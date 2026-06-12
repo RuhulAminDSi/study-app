@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { AppProvider, useApp } from './context/AppContext'
 
 import { AuthProvider, useAuth } from './context/AuthContext'
@@ -12,10 +11,6 @@ import './index.css'
 
 function PublicView() {
   const state = useApp()
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [state.currentModule, state.currentLesson])
 
   return (
     <div className={`app-bg ${state.theme}`}>

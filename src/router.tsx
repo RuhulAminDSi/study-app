@@ -4,10 +4,12 @@ type RouteType = 'public' | 'admin' | 'login'
 
 export interface RouteInfo {
   type: RouteType
-  moduleIndex?: number
-  lessonIndex?: number
+  chapterId?: string
+  lessonId?: string
   adminView?: string
 }
+
+const UUID_PATTERN = /[a-fA-F0-9-]{36}/
 
 export function parseHash(): RouteInfo {
   const hash = window.location.hash.replace(/^#\//, '')
@@ -19,9 +21,14 @@ export function parseHash(): RouteInfo {
   }
   if (hash.startsWith('admin')) return { type: 'admin', adminView: '' }
 
-  const lessonMatch = hash.match(/^module\/(\d+)\/lesson\/(\d+)/)
+  const lessonMatch = hash.match(new RegExp(`^chapter/(${UUID_PATTERN.source})/lesson/(${UUID_PATTERN.source})`))
   if (lessonMatch) {
-    return { type: 'public', moduleIndex: Number(lessonMatch[1]), lessonIndex: Number(lessonMatch[2]) }
+    return { type: 'public', chapterId: lessonMatch[1], lessonId: lessonMatch[2] }
+  }
+
+  const chapterMatch = hash.match(new RegExp(`^chapter/(${UUID_PATTERN.source})`))
+  if (chapterMatch) {
+    return { type: 'public', chapterId: chapterMatch[1] }
   }
 
   return { type: 'public' }
@@ -43,6 +50,6 @@ export function navigate(path: string) {
   window.location.hash = `#/${path}`
 }
 
-export function navigateToLesson(moduleIndex: number, lessonIndex: number) {
-  window.location.hash = `#/module/${moduleIndex}/lesson/${lessonIndex}`
+export function navigateToLesson(chapterId: string, lessonId: string) {
+  window.location.hash = `#/chapter/${chapterId}/lesson/${lessonId}`
 }

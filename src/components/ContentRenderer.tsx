@@ -56,6 +56,10 @@ function isTableLine(line: string): boolean {
 }
 
 export function renderContent(content: string): ReactNode[] {
+  if (/^\s*<(?:div|table|p|h[1-6]|pre|ul|ol|li|blockquote|hr|img|br|section|article|header|footer|main|figure|figcaption|span|a)\b/i.test(content.trim())) {
+    return [<div key="html" className="html-content" dangerouslySetInnerHTML={{ __html: content }} />]
+  }
+
   const allLines = content.split('\n')
   const result: ReactNode[] = []
   let i = 0

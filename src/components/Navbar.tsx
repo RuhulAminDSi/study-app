@@ -1,5 +1,4 @@
 import { useApp, useAppDispatch } from '../context/AppContext'
-import { modules } from '../data/modules/index'
 import { translations } from '../data/translations'
 import { navigateToLesson } from '../router'
 import { useEffect } from 'react'
@@ -68,31 +67,28 @@ function SearchDropdown() {
   const state = useApp()
   const dispatch = useAppDispatch()
 
-  const results = modules.flatMap((m, moduleIndex) =>
-    m.lessons.filter(l =>
-      (state.language === 'bn' && l.titleBn ? l.titleBn : l.title).toLowerCase().includes(state.searchQuery.toLowerCase())
-    ).map(l => ({
-      ...l,
-      moduleTitle: state.language === 'bn' && m.titleBn ? m.titleBn : m.title,
-      moduleIndex,
-      lessonIndex: m.lessons.indexOf(l)
-    }))
-  ).slice(0, 10)
+  const results = state.orderedLessons
+    .filter(o => {
+      const title = state.language === 'bn' && o.lesson.title_bn ? o.lesson.title_bn : o.lesson.title_en
+      return title.toLowerCase().includes(state.searchQuery.toLowerCase())
+    })
+    .slice(0, 10)
 
   if (results.length === 0) return null
 
   return (
     <div className="search-results-dropdown">
-      {results.slice(0, 5).map((result, i) => (
-        <div key={i} className="search-result-item" onClick={() => {
-          navigateToLesson(result.moduleIndex, result.lessonIndex)
-          dispatch({ type: 'SET_SEARCH_QUERY', query: '' })
-        }}>
-          <div className="search-result-title">
-            {state.language === 'bn' && result.titleBn ? result.titleBn : result.title}
+      {results.slice(0, 5).map((result, i) => {
+        const title = state.language === 'bn' && result.lesson.title_bn ? result.lesson.title_bn : result.lesson.title_en
+        return (
+          <div key={i} className="search-result-item" onClick={() => {
+            navigateToLesson(result.chapterId, result.lesson.id)
+            dispatch({ type: 'SET_SEARCH_QUERY', query: '' })
+          }}>
+            <div className="search-result-title">{title}</div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

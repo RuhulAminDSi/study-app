@@ -1,5 +1,5 @@
+import { useRef, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
-import { modules } from '../data/modules/index'
 import { translations } from '../data/translations'
 import { renderContent } from './ContentRenderer'
 import { navigateToLesson } from '../router'
@@ -7,31 +7,60 @@ import { navigateToLesson } from '../router'
 export default function MainContent() {
   const state = useApp()
   const t = translations[state.language]
+  const contentRef = useRef<HTMLDivElement>(null)
 
-  const module = modules[state.currentModule]
-  const lesson = module?.lessons[state.currentLesson]
-  const lessonTitle = state.language === 'bn' && lesson?.titleBn ? lesson.titleBn : lesson?.title
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el) return
+    el.querySelectorAll<HTMLElement>('pre').forEach(pre => {
+      const code = pre.querySelector('code')
+      if (!code) return
+      const match = Array.from(code.classList).find(c => c.startsWith('language-'))
+      if (match && !pre.hasAttribute('data-lang')) {
+        pre.setAttribute('data-lang', match.replace('language-', ''))
+      }
+      if (!pre.querySelector('.pub-copy-btn')) {
+        const btn = document.createElement('button')
+        btn.className = 'pub-copy-btn'
+        btn.textContent = 'Copy'
+        btn.addEventListener('click', e => {
+          e.stopPropagation()
+          navigator.clipboard.writeText(code.textContent || '')
+          btn.textContent = 'Copied!'
+          btn.classList.add('copied')
+          setTimeout(() => {
+            btn.textContent = 'Copy'
+            btn.classList.remove('copied')
+          }, 2000)
+        })
+        pre.appendChild(btn)
+      }
+    })
+  })
 
-  if (!module || !lesson) return null
+  if (state.loading || state.orderedLessons.length === 0) return null
+
+  const current = state.orderedLessons[state.currentIndex]
+  if (!current) return null
+
+  const lesson = current.lesson
+  const lessonTitle = state.language === 'bn' && lesson.title_bn ? lesson.title_bn : lesson.title_en
+  const isFirst = state.currentIndex === 0
+  const isLast = state.currentIndex === state.orderedLessons.length - 1
 
   const handlePrev = () => {
-    if (state.currentLesson > 0) {
-      navigateToLesson(state.currentModule, state.currentLesson - 1)
-    } else if (state.currentModule > 0) {
-      navigateToLesson(state.currentModule - 1, modules[state.currentModule - 1].lessons.length - 1)
+    if (state.currentIndex > 0) {
+      const prev = state.orderedLessons[state.currentIndex - 1]
+      if (prev) navigateToLesson(prev.chapterId, prev.lesson.id)
     }
   }
 
   const handleNext = () => {
-    if (state.currentLesson < module.lessons.length - 1) {
-      navigateToLesson(state.currentModule, state.currentLesson + 1)
-    } else if (state.currentModule < modules.length - 1) {
-      navigateToLesson(state.currentModule + 1, 0)
+    if (state.currentIndex < state.orderedLessons.length - 1) {
+      const next = state.orderedLessons[state.currentIndex + 1]
+      if (next) navigateToLesson(next.chapterId, next.lesson.id)
     }
   }
-
-  const isFirst = state.currentModule === 0 && state.currentLesson === 0
-  const isLast = state.currentModule === modules.length - 1 && state.currentLesson === module.lessons.length - 1
 
   return (
     <main className="main-content">
@@ -43,31 +72,31 @@ export default function MainContent() {
                lesson.level === 'Intermediate' ? (state.language === 'bn' ? 'মধ্যম' : 'Intermediate') :
                (state.language === 'bn' ? 'উন্নত' : 'Advanced')}
             </span>
-            <span className="lesson-subtitle">{t.lesson} {state.currentLesson + 1} / {module.lessons.length}</span>
+            <span className="lesson-subtitle">{t.lesson} {lesson.lesson_number} / {state.orderedLessons.length}</span>
           </div>
           <h1 className="lesson-title">{lessonTitle}</h1>
         </div>
 
-        <div className="content-rendered">
-          {renderContent(state.language === 'bn' && lesson.contentBn ? lesson.contentBn : lesson.content)}
+        <div className="content-rendered" ref={contentRef}>
+          {renderContent(state.language === 'bn' && lesson.content_bn ? lesson.content_bn : lesson.content_en)}
         </div>
 
         <div className="takeaways-card">
           <h3 className="takeaways-title">{t.keyTakeaways}</h3>
           <ul className="bullet-list">
-            {(state.language === 'bn' && lesson.takeawaysBn ? lesson.takeawaysBn : lesson.takeaways).map((takeaway, i) => (
+            {(state.language === 'bn' && lesson.takeaways_bn ? lesson.takeaways_bn : lesson.takeaways_en || []).map((takeaway, i) => (
               <li key={i}>{takeaway}</li>
             ))}
           </ul>
         </div>
 
-        {lesson.code && (
+        {lesson.code_en && (
           <div className="code-block">
             <div className="code-header">
               <span className="code-label">{t.keyFormula}</span>
-              <button className="code-copy" onClick={() => navigator.clipboard.writeText(lesson.code || '')}>{t.copy}</button>
+              <button className="code-copy" onClick={() => navigator.clipboard.writeText(lesson.code_en || '')}>{t.copy}</button>
             </div>
-            <pre className="code-content">{lesson.code}</pre>
+            <pre className="code-content">{lesson.code_en}</pre>
           </div>
         )}
       </>
