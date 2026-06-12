@@ -20,4 +20,10 @@ export const translation_en: Translations = {
   lessons: "Lessons",
   goToBottom: "Go to bottom",
   goToTop: "Go to top",
+  adminDashboard: "Dashboard",
+  adminChapters: "Chapters",
+  adminLessons: "Lessons",
+  adminContent: "Content",
+  adminFiles: "Files",
+  adminBack: "Back to App",
 }

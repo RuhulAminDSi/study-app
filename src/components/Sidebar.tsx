@@ -1,66 +1,46 @@
-import type { Module } from '../types'
+import { useApp, useAppDispatch } from '../context/AppContext'
+import { modules } from '../data/modules/index'
 
-interface SidebarProps {
-  modules: Module[]
-  currentModule: number
-  currentLesson: number
-  expandedModule: number | null
-  sidebarOpen: boolean
-  language: 'en' | 'bn'
-  onModuleSelect: (idx: number) => void
-  onLessonSelect: (modIdx: number, lesIdx: number) => void
-  onExpandedToggle: (idx: number) => void
-  onSidebarClose: () => void
-}
+export default function Sidebar() {
+  const state = useApp()
+  const dispatch = useAppDispatch()
 
-export function Sidebar({
-  modules,
-  currentModule,
-  currentLesson,
-  expandedModule,
-  sidebarOpen,
-  language,
-  onModuleSelect,
-  onLessonSelect,
-  onExpandedToggle,
-  onSidebarClose,
-}: SidebarProps) {
   return (
-    <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+    <aside className={`sidebar ${state.sidebarOpen ? 'open' : ''}`}>
+      {state.sidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => dispatch({ type: 'TOGGLE_SIDEBAR' })} />
+      )}
       <div className="sidebar-section">
-        {modules.map((m, idx) => (
-          <div key={idx} className="sidebar-module">
+        {modules.map((m, moduleIndex) => (
+          <div key={moduleIndex} className="sidebar-module">
             <div
-              onClick={() => { 
-                onModuleSelect(idx); 
-                onSidebarClose(); 
+              className={`sidebar-item ${state.currentModule === moduleIndex ? 'active' : ''}`}
+              onClick={() => {
+                dispatch({ type: 'GO_TO', moduleIndex, lessonIndex: 0 })
+                dispatch({ type: 'TOGGLE_MODULE', moduleIndex })
               }}
-              className={`sidebar-item ${currentModule === idx ? 'active' : ''}`}
             >
-              <span>{language === 'bn' && m.titleBn ? m.titleBn : m.title}</span>
-              <button 
-                className="sidebar-expand-btn"
-                onClick={(e) => { e.stopPropagation(); onExpandedToggle(idx); }}
-              >
-                <svg className={`w-4 h-4 transform ${expandedModule === idx ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              <span>{state.language === 'bn' && m.titleBn ? m.titleBn : m.title}</span>
+              {state.expandedModules.has(moduleIndex) && (
+                <button className="sidebar-expand-btn">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
             </div>
-            {expandedModule === idx && (
+            {state.expandedModules.has(moduleIndex) && (
               <div className="sidebar-submenu">
-                {m.lessons.map((l, lIdx) => (
+                {m.lessons.map((l, lessonIndex) => (
                   <div
-                    key={lIdx}
-                    className={`sidebar-subitem ${currentModule === idx && currentLesson === lIdx ? 'active' : ''}`}
-                    onClick={() => { 
-                      onModuleSelect(idx); 
-                      onLessonSelect(idx, lIdx);
-                      onExpandedToggle(idx);
-                      onSidebarClose(); 
+                    key={lessonIndex}
+                    className={`sidebar-subitem ${state.currentModule === moduleIndex && state.currentLesson === lessonIndex ? 'active' : ''}`}
+                    onClick={() => {
+                      dispatch({ type: 'GO_TO', moduleIndex, lessonIndex })
+                      dispatch({ type: 'TOGGLE_SIDEBAR' })
                     }}
                   >
-                    <span>{language === 'bn' && l.titleBn ? l.titleBn : l.title}</span>
+                    <span>{state.language === 'bn' && l.titleBn ? l.titleBn : l.title}</span>
                   </div>
                 ))}
               </div>

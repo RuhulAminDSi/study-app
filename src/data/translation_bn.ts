@@ -20,4 +20,10 @@ export const translation_bn: Translations = {
   lessons: "পাঠসমূহ",
   goToBottom: "নিচে যান",
   goToTop: "উপরে যান",
+  adminDashboard: "ড্যাশবোর্ড",
+  adminChapters: "চ্যাপ্টার",
+  adminLessons: "পাঠ",
+  adminContent: "কন্টেন্ট",
+  adminFiles: "ফাইল",
+  adminBack: "অ্যাপে ফিরুন",
 }
