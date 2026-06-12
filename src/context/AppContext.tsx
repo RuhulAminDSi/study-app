@@ -1,10 +1,11 @@
-import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, type Dispatch, type ReactNode } from 'react'
 import type { Language, Theme } from '../types'
+import { parseHash, navigateToLesson } from '../router'
 
 interface AppState {
   currentModule: number
   currentLesson: number
-  expandedModules: Set<number>
+  expandedModules: number | null
   sidebarOpen: boolean
   language: Language
   theme: Theme
@@ -31,15 +32,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, currentLesson: action.lessonIndex }
     case 'GO_TO':
       return { ...state, currentModule: action.moduleIndex, currentLesson: action.lessonIndex }
-    case 'TOGGLE_MODULE': {
-      const next = new Set(state.expandedModules)
-      if (next.has(action.moduleIndex)) {
-        next.delete(action.moduleIndex)
-      } else {
-        next.add(action.moduleIndex)
-      }
-      return { ...state, expandedModules: next }
-    }
+    case 'TOGGLE_MODULE':
+      return { ...state, expandedModules: state.expandedModules === action.moduleIndex ? null : action.moduleIndex }
     case 'TOGGLE_SIDEBAR':
       return { ...state, sidebarOpen: !state.sidebarOpen }
     case 'SET_LANGUAGE':
@@ -69,15 +63,12 @@ function appReducer(state: AppState, action: AppAction): AppState {
   }
 }
 
-const totalModules = 19
-
 function createInitialState(): AppState {
-  const allModules = new Set<number>()
-  for (let i = 0; i < totalModules; i++) allModules.add(i)
+  const route = parseHash()
   return {
-    currentModule: 0,
-    currentLesson: 0,
-    expandedModules: allModules,
+    currentModule: route.moduleIndex ?? 0,
+    currentLesson: route.lessonIndex ?? 0,
+    expandedModules: route.moduleIndex ?? null,
     sidebarOpen: false,
     language: 'bn',
     theme: 'dark',
@@ -90,6 +81,23 @@ const AppDispatchContext = createContext<Dispatch<AppAction> | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, undefined, createInitialState)
+
+  useEffect(() => {
+    if (window.location.hash.includes('module')) {
+      navigateToLesson(state.currentModule, state.currentLesson)
+    }
+  }, [state.currentModule, state.currentLesson])
+
+  useEffect(() => {
+    const onHashChange = () => {
+      const route = parseHash()
+      if (route.type === 'public' && route.moduleIndex !== undefined && route.lessonIndex !== undefined) {
+        dispatch({ type: 'GO_TO', moduleIndex: route.moduleIndex, lessonIndex: route.lessonIndex })
+      }
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
 
   return (
     <AppContext.Provider value={state}>

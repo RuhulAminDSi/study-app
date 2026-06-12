@@ -1,6 +1,7 @@
 import { useApp, useAppDispatch } from '../context/AppContext'
 import { modules } from '../data/modules/index'
 import { translations } from '../data/translations'
+import { navigateToLesson } from '../router'
 import { useEffect } from 'react'
 
 interface NavbarProps {
@@ -84,7 +85,7 @@ function SearchDropdown() {
     <div className="search-results-dropdown">
       {results.slice(0, 5).map((result, i) => (
         <div key={i} className="search-result-item" onClick={() => {
-          dispatch({ type: 'GO_TO', moduleIndex: result.moduleIndex, lessonIndex: result.lessonIndex })
+          navigateToLesson(result.moduleIndex, result.lessonIndex)
           dispatch({ type: 'SET_SEARCH_QUERY', query: '' })
         }}>
           <div className="search-result-title">

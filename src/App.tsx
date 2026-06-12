@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { AppProvider, useApp } from './context/AppContext'
-import { AdminProvider } from './context/AdminContext'
+
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
@@ -35,9 +35,7 @@ function AdminRoute() {
   }
 
   return (
-    <AdminProvider>
-      <AdminDashboard onBack={() => navigate('')} />
-    </AdminProvider>
+    <AdminDashboard onBack={() => navigate('')} />
   )
 }
 
@@ -53,9 +51,9 @@ function AppShell() {
   return (
     <AuthProvider>
       <AppProvider>
-        {route === 'public' && <PublicView />}
-        {route === 'admin' && <AdminRoute />}
-        {route === 'login' && <LoginRoute />}
+        {route.type === 'public' && <PublicView />}
+        {route.type === 'admin' && <AdminRoute />}
+        {route.type === 'login' && <LoginRoute />}
       </AppProvider>
     </AuthProvider>
   )

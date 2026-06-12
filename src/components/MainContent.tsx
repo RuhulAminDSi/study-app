@@ -1,11 +1,11 @@
-import { useApp, useAppDispatch } from '../context/AppContext'
+import { useApp } from '../context/AppContext'
 import { modules } from '../data/modules/index'
 import { translations } from '../data/translations'
 import { renderContent } from './ContentRenderer'
+import { navigateToLesson } from '../router'
 
 export default function MainContent() {
   const state = useApp()
-  const dispatch = useAppDispatch()
   const t = translations[state.language]
 
   const module = modules[state.currentModule]
@@ -16,19 +16,17 @@ export default function MainContent() {
 
   const handlePrev = () => {
     if (state.currentLesson > 0) {
-      dispatch({ type: 'SET_LESSON', lessonIndex: state.currentLesson - 1 })
+      navigateToLesson(state.currentModule, state.currentLesson - 1)
     } else if (state.currentModule > 0) {
-      dispatch({ type: 'SET_MODULE', moduleIndex: state.currentModule - 1 })
-      dispatch({ type: 'SET_LESSON', lessonIndex: modules[state.currentModule - 1].lessons.length - 1 })
+      navigateToLesson(state.currentModule - 1, modules[state.currentModule - 1].lessons.length - 1)
     }
   }
 
   const handleNext = () => {
     if (state.currentLesson < module.lessons.length - 1) {
-      dispatch({ type: 'SET_LESSON', lessonIndex: state.currentLesson + 1 })
+      navigateToLesson(state.currentModule, state.currentLesson + 1)
     } else if (state.currentModule < modules.length - 1) {
-      dispatch({ type: 'SET_MODULE', moduleIndex: state.currentModule + 1 })
-      dispatch({ type: 'SET_LESSON', lessonIndex: 0 })
+      navigateToLesson(state.currentModule + 1, 0)
     }
   }
 

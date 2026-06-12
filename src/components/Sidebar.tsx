@@ -1,5 +1,6 @@
 import { useApp, useAppDispatch } from '../context/AppContext'
 import { modules } from '../data/modules/index'
+import { navigateToLesson } from '../router'
 
 export default function Sidebar() {
   const state = useApp()
@@ -16,12 +17,12 @@ export default function Sidebar() {
             <div
               className={`sidebar-item ${state.currentModule === moduleIndex ? 'active' : ''}`}
               onClick={() => {
-                dispatch({ type: 'GO_TO', moduleIndex, lessonIndex: 0 })
+                navigateToLesson(moduleIndex, 0)
                 dispatch({ type: 'TOGGLE_MODULE', moduleIndex })
               }}
             >
               <span>{state.language === 'bn' && m.titleBn ? m.titleBn : m.title}</span>
-              {state.expandedModules.has(moduleIndex) && (
+              {state.expandedModules === moduleIndex && (
                 <button className="sidebar-expand-btn">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -29,14 +30,14 @@ export default function Sidebar() {
                 </button>
               )}
             </div>
-            {state.expandedModules.has(moduleIndex) && (
+            {state.expandedModules === moduleIndex && (
               <div className="sidebar-submenu">
                 {m.lessons.map((l, lessonIndex) => (
                   <div
                     key={lessonIndex}
                     className={`sidebar-subitem ${state.currentModule === moduleIndex && state.currentLesson === lessonIndex ? 'active' : ''}`}
                     onClick={() => {
-                      dispatch({ type: 'GO_TO', moduleIndex, lessonIndex })
+                      navigateToLesson(moduleIndex, lessonIndex)
                       dispatch({ type: 'TOGGLE_SIDEBAR' })
                     }}
                   >

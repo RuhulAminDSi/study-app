@@ -1,16 +1,28 @@
 import { useState, useEffect } from 'react'
 
-type Route = 'public' | 'admin' | 'login'
+type RouteType = 'public' | 'admin' | 'login'
 
-function parseHash(): Route {
-  const hash = window.location.hash.replace(/^#\//, '')
-  if (hash.startsWith('admin/login')) return 'login'
-  if (hash.startsWith('admin')) return 'admin'
-  return 'public'
+export interface RouteInfo {
+  type: RouteType
+  moduleIndex?: number
+  lessonIndex?: number
 }
 
-export function useRoute(): Route {
-  const [route, setRoute] = useState<Route>(() => parseHash())
+export function parseHash(): RouteInfo {
+  const hash = window.location.hash.replace(/^#\//, '')
+  if (hash.startsWith('admin/login')) return { type: 'login' }
+  if (hash.startsWith('admin')) return { type: 'admin' }
+
+  const lessonMatch = hash.match(/^module\/(\d+)\/lesson\/(\d+)/)
+  if (lessonMatch) {
+    return { type: 'public', moduleIndex: Number(lessonMatch[1]), lessonIndex: Number(lessonMatch[2]) }
+  }
+
+  return { type: 'public' }
+}
+
+export function useRoute(): RouteInfo {
+  const [route, setRoute] = useState<RouteInfo>(() => parseHash())
 
   useEffect(() => {
     const onHashChange = () => setRoute(parseHash())
@@ -23,4 +35,8 @@ export function useRoute(): Route {
 
 export function navigate(path: string) {
   window.location.hash = `#/${path}`
+}
+
+export function navigateToLesson(moduleIndex: number, lessonIndex: number) {
+  window.location.hash = `#/module/${moduleIndex}/lesson/${lessonIndex}`
 }
