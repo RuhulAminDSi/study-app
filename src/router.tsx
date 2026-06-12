@@ -6,12 +6,18 @@ export interface RouteInfo {
   type: RouteType
   moduleIndex?: number
   lessonIndex?: number
+  adminView?: string
 }
 
 export function parseHash(): RouteInfo {
   const hash = window.location.hash.replace(/^#\//, '')
-  if (hash.startsWith('admin/login')) return { type: 'login' }
-  if (hash.startsWith('admin')) return { type: 'admin' }
+  const adminMatch = hash.match(/^admin\/(.+)/)
+  if (adminMatch) {
+    const sub = adminMatch[1]
+    if (sub === 'login') return { type: 'login' }
+    return { type: 'admin', adminView: sub }
+  }
+  if (hash.startsWith('admin')) return { type: 'admin', adminView: '' }
 
   const lessonMatch = hash.match(/^module\/(\d+)\/lesson\/(\d+)/)
   if (lessonMatch) {

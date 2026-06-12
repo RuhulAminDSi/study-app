@@ -40,21 +40,11 @@ export interface ApiSideMenu {
   icon: string | null
   sort_order: number
   is_active: boolean
-  sub_menus?: ApiSubSideMenu[]
-}
-
-export interface ApiSubSideMenu {
-  id: string
-  side_menu_id: string
-  label_en: string
-  label_bn: string | null
-  sort_order: number
-  is_active: boolean
 }
 
 export interface ApiLesson {
   id: string
-  sub_side_menu_id: string
+  side_menu_id: string
   lesson_number: number
   title_en: string
   title_bn: string | null
@@ -82,7 +72,7 @@ export const api = {
   },
   menus: {
     list: () => apiFetch<ApiSideMenu[]>('/menus'),
-    listWithSub: () => apiFetch<ApiSideMenu[]>('/menus/with-sub'),
+
     create: (data: Partial<ApiSideMenu>) =>
       apiFetch<ApiSideMenu>('/menus', { method: 'POST', body: JSON.stringify(data) }),
     update: (id: string, data: Partial<ApiSideMenu>) =>
@@ -92,26 +82,32 @@ export const api = {
     toggle: (id: string) =>
       apiFetch<ApiSideMenu>(`/menus/${id}/toggle`, { method: 'PATCH' }),
   },
-  submenus: {
-    list: () => apiFetch<ApiSubSideMenu[]>('/submenus'),
-    create: (data: Partial<ApiSubSideMenu>) =>
-      apiFetch<ApiSubSideMenu>('/submenus', { method: 'POST', body: JSON.stringify(data) }),
-    update: (id: string, data: Partial<ApiSubSideMenu>) =>
-      apiFetch<ApiSubSideMenu>(`/submenus/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    delete: (id: string) =>
-      apiFetch<{ deleted: boolean }>(`/submenus/${id}`, { method: 'DELETE' }),
-    toggle: (id: string) =>
-      apiFetch<ApiSubSideMenu>(`/submenus/${id}/toggle`, { method: 'PATCH' }),
-  },
+
   lessons: {
     list: () => apiFetch<ApiLesson[]>('/lessons'),
     get: (id: string) => apiFetch<ApiLesson>(`/lessons/${id}`),
-    getBySubMenu: (subMenuId: string) => apiFetch<ApiLesson[]>(`/lessons/sub-menu/${subMenuId}`),
     create: (data: Partial<ApiLesson>) =>
       apiFetch<ApiLesson>('/lessons', { method: 'POST', body: JSON.stringify(data) }),
     update: (id: string, data: Partial<ApiLesson>) =>
       apiFetch<ApiLesson>(`/lessons/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: string) =>
       apiFetch<{ deleted: boolean }>(`/lessons/${id}`, { method: 'DELETE' }),
+    togglePublish: (id: string) =>
+      apiFetch<ApiLesson>(`/lessons/${id}/toggle-publish`, { method: 'PATCH' }),
+    swapOrder: (id1: string, id2: string) =>
+      apiFetch<ApiLesson[]>('/lessons/swap-order', { method: 'POST', body: JSON.stringify({ id1, id2 }) }),
+  },
+  files: {
+    upload: async (file: File) => {
+      const form = new FormData()
+      form.append('file', file)
+      const res = await fetch(`${API_BASE}/files/upload`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${getToken()}` },
+        body: form,
+      })
+      if (!res.ok) throw new Error((await res.json()).error || 'Upload failed')
+      return res.json() as Promise<{ id: string; storage_path: string; original_name: string }>
+    },
   },
 }

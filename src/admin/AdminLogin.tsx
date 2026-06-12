@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { useApp } from '../context/AppContext'
+import { translations } from '../data/translations'
 import { navigate } from '../router'
 
 const API_BASE = '/api'
@@ -10,6 +12,8 @@ interface LoginProps {
 
 export default function AdminLogin({ onLogin }: LoginProps) {
   const auth = useAuth()
+  const appState = useApp()
+  const t = translations[appState.language]
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -30,7 +34,7 @@ export default function AdminLogin({ onLogin }: LoginProps) {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || 'Login failed')
+        setError(data.error || t.adminLoginFailed)
         return
       }
 
@@ -38,7 +42,7 @@ export default function AdminLogin({ onLogin }: LoginProps) {
       onLogin()
       navigate('admin')
     } catch {
-      setError('Cannot connect to server. Make sure the API is running.')
+      setError(t.adminServerError)
     } finally {
       setLoading(false)
     }
@@ -67,7 +71,7 @@ export default function AdminLogin({ onLogin }: LoginProps) {
           textAlign: 'center',
           marginBottom: '0.5rem',
         }}>
-          Admin Login
+          {t.adminLoginTitle}
         </h1>
         <p style={{
           textAlign: 'center',
@@ -75,19 +79,19 @@ export default function AdminLogin({ onLogin }: LoginProps) {
           fontSize: '0.85rem',
           marginBottom: '2rem',
         }}>
-          Sign in to manage your study content
+          {t.adminLoginDesc}
         </p>
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{
+              <label style={{
               display: 'block',
               fontSize: '0.8rem',
               color: 'var(--text-dim)',
               marginBottom: '0.4rem',
               fontWeight: 500,
             }}>
-              Username
+              {t.adminUsername}
             </label>
             <input
               type="text"
@@ -106,20 +110,20 @@ export default function AdminLogin({ onLogin }: LoginProps) {
               }}
               onFocus={e => e.target.style.borderColor = 'var(--accent)'}
               onBlur={e => e.target.style.borderColor = 'var(--border)'}
-              placeholder="Enter username"
+              placeholder={t.adminUsername}
               required
             />
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{
+              <label style={{
               display: 'block',
               fontSize: '0.8rem',
               color: 'var(--text-dim)',
               marginBottom: '0.4rem',
               fontWeight: 500,
             }}>
-              Password
+              {t.adminPassword}
             </label>
             <input
               type="password"
@@ -138,7 +142,7 @@ export default function AdminLogin({ onLogin }: LoginProps) {
               }}
               onFocus={e => e.target.style.borderColor = 'var(--accent)'}
               onBlur={e => e.target.style.borderColor = 'var(--border)'}
-              placeholder="Enter password"
+              placeholder={t.adminPassword}
               required
             />
           </div>
@@ -173,7 +177,7 @@ export default function AdminLogin({ onLogin }: LoginProps) {
               transition: 'all 0.2s',
             }}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t.adminSigningIn : t.adminSignIn}
           </button>
         </form>
 
@@ -187,7 +191,7 @@ export default function AdminLogin({ onLogin }: LoginProps) {
             style={{ color: 'var(--accent)', cursor: 'pointer', textDecoration: 'underline' }}
             onClick={() => { navigate(''); window.location.reload() }}
           >
-            Back to StudyHub
+            {t.adminBack}
           </span>
         </div>
       </div>

@@ -15,7 +15,7 @@ interface ContentEditorProps {
 
 type Tab = 'content_en' | 'content_bn' | 'code_en'
 
-type ModalType = 'image' | 'link' | 'code' | null
+type ModalType = 'image' | 'link' | 'code' | 'file' | null
 
 function formatHtml(html: string): string {
   const div = document.createElement('div')
@@ -58,6 +58,13 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
   const editorRef = useRef<HTMLDivElement>(null)
   const [chapterId, setChapterId] = useState('')
   const [lessonId, setLessonId] = useState('')
+  const contentCache = useRef<Record<string, string>>({})
+  const [uploading, setUploading] = useState(false)
+  const [fileUploading, setFileUploading] = useState(false)
+  const [reorder, setReorder] = useState(false)
+  const [blocks, setBlocks] = useState<string[]>([])
+  const [editorKey, setEditorKey] = useState(0)
+  const [dragOver, setDragOver] = useState(false)
 
   useEffect(() => {
     if (lesson) {
@@ -66,6 +73,19 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
       setLessonId(lesson.id)
     }
   }, [lesson, menus])
+
+  useEffect(() => {
+    if (isNew && lessonId && lessons) {
+      const sel = lessons.find(l => l.id === lessonId)
+      if (sel) {
+        contentCache.current = {}
+        if (sel.content_en) contentCache.current.content_en = sel.content_en
+        if (sel.content_bn) contentCache.current.content_bn = sel.content_bn
+        if (sel.code_en) contentCache.current.code_en = sel.code_en
+        setEditorKey(k => k + 1)
+      }
+    }
+  }, [lessonId, isNew, lessons])
 
   const lessonsByChapter = (chId: string) => {
     if (!chId) return []
@@ -81,6 +101,13 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
   function execCmd(cmd: string, val?: string) {
     document.execCommand(cmd, false, val)
     if (editorRef.current) editorRef.current.focus()
+  }
+
+  function insertAtEnd(html: string) {
+    if (editorRef.current) {
+      const existing = editorRef.current.innerHTML
+      editorRef.current.innerHTML = existing + html
+    }
   }
 
   function insertTable() {
@@ -102,9 +129,66 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
 
   function confirmImage() {
     if (imageUrl) {
-      execCmd('insertImage', imageUrl)
+      insertAtEnd(`<img src="${imageUrl}" alt="" style="max-width:100%">`)
       setModal(null)
       setImageUrl('')
+    }
+  }
+
+  function handleImageTabChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.value === 'upload') {
+      setImageUrl('__upload__')
+    } else {
+      setImageUrl('')
+    }
+  }
+
+  async function uploadImage(file: File) {
+    setUploading(true)
+    try {
+      const result = await api.files.upload(file)
+      const url = `http://localhost:3001/uploads/${result.storage_path}`
+      insertAtEnd(`<br><img src="${url}" alt="" style="max-width:100%"><br>`)
+      setModal(null)
+    } catch (e: any) {
+      alert(e.message)
+    } finally {
+      setUploading(false)
+      setImageUrl('')
+    }
+  }
+
+  async function uploadFile(file: File) {
+    setFileUploading(true)
+    try {
+      const result = await api.files.upload(file)
+      const url = `http://localhost:3001/uploads/${result.storage_path}`
+      const name = result.original_name || file.name
+      insertAtEnd(`<br><a href="${url}" target="_blank" rel="noopener">📎 ${name}</a><br>`)
+      setModal(null)
+    } catch (e: any) {
+      alert(e.message)
+    } finally {
+      setFileUploading(false)
+    }
+  }
+
+  async function handleFileDrop(e: React.DragEvent) {
+    e.preventDefault()
+    const files = Array.from(e.dataTransfer.files)
+    for (const file of files) {
+      try {
+        const result = await api.files.upload(file)
+        const url = `http://localhost:3001/uploads/${result.storage_path}`
+        const name = result.original_name || file.name
+        if (file.type.startsWith('image/')) {
+          insertAtEnd(`<br><img src="${url}" alt="${name}" style="max-width:100%"><br>`)
+        } else {
+          insertAtEnd(`<br><a href="${url}" target="_blank" rel="noopener">📎 ${name}</a><br>`)
+        }
+      } catch (e: any) {
+        alert(`Upload failed: ${file.name} — ${e.message}`)
+      }
     }
   }
 
@@ -174,11 +258,11 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
       const sel = lessons?.find(l => l.id === lessonId)
       if (!sel || !targetId) { alert(language === 'bn' ? 'একটি পাঠ নির্বাচন করুন' : 'Select a lesson'); setSaving(false); return }
 
+      contentCache.current[tab] = getContent()
       const body: Record<string, any> = {}
-      if (tab === 'content_en') body.content_en = getContent()
-      if (tab === 'content_bn') body.content_bn = getContent()
-      if (tab === 'code_en') body.code_en = getContent()
-      if (tab !== 'content_en') body.content_en = editorRef.current?.innerHTML || lesson?.content_en || ''
+      body.content_en = contentCache.current.content_en ?? ''
+      body.content_bn = contentCache.current.content_bn ?? null
+      body.code_en = contentCache.current.code_en ?? null
 
       body.lesson_number = sel.lesson_number
       body.chapter_id = chapterId
@@ -190,7 +274,45 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
     } catch (e: any) { alert(e.message) } finally { setSaving(false) }
   }
 
-  const placeholder = isNew ? '' : tab === 'content_en' ? lesson!.content_en : tab === 'content_bn' ? (lesson!.content_bn || '') : (lesson!.code_en || '')
+  function handleEditorRef(el: HTMLDivElement | null) {
+    if (el) {
+      editorRef.current = el
+      const initial = isNew ? '' : tab === 'content_en' ? lesson!.content_en : tab === 'content_bn' ? (lesson!.content_bn || '') : (lesson!.code_en || '')
+      if (!el.innerHTML) el.innerHTML = contentCache.current[tab] ?? initial
+    }
+  }
+
+  function enterReorderMode() {
+    if (!editorRef.current) return
+    contentCache.current[tab] = editorRef.current.innerHTML
+    const blockList: string[] = []
+    for (const child of Array.from(editorRef.current.childNodes)) {
+      if (child.nodeType === 3) {
+        const text = child.textContent?.trim()
+        if (text) blockList.push(text)
+      } else if (child.nodeType === 1) {
+        blockList.push((child as HTMLElement).outerHTML)
+      }
+    }
+    if (!blockList.length) blockList.push('')
+    setBlocks(blockList)
+    setReorder(true)
+  }
+
+  function exitReorderMode() {
+    const html = blocks.filter(b => b).join('\n')
+    contentCache.current[tab] = html
+    setEditorKey(k => k + 1)
+    setReorder(false)
+  }
+
+  function moveBlock(idx: number, dir: -1 | 1) {
+    const t = idx + dir
+    if (t < 0 || t >= blocks.length) return
+    const next = [...blocks]
+    ;[next[idx], next[t]] = [next[t], next[idx]]
+    setBlocks(next)
+  }
 
   return (
     <div className="content-editor">
@@ -228,7 +350,7 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
               {!isNew && lesson ? null : <option value="">-- {language === 'bn' ? 'পাঠ নির্বাচন করুন' : 'Select Lesson'} --</option>}
               {lessonsByChapter(chapterId).map(l => (
                 <option key={l.id} value={l.id}>
-                  {language === 'bn' && l.title_bn ? l.title_bn : l.title_en}
+                  {l.title_en}{l.title_bn ? ` (${l.title_bn})` : ''}
                 </option>
               ))}
             </select>
@@ -239,13 +361,17 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
       <div className="ce-tabs">
         {(['content_en', 'content_bn', 'code_en'] as Tab[]).map(tabKey => (
           <button key={tabKey} className={`ce-tab ${tab === tabKey ? 'active' : ''}`} onClick={() => {
-            if (editorRef.current && lesson) {
-              const html = editorRef.current.innerHTML
-              if (tab === 'content_en') lesson.content_en = html
-              else if (tab === 'content_bn') lesson.content_bn = html
-              else lesson.code_en = html
+            if (editorRef.current) {
+              contentCache.current[tab] = editorRef.current.innerHTML
             }
             setTab(tabKey)
+            requestAnimationFrame(() => {
+              if (editorRef.current) {
+                editorRef.current.innerHTML = contentCache.current[tabKey] ?? (lesson
+                  ? (tabKey === 'content_en' ? lesson.content_en : tabKey === 'content_bn' ? (lesson.content_bn || '') : (lesson.code_en || ''))
+                  : '')
+              }
+            })
           }}>
             {tabKey === 'content_en' ? t.adminContentEn : tabKey === 'content_bn' ? t.adminContentBn : t.adminCode}
           </button>
@@ -254,7 +380,7 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
 
       {preview ? (
         <div className="ce-preview">
-          <div className="ce-preview-body" dangerouslySetInnerHTML={{ __html: placeholder }} />
+          <div className="ce-preview-body" dangerouslySetInnerHTML={{ __html: getContent() }} />
         </div>
       ) : (
         <>
@@ -296,6 +422,7 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
             {/* Media */}
             <button onClick={openImageModal} title="Image">🖼</button>
             <button onClick={openLinkModal} title="Link">🔗</button>
+            <button onClick={() => setModal('file')} title="Attach file">📎</button>
             <span className="ce-sep" />
 
             {/* Tools */}
@@ -303,45 +430,97 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
             <button onClick={() => execCmd('removeFormat')} title="Clear formatting">⌫</button>
             <button onClick={() => execCmd('undo')} title="Undo">↩</button>
             <button onClick={() => execCmd('redo')} title="Redo">↪</button>
+            <span className="ce-sep" />
+            <button onClick={enterReorderMode} title="Reorder blocks">⇅</button>
           </div>
 
-          <div
-            ref={editorRef}
-            className="ce-editor"
-            contentEditable
-            suppressContentEditableWarning
-            onKeyDown={handleKeyDown}
-            dangerouslySetInnerHTML={{ __html: placeholder }}
-          />
+          {reorder ? (
+            <div className="ce-reorder-panel">
+              {blocks.map((block, i) => (
+                <div key={i} className="ce-reorder-block">
+                  <div className="ce-reorder-controls">
+                    <button onClick={() => moveBlock(i, -1)} disabled={i === 0} title="Move up">▲</button>
+                    <span className="ce-reorder-num">{i + 1}</span>
+                    <button onClick={() => moveBlock(i, 1)} disabled={i === blocks.length - 1} title="Move down">▼</button>
+                  </div>
+                  <div className="ce-reorder-content">
+                    <div className="ce-reorder-tag">{block.replace(/<([^\s>]+).*/, '<$1>')}</div>
+                    <div className="ce-reorder-preview" dangerouslySetInnerHTML={{ __html: block }} />
+                  </div>
+                </div>
+              ))}
+              <button className="admin-action-btn primary" onClick={exitReorderMode} style={{ marginTop: '0.75rem' }}>
+                {language === 'bn' ? 'সম্পন্ন' : 'Done'}
+              </button>
+            </div>
+          ) : (
+            <div
+              key={editorKey}
+              ref={handleEditorRef}
+              className={`ce-editor${dragOver ? ' ce-editor-dragover' : ''}`}
+              contentEditable
+              suppressContentEditableWarning
+              onKeyDown={handleKeyDown}
+              onDragOver={e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; setDragOver(true) }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={e => { e.preventDefault(); setDragOver(false); handleFileDrop(e) }}
+            />
+          )}
+
         </>
       )}
 
       {/* Image Modal */}
       {modal === 'image' && (
-        <div className="ce-modal-overlay" onClick={() => setModal(null)}>
+        <div className="ce-modal-overlay" onClick={() => { if (!uploading) setModal(null) }}>
           <div className="ce-modal" onClick={e => e.stopPropagation()}>
             <div className="ce-modal-header">
               <h4>{language === 'bn' ? 'ছবি যোগ করুন' : 'Insert Image'}</h4>
-              <button className="ce-modal-close" onClick={() => setModal(null)}>✕</button>
+              <button className="ce-modal-close" onClick={() => { if (!uploading) setModal(null) }}>✕</button>
             </div>
             <div className="ce-modal-body">
-              <label>{language === 'bn' ? 'ছবির URL' : 'Image URL'}</label>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={e => setImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                autoFocus
-              />
-              <p className="ce-modal-hint">
-                {language === 'bn' ? 'ইমেজ URL দিন অথবা একটি ছবি সিলেক্ট করুন' : 'Enter an image URL'}
-              </p>
+              <div className="ce-image-tabs">
+                <label>
+                  <input type="radio" name="imageSrc" value="url" defaultChecked onChange={handleImageTabChange} />
+                  {language === 'bn' ? 'URL' : 'URL'}
+                </label>
+                <label>
+                  <input type="radio" name="imageSrc" value="upload" onChange={handleImageTabChange} />
+                  {language === 'bn' ? 'আপলোড' : 'Upload'}
+                </label>
+              </div>
+
+              {imageUrl !== '__upload__' ? (
+                <>
+                  <label style={{ marginTop: '0.75rem', display: 'block' }}>{language === 'bn' ? 'ছবির URL' : 'Image URL'}</label>
+                  <input
+                    type="url"
+                    value={imageUrl}
+                    onChange={e => setImageUrl(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    autoFocus
+                  />
+                </>
+              ) : (
+                <>
+                  <label style={{ marginTop: '0.75rem', display: 'block' }}>{language === 'bn' ? 'ছবি নির্বাচন করুন' : 'Choose Image'}</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => { const f = e.target.files?.[0]; if (f) uploadImage(f) }}
+                    disabled={uploading}
+                  />
+                  {uploading && <p className="ce-modal-hint">{language === 'bn' ? 'আপলোড হচ্ছে...' : 'Uploading...'}</p>}
+                </>
+              )}
             </div>
             <div className="ce-modal-footer">
-              <button className="admin-action-btn" onClick={() => setModal(null)}>{t.adminCancel}</button>
-              <button className="admin-action-btn primary" onClick={confirmImage} disabled={!imageUrl}>
-                {t.adminAdd}
-              </button>
+              <button className="admin-action-btn" onClick={() => { if (!uploading) setModal(null) }}>{t.adminCancel}</button>
+              {imageUrl !== '__upload__' && (
+                <button className="admin-action-btn primary" onClick={confirmImage} disabled={!imageUrl}>
+                  {t.adminAdd}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -424,6 +603,30 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
           </div>
         </div>
       )}
+      {/* File Attachment Modal */}
+      {modal === 'file' && (
+        <div className="ce-modal-overlay" onClick={() => { if (!fileUploading) setModal(null) }}>
+          <div className="ce-modal" onClick={e => e.stopPropagation()}>
+            <div className="ce-modal-header">
+              <h4>{language === 'bn' ? 'ফাইল সংযুক্ত করুন' : 'Attach File'}</h4>
+              <button className="ce-modal-close" onClick={() => { if (!fileUploading) setModal(null) }}>✕</button>
+            </div>
+            <div className="ce-modal-body">
+              <label style={{ marginTop: '0.75rem', display: 'block' }}>{language === 'bn' ? 'ফাইল নির্বাচন করুন (PDF, DOC, ইত্যাদি)' : 'Choose File (PDF, DOC, etc.)'}</label>
+              <input
+                type="file"
+                onChange={e => { const f = e.target.files?.[0]; if (f) uploadFile(f) }}
+                disabled={fileUploading}
+              />
+              {fileUploading && <p className="ce-modal-hint">{language === 'bn' ? 'আপলোড হচ্ছে...' : 'Uploading...'}</p>}
+            </div>
+            <div className="ce-modal-footer">
+              <button className="admin-action-btn" onClick={() => { if (!fileUploading) setModal(null) }}>{t.adminCancel}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

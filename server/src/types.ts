@@ -28,18 +28,9 @@ export interface SideMenu {
   is_active: boolean;
 }
 
-export interface SubSideMenu {
-  id: string;
-  side_menu_id: string;
-  label_en: string;
-  label_bn: string | null;
-  sort_order: number;
-  is_active: boolean;
-}
-
 export interface Lesson {
   id: string;
-  sub_side_menu_id: string;
+  side_menu_id: string;
   lesson_number: number;
   title_en: string;
   title_bn: string | null;
@@ -59,5 +50,4 @@ export interface DashboardStats {
   total_lessons: number;
   published_lessons: number;
   total_side_menus: number;
-  total_sub_menus: number;
 }

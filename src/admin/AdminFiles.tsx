@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { api, type ApiLesson, type ApiChapter } from './api'
 import type { Language } from '../types'
+import { translations } from '../data/translations'
 
 interface AdminFilesProps {
   language: Language
 }
 
 export default function AdminFiles({ language }: AdminFilesProps) {
+  const t = translations[language]
   const [chapters, setChapters] = useState<ApiChapter[]>([])
   const [lessons, setLessons] = useState<ApiLesson[]>([])
   const [loading, setLoading] = useState(true)
@@ -19,7 +21,7 @@ export default function AdminFiles({ language }: AdminFilesProps) {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <div className="admin-loading">Loading...</div>
+  if (loading) return <div className="admin-loading">{t.adminLoading}</div>
   if (error) return <div className="admin-error">{error}</div>
 
   const totalBn = lessons.filter(l => l.content_bn).length
@@ -28,7 +30,9 @@ export default function AdminFiles({ language }: AdminFilesProps) {
   return (
     <div>
       <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: 'var(--text-dim)' }}>
-        {lessons.length} lessons — {totalBn} bilingual, {totalCode} with code
+        {language === 'bn'
+          ? `${lessons.length}টি পাঠ — ${totalBn}টি দ্বিভাষিক, ${totalCode}টি কোড সহ`
+          : `${lessons.length} lessons — ${totalBn} bilingual, ${totalCode} with code`}
       </div>
       <div className="admin-grid">
         {chapters.map(ch => (
@@ -37,7 +41,7 @@ export default function AdminFiles({ language }: AdminFilesProps) {
               {ch.chapter_number}. {language === 'bn' && ch.title_bn ? ch.title_bn : ch.title_en}
             </h3>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
-              {lessons.length} lessons
+              {language === 'bn' ? `${lessons.length}টি পাঠ` : `${lessons.length} lessons`}
             </div>
           </div>
         ))}

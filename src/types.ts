@@ -46,23 +46,60 @@ export interface Translations {
   adminContent: string
   adminFiles: string
   adminBack: string
-}
-
-export interface AdminChapter {
-  id: string
-  title: string
-  titleBn?: string
-  order: number
-  lessons: AdminLesson[]
-}
-
-export interface AdminLesson {
-  id: string
-  title: string
-  titleBn?: string
-  level: string
-  lessonNumber: number
-  moduleId: number
+  adminLogout: string
+  adminStatistics: string
+  adminTotalChapters: string
+  adminSideMenus: string
+  adminTotalLessons: string
+  adminPublished: string
+  adminLoginTitle: string
+  adminLoginDesc: string
+  adminUsername: string
+  adminPassword: string
+  adminSignIn: string
+  adminSigningIn: string
+  adminLoginFailed: string
+  adminServerError: string
+  adminAdd: string
+  adminEdit: string
+  adminDelete: string
+  adminSave: string
+  adminCancel: string
+  adminCreate: string
+  adminView: string
+  adminSource: string
+  adminPub: string
+  adminUnpub: string
+  adminActions: string
+  adminSearch: string
+  adminConfirmDelete: string
+  adminLoading: string
+  adminBeginner: string
+  adminIntermediate: string
+  adminAdvanced: string
+  adminTitle: string
+  adminNumber: string
+  adminLevel: string
+  adminDescription: string
+  adminContentEn: string
+  adminContentBn: string
+  adminCode: string
+  adminChapter: string
+  adminMenu: string
+  adminAll: string
+  adminAllMenus: string
+  adminAllChapters: string
+  adminNewChapter: string
+  adminEditChapter: string
+  adminNewLesson: string
+  adminEditLesson: string
+  adminEditTitle: string
+  adminTitleEn: string
+  adminTitleBn: string
+  adminBengali: string
+  adminTakeawaysBn: string
+  adminSeeMore: string
+  adminBackEditor: string
 }
 
 export type Language = 'en' | 'bn'

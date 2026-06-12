@@ -11,24 +11,6 @@ router.get("/", async (_req, res) => {
   res.json(result.rows);
 });
 
-router.get("/with-sub", async (_req, res) => {
-  const menus = await pool.query("SELECT * FROM side_menus ORDER BY sort_order");
-  const subs = await pool.query("SELECT * FROM sub_side_menus ORDER BY sort_order");
-
-  const subMap: Record<string, any[]> = {};
-  for (const s of subs.rows) {
-    if (!subMap[s.side_menu_id]) subMap[s.side_menu_id] = [];
-    subMap[s.side_menu_id].push(s);
-  }
-
-  const result = menus.rows.map((m: any) => ({
-    ...m,
-    sub_menus: subMap[m.id] || [],
-  }));
-
-  res.json(result);
-});
-
 router.post("/", async (req: AuthRequest, res) => {
   const { chapter_id, label_en, label_bn, icon } = req.body;
   const { rows } = await pool.query(

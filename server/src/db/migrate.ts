@@ -46,22 +46,14 @@ CREATE TABLE IF NOT EXISTS side_menus (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Sub side menus
-CREATE TABLE IF NOT EXISTS sub_side_menus (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    side_menu_id UUID NOT NULL REFERENCES side_menus(id) ON DELETE CASCADE,
-    label_en VARCHAR(255) NOT NULL,
-    label_bn VARCHAR(255),
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
+-- Drop legacy tables and recreate with new schema
+DROP TABLE IF EXISTS lessons CASCADE;
+DROP TABLE IF EXISTS sub_side_menus CASCADE;
 
--- Lessons
+-- Lessons (linked directly to side_menus)
 CREATE TABLE IF NOT EXISTS lessons (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    sub_side_menu_id UUID NOT NULL REFERENCES sub_side_menus(id) ON DELETE CASCADE,
+    side_menu_id UUID NOT NULL REFERENCES side_menus(id) ON DELETE CASCADE,
     lesson_number INTEGER NOT NULL CHECK (lesson_number > 0),
     title_en VARCHAR(255) NOT NULL,
     title_bn VARCHAR(255),
@@ -76,7 +68,7 @@ CREATE TABLE IF NOT EXISTS lessons (
     is_published BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    UNIQUE (sub_side_menu_id, lesson_number)
+    UNIQUE (side_menu_id, lesson_number)
 );
 
 -- Uploaded files metadata
@@ -95,8 +87,7 @@ CREATE INDEX IF NOT EXISTS idx_chapters_published ON chapters(is_published) WHER
 CREATE INDEX IF NOT EXISTS idx_chapters_sort ON chapters(sort_order);
 CREATE INDEX IF NOT EXISTS idx_side_menus_chapter ON side_menus(chapter_id);
 CREATE INDEX IF NOT EXISTS idx_side_menus_active ON side_menus(is_active) WHERE is_active = true;
-CREATE INDEX IF NOT EXISTS idx_sub_side_menus_menu ON sub_side_menus(side_menu_id);
-CREATE INDEX IF NOT EXISTS idx_lessons_sub_menu ON lessons(sub_side_menu_id);
+CREATE INDEX IF NOT EXISTS idx_lessons_side_menu ON lessons(side_menu_id);
 CREATE INDEX IF NOT EXISTS idx_lessons_published ON lessons(is_published) WHERE is_published = true;
 `;
 

@@ -287,7 +287,7 @@ export default function AdminContent({ language }: AdminContentProps) {
               {preview.content_bn && <><h4>{t.adminContentBn}</h4><pre>{preview.content_bn}</pre></>}
               {preview.code_en && <><h4>{t.adminCode}</h4><pre className="admin-code-block">{preview.code_en}</pre></>}
               <h4>{t.keyTakeaways}</h4>
-              <ul>{preview.takeaways_en.map((t, i) => <li key={i}>{t}</li>)}</ul>
+              <ul>{(preview.takeaways_en || []).map((t, i) => <li key={i}>{t}</li>)}</ul>
               {preview.takeaways_bn?.length ? <><h4>{t.adminTakeawaysBn}</h4><ul>{preview.takeaways_bn.map((t, i) => <li key={i}>{t}</li>)}</ul></> : null}
             </div>
           </div>
