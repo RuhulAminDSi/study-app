@@ -29,7 +29,7 @@ export default function AdminLessons({ language }: AdminLessonsProps) {
   useEffect(() => {
     Promise.all([api.chapters.list(), api.menus.list(), api.lessons.list()])
       .then(([ch, me, le]) => { setChapters(ch); setMenus(me); setLessons(le) })
-      .catch(e => setError(e.message))
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
@@ -211,6 +211,7 @@ export default function AdminLessons({ language }: AdminLessonsProps) {
                   return (
                     <div key={sm.id} className="sm-group">
                       <div className="sm-label">{language === 'bn' && sm.label_bn ? sm.label_bn : sm.label_en} <span className="count-badge sm-count">{smLessons.length}</span></div>
+                      <div className="lesson-sub-table-wrapper">
                       <table className="lesson-sub-table">
                         <tbody>
                           {smLessons.map(l => (
@@ -229,6 +230,7 @@ export default function AdminLessons({ language }: AdminLessonsProps) {
                           ))}
                         </tbody>
                       </table>
+                      </div>
                     </div>
                   )
                 })}

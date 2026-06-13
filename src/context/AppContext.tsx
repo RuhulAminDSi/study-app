@@ -153,6 +153,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    const route = parseHash()
+    if (route.type !== 'public') return
     if (!state.loading && state.orderedLessons.length > 0) {
       const current = state.orderedLessons[state.currentIndex]
       if (current) {

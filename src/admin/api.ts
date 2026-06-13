@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:3001/api'
+const API_BASE = '/api'
 
 function getToken(): string {
   return localStorage.getItem('admin_token') || ''
@@ -40,6 +40,16 @@ export interface ApiSideMenu {
   icon: string | null
   sort_order: number
   is_active: boolean
+}
+
+export interface ApiUploadedFile {
+  id: string
+  original_name: string
+  storage_path: string
+  mime_type: string
+  file_size: number
+  uploaded_by: string | null
+  created_at: string
 }
 
 export interface ApiLesson {
@@ -98,6 +108,7 @@ export const api = {
       apiFetch<ApiLesson[]>('/lessons/swap-order', { method: 'POST', body: JSON.stringify({ id1, id2 }) }),
   },
   files: {
+    list: () => apiFetch<ApiUploadedFile[]>('/files'),
     upload: async (file: File) => {
       const form = new FormData()
       form.append('file', file)
@@ -107,7 +118,8 @@ export const api = {
         body: form,
       })
       if (!res.ok) throw new Error((await res.json()).error || 'Upload failed')
-      return res.json() as Promise<{ id: string; storage_path: string; original_name: string }>
+      return res.json() as Promise<ApiUploadedFile>
     },
+    delete: (id: string) => apiFetch<{ deleted: boolean }>(`/files/${id}`, { method: 'DELETE' }),
   },
 }

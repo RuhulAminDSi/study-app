@@ -26,7 +26,7 @@ export default function AdminContent({ language }: AdminContentProps) {
   useEffect(() => {
     Promise.all([api.chapters.list(), api.menus.list(), api.lessons.list()])
       .then(([ch, me, le]) => { setChapters(ch); setMenus(me); setLessons(le) })
-      .catch(e => setError(e.message))
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
@@ -130,6 +130,7 @@ export default function AdminContent({ language }: AdminContentProps) {
                   <span className="count-badge">{chLessons.length}</span>
                 </div>
                 {isOpen && (
+                  <div className="lesson-sub-table-wrapper">
                   <table className="lesson-sub-table">
                     <tbody>
                       {chLessons.map(l => {
@@ -167,6 +168,7 @@ export default function AdminContent({ language }: AdminContentProps) {
                       })}
                     </tbody>
                   </table>
+                  </div>
                 )}
               </div>
             )

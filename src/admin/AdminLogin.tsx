@@ -55,11 +55,12 @@ export default function AdminLogin({ onLogin }: LoginProps) {
       alignItems: 'center',
       justifyContent: 'center',
       background: 'var(--bg-main)',
+      padding: '1rem',
     }}>
       <div style={{
         width: '100%',
         maxWidth: '400px',
-        padding: '2.5rem',
+        padding: 'clamp(1.5rem, 5vw, 2.5rem)',
         background: 'var(--bg-card)',
         border: '1px solid var(--border)',
         borderRadius: '16px',

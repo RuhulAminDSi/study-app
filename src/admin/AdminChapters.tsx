@@ -25,7 +25,7 @@ export default function AdminChapters({ language }: AdminChaptersProps) {
   useEffect(() => {
     api.chapters.list()
       .then(setChapters)
-      .catch(e => setError(e.message))
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
@@ -53,10 +53,10 @@ export default function AdminChapters({ language }: AdminChaptersProps) {
   }
 
   if (loading) return <div className="admin-loading">{t.adminLoading}</div>
-  if (error) return <div className="admin-error">{error}</div>
 
   return (
     <div>
+      {error && <div className="admin-error" style={{ marginBottom: 8, cursor: 'pointer' }} onClick={() => setError('')}>{error} ✕</div>}
       <div className="table-toolbar">
         <input className="search-input" placeholder={t.adminSearch} value={tbl.search} onChange={e => tbl.setSearch(e.target.value)} />
         <button className="admin-action-btn primary" onClick={openCreate}>+ {t.adminAdd}</button>

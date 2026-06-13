@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, type ReactNode } from 'react'
 
 interface AuthUser {
   id: string
@@ -24,33 +24,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return raw ? JSON.parse(raw) : null
   })
 
+  const persistToken = (t: string | null) => {
+    if (t) localStorage.setItem('admin_token', t)
+    else localStorage.removeItem('admin_token')
+  }
+  const persistUser = (u: AuthUser | null) => {
+    if (u) localStorage.setItem('admin_user', JSON.stringify(u))
+    else localStorage.removeItem('admin_user')
+  }
+
   const login = (newToken: string, newUser: AuthUser) => {
+    persistToken(newToken)
+    persistUser(newUser)
     setToken(newToken)
     setUser(newUser)
   }
 
   const logout = () => {
+    persistToken(null)
+    persistUser(null)
     setToken(null)
     setUser(null)
-    localStorage.removeItem('admin_token')
-    localStorage.removeItem('admin_user')
   }
-
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem('admin_token', token)
-    } else {
-      localStorage.removeItem('admin_token')
-    }
-  }, [token])
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('admin_user', JSON.stringify(user))
-    } else {
-      localStorage.removeItem('admin_user')
-    }
-  }, [user])
 
   return (
     <AuthContext.Provider value={{ token, user, isAuthenticated: !!token, login, logout }}>

@@ -45,6 +45,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
   const [lessons, setLessons] = useState<ApiLesson[]>([])
   const [menus, setMenus] = useState<ApiSideMenu[]>([])
   const [loading, setLoading] = useState(true)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
     navigate(`admin/${view === 'dashboard' ? '' : view}`)
@@ -78,7 +79,42 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
           <div
             key={item.key}
             className={`admin-nav-item ${view === item.key ? 'active' : ''}`}
-            onClick={() => setView(item.key)}
+            onClick={() => { setView(item.key); setMobileOpen(false) }}
+          >
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+            </svg>
+            <span className="admin-nav-label">{t[labelKey[item.key]]}</span>
+          </div>
+        ))}
+        <div className="admin-nav-spacer" />
+        <div
+          className="admin-nav-item admin-logout-item"
+          onClick={() => { auth.logout(); navigate(''); }}
+        >
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span className="admin-nav-label">{t.adminLogout}</span>
+        </div>
+        <button className="admin-mobile-toggle" onClick={() => setMobileOpen(p => !p)}>
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+          </svg>
+        </button>
+      </div>
+
+      <div className={`admin-mobile-overlay ${mobileOpen ? 'open' : ''}`} onClick={() => setMobileOpen(false)} />
+      <div className={`admin-mobile-nav ${mobileOpen ? 'open' : ''}`}>
+        <div className="admin-mobile-nav-header">
+          <span className="admin-logo">{t.studyHub}</span>
+          <button className="admin-mobile-close" onClick={() => setMobileOpen(false)}>✕</button>
+        </div>
+        {navItems.map(item => (
+          <div
+            key={item.key}
+            className={`admin-nav-item ${view === item.key ? 'active' : ''}`}
+            onClick={() => { setView(item.key); setMobileOpen(false) }}
           >
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
@@ -102,7 +138,12 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
       <div className="admin-main">
         <div className="admin-header">
           <h2>{t[headerTitle[view]]}</h2>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <button className="admin-mobile-hamburger" onClick={() => setMobileOpen(p => !p)}>
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
             <button className="admin-action-btn sm" onClick={() => dispatch({ type: 'SET_LANGUAGE', language: appState.language === 'en' ? 'bn' : 'en' })}>
               {appState.language === 'en' ? 'বাং' : 'EN'}
             </button>

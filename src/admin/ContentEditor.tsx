@@ -141,6 +141,8 @@ export default function ContentEditor({ lesson, language, onBack, isNew, chapter
       StarterKit.configure({
         heading: false,
         codeBlock: false,
+        link: false,
+        underline: false,
       }),
       AnchorHeading.configure({ levels: [1, 2, 3, 4] }),
       Underline,
