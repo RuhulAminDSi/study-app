@@ -21,6 +21,17 @@ describe("parseImportText", () => {
     expect(() => parseImportText("csv", HEADER + "\nDBMS,T,mcq,2,Q,\uFFFD\uFFFD,A,,B,,,,A,,,,,\n")).toThrow(expect.objectContaining({ code: "encoding" }));
   });
 
+  it("rejects Bangla columns that Excel's ANSI save turned into question marks", () => {
+    // Real bytes from Excel SaveAs xlCSV (format 6) of a sheet containing "কোন NF": ",??? NF"
+    const ansi = "subject_code,type,stem_en,stem_bn,option_a_en,option_a_bn,option_b_en,correct\r\nDBMS,mcq,Which NF?,??? NF,1NF,??NF,3NF,B\r\n";
+    expect(() => parseImportText("csv", ansi)).toThrow(expect.objectContaining({ code: "encoding" }));
+  });
+
+  it("still accepts a question mark inside genuine Bangla text", () => {
+    const ok = "subject_code,type,stem_en,stem_bn,option_a_en,option_b_en,correct\nDBMS,mcq,Which NF?,কোন NF ব্যবহার হয়??,1NF,3NF,B\n";
+    expect(parseImportText("csv", ok)).toHaveLength(1);
+  });
+
   it("rejects unreadable JSON", () => {
     expect(() => parseImportText("json", "{not json")).toThrow(expect.objectContaining({ code: "file_unreadable" }));
     expect(() => parseImportText("json", '{"a":1}')).toThrow(expect.objectContaining({ code: "file_unreadable" }));

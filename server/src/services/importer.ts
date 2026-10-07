@@ -27,12 +27,35 @@ export interface ImportDraft {
 }
 export interface ImportReport { total: number; valid: number; duplicates: number; problems: ImportProblem[]; drafts: ImportDraft[] }
 
+const BENGALI = /[ঀ-৿]/;
+const ENCODING_MESSAGE = 'The file is not UTF-8, so Bangla text was lost. In Excel use "Save as → CSV UTF-8".';
+
+/**
+ * Excel's plain "CSV (Comma delimited)" save writes every Bangla character as "?".
+ * A Bangla column holding "??" but no Bengali letter is that damage, not real text.
+ */
+function assertBanglaSurvived(rows: Record<string, unknown>[]) {
+  for (const row of rows) {
+    for (const [key, value] of Object.entries(row)) {
+      if (key.endsWith("_bn") && typeof value === "string" && /\?{2,}/.test(value) && !BENGALI.test(value)) {
+        throw new ImportFileError("encoding", ENCODING_MESSAGE);
+      }
+    }
+  }
+}
+
 /** Turns the uploaded text into row objects keyed by lower-case column name. */
 export function parseImportText(format: ImportFormat, content: string): Record<string, unknown>[] {
+  const rows = parseRows(format, content);
+  assertBanglaSurvived(rows);
+  return rows;
+}
+
+function parseRows(format: ImportFormat, content: string): Record<string, unknown>[] {
   const body = content.replace(/^\uFEFF/, "");
   // U+FFFD is what Bangla becomes when Excel saves "CSV (Comma delimited)" in a non-UTF-8 code page.
   if (body.includes("\uFFFD")) {
-    throw new ImportFileError("encoding", 'The file is not UTF-8, so Bangla text was lost. In Excel use "Save as → CSV UTF-8".');
+    throw new ImportFileError("encoding", ENCODING_MESSAGE);
   }
   if (format === "json") {
     let data: unknown;
