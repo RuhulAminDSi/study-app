@@ -7,11 +7,25 @@ function notifyIfUnauthorized(res: Response) {
   if (res.status === 401) window.dispatchEvent(new Event(ADMIN_UNAUTHORIZED_EVENT))
 }
 
+/** An admin API failure with the server's machine-readable code and per-field codes. */
+export class AdminApiError extends Error {
+  status: number
+  code?: string
+  fields: Record<string, string>
+
+  constructor(status: number, body: { error?: string; code?: string; fields?: Record<string, string> }) {
+    super(body.error || 'API request failed')
+    this.status = status
+    this.code = body.code ?? (status >= 500 ? 'internal_error' : undefined)
+    this.fields = body.fields ?? {}
+  }
+}
+
 function getToken(): string {
   return localStorage.getItem('admin_token') || ''
 }
 
-async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
@@ -23,7 +37,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   if (!res.ok) {
     notifyIfUnauthorized(res)
     const err = await res.json().catch(() => ({ error: res.statusText }))
-    throw new Error(err.error || 'API request failed')
+    throw new AdminApiError(res.status, err)
   }
   return res.json()
 }
