@@ -1,18 +1,29 @@
 import { useState, useEffect } from 'react'
 
-type RouteType = 'public' | 'admin' | 'login'
+type RouteType = 'public' | 'admin' | 'login' | 'candidate-login' | 'candidate-signup'
 
 export interface RouteInfo {
   type: RouteType
   chapterId?: string
   lessonId?: string
   adminView?: string
+  next?: string
 }
 
 const UUID_PATTERN = /[a-fA-F0-9-]{36}/
+/** `next` may only name an in-app hash path (letters, digits, / _ -). */
+const SAFE_NEXT = /^[a-z0-9/_-]*$/i
 
 export function parseHash(): RouteInfo {
   const hash = window.location.hash.replace(/^#\//, '')
+  const [path, query = ''] = hash.split('?')
+  if (path === 'login' || path === 'signup') {
+    const next = new URLSearchParams(query).get('next') ?? undefined
+    return {
+      type: path === 'login' ? 'candidate-login' : 'candidate-signup',
+      next: next && SAFE_NEXT.test(next) ? next : undefined,
+    }
+  }
   const adminMatch = hash.match(/^admin\/(.+)/)
   if (adminMatch) {
     const sub = adminMatch[1]

@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useEffect, type Dispatch, type ReactNode } from 'react'
 import type { Language, Theme } from '../types'
 import type { PublicChapter, PublicSideMenu, PublicLesson } from '../public/publicApi'
-import { fetchPublishedChapters, fetchActiveMenus, fetchLessonsByMenu } from '../public/publicApi'
+import { fetchPublishedChapters, fetchActiveMenus, fetchPublishedLessons } from '../public/publicApi'
 import { parseHash, navigateToLesson } from '../router'
 
 export interface OrderedLesson {
@@ -24,10 +24,15 @@ interface AppState {
   theme: Theme
   searchQuery: string
   loading: boolean
+  /** True when the last attempt to load public content failed (server unreachable or erroring). */
+  loadFailed: boolean
+  /** Incremented by RETRY_LOAD to re-run the initial content fetch. */
+  loadAttempt: number
 }
 
 type AppAction =
-  | { type: 'INIT'; chapters: PublicChapter[]; menus: PublicSideMenu[]; orderedLessons: OrderedLesson[]; currentIndex: number }
+  | { type: 'INIT'; chapters: PublicChapter[]; menus: PublicSideMenu[]; orderedLessons: OrderedLesson[]; currentIndex: number; loadFailed: boolean }
+  | { type: 'RETRY_LOAD' }
   | { type: 'GO_TO'; index: number }
   | { type: 'TOGGLE_CHAPTER'; chapterId: string }
   | { type: 'TOGGLE_SIDEBAR' }
@@ -41,6 +46,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case 'INIT':
       return { ...state, ...action, loading: false }
+    case 'RETRY_LOAD':
+      return { ...state, loading: true, loadFailed: false, loadAttempt: state.loadAttempt + 1 }
     case 'GO_TO':
       return { ...state, currentIndex: action.index }
     case 'TOGGLE_CHAPTER':
@@ -75,6 +82,8 @@ function createInitialState(): AppState {
     theme: 'dark',
     searchQuery: '',
     loading: true,
+    loadFailed: false,
+    loadAttempt: 0,
   }
 }
 
@@ -120,16 +129,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function loadData() {
       try {
-        const [chapters, menus] = await Promise.all([
+        // Three requests in parallel; buildOrderedLessons keeps only lessons whose menu is active
+        // and whose chapter is published.
+        const [chapters, menus, allLessons] = await Promise.all([
           fetchPublishedChapters(),
           fetchActiveMenus(),
+          fetchPublishedLessons(),
         ])
-
-        const allLessons: PublicLesson[] = []
-        for (const menu of menus) {
-          const lessons = await fetchLessonsByMenu(menu.id)
-          allLessons.push(...lessons)
-        }
 
         const orderedLessons = buildOrderedLessons(chapters, menus, allLessons)
 
@@ -142,15 +148,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
           if (idx >= 0) currentIndex = idx
         }
 
-        dispatch({ type: 'INIT', chapters, menus, orderedLessons, currentIndex })
+        dispatch({ type: 'INIT', chapters, menus, orderedLessons, currentIndex, loadFailed: false })
       } catch (err) {
         console.error('Failed to load public data:', err)
-        dispatch({ type: 'INIT', chapters: [], menus: [], orderedLessons: [], currentIndex: 0 })
+        dispatch({ type: 'INIT', chapters: [], menus: [], orderedLessons: [], currentIndex: 0, loadFailed: true })
       }
     }
 
     loadData()
-  }, [])
+  }, [state.loadAttempt])
 
   useEffect(() => {
     const route = parseHash()

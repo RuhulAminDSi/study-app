@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext'
 import { translations } from '../data/translations'
 import { renderContent } from './ContentRenderer'
 import { navigateToLesson } from '../router'
+import ContentStatus from './ContentStatus'
 
 export default function MainContent() {
   const state = useApp()
@@ -38,10 +39,8 @@ export default function MainContent() {
     })
   })
 
-  if (state.loading || state.orderedLessons.length === 0) return null
-
   const current = state.orderedLessons[state.currentIndex]
-  if (!current) return null
+  if (state.loading || state.loadFailed || !current) return <ContentStatus />
 
   const lesson = current.lesson
   const lessonTitle = state.language === 'bn' && lesson.title_bn ? lesson.title_bn : lesson.title_en

@@ -54,6 +54,11 @@ export function fetchActiveMenus(): Promise<PublicSideMenu[]> {
   return publicFetch<PublicSideMenu[]>('/menus')
 }
 
+/** Every published lesson in one request; callers group them by side menu. */
+export function fetchPublishedLessons(): Promise<PublicLesson[]> {
+  return publicFetch<PublicLesson[]>('/lessons/published')
+}
+
 export function fetchLessonsByMenu(menuId: string): Promise<PublicLesson[]> {
   return publicFetch<PublicLesson[]>(`/lessons/by-menu/${menuId}`)
 }

@@ -1,7 +1,9 @@
 import { useApp, useAppDispatch } from '../context/AppContext'
 import { translations } from '../data/translations'
-import { navigateToLesson } from '../router'
+import { navigate, navigateToLesson } from '../router'
 import { useEffect } from 'react'
+import { useCandidateAuth } from '../candidate/CandidateAuthContext'
+import '../candidate/candidate.css'
 
 interface NavbarProps {
   onAdminClick: () => void
@@ -11,6 +13,7 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
   const state = useApp()
   const dispatch = useAppDispatch()
   const t = translations[state.language]
+  const candidateAuth = useCandidateAuth()
 
   useEffect(() => {
     document.documentElement.classList.toggle('light-theme', state.theme === 'light')
@@ -55,7 +58,15 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
         <button className="language-toggle" onClick={() => dispatch({ type: 'SET_LANGUAGE', language: state.language === 'en' ? 'bn' : 'en' })}>
           {state.language === 'en' ? 'বাং' : 'EN'}
         </button>
-        <button className="language-toggle" onClick={onAdminClick} title="Admin">
+        {candidateAuth.candidate ? (
+          <>
+            <span className="navbar-user" title={candidateAuth.candidate.email}>{candidateAuth.candidate.fullName}</span>
+            <button className="language-toggle" onClick={candidateAuth.signOut}>{t.signOut}</button>
+          </>
+        ) : (
+          <button className="language-toggle" onClick={() => navigate('login')}>{t.signIn}</button>
+        )}
+        <button className="language-toggle navbar-admin-btn" onClick={onAdminClick} title="Admin">
           Admin
         </button>
       </div>

@@ -100,6 +100,48 @@ export interface Translations {
   adminTakeawaysBn: string
   adminSeeMore: string
   adminBackEditor: string
+  signIn: string
+  signUp: string
+  signOut: string
+  signingIn: string
+  candidateLoginTitle: string
+  candidateLoginDesc: string
+  candidateSignupTitle: string
+  candidateSignupDesc: string
+  fullName: string
+  email: string
+  phoneOptional: string
+  password: string
+  confirmPassword: string
+  createAccount: string
+  creatingAccount: string
+  noAccountYet: string
+  haveAccount: string
+  passwordsDontMatch: string
+  genericServerError: string
+  errRequired: string
+  errFixFields: string
+  errNameLength: string
+  errEmailInvalid: string
+  errEmailTaken: string
+  errPasswordShort: string
+  errPasswordLong: string
+  errPhoneInvalid: string
+  errPostUnknown: string
+  errBadCredentials: string
+  errTooManyAttempts: string
+  errInternal: string
+  errAccountInactive: string
+  loadingLessons: string
+  loadFailedTitle: string
+  loadFailedDesc: string
+  retry: string
+  noLessonsTitle: string
+  noLessonsDesc: string
+  backToLessons: string
+  showPassword: string
+  hidePassword: string
+  passwordHint: string
 }
 
 export type Language = 'en' | 'bn'

@@ -1,5 +1,12 @@
 const API_BASE = '/api'
 
+/** Fired when the server rejects the admin token (expired, or issued before token kinds existed). */
+export const ADMIN_UNAUTHORIZED_EVENT = 'admin:unauthorized'
+
+function notifyIfUnauthorized(res: Response) {
+  if (res.status === 401) window.dispatchEvent(new Event(ADMIN_UNAUTHORIZED_EVENT))
+}
+
 function getToken(): string {
   return localStorage.getItem('admin_token') || ''
 }
@@ -14,6 +21,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     },
   })
   if (!res.ok) {
+    notifyIfUnauthorized(res)
     const err = await res.json().catch(() => ({ error: res.statusText }))
     throw new Error(err.error || 'API request failed')
   }
@@ -117,7 +125,10 @@ export const api = {
         headers: { Authorization: `Bearer ${getToken()}` },
         body: form,
       })
-      if (!res.ok) throw new Error((await res.json()).error || 'Upload failed')
+      if (!res.ok) {
+        notifyIfUnauthorized(res)
+        throw new Error((await res.json()).error || 'Upload failed')
+      }
       return res.json() as Promise<ApiUploadedFile>
     },
     delete: (id: string) => apiFetch<{ deleted: boolean }>(`/files/${id}`, { method: 'DELETE' }),
