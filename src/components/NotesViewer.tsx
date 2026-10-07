@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import type { KeyboardEvent } from 'react'
 import { useApp } from '../context/AppContext'
 import { translations } from '../data/translations'
 
@@ -77,15 +76,6 @@ export default function NotesViewer({ slug, lang, title }: Props) {
     return () => { alive = false }
   }, [base])
 
-  const tabs: Tab[] = ['notes', 'pdf']
-  const tabId = (k: Tab) => `${id}-tab-${k}`
-  const onTabKey = (e: KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return
-    e.preventDefault()
-    const next: Tab = tab === 'notes' ? 'pdf' : 'notes'
-    setTab(next)
-    document.getElementById(tabId(next))?.focus()
-  }
   const openPage = (page: number) => {
     setPdfPage(page)
     setDetailsOpen(false)
@@ -106,28 +96,21 @@ export default function NotesViewer({ slug, lang, title }: Props) {
           <span className="nv-eyebrow"><PenIcon />{t.notesBadge}</span>
           <h2 className="nv-title">{title}</h2>
         </div>
-        <div className="nv-tabs" role="tablist" aria-label={t.notesViewsLabel}>
-          {tabs.map(k => (
-            <button
-              key={k}
-              id={tabId(k)}
-              type="button"
-              role="tab"
-              className="nv-tab"
-              aria-selected={tab === k}
-              aria-controls={`${id}-panel-${k}`}
-              tabIndex={tab === k ? 0 : -1}
-              onClick={() => setTab(k)}
-              onKeyDown={onTabKey}
-            >
-              {k === 'notes' ? <><NotebookIcon />{t.notesTabNotes}</> : <><FileIcon />{t.notesTabPdf}</>}
-            </button>
-          ))}
+        <div className="nv-toolbar" aria-label={t.notesViewsLabel}>
+          <button type="button" className="nv-tab" aria-pressed={tab === 'notes'} onClick={() => setTab('notes')}>
+            <NotebookIcon />{t.notesTabNotes}
+          </button>
+          <a className="nv-btn" href={`${base}.html?view=web`} target="_blank" rel="noopener"><ExternalIcon />{t.noteNewTab}</a>
+          <button type="button" className="nv-tab" aria-pressed={tab === 'pdf'} onClick={() => setTab('pdf')}>
+            <FileIcon />{t.notesTabPdf}
+          </button>
+          <a className="nv-btn" href={`${base}.pdf`} target="_blank" rel="noopener"><ExternalIcon />{t.handwrittenNewTab}</a>
+          <a className="nv-btn nv-btn-primary" href={`${base}.note.pdf`} download={`${slug}.${lang}.note.pdf`}><DownloadIcon />{t.noteDownload}</a>
         </div>
       </header>
 
       {tab === 'notes' ? (
-        <div className="nv-panel" role="tabpanel" id={`${id}-panel-notes`} aria-labelledby={tabId('notes')}>
+        <div className="nv-panel">
           <iframe
             ref={webRef}
             className="nv-frame nv-web"
@@ -139,7 +122,7 @@ export default function NotesViewer({ slug, lang, title }: Props) {
           />
         </div>
       ) : (
-        <div className="nv-panel" role="tabpanel" id={`${id}-panel-pdf`} aria-labelledby={tabId('pdf')}>
+        <div className="nv-panel">
           <div className="nv-bar">
             <div className="nv-file">
               <span className="nv-file-icon" aria-hidden="true">PDF</span>
@@ -158,7 +141,6 @@ export default function NotesViewer({ slug, lang, title }: Props) {
               >
                 <InfoIcon />{t.pdfDetails}
               </button>
-              <a className="nv-btn" href={`${base}.pdf`} target="_blank" rel="noopener"><ExternalIcon />{t.pdfOpenNewTab}</a>
               <a className="nv-btn nv-btn-primary" href={`${base}.pdf`} download={fileName}><DownloadIcon />{t.pdfDownload}</a>
             </div>
           </div>

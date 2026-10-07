@@ -277,6 +277,9 @@ export interface Translations {
   pdfContents: string
   pdfGoToPage: string
   pdfPageShort: string
+  noteNewTab: string
+  handwrittenNewTab: string
+  noteDownload: string
 }
 
 export type Language = 'en' | 'bn'

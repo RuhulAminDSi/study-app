@@ -3,6 +3,7 @@
 //   public/notes/<slug>/<slug>.<lang>.html|pdf|md          the note set
 //   public/notes/<slug>/<slug>.<lang>.json                 metadata for the in-app viewer (pages, size, contents …)
 //   public/notes/<slug>/<slug>.<lang>.cover.jpg            first sheet, used as the PDF thumbnail
+//   public/notes/<slug>/<slug>.<lang>.note.pdf             the typed note (web view) as a PDF, for "Download note"
 // The published HTML gets fit.js injected (scales A4 sheets to narrow screens; print unaffected).
 // Only sources that have a rendered PDF are published. Usage: node notes/build/publish.mjs
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -54,6 +55,18 @@ async function inspect(browser, htmlFile, coverFile) {
   }
 }
 
+/** The typed note (the published page in ?view=web mode) printed to an A4 PDF for "Download note". */
+async function printTypedNote(browser, publishedHtml, outFile) {
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${pathToFileURL(publishedHtml).href}?view=web`, { waitUntil: 'load' });
+    await page.evaluate(() => document.fonts.ready);
+    await page.pdf({ path: outFile, format: 'A4', printBackground: true, margin: { top: '14mm', bottom: '14mm', left: '14mm', right: '14mm' } });
+  } finally {
+    await page.close();
+  }
+}
+
 rmSync(join(out, 'assets'), { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 cpSync(join(root, 'assets'), join(out, 'assets'), { recursive: true });
@@ -80,6 +93,8 @@ try {
     if (existsSync(md)) copyFileSync(md, join(dest, `${name}.md`));
 
     const info = await inspect(browser, src, join(dest, `${name}.cover.jpg`));
+    const notePdf = join(dest, `${name}.note.pdf`);
+    await printTypedNote(browser, join(dest, file), notePdf);
     const pdfStat = statSync(pdf);
     const meta = {
       slug, lang,
@@ -87,6 +102,7 @@ try {
       pages: info.pages,
       format: 'A4',
       pdfBytes: pdfStat.size,
+      notePdfBytes: statSync(notePdf).size,
       updated: pdfStat.mtime.toISOString(),
       contents: info.contents,
     };
