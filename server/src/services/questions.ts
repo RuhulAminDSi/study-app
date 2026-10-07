@@ -96,6 +96,15 @@ export async function insertQuestion(db: Db, q: QuestionWrite, opts: { source: Q
 export async function updateQuestion(db: Db, id: string, q: QuestionWrite): Promise<boolean> {
   const current = await db.query("SELECT source FROM questions WHERE id = $1", [id]);
   if (!current.rows[0]) return false;
+  // Options are matched by position. Once candidates have answered, removing one would shift the
+  // later options onto other rows and change what their saved answers point to.
+  const answered = ((await db.query("SELECT 1 FROM attempt_questions WHERE question_id = $1 LIMIT 1", [id])).rowCount ?? 0) > 0;
+  if (answered) {
+    const existing = (await db.query("SELECT count(*)::int AS n FROM question_options WHERE question_id = $1", [id])).rows[0].n;
+    if (q.options.length < existing) {
+      throw new QuestionConflictError("has_attempts", "Candidates have answered this question, so its options can't be removed. Edit their text instead, or unpublish it.");
+    }
+  }
   const untagged: QuestionSource = current.rows[0].source === "past_paper" ? "original" : current.rows[0].source;
   const source: QuestionSource = q.exam_tag_ids.length ? "past_paper" : untagged;
   try {

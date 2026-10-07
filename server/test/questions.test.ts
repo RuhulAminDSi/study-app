@@ -97,6 +97,23 @@ describe("PUT /api/questions/:id", () => {
     expect(res.body.options).toHaveLength(2);
   });
 
+  it("refuses to remove options once candidates have answered, but still allows text fixes", async () => {
+    const created = (await auth(api().post("/api/questions")).send(mcqBody())).body;
+    const attempt = await pool.query("INSERT INTO attempts (candidate_id, mode) VALUES ($1, 'practice') RETURNING id", [await insertCandidate()]);
+    await pool.query(
+      "INSERT INTO attempt_questions (attempt_id, question_id, position, option_order, selected_option_id) VALUES ($1, $2, 1, '{1,2,3,4}', $3)",
+      [attempt.rows[0].id, created.id, created.options[3].id],
+    );
+    const fewer = await auth(api().put(`/api/questions/${created.id}`)).send(mcqBody({ options: [
+      { text_en: "1NF", is_correct: false }, { text_en: "3NF", is_correct: true }, { text_en: "BCNF", is_correct: false },
+    ] }));
+    expect(fewer.status).toBe(409);
+    expect(fewer.body.code).toBe("has_attempts");
+    const typoFix = await auth(api().put(`/api/questions/${created.id}`)).send(mcqBody({ stem_bn: "সংশোধিত" }));
+    expect(typoFix.status).toBe(200);
+    expect(typoFix.body.options.map((o: { id: string }) => o.id)).toEqual(created.options.map((o: { id: string }) => o.id));
+  });
+
   it("returns 404 for an unknown id", async () => {
     expect((await auth(api().put("/api/questions/11111111-1111-1111-1111-111111111111")).send(mcqBody())).status).toBe(404);
     expect((await auth(api().get("/api/questions/not-a-uuid"))).status).toBe(404);
