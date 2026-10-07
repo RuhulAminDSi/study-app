@@ -56,3 +56,14 @@ export async function insertJobPost(title = "Assistant Programmer"): Promise<str
   );
   return rows[0].id;
 }
+export async function insertTopic(subjectId: string, name = "Normalization"): Promise<string> {
+  const { rows } = await pool.query("INSERT INTO topics (subject_id, name_en) VALUES ($1, $2) RETURNING id", [subjectId, name]);
+  return rows[0].id;
+}
+
+export async function insertExamTag(): Promise<string> {
+  const { rows } = await pool.query(
+    "INSERT INTO exam_tags (organization, post_en, year) VALUES ('Bangladesh Bank', 'Assistant Programmer', 2022) RETURNING id",
+  );
+  return rows[0].id;
+}

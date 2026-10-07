@@ -13,6 +13,8 @@ import lessonsRoutes from "./routes/lessons.js";
 import filesRoutes from "./routes/files.js";
 import dashboardRoutes from "./routes/dashboard.js";
 import { candidateAuthRouter, candidateMeRouter } from "./routes/candidateAuth.js";
+import { examTagsRouter, jobPostsRouter, subjectsRouter, topicsRouter, SUBJECT_SELECT, JOB_POST_SELECT } from "./routes/adminTaxonomy.js";
+import { UUID_RE } from "./validation/taxonomy.js";
 
 export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "authRateLimitMax">> = {}) {
   const settings = { ...config, ...overrides };
@@ -35,6 +37,10 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   app.use("/api/dashboard", adminRequired, dashboardRoutes);
   app.use("/api/candidate/auth", createAuthLimiter(settings.authRateLimitMax), candidateAuthRouter);
   app.use("/api/candidate/me", candidateRequired, candidateMeRouter);
+  app.use("/api/subjects", adminRequired, subjectsRouter);
+  app.use("/api/topics", adminRequired, topicsRouter);
+  app.use("/api/exam-tags", adminRequired, examTagsRouter);
+  app.use("/api/job-posts", adminRequired, jobPostsRouter);
 
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -48,7 +54,8 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
     });
   }
 
-  app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  // Express recognises an error handler by its four parameters, so _next must stay.
+  app.use((err: Error & { status?: number }, _req: express.Request, res: express.Response, _next: express.NextFunction) => { // eslint-disable-line @typescript-eslint/no-unused-vars
     console.error(err);
     const status = err.status || 500;
     if (status >= 500) {
@@ -91,6 +98,21 @@ function createPublicRouter() {
   }));
   router.get("/lessons/:id", asyncHandler(async (req, res) => {
     const result = await pool.query("SELECT * FROM lessons WHERE id = $1", [req.params.id]);
+    if (!result.rows[0]) { res.status(404).json({ error: "Not found" }); return; }
+    res.json(result.rows[0]);
+  }));
+  router.get("/subjects", asyncHandler(async (_req, res) => {
+    const result = await pool.query(`${SUBJECT_SELECT} ORDER BY s.sort_order, s.code`);
+    // question_count includes drafts, so the public list only exposes published_count.
+    res.json(result.rows.map(({ id, code, name_en, name_bn, category, chapter_id, chapter_number, sort_order, topic_count, published_count }) =>
+      ({ id, code, name_en, name_bn, category, chapter_id, chapter_number, sort_order, topic_count, published_count })));
+  }));
+  router.get("/job-posts", asyncHandler(async (_req, res) => {
+    res.json((await pool.query(`${JOB_POST_SELECT} WHERE p.is_published ORDER BY p.organization, p.title_en`)).rows);
+  }));
+  router.get("/job-posts/:id", asyncHandler(async (req, res) => {
+    if (!UUID_RE.test(req.params.id)) { res.status(404).json({ error: "Not found" }); return; }
+    const result = await pool.query(`${JOB_POST_SELECT} WHERE p.id = $1 AND p.is_published`, [req.params.id]);
     if (!result.rows[0]) { res.status(404).json({ error: "Not found" }); return; }
     res.json(result.rows[0]);
   }));
