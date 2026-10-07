@@ -44,6 +44,10 @@ export default function MainContent() {
 
   const lesson = current.lesson
   const lessonTitle = state.language === 'bn' && lesson.title_bn ? lesson.title_bn : lesson.title_en
+  const lessonContent = state.language === 'bn' && lesson.content_bn ? lesson.content_bn : lesson.content_en
+  // Notes lessons (handwritten/typed note viewer) carry everything in the notes; no takeaways card.
+  const isNotesLesson = lessonContent.includes('class="hn-viewer"')
+  const takeaways = (state.language === 'bn' && lesson.takeaways_bn ? lesson.takeaways_bn : lesson.takeaways_en) || []
   const isFirst = state.currentIndex === 0
   const isLast = state.currentIndex === state.orderedLessons.length - 1
 
@@ -77,17 +81,19 @@ export default function MainContent() {
         </div>
 
         <div className="content-rendered" ref={contentRef}>
-          {renderContent(state.language === 'bn' && lesson.content_bn ? lesson.content_bn : lesson.content_en)}
+          {renderContent(lessonContent)}
         </div>
 
-        <div className="takeaways-card">
-          <h3 className="takeaways-title">{t.keyTakeaways}</h3>
-          <ul className="bullet-list">
-            {(state.language === 'bn' && lesson.takeaways_bn ? lesson.takeaways_bn : lesson.takeaways_en || []).map((takeaway, i) => (
-              <li key={i}>{takeaway}</li>
-            ))}
-          </ul>
-        </div>
+        {!isNotesLesson && takeaways.length > 0 && (
+          <div className="takeaways-card">
+            <h3 className="takeaways-title">{t.keyTakeaways}</h3>
+            <ul className="bullet-list">
+              {takeaways.map((takeaway, i) => (
+                <li key={i}>{takeaway}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {lesson.code_en && (
           <div className="code-block">
