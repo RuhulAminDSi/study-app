@@ -44,13 +44,15 @@ const lesson = async (title: string) =>
   (await pool.query("SELECT lesson_number, content_en, content_bn, code_en, takeaways_en, is_published FROM lessons WHERE title_en = $1", [title])).rows;
 
 describe("viewerHtml", () => {
-  it("frames the published page for the requested language and links PDF, page and Markdown", () => {
+  it("shows the notebook page by default with PDF and full-page buttons, and no Markdown button", () => {
     const html = viewerHtml(replaceEntry, "bn");
     expect(html.startsWith("<div")).toBe(true); // rendered as HTML, not by the legacy parser
     expect(html).toContain('data-notes="dld-logic-gates"');
-    expect(html).toContain('src="/notes/dld-logic-gates/dld-logic-gates.bn.html"');
+    expect(html).toContain('<iframe class="hn-viewer-frame" src="/notes/dld-logic-gates/dld-logic-gates.bn.html"');
     expect(html).toContain('href="/notes/dld-logic-gates/dld-logic-gates.bn.pdf" download');
-    expect(html).toContain('href="/notes/dld-logic-gates/dld-logic-gates.bn.md"');
+    expect(html).toContain('href="/notes/dld-logic-gates/dld-logic-gates.bn.html" target="_blank"');
+    expect(html).not.toContain(".md");
+    expect(html).not.toContain("Markdown");
   });
 });
 

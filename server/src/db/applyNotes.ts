@@ -25,16 +25,19 @@ export interface NotesResult {
   reason?: string;
 }
 
-const LABELS: Record<Lang, { pdf: string; open: string; md: string }> = {
-  en: { pdf: "Download PDF", open: "Open full page", md: "Markdown" },
-  bn: { pdf: "PDF ডাউনলোড", open: "পূর্ণ পৃষ্ঠায় খুলুন", md: "Markdown" },
+const LABELS: Record<Lang, { pdf: string; open: string }> = {
+  en: { pdf: "Download PDF", open: "Open full page" },
+  bn: { pdf: "PDF ডাউনলোড", open: "পূর্ণ পৃষ্ঠায় খুলুন" },
 };
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-/** Lesson body: a viewer that frames the published notes page (keeps its CSS and SVG ids isolated). */
+/**
+ * Lesson body: the notebook page is shown framed by default (keeps its CSS and SVG ids isolated),
+ * with "Download PDF" and "Open full page" buttons above it.
+ */
 export function viewerHtml(entry: NotesEntry, lang: Lang): string {
   const base = `/notes/${entry.slug}/${entry.slug}.${lang}`;
   const heading = escapeHtml(entry.heading[lang]);
@@ -44,8 +47,7 @@ export function viewerHtml(entry: NotesEntry, lang: Lang): string {
     `<div class="hn-viewer" data-notes="${entry.slug}" data-lang="${lang}"${kind}>` +
     `<div class="hn-viewer-bar"><span class="hn-viewer-title">${heading}</span>` +
     `<span class="hn-viewer-links"><a href="${base}.pdf" download>${l.pdf}</a>` +
-    `<a href="${base}.html" target="_blank" rel="noopener">${l.open}</a>` +
-    `<a href="${base}.md" target="_blank" rel="noopener">${l.md}</a></span></div>` +
+    `<a href="${base}.html" target="_blank" rel="noopener">${l.open}</a></span></div>` +
     `<iframe class="hn-viewer-frame" src="${base}.html" title="${heading}" loading="lazy"></iframe></div>`
   );
 }
