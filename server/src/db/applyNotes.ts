@@ -87,9 +87,11 @@ export async function applyNotes(
     }
     const lesson = (
       await db.query(
+        // Its own lesson (by marker) first, so an added lesson is still found after its title changes.
         `SELECT l.id, l.content_en, l.content_bn FROM lessons l JOIN side_menus m ON m.id = l.side_menu_id
-          WHERE m.chapter_id = $1 AND l.title_en = $2 ORDER BY m.sort_order, l.lesson_number LIMIT 1`,
-        [chapter.id, entry.lessonTitleEn],
+          WHERE m.chapter_id = $1 AND (l.title_en = $2 OR strpos(l.content_en, $3) > 0)
+          ORDER BY (strpos(l.content_en, $3) > 0) DESC, m.sort_order, l.lesson_number LIMIT 1`,
+        [chapter.id, entry.lessonTitleEn, `data-notes="${entry.slug}"`],
       )
     ).rows[0];
     const fields = [
@@ -110,9 +112,12 @@ export async function applyNotes(
       }
       await db.query(
         `UPDATE lessons SET content_en = $2, content_bn = $3, takeaways_en = $4, takeaways_bn = $5,
-                code_en = NULL, code_bn = NULL, updated_at = now()
+                code_en = NULL, code_bn = NULL, updated_at = now(),
+                title_en = CASE WHEN $6 THEN $7 ELSE title_en END,
+                title_bn = CASE WHEN $6 THEN COALESCE($8, title_bn) ELSE title_bn END
           WHERE id = $1`,
-        [lesson.id, ...fields],
+        // An added lesson belongs to the notes, so it follows the manifest title; a replaced one keeps its own.
+        [lesson.id, ...fields, entry.mode === "add", entry.lessonTitleEn, entry.lessonTitleBn ?? null],
       );
       results.push({ slug: entry.slug, action: managed ? "refreshed" : "replaced" });
       continue;

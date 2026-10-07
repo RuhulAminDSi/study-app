@@ -236,7 +236,7 @@ export const translation_bn: Translations = {
   errFileUnreadable: "ফাইলটি পড়া যায়নি। এটি সঠিক CSV বা JSON কিনা দেখুন।",
   errEncoding: "ফাইলটি UTF-8 নয়, তাই বাংলা লেখা নষ্ট হয়েছে। Excel-এ \"Save as → CSV UTF-8\" ব্যবহার করুন।",
   errChapterUnknown: "বিদ্যমান একটি অধ্যায় বাছাই করুন।",
-  notesBadge: "হাতে লেখা রিভিশন নোট",
+  notesBadge: "রিভিশন নোট",
   notesTabNotes: "নোট",
   notesTabPdf: "হাতে লেখা নোট",
   notesViewsLabel: "নোট দেখার ধরন",
@@ -260,5 +260,4 @@ export const translation_bn: Translations = {
   noteNewTab: "নোট নতুন ট্যাবে",
   handwrittenNewTab: "হাতে লেখা নোট নতুন ট্যাবে",
   noteDownload: "নোট ডাউনলোড",
-  noteTypedLabel: "টাইপ করা নোট",
 }

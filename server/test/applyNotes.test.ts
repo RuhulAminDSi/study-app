@@ -86,6 +86,15 @@ describe("applyNotes", () => {
     expect((await pool.query("SELECT count(*)::int AS n FROM lessons")).rows[0].n).toBe(3);
   });
 
+  it("finds its own added lesson after a rename and updates the title instead of adding another", async () => {
+    await seedModules(pool, modules);
+    await applyNotes(pool, [addEntry], modules);
+    const renamed = { ...addEntry, lessonTitleEn: "Revision Notes", lessonTitleBn: "রিভিশন নোট" };
+    expect(await applyNotes(pool, [renamed], modules)).toEqual([{ slug: "ch1-basic-physics", action: "refreshed" }]);
+    const { rows } = await pool.query("SELECT title_en, title_bn FROM lessons WHERE content_en LIKE '%data-notes=\"ch1-basic-physics\"%'");
+    expect(rows).toEqual([{ title_en: "Revision Notes", title_bn: "রিভিশন নোট" }]);
+  });
+
   it("adds a published lesson after the chapter's last lesson", async () => {
     await seedModules(pool, modules);
     expect(await applyNotes(pool, [addEntry], modules)).toEqual([{ slug: "ch1-basic-physics", action: "inserted" }]);

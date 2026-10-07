@@ -92,6 +92,10 @@ async function printTypedNote(browser, publishedHtml, outFile, coverFile) {
     await page.screenshot({ path: coverFile, type: 'jpeg', quality: 82 });
     // hw.css sets @page { margin: 0 } for the edge-to-edge handwritten sheets; the typed note needs real margins.
     await page.addStyleTag({ content: '@page { size: A4; margin: 14mm 14mm 16mm; }' });
+    // The PDF viewer shows the document title: name the note plainly (no "handwritten", no exam suffix).
+    await page.evaluate(() => {
+      document.title = document.title.replace(/\s*\([^)]*\)\s*$/, '').replace(/Handwritten /i, '').replace('হাতে লেখা ', '');
+    });
     const titles = await page.evaluate(() => {
       const clean = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.no, .tag').forEach((n) => n.remove()); return c.textContent.replace(/\s+/g, ' ').trim(); };
       const targets = [];

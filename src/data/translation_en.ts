@@ -236,7 +236,7 @@ export const translation_en: Translations = {
   errFileUnreadable: "The file could not be read. Check that it is a valid CSV or JSON file.",
   errEncoding: "The file is not UTF-8, so Bangla text was lost. In Excel use \"Save as → CSV UTF-8\".",
   errChapterUnknown: "Choose a chapter that exists.",
-  notesBadge: "Handwritten revision notes",
+  notesBadge: "Revision notes",
   notesTabNotes: "Note",
   notesTabPdf: "Handwritten note",
   notesViewsLabel: "Notes views",
@@ -260,5 +260,4 @@ export const translation_en: Translations = {
   noteNewTab: "Note in new tab",
   handwrittenNewTab: "Handwritten note in new tab",
   noteDownload: "Download note",
-  noteTypedLabel: "Typed note",
 }

@@ -45,27 +45,26 @@ const ChevronIcon = ({ open }: { open: boolean }) => (
 
 interface FileInfo {
   kind: View
-  label: string
   fileName: string
   href: string
   pages: number | null
   bytes: number | null
   cover: string
-  downloadLabel: string
   contents: { page: number | null; title: string }[]
 }
 
-/** One document (typed note or handwritten note): bar, details panel and embedded preview. */
-function DocumentView({ file, meta, lang, ui, t, title }: {
+/** One document (note or handwritten note): details panel (when open) and the embedded preview. */
+function DocumentView({ file, meta, lang, ui, t, title, detailsId, detailsOpen, closeDetails }: {
   file: FileInfo
   meta: NotesMeta | null
   lang: Lang
   ui: Lang
   t: Translations
   title: string
+  detailsId: string
+  detailsOpen: boolean
+  closeDetails: () => void
 }) {
-  const id = useId()
-  const [open, setOpen] = useState(false)
   const [page, setPage] = useState(1)
   const [coverOk, setCoverOk] = useState(true)
   const previewRef = useRef<HTMLDivElement>(null)
@@ -78,35 +77,15 @@ function DocumentView({ file, meta, lang, ui, t, title }: {
     ? new Date(meta.updated).toLocaleDateString(ui === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
     : null
   const openPage = (p: number) => {
-    setOpen(false)
+    closeDetails()
     setPage(p)
     requestAnimationFrame(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
   }
 
   return (
     <div className="nv-doc">
-      <div className="nv-bar">
-        <div className="nv-doc-id">
-          <span className={`nv-doc-badge nv-doc-badge--${file.kind}`} aria-hidden="true">
-            {file.kind === 'note' ? <DocIcon /> : <PenDocIcon />}
-          </span>
-          <span className="nv-doc-text">
-            <span className="nv-doc-label">{file.label}</span>
-            <span className="nv-doc-meta">
-              {pages && size ? <>PDF · {pages} {t.pdfPages} · {size}</> : 'PDF'}
-            </span>
-          </span>
-        </div>
-        <div className="nv-bar-actions">
-          <button type="button" className="nv-btn nv-btn-ghost" aria-expanded={open} aria-controls={`${id}-details`} onClick={() => setOpen(o => !o)}>
-            <InfoIcon /><span>{t.pdfDetails}</span><ChevronIcon open={open} />
-          </button>
-          <a className="nv-btn nv-btn-soft" href={file.href} download={file.fileName}><DownloadIcon /><span>{file.downloadLabel}</span></a>
-        </div>
-      </div>
-
-      {open && (
-        <div className="nv-details" id={`${id}-details`}>
+      {detailsOpen && (
+        <div className="nv-details" id={detailsId}>
           {coverOk && (
             <div className="nv-cover">
               <img src={file.cover} alt="" onError={() => setCoverOk(false)} />
@@ -117,7 +96,7 @@ function DocumentView({ file, meta, lang, ui, t, title }: {
               <div><dt>{t.pdfPages}</dt><dd>{pages ?? '—'}</dd></div>
               <div><dt>{t.pdfFileSize}</dt><dd>{size ?? '—'}</dd></div>
               <div><dt>{t.pdfLanguage}</dt><dd>{lang === 'bn' ? 'বাংলা' : 'English'}</dd></div>
-              <div><dt>{t.pdfFormat}</dt><dd>A4</dd></div>
+              <div><dt>{t.pdfFormat}</dt><dd>A4 · PDF</dd></div>
               <div><dt>{t.pdfUpdated}</dt><dd>{updated ?? '—'}</dd></div>
             </dl>
             {file.contents.length > 0 && (
@@ -147,7 +126,7 @@ function DocumentView({ file, meta, lang, ui, t, title }: {
           <div className="nv-fallback">
             {coverOk && <img src={file.cover} alt="" onError={() => setCoverOk(false)} />}
             <p>{t.pdfNoPreview}</p>
-            <a className="nv-btn nv-btn-primary" href={file.href} download={file.fileName}><DownloadIcon /><span>{file.downloadLabel}</span></a>
+            <a className="nv-btn nv-btn-primary" href={file.href} download={file.fileName}><DownloadIcon /><span>{t.noteDownload}</span></a>
           </div>
         )}
       </div>
@@ -156,13 +135,16 @@ function DocumentView({ file, meta, lang, ui, t, title }: {
 }
 
 /**
- * In-lesson viewer for a note set. "Note" (default) is the typed note; "Handwritten note" is the
- * handwritten notebook. Both are PDFs shown the same way: bar, details, download, embedded preview.
+ * In-lesson viewer for a note set: "Note" (default) and "Handwritten note", both PDFs shown the same way.
+ * Header controls: the two views (each with open-in-new-tab), Details and Download, which act on the
+ * view that is currently shown.
  */
 export default function NotesViewer({ slug, lang, title }: Props) {
   const { language: ui } = useApp()
   const t = translations[ui]
+  const detailsId = useId()
   const [view, setView] = useState<View>('note')
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const [meta, setMeta] = useState<NotesMeta | null>(null)
   const base = `/notes/${slug}/${slug}.${lang}`
 
@@ -178,28 +160,25 @@ export default function NotesViewer({ slug, lang, title }: Props) {
   const files: Record<View, FileInfo> = {
     note: {
       kind: 'note',
-      label: t.noteTypedLabel,
       fileName: `${slug}.${lang}.note.pdf`,
       href: `${base}.note.pdf`,
       pages: meta?.notePages ?? null,
       bytes: meta?.notePdfBytes ?? null,
       cover: `${base}.note.cover.jpg`,
-      downloadLabel: t.noteDownload,
       contents: meta?.noteContents ?? [],
     },
     handwritten: {
       kind: 'handwritten',
-      label: t.notesTabPdf,
       fileName: `${slug}.${lang}.pdf`,
       href: `${base}.pdf`,
       pages: meta?.pages ?? null,
       bytes: meta?.pdfBytes ?? null,
       cover: `${base}.cover.jpg`,
-      downloadLabel: t.pdfDownload,
       contents: meta?.contents ?? [],
     },
   }
-  const pages = meta?.notePages ?? meta?.pages
+  const current = files[view]
+  const pages = current.pages
   const updated = meta
     ? new Date(meta.updated).toLocaleDateString(ui === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
     : null
@@ -224,7 +203,7 @@ export default function NotesViewer({ slug, lang, title }: Props) {
           <h2 className="nv-title">{title}</h2>
           <ul className="nv-chips">
             {pages != null && <li>{localDigits(String(pages), ui)} {t.pdfPages}</li>}
-            <li>A4</li>
+            {current.bytes != null && <li>{megabytes(current.bytes, ui)}</li>}
             <li>{lang === 'bn' ? 'বাংলা' : 'English'}</li>
             {updated && <li>{t.pdfUpdated} {updated}</li>}
           </ul>
@@ -234,13 +213,33 @@ export default function NotesViewer({ slug, lang, title }: Props) {
             {segment('note', t.notesTabNotes, t.noteNewTab, <DocIcon />)}
             {segment('handwritten', t.notesTabPdf, t.handwrittenNewTab, <PenDocIcon />)}
           </div>
-          <a className="nv-btn nv-btn-primary" href={files.note.href} download={files.note.fileName}>
+          <button
+            type="button"
+            className="nv-btn nv-btn-ghost nv-btn-outline"
+            aria-expanded={detailsOpen}
+            aria-controls={detailsId}
+            onClick={() => setDetailsOpen(o => !o)}
+          >
+            <InfoIcon /><span>{t.pdfDetails}</span><ChevronIcon open={detailsOpen} />
+          </button>
+          <a className="nv-btn nv-btn-primary" href={current.href} download={current.fileName}>
             <DownloadIcon /><span>{t.noteDownload}</span>
           </a>
         </div>
       </header>
 
-      <DocumentView key={view} file={files[view]} meta={meta} lang={lang} ui={ui} t={t} title={title} />
+      <DocumentView
+        key={view}
+        file={current}
+        meta={meta}
+        lang={lang}
+        ui={ui}
+        t={t}
+        title={title}
+        detailsId={detailsId}
+        detailsOpen={detailsOpen}
+        closeDetails={() => setDetailsOpen(false)}
+      />
     </section>
   )
 }
