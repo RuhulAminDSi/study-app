@@ -1,17 +1,24 @@
 import { useEffect, useId, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import { useApp } from '../context/AppContext'
 import { translations } from '../data/translations'
+import type { Translations } from '../types'
 
-/** Written next to each published PDF by notes/build/publish.mjs. */
+/** Written next to each published note set by notes/build/publish.mjs. */
 interface NotesMeta {
   title: string
+  /** handwritten PDF */
   pages: number
   pdfBytes: number
+  /** typed note PDF ("Download note") */
+  notePages?: number
+  notePdfBytes?: number
+  noteContents?: { page: number | null; title: string }[]
   updated: string
   contents: { page: number; title: string }[]
 }
 
-type Tab = 'notes' | 'pdf'
+type View = 'note' | 'handwritten'
 type Lang = 'en' | 'bn'
 
 interface Props {
@@ -33,39 +40,134 @@ const DownloadIcon = () => <svg {...icon}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 
 const InfoIcon = () => <svg {...icon}><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
 const ExternalIcon = () => <svg {...icon}><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
 
+interface FileInfo {
+  fileName: string
+  href: string
+  pages: number | null
+  bytes: number | null
+  cover: string
+  downloadLabel: string
+}
+
+/** File bar + Details panel, identical for the typed note and the handwritten PDF. */
+function FileDetails({ file, meta, contents, title, lang, ui, t, onContents }: {
+  file: FileInfo
+  meta: NotesMeta | null
+  /** contents of this file, with page numbers in this file */
+  contents: { page: number | null; title: string }[]
+  title: string
+  lang: Lang
+  ui: Lang
+  t: Translations
+  onContents: (page: number) => void
+}) {
+  const id = useId()
+  const [open, setOpen] = useState(false)
+  const [coverOk, setCoverOk] = useState(true)
+  const pages = file.pages != null ? localDigits(String(file.pages), ui) : null
+  const size = file.bytes != null ? megabytes(file.bytes, ui) : null
+  const updated = meta
+    ? new Date(meta.updated).toLocaleDateString(ui === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null
+
+  return (
+    <>
+      <div className="nv-bar">
+        <div className="nv-file">
+          <span className="nv-file-icon" aria-hidden="true">PDF</span>
+          <span className="nv-file-text">
+            <span className="nv-file-name">{file.fileName}</span>
+            <span className="nv-file-meta">{pages && size ? `${pages} ${t.pdfPages} · ${size}` : '…'}</span>
+          </span>
+        </div>
+        <div className="nv-actions">
+          <button type="button" className="nv-btn" aria-expanded={open} aria-controls={`${id}-details`} onClick={() => setOpen(o => !o)}>
+            <InfoIcon />{t.pdfDetails}
+          </button>
+          <a className="nv-btn nv-btn-primary" href={file.href} download={file.fileName}><DownloadIcon />{file.downloadLabel}</a>
+        </div>
+      </div>
+      {open && (
+        <div className="nv-details" id={`${id}-details`}>
+          {coverOk && <img className="nv-cover-thumb" src={file.cover} alt="" onError={() => setCoverOk(false)} />}
+          <div className="nv-details-body">
+            <dl className="nv-meta">
+              <div><dt>{t.pdfTitle}</dt><dd>{meta?.title ?? title}</dd></div>
+              <div><dt>{t.pdfLanguage}</dt><dd>{lang === 'bn' ? 'বাংলা' : 'English'}</dd></div>
+              <div><dt>{t.pdfPages}</dt><dd>{pages ?? '—'}</dd></div>
+              <div><dt>{t.pdfFileSize}</dt><dd>{size ?? '—'}</dd></div>
+              <div><dt>{t.pdfFormat}</dt><dd>{t.pdfFormatValue}</dd></div>
+              <div><dt>{t.pdfUpdated}</dt><dd>{updated ?? '—'}</dd></div>
+            </dl>
+            {contents.length > 0 && (
+              <div className="nv-contents">
+                <h3>{t.pdfContents}</h3>
+                <ol>
+                  {contents.map((c, i) => (
+                    <li key={i}>
+                      <button type="button" onClick={() => { setOpen(false); onContents(c.page ?? 1) }} title={c.title}>
+                        <span>{c.title}</span>
+                        {c.page != null && <span className="nv-page">{t.pdfPageShort} {localDigits(String(c.page), ui)}</span>}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+/** Embedded PDF with its file bar and details; on phones without inline PDF support, the cover + download. */
+function PdfView({ file, contents, meta, title, lang, ui, t }: {
+  file: FileInfo
+  contents: { page: number | null; title: string }[]
+  meta: NotesMeta | null
+  title: string
+  lang: Lang
+  ui: Lang
+  t: Translations
+}) {
+  const [page, setPage] = useState(1)
+  const [coverOk, setCoverOk] = useState(true)
+  const previewRef = useRef<HTMLDivElement>(null)
+  // Phones (e.g. Chrome on Android) cannot render PDFs inside a page.
+  const canPreview = typeof navigator === 'undefined' || navigator.pdfViewerEnabled !== false
+  const openPage = (p: number) => {
+    setPage(p)
+    requestAnimationFrame(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
+  return (
+    <div className="nv-panel">
+      <FileDetails file={file} meta={meta} contents={contents} title={title} lang={lang} ui={ui} t={t} onContents={openPage} />
+      <div ref={previewRef} className="nv-preview">
+        {canPreview ? (
+          <iframe key={page} className="nv-frame nv-pdf" src={`${file.href}#page=${page}&view=FitH`} title={`${t.pdfPreviewTitle}: ${title}`} />
+        ) : (
+          <div className="nv-fallback">
+            {coverOk && <img src={file.cover} alt="" onError={() => setCoverOk(false)} />}
+            <p>{t.pdfNoPreview}</p>
+            <a className="nv-btn nv-btn-primary" href={file.href} download={file.fileName}><DownloadIcon />{file.downloadLabel}</a>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 /**
- * In-lesson viewer for a handwritten note set: the notebook is shown by default; the PDF tab has
- * an embedded preview, download, open-in-new-tab and a details panel (cover, facts, contents).
+ * In-lesson viewer for a note set. "Note" (default) is the typed note PDF; "Handwritten note" is the
+ * handwritten PDF. Both are shown the same way: embedded preview, file bar, details, download.
  */
 export default function NotesViewer({ slug, lang, title }: Props) {
   const { language: ui } = useApp()
   const t = translations[ui]
-  const id = useId()
-  const [tab, setTab] = useState<Tab>('notes')
-  const [detailsOpen, setDetailsOpen] = useState(false)
-  const [pdfPage, setPdfPage] = useState(1)
+  const [view, setView] = useState<View>('note')
   const [meta, setMeta] = useState<NotesMeta | null>(null)
-  const [coverOk, setCoverOk] = useState(true)
-  const previewRef = useRef<HTMLDivElement>(null)
-  // The Notes tab is a simple web page: the frame grows to the page's full height (no inner scrollbar).
-  const webRef = useRef<HTMLIFrameElement>(null)
-  const webObserver = useRef<ResizeObserver | null>(null)
-  const [webHeight, setWebHeight] = useState<number | null>(null)
-  const onWebLoad = () => {
-    const doc = webRef.current?.contentDocument
-    if (!doc) return
-    const measure = () => setWebHeight(doc.documentElement.scrollHeight)
-    measure()
-    webObserver.current?.disconnect()
-    webObserver.current = new ResizeObserver(measure)
-    webObserver.current.observe(doc.body)
-  }
-  useEffect(() => () => webObserver.current?.disconnect(), [])
-
   const base = `/notes/${slug}/${slug}.${lang}`
-  const fileName = `${slug}.${lang}.pdf`
-  // Phones (e.g. Chrome on Android) cannot render PDFs inside a page; they get the cover + download.
-  const canPreview = typeof navigator === 'undefined' || navigator.pdfViewerEnabled !== false
 
   useEffect(() => {
     let alive = true
@@ -76,18 +178,28 @@ export default function NotesViewer({ slug, lang, title }: Props) {
     return () => { alive = false }
   }, [base])
 
-  const openPage = (page: number) => {
-    setPdfPage(page)
-    setDetailsOpen(false)
-    requestAnimationFrame(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  const noteFile: FileInfo = {
+    fileName: `${slug}.${lang}.note.pdf`,
+    href: `${base}.note.pdf`,
+    pages: meta?.notePages ?? null,
+    bytes: meta?.notePdfBytes ?? null,
+    cover: `${base}.note.cover.jpg`,
+    downloadLabel: t.noteDownload,
+  }
+  const handwrittenFile: FileInfo = {
+    fileName: `${slug}.${lang}.pdf`,
+    href: `${base}.pdf`,
+    pages: meta?.pages ?? null,
+    bytes: meta?.pdfBytes ?? null,
+    cover: `${base}.cover.jpg`,
+    downloadLabel: t.pdfDownload,
   }
 
-  const pages = meta ? localDigits(String(meta.pages), ui) : null
-  const size = meta ? megabytes(meta.pdfBytes, ui) : null
-  const updated = meta
-    ? new Date(meta.updated).toLocaleDateString(ui === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-    : null
-  const cover = coverOk ? `${base}.cover.jpg` : null
+  const toggle = (v: View, label: string, glyph: ReactNode) => (
+    <button type="button" className="nv-tab" aria-pressed={view === v} onClick={() => setView(v)}>
+      {glyph}{label}
+    </button>
+  )
 
   return (
     <section className="nv" aria-label={title}>
@@ -97,102 +209,17 @@ export default function NotesViewer({ slug, lang, title }: Props) {
           <h2 className="nv-title">{title}</h2>
         </div>
         <div className="nv-toolbar" aria-label={t.notesViewsLabel}>
-          <button type="button" className="nv-tab" aria-pressed={tab === 'notes'} onClick={() => setTab('notes')}>
-            <NotebookIcon />{t.notesTabNotes}
-          </button>
-          <a className="nv-btn" href={`${base}.html?view=web`} target="_blank" rel="noopener"><ExternalIcon />{t.noteNewTab}</a>
-          <button type="button" className="nv-tab" aria-pressed={tab === 'pdf'} onClick={() => setTab('pdf')}>
-            <FileIcon />{t.notesTabPdf}
-          </button>
-          <a className="nv-btn" href={`${base}.pdf`} target="_blank" rel="noopener"><ExternalIcon />{t.handwrittenNewTab}</a>
-          <a className="nv-btn nv-btn-primary" href={`${base}.note.pdf`} download={`${slug}.${lang}.note.pdf`}><DownloadIcon />{t.noteDownload}</a>
+          {toggle('note', t.notesTabNotes, <NotebookIcon />)}
+          <a className="nv-btn" href={noteFile.href} target="_blank" rel="noopener"><ExternalIcon />{t.noteNewTab}</a>
+          {toggle('handwritten', t.notesTabPdf, <FileIcon />)}
+          <a className="nv-btn" href={handwrittenFile.href} target="_blank" rel="noopener"><ExternalIcon />{t.handwrittenNewTab}</a>
+          <a className="nv-btn nv-btn-primary" href={noteFile.href} download={noteFile.fileName}><DownloadIcon />{t.noteDownload}</a>
         </div>
       </header>
-
-      {tab === 'notes' ? (
-        <div className="nv-panel">
-          <iframe
-            ref={webRef}
-            className="nv-frame nv-web"
-            src={`${base}.html?view=web`}
-            title={title}
-            scrolling="no"
-            style={webHeight ? { height: webHeight } : undefined}
-            onLoad={onWebLoad}
-          />
-        </div>
+      {view === 'note' ? (
+        <PdfView key="note" file={noteFile} contents={meta?.noteContents ?? []} meta={meta} title={title} lang={lang} ui={ui} t={t} />
       ) : (
-        <div className="nv-panel">
-          <div className="nv-bar">
-            <div className="nv-file">
-              <span className="nv-file-icon" aria-hidden="true">PDF</span>
-              <span className="nv-file-text">
-                <span className="nv-file-name">{fileName}</span>
-                <span className="nv-file-meta">{pages && size ? `${pages} ${t.pdfPages} · ${size}` : '…'}</span>
-              </span>
-            </div>
-            <div className="nv-actions">
-              <button
-                type="button"
-                className="nv-btn"
-                aria-expanded={detailsOpen}
-                aria-controls={`${id}-details`}
-                onClick={() => setDetailsOpen(o => !o)}
-              >
-                <InfoIcon />{t.pdfDetails}
-              </button>
-              <a className="nv-btn nv-btn-primary" href={`${base}.pdf`} download={fileName}><DownloadIcon />{t.pdfDownload}</a>
-            </div>
-          </div>
-
-          {detailsOpen && (
-            <div className="nv-details" id={`${id}-details`}>
-              {cover && <img className="nv-cover-thumb" src={cover} alt="" onError={() => setCoverOk(false)} />}
-              <div className="nv-details-body">
-                <dl className="nv-meta">
-                  <div><dt>{t.pdfTitle}</dt><dd>{meta?.title ?? title}</dd></div>
-                  <div><dt>{t.pdfLanguage}</dt><dd>{lang === 'bn' ? 'বাংলা' : 'English'}</dd></div>
-                  <div><dt>{t.pdfPages}</dt><dd>{pages ?? '—'}</dd></div>
-                  <div><dt>{t.pdfFileSize}</dt><dd>{size ?? '—'}</dd></div>
-                  <div><dt>{t.pdfFormat}</dt><dd>{t.pdfFormatValue}</dd></div>
-                  <div><dt>{t.pdfUpdated}</dt><dd>{updated ?? '—'}</dd></div>
-                </dl>
-                {meta && meta.contents.length > 0 && (
-                  <div className="nv-contents">
-                    <h3>{t.pdfContents}</h3>
-                    <ol>
-                      {meta.contents.map((c, i) => (
-                        <li key={i}>
-                          <button type="button" onClick={() => openPage(c.page)} title={`${t.pdfGoToPage} ${localDigits(String(c.page), ui)}`}>
-                            <span>{c.title}</span>
-                            <span className="nv-page">{t.pdfPageShort} {localDigits(String(c.page), ui)}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div ref={previewRef} className="nv-preview">
-            {canPreview ? (
-              <iframe
-                key={pdfPage}
-                className="nv-frame nv-pdf"
-                src={`${base}.pdf#page=${pdfPage}&view=FitH`}
-                title={`${t.pdfPreviewTitle}: ${title}`}
-              />
-            ) : (
-              <div className="nv-fallback">
-                {cover && <img src={cover} alt="" onError={() => setCoverOk(false)} />}
-                <p>{t.pdfNoPreview}</p>
-                <a className="nv-btn nv-btn-primary" href={`${base}.pdf`} download={fileName}><DownloadIcon />{t.pdfDownload}</a>
-              </div>
-            )}
-          </div>
-        </div>
+        <PdfView key="handwritten" file={handwrittenFile} contents={meta?.contents ?? []} meta={meta} title={title} lang={lang} ui={ui} t={t} />
       )}
     </section>
   )

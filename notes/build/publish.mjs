@@ -4,8 +4,10 @@
 //   public/notes/<slug>/<slug>.<lang>.json                 metadata for the in-app viewer (pages, size, contents …)
 //   public/notes/<slug>/<slug>.<lang>.cover.jpg            first sheet, used as the PDF thumbnail
 //   public/notes/<slug>/<slug>.<lang>.note.pdf             the typed note (web view) as a PDF, for "Download note"
+//   public/notes/<slug>/<slug>.<lang>.note.cover.jpg       its first screen, for the Note details panel
 // The published HTML gets fit.js injected (scales A4 sheets to narrow screens; print unaffected).
 // Only sources that have a rendered PDF are published. Usage: node notes/build/publish.mjs
+import { spawnSync } from 'node:child_process';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -55,13 +57,66 @@ async function inspect(browser, htmlFile, coverFile) {
   }
 }
 
-/** The typed note (the published page in ?view=web mode) printed to an A4 PDF for "Download note". */
-async function printTypedNote(browser, publishedHtml, outFile) {
-  const page = await browser.newPage();
+/** Page number of each contents marker (NVSEC<i>X) in a PDF, read with Python + PyMuPDF if available. */
+function markerPages(pdfPath, count) {
+  const script = [
+    'import sys, json, re, fitz',
+    'd = fitz.open(sys.argv[1]); found = {}',
+    'for i, pg in enumerate(d):',
+    '    for m in re.findall("NVSEC([0-9]+)X", pg.get_text()):',
+    '        found.setdefault(int(m), i + 1)',
+    'print(json.dumps(found))',
+  ].join('\n');
+  for (const py of ['py', 'python3', 'python']) {
+    const r = spawnSync(py, ['-c', script, pdfPath], { encoding: 'utf8' });
+    if (r.status === 0) {
+      const found = JSON.parse(r.stdout);
+      return Array.from({ length: count }, (_, i) => found[i] ?? null);
+    }
+  }
+  console.warn('  (no Python/PyMuPDF: typed-note contents get no page numbers)');
+  return Array(count).fill(null);
+}
+
+/**
+ * The typed note (the published page in ?view=web mode) printed to an A4 PDF for the Note view and
+ * "Download note", plus a cover snap. Section page numbers come from a throwaway probe print with
+ * absolutely positioned markers (they cannot change pagination); the final print has no markers.
+ */
+async function printTypedNote(browser, publishedHtml, outFile, coverFile) {
+  const page = await browser.newPage({ viewport: { width: 794, height: 1123 } });
+  const pdfOptions = { format: 'A4', printBackground: true, margin: { top: '14mm', bottom: '14mm', left: '14mm', right: '14mm' } };
   try {
     await page.goto(`${pathToFileURL(publishedHtml).href}?view=web`, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
-    await page.pdf({ path: outFile, format: 'A4', printBackground: true, margin: { top: '14mm', bottom: '14mm', left: '14mm', right: '14mm' } });
+    await page.screenshot({ path: coverFile, type: 'jpeg', quality: 82 });
+    const titles = await page.evaluate(() => {
+      const clean = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.no, .tag').forEach((n) => n.remove()); return c.textContent.replace(/\s+/g, ' ').trim(); };
+      const targets = [];
+      document.querySelectorAll('section.page').forEach((sheet) => {
+        const heads = sheet.querySelectorAll('h2');
+        if (heads.length) heads.forEach((h) => targets.push(h)); else targets.push(sheet.querySelector('h1') ?? sheet);
+      });
+      return targets.map((t, i) => {
+        if (getComputedStyle(t).position === 'static') t.style.position = 'relative';
+        const m = document.createElement('span');
+        m.className = 'nv-marker';
+        m.textContent = `NVSEC${i}X`;
+        m.style.cssText = 'position:absolute;left:0;top:0;font-size:6px;line-height:1;color:#000;'; // probe print only
+        t.appendChild(m);
+        return clean(t).replace(/NVSEC\d+X/, '').trim();
+      });
+    });
+    const probe = `${outFile}.probe.pdf`;
+    await page.pdf({ path: probe, ...pdfOptions });
+    const pages = markerPages(probe, titles.length);
+    rmSync(probe, { force: true });
+    await page.evaluate(() => document.querySelectorAll('.nv-marker').forEach((m) => m.remove()));
+    const pdf = await page.pdf({ path: outFile, ...pdfOptions });
+    return {
+      pages: (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length,
+      contents: titles.map((title, i) => ({ page: pages[i], title })).filter((c) => c.title),
+    };
   } finally {
     await page.close();
   }
@@ -94,7 +149,7 @@ try {
 
     const info = await inspect(browser, src, join(dest, `${name}.cover.jpg`));
     const notePdf = join(dest, `${name}.note.pdf`);
-    await printTypedNote(browser, join(dest, file), notePdf);
+    const note = await printTypedNote(browser, join(dest, file), notePdf, join(dest, `${name}.note.cover.jpg`));
     const pdfStat = statSync(pdf);
     const meta = {
       slug, lang,
@@ -103,6 +158,8 @@ try {
       format: 'A4',
       pdfBytes: pdfStat.size,
       notePdfBytes: statSync(notePdf).size,
+      notePages: note.pages,
+      noteContents: note.contents,
       updated: pdfStat.mtime.toISOString(),
       contents: info.contents,
     };
