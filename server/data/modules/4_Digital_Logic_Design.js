@@ -74,7 +74,7 @@ const m4 = {
             title: "Combinational Circuits",
             titleBn: "কম্বিনেশনাল সার্কিট",
             content: "Combinational Circuits: Output depends only on current inputs. No memory.\n\nDesign Process:\n1. Identify inputs and outputs\n2. Create truth table\n3. Write Boolean expressions\n4. Simplify using K-maps or algebra\n5. Implement with gates\n\nCommon Circuits:\n• Adders: Half adder (sum, carry), Full adder (3 inputs)\n• Multiplexer (MUX): Selects one input from many\n• Demultiplexer (DEMUX): Routes input to one output\n• Encoder/Decoder, Comparator",
-            contentBn: "কম্বিনেশনাল সার্কিট: আউটপুট শুধুমাত্র বর্তমান ইনপুটের উপর নির্ভর করে। মেমোরি নেই।\n\nনকশা প্রক্রিয়া:\n১. ইনপুট ও আউটপুট চিহ্নিত করুন\n২. ট্রুথ টেবিল তৈরি করুন\n৩. বুলিয়ান প্রকাশ লিখুন\n৪. K-ম্যাপ বা বীজগণিত ব্যবহার করে সরল করুন\n৫. গেট দিয়ে বাস্তবায়ন করুন\n\nসাধারণ সার্কিট:\n• অ্যাডার: হাফ অ্যাডার (সাম, ক্যারি), ফুল অ্যাডার (৩ ইনপুট)\n• মাল্টিপ্লেক্সার (MUX): অনেক থেকে একটি ইনপুট নির্বাচন করে\n• ডিমাল্টিপ্লেক��সার (DEMUX): একটি আউটপুটে ইনপুট পথ তৈরি করে\n• এনকোডার/ডিকোডার, কম্পারেটর",
+            contentBn: "কম্বিনেশনাল সার্কিট: আউটপুট শুধুমাত্র বর্তমান ইনপুটের উপর নির্ভর করে। মেমোরি নেই।\n\nনকশা প্রক্রিয়া:\n১. ইনপুট ও আউটপুট চিহ্নিত করুন\n২. ট্রুথ টেবিল তৈরি করুন\n৩. বুলিয়ান প্রকাশ লিখুন\n৪. K-ম্যাপ বা বীজগণিত ব্যবহার করে সরল করুন\n৫. গেট দিয়ে বাস্তবায়ন করুন\n\nসাধারণ সার্কিট:\n• অ্যাডার: হাফ অ্যাডার (সাম, ক্যারি), ফুল অ্যাডার (৩ ইনপুট)\n• মাল্টিপ্লেক্সার (MUX): অনেক থেকে একটি ইনপুট নির্বাচন করে\n• ডিমাল্টিপ্লেক্সার (DEMUX): একটি আউটপুটে ইনপুট পথ তৈরি করে\n• এনকোডার/ডিকোডার, কম্পারেটর",
             code: "Half Adder:\nS = A ⊕ B\nC = A × B",
             takeaways: [
                 "Combinational circuits have no memory",
@@ -107,7 +107,7 @@ const m4 = {
                 "সিকোয়েনশিয়াল সার্কিটের মেমোরি আছে (ফ্লিপ-ফ্লপ)",
                 "ফ্লিপ-ফ্লপ ক্লক এজে ট্রিগার করে",
                 "কাউন্টার ও রেজিস্টার ডেটা সংরক্ষণ করে",
-                "স্টেট মেশিন সিকোয়ে��শ��য়াল আচরণ মডেল করে"
+                "স্টেট মেশিন সিকোয়েনশিয়াল আচরণ মডেল করে"
             ],
             level: "Advanced"
         }
