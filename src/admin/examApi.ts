@@ -32,7 +32,7 @@ export interface QuestionList { items: ApiQuestionListItem[]; total: number; pag
 export type QuestionPayload = Omit<ApiQuestion, 'id' | 'subject_code' | 'topic_name' | 'source' | 'updated_at' | 'marks'>
 export interface QuestionListParams { subject_id?: string; type?: string; published?: string; q?: string; page?: number; pageSize?: number }
 export interface ImportProblem { row: number; field: string; code: string }
-export interface ImportReport { total: number; valid: number; duplicates: number; problems: ImportProblem[]; imported?: number }
+export interface ImportReport { total: number; valid: number; duplicates: number; duplicateRows: number[]; problems: ImportProblem[]; imported?: number }
 
 const json = (method: string, body: unknown): RequestInit => ({ method, body: JSON.stringify(body) })
 

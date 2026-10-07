@@ -25,7 +25,7 @@ export interface ImportDraft {
   question: Omit<QuestionWrite, "topic_id" | "exam_tag_ids" | "is_published">;
   hash: string;
 }
-export interface ImportReport { total: number; valid: number; duplicates: number; problems: ImportProblem[]; drafts: ImportDraft[] }
+export interface ImportReport { total: number; valid: number; duplicates: number; duplicateRows: number[]; problems: ImportProblem[]; drafts: ImportDraft[] }
 
 const BENGALI = /[ঀ-৿]/;
 const ENCODING_MESSAGE = 'The file is not UTF-8, so Bangla text was lost. In Excel use "Save as → CSV UTF-8".';
@@ -141,15 +141,18 @@ export function rowToDraft(raw: Record<string, unknown>, row: number, subjectsBy
   };
 }
 
-/** Validates every row against the subjects table and finds duplicates (in the bank or repeated in the file). */
-export async function validateImport(db: Db, rows: Record<string, unknown>[]): Promise<ImportReport> {
+/**
+ * Validates every row against the subjects table and finds duplicates (in the bank or repeated in the file).
+ * `firstRow` is the number of the first data row as the admin sees it: 2 for a CSV (row 1 is the header).
+ */
+export async function validateImport(db: Db, rows: Record<string, unknown>[], firstRow = 1): Promise<ImportReport> {
   const subjects = new Map<string, string>(
     (await db.query("SELECT id, code FROM subjects")).rows.map((r) => [String(r.code).toUpperCase(), r.id]),
   );
   const problems: ImportProblem[] = [];
   const candidates: ImportDraft[] = [];
   rows.forEach((raw, i) => {
-    const result = rowToDraft(raw, i + 1, subjects);
+    const result = rowToDraft(raw, i + firstRow, subjects);
     problems.push(...result.problems);
     if (result.draft) candidates.push(result.draft);
   });
@@ -160,13 +163,13 @@ export async function validateImport(db: Db, rows: Record<string, unknown>[]): P
   );
   const seen = new Set<string>();
   const drafts: ImportDraft[] = [];
-  let duplicates = 0;
+  const duplicateRows: number[] = [];
   for (const d of candidates) {
-    if (existing.has(d.hash) || seen.has(d.hash)) { duplicates++; continue; }
+    if (existing.has(d.hash) || seen.has(d.hash)) { duplicateRows.push(d.row); continue; }
     seen.add(d.hash);
     drafts.push(d);
   }
-  return { total: rows.length, valid: drafts.length, duplicates, problems, drafts };
+  return { total: rows.length, valid: drafts.length, duplicates: duplicateRows.length, duplicateRows, problems, drafts };
 }
 
 /** Inserts validated drafts (call inside a transaction). Returns the number inserted. */

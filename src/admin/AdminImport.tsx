@@ -61,7 +61,8 @@ export default function AdminImport({ language }: { language: Language }) {
       <div className="imp-actions">
         <label className="admin-action-btn imp-file-label">
           {t.impChooseFile}
-          <input id="imp-file" type="file" accept=".csv,.json,text/csv,application/json" onChange={e => pick(e.target.files?.[0])} />
+          <input id="imp-file" type="file" accept=".csv,.json,text/csv,application/json"
+            onChange={e => { pick(e.target.files?.[0]); e.target.value = '' /* lets the same, corrected file be picked again */ }} />
         </label>
         <span className="imp-file-name">{file?.name ?? ''}</span>
         <button className="admin-action-btn primary" onClick={() => run(true)} disabled={!file || busy !== null}>{busy === 'check' ? t.impChecking : t.impCheck}</button>
@@ -79,6 +80,9 @@ export default function AdminImport({ language }: { language: Language }) {
             <div className="imp-stat"><strong>{report.duplicates}</strong><span>{t.impDuplicates}</span></div>
             <div className={`imp-stat${new Set(report.problems.map(p => p.row)).size ? ' bad' : ''}`}><strong>{new Set(report.problems.map(p => p.row)).size}</strong><span>{t.impProblems}</span></div>
           </div>
+          {report.duplicateRows.length > 0 && (
+            <p className="imp-dup-rows">{t.impDuplicates} — {t.impRow}: {report.duplicateRows.join(', ')}</p>
+          )}
           {report.problems.length > 0 && (
             <div className="admin-data-table-container">
               <table className="admin-data-table imp-problems">

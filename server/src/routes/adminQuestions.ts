@@ -73,8 +73,8 @@ adminQuestionsRouter.post("/import", asyncHandler<AuthRequest>(async (req, res) 
     if (err instanceof ImportFileError) { res.status(400).json({ error: err.message, code: err.code }); return; }
     throw err;
   }
-  const report = await validateImport(pool, rows);
-  const summary = { total: report.total, valid: report.valid, duplicates: report.duplicates, problems: report.problems };
+  const report = await validateImport(pool, rows, format === "csv" ? 2 : 1);
+  const summary = { total: report.total, valid: report.valid, duplicates: report.duplicates, duplicateRows: report.duplicateRows, problems: report.problems };
   if (dryRun !== false) { res.json(summary); return; }
   const imported = await withTransaction((client) =>
     commitImport(client, report.drafts, { source: "imported", publish: false, createdBy: req.user?.id ?? null }));

@@ -23,7 +23,11 @@ export default function AdminQuestions({ language }: { language: Language }) {
 
   const load = useCallback(() => {
     examApi.questions.list({ ...filters, page, pageSize: PAGE_SIZE })
-      .then(d => { setData(d); setSelected(new Set()) })
+      .then(d => {
+        // Publishing or deleting the last rows of the last page: step back to a page that has rows.
+        if (d.items.length === 0 && d.total > 0 && page > 1) { setPage(Math.ceil(d.total / PAGE_SIZE)); return }
+        setData(d); setSelected(new Set()); setError('')
+      })
       .catch(e => setError(e instanceof AdminApiError ? adminErrorText(t, e.code, e.message) : String(e)))
   }, [filters, page, t])
 

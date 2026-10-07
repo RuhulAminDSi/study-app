@@ -86,7 +86,7 @@ describe("POST /api/questions/import", () => {
   it("dry run reports counts and problems without writing anything", async () => {
     const res = await post({ format: "csv", content: csv, dryRun: true });
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ total: 5, valid: 3, duplicates: 1, problems: [{ row: 4, field: "correct", code: "correct_invalid" }] });
+    expect(res.body).toEqual({ total: 5, valid: 3, duplicates: 1, duplicateRows: [6], problems: [{ row: 5, field: "correct", code: "correct_invalid" }] });
     expect((await pool.query("SELECT count(*)::int AS n FROM questions")).rows[0].n).toBe(0);
   });
 
