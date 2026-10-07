@@ -85,11 +85,13 @@ function markerPages(pdfPath, count) {
  */
 async function printTypedNote(browser, publishedHtml, outFile, coverFile) {
   const page = await browser.newPage({ viewport: { width: 794, height: 1123 } });
-  const pdfOptions = { format: 'A4', printBackground: true, margin: { top: '14mm', bottom: '14mm', left: '14mm', right: '14mm' } };
+  const pdfOptions = { format: 'A4', printBackground: true, preferCSSPageSize: true };
   try {
     await page.goto(`${pathToFileURL(publishedHtml).href}?view=web`, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ path: coverFile, type: 'jpeg', quality: 82 });
+    // hw.css sets @page { margin: 0 } for the edge-to-edge handwritten sheets; the typed note needs real margins.
+    await page.addStyleTag({ content: '@page { size: A4; margin: 14mm 14mm 16mm; }' });
     const titles = await page.evaluate(() => {
       const clean = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.no, .tag').forEach((n) => n.remove()); return c.textContent.replace(/\s+/g, ' ').trim(); };
       const targets = [];
