@@ -67,6 +67,38 @@ describe("seedExamPrep", () => {
     expect((await pool.query("SELECT count(*)::int AS n FROM job_posts WHERE exam_pattern_en = 'Edited pattern'")).rows[0].n).toBe(3);
   });
 
+  it("never brings back seeded content that an admin edited, deleted or renamed", async () => {
+    const ch = await pool.query("INSERT INTO chapters (chapter_number, title_en, level, is_published) VALUES (16, 'DB', 'Beginner', true) RETURNING id");
+    const menu = await pool.query("INSERT INTO side_menus (chapter_id, label_en) VALUES ($1, 'DB') RETURNING id", [ch.rows[0].id]);
+    await pool.query("INSERT INTO lessons (side_menu_id, lesson_number, title_en, content_en, level) VALUES ($1, 1, 'Database Concepts & Data Models (ER, Relational)', 'x', 'Beginner')", [menu.rows[0].id]);
+    await seedExamPrep(pool, dir);
+
+    // An admin fixes the English text (this changes the content hash), renames a post and a topic.
+    await pool.query("UPDATE questions SET stem_en = 'What is the full form of DBMS?'");
+    await pool.query("UPDATE job_posts SET title_en = 'Assistant Programmer (renamed)' WHERE organization = 'BPSC'");
+    await pool.query("UPDATE topics SET name_en = 'Renamed topic'");
+    expect(await seedExamPrep(pool, dir)).toEqual({ subjects: 0, topics: 0, jobPosts: 0, mockTests: 0, questions: 0 });
+    expect((await pool.query("SELECT count(*)::int AS n FROM questions")).rows[0].n).toBe(1);
+    expect((await pool.query("SELECT count(*)::int AS n FROM job_posts")).rows[0].n).toBe(3);
+    expect((await pool.query("SELECT count(*)::int AS n FROM topics")).rows[0].n).toBe(1);
+
+    // An admin deletes the seeded question and a seeded subject.
+    await pool.query("DELETE FROM questions");
+    await pool.query("DELETE FROM subjects WHERE code = 'GK'");
+    expect(await seedExamPrep(pool, dir)).toEqual({ subjects: 0, topics: 0, jobPosts: 0, mockTests: 0, questions: 0 });
+    expect((await pool.query("SELECT count(*)::int AS n FROM questions")).rows[0].n).toBe(0);
+    expect((await pool.query("SELECT count(*)::int AS n FROM subjects WHERE code = 'GK'")).rows[0].n).toBe(0);
+  });
+
+  it("adopts content seeded before the ledger existed instead of duplicating it", async () => {
+    await seedExamPrep(pool, dir);
+    await pool.query("DELETE FROM seed_ledger"); // a database seeded by the first version of the seed
+    expect(await seedExamPrep(pool, dir)).toEqual({ subjects: 0, topics: 0, jobPosts: 0, mockTests: 0, questions: 0 });
+    await pool.query("UPDATE questions SET stem_en = 'Edited after adoption?'");
+    expect((await seedExamPrep(pool, dir)).questions).toBe(0);
+    expect((await pool.query("SELECT count(*)::int AS n FROM questions")).rows[0].n).toBe(1);
+  });
+
   it("refuses to seed a content file with invalid rows and names the file and row", async () => {
     fs.writeFileSync(path.join(dir, "NET.json"), JSON.stringify([{ subject_code: "NET", type: "mcq", stem_en: "Bad", option_a_en: "A", option_b_en: "B", correct: "Q" }]));
     await expect(seedExamPrep(pool, dir)).rejects.toThrow(/NET\.json row 1: correct correct_invalid/);

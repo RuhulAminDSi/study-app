@@ -3,7 +3,7 @@ import path from "path";
 import type { Pool, PoolClient } from "pg";
 import { pool } from "./pool.js";
 import { withTransaction } from "./tx.js";
-import { commitImport, parseImportText, validateImport } from "../services/importer.js";
+import { commitImport, parseImportText, rowToDraft } from "../services/importer.js";
 
 type Db = Pool | PoolClient;
 
@@ -66,6 +66,17 @@ export function apportion(weights: number[], total: number): number[] {
   return parts;
 }
 
+type SeedKind = "subject" | "topic" | "job_post" | "question";
+
+/** True when the seed created (or adopted) this row on an earlier run — never create it again. */
+async function seededBefore(db: Db, kind: SeedKind, key: string): Promise<boolean> {
+  return ((await db.query("SELECT 1 FROM seed_ledger WHERE kind = $1 AND key = $2", [kind, key])).rowCount ?? 0) > 0;
+}
+
+async function remember(db: Db, kind: SeedKind, key: string) {
+  await db.query("INSERT INTO seed_ledger (kind, key) VALUES ($1, $2) ON CONFLICT DO NOTHING", [kind, key]);
+}
+
 async function seedSubjects(db: Db) {
   let subjects = 0;
   let topics = 0;
@@ -74,29 +85,34 @@ async function seedSubjects(db: Db) {
     const chapter = s.chapterNumber
       ? (await db.query("SELECT id FROM chapters WHERE chapter_number = $1", [s.chapterNumber])).rows[0]?.id ?? null
       : null;
-    const inserted = await db.query(
-      `INSERT INTO subjects (code, name_en, name_bn, category, chapter_id, sort_order) VALUES ($1,$2,$3,$4,$5,$6)
-       ON CONFLICT (code) DO NOTHING`,
-      [s.code, s.name_en, s.name_bn, s.category, chapter, i + 1],
-    );
-    subjects += inserted.rowCount ?? 0;
+    if (!(await seededBefore(db, "subject", s.code))) {
+      const inserted = await db.query(
+        `INSERT INTO subjects (code, name_en, name_bn, category, chapter_id, sort_order) VALUES ($1,$2,$3,$4,$5,$6)
+         ON CONFLICT (code) DO NOTHING`,
+        [s.code, s.name_en, s.name_bn, s.category, chapter, i + 1],
+      );
+      subjects += inserted.rowCount ?? 0;
+      await remember(db, "subject", s.code); // also adopts a subject that already existed
+    }
+    const subject = (await db.query("SELECT id, chapter_id FROM subjects WHERE code = $1", [s.code])).rows[0];
+    if (!subject || !chapter) continue; // deleted by an admin, or no lessons to link yet
     // Link a subject created before its chapter existed, without overwriting an admin's choice.
-    if (chapter) await db.query("UPDATE subjects SET chapter_id = $2 WHERE code = $1 AND chapter_id IS NULL", [s.code, chapter]);
-    if (!chapter) continue;
+    if (!subject.chapter_id) await db.query("UPDATE subjects SET chapter_id = $2 WHERE id = $1", [subject.id, chapter]);
     // One topic per lesson of the linked chapter, named after the lesson so imported topics match.
     const lessons = await db.query(
       `SELECT l.id, l.title_en, l.title_bn, l.lesson_number FROM lessons l JOIN side_menus m ON m.id = l.side_menu_id
         WHERE m.chapter_id = $1 ORDER BY m.sort_order, l.lesson_number`,
       [chapter],
     );
-    const subjectId = (await db.query("SELECT id FROM subjects WHERE code = $1", [s.code])).rows[0].id;
     for (const l of lessons.rows) {
+      if (await seededBefore(db, "topic", l.id)) continue;
       const t = await db.query(
         `INSERT INTO topics (subject_id, name_en, name_bn, lesson_id, sort_order) VALUES ($1,$2,$3,$4,$5)
          ON CONFLICT (subject_id, name_en) DO NOTHING`,
-        [subjectId, l.title_en, l.title_bn, l.id, l.lesson_number],
+        [subject.id, String(l.title_en).slice(0, 200), l.title_bn ? String(l.title_bn).slice(0, 200) : null, l.id, l.lesson_number],
       );
       topics += t.rowCount ?? 0;
+      await remember(db, "topic", l.id);
     }
   }
   return { subjects, topics };
@@ -109,15 +125,18 @@ async function seedJobPostsAndMocks(db: Db) {
     (await db.query("SELECT id, code FROM subjects")).rows.map((r) => [r.code, r.id]),
   );
   for (const p of JOB_POSTS) {
+    const key = `${p.organization}|${p.title_en}`;
+    if (await seededBefore(db, "job_post", key)) continue; // possibly renamed or deleted since — leave it alone
     const inserted = await db.query(
       `INSERT INTO job_posts (organization, title_en, title_bn, exam_pattern_en, exam_pattern_bn, is_published)
        VALUES ($1,$2,$3,$4,$5,false) ON CONFLICT (organization, title_en) DO NOTHING RETURNING id`,
       [p.organization, p.title_en, p.title_bn, PLACEHOLDER_EN, PLACEHOLDER_BN],
     );
-    if (!inserted.rows[0]) continue; // already seeded (possibly edited) — leave it alone
+    await remember(db, "job_post", key);
+    if (!inserted.rows[0]) continue; // existed before the ledger — adopt it as is
     jobPosts++;
     const postId = inserted.rows[0].id;
-    const entries = Object.entries(p.weights);
+    const entries = Object.entries(p.weights).filter(([code]) => ids.has(code));
     for (const [code, weight] of entries) {
       await db.query("INSERT INTO job_post_subjects (job_post_id, subject_id, weight) VALUES ($1,$2,$3)", [postId, ids.get(code), weight]);
     }
@@ -139,15 +158,28 @@ async function seedJobPostsAndMocks(db: Db) {
 
 async function seedQuestions(db: Db, dir: string) {
   if (!fs.existsSync(dir)) return 0;
+  const subjects = new Map<string, string>(
+    (await db.query("SELECT id, code FROM subjects")).rows.map((r) => [String(r.code).toUpperCase(), r.id]),
+  );
   let added = 0;
   for (const file of fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) {
     const rows = parseImportText("json", fs.readFileSync(path.join(dir, file), "utf8"));
-    const report = await validateImport(db, rows);
-    if (report.problems.length) {
-      const list = report.problems.slice(0, 10).map((p) => `${file} row ${p.row}: ${p.field} ${p.code}`).join("; ");
-      throw new Error(`Starter content has invalid rows — ${list}`);
+    const results = rows.map((raw, i) => rowToDraft(raw, i + 1, subjects));
+    const problems = results.flatMap((r) => r.problems);
+    if (problems.length) {
+      // A subject an admin deleted is skipped, not an error; anything else in the file is.
+      const real = problems.filter((p) => p.code !== "subject_unknown");
+      if (real.length) {
+        const list = real.slice(0, 10).map((p) => `${file} row ${p.row}: ${p.field} ${p.code}`).join("; ");
+        throw new Error(`Starter content has invalid rows — ${list}`);
+      }
     }
-    added += await commitImport(db, report.drafts, { source: "original", publish: true, createdBy: null });
+    for (const { draft } of results) {
+      if (!draft || (await seededBefore(db, "question", draft.hash))) continue;
+      const exists = await db.query("SELECT 1 FROM questions WHERE content_hash = $1", [draft.hash]);
+      if (!exists.rowCount) added += await commitImport(db, [draft], { source: "original", publish: true, createdBy: null });
+      await remember(db, "question", draft.hash); // keyed by the original hash, so later edits don't matter
+    }
   }
   return added;
 }

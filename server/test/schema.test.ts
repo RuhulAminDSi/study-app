@@ -15,9 +15,9 @@ async function pgErrorCode(query: Promise<unknown>): Promise<string> {
 beforeEach(resetDb);
 
 describe("002_exam_prep schema", () => {
-  it("is recorded after 001_core", async () => {
+  it("is recorded after 001_core (and 003 follows)", async () => {
     const { rows } = await pool.query("SELECT version FROM schema_migrations ORDER BY version");
-    expect(rows.map((r) => r.version)).toEqual([1, 2]);
+    expect(rows.map((r) => r.version)).toEqual([1, 2, 3]);
   });
 
   it("allows only one correct option per question", async () => {
