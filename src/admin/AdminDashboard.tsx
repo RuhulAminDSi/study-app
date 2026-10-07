@@ -9,13 +9,14 @@ import AdminChapters from './AdminChapters'
 import AdminLessons from './AdminLessons'
 import AdminContent from './AdminContent'
 import AdminFiles from './AdminFiles'
+import AdminQuestions from './AdminQuestions'
 import './admin.css'
 
 interface AdminDashboardProps {
   onBack: () => void
 }
 
-type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'content' | 'files'
+type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'content' | 'files' | 'questions' | 'import' | 'taxonomy'
 
 const navItems: { key: AdminView; icon: string }[] = [
   { key: 'dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -23,13 +24,14 @@ const navItems: { key: AdminView; icon: string }[] = [
   { key: 'lessons', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
   { key: 'content', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
   { key: 'files', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+  { key: 'questions', icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
 ]
 
 const headerTitle: Record<AdminView, keyof Translations> = {
-  dashboard: 'adminDashboard', chapters: 'adminChapters', lessons: 'adminLessons', content: 'adminContent', files: 'adminFiles',
+  dashboard: 'adminDashboard', chapters: 'adminChapters', lessons: 'adminLessons', content: 'adminContent', files: 'adminFiles', questions: 'adminQuestions', import: 'adminImport', taxonomy: 'adminTaxonomy',
 }
 const labelKey: Record<AdminView, keyof Translations> = {
-  dashboard: 'adminDashboard', chapters: 'adminChapters', lessons: 'adminLessons', content: 'adminContent', files: 'adminFiles',
+  dashboard: 'adminDashboard', chapters: 'adminChapters', lessons: 'adminLessons', content: 'adminContent', files: 'adminFiles', questions: 'adminQuestions', import: 'adminImport', taxonomy: 'adminTaxonomy',
 }
 
 export default function AdminDashboard({ onBack }: AdminDashboardProps) {
@@ -38,7 +40,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
   const auth = useAuth()
   const t = translations[appState.language]
   const route = useRoute()
-  const validViews: AdminView[] = ['dashboard', 'chapters', 'lessons', 'content', 'files']
+  const validViews: AdminView[] = ['dashboard', 'chapters', 'lessons', 'content', 'files', 'questions', 'import', 'taxonomy']
   const initialView = validViews.includes(route.adminView as AdminView) ? (route.adminView as AdminView) : 'dashboard'
   const [view, setView] = useState<AdminView>(initialView)
   const [chapters, setChapters] = useState<ApiChapter[]>([])
@@ -201,6 +203,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
         {view === 'lessons' && <AdminLessons language={appState.language} />}
         {view === 'content' && <AdminContent language={appState.language} />}
         {view === 'files' && <AdminFiles language={appState.language} />}
+        {view === 'questions' && <AdminQuestions language={appState.language} />}
       </div>
     </div>
   )
