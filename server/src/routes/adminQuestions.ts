@@ -6,6 +6,7 @@ import type { AuthRequest } from "../middleware/auth.js";
 import { parseQuestionBody } from "../validation/question.js";
 import { UUID_RE } from "../validation/taxonomy.js";
 import type { QuestionWrite } from "../services/questionContent.js";
+import { commitImport, ImportFileError, parseImportText, validateImport } from "../services/importer.js";
 import {
   deleteQuestion, getQuestion, insertQuestion, listQuestions, QuestionConflictError, setPublished, updateQuestion,
 } from "../services/questions.js";
@@ -57,6 +58,27 @@ adminQuestionsRouter.post("/bulk-publish", asyncHandler(async (req, res) => {
   const ids = Array.isArray(req.body?.ids) ? req.body.ids.filter((id: unknown) => typeof id === "string" && UUID_RE.test(id)) : [];
   if (typeof req.body?.published !== "boolean") { invalid(res, { published: "required" }); return; }
   res.json({ updated: await setPublished(pool, ids, req.body.published) });
+}));
+
+adminQuestionsRouter.post("/import", asyncHandler<AuthRequest>(async (req, res) => {
+  const { format, content, dryRun } = req.body ?? {};
+  if ((format !== "csv" && format !== "json") || typeof content !== "string") {
+    invalid(res, { format: "required" });
+    return;
+  }
+  let rows: Record<string, unknown>[];
+  try {
+    rows = parseImportText(format, content);
+  } catch (err) {
+    if (err instanceof ImportFileError) { res.status(400).json({ error: err.message, code: err.code }); return; }
+    throw err;
+  }
+  const report = await validateImport(pool, rows);
+  const summary = { total: report.total, valid: report.valid, duplicates: report.duplicates, problems: report.problems };
+  if (dryRun !== false) { res.json(summary); return; }
+  const imported = await withTransaction((client) =>
+    commitImport(client, report.drafts, { source: "imported", publish: false, createdBy: req.user?.id ?? null }));
+  res.json({ ...summary, imported });
 }));
 
 adminQuestionsRouter.get("/:id", asyncHandler(async (req, res) => {
