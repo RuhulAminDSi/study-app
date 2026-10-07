@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>লজিক গেট: হাতে লেখা রিভিশন নোট (সরকারি আইটি নিয়োগ পরীক্ষা)</title>
+<link rel="stylesheet" href="../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, logic-gate symbols (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <g id="g-and"><path d="M0,12H10M0,28H10M44,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-nand"><path d="M0,12H10M0,28H10M52,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="48" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-nand3"><path d="M0,8H10M0,20H10M0,32H10M52,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,2H28A18,18 0 0 1 28,38H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="50" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-or"><path d="M0,12H11M0,28H11M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-nor"><path d="M0,12H11M0,28H11M58,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="54" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-xor"><path d="M0,12H6M0,28H6M50,20H60M3,4Q11,20 3,36" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(255,105,180,.25)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-xnor"><path d="M0,12H6M0,28H6M58,20H60M3,4Q11,20 3,36" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(255,105,180,.25)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="54" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-not"><path d="M0,20H12M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M12,8L42,20L12,32Z" fill="rgba(135,190,255,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="46" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <!-- bubbled-input forms (De Morgan equivalents) -->
+    <g id="g-bor"><path d="M0,12H3M0,28H3M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="8" cy="12" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="8" cy="28" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-band"><path d="M0,12H2M0,28H2M44,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="6" cy="12" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="6" cy="28" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+  </defs>
+</svg>
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">লজিক গেট (Logic Gate)</span></h1>
+  <p class="subtitle">সত্যক সারণি · সর্বজনীন গেট · ডি মরগান · IC: ১০ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="92" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M228,150 L176,150 M412,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">লজিক গেট</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">লজিক লেভেল · 2ⁿ</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">৭টি গেট + সত্যক সারণি ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">মৌলিক: AND · OR · NOT</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">সর্বজনীন গেট ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">XOR-এর ধর্ম ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">SOP / POS → সার্কিট</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">ডি মরগান ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">74xx IC · TTL/CMOS</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① ২-ইনপুট সত্যক সারণি<br>② ন্যূনতম NAND/NOR সংখ্যা<br>③ ডি মরগান ও বাবল<br>④ XOR = বিজোড় প্যারিটি<br>⑤ 7400/02/04/08/32/86<br>⑥ পজিটিভ বনাম নেগেটিভ লজিক</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Digital logic: Boolean algebra, <span class="hl">De Morgan's Theorems</span>, <span class="hl">logic gates and their truth tables</span>, canonical forms, combinational logic circuits, minimization techniques"। এই নোটে গেট অংশ বিস্তারিত, সাথে ক্যানোনিকাল ফর্মে যাওয়ার সেতু; K-ম্যাপ আছে বুলিয়ান অ্যালজেবরা লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>মূল ধারণা ও লজিক লেভেল ……… পৃ. ২</li><li>AND, OR, NOT ……… পৃ. ৩</li><li>NAND, NOR, XOR, XNOR ……… পৃ. ৪</li><li>সর্বজনীন গেট ও গেট-সংখ্যা ……… পৃ. ৫</li><li>ডি মরগান ও বাবল পুশিং ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>রাশিমালা → সার্কিট (SOP/POS) … পৃ. ৭</li><li>IC, লজিক ফ্যামিলি, প্রয়োগ ……… পৃ. ৮</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ৯</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১০</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: fundamentals ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>মূল ধারণা</span></div>
+  <h2><span class="no">১</span>লজিক গেট কী?</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> লজিক গেট হলো এমন একটি ইলেকট্রনিক সার্কিট, যা এক বা একাধিক <span class="hl">বাইনারি ইনপুট</span> নিয়ে একটি নির্দিষ্ট <span class="hl">বুলিয়ান ফাংশন</span> অনুযায়ী একটি বাইনারি আউটপুট দেয়। ALU, মেমরি, CPU কন্ট্রোল: সব ডিজিটাল সিস্টেমের মূল একক এই গেট।</div>
+  <div class="mnote">গেট = ট্রানজিস্টরে তৈরি বুলিয়ান অপারেটর</div>
+  <table class="hand">
+    <tr><th class="l">বুলিয়ান অপারেশন</th><th>চিহ্ন</th><th>গেট</th><th class="l">আউটপুট 1 হয় যখন …</th></tr>
+    <tr><td class="l">যৌক্তিক গুণ</td><td>A·B</td><td>AND</td><td class="l">সব ইনপুট 1</td></tr>
+    <tr><td class="l">যৌক্তিক যোগ</td><td>A+B</td><td>OR</td><td class="l">অন্তত একটি ইনপুট 1</td></tr>
+    <tr><td class="l">পূরক (complement)</td><td>A′</td><td>NOT</td><td class="l">ইনপুট 0</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">গণনার নিয়ম</span><br>n টি ইনপুট → সত্যক সারণিতে <span class="circ">2ⁿ</span> টি সারি<br>n টি চলক → <span class="circ">2^(2ⁿ)</span> টি ভিন্ন বুলিয়ান ফাংশন<br>(n = 2 → ৪টি সারি, <b>১৬টি</b> ফাংশন)</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ইনপুট কলাম বাইনারিতে গুনে লেখো: 00, 01, 10, 11। কোনো সারি বাদ পড়বে না।</div>
+  </div>
+
+  <h2><span class="no">২</span>লজিক লেভেল: পজিটিভ বনাম নেগেটিভ লজিক</h2>
+  <div class="cols" style="grid-template-columns:1fr 250px">
+    <div>
+      <p>গেট আসলে 0 বা 1 "দেখে" না; দেখে <b>ভোল্টেজের পরিসর</b>।</p>
+      <ul class="dash">
+        <li><span class="hl">পজিটিভ লজিক</span>: HIGH = 1, LOW = 0 (সাধারণ নিয়ম)</li>
+        <li><span class="hl">নেগেটিভ লজিক</span>: HIGH = 0, LOW = 1</li>
+      </ul>
+      <p>একই সার্কিট, ভিন্ন লেবেল → ভিন্ন ফাংশন।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 140" width="245">
+      <g class="w">
+        <path class="ink-k" d="M30,132 V8 M30,132 H240"/>
+        <rect x="32" y="16" width="200" height="60" class="fill-g" style="stroke:none"/>
+        <rect x="32" y="100" width="200" height="30" class="fill-b" style="stroke:none"/>
+        <path class="ink-r" d="M30,76 H232 M30,100 H232" stroke-dasharray="5 4"/>
+      </g>
+      <text x="4" y="20" class="s">5 V</text><text x="4" y="80" class="s">2 V</text><text x="0" y="104" class="s">0.8 V</text><text x="6" y="136" class="s">0</text>
+      <text x="120" y="50" class="bn g s w6">HIGH (1)</text><text x="110" y="92" class="bn r s">নিষিদ্ধ অঞ্চল</text><text x="120" y="122" class="bn s w6">LOW (0)</text>
+    </svg><figcaption>TTL ইনপুট সীমা</figcaption></figure>
+  </div>
+  <table class="hand small">
+    <tr><th class="l">TTL (5 V) লেভেল</th><th>ইনপুট</th><th>আউটপুট</th></tr>
+    <tr><td class="l">LOW (0)</td><td>V<sub>IL</sub> ≤ <span class="circ">0.8 V</span></td><td>V<sub>OL</sub> ≤ 0.4 V</td></tr>
+    <tr><td class="l">HIGH (1)</td><td>V<sub>IH</sub> ≥ <span class="circ">2.0 V</span></td><td>V<sub>OH</sub> ≥ 2.4 V</td></tr>
+  </table>
+  <p class="small">নয়েজ মার্জিন (noise margin) = 2.4 − 2.0 = 0.8 − 0.4 = <b>0.4 V</b>। CMOS-এর সীমা সাপ্লাই ভোল্টেজের সাথে বদলায় (মোটামুটি V<sub>DD</sub>-এর ৩০% / ৭০%)।</p>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> পজিটিভ লজিকের <b>AND</b> গেট নেগেটিভ লজিকে <b>OR</b> হিসেবে কাজ করে; পজিটিভ <b>NAND</b> = নেগেটিভ <b>NOR</b> (ছদ্মবেশে ডি মরগান)।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: AND, OR, NOT ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>মৌলিক গেট</span></div>
+  <h2><span class="no">৩</span>মৌলিক গেট (Basic Gate): AND, OR, NOT</h2>
+  <h3>AND: সব ইনপুট 1 হলেই কেবল আউটপুট 1 · Y = A·B</h3>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 150 50" width="150"><g class="w"><use href="#g-and" x="35" y="4"/></g><text x="28" y="21" text-anchor="end">A</text><text x="28" y="37" text-anchor="end">B</text><text x="100" y="29" class="r">Y = A·B</text></svg></figure>
+    <table class="hand small"><tr><th>A</th><th>B</th><th>Y</th></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td class="red"><b>1</b></td></tr></table>
+    <figure class="doodle"><svg viewBox="0 0 200 70" width="190"><g class="w"><path class="ink" d="M10,60 V40 H40 M40,40 L60,28 M64,40 H95 M95,40 L115,28 M119,40 H180 V60 H112 M88,60 H10"/><circle cx="100" cy="60" r="10" class="ink-r fill-y"/></g><text x="48" y="22" class="s">A</text><text x="104" y="22" class="s">B</text></svg><figcaption>সিরিজে দুটি সুইচ</figcaption></figure>
+  </div>
+  <h3>OR: সব ইনপুট 0 হলেই কেবল আউটপুট 0 · Y = A + B</h3>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 150 50" width="150"><g class="w"><use href="#g-or" x="35" y="4"/></g><text x="28" y="21" text-anchor="end">A</text><text x="28" y="37" text-anchor="end">B</text><text x="100" y="29" class="r">Y = A+B</text></svg></figure>
+    <table class="hand small"><tr><th>A</th><th>B</th><th>Y</th></tr><tr><td>0</td><td>0</td><td class="red"><b>0</b></td></tr><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td></tr></table>
+    <figure class="doodle"><svg viewBox="0 0 200 80" width="190"><g class="w"><path class="ink" d="M10,72 V30 H40 M40,30 V12 H60 M60,12 L80,2 M84,12 H120 V30 M40,30 V46 H60 M60,46 L80,36 M84,46 H120 V30 M120,30 H180 V72 H112 M88,72 H10"/><circle cx="100" cy="72" r="9" class="ink-r fill-y"/></g><text x="66" y="8" class="s">A</text><text x="66" y="42" class="s">B</text></svg><figcaption>প্যারালালে দুটি সুইচ</figcaption></figure>
+  </div>
+  <h3>NOT (ইনভার্টার): আউটপুট = ইনপুটের পূরক · Y = A′</h3>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 150 44" width="150"><g class="w"><use href="#g-not" x="35" y="2"/></g><text x="28" y="27" text-anchor="end">A</text><text x="100" y="27" class="r">Y = <tspan class="ov">A</tspan></text></svg></figure>
+    <table class="hand small"><tr><th>A</th><th>Y</th></tr><tr><td>0</td><td class="red"><b>1</b></td></tr><tr><td>1</td><td>0</td></tr></table>
+    <p class="small">একমাত্র <b>এক-ইনপুটের</b> গেট। যেকোনো প্রতীকে ছোট বৃত্ত (বাবল) ○ মানে NOT। পরপর দুটি NOT একে অপরকে বাতিল করে: (A′)′ = A।</p>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>বহু-ইনপুট গেট</h3>
+      <ul class="dash small">
+        <li>n-ইনপুট AND: শুধু 11…1 হলে 1 (2ⁿ টি সারির একটি)</li>
+        <li>n-ইনপুট OR: শুধু 00…0 হলে 0</li>
+        <li>AND ও OR সহযোজী (associative): (A·B)·C = A·(B·C), তাই ২-ইনপুট গেট <span class="hl">পরপর জোড়া</span> যায়</li>
+      </ul>
+    </div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">গেটিং (enable / inhibit)</span><br>AND: কন্ট্রোল 1 → ডেটা <b>পার হয়</b>, 0 → আউটপুট 0<br>OR: কন্ট্রোল 0 → ডেটা পার হয়, 1 → আউটপুট 1<br>XOR: কন্ট্রোল 1 → ডেটা <b>উল্টে যায়</b></div>
+  </div>
+  <div class="trick"><span class="lbl">মনে রাখার কৌশল</span> <b>AND = "সবাই"</b>, <b>OR = "যেকেউ"</b>। AND একটি 0 পেলেই আউটপুট 0 করে দেয়; OR একটি 1 পেলেই আউটপুট 1।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: derived gates ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>যৌগিক গেট</span></div>
+  <h2><span class="no">৪</span>NAND, NOR, XOR, XNOR</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols">
+    <div class="ex"><span class="lbl">NAND = NOT + AND</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-nand" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = <tspan class="ov">A·B</tspan></text></svg></figure>
+      <p class="small">Y = (AB)′ · <b>শুধু</b> সব ইনপুট 1 হলে আউটপুট 0</p></div>
+    <div class="ex"><span class="lbl">NOR = NOT + OR</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-nor" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = <tspan class="ov">A+B</tspan></text></svg></figure>
+      <p class="small">Y = (A+B)′ · <b>শুধু</b> সব ইনপুট 0 হলে আউটপুট 1</p></div>
+    <div class="ex"><span class="lbl">XOR (এক্সক্লুসিভ-OR)</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-xor" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = A⊕B</text></svg></figure>
+      <p class="small">A⊕B = <span class="hl">A′B + AB′</span> · ইনপুট <b>ভিন্ন</b> হলে 1</p></div>
+    <div class="ex"><span class="lbl">XNOR (সমতা গেট)</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-xnor" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = <tspan class="ov">A⊕B</tspan></text></svg></figure>
+      <p class="small">A⊙B = <span class="hl">AB + A′B′</span> · ইনপুট <b>সমান</b> হলে 1</p></div>
+  </div>
+  <h3>সব ২-ইনপুট গেটের সত্যক সারণি (truth table)</h3>
+  <table class="hand">
+    <tr><th>A</th><th>B</th><th>AND</th><th>OR</th><th>NAND</th><th>NOR</th><th>XOR</th><th>XNOR</th></tr>
+    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td class="red"><b>1</b></td><td>0</td><td class="red"><b>1</b></td></tr>
+    <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+    <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+    <tr><td>1</td><td>1</td><td class="red"><b>1</b></td><td>1</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+  </table>
+  <div class="mnote purple">পূরক জোড়া: AND↔NAND, OR↔NOR, XOR↔XNOR</div>
+  <div class="sumbox"><span class="lbl">XOR-এর ধর্ম</span>
+    <div class="fgrid small">
+      <p>A ⊕ 0 = A (অপরিবর্তিত)</p><p>A ⊕ 1 = <span class="circ">A′</span> (উল্টে যায়)</p>
+      <p>A ⊕ A = 0</p><p>A ⊕ A′ = 1</p>
+      <p>বিনিময় ও সহযোজী নিয়ম মেনে চলে</p><p>(A ⊕ B)′ = A′ ⊕ B = A ⊕ B′</p>
+    </div>
+    <p class="small">n-ইনপুট XOR = 1 যখন 1-এর সংখ্যা <span class="hl">বিজোড়</span> → <b>বিজোড় প্যারিটি ফাংশন</b>; ব্যবহার: প্যারিটি জেনারেটর/চেকার, তুলনাকারী (comparator), অ্যাডার, নিয়ন্ত্রিত ইনভার্টার।</p>
+  </div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> NAND ও NOR <b>সহযোজী নয়</b>: (A NAND B) NAND C ≠ A NAND (B NAND C)। ৩-ইনপুট NAND মানে (ABC)′, দুটি ২-ইনপুট NAND পরপর বসানো নয়।</div>
+  <div class="trick"><span class="lbl">মনে রাখার কৌশল</span> নামের শুরুতে "N" = আউটপুটে বাবল = সেই গেটের কলাম উল্টে দাও। XOR = "<b>ভিন্ন</b> হলে 1", XNOR = "<b>একই</b> হলে 1"।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: universal gates ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>সর্বজনীন গেট</span></div>
+  <h2><span class="no">৫</span>সর্বজনীন গেট (Universal Gate): NAND ও NOR</h2>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> যে গেট দিয়ে একাই NOT, AND ও OR (অর্থাৎ <b>যেকোনো</b> বুলিয়ান ফাংশন) তৈরি করা যায়, তাকে <span class="hl">সর্বজনীন গেট</span> বলে। <span class="circ">NAND</span> ও <span class="circ">NOR</span> সর্বজনীন; AND, OR, XOR সর্বজনীন নয়।</div>
+  <h3>শুধু NAND দিয়ে</h3>
+  <figure class="doodle">
+    <svg viewBox="0 0 470 200" width="470">
+      <g class="w">
+        <path class="ink" d="M8,40H26M26,32V48M26,32H36M26,48H36"/><use href="#g-nand" x="36" y="20"/>
+        <path class="ink" d="M150,32H166M150,48H166M226,40H236M236,32V48M236,32H244M236,48H244"/><use href="#g-nand" x="166" y="20"/><use href="#g-nand" x="244" y="20"/>
+        <path class="ink" d="M10,125H34M34,117V133M34,117H44M34,133H44M10,175H34M34,167V183M34,167H44M34,183H44M104,125H130V142H160M104,175H140V158H160"/><use href="#g-nand" x="44" y="105"/><use href="#g-nand" x="44" y="155"/><use href="#g-nand" x="160" y="130"/>
+      </g>
+      <text x="4" y="36" text-anchor="end">A</text><text x="102" y="45" class="r">A′</text><text x="50" y="80" class="bn g">NOT (১টি)</text>
+      <text x="146" y="36" text-anchor="end">A</text><text x="146" y="52" text-anchor="end">B</text><text x="310" y="45" class="r">A·B</text><text x="205" y="80" class="bn g">AND (২টি)</text>
+      <text x="6" y="129" text-anchor="end">A</text><text x="6" y="179" text-anchor="end">B</text><text x="108" y="120" class="s">A′</text><text x="108" y="170" class="s">B′</text><text x="226" y="154" class="r">(A′·B′)′ = A+B</text><text x="110" y="198" class="bn g">OR (৩টি)</text>
+      <text x="350" y="120" class="bn p">দুই ইনপুট জুড়ে দিলে:</text><text x="350" y="140" class="p">NAND(A, A) = A′</text>
+    </svg>
+  </figure>
+  <p class="small"><b>শুধু NOR দিয়ে</b> (আয়নার প্রতিচ্ছবি): NOR(A, A) = A′ (১টি) · NOR-এর পর NOR-ইনভার্টার = <b>OR</b> (২টি) · দুই ইনপুট উল্টে তারপর NOR: (A′ + B′)′ = <b>AND</b> (৩টি)।</p>
+  <table class="hand">
+    <tr><th class="l">ফাংশন</th><th>NOT</th><th>AND</th><th>OR</th><th>XOR</th><th>XNOR</th></tr>
+    <tr><td class="l">ন্যূনতম ২-ইনপুট <b>NAND</b></td><td>1</td><td>2</td><td>3</td><td class="red"><b>4</b></td><td>5</td></tr>
+    <tr><td class="l">ন্যূনতম ২-ইনপুট <b>NOR</b></td><td>1</td><td>3</td><td>2</td><td>5</td><td class="red"><b>4</b></td></tr>
+  </table>
+  <div class="mnote green">NAND আর NOR-এ AND/OR ও XOR/XNOR-এর সংখ্যা অদলবদল হয় (দ্বৈততা)</div>
+  <h3>৪টি NAND দিয়ে XOR (ন্যূনতম)</h3>
+  <figure class="doodle"><svg viewBox="0 0 470 135" width="440">
+    <g class="w">
+      <path class="ink" d="M20,22 H240 M60,22 V62 H120 M20,118 H240 M80,118 V78 H120 M180,70 H210 V38 H240 M210,70 V102 H240 M300,30 H330 V62 H360 M300,110 H330 V78 H360 M420,70 H450"/>
+      <circle cx="60" cy="22" r="3.5" fill="#1d3f8f"/><circle cx="80" cy="118" r="3.5" fill="#1d3f8f"/><circle cx="210" cy="70" r="3.5" fill="#1d3f8f"/>
+      <use href="#g-nand" x="120" y="50"/><use href="#g-nand" x="240" y="10"/><use href="#g-nand" x="240" y="90"/><use href="#g-nand" x="360" y="50"/>
+    </g>
+    <text x="14" y="27" text-anchor="end">A</text><text x="14" y="123" text-anchor="end">B</text><text x="186" y="62" class="r s">P</text><text x="304" y="22" class="r s">Q</text><text x="304" y="128" class="r s">R</text><text x="454" y="66" class="r">Y</text>
+  </svg></figure>
+  <div class="fgrid small"><p>① P = (AB)′ = A′ + B′</p><p>② Q = (A·P)′ = (A(A′+B′))′ = (AB′)′</p><p>③ R = (B·P)′ = (A′B)′</p><p>④ Y = (Q·R)′ = AB′ + A′B = <span class="circ">A ⊕ B</span></p></div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> অনেক বইয়ে XOR আঁকা হয় <b>৫টি NAND</b> বা <b>৬টি NOR</b> দিয়ে (ইনভার্টার + SOP)। সার্কিট ঠিক, কিন্তু ন্যূনতম নয়। MCQ-তে চাওয়া হয় <b>ন্যূনতম: ৪টি NAND, ৫টি NOR</b>।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: De Morgan ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>ডি মরগান</span></div>
+  <h2><span class="no">৬</span>ডি মরগানের উপপাদ্য (De Morgan's Theorems)</h2>
+  <div class="sumbox"><span class="lbl">দুটি সূত্র</span> &nbsp;<span class="circ">(A · B)′ = A′ + B′</span> &nbsp;&nbsp; <span class="circ">(A + B)′ = A′ · B′</span><br>
+    n চলকের জন্য: (A·B·C…)′ = A′ + B′ + C′ + … &nbsp;·&nbsp; (A + B + C + …)′ = A′·B′·C′…</div>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr">
+    <div>
+      <h3>সত্যক সারণি দিয়ে প্রমাণ</h3>
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>A</th><th>B</th><th>(AB)′</th><th>A′+B′</th><th>(A+B)′</th><th>A′B′</th></tr>
+        <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>সমতুল্য প্রতীক</h3>
+      <figure class="doodle"><svg viewBox="0 0 300 120" width="290">
+        <g class="w"><use href="#g-nand" x="10" y="6"/><use href="#g-bor" x="170" y="6"/><use href="#g-nor" x="10" y="70"/><use href="#g-band" x="170" y="70"/></g>
+        <text x="122" y="31" class="r l">≡</text><text x="122" y="95" class="r l">≡</text>
+        <text x="20" y="62" class="s">NAND</text><text x="160" y="62" class="bn s">বাবল-ইনপুট OR</text><text x="20" y="120" class="s">NOR</text><text x="160" y="120" class="bn s">বাবল-ইনপুট AND</text>
+      </svg></figure>
+    </div>
+  </div>
+  <div class="trick"><span class="lbl">মনে রাখার কৌশল</span> "<b>দাগ ভাঙো, চিহ্ন বদলাও</b>"। প্রতীকে <b>বাবল পুশিং</b>: আউটপুটের বাবল সব ইনপুটে সরাও (বা উল্টোটা), আর AND ↔ OR বদলাও।</div>
+  <h3>সমাধানকৃত উদাহরণ (লিখিত উত্তরের ধাঁচে)</h3>
+  <div class="wq"><span class="lbl">প্রশ্ন</span> F = (A + B)′ + (A′ + B′)′ সরল করো এবং এটি কোন গেটের সমান তা লেখো। <i class="mk">৪ নম্বর</i></div>
+  <ol class="steps">
+    <li>প্রতিটি পদে ডি মরগান: (A + B)′ = A′B′ এবং (A′ + B′)′ = A″B″ = AB</li>
+    <li>অতএব F = A′B′ + AB</li>
+    <li>A = B হলে F = 1 → F = <span class="circ">A ⊙ B (XNOR)</span></li>
+    <li>২টি NOR + ২টি NOT + ১টি OR-এর বদলে একটি XNOR → <span class="hl">কম গেট, কম বিলম্ব</span></li>
+  </ol>
+  <h2><span class="no">৭</span>দ্বৈততার নীতি (Duality Principle)</h2>
+  <div class="def"><span class="lbl">নিয়ম</span> যেকোনো বুলিয়ান অভেদে <b>+ ↔ ·</b> এবং <b>0 ↔ 1</b> বদলালে অভেদটি সত্যই থাকে (চলকগুলোর পূরক নেওয়া হয় <b>না</b>)।</div>
+  <table class="hand small">
+    <tr><th class="l">অভেদ</th><th class="l">এর দ্বৈত (dual)</th></tr>
+    <tr><td class="l">A + 0 = A</td><td class="l">A · 1 = A</td></tr>
+    <tr><td class="l">A + A′ = 1</td><td class="l">A · A′ = 0</td></tr>
+    <tr><td class="l">A(B + C) = AB + AC</td><td class="l">A + BC = (A + B)(A + C)</td></tr>
+  </table>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> দ্বৈত আর পূরক এক জিনিস <b>নয়</b>। পূরকে প্রতিটি চলকও উল্টে যায় (A → A′); দ্বৈতে যায় না।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: expression to circuit ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>রাশিমালা → সার্কিট</span></div>
+  <h2><span class="no">৮</span>সত্যক সারণি থেকে গেট সার্কিট</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">মিনটার্ম (m)</span> সব চলক থাকা AND-পদ, ঠিক একটি সারিতে 1। <b>SOP</b> = মিনটার্মের OR = <b>Σm</b></div>
+      <div class="def small"><span class="lbl">ম্যাক্সটার্ম (M)</span> সব চলক থাকা OR-পদ, ঠিক একটি সারিতে 0। <b>POS</b> = ম্যাক্সটার্মের AND = <b>ΠM</b></div>
+    </div>
+    <ol class="steps small">
+      <li>সত্যক সারণি লেখো (2ⁿ টি সারি)</li>
+      <li>F = 1 এমন সারি → মিনটার্ম (SOP)</li>
+      <li>সরল করো (বুলিয়ান সূত্র বা K-ম্যাপ)</li>
+      <li>AND-OR (বা NAND-NAND) আঁকো</li>
+      <li>প্রতিটি সারি আবার যাচাই করো</li>
+    </ol>
+  </div>
+  <h3>সমাধানকৃত উদাহরণ: ৩-ইনপুট সংখ্যাগরিষ্ঠতা (majority) সার্কিট</h3>
+  <p>A, B, C-এর <b>অন্তত দুটি</b> 1 হলে F = 1 (যেমন ৩ জনের মধ্যে ২ জনের অনুমোদন)।</p>
+  <div class="cols" style="grid-template-columns:200px 1fr">
+    <table class="hand small">
+      <tr><th>#</th><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+      <tr><td>3</td><td>0</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr>
+      <tr><td>4</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>5</td><td>1</td><td>0</td><td>1</td><td class="red"><b>1</b></td></tr>
+      <tr><td>6</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>7</td><td>1</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr>
+    </table>
+    <div>
+      <p>ক্যানোনিকাল SOP: F = Σm(3, 5, 6, 7) = A′BC + AB′C + ABC′ + ABC</p>
+      <p>ক্যানোনিকাল POS: F = ΠM(0, 1, 2, 4)</p>
+      <p>সরলীকরণ (ABC দুবার যোগ করে, A + A′ = 1):</p>
+      <p class="center"><span class="circ">F = AB + BC + CA</span></p>
+      <p class="small">POS রূপে = (A + B)(B + C)(C + A)</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:300px 1fr">
+    <figure class="doodle"><svg viewBox="0 0 300 160" width="300">
+      <g class="w">
+        <path class="ink-k" d="M20,10 V155 M40,10 V155 M60,10 V155"/>
+        <path class="ink" d="M20,22 H100 M40,38 H100 M40,72 H100 M60,88 H100 M20,122 H100 M60,138 H100 M160,30 H180 V68 H200 M160,80 H200 M160,130 H180 V92 H200 M260,80 H288"/>
+        <circle cx="20" cy="22" r="3" fill="#1d3f8f"/><circle cx="40" cy="38" r="3" fill="#1d3f8f"/><circle cx="40" cy="72" r="3" fill="#1d3f8f"/><circle cx="60" cy="88" r="3" fill="#1d3f8f"/><circle cx="20" cy="122" r="3" fill="#1d3f8f"/><circle cx="60" cy="138" r="3" fill="#1d3f8f"/>
+        <use href="#g-nand" x="100" y="10"/><use href="#g-nand" x="100" y="60"/><use href="#g-nand" x="100" y="110"/><use href="#g-nand3" x="200" y="60"/>
+      </g>
+      <text x="20" y="8" text-anchor="middle" class="s">A</text><text x="40" y="8" text-anchor="middle" class="s">B</text><text x="60" y="8" text-anchor="middle" class="s">C</text><text x="292" y="76" class="r">F</text>
+    </svg><figcaption>NAND-NAND: ৩টি ২-ইনপুট + ১টি ৩-ইনপুট NAND</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">দুই-স্তর নিয়ম</span><br>SOP (AND-OR) → সব গেটের বদলে <b>NAND</b> = <span class="hl">NAND-NAND</span><br>POS (OR-AND) → সব গেটের বদলে <b>NOR</b> = <span class="hl">NOR-NOR</span><br>কারণ: ডি মরগানে F = ((AB)′(BC)′(CA)′)′ = AB + BC + CA</div>
+      <p class="small">লিটারেল কম → গেট কম। নিয়মমাফিক সরলীকরণ (K-ম্যাপ, don't-care) → <b>বুলিয়ান অ্যালজেবরা</b> লেসন দেখো।</p>
+    </div>
+  </div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> মিনটার্মের তালিকা আর ম্যাক্সটার্মের তালিকা পরস্পরের <b>পূরক</b>: দুটো মিলে সব 2ⁿ সারি-নম্বর ঢেকে দেয় (এখানে {3,5,6,7} ∪ {0,1,2,4})।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: ICs, families, applications ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>হার্ডওয়্যার ও প্রয়োগ</span></div>
+  <h2><span class="no">৯</span>গেট IC (74xx TTL ফ্যামিলি)</h2>
+  <div class="cols" style="grid-template-columns:1.3fr 1fr">
+    <table class="hand small">
+      <tr><th>IC</th><th class="l">ভেতরে যা আছে</th></tr>
+      <tr><td><span class="circ">7400</span></td><td class="l">৪টি ২-ইনপুট NAND (quad)</td></tr>
+      <tr><td>7402</td><td class="l">৪টি ২-ইনপুট NOR</td></tr>
+      <tr><td><span class="circ">7404</span></td><td class="l">৬টি NOT (hex inverter)</td></tr>
+      <tr><td>7408</td><td class="l">৪টি ২-ইনপুট AND</td></tr>
+      <tr><td>7432</td><td class="l">৪টি ২-ইনপুট OR</td></tr>
+      <tr><td>7486</td><td class="l">৪টি ২-ইনপুট XOR</td></tr>
+      <tr><td>74266</td><td class="l">৪টি ২-ইনপুট XNOR (ওপেন কালেক্টর)</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 200 170" width="200">
+      <g class="w">
+        <rect x="60" y="10" width="80" height="150" rx="6" class="ink-k" style="fill:rgba(31,31,36,.08)"/>
+        <path class="ink-k" d="M90,10 A10,10 0 0 0 110,10"/>
+        <path class="ink" d="M48,22H60M48,42H60M48,62H60M48,82H60M48,102H60M48,122H60M48,142H60 M140,22H152M140,42H152M140,62H152M140,82H152M140,102H152M140,122H152M140,142H152"/>
+      </g>
+      <text x="42" y="26" text-anchor="end" class="s">1</text><text x="42" y="146" text-anchor="end" class="r s w6">7 GND</text><text x="158" y="26" class="r s w6">14 V<tspan dy="3" font-size="9">CC</tspan></text><text x="158" y="146" class="s">8</text>
+      <text x="100" y="90" text-anchor="middle" class="k s">74xx</text><text x="100" y="106" text-anchor="middle" class="s">14-pin DIP</text>
+    </svg><figcaption>খাঁজ উপরে, পিন ১ বাঁয়ে উপরে, ঘড়ির কাঁটার বিপরীতে গোনো</figcaption></figure>
+  </div>
+  <p class="small">"Quad" = ৪টি গেট, "hex" = ৬টি গেট। সাধারণ ১৪-পিন DIP-এ <span class="circ">V<sub>CC</sub> = পিন 14, GND = পিন 7</span>।</p>
+  <h2><span class="no">১০</span>লজিক ফ্যামিলি ও গেটের প্যারামিটার</h2>
+  <table class="hand small">
+    <tr><th class="l"></th><th>TTL (74xx)</th><th>CMOS (4000 / 74HC)</th></tr>
+    <tr><td class="l">উপাদান</td><td>বাইপোলার ট্রানজিস্টর</td><td>MOSFET (n + p জোড়া)</td></tr>
+    <tr><td class="l">সাপ্লাই</td><td>5 V ± 5%</td><td>3–15 V (4000), 2–6 V (74HC)</td></tr>
+    <tr><td class="l">স্থির অবস্থার শক্তি</td><td>বেশি (প্রতি গেটে mW)</td><td><b>খুব কম</b> → CPU, মোবাইলে ব্যবহৃত</td></tr>
+    <tr><td class="l">ফ্যান-আউট</td><td>প্রায় ১০ (স্ট্যান্ডার্ড TTL)</td><td>অনেক বেশি (ইনপুট প্রায় কারেন্ট নেয় না)</td></tr>
+  </table>
+  <ul class="dash small">
+    <li><b>ফ্যান-ইন</b> = গেটের ইনপুট সংখ্যা · <b>ফ্যান-আউট</b> = একটি আউটপুট কতগুলো গেট-ইনপুট চালাতে পারে</li>
+    <li><b>প্রোপাগেশন ডিলে</b> = ইনপুট থেকে আউটপুট পৌঁছাতে সময় (স্ট্যান্ডার্ড TTL-এ প্রায় ১০ ns) → ক্লক গতির সীমা</li>
+    <li><b>নয়েজ মার্জিন</b> = একটি লেভেল কতটা নয়েজ সহ্য করে (TTL: 0.4 V)</li>
+    <li>ইন্টিগ্রেশন স্কেল (প্রচলিত হিসাব): <b>SSI</b> &lt; ১২টি গেট · <b>MSI</b> ১২–৯৯ · <b>LSI</b> ১০০–৯,৯৯৯ · <b>VLSI</b> ≥ ১০,০০০</li>
+  </ul>
+  <h2><span class="no">১১</span>গেটের প্রয়োগ</h2>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">ক্লাসিক সার্কিট</span><br>হাফ অ্যাডার: S = A ⊕ B, C = AB<br>A, B, C-এর জোড় প্যারিটি বিট: P = A ⊕ B ⊕ C<br>সমতা যাচাই (১-বিট comparator): A ⊙ B</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT সংযোগ: C bitwise</span><br>12 &amp; 10 = <b>8</b> · 12 | 10 = <b>14</b> · 12 ^ 10 = <b>6</b> · ~12 = −13<br>মাস্ক: x &amp; 1 → জোড়/বিজোড় · x | mask বিট সেট · x ^ mask বিট উল্টায়<br>অদলবদল: a ^= b; b ^= a; a ^= b;</div>
+  </div>
+  <div class="trick"><span class="lbl">মনে রাখার কৌশল</span> 74-এর পরের দুই অঙ্ক = গেট কোড: <b>00</b> NAND, <b>02</b> NOR, <b>04</b> NOT, <b>08</b> AND, <b>32</b> OR, <b>86</b> XOR। "শূন্য-শূন্য মানেই সর্বজনীন NAND"।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>AND: A·B · OR: A+B · NOT: A′</p><p>NAND: (AB)′ · NOR: (A+B)′</p>
+      <p>XOR: A′B + AB′ (ভিন্ন → 1)</p><p>XNOR: AB + A′B′ (সমান → 1)</p>
+      <p>(AB)′ = A′+B′ · (A+B)′ = A′B′</p><p>A⊕0 = A · A⊕1 = A′ · A⊕A = 0</p>
+      <p>n ইনপুট → 2ⁿ সারি · 2^(2ⁿ) ফাংশন</p><p>সর্বজনীন: শুধু NAND, NOR</p>
+      <p>NAND: NOT 1, AND 2, OR 3, XOR 4</p><p>NOR: NOT 1, OR 2, AND 3, XNOR 4</p>
+      <p>SOP → NAND-NAND · POS → NOR-NOR</p><p>TTL: V<sub>IL</sub> ≤ 0.8 V, V<sub>IH</sub> ≥ 2 V, NM 0.4 V</p>
+      <p>7400 NAND · 7402 NOR · 7404 NOT</p><p>7408 AND · 7432 OR · 7486 XOR</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>মৌলিক গেট: AND, OR, NOT</li>
+      <li>সর্বজনীন গেট: NAND, NOR</li>
+      <li>একমাত্র এক-ইনপুটের গেট: NOT</li>
+      <li>সব ইনপুট 0 → আউটপুট 1: NAND, NOR, XNOR</li>
+      <li>সব ইনপুট 1 → আউটপুট 0: NAND, NOR, XOR</li>
+      <li>XOR-এর আরেক নাম "অসমতা" গেট</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>XNOR = "সমতা / equivalence" গেট</li>
+      <li>NAND(A, A) = NOR(A, A) = A′</li>
+      <li>XOR-এ ন্যূনতম NAND = ৪টি</li>
+      <li>পজিটিভ AND = নেগেটিভ OR</li>
+      <li>হাফ অ্যাডারে যোগফল = XOR, ক্যারি = AND</li>
+      <li>7404 = hex inverter (৬টি NOT)</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> OR-এর আউটপুট 0 <b>শুধু</b> সব ইনপুট 0 হলে · NAND/NOR সহযোজী নয় · দ্বৈত ≠ পূরক · XOR, XNOR, AND, OR সর্বজনীন <b>নয়</b> · বইয়ের ৫-NAND XOR ন্যূনতম নয়</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> AND = সবাই, OR = যেকেউ · "N" = বাবল = কলাম উল্টাও · দাগ ভাঙো, চিহ্ন বদলাও · বাবল পুশিং-এ AND ↔ OR · XOR = ভিন্ন, XNOR = একই · 7400 = সর্বজনীন NAND</div>
+  <figure class="doodle"><svg viewBox="0 0 600 70" width="600">
+    <g class="w">
+      <use href="#g-and" x="10" y="14"/><use href="#g-or" x="90" y="14"/><use href="#g-not" x="170" y="14"/><use href="#g-nand" x="250" y="14"/><use href="#g-nor" x="330" y="14"/><use href="#g-xor" x="410" y="14"/><use href="#g-xnor" x="490" y="14"/>
+    </g>
+    <text x="40" y="68" text-anchor="middle" class="s">AND</text><text x="120" y="68" text-anchor="middle" class="s">OR</text><text x="200" y="68" text-anchor="middle" class="s">NOT</text><text x="280" y="68" text-anchor="middle" class="s r">NAND</text><text x="360" y="68" text-anchor="middle" class="s r">NOR</text><text x="440" y="68" text-anchor="middle" class="s">XOR</text><text x="520" y="68" text-anchor="middle" class="s">XNOR</text>
+  </svg><figcaption>পরীক্ষার আগে ৭টি প্রতীক মুখস্থ থেকে আঁকো</figcaption></figure>
+  <div class="tipbox"><span class="lbl">লিখিত পরীক্ষার টিপস</span> গেটের প্রশ্নে <b>প্রতীক + সত্যক সারণি + বুলিয়ান রাশিমালা</b> তিনটিই লেখো; সার্কিটে প্রতিটি গেটের আউটপুট লেবেল করো (P, Q, R …) এবং শেষে একটি সারি দিয়ে যাচাই দেখাও।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · লজিক গেট</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>কোন গেটের আউটপুট শুধু সব ইনপুট 0 হলে 1 হয়?<ol class="opts"><li>NAND</li><li>NOR</li><li>XOR</li><li>OR</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>XOR তৈরিতে ন্যূনতম কয়টি ২-ইনপুট NAND লাগে?<ol class="opts"><li>3</li><li>5</li><li>4</li><li>6</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>A ⊕ 1 = ?<ol class="opts"><li>A</li><li>1</li><li>0</li><li>A′</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>৪-ইনপুট গেটের সত্যক সারণিতে সারি কয়টি?<ol class="opts"><li>8</li><li>16</li><li>4</li><li>32</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>IC 7404-এ থাকে:<ol class="opts"><li>৬টি ইনভার্টার</li><li>৪টি NAND</li><li>৪টি NOR</li><li>৪টি XOR</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>পজিটিভ লজিকের AND গেট নেগেটিভ লজিকে কাজ করে:<ol class="opts"><li>NAND</li><li>NOR</li><li>OR</li><li>AND</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>(A + B)′ = ?<ol class="opts"><li>A′B′</li><li>A′ + B′</li><li>AB</li><li>(AB)′</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>২ চলকের ভিন্ন বুলিয়ান ফাংশন কয়টি?<ol class="opts"><li>4</li><li>8</li><li>2</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>AND গেট বানাতে ন্যূনতম কয়টি ২-ইনপুট NOR লাগে?<ol class="opts"><li>2</li><li>3</li><li>1</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>C-তে 12 ^ 10-এর মান:<ol class="opts"><li>6</li><li>8</li><li>14</li><li>2</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ঘ · ৪-খ · ৫-ক · ৬-গ · ৭-ক · ৮-ঘ · ৯-খ · ১০-ক</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> শুধু NAND গেট ব্যবহার করে ন্যূনতম সংখ্যক গেটে একটি ২-ইনপুট XOR গেট তৈরি করো। সার্কিট আঁকো এবং বীজগাণিতিকভাবে প্রমাণ করো। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li><b>সার্কিট:</b> G1 = NAND(A, B) → P; G2 = NAND(A, P) → Q; G3 = NAND(B, P) → R; G4 = NAND(Q, R) → Y (চিত্র: পৃ. ৫)। <i class="mk">২</i></li>
+    <li>P = (AB)′ = A′ + B′ (ডি মরগান); Q = (A(A′ + B′))′ = (AA′ + AB′)′ = (AB′)′; R = (A′B)′ <i class="mk">৩</i></li>
+    <li>Y = (Q · R)′ = Q′ + R′ = <b>AB′ + A′B = A ⊕ B</b> ✓ (ডি মরগান + দ্বৈত পূরক) <i class="mk">২</i></li>
+    <li>যাচাই: AB = 00 → P = 1, Q = 1, R = 1, Y = 0 ✓; AB = 10 → P = 1, Q = 0, Y = 1 ✓। <b>৪টি গেটই ন্যূনতম।</b> <i class="mk">১</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>৭টি প্রতীক ও সত্যক সারণি আঁকতে পারি</li>
+        <li>NAND ও NOR দিয়ে NOT/AND/OR বানাতে পারি</li>
+        <li>ন্যূনতম গেট-সংখ্যা জানি (XOR-এ ৪টি NAND)</li>
+        <li>ডি মরগান ও বাবল পুশিং প্রয়োগ করতে পারি</li>
+        <li>7400 … 7486 ও V<sub>CC</sub>/GND পিন জানি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① ৪টি NOR দিয়ে XNOR<br>② শুধু NAND দিয়ে majority সার্কিট<br>③ সত্যক সারণিতে ডি মরগান প্রমাণ<br>④ ৪ বিটের জোড় প্যারিটি জেনারেটর</div>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../assets/fit.js"></script>
+</body>
+</html>

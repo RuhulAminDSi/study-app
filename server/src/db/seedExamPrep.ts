@@ -99,9 +99,11 @@ async function seedSubjects(db: Db) {
     // Link a subject created before its chapter existed, without overwriting an admin's choice.
     if (!subject.chapter_id) await db.query("UPDATE subjects SET chapter_id = $2 WHERE id = $1", [subject.id, chapter]);
     // One topic per lesson of the linked chapter, named after the lesson so imported topics match.
+    // Revision-notes lessons added by notes:apply summarise the chapter and are not topics.
     const lessons = await db.query(
       `SELECT l.id, l.title_en, l.title_bn, l.lesson_number FROM lessons l JOIN side_menus m ON m.id = l.side_menu_id
-        WHERE m.chapter_id = $1 ORDER BY m.sort_order, l.lesson_number`,
+        WHERE m.chapter_id = $1 AND l.content_en NOT LIKE '%data-notes-kind="revision"%'
+        ORDER BY m.sort_order, l.lesson_number`,
       [chapter],
     );
     for (const l of lessons.rows) {

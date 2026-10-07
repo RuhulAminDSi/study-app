@@ -97,9 +97,13 @@ export async function seed() {
   try {
     await client.query("BEGIN");
     const result = await seedModules(client, modules as SeedModule[]);
+    // Attach handwritten revision notes (guarded: never overwrites lessons an admin has edited).
+    const { applyNotes, loadNotesManifest } = await import("./applyNotes.js");
+    const notes = await applyNotes(client, loadNotesManifest(), modules as SeedModule[]);
     await client.query("COMMIT");
     console.log(`✔ ${result.chapters} chapters checked (existing ones left as they are)`);
     console.log(`✔ ${result.lessonsAdded} new lessons added`);
+    for (const n of notes) console.log(`✔ notes ${n.slug}: ${n.action}${n.reason ? ` (${n.reason})` : ""}`);
     console.log("\n✅ Seed complete!");
   } catch (err) {
     await client.query("ROLLBACK");
