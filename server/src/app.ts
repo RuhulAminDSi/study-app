@@ -15,6 +15,7 @@ import dashboardRoutes from "./routes/dashboard.js";
 import { candidateAuthRouter, candidateMeRouter } from "./routes/candidateAuth.js";
 import { examTagsRouter, jobPostsRouter, subjectsRouter, topicsRouter, SUBJECT_SELECT, JOB_POST_SELECT } from "./routes/adminTaxonomy.js";
 import { UUID_RE } from "./validation/taxonomy.js";
+import { adminQuestionsRouter } from "./routes/adminQuestions.js";
 
 export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "authRateLimitMax">> = {}) {
   const settings = { ...config, ...overrides };
@@ -41,6 +42,7 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   app.use("/api/topics", adminRequired, topicsRouter);
   app.use("/api/exam-tags", adminRequired, examTagsRouter);
   app.use("/api/job-posts", adminRequired, jobPostsRouter);
+  app.use("/api/questions", adminRequired, adminQuestionsRouter);
 
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
