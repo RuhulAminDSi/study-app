@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import NotesViewer from './NotesViewer'
 
 function parseTable(lines: string[]): ReactNode | null {
   const rows: string[][] = []
@@ -55,7 +56,21 @@ function isTableLine(line: string): boolean {
   return trimmed.includes('│') || /[┌┬┐├┤└┘┄┆─]/.test(trimmed)
 }
 
+/** A lesson body written by the server's notes:apply (a .hn-viewer block) becomes the NotesViewer. */
+function notesViewerFor(content: string): ReactNode | null {
+  if (!content.includes('class="hn-viewer"')) return null
+  const el = new DOMParser().parseFromString(content, 'text/html').querySelector<HTMLElement>('.hn-viewer')
+  const slug = el?.dataset.notes
+  const lang = el?.dataset.lang
+  if (!el || !slug || (lang !== 'en' && lang !== 'bn')) return null
+  const title = el.dataset.title || el.querySelector('.hn-viewer-title')?.textContent || slug
+  return <NotesViewer key={`${slug}.${lang}`} slug={slug} lang={lang} title={title} />
+}
+
 export function renderContent(content: string): ReactNode[] {
+  const notes = notesViewerFor(content)
+  if (notes) return [notes]
+
   if (/^\s*<(?:div|table|p|h[1-6]|pre|ul|ol|li|blockquote|hr|img|br|section|article|header|footer|main|figure|figcaption|span|a)\b/i.test(content.trim())) {
     return [<div key="html" className="html-content" dangerouslySetInnerHTML={{ __html: content }} />]
   }

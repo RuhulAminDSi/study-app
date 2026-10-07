@@ -256,6 +256,27 @@ export interface Translations {
   errFileUnreadable: string
   errEncoding: string
   errChapterUnknown: string
+  notesBadge: string
+  notesTabNotes: string
+  notesTabPdf: string
+  notesViewsLabel: string
+  notesOpenFull: string
+  notesPagesA4: string
+  pdfDownload: string
+  pdfDetails: string
+  pdfOpenNewTab: string
+  pdfPreviewTitle: string
+  pdfNoPreview: string
+  pdfTitle: string
+  pdfLanguage: string
+  pdfPages: string
+  pdfFileSize: string
+  pdfFormat: string
+  pdfFormatValue: string
+  pdfUpdated: string
+  pdfContents: string
+  pdfGoToPage: string
+  pdfPageShort: string
 }
 
 export type Language = 'en' | 'bn'

@@ -47,7 +47,7 @@ describe("viewerHtml", () => {
   it("shows the notebook page by default with PDF and full-page buttons, and no Markdown button", () => {
     const html = viewerHtml(replaceEntry, "bn");
     expect(html.startsWith("<div")).toBe(true); // rendered as HTML, not by the legacy parser
-    expect(html).toContain('data-notes="dld-logic-gates"');
+    expect(html).toContain('data-notes="dld-logic-gates" data-lang="bn" data-title="লজিক গেট: নোট"');
     expect(html).toContain('<iframe class="hn-viewer-frame" src="/notes/dld-logic-gates/dld-logic-gates.bn.html"');
     expect(html).toContain('href="/notes/dld-logic-gates/dld-logic-gates.bn.pdf" download');
     expect(html).toContain('href="/notes/dld-logic-gates/dld-logic-gates.bn.html" target="_blank"');
@@ -92,6 +92,19 @@ describe("applyNotes", () => {
     const [row] = await lesson("Revision Notes (Handwritten)");
     expect(row).toMatchObject({ lesson_number: 3, is_published: true });
     expect(row.content_en).toContain('data-notes-kind="revision"');
+  });
+
+  it("skips note sets that are not published yet when given the published folder", async () => {
+    await seedModules(pool, modules);
+    const published = fs.mkdtempSync(path.join(os.tmpdir(), "notes-pub-"));
+    fs.mkdirSync(path.join(published, "dld-logic-gates"));
+    fs.writeFileSync(path.join(published, "dld-logic-gates", "dld-logic-gates.en.html"), "<html></html>");
+    const [skipped] = await applyNotes(pool, [replaceEntry], modules, { publishedDir: published });
+    expect(skipped).toMatchObject({ action: "skipped", reason: expect.stringContaining("dld-logic-gates.bn.html") });
+    expect((await lesson("Logic Gates"))[0].content_en).not.toContain("data-notes");
+
+    fs.writeFileSync(path.join(published, "dld-logic-gates", "dld-logic-gates.bn.html"), "<html></html>");
+    expect(await applyNotes(pool, [replaceEntry], modules, { publishedDir: published })).toEqual([{ slug: "dld-logic-gates", action: "replaced" }]);
   });
 
   it("skips notes whose chapter or lesson does not exist", async () => {

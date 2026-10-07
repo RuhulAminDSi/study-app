@@ -1,6 +1,11 @@
-// Screen-only helper for published notes: scales the fixed A4 sheets down to the viewport width
-// (phones, the in-lesson iframe). Printing ignores it, so PDFs keep true A4 size.
+// Screen-only helper for published notes.
+// ?view=web → simple flowing web page (no A4 sheets), used as the default view inside lessons.
+// otherwise → scales the fixed A4 sheets down to narrow viewports. Printing is never affected.
 (function () {
+  if (/[?&]view=web\b/.test(location.search)) {
+    document.documentElement.classList.add('web');
+    return;
+  }
   var PAGE_PX = 210 * 96 / 25.4 + 24; // A4 width in CSS px plus a small gutter
   var printing = window.matchMedia ? window.matchMedia('print') : null;
   function fit() {
