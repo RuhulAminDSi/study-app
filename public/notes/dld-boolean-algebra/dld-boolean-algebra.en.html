@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Boolean Algebra: Handwritten Revision Notes (Govt IT Exam)</title>
+<link rel="stylesheet" href="../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, gate symbols (inline attributes!)
+     pins: 2-input at (0,12) and (0,28), output at (60,20); NOT input at (0,20) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <g id="g-nand"><path d="M0,12H10M0,28H10M52,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="48" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-and"><path d="M0,12H10M0,28H10M44,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-or"><path d="M0,12H11M0,28H11M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Boolean Algebra</span></h1>
+  <p class="subtitle">Laws · De Morgan · SOP/POS · K-map · Quine–McCluskey: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">BOOLEAN ALGEBRA</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Operators · precedence</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Laws &amp; theorems ★</text>
+      <text x="500" y="65" text-anchor="middle">Postulates · duality</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">De Morgan ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">SOP / POS, Σm ΠM ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Algebraic simplification</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">K-map ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Quine–McCluskey</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① A + A′B = A + B<br>② consensus theorem<br>③ De Morgan &amp; F′<br>④ Σm ↔ ΠM<br>⑤ K-map grouping<br>⑥ don't-cares (X)</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Digital logic: <span class="hl">Boolean algebra</span>, <span class="hl">De Morgan's Theorems</span>, logic gates and their truth tables, <span class="hl">canonical forms</span>, combinational logic circuits, <span class="hl">minimization techniques</span>". This notebook covers the algebra, canonical forms and minimization (K-map, Quine–McCluskey); gate symbols and gate counts are in the Logic Gates notes.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Basics, postulates, duality ……… p. 2</li><li>Laws &amp; theorems ……… p. 3</li><li>De Morgan &amp; complement of F ……… p. 4</li><li>Algebraic simplification ……… p. 5</li><li>Minterms, maxterms, SOP/POS … p. 6</li><li>K-map rules ……… p. 7</li></ul>
+    <ul class="tick"><li>K-map worked examples ……… p. 8</li><li>Quine–McCluskey, gates, code ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: basics, postulates, duality ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Basics</span></div>
+  <h2><span class="no">1</span>What Is Boolean Algebra?</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> The algebra of <span class="hl">two values, 0 and 1</span>, with three basic operations: AND, OR, NOT. Introduced by George Boole (<span class="circ">1854</span>); Claude Shannon (<span class="circ">1938</span>) applied it to switching circuits, which made it the mathematics of digital design.</div>
+  <table class="hand small">
+    <tr><th class="l">Operation</th><th>Symbol</th><th class="l">Rule</th><th>In C</th></tr>
+    <tr><td class="l">AND (logical product)</td><td>A · B or AB</td><td class="l">1 only if <b>all</b> inputs are 1</td><td>&amp;&amp;</td></tr>
+    <tr><td class="l">OR (logical sum)</td><td>A + B</td><td class="l">0 only if <b>all</b> inputs are 0</td><td>||</td></tr>
+    <tr><td class="l">NOT (complement)</td><td>A′ (also Ā)</td><td class="l">flips 0 ↔ 1</td><td>!</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <p><b>Precedence:</b> <span class="circ">( ) → NOT → AND → OR</span></p>
+      <p class="small">So A + BC′ means A + (B · (C′)), never (A + B)C′.</p>
+      <div class="sumbox small"><span class="lbl">Counting rules</span><br>n variables → <span class="hl">2ⁿ</span> truth-table rows<br>n variables → <span class="hl">2^(2ⁿ)</span> different functions<br>(n = 2 → 16 functions; n = 3 → 256)</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 280 150" width="270">
+      <g class="w">
+        <path class="ink-k" d="M10,30 H80 V60 H140 V90 H200 V120 H270" />
+        <path class="ink-g" d="M30,140 C120,150 200,140 255,128" marker-end="url(#ahg)"/>
+      </g>
+      <text x="45" y="22" text-anchor="middle" class="r w6">( )</text><text x="110" y="52" text-anchor="middle" class="w6">NOT ′</text><text x="170" y="82" text-anchor="middle" class="w6">AND ·</text><text x="235" y="112" text-anchor="middle" class="w6">OR +</text>
+      <text x="40" y="132" class="g s">evaluate first … last</text>
+    </svg><figcaption>the precedence staircase</figcaption></figure>
+  </div>
+  <div class="exam"><span class="lbl">Exam trap</span> Boolean <b>1 + 1 = 1</b> (OR). Binary arithmetic <b>1 + 1 = 10</b> (sum 0, carry 1). Same symbol, different meaning: read the question carefully.</div>
+
+  <h2><span class="no">2</span>Huntington's Postulates &amp; Duality</h2>
+  <div class="cols small">
+    <ol class="num">
+      <li><b>Closure</b> under + and ·</li>
+      <li><b>Identity:</b> A + 0 = A, A · 1 = A</li>
+      <li><b>Commutative:</b> A + B = B + A, AB = BA</li>
+    </ol>
+    <ol class="num" start="4">
+      <li><b>Distributive:</b> A(B + C) = AB + AC <b>and</b> A + BC = (A + B)(A + C)</li>
+      <li><b>Complement:</b> A + A′ = 1, A · A′ = 0</li>
+      <li>At least two elements, 0 ≠ 1</li>
+    </ol>
+  </div>
+  <p class="small">Huntington (<b>1904</b>): every other law (associative, absorption, De Morgan …) can be <span class="hl">proved from these six</span>.</p>
+  <div class="def"><span class="lbl">Duality principle</span> Swap <b>+ ↔ ·</b> and <b>0 ↔ 1</b> (leave every literal as it is). If an identity is true, its <span class="hl">dual is also true</span>, so each proof gives you two laws.</div>
+  <div class="cols">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Expression</th><th class="l">Dual</th></tr>
+      <tr><td class="l">A + 0 = A</td><td class="l">A · 1 = A</td></tr>
+      <tr><td class="l">A + AB = A</td><td class="l">A(A + B) = A</td></tr>
+      <tr><td class="l">A + BC</td><td class="l">A(B + C)</td></tr>
+    </table>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Dual = "<b>mirror the operators, keep the letters</b>". Complement = mirror the operators <b>and</b> flip every letter.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: laws & theorems ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Laws &amp; theorems</span></div>
+  <h2><span class="no">3</span>Laws &amp; Theorems (with Duals)</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th>#</th><th class="l">Law</th><th class="l">Form</th><th class="l">Dual form</th></tr>
+    <tr><td>1</td><td class="l">Identity</td><td class="l">A + 0 = A</td><td class="l">A · 1 = A</td></tr>
+    <tr><td>2</td><td class="l" style="white-space:nowrap">Null</td><td class="l">A + 1 = 1 ★</td><td class="l">A · 0 = 0</td></tr>
+    <tr><td>3</td><td class="l">Idempotent</td><td class="l">A + A = A ★</td><td class="l">A · A = A ★</td></tr>
+    <tr><td>4</td><td class="l">Complement</td><td class="l">A + A′ = 1 ★</td><td class="l">A · A′ = 0 ★</td></tr>
+    <tr><td>5</td><td class="l">Involution</td><td class="l">(A′)′ = A</td><td class="l">(self-dual)</td></tr>
+    <tr><td>6</td><td class="l">Commutative</td><td class="l">A + B = B + A</td><td class="l">AB = BA</td></tr>
+    <tr><td>7</td><td class="l">Associative</td><td class="l">A + (B + C) = (A + B) + C</td><td class="l">A(BC) = (AB)C</td></tr>
+    <tr><td>8</td><td class="l">Distributive</td><td class="l">A(B + C) = AB + AC</td><td class="l red"><b>A + BC = (A + B)(A + C) ★</b></td></tr>
+    <tr><td>9</td><td class="l">Absorption</td><td class="l">A + AB = A ★</td><td class="l">A(A + B) = A ★</td></tr>
+    <tr><td>10</td><td class="l" style="white-space:nowrap">Redundant literal</td><td class="l"><span class="hl">A + A′B = A + B</span> ★</td><td class="l">A(A′ + B) = AB ★</td></tr>
+    <tr><td>11</td><td class="l">Consensus</td><td class="l">AB + A′C + BC = AB + A′C ★</td><td class="l">(A + B)(A′ + C)(B + C) = (A + B)(A′ + C) ★</td></tr>
+    <tr><td>12</td><td class="l">De Morgan</td><td class="l">(A + B)′ = A′B′ ★</td><td class="l">(AB)′ = A′ + B′ ★</td></tr>
+  </table>
+  <div class="mnote">Laws 9–12 = 80% of simplification marks</div>
+  <p class="small"><span class="red"><b>★</b></span> = no counterpart in school algebra (there, 1 + 1 = 2 and A + A = 2A). Laws 9–12 are the <span class="hl">simplification workhorses</span>.</p>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Proof: absorption ✍</span><br>A + AB = A·1 + AB = A(1 + B) = A · 1 = <span class="circ">A</span><br><span class="tiny">identity, distributive, null, identity</span></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Proof: redundant literal ✍</span><br>A + A′B = (A + A′)(A + B) = 1 · (A + B) = <span class="circ">A + B</span><br><span class="tiny">distributive (+ over ·), complement, identity</span></div>
+  </div>
+  <div class="cols" style="grid-template-columns:240px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 240 120" width="230">
+      <g class="w">
+        <rect x="6" y="6" width="228" height="108" rx="8" class="ink-k"/>
+        <circle cx="95" cy="60" r="44" class="ink fill-y"/>
+        <circle cx="145" cy="60" r="44" class="ink"/>
+        <path d="M120,24 A44,44 0 0 1 120,96 A44,44 0 0 1 120,24 Z" class="ink-r" style="fill:rgba(211,47,47,.25)"/>
+      </g>
+      <text x="60" y="64" class="w6">A</text><text x="170" y="64" class="w6">B</text><text x="108" y="112" class="r s">AB ⊂ A</text>
+    </svg><figcaption>A + AB: the AB part is already inside A</figcaption></figure>
+    <div>
+      <div class="trick small"><span class="lbl">Memory trick: consensus</span> In AB + A′C the variable A appears <b>plain and primed</b>. Drop it and AND the leftovers → <b>BC</b>. That "bridge" term is redundant, so delete it.</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> A + BC = (A + B)(A + C) is <b>true</b> here, though it looks wrong from school algebra. A + A = A, never 2A.</div>
+    </div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: De Morgan in depth ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>De Morgan</span></div>
+  <h2><span class="no">4</span>De Morgan's Theorems in Depth</h2><span class="tag">high-yield</span>
+  <div class="sumbox"><span class="lbl">The two theorems</span> &nbsp;<span class="circ">(A + B)′ = A′ · B′</span> &nbsp;&nbsp; <span class="circ">(A · B)′ = A′ + B′</span><br>
+    n variables: (A + B + C + …)′ = A′B′C′… &nbsp;·&nbsp; (ABC…)′ = A′ + B′ + C′ + …</div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div>
+      <h3>Proof by truth table</h3>
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>A</th><th>B</th><th>(A+B)′</th><th>A′B′</th><th>(AB)′</th><th>A′+B′</th></tr>
+        <tr><td>0</td><td>0</td><td class="red"><b>1</b></td><td class="red"><b>1</b></td><td>1</td><td>1</td></tr>
+        <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>0</td><td class="red"><b>0</b></td><td class="red"><b>0</b></td></tr>
+      </table>
+      <p class="small">Columns 3 = 4 and 5 = 6 in every row → <b>proved</b>.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="240">
+      <g class="w">
+        <rect x="6" y="6" width="238" height="120" rx="8" class="ink-k" style="fill:rgba(211,47,47,.18)"/>
+        <circle cx="100" cy="66" r="46" class="ink" style="fill:#fffdf6"/>
+        <circle cx="150" cy="66" r="46" class="ink" style="fill:#fffdf6;fill-opacity:.85"/>
+        <circle cx="100" cy="66" r="46" class="ink"/>
+      </g>
+      <text x="70" y="70" class="w6">A</text><text x="168" y="70" class="w6">B</text><text x="16" y="24" class="r s">shaded</text>
+      <text x="125" y="146" text-anchor="middle" class="r s">(A + B)′ = A′ · B′: outside both</text>
+    </svg></figure>
+  </div>
+  <div class="mnote">a bar over the whole ≠ a bar over each letter!</div>
+  <h3>Complement of a whole function, F′</h3>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ol class="steps small">
+      <li>Put brackets round every AND term</li>
+      <li>Swap <b>+ ↔ ·</b> (and 0 ↔ 1): this is the dual</li>
+      <li>Complement <b>every literal</b> (A ↔ A′)</li>
+      <li>Simplify if asked</li>
+    </ol>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> F′ = <b>dual of F with every literal flipped</b>. "Break the long bar, change the sign under the break."</div>
+  </div>
+  <div class="ex"><span class="lbl">Worked example 1 ✍</span> F = AB′ + A′C → F′ = <span class="circ">(A′ + B)(A + C′)</span><br>
+    Expand: A′A + A′C′ + AB + BC′ = A′C′ + AB + BC′ = <b>A′C′ + AB</b> (BC′ is the consensus of A′C′ and AB)</div>
+  <div class="ex"><span class="lbl">Worked example 2 ✍</span> F = x(y′z + yz′) → F′ = x′ + (y + z′)(y′ + z) = <b>x′ + yz + y′z′</b> &nbsp;(= x′ + (y ⊙ z))</div>
+  <div class="ex"><span class="lbl">Worked example 3 ✍</span> (A + BC)′ = A′ · (BC)′ = A′(B′ + C′) = <b>A′B′ + A′C′</b> &nbsp;<span class="tiny green">De Morgan twice, then distributive</span></div>
+  <div class="exam"><span class="lbl">Exam trap</span> (A + B)′ ≠ A′ + B′ and (AB)′ ≠ A′B′. Flipping the letters <b>without</b> swapping the operator is the most common mistake.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: algebraic simplification ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Simplification</span></div>
+  <h2><span class="no">5</span>Algebraic Simplification</h2><span class="tag">written favourite</span>
+  <div class="def"><span class="lbl">Goal</span> Fewest <b>terms</b>, then fewest <b>literals</b> (a literal = a variable or its complement in a term). Fewer literals → <span class="hl">fewer gates, less delay, lower cost</span>. Name the law at every step: examiners mark the steps.</div>
+  <div class="ex"><span class="lbl">Example 1 ✍</span> F = AB + AB′ + A′B
+    <ol class="steps small"><li>AB + AB′ = A(B + B′) = A · 1 = A &nbsp;<span class="tiny green">distributive, complement, identity</span></li><li>F = A + A′B = <span class="circ">A + B</span> &nbsp;<span class="tiny green">redundant literal</span> &nbsp;(6 literals → 2)</li></ol></div>
+  <div class="ex"><span class="lbl">Example 2 ✍</span> F = (A + B)(A + B′) = A + BB′ = A + 0 = <span class="circ">A</span> &nbsp;<span class="tiny green">distributive (+ over ·), complement, identity</span></div>
+  <div class="ex"><span class="lbl">Example 3 ✍</span> F = A′B′C + A′BC + AB′C
+    <ol class="steps small"><li>A′B′C + A′BC = A′C(B′ + B) = A′C &nbsp;<span class="tiny green">distributive, complement</span></li><li>F = A′C + AB′C = C(A′ + AB′) = C(A′ + B′) &nbsp;<span class="tiny green">redundant literal</span></li><li>F = <span class="circ">A′C + B′C</span> (9 literals → 4; factored C(A′ + B′) = 3)</li></ol></div>
+  <div class="ex"><span class="lbl">Example 4: consensus ✍</span> F = XY + X′Z + YZ
+    <ol class="steps small"><li>YZ = YZ(X + X′) = XYZ + X′YZ &nbsp;<span class="tiny green">identity, complement, distributive</span></li><li>XY + XYZ = XY and X′Z + X′YZ = X′Z &nbsp;<span class="tiny green">absorption</span></li><li>F = <span class="circ">XY + X′Z</span></li></ol></div>
+  <div class="ex"><span class="lbl">Example 5 ✍</span> F = A′BC + AB′C′ + ABC′ + ABC
+    <ol class="steps small"><li>A′BC + ABC = BC(A′ + A) = BC</li><li>AB′C′ + ABC′ = AC′(B′ + B) = AC′</li><li>F = <span class="circ">BC + AC′</span> (12 literals → 4)</li></ol></div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Look for, in this order</span> ① X + X′ pairs (combine) ② a term inside another (absorption) ③ X + X′Y (drop X′) ④ a consensus "bridge" term (delete).</div>
+    <figure class="doodle"><svg viewBox="0 0 250 92" width="245">
+      <g class="w">
+        <rect x="70" y="8" width="72" height="16" class="ink-r fill-r"/><rect x="70" y="8" width="24" height="16" class="ink-g fill-g"/>
+        <rect x="70" y="36" width="108" height="16" class="ink-r fill-r"/><rect x="70" y="36" width="48" height="16" class="ink-g fill-g"/>
+        <rect x="70" y="64" width="144" height="16" class="ink-r fill-r"/><rect x="70" y="64" width="48" height="16" class="ink-g fill-g"/>
+      </g>
+      <text x="8" y="21" class="s">Ex 1</text><text x="8" y="49" class="s">Ex 3</text><text x="8" y="77" class="s">Ex 5</text>
+      <text x="150" y="21" class="s r">6 → 2</text><text x="186" y="49" class="s r">9 → 4</text><text x="220" y="77" class="s r">12 → 4</text>
+    </svg><figcaption>literals before (red) vs after (green)</figcaption></figure>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: canonical forms ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Canonical forms</span></div>
+  <h2><span class="no">6</span>Minterms, Maxterms &amp; Canonical Forms</h2><span class="tag">high-yield</span>
+  <table class="hand small">
+    <tr><th>A B C</th><th class="l">Minterm</th><th>m<sub>i</sub></th><th class="l">Maxterm</th><th>M<sub>i</sub></th></tr>
+    <tr><td>0 0 0</td><td class="l">A′B′C′</td><td>m0</td><td class="l">A + B + C</td><td>M0</td></tr>
+    <tr><td>0 0 1</td><td class="l">A′B′C</td><td>m1</td><td class="l">A + B + C′</td><td>M1</td></tr>
+    <tr><td>0 1 0</td><td class="l">A′BC′</td><td>m2</td><td class="l">A + B′ + C</td><td>M2</td></tr>
+    <tr><td>0 1 1</td><td class="l">A′BC</td><td>m3</td><td class="l">A + B′ + C′</td><td>M3</td></tr>
+    <tr><td>1 0 0</td><td class="l">AB′C′</td><td>m4</td><td class="l">A′ + B + C</td><td>M4</td></tr>
+    <tr><td>1 0 1</td><td class="l">AB′C</td><td>m5</td><td class="l">A′ + B + C′</td><td>M5</td></tr>
+    <tr><td>1 1 0</td><td class="l">ABC′</td><td>m6</td><td class="l">A′ + B′ + C</td><td>M6</td></tr>
+    <tr><td>1 1 1</td><td class="l">ABC</td><td>m7</td><td class="l">A′ + B′ + C′</td><td>M7</td></tr>
+  </table>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">Minterm m<sub>i</sub></span> AND of <b>all</b> variables; = 1 for exactly one row. <b>Canonical SOP</b> = OR of minterms = <span class="hl">Σm</span></div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Maxterm M<sub>i</sub></span> OR of <b>all</b> variables; = 0 for exactly one row. <b>Canonical POS</b> = AND of maxterms = <span class="hl">ΠM</span></div>
+  </div>
+  <p><b>Key relation:</b> <span class="circ">m<sub>i</sub>′ = M<sub>i</sub></span> · F = Σm(…) = ΠM(the <b>missing</b> indices) · F′ = Σm(missing) · <b>#m + #M = 2ⁿ</b></p>
+  <div class="mnote green">index = the row number in binary: ABC = 101 → m5</div>
+  <p class="small"><b>Standard</b> SOP/POS (terms may miss variables, e.g. A + B′C) vs <b>canonical</b> (every term has every variable).</p>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> Expand F = A + B′C to canonical form.
+      <ol class="steps"><li>A = A(B + B′)(C + C′) = m4 + m5 + m6 + m7</li><li>B′C = (A + A′)B′C = m5 + m1</li><li>F = <span class="circ">Σm(1, 4, 5, 6, 7)</span> = ΠM(0, 2, 3)</li><li>F′ = Σm(0, 2, 3)</li></ol></div>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="240">
+      <g class="w">
+        <rect x="10" y="14" width="120" height="34" rx="10" class="ink-g fill-g"/>
+        <rect x="130" y="96" width="112" height="34" rx="10" class="ink-r fill-r"/>
+        <rect x="10" y="96" width="104" height="34" rx="10" class="ink-p fill-p"/>
+        <path class="ink-k" d="M100,52 L168,92" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M60,52 L60,92" marker-end="url(#ahb)"/>
+      </g>
+      <text x="70" y="36" text-anchor="middle" class="g w6">Σm(1,4,5,6,7)</text>
+      <text x="186" y="118" text-anchor="middle" class="r w6">ΠM(0,2,3)</text>
+      <text x="62" y="118" text-anchor="middle" class="p w6">F′ = Σm(0,2,3)</text>
+      <text x="168" y="62" class="s">missing</text><text x="168" y="76" class="s">indices</text>
+    </svg></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Minterm: 1 → plain, 0 → primed. Maxterm: <b>exactly the opposite</b> (0 → plain).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> 3-variable F = Σm(1, 3, 5) has <b>8 − 3 = 5</b> maxterms in its ΠM form.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: K-map rules ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>K-map rules</span></div>
+  <h2><span class="no">7</span>Karnaugh Map (K-map): the Rules</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A K-map (Karnaugh, <span class="circ">1953</span>) is the truth table redrawn as a grid in <span class="hl">Gray-code order</span>, so neighbouring cells differ in <b>exactly one variable</b>. Grouping neighbours removes that variable.</div>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 138 148" width="138"><text x="92" y="14" text-anchor="middle" class="s k w6">2 variables</text><g class="w"><rect x="58" y="66" width="68" height="68" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M92,66V134M58,100H126" style="stroke-width:1.3"/><path class="ink-k" d="M24,32L58,66" style="stroke-width:1.3"/></g><text x="18" y="58" class="s g">A</text><text x="48" y="34" class="s g">B</text><text x="75" y="51" text-anchor="middle" class="s r">0</text><text x="109" y="51" text-anchor="middle" class="s r">1</text><text x="43" y="88" text-anchor="end" class="s r">0</text><text x="43" y="122" text-anchor="end" class="s r">1</text><text x="75" y="88" text-anchor="middle">0</text><text x="109" y="88" text-anchor="middle">1</text><text x="75" y="122" text-anchor="middle">2</text><text x="109" y="122" text-anchor="middle">3</text></svg></figure>
+    <figure class="doodle"><svg viewBox="0 0 206 148" width="206"><text x="126" y="14" text-anchor="middle" class="s k w6">3 variables</text><g class="w"><rect x="58" y="66" width="136" height="68" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M92,66V134M126,66V134M160,66V134M58,100H194" style="stroke-width:1.3"/><path class="ink-k" d="M24,32L58,66" style="stroke-width:1.3"/></g><text x="18" y="58" class="s g">A</text><text x="48" y="34" class="s g">BC</text><text x="75" y="51" text-anchor="middle" class="s r">00</text><text x="109" y="51" text-anchor="middle" class="s r">01</text><text x="143" y="51" text-anchor="middle" class="s r">11</text><text x="177" y="51" text-anchor="middle" class="s r">10</text><text x="43" y="88" text-anchor="end" class="s r">0</text><text x="43" y="122" text-anchor="end" class="s r">1</text><text x="75" y="88" text-anchor="middle">0</text><text x="109" y="88" text-anchor="middle">1</text><text x="143" y="88" text-anchor="middle">3</text><text x="177" y="88" text-anchor="middle">2</text><text x="75" y="122" text-anchor="middle">4</text><text x="109" y="122" text-anchor="middle">5</text><text x="143" y="122" text-anchor="middle">7</text><text x="177" y="122" text-anchor="middle">6</text></svg></figure>
+    <figure class="doodle"><svg viewBox="0 0 206 216" width="206"><text x="126" y="14" text-anchor="middle" class="s k w6">4 variables</text><g class="w"><rect x="58" y="66" width="136" height="136" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M92,66V202M126,66V202M160,66V202M58,100H194M58,134H194M58,168H194" style="stroke-width:1.3"/><path class="ink-k" d="M24,32L58,66" style="stroke-width:1.3"/></g><text x="18" y="58" class="s g">AB</text><text x="48" y="34" class="s g">CD</text><text x="75" y="51" text-anchor="middle" class="s r">00</text><text x="109" y="51" text-anchor="middle" class="s r">01</text><text x="143" y="51" text-anchor="middle" class="s r">11</text><text x="177" y="51" text-anchor="middle" class="s r">10</text><text x="43" y="88" text-anchor="end" class="s r">00</text><text x="43" y="122" text-anchor="end" class="s r">01</text><text x="43" y="156" text-anchor="end" class="s r">11</text><text x="43" y="190" text-anchor="end" class="s r">10</text><text x="75" y="88" text-anchor="middle">0</text><text x="109" y="88" text-anchor="middle">1</text><text x="143" y="88" text-anchor="middle">3</text><text x="177" y="88" text-anchor="middle">2</text><text x="75" y="122" text-anchor="middle">4</text><text x="109" y="122" text-anchor="middle">5</text><text x="143" y="122" text-anchor="middle">7</text><text x="177" y="122" text-anchor="middle">6</text><text x="75" y="156" text-anchor="middle">12</text><text x="109" y="156" text-anchor="middle">13</text><text x="143" y="156" text-anchor="middle">15</text><text x="177" y="156" text-anchor="middle">14</text><text x="75" y="190" text-anchor="middle">8</text><text x="109" y="190" text-anchor="middle">9</text><text x="143" y="190" text-anchor="middle">11</text><text x="177" y="190" text-anchor="middle">10</text></svg></figure>
+  </div>
+  <p class="small center">cell numbers = minterm indices · columns run <span class="circ">00, 01, 11, 10</span> (not 10, 11)</p>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr">
+    <ol class="steps small">
+      <li>Group the <b>1s</b> for SOP (the <b>0s</b> for POS); an X (don't-care) may join any group</li>
+      <li>Group sizes: <span class="hl">1, 2, 4, 8, 16</span>; rectangles only, no L-shapes or diagonals</li>
+      <li>Make groups <b>as large as possible</b>, and use <b>as few</b> as possible</li>
+      <li>Groups may <b>overlap</b>; every 1 must be covered</li>
+      <li>Edges wrap: left ↔ right, top ↔ bottom; the 4 corners are neighbours</li>
+      <li>Read a group: keep the variables that stay constant</li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 324 198" width="324"><g class="w"><rect x="58" y="48" width="136" height="136" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M92,48V184M126,48V184M160,48V184M58,82H194M58,116H194M58,150H194" style="stroke-width:1.3"/><path class="ink-k" d="M24,14L58,48" style="stroke-width:1.3"/></g><text x="18" y="40" class="s g">AB</text><text x="48" y="16" class="s g">CD</text><text x="75" y="33" text-anchor="middle" class="s r">00</text><text x="109" y="33" text-anchor="middle" class="s r">01</text><text x="143" y="33" text-anchor="middle" class="s r">11</text><text x="177" y="33" text-anchor="middle" class="s r">10</text><text x="43" y="70" text-anchor="end" class="s r">00</text><text x="43" y="104" text-anchor="end" class="s r">01</text><text x="43" y="138" text-anchor="end" class="s r">11</text><text x="43" y="172" text-anchor="end" class="s r">10</text><text x="61" y="58" style="font-size:9px;fill:#8a94b0">0</text><text x="95" y="58" style="font-size:9px;fill:#8a94b0">1</text><text x="129" y="58" style="font-size:9px;fill:#8a94b0">3</text><text x="163" y="58" style="font-size:9px;fill:#8a94b0">2</text><text x="61" y="92" style="font-size:9px;fill:#8a94b0">4</text><text x="95" y="92" style="font-size:9px;fill:#8a94b0">5</text><text x="129" y="92" style="font-size:9px;fill:#8a94b0">7</text><text x="163" y="92" style="font-size:9px;fill:#8a94b0">6</text><text x="61" y="126" style="font-size:9px;fill:#8a94b0">12</text><text x="95" y="126" style="font-size:9px;fill:#8a94b0">13</text><text x="129" y="126" style="font-size:9px;fill:#8a94b0">15</text><text x="163" y="126" style="font-size:9px;fill:#8a94b0">14</text><text x="61" y="160" style="font-size:9px;fill:#8a94b0">8</text><text x="95" y="160" style="font-size:9px;fill:#8a94b0">9</text><text x="129" y="160" style="font-size:9px;fill:#8a94b0">11</text><text x="163" y="160" style="font-size:9px;fill:#8a94b0">10</text><g class="w"><rect x="49" y="39" width="41" height="41" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="162" y="39" width="41" height="41" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="49" y="152" width="41" height="41" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="162" y="152" width="41" height="41" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="49" y="86" width="39" height="60" rx="11" class="ink-g" style="stroke-width:2.4"/><rect x="164" y="86" width="39" height="60" rx="11" class="ink-g" style="stroke-width:2.4"/><rect x="98" y="39" width="22" height="37" rx="11" class="ink-p" style="stroke-width:2.4"/><rect x="98" y="156" width="22" height="37" rx="11" class="ink-p" style="stroke-width:2.4"/></g><text x="216" y="62" class="r w6">4 corners</text><text x="216" y="77" class="s" style="font-size:10.5px;fill:#6b7a99">m0,2,8,10</text><text x="216" y="96" class="g w6">left ↔ right</text><text x="216" y="111" class="s" style="font-size:10.5px;fill:#6b7a99">m4,6,12,14</text><text x="216" y="130" class="p w6">top ↔ bottom</text><text x="216" y="145" class="s" style="font-size:10.5px;fill:#6b7a99">m1,9</text></svg></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Group (4-var)</th><th>Literals left</th></tr>
+      <tr><td>1 cell</td><td>4</td></tr><tr><td>2 cells</td><td>3</td></tr><tr><td>4 cells</td><td>2</td></tr><tr><td>8 cells</td><td>1</td></tr><tr><td>16 cells</td><td class="red"><b>F = 1</b></td></tr>
+    </table>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Prime implicant (PI)</span> a group that cannot be made larger</div>
+      <div class="def small"><span class="lbl">Essential PI</span> a PI covering a 1 that <b>no other</b> PI covers → it <span class="circ">must</span> appear in the answer</div>
+    </div>
+  </div>
+  <div class="exam"><span class="lbl">Exam trap</span> "Adjacent" means <b>one bit</b> different: m3 (0011) and m2 (0010) are neighbours; m1 (0001) and m2 (0010) are <b>not</b>, though 1 and 2 are consecutive numbers.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: K-map worked examples ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>K-map examples</span></div>
+  <h2><span class="no">8</span>K-map Worked Examples</h2><span class="tag">written favourite</span>
+  <h3>(a) F(A, B, C, D) = Σm(0, 1, 2, 5, 8, 9, 10)</h3>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 284 198" width="284"><g class="w"><rect x="58" y="48" width="136" height="136" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M92,48V184M126,48V184M160,48V184M58,82H194M58,116H194M58,150H194" style="stroke-width:1.3"/><path class="ink-k" d="M24,14L58,48" style="stroke-width:1.3"/></g><text x="18" y="40" class="s g">AB</text><text x="48" y="16" class="s g">CD</text><text x="75" y="33" text-anchor="middle" class="s r">00</text><text x="109" y="33" text-anchor="middle" class="s r">01</text><text x="143" y="33" text-anchor="middle" class="s r">11</text><text x="177" y="33" text-anchor="middle" class="s r">10</text><text x="43" y="70" text-anchor="end" class="s r">00</text><text x="43" y="104" text-anchor="end" class="s r">01</text><text x="43" y="138" text-anchor="end" class="s r">11</text><text x="43" y="172" text-anchor="end" class="s r">10</text><text x="61" y="58" style="font-size:9px;fill:#8a94b0">0</text><text x="77" y="72" text-anchor="middle" class="k l">1</text><text x="95" y="58" style="font-size:9px;fill:#8a94b0">1</text><text x="111" y="72" text-anchor="middle" class="k l">1</text><text x="129" y="58" style="font-size:9px;fill:#8a94b0">3</text><text x="163" y="58" style="font-size:9px;fill:#8a94b0">2</text><text x="179" y="72" text-anchor="middle" class="k l">1</text><text x="61" y="92" style="font-size:9px;fill:#8a94b0">4</text><text x="95" y="92" style="font-size:9px;fill:#8a94b0">5</text><text x="111" y="106" text-anchor="middle" class="k l">1</text><text x="129" y="92" style="font-size:9px;fill:#8a94b0">7</text><text x="163" y="92" style="font-size:9px;fill:#8a94b0">6</text><text x="61" y="126" style="font-size:9px;fill:#8a94b0">12</text><text x="95" y="126" style="font-size:9px;fill:#8a94b0">13</text><text x="129" y="126" style="font-size:9px;fill:#8a94b0">15</text><text x="163" y="126" style="font-size:9px;fill:#8a94b0">14</text><text x="61" y="160" style="font-size:9px;fill:#8a94b0">8</text><text x="77" y="174" text-anchor="middle" class="k l">1</text><text x="95" y="160" style="font-size:9px;fill:#8a94b0">9</text><text x="111" y="174" text-anchor="middle" class="k l">1</text><text x="129" y="160" style="font-size:9px;fill:#8a94b0">11</text><text x="163" y="160" style="font-size:9px;fill:#8a94b0">10</text><text x="179" y="174" text-anchor="middle" class="k l">1</text><g class="w"><rect x="60" y="39" width="64" height="41" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="60" y="152" width="64" height="41" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="49" y="39" width="39" height="39" rx="11" class="ink-g" style="stroke-width:2.4"/><rect x="164" y="39" width="39" height="39" rx="11" class="ink-g" style="stroke-width:2.4"/><rect x="49" y="154" width="39" height="39" rx="11" class="ink-g" style="stroke-width:2.4"/><rect x="164" y="154" width="39" height="39" rx="11" class="ink-g" style="stroke-width:2.4"/><rect x="98" y="54" width="22" height="56" rx="11" class="ink-p" style="stroke-width:2.4"/></g><text x="216" y="62" class="r w6">B′C′</text><text x="216" y="77" class="s" style="font-size:10.5px;fill:#6b7a99">m0,1,8,9</text><text x="216" y="96" class="g w6">B′D′</text><text x="216" y="111" class="s" style="font-size:10.5px;fill:#6b7a99">m0,2,8,10</text><text x="216" y="130" class="p w6">A′C′D</text><text x="216" y="145" class="s" style="font-size:10.5px;fill:#6b7a99">m1,5</text></svg></figure>
+    <div>
+      <ul class="dash small">
+        <li><span class="red"><b>B′C′</b></span>: quad m0, 1, 8, 9 (top and bottom rows wrap)</li>
+        <li><span class="green"><b>B′D′</b></span>: the four corners m0, 2, 8, 10</li>
+        <li><span class="purple"><b>A′C′D</b></span>: pair m1, 5</li>
+      </ul>
+      <p>F = <span class="circ">B′C′ + B′D′ + A′C′D</span></p>
+      <p class="small">All three are <b>essential</b>: m9, m10 and m5 are each covered by one group only. 7 literals.</p>
+    </div>
+  </div>
+  <h3>(b) With don't-cares: F = Σm(1, 3, 7, 11, 15) + d(0, 2, 5)</h3>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 284 198" width="284"><g class="w"><rect x="58" y="48" width="136" height="136" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M92,48V184M126,48V184M160,48V184M58,82H194M58,116H194M58,150H194" style="stroke-width:1.3"/><path class="ink-k" d="M24,14L58,48" style="stroke-width:1.3"/></g><text x="18" y="40" class="s g">AB</text><text x="48" y="16" class="s g">CD</text><text x="75" y="33" text-anchor="middle" class="s r">00</text><text x="109" y="33" text-anchor="middle" class="s r">01</text><text x="143" y="33" text-anchor="middle" class="s r">11</text><text x="177" y="33" text-anchor="middle" class="s r">10</text><text x="43" y="70" text-anchor="end" class="s r">00</text><text x="43" y="104" text-anchor="end" class="s r">01</text><text x="43" y="138" text-anchor="end" class="s r">11</text><text x="43" y="172" text-anchor="end" class="s r">10</text><text x="61" y="58" style="font-size:9px;fill:#8a94b0">0</text><text x="77" y="72" text-anchor="middle" class="p l">X</text><text x="95" y="58" style="font-size:9px;fill:#8a94b0">1</text><text x="111" y="72" text-anchor="middle" class="k l">1</text><text x="129" y="58" style="font-size:9px;fill:#8a94b0">3</text><text x="145" y="72" text-anchor="middle" class="k l">1</text><text x="163" y="58" style="font-size:9px;fill:#8a94b0">2</text><text x="179" y="72" text-anchor="middle" class="p l">X</text><text x="61" y="92" style="font-size:9px;fill:#8a94b0">4</text><text x="95" y="92" style="font-size:9px;fill:#8a94b0">5</text><text x="111" y="106" text-anchor="middle" class="p l">X</text><text x="129" y="92" style="font-size:9px;fill:#8a94b0">7</text><text x="145" y="106" text-anchor="middle" class="k l">1</text><text x="163" y="92" style="font-size:9px;fill:#8a94b0">6</text><text x="61" y="126" style="font-size:9px;fill:#8a94b0">12</text><text x="95" y="126" style="font-size:9px;fill:#8a94b0">13</text><text x="129" y="126" style="font-size:9px;fill:#8a94b0">15</text><text x="145" y="140" text-anchor="middle" class="k l">1</text><text x="163" y="126" style="font-size:9px;fill:#8a94b0">14</text><text x="61" y="160" style="font-size:9px;fill:#8a94b0">8</text><text x="95" y="160" style="font-size:9px;fill:#8a94b0">9</text><text x="129" y="160" style="font-size:9px;fill:#8a94b0">11</text><text x="145" y="174" text-anchor="middle" class="k l">1</text><text x="163" y="160" style="font-size:9px;fill:#8a94b0">10</text><g class="w"><rect x="128" y="50" width="30" height="132" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="62" y="52" width="128" height="26" rx="11" class="ink-g" style="stroke-width:2.4"/></g><text x="216" y="62" class="r w6">CD</text><text x="216" y="77" class="s" style="font-size:10.5px;fill:#6b7a99">m3,7,11,15</text><text x="216" y="96" class="g w6">A′B′</text><text x="216" y="111" class="s" style="font-size:10.5px;fill:#6b7a99">m0,1,2,3</text></svg></figure>
+    <div>
+      <ul class="dash small">
+        <li><span class="red"><b>CD</b></span>: column CD = 11 (m3, 7, 11, 15)</li>
+        <li><span class="green"><b>A′B′</b></span>: row AB = 00, using X at m0 and m2</li>
+      </ul>
+      <p>F = <span class="circ">CD + A′B′</span></p>
+      <p class="small">CD + A′D (using X at m5) is <b>equally minimal</b>: both have 4 literals. X5 is simply left out of the first answer.</p>
+    </div>
+  </div>
+  <h3>(c) POS by grouping 0s: F(A, B, C) = ΠM(0, 1, 2, 3, 6)</h3>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 294 130" width="294"><g class="w"><rect x="58" y="48" width="136" height="68" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M92,48V116M126,48V116M160,48V116M58,82H194" style="stroke-width:1.3"/><path class="ink-k" d="M24,14L58,48" style="stroke-width:1.3"/></g><text x="18" y="40" class="s g">A</text><text x="48" y="16" class="s g">BC</text><text x="75" y="33" text-anchor="middle" class="s r">00</text><text x="109" y="33" text-anchor="middle" class="s r">01</text><text x="143" y="33" text-anchor="middle" class="s r">11</text><text x="177" y="33" text-anchor="middle" class="s r">10</text><text x="43" y="70" text-anchor="end" class="s r">0</text><text x="43" y="104" text-anchor="end" class="s r">1</text><text x="61" y="58" style="font-size:9px;fill:#8a94b0">0</text><text x="77" y="72" text-anchor="middle" style="font-size:15px;fill:#9aa3b8">0</text><text x="95" y="58" style="font-size:9px;fill:#8a94b0">1</text><text x="111" y="72" text-anchor="middle" style="font-size:15px;fill:#9aa3b8">0</text><text x="129" y="58" style="font-size:9px;fill:#8a94b0">3</text><text x="145" y="72" text-anchor="middle" style="font-size:15px;fill:#9aa3b8">0</text><text x="163" y="58" style="font-size:9px;fill:#8a94b0">2</text><text x="179" y="72" text-anchor="middle" style="font-size:15px;fill:#9aa3b8">0</text><text x="61" y="92" style="font-size:9px;fill:#8a94b0">4</text><text x="77" y="106" text-anchor="middle" class="k l">1</text><text x="95" y="92" style="font-size:9px;fill:#8a94b0">5</text><text x="111" y="106" text-anchor="middle" class="k l">1</text><text x="129" y="92" style="font-size:9px;fill:#8a94b0">7</text><text x="145" y="106" text-anchor="middle" class="k l">1</text><text x="163" y="92" style="font-size:9px;fill:#8a94b0">6</text><text x="179" y="106" text-anchor="middle" style="font-size:15px;fill:#9aa3b8">0</text><g class="w"><rect x="60" y="50" width="132" height="30" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="164" y="52" width="26" height="60" rx="11" class="ink-g" style="stroke-width:2.4"/></g><text x="216" y="62" class="r w6">(A)</text><text x="216" y="77" class="s" style="font-size:10.5px;fill:#6b7a99">m0,1,2,3</text><text x="216" y="96" class="g w6">(B′ + C)</text><text x="216" y="111" class="s" style="font-size:10.5px;fill:#6b7a99">m2,6</text></svg></figure>
+    <div>
+      <ul class="dash small">
+        <li>Row A = 0 (four 0s) → sum term <span class="red"><b>(A)</b></span></li>
+        <li>m2, m6 (B = 1, C = 0) → <span class="green"><b>(B′ + C)</b></span></li>
+        <li>In a 0-group: a variable that is 0 stays plain, 1 is primed</li>
+      </ul>
+      <p>F = <span class="circ">A(B′ + C)</span></p>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Inside a group, a variable that <b>changes</b> disappears; a variable that stays constant is kept.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Use an X only if it makes a group <b>bigger</b>; don't-cares never have to be covered.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: QM, gates, code ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Beyond the K-map</span></div>
+  <h2><span class="no">9</span>Quine–McCluskey (Tabular) Method</h2>
+  <div class="def"><span class="lbl">Idea</span> A systematic, <span class="hl">computer-friendly</span> version of the K-map (Quine 1952, McCluskey 1956). It works for any number of variables.</div>
+  <ol class="steps small">
+    <li>Write the minterms in binary and <b>group them by the number of 1s</b></li>
+    <li>Combine terms in neighbouring groups that differ in <b>one bit</b>; write – for that bit and tick both</li>
+    <li>Repeat until nothing combines; <b>unticked terms = prime implicants</b></li>
+    <li>PI chart: take the essential PIs, then cover the rest with the fewest PIs (Petrick's method)</li>
+  </ol>
+  <div class="ex small"><span class="lbl">Mini example ✍</span> F = Σm(0, 1, 2, 3, 7)
+    <table class="hand small" style="white-space:nowrap">
+      <tr><th>Group</th><th>Column I</th><th>Column II</th><th>Column III</th></tr>
+      <tr><td>0 ones</td><td>0: 000 ✓</td><td>0,1: 00– ✓ · 0,2: 0–0 ✓</td><td class="red"><b>0,1,2,3: 0––</b></td></tr>
+      <tr><td>1 one</td><td>1: 001 ✓ · 2: 010 ✓</td><td>1,3: 0–1 ✓ · 2,3: 01– ✓</td><td></td></tr>
+      <tr><td>2 ones</td><td>3: 011 ✓</td><td class="red"><b>3,7: –11</b></td><td></td></tr>
+      <tr><td>3 ones</td><td>7: 111 ✓</td><td></td><td></td></tr>
+    </table>
+    Unticked = PIs: 0–– = A′ and –11 = BC; both essential (m0 and m7) → F = <span class="circ">A′ + BC</span></div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">K-map</th><th class="l">Quine–McCluskey</th></tr>
+    <tr><td class="l">Practical size</td><td class="l">up to 4 (5–6 with care) variables</td><td class="l">any number</td></tr>
+    <tr><td class="l">Method</td><td class="l">visual, by hand</td><td class="l">tabular, mechanical</td></tr>
+    <tr><td class="l">Best for</td><td class="l">exams, small circuits</td><td class="l">software / CAD tools</td></tr>
+  </table>
+  <h2><span class="no">10</span>From Minimal Form to Gates &amp; Code</h2>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:center">
+    <div>
+      <p><b>SOP</b> → AND-OR → <span class="hl">NAND-NAND</span> &nbsp;·&nbsp; <b>POS</b> → OR-AND → <span class="hl">NOR-NOR</span> (same two levels; see Logic Gates notes, sheet 7).</p>
+      <p class="small">Cost ≈ number of gates + gate inputs: that is why we minimize literals first.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 110" width="265">
+      <g class="w">
+        <use href="#g-nand" x="40" y="6"/><use href="#g-nand" x="40" y="64"/><use href="#g-nand" x="160" y="35"/>
+        <path class="ink" d="M100,26 H130 V47 H160 M100,84 H130 V63 H160 M220,55 H246"/>
+      </g>
+      <text x="34" y="22" text-anchor="end" class="s">A</text><text x="34" y="38" text-anchor="end" class="s">B</text><text x="34" y="80" text-anchor="end" class="s">C</text><text x="34" y="96" text-anchor="end" class="s">D</text>
+      <text x="250" y="52" class="r w6">F</text><text x="110" y="108" class="g s">F = AB + CD (NAND-NAND)</text>
+    </svg></figure>
+  </div>
+  <div class="tipbox"><span class="lbl">IT link</span> The same laws simplify code: <span class="mono">!(age &lt; 18 || age &gt; 60)</span> = <span class="mono">age &gt;= 18 &amp;&amp; age &lt;= 60</span> (De Morgan) · <span class="mono">x || (x &amp;&amp; y)</span> = <span class="mono">x</span> (absorption) · SQL <span class="mono">dept = 'IT' OR (dept = 'IT' AND pay &gt; 50000)</span> = <span class="mono">dept = 'IT'</span></div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Precedence: ( ) → NOT → AND → OR</p><p>n vars → 2ⁿ rows · 2^(2ⁿ) functions</p>
+      <p>A + 1 = 1 · A · 0 = 0 · A + A = A</p><p>A + A′ = 1 · A · A′ = 0 · A″ = A</p>
+      <p>A + AB = A · A(A + B) = A</p><p>A + A′B = A + B · A(A′ + B) = AB</p>
+      <p>A + BC = (A + B)(A + C)</p><p>AB + A′C + BC = AB + A′C</p>
+      <p>(A + B)′ = A′B′ · (AB)′ = A′ + B′</p><p>Dual: + ↔ ·, 0 ↔ 1 (letters stay)</p>
+      <p>m<sub>i</sub>′ = M<sub>i</sub> · Σm(…) = ΠM(missing)</p><p>K-map order 00, 01, 11, 10</p>
+      <p>Group of 2ᵏ cells removes k variables</p><p>SOP → NAND-NAND · POS → NOR-NOR</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Boolean algebra: Boole, 1854</li>
+      <li>Applied to switching: Shannon, 1938</li>
+      <li>A + AB = A (absorption)</li>
+      <li>A + A′B = A + B</li>
+      <li>Dual of A + BC is A(B + C)</li>
+      <li>4-variable K-map has 16 cells</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>K-map groups: 1, 2, 4, 8, 16 only</li>
+      <li>Four corners of a 4-var map = one group</li>
+      <li>Σm(0, 2, 4, 6) of A, B, C = C′</li>
+      <li>Essential PI must be in every answer</li>
+      <li>QM = tabular method, for many variables</li>
+      <li>#minterms + #maxterms = 2ⁿ</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> Boolean 1 + 1 = 1, binary 1 + 1 = 10 · dual ≠ complement · (A + B)′ ≠ A′ + B′ · adjacency is by one bit, not by consecutive numbers · don't-cares need not be covered · minimal answers may not be unique</div>
+  <div class="trick"><span class="lbl">All tricks together</span> Precedence staircase · dual = mirror operators, keep letters · consensus "bridge" term is redundant · break the bar, change the sign · minterm 0 → primed, maxterm 0 → plain · in a group, the changing variable disappears</div>
+  <figure class="doodle"><svg viewBox="0 0 520 90" width="520">
+    <g class="w">
+      <circle cx="70" cy="45" r="26" class="ink fill-b"/><circle cx="190" cy="45" r="26" class="ink fill-b"/><circle cx="310" cy="45" r="26" class="ink-r fill-r"/><circle cx="430" cy="45" r="26" class="ink-r fill-r"/>
+      <path class="ink-g" d="M98,45 H160 M218,45 H280 M338,45 H400" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M430,74 C380,96 120,96 70,74" marker-end="url(#ahp)"/>
+    </g>
+    <text x="70" y="51" text-anchor="middle" class="w6">00</text><text x="190" y="51" text-anchor="middle" class="w6">01</text><text x="310" y="51" text-anchor="middle" class="r w6">11</text><text x="430" y="51" text-anchor="middle" class="r w6">10</text>
+    <text x="129" y="36" text-anchor="middle" class="g s">1 bit</text><text x="249" y="36" text-anchor="middle" class="g s">1 bit</text><text x="369" y="36" text-anchor="middle" class="g s">1 bit</text><text x="250" y="88" text-anchor="middle" class="p s">wraps round: also 1 bit</text>
+  </svg><figcaption>Gray-code order: every step, including the wrap, changes one bit</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Boolean Algebra</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A + 1 equals:<ol class="opts"><li>A</li><li>0</li><li>A′</li><li>1</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>A + AB simplifies to:<ol class="opts"><li>B</li><li>AB</li><li>A</li><li>A + B</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>(A + B)′ equals:<ol class="opts"><li>A′B′</li><li>A′ + B′</li><li>AB</li><li>A′B</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>F(A, B, C) = Σm(0, 2, 4, 6) simplifies to:<ol class="opts"><li>A′</li><li>B′C′</li><li>A′C′</li><li>C′</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>AB + A′C + BC simplifies to:<ol class="opts"><li>AB + C</li><li>AB + A′C</li><li>A + C</li><li>B + C</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>A + A′B equals:<ol class="opts"><li>A + B</li><li>AB</li><li>A′ + B</li><li>B</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>The dual of A + BC is:<ol class="opts"><li>A′(B′ + C′)</li><li>(A + B)(A + C)</li><li>A(B + C)</li><li>A + B + C</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Number of cells in a 4-variable K-map:<ol class="opts"><li>8</li><li>16</li><li>4</li><li>32</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Which group size is NOT allowed in a K-map?<ol class="opts"><li>2</li><li>4</li><li>8</li><li>6</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>For 3 variables, F = Σm(1, 3, 5) has how many maxterms in ΠM form?<ol class="opts"><li>3</li><li>5</li><li>8</li><li>2</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-d · 2-c · 3-a · 4-d · 5-b · 6-a · 7-c · 8-b · 9-d · 10-b</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Minimize F(A, B, C, D) = Σm(0, 2, 5, 7, 8, 10, 13, 15) with a K-map and implement it with NAND gates only. <i class="mk">8 marks</i></div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 258 182" width="258"><g class="w"><rect x="58" y="48" width="120" height="120" class="ink-k" style="fill:rgba(255,255,255,.5)"/><path class="ink-k" d="M88,48V168M118,48V168M148,48V168M58,78H178M58,108H178M58,138H178" style="stroke-width:1.3"/><path class="ink-k" d="M24,14L58,48" style="stroke-width:1.3"/></g><text x="18" y="40" class="s g">AB</text><text x="48" y="16" class="s g">CD</text><text x="73" y="33" text-anchor="middle" class="s r">00</text><text x="103" y="33" text-anchor="middle" class="s r">01</text><text x="133" y="33" text-anchor="middle" class="s r">11</text><text x="163" y="33" text-anchor="middle" class="s r">10</text><text x="43" y="68" text-anchor="end" class="s r">00</text><text x="43" y="98" text-anchor="end" class="s r">01</text><text x="43" y="128" text-anchor="end" class="s r">11</text><text x="43" y="158" text-anchor="end" class="s r">10</text><text x="61" y="58" style="font-size:9px;fill:#8a94b0">0</text><text x="75" y="70" text-anchor="middle" class="k l">1</text><text x="91" y="58" style="font-size:9px;fill:#8a94b0">1</text><text x="121" y="58" style="font-size:9px;fill:#8a94b0">3</text><text x="151" y="58" style="font-size:9px;fill:#8a94b0">2</text><text x="165" y="70" text-anchor="middle" class="k l">1</text><text x="61" y="88" style="font-size:9px;fill:#8a94b0">4</text><text x="91" y="88" style="font-size:9px;fill:#8a94b0">5</text><text x="105" y="100" text-anchor="middle" class="k l">1</text><text x="121" y="88" style="font-size:9px;fill:#8a94b0">7</text><text x="135" y="100" text-anchor="middle" class="k l">1</text><text x="151" y="88" style="font-size:9px;fill:#8a94b0">6</text><text x="61" y="118" style="font-size:9px;fill:#8a94b0">12</text><text x="91" y="118" style="font-size:9px;fill:#8a94b0">13</text><text x="105" y="130" text-anchor="middle" class="k l">1</text><text x="121" y="118" style="font-size:9px;fill:#8a94b0">15</text><text x="135" y="130" text-anchor="middle" class="k l">1</text><text x="151" y="118" style="font-size:9px;fill:#8a94b0">14</text><text x="61" y="148" style="font-size:9px;fill:#8a94b0">8</text><text x="75" y="160" text-anchor="middle" class="k l">1</text><text x="91" y="148" style="font-size:9px;fill:#8a94b0">9</text><text x="121" y="148" style="font-size:9px;fill:#8a94b0">11</text><text x="151" y="148" style="font-size:9px;fill:#8a94b0">10</text><text x="165" y="160" text-anchor="middle" class="k l">1</text><g class="w"><rect x="49" y="39" width="37" height="37" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="150" y="39" width="37" height="37" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="49" y="140" width="37" height="37" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="150" y="140" width="37" height="37" rx="11" class="ink-r" style="stroke-width:2.4"/><rect x="92" y="82" width="52" height="52" rx="11" class="ink-g" style="stroke-width:2.4"/></g><text x="200" y="62" class="r w6">B′D′</text><text x="200" y="77" class="s" style="font-size:10.5px;fill:#6b7a99">m0,2,8,10</text><text x="200" y="96" class="g w6">BD</text><text x="200" y="111" class="s" style="font-size:10.5px;fill:#6b7a99">m5,7,13,15</text></svg></figure>
+    <ol class="steps small">
+      <li>Corners m0, 2, 8, 10 → <b>B′D′</b>; centre m5, 7, 13, 15 → <b>BD</b> <i class="mk">3</i></li>
+      <li>F = <span class="circ">B′D′ + BD</span> = B ⊙ D (XNOR); A and C drop out <i class="mk">2</i></li>
+      <li>NAND-NAND: F = ((B′D′)′ · (BD)′)′, with B′ = NAND(B, B), D′ = NAND(D, D) <i class="mk">2</i></li>
+      <li>Total: 2 inverters + 2 + 1 = <b>5 NAND gates</b> <i class="mk">1</i></li>
+    </ol>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can state all 12 laws with their duals</li>
+        <li>Can find F′ and the dual without mixing them</li>
+        <li>Can convert Σm ↔ ΠM and expand to canonical</li>
+        <li>Can group 3- and 4-variable K-maps with X</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① Prove the consensus theorem<br>② Σm(1,3,7,11,15) + d(0,2,5)<br>③ Minimize a POS with 0-groups<br>④ QM for Σm(0,1,2,5,6,7)</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../assets/fit.js"></script>
+</body>
+</html>
+
