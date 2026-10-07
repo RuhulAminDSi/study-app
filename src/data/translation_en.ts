@@ -260,4 +260,5 @@ export const translation_en: Translations = {
   noteNewTab: "Note in new tab",
   handwrittenNewTab: "Handwritten note in new tab",
   noteDownload: "Download note",
+  noteTypedLabel: "Typed note",
 }

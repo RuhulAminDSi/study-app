@@ -280,6 +280,7 @@ export interface Translations {
   noteNewTab: string
   handwrittenNewTab: string
   noteDownload: string
+  noteTypedLabel: string
 }
 
 export type Language = 'en' | 'bn'

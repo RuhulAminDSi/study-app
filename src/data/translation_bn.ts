@@ -260,4 +260,5 @@ export const translation_bn: Translations = {
   noteNewTab: "নোট নতুন ট্যাবে",
   handwrittenNewTab: "হাতে লেখা নোট নতুন ট্যাবে",
   noteDownload: "নোট ডাউনলোড",
+  noteTypedLabel: "টাইপ করা নোট",
 }
