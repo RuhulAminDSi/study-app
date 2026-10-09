@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>অথেনটিকেশন, সিগনেচার, DNS ও ইমেইল: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">অথেনটিকেশন, DNS ও ইমেইল</span></h1>
+  <p class="subtitle">Kerberos · হ্যাশ · সিগনেচার · X.509 · গিগাবিট · DNS · মেইল: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">কে পাঠাল? কোথায়?</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">ফ্যাক্টর · পাসওয়ার্ড</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">KDC · Kerberos ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">চ্যালেঞ্জ–রেসপন্স</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">হ্যাশ · MD5/SHA ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">সিগনেচার · X.509 ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">গিগাবিট / 10G ইথারনেট</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">DNS: রেকর্ড, পোর্ট 53 ★</text>
+      <text x="500" y="245" text-anchor="middle" class="r w6">SMTP·POP·IMAP·PGP ★</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, নীল = ধারণা, সবুজ = LAN প্রযুক্তি</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① প্রাইভেটে সই, পাবলিকে যাচাই<br>② Kerberos: AS, TGS, TGT<br>③ MD5 128 · SHA-1 160<br>④ 802.3z · 802.3ab<br>⑤ DNS 53 · SMTP 25<br>⑥ POP3 110 · IMAP 143</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Network security: Cryptography, DES, IDEA, public key algorithm; <span class="hl">Authentication</span>; <span class="hl">Digital signatures</span>; <span class="hl">Gigabit Ethernet</span>; <span class="hl">Domain Name System: Name servers</span>; <span class="hl">Email and its privacy</span>"। DES, IDEA, RSA ও ডিফি–হেলম্যান আছে ট্রান্সপোর্ট ও ক্রিপ্টোগ্রাফি নোটে; সাধারণ ও ফাস্ট ইথারনেট আছে ডেটা লিংক ও LAN নোটে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>অথেনটিকেশন, চ্যালেঞ্জ–রেসপন্স … পৃ. ২</li><li>KDC, নিডহ্যাম–শ্রোডার, Kerberos … পৃ. ৩</li><li>হ্যাশ ফাংশন ও MAC ……… পৃ. ৪</li><li>ডিজিটাল সিগনেচার ……… পৃ. ৫</li><li>সার্টিফিকেট, PKI, X.509 ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>গিগাবিট ও ১০ গিগাবিট ইথারনেট … পৃ. ৭</li><li>DNS: নেম সার্ভার ও রেকর্ড ……… পৃ. ৮</li><li>ইমেইল: SMTP, POP3, IMAP, MIME … পৃ. ৯</li><li>PGP, S/MIME, আগের রাতের পাতা … পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: authentication basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>অথেনটিকেশন</span></div>
+  <h2><span class="no">১</span>অথেনটিকেশন কী?</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">অথেনটিকেশন (Authentication)</span> হলো প্রমাণ করা যে কোনো ব্যবহারকারী, ডিভাইস বা প্রসেস <b>আসলেই সে, যে দাবি সে করছে</b>; <b>অথরাইজেশন</b> ঠিক করে সে কী করতে পারবে; <b>অ্যাকাউন্টিং</b> তার কাজের হিসাব রাখে। তিনটি মিলে: <span class="circ">AAA</span>।</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">ফ্যাক্টর</th><th class="l">উদাহরণ</th></tr>
+      <tr><td class="l" style="white-space:nowrap">যা তুমি <b>জানো</b></td><td class="l">পাসওয়ার্ড, PIN, নিরাপত্তা প্রশ্ন</td></tr>
+      <tr><td class="l" style="white-space:nowrap">যা তোমার <b>কাছে আছে</b></td><td class="l">OTP টোকেন, ফোন (SMS/অ্যাপ), স্মার্ট কার্ড</td></tr>
+      <tr><td class="l" style="white-space:nowrap">যা তুমি <b>নিজে</b></td><td class="l">আঙুলের ছাপ, আইরিস, মুখ, কণ্ঠস্বর</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="240">
+      <g class="w">
+        <circle cx="80" cy="56" r="44" class="ink fill-b"/>
+        <circle cx="170" cy="56" r="44" class="ink-g fill-g"/>
+        <circle cx="125" cy="100" r="44" class="ink-p fill-p"/>
+      </g>
+      <text x="62" y="46" text-anchor="middle" class="bn w6">জানা</text>
+      <text x="190" y="46" text-anchor="middle" class="bn g w6">আছে</text>
+      <text x="125" y="126" text-anchor="middle" class="bn p w6">নিজে</text>
+      <text x="125" y="80" text-anchor="middle" class="r s w6">MFA</text>
+    </svg><figcaption>MFA = ভিন্ন ভিন্ন বৃত্ত থেকে ফ্যাক্টর</figcaption></figure>
+  </div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>পাসওয়ার্ড + PIN টু-ফ্যাক্টর নয়</b>: দুটোই "যা তুমি জানো"। MFA (মাল্টি-ফ্যাক্টর অথেনটিকেশন)-এ লাগে <b>ভিন্ন ধরনের</b> ফ্যাক্টর (পাসওয়ার্ড + ফোনের OTP)।</div>
+  <h2><span class="no">২</span>পাসওয়ার্ড ও ওয়ান-টাইম পাসওয়ার্ড</h2>
+  <ul class="dash small">
+    <li>পাসওয়ার্ড নয়, রাখতে হয় <span class="hl">সল্টেড হ্যাশ (salted hash)</span> H(salt ∥ password); প্রতিটি ব্যবহারকারীর আলাদা সল্ট <b>রেইনবো টেবিল</b> অকেজো করে। ধীর হ্যাশ (bcrypt, PBKDF2, Argon2) ডিকশনারি অ্যাটাক ধীর করে।</li>
+    <li><b>OTP</b>: HOTP (কাউন্টারভিত্তিক) ও <b>TOTP</b> (প্রতি <span class="circ">30 s</span>-এ নতুন কোড); চুরি হওয়া OTP পরে অকেজো, তাই OTP <b>রিপ্লে অ্যাটাক</b> ঠেকায়।</li>
+  </ul>
+  <h2><span class="no">৩</span>চ্যালেঞ্জ–রেসপন্স (শেয়ার্ড সিক্রেট কী)</h2>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 270 190" width="265">
+      <g class="w">
+        <rect x="20" y="4" width="50" height="24" rx="6" class="ink fill-b"/><rect x="200" y="4" width="50" height="24" rx="6" class="ink fill-b"/>
+        <path class="ink-k" d="M45,28 V186 M225,28 V186" stroke-dasharray="4 4" style="stroke-width:1.3"/>
+        <path class="ink" d="M47,48 H220" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M223,78 H50" marker-end="url(#ah)"/>
+        <path class="ink" d="M47,108 H220" marker-end="url(#ahb)"/>
+        <path class="ink" d="M47,138 H220" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M223,168 H50" marker-end="url(#ahg)"/>
+      </g>
+      <text x="45" y="21" text-anchor="middle" class="w6">Alice</text><text x="225" y="21" text-anchor="middle" class="w6">Bob</text>
+      <text x="135" y="34" text-anchor="middle" class="bn s">① A (আমি Alice)</text>
+      <text x="135" y="64" text-anchor="middle" class="bn r s">② R<tspan baseline-shift="sub" font-size="9">B</tspan> (র‍্যান্ডম ননস)</text>
+      <text x="135" y="94" text-anchor="middle" class="s">③ K<tspan baseline-shift="sub" font-size="9">AB</tspan>(R<tspan baseline-shift="sub" font-size="9">B</tspan>)</text>
+      <text x="135" y="124" text-anchor="middle" class="s">④ R<tspan baseline-shift="sub" font-size="9">A</tspan></text>
+      <text x="135" y="154" text-anchor="middle" class="g s">⑤ K<tspan baseline-shift="sub" font-size="9">AB</tspan>(R<tspan baseline-shift="sub" font-size="9">A</tspan>)</text>
+    </svg><figcaption>৫-বার্তার পারস্পরিক অথেনটিকেশন</figcaption></figure>
+    <div>
+      <p class="small">Bob একটি নতুন র‍্যান্ডম <span class="hl">ননস (nonce)</span> ("একবারই ব্যবহৃত সংখ্যা") পাঠায়; শুধু K<sub>AB</sub> যার কাছে আছে সে-ই এটি এনক্রিপ্ট করে ফেরত দিতে পারে। ④–⑤ উল্টো দিকে একই কাজ: <span class="hl">পারস্পরিক অথেনটিকেশন (mutual authentication)</span>। কী <b>কখনো নেটওয়ার্কে যায় না</b>।</p>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ: রিফ্লেকশন অ্যাটাক</span> ৩-বার্তার সংক্ষিপ্ত রূপে Trudy একটি <b>দ্বিতীয় সেশন</b> খুলে Bob-কে দিয়েই তার নিজের চ্যালেঞ্জ এনক্রিপ্ট করিয়ে নেয়। প্রতিকার: <b>যে শুরু করে সে আগে প্রমাণ দেবে</b>; দুই দিকের জন্য আলাদা কী।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"নতুন প্রশ্ন, গোপন উত্তর"</b>: ননস = রিপ্লে নয়, কী = প্রমাণ।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">AAA সার্ভার</span> <b>RADIUS</b> UDP <span class="circ">1812</span> · <b>TACACS+</b> TCP 49 · <b>EAP/802.1X</b> Wi-Fi</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: KDC, Needham–Schroeder, Kerberos ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>KDC ও Kerberos</span></div>
+  <h2><span class="no">৪</span>কী ডিস্ট্রিবিউশন সেন্টার ও নিডহ্যাম–শ্রোডার</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">KDC</span> একটি বিশ্বস্ত সার্ভার, যা <b>প্রত্যেক</b> ব্যবহারকারীর সাথে একটি করে গোপন কী শেয়ার করে (K<sub>A</sub>, K<sub>B</sub> …)। N জন ব্যবহারকারীর জন্য জোড়ায় জোড়ায় <span class="circ">N(N − 1)/2</span>টি কী-এর বদলে N টি কী-ই যথেষ্ট। প্রতিটি আলাপের জন্য KDC নতুন <span class="hl">সেশন কী (session key)</span> K<sub>S</sub> দেয়।</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 196" width="295">
+      <g class="w">
+        <rect x="6" y="4" width="44" height="24" rx="6" class="ink fill-b"/><rect x="132" y="4" width="56" height="24" rx="6" class="ink-r fill-r"/><rect x="252" y="4" width="44" height="24" rx="6" class="ink fill-b"/>
+        <path class="ink-k" d="M28,28 V192 M160,28 V192 M274,28 V192" stroke-dasharray="4 4" style="stroke-width:1.3"/>
+        <path class="ink" d="M30,56 H156" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M158,90 H33" marker-end="url(#ah)"/>
+        <path class="ink" d="M30,124 H270" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M272,156 H33" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M30,186 H270" marker-end="url(#ahg)"/>
+      </g>
+      <text x="28" y="21" text-anchor="middle" class="w6">A</text><text x="160" y="21" text-anchor="middle" class="r w6">KDC</text><text x="274" y="21" text-anchor="middle" class="w6">B</text>
+      <text x="94" y="42" text-anchor="middle" class="s">① A, B, R<tspan baseline-shift="sub" font-size="9">A</tspan></text>
+      <text x="94" y="75" text-anchor="middle" class="r s">② K<tspan baseline-shift="sub" font-size="9">A</tspan>(R<tspan baseline-shift="sub" font-size="9">A</tspan>, B, K<tspan baseline-shift="sub" font-size="9">S</tspan>, T)</text>
+      <text x="150" y="109" text-anchor="middle" class="s">③ T = K<tspan baseline-shift="sub" font-size="9">B</tspan>(A, K<tspan baseline-shift="sub" font-size="9">S</tspan>)</text>
+      <text x="150" y="141" text-anchor="middle" class="g s">④ K<tspan baseline-shift="sub" font-size="9">S</tspan>(R<tspan baseline-shift="sub" font-size="9">B</tspan>)</text>
+      <text x="150" y="171" text-anchor="middle" class="g s">⑤ K<tspan baseline-shift="sub" font-size="9">S</tspan>(R<tspan baseline-shift="sub" font-size="9">B</tspan> − 1)</text>
+    </svg><figcaption>নিডহ্যাম–শ্রোডার (১৯৭৮); T = টিকিট</figcaption></figure>
+    <div class="small">
+      <p>② প্রমাণ করে উত্তরটি নতুন (এতে R<sub>A</sub> আছে) এবং A-কে <b>টিকিট</b> দেয়, যা শুধু B খুলতে পারে। ④–⑤ দুই পক্ষকে নিশ্চিত করে যে অপরজনের কাছেও K<sub>S</sub> আছে।</p>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ: দুর্বলতা</span> বার্তা ③-এ <b>নতুনত্বের প্রমাণ নেই</b>। পুরোনো কোনো K<sub>S</sub> ফাঁস হলে Trudy পুরোনো টিকিট <b>রিপ্লে</b> করে A সাজতে পারে (ডেনিং–সাক্কো, ১৯৮১)। প্রতিকার: <b>টাইমস্ট্যাম্প</b> (Kerberos) বা <b>অটওয়ে–রিস</b> প্রোটোকল।</div>
+    </div>
+  </div>
+  <h2><span class="no">৫</span>Kerberos</h2><span class="tag">লিখিত প্রশ্নে প্রিয়</span>
+  <p class="small">MIT-র Project Athena থেকে; <b>v5</b> (RFC 4120) হলো <span class="hl">Windows Active Directory</span>-র লগইন পদ্ধতি। সিমেট্রিক কী, <span class="circ">পোর্ট 88</span>, <b>সিঙ্গেল সাইন-অন</b>: একবার পাসওয়ার্ড, সব সার্ভিসের টিকিট।</p>
+  <div class="cols" style="grid-template-columns:310px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 310 200" width="305">
+      <g class="w">
+        <rect x="8" y="80" width="70" height="40" rx="10" class="ink fill-y"/>
+        <rect x="190" y="6" width="112" height="36" rx="10" class="ink-r fill-r"/>
+        <rect x="190" y="82" width="112" height="36" rx="10" class="ink-r fill-r"/>
+        <rect x="190" y="158" width="112" height="36" rx="10" class="ink-g fill-g"/>
+        <path class="ink-k" d="M182,2 V124 H310" stroke-dasharray="5 4" style="stroke-width:1.2"/>
+        <path class="ink" d="M78,86 L186,26" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M190,36 L82,96" marker-end="url(#ah)"/>
+        <path class="ink" d="M78,100 L186,96" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M190,108 L82,110" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M78,114 L186,166" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M190,184 L72,122" marker-end="url(#ahg)"/>
+      </g>
+      <text x="43" y="105" text-anchor="middle" class="bn w6">ক্লায়েন্ট</text>
+      <text x="246" y="29" text-anchor="middle" class="r w6">AS</text>
+      <text x="246" y="105" text-anchor="middle" class="r w6">TGS</text>
+      <text x="246" y="181" text-anchor="middle" class="bn g w6">সার্ভার V</text>
+      <text x="116" y="46" class="s">①</text><text x="160" y="74" class="r s">②</text>
+      <text x="122" y="92" class="s">③</text><text x="150" y="126" class="r s">④</text>
+      <text x="104" y="146" class="g s">⑤</text><text x="146" y="174" class="g s">⑥</text>
+      <text x="300" y="138" text-anchor="end" class="r s">KDC = AS + TGS</text>
+    </svg><figcaption>তিন সার্ভার, ছয় বার্তা</figcaption></figure>
+    <ol class="steps small">
+      <li><b>C → AS</b>: ব্যবহারকারীর নাম (পাসওয়ার্ড পাঠানো হয় না)</li>
+      <li><b>AS → C</b>: K<sub>C</sub>(K<sub>S</sub>, <span class="hl">TGT</span>); K<sub>C</sub> পাসওয়ার্ড থেকে তৈরি, তাই শুধু আসল ব্যবহারকারী এটি খুলতে পারে</li>
+      <li><b>C → TGS</b>: TGT + K<sub>S</sub>(টাইমস্ট্যাম্প) + "আমি V চাই"</li>
+      <li><b>TGS → C</b>: K<sub>S</sub>(K<sub>CV</sub>) + <b>সার্ভিস টিকিট</b> K<sub>V</sub>(C, K<sub>CV</sub>)</li>
+      <li><b>C → V</b>: সার্ভিস টিকিট + K<sub>CV</sub>(টাইমস্ট্যাম্প)</li>
+      <li><b>V → C</b>: K<sub>CV</sub>(টাইমস্ট্যাম্প + 1): <b>পারস্পরিক অথেনটিকেশন</b></li>
+    </ol>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"AS ঢুকতে দেয়, TGS টিকিট দেয়।"</b> TGT = সিনেমা হলের রিস্টব্যান্ড; প্রতিটি সার্ভিস টিকিট = একটি ছবির আসন। রিস্টব্যান্ড (TGT) চলে সারাদিন (≈ 10 h)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> রিপ্লে ঠেকাতে টাইমস্ট্যাম্প ব্যবহার করে বলে Kerberos-এ <b>ঘড়ি মেলানো</b> থাকতে হয় (ডিফল্ট পার্থক্য ≤ 5 min)। KDC একটি <b>সিঙ্গেল পয়েন্ট অব ফেইলিওর</b>; মূল রূপে এটি পাবলিক-কী ক্রিপ্টোগ্রাফি ব্যবহার করে না।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: hash functions & MACs ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>হ্যাশ ও MAC</span></div>
+  <h2><span class="no">৬</span>ক্রিপ্টোগ্রাফিক হ্যাশ ফাংশন (মেসেজ ডাইজেস্ট)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> হ্যাশ ফাংশন H <b>যেকোনো দৈর্ঘ্যের</b> বার্তাকে একটি <span class="hl">নির্দিষ্ট দৈর্ঘ্যের ডাইজেস্টে</span> রূপান্তর করে। এতে <b>কোনো কী নেই</b>, হিসাব দ্রুত, আর ইনপুটের একটি বিট বদলালে আউটপুটের প্রায় অর্ধেক বিট বদলে যায় (<b>অ্যাভালাঞ্চ ইফেক্ট</b>)।</div>
+  <div class="cols" style="grid-template-columns:1fr 280px;align-items:center">
+    <ol class="num small">
+      <li><b>প্রি-ইমেজ রেজিস্ট্যান্স</b> (একমুখী): H(m) থেকে m বের করা অসম্ভবপ্রায়</li>
+      <li><b>সেকেন্ড প্রি-ইমেজ রেজিস্ট্যান্স</b>: m দেওয়া থাকলে H(m′) = H(m) হয় এমন m′ ≠ m খোঁজা অসম্ভবপ্রায়</li>
+      <li><b>কলিশন রেজিস্ট্যান্স</b>: সমান হ্যাশের <i>যেকোনো</i> জোড়া m ≠ m′ খোঁজা অসম্ভবপ্রায়</li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 280 120" width="275">
+      <g class="w">
+        <rect x="6" y="14" width="80" height="28" rx="6" class="ink fill-b"/>
+        <rect x="6" y="50" width="56" height="28" rx="6" class="ink fill-b"/>
+        <rect x="6" y="86" width="96" height="28" rx="6" class="ink fill-b"/>
+        <path class="ink-k" d="M90,28 L140,58 M66,64 L140,64 M106,100 L140,70"/>
+        <rect x="140" y="44" width="40" height="40" rx="8" class="ink-r fill-y"/>
+        <path class="ink-g" d="M182,64 H208" marker-end="url(#ahg)"/>
+        <rect x="212" y="50" width="62" height="28" rx="6" class="ink-g fill-g"/>
+      </g>
+      <text x="46" y="33" text-anchor="middle" class="bn s">ছোট বার্তা</text><text x="34" y="69" text-anchor="middle" class="s">"hi"</text><text x="54" y="105" text-anchor="middle" class="bn s">4 GB ফাইল</text>
+      <text x="160" y="70" text-anchor="middle" class="r w6">H</text>
+      <text x="243" y="69" text-anchor="middle" class="bn g s w6">256 বিট</text>
+    </svg><figcaption>যেকোনো দৈর্ঘ্য ঢোকে, নির্দিষ্ট দৈর্ঘ্য বের হয়</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">অ্যালগরিদম</th><th>সাল</th><th>ডাইজেস্ট</th><th>ব্লক</th><th>রাউন্ড</th><th class="l">অবস্থা</th></tr>
+    <tr><td class="l"><b>MD5</b> (Rivest)</td><td>1991</td><td class="red"><b>128</b></td><td>512</td><td>64</td><td class="l">ভাঙা (2004): শুধু চেকসাম</td></tr>
+    <tr><td class="l"><b>SHA-1</b> (NSA/NIST)</td><td>1995</td><td class="red"><b>160</b></td><td>512</td><td>80</td><td class="l">ভাঙা (2017, SHAttered)</td></tr>
+    <tr><td class="l"><b>SHA-256</b> (SHA-2)</td><td>2001</td><td class="red"><b>256</b></td><td>512</td><td>64</td><td class="l">বর্তমান মান: TLS, Bitcoin</td></tr>
+    <tr><td class="l">SHA-512 (SHA-2)</td><td>2001</td><td>512</td><td>1024</td><td>80</td><td class="l">নিরাপদ, 64-বিট CPU-তে দ্রুত</td></tr>
+    <tr><td class="l">SHA-3 (Keccak)</td><td>2015</td><td>224–512</td><td>sponge</td><td>24</td><td class="l">নতুন নকশা, SHA-2-এর বিকল্প</td></tr>
+  </table>
+  <p class="small">মাপ বিটে। <b>বার্থডে অ্যাটাক:</b> n-বিট ডাইজেস্টে মোটামুটি <span class="circ">2<sup>n/2</sup></span> বার চেষ্টায় কলিশন মেলে → MD5 2<sup>64</sup>, SHA-1 2<sup>80</sup>, SHA-256 2<sup>128</sup>।</p>
+  <h2><span class="no">৭</span>মেসেজ অথেনটিকেশন কোড (MAC) ও HMAC</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">MAC</span> বার্তা <b>ও একটি শেয়ার্ড কী</b> থেকে ট্যাগ = C(K, M); প্রাপক একই কী দিয়ে আবার হিসাব করে। প্রমাণ করে <span class="hl">ইন্টিগ্রিটি + উৎস</span>: K ছাড়া বৈধ ট্যাগ বানানো যায় না।</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">HMAC (RFC 2104)</span> H((K ⊕ opad) ∥ H((K ⊕ ipad) ∥ M))<br>ipad = 0x36…, opad = 0x5C… · TLS, IPsec-এ HMAC-SHA256</div>
+  </div>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">পদ্ধতি</th><th>কী</th><th>ইন্টিগ্রিটি</th><th>অথেন.</th><th>নন-রেপুড.</th><th>গোপনীয়তা</th></tr>
+    <tr><td class="l">শুধু হ্যাশ</td><td>নেই</td><td>শুধু ত্রুটি</td><td>✗</td><td>✗</td><td>✗</td></tr>
+    <tr><td class="l">MAC / HMAC</td><td>শেয়ার্ড সিক্রেট</td><td>✓</td><td>✓</td><td class="red"><b>✗</b></td><td>✗</td></tr>
+    <tr><td class="l">ডিজিটাল সিগনেচার</td><td>প্রাইভেট / পাবলিক</td><td>✓</td><td>✓</td><td class="green"><b>✓</b></td><td>✗</td></tr>
+    <tr><td class="l">এনক্রিপশন</td><td>যেকোনো</td><td>✗</td><td>✗</td><td>✗</td><td>✓</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> SHA-<b>1</b> ↔ <b>1</b>60; MD5 তার চেয়ে ছোট (128)। SHA-2-তে নামই দৈর্ঘ্য: SHA-256 → 256।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> MAC <b>নন-রেপুডিয়েশন দেয় না</b>: Bob-ও K জানে, তাই ট্যাগ সে নিজেও বানাতে পারত। হ্যাশ <b>এনক্রিপশন নয়</b>: কী নেই, উল্টানোও যায় না।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: digital signatures ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>ডিজিটাল সিগনেচার</span></div>
+  <h2><span class="no">৮</span>ডিজিটাল সিগনেচার</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ডিজিটাল সিগনেচার (Digital Signature) হলো <b>স্বাক্ষরকারীর প্রাইভেট কী</b> দিয়ে বার্তা থেকে হিসাব করা একটি মান, যা যে কেউ <b>স্বাক্ষরকারীর পাবলিক কী</b> দিয়ে যাচাই করতে পারে। এটি দেয় <span class="hl">অথেনটিকেশন</span>, <span class="hl">ইন্টিগ্রিটি (অখণ্ডতা)</span> ও <span class="hl">নন-রেপুডিয়েশন (অস্বীকার করা যায় না)</span>, কিন্তু <b>গোপনীয়তা দেয় না</b>।</div>
+  <p class="small"><b>শর্ত:</b> ① প্রাপক প্রেরকের পরিচয় যাচাই করতে পারবে; ② প্রেরক পরে অস্বীকার করতে পারবে না; ③ প্রাপক বার্তা জাল বা বদল করতে পারবে না।</p>
+  <figure class="doodle"><svg viewBox="0 0 640 176" width="640">
+    <g class="w">
+      <rect x="4" y="14" width="84" height="34" rx="8" class="ink fill-b"/>
+      <rect x="112" y="14" width="54" height="34" rx="8" class="ink fill-y"/>
+      <rect x="190" y="14" width="62" height="34" rx="8" class="ink fill-y"/>
+      <rect x="276" y="10" width="150" height="42" rx="8" class="ink-r fill-r"/>
+      <rect x="474" y="14" width="96" height="34" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M88,31 H108 M166,31 H186 M252,31 H272 M426,31 H470" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M522,48 V97 H414 M522,97 V143 H444" marker-end="url(#ahg)"/>
+      <rect x="300" y="82" width="110" height="30" rx="8" class="ink fill-y"/>
+      <rect x="270" y="128" width="170" height="30" rx="8" class="ink-g fill-g"/>
+      <path class="ink-r" d="M300,97 L215,114 M270,143 L215,126"/>
+      <circle cx="200" cy="120" r="16" class="ink-r fill-y"/>
+    </g>
+    <text x="46" y="36" text-anchor="middle" class="bn w6">বার্তা M</text>
+    <text x="139" y="36" text-anchor="middle" class="s w6">H</text>
+    <text x="221" y="36" text-anchor="middle" class="bn s w6">ডাইজেস্ট h</text>
+    <text x="351" y="28" text-anchor="middle" class="bn r s w6">h-এ সই করো</text><text x="351" y="44" text-anchor="middle" class="bn r s w6">Alice-এর প্রাইভেট কী</text>
+    <text x="522" y="36" text-anchor="middle" class="s w6">M + sig</text><text x="448" y="22" text-anchor="middle" class="bn s">পাঠাও</text>
+    <text x="355" y="102" text-anchor="middle" class="s w6">H(M) = h₁</text>
+    <text x="355" y="148" text-anchor="middle" class="bn g s w6">sig + Alice-এর পাবলিক → h₂</text>
+    <text x="200" y="125" text-anchor="middle" class="r w6">=?</text>
+    <text x="176" y="112" text-anchor="end" class="bn g s w6">h₁ = h₂ → আসল ✓</text><text x="176" y="136" text-anchor="end" class="bn r s">h₁ ≠ h₂ → জাল / বদলানো</text>
+    <text x="4" y="70" class="bn r s">প্রেরক (Alice)</text><text x="636" y="170" text-anchor="end" class="bn g s">প্রাপক (Bob)</text>
+  </svg><figcaption>আগে হ্যাশ, পরে সই: প্রাপক নিজে হ্যাশ বের করে সিগনেচারের সাথে মেলায়</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <h3>কেন হ্যাশে সই?</h3>
+      <ul class="dash small">
+        <li>পাবলিক-কী অপারেশন ধীর; 256-বিট ডাইজেস্ট খুব ছোট</li>
+        <li>বার্তা যত বড়ই হোক, সিগনেচারের মাপ একই থাকে</li>
+        <li>বার্তা পড়া যায় এমনই থাকতে পারে (প্লেইন টেক্সট + সিগনেচার)</li>
+      </ul>
+    </div>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">অ্যালগরিদম</th><th class="l">ভিত্তি</th></tr>
+      <tr><td class="l"><b>RSA</b></td><td class="l">উৎপাদকে বিশ্লেষণ; সবচেয়ে প্রচলিত</td></tr>
+      <tr><td class="l"><b>DSA</b> (DSS, FIPS 186, 1994)</td><td class="l">ডিসক্রিট লগ; NIST, শুধু সইয়ের জন্য</td></tr>
+      <tr><td class="l"><b>ECDSA</b>, EdDSA</td><td class="l">এলিপটিক কার্ভ: ছোট কী</td></tr>
+    </table>
+  </div>
+  <div class="ex"><span class="lbl">সমাধানকৃত উদাহরণ: RSA সিগনেচার ✍</span> কী: n = 33, e = 3 (পাবলিক), d = 7 (প্রাইভেট), কারণ 3 × 7 = 21 ≡ 1 (mod φ = 20)। ডাইজেস্ট h = 4।
+    <ol class="steps small"><li>সই: s = h<sup>d</sup> mod n = 4<sup>7</sup> mod 33 = 16384 mod 33 = <span class="circ">16</span> &nbsp;<span class="tiny green">33 × 496 = 16368</span></li><li>যাচাই: s<sup>e</sup> mod n = 16<sup>3</sup> mod 33 = 4096 mod 33 = <b>4</b> = h ✓ &nbsp;<span class="tiny green">33 × 124 = 4092</span></li></ol></div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>সই</b> হয় <b>প্রেরকের প্রাইভেট</b> কী দিয়ে, যাচাই <b>প্রেরকের পাবলিক</b> কী দিয়ে। গোপনীয়তার জন্য <b>এনক্রিপশন</b> হয় <b>প্রাপকের পাবলিক</b> কী দিয়ে। দুটোই লাগলে: আগে সই, পরে এনক্রিপশন।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"প্রাইভেট সই করে, পাবলিক যাচাই করে।"</b> কলম (প্রাইভেট কী) শুধু তোমার হাতে; নমুনা সই (পাবলিক কী) দেখে সবাই মিলিয়ে নিতে পারে।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">পাবলিক কী ছাড়া</span> একজন বিশ্বস্ত মধ্যস্থ ("Big Brother", BB) তার সাথে কী শেয়ার করা ব্যবহারকারীদের হয়ে সই করে এবং প্রমাণ হিসেবে K<sub>BB</sub>(A, t, P) রাখে। প্রয়োগ: কোড সাইনিং, TLS সার্টিফিকেট, S/MIME, PGP, ব্লকচেইন।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: certificates, PKI, X.509 ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>PKI ও X.509</span></div>
+  <h2><span class="no">৯</span>সার্টিফিকেট কেন লাগে?</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সমস্যা</span> শুধু একটি পাবলিক কী তার মালিক সম্পর্কে কিছুই বলে না। Trudy Bob-এর নামে <i>নিজের</i> কী প্রকাশ করতে পারে (<b>ম্যান-ইন-দ্য-মিডল</b>)। <span class="hl">সার্টিফিকেট (certificate)</span> হলো এমন একটি দলিল, যা একটি <b>নামকে একটি পাবলিক কী-র সাথে</b> বেঁধে দেয় এবং যাতে একটি বিশ্বস্ত <span class="hl">সার্টিফিকেশন অথরিটি (CA)</span>-র ডিজিটাল সই থাকে।</div>
+  <div class="cols" style="grid-template-columns:260px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 260 220" width="255">
+      <g class="w">
+        <rect x="70" y="6" width="120" height="38" rx="10" class="ink-r fill-r"/>
+        <rect x="70" y="88" width="120" height="38" rx="10" class="ink fill-b"/>
+        <rect x="14" y="170" width="104" height="38" rx="10" class="ink-g fill-g"/>
+        <rect x="142" y="170" width="104" height="38" rx="10" class="ink-g fill-g"/>
+        <path class="ink-r" d="M130,44 V84" marker-end="url(#ah)"/>
+        <path class="ink" d="M112,126 L72,166 M148,126 L190,166" marker-end="url(#ahb)"/>
+      </g>
+      <text x="130" y="24" text-anchor="middle" class="r w6">Root CA</text><text x="130" y="38" text-anchor="middle" class="bn r s">নিজেই সই করা</text>
+      <text x="130" y="112" text-anchor="middle" class="w6">Intermediate CA</text>
+      <text x="66" y="194" text-anchor="middle" class="g s w6">www.bank.bd</text>
+      <text x="194" y="194" text-anchor="middle" class="g s w6">mail.gov.bd</text>
+      <text x="138" y="68" class="bn s">সই করে</text>
+    </svg><figcaption>বিশ্বস্ত রুট পর্যন্ত চেইন অব ট্রাস্ট</figcaption></figure>
+    <div class="small">
+      <p><b>PKI</b> (পাবলিক কী অবকাঠামো) = CA + <b>RA</b> (পরিচয় যাচাই করে) + সার্টিফিকেট + ডিরেক্টরি + বাতিলের ব্যবস্থা। রুট CA-র সার্টিফিকেট <b>নিজেই সই করা (self-signed)</b> এবং ব্রাউজার ও OS-এ আগে থেকেই থাকে।</p>
+      <p><b>বাতিল (revocation)</b> (কী চুরি হলে): <span class="hl">CRL</span> (বাতিল তালিকা) বা সরাসরি <b>OCSP</b> যাচাই।</p>
+      <p><b>PGP</b> এর বদলে ব্যবহার করে <b>ওয়েব অব ট্রাস্ট</b>: ব্যবহারকারীরা একে অপরের কী-তে সই করে।</p>
+      <div class="tipbox small" style="margin-top:2mm"><span class="lbl">বাংলাদেশ প্রসঙ্গ</span> <b>তথ্য ও যোগাযোগ প্রযুক্তি আইন ২০০৬</b>: ডিজিটাল সই আইনত বৈধ; <b>CCA</b> (Controller of Certifying Authorities) CA-দের লাইসেন্স দেয়।</div>
+    </div>
+  </div>
+  <h2><span class="no">১০</span>X.509 সার্টিফিকেটের গঠন</h2><span class="tag">হাই-ইল্ড</span>
+  <p class="small">ITU-T-র মান (v1 ১৯৮৮); ব্যবহৃত হয় TLS/HTTPS, S/MIME, IPsec ও কোড সাইনিং-এ। বর্তমান <span class="circ">ভার্সন 3</span> (১৯৯৬) যোগ করেছে <b>এক্সটেনশন</b>। ASN.1 (DER)-এ এনকোড করা; ফাইল .cer, .crt, .pem।</p>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">ফিল্ড</th><th class="l">অর্থ</th></tr>
+      <tr><td class="l">Version · Serial no.</td><td class="l">v1/2/3 · প্রতি CA-তে অনন্য</td></tr>
+      <tr><td class="l">Signature algorithm</td><td class="l">যেমন SHA-256 with RSA</td></tr>
+      <tr><td class="l"><b>Issuer</b></td><td class="l">CA-র X.500 নাম</td></tr>
+      <tr><td class="l"><b>Validity</b></td><td class="l">শুরুর ও শেষের তারিখ</td></tr>
+      <tr><td class="l"><b>Subject</b></td><td class="l">মালিক (CN = www.bank.bd)</td></tr>
+      <tr><td class="l"><b>Subject public key</b></td><td class="l">প্রত্যয়িত কী</td></tr>
+      <tr><td class="l">Extensions (v3)</td><td class="l">কী-র ব্যবহার, বিকল্প নাম</td></tr>
+      <tr><td class="l red"><b>CA's signature</b></td><td class="l">ওপরের সব ফিল্ডের ওপর</td></tr>
+    </table>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">ব্রাউজার যেভাবে www.bank.bd যাচাই করে ✍</span>
+        <ol class="steps"><li>সার্ভার নিজের ও ইন্টারমিডিয়েটের সার্টিফিকেট পাঠায়</li><li>ইন্টারমিডিয়েট CA-র পাবলিক কী দিয়ে সার্ভারের সই, তারপর রুট দিয়ে ইন্টারমিডিয়েটের সই যাচাই</li><li>তারিখ, নামের মিল, বাতিল কিনা দেখা</li><li>তারপরই Subject-এর পাবলিক কী-তে আস্থা</li></ol></div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> সার্টিফিকেট = <b>পাসপোর্ট</b>: Subject = ধারক, কী = ছবি, Issuer = সরকার, CA-র সই = সিল।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> এতে থাকে শুধু Subject-এর <b>পাবলিক</b> কী, আর সই হয় <b>CA-র</b> প্রাইভেট কী দিয়ে।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: Gigabit Ethernet ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>গিগাবিট ইথারনেট</span></div>
+  <h2><span class="no">১১</span>গিগাবিট ইথারনেট (1000 Mbps)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">1 Gbps</span> গতির ইথারনেট (ফাস্ট ইথারনেটের ১০ গুণ), যার <b>ফ্রেম ফরম্যাট একই</b> (64–1518 বাইট), তাই পুরোনো ইথারনেটের সাথে চলে। মান: <span class="circ">802.3z</span> (১৯৯৮, ফাইবার + ছোট কপার) ও <span class="circ">802.3ab</span> (১৯৯৯, 1000BASE-T)।</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">নাম</th><th>মান</th><th class="l">মাধ্যম</th><th>সর্বোচ্চ দৈর্ঘ্য</th><th>কোডিং</th></tr>
+    <tr><td class="l"><b>1000BASE-SX</b></td><td>802.3z</td><td class="l">মাল্টিমোড ফাইবার, 850 nm</td><td>220–550 m</td><td>8B/10B</td></tr>
+    <tr><td class="l"><b>1000BASE-LX</b></td><td>802.3z</td><td class="l">সিঙ্গেল-মোড ফাইবার, 1310 nm</td><td class="red"><b>5 km</b></td><td>8B/10B</td></tr>
+    <tr><td class="l">1000BASE-CX</td><td>802.3z</td><td class="l">শিল্ডেড টুইনাক্স কপার</td><td>25 m</td><td>8B/10B</td></tr>
+    <tr><td class="l"><b>1000BASE-T</b></td><td>802.3ab</td><td class="l">Cat 5e UTP, <b>৪ জোড়া তারই</b></td><td class="red"><b>100 m</b></td><td>PAM-5</td></tr>
+  </table>
+  <p class="small">8B/10B → লাইন রেট <b>1.25 Gbaud</b>। 1000BASE-T: 4 জোড়া × 250 Mbps, প্রতিটি জোড়া দুই দিকেই (ইকো ক্যান্সেলেশন)। LX মাল্টিমোডেও 550 m চলে।</p>
+  <h3>হাফ-ডুপ্লেক্স: ক্যারিয়ার এক্সটেনশন ও ফ্রেম বার্স্টিং</h3>
+  <p class="small">1 Gbps-এ 64-বাইট ফ্রেম মাত্র 0.512 µs টেকে, ফলে CSMA/CD নেটওয়ার্ককে মাত্র প্রায় <b>25 m</b>-এ সীমিত করত। দুটি সমাধান, <b>শুধু হাফ-ডুপ্লেক্সে</b>:</p>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">ক্যারিয়ার এক্সটেনশন</span> প্রতিটি ছোট ফ্রেমের পরে প্যাডিং দিয়ে অন্তত <span class="circ">512 বাইট</span> (4096 বিট টাইম) পূরণ → আবার প্রায় <b>200 m</b>। খরচ: 64-বাইট ফ্রেমের মাত্র ১/৮ কাজের।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">ফ্রেম বার্স্টিং</span> একটি এক্সটেন্ডেড ফ্রেমের পর লাইন না ছেড়েই <b>পরপর কয়েকটি ছোট ফ্রেম</b> পাঠানো, 8192 বাইট পর্যন্ত।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 280 120" width="280">
+      <g class="w">
+        <rect x="8" y="20" width="34" height="26" class="ink fill-b"/>
+        <rect x="42" y="20" width="230" height="26" class="ink-r" style="fill:rgba(211,47,47,.12)" stroke-dasharray="5 4"/>
+        <rect x="8" y="76" width="34" height="26" class="ink fill-b"/>
+        <rect x="42" y="76" width="40" height="26" class="ink-r" style="fill:rgba(211,47,47,.12)" stroke-dasharray="5 4"/>
+        <rect x="88" y="76" width="34" height="26" class="ink-g fill-g"/>
+        <rect x="128" y="76" width="34" height="26" class="ink-g fill-g"/>
+        <rect x="168" y="76" width="50" height="26" class="ink-g fill-g"/>
+        <rect x="224" y="76" width="34" height="26" class="ink-g fill-g"/>
+      </g>
+      <text x="8" y="13" class="bn s w6">ক্যারিয়ার এক্সটেনশন</text>
+      <text x="25" y="38" text-anchor="middle" class="s">64 B</text><text x="157" y="38" text-anchor="middle" class="bn r s">এক্সটেনশন → 512 B</text>
+      <text x="8" y="69" class="bn s w6">ফ্রেম বার্স্টিং</text>
+      <text x="25" y="94" text-anchor="middle" class="s">F1</text><text x="62" y="94" text-anchor="middle" class="r s">ext</text>
+      <text x="105" y="94" text-anchor="middle" class="g s">F2</text><text x="145" y="94" text-anchor="middle" class="g s">F3</text><text x="193" y="94" text-anchor="middle" class="g s">F4</text><text x="241" y="94" text-anchor="middle" class="g s">F5</text>
+      <text x="140" y="116" text-anchor="middle" class="bn g s">প্রতি বার্স্টে ≤ 8192 B</text>
+    </svg></figure>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> বাস্তবের গিগাবিট লিংক সুইচের মাধ্যমে <b>ফুল-ডুপ্লেক্স</b>: কলিশন নেই, এক্সটেনশনও নেই। ন্যূনতম <i>ফ্রেম</i> 64 বাইটই থাকে; শুধু ন্যূনতম <i>স্লট</i> 512 বাইটে বাড়ে।</div>
+  </div>
+  <h2><span class="no">১২</span>১০ গিগাবিট ইথারনেট ও তার পরে</h2>
+  <div class="cols" style="grid-template-columns:1.25fr 1fr;align-items:start">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">নাম</th><th>মান</th><th class="l">দূরত্ব</th></tr>
+      <tr><td class="l">10GBASE-SR/LR/ER</td><td>802.3ae (2002)</td><td class="l">ফাইবার 300 m/10/40 km</td></tr>
+      <tr><td class="l"><b>10GBASE-T</b></td><td>802.3an (2006)</td><td class="l">Cat 6a · 100 m</td></tr>
+      <tr><td class="l">40G / 100G</td><td>802.3ba (2010)</td><td class="l">ডেটা সেন্টার</td></tr>
+    </table>
+    <div>
+      <p class="small">10G <span class="hl">শুধুই ফুল-ডুপ্লেক্স</span>: CSMA/CD নেই। ফাইবারে <b>64B/66B</b> কোডিং।</p>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>"z = কাচ (ফাইবার), ab = কপার।"</b> S = ছোট তরঙ্গদৈর্ঘ্য (850 nm), L = বড় (1310 nm)।</div>
+    </div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: DNS ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>DNS</span></div>
+  <h2><span class="no">১৩</span>ডোমেইন নেম সিস্টেম (DNS)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> একটি <span class="hl">স্তরভিত্তিক (hierarchical) ও ডিস্ট্রিবিউটেড ডেটাবেস</span>, যা নামকে IP অ্যাড্রেস, মেইল সার্ভার ও উপনামের সাথে মেলায় (মকাপেট্রিস; RFC 1034/1035, ১৯৮৭)। <span class="circ">পোর্ট 53</span>: সাধারণ কোয়েরিতে <b>UDP</b>, জোন ট্রান্সফার ও 512 বাইটের বেশি বড় উত্তরে <b>TCP</b>।</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="325">
+      <g class="w">
+        <circle cx="165" cy="22" r="16" class="ink-r fill-r"/>
+        <path class="ink-k" d="M155,36 L52,74 M160,38 L128,74 M170,38 L204,74 M176,36 L282,74"/>
+        <rect x="26" y="74" width="52" height="26" rx="6" class="ink fill-b"/>
+        <rect x="102" y="74" width="52" height="26" rx="6" class="ink fill-b"/>
+        <rect x="178" y="74" width="52" height="26" rx="6" class="ink fill-b"/>
+        <rect x="256" y="74" width="52" height="26" rx="6" class="ink-g fill-g"/>
+        <path class="ink-k" d="M282,100 L240,132 M282,100 L322,132"/>
+        <rect x="206" y="132" width="64" height="24" rx="6" class="ink fill-y"/>
+        <rect x="282" y="132" width="44" height="24" rx="6" class="ink fill-y"/>
+        <path class="ink-k" d="M238,156 L238,170"/>
+      </g>
+      <text x="165" y="27" text-anchor="middle" class="r w6">.</text><text x="190" y="18" class="bn r s">রুট (১৩টি নাম: a–m)</text>
+      <text x="52" y="92" text-anchor="middle" class="s w6">com</text><text x="128" y="92" text-anchor="middle" class="s w6">org</text><text x="204" y="92" text-anchor="middle" class="s w6">net</text><text x="282" y="92" text-anchor="middle" class="g s w6">bd</text>
+      <text x="238" y="149" text-anchor="middle" class="s">gov.bd</text><text x="304" y="149" text-anchor="middle" class="s">ac.bd</text>
+      <text x="238" y="184" text-anchor="middle" class="s">www.bb.gov.bd</text>
+      <text x="90" y="118" text-anchor="middle" class="s">gTLDs</text><text x="300" y="66" text-anchor="middle" class="g s">ccTLD</text>
+    </svg><figcaption>নামের গাছ, ডান থেকে বামে পড়ো: www . bb . gov . bd .</figcaption></figure>
+    <div class="small">
+      <p><b>জোন (zone)</b> = গাছের যে অংশ একটি প্রতিষ্ঠান চালায়: একটি <b>প্রাইমারি</b> সার্ভার এবং <b>সেকেন্ডারি</b> সার্ভার, যারা <span class="hl">জোন ট্রান্সফার</span> (AXFR, TCP) দিয়ে কপি রাখে। লেবেল ≤ <b>63</b> অক্ষর, পুরো নাম ≤ <b>255</b> বাইট।</p>
+      <table class="hand small" style="margin-top:2mm;white-space:nowrap">
+        <tr><th class="l">সার্ভার</th><th class="l">কাজ</th></tr>
+        <tr><td class="l">Root</td><td class="l">TLD সার্ভার দেখিয়ে দেয়</td></tr>
+        <tr><td class="l">TLD</td><td class="l">ডোমেইনের সার্ভার দেখায়</td></tr>
+        <tr><td class="l">Authoritative</td><td class="l">চূড়ান্ত উত্তর</td></tr>
+        <tr><td class="l">লোকাল রিজলভার</td><td class="l">জিজ্ঞেস করে, ক্যাশ (TTL)</td></tr>
+      </table>
+    </div>
+  </div>
+  <h3>রিসোর্স রেকর্ড: (নাম, TTL, ক্লাস, টাইপ, মান)</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>টাইপ</th><th class="l">মান</th><th class="l">উদাহরণ</th></tr>
+    <tr><td><b>A</b></td><td class="l">IPv4 অ্যাড্রেস (32 বিট)</td><td class="l">www 3600 IN A 203.0.113.10</td></tr>
+    <tr><td><b>AAAA</b></td><td class="l">IPv6 অ্যাড্রেস (128 বিট)</td><td class="l">www … IN AAAA 2001:db8::10</td></tr>
+    <tr><td><b>MX</b></td><td class="l">মেইল সার্ভার + অগ্রাধিকার (কম = আগে)</td><td class="l">IN MX 10 mail.bb.gov.bd.</td></tr>
+    <tr><td><b>CNAME</b></td><td class="l">উপনাম (alias) → আসল নাম</td><td class="l">ftp IN CNAME www</td></tr>
+    <tr><td><b>NS</b></td><td class="l">জোনের একটি নেম সার্ভার</td><td class="l">IN NS ns1.bb.gov.bd.</td></tr>
+    <tr><td><b>PTR</b></td><td class="l">IP → নাম (রিভার্স লুকআপ)</td><td class="l">10.113.0.203.in-addr.arpa</td></tr>
+    <tr><td><b>SOA</b></td><td class="l">জোনের তথ্য: serial, refresh, expire</td><td class="l">প্রতি জোনে একটি, সবার আগে</td></tr>
+  </table>
+  <h3>রিকার্সিভ বনাম ইটারেটিভ রেজোলিউশন</h3>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p><span class="hl">রিকার্সিভ (recursive)</span>: সার্ভার পুরো কাজ করে চূড়ান্ত উত্তর ফেরত দেয় (হোস্ট → রিজলভার)। <span class="hl">ইটারেটিভ (iterative)</span>: সার্ভার শুধু একটি <b>রেফারেল</b> দেয়, প্রশ্নকারী নিজেই এগোয় (রিজলভার → রুট → TLD → অথরিটেটিভ)। TTL অনুযায়ী ক্যাশ থাকায় বেশির ভাগ লুকআপ রুট পর্যন্ত যায় না।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 140" width="295">
+      <g class="w">
+        <rect x="4" y="56" width="50" height="28" rx="6" class="ink fill-y"/>
+        <rect x="96" y="56" width="66" height="28" rx="6" class="ink-r fill-r"/>
+        <rect x="216" y="4" width="78" height="26" rx="6" class="ink fill-b"/>
+        <rect x="216" y="57" width="78" height="26" rx="6" class="ink fill-b"/>
+        <rect x="216" y="110" width="78" height="26" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M54,64 H92 M96,76 H58" marker-end="url(#ah)"/>
+        <path class="ink" d="M162,60 L212,20 M212,30 L166,64" marker-end="url(#ahb)"/>
+        <path class="ink" d="M162,68 H212 M212,76 H166" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M162,78 L212,118 M212,128 L162,84" marker-end="url(#ahg)"/>
+      </g>
+      <text x="29" y="75" text-anchor="middle" class="bn s w6">হোস্ট</text><text x="129" y="75" text-anchor="middle" class="bn r s w6">রিজলভার</text>
+      <text x="255" y="22" text-anchor="middle" class="bn s">রুট</text><text x="255" y="75" text-anchor="middle" class="s">TLD .bd</text><text x="255" y="128" text-anchor="middle" class="bn g s">অথরিটেটিভ</text>
+      <text x="74" y="52" text-anchor="middle" class="bn r s">রিকার্সিভ</text><text x="186" y="106" class="bn s" style="font-size:10px">ইটারেটিভ</text>
+    </svg></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"কোয়াড-A = চার গুণ A"</b>: AAAA-তে 128 বিট, A-র 32-এর চার গুণ। <b>MX = Mail eXchange</b>; <b>PTR = পয়েন্টার, উল্টো দিকে</b>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> DNS <b>শুধু UDP নয়</b>: জোন ট্রান্সফারে TCP 53। <b>ক্যাশ পয়জনিং</b> ভুয়া রেকর্ড ঢোকায়; <b>DNSSEC</b> রেকর্ডে সই করে (ইন্টিগ্রিটি), এনক্রিপ্ট করে না।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: email protocols ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>ইমেইল</span></div>
+  <h2><span class="no">১৪</span>ইমেইল যেভাবে যায়</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="4" y="52" width="80" height="40" rx="10" class="ink fill-y"/>
+      <rect x="138" y="52" width="96" height="40" rx="10" class="ink fill-b"/>
+      <rect x="300" y="52" width="96" height="40" rx="10" class="ink fill-b"/>
+      <rect x="430" y="52" width="74" height="40" rx="10" class="ink-p fill-p"/>
+      <rect x="556" y="52" width="80" height="40" rx="10" class="ink fill-y"/>
+      <path class="ink-r" d="M84,72 H134 M234,72 H296" marker-end="url(#ah)"/>
+      <path class="ink-k" d="M396,72 H426"/>
+      <path class="ink-g" d="M552,72 H508" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M508,80 H552" marker-end="url(#ahg)"/>
+    </g>
+    <text x="44" y="70" text-anchor="middle" class="w6">Alice</text><text x="44" y="85" text-anchor="middle" class="s">MUA</text>
+    <text x="186" y="70" text-anchor="middle" class="bn w6">তার সার্ভার</text><text x="186" y="85" text-anchor="middle" class="s">MTA</text>
+    <text x="348" y="70" text-anchor="middle" class="bn w6">Bob-এর সার্ভার</text><text x="348" y="85" text-anchor="middle" class="s">MTA</text>
+    <text x="467" y="70" text-anchor="middle" class="bn p w6">মেইলবক্স</text><text x="467" y="85" text-anchor="middle" class="p s">MDA</text>
+    <text x="596" y="70" text-anchor="middle" class="w6">Bob</text><text x="596" y="85" text-anchor="middle" class="s">MUA</text>
+    <text x="109" y="44" text-anchor="middle" class="r s">SMTP 587</text><text x="265" y="44" text-anchor="middle" class="r s">SMTP 25</text>
+    <text x="265" y="116" text-anchor="middle" class="bn s">DNS-এ MX খোঁজা</text>
+    <text x="530" y="44" text-anchor="middle" class="g s">POP3 / IMAP</text>
+    <text x="200" y="140" text-anchor="middle" class="r s">PUSH (SMTP)</text><text x="530" y="140" text-anchor="middle" class="g s">PULL (POP3 / IMAP / HTTPS webmail)</text>
+  </svg><figcaption>MUA = ইউজার এজেন্ট (Outlook) · MTA = ট্রান্সফার এজেন্ট (Postfix, Sendmail) · MDA = ডেলিভারি এজেন্ট</figcaption></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">প্রোটোকল</th><th>পোর্ট (TLS)</th><th class="l">কাজ</th><th class="l">মূল কথা</th></tr>
+    <tr><td class="l"><b>SMTP</b></td><td><span class="circ">25</span> · 587 · (465)</td><td class="l">পাঠানো / রিলে, push</td><td class="l">25 রিলে, 587 সাবমিশন</td></tr>
+    <tr><td class="l"><b>POP3</b></td><td><span class="circ">110</span> · (995)</td><td class="l">এক ডিভাইসে ডাউনলোড</td><td class="l">সাধারণত সার্ভার থেকে মুছে যায়</td></tr>
+    <tr><td class="l"><b>IMAP4</b></td><td><span class="circ">143</span> · (993)</td><td class="l">মেইল সার্ভারেই থাকে</td><td class="l">ফোল্ডার, সব ডিভাইসে সিঙ্ক</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="code small" style="margin-top:0">S: 220 mail.bb.gov.bd ESMTP
+C: EHLO pc.example.org   S: 250
+C: MAIL FROM:&lt;alice@example.org&gt;
+C: RCPT TO:&lt;bob@bb.gov.bd&gt;
+C: DATA     S: 354 end with "."
+C: Subject: Hi ... .  S: 250
+C: QUIT     S: 221 bye</div>
+    <div>
+      <p class="small"><b>SMTP রিপ্লাই কোড:</b> 2xx সফল, 3xx আরও পাঠাও, 4xx সাময়িক, 5xx স্থায়ী ত্রুটি। <b>POP3:</b> USER, PASS, LIST, RETR, DELE, QUIT।</p>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> SMTP <b>পাঠায়</b>; POP3/IMAP <b>নামিয়ে আনে</b>। ওয়েবমেইলে ব্রাউজার পর্যন্ত <b>HTTPS</b>, কিন্তু সার্ভার থেকে সার্ভারে মেইল নেয় SMTP-ই।</div>
+    </div>
+  </div>
+  <h2><span class="no">১৫</span>MIME: ৭-বিট ASCII-র বাইরে</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="small">
+      <p>RFC 822 মেইল ছিল শুধু <b>7-বিট ASCII</b>। <span class="hl">MIME</span> (RFC 2045–2049) এমন হেডার যোগ করে, যাতে বাংলা (UTF-8), ছবি, PDF ও বহু-অংশের মেইল পাঠানো যায়:</p>
+      <ul class="dash"><li><b>MIME-Version</b>: 1.0</li><li><b>Content-Type</b>: text/plain, image/jpeg, application/pdf, <b>multipart/mixed</b></li><li><b>Content-Transfer-Encoding</b>: 7bit, 8bit, <b>base64</b>, quoted-printable</li></ul>
+    </div>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ: base64 ✍</span> "Man" = 77, 97, 110 = 01001101 01100001 01101110<br>৬-বিটের দল: 010011 · 010110 · 000101 · 101110 = 19, 22, 5, 46 → <span class="circ">TWFu</span><br>৩ বাইট → ৪ অক্ষর: 3 MB সংযুক্তি হয়ে যায় প্রায় <b>4 MB</b> (+33%)।</div>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> মেইলের যাত্রাপথের ক্রমে পোর্ট: <b>25 → 110 → 143</b> (পাঠাও, নামিয়ে আনো, সার্ভারে রাখো)। TLS জোড়া: <b>465, 995, 993</b>।</div>
+    </div>
+  </div>
+  <div class="tipbox small"><span class="lbl">স্পুফিং প্রতিরোধ (DNS TXT রেকর্ড)</span> <b>SPF</b> জানায় কোন সার্ভার ডোমেইনের হয়ে মেইল পাঠাতে পারে · <b>DKIM</b> DNS-এ প্রকাশিত কী দিয়ে হেডারে সই করে · <b>DMARC</b> বলে দেয় যাচাই ব্যর্থ হলে কী করতে হবে।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: email privacy + night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>ইমেইল প্রাইভেসি · রিভিশন ১</span></div>
+  <h2><span class="no">১৬</span>ইমেইল প্রাইভেসি: PGP ও S/MIME</h2><span class="tag">হাই-ইল্ড</span>
+  <p class="small">ঝুঁকি: <b>আড়ি পাতা (eavesdropping)</b>, <b>বার্তা বদল (tampering)</b>, <b>স্পুফিং</b> (ভুয়া From:)। TLS/STARTTLS শুধু প্রতিটি ধাপ রক্ষা করে; <span class="hl">এন্ড-টু-এন্ড</span> গোপনীয়তার জন্য লাগে PGP বা S/MIME।</p>
+  <div class="cols" style="grid-template-columns:1fr 310px;align-items:center">
+    <div class="small">
+      <p><b>PGP</b> (Pretty Good Privacy; ফিল জিমারম্যান, <span class="circ">১৯৯১</span>; OpenPGP RFC 4880)। শুরুতে বার্তার জন্য <b>IDEA</b> (128-বিট), কী-র জন্য <b>RSA</b>, ডাইজেস্টে <b>MD5</b>; এখন AES, SHA-256, RSA/ECC।</p>
+      <ol class="steps"><li>Alice-এর প্রাইভেট কী দিয়ে ডাইজেস্টে <b>সই</b></li><li><b>কমপ্রেস</b> (ZIP)</li><li>এককালীন <span class="hl">সেশন কী</span> দিয়ে <b>এনক্রিপ্ট</b>; সেশন কী যায় Bob-এর পাবলিক কী দিয়ে এনক্রিপ্ট হয়ে</li><li>SMTP-র জন্য <b>Radix-64</b> (base64)</li></ol>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 310 170" width="305">
+      <g class="w">
+        <rect x="4" y="8" width="66" height="30" rx="6" class="ink fill-b"/>
+        <rect x="84" y="8" width="66" height="30" rx="6" class="ink-r fill-r"/>
+        <rect x="164" y="8" width="66" height="30" rx="6" class="ink fill-y"/>
+        <rect x="244" y="8" width="62" height="30" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M70,23 H80 M150,23 H160 M230,23 H240" marker-end="url(#ahb)"/>
+        <rect x="64" y="84" width="74" height="30" rx="6" class="ink-p fill-p"/>
+        <rect x="186" y="84" width="112" height="30" rx="6" class="ink-r fill-r"/>
+        <path class="ink-p" d="M118,84 L180,40" marker-end="url(#ahp)"/>
+        <path class="ink-r" d="M138,99 H182" marker-end="url(#ah)"/>
+      </g>
+      <text x="37" y="28" text-anchor="middle" class="s w6">M + sig</text><text x="117" y="28" text-anchor="middle" class="r s w6">ZIP</text><text x="197" y="28" text-anchor="middle" class="s w6">IDEA/AES</text><text x="275" y="28" text-anchor="middle" class="g s w6">base64</text>
+      <text x="101" y="104" text-anchor="middle" class="bn p s w6">সেশন কী</text><text x="242" y="104" text-anchor="middle" class="bn r s w6">E(Bob-এর পাবলিক)</text>
+      <text x="155" y="146" text-anchor="middle" class="bn s">মূল বার্তায় দ্রুত সিমেট্রিক সাইফার,</text><text x="155" y="162" text-anchor="middle" class="bn s">পাবলিক কী শুধু ছোট সেশন কী-তে</text>
+    </svg><figcaption>PGP হাইব্রিড: সিমেট্রিক + পাবলিক কী</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">PGP / OpenPGP</th><th class="l">S/MIME</th></tr>
+    <tr><td class="l">আস্থার মডেল</td><td class="l"><b>ওয়েব অব ট্রাস্ট</b> (ব্যবহারকারীরা কী-তে সই করে)</td><td class="l">CA শ্রেণিবিন্যাসের <b>X.509 সার্টিফিকেট</b></td></tr>
+    <tr><td class="l">সাধারণ ব্যবহার</td><td class="l">ব্যক্তি, ওপেন-সোর্স সফটওয়্যার</td><td class="l">প্রতিষ্ঠান, Outlook, সরকার</td></tr>
+  </table>
+  <div class="sumbox"><span class="lbl">আগের রাতের তথ্য-পাতা</span>
+    <div class="fgrid small">
+      <p>MFA = ভিন্ন ধরনের ফ্যাক্টর</p><p>KDC: N(N − 1)/2 নয়, N টি কী</p>
+      <p>নিডহ্যাম–শ্রোডারের দুর্বলতা: পুরোনো কী রিপ্লে</p><p>Kerberos: AS → TGT, TGS → টিকিট, পোর্ট 88</p>
+      <p>MD5 128 · SHA-1 160 · SHA-256 256 বিট</p><p>বার্থডে অ্যাটাক ≈ 2<sup>n/2</sup></p>
+      <p>MAC: নন-রেপুডিয়েশন নেই; সিগনেচার: আছে</p><p>সই: প্রেরকের প্রাইভেট · যাচাই: প্রেরকের পাবলিক</p>
+      <p>X.509 v3: Issuer, Subject, পাবলিক কী, CA-র সই</p><p>বাতিল: CRL / OCSP</p>
+      <p>802.3z ফাইবার · 802.3ab 1000BASE-T 100 m</p><p>ক্যারিয়ার এক্সটেনশন: স্লট 512 B · বার্স্ট 8192 B</p>
+      <p>10G: 802.3ae, শুধু ফুল-ডুপ্লেক্স</p><p>DNS 53: UDP কোয়েরি · TCP জোন ট্রান্সফার</p>
+      <p>A · AAAA · MX · CNAME · NS · PTR · SOA</p><p>SMTP 25/587 · POP3 110 · IMAP 143</p>
+      <p>MIME: Content-Type, base64 (+33%)</p><p>PGP: সই → ZIP → এনক্রিপ্ট → radix-64</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">প্রধান ফাঁদ</span> পাসওয়ার্ড + PIN ≠ MFA · হ্যাশে কী নেই · MAC ≠ নন-রেপুডিয়েশন · সার্টিফিকেটে শুধু পাবলিক কী · গিগাবিটে ন্যূনতম ফ্রেম এখনও 64 B · DNS TCP-ও ব্যবহার করে · POP3/IMAP মেইল পাঠায় না · TLS ≠ এন্ড-টু-এন্ড</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসাথে</span> নতুন প্রশ্ন, গোপন উত্তর · AS ঢুকতে দেয়, TGS টিকিট দেয় · SHA-1 ↔ 160 · প্রাইভেট সই করে, পাবলিক যাচাই করে · সার্টিফিকেট = পাসপোর্ট · z = কাচ, ab = কপার · কোয়াড-A = 4 × A · 25 → 110 → 143</div>
+  <div class="sticky pink" style="float:none;width:auto;margin:3mm 0 0 0"><b>আরও অনুশীলন (লিখিত):</b> ① n = 33 দিয়ে RSA সই ও যাচাই · ② নিডহ্যাম–শ্রোডার ও তার দুর্বলতা · ③ রিকার্সিভ বনাম ইটারেটিভ DNS (চিত্রসহ) · ④ PGP কীভাবে গোপনীয়তা + অথেনটিকেশন দেয়</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · অথেনটিকেশন, DNS ও ইমেইল</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মিলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>ডিজিটাল সিগনেচার যাচাই হয় কোনটি দিয়ে?<ol class="opts"><li>প্রাপকের প্রাইভেট কী</li><li>প্রেরকের পাবলিক কী</li><li>প্রেরকের প্রাইভেট কী</li><li>শেয়ার্ড DES কী</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>SHA-1-এর ডাইজেস্টের দৈর্ঘ্য:<ol class="opts"><li>128 বিট</li><li>256 বিট</li><li>160 বিট</li><li>512 বিট</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>IPv6 অ্যাড্রেসের DNS রেকর্ড:<ol class="opts"><li>A</li><li>MX</li><li>PTR</li><li>AAAA</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>Kerberos-এ TGT দেয়:<ol class="opts"><li>AS</li><li>TGS</li><li>ফাইল সার্ভার</li><li>CA</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>1000BASE-T (Cat 5e UTP) কোন মানে?<ol class="opts"><li>802.3u</li><li>802.3z</li><li>802.3ab</li><li>802.3ae</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>MAC কোন সেবাটি দেয় না?<ol class="opts"><li>নন-রেপুডিয়েশন</li><li>ইন্টিগ্রিটি</li><li>উৎস যাচাই</li><li>বদল শনাক্তকরণ</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>IMAP-এর ডিফল্ট পোর্ট (TLS ছাড়া):<ol class="opts"><li>110</li><li>143</li><li>25</li><li>993</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>ক্যারিয়ার এক্সটেনশনে ন্যূনতম স্লট হয়:<ol class="opts"><li>64 বাইট</li><li>1518 বাইট</li><li>8192 বাইট</li><li>512 বাইট</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>X.509 সার্টিফিকেটে সই করা হয় কোন কী দিয়ে?<ol class="opts"><li>CA-র প্রাইভেট</li><li>মালিকের প্রাইভেট</li><li>CA-র পাবলিক</li><li>মালিকের পাবলিক</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>DNS মূলত কী কাজে TCP 53 ব্যবহার করে?<ol class="opts"><li>A-রেকর্ড কোয়েরি</li><li>রিভার্স লুকআপ</li><li>জোন ট্রান্সফার</li><li>রুট হিন্ট</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ঘ · ৪-ক · ৫-গ · ৬-ক · ৭-খ · ৮-ঘ · ৯-ক · ১০-গ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> চিত্রসহ ব্যাখ্যা করো, Kerberos কীভাবে একটি ক্লায়েন্টকে সার্ভারের কাছে অথেনটিকেট করে। এটি কীভাবে পারস্পরিক অথেনটিকেশন দেয় এবং কেন ঘড়ি মেলানো থাকা দরকার? <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>AS + TGS = KDC, যা প্রত্যেক ব্যবহারকারী ও সার্ভারের সাথে একটি গোপন কী শেয়ার করে; চিত্র ৩ নম্বর পাতার মতো <i class="mk">১</i></li>
+    <li>C → AS: ব্যবহারকারীর নাম। AS → C: K<sub>C</sub>(K<sub>S</sub>, TGT); K<sub>C</sub> আসে পাসওয়ার্ড থেকে, যা কখনো নেটওয়ার্কে যায় না <i class="mk">২</i></li>
+    <li>C → TGS: TGT + K<sub>S</sub>(টাইমস্ট্যাম্প) + সার্ভারের নাম। TGS → C: K<sub>S</sub>(K<sub>CV</sub>) + টিকিট K<sub>V</sub>(C, K<sub>CV</sub>) <i class="mk">২</i></li>
+    <li>C → V: টিকিট + K<sub>CV</sub>(টাইমস্ট্যাম্প); V → C: K<sub>CV</sub>(টাইমস্ট্যাম্প + 1)। শুধু আসল V-ই টিকিট খুলতে পারে: <span class="hl">পারস্পরিক অথেনটিকেশন</span> <i class="mk">২</i></li>
+    <li>টাইমস্ট্যাম্প রিপ্লে ঠেকায়, তাই ঘড়ির পার্থক্য ≈ 5 min-এর মধ্যে থাকতে হয় <i class="mk">১</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে যাচাই ✓</h3>
+  <div class="cols">
+    <ul class="tick small" style="margin-top:0">
+      <li>চ্যালেঞ্জ–রেসপন্স আঁকা, রিফ্লেকশন চেনা</li>
+      <li>Kerberos-এর ৬টি বার্তা লেখা</li>
+    </ul>
+    <ul class="tick small" style="margin-top:0">
+      <li>হ্যাশের মাপ, MAC বনাম সিগনেচার, X.509</li>
+      <li>গিগাবিট মাধ্যম, DNS রেকর্ড, মেইল পোর্ট</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

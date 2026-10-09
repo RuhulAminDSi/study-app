@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>রাউটিং, কনজেশন কন্ট্রোল ও WAN: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">রাউটিং, কনজেশন কন্ট্রোল ও WAN</span></h1>
+  <p class="subtitle">Dijkstra · Bellman-Ford · BGP · বাকেট · ডিভাইস · X.25/FR/ATM/MPLS · ফ্র্যাগমেন্টেশন: ১২ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="580">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">নেটওয়ার্ক লেয়ার</text><text x="320" y="168" text-anchor="middle" class="bn r s">রাউটিং · কনজেশন · WAN</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">স্ট্যাটিক · ফ্লাডিং</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">LS: Dijkstra, OSPF ★</text>
+      <text x="500" y="65" text-anchor="middle" class="r w6">DV: Bellman-Ford ★</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">কাউন্ট-টু-ইনফিনিটি ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn">BGP · হায়ারার্কি</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">ডিভাইস · টানেল</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">বাকেট · RED · চোক ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">WAN · ফ্র্যাগমেন্টেশন</text>
+    </svg>
+    <figcaption>↑ এক পাতায় পুরো লেসন: লাল = হাই-ইল্ড, সবুজ = প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① DV → Bellman-Ford<br>② LS → Dijkstra<br>③ RIP: 16 হপ = ∞<br>④ স্প্লিট হরাইজন<br>⑤ S = C/(M − ρ)<br>⑥ অফসেট ÷ 8 বাইট<br>⑦ ATM সেল 53 B</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Computer Networking and Security: … <span class="hl">Routing algorithm</span>; <span class="hl">Congestion control</span>; <span class="hl">Internetworking, WAN</span>; <span class="hl">Fragmentation</span>; …"। পাশের নোটগুলোতে আছে: লেয়ার ও LAN (IEEE 802), IPv4/IPv6 হেডার ও অ্যাড্রেসিং, ARP (নেটওয়ার্ক লেয়ার নোট), TCP-র কনজেশন উইন্ডো (ট্রান্সপোর্ট লেয়ার নোট)।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>রাউটিংয়ের মূল কথা, ফ্লাডিং ……… পৃ. ২</li><li>লিংক স্টেট, Dijkstra, OSPF, হায়ারার্কি … পৃ. ৩</li><li>ডিসট্যান্স ভেক্টর, RIP, কাউন্ট-টু-∞ … পৃ. ৪</li><li>BGP, ব্রডকাস্ট, কনজেশন ……… পৃ. ৫</li><li>চোক প্যাকেট, RED, শেপিং ……… পৃ. ৬</li><li>লিকি ও টোকেন বাকেট, ডিভাইস … পৃ. ৭</li></ul>
+    <ul class="tick"><li>টানেলিং, সুইচিং ……… পৃ. ৮</li><li>WAN: লিজড লাইন, X.25, FR, ATM, MPLS … পৃ. ৯</li><li>IPv4 ফ্র্যাগমেন্টেশন ……… পৃ. ১০</li><li>পরীক্ষার আগের রাতের শিট ……… পৃ. ১১</li><li>অনুশীলনী MCQ + লিখিত ……… পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: routing basics, flooding ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>রাউটিংয়ের মূল কথা</span></div>
+  <h2><span class="no">১</span>রাউটিং: পুরো চিত্র</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">রাউটিং অ্যালগরিদম (Routing Algorithm)</span> হলো নেটওয়ার্ক লেয়ারের (লেয়ার ৩) সেই সফটওয়্যার, যা ঠিক করে আগত একটি প্যাকেট কোন আউটপুট লাইনে পাঠানো হবে। <b>রাউটিং</b> = রাউটিং টেবিল তৈরি করা (কন্ট্রোল প্লেন); <b>ফরওয়ার্ডিং (Forwarding)</b> = প্রতিটি প্যাকেটের জন্য সেই টেবিল দেখে প্যাকেট বের করে দেওয়া (ডেটা প্লেন)।</div>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <div>
+      <div class="def small"><span class="lbl">অপটিমালিটি প্রিন্সিপল</span> (Optimality Principle) I থেকে K-এর সর্বোত্তম পথে J থাকলে J থেকে K-এর সর্বোত্তম পথও সেই একই রুট ধরে যায়। তাই একটি গন্তব্যে যাওয়ার সব সর্বোত্তম রুট মিলে একটি ট্রি তৈরি করে: <span class="hl">সিংক ট্রি (Sink Tree)</span> (কোনো লুপ নেই)।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 230" width="320">
+      <g class="w">
+        <rect x="115" y="6" width="100" height="32" rx="10" class="ink-k fill-y"/>
+        <rect x="10" y="70" width="120" height="34" rx="10" class="ink fill-b"/>
+        <rect x="190" y="70" width="130" height="34" rx="10" class="ink-r fill-r"/>
+        <rect x="130" y="138" width="92" height="34" rx="10" class="ink-g fill-g"/>
+        <rect x="236" y="138" width="88" height="34" rx="10" class="ink-p fill-p"/>
+        <rect x="4" y="188" width="100" height="34" rx="10" class="ink-r fill-r"/>
+        <rect x="112" y="188" width="104" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M150,38 L80,70 M180,38 L250,70 M240,104 L180,138 M270,104 L280,138 M160,172 L60,188 M175,172 L165,188"/>
+      </g>
+      <text x="165" y="27" text-anchor="middle" class="bn k w6">রাউটিং</text>
+      <text x="70" y="86" text-anchor="middle" class="bn w6">স্ট্যাটিক</text><text x="70" y="100" text-anchor="middle" class="bn s">নন-অ্যাডাপটিভ</text>
+      <text x="255" y="86" text-anchor="middle" class="bn r w6">ডায়নামিক</text><text x="255" y="100" text-anchor="middle" class="bn s r">অ্যাডাপটিভ</text>
+      <text x="176" y="154" text-anchor="middle" class="g w6">IGP</text><text x="176" y="168" text-anchor="middle" class="bn g s">AS-এর ভেতরে</text>
+      <text x="280" y="154" text-anchor="middle" class="p w6">EGP</text><text x="280" y="168" text-anchor="middle" class="p s">BGP (path vector)</text>
+      <text x="54" y="203" text-anchor="middle" class="r w6">DV</text><text x="54" y="217" text-anchor="middle" class="s">RIP · (EIGRP)</text>
+      <text x="164" y="203" text-anchor="middle" class="r w6">LS</text><text x="164" y="217" text-anchor="middle" class="s">OSPF · IS-IS</text>
+    </svg><figcaption>রাউটিংয়ের বংশতালিকা</figcaption></figure>
+  </div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">স্ট্যাটিক (নন-অ্যাডাপটিভ)</th><th class="l">ডায়নামিক (অ্যাডাপটিভ)</th></tr>
+    <tr><td class="l">রুট ঠিক করে</td><td class="l">অ্যাডমিনিস্ট্রেটর, হাতে</td><td class="l">রাউটারগুলোর প্রোটোকল-বিনিময়</td></tr>
+    <tr><td class="l">বিকল হলে · ওভারহেড · ব্যবহার</td><td class="l">সাড়া দেয় না · নেই · ছোট/স্টাব নেটওয়ার্ক</td><td class="l">নিজেই রুট বদলায় · ব্যান্ডউইথ, CPU · বড় নেটওয়ার্ক</td></tr>
+  </table>
+  <p class="small"><b>মেট্রিক (Metric)</b>: হপ কাউন্ট (RIP) · ব্যান্ডউইথ · ডিলে · লোড · নির্ভরযোগ্যতা · MTU · কস্ট (OSPF) · AS পাথ / পলিসি (BGP)। <b>মেট্রিক যত কম, রুট তত ভালো</b>।</p>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>RIP গোনে হপ, OSPF গোনে কস্ট, BGP গোনে AS</b> (আর মানে পলিসি)"।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>মেট্রিক</b> তুলনা করে <b>একই প্রোটোকলের ভেতরের</b> রুটগুলো; <b>অ্যাডমিনিস্ট্রেটিভ ডিসট্যান্স</b> (AD, বিশ্বাসযোগ্যতা) বাছাই করে <b>ভিন্ন প্রোটোকলের মধ্যে</b>, যার মান কম সে জেতে। Cisco AD: connected 0 · static <span class="circ">1</span> · eBGP 20 · EIGRP 90 · OSPF 110 · IS-IS 115 · RIP 120 · iBGP 200। তাই হপ কাউন্ট যা-ই হোক, OSPF রুট RIP রুটকে হারায়।</div>
+  <h2><span class="no">২</span>ফ্লাডিং (Flooding)</h2>
+  <p class="small">একটি স্ট্যাটিক অ্যালগরিদম: প্রতিটি প্যাকেট <b>যে লাইনে এসেছে সেটি ছাড়া বাকি সব লাইনে</b> পাঠানো হয়। এটি মজবুত (robust) এবং সবসময় সংক্ষিপ্ততম পথ খুঁজে পায় (সব পথই চেষ্টা হয়), কিন্তু নেটওয়ার্ক ডুপ্লিকেট প্যাকেটে ভরে যায়। নিয়ন্ত্রণের উপায়: <b>হপ কাউন্টার</b> (শুরু হয় নেটওয়ার্কের ব্যাস থেকে), <b>সিকোয়েন্স নম্বর</b> (আগে দেখা কপি বাদ) বা <b>সিলেক্টিভ ফ্লাডিং</b>। লিংক-স্টেট প্যাকেট ছড়াতে ফ্লাডিং ব্যবহৃত হয়।</p>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: link state, Dijkstra, OSPF, hierarchy ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>লিংক স্টেট</span></div>
+  <h2><span class="no">৩</span>লিংক স্টেট রাউটিং ও Dijkstra</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">মূল ধারণা</span> প্রতিটি রাউটার <span class="hl">পুরো টপোলজির মানচিত্র</span> জানে এবং নিজেই তার ওপর <span class="hl">Dijkstra অ্যালগরিদম</span> (SPF) চালায়: "মানচিত্র দেখে রাউটিং"।</div>
+  <ol class="steps small">
+    <li><b>প্রতিবেশী খোঁজা</b> (HELLO) · প্রত্যেকের <b>কস্ট মাপা</b> · <b>লিংক স্টেট প্যাকেট তৈরি</b> (LSP/LSA: ID, সিকোয়েন্স নং, বয়স, প্রতিবেশী + কস্ট)</li>
+    <li>LSP <b>সব</b> রাউটারে <b>ফ্লাড</b> করা · পুরো মানচিত্রে <b>Dijkstra চালানো</b> → সংক্ষিপ্ততম-পথ ট্রি → রাউটিং টেবিল</li>
+  </ol>
+  <h3>সমাধানকৃত উদাহরণ: A থেকে সংক্ষিপ্ততম পথ</h3>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 250 170" width="245">
+      <g class="w">
+        <path class="ink" d="M40,40 L210,40 M40,40 L40,140 M40,140 L210,140 M210,40 L210,140 M125,90 L210,40 M125,90 L210,140"/>
+        <path class="ink-r" style="stroke-width:3.4" d="M40,40 L40,140 M40,140 L125,90 M125,90 L210,40 M210,40 L210,140"/>
+        <circle cx="40" cy="40" r="15" class="ink-k fill-y"/><circle cx="40" cy="140" r="15" class="ink fill-b"/><circle cx="125" cy="90" r="15" class="ink fill-b"/><circle cx="210" cy="40" r="15" class="ink fill-b"/><circle cx="210" cy="140" r="15" class="ink fill-b"/>
+      </g>
+      <text x="40" y="45" text-anchor="middle" class="k w6">A</text><text x="40" y="145" text-anchor="middle" class="w6">B</text><text x="125" y="95" text-anchor="middle" class="w6">C</text><text x="210" y="45" text-anchor="middle" class="w6">D</text><text x="210" y="145" text-anchor="middle" class="w6">E</text>
+      <text x="125" y="32" text-anchor="middle" class="s">9</text><text x="26" y="95" text-anchor="middle" class="s r">2</text><text x="125" y="158" text-anchor="middle" class="s">7</text><text x="80" y="108" class="s r">2</text><text x="150" y="62" class="s r">1</text><text x="172" y="128" class="s">4</text><text x="224" y="95" class="s r">1</text>
+    </svg><figcaption>লাল = চূড়ান্ত সংক্ষিপ্ততম-পথ ট্রি</figcaption></figure>
+    <table class="hand small" style="white-space:nowrap;margin-top:0">
+      <tr><th>ধাপ</th><th>স্থায়ী সেট</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+      <tr><td>0</td><td>{A}</td><td class="red"><b>2,A</b></td><td>∞</td><td>9,A</td><td>∞</td></tr>
+      <tr><td>1</td><td>{A,B}</td><td>✓</td><td class="red"><b>4,B</b></td><td>9,A</td><td>9,B</td></tr>
+      <tr><td>2</td><td>{A,B,C}</td><td>✓</td><td>✓</td><td class="red"><b>5,C</b></td><td>8,C</td></tr>
+      <tr><td>3</td><td>{A,B,C,D}</td><td>✓</td><td>✓</td><td>✓</td><td class="red"><b>6,D</b></td></tr>
+    </table>
+  </div>
+  <p class="small">"4,B" = দূরত্ব 4, আগের নোড B। প্রতি ধাপে <b>সবচেয়ে ছোট অস্থায়ী (tentative)</b> নোডটি স্থায়ী হয় এবং তার প্রতিবেশীদের মান হালনাগাদ (relax) হয়। A থেকে সব রুটের নেক্সট হপ <span class="circ">B</span>; A→E = A-B-C-D-E, কস্ট 6 (সরাসরি মনে হওয়া A-D-E = 10 নয়)।</p>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">OSPF-এর তথ্য</span><br>RFC 2328 (v2), IPv6-এর জন্য v3<br><b>সরাসরি IP-র ওপর</b> চলে: প্রোটোকল <span class="circ">89</span><br>কস্ট = 10⁸ / ব্যান্ডউইথ (100 Mbps → 1)<br><span class="hl">এরিয়া (Area)</span>; ব্যাকবোন = <b>area 0</b>; ABR, ASBR, DR/BDR<br>224.0.0.5 সব রাউটার · 224.0.0.6 DR<br>Hello 10 s, dead 40 s · AD 110</div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> সংখ্যায় OSPF: "<b>89 · 110 · area 0 · 5/6 · 10/40</b>" = প্রোটোকল, AD, ব্যাকবোন, মাল্টিকাস্টের শেষ অঙ্ক, hello/dead।</div>
+      <p class="small"><b>IS-IS</b>: OSI-র লিংক-স্টেট যমজ, IP নয়, সরাসরি লেয়ার ২-এর ওপর চলে। Dijkstra: O(N²)।</p>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ঋণাত্মক</b> এজ কস্টে Dijkstra ভুল ফল দেয়; Bellman-Ford তা সামলায় (তবে ঋণাত্মক সাইকেল নয়)।</div>
+    </div>
+  </div>
+  <h2><span class="no">৪</span>হায়ারার্কিক্যাল রাউটিং (Hierarchical Routing)</h2>
+  <div class="cols" style="grid-template-columns:1.2fr 1fr">
+    <p class="small" style="margin-top:0">রাউটারগুলোকে <b>অঞ্চলে (region)</b> ভাগ করা হয় (এরিয়া, AS); একটি রাউটার নিজের অঞ্চলের সব রাউটার জানে, কিন্তু অন্য প্রতিটি অঞ্চলের জন্য রাখে <b>মাত্র একটি এন্ট্রি</b>। টেবিল ছোট হয়, পথ সামান্য লম্বা হতে পারে। সর্বোত্তম: <span class="circ">ln N</span> স্তর, <b>e·ln N</b> এন্ট্রি।</p>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 720টি রাউটার। ফ্ল্যাট: <b>720</b> এন্ট্রি। 24 অঞ্চল × 30 রাউটার: 30 + 23 = <b>53</b>। 8 ক্লাস্টার × 9 অঞ্চল × 10 রাউটার: 10 + 8 + 7 = <span class="circ">25</span>।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: distance vector, RIP, count to infinity ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>ডিসট্যান্স ভেক্টর</span></div>
+  <h2><span class="no">৫</span>ডিসট্যান্স ভেক্টর রাউটিং ও Bellman-Ford</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">মূল ধারণা</span> প্রতিটি রাউটার প্রতিটি গন্তব্যের সবচেয়ে ভালো জানা <b>দূরত্ব</b> (ও লাইন) রাখে এবং এই ভেক্টর পর্যায়ক্রমে <b>শুধু প্রতিবেশীদের সাথে</b> বিনিময় করে। "শোনা কথায় রাউটিং"; ১৯৭৯ পর্যন্ত ARPANET-এ, পরে RIP-এ।</div>
+  <div class="sumbox"><span class="lbl">Bellman-Ford সমীকরণ</span> &nbsp;<span class="circ">D<sub>x</sub>(y) = min<sub>v</sub> { c(x, v) + D<sub>v</sub>(y) }</span> &nbsp;x-এর সব প্রতিবেশী v-এর ওপর</div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> রাউটার X: লিংক X–A = 2, X–B = 5, X–C = 1। প্রাপ্ত ভেক্টর:
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>কার কাছ থেকে</th><th>Y পর্যন্ত</th><th>Z পর্যন্ত</th></tr>
+        <tr><td>A</td><td>7</td><td>3</td></tr><tr><td>B</td><td>2</td><td>9</td></tr><tr><td>C</td><td>8</td><td>6</td></tr>
+      </table>
+      Y: min(2+7, <b>5+2</b>, 1+8) = <span class="circ">7, B হয়ে</span><br>Z: min(<b>2+3</b>, 5+9, 1+6) = <span class="circ">5, A হয়ে</span></div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">RIP-এর তথ্য</span><br>মেট্রিক = <span class="hl">হপ কাউন্ট</span>; সর্বোচ্চ <b>15</b>, <span class="circ">16 = ∞</span><br>প্রতি <b>30 s</b>-এ পুরো টেবিল · UDP পোর্ট <b>520</b><br>invalid 180 s · hold-down 180 s · flush 240 s<br>v1 ক্লাসফুল, ব্রডকাস্ট · v2 ক্লাসলেস, মাল্টিকাস্ট <b>224.0.0.9</b>, অথেনটিকেশন<br>RIPng (IPv6): UDP 521 · AD 120</div>
+  </div>
+  <h2><span class="no">৬</span>কাউন্ট-টু-ইনফিনিটি ও তার প্রতিকার</h2>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 270 110" width="265">
+      <g class="w">
+        <circle cx="30" cy="40" r="16" class="ink-k fill-y"/><circle cx="135" cy="40" r="16" class="ink fill-b"/><circle cx="240" cy="40" r="16" class="ink fill-b"/>
+        <path class="ink" d="M46,40 H119 M151,40 H224"/>
+        <path class="ink-r" style="stroke-width:3" d="M72,28 L92,52 M92,28 L72,52"/>
+        <path class="ink-p" d="M240,60 C210,98 165,98 140,62" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M135,62 C150,86 200,86 232,62" marker-end="url(#ahp)"/>
+      </g>
+      <text x="30" y="45" text-anchor="middle" class="k w6">A</text><text x="135" y="45" text-anchor="middle" class="w6">B</text><text x="240" y="45" text-anchor="middle" class="w6">C</text>
+      <text x="82" y="18" text-anchor="middle" class="bn r s">লিংক বিচ্ছিন্ন</text><text x="188" y="106" text-anchor="middle" class="bn p s">"A 2 দূরে" … "না, 3" … "4" …</text>
+    </svg></figure>
+    <table class="hand small" style="white-space:nowrap;margin-top:0">
+      <tr><th>বিনিময়</th><th>B থেকে A-র দূরত্ব</th><th>C থেকে A-র দূরত্ব</th></tr>
+      <tr><td>বিকল হওয়ার আগে</td><td>1</td><td>2</td></tr>
+      <tr><td>1</td><td>3 (C হয়ে!)</td><td>2</td></tr>
+      <tr><td>2 · 3 · 4</td><td>3 · 5 · 5</td><td>4 · 4 · 6</td></tr>
+      <tr><td>শেষে</td><td class="red"><b>16 = ∞</b></td><td class="red"><b>16 = ∞</b></td></tr>
+    </table>
+  </div>
+  <p class="small">C তখনও "A 2 দূরে" ঘোষণা করে (যে রুট আসলে B-এর মধ্য দিয়েই যায়), আর B তা বিশ্বাস করে। <span class="hl">সুখবর দ্রুত ছড়ায়, দুঃসংবাদ ধীরে</span>।</p>
+  <table class="hand small">
+    <tr><th class="l">প্রতিকার</th><th class="l">কীভাবে কাজ করে</th></tr>
+    <tr><td class="l"><b>স্প্লিট হরাইজন</b> · <b>পয়জন রিভার্স</b></td><td class="l">যে ইন্টারফেসে রুট শেখা, সেখানে তা আর ফেরত ঘোষণা নয় · অথবা ফেরত পাঠাও মেট্রিক 16 (∞) দিয়ে</td></tr>
+    <tr><td class="l"><b>রুট পয়জনিং</b> · <b>ট্রিগারড আপডেট</b></td><td class="l">বিকল রুট 30 s অপেক্ষা না করে সঙ্গে সঙ্গে মেট্রিক 16 দিয়ে পাঠানো হয়</td></tr>
+    <tr><td class="l"><b>হোল্ড-ডাউন টাইমার</b></td><td class="l">রুট ডাউন হলে 180 s তার সম্পর্কে খারাপ খবর উপেক্ষা</td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> স্প্লিট হরাইজন দুই রাউটারের লুপ সারায়, কিন্তু তিন বা তার বেশি রাউটারের লুপ <b>নয়</b>; RIP-এর ছোট ∞ (16) গণনাকে শুধু সীমিত করে।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: DV vs LS, BGP, broadcast/multicast, congestion ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>BGP · কনজেশন</span></div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">ডিসট্যান্স ভেক্টর</th><th class="l">লিংক স্টেট</th></tr>
+    <tr><td class="l">জানে · অ্যালগরিদম</td><td class="l">প্রতিবেশীর দূরত্ব · <span class="circ">Bellman-Ford</span></td><td class="l">পুরো টপোলজি · <span class="circ">Dijkstra</span></td></tr>
+    <tr><td class="l">পাঠায়</td><td class="l">পুরো টেবিল, প্রতিবেশীকে, পর্যায়ক্রমে</td><td class="l">নিজের লিংক (LSA), সবাইকে, পরিবর্তন হলে</td></tr>
+    <tr><td class="l">কনভারজেন্স · CPU</td><td class="l">ধীর, কাউন্ট-টু-∞ · কম, ছোট নেটওয়ার্ক</td><td class="l">দ্রুত, লুপমুক্ত · বেশি, বড় নেটওয়ার্ক</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">RIP, IGRP; EIGRP = "অ্যাডভান্সড DV / হাইব্রিড" (DUAL)</td><td class="l">OSPF, IS-IS</td></tr>
+  </table>
+  <h2><span class="no">৭</span>BGP: অটোনোমাস সিস্টেমের মধ্যে রাউটিং</h2><span class="tag">MCQ</span>
+  <ul class="dash small">
+      <li><span class="hl">পাথ ভেক্টর (Path Vector)</span> প্রোটোকল; BGP-4 হলো ইন্টারনেটের ইন্টার-ডোমেইন (EGP) প্রোটোকল</li>
+      <li>চলে <b>TCP পোর্ট <span class="circ">179</span></b>-এ; AS-এর মধ্যে eBGP, একই AS-এর ভেতরে iBGP</li>
+      <li>প্রতিটি রুট তার পুরো <b>AS_PATH</b> বহন করে; যে পথে নিজের AS আছে রাউটার তা বাতিল করে → <b>লুপ হয় না</b></li>
+      <li>বাছাই করে <b>পলিসি</b> দিয়ে (LOCAL_PREF, AS_PATH-এর দৈর্ঘ্য, MED), কস্ট দিয়ে নয় · মেসেজ: OPEN, UPDATE, KEEPALIVE, NOTIFICATION</li>
+    </ul>
+  <h2><span class="no">৮</span>ব্রডকাস্ট ও মাল্টিকাস্ট রাউটিং</h2>
+  <p class="small"><b>ব্রডকাস্ট</b>: আলাদা আলাদা কপি (অপচয়) · ফ্লাডিং · মাল্টিডেস্টিনেশন · <span class="hl">স্প্যানিং ট্রি</span> (সর্বোত্তম) · <span class="hl">রিভার্স পাথ ফরওয়ার্ডিং</span> (RPF): কপিটি যদি সেই লাইনে আসে যা দিয়ে এই রাউটার নিজে উৎসে পৌঁছায়, তবেই ফরওয়ার্ড করো। <b>মাল্টিকাস্ট</b> (224.0.0.0/4, IGMP): সোর্স-ভিত্তিক ট্রি (DVMRP, PIM-DM) অথবা শেয়ার্ড কোর-ভিত্তিক ট্রি (CBT, PIM-SM)।</p>
+  <h2><span class="no">৯</span>কনজেশন ও তার নিয়ন্ত্রণ</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">কনজেশন (Congestion)</span>: নেটওয়ার্কে (বা তার কোনো অংশে) অতিরিক্ত প্যাকেট, ফলে ডিলে বাড়ে ও থ্রুপুট কমে। <b>কনজেশন কন্ট্রোল</b> গোটা নেটওয়ার্কের বিষয় (global); <b>ফ্লো কন্ট্রোল</b> পয়েন্ট-টু-পয়েন্ট (দ্রুত প্রেরক, ধীর প্রাপক)।</div>
+  <div class="cols" style="grid-template-columns:225px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 270 170" width="215">
+      <g class="w">
+        <path class="ink-k" d="M30,150 V10 M30,150 H262" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M30,150 L140,40 H250"/>
+        <path class="ink" d="M30,150 C90,90 140,62 250,52"/>
+        <path class="ink-r" d="M30,150 C90,95 120,70 150,78 C190,90 220,130 250,140"/>
+        <path class="ink-k" d="M140,40 V150" stroke-dasharray="4 4"/>
+      </g>
+      <text x="36" y="14" class="bn s">আউটপুট</text><text x="192" y="166" class="bn s">প্রদত্ত লোড</text>
+      <text x="150" y="34" class="bn g s">আদর্শ</text><text x="200" y="68" class="bn s">কাম্য</text><text x="190" y="128" class="bn r s w6">কনজেস্টেড</text>
+      <text x="100" y="166" class="bn s">ধারণক্ষমতা</text>
+    </svg><figcaption>প্রদত্ত বনাম পৌঁছানো প্যাকেট</figcaption></figure>
+    <div class="small">
+      <p><b>কারণ</b>: একাধিক লাইনের বার্স্টি ট্রাফিক এক লাইনে জড়ো হওয়া, ধীর রাউটার, কম বাফার, কম ব্যান্ডউইথের লাইন।</p>
+      <p>অসীম বাফার অবস্থা আরও <b>খারাপ</b> করে: প্যাকেট এত দেরি করে যে টাইমআউটে রিট্রান্সমিট হয়, লোড আরও বাড়ে। ধারণক্ষমতা পেরোলে আউটপুট প্রায় শূন্যে নামতে পারে: <span class="circ">কনজেশন কলাপস</span>।</p>
+    </div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: congestion techniques, RED, traffic shaping ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>কনজেশন কন্ট্রোল</span></div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">ওপেন লুপ (প্রতিরোধ)</th><th class="l">ক্লোজড লুপ (ফিডব্যাক, প্রতিক্রিয়া)</th></tr>
+    <tr><td class="l">ধারণা</td><td class="l">ভালো ডিজাইন, যাতে কনজেশন শুরুই না হয়</td><td class="l">পর্যবেক্ষণ, সংকেত, তারপর সমন্বয়</td></tr>
+    <tr><td class="l">উপায়</td><td class="l">প্রভিশনিং, <b>অ্যাডমিশন কন্ট্রোল</b>, ট্রাফিক শেপিং (বাকেট), রিট্রান্সমিশন/ACK/ডিসকার্ড পলিসি</td><td class="l"><b>চোক প্যাকেট</b>, ব্যাক-প্রেশার, ECN, RED, TCP-র AIMD উইন্ডো (ট্রান্সপোর্ট নোট)</td></tr>
+  </table>
+  <ul class="dash small">
+    <li><b>অ্যাডমিশন কন্ট্রোল</b>: ভার্চুয়াল-সার্কিট নেটওয়ার্কে নতুন VC নেটওয়ার্ককে কনজেস্টেড করলে তা প্রত্যাখ্যান (টেলিফোনের "ব্যস্ত" টোনের মতো)।</li>
+    <li><b>চোক প্যাকেট (Choke Packet)</b>: কনজেস্টেড রাউটার <b>উৎসে ফেরত</b> একটি প্যাকেট পাঠায়, উৎস তার রেট কমায় (যেমন অর্ধেক)। <b>হপ-বাই-হপ ব্যাক-প্রেশার</b>: চোক প্যাকেট পথের প্রতিটি রাউটারেই কার্যকর হয়, তাই তাৎক্ষণিক স্বস্তি। (ICMP Source Quench এখন বাতিল।)</li>
+    <li><b>ECN</b>: রাউটার প্যাকেট ড্রপ না করে IP হেডারের 2 বিট <b>মার্ক</b> করে; প্রাপক তা ফেরত জানায় (TCP ECE ফ্ল্যাগ), প্রেরক গতি কমায়।</li>
+    <li><b>লোড শেডিং</b>: প্যাকেট ফেলে দেওয়া। <span class="hl">ওয়াইন</span> (পুরোনোটাই ভালো: ফাইল ট্রান্সফার, নতুনটা ফেলো) বনাম <span class="hl">মিল্ক</span> (নতুনটাই ভালো: রিয়েল-টাইম মিডিয়া, পুরোনোটা ফেলো)।</li>
+  </ul>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <p class="small"><b>RED</b> (Random Early Detection, Floyd ও Jacobson ১৯৯৩): রাউটার কিউয়ের <b>গড়</b> দৈর্ঘ্য দেখে। min<sub>th</sub>-এর নিচে: ড্রপ নেই; দুই থ্রেশহোল্ডের মাঝে: max<sub>p</sub> পর্যন্ত বাড়তে থাকা সম্ভাবনায় ড্রপ; max<sub>th</sub>-এর ওপরে: সব ড্রপ। <b>আগেভাগে ও এলোমেলোভাবে</b> ড্রপ করায় অল্প কয়েকটি TCP প্রেরক ধীর হয়, টেইল-ড্রপের <span class="hl">গ্লোবাল সিনক্রোনাইজেশন</span> এড়ানো যায়।</p>
+    <figure class="doodle"><svg viewBox="0 0 250 120" width="245">
+      <g class="w">
+        <path class="ink-k" d="M30,100 V8 M30,100 H240"/>
+        <path class="ink-r" style="stroke-width:2.6" d="M30,100 H90 L180,60 V18 H235"/>
+        <path class="ink-k" d="M90,100 V94 M180,100 V94" />
+      </g>
+      <text x="4" y="22" class="s">1</text><text x="2" y="64" class="s">p</text><text x="184" y="70" class="s r">max<tspan dy="3" font-size="9">p</tspan></text>
+      <text x="90" y="116" text-anchor="middle" class="s">min<tspan dy="3" font-size="9">th</tspan></text><text x="180" y="116" text-anchor="middle" class="s">max<tspan dy="3" font-size="9">th</tspan></text><text x="214" y="96" class="bn s">গড় কিউ</text>
+    </svg><figcaption>RED-এর ড্রপ সম্ভাবনা</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> কনজেশন কন্ট্রোল ≠ ফ্লো কন্ট্রোল: ফাঁকা লিংকে দ্রুত PC থেকে ধীর প্রিন্টারে পাঠানো ফ্লো-কন্ট্রোলের সমস্যা; এক ওভারলোডেড লিংকে বহু হোস্ট হলো কনজেশন।</div>
+  <h2><span class="no">১০</span>ট্রাফিক শেপিং: লিকি ও টোকেন বাকেট</h2><span class="tag">লিখিত প্রশ্নে প্রিয়</span>
+  <div class="def small"><span class="lbl">ট্রাফিক শেপিং (Traffic Shaping)</span> হোস্ট যে ট্রাফিক পাঠায় তার <b>রেট ও বার্স্টিনেস</b> নেটওয়ার্কের সাথে চুক্তি অনুযায়ী নিয়ন্ত্রণ (ওপেন লুপ)। <b>পুলিশিং (Policing)</b> = নেটওয়ার্ক তা যাচাই করে অতিরিক্ত অংশ ড্রপ বা মার্ক করে।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <figure class="doodle"><svg viewBox="0 0 280 170" width="260">
+      <g class="w">
+        <path class="ink-k" d="M90,40 L100,120 H160 L170,40" />
+        <path class="ink fill-b" d="M95,80 L100,120 H160 L165,80 Z"/>
+        <path class="ink" d="M130,120 V146" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M70,12 C90,14 110,18 118,34" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M172,58 C190,60 200,70 206,84" marker-end="url(#ah)"/>
+      </g>
+      <text x="14" y="14" class="bn r s">বার্স্টি ইনপুট</text><text x="196" y="100" class="bn r s">উপচে পড়া:</text><text x="196" y="114" class="bn r s">ফেলে দেওয়া</text>
+      <text x="130" y="166" text-anchor="middle" class="bn w6">স্থির রেট r</text><text x="130" y="104" text-anchor="middle" class="bn s">কিউ (b)</text>
+    </svg><figcaption>লিকি বাকেট: মসৃণ আউটপুট</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 280 170" width="260">
+      <g class="w">
+        <path class="ink-k" d="M100,30 L106,110 H174 L180,30" />
+        <circle cx="122" cy="96" r="7" class="ink-g fill-g"/><circle cx="140" cy="96" r="7" class="ink-g fill-g"/><circle cx="158" cy="96" r="7" class="ink-g fill-g"/><circle cx="131" cy="80" r="7" class="ink-g fill-g"/><circle cx="149" cy="80" r="7" class="ink-g fill-g"/>
+        <path class="ink-g" d="M140,4 V24" marker-end="url(#ahg)"/>
+        <rect x="16" y="128" width="70" height="22" rx="5" class="ink fill-b"/>
+        <path class="ink" d="M90,139 H240" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M140,110 V128" stroke-dasharray="3 3"/>
+      </g>
+      <text x="150" y="16" class="bn g s">ρ রেটে টোকেন</text><text x="186" y="60" class="bn s">সর্বোচ্চ C</text>
+      <text x="51" y="143" text-anchor="middle" class="bn s">প্যাকেট</text><text x="190" y="162" text-anchor="middle" class="bn w6">M পর্যন্ত বার্স্ট</text>
+    </svg><figcaption>টোকেন বাকেট: বার্স্ট চলে</figcaption></figure>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: buckets, devices ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>শেপিং · ডিভাইস</span></div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">লিকি বাকেট</th><th class="l">টোকেন বাকেট</th></tr>
+    <tr><td class="l">আউটপুট</td><td class="l">ইনপুট যত বার্স্টিই হোক, <b>স্থির</b> রেট r</td><td class="l">গড় রেট ρ, M পর্যন্ত বার্স্ট চলে</td></tr>
+    <tr><td class="l">অলস হোস্ট · পূর্ণ হলে</td><td class="l">কিছু পায় না · <b>প্যাকেট</b> ফেলে দেয়</td><td class="l">C পর্যন্ত টোকেন জমায় · <b>টোকেন</b> ফেলে দেয়</td></tr>
+    <tr><td class="l">t সময়ে সর্বোচ্চ ডেটা</td><td class="l">r·t</td><td class="l"><span class="circ">C + ρt</span> (এবং ≤ M·t)</td></tr>
+  </table>
+  <div class="sumbox"><span class="lbl">বার্স্টের দৈর্ঘ্য</span> পূর্ণ বাকেট C বাইট, টোকেন রেট ρ, সর্বোচ্চ আউটপুট রেট M। S সেকেন্ডের বার্স্টে: C + ρS = MS ⇒ <span class="circ">S = C / (M − ρ)</span></div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ১ ✍</span> C = 250 KB, M = 25 MB/s, ρ = 2 MB/s: S = 250 KB / 23 MB/s ≈ <b>11 ms</b> পূর্ণ গতিতে, তারপর 2 MB/s।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ২ ✍</span> 1 MB বার্স্ট (25 MB/s-এ 40 ms) লিকি বাকেটে, আউটপুট 2 MB/s: আউটপুট চলে <b>500 ms</b>; বাকেটে ধরতে হবে ≈ 0.92 MB।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>লিকি</b> = ফুটো কল: সবসময় একই ফোঁটা। <b>টোকেন</b> = সঞ্চয়ী হিসাব: অলস সময়ে জমাও, বার্স্টে খরচ করো, তবে ব্যালান্স C-এর বেশি কখনো নয়।</div>
+  <h2><span class="no">১১</span>ইন্টারনেটওয়ার্কিং ও তার ডিভাইস</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def small"><span class="lbl">সংজ্ঞা</span> <span class="hl">ইন্টারনেটওয়ার্কিং (Internetworking)</span> = ভিন্ন ধরনের নেটওয়ার্ক (অ্যাড্রেসিং, প্যাকেটের আকার, সার্ভিস, QoS) জুড়ে এক নেটওয়ার্কের মতো চালানো; IP চালানো লেয়ার-৩ রাউটারই ইন্টারনেটকে জুড়ে রাখে।</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">ডিভাইস</th><th>লেয়ার</th><th class="l">কাজ করে</th><th>কলিশন ডোমেইন</th><th>ব্রডকাস্ট ডোমেইন</th></tr>
+    <tr><td class="l">রিপিটার</td><td>1</td><td class="l">বিট: সিগন্যাল পুনর্গঠন</td><td>1 (বাড়ায়)</td><td>1</td></tr>
+    <tr><td class="l">হাব</td><td>1</td><td class="l">বিট: মাল্টিপোর্ট রিপিটার</td><td>সব পোর্টে মিলে 1</td><td>1</td></tr>
+    <tr><td class="l">ব্রিজ</td><td>2</td><td class="l">ফ্রেম: MAC ফিল্টারিং</td><td>প্রতি পোর্টে 1</td><td>1</td></tr>
+    <tr><td class="l">সুইচ</td><td>2</td><td class="l">ফ্রেম: মাল্টিপোর্ট ব্রিজ</td><td><span class="circ">প্রতি পোর্টে 1</span></td><td>1 (প্রতি VLAN-এ)</td></tr>
+    <tr><td class="l">রাউটার</td><td>3</td><td class="l">প্যাকেট: IP অ্যাড্রেস</td><td>প্রতি পোর্টে 1</td><td><span class="circ">প্রতি পোর্টে 1</span></td></tr>
+    <tr><td class="l">গেটওয়ে</td><td>4–7</td><td class="l">প্রোটোকল রূপান্তর</td><td>–</td><td>–</td></tr>
+  </table>
+  <ul class="dash small">
+    <li><b>ব্রিজ</b>: সোর্স অ্যাড্রেস দেখে MAC → পোর্ট শেখে (<b>ব্যাকওয়ার্ড লার্নিং</b>); অজানা গন্তব্যে ফ্লাড করে; STP (802.1D) লুপ দূর করে।</li>
+    <li><b>সুইচ</b>: store-and-forward (CRC যাচাই করে) বা cut-through (কম ল্যাটেন্সি); ফুল ডুপ্লেক্স, কলিশন নেই; লেয়ার-৩ সুইচ রাউটিংও করে।</li>
+    <li><b>গেটওয়ে</b>: ভিন্ন প্রোটোকলের মধ্যে রূপান্তর করে (ই-মেইল, VoIP); TCP/IP-র "ডিফল্ট গেটওয়ে" আসলে রাউটারই।</li>
+  </ul>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: devices cont., tunnelling, switching ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>ডিভাইস · সুইচিং</span></div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ২টি ইন্টারফেসের একটি রাউটার: একটি ইন্টারফেসে ২০টি PC-সহ ২৪-পোর্ট সুইচ, অন্যটিতে ৬টি PC-সহ একটি হাব। কলিশন ডোমেইন: 20 + 1 (সুইচ–রাউটার লিংক) + 1 (পুরো হাব অংশ) = <span class="circ">22</span>। ব্রডকাস্ট ডোমেইন: <b>2</b> (রাউটারের প্রতি ইন্টারফেসে একটি)।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>সুইচ</b> কলিশন ডোমেইন ভাগ করে, কিন্তু ব্রডকাস্ট ডোমেইন <b>নয়</b>; ব্রডকাস্ট ডোমেইন ভাগ করে কেবল <b>রাউটার</b> (বা VLAN)। অনেক পোর্ট থাকলেও হাব লেয়ার-১ ডিভাইস।</div>
+  <h3>টানেলিং (Tunnelling)</h3>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <p class="small" style="margin-top:0"><b>ভিন্ন ধরনের</b> নেটওয়ার্ক পার হতে দুটি মাল্টিপ্রোটোকল রাউটারের মাঝে পুরো প্যাকেটটি ওই নেটওয়ার্কের প্যাকেটের <b>পেলোড</b> হিসেবে যায়। উদাহরণ: IPv6-in-IPv4 (প্রোটোকল 41), GRE (প্রোটোকল 47), IPsec VPN।</p>
+    <figure class="doodle"><svg viewBox="0 0 300 100" width="290">
+      <g class="w">
+        <rect x="4" y="30" width="44" height="30" rx="6" class="ink-g fill-g"/><rect x="252" y="30" width="44" height="30" rx="6" class="ink-g fill-g"/>
+        <ellipse cx="150" cy="45" rx="88" ry="38" class="ink fill-b"/>
+        <rect x="84" y="30" width="128" height="30" rx="4" class="ink-k"/><rect x="138" y="35" width="68" height="20" rx="4" class="ink-g fill-g"/>
+        <path class="ink" d="M48,45 H62 M238,45 H252"/>
+      </g>
+      <text x="26" y="50" text-anchor="middle" class="g s">IPv6</text><text x="274" y="50" text-anchor="middle" class="g s">IPv6</text>
+      <text x="110" y="50" text-anchor="middle" class="s w6">v4 hdr</text><text x="172" y="50" text-anchor="middle" class="g s">IPv6 pkt</text>
+      <text x="150" y="96" text-anchor="middle" class="bn s">IPv4 নেটওয়ার্ক = টানেল</text>
+    </svg></figure>
+  </div>
+  <h2><span class="no">১২</span>সার্কিট বনাম প্যাকেট সুইচিং</h2><span class="tag">MCQ + লিখিত</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">সার্কিট</th><th class="l">ডেটাগ্রাম</th><th class="l">ভার্চুয়াল সার্কিট</th></tr>
+    <tr><td class="l">ধারণা</td><td class="l">আগে নির্দিষ্ট পথ স্থাপন</td><td class="l">প্রতিটি প্যাকেট আলাদাভাবে রাউট হয়</td><td class="l">সেটআপে পথ নির্দিষ্ট, লিংক শেয়ার্ড</td></tr>
+    <tr><td class="l">প্যাকেটে থাকে</td><td class="l">–</td><td class="l">পূর্ণ অ্যাড্রেস</td><td class="l">ছোট VC নম্বর</td></tr>
+    <tr><td class="l">ক্রম · রাউটার বিকল হলে</td><td class="l">ক্রমানুসারে · কল বিচ্ছিন্ন</td><td class="l">ক্রম ভাঙতে পারে · শুধু তার প্যাকেট হারায়</td><td class="l">ক্রমানুসারে · তার মধ্য দিয়ে যাওয়া সব VC শেষ</td></tr>
+    <tr><td class="l">QoS, কনজেশন</td><td class="l">সহজ (রিজার্ভড)</td><td class="l">কঠিন</td><td class="l">রিসোর্স রিজার্ভ থাকলে সহজ</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">PSTN, ISDN</td><td class="l"><span class="hl">IP</span></td><td class="l"><span class="hl">X.25, Frame Relay, ATM, MPLS</span></td></tr>
+  </table>
+  <div class="sumbox small"><span class="lbl">ডিলের সূত্র</span> মেসেজ x বিট, k হপ, বিট রেট b, প্রতি হপে প্রোপাগেশন d, সেটআপ s, প্যাকেট p বিট (হেডার বাদ):
+    সার্কিট <span class="circ">T = s + x/b + k·d</span> · প্যাকেট <span class="circ">T = x/b + (k − 1)·p/b + k·d</span>। s &gt; (k − 1)·p/b হলে প্যাকেট সুইচিং দ্রুত।<br>
+    <b>উদাহরণ ✍</b> x = 10⁶ বিট, b = 1 Mbps, k = 4, d = 5 ms, s = 200 ms, p = 10 000 বিট: সার্কিট 0.2 + 1 + 0.02 = <b>1.22 s</b>; প্যাকেট 1 + 3 × 0.01 + 0.02 = <b>1.05 s</b>।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ভার্চুয়াল সার্কিট আসলে <b>প্যাকেট</b> সুইচিং (লিংক শেয়ার হয়), সার্কিট সুইচিং নয়; এটি শুধু সেটআপের সময় রুট নির্দিষ্ট করে।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: WAN technologies ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>WAN প্রযুক্তি</span></div>
+  <h2><span class="no">১৩</span>WAN প্রযুক্তি</h2><span class="tag">হাই-ইল্ড</span>
+  <p class="small"><b>WAN</b> শহর, দেশ, মহাদেশ জুড়ে বিস্তৃত, সাধারণত ক্যারিয়ারের লাইনের ওপর: লিজড লাইন, সার্কিট-সুইচড ISDN, প্যাকেট-সুইচড X.25 / Frame Relay / ATM, MPLS, ইন্টারনেট VPN (IPsec), স্যাটেলাইট/সেলুলার ব্যাকআপ।</p>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">লিজড লাইন</th><th>রেট</th><th>চ্যানেল</th></tr>
+      <tr><td class="l">T1 (USA)</td><td><span class="circ">1.544 Mbps</span></td><td>24 × 64 k</td></tr>
+      <tr><td class="l">E1 (ইউরোপ, BD)</td><td><span class="circ">2.048 Mbps</span></td><td>32 (30 ব্যবহারযোগ্য)</td></tr>
+      <tr><td class="l">T3 / E3</td><td>44.736 / 34.368</td><td>672 / 480</td></tr>
+      <tr><td class="l">OC-3 = STM-1</td><td>155.52 Mbps</td><td>SONET/SDH</td></tr>
+      <tr><td class="l">OC-12 = STM-4</td><td>622.08 Mbps</td><td></td></tr>
+    </table>
+    <div class="small">
+      <p><b>ISDN</b>: BRI = 2B + D = 2 × 64 + 16 = <b>144 kbps</b>; PRI = 23B + D (T1) বা 30B + D (E1)।</p>
+      <p>T1 = 24 × 64 kbps + 8 kbps ফ্রেমিং = 1.544 Mbps। OC-1 = 51.84 Mbps; OC-n = n × 51.84।</p>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">X.25</th><th class="l">Frame Relay</th><th class="l">ATM</th></tr>
+    <tr><td class="l">সময় · সংস্থা</td><td class="l">1976, CCITT/ITU-T</td><td class="l">1990-এর দশকের শুরু</td><td class="l">1990-এর দশক, B-ISDN-এর মূল</td></tr>
+    <tr><td class="l">লেয়ার</td><td class="l">3 (X.21, LAPB, PLP)</td><td class="l">শুধু 2 (LAPF)</td><td class="l">ফিজিক্যাল, ATM, AAL</td></tr>
+    <tr><td class="l">একক</td><td class="l">প্যাকেট (পরিবর্তনশীল)</td><td class="l">ফ্রেম (পরিবর্তনশীল)</td><td class="l"><span class="circ">53-বাইট সেল</span></td></tr>
+    <tr><td class="l">এরর কন্ট্রোল</td><td class="l"><b>হপ-বাই-হপ</b> (নয়েজি লাইন)</td><td class="l">নেই: ত্রুটিপূর্ণ ফ্রেম ড্রপ</td><td class="l">HEC শুধু হেডারে</td></tr>
+    <tr><td class="l">VC শনাক্তকারী</td><td class="l">LCN</td><td class="l"><b>DLCI</b> (10 বিট)</td><td class="l"><b>VPI/VCI</b></td></tr>
+    <tr><td class="l">গতি</td><td class="l">≤ 64 kbps (পরে 2 Mbps)</td><td class="l">56 kbps – 45 Mbps</td><td class="l">155.52 / 622.08 Mbps</td></tr>
+    <tr><td class="l">অতিরিক্ত</td><td class="l">টার্মিনালের জন্য PAD</td><td class="l">CIR, DE বিট, FECN/BECN</td><td class="l">CBR, VBR, ABR, UBR</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <figure class="doodle"><svg viewBox="0 0 280 74" width="275">
+      <g class="w"><rect x="10" y="18" width="40" height="30" class="ink-r fill-r"/><rect x="50" y="18" width="220" height="30" class="ink-g fill-g"/></g>
+      <text x="30" y="38" text-anchor="middle" class="r s w6">5 B</text><text x="160" y="38" text-anchor="middle" class="bn g w6">48-বাইট পেলোড</text>
+      <text x="30" y="64" text-anchor="middle" class="bn s">হেডার</text><text x="160" y="64" text-anchor="middle" class="bn s">মোট 53 বাইট (≈ 9.4 % ওভারহেড)</text>
+    </svg><figcaption>ATM সেল</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 280 74" width="275">
+      <g class="w"><rect x="10" y="18" width="134" height="30" class="ink-p fill-p"/><rect x="144" y="18" width="40" height="30" class="ink fill-b"/><rect x="184" y="18" width="22" height="30" class="ink-r fill-r"/><rect x="206" y="18" width="64" height="30" class="ink-g fill-g"/></g>
+      <text x="77" y="38" text-anchor="middle" class="p w6">Label 20</text><text x="164" y="38" text-anchor="middle" class="s">TC 3</text><text x="195" y="38" text-anchor="middle" class="r s">S</text><text x="238" y="38" text-anchor="middle" class="g s w6">TTL 8</text>
+      <text x="140" y="66" text-anchor="middle" class="bn s">32-বিট MPLS শিম হেডার (বিটে)</text>
+    </svg><figcaption>MPLS লেবেল এন্ট্রি</figcaption></figure>
+  </div>
+  <p class="small"><b>ATM</b>: 48 বাইট ছিল আপস (USA চেয়েছিল 64, ইউরোপ 32)। UNI হেডার: GFC 4, VPI 8, VCI 16, PT 3, CLP 1, HEC 8 বিট। ATM নেটওয়ার্ক লেয়ার ও AAL আলাদা নোটে।</p>
+  <p class="small"><b>MPLS</b> ("লেয়ার 2.5", RFC 3031): ইনগ্রেস (প্রবেশপ্রান্তের) <b>LER</b> প্যাকেটকে একটি FEC-এ শ্রেণিভুক্ত করে লেবেল <b>push</b> করে; কোরের <b>LSR</b> লেবেল <b>swap</b> করে (হুবহু মিল, দ্রুত); ইগ্রেস (নির্গমপ্রান্তে) লেবেল <b>pop</b> হয়। পথটির নাম <span class="hl">LSP</span>। ক্যারিয়াররা ট্রাফিক ইঞ্জিনিয়ারিং, QoS ও L3 VPN-এ ব্যবহার করে; যেকোনো প্রোটোকল বহন করে।</p>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>X.25 প্রতি হপে যাচাই করে, Frame Relay কোথাও করে না, ATM সব কেটে 53 বানায়।</b> Frame Relay = "এরর কন্ট্রোল ফেলে দেওয়া X.25, কারণ ফাইবার পরিষ্কার"।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ATM-এর HEC শুধু <b>5-বাইট হেডার</b> রক্ষা করে, পেলোড নয়। Frame Relay ত্রুটি <b>শনাক্ত</b> করে (FCS) কিন্তু কখনো <b>সংশোধন</b> করে না: ফ্রেমটি ফেলে দেয়।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: fragmentation ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>ফ্র্যাগমেন্টেশন</span></div>
+  <h2><span class="no">১৪</span>IPv4 ফ্র্যাগমেন্টেশন (Fragmentation)</h2><span class="tag">লিখিত প্রশ্নে প্রিয়</span>
+  <div class="def small"><span class="lbl">কেন</span> পরের লিংকের <span class="hl">MTU</span>-র (একটি ফ্রেমের সর্বোচ্চ পেলোড) চেয়ে বড় ডেটাগ্রাম কয়েকটি <b>ফ্র্যাগমেন্টে</b> ভাগ হয়, প্রতিটি নিজস্ব হেডারসহ পূর্ণ IP ডেটাগ্রাম। IPv4: উৎস <b>বা যেকোনো রাউটার</b> ফ্র্যাগমেন্ট করতে পারে; <span class="hl">রিঅ্যাসেম্বলি হয় শুধু চূড়ান্ত গন্তব্যে</span>।</div>
+  <div class="cols" style="grid-template-columns:1.5fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">হেডার ফিল্ড (বিট)</th><th class="l">ভূমিকা</th></tr>
+      <tr><td class="l">Identification (16)</td><td class="l">সব ফ্র্যাগমেন্টে একই</td></tr>
+      <tr><td class="l">DF (1) · MF (1)</td><td class="l">ফ্র্যাগমেন্ট নয় · আরও আছে</td></tr>
+      <tr><td class="l">Fragment offset (<span class="circ">13</span>)</td><td class="l"><b>8-বাইট</b> এককে</td></tr>
+      <tr><td class="l">Total length (16)</td><td class="l">হেডার + ডেটা ≤ 65 535</td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">লিংক</th><th>MTU (B)</th></tr>
+      <tr><td class="l">Ethernet · PPP</td><td><span class="circ">1500</span></td></tr>
+      <tr><td class="l">802.11 · FDDI</td><td>2304 · 4352</td></tr>
+      <tr><td class="l">X.25 (সাধারণত)</td><td>576</td></tr>
+      <tr><td class="l">IPv6 ন্যূনতম</td><td>1280</td></tr>
+    </table>
+  </div>
+  <div class="ex"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍</span> টোটাল লেংথ 4000 B (20-বাইট হেডার), পরের লিংকের MTU 1500।
+    <ol class="steps small"><li>ডেটা = 4000 − 20 = 3980 B। প্রতি ফ্র্যাগমেন্টে সর্বোচ্চ ডেটা = 1500 − 20 = 1480 (8-এর গুণিতক ✓)</li><li>ভাগ: 3980 = 1480 + 1480 + 1020</li></ol>
+    <table class="hand small" style="white-space:nowrap">
+      <tr><th>ফ্র্যাগ</th><th>ডেটা বাইট</th><th>টোটাল লেংথ</th><th>অফসেট</th><th>MF</th></tr>
+      <tr><td>1</td><td>0 – 1479</td><td>1500</td><td>0</td><td>1</td></tr>
+      <tr><td>2</td><td>1480 – 2959</td><td>1500</td><td>1480/8 = 185</td><td>1</td></tr>
+      <tr><td>3</td><td>2960 – 3979</td><td>1040</td><td><span class="circ">2960/8 = 370</span></td><td class="red"><b>0</b></td></tr>
+    </table></div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ২: 8-বাইটের ফাঁদ ✍</span> MTU 1000, ডেটাগ্রাম 2400 B। 1000 − 20 = 980, যা 8-এর গুণিতক নয় → নিতে হবে <b>976</b>। ডেটা 2380 = 976 + 976 + 428; অফসেট <b>0, 122, 244</b>।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ৩: ফ্র্যাগমেন্ট পড়া ✍</span> অফসেট 100, HLEN 5, টোটাল লেংথ 100 → প্রথম ডেটা বাইট = 100 × 8 = <b>800</b>, ডেটা = 80 B, শেষ বাইট <b>879</b>।</div>
+  </div>
+  <ul class="dash small">
+    <li>MF = 1, অফসেট = 0 → <b>প্রথম</b> ফ্র্যাগমেন্ট · MF = 0, অফসেট ≠ 0 → <b>শেষ</b> · MF = 0, অফসেট = 0 → ফ্র্যাগমেন্ট হয়নি</li>
+    <li>একটি ফ্র্যাগমেন্ট হারালে <b>পুরো ডেটাগ্রাম</b> বাতিল হয় (রিঅ্যাসেম্বলি টাইমার)</li>
+    <li><b>পাথ MTU ডিসকভারি</b>: DF = 1 দিয়ে পাঠাও; যে রাউটার ফরওয়ার্ড করতে পারে না সে প্যাকেট ড্রপ করে ICMP type 3 code 4 "fragmentation needed" ও পরের হপের MTU ফেরত পাঠায়</li>
+    <li><b>IPv6</b>: রাউটার <b>কখনো</b> ফ্র্যাগমেন্ট করে না; শুধু উৎস করে (Fragment হেডার, 8 B, next header 44); বেশি বড় হলে → ICMPv6 "Packet Too Big"</li>
+  </ul>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>অফসেট × 8 = বাইটের অবস্থান</b>": 2¹³টি অফসেট × 8 বাইট = 2¹⁶, যা 65 535-বাইটের ডেটাগ্রাম ঢেকে দেয়।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের শিট</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>DV: D<sub>x</sub>(y) = min{c(x,v) + D<sub>v</sub>(y)}</p><p>LS: LSA ফ্লাড, তারপর Dijkstra O(N²)</p>
+      <p>RIP: হপ, সর্বোচ্চ 15, 16 = ∞, 30 s, UDP 520</p><p>OSPF: IP প্রোটোকল 89, area 0, AD 110</p>
+      <p>BGP: পাথ ভেক্টর, TCP 179, AS_PATH</p><p>AD: static 1, eBGP 20, OSPF 110, RIP 120</p>
+      <p>হায়ারার্কি: ln N স্তর, e·ln N এন্ট্রি</p><p>টোকেন: S = C/(M − ρ) · সর্বোচ্চ = C + ρt</p>
+      <p>সার্কিট: s + x/b + kd</p><p>প্যাকেট: x/b + (k − 1)p/b + kd</p>
+      <p>ATM 53 = 5 + 48 · VPI/VCI</p><p>T1 1.544 · E1 2.048 · STM-1 155.52</p>
+      <p>MPLS: label 20 · TC 3 · S 1 · TTL 8</p><p>অফসেট = বাইটের অবস্থান / 8 (13 বিট)</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১৪টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>রাউটার = লেয়ার ৩, ব্রিজ/সুইচ = ২, হাব/রিপিটার = ১</li>
+      <li>ডিসট্যান্স ভেক্টর Bellman-Ford ব্যবহার করে</li>
+      <li>লিংক স্টেট Dijkstra ব্যবহার করে</li>
+      <li>BGP হলো AS-এর মধ্যকার (EGP) প্রোটোকল</li>
+      <li>স্প্লিট হরাইজন কাউন্ট-টু-ইনফিনিটি কমায়</li>
+      <li>এক গন্তব্যের সব সর্বোত্তম রুট = সিংক ট্রি</li>
+      <li>ফ্লাডিং সব পথ চেষ্টা করে: মজবুত, প্রচুর ডুপ্লিকেট</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>লিকি বাকেট → স্থির আউটপুট রেট</li>
+      <li>টোকেন বাকেট → বার্স্ট চলে, টোকেন জমায়</li>
+      <li>RED গড় কিউ দেখে আগেভাগে, এলোমেলো ড্রপ করে</li>
+      <li>X.25 = হপ-বাই-হপ এরর কন্ট্রোল</li>
+      <li>Frame Relay-তে DLCI; ATM-এ VPI/VCI</li>
+      <li>IPv4 রিঅ্যাসেম্বলি শুধু গন্তব্যে</li>
+      <li>IPv6 রাউটার কখনো ফ্র্যাগমেন্ট করে না</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> মেট্রিক ≠ অ্যাডমিনিস্ট্রেটিভ ডিসট্যান্স · ৩+ রাউটারের লুপে স্প্লিট হরাইজন ব্যর্থ · সুইচ কলিশন ডোমেইন ভাগ করে, ব্রডকাস্ট নয় · ভার্চুয়াল সার্কিট = প্যাকেট সুইচিং · লিকি বাকেট প্যাকেট ফেলে, টোকেন বাকেট টোকেন ফেলে · অফসেট গোনে 8-বাইট এককে, প্রতি ফ্র্যাগমেন্টের ডেটা 8-এর গুণিতক হতে হবে · ATM-এর HEC শুধু হেডারে</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> RIP গোনে হপ, OSPF কস্ট, BGP AS · OSPF "89 · 110 · area 0 · 5/6 · 10/40" · RPF = নিজের ঘরে ফেরার পথে এসেছে? · লিকি = ফুটো কল, টোকেন = সঞ্চয়ী হিসাব · X.25 প্রতি হপে যাচাই, FR কোথাও না, ATM কেটে 53 · অফসেট × 8 = বাইটের অবস্থান</div>
+  <figure class="doodle"><svg viewBox="0 0 560 96" width="560">
+    <g class="w">
+      <rect x="10" y="20" width="120" height="44" rx="12" class="ink-r fill-r"/><rect x="150" y="20" width="120" height="44" rx="12" class="ink fill-b"/><rect x="290" y="20" width="120" height="44" rx="12" class="ink-g fill-g"/><rect x="430" y="20" width="120" height="44" rx="12" class="ink-p fill-p"/>
+      <path class="ink-k" d="M130,42 H150 M270,42 H290 M410,42 H430"/>
+    </g>
+    <text x="70" y="40" text-anchor="middle" class="bn r w6">রাউট</text><text x="70" y="56" text-anchor="middle" class="s">DV · LS · BGP</text>
+    <text x="210" y="40" text-anchor="middle" class="bn w6">শেপ</text><text x="210" y="56" text-anchor="middle" class="bn s">বাকেট · RED</text>
+    <text x="350" y="40" text-anchor="middle" class="bn g w6">সুইচ</text><text x="350" y="56" text-anchor="middle" class="bn s">সার্কিট · প্যাকেট · VC</text>
+    <text x="490" y="40" text-anchor="middle" class="bn p w6">ফ্র্যাগমেন্ট</text><text x="490" y="56" text-anchor="middle" class="s">MTU · offset · MF</text>
+    <text x="280" y="90" text-anchor="middle" class="bn s">নেটওয়ার্ক লেয়ারের প্রতিটি প্রশ্নপত্রের চারটি মূল প্রশ্ন</text>
+  </svg></figure>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · রাউটিং ও WAN</span><span>রিভিশন ২: অনুশীলনী</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>ডিসট্যান্স ভেক্টর রাউটিং কোন অ্যালগরিদমের ওপর ভিত্তি করে?<ol class="opts"><li>Dijkstra</li><li>Prim</li><li>Bellman-Ford</li><li>Kruskal</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>RIP-এ হপ কাউন্ট 16 মানে:<ol class="opts"><li>অগম্য</li><li>সেরা রুট</li><li>16টি রাউটার</li><li>ডিফল্ট রুট</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>OSPF সরাসরি IP-তে যে প্রোটোকল নম্বরে বহন হয়:<ol class="opts"><li>6</li><li>17</li><li>520</li><li>89</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>কোন প্রোটোকল অটোনোমাস সিস্টেমগুলোর মধ্যে রাউটিং করে?<ol class="opts"><li>BGP</li><li>RIP</li><li>OSPF</li><li>IS-IS</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>লিকি বাকেট অ্যালগরিদম মূলত দেয়:<ol class="opts"><li>সংক্ষিপ্ততম পথ</li><li>স্থির আউটপুট রেট</li><li>ত্রুটি শনাক্তকরণ</li><li>অ্যাড্রেস রেজল্যুশন</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>টোকেন বাকেট: C = 250 KB, ρ = 2 MB/s, M = 25 MB/s। বার্স্টের দৈর্ঘ্য ≈<ol class="opts"><li>125 ms</li><li>10 ms</li><li>11 ms</li><li>23 ms</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>কোন ডিভাইস ব্রডকাস্ট ডোমেইন ভাগ করে?<ol class="opts"><li>হাব</li><li>রাউটার</li><li>সুইচ</li><li>রিপিটার</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>একটি ATM সেলের আকার:<ol class="opts"><li>48 বাইট</li><li>64 বাইট</li><li>1500 বাইট</li><li>53 বাইট</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>4000-বাইট ডেটাগ্রাম (20 B হেডার), MTU 1500: শেষ ফ্র্যাগমেন্টের অফসেট?<ol class="opts"><li>370</li><li>2960</li><li>185</li><li>3</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>হপ-বাই-হপ এরর কন্ট্রোল কোনটির বৈশিষ্ট্য?<ol class="opts"><li>Frame Relay</li><li>X.25</li><li>ATM</li><li>MPLS</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-ঘ · ৪-ক · ৫-খ · ৬-গ · ৭-খ · ৮-ঘ · ৯-ক · ১০-খ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> উদাহরণসহ ডিসট্যান্স ভেক্টর রাউটিংয়ের কাউন্ট-টু-ইনফিনিটি সমস্যা ব্যাখ্যা করো এবং এটি কমানোর দুটি কৌশল বর্ণনা করো। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>DV রাউটার শুধু প্রতিবেশীর দূরত্ব জানে (Bellman-Ford), তাই প্রতিবেশীর রুট তার নিজের মধ্য দিয়েই ফিরে আসে কি না বুঝতে পারে না <i class="mk">১</i></li>
+    <li>শৃঙ্খল A–B–C, প্রতিটি কস্ট 1। B: A = 1; C: A = 2 (B হয়ে)। A–B লিংক বিচ্ছিন্ন হলো <i class="mk">১</i></li>
+    <li>B শোনে C-এর "A = 2", তাই C হয়ে A = 3 ধরে; তারপর C ধরে B হয়ে A = 4; এভাবে 5, 6, … করে ∞ (RIP-এ 16) পর্যন্ত গোনে, পুরো সময় রাউটিং লুপ থাকে <i class="mk">৩</i></li>
+    <li><b>স্প্লিট হরাইজন</b>: যে লাইন থেকে শিখেছে সেই B-কে C আর A-র রুট ঘোষণা করে না; <b>পয়জন রিভার্স</b>: B-কে A = ∞ ঘোষণা করে <i class="mk">২</i></li>
+    <li>আরও আছে হোল্ড-ডাউন টাইমার ও ট্রিগারড আপডেট; কোনোটিই ৩+ রাউটারের লুপ পুরোপুরি সারায় না, তাই লিংক স্টেট বেশি পছন্দনীয় <i class="mk">১</i></li>
+  </ol>
+  <div class="tipbox small"><span class="lbl">পরীক্ষার আগে ✓</span> ৫-নোডের গ্রাফে টেবিল করে Dijkstra · Bellman-Ford দিয়ে DV আপডেট · S = C/(M − ρ) ও C + ρt · ফ্র্যাগমেন্টের আকার, অফসেট, MF · আরও লিখে অনুশীলন: DV বনাম LS, লিকি বনাম টোকেন বাকেট, X.25 বনাম FR বনাম ATM</div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

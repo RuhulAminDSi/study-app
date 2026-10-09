@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Firewalls, IPv4, IPv6, ARP, Mobile IP and ATM: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title" style="font-size:25pt"><span class="u">Firewalls, IPv4, IPv6, ARP, Mobile IP &amp; ATM</span></h1>
+  <p class="subtitle">Firewalls · IPv4 · subnetting · NAT · IPv6 · ARP · Mobile IP · ATM: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">NETWORK LAYER</text><text x="320" y="168" text-anchor="middle" class="r s">IP · firewalls · mind-map</text>
+      <text x="140" y="65" text-anchor="middle">IPv4 header 20–60 B</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Firewalls · DMZ ★</text>
+      <text x="500" y="65" text-anchor="middle">NAT · private ranges</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Subnetting/CIDR ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">IPv6 128-bit ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Mobile IP · CoA</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">ARP · RARP · ICMP ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">ATM cell 5 + 48</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = applied / less frequent</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① firewall types · DMZ<br>② IHL × 4 · TTL<br>③ private ranges<br>④ hosts = 2ʰ − 2<br>⑤ IPv6 "::" once<br>⑥ ARP: IP → MAC<br>⑦ HA · FA · CoA<br>⑧ ATM 53 = 5 + 48</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Computer Networking and Security: … Fragmentation; <span class="hl">Firewalls</span>; <span class="hl">IPv4, IPv6, ARP, RARP, Mobile IP, Network layer of ATM</span>; Transport protocols …". Covers the firewall at the network border, IPv4/IPv6 packets and addresses, the helpers (ARP, RARP, ICMP, NAT), mobility and the ATM network layer. Fragmentation arithmetic and routing: see the Routing notes.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Firewalls, DMZ, ACLs ……… p. 2</li><li>IPv4 header ……… p. 3</li><li>Classes, special ranges, NAT ……… p. 4</li><li>Subnetting, CIDR, VLSM ……… p. 5</li><li>IPv6 addresses ……… p. 6</li></ul>
+    <ul class="tick"><li>IPv6 header &amp; transition ……… p. 7</li><li>ARP, RARP, ICMP ……… p. 8</li><li>Mobile IP &amp; ATM network layer … p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: firewalls ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>Firewalls</span></div>
+  <h2><span class="no">1</span>Firewalls</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A firewall is hardware or software at a network boundary that <span class="hl">permits or blocks traffic according to a rule set</span> (security policy). <b>All</b> traffic between inside and outside must pass through it. The safe policy is <span class="circ">default deny</span>: whatever is not explicitly allowed is blocked.</div>
+  <table class="hand tiny" style="line-height:5.6mm;width:100%">
+    <tr><th class="l">Type</th><th>Layer</th><th class="l">Decides on</th><th class="l">+ / −</th></tr>
+    <tr><td class="l"><b>Packet filter</b> (stateless)</td><td>3–4</td><td class="l">IP addresses, ports, protocol, TCP flags; each packet alone</td><td class="l">fast, cheap (router ACL) / no state, fooled by spoofing</td></tr>
+    <tr><td class="l"><b>Stateful inspection</b></td><td>3–4</td><td class="l">packet + <span class="hl">state table</span> of open connections</td><td class="l">replies pass automatically / table can be flooded</td></tr>
+    <tr><td class="l"><b>Circuit-level gateway</b></td><td>5</td><td class="l">validates the session set-up, then relays (SOCKS)</td><td class="l">hides inside hosts / no content check</td></tr>
+    <tr><td class="l"><b>Application gateway</b> (proxy)</td><td>7</td><td class="l">full content of one protocol (HTTP, FTP, SMTP), user login, logs</td><td class="l">strongest control / slow, one proxy per service</td></tr>
+    <tr><td class="l"><b>NGFW</b> (next-generation)</td><td>3–7</td><td class="l">deep packet inspection, IPS, application and user identity</td><td class="l">all in one box / cost, latency</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <path class="ink-k fill-b" d="M30,78 C10,70 18,44 44,48 C50,26 86,26 94,44 C118,36 132,60 116,76 C126,96 98,108 82,98 C66,112 36,104 30,78 Z"/>
+      <rect x="150" y="50" width="56" height="56" rx="6" class="ink-r fill-r"/>
+      <rect x="236" y="14" width="168" height="124" rx="12" class="ink-p" stroke-dasharray="7 5"/>
+      <rect x="254" y="34" width="132" height="26" rx="6" class="ink fill-y"/>
+      <rect x="254" y="66" width="132" height="26" rx="6" class="ink fill-y"/>
+      <rect x="254" y="98" width="132" height="26" rx="6" class="ink fill-y"/>
+      <rect x="434" y="50" width="56" height="56" rx="6" class="ink-r fill-r"/>
+      <rect x="520" y="30" width="110" height="96" rx="12" class="ink-g fill-g"/>
+      <path class="ink-k" d="M124,78 H146" marker-end="url(#ahb)"/><path class="ink-k" d="M206,78 H230" marker-end="url(#ahb)"/><path class="ink-k" d="M404,78 H430" marker-end="url(#ahb)"/><path class="ink-k" d="M490,78 H516" marker-end="url(#ahb)"/>
+    </g>
+    <text x="68" y="82" text-anchor="middle" class="w6">Internet</text>
+    <text x="178" y="76" text-anchor="middle" class="r s w6">outer</text><text x="178" y="92" text-anchor="middle" class="r s w6">FW</text>
+    <text x="320" y="52" text-anchor="middle" class="s">web server</text><text x="320" y="84" text-anchor="middle" class="s">mail server</text><text x="320" y="116" text-anchor="middle" class="s">public DNS</text>
+    <text x="320" y="150" text-anchor="middle" class="p s w6">DMZ (screened subnet)</text>
+    <text x="462" y="76" text-anchor="middle" class="r s w6">inner</text><text x="462" y="92" text-anchor="middle" class="r s w6">FW</text>
+    <text x="575" y="74" text-anchor="middle" class="g w6">internal</text><text x="575" y="94" text-anchor="middle" class="g w6">LAN</text>
+  </svg><figcaption>screened subnet: public servers sit between two firewalls; the inside LAN is never reached directly</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <h3>Architectures</h3>
+      <ul class="dash tiny">
+        <li><b>Screening router</b>: packet filtering only</li>
+        <li><b>Dual-homed host</b>: <span class="hl">bastion host</span>, two NICs, forwarding off</li>
+        <li><b>Screened host</b>: filtering router + bastion host</li>
+        <li><b>Screened subnet (DMZ)</b>: two firewalls or one three-legged firewall</li>
+        <li><b>Host-based</b> (Windows Defender Firewall, iptables) vs <b>network-based</b></li>
+      </ul>
+    </div>
+    <div>
+      <h3>ACL: first match wins</h3>
+      <div class="code tiny">permit tcp any host 203.0.113.10 eq 443
+permit tcp any host 203.0.113.25 eq 25
+permit tcp any 10.0.0.0/8 established
+deny   ip  any any   # implicit anyway</div>
+      <p class="tiny">A broad <b>permit</b> above a narrow <b>deny</b> makes the deny useless.</p>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> The <b>packet filter reads the envelope</b>, the <b>stateful</b> firewall <b>remembers the conversation</b>, the <b>proxy opens the letter</b>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A firewall cannot stop traffic that <b>bypasses</b> it (insider, USB stick, rogue Wi-Fi) or malware hidden in allowed, encrypted traffic. <b>IDS</b> only detects and alerts; <b>IPS</b> sits inline and blocks.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: IPv4 header ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>IPv4 header</span></div>
+  <h2><span class="no">2</span>The IPv4 Datagram Header</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">IPv4</span> (RFC 791, <span class="circ">1981</span>): a <span class="hl">connectionless, best-effort</span> network-layer protocol: no acknowledgements, no ordering, no retransmission (TCP adds those). Datagram = header (<b>20–60 bytes</b>) + data; maximum total size <span class="circ">65,535 bytes</span>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 236" width="640">
+    <text x="22" y="12" class="s">bit 0</text><text x="94" y="12" class="s">4</text><text x="166" y="12" class="s">8</text><text x="310" y="12" class="s">16</text><text x="590" y="12" text-anchor="end" class="s">31</text>
+    <g class="w">
+      <rect x="20" y="18" width="576" height="150" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+      <path class="ink-k" d="M20,48 H596 M20,78 H596 M20,108 H596 M20,138 H596 M92,18 V48 M164,18 V48 M308,18 V108 M362,48 V78 M164,78 V108" style="stroke-width:1.5"/>
+      <rect x="20" y="168" width="576" height="30" class="ink-k" stroke-dasharray="6 5" style="fill:rgba(255,238,0,.18)"/>
+      <path class="ink-r" d="M604,20 Q614,20 614,30 V82 Q614,93 622,93 Q614,93 614,104 V156 Q614,166 604,166"/>
+    </g>
+    <text x="56" y="38" text-anchor="middle" class="s w6">Ver 4</text><text x="128" y="38" text-anchor="middle" class="s w6 r">IHL 4</text><text x="236" y="38" text-anchor="middle" class="s">DSCP 6 + ECN 2</text><text x="452" y="38" text-anchor="middle" class="s w6">Total length 16</text>
+    <text x="164" y="68" text-anchor="middle" class="s">Identification 16</text><text x="335" y="68" text-anchor="middle" class="s">Flags 3</text><text x="479" y="68" text-anchor="middle" class="s">Fragment offset 13</text>
+    <text x="92" y="98" text-anchor="middle" class="s w6 r">TTL 8</text><text x="236" y="98" text-anchor="middle" class="s w6">Protocol 8</text><text x="452" y="98" text-anchor="middle" class="s">Header checksum 16</text>
+    <text x="308" y="128" text-anchor="middle" class="s w6">Source IP address 32</text>
+    <text x="308" y="158" text-anchor="middle" class="s w6">Destination IP address 32</text>
+    <text x="308" y="188" text-anchor="middle" class="s">Options (0–40 bytes) + padding</text>
+    <text x="626" y="98" class="r s w6">20 B</text>
+    <text x="308" y="224" text-anchor="middle" class="g s">5 rows × 32 bits = 160 bits = 20 bytes fixed part</text>
+  </svg></figure>
+  <table class="hand tiny" style="line-height:5.6mm;width:100%">
+    <tr><th class="l">Field</th><th style="white-space:nowrap">Bits</th><th class="l">What to remember</th></tr>
+    <tr><td class="l">Version</td><td>4</td><td class="l">value 4 (0100); IPv6 packets carry 6</td></tr>
+    <tr><td class="l">IHL (header length)</td><td>4</td><td class="l">counts <b>32-bit words</b>: 5–15 → <span class="hl">20–60 bytes</span></td></tr>
+    <tr><td class="l">DSCP + ECN (old ToS)</td><td>6 + 2</td><td class="l">QoS class (DiffServ) and congestion marking</td></tr>
+    <tr><td class="l">Total length</td><td>16</td><td class="l">header + data in bytes, max 2¹⁶ − 1 = 65,535</td></tr>
+    <tr><td class="l">Identification, Flags, Fragment offset</td><td style="white-space:nowrap">16, 3, 13</td><td class="l">fragmentation: flags = reserved, <b>DF</b>, <b>MF</b>; offset in 8-byte units</td></tr>
+    <tr><td class="l">TTL (time to live)</td><td>8</td><td class="l">−1 at every router; at 0 the packet is dropped and ICMP <b>Time Exceeded</b> is sent</td></tr>
+    <tr><td class="l">Protocol</td><td>8</td><td class="l"><span class="circ">1 ICMP · 6 TCP · 17 UDP</span> · 2 IGMP · 41 IPv6 · 50 ESP · 51 AH · 89 OSPF</td></tr>
+    <tr><td class="l">Header checksum</td><td>16</td><td class="l">covers the <b>header only</b>; recomputed at every hop (TTL changes)</td></tr>
+    <tr><td class="l">Source, Destination</td><td style="white-space:nowrap">32 + 32</td><td class="l">IPv4 addresses; unchanged end to end (except by NAT)</td></tr>
+  </table>
+  <div class="mnote">0x45 = the usual first byte</div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> First byte <b>0x45</b> → version 4, IHL 5 → header 5 × 4 = <span class="circ">20 bytes</span>. If IHL = 8, header = 32 bytes, so 12 bytes are options. With total length 1500 and IHL 5, data = 1500 − 20 = <b>1480 bytes</b>. Largest possible data in one datagram: 65,535 − 20 = 65,515 bytes.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>IHL × 4, offset × 8</b>": header length counts 4-byte words, fragment offset counts 8-byte blocks. Protocol numbers: "<b>1 ping, 6 TCP, 17 UDP</b>".</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The IPv4 checksum does <b>not</b> protect the data (TCP/UDP checksums do). TTL is in practice a <b>hop count</b>, not seconds. Offset/MF arithmetic: see the Fragmentation sheet of the Routing notes.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: classes, special ranges, NAT ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>Addresses &amp; NAT</span></div>
+  <h2><span class="no">3</span>IPv4 Addresses, Classes &amp; Special Ranges</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Address</span> 32 bits, four decimal octets; <span class="circ">2³² ≈ 4.3 billion</span> addresses, each = <b>network ID + host ID</b>. Classful (1981) split by the first bits; <span class="hl">CIDR</span> (1993) allows any prefix /n.</div>
+  <table class="hand tiny" style="line-height:5.6mm;width:100%;white-space:nowrap">
+    <tr><th>Class (bits)</th><th>First octet</th><th>Default mask</th><th>Networks</th><th>Hosts / network</th></tr>
+    <tr><td>A (0)</td><td><span class="hl">1–126</span></td><td>/8 = 255.0.0.0</td><td>2⁷ − 2 = 126</td><td>2²⁴ − 2 = 16,777,214</td></tr>
+    <tr><td>B (10)</td><td><span class="hl">128–191</span></td><td>/16 = 255.255.0.0</td><td>2¹⁴ = 16,384</td><td>2¹⁶ − 2 = 65,534</td></tr>
+    <tr><td>C (110)</td><td><span class="hl">192–223</span></td><td>/24 = 255.255.255.0</td><td>2²¹ = 2,097,152</td><td>2⁸ − 2 = 254</td></tr>
+    <tr><td>D (1110)</td><td>224–239</td><td colspan="3">multicast (no network/host split)</td></tr>
+    <tr><td>E (1111)</td><td>240–255</td><td colspan="3">reserved / experimental</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1.2fr .8fr">
+    <table class="hand tiny" style="line-height:5.6mm;margin-top:0;white-space:nowrap">
+      <tr><th class="l">Special address</th><th class="l">Meaning</th></tr>
+      <tr><td class="l">0.0.0.0</td><td class="l">this host / default route</td></tr>
+      <tr><td class="l"><span class="circ">127.0.0.0/8</span></td><td class="l">loopback (127.0.0.1)</td></tr>
+      <tr><td class="l">255.255.255.255</td><td class="l">limited broadcast</td></tr>
+      <tr><td class="l">host bits all 0 / 1</td><td class="l">network / directed bcast</td></tr>
+      <tr><td class="l">169.254.0.0/16</td><td class="l">link-local (APIPA)</td></tr>
+      <tr><td class="l">100.64.0.0/10</td><td class="l">carrier-grade NAT</td></tr>
+    </table>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Private (RFC 1918)</span><br><span class="hl">10.0.0.0/8</span> · 10.x.x.x<br><span class="hl">172.16.0.0/12</span><br>&nbsp; 172.16.x.x – 172.31.x.x<br><span class="hl">192.168.0.0/16</span> · 192.168.x.x<br>not routed on the Internet</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> 172.<b>32</b>.x.x and 192.<b>169</b>.x.x are <b>public</b>. 127 is kept for loopback, so usable class A first octets are 1–126, not 0–127.</div>
+  <h2><span class="no">4</span>NAT (Network Address Translation)</h2>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div>
+      <p class="small">The border router <span class="hl">rewrites private source addresses to a public one</span> (RFC 3022) and reverses it for replies.</p>
+      <ul class="dash small">
+        <li><b>Static NAT</b>: 1 private ↔ 1 public (to publish a server)</li>
+        <li><b>Dynamic NAT</b>: a shared pool of public addresses</li>
+        <li><b><span class="circ">PAT / NAPT</span></b> ("overload"): many hosts → <b>one</b> public IP, told apart by <b>port numbers</b></li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 96" width="300">
+      <g class="w">
+        <rect x="6" y="20" width="96" height="52" rx="8" class="ink-g fill-g"/>
+        <rect x="122" y="28" width="56" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="198" y="20" width="96" height="52" rx="8" class="ink fill-b"/>
+        <path class="ink-k" d="M102,46 H118" marker-end="url(#ahb)"/><path class="ink-k" d="M178,46 H194" marker-end="url(#ahb)"/>
+      </g>
+      <text x="54" y="14" text-anchor="middle" class="s r">inside</text><text x="246" y="14" text-anchor="middle" class="s r">outside</text>
+      <text x="54" y="42" text-anchor="middle" class="s">192.168.1.10</text><text x="54" y="60" text-anchor="middle" class="s">:51000</text>
+      <text x="150" y="51" text-anchor="middle" class="r w6">NAT</text>
+      <text x="246" y="42" text-anchor="middle" class="s">203.0.113.5</text><text x="246" y="60" text-anchor="middle" class="s">:40001</text>
+      <text x="150" y="92" text-anchor="middle" class="g s">one table row per connection</text>
+    </svg><figcaption>PAT rewrites address and port</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Private = "<b>10 · 172.16 to 31 · 192.168</b>": one /8, sixteen class-B blocks, 256 class-C blocks.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> NAT is <b>not</b> a firewall, though it drops unsolicited inbound packets. It breaks end-to-end addressing: IPsec AH, active FTP and peer-to-peer need ALGs or NAT traversal.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: subnetting ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>Subnetting &amp; CIDR</span></div>
+  <h2><span class="no">5</span>Subnetting, CIDR &amp; VLSM</h2><span class="tag">written favourite</span>
+  <div class="sumbox"><span class="lbl">The formulas</span> prefix /n → host bits <b>h = 32 − n</b> · addresses per subnet = <span class="circ">2ʰ</span> · usable hosts = <span class="circ">2ʰ − 2</span> (network and broadcast removed) · borrowing s bits gives <b>2ˢ</b> subnets · <span class="hl">block size = 256 − mask octet</span> · network = largest multiple of the block ≤ the address · broadcast = next network − 1</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Prefix</th><th>Mask</th><th>Block</th><th>Hosts</th></tr>
+      <tr><td>/24</td><td>255.255.255.0</td><td>256</td><td>254</td></tr>
+      <tr><td>/25</td><td>…255.128</td><td>128</td><td>126</td></tr>
+      <tr><td>/26</td><td>…255.192</td><td>64</td><td>62</td></tr>
+      <tr><td>/27</td><td>…255.224</td><td>32</td><td>30</td></tr>
+      <tr><td>/28</td><td>…255.240</td><td>16</td><td>14</td></tr>
+      <tr><td>/29</td><td>…255.248</td><td>8</td><td>6</td></tr>
+      <tr><td>/30</td><td>…255.252</td><td>4</td><td class="red"><b>2</b></td></tr>
+      <tr><td>/20</td><td>255.255.240.0</td><td style="white-space:nowrap">16 (3rd)</td><td>4,094</td></tr>
+      <tr><td>/22</td><td>255.255.252.0</td><td style="white-space:nowrap">4 (3rd)</td><td>1,022</td></tr>
+    </table>
+    <div>
+      <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 96" width="300">
+        <g class="w">
+          <path class="ink-k" d="M10,40 H290"/>
+          <path class="ink-k" d="M10,32 V48 M80,32 V48 M150,32 V48 M220,32 V48 M290,32 V48"/>
+          <rect x="150" y="26" width="70" height="28" class="ink-r fill-r"/>
+          <path class="ink-g" d="M174,8 V24" marker-end="url(#ahg)"/>
+        </g>
+        <text x="174" y="8" text-anchor="middle" class="g s w6">.77</text>
+        <text x="10" y="66" text-anchor="middle" class="s">0</text><text x="80" y="66" text-anchor="middle" class="s">32</text><text x="150" y="66" text-anchor="middle" class="s r w6">64</text><text x="220" y="66" text-anchor="middle" class="s">96</text><text x="290" y="66" text-anchor="middle" class="s">128</text>
+        <text x="150" y="88" text-anchor="middle" class="r s">network .64 … broadcast .95</text>
+      </svg><figcaption>/27: count in blocks of 32</figcaption></figure>
+      <p class="tiny">/31 (RFC 3021) is used on point-to-point links: 2 addresses, both usable. /32 = a single host route.</p>
+      <div class="trick small"><span class="lbl">Memory trick</span> "<b>Magic number</b> = 256 − mask octet". Count up in magic numbers; the address falls in one block.</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Example 1 ✍</span> 192.168.10.130/26 → block 64: blocks start .0, .64, <b>.128</b>, .192 → network <span class="circ">192.168.10.128</span>, hosts .129–.190, broadcast <b>.191</b>, 2⁶ − 2 = 62 hosts.</div>
+  <div class="ex small"><span class="lbl">Example 2 ✍</span> 172.16.45.200/20 → mask 255.255.240.0, block 16 in the <b>third</b> octet: 32 ≤ 45 &lt; 48 → network <span class="circ">172.16.32.0</span>, broadcast 172.16.47.255, hosts 172.16.32.1–172.16.47.254 (2¹² − 2 = 4,094).</div>
+  <div class="ex small"><span class="lbl">Example 3: VLSM ✍</span> Split 192.168.1.0/24 for LAN A (100 hosts), LAN B (50 hosts) and a router link (2). <b>Largest first:</b>
+    <ol class="steps"><li>A needs 2⁷ − 2 = 126 ≥ 100 → /25: <b>192.168.1.0/25</b> (.1–.126, bcast .127)</li><li>B needs 2⁶ − 2 = 62 ≥ 50 → /26: <b>192.168.1.128/26</b> (.129–.190, bcast .191)</li><li>Link needs 2 → /30: <b>192.168.1.192/30</b> (.193, .194); .196–.255 is left free</li></ol></div>
+  <div class="ex small"><span class="lbl">Example 4: supernetting (route aggregation) ✍</span> 200.10.0.0/24, 200.10.1.0/24, 200.10.2.0/24, 200.10.3.0/24: third octets 0–3 = 000000<b>00</b>…000000<b>11</b> share 16 + 6 = 22 bits → one route <span class="circ">200.10.0.0/22</span>. Rule: a power-of-2 count of contiguous blocks, the first one divisible by that count.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> "Addresses" = 2ʰ but "usable hosts" = 2ʰ − 2. A /30 has only <b>2</b> usable hosts. Subnets = <b>2ˢ</b> (old no-subnet-zero rule: 2ˢ − 2).</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: IPv6 addresses ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>IPv6 addresses</span></div>
+  <h2><span class="no">6</span>IPv6 Addresses</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">IPv6</span> (RFC 8200) has <span class="circ">128-bit</span> addresses: 2¹²⁸ ≈ <b>3.4 × 10³⁸</b> (vast, not unlimited), as <span class="hl">8 groups of 4 hex digits</span> (16 bits each) separated by colons: 2001:0db8:0000:0000:0000:ff00:0042:8329.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="640">
+    <g class="w">
+      <rect x="20" y="20" width="225" height="34" class="ink fill-b"/>
+      <rect x="245" y="20" width="75" height="34" class="ink-p fill-p"/>
+      <rect x="320" y="20" width="300" height="34" class="ink-g fill-g"/>
+    </g>
+    <text x="132" y="42" text-anchor="middle" class="s w6">global routing prefix 48</text><text x="282" y="42" text-anchor="middle" class="s w6">subnet 16</text><text x="470" y="42" text-anchor="middle" class="s w6">interface ID 64</text>
+    <text x="170" y="74" text-anchor="middle" class="s">network prefix /64 (from the ISP + site)</text><text x="470" y="74" text-anchor="middle" class="s">host part (SLAAC / EUI-64 / random)</text>
+    <text x="20" y="14" class="r s">2001:db8:acad</text><text x="250" y="14" class="r s">:0001</text><text x="325" y="14" class="r s">:0000:0000:0000:0001</text>
+  </svg><figcaption>a typical global unicast address: every LAN gets a /64</figcaption></figure>
+  <h3>Abbreviation rules</h3>
+  <ol class="steps small">
+    <li>Drop <b>leading zeros</b> in each group: 0db8 → db8, 0042 → 42, 0000 → 0</li>
+    <li>Replace <b>one</b> run of consecutive all-zero groups by <span class="circ">::</span> (only once per address; use it for the longest run)</li>
+    <li>Write hex in lowercase (RFC 5952); do not use :: for a single zero group</li>
+  </ol>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Compress ✍</span> 2001:0db8:0000:0000:0000:ff00:0042:8329<br>→ 2001:db8:0:0:0:ff00:42:8329<br>→ <span class="circ">2001:db8::ff00:42:8329</span></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Expand ✍</span> fe80::1:2 shows 3 groups, so :: = 8 − 3 = <b>5</b> zero groups → fe80:0:0:0:0:0:1:2 = fe80:0000:0000:0000:0000:0000:0001:0002</div>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Type</th><th class="l">Prefix</th><th class="l">Notes</th></tr>
+    <tr><td class="l">Global unicast</td><td class="l"><span class="hl">2000::/3</span></td><td class="l">public; 2001:db8::/32 = documentation</td></tr>
+    <tr><td class="l">Link-local</td><td class="l"><span class="hl">fe80::/10</span></td><td class="l">automatic on every interface; never routed</td></tr>
+    <tr><td class="l">Unique local</td><td class="l">fc00::/7 (fd00::/8)</td><td class="l">like RFC 1918 private space</td></tr>
+    <tr><td class="l">Loopback · unspecified</td><td class="l">::1/128 · ::/128</td><td class="l">like 127.0.0.1 · 0.0.0.0</td></tr>
+    <tr><td class="l">Multicast</td><td class="l"><span class="hl">ff00::/8</span></td><td class="l">ff02::1 all nodes, ff02::2 all routers</td></tr>
+    <tr><td class="l">Anycast</td><td class="l">(from unicast space)</td><td class="l">delivered to the <b>nearest</b> member of a group</td></tr>
+    <tr><td class="l">IPv4-mapped</td><td class="l">::ffff:0:0/96</td><td class="l">::ffff:192.0.2.1 (dual-stack sockets)</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">EUI-64 ✍</span> MAC 00:1A:2B:3C:4D:5E → split in half and insert <b>ff:fe</b> → flip the 7th bit (U/L) of the first byte, 00 → 02 → interface ID <span class="circ">021a:2bff:fe3c:4d5e</span>, address fe80::21a:2bff:fe3c:4d5e.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Double colon, single use</b>": two :: make the length ambiguous. Prefixes: <b>2</b>… global, <b>fe80</b> link-local, <b>ff</b> multicast.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> 2001:db8::1::2 is <b>invalid</b> (two ::), so is a group of 5 hex digits. IPv6 has unicast, multicast and anycast, but <b>no broadcast</b>.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: IPv6 header & transition ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>IPv6 header &amp; transition</span></div>
+  <h2><span class="no">7</span>The IPv6 Header (40 bytes, fixed)</h2><span class="tag">MCQ + Written</span>
+  <figure class="doodle"><svg viewBox="0 0 640 176" width="640">
+    <text x="22" y="12" class="s">bit 0</text><text x="94" y="12" class="s">4</text><text x="238" y="12" class="s">12</text><text x="590" y="12" text-anchor="end" class="s">31</text>
+    <g class="w">
+      <rect x="20" y="18" width="576" height="140" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+      <path class="ink-k" d="M20,48 H596 M20,78 H596 M20,118 H596 M92,18 V48 M236,18 V48 M308,48 V78 M452,48 V78" style="stroke-width:1.5"/>
+    </g>
+    <text x="56" y="38" text-anchor="middle" class="s w6">Ver 6</text><text x="164" y="38" text-anchor="middle" class="s">Traffic class 8</text><text x="416" y="38" text-anchor="middle" class="s w6 r">Flow label 20</text>
+    <text x="164" y="68" text-anchor="middle" class="s">Payload length 16</text><text x="380" y="68" text-anchor="middle" class="s w6 r">Next header 8</text><text x="524" y="68" text-anchor="middle" class="s w6">Hop limit 8</text>
+    <text x="308" y="103" text-anchor="middle" class="s w6">Source address 128 (4 rows)</text>
+    <text x="308" y="143" text-anchor="middle" class="s w6">Destination address 128 (4 rows)</text>
+    <text x="308" y="174" text-anchor="middle" class="g s">8 fields: 64 bits + 2 × 128 bits = 320 bits = 40 bytes</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <p class="small"><b>Removed</b> from IPv4: IHL, <span class="hl">header checksum</span>, identification/flags/offset (moved to the Fragment extension header), options. <b>Renamed:</b> TTL → Hop limit, Protocol → Next header, ToS → Traffic class.</p>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Next-header values</span><br>0 Hop-by-Hop · 43 Routing · <b>44 Fragment</b><br>50 ESP · 51 AH · 60 Destination options<br>6 TCP · 17 UDP · <span class="circ">58 ICMPv6</span> · 59 none</div>
+    </div>
+    <div>
+      <p class="small"><span class="hl">Extension headers</span> form a chain: each one's Next header names the one after it, ending in TCP/UDP. Routers normally read only the base header, so forwarding is faster.</p>
+      <p class="small">Fragmentation is done <b>only by the source</b> after Path MTU Discovery; every link must carry at least <span class="circ">1280 bytes</span>.</p>
+    </div>
+  </div>
+  <table class="hand tiny" style="line-height:5.6mm;width:100%">
+    <tr><th class="l">Feature</th><th class="l">IPv4</th><th class="l">IPv6</th></tr>
+    <tr><td class="l">Address</td><td class="l">32-bit, dotted decimal</td><td class="l">128-bit, colon hex</td></tr>
+    <tr><td class="l">Header</td><td class="l">20–60 B, 12 fields + options</td><td class="l">40 B fixed, 8 fields + extension headers</td></tr>
+    <tr><td class="l">Checksum / fragments</td><td class="l">yes / source + routers</td><td class="l">none / source only</td></tr>
+    <tr><td class="l">Resolution / config</td><td class="l">ARP / manual, DHCP</td><td class="l">NDP (ICMPv6) / SLAAC, DHCPv6</td></tr>
+    <tr><td class="l">IPsec</td><td class="l">optional add-on</td><td class="l">built in (AH/ESP); <b>use</b> still optional</td></tr>
+    <tr><td class="l">QoS / broadcast</td><td class="l">DSCP / yes</td><td class="l">traffic class + flow label / none</td></tr>
+  </table>
+  <h2><span class="no">8</span>IPv4 → IPv6 Transition</h2>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <ul class="dash tiny">
+      <li><span class="circ">Dual stack</span>: devices run IPv4 and IPv6 side by side (most common)</li>
+      <li><b>Tunnelling</b>: IPv6 inside IPv4 (protocol <b>41</b>): 6in4, <b>6to4</b> (2002::/16), <b>Teredo</b> (UDP, through NAT), ISATAP</li>
+      <li><b>Translation</b>: NAT64 + DNS64 (64:ff9b::/96): IPv6-only hosts reach IPv4 servers</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 290 100" width="290">
+      <g class="w">
+        <rect x="4" y="30" width="50" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="236" y="30" width="50" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="68" y="18" width="154" height="60" rx="26" class="ink fill-b"/>
+        <rect x="84" y="36" width="44" height="24" class="ink-r fill-r"/>
+        <rect x="128" y="36" width="70" height="24" class="ink-g fill-g"/>
+      </g>
+      <text x="29" y="53" text-anchor="middle" class="g s w6">IPv6</text><text x="261" y="53" text-anchor="middle" class="g s w6">IPv6</text>
+      <text x="106" y="53" text-anchor="middle" class="s">v4 hdr</text><text x="163" y="53" text-anchor="middle" class="g s">v6 packet</text>
+      <text x="145" y="96" text-anchor="middle" class="s">IPv4-only network in between</text>
+    </svg><figcaption>tunnelling = a 6-4-6 sandwich</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> The three transition roads: "<b>both, wrap, translate</b>" = dual stack, tunnel, NAT64.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> IPv6 header: <b>fewer fields</b> but <b>bigger</b> than IPv4's minimum (40 vs 20 bytes).</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: ARP, RARP, ICMP ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>ARP, RARP, ICMP</span></div>
+  <h2><span class="no">9</span>ARP (Address Resolution Protocol)</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">ARP</span> (RFC 826, 1982) finds the <span class="hl">MAC address for a known IPv4 address</span> on the same LAN. Request = <b>broadcast</b>, reply = <b>unicast</b>; results go in the ARP cache. <span class="circ">EtherType 0x0806</span>; never crosses a router.</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 150" width="330">
+      <g class="w">
+        <rect x="6" y="50" width="86" height="46" rx="8" class="ink fill-b"/>
+        <rect x="238" y="10" width="86" height="40" rx="8" class="ink fill-y"/>
+        <rect x="238" y="96" width="86" height="46" rx="8" class="ink-g fill-g"/>
+        <path class="ink-r" d="M92,62 L234,34" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M92,70 L234,108" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M234,128 L96,90" marker-end="url(#ahg)" stroke-dasharray="6 4"/>
+      </g>
+      <text x="49" y="70" text-anchor="middle" class="s w6">A 10.0.0.1</text><text x="49" y="86" text-anchor="middle" class="s">AA:AA…</text>
+      <text x="281" y="35" text-anchor="middle" class="s">C ignores it</text>
+      <text x="281" y="116" text-anchor="middle" class="s w6">B 10.0.0.2</text><text x="281" y="132" text-anchor="middle" class="s">BB:BB…</text>
+      <text x="96" y="30" class="r s">① "Who has 10.0.0.2?"</text>
+      <text x="40" y="146" class="g s">② "10.0.0.2 is at BB:BB…"</text>
+    </svg><figcaption>broadcast request, unicast reply</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">ARP packet: 28 bytes (Ethernet/IPv4)</span><br>HW type 2 (1 = Ethernet) · protocol type 2 (0x0800) · HW len 1 (6) · protocol len 1 (4) · <b>opcode 2</b>: 1 request, 2 reply (RARP 3, 4) · sender MAC 6, IP 4 · target MAC 6 (zeros in a request), IP 4</div>
+  </div>
+  <ul class="dash small">
+    <li>Destination on <b>another</b> network → ARP for the <span class="hl">default gateway's MAC</span>, not the remote host's</li>
+    <li><b>Gratuitous ARP</b>: announces its own IP · <b>Proxy ARP</b>: a router answers for another subnet</li>
+    <li><b>ARP spoofing</b>: forged replies → man-in-the-middle; IPv6 uses NDP instead</li>
+  </ul>
+  <h2><span class="no">10</span>RARP → BOOTP → DHCP</h2>
+  <table class="hand tiny" style="line-height:5.6mm;width:100%;white-space:nowrap">
+    <tr><th class="l">Protocol</th><th class="l">Gives the host</th><th class="l">Crosses routers?</th></tr>
+    <tr><td class="l"><b>RARP</b> (RFC 903, 1984)</td><td class="l">MAC → its IP only</td><td class="l">no: a server on every LAN (EtherType 0x8035)</td></tr>
+    <tr><td class="l"><b>BOOTP</b> (RFC 951, 1985)</td><td class="l">IP, mask, gateway, boot file</td><td class="l">yes, relay agent (UDP 67/68)</td></tr>
+    <tr><td class="l"><b>DHCP</b> (RFC 2131)</td><td class="l">all that + a <b>lease</b> (DORA)</td><td class="l">yes, relay agent (UDP 67/68)</td></tr>
+  </table>
+  <h2><span class="no">11</span>ICMP (Internet Control Message Protocol)</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <p class="small">RFC 792; reports errors and answers queries for IP. Carried <b>inside IP</b> (protocol <span class="circ">1</span>) yet counted as network layer. It reports problems but repairs nothing.</p>
+      <ul class="dash tiny">
+        <li><b>ping</b>: Echo request 8 → Echo reply 0</li>
+        <li><b>traceroute</b>: probes with TTL 1, 2, 3 … each draw a Time Exceeded from the next router</li>
+        <li>No error message about an ICMP error, a broadcast or a non-first fragment</li>
+      </ul>
+    </div>
+    <table class="hand tiny" style="line-height:5.6mm;margin-top:0">
+      <tr><th>Type</th><th class="l">Message</th></tr>
+      <tr><td style="white-space:nowrap">0 / 8</td><td class="l">Echo reply / request</td></tr>
+      <tr><td>3</td><td class="l">Dest. unreachable (0 net, 1 host,<br>3 port, 4 frag. needed + DF)</td></tr>
+      <tr><td>5</td><td class="l">Redirect (a better route)</td></tr>
+      <tr><td><span class="circ">11</span></td><td class="l">Time exceeded (0 TTL, 1 reassembly)</td></tr>
+      <tr><td>12</td><td class="l">Parameter problem</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> ARP asks "<b>who has this IP?</b>", RARP asks "<b>who am I?</b>". "<b>Ping 8, pong 0</b>; traceroute counts the 11s."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> ARP: IP → MAC; <b>RARP: MAC → IP</b>. RARP could not cross routers and gave no mask or gateway, so BOOTP and then DHCP replaced it.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: Mobile IP & ATM ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>Mobile IP &amp; ATM</span></div>
+  <h2><span class="no">12</span>Mobile IP</h2><span class="tag">MCQ + Written</span>
+  <div class="def small"><span class="lbl">Idea</span> Mobile IP (RFC 5944) lets a mobile node keep its <span class="hl">permanent home address</span> while it moves, so peers and open connections keep working.</div>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <ul class="dash tiny">
+      <li><b>Mobile node (MN)</b>: the roaming host; <b>correspondent node (CN)</b>: its peer</li>
+      <li><b>Home agent (HA)</b>: router on the home network; keeps the binding, tunnels packets on</li>
+      <li><b>Foreign agent (FA)</b>: router on the visited network; offers a CoA, unwraps packets</li>
+      <li><span class="circ">Care-of address (CoA)</span>: the temporary address; <b>FA CoA</b> (the FA's, shared) or <b>co-located CoA</b> (from DHCP; the MN unwraps itself)</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 290 160" width="290">
+      <g class="w">
+        <rect x="6" y="60" width="62" height="40" rx="8" class="ink fill-b"/>
+        <rect x="192" y="6" width="92" height="42" rx="8" class="ink-g fill-g"/>
+        <rect x="192" y="112" width="92" height="42" rx="8" class="ink-p fill-p"/>
+        <path class="ink-k" d="M68,70 L188,32" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M230,50 V108" marker-end="url(#ah)" stroke-dasharray="7 5"/>
+        <path class="ink-g" d="M188,136 L72,96" marker-end="url(#ahg)"/>
+      </g>
+      <text x="37" y="85" text-anchor="middle" class="w6">CN</text>
+      <text x="238" y="24" text-anchor="middle" class="s w6">HA</text><text x="238" y="40" text-anchor="middle" class="s">home network</text>
+      <text x="238" y="130" text-anchor="middle" class="s w6">FA + MN</text><text x="238" y="146" text-anchor="middle" class="s">CoA</text>
+      <text x="20" y="24" class="s">① to home address</text>
+      <text x="236" y="84" class="r s">② tunnel</text>
+      <text x="40" y="146" class="g s">③ direct</text>
+    </svg><figcaption>triangle: in via the HA, out direct</figcaption></figure>
+  </div>
+  <ol class="steps tiny">
+    <li><b>Agent discovery</b>: <b>agent advertisements</b> (ICMP router-advertisement extension) or a solicitation</li>
+    <li><b>Registration</b>: MN → FA → HA on <span class="circ">UDP 434</span>; the HA binds home address ↔ CoA</li>
+    <li><b>Tunnelling</b>: the HA intercepts (proxy ARP) and sends <span class="hl">IP-in-IP</span> (protocol 4) to the CoA</li>
+  </ol>
+  <div class="exam tiny"><span class="lbl">Exam trap</span> Replies go MN → CN directly, so traffic makes a <b>triangle</b> ("triangle routing"). Fixes: route optimisation (the CN learns the CoA), reverse tunnelling. <b>Mobile IPv6</b> (RFC 6275) has <b>no foreign agent</b>.</div>
+
+  <h2><span class="no">13</span>Network Layer of ATM</h2><span class="tag">MCQ</span>
+  <div class="def tiny"><span class="lbl">Idea</span> <span class="hl">Connection-oriented, cell-switched</span>: a <b>virtual circuit</b> is set up once, then 53-byte cells are switched by <b>VPI/VCI labels</b> under the agreed QoS; cells stay in order.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 96" width="640">
+    <g class="w">
+      <rect x="20" y="10" width="80" height="30" class="ink-r fill-r"/>
+      <rect x="100" y="10" width="520" height="30" class="ink-g fill-g"/>
+      <rect x="20" y="58" width="44" height="28" class="ink fill-b"/><rect x="64" y="58" width="80" height="28" class="ink fill-y"/><rect x="144" y="58" width="150" height="28" class="ink fill-b"/><rect x="294" y="58" width="40" height="28" class="ink fill-y"/><rect x="334" y="58" width="34" height="28" class="ink-r fill-r"/><rect x="368" y="58" width="70" height="28" class="ink fill-y"/>
+    </g>
+    <path class="ink-k" d="M20,40 L20,58 M100,40 L438,58" stroke-dasharray="4 4" style="stroke-width:1.3"/>
+    <text x="60" y="30" text-anchor="middle" class="r s w6">header 5 B</text><text x="360" y="30" text-anchor="middle" class="g s w6">payload 48 B (cell = 53 bytes)</text>
+    <text x="42" y="77" text-anchor="middle" class="s">GFC 4</text><text x="104" y="77" text-anchor="middle" class="s w6">VPI 8</text><text x="219" y="77" text-anchor="middle" class="s w6">VCI 16</text><text x="314" y="77" text-anchor="middle" class="s">PT 3</text><text x="351" y="77" text-anchor="middle" class="s">CLP</text><text x="403" y="77" text-anchor="middle" class="s">HEC 8</text>
+    <text x="448" y="70" class="s">UNI header = 40 bits; at the NNI</text><text x="448" y="86" class="s">VPI has 12 bits, no GFC</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <ul class="dash tiny">
+      <li>VPI: 256 paths at the UNI, <span class="circ">4,096</span> at the NNI; VCI: 65,536 per path</li>
+      <li><b>VP switch</b> rewrites only the VPI; <b>VC switch</b> rewrites VPI and VCI; labels are <b>local</b> to each link</li>
+      <li><b>PVC</b> (configured) or <b>SVC</b> (signalled, Q.2931)</li>
+      <li>ATM addresses (20-byte NSAP or E.164) are used only at set-up</li>
+    </ul>
+    <div>
+      <table class="hand tiny" style="line-height:5.6mm;margin-top:0">
+        <tr><th class="l">Service class</th><th class="l">Typical use</th></tr>
+        <tr><td class="l"><span class="hl">CBR</span></td><td class="l">voice, circuit emulation</td></tr>
+        <tr><td class="l" style="white-space:nowrap">rt-/nrt-VBR</td><td class="l">video / bursty data</td></tr>
+        <tr><td class="l">ABR</td><td class="l">RM-cell feedback</td></tr>
+        <tr><td class="l">UBR</td><td class="l">best effort</td></tr>
+      </table>
+      <p class="tiny">Policing: GCRA (leaky bucket); CLP = 1 cells are dropped first.</p>
+    </div>
+  </div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Path is the motorway, channel is the lane</b>": the VPI picks the bundle, the VCI the circuit inside it. HEC = CRC-8 over the header only; efficiency 48/53 ≈ 90.6%. Cell delineation: ATM data-link notes; AAL: transport notes.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>IPv4 header 20–60 B · IHL × 4</p><p>Total length max 65,535 B</p>
+      <p>Protocol: 1 ICMP, 6 TCP, 17 UDP</p><p>TTL 0 → drop + ICMP type 11</p>
+      <p>A 1–126 · B 128–191 · C 192–223</p><p>D 224–239 multicast · E 240–255</p>
+      <p>10/8 · 172.16/12 · 192.168/16 private</p><p>127/8 loopback · 169.254/16 APIPA</p>
+      <p>hosts = 2ʰ − 2 · block = 256 − mask</p><p>/26 = .192, 62 hosts · /30 = 2 hosts</p>
+      <p>IPv6 128-bit, header 40 B, 8 fields</p><p>:: only once · no broadcast</p>
+      <p>fe80::/10 link-local · ff00::/8 multicast</p><p>2000::/3 global · ::1 loopback</p>
+      <p>ARP IP → MAC, 0x0806, 28 B</p><p>RARP MAC → IP → BOOTP → DHCP</p>
+      <p>Mobile IP: HA, FA, CoA, UDP 434</p><p>ATM 53 = 5 + 48 · VPI 8/12, VCI 16</p>
+    </div>
+  </div>
+  <h3>Top 14 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Proxy = application-level gateway (layer 7)</li>
+      <li>Stateful firewall keeps a state table</li>
+      <li>DMZ = screened subnet for public servers</li>
+      <li>IPv4 checksum covers the header only</li>
+      <li>DF = don't fragment, MF = more fragments</li>
+      <li>PAT maps many hosts to one IP by port</li>
+      <li>200.10.0.0–3.0/24 aggregate to /22</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>IPv6 = 2¹²⁸ ≈ 3.4 × 10³⁸ addresses</li>
+      <li>IPv6 fragments at the source only; min MTU 1280</li>
+      <li>NDP (ICMPv6) replaces ARP in IPv6</li>
+      <li>Dual stack, tunnelling, NAT64</li>
+      <li>ping = ICMP echo 8 / 0</li>
+      <li>MIPv4 tunnel: IP-in-IP, HA → CoA</li>
+      <li>ATM HEC protects the 5-byte header only</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> 172.32.x.x is public · usable hosts = 2ʰ − 2, not 2ʰ · /30 = 2 hosts · two :: are invalid · IPv6 has no broadcast and no header checksum · IPsec is designed into IPv6 but its use is optional · NAT is not a firewall · ARP reply is unicast · VPI/VCI are local labels, not addresses</div>
+  <div class="trick"><span class="lbl">All tricks together</span> Envelope / conversation / letter (filter / stateful / proxy) · IHL × 4, offset × 8 · "1 ping, 6 TCP, 17 UDP" · magic number = 256 − mask · double colon, single use · both, wrap, translate · ping 8, pong 0 · path = motorway, channel = lane</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="24" width="100" height="44" rx="10" class="ink fill-b"/>
+      <rect x="160" y="24" width="120" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="330" y="24" width="110" height="44" rx="10" class="ink-g fill-g"/>
+      <rect x="490" y="24" width="100" height="44" rx="10" class="ink-p fill-p"/>
+      <path class="ink-k" d="M110,46 H156" marker-end="url(#ahb)"/><path class="ink-k" d="M280,46 H326" marker-end="url(#ahb)"/><path class="ink-k" d="M440,46 H486" marker-end="url(#ahb)"/>
+    </g>
+    <text x="60" y="44" text-anchor="middle" class="s w6">IP address</text><text x="60" y="60" text-anchor="middle" class="s">10.0.0.2</text>
+    <text x="220" y="44" text-anchor="middle" class="r s w6">same subnet?</text><text x="220" y="60" text-anchor="middle" class="s">AND with mask</text>
+    <text x="385" y="44" text-anchor="middle" class="g s w6">ARP for host</text><text x="385" y="60" text-anchor="middle" class="s">or for gateway</text>
+    <text x="540" y="44" text-anchor="middle" class="p s w6">Ethernet</text><text x="540" y="60" text-anchor="middle" class="s">frame sent</text>
+    <text x="300" y="90" text-anchor="middle" class="s">how a host sends one IPv4 packet: mask, ARP, frame</text>
+  </svg></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · IP Layer &amp; Firewalls</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A packet filter decides mainly on:<ol class="opts"><li>application data</li><li>IP, port, protocol</li><li>the user's login</li><li>MAC address only</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>An IPv4 header with IHL = 6 is how long?<ol class="opts"><li>6 bytes</li><li>12 bytes</li><li>24 bytes</li><li>48 bytes</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Which address is private (RFC 1918)?<ol class="opts"><li>172.31.200.1</li><li>172.32.0.1</li><li>192.169.0.1</li><li>11.0.0.1</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Usable host addresses in a /28 subnet:<ol class="opts"><li>16</li><li>30</li><li>6</li><li>14</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Broadcast address of 192.168.10.130/26:<ol class="opts"><li>192.168.10.127</li><li>192.168.10.255</li><li>192.168.10.192</li><li>192.168.10.191</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>2001:0db8:0:0:0:0:0:0001 compresses to:<ol class="opts"><li>2001:db8::1</li><li>2001:db8:::1</li><li>2001::db8::1</li><li>21:db8::1</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Size of the IPv6 base header:<ol class="opts"><li>20 bytes</li><li>60 bytes</li><li>40 bytes</li><li>128 bytes</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>RARP maps:<ol class="opts"><li>IP → MAC</li><li>MAC → IP</li><li>name → IP</li><li>IP → name</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>In Mobile IP, the temporary address of a mobile node in a foreign network is its:<ol class="opts"><li>home address</li><li>MAC address</li><li>loopback address</li><li>care-of address</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Size of an ATM cell header:<ol class="opts"><li>48 bytes</li><li>53 bytes</li><li>5 bytes</li><li>8 bytes</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-a · 4-d · 5-d · 6-a · 7-c · 8-b · 9-d · 10-c</div>
+
+  <div class="wq"><span class="lbl">Written question</span> The network 192.168.5.0/24 must be divided into 4 equal subnets. Find the new mask, the usable hosts per subnet, and for each subnet its network address, first and last usable host and broadcast address. <i class="mk">8 marks</i></div>
+  <div class="cols" style="grid-template-columns:1fr 1.1fr;align-items:start">
+    <ol class="steps small">
+      <li>4 = 2² → borrow <b>2</b> bits → <span class="circ">/26</span> (255.255.255.192) <i class="mk">2</i></li>
+      <li>h = 32 − 26 = 6 → 64 addresses, <b>62 usable</b>; block 256 − 192 = 64 <i class="mk">2</i></li>
+      <li>Subnets start at multiples of 64 (table) <i class="mk">4</i></li>
+    </ol>
+    <table class="hand tiny" style="line-height:5.6mm;margin-top:0;white-space:nowrap">
+      <tr><th>Network</th><th>First</th><th>Last</th><th>Bcast</th></tr>
+      <tr><td>192.168.5.0</td><td>.1</td><td>.62</td><td>.63</td></tr>
+      <tr><td>192.168.5.64</td><td>.65</td><td>.126</td><td>.127</td></tr>
+      <tr><td>192.168.5.128</td><td>.129</td><td>.190</td><td>.191</td></tr>
+      <tr><td>192.168.5.192</td><td>.193</td><td>.254</td><td>.255</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Firewall types and a DMZ diagram</li>
+        <li>IPv4 / IPv6 headers with field sizes</li>
+        <li>Network, broadcast, hosts for any /n</li>
+        <li>Compress / expand an IPv6 address</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① Mobile IP with a diagram<br>② ARP request/reply steps<br>③ VLSM for 100, 50, 2 hosts<br>④ IPv4 vs IPv6 (8 points)</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

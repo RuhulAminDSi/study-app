@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>প্রোটোকল হায়ারার্কি, ডেটা লিংক ও LAN: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>তারিখ: ০৮.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">প্রোটোকল হায়ারার্কি, ডেটা লিংক ও LAN</span></h1>
+  <p class="subtitle">স্তর · ফ্রেমিং · CRC · হ্যামিং · ARQ · HDLC/PPP · ATM · ALOHA/CSMA · ইথারনেট · সুইচ: ১২ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">ডেটা লিংক স্তর</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">স্তর · PDU</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">CRC · হ্যামিং ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">ফ্রেমিং · ATM সেল</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">GBN · SR ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">HDLC · PPP ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">IEEE 802 · ইথারনেট</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">ALOHA · CSMA ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">সুইচ · VLAN</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = LAN-এর ব্যবহারিক দিক</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① প্রতি স্তরের PDU-র নাম<br>② বিট স্টাফিং, ফ্ল্যাগ 7E<br>③ CRC ও হ্যামিং বিট<br>④ GBN 2ᵐ−1, SR 2ᵐ⁻¹<br>⑤ ALOHA 18.4% / 36.8%<br>⑥ ইথারনেট 64–1518 B<br>⑦ হাব L1 · সুইচ L2</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Computer Networking and Security: <span class="hl">Protocol hierarchies</span>; <span class="hl">Data link control: HDLC</span>; DLL in Internet; DLL of ATM; <span class="hl">LAN Protocols: Standards IEEE 802.*</span>; Hubs, Bridges, and Switches, FDDI, Fast Ethernet; …"। ফ্রেমিং, ত্রুটি ও প্রবাহ নিয়ন্ত্রণ এবং মিডিয়াম অ্যাক্সেস যোগ করা হয়েছে, কারণ ডেটা লিংকের প্রায় সব প্রশ্ন এগুলোর ওপর দাঁড়ানো। রাউটিং, IP, TCP, নিরাপত্তা এবং OSI বনাম TCP/IP-এর পূর্ণ তুলনা এই অধ্যায়ের অন্য লেসনগুলোতে আছে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>প্রোটোকল হায়ারার্কি, DLL-এর সেবা … পৃ. ২</li><li>ফ্রেমিং, প্যারিটি, চেকসাম ……… পৃ. ৩</li><li>CRC ও হ্যামিং কোড ……… পৃ. ৪</li><li>ফ্লো কন্ট্রোল ও ARQ ……… পৃ. ৫</li><li>HDLC ……… পৃ. ৬</li><li>PPP, SLIP ও ATM ডেটা লিংক ……… পৃ. ৭</li></ul>
+    <ul class="tick"><li>ALOHA, CSMA/CD, CSMA/CA ……… পৃ. ৮</li><li>Wi-Fi, টোকেন রিং, FDDI, IEEE 802 … পৃ. ৯</li><li>ইথারনেট, হাব, সুইচ, VLAN … পৃ. ১০</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১১</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: protocol hierarchies, DLL services ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>স্তর</span></div>
+  <h2><span class="no">১</span>প্রোটোকল হায়ারার্কি: স্তর কেন?</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> নেটওয়ার্ক হলো <span class="hl">স্তরের স্তূপ (stack of layers)</span>; প্রতিটি স্তর ওপরের স্তরকে <b>সার্ভিস (service)</b> দেয়, কীভাবে দেয় তা আড়ালে রাখে। এক মেশিনের স্তর n অন্য মেশিনের স্তর n-এর (তার <b>পিয়ার, peer</b>) সাথে <span class="hl">স্তর-n প্রোটোকল</span> দিয়ে কথা বলে। আর্কিটেকচার = স্তর + প্রোটোকল; <b>প্রোটোকল স্ট্যাক</b> = প্রতি স্তরে একটি প্রোটোকল।</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 222" width="296">
+      <g class="w">
+        <rect x="20" y="22" width="100" height="150" rx="6" class="ink fill-b"/>
+        <rect x="210" y="22" width="100" height="150" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M20,52 H120 M20,82 H120 M20,112 H120 M20,142 H120 M210,52 H310 M210,82 H310 M210,112 H310 M210,142 H310" style="stroke-width:1.4"/>
+        <path class="ink-p" d="M124,37 H206 M124,67 H206 M124,97 H206 M124,127 H206" stroke-dasharray="5 5" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+        <path class="ink-r" d="M10,30 V166" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M320,166 V30" marker-end="url(#ah)"/>
+        <path class="ink-k" d="M70,172 V196 H260 V172" style="stroke-width:2.6"/>
+      </g>
+      <text x="70" y="14" text-anchor="middle" class="bn k w6">হোস্ট A</text><text x="260" y="14" text-anchor="middle" class="bn k w6">হোস্ট B</text>
+      <text x="70" y="42" text-anchor="middle" class="bn s">অ্যাপ্লিকেশন</text><text x="70" y="72" text-anchor="middle" class="bn s">ট্রান্সপোর্ট</text><text x="70" y="102" text-anchor="middle" class="bn s">নেটওয়ার্ক</text><text x="70" y="132" text-anchor="middle" class="bn s r w6">ডেটা লিংক</text><text x="70" y="162" text-anchor="middle" class="bn s">ফিজিক্যাল</text>
+      <text x="260" y="42" text-anchor="middle" class="bn s">অ্যাপ্লিকেশন</text><text x="260" y="72" text-anchor="middle" class="bn s">ট্রান্সপোর্ট</text><text x="260" y="102" text-anchor="middle" class="bn s">নেটওয়ার্ক</text><text x="260" y="132" text-anchor="middle" class="bn s r w6">ডেটা লিংক</text><text x="260" y="162" text-anchor="middle" class="bn s">ফিজিক্যাল</text>
+      <text x="165" y="216" text-anchor="middle" class="bn s k">ফিজিক্যাল মাধ্যম: একমাত্র বাস্তব পথ</text>
+      <text x="165" y="160" text-anchor="middle" class="bn p s">ভার্চুয়াল পিয়ার</text><text x="165" y="174" text-anchor="middle" class="bn p s">প্রোটোকল</text>
+    </svg></figure>
+    <ul class="dash small">
+      <li><b>প্রোটোকল</b>: <b>পিয়ারদের</b> মধ্যকার নিয়ম (আনুভূমিক)</li>
+      <li><b>সার্ভিস</b>: একটি স্তর ওপরের স্তরকে যা দেয় (উল্লম্ব)</li>
+      <li><b>ইন্টারফেস</b>: পাশাপাশি দুই স্তরের সীমানা</li>
+      <li><b>SAP</b> (service access point): পোর্ট, IP, MAC</li>
+      <li><b>এনক্যাপসুলেশন</b>: নিচে নামার সময় প্রতিটি স্তর নিজের হেডার যোগ করে</li>
+    </ul>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">স্তর (OSI নং)</th><th>PDU</th><th class="l">অ্যাড্রেস</th><th class="l">ডিভাইস</th><th class="l">উদাহরণ প্রোটোকল</th></tr>
+    <tr><td class="l">অ্যাপ্লিকেশন (7)</td><td>মেসেজ</td><td class="l">নাম / URL</td><td class="l">গেটওয়ে</td><td class="l">HTTP, SMTP, DNS</td></tr>
+    <tr><td class="l">ট্রান্সপোর্ট (4)</td><td>সেগমেন্ট</td><td class="l">পোর্ট (16 বিট)</td><td class="l">(প্রান্তিক হোস্ট)</td><td class="l">TCP, UDP</td></tr>
+    <tr><td class="l">নেটওয়ার্ক (3)</td><td>প্যাকেট</td><td class="l">IP (32/128 বিট)</td><td class="l">রাউটার</td><td class="l">IP, ICMP</td></tr>
+    <tr><td class="l red"><b>ডেটা লিংক (2)</b></td><td class="red"><b>ফ্রেম</b></td><td class="l"><span class="circ">MAC (48 বিট)</span></td><td class="l">ব্রিজ, সুইচ</td><td class="l">Ethernet, HDLC, PPP</td></tr>
+    <tr><td class="l">ফিজিক্যাল (1)</td><td>বিট</td><td class="l">নেই</td><td class="l">হাব, রিপিটার</td><td class="l">RS-232, 10Base-T</td></tr>
+  </table>
+  <div class="mnote">OSI ৭ বনাম TCP/IP ৪: পূর্ণ তুলনা OSI মডেল লেসনে</div>
+  <p class="small"><b>কানেকশন-ওরিয়েন্টেড</b> (স্থাপন → ব্যবহার → মুক্তি: TCP, ATM) বনাম <b>কানেকশনলেস</b> (প্রতি এককে পূর্ণ ঠিকানা: IP, UDP)। <b>OSI প্রিমিটিভ:</b> <span class="hl">Request → Indication → Response → Confirm</span>। <b>নকশার বিষয়:</b> অ্যাড্রেসিং, ত্রুটি ও প্রবাহ নিয়ন্ত্রণ, মাল্টিপ্লেক্সিং, রাউটিং, ফ্র্যাগমেন্টেশন।</p>
+
+  <h2><span class="no">২</span>ডেটা লিংক স্তর: কাজ ও সেবা</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <ul class="dash small">
+      <li><b>ফ্রেমিং</b>: বিট-প্রবাহকে ফ্রেমে ভাগ করা</li>
+      <li><b>ফিজিক্যাল অ্যাড্রেসিং</b>: হেডারে MAC</li>
+      <li><b>ত্রুটি নিয়ন্ত্রণ</b>: শনাক্ত (CRC), পুনঃপ্রেরণ</li>
+      <li><b>প্রবাহ নিয়ন্ত্রণ</b>: রিসিভারকে প্লাবিত না করা</li>
+      <li><b>অ্যাক্সেস নিয়ন্ত্রণ</b>: শেয়ার্ড লিংক কে ব্যবহার করবে</li>
+    </ul>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">IEEE উপস্তর</span><br><b>LLC</b> (802.2): প্রবাহ/ত্রুটি নিয়ন্ত্রণ, কোন নেটওয়ার্ক প্রোটোকল<br><b>MAC</b> (802.3, 802.5, 802.11 …): একটি মাধ্যমে অ্যাক্সেস + ফ্রেমিং</div>
+  </div>
+  <p class="small">সেবা: <b>আনঅ্যাকনলেজড কানেকশনলেস</b> (Ethernet) · <b>অ্যাকনলেজড কানেকশনলেস</b> (Wi-Fi) · <b>অ্যাকনলেজড কানেকশন-ওরিয়েন্টেড</b> (HDLC)। DLL-এর ডেলিভারি <span class="hl">হপ-টু-হপ (hop-to-hop)</span>; ট্রান্সপোর্ট স্তরের এন্ড-টু-এন্ড।</p>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ডেটা লিংক স্তর হেডারের সাথে একটি <b>ট্রেইলার</b> (FCS)-ও যোগ করে; ওপরের স্তরগুলো শুধু হেডার যোগ করে।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: framing, parity, checksum ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>ফ্রেমিং ও ত্রুটি শনাক্তকরণ</span></div>
+  <h2><span class="no">৩</span>ফ্রেমিং: ফ্রেম কোথায় শুরু?</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">পদ্ধতি</th><th class="l">কীভাবে</th><th class="l">দুর্বলতা / ব্যবহার</th></tr>
+    <tr><td class="l">বাইট কাউন্ট</td><td class="l">হেডারের ফিল্ডে ফ্রেমের দৈর্ঘ্য</td><td class="l">একটি কাউন্ট ভুল → <b>সিঙ্ক হারায়</b></td></tr>
+    <tr><td class="l">ফ্ল্যাগ + <span class="hl">বাইট স্টাফিং</span></td><td class="l">দুই প্রান্তে FLAG; ডেটার FLAG/ESC-এর আগে ESC</td><td class="l">বাইট-ভিত্তিক: PPP, BISYNC</td></tr>
+    <tr><td class="l">ফ্ল্যাগ + <span class="hl">বিট স্টাফিং</span></td><td class="l">ফ্ল্যাগ <span class="circ">01111110</span>; পাঁচটি 1-এর পর 0</td><td class="l">বিট-ভিত্তিক: HDLC, SDLC</td></tr>
+    <tr><td class="l">কোডিং ভায়োলেশন</td><td class="l">ডেটায় কখনো আসে না এমন সিম্বল</td><td class="l">4B/5B (ফাস্ট ইথারনেট, FDDI)</td></tr>
+    <tr><td class="l">নির্দিষ্ট আকার</td><td class="l">সব ফ্রেম একই দৈর্ঘ্যের</td><td class="l">ATM-এর 53-বাইট সেল</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 640 128" width="640">
+    <g class="w">
+      <rect x="120" y="86" width="110" height="32" rx="4" class="ink-r fill-r"/>
+      <rect x="230" y="86" width="250" height="32" rx="4" class="ink fill-b"/>
+      <rect x="480" y="86" width="110" height="32" rx="4" class="ink-r fill-r"/>
+    </g>
+    <text x="10" y="26" class="bn k w6">ডেটা:</text><text x="120" y="26" class="l" style="letter-spacing:2px">0110 11111 11111 00</text>
+    <text x="10" y="62" class="bn k w6">প্রেরিত:</text><text x="120" y="62" class="l" style="letter-spacing:2px">0110 11111 <tspan class="r" style="fill:#d32f2f">0</tspan> 11111 <tspan style="fill:#d32f2f">0</tspan> 00</text>
+    <text x="460" y="26" class="bn g s">পরপর ৫টি 1 →</text><text x="460" y="44" class="bn g s">একটি 0 ঢোকাও (লাল)</text>
+    <text x="175" y="107" text-anchor="middle" class="r w6">01111110</text><text x="355" y="107" text-anchor="middle" class="bn">স্টাফ করা পেলোড + FCS</text><text x="535" y="107" text-anchor="middle" class="r w6">01111110</text>
+    <text x="10" y="107" class="bn s">HDLC ফ্রেম:</text>
+  </svg><figcaption>বিট স্টাফিং: ফ্ল্যাগের প্যাটার্ন ফ্রেমের ভেতরে কখনো আসতে পারে না</figcaption></figure>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>পাঁচটি এক, তারপর একটি শূন্য।</b>" রিসিভার, 11111-এর পর: 0 → মুছে দাও; 0111111<b>0</b> → ফ্ল্যাগ; সাতটি 1 → অ্যাবর্ট।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">বাইট স্টাফিং ✍</span> A FLAG B → A <b>ESC</b> FLAG B · A ESC B → A <b>ESC</b> ESC B · A ESC FLAG B → A ESC ESC ESC FLAG B</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> পাঁচটি 1-এর পর 0 ঢোকানো হয় <b>পরের ডেটা বিট আগে থেকেই 0 হলেও</b>; রিসিভার সবসময় সেটি সরিয়ে নেয়। সবচেয়ে খারাপ ক্ষেত্রে প্রতি ৫ বিটে ১টি বাড়তি।</div>
+
+  <h2><span class="no">৪</span>ত্রুটি, প্যারিটি ও চেকসাম</h2><span class="tag">MCQ</span>
+  <p class="small"><b>বার্স্ট ত্রুটির (burst error)</b> দৈর্ঘ্য = প্রথম থেকে শেষ ভুল বিট (10 Mbps-এ 1 μs নয়েজে 10 বিট নষ্ট)। <span class="hl">শনাক্তকরণ (detection)</span> + পুনঃপ্রেরণ = ARQ (LAN, TCP); <span class="hl">সংশোধন (correction)</span> = FEC (স্যাটেলাইট, সম্প্রচার, ECC মেমরি)।</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">পদ্ধতি</th><th class="l">শনাক্ত করে</th><th class="l">যা ধরে না</th><th class="l">ব্যবহার</th></tr>
+    <tr><td class="l">1-D প্যারিটি</td><td class="l"><b>বিজোড়</b> সংখ্যক ত্রুটি</td><td class="l"><b>জোড়</b> সংখ্যক</td><td class="l">সিরিয়াল ASCII</td></tr>
+    <tr><td class="l">2-D প্যারিটি</td><td class="l">সব 1-, 2-, 3-বিট; 1টি সংশোধন</td><td class="l">কিছু 4-বিট</td><td class="l">ব্লক কোড</td></tr>
+    <tr><td class="l">চেকসাম</td><td class="l">16-বিট 1's-কমপ্লিমেন্ট যোগ</td><td class="l">ওয়ার্ড অদলবদল</td><td class="l">IP, TCP, UDP</td></tr>
+    <tr><td class="l">CRC</td><td class="l">≤ r বিটের সব বার্স্ট, বাকির অধিকাংশ</td><td class="l">খুবই কম</td><td class="l">Ethernet, HDLC, PPP</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">চেকসাম ✍ (4-বিট ওয়ার্ড)</span> ডেটা 7, 11, 12, 0, 6 → যোগফল = 36 = 10 0100₂ → ক্যারি ঘুরিয়ে যোগ: 0100 + 10 = 0110 (6) → চেকসাম = কমপ্লিমেন্ট = <span class="circ">1001 (9)</span>। রিসিভার: 36 + 9 = 45 = 10 1101 → 1101 + 10 = 1111 → কমপ্লিমেন্ট 0000 → গ্রহণ।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: CRC and Hamming ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>CRC ও হ্যামিং</span></div>
+  <h2><span class="no">৫</span>CRC (Cyclic Redundancy Check)</h2><span class="tag">লিখিতে প্রিয়</span>
+  <div class="def"><span class="lbl">পদ্ধতি</span> <b>r</b> ঘাতের (degree) জেনারেটর G(x) (r + 1 বিট): ডেটার শেষে <span class="hl">r টি শূন্য</span> যোগ করো, <b>মডুলো-2</b> (XOR) পদ্ধতিতে G দিয়ে ভাগ করো; r-বিট ভাগশেষই CRC; ডেটা + CRC পাঠাও। রিসিভার G দিয়ে ভাগ করে: <span class="circ">ভাগশেষ 0 → গ্রহণ</span>।</div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ডেটা 100100, G = 1101 (x³ + x² + 1, r = 3)
+      <ol class="steps"><li>ভাজ্য 100100<b>000</b></li><li>1001⊕1101 = 0100 → 1000⊕1101 = 0101</li><li>1010⊕1101 = 0111 → 1110⊕1101 = 0011</li><li>0110 (প্রথম বিট 0: ⊕0000) → 1100⊕1101 = <b>001</b> → পাঠাও <span class="circ">100100 001</span></li></ol></div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">CRC যা ধরে</span><br>সব একক-বিট ত্রুটি · (x + 1) G-এর উৎপাদক হলে সব বিজোড়-সংখ্যক ত্রুটি · <b>r পর্যন্ত সব বার্স্ট</b> · r + 1 দৈর্ঘ্যের বার্স্ট: 1 − (½)^(r−1) · আরও দীর্ঘ: 1 − (½)^r<br><b>CRC-8</b> ATM HEC · <b>CRC-16</b> HDLC, PPP · <b>CRC-32</b> Ethernet, Wi-Fi</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> শূন্য যোগ হয় <b>ঘাতের</b> সমান (1101-এর জন্য 3টি), জেনারেটরের বিট-সংখ্যা (4) নয়। মডুলো-2 বিয়োগ = XOR: কোনো ধার নেই।</div>
+
+  <h2><span class="no">৬</span>হ্যামিং দূরত্ব ও হ্যামিং কোড</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def small"><span class="lbl">হ্যামিং দূরত্ব</span> d(x, y) = দুই কোডওয়ার্ড যত অবস্থানে ভিন্ন = x ⊕ y-এর 1-এর সংখ্যা; d(10101, 11110) = 01011 → <b>3</b>। <b>d<sub>min</sub></b> = যেকোনো দুটি বৈধ কোডওয়ার্ডের ক্ষুদ্রতম দূরত্ব।</div>
+  <div class="sumbox small"><span class="lbl">নিয়ম</span> s টি শনাক্ত: <span class="circ">d<sub>min</sub> ≥ s + 1</span> · t টি সংশোধন: <span class="circ">d<sub>min</sub> ≥ 2t + 1</span> · চেক বিট: <span class="hl">2<sup>r</sup> ≥ m + r + 1</span> → m = 4: 3 (7, 4) · 7: 4 (11, 7) · 8: 4 (12, 8) · 16: 5 · 32: 6</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 158" width="326">
+      <g class="w">
+        <rect x="60" y="30" width="36" height="34" class="ink-k fill-y"/><rect x="96" y="30" width="36" height="34" class="ink-k fill-y"/><rect x="132" y="30" width="36" height="34" class="ink-k"/><rect x="168" y="30" width="36" height="34" class="ink-k fill-y"/><rect x="204" y="30" width="36" height="34" class="ink-k"/><rect x="240" y="30" width="36" height="34" class="ink-k" style="fill:rgba(211,47,47,.18)"/><rect x="276" y="30" width="36" height="34" class="ink-k"/>
+      </g>
+      <text x="78" y="22" text-anchor="middle" class="s">1</text><text x="114" y="22" text-anchor="middle" class="s">2</text><text x="150" y="22" text-anchor="middle" class="s">3</text><text x="186" y="22" text-anchor="middle" class="s">4</text><text x="222" y="22" text-anchor="middle" class="s">5</text><text x="258" y="22" text-anchor="middle" class="s r w6">6</text><text x="294" y="22" text-anchor="middle" class="s">7</text>
+      <text x="78" y="53" text-anchor="middle" class="k l">0</text><text x="114" y="53" text-anchor="middle" class="k l">1</text><text x="150" y="53" text-anchor="middle" class="k l">1</text><text x="186" y="53" text-anchor="middle" class="k l">0</text><text x="222" y="53" text-anchor="middle" class="k l">0</text><text x="258" y="53" text-anchor="middle" class="k l">1</text><text x="294" y="53" text-anchor="middle" class="k l">1</text>
+      <text x="78" y="82" text-anchor="middle" class="s">P1</text><text x="114" y="82" text-anchor="middle" class="s">P2</text><text x="150" y="82" text-anchor="middle" class="s">D</text><text x="186" y="82" text-anchor="middle" class="s">P4</text><text x="222" y="82" text-anchor="middle" class="s">D</text><text x="258" y="82" text-anchor="middle" class="s">D</text><text x="294" y="82" text-anchor="middle" class="s">D</text>
+      <text x="8" y="106" class="r s w6">P1</text><text x="8" y="126" class="g s w6">P2</text><text x="8" y="146" class="p s w6">P4</text>
+      <text x="78" y="106" text-anchor="middle" class="r">●</text><text x="150" y="106" text-anchor="middle" class="r">●</text><text x="222" y="106" text-anchor="middle" class="r">●</text><text x="294" y="106" text-anchor="middle" class="r">●</text>
+      <text x="114" y="126" text-anchor="middle" class="g">●</text><text x="150" y="126" text-anchor="middle" class="g">●</text><text x="258" y="126" text-anchor="middle" class="g">●</text><text x="294" y="126" text-anchor="middle" class="g">●</text>
+      <text x="186" y="146" text-anchor="middle" class="p">●</text><text x="222" y="146" text-anchor="middle" class="p">●</text><text x="258" y="146" text-anchor="middle" class="p">●</text><text x="294" y="146" text-anchor="middle" class="p">●</text>
+    </svg><figcaption>ডেটা 1011-এর হ্যামিং (7, 4): কে কাকে পরীক্ষা করে</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ডেটা 1011 বসাও 3, 5, 6, 7 অবস্থানে (জোড় প্যারিটি):
+      <ol class="steps"><li>P1 = 3⊕5⊕7 = 1⊕0⊕1 = 0</li><li>P2 = 3⊕6⊕7 = 1⊕1⊕1 = 1</li><li>P4 = 5⊕6⊕7 = 0⊕1⊕1 = 0 → <b>0110011</b></li><li>বিট 6 উল্টে গেলে: 0110001 → চেক C4 C2 C1 = 1 1 0 = <span class="circ">6</span> → বিট 6 উল্টাও</li></ol></div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> প্যারিটি বিট বসে <b>2-এর ঘাতের</b> অবস্থানে; k অবস্থানকে পরীক্ষা করে সেই বিটগুলো, যাদের যোগফল k: 6 = 4 + 2।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> হ্যামিং (7, 4)-এ d<sub>min</sub> = 3: ১টি সংশোধন <b>অথবা</b> ২টি শনাক্ত। আরেকটি প্যারিটি বিট দিলে SEC-DED (ECC RAM)।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: flow control & ARQ ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>ফ্লো কন্ট্রোল</span></div>
+  <h2><span class="no">৭</span>ফ্লো কন্ট্রোল: স্টপ-অ্যান্ড-ওয়েট</h2><span class="tag">গাণিতিক</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>ফ্লো কন্ট্রোল (flow control)</b> দ্রুত প্রেরককে ধীর রিসিভার প্লাবিত করতে দেয় না। <b>ত্রুটি নিয়ন্ত্রণ</b> = <span class="hl">ARQ</span> (automatic repeat request): শনাক্ত, ACK/NAK, টাইমআউট, পুনঃপ্রেরণ। <b>স্টপ-অ্যান্ড-ওয়েট</b>: একটি ফ্রেম পাঠিয়ে তার ACK-এর অপেক্ষা; সিকোয়েন্স নম্বর 0, 1 ডুপ্লিকেট ধরে।</div>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 270 210" width="266">
+      <g class="w">
+        <path class="ink-k" d="M40,24 V204 M230,24 V204"/>
+        <path class="ink fill-b" d="M40,32 L230,112 L230,132 L40,52 Z"/>
+        <path class="ink-g" d="M230,134 L42,196" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M30,32 V52 M24,32 H36 M24,52 H36"/>
+        <path class="ink-p" d="M30,56 V194" stroke-dasharray="4 4"/>
+      </g>
+      <text x="40" y="16" text-anchor="middle" class="bn k w6">প্রেরক</text><text x="230" y="16" text-anchor="middle" class="bn k w6">রিসিভার</text>
+      <text x="20" y="47" text-anchor="end" class="r s">Tt</text>
+      <text x="140" y="68" class="bn s">ফ্রেম</text><text x="150" y="102" class="s">Tp</text>
+      <text x="150" y="176" class="g s">ACK (Tp)</text>
+      <text x="20" y="130" text-anchor="end" class="bn p s">অলস</text><text x="20" y="144" text-anchor="end" class="p s">≈2Tp</text>
+    </svg><figcaption>প্রতি ফ্রেমে লাইন প্রায় 2Tp সময় অলস বসে থাকে</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">সূত্র</span><br>Tt = L / B (ফ্রেমের বিট ÷ ব্যান্ডউইথ)<br>Tp = d / v (তারে v ≈ 2 × 10⁸ m/s)<br><span class="hl">a = Tp / Tt</span><br>স্টপ-অ্যান্ড-ওয়েট: <span class="circ">η = 1 / (1 + 2a)</span><br>স্লাইডিং উইন্ডো: η = W / (1 + 2a), সর্বোচ্চ 1<br>100% ব্যবহারে লাগে <b>W ≥ 1 + 2a</b><br>থ্রুপুট = η × B · BDP = B × RTT</div>
+  </div>
+  <div class="ex"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> B = 1 Mbps, L = 1000 বিট, Tp = 20 ms। Tt = 1 ms → a = 20 → স্টপ-অ্যান্ড-ওয়েট η = 1/41 = <span class="circ">2.4%</span> (24 kbps)। পূর্ণ ব্যবহারে W ≥ 41 → Go-Back-N: 2ᵐ − 1 ≥ 41 → <b>m = 6</b>; Selective Repeat: 2ᵐ⁻¹ ≥ 41 → <b>m = 7</b>।</div>
+
+  <h2><span class="no">৮</span>স্লাইডিং উইন্ডো: Go-Back-N বনাম Selective Repeat</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">Stop-and-Wait</th><th class="l">Go-Back-N</th><th class="l">Selective Repeat</th></tr>
+    <tr><td class="l">প্রেরকের উইন্ডো</td><td class="l">1</td><td class="l"><span class="circ">2ᵐ − 1</span></td><td class="l"><span class="circ">2ᵐ⁻¹</span></td></tr>
+    <tr><td class="l">রিসিভারের উইন্ডো</td><td class="l">1</td><td class="l">1</td><td class="l">2ᵐ⁻¹</td></tr>
+    <tr><td class="l">ফ্রেম হারালে</td><td class="l">সেটিই আবার</td><td class="l">সেটি <b>ও পরের সবগুলো</b> আবার</td><td class="l"><b>শুধু</b> সেই ফ্রেম আবার</td></tr>
+    <tr><td class="l">ACK-এর ধরন</td><td class="l">প্রতি ফ্রেমে একটি</td><td class="l">কিউমুলেটিভ</td><td class="l">আলাদা আলাদা (+ NAK)</td></tr>
+    <tr><td class="l">ক্রমের বাইরের ফ্রেম</td><td class="l">প্রযোজ্য নয়</td><td class="l">বাতিল</td><td class="l">বাফারে রাখে</td></tr>
+  </table>
+  <p class="small">m = 3 → সিকোয়েন্স 0–7: GBN উইন্ডো <b>7</b>, SR উইন্ডো <b>4</b>। <b>পিগিব্যাকিং (piggybacking)</b>: বিপরীতমুখী ডেটা ফ্রেমের সাথে ACK যায় (HDLC-র N(R))। ত্রুটি হলে GBN ব্যান্ডউইথ নষ্ট করে; SR-এ সবচেয়ে বেশি বাফার লাগে।</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> GBN: "<b>একটি কম সব</b>" (2ᵐ − 1)। SR: "<b>অর্ধেক</b>" (2ᵐ⁻¹)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> SR উইন্ডো অর্ধেকের বেশি হলে পুরোনো ও নতুন ফ্রেম একই <b>নম্বর</b> পায়।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: HDLC ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>HDLC</span></div>
+  <h2><span class="no">৯</span>HDLC (High-Level Data Link Control)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ISO-র <span class="hl">বিট-ভিত্তিক (bit-oriented)</span> প্রোটোকল (IBM-এর SDLC থেকে), পয়েন্ট-টু-পয়েন্ট বা মাল্টিপয়েন্ট, হাফ/ফুল ডুপ্লেক্স: <b>বিট স্টাফিং</b>, ফ্ল্যাগ <span class="circ">01111110 (7E)</span>, স্লাইডিং-উইন্ডো ARQ। পরিবার: <b>LAPB</b> (X.25), <b>LAPD</b> (ISDN), LAPM (মডেম); PPP ও 802.2 LLC-র ফ্রেমিংয়ের ভিত্তি।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="640">
+    <g class="w">
+      <rect x="10" y="22" width="80" height="38" class="ink-r fill-r"/><rect x="90" y="22" width="95" height="38" class="ink fill-b"/><rect x="185" y="22" width="95" height="38" class="ink fill-b"/><rect x="280" y="22" width="175" height="38" class="ink-g fill-g"/><rect x="455" y="22" width="95" height="38" class="ink-k fill-y"/><rect x="550" y="22" width="80" height="38" class="ink-r fill-r"/>
+    </g>
+    <text x="50" y="46" text-anchor="middle" class="bn r w6">ফ্ল্যাগ</text><text x="137" y="46" text-anchor="middle" class="bn w6">অ্যাড্রেস</text><text x="232" y="46" text-anchor="middle" class="bn w6">কন্ট্রোল</text><text x="367" y="46" text-anchor="middle" class="bn g w6">ইনফরমেশন</text><text x="502" y="46" text-anchor="middle" class="w6">FCS</text><text x="590" y="46" text-anchor="middle" class="bn r w6">ফ্ল্যাগ</text>
+    <text x="50" y="80" text-anchor="middle" class="bn s">8 বিট</text><text x="137" y="80" text-anchor="middle" class="bn s">8 (বাড়ানো যায়)</text><text x="232" y="80" text-anchor="middle" class="bn s">8 বা 16</text><text x="367" y="80" text-anchor="middle" class="bn s">পরিবর্তনশীল (I-ফ্রেম)</text><text x="502" y="80" text-anchor="middle" class="bn s">16 বা 32 (CRC)</text><text x="590" y="80" text-anchor="middle" class="bn s">8 বিট</text>
+    <text x="320" y="14" text-anchor="middle" class="bn r s">FCS ঢাকে অ্যাড্রেস + কন্ট্রোল + ইনফরমেশন</text>
+  </svg><figcaption>HDLC ফ্রেম: একটি ফ্ল্যাগ এক ফ্রেম শেষ করে পরেরটি শুরু করতে পারে</figcaption></figure>
+  <p class="small"><b>স্টেশন:</b> <b>প্রাইমারি</b> কমান্ড পাঠায়, <b>সেকেন্ডারি</b> রেসপন্স পাঠায়, <b>কম্বাইন্ড</b> দুটোই। <b>কনফিগারেশন:</b> <b>আনব্যালান্সড</b> = ১টি প্রাইমারি + n টি সেকেন্ডারি; <b>ব্যালান্সড</b> = ২টি কম্বাইন্ড স্টেশন (পয়েন্ট-টু-পয়েন্ট)।</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">ট্রান্সফার মোড</th><th class="l">কনফিগ.</th><th class="l">কে পাঠানো শুরু করতে পারে?</th></tr>
+    <tr><td class="l"><b>NRM</b> Normal Response Mode</td><td class="l">আনব্যালান্সড</td><td class="l">সেকেন্ডারি শুধু <b>পোল</b> করা হলে (মাল্টিপয়েন্ট)</td></tr>
+    <tr><td class="l"><b>ARM</b> Asynchronous Response Mode</td><td class="l">আনব্যালান্সড</td><td class="l">সেকেন্ডারি অনুমতি ছাড়াই (বিরল)</td></tr>
+    <tr><td class="l"><span class="hl"><b>ABM</b> Asynchronous Balanced Mode</span></td><td class="l">ব্যালান্সড</td><td class="l">যেকোনো স্টেশন, যেকোনো সময় (LAPB; সবচেয়ে প্রচলিত)</td></tr>
+  </table>
+  <h3>কন্ট্রোল ফিল্ড (8-বিট, মডুলো 8)</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">ফ্রেম</th><th>বিট 1 → 8</th><th class="l">কাজ</th></tr>
+    <tr><td class="l"><b>I</b>-ফ্রেম</td><td><span class="red"><b>0</b></span> · N(S) 3 · P/F · N(R) 3</td><td class="l">ইউজার ডেটা + পিগিব্যাকড ACK</td></tr>
+    <tr><td class="l"><b>S</b>-ফ্রেম</td><td><span class="red"><b>10</b></span> · কোড 2 · P/F · N(R) 3</td><td class="l">ACK / NAK, ফ্লো কন্ট্রোল (ডেটা নেই)</td></tr>
+    <tr><td class="l"><b>U</b>-ফ্রেম</td><td><span class="red"><b>11</b></span> · M 2 · P/F · M 3</td><td class="l">লিংক ব্যবস্থাপনা: SNRM, SABM, DISC, UA, FRMR</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>S কোড</th><th class="l">নাম</th><th class="l">অর্থ</th></tr>
+      <tr><td>00</td><td class="l">RR</td><td class="l">ACK, প্রস্তুত</td></tr>
+      <tr><td>10</td><td class="l">RNR</td><td class="l">ACK, কিন্তু থামো</td></tr>
+      <tr><td>01</td><td class="l">REJ</td><td class="l">NAK: Go-Back-N</td></tr>
+      <tr><td>11</td><td class="l">SREJ</td><td class="l">NAK: Selective</td></tr>
+    </table>
+    <div>
+      <p class="small">3-বিট N(S)/N(R) → উইন্ডো ≤ <span class="circ">7</span>; বর্ধিত 16-বিট কন্ট্রোল (SABME) → মডুলো 128, উইন্ডো ≤ 127। <b>P/F</b>: কমান্ডে Poll, রেসপন্সে Final।</p>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> I-S-U শুরু হয় <b>0, 10, 11</b> দিয়ে। RR/RNR = "Ready / Not Ready", REJ = সব বাতিল, SREJ = একটি বাতিল।</div>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ ✍</span> N(R) = <b>পরবর্তী প্রত্যাশিত ফ্রেম</b>, শেষ পাওয়া ফ্রেম নয়: N(S) = 3, N(R) = 5 যুক্ত I-ফ্রেম হলো ফ্রেম 3, এবং এটি ফ্রেম 4 পর্যন্ত স্বীকার করে। HDLC বিট-ভিত্তিক; PPP দেখতে একই রকম, কিন্তু <b>বাইট-ভিত্তিক</b>।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: PPP, SLIP, ATM DLL ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>ইন্টারনেট ও ATM-এর DLL</span></div>
+  <h2><span class="no">১০</span>ইন্টারনেটের DLL: SLIP ও PPP</h2><span class="tag">MCQ + লিখিত</span>
+  <p class="small">পয়েন্ট-টু-পয়েন্ট লিংকে (ডায়াল-আপ, লিজড লাইন, PPPoE হিসেবে DSL, SONET-এর ওপর রাউটার-টু-রাউটার) ব্যবহৃত হয় <span class="hl">PPP</span> (RFC 1661), যা SLIP-এর উত্তরসূরি। LAN-এ ইন্টারনেট চলে Ethernet ও Wi-Fi-এর ওপর।</p>
+  <figure class="doodle"><svg viewBox="0 0 640 90" width="640">
+    <g class="w">
+      <rect x="10" y="22" width="70" height="38" class="ink-r fill-r"/><rect x="80" y="22" width="75" height="38" class="ink fill-b"/><rect x="155" y="22" width="75" height="38" class="ink fill-b"/><rect x="230" y="22" width="90" height="38" class="ink-k fill-y"/><rect x="320" y="22" width="160" height="38" class="ink-g fill-g"/><rect x="480" y="22" width="80" height="38" class="ink fill-b"/><rect x="560" y="22" width="70" height="38" class="ink-r fill-r"/>
+    </g>
+    <text x="45" y="46" text-anchor="middle" class="r w6">7E</text><text x="117" y="46" text-anchor="middle" class="w6">FF</text><text x="192" y="46" text-anchor="middle" class="w6">03</text><text x="275" y="46" text-anchor="middle" class="bn w6">প্রোটোকল</text><text x="400" y="46" text-anchor="middle" class="bn g w6">পেলোড</text><text x="520" y="46" text-anchor="middle" class="w6">FCS</text><text x="595" y="46" text-anchor="middle" class="r w6">7E</text>
+    <text x="45" y="80" text-anchor="middle" class="bn s">ফ্ল্যাগ</text><text x="117" y="80" text-anchor="middle" class="bn s">সব স্টেশন</text><text x="192" y="80" text-anchor="middle" class="bn s">আনন্যাম্বার্ড</text><text x="275" y="80" text-anchor="middle" class="bn s">1–2 বাইট</text><text x="400" y="80" text-anchor="middle" class="bn s">≤ 1500 B (ডিফল্ট MRU)</text><text x="520" y="80" text-anchor="middle" class="bn s">2 বা 4 B</text><text x="595" y="80" text-anchor="middle" class="bn s">ফ্ল্যাগ</text>
+    <text x="320" y="14" text-anchor="middle" class="bn r s">প্রোটোকল 0021 = IPv4 · C021 = LCP · C023 = PAP · C223 = CHAP · 8021 = IPCP</text>
+  </svg><figcaption>PPP ফ্রেম: HDLC-র মতো, কিন্তু বাইট-ভিত্তিক</figcaption></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">SLIP (RFC 1055)</th><th class="l">PPP (RFC 1661)</th></tr>
+    <tr><td class="l">ফ্রেমিং</td><td class="l">END বাইট C0, এস্কেপ DB</td><td class="l">ফ্ল্যাগ 7E, এস্কেপ <span class="circ">7D</span>, বাইট ⊕ 20</td></tr>
+    <tr><td class="l">ত্রুটি শনাক্তকরণ</td><td class="l">নেই</td><td class="l">FCS (CRC-16 বা CRC-32)</td></tr>
+    <tr><td class="l">নেটওয়ার্ক প্রোটোকল</td><td class="l">শুধু IP</td><td class="l">অনেক (প্রোটোকল ফিল্ড, NCP)</td></tr>
+    <tr><td class="l">IP অ্যাড্রেস</td><td class="l">হাতে কনফিগার</td><td class="l">আলোচনার মাধ্যমে (IPCP)</td></tr>
+    <tr><td class="l">অথেনটিকেশন</td><td class="l">নেই</td><td class="l">PAP বা CHAP</td></tr>
+  </table>
+  <p class="small"><b>PPP-র ধাপ:</b> Dead → Establish (<span class="hl">LCP</span>: লিংকের অপশন) → Authenticate (ঐচ্ছিক) → Network (<span class="hl">NCP</span>, যেমন IPCP) → Open → Terminate → Dead। <b>PAP</b>: ২-ধাপ, পাসওয়ার্ড খোলা টেক্সটে, একবার। <b>CHAP</b>: ৩-ধাপ চ্যালেঞ্জ–রেসপন্স (চ্যালেঞ্জ + সিক্রেটের MD5 হ্যাশ), সিক্রেট কখনো পাঠানো হয় না, সেশনের মাঝেও বারবার হয়। স্টাফিং: 7E → 7D 5E, 7D → 7D 5D।</p>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> PPP ত্রুটি <b>শনাক্ত</b> করে (FCS), কিন্তু ডিফল্ট মোডে সিকোয়েন্স নম্বর, ACK বা ফ্লো কন্ট্রোল নেই: ভুল ফ্রেম ফেলে দেওয়া হয়, ওপরের স্তর সামলায়।</div>
+
+  <h2><span class="no">১১</span>ATM-এর ডেটা লিংক স্তর</h2><span class="tag">MCQ</span>
+  <div class="def small"><span class="lbl">মূল ধারণা</span> ATM নির্দিষ্ট <span class="circ">53-বাইট সেল</span> = 5-বাইট হেডার + 48-বাইট পেলোড, ভার্চুয়াল সার্কিটের ওপর সুইচ করে (MAC অ্যাড্রেসের বদলে VPI/VCI)। ডেটা লিংক ধরনের কাজ করে ATM স্তরের নিচের <b>TC (Transmission Convergence) উপস্তর</b>।</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="296">
+      <g class="w">
+        <rect x="40" y="10" width="208" height="125" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M40,35 H248 M40,60 H248 M40,85 H248 M40,110 H248" style="stroke-width:1.3"/>
+        <path class="ink-k" d="M144,10 V35 M144,35 V60 M144,85 V110 M222,85 V110" style="stroke-width:1.3"/>
+        <rect x="40" y="110" width="208" height="25" class="ink-r fill-r"/>
+      </g>
+      <text x="20" y="27" text-anchor="middle" class="s">1</text><text x="20" y="52" text-anchor="middle" class="s">2</text><text x="20" y="77" text-anchor="middle" class="s">3</text><text x="20" y="102" text-anchor="middle" class="s">4</text><text x="20" y="127" text-anchor="middle" class="s">5</text>
+      <text x="92" y="27" text-anchor="middle" class="s w6">GFC 4</text><text x="196" y="27" text-anchor="middle" class="s w6">VPI 4</text>
+      <text x="92" y="52" text-anchor="middle" class="s w6">VPI 4</text><text x="196" y="52" text-anchor="middle" class="s w6">VCI 4</text>
+      <text x="144" y="77" text-anchor="middle" class="s w6">VCI 8</text>
+      <text x="92" y="102" text-anchor="middle" class="s w6">VCI 4</text><text x="183" y="102" text-anchor="middle" class="s w6">PT 3</text><text x="235" y="102" text-anchor="middle" class="s" style="font-size:10px">CLP</text>
+      <text x="144" y="127" text-anchor="middle" class="r s w6">HEC 8 (CRC-8)</text>
+      <text x="256" y="56" class="g s">+ 48 B</text><text x="256" y="72" class="bn g s">পেলোড</text>
+      <text x="144" y="149" text-anchor="middle" class="bn s">UNI হেডার (NNI: 12-বিট VPI, GFC নেই)</text>
+    </svg></figure>
+    <ul class="dash small">
+      <li><b>HEC</b>: CRC-8 (x⁸ + x² + x + 1), শুধু হেডারের প্রথম <b>4 বাইটের</b> ওপর; ১-বিট সংশোধন, বহু-বিট হেডার-ত্রুটি শনাক্ত</li>
+      <li><b>সেল ডিলিনিয়েশন</b>: HEC যাচাই করে সেলের সীমানা খোঁজা (hunt → presync → sync)</li>
+      <li>সেল-রেট ডিকাপলিং (idle সেল), SONET/SDH ফ্রেমে সেল বসানো</li>
+      <li><b>CLP = 1</b>: কনজেশনে এই সেল আগে ফেলা হবে</li>
+    </ul>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>5 + 48 = 53</b>"। 48 ছিল 32 ও 64 বাইটের আপস। সেল ট্যাক্স = 5/53 ≈ <b>9.4%</b>।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">অন্যত্র</span> AAL → ট্রান্সপোর্ট লেসন; ATM নেটওয়ার্ক স্তর (VPI/VCI সুইচিং) → IP লেসন।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: MAC - ALOHA, CSMA, CSMA/CD, CSMA/CA ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>মিডিয়াম অ্যাক্সেস</span></div>
+  <h2><span class="no">১২</span>মিডিয়াম অ্যাক্সেস কন্ট্রোল: এরপর কে পাঠাবে?</h2><span class="tag">হাই-ইল্ড</span>
+  <p class="small"><b>র‍্যান্ডম অ্যাক্সেস:</b> ALOHA, CSMA, CSMA/CD, CSMA/CA · <b>নিয়ন্ত্রিত অ্যাক্সেস:</b> রিজার্ভেশন, পোলিং, <span class="hl">টোকেন পাসিং</span> · <b>চ্যানেলাইজেশন:</b> FDMA, TDMA, CDMA।</p>
+  <div class="cols" style="grid-template-columns:1fr 262px;align-items:center">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l"></th><th>Pure ALOHA</th><th>Slotted ALOHA</th></tr>
+      <tr><td class="l">পাঠানো</td><td>যেকোনো সময়</td><td>শুধু স্লটের শুরুতে</td></tr>
+      <tr><td class="l">ঝুঁকির সময়</td><td>2 × T<sub>fr</sub></td><td>T<sub>fr</sub></td></tr>
+      <tr><td class="l">থ্রুপুট S</td><td>G·e<sup>−2G</sup></td><td>G·e<sup>−G</sup></td></tr>
+      <tr><td class="l">সর্বোচ্চ S</td><td><span class="circ">18.4%</span></td><td><span class="circ">36.8%</span></td></tr>
+      <tr><td class="l">যে লোডে</td><td>G = 0.5</td><td>G = 1</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 172" width="258">
+      <g class="w">
+        <path class="ink-k" d="M30,8 V150 H290"/>
+        <path class="ink-g" d="M30,150 C40,110 52,88 70,59 C85,40 98,38 110,39.6 C130,42 150,49 190,68.7 C220,84 250,98 270,105"/>
+        <path class="ink" d="M30,150 C40,120 55,98 70,94.8 C82,93 92,96 110,109.5 C130,120 150,128 190,139 C220,144 250,147 270,148"/>
+        <path class="ink-k" d="M110,39 V150 M70,95 V150" stroke-dasharray="3 4" style="stroke-width:1.2"/>
+      </g>
+      <text x="14" y="18" class="s k">S</text><text x="236" y="166" class="bn s k">G (লোড)</text>
+      <text x="66" y="166" class="s">0.5</text><text x="106" y="166" class="s">1</text>
+      <text x="116" y="30" class="g s w6">36.8%</text><text x="96" y="90" class="s w6">18.4%</text>
+      <text x="170" y="40" class="g s">slotted</text><text x="190" y="128" class="s">pure</text>
+    </svg></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 200 kbps চ্যানেলে 200-বিট ফ্রেম → T<sub>fr</sub> = 1 ms। লোড 1000 ফ্রেম/s → G = 1। Pure: S = e<sup>−2</sup> = 0.135 → <b>135 ফ্রেম/s</b> সফল। Slotted: S = e<sup>−1</sup> = 0.368 → <span class="circ">368 ফ্রেম/s</span>।</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">CSMA-র ধরন</th><th class="l">চ্যানেল খালি</th><th class="l">চ্যানেল ব্যস্ত</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l">1-persistent</td><td class="l">সাথে সাথে পাঠাও</td><td class="l">শুনতে থাকো, খালি হলেই পাঠাও</td><td class="l">Ethernet; সবচেয়ে বেশি কলিশন</td></tr>
+    <tr><td class="l">Non-persistent</td><td class="l">সাথে সাথে পাঠাও</td><td class="l">র‍্যান্ডম সময় পর আবার শোনো</td><td class="l">কলিশন কম, দেরি বেশি</td></tr>
+    <tr><td class="l">p-persistent</td><td class="l">p সম্ভাবনায় পাঠাও</td><td class="l">পরের স্লটের অপেক্ষা</td><td class="l">স্লটেড চ্যানেল</td></tr>
+  </table>
+  <h3>CSMA/CD (ক্লাসিক হাফ-ডুপ্লেক্স ইথারনেট)</h3>
+  <p class="small">পাঠানোর আগে ও পাঠানোর <b>সময়ও</b> শোনো; কলিশন হলে <b>জ্যাম (jam)</b> সিগন্যাল পাঠাও, থামো, ব্যাক-অফ করো। কলিশন ধরতে হলে সংকেত ফিরে আসা পর্যন্ত প্রেরককে পাঠাতেই থাকতে হবে: <span class="hl">T<sub>fr</sub> ≥ 2 × T<sub>p</sub></span> → <span class="circ">L<sub>min</sub> = 2 × T<sub>p</sub> × B</span>।</p>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ✍</span> 10 Mbps, সর্বোচ্চ রাউন্ড ট্রিপ 51.2 μs → L<sub>min</sub> = 10⁷ × 51.2 × 10⁻⁶ = <b>512 বিট = 64 বাইট</b>, ইথারনেটের ন্যূনতম ফ্রেম।</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">এক্সপোনেনশিয়াল ব্যাক-অফ</span> n-তম কলিশনের পর K × 512 বিট-টাইম অপেক্ষা, K র‍্যান্ডম 0 … 2^min(n,10) − 1; <b>16</b> বার চেষ্টার পর হাল ছাড়ে।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ফুল-ডুপ্লেক্স সুইচড ইথারনেটে <b>কলিশন নেই</b>, তাই CSMA/CD বন্ধ থাকে। প্রোপাগেশন ডিলের কারণে ক্যারিয়ার সেন্সিং সব কলিশন ঠেকাতে পারে না।</div>
+  <div class="def small"><span class="lbl">CSMA/CA (ওয়্যারলেস)</span> রেডিও পাঠানোর সময় কলিশন শুনতে পারে না (নিজের সিগন্যালই রিসিভারকে ঢেকে দেয়), আর কিছু স্টেশন একে অপরকে শুনতেই পায় না। তাই Wi-Fi কলিশন <span class="hl">এড়িয়ে চলে (avoidance)</span>: ইন্টারফ্রেম স্পেস, র‍্যান্ডম কনটেনশন উইন্ডো এবং প্রতিটি ফ্রেমের জন্য <b>পজিটিভ ACK</b>।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: Wi-Fi, Token Ring, FDDI, IEEE 802 ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>Wi-Fi · টোকেন রিং · IEEE 802</span></div>
+  <h2><span class="no">১৩</span>IEEE 802.11 (Wi-Fi)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:274px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 150" width="270">
+      <g class="w">
+        <ellipse cx="110" cy="70" rx="72" ry="52" class="ink-g" stroke-dasharray="6 5"/>
+        <ellipse cx="230" cy="70" rx="72" ry="52" class="ink-p" stroke-dasharray="6 5"/>
+        <circle cx="110" cy="70" r="15" class="ink fill-b"/><circle cx="170" cy="70" r="15" class="ink-r fill-r"/><circle cx="230" cy="70" r="15" class="ink fill-b"/>
+      </g>
+      <text x="110" y="76" text-anchor="middle" class="w6">A</text><text x="170" y="76" text-anchor="middle" class="r w6">B</text><text x="230" y="76" text-anchor="middle" class="w6">C</text>
+      <text x="60" y="12" class="bn g s">A-র পরিসর</text><text x="230" y="12" class="bn p s">C-র পরিসর</text>
+      <text x="165" y="140" text-anchor="middle" class="bn r s">A ও C একে অপরকে শোনে না → B-তে কলিশন</text>
+    </svg><figcaption>হিডেন স্টেশন সমস্যা → সমাধান RTS/CTS</figcaption></figure>
+    <ul class="dash small">
+      <li><b>RTS/CTS</b>: প্রেরক অনুমতি চায় (RTS), রিসিভার দেয় (CTS); যারা CTS শোনে তারা চুপ থাকে</li>
+      <li><b>NAV</b>: ভার্চুয়াল ক্যারিয়ার সেন্স, "কতক্ষণ ব্যস্ত" টাইমার</li>
+      <li>IFS-এর ক্রম: <span class="circ">SIFS &lt; PIFS &lt; DIFS</span>; ACK/CTS শুধু SIFS অপেক্ষা করে, তাই তারাই জেতে</li>
+      <li><b>DCF</b> (কনটেনশন, বাধ্যতামূলক) · <b>PCF</b> (AP পোল করে, ঐচ্ছিক)</li>
+      <li>ফ্রেমে সর্বোচ্চ <b>4টি MAC অ্যাড্রেস</b> (AP-র মাধ্যমে)</li>
+    </ul>
+  </div>
+  <p class="small"><b>802.11b</b> 2.4 GHz, 11 Mbps, DSSS · <b>a</b> 5 GHz, 54 Mbps, OFDM · <b>g</b> 2.4 GHz, 54 Mbps, OFDM · <b>n</b> (Wi-Fi 4) 2.4/5 GHz, 600 Mbps, MIMO · <b>ac</b> (Wi-Fi 5) 5 GHz, ≈ 6.9 Gbps, MU-MIMO · <b>ax</b> (Wi-Fi 6/6E) 6 GHz পর্যন্ত, ≈ 9.6 Gbps, OFDMA। BSS = AP + তার স্টেশন; ESS = ডিস্ট্রিবিউশন সিস্টেমে যুক্ত একাধিক BSS; IBSS = অ্যাড হক। নিরাপত্তা: WEP (ভাঙা) → WPA → <b>WPA2</b> (802.11i, AES-CCMP) → WPA3।</p>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> তারযুক্ত = <b>D</b>etect (CD), তারহীন = <b>A</b>void (CA)। "<b>ছোট অপেক্ষাই জেতে</b>": SIFS সবচেয়ে ছোট।</div>
+
+  <h2><span class="no">১৪</span>টোকেন পাসিং: টোকেন রিং ও FDDI</h2><span class="tag">MCQ</span>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">টোকেন রিং (IEEE 802.5)</span> 4 বা 16 Mbps; একটি 3-বাইট <b>টোকেন</b> ঘোরে, যার হাতে টোকেন শুধু সে পাঠায়; ডিফারেনশিয়াল ম্যানচেস্টার; MAU-র মাধ্যমে স্টার-ওয়্যার্ড রিং; <span class="hl">কলিশন নেই, নির্ধারিত বিলম্ব</span>। টোকেন বাস = 802.4।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">FDDI (ANSI X3T9.5)</span> ফাইবারে <span class="circ">100 Mbps</span>; <b>দুটি বিপরীতমুখী রিং</b> (ভাঙলে রিং ঘুরে জোড়া লাগে); টাইমড টোকেন; 4B/5B + NRZ-I; রিং ≤ 100 km, ≈ ৫০০ স্টেশন। <b>ফাঁদ:</b> ANSI, IEEE 802 নয়।</div>
+  </div>
+
+  <h2><span class="no">১৫</span>IEEE 802 পরিবার</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">স্ট্যান্ডার্ড</th><th class="l">বিষয়</th><th class="l">স্ট্যান্ডার্ড</th><th class="l">বিষয়</th></tr>
+    <tr><td class="l">802.1D</td><td class="l">ব্রিজ, স্প্যানিং ট্রি</td><td class="l"><span class="circ">802.3</span></td><td class="l">ইথারনেট (CSMA/CD)</td></tr>
+    <tr><td class="l">802.1Q · 802.1X</td><td class="l">VLAN ট্যাগ · পোর্ট-ভিত্তিক অ্যাক্সেস</td><td class="l">802.4 · 802.5</td><td class="l">টোকেন বাস · টোকেন রিং</td></tr>
+    <tr><td class="l">802.2</td><td class="l">LLC</td><td class="l">802.6</td><td class="l">DQDB (MAN)</td></tr>
+    <tr><td class="l">802.3u</td><td class="l">ফাস্ট ইথারনেট 100 Mbps</td><td class="l"><span class="circ">802.11</span></td><td class="l">ওয়্যারলেস LAN (CSMA/CA)</td></tr>
+    <tr><td class="l">802.3z / ab</td><td class="l">গিগাবিট (ফাইবার / UTP)</td><td class="l">802.15</td><td class="l">WPAN: .1 ব্লুটুথ, .4 (ZigBee)</td></tr>
+    <tr><td class="l">802.3ae · af</td><td class="l">10 GbE · Power over Ethernet</td><td class="l">802.16</td><td class="l">WiMAX (ওয়্যারলেস MAN)</td></tr>
+  </table>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: Ethernet, devices, VLAN ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>ইথারনেট · ডিভাইস · VLAN</span></div>
+  <h2><span class="no">১৬</span>ইথারনেট ফ্রেম ও MAC অ্যাড্রেস</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="640">
+    <g class="w">
+      <rect x="10" y="24" width="88" height="38" class="ink-k" style="fill:rgba(0,0,0,.05)"/><rect x="98" y="24" width="50" height="38" class="ink-k" style="fill:rgba(0,0,0,.05)"/>
+      <rect x="148" y="24" width="78" height="38" class="ink fill-b"/><rect x="226" y="24" width="78" height="38" class="ink fill-b"/><rect x="304" y="24" width="80" height="38" class="ink-k fill-y"/><rect x="384" y="24" width="170" height="38" class="ink-g fill-g"/><rect x="554" y="24" width="76" height="38" class="ink-r fill-r"/>
+      <path class="ink-r" d="M148,80 V88 H630 V80"/>
+    </g>
+    <text x="54" y="48" text-anchor="middle" class="bn s w6">প্রিঅ্যাম্বল</text><text x="123" y="48" text-anchor="middle" class="s w6">SFD</text><text x="187" y="48" text-anchor="middle" class="bn w6">গন্তব্য</text><text x="265" y="48" text-anchor="middle" class="bn w6">উৎস</text><text x="344" y="48" text-anchor="middle" class="w6">Type/Len</text><text x="469" y="48" text-anchor="middle" class="bn g w6">ডেটা + প্যাড</text><text x="592" y="48" text-anchor="middle" class="r w6">FCS</text>
+    <text x="54" y="16" text-anchor="middle" class="s">7 B</text><text x="123" y="16" text-anchor="middle" class="s">1 B</text><text x="187" y="16" text-anchor="middle" class="s">6 B</text><text x="265" y="16" text-anchor="middle" class="s">6 B</text><text x="344" y="16" text-anchor="middle" class="s">2 B</text><text x="469" y="16" text-anchor="middle" class="s">46–1500 B</text><text x="592" y="16" text-anchor="middle" class="s">4 B (CRC-32)</text>
+    <text x="389" y="106" text-anchor="middle" class="bn r s w6">ফ্রেম = 64 থেকে 1518 বাইট (VLAN ট্যাগসহ 1522)</text>
+    <text x="78" y="84" text-anchor="middle" class="bn s">PHY যোগ করে</text>
+  </svg></figure>
+  <ul class="dash small">
+    <li>প্রিঅ্যাম্বল 10101010 × 7, SFD <b>10101011</b> (ফ্রেমের আকারে গণ্য নয়); 46 B-এর কম ডেটা হলে <b>প্যাড</b> করা হয়; ফ্রেমের মাঝে ফাঁক 96 বিট-টাইম। Type ≥ 0x0600 → <b>EtherType</b> (0800 IPv4, 0806 ARP, 86DD IPv6); ≤ 1500 → দৈর্ঘ্য।</li>
+    <li><b>MAC অ্যাড্রেস</b> <span class="circ">48 বিট</span>: প্রথম 24 বিট = <b>OUI</b> (নির্মাতা); প্রথম বাইটের LSB: 0 ইউনিকাস্ট, 1 মাল্টিকাস্ট; ব্রডকাস্ট <b>FF-FF-FF-FF-FF-FF</b>।</li>
+  </ul>
+  <p class="small"><b>মাধ্যম:</b> 10Base5 মোটা কোঅ্যাক্স 500 m · 10Base2 চিকন কোঅ্যাক্স 185 m · 10Base-T UTP 100 m · 10Base-F 2 km (ম্যানচেস্টার) · ফাস্ট ইথারনেট 802.3u: <span class="hl">100Base-TX</span> Cat 5, 100 m, 4B/5B + MLT-3 · 100Base-FX ফাইবার 2 km · 100Base-T4 Cat 3, 8B/6T।</p>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ন্যূনতম ফ্রেম <b>64 B</b>, ন্যূনতম ডেটা <b>46 B</b>; সর্বোচ্চ ফ্রেম 1518 B, MTU 1500 B। ফাস্ট ইথারনেটেও 64-বাইট ন্যূনতম সীমা থাকে।</div>
+  <div class="mnote">গিগাবিট ইথারনেট: অথেনটিকেশন ও DNS লেসনে</div>
+
+  <h2><span class="no">১৭</span>হাব, ব্রিজ, সুইচ ও VLAN</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">ডিভাইস</th><th>স্তর</th><th class="l">যার ভিত্তিতে পাঠায়</th><th>কলিশন ডোমেইন</th><th>ব্রডকাস্ট ডোমেইন</th></tr>
+    <tr><td class="l">রিপিটার / <b>হাব</b></td><td>1</td><td class="l">কিছু না: সব পোর্টে পুনরাবৃত্তি</td><td>সব পোর্টে 1টি</td><td>1</td></tr>
+    <tr><td class="l"><b>ব্রিজ</b> / <b>সুইচ</b></td><td>2</td><td class="l">MAC অ্যাড্রেস</td><td>প্রতি পোর্টে 1টি</td><td>1 (প্রতি VLAN-এ)</td></tr>
+    <tr><td class="l"><b>রাউটার</b> / L3 সুইচ</td><td>3</td><td class="l">IP অ্যাড্রেস</td><td>প্রতি পোর্টে 1টি</td><td><span class="circ">প্রতি পোর্টে 1টি</span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:228px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 320 170" width="224">
+      <g class="w">
+        <rect x="110" y="64" width="100" height="42" rx="6" class="ink-k fill-y"/>
+        <path class="ink" d="M58,34 L112,70 M58,140 L112,100 M262,34 L208,70 M262,140 L208,100"/>
+        <rect x="14" y="16" width="44" height="30" rx="5" class="ink fill-b"/><rect x="14" y="126" width="44" height="30" rx="5" class="ink fill-b"/><rect x="262" y="16" width="44" height="30" rx="5" class="ink fill-b"/><rect x="262" y="126" width="44" height="30" rx="5" class="ink fill-b"/>
+      </g>
+      <text x="160" y="90" text-anchor="middle" class="bn k w6">সুইচ</text>
+      <text x="36" y="36" text-anchor="middle" class="w6">A</text><text x="36" y="146" text-anchor="middle" class="w6">B</text><text x="284" y="36" text-anchor="middle" class="w6">C</text><text x="284" y="146" text-anchor="middle" class="w6">D</text>
+      <text x="96" y="52" class="r s">1</text><text x="96" y="126" class="r s">2</text><text x="218" y="52" class="r s">3</text><text x="218" y="126" class="r s">4</text>
+      <text x="160" y="20" text-anchor="middle" class="bn g s">শেখে: উৎস MAC → পোর্ট</text>
+      <text x="160" y="160" text-anchor="middle" class="bn p s">অজানা গন্তব্য → ফ্লাড</text>
+    </svg></figure>
+    <p class="small"><b>ট্রান্সপারেন্ট ব্রিজ</b> (802.1D): প্রতিটি <b>উৎস</b> MAC → পোর্টের <span class="hl">ব্যাকওয়ার্ড লার্নিং</span>; তারপর জানা পোর্টে <b>ফরোয়ার্ড</b>, একই পোর্ট হলে <b>ফিল্টার</b>, অজানা/ব্রডকাস্ট হলে <b>ফ্লাড</b>। সুইচিং মোড: <b>store-and-forward</b> (CRC যাচাই) · <b>cut-through</b> (গন্তব্য MAC পড়েই) · <b>fragment-free</b> (প্রথম 64 B)।</p>
+  </div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">STP (802.1D)</span> লুপ থেকে <b>ব্রডকাস্ট স্টর্ম</b> হয়; STP একটি <span class="hl">রুট ব্রিজ</span> বাছে (সবচেয়ে কম প্রায়োরিটি + MAC) এবং কিছু পোর্ট ব্লক করে → একটি লুপমুক্ত ট্রি। RSTP = 802.1w।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">VLAN (802.1Q)</span> সফটওয়্যারে তৈরি <span class="hl">ব্রডকাস্ট ডোমেইন</span>। 4-বাইট ট্যাগ: TPID 8100, PCP 3, DEI 1, VID 12 বিট → <span class="circ">4094</span>; ট্রাংক ট্যাগ বহন করে।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> রাউটার → সুইচ (৪টি PC) এবং → হাব (৩টি PC)। কলিশন ডোমেইন = সুইচের ৫টি পোর্ট + হাবের ১টি = <span class="circ">6</span>; ব্রডকাস্ট ডোমেইন = <span class="circ">2</span>।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>PDU: বিট → ফ্রেম → প্যাকেট → সেগমেন্ট</p><p>DLL যোগ করে হেডার + ট্রেইলার (FCS)</p>
+      <p>বিট স্টাফিং: পাঁচটি 1-এর পর 0 · ফ্ল্যাগ 7E</p><p>PPP এস্কেপ 7D, বাইট ⊕ 20 · SLIP C0</p>
+      <p>প্যারিটি: শুধু বিজোড়-সংখ্যক ত্রুটি ধরে</p><p>CRC: ঘাত r → r টি শূন্য, বার্স্ট ≤ r</p>
+      <p>s টি শনাক্ত: d<sub>min</sub> ≥ s + 1</p><p>t টি সংশোধন: d<sub>min</sub> ≥ 2t + 1</p>
+      <p>হ্যামিং: 2<sup>r</sup> ≥ m + r + 1</p><p>m = 4 → 3 · 7 → 4 · 8 → 4 · 16 → 5</p>
+      <p>a = Tp / Tt · S&amp;W η = 1/(1 + 2a)</p><p>উইন্ডো η = W/(1 + 2a); W ≥ 1 + 2a</p>
+      <p>GBN W ≤ 2ᵐ − 1 · SR W ≤ 2ᵐ⁻¹</p><p>HDLC NRM · ARM · ABM; I/S/U</p>
+      <p>S-ফ্রেম RR 00 · REJ 01 · RNR 10 · SREJ 11</p><p>ATM 53 = 5 + 48; HEC = CRC-8</p>
+      <p>Pure ALOHA 18.4%, G = 0.5-এ</p><p>Slotted ALOHA 36.8%, G = 1-এ</p>
+      <p>CSMA/CD: L<sub>min</sub> = 2 · Tp · B</p><p>ব্যাক-অফ 0 … 2^min(n,10) − 1; 16-এ হাল ছাড়ে</p>
+      <p>ইথারনেট 64–1518 B, ডেটা 46–1500</p><p>MAC 48 বিট, OUI 24 · ব্রডকাস্ট FF…FF</p>
+      <p>SIFS &lt; PIFS &lt; DIFS · RTS/CTS</p><p>FDDI 100 Mbps দ্বৈত রিং (ANSI)</p>
+      <p>802.3 · 802.5 · 802.11 · 802.1Q</p><p>VLAN ট্যাগ 4 B, VID 12 বিট, 4094</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>MAC অ্যাড্রেস = 48 বিট</li>
+      <li>ইথারনেট = IEEE 802.3, Wi-Fi = 802.11</li>
+      <li>টোকেন রিং = 802.5, টোকেন বাস = 802.4</li>
+      <li>HDLC বিট-ভিত্তিক; PPP বাইট-ভিত্তিক</li>
+      <li>3-বিট সিকোয়েন্স: GBN উইন্ডো 7, SR 4</li>
+      <li>Wi-Fi-তে CSMA/CA, CSMA/CD নয়</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>হাব L1 · ব্রিজ, সুইচ L2 · রাউটার L3</li>
+      <li>রাউটার ব্রডকাস্ট ডোমেইন আলাদা করে</li>
+      <li>ATM-এর HEC শুধু হেডার রক্ষা করে</li>
+      <li>CHAP: ৩-ধাপ, সিক্রেট পাঠানো হয় না</li>
+      <li>STP = 802.1D; VLAN = 802.1Q</li>
+      <li>ফাস্ট ইথারনেট 802.3u, 100Base-TX</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> CRC-র শূন্য = ঘাত, জেনারেটরের দৈর্ঘ্য নয় · N(R) = পরবর্তী প্রত্যাশিত ফ্রেম · হ্যামিং (7, 4) ১টি সংশোধন <b>অথবা</b> ২টি শনাক্ত · পরের বিট 0 হলেও 0 স্টাফ হয় · ফুল-ডুপ্লেক্স ইথারনেটে CSMA/CD নেই · ন্যূনতম ফ্রেম 64 B বনাম ন্যূনতম ডেটা 46 B · FDDI ANSI-র, IEEE-র নয়</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> পাঁচটি এক, তারপর শূন্য · প্যারিটি বিট 2-এর ঘাতে · GBN একটি কম সব, SR অর্ধেক · I-S-U = 0, 10, 11 · 5 + 48 = 53 · তারযুক্ত Detect, তারহীন Avoid · ছোট অপেক্ষাই জেতে (SIFS) · হাব সবাইকে শোনায়, সুইচ কলিশন ভাগ করে, রাউটার ব্রডকাস্ট ভাগ করে</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="60" width="130" height="30" rx="8" class="ink fill-b"/>
+      <rect x="160" y="40" width="130" height="50" rx="8" class="ink-g fill-g"/>
+      <rect x="310" y="20" width="130" height="70" rx="8" class="ink-p fill-p"/>
+      <rect x="460" y="4" width="130" height="86" rx="8" class="ink-r fill-r"/>
+    </g>
+    <text x="75" y="80" text-anchor="middle" class="bn w6">L1: হাব</text>
+    <text x="225" y="70" text-anchor="middle" class="bn g w6">L2: সুইচ</text><text x="225" y="86" text-anchor="middle" class="bn g s">ফ্রেম · MAC</text>
+    <text x="375" y="52" text-anchor="middle" class="bn p w6">L3: রাউটার</text><text x="375" y="70" text-anchor="middle" class="bn p s">প্যাকেট · IP</text>
+    <text x="525" y="38" text-anchor="middle" class="bn r w6">গেটওয়ে</text><text x="525" y="56" text-anchor="middle" class="bn r s">সব স্তর,</text><text x="525" y="72" text-anchor="middle" class="bn r s">প্রোটোকল রূপান্তর</text>
+  </svg><figcaption>ডিভাইসের সিঁড়ি: প্রতি ধাপে আরও একটি হেডার পড়া হয়</figcaption></figure>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ডেটা লিংক ও LAN</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>4-বিট সিকোয়েন্স নম্বরসহ Go-Back-N-এ প্রেরকের সর্বোচ্চ উইন্ডো?<ol class="opts"><li>16</li><li>8</li><li>15</li><li>7</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>Pure ALOHA-র সর্বোচ্চ থ্রুপুট:<ol class="opts"><li>18.4%</li><li>36.8%</li><li>50%</li><li>100%</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>HDLC-র বিট স্টাফিংয়ে 0 ঢোকানো হয়:<ol class="opts"><li>চারটি 1-এর পর</li><li>ছয়টি 1-এর পর</li><li>আটটি 1-এর পর</li><li>পরপর পাঁচটি 1-এর পর</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>ATM সেলের HEC ফিল্ড রক্ষা করে:<ol class="opts"><li>48-বাইট পেলোড</li><li>শুধু সেল হেডার</li><li>পুরো 53-বাইট সেল</li><li>AAL ট্রেইলার</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>ইথারনেট ফ্রেমের ন্যূনতম আকার:<ol class="opts"><li>64 বাইট</li><li>46 বাইট</li><li>512 বাইট</li><li>1518 বাইট</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>কোন ডিভাইস ব্রডকাস্ট ডোমেইন আলাদা করে?<ol class="opts"><li>হাব</li><li>সুইচ</li><li>রাউটার</li><li>ব্রিজ</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>7টি ডেটা বিটের জন্য হ্যামিং চেক বিট লাগে:<ol class="opts"><li>3</li><li>5</li><li>7</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>IEEE 802.11-এর মিডিয়াম অ্যাক্সেস পদ্ধতি:<ol class="opts"><li>CSMA/CD</li><li>CSMA/CA</li><li>টোকেন পাসিং</li><li>Pure ALOHA</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>IEEE 802.1Q সংজ্ঞায়িত করে:<ol class="opts"><li>স্প্যানিং ট্রি</li><li>LLC</li><li>VLAN ট্যাগিং</li><li>টোকেন রিং</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>লিংক স্থাপন ও বিচ্ছিন্ন করতে ব্যবহৃত HDLC ফ্রেম:<ol class="opts"><li>U-ফ্রেম</li><li>I-ফ্রেম</li><li>S-ফ্রেম</li><li>P-ফ্রেম</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-ঘ · ৪-খ · ৫-ক · ৬-গ · ৭-ঘ · ৮-খ · ৯-গ · ১০-ক</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> একটি 1 Mbps স্যাটেলাইট লিংকের একমুখী প্রোপাগেশন ডিলে 270 ms এবং এতে 1000-বিটের ফ্রেম যায়। নির্ণয় করো (i) স্টপ-অ্যান্ড-ওয়েটে লিংকের ব্যবহার, (ii) পূর্ণ ব্যবহারের জন্য উইন্ডোর আকার, (iii) Go-Back-N ও Selective Repeat-এর জন্য ন্যূনতম সিকোয়েন্স-নম্বর বিট। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>Tt = L/B = 1000 / 10⁶ = 1 ms; a = Tp/Tt = 270 <i class="mk">১</i></li>
+    <li>স্টপ-অ্যান্ড-ওয়েট η = 1/(1 + 2a) = 1/541 ≈ <span class="circ">0.18%</span> (থ্রুপুট ≈ 1.85 kbps) <i class="mk">২</i></li>
+    <li>পূর্ণ ব্যবহার: W ≥ 1 + 2a = <b>541 ফ্রেম</b> (ব্যান্ডউইথ × RTT = 541 000 বিট) <i class="mk">২</i></li>
+    <li>GBN: 2ᵐ − 1 ≥ 541 → <b>m = 10</b> (উইন্ডো 1023)। SR: 2ᵐ⁻¹ ≥ 541 → <b>m = 11</b> (উইন্ডো 1024) <i class="mk">৩</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>প্রতি স্তরের PDU, অ্যাড্রেস ও ডিভাইস বলতে পারি</li>
+        <li>বিট স্টাফিং ও বাইট স্টাফিং করতে পারি</li>
+        <li>CRC ও হ্যামিং (7, 4) কোড বের করতে পারি</li>
+        <li>কলিশন ও ব্রডকাস্ট ডোমেইন গুনতে পারি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① G = 1011 দিয়ে 1101-এর CRC<br>② HDLC-র মোড ও ফ্রেমের ধরন<br>③ 1 Gbps, 1 km-এ CSMA/CD-র ন্যূনতম ফ্রেম<br>④ হিডেন স্টেশন ও RTS/CTS</div>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>
