@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memory Hierarchy: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Memory Hierarchy</span></h1>
+  <p class="subtitle">Locality · RAM/ROM · Cache mapping · VM/TLB · Disk: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">MEMORY HIERARCHY</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Pyramid: speed · cost</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Access time ★</text>
+      <text x="500" y="65" text-anchor="middle">SRAM · DRAM · ROM</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Locality ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Tag · Index · Offset ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Replace · write policy</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Disk access time ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">VM · TLB · RAID</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = policy / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① fastest = registers<br>② temporal vs spatial<br>③ SRAM cache, DRAM main<br>④ T = h·Tc + (1−h)(Tc+Tm)<br>⑤ tag/index/offset bits<br>⑥ write-back + dirty bit<br>⑦ seek + latency + transfer</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Computer Architecture: … Processor design … Pipeline … <span class="hl">Memory organization: cache, virtual memory</span>, channels." Microprocessor paper: "<span class="hl">Memory Interfacing</span>". This notebook covers the hierarchy, semiconductor memory, capacity and interleaving, cache design and secondary storage; CPU, pipelining and CPI are in the CPU Organization notes, paging algorithms in the Operating Systems chapter.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Hierarchy pyramid &amp; locality ……… p. 2</li><li>SRAM, DRAM &amp; ROM types ……… p. 3</li><li>Capacity, chips, interleaving ……… p. 4</li><li>Cache basics &amp; access time ……… p. 5</li><li>Mapping: tag / index / offset … p. 6</li></ul>
+    <ul class="tick"><li>Mapping examples, replacement … p. 7</li><li>Write policy, 3 Cs, multilevel … p. 8</li><li>Virtual memory, TLB, disk, RAID … p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: hierarchy & locality ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Pyramid &amp; locality</span></div>
+  <h2><span class="no">1</span>Why a Memory Hierarchy?</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> Memory built as <span class="hl">levels</span>, each smaller, faster and <b>costlier per bit</b> than the one below. Thanks to locality the system runs at <span class="hl">nearly the speed of the fastest level at nearly the cost of the cheapest</span>.</div>
+  <div class="cols" style="grid-template-columns:350px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 370 230" width="345">
+      <g class="w">
+        <path d="M185,6 L222,40 L148,40 Z" class="ink-r fill-r"/>
+        <rect x="132" y="44" width="106" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="104" y="76" width="162" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="76" y="108" width="218" height="28" rx="5" class="ink fill-b"/>
+        <rect x="50" y="140" width="270" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="26" y="172" width="318" height="28" rx="5" class="ink-p fill-p"/>
+        <path class="ink-r" d="M12,198 V14" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M358,14 V198" marker-end="url(#ahg)"/>
+      </g>
+      <text x="185" y="35" text-anchor="middle" class="s r w6">Reg</text>
+      <text x="185" y="63" text-anchor="middle" class="s r w6">L1 cache</text>
+      <text x="185" y="95" text-anchor="middle" class="s r w6">L2 · L3 cache (SRAM)</text>
+      <text x="185" y="127" text-anchor="middle" class="s w6">Main memory (DRAM)</text>
+      <text x="185" y="159" text-anchor="middle" class="s g w6">SSD / HDD (secondary)</text>
+      <text x="185" y="191" text-anchor="middle" class="s p w6">Tape · optical (tertiary)</text>
+      <text x="185" y="222" text-anchor="middle" class="s">primary = what the CPU addresses directly (top 4)</text>
+    </svg><figcaption>red ↑ faster, costlier/bit · green ↓ bigger, cheaper</figcaption></figure>
+    <div class="small">
+      <p><b>Going DOWN</b> the pyramid:</p>
+      <ul class="dash">
+        <li>capacity <span class="circ">↑</span></li>
+        <li>access time ↑ (slower)</li>
+        <li>cost per bit ↓</li>
+        <li>frequency of access by the CPU ↓</li>
+      </ul>
+      <p>Properties: <span class="hl">inclusion</span> (level i ⊂ level i+1), <b>coherence</b> (copies agree), <b>locality</b>. 90/10 rule: ≈ <span class="circ">90%</span> of time is spent in 10% of the code.</p>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Level</th><th>Typical size</th><th>Access time</th><th>Built from</th><th class="l">Managed by</th></tr>
+    <tr><td class="l">Registers</td><td>&lt; 1 KB</td><td class="red"><b>&lt; 1 ns (1 cycle)</b></td><td>flip-flops</td><td class="l">compiler</td></tr>
+    <tr><td class="l">L1 / L2 / L3</td><td>32 K / 1 M / 32 MB</td><td>1 / 4 / 15 ns</td><td>SRAM</td><td class="l">hardware</td></tr>
+    <tr><td class="l">Main memory</td><td>8 – 64 GB</td><td>50 – 100 ns</td><td>DRAM</td><td class="l">OS</td></tr>
+    <tr><td class="l">SSD / HDD</td><td>0.5 – 20 TB</td><td>0.1 ms / 5 – 10 ms</td><td>flash / disk</td><td class="l">OS</td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">Exam trap</span> Fastest = <b>registers</b>, not cache. RAM ≈ <b>150 – 300 cycles</b> at 3 GHz.</div>
+
+  <h2><span class="no">2</span>Locality of Reference</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">Temporal</span> an item used now is <span class="hl">used again soon</span> (loop counter, <i>sum</i>, loop code). Exploited by <b>keeping</b> recent items (LRU).</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Spatial</span> <span class="hl">nearby addresses</span> are used soon (arrays, sequential code). Exploited by fetching a whole <b>block</b> (64 B) and prefetching.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div>
+      <div class="code">sum = 0;
+for (i = 0; i &lt; n; i++)
+    sum += a[i];   /* a[i]: spatial */
+                   /* sum, i: temporal */</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 100" width="285">
+      <g class="w">
+        <rect x="10" y="30" width="270" height="30" class="ink-k"/>
+        <path class="ink-k" d="M40,30V60M70,30V60M100,30V60M130,30V60M160,30V60M190,30V60M220,30V60M250,30V60" style="stroke-width:1.2"/>
+        <rect x="70" y="30" width="120" height="30" class="ink-g fill-g"/>
+        <path class="ink-r" d="M235,26 C225,2 255,2 245,26" marker-end="url(#ah)"/>
+      </g>
+      <text x="130" y="82" text-anchor="middle" class="g s w6">a[0..3]: one block (spatial)</text>
+      <text x="226" y="80" class="r s">reused</text><text x="226" y="94" class="r s">(temporal)</text>
+    </svg><figcaption>one miss brings the neighbours too</figcaption></figure>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> <b>T</b>emporal = same <b>T</b>hing, again in <b>T</b>ime. <b>S</b>patial = <b>S</b>urrounding <b>S</b>pace. C is row-major: loop <i>a[i][j]</i> with <b>j inside</b>.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: SRAM, DRAM, ROM ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Semiconductor memory</span></div>
+  <h2><span class="no">3</span>RAM: SRAM vs DRAM</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l"></th><th>SRAM</th><th>DRAM</th></tr>
+      <tr><td class="l">Cell</td><td><b>6T</b> flip-flop</td><td><b>1T + 1C</b></td></tr>
+      <tr><td class="l">Refresh</td><td>none</td><td class="red"><b>every ≈ 64 ms</b></td></tr>
+      <tr><td class="l">Speed</td><td>faster</td><td>slower</td></tr>
+      <tr><td class="l">Density</td><td>low</td><td>high</td></tr>
+      <tr><td class="l">Cost / bit</td><td>high</td><td>low</td></tr>
+      <tr><td class="l">Read</td><td>non-destructive</td><td>destructive</td></tr>
+      <tr><td class="l">Used as</td><td class="red"><b>cache</b></td><td class="red"><b>main memory</b></td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 290 190" width="280">
+      <g class="w">
+        <path d="M30,40 L30,80 L62,60 Z" class="ink fill-b"/><circle cx="66" cy="60" r="4" class="ink"/>
+        <path d="M110,80 L110,40 L78,60 Z" class="ink fill-b"/>
+        <path class="ink" d="M70,60 H90 M20,60 H30 M110,60 H120 M20,60 V26 H120 V60"/>
+        <path class="ink-k" d="M175,40 V70 M165,70 H185 M175,70 V95 M160,95 H190 M160,103 H190 M175,103 V120 M168,120 H182" />
+        <path class="ink-k" d="M150,40 H200"/>
+        <rect x="160" y="88" width="30" height="22" class="ink-r" style="fill:none;stroke-dasharray:3 3"/>
+      </g>
+      <text x="70" y="104" text-anchor="middle" class="s w6">SRAM: 2 cross-coupled</text>
+      <text x="70" y="120" text-anchor="middle" class="s w6">inverters (+2 access)</text>
+      <text x="215" y="44" class="s">word line</text>
+      <text x="196" y="106" class="r s">C: charge</text>
+      <text x="175" y="146" text-anchor="middle" class="s w6">DRAM: 1T + 1C</text>
+      <text x="145" y="176" text-anchor="middle" class="r s">charge leaks → refresh; "static" = no refresh</text>
+    </svg></figure>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> "Static" does <b>not</b> mean non-volatile: SRAM and DRAM <b>both lose data</b> when power goes. DRAM's row and column addresses share pins (multiplexed with <b>RAS / CAS</b>), so a 1M × 1 DRAM needs only 10 address pins, not 20.</div>
+  <p class="small"><b>DRAM family:</b> asynchronous DRAM → FPM → EDO → <span class="hl">SDRAM</span> (clocked) → <span class="hl">DDR</span> (data on <b>both clock edges</b>) → DDR2 / 3 / 4 / 5. Peak rate = transfers/s × bus width: DDR4-3200 on a 64-bit (8 B) channel = 3200 × 10⁶ × 8 B = <span class="circ">25.6 GB/s</span>.</p>
+
+  <div class="mnote">SRAM → cache, DRAM → main memory</div>
+  <h2><span class="no">4</span>ROM Family (Non-volatile)</h2>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Type</th><th class="l">Written</th><th class="l">Erased</th><th class="l">Typical use</th></tr>
+    <tr><td class="l">Mask ROM</td><td class="l">by the maker (mask)</td><td class="l">never</td><td class="l">mass-produced code</td></tr>
+    <tr><td class="l">PROM (OTP)</td><td class="l">once by user (fuses)</td><td class="l">never</td><td class="l">small-run firmware</td></tr>
+    <tr><td class="l">EPROM</td><td class="l">user, in a programmer</td><td class="l"><span class="circ">UV light</span>, whole chip</td><td class="l">prototypes (window)</td></tr>
+    <tr><td class="l">EEPROM</td><td class="l">electrically, in circuit</td><td class="l">electrically, <b>per byte</b></td><td class="l">settings, serial numbers</td></tr>
+    <tr><td class="l">Flash</td><td class="l">electrically, in circuit</td><td class="l">electrically, <b>per block</b></td><td class="l">UEFI/BIOS, SSD, USB</td></tr>
+  </table>
+  <div class="cols">
+    <div class="small"><p><b>NOR flash</b>: random byte read, execute-in-place → firmware. <b>NAND flash</b>: denser, page read / block erase → SSDs, cards; limited erase cycles (wear levelling).</p></div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> EPROM = <b>E</b>rase with <b>P</b>hotons (UV). EEPROM: extra E = <b>E</b>lectrically. Flash erases a whole block "in a flash".</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> ROM is also <b>random access</b> ("RAM" really means read/write memory), and ROM is primary but non-volatile. Access methods: <b>random</b> (RAM, ROM) · <b>sequential</b> (tape) · <b>direct</b> (disk) · <b>associative</b>, by content (cache tags, TLB).</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: organisation, capacity, interleaving ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Capacity &amp; interleaving</span></div>
+  <h2><span class="no">5</span>Memory Organisation &amp; Capacity Maths</h2><span class="tag">calculation</span>
+  <div class="sumbox"><span class="lbl">Key formulas</span> <b>2ⁿ words × m bits</b> → <span class="circ">n address lines</span>, <span class="circ">m data lines</span> · chips = (words ÷ chip words) × (width ÷ chip width) · address bits = log₂(<b>addressable units</b>)</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Width (word-size) expansion</span> chips side by side share <b>all</b> address lines; each supplies some data bits (two 1K × 4 → 1K × 8).</div>
+      <div class="def small"><span class="lbl">Depth (word-count) expansion</span> extra high-order address bits go to a <span class="hl">decoder</span> whose outputs drive the chips' <b>chip select (CS)</b>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="295">
+      <g class="w">
+        <rect x="120" y="10" width="70" height="34" rx="4" class="ink fill-b"/><rect x="200" y="10" width="70" height="34" rx="4" class="ink fill-b"/>
+        <rect x="120" y="60" width="70" height="34" rx="4" class="ink fill-b"/><rect x="200" y="60" width="70" height="34" rx="4" class="ink fill-b"/>
+        <rect x="120" y="110" width="70" height="34" rx="4" class="ink fill-b"/><rect x="200" y="110" width="70" height="34" rx="4" class="ink fill-b"/>
+        <rect x="20" y="50" width="56" height="70" rx="4" class="ink-r fill-r"/>
+        <path class="ink-r" d="M76,62 H110 V27 H120 M76,85 H120 M76,108 H110 V127 H120" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M100,160 H285" />
+      </g>
+      <text x="155" y="32" text-anchor="middle" class="s">1K×4</text><text x="235" y="32" text-anchor="middle" class="s">1K×4</text>
+      <text x="155" y="82" text-anchor="middle" class="s">1K×4</text><text x="235" y="82" text-anchor="middle" class="s">1K×4</text>
+      <text x="155" y="132" text-anchor="middle" class="s">⋮</text><text x="235" y="132" text-anchor="middle" class="s">⋮</text>
+      <text x="48" y="80" text-anchor="middle" class="r s w6">4-to-16</text><text x="48" y="96" text-anchor="middle" class="r s w6">decoder</text>
+      <text x="48" y="140" text-anchor="middle" class="r s">A13–A10</text>
+      <text x="190" y="156" text-anchor="middle" class="g s">A9–A0 to every chip</text>
+    </svg><figcaption>16K × 8 from 1K × 4: 16 rows × 2 chips</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span>
+    <ol class="steps">
+      <li>A 4K × 8 chip: 4K = 2¹² → <b>12</b> address lines, <b>8</b> data lines; capacity 32 Kbit = 4 KB</li>
+      <li>16K × 8 memory from 1K × 4 chips: (16K / 1K) × (8 / 4) = 16 × 2 = <span class="circ">32 chips</span>; 14 address lines: A9–A0 to every chip, A13–A10 into a <b>4-to-16 decoder</b></li>
+      <li>64 MB, byte-addressable: 2²⁶ bytes → <b>26</b> address bits. Same memory, 32-bit (4-byte) words, word-addressable: 2²⁴ words → <b>24</b> bits</li>
+      <li>32-bit byte address → 2³² B = <b>4 GB</b>; 8086 (20 lines) → 1 MB</li>
+    </ol></div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Check <b>byte</b>- vs <b>word</b>-addressable before taking log₂.</div>
+
+  <h2><span class="no">6</span>Memory Interleaving</h2>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div class="small">
+      <ul class="dash">
+        <li><b>k modules (banks)</b> work in parallel</li>
+        <li><span class="hl">Low-order</span>: low address bits pick the module (address mod k); consecutive words in <b>different</b> modules → a block is fetched in parallel</li>
+        <li><b>High-order</b>: high bits pick the module; consecutive words in the <b>same</b> module → easy expansion, no speed-up</li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 130" width="285">
+      <g class="w">
+        <rect x="10" y="30" width="62" height="80" rx="4" class="ink fill-b"/><rect x="80" y="30" width="62" height="80" rx="4" class="ink fill-b"/>
+        <rect x="150" y="30" width="62" height="80" rx="4" class="ink fill-b"/><rect x="220" y="30" width="62" height="80" rx="4" class="ink fill-b"/>
+      </g>
+      <text x="41" y="22" text-anchor="middle" class="r s w6">M0</text><text x="111" y="22" text-anchor="middle" class="r s w6">M1</text><text x="181" y="22" text-anchor="middle" class="r s w6">M2</text><text x="251" y="22" text-anchor="middle" class="r s w6">M3</text>
+      <text x="41" y="56" text-anchor="middle" class="s">0, 4</text><text x="111" y="56" text-anchor="middle" class="s">1, 5</text><text x="181" y="56" text-anchor="middle" class="s">2, 6</text><text x="251" y="56" text-anchor="middle" class="s">3, 7</text>
+      <text x="41" y="80" text-anchor="middle" class="s">8 …</text><text x="111" y="80" text-anchor="middle" class="s">9 …</text><text x="181" y="80" text-anchor="middle" class="s">10 …</text><text x="251" y="80" text-anchor="middle" class="s">11 …</text>
+      <text x="146" y="126" text-anchor="middle" class="g s">module = 2 lowest address bits</text>
+    </svg><figcaption>4-way low-order interleaving</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> 4-word block; 1 cycle to send the address, 15 cycles per DRAM access, 1 cycle per word on the bus. One-word-wide memory: 1 + 4 × 15 + 4 × 1 = <b>65 cycles</b>. 4-bank interleaved: 1 + 15 + 4 × 1 = <span class="circ">20 cycles</span> (3.25× faster miss penalty).</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: cache basics & access time ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Cache &amp; access time</span></div>
+  <h2><span class="no">7</span>Cache Memory: the Basics</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A small, fast <span class="hl">SRAM</span> memory between the CPU and main memory that holds copies of recently used <b>blocks</b> (lines). Invisible to the programmer: managed entirely by hardware.</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <ul class="dash small">
+      <li><b>Block / line</b>: the unit moved between cache and memory (typ. 64 B)</li>
+      <li><b>Hit</b>: word found in cache · <b>Miss</b>: not found → fetch the block</li>
+      <li><span class="hl">Hit ratio h = hits / (hits + misses)</span>; miss ratio = 1 − h</li>
+      <li><b>Hit time</b> (Tc) · <b>miss penalty</b> (time to bring the block)</li>
+      <li>Each line stores a <b>tag</b> (which block is here), a <b>valid bit</b>, and a <b>dirty bit</b> for write-back</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="295">
+      <g class="w">
+        <rect x="8" y="60" width="56" height="44" rx="6" class="ink-k fill-y"/>
+        <rect x="112" y="60" width="74" height="44" rx="6" class="ink-r fill-r"/>
+        <rect x="232" y="60" width="62" height="44" rx="6" class="ink fill-b"/>
+        <path class="ink-g" d="M64,72 H110" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M110,92 H66" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M186,72 H230" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M230,92 H188" marker-end="url(#ah)"/>
+      </g>
+      <text x="36" y="87" text-anchor="middle" class="w6">CPU</text><text x="149" y="87" text-anchor="middle" class="r w6">Cache</text><text x="263" y="80" text-anchor="middle" class="w6">Main</text><text x="263" y="96" text-anchor="middle" class="s">memory</text>
+      <text x="87" y="52" text-anchor="middle" class="g s">word</text><text x="87" y="124" text-anchor="middle" class="g s">hit: ≈ 1 ns</text>
+      <text x="208" y="52" text-anchor="middle" class="r s">block</text><text x="208" y="124" text-anchor="middle" class="r s">miss: ≈ 100 ns</text>
+      <text x="150" y="156" text-anchor="middle" class="s">CPU ↔ cache: words · cache ↔ RAM: blocks</text>
+    </svg></figure>
+  </div>
+
+  <h2><span class="no">8</span>Average Access Time: Which Formula?</h2><span class="tag">very high-yield</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Organisation</th><th>A miss costs</th><th class="l">Formula</th></tr>
+    <tr><td class="l"><b>Hierarchical</b> (look-through)</td><td>Tc + Tm</td><td class="l"><span class="hl"><b>T = h·Tc + (1 − h)(Tc + Tm)</b></span></td></tr>
+    <tr><td class="l"><b>Simultaneous</b> (parallel)</td><td>Tm only</td><td class="l">T = h·Tc + (1 − h)·Tm</td></tr>
+    <tr><td class="l"><b>AMAT</b> (Hennessy–Patterson)</td><td>miss penalty</td><td class="l">AMAT = hit time + miss rate × miss penalty</td></tr>
+  </table>
+  <p class="small">Hierarchical: the cache is checked first, then memory. Simultaneous: both are started together. Hierarchical simplifies to Tc + (1 − h)·Tm, the AMAT form with penalty = Tm. <b>Default</b> when the question is silent: <span class="hl">hierarchical</span>, but check whether the options hold the simultaneous answer.</p>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span>
+    <ol class="steps">
+      <li>Tc = 10 ns, Tm = 100 ns, h = 0.9: hierarchical 0.9 × 10 + 0.1 × 110 = <span class="circ">20 ns</span>; simultaneous 9 + 10 = <b>19 ns</b>; speed-up = 100 / 20 = <b>5</b></li>
+      <li>Classic: Tc = 100 ns, Tm = 1000 ns, h = 0.9 → hierarchical <b>200 ns</b> (simultaneous 190 ns)</li>
+      <li>AMAT: hit 1 ns, miss rate 5%, penalty 100 ns → 1 + 0.05 × 100 = <b>6 ns</b></li>
+      <li>Find h: Tc = 5, Tm = 80, target 9 ns: 9 = 5 + (1 − h) × 80 → <b>h = 0.95</b></li>
+      <li>CPI (see CPU Organization): base 1, 1.3 accesses / instr., miss 2%, penalty 100 → 1 + 1.3 × 0.02 × 100 = <b>3.6</b></li>
+    </ol></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Through</b>" the cache: a miss <b>pays both</b>, Tc + Tm. "<b>Side by side</b>": a miss pays Tm only.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Given the <b>miss</b> ratio (0.1)? Don't use it as h. Check: Tc ≤ T ≤ Tc + Tm.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: mapping ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Cache mapping</span></div>
+  <h2><span class="no">9</span>Cache Mapping Techniques</h2><span class="tag">very high-yield</span>
+  <p class="small">Mapping decides <b>where</b> a memory block may be placed in the cache, and so how the address is split. Let block size = B bytes, lines = L, associativity = k, sets S = L / k.</p>
+  <div class="cols3 small">
+    <div class="def" style="margin-top:0"><span class="lbl">Direct</span> block j → line <span class="circ">j mod L</span>. One place only, <b>one comparator</b>. Simple, fast; suffers <b>conflict misses</b> (thrashing).</div>
+    <div class="def" style="margin-top:0"><span class="lbl">Fully associative</span> block → <b>any</b> line; all tags compared <span class="hl">in parallel</span> (L comparators, CAM). No conflict misses; costly.</div>
+    <div class="def" style="margin-top:0"><span class="lbl">k-way set assoc.</span> block j → set <span class="circ">j mod S</span>, any of its k lines; k comparators. The compromise used in real CPUs.</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="20" y="20" width="240" height="30" class="ink-k"/><rect x="20" y="20" width="110" height="30" class="ink-r fill-r"/><rect x="130" y="20" width="80" height="30" class="ink fill-b"/><rect x="210" y="20" width="50" height="30" class="ink-g fill-g"/>
+      <rect x="20" y="66" width="240" height="30" class="ink-k"/><rect x="20" y="66" width="190" height="30" class="ink-r fill-r"/><rect x="210" y="66" width="50" height="30" class="ink-g fill-g"/>
+      <rect x="20" y="112" width="240" height="30" class="ink-k"/><rect x="20" y="112" width="125" height="30" class="ink-r fill-r"/><rect x="145" y="112" width="65" height="30" class="ink fill-b"/><rect x="210" y="112" width="50" height="30" class="ink-g fill-g"/>
+    </g>
+    <text x="75" y="41" text-anchor="middle" class="r w6">Tag</text><text x="170" y="41" text-anchor="middle" class="w6">Line</text><text x="235" y="41" text-anchor="middle" class="g w6">Offset</text>
+    <text x="115" y="87" text-anchor="middle" class="r w6">Tag</text><text x="235" y="87" text-anchor="middle" class="g w6">Offset</text>
+    <text x="82" y="133" text-anchor="middle" class="r w6">Tag</text><text x="177" y="133" text-anchor="middle" class="w6">Set</text><text x="235" y="133" text-anchor="middle" class="g w6">Offset</text>
+    <text x="275" y="41" class="w6">Direct: line = log₂ L bits</text>
+    <text x="275" y="87" class="w6">Fully associative: no index field</text>
+    <text x="275" y="133" class="w6">k-way: set = log₂ (L / k) bits</text>
+    <text x="275" y="16" class="g s">offset = log₂ B · tag = address bits − index − offset</text>
+  </svg><figcaption>the three address splits (higher associativity → longer tag, shorter index)</figcaption></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th>Direct</th><th>k-way set associative</th><th>Fully associative</th></tr>
+    <tr><td class="l">Places for a block</td><td>1</td><td>k</td><td>L (any)</td></tr>
+    <tr><td class="l">Tag comparators</td><td>1</td><td>k</td><td>L</td></tr>
+    <tr><td class="l">Conflict misses</td><td class="red"><b>most</b></td><td>fewer</td><td class="green"><b>none</b></td></tr>
+    <tr><td class="l">Hardware cost, hit time</td><td>lowest</td><td>medium</td><td>highest</td></tr>
+    <tr><td class="l">Replacement policy needed?</td><td><b>no</b> (no choice)</td><td>yes, within the set</td><td>yes</td></tr>
+    <tr><td class="l">Special case of k-way</td><td>k = 1</td><td>1 &lt; k &lt; L</td><td>k = L (one set)</td></tr>
+  </table>
+  <h3>Same cache, different associativity</h3>
+  <div class="cols" style="grid-template-columns:auto 1fr;align-items:start">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">64 KB · 64 B · 32-bit</th><th>Tag</th><th>Index</th><th>Offset</th></tr>
+      <tr><td class="l">Direct (1024 lines)</td><td class="red"><b>16</b></td><td>10</td><td>6</td></tr>
+      <tr><td class="l">2-way (512 sets)</td><td>17</td><td>9</td><td>6</td></tr>
+      <tr><td class="l">4-way (256 sets)</td><td>18</td><td>8</td><td>6</td></tr>
+      <tr><td class="l">8-way (128 sets)</td><td>19</td><td>7</td><td>6</td></tr>
+      <tr><td class="l">Fully associative</td><td>26</td><td>–</td><td>6</td></tr>
+    </table>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Doubling k</b> moves one bit from index to tag. Direct: <span class="hl">tag = log₂(MM ÷ cache)</span> = 32 − 16 = 16.</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> Offset ← <b>block</b> size; index ← <b>sets</b> (not lines) when k &gt; 1.</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Where does block 1000 go? ✍</span> Direct, 128 lines: 1000 mod 128 = <b>line 104</b>. 4-way, 32 sets: 1000 mod 32 = <b>set 8</b> (any of its 4 lines).</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: mapping examples & replacement ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Mapping examples · replacement</span></div>
+  <h2><span class="no">10</span>Mapping: Worked Examples</h2><span class="tag">written favourite</span>
+  <div class="ex small"><span class="lbl">Example 1: split an address ✍</span> Direct-mapped 64 KB cache, 64 B blocks, 32-bit address 0x12345678 (tag 16 | line 10 | offset 6): offset = 0x78 AND 0x3F = <b>56</b> · line = (0x12345678 ÷ 64) mod 1024 = <b>345</b> · tag = upper 16 bits = <span class="circ">0x1234</span></div>
+  <div class="ex small"><span class="lbl">Example 2: 2-way set associative ✍</span> 32 KB cache, 32 B blocks, 32-bit address. Offset = log₂ 32 = <b>5</b>; lines = 32 KB / 32 B = 1024; sets = 1024 / 2 = 512 → set = <b>9</b>; tag = 32 − 9 − 5 = <span class="circ">18</span>.</div>
+  <div class="ex small"><span class="lbl">Example 3: tag memory ✍</span> Example 1's cache: 1024 lines × (16 tag + 1 valid) = 17,408 bits = <b>2176 B</b> on top of the 64 KB of data.</div>
+  <h3>Example 4: block trace 0, 8, 0, 6, 8 in a 4-block cache</h3>
+  <div class="cols" style="grid-template-columns:1.3fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Cache</th><th>0</th><th>8</th><th>0</th><th>6</th><th>8</th><th>Misses</th></tr>
+      <tr><td class="l">Direct (j mod 4)</td><td>M</td><td>M</td><td>M</td><td>M</td><td>M</td><td class="red"><b>5</b></td></tr>
+      <tr><td class="l">2-way, LRU</td><td>M</td><td>M</td><td class="green"><b>H</b></td><td>M</td><td>M</td><td>4</td></tr>
+      <tr><td class="l">Fully assoc.</td><td>M</td><td>M</td><td class="green"><b>H</b></td><td>M</td><td class="green"><b>H</b></td><td class="green"><b>3</b></td></tr>
+    </table>
+    <p class="small">Direct: 0 and 8 share line 0 and evict each other. 2-way: 0, 6 and 8 all fall in set 0 (3 blocks, 2 ways). Fully assoc.: only the 3 cold misses. More ways remove <span class="hl">conflict misses</span>.</p>
+  </div>
+
+  <h2><span class="no">11</span>Replacement Policies</h2><span class="tag">high-yield</span>
+  <p class="small">Needed only when the block has a <b>choice</b> of lines (set or fully associative) and all are full.</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Policy</th><th class="l">Evicts the block …</th><th class="l">Notes</th></tr>
+    <tr><td class="l"><b>LRU</b></td><td class="l">least recently <b>used</b></td><td class="l">temporal locality; 2-way: 1 bit per set</td></tr>
+    <tr><td class="l"><b>FIFO</b></td><td class="l">loaded <b>earliest</b></td><td class="l">round-robin pointer; <span class="circ">Belady's anomaly</span></td></tr>
+    <tr><td class="l"><b>Random</b></td><td class="l">picked at random</td><td class="l">no bookkeeping; near LRU when large</td></tr>
+    <tr><td class="l">LFU</td><td class="l">least frequently used</td><td class="l">needs counters</td></tr>
+    <tr><td class="l">Optimal (Belady)</td><td class="l">used farthest in future</td><td class="l">needs the future: benchmark only</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked trace ✍</span> Fully associative, 3 lines (victim as subscript)
+    <table class="hand small" style="white-space:nowrap">
+      <tr><th class="l">Ref</th><th>7</th><th>0</th><th>1</th><th>2</th><th>0</th><th>3</th><th>0</th><th>4</th><th>2</th><th>3</th><th>Miss</th></tr>
+      <tr><td class="l">FIFO</td><td>M</td><td>M</td><td>M</td><td>M<sub>7</sub></td><td>H</td><td>M<sub>0</sub></td><td>M<sub>1</sub></td><td>M<sub>2</sub></td><td>M<sub>3</sub></td><td>M<sub>0</sub></td><td class="red"><b>9</b></td></tr>
+      <tr><td class="l">LRU</td><td>M</td><td>M</td><td>M</td><td>M<sub>7</sub></td><td>H</td><td>M<sub>1</sub></td><td>H</td><td>M<sub>2</sub></td><td>M<sub>3</sub></td><td>M<sub>0</sub></td><td><b>8</b></td></tr>
+      <tr><td class="l">OPT</td><td>M</td><td>M</td><td>M</td><td>M<sub>7</sub></td><td>H</td><td>M<sub>1</sub></td><td>H</td><td>M<sub>0</sub></td><td>H</td><td>H</td><td class="green"><b>6</b></td></tr>
+    </table></div>
+  <div class="trick small"><span class="lbl">Memory trick</span> FIFO: <b>birth date</b> · LRU: <b>last visit</b> · OPT: <b>next visit</b> (same algorithms in paging).</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: write policy, 3 Cs, multilevel ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Writes · misses · levels</span></div>
+  <h2><span class="no">12</span>Write Policies</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">On a write hit</th><th class="l">Write-through</th><th class="l">Write-back (copy-back)</th></tr>
+    <tr><td class="l">Memory updated</td><td class="l">on <b>every</b> write</td><td class="l">when a <span class="circ">dirty</span> block is evicted</td></tr>
+    <tr><td class="l">Memory traffic</td><td class="l">high (write buffer hides it)</td><td class="l">low</td></tr>
+    <tr><td class="l">Memory up to date?</td><td class="l">always (safe for DMA)</td><td class="l">no: dirty bit, coherence care</td></tr>
+    <tr><td class="l">Usual write-miss partner</td><td class="l"><b>no-write-allocate</b></td><td class="l"><b>write-allocate</b></td></tr>
+  </table>
+  <p class="small"><span class="hl">Write-allocate</span> (fetch-on-write): on a write miss, load the block, then write it. <b>No-write-allocate</b> (write-around): write straight to memory.</p>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Traffic ✍</span> A loop writes one variable 100 times: write-through <b>100</b> memory writes, write-back <b>1</b> (at eviction).</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Write-back time ✍</span> Tc = 5 ns, Tm = 50 ns, h = 0.9, 30% of victims dirty: T = 5 + 0.1 × (50 + 0.3 × 50) = <b>11.5 ns</b></div>
+  </div>
+  <p class="small">Multicore: several caches may hold copies; a <b>coherence protocol</b> (MESI, snooping) keeps them consistent.</p>
+
+  <h2><span class="no">13</span>Why Misses Happen: the 3 Cs</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:auto 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Miss</th><th class="l">Cause</th><th class="l">Remedy</th></tr>
+      <tr><td class="l"><b>Compulsory</b></td><td class="l">first access (cold)</td><td class="l">bigger block, prefetch</td></tr>
+      <tr><td class="l"><b>Capacity</b></td><td class="l">working set &gt; cache</td><td class="l">bigger cache</td></tr>
+      <tr><td class="l"><b>Conflict</b></td><td class="l">blocks clash in a set</td><td class="l">more ways, victim cache</td></tr>
+      <tr><td class="l">Coherence</td><td class="l">another core wrote it</td><td class="l">(the 4th C)</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="215">
+      <g class="w">
+        <path class="ink-k" d="M30,120 V10 M30,120 H240" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M38,40 C80,95 120,105 150,96 C180,88 205,60 230,30"/>
+      </g>
+      <text x="135" y="140" text-anchor="middle" class="s">block size →</text>
+      <text x="38" y="10" class="s">miss rate</text>
+      <text x="52" y="30" class="g s">cold misses ↓</text>
+      <text x="148" y="30" class="r s">conflicts ↑</text>
+    </svg><figcaption>block size: U-shaped trade-off</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Cold</b> start, <b>Crowded</b> cache, <b>Clash</b> in a set. Fully associative: <b>no</b> conflict misses.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A bigger block cuts cold misses but raises the <b>miss penalty</b>.</div>
+  </div>
+
+  <h2><span class="no">14</span>Multilevel Caches</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ul class="dash small">
+      <li><b>L1</b>: split I + D caches, per core; aim: <span class="hl">short hit time</span></li>
+      <li><b>L2</b>: unified, per core; aim: low miss rate</li>
+      <li><b>L3</b>: shared by all cores (last level)</li>
+      <li><b>Local</b> miss rate = misses / accesses to <b>that level</b>; <b>global</b> = misses / all CPU accesses</li>
+    </ul>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Two-level AMAT ✍</span> L1: 1 ns, miss 5%. L2: 10 ns, local miss 20%. RAM 100 ns.<br>AMAT = 1 + 0.05 × (10 + 0.2 × 100) = 1 + 0.05 × 30 = <span class="circ">2.5 ns</span><br>Without L2: 1 + 0.05 × 100 = 6 ns. Global L2 miss rate = 0.05 × 0.2 = <b>1%</b>.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: VM, TLB, disk, RAID ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>VM · TLB · disk · RAID</span></div>
+  <h2><span class="no">15</span>Virtual Memory &amp; TLB (Summary)</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p>VM uses main memory as a <span class="hl">cache for the disk</span>. The <b>MMU</b> translates virtual addresses page by page through the <b>page table</b> (in RAM, found via the PTBR).</p>
+      <p>A page fault costs <b>millions of cycles</b> → large pages (4 KB), fully associative placement, LRU-like replacement, always <b>write-back</b>.</p>
+      <p><span class="hl">TLB</span> = small associative cache of recent page-table entries.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="295">
+      <g class="w">
+        <rect x="6" y="10" width="70" height="30" rx="5" class="ink-k fill-y"/>
+        <rect x="112" y="10" width="70" height="30" rx="5" class="ink-r fill-r"/>
+        <rect x="112" y="92" width="70" height="30" rx="5" class="ink fill-b"/>
+        <rect x="222" y="10" width="70" height="30" rx="5" class="ink-g fill-g"/>
+        <rect x="222" y="140" width="70" height="30" rx="5" class="ink-p fill-p"/>
+        <path class="ink-k" d="M76,25 H110" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M182,25 H220" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M147,40 V90" marker-end="url(#ah)"/>
+        <path class="ink" d="M182,107 C210,107 235,80 250,42" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M147,122 C150,150 190,158 220,155" marker-end="url(#ahp)"/>
+      </g>
+      <text x="41" y="30" text-anchor="middle" class="s w6">VA</text><text x="147" y="30" text-anchor="middle" class="r s w6">TLB</text>
+      <text x="147" y="112" text-anchor="middle" class="s w6">page table</text><text x="257" y="30" text-anchor="middle" class="g s w6">PA</text><text x="257" y="160" text-anchor="middle" class="p s w6">disk</text>
+      <text x="200" y="14" text-anchor="middle" class="g s">hit</text><text x="128" y="68" text-anchor="end" class="r s">TLB miss</text>
+      <text x="160" y="174" class="p s">fault</text>
+    </svg></figure>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Cache</th><th class="l">VM</th><th class="l">Formula / example</th></tr>
+    <tr><td class="l">block</td><td class="l">page / frame</td><td class="l">pages = 2^(VA bits − offset bits)</td></tr>
+    <tr><td class="l">miss</td><td class="l">page fault (OS)</td><td class="l">32-bit VA, 4 KB page → 2²⁰ PTEs × 4 B = <b>4 MB</b></td></tr>
+    <tr><td class="l">tag store</td><td class="l">page table, TLB</td><td class="l">64 MB RAM, 4 KB pages → 2¹⁴ frames</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">EAT with a TLB ✍</span> TLB 20 ns, memory 100 ns, TLB hit 0.8, one-level table: 0.8 × (20 + 100) + 0.2 × (20 + 100 + 100) = <span class="circ">140 ns</span> (a TLB miss adds one memory access). Paging algorithms, thrashing → OS chapter.</div>
+
+  <h2><span class="no">16</span>Secondary Storage: Disk &amp; RAID</h2><span class="tag">calculation</span>
+  <div class="sumbox small"><span class="lbl">Disk formulas</span> <span class="hl">Access time = seek + rotational latency + transfer</span> (+ controller overhead) · average latency = ½ × (60 / rpm) s · capacity = surfaces × tracks × sectors/track × bytes/sector</div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> 6000 rpm, average seek 8 ms, 100 sectors × 512 B per track.
+    <ol class="steps"><li>Rotation = 60 / 6000 s = 10 ms → latency <b>5 ms</b>; 1 sector = 10 / 100 = 0.1 ms</li><li>Access = 8 + 5 + 0.1 = <span class="circ">13.1 ms</span>; 4 KB (8 sectors) = 13.8 ms; rate = 51,200 B / 10 ms = <b>5.12 MB/s</b></li><li>16 surfaces × 1024 tracks × 128 sectors × 512 B = 2³⁰ B = <b>1 GB</b></li></ol></div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>RAID</th><th class="l">Scheme</th><th>Min</th><th>Usable</th><th class="l">Survives</th></tr>
+    <tr><td>0</td><td class="l">striping, no redundancy</td><td>2</td><td>n</td><td class="l red"><b>no failure</b></td></tr>
+    <tr><td>1</td><td class="l">mirroring</td><td>2</td><td>n / 2</td><td class="l">1 disk per pair</td></tr>
+    <tr><td>5</td><td class="l">striping + <b>distributed parity</b></td><td>3</td><td>n − 1</td><td class="l">1 disk</td></tr>
+    <tr><td>6</td><td class="l">two distributed parities</td><td>4</td><td>n − 2</td><td class="l">2 disks</td></tr>
+    <tr><td>10</td><td class="l">mirror, then stripe</td><td>4</td><td>n / 2</td><td class="l">1 per pair</td></tr>
+  </table>
+  <p class="small">RAID 2 = bit-level Hamming, 3 = byte-level, 4 = block-level, each with a <b>dedicated</b> parity disk (bottleneck). Parity = XOR. 5 × 2 TB: RAID 5 → <b>8 TB</b>, RAID 6 → 6 TB.</p>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Reg → L1 → L2 → L3 → RAM → disk → tape</p><p>Down: size ↑, time ↑, cost/bit ↓</p>
+      <p>Temporal = same item · spatial = neighbours</p><p>SRAM 6T, cache · DRAM 1T1C, refresh</p>
+      <p>EPROM: UV · EEPROM: byte · flash: block</p><p>2ⁿ × m → n address, m data lines</p>
+      <p>Chips = (W/w) × (M/m)</p><p>Low-order interleave: module = addr mod k</p>
+      <p>Hier.: T = h·Tc + (1−h)(Tc+Tm)</p><p>Simult.: T = h·Tc + (1−h)·Tm</p>
+      <p>AMAT = hit time + miss rate × penalty</p><p>offset = log₂ B · sets = L / k</p>
+      <p>tag = address − index − offset</p><p>Direct tag = log₂(MM / cache)</p>
+      <p>EAT(TLB) = h(t+m) + (1−h)(t+2m)</p><p>Disk = seek + ½ rotation + transfer</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Fastest storage: CPU registers</li>
+      <li>Cache sits between CPU and main memory</li>
+      <li>Cache is made of SRAM</li>
+      <li>DRAM needs refreshing; SRAM does not</li>
+      <li>Loop variable reuse = temporal locality</li>
+      <li>Any block → any line = fully associative</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Direct mapping needs no replacement policy</li>
+      <li>Dirty bit belongs to write-back</li>
+      <li>FIFO can show Belady's anomaly</li>
+      <li>TLB = cache of page-table entries</li>
+      <li>RAID 5 = distributed parity, n − 1</li>
+      <li>7200 rpm → 4.17 ms average latency</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> registers, not cache, are fastest · SRAM is volatile too · hierarchical (Tc + Tm on a miss) vs simultaneous (Tm) · index counts <b>sets</b> when k &gt; 1 · byte vs word addressing · latency is <b>half</b> a rotation · RAID 0 has no redundancy · bigger blocks are not always better</div>
+  <div class="trick"><span class="lbl">All tricks together</span> Temporal = same Thing in Time, Spatial = Surrounding Space · EPROM = Erase with Photons · "through" pays Tc + Tm, "side by side" pays Tm · doubling k moves a bit from index to tag · FIFO birth date, LRU last visit, OPT next visit · 3 Cs: Cold, Crowded, Clash</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="30" width="230" height="36" class="ink-k"/>
+      <rect x="10" y="30" width="110" height="36" class="ink-r fill-r"/><rect x="120" y="30" width="70" height="36" class="ink fill-b"/><rect x="190" y="30" width="50" height="36" class="ink-g fill-g"/>
+      <path class="ink-p" d="M262,48 H320" marker-end="url(#ahp)"/>
+      <rect x="340" y="14" width="250" height="68" rx="10" class="ink-p fill-p"/>
+    </g>
+    <text x="65" y="54" text-anchor="middle" class="r w6">tag</text><text x="155" y="54" text-anchor="middle" class="w6">set</text><text x="215" y="54" text-anchor="middle" class="g w6">off</text>
+    <text x="65" y="88" text-anchor="middle" class="r s">compare</text><text x="155" y="88" text-anchor="middle" class="s">pick set</text><text x="222" y="88" text-anchor="middle" class="g s">byte</text>
+    <text x="465" y="36" text-anchor="middle" class="p w6">1. offset = log₂ block</text><text x="465" y="57" text-anchor="middle" class="p w6">2. index = log₂ (lines / k)</text><text x="465" y="78" text-anchor="middle" class="p w6">3. tag = the rest</text>
+  </svg><figcaption>the 3-step address split: always offset first, tag last</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · Memory Hierarchy</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Which memory needs periodic refresh?<ol class="opts"><li>SRAM</li><li>DRAM</li><li>EPROM</li><li>Flash</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Hierarchical: Tc 20 ns, Tm 200 ns, h 0.9. T = ?<ol class="opts"><li>38 ns</li><li>36 ns</li><li>40 ns</li><li>22 ns</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>16K × 8 from 1K × 4 chips needs:<ol class="opts"><li>32 chips</li><li>16 chips</li><li>8 chips</li><li>64 chips</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Direct, 32 KB, 16 B blocks, 32-bit: tag bits?<ol class="opts"><li>15</li><li>21</li><li>11</li><li>17</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>The dirty bit is needed in:<ol class="opts"><li>write-back</li><li>write-through</li><li>direct mapping</li><li>FIFO</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Two blocks fighting for one line cause a:<ol class="opts"><li>compulsory miss</li><li>capacity miss</li><li>conflict miss</li><li>coherence miss</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Scanning an array in order exploits:<ol class="opts"><li>temporal locality</li><li>spatial locality</li><li>interleaving</li><li>write-allocate</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>7200 rpm disk, average latency:<ol class="opts"><li>8.33 ms</li><li>7.2 ms</li><li>2.08 ms</li><li>4.17 ms</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Striping with distributed parity is:<ol class="opts"><li>RAID 5</li><li>RAID 1</li><li>RAID 4</li><li>RAID 0</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>k-way cache with k = number of lines is:<ol class="opts"><li>direct mapped</li><li>2-way</li><li>fully associative</li><li>interleaved</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-a · 4-d · 5-a · 6-c · 7-b · 8-d · 9-a · 10-c</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Explain the three cache mappings. For a 256 KB, 4-way cache with 64 B blocks and 32-bit addresses, find the field widths, the set and tag of 0x0001F2C4, and the tag storage (1 valid bit per line). <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>Direct: line = j mod L · fully associative: any line · k-way: set = j mod S (one merit / demerit each) <i class="mk">3</i></li>
+    <li>Offset = log₂ 64 = <b>6</b>; 4096 lines ÷ 4 = 1024 sets → <b>10</b>; tag = 32 − 10 − 6 = <span class="circ">16</span> <i class="mk">2</i></li>
+    <li>Offset = 0xC4 AND 0x3F = <b>4</b>; set = ⌊0x1F2C4 ÷ 64⌋ mod 1024 = 1995 mod 1024 = <b>971</b>; tag = <b>0x0001</b> <i class="mk">2</i></li>
+    <li>Tag storage = 4096 × (16 + 1) = 69,632 bits = <b>8.5 KB</b> <i class="mk">1</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Know which access-time formula to use</li>
+        <li>Can split any address into tag / index / offset</li>
+        <li>Can trace FIFO and LRU on a block string</li>
+        <li>Can compute disk access time and RAID capacity</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① SRAM vs DRAM, 6 points<br>② 32K × 16 from 4K × 8 chips<br>③ write-through vs write-back<br>④ two-level AMAT with global miss rate</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

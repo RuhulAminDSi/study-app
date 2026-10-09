@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>মেমোরি হায়ারার্কি: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">মেমোরি হায়ারার্কি (Memory Hierarchy)</span></h1>
+  <p class="subtitle">লোকালিটি · RAM/ROM · ক্যাশ ম্যাপিং · VM/TLB · ডিস্ক: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">মেমোরি হায়ারার্কি</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">পিরামিড: গতি · খরচ</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">অ্যাক্সেস টাইম ★</text>
+      <text x="500" y="65" text-anchor="middle">SRAM · DRAM · ROM</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">লোকালিটি ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6 s">ট্যাগ · ইনডেক্স · অফসেট ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">রিপ্লেস · রাইট পলিসি</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">ডিস্ক অ্যাক্সেস টাইম ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">VM · TLB · RAID</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = হাই-ইল্ড, সবুজ = পলিসি / প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① দ্রুততম = রেজিস্টার<br>② টেম্পোরাল বনাম স্পেশিয়াল<br>③ ক্যাশে SRAM, মেইনে DRAM<br>④ T = h·Tc + (1−h)(Tc+Tm)<br>⑤ ট্যাগ/ইনডেক্স/অফসেট বিট<br>⑥ রাইট-ব্যাক + ডার্টি বিট<br>⑦ সিক + ল্যাটেন্সি + ট্রান্সফার</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Computer Architecture: … Processor design … Pipeline … <span class="hl">Memory organization: cache, virtual memory</span>, channels."। মাইক্রোপ্রসেসর পেপারে: "<span class="hl">Memory Interfacing</span>"। এই নোটে আছে হায়ারার্কি, সেমিকন্ডাক্টর মেমোরি, ধারণক্ষমতা ও ইন্টারলিভিং, ক্যাশ ডিজাইন এবং সেকেন্ডারি স্টোরেজ; CPU, পাইপলাইন ও CPI আছে CPU সংগঠন নোটে, পেজিং অ্যালগরিদম অপারেটিং সিস্টেম অধ্যায়ে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>হায়ারার্কি পিরামিড ও লোকালিটি … পৃ. ২</li><li>SRAM, DRAM ও ROM ……… পৃ. ৩</li><li>ধারণক্ষমতা, চিপ, ইন্টারলিভিং … পৃ. ৪</li><li>ক্যাশ ও অ্যাক্সেস টাইম ……… পৃ. ৫</li><li>ম্যাপিং: ট্যাগ / ইনডেক্স / অফসেট … পৃ. ৬</li></ul>
+    <ul class="tick"><li>ম্যাপিং উদাহরণ, রিপ্লেসমেন্ট … পৃ. ৭</li><li>রাইট পলিসি, ৩টি C, মাল্টিলেভেল … পৃ. ৮</li><li>ভার্চুয়াল মেমোরি, TLB, ডিস্ক, RAID … পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা … পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: hierarchy & locality ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>পিরামিড ও লোকালিটি</span></div>
+  <h2><span class="no">১</span>মেমোরি হায়ারার্কি কেন?</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> মেমোরিকে কয়েকটি <span class="hl">স্তরে (level)</span> সাজানো হয়; প্রতিটি স্তর নিচেরটির চেয়ে ছোট, দ্রুত ও <b>প্রতি বিটে বেশি দামি</b>। লোকালিটির কারণে পুরো সিস্টেম চলে <span class="hl">প্রায় দ্রুততম স্তরের গতিতে, প্রায় সস্তাতম স্তরের খরচে</span>।</div>
+  <div class="cols" style="grid-template-columns:350px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 370 230" width="345">
+      <g class="w">
+        <path d="M185,6 L222,40 L148,40 Z" class="ink-r fill-r"/>
+        <rect x="132" y="44" width="106" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="104" y="76" width="162" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="76" y="108" width="218" height="28" rx="5" class="ink fill-b"/>
+        <rect x="50" y="140" width="270" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="26" y="172" width="318" height="28" rx="5" class="ink-p fill-p"/>
+        <path class="ink-r" d="M12,198 V14" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M358,14 V198" marker-end="url(#ahg)"/>
+      </g>
+      <text x="185" y="35" text-anchor="middle" class="s r w6">Reg</text>
+      <text x="185" y="63" text-anchor="middle" class="bn s r w6">L1 ক্যাশ</text>
+      <text x="185" y="95" text-anchor="middle" class="bn s r w6">L2 · L3 ক্যাশ (SRAM)</text>
+      <text x="185" y="127" text-anchor="middle" class="bn s w6">মেইন মেমোরি (DRAM)</text>
+      <text x="185" y="159" text-anchor="middle" class="bn s g w6">SSD / HDD (সেকেন্ডারি)</text>
+      <text x="185" y="191" text-anchor="middle" class="bn s p w6">টেপ · অপটিক্যাল (টারশিয়ারি)</text>
+      <text x="185" y="222" text-anchor="middle" class="bn s">প্রাইমারি = যা CPU সরাসরি অ্যাক্সেস করে (ওপরের ৪টি)</text>
+    </svg><figcaption>লাল ↑ দ্রুত, বিটপ্রতি দামি · সবুজ ↓ বড়, সস্তা</figcaption></figure>
+    <div class="small">
+      <p><b>পিরামিডের নিচের দিকে</b> গেলে:</p>
+      <ul class="dash">
+        <li>ধারণক্ষমতা (capacity) <span class="circ">↑</span></li>
+        <li>অ্যাক্সেস টাইম ↑ (ধীর)</li>
+        <li>প্রতি বিটে খরচ ↓</li>
+        <li>CPU-র অ্যাক্সেসের হার ↓</li>
+      </ul>
+      <p>বৈশিষ্ট্য: <span class="hl">ইনক্লুশন (inclusion)</span> (স্তর i ⊂ স্তর i+1), <b>কোহেরেন্স</b> (কপিগুলো মেলে), <b>লোকালিটি</b>। ৯০/১০ নিয়ম: সময়ের ≈ <span class="circ">৯০%</span> যায় কোডের ১০%-এ।</p>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">স্তর</th><th>সাধারণ আকার</th><th>অ্যাক্সেস টাইম</th><th>উপাদান</th><th class="l">নিয়ন্ত্রণ করে</th></tr>
+    <tr><td class="l">রেজিস্টার</td><td>&lt; 1 KB</td><td class="red"><b>&lt; 1 ns (1 সাইকেল)</b></td><td>ফ্লিপ-ফ্লপ</td><td class="l">কম্পাইলার</td></tr>
+    <tr><td class="l">L1 / L2 / L3</td><td>32 K / 1 M / 32 MB</td><td>1 / 4 / 15 ns</td><td>SRAM</td><td class="l">হার্ডওয়্যার</td></tr>
+    <tr><td class="l">মেইন মেমোরি</td><td>8 – 64 GB</td><td>50 – 100 ns</td><td>DRAM</td><td class="l">OS</td></tr>
+    <tr><td class="l">SSD / HDD</td><td>0.5 – 20 TB</td><td>0.1 ms / 5 – 10 ms</td><td>ফ্ল্যাশ / ডিস্ক</td><td class="l">OS</td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> দ্রুততম হলো <b>রেজিস্টার</b>, ক্যাশ নয়। 3 GHz-এ RAM ≈ <b>150 – 300 সাইকেল</b>।</div>
+
+  <h2><span class="no">২</span>লোকালিটি অব রেফারেন্স (Locality)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">টেম্পোরাল (কালিক)</span> এখন ব্যবহৃত আইটেম <span class="hl">শিগগিরই আবার লাগে</span> (লুপ কাউন্টার, <i>sum</i>, লুপের কোড)। সাম্প্রতিক আইটেম ক্যাশে <b>রেখে দিয়ে</b> এর সুবিধা নেওয়া হয় (LRU)।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">স্পেশিয়াল (স্থানিক)</span> <span class="hl">কাছাকাছি অ্যাড্রেস</span> শিগগিরই লাগে (অ্যারে, ক্রমিক কোড)। পুরো <b>ব্লক</b> (64 B) এনে ও প্রিফেচ করে এর সুবিধা নেওয়া হয়।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div>
+      <div class="code">sum = 0;
+for (i = 0; i &lt; n; i++)
+    sum += a[i];   /* a[i]: স্পেশিয়াল */
+                   /* sum, i: টেম্পোরাল */</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 100" width="285">
+      <g class="w">
+        <rect x="10" y="30" width="270" height="30" class="ink-k"/>
+        <path class="ink-k" d="M40,30V60M70,30V60M100,30V60M130,30V60M160,30V60M190,30V60M220,30V60M250,30V60" style="stroke-width:1.2"/>
+        <rect x="70" y="30" width="120" height="30" class="ink-g fill-g"/>
+        <path class="ink-r" d="M235,26 C225,2 255,2 245,26" marker-end="url(#ah)"/>
+      </g>
+      <text x="125" y="82" text-anchor="middle" class="bn g s w6">a[0..3]: এক ব্লক (স্পেশিয়াল)</text>
+      <text x="228" y="80" class="bn r s">পুনর্ব্যবহার</text><text x="222" y="95" class="bn r s">(টেম্পোরাল)</text>
+    </svg><figcaption>একটি মিসেই পাশের ডেটাও চলে আসে</figcaption></figure>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>T</b>emporal = same <b>T</b>hing, again in <b>T</b>ime (একই জিনিস আবার)। <b>S</b>patial = <b>S</b>urrounding <b>S</b>pace (আশপাশ)। C-তে অ্যারে row-major: <i>a[i][j]</i> লুপে <b>j ভেতরের লুপে</b> রাখো।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: SRAM, DRAM, ROM ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>সেমিকন্ডাক্টর মেমোরি</span></div>
+  <h2><span class="no">৩</span>RAM: SRAM বনাম DRAM</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l"></th><th>SRAM</th><th>DRAM</th></tr>
+      <tr><td class="l">সেল</td><td><b>6T</b> ফ্লিপ-ফ্লপ</td><td><b>1T + 1C</b></td></tr>
+      <tr><td class="l">রিফ্রেশ</td><td>লাগে না</td><td class="red"><b>প্রতি ≈ 64 ms</b></td></tr>
+      <tr><td class="l">গতি</td><td>দ্রুত</td><td>ধীর</td></tr>
+      <tr><td class="l">ঘনত্ব (density)</td><td>কম</td><td>বেশি</td></tr>
+      <tr><td class="l">খরচ / বিট</td><td>বেশি</td><td>কম</td></tr>
+      <tr><td class="l">রিড</td><td>নন-ডেস্ট্রাকটিভ</td><td>ডেস্ট্রাকটিভ</td></tr>
+      <tr><td class="l">ব্যবহার</td><td class="red"><b>ক্যাশ</b></td><td class="red"><b>মেইন মেমোরি</b></td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 290 190" width="280">
+      <g class="w">
+        <path d="M30,40 L30,80 L62,60 Z" class="ink fill-b"/><circle cx="66" cy="60" r="4" class="ink"/>
+        <path d="M110,80 L110,40 L78,60 Z" class="ink fill-b"/>
+        <path class="ink" d="M70,60 H90 M20,60 H30 M110,60 H120 M20,60 V26 H120 V60"/>
+        <path class="ink-k" d="M175,40 V70 M165,70 H185 M175,70 V95 M160,95 H190 M160,103 H190 M175,103 V120 M168,120 H182" />
+        <path class="ink-k" d="M150,40 H200"/>
+        <rect x="160" y="88" width="30" height="22" class="ink-r" style="fill:none;stroke-dasharray:3 3"/>
+      </g>
+      <text x="70" y="104" text-anchor="middle" class="bn s w6">SRAM: ২টি ক্রস-কাপলড</text>
+      <text x="70" y="120" text-anchor="middle" class="bn s w6">ইনভার্টার (+২টি অ্যাক্সেস)</text>
+      <text x="206" y="44" class="bn s">ওয়ার্ড লাইন</text>
+      <text x="196" y="106" class="bn r s">C: চার্জ</text>
+      <text x="175" y="146" text-anchor="middle" class="s w6">DRAM: 1T + 1C</text>
+      <text x="145" y="176" text-anchor="middle" class="bn r s">চার্জ লিক করে → রিফ্রেশ; "স্ট্যাটিক" = রিফ্রেশ নেই</text>
+    </svg></figure>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> "স্ট্যাটিক" মানে নন-ভোলাটাইল <b>নয়</b>: বিদ্যুৎ গেলে SRAM ও DRAM <b>দুটিরই ডেটা মুছে যায়</b>। DRAM-এর রো ও কলাম অ্যাড্রেস একই পিন ভাগ করে (<b>RAS / CAS</b> দিয়ে মাল্টিপ্লেক্সড), তাই 1M × 1 DRAM-এ ২০টি নয়, মাত্র ১০টি অ্যাড্রেস পিন লাগে।</div>
+  <p class="small"><b>DRAM পরিবার:</b> অ্যাসিনক্রোনাস DRAM → FPM → EDO → <span class="hl">SDRAM</span> (ক্লকড) → <span class="hl">DDR</span> (ক্লকের <b>দুই এজেই</b> ডেটা) → DDR2 / 3 / 4 / 5। সর্বোচ্চ হার = ট্রান্সফার/s × বাস প্রস্থ: 64-বিট (8 B) চ্যানেলে DDR4-3200 = 3200 × 10⁶ × 8 B = <span class="circ">25.6 GB/s</span>।</p>
+
+  <div class="mnote">SRAM → ক্যাশ, DRAM → মেইন মেমোরি</div>
+  <h2><span class="no">৪</span>ROM পরিবার (নন-ভোলাটাইল)</h2>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">ধরন</th><th class="l">লেখা হয়</th><th class="l">মোছা হয়</th><th class="l">সাধারণ ব্যবহার</th></tr>
+    <tr><td class="l">Mask ROM</td><td class="l">নির্মাতা (মাস্ক দিয়ে)</td><td class="l">কখনো না</td><td class="l">বিপুল উৎপাদনের কোড</td></tr>
+    <tr><td class="l">PROM (OTP)</td><td class="l">ব্যবহারকারী একবার (ফিউজ)</td><td class="l">কখনো না</td><td class="l">কম উৎপাদনের ফার্মওয়্যার</td></tr>
+    <tr><td class="l">EPROM</td><td class="l">ব্যবহারকারী, প্রোগ্রামারে</td><td class="l"><span class="circ">UV আলো</span>, পুরো চিপ</td><td class="l">প্রোটোটাইপ (কোয়ার্টজ জানালা)</td></tr>
+    <tr><td class="l">EEPROM</td><td class="l">বৈদ্যুতিকভাবে, সার্কিটেই</td><td class="l">বৈদ্যুতিকভাবে, <b>প্রতি বাইট</b></td><td class="l">সেটিংস, সিরিয়াল নম্বর</td></tr>
+    <tr><td class="l">Flash</td><td class="l">বৈদ্যুতিকভাবে, সার্কিটেই</td><td class="l">বৈদ্যুতিকভাবে, <b>প্রতি ব্লক</b></td><td class="l">UEFI/BIOS, SSD, USB</td></tr>
+  </table>
+  <div class="cols">
+    <div class="small"><p><b>NOR ফ্ল্যাশ</b>: র‍্যান্ডম বাইট রিড, এক্সিকিউট-ইন-প্লেস → ফার্মওয়্যার। <b>NAND ফ্ল্যাশ</b>: বেশি ঘন, পেজ রিড / ব্লক ইরেজ → SSD, মেমোরি কার্ড; ইরেজ সাইকেল সীমিত (ওয়্যার লেভেলিং)।</p></div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> EPROM = <b>E</b>rase with <b>P</b>hotons (UV আলোয় মোছা)। EEPROM-এর বাড়তি E = <b>E</b>lectrically। ফ্ল্যাশ পুরো ব্লক মোছে "in a flash"।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ROM-ও <b>র‍্যান্ডম অ্যাক্সেস</b> ("RAM" আসলে রিড/রাইট মেমোরি বোঝায়); ROM প্রাইমারি, তবু নন-ভোলাটাইল। অ্যাক্সেস পদ্ধতি: <b>র‍্যান্ডম</b> (RAM, ROM) · <b>সিকোয়েনশিয়াল</b> (টেপ) · <b>ডাইরেক্ট</b> (ডিস্ক) · <b>অ্যাসোসিয়েটিভ</b>, কনটেন্ট দিয়ে (ক্যাশ ট্যাগ, TLB)।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: organisation, capacity, interleaving ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>ধারণক্ষমতা ও ইন্টারলিভিং</span></div>
+  <h2><span class="no">৫</span>মেমোরি সংগঠন ও ধারণক্ষমতার হিসাব</h2><span class="tag">গাণিতিক</span>
+  <div class="sumbox"><span class="lbl">মূল সূত্র</span> <b>2ⁿ ওয়ার্ড × m বিট</b> → <span class="circ">n টি অ্যাড্রেস লাইন</span>, <span class="circ">m টি ডেটা লাইন</span> · চিপ সংখ্যা = (মোট ওয়ার্ড ÷ চিপের ওয়ার্ড) × (মোট প্রস্থ ÷ চিপের প্রস্থ) · অ্যাড্রেস বিট = log₂(<b>অ্যাড্রেসযোগ্য একক</b>)</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">প্রস্থ (ওয়ার্ড-সাইজ) বাড়ানো</span> চিপগুলো পাশাপাশি বসে <b>সব</b> অ্যাড্রেস লাইন ভাগ করে; প্রতিটি কিছু ডেটা বিট দেয় (দুটি 1K × 4 → 1K × 8)।</div>
+      <div class="def small"><span class="lbl">গভীরতা (ওয়ার্ড-সংখ্যা) বাড়ানো</span> বাড়তি উচ্চ-ক্রমের অ্যাড্রেস বিট যায় একটি <span class="hl">ডিকোডারে</span>, যার আউটপুট চিপগুলোর <b>চিপ সিলেক্ট (CS)</b> চালায়।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="295">
+      <g class="w">
+        <rect x="120" y="10" width="70" height="34" rx="4" class="ink fill-b"/><rect x="200" y="10" width="70" height="34" rx="4" class="ink fill-b"/>
+        <rect x="120" y="60" width="70" height="34" rx="4" class="ink fill-b"/><rect x="200" y="60" width="70" height="34" rx="4" class="ink fill-b"/>
+        <rect x="120" y="110" width="70" height="34" rx="4" class="ink fill-b"/><rect x="200" y="110" width="70" height="34" rx="4" class="ink fill-b"/>
+        <rect x="20" y="50" width="56" height="70" rx="4" class="ink-r fill-r"/>
+        <path class="ink-r" d="M76,62 H110 V27 H120 M76,85 H120 M76,108 H110 V127 H120" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M100,160 H285" />
+      </g>
+      <text x="155" y="32" text-anchor="middle" class="s">1K×4</text><text x="235" y="32" text-anchor="middle" class="s">1K×4</text>
+      <text x="155" y="82" text-anchor="middle" class="s">1K×4</text><text x="235" y="82" text-anchor="middle" class="s">1K×4</text>
+      <text x="155" y="132" text-anchor="middle" class="s">⋮</text><text x="235" y="132" text-anchor="middle" class="s">⋮</text>
+      <text x="48" y="80" text-anchor="middle" class="r s w6">4-to-16</text><text x="48" y="96" text-anchor="middle" class="bn r s w6">ডিকোডার</text>
+      <text x="48" y="140" text-anchor="middle" class="r s">A13–A10</text>
+      <text x="190" y="156" text-anchor="middle" class="bn g s">A9–A0 প্রতিটি চিপে</text>
+    </svg><figcaption>1K × 4 দিয়ে 16K × 8: ১৬ সারি × ২টি চিপ</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span>
+    <ol class="steps">
+      <li>একটি 4K × 8 চিপ: 4K = 2¹² → <b>12</b>টি অ্যাড্রেস লাইন, <b>8</b>টি ডেটা লাইন; ধারণক্ষমতা 32 Kbit = 4 KB</li>
+      <li>1K × 4 চিপ দিয়ে 16K × 8 মেমোরি: (16K / 1K) × (8 / 4) = 16 × 2 = <span class="circ">32টি চিপ</span>; 14টি অ্যাড্রেস লাইন: A9–A0 প্রতিটি চিপে, A13–A10 যায় <b>4-to-16 ডিকোডারে</b></li>
+      <li>64 MB, বাইট-অ্যাড্রেসযোগ্য: 2²⁶ বাইট → <b>26</b> অ্যাড্রেস বিট। একই মেমোরি, 32-বিট (4-বাইট) ওয়ার্ড, ওয়ার্ড-অ্যাড্রেসযোগ্য: 2²⁴ ওয়ার্ড → <b>24</b> বিট</li>
+      <li>32-বিট বাইট অ্যাড্রেস → 2³² B = <b>4 GB</b>; 8086 (20টি লাইন) → 1 MB</li>
+    </ol></div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> log₂ নেওয়ার আগে দেখো মেমোরি <b>বাইট</b>- নাকি <b>ওয়ার্ড</b>-অ্যাড্রেসযোগ্য।</div>
+
+  <h2><span class="no">৬</span>মেমোরি ইন্টারলিভিং (Interleaving)</h2>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div class="small">
+      <ul class="dash">
+        <li><b>k টি মডিউল (ব্যাংক)</b> সমান্তরালে কাজ করে</li>
+        <li><span class="hl">লো-অর্ডার</span>: নিচের অ্যাড্রেস বিট মডিউল বাছে (address mod k); পরপর ওয়ার্ড <b>ভিন্ন</b> মডিউলে → পুরো ব্লক সমান্তরালে আসে</li>
+        <li><b>হাই-অর্ডার</b>: ওপরের বিট মডিউল বাছে; পরপর ওয়ার্ড <b>একই</b> মডিউলে → সহজে বাড়ানো যায়, গতি বাড়ে না</li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 130" width="285">
+      <g class="w">
+        <rect x="10" y="30" width="62" height="80" rx="4" class="ink fill-b"/><rect x="80" y="30" width="62" height="80" rx="4" class="ink fill-b"/>
+        <rect x="150" y="30" width="62" height="80" rx="4" class="ink fill-b"/><rect x="220" y="30" width="62" height="80" rx="4" class="ink fill-b"/>
+      </g>
+      <text x="41" y="22" text-anchor="middle" class="r s w6">M0</text><text x="111" y="22" text-anchor="middle" class="r s w6">M1</text><text x="181" y="22" text-anchor="middle" class="r s w6">M2</text><text x="251" y="22" text-anchor="middle" class="r s w6">M3</text>
+      <text x="41" y="56" text-anchor="middle" class="s">0, 4</text><text x="111" y="56" text-anchor="middle" class="s">1, 5</text><text x="181" y="56" text-anchor="middle" class="s">2, 6</text><text x="251" y="56" text-anchor="middle" class="s">3, 7</text>
+      <text x="41" y="80" text-anchor="middle" class="s">8 …</text><text x="111" y="80" text-anchor="middle" class="s">9 …</text><text x="181" y="80" text-anchor="middle" class="s">10 …</text><text x="251" y="80" text-anchor="middle" class="s">11 …</text>
+      <text x="146" y="126" text-anchor="middle" class="bn g s">মডিউল = সবচেয়ে নিচের ২টি অ্যাড্রেস বিট</text>
+    </svg><figcaption>৪-ওয়ে লো-অর্ডার ইন্টারলিভিং</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ৪-ওয়ার্ড ব্লক; অ্যাড্রেস পাঠাতে 1 সাইকেল, প্রতি DRAM অ্যাক্সেসে 15 সাইকেল, বাসে প্রতি ওয়ার্ডে 1 সাইকেল। এক-ওয়ার্ড-চওড়া মেমোরি: 1 + 4 × 15 + 4 × 1 = <b>65 সাইকেল</b>। ৪-ব্যাংক ইন্টারলিভড: 1 + 15 + 4 × 1 = <span class="circ">20 সাইকেল</span> (মিস পেনাল্টি 3.25 গুণ কম)।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: cache basics & access time ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>ক্যাশ ও অ্যাক্সেস টাইম</span></div>
+  <h2><span class="no">৭</span>ক্যাশ মেমোরি: মূল কথা</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> CPU ও মেইন মেমোরির মাঝে একটি ছোট, দ্রুত <span class="hl">SRAM</span> মেমোরি, যা সম্প্রতি ব্যবহৃত <b>ব্লকের</b> (লাইন) কপি রাখে। প্রোগ্রামারের কাছে অদৃশ্য: পুরোপুরি হার্ডওয়্যার চালায়।</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <ul class="dash small">
+      <li><b>ব্লক / লাইন</b>: ক্যাশ ও মেমোরির মধ্যে আদান-প্রদানের একক (সাধারণত 64 B)</li>
+      <li><b>হিট</b>: ওয়ার্ড ক্যাশে পাওয়া গেল · <b>মিস</b>: পাওয়া গেল না → ব্লক আনো</li>
+      <li><span class="hl">হিট রেশিও h = হিট / (হিট + মিস)</span>; মিস রেশিও = 1 − h</li>
+      <li><b>হিট টাইম</b> (Tc) · <b>মিস পেনাল্টি</b> (ব্লক আনার সময়)</li>
+      <li>প্রতি লাইনে থাকে <b>ট্যাগ</b> (কোন ব্লক আছে), <b>ভ্যালিড বিট</b>, আর রাইট-ব্যাকে <b>ডার্টি বিট</b></li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="295">
+      <g class="w">
+        <rect x="8" y="60" width="56" height="44" rx="6" class="ink-k fill-y"/>
+        <rect x="112" y="60" width="74" height="44" rx="6" class="ink-r fill-r"/>
+        <rect x="232" y="60" width="62" height="44" rx="6" class="ink fill-b"/>
+        <path class="ink-g" d="M64,72 H110" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M110,92 H66" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M186,72 H230" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M230,92 H188" marker-end="url(#ah)"/>
+      </g>
+      <text x="36" y="87" text-anchor="middle" class="w6">CPU</text><text x="149" y="87" text-anchor="middle" class="bn r w6">ক্যাশ</text><text x="263" y="80" text-anchor="middle" class="bn w6">মেইন</text><text x="263" y="96" text-anchor="middle" class="bn s">মেমোরি</text>
+      <text x="87" y="52" text-anchor="middle" class="bn g s">ওয়ার্ড</text><text x="87" y="124" text-anchor="middle" class="bn g s">হিট: ≈ 1 ns</text>
+      <text x="208" y="52" text-anchor="middle" class="bn r s">ব্লক</text><text x="208" y="124" text-anchor="middle" class="bn r s">মিস: ≈ 100 ns</text>
+      <text x="150" y="156" text-anchor="middle" class="bn s">CPU ↔ ক্যাশ: ওয়ার্ড · ক্যাশ ↔ RAM: ব্লক</text>
+    </svg></figure>
+  </div>
+
+  <h2><span class="no">৮</span>গড় অ্যাক্সেস টাইম: কোন সূত্র?</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">সংগঠন</th><th>একটি মিসের খরচ</th><th class="l">সূত্র</th></tr>
+    <tr><td class="l"><b>হায়ারার্কিক্যাল</b> (লুক-থ্রু)</td><td>Tc + Tm</td><td class="l"><span class="hl"><b>T = h·Tc + (1 − h)(Tc + Tm)</b></span></td></tr>
+    <tr><td class="l"><b>সাইমালটেনিয়াস</b> (প্যারালাল)</td><td>শুধু Tm</td><td class="l">T = h·Tc + (1 − h)·Tm</td></tr>
+    <tr><td class="l"><b>AMAT</b> (Hennessy–Patterson)</td><td>মিস পেনাল্টি</td><td class="l">AMAT = হিট টাইম + মিস রেট × পেনাল্টি</td></tr>
+  </table>
+  <p class="small">হায়ারার্কিক্যাল: আগে ক্যাশ, তারপর মেমোরি। সাইমালটেনিয়াস: দুটিতে একসাথে খোঁজা শুরু। হায়ারার্কিক্যাল সূত্র সরল করলে Tc + (1 − h)·Tm, অর্থাৎ পেনাল্টি = Tm ধরলে AMAT-এর রূপ। প্রশ্নে কিছু না বললে <b>ডিফল্ট</b> <span class="hl">হায়ারার্কিক্যাল</span>, তবে অপশনে সাইমালটেনিয়াস উত্তরটিও আছে কি না দেখো।</p>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span>
+    <ol class="steps">
+      <li>Tc = 10 ns, Tm = 100 ns, h = 0.9: হায়ারার্কিক্যাল 0.9 × 10 + 0.1 × 110 = <span class="circ">20 ns</span>; সাইমালটেনিয়াস 9 + 10 = <b>19 ns</b>; স্পিডআপ = 100 / 20 = <b>5</b></li>
+      <li>ক্লাসিক: Tc = 100 ns, Tm = 1000 ns, h = 0.9 → হায়ারার্কিক্যাল <b>200 ns</b> (সাইমালটেনিয়াস 190 ns)</li>
+      <li>AMAT: হিট 1 ns, মিস রেট 5%, পেনাল্টি 100 ns → 1 + 0.05 × 100 = <b>6 ns</b></li>
+      <li>h নির্ণয়: Tc = 5, Tm = 80, লক্ষ্য 9 ns: 9 = 5 + (1 − h) × 80 → <b>h = 0.95</b></li>
+      <li>CPI (দেখো CPU সংগঠন): বেস 1, ইনস্ট্রাকশনপ্রতি 1.3 অ্যাক্সেস, মিস 2%, পেনাল্টি 100 → 1 + 1.3 × 0.02 × 100 = <b>3.6</b></li>
+    </ol></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ক্যাশের "<b>ভেতর দিয়ে</b>" (through): মিসে <b>দুটোই</b> দিতে হয়, Tc + Tm। "<b>পাশাপাশি</b>" (side by side): মিসে শুধু Tm।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>মিস</b> রেশিও (0.1) দেওয়া? সেটিকে h ধরো না। যাচাই: Tc ≤ T ≤ Tc + Tm।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: mapping ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>ক্যাশ ম্যাপিং</span></div>
+  <h2><span class="no">৯</span>ক্যাশ ম্যাপিং পদ্ধতি (Cache Mapping)</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <p class="small">ম্যাপিং ঠিক করে একটি মেমোরি ব্লক ক্যাশের <b>কোথায়</b> বসতে পারবে, তাই অ্যাড্রেস কীভাবে ভাগ হবে। ধরি ব্লক সাইজ = B বাইট, লাইন = L, অ্যাসোসিয়েটিভিটি = k, সেট S = L / k।</p>
+  <div class="cols3 small">
+    <div class="def" style="margin-top:0"><span class="lbl">ডাইরেক্ট</span> ব্লক j → লাইন <span class="circ">j mod L</span>। একটিই জায়গা, <b>একটি কম্পারেটর</b>। সরল, দ্রুত; <b>কনফ্লিক্ট মিস</b> (থ্র্যাশিং) বেশি।</div>
+    <div class="def" style="margin-top:0"><span class="lbl">ফুলি অ্যাসোসিয়েটিভ</span> ব্লক → <b>যেকোনো</b> লাইনে; সব ট্যাগ <span class="hl">সমান্তরালে</span> তুলনা (L টি কম্পারেটর, CAM)। কনফ্লিক্ট মিস নেই; ব্যয়বহুল।</div>
+    <div class="def" style="margin-top:0"><span class="lbl">k-ওয়ে সেট অ্যাসো.</span> ব্লক j → সেট <span class="circ">j mod S</span>, সেটের k টি লাইনের যেকোনোটিতে; k টি কম্পারেটর। বাস্তব CPU-তে ব্যবহৃত মধ্যপন্থা।</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="20" y="20" width="240" height="30" class="ink-k"/><rect x="20" y="20" width="110" height="30" class="ink-r fill-r"/><rect x="130" y="20" width="80" height="30" class="ink fill-b"/><rect x="210" y="20" width="50" height="30" class="ink-g fill-g"/>
+      <rect x="20" y="66" width="240" height="30" class="ink-k"/><rect x="20" y="66" width="190" height="30" class="ink-r fill-r"/><rect x="210" y="66" width="50" height="30" class="ink-g fill-g"/>
+      <rect x="20" y="112" width="240" height="30" class="ink-k"/><rect x="20" y="112" width="125" height="30" class="ink-r fill-r"/><rect x="145" y="112" width="65" height="30" class="ink fill-b"/><rect x="210" y="112" width="50" height="30" class="ink-g fill-g"/>
+    </g>
+    <text x="75" y="41" text-anchor="middle" class="bn r w6">ট্যাগ</text><text x="170" y="41" text-anchor="middle" class="bn w6">লাইন</text><text x="235" y="40" text-anchor="middle" class="bn g s w6">অফসেট</text>
+    <text x="115" y="87" text-anchor="middle" class="bn r w6">ট্যাগ</text><text x="235" y="86" text-anchor="middle" class="bn g s w6">অফসেট</text>
+    <text x="82" y="133" text-anchor="middle" class="bn r w6">ট্যাগ</text><text x="177" y="133" text-anchor="middle" class="bn w6">সেট</text><text x="235" y="132" text-anchor="middle" class="bn g s w6">অফসেট</text>
+    <text x="275" y="41" class="bn w6">ডাইরেক্ট: লাইন = log₂ L বিট</text>
+    <text x="275" y="87" class="bn w6">ফুলি অ্যাসোসিয়েটিভ: ইনডেক্স ফিল্ড নেই</text>
+    <text x="275" y="133" class="bn w6">k-ওয়ে: সেট = log₂ (L / k) বিট</text>
+    <text x="275" y="14" class="bn g s">অফসেট = log₂ B · ট্যাগ = অ্যাড্রেস বিট − ইনডেক্স − অফসেট</text>
+  </svg><figcaption>তিন রকম অ্যাড্রেস বিভাজন (অ্যাসোসিয়েটিভিটি বাড়লে → ট্যাগ লম্বা, ইনডেক্স ছোট)</figcaption></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th>ডাইরেক্ট</th><th>k-ওয়ে সেট অ্যাসোসিয়েটিভ</th><th>ফুলি অ্যাসোসিয়েটিভ</th></tr>
+    <tr><td class="l">ব্লক বসার জায়গা</td><td>1</td><td>k</td><td>L (যেকোনো)</td></tr>
+    <tr><td class="l">ট্যাগ কম্পারেটর</td><td>1</td><td>k</td><td>L</td></tr>
+    <tr><td class="l">কনফ্লিক্ট মিস</td><td class="red"><b>সবচেয়ে বেশি</b></td><td>কম</td><td class="green"><b>নেই</b></td></tr>
+    <tr><td class="l">হার্ডওয়্যার খরচ, হিট টাইম</td><td>সবচেয়ে কম</td><td>মাঝারি</td><td>সবচেয়ে বেশি</td></tr>
+    <tr><td class="l">রিপ্লেসমেন্ট পলিসি লাগে?</td><td><b>না</b> (বিকল্প নেই)</td><td>হ্যাঁ, সেটের ভেতরে</td><td>হ্যাঁ</td></tr>
+    <tr><td class="l">k-ওয়ের বিশেষ রূপ</td><td>k = 1</td><td>1 &lt; k &lt; L</td><td>k = L (একটি সেট)</td></tr>
+  </table>
+  <h3>একই ক্যাশ, ভিন্ন অ্যাসোসিয়েটিভিটি</h3>
+  <div class="cols" style="grid-template-columns:auto 1fr;align-items:start">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">64 KB · 64 B · 32-বিট</th><th>ট্যাগ</th><th>ইনডেক্স</th><th>অফসেট</th></tr>
+      <tr><td class="l">ডাইরেক্ট (1024 লাইন)</td><td class="red"><b>16</b></td><td>10</td><td>6</td></tr>
+      <tr><td class="l">2-ওয়ে (512 সেট)</td><td>17</td><td>9</td><td>6</td></tr>
+      <tr><td class="l">4-ওয়ে (256 সেট)</td><td>18</td><td>8</td><td>6</td></tr>
+      <tr><td class="l">8-ওয়ে (128 সেট)</td><td>19</td><td>7</td><td>6</td></tr>
+      <tr><td class="l">ফুলি অ্যাসোসিয়েটিভ</td><td>26</td><td>–</td><td>6</td></tr>
+    </table>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>k দ্বিগুণ</b> করলে ইনডেক্সের এক বিট ট্যাগে যায়। ডাইরেক্ট: <span class="hl">ট্যাগ = log₂(MM ÷ ক্যাশ)</span> = 32 − 16 = 16।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> অফসেট ← <b>ব্লক</b> সাইজ; k &gt; 1 হলে ইনডেক্স ← <b>সেট</b> সংখ্যা (লাইন নয়)।</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">ব্লক 1000 কোথায় যাবে? ✍</span> ডাইরেক্ট, 128 লাইন: 1000 mod 128 = <b>লাইন 104</b>। 4-ওয়ে, 32 সেট: 1000 mod 32 = <b>সেট 8</b> (এর ৪টি লাইনের যেকোনোটি)।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: mapping examples & replacement ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>ম্যাপিং উদাহরণ · রিপ্লেসমেন্ট</span></div>
+  <h2><span class="no">১০</span>ম্যাপিং: সমাধানকৃত উদাহরণ</h2><span class="tag">লিখিত পরীক্ষায় প্রিয়</span>
+  <div class="ex small"><span class="lbl">উদাহরণ ১: অ্যাড্রেস ভাগ ✍</span> ডাইরেক্ট-ম্যাপড 64 KB ক্যাশ, 64 B ব্লক, 32-বিট অ্যাড্রেস 0x12345678 (ট্যাগ 16 | লাইন 10 | অফসেট 6): অফসেট = 0x78 AND 0x3F = <b>56</b> · লাইন = (0x12345678 ÷ 64) mod 1024 = <b>345</b> · ট্যাগ = ওপরের 16 বিট = <span class="circ">0x1234</span></div>
+  <div class="ex small"><span class="lbl">উদাহরণ ২: 2-ওয়ে সেট অ্যাসোসিয়েটিভ ✍</span> 32 KB ক্যাশ, 32 B ব্লক, 32-বিট অ্যাড্রেস। অফসেট = log₂ 32 = <b>5</b>; লাইন = 32 KB / 32 B = 1024; সেট = 1024 / 2 = 512 → সেট ফিল্ড = <b>9</b>; ট্যাগ = 32 − 9 − 5 = <span class="circ">18</span>।</div>
+  <div class="ex small"><span class="lbl">উদাহরণ ৩: ট্যাগ মেমোরি ✍</span> উদাহরণ ১-এর ক্যাশ: 1024 লাইন × (16 ট্যাগ + 1 ভ্যালিড) = 17,408 বিট = <b>2176 B</b>, 64 KB ডেটার বাইরে বাড়তি।</div>
+  <h3>উদাহরণ ৪: ৪-ব্লক ক্যাশে ব্লক ক্রম 0, 8, 0, 6, 8</h3>
+  <div class="cols" style="grid-template-columns:1.3fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">ক্যাশ</th><th>0</th><th>8</th><th>0</th><th>6</th><th>8</th><th>মিস</th></tr>
+      <tr><td class="l">ডাইরেক্ট (j mod 4)</td><td>M</td><td>M</td><td>M</td><td>M</td><td>M</td><td class="red"><b>5</b></td></tr>
+      <tr><td class="l">2-ওয়ে, LRU</td><td>M</td><td>M</td><td class="green"><b>H</b></td><td>M</td><td>M</td><td>4</td></tr>
+      <tr><td class="l">ফুলি অ্যাসো.</td><td>M</td><td>M</td><td class="green"><b>H</b></td><td>M</td><td class="green"><b>H</b></td><td class="green"><b>3</b></td></tr>
+    </table>
+    <p class="small">ডাইরেক্ট: 0 ও 8 একই লাইন 0-তে, একে অপরকে সরায়। 2-ওয়ে: 0, 6, 8 তিনটিই সেট 0-তে (৩টি ব্লক, ২টি ওয়ে)। ফুলি অ্যাসো.: শুধু ৩টি কোল্ড মিস। ওয়ে বাড়ালে <span class="hl">কনফ্লিক্ট মিস</span> কমে।</p>
+  </div>
+
+  <h2><span class="no">১১</span>রিপ্লেসমেন্ট পলিসি (Replacement)</h2><span class="tag">হাই-ইল্ড</span>
+  <p class="small">কেবল তখনই লাগে, যখন ব্লক রাখার জন্য একাধিক লাইনের <b>বিকল্প</b> থাকে (সেট বা ফুলি অ্যাসোসিয়েটিভ) এবং সবগুলো ভরা।</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">পলিসি</th><th class="l">যে ব্লক সরায় …</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l"><b>LRU</b></td><td class="l">সবচেয়ে বেশি সময় <b>অব্যবহৃত</b></td><td class="l">টেম্পোরাল লোকালিটি; 2-ওয়ে: প্রতি সেটে 1 বিট</td></tr>
+    <tr><td class="l"><b>FIFO</b></td><td class="l">যেটি <b>সবার আগে</b> লোড হয়েছে</td><td class="l">রাউন্ড-রবিন পয়েন্টার; <span class="circ">বেলাডির অ্যানোমালি</span></td></tr>
+    <tr><td class="l"><b>Random</b></td><td class="l">দৈবভাবে বাছাই করা</td><td class="l">হিসাব রাখা লাগে না; বড় ক্যাশে প্রায় LRU-র সমান</td></tr>
+    <tr><td class="l">LFU</td><td class="l">সবচেয়ে কম বার ব্যবহৃত</td><td class="l">কাউন্টার লাগে</td></tr>
+    <tr><td class="l">Optimal (Belady)</td><td class="l">ভবিষ্যতে সবচেয়ে দেরিতে লাগবে</td><td class="l">ভবিষ্যৎ জানা লাগে: শুধু তুলনার মাপকাঠি</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধানকৃত ট্রেস ✍</span> ফুলি অ্যাসোসিয়েটিভ, ৩টি লাইন (সাবস্ক্রিপ্টে সরানো ব্লক)
+    <table class="hand small" style="white-space:nowrap">
+      <tr><th class="l">রেফ</th><th>7</th><th>0</th><th>1</th><th>2</th><th>0</th><th>3</th><th>0</th><th>4</th><th>2</th><th>3</th><th>মিস</th></tr>
+      <tr><td class="l">FIFO</td><td>M</td><td>M</td><td>M</td><td>M<sub>7</sub></td><td>H</td><td>M<sub>0</sub></td><td>M<sub>1</sub></td><td>M<sub>2</sub></td><td>M<sub>3</sub></td><td>M<sub>0</sub></td><td class="red"><b>9</b></td></tr>
+      <tr><td class="l">LRU</td><td>M</td><td>M</td><td>M</td><td>M<sub>7</sub></td><td>H</td><td>M<sub>1</sub></td><td>H</td><td>M<sub>2</sub></td><td>M<sub>3</sub></td><td>M<sub>0</sub></td><td><b>8</b></td></tr>
+      <tr><td class="l">OPT</td><td>M</td><td>M</td><td>M</td><td>M<sub>7</sub></td><td>H</td><td>M<sub>1</sub></td><td>H</td><td>M<sub>0</sub></td><td>H</td><td>H</td><td class="green"><b>6</b></td></tr>
+    </table></div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> FIFO: <b>জন্মতারিখ</b> (কে আগে এল) · LRU: <b>শেষ ব্যবহার</b> · OPT: <b>পরের ব্যবহার</b> (পেজিংয়েও একই অ্যালগরিদম)।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: write policy, 3 Cs, multilevel ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>রাইট · মিস · স্তর</span></div>
+  <h2><span class="no">১২</span>রাইট পলিসি (Write Policy)</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">রাইট হিটে</th><th class="l">রাইট-থ্রু</th><th class="l">রাইট-ব্যাক (কপি-ব্যাক)</th></tr>
+    <tr><td class="l">মেমোরি হালনাগাদ</td><td class="l"><b>প্রতিটি</b> রাইটে</td><td class="l"><span class="circ">ডার্টি</span> ব্লক সরানোর সময়</td></tr>
+    <tr><td class="l">মেমোরি ট্রাফিক</td><td class="l">বেশি (রাইট বাফার আড়াল করে)</td><td class="l">কম</td></tr>
+    <tr><td class="l">মেমোরি হালনাগাদ থাকে?</td><td class="l">সবসময় (DMA-র জন্য নিরাপদ)</td><td class="l">না: ডার্টি বিট, কোহেরেন্স সামলাতে হয়</td></tr>
+    <tr><td class="l">রাইট মিসে সাধারণ জুটি</td><td class="l"><b>নো-রাইট-অ্যালোকেট</b></td><td class="l"><b>রাইট-অ্যালোকেট</b></td></tr>
+  </table>
+  <p class="small"><span class="hl">রাইট-অ্যালোকেট</span> (fetch-on-write): রাইট মিসে আগে ব্লক লোড, তারপর লেখা। <b>নো-রাইট-অ্যালোকেট</b> (write-around): সরাসরি মেমোরিতে লেখা।</p>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">ট্রাফিক ✍</span> একটি লুপ একটি ভেরিয়েবলে ১০০ বার লেখে: রাইট-থ্রু <b>100</b>টি মেমোরি রাইট, রাইট-ব্যাক <b>1</b>টি (সরানোর সময়)।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">রাইট-ব্যাক টাইম ✍</span> Tc = 5 ns, Tm = 50 ns, h = 0.9, সরানো ব্লকের 30% ডার্টি: T = 5 + 0.1 × (50 + 0.3 × 50) = <b>11.5 ns</b></div>
+  </div>
+  <p class="small">মাল্টিকোর: একাধিক ক্যাশে একই ব্লকের কপি থাকতে পারে; একটি <b>কোহেরেন্স প্রোটোকল</b> (MESI, স্নুপিং) সেগুলো মিলিয়ে রাখে।</p>
+
+  <h2><span class="no">১৩</span>মিস কেন হয়: ৩টি C</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:auto 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">মিস</th><th class="l">কারণ</th><th class="l">প্রতিকার</th></tr>
+      <tr><td class="l"><b>কম্পালসরি</b></td><td class="l">প্রথম অ্যাক্সেস (কোল্ড)</td><td class="l">বড় ব্লক, প্রিফেচ</td></tr>
+      <tr><td class="l"><b>ক্যাপাসিটি</b></td><td class="l">ওয়ার্কিং সেট &gt; ক্যাশ</td><td class="l">বড় ক্যাশ</td></tr>
+      <tr><td class="l"><b>কনফ্লিক্ট</b></td><td class="l">সেটে ব্লকের সংঘর্ষ</td><td class="l">বেশি ওয়ে, ভিক্টিম ক্যাশ</td></tr>
+      <tr><td class="l">কোহেরেন্স</td><td class="l">অন্য কোর লিখেছে</td><td class="l">(৪র্থ C)</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="215">
+      <g class="w">
+        <path class="ink-k" d="M30,120 V10 M30,120 H240" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M38,40 C80,95 120,105 150,96 C180,88 205,60 230,30"/>
+      </g>
+      <text x="135" y="140" text-anchor="middle" class="bn s">ব্লক সাইজ →</text>
+      <text x="38" y="10" class="bn s">মিস রেট</text>
+      <text x="52" y="30" class="bn g s">কোল্ড মিস ↓</text>
+      <text x="150" y="30" class="bn r s">কনফ্লিক্ট ↑</text>
+    </svg><figcaption>ব্লক সাইজ: U-আকৃতির ট্রেড-অফ</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>C</b>old start, <b>C</b>rowded cache, <b>C</b>lash in a set (ঠান্ডা শুরু, ভিড়, সংঘর্ষ)। ফুলি অ্যাসোসিয়েটিভে কনফ্লিক্ট মিস <b>নেই</b>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> বড় ব্লক কোল্ড মিস কমায়, কিন্তু <b>মিস পেনাল্টি</b> বাড়ায়।</div>
+  </div>
+
+  <h2><span class="no">১৪</span>মাল্টিলেভেল ক্যাশ</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ul class="dash small">
+      <li><b>L1</b>: আলাদা I + D ক্যাশ, প্রতি কোরে; লক্ষ্য: <span class="hl">কম হিট টাইম</span></li>
+      <li><b>L2</b>: ইউনিফায়েড, প্রতি কোরে; লক্ষ্য: কম মিস রেট</li>
+      <li><b>L3</b>: সব কোরের শেয়ার্ড (লাস্ট লেভেল)</li>
+      <li><b>লোকাল</b> মিস রেট = মিস / <b>ওই স্তরে</b> অ্যাক্সেস; <b>গ্লোবাল</b> = মিস / CPU-র মোট অ্যাক্সেস</li>
+    </ul>
+    <div class="ex small" style="margin-top:0"><span class="lbl">দুই-স্তর AMAT ✍</span> L1: 1 ns, মিস 5%। L2: 10 ns, লোকাল মিস 20%। RAM 100 ns।<br>AMAT = 1 + 0.05 × (10 + 0.2 × 100) = 1 + 0.05 × 30 = <span class="circ">2.5 ns</span><br>L2 ছাড়া: 1 + 0.05 × 100 = 6 ns। গ্লোবাল L2 মিস রেট = 0.05 × 0.2 = <b>1%</b>।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: VM, TLB, disk, RAID ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>VM · TLB · ডিস্ক · RAID</span></div>
+  <h2><span class="no">১৫</span>ভার্চুয়াল মেমোরি ও TLB (সারসংক্ষেপ)</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p>VM মেইন মেমোরিকে <span class="hl">ডিস্কের ক্যাশ</span> হিসেবে ব্যবহার করে। <b>MMU</b> পেজ ধরে ধরে <b>পেজ টেবিলের</b> সাহায্যে ভার্চুয়াল অ্যাড্রেস অনুবাদ করে (টেবিল RAM-এ, PTBR দিয়ে খোঁজা হয়)।</p>
+      <p>পেজ ফল্টের খরচ <b>লক্ষ লক্ষ সাইকেল</b> → বড় পেজ (4 KB), ফুলি অ্যাসোসিয়েটিভ প্লেসমেন্ট, LRU-ধাঁচের রিপ্লেসমেন্ট, সবসময় <b>রাইট-ব্যাক</b>।</p>
+      <p><span class="hl">TLB</span> = সাম্প্রতিক পেজ-টেবিল এন্ট্রির ছোট অ্যাসোসিয়েটিভ ক্যাশ।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="295">
+      <g class="w">
+        <rect x="6" y="10" width="70" height="30" rx="5" class="ink-k fill-y"/>
+        <rect x="112" y="10" width="70" height="30" rx="5" class="ink-r fill-r"/>
+        <rect x="112" y="92" width="70" height="30" rx="5" class="ink fill-b"/>
+        <rect x="222" y="10" width="70" height="30" rx="5" class="ink-g fill-g"/>
+        <rect x="222" y="140" width="70" height="30" rx="5" class="ink-p fill-p"/>
+        <path class="ink-k" d="M76,25 H110" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M182,25 H220" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M147,40 V90" marker-end="url(#ah)"/>
+        <path class="ink" d="M182,107 C210,107 235,80 250,42" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M147,122 C150,150 190,158 220,155" marker-end="url(#ahp)"/>
+      </g>
+      <text x="41" y="30" text-anchor="middle" class="s w6">VA</text><text x="147" y="30" text-anchor="middle" class="r s w6">TLB</text>
+      <text x="147" y="112" text-anchor="middle" class="bn s w6">পেজ টেবিল</text><text x="257" y="30" text-anchor="middle" class="g s w6">PA</text><text x="257" y="160" text-anchor="middle" class="bn p s w6">ডিস্ক</text>
+      <text x="200" y="14" text-anchor="middle" class="bn g s">হিট</text><text x="141" y="68" text-anchor="end" class="bn r s">TLB মিস</text>
+      <text x="160" y="174" class="bn p s">ফল্ট</text>
+    </svg></figure>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">ক্যাশ</th><th class="l">VM</th><th class="l">সূত্র / উদাহরণ</th></tr>
+    <tr><td class="l">ব্লক</td><td class="l">পেজ / ফ্রেম</td><td class="l">পেজ সংখ্যা = 2^(VA বিট − অফসেট বিট)</td></tr>
+    <tr><td class="l">মিস</td><td class="l">পেজ ফল্ট (OS)</td><td class="l">32-বিট VA, 4 KB পেজ → 2²⁰ PTE × 4 B = <b>4 MB</b></td></tr>
+    <tr><td class="l">ট্যাগ স্টোর</td><td class="l">পেজ টেবিল, TLB</td><td class="l">64 MB RAM, 4 KB পেজ → 2¹⁴ ফ্রেম</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">TLB-সহ EAT ✍</span> TLB 20 ns, মেমোরি 100 ns, TLB হিট 0.8, এক-স্তর টেবিল: 0.8 × (20 + 100) + 0.2 × (20 + 100 + 100) = <span class="circ">140 ns</span> (TLB মিসে একটি বাড়তি মেমোরি অ্যাক্সেস)। পেজিং অ্যালগরিদম, থ্র্যাশিং → OS অধ্যায়।</div>
+
+  <h2><span class="no">১৬</span>সেকেন্ডারি স্টোরেজ: ডিস্ক ও RAID</h2><span class="tag">গাণিতিক</span>
+  <div class="sumbox small"><span class="lbl">ডিস্কের সূত্র</span> <span class="hl">অ্যাক্সেস টাইম = সিক + রোটেশনাল ল্যাটেন্সি + ট্রান্সফার</span> (+ কন্ট্রোলার ওভারহেড) · গড় ল্যাটেন্সি = ½ × (60 / rpm) s · ধারণক্ষমতা = সারফেস × ট্র্যাক × সেক্টর/ট্র্যাক × বাইট/সেক্টর</div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 6000 rpm, গড় সিক 8 ms, প্রতি ট্র্যাকে 100 সেক্টর × 512 B।
+    <ol class="steps"><li>এক ঘূর্ণন = 60 / 6000 s = 10 ms → ল্যাটেন্সি <b>5 ms</b>; 1 সেক্টর = 10 / 100 = 0.1 ms</li><li>অ্যাক্সেস = 8 + 5 + 0.1 = <span class="circ">13.1 ms</span>; 4 KB (8 সেক্টর) = 13.8 ms; হার = 51,200 B / 10 ms = <b>5.12 MB/s</b></li><li>16 সারফেস × 1024 ট্র্যাক × 128 সেক্টর × 512 B = 2³⁰ B = <b>1 GB</b></li></ol></div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>RAID</th><th class="l">পদ্ধতি</th><th>ন্যূনতম</th><th>ব্যবহারযোগ্য</th><th class="l">নষ্ট সহ্য করে</th></tr>
+    <tr><td>0</td><td class="l">স্ট্রাইপিং, রিডানডেন্সি নেই</td><td>2</td><td>n</td><td class="l red"><b>একটিও না</b></td></tr>
+    <tr><td>1</td><td class="l">মিররিং</td><td>2</td><td>n / 2</td><td class="l">প্রতি জোড়ায় 1টি</td></tr>
+    <tr><td>5</td><td class="l">স্ট্রাইপিং + <b>ডিস্ট্রিবিউটেড প্যারিটি</b></td><td>3</td><td>n − 1</td><td class="l">1টি ডিস্ক</td></tr>
+    <tr><td>6</td><td class="l">দুটি ডিস্ট্রিবিউটেড প্যারিটি</td><td>4</td><td>n − 2</td><td class="l">2টি ডিস্ক</td></tr>
+    <tr><td>10</td><td class="l">মিরর, তারপর স্ট্রাইপ</td><td>4</td><td>n / 2</td><td class="l">প্রতি জোড়ায় 1টি</td></tr>
+  </table>
+  <p class="small">RAID 2 = বিট-লেভেল হ্যামিং, 3 = বাইট-লেভেল, 4 = ব্লক-লেভেল; প্রতিটিতে একটি <b>আলাদা (ডেডিকেটেড)</b> প্যারিটি ডিস্ক (বটলনেক)। প্যারিটি = XOR। 5 × 2 TB: RAID 5 → <b>8 TB</b>, RAID 6 → 6 TB।</p>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>Reg → L1 → L2 → L3 → RAM → ডিস্ক → টেপ</p><p>নিচে: আকার ↑, সময় ↑, খরচ/বিট ↓</p>
+      <p>টেম্পোরাল = একই আইটেম · স্পেশিয়াল = পাশের</p><p>SRAM 6T, ক্যাশ · DRAM 1T1C, রিফ্রেশ</p>
+      <p>EPROM: UV · EEPROM: বাইট · ফ্ল্যাশ: ব্লক</p><p>2ⁿ × m → n অ্যাড্রেস, m ডেটা লাইন</p>
+      <p>চিপ = (W/w) × (M/m)</p><p>লো-অর্ডার: মডিউল = addr mod k</p>
+      <p>হায়ারা.: T = h·Tc + (1−h)(Tc+Tm)</p><p>সাইমাল.: T = h·Tc + (1−h)·Tm</p>
+      <p>AMAT = হিট টাইম + মিস রেট × পেনাল্টি</p><p>অফসেট = log₂ B · সেট = L / k</p>
+      <p>ট্যাগ = অ্যাড্রেস − ইনডেক্স − অফসেট</p><p>ডাইরেক্ট ট্যাগ = log₂(MM / ক্যাশ)</p>
+      <p>EAT(TLB) = h(t+m) + (1−h)(t+2m)</p><p>ডিস্ক = সিক + ½ ঘূর্ণন + ট্রান্সফার</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>দ্রুততম স্টোরেজ: CPU রেজিস্টার</li>
+      <li>ক্যাশ থাকে CPU ও মেইন মেমোরির মাঝে</li>
+      <li>ক্যাশ তৈরি হয় SRAM দিয়ে</li>
+      <li>DRAM-এ রিফ্রেশ লাগে; SRAM-এ লাগে না</li>
+      <li>লুপ ভেরিয়েবল বারবার = টেম্পোরাল লোকালিটি</li>
+      <li>যেকোনো ব্লক → যেকোনো লাইন = ফুলি অ্যাসো.</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>ডাইরেক্ট ম্যাপিংয়ে রিপ্লেসমেন্ট পলিসি লাগে না</li>
+      <li>ডার্টি বিট রাইট-ব্যাকের অংশ</li>
+      <li>FIFO-তে বেলাডির অ্যানোমালি হতে পারে</li>
+      <li>TLB = পেজ-টেবিল এন্ট্রির ক্যাশ</li>
+      <li>RAID 5 = ডিস্ট্রিবিউটেড প্যারিটি, n − 1</li>
+      <li>7200 rpm → গড় ল্যাটেন্সি 4.17 ms</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> ক্যাশ নয়, রেজিস্টার দ্রুততম · SRAM-ও ভোলাটাইল · হায়ারার্কিক্যাল (মিসে Tc + Tm) বনাম সাইমালটেনিয়াস (Tm) · k &gt; 1 হলে ইনডেক্স গোনে <b>সেট</b> · বাইট বনাম ওয়ার্ড অ্যাড্রেসিং · ল্যাটেন্সি = <b>অর্ধেক</b> ঘূর্ণন · RAID 0-তে রিডানডেন্সি নেই · বড় ব্লক সবসময় ভালো নয়</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> Temporal = same Thing in Time, Spatial = Surrounding Space · EPROM = Erase with Photons · "ভেতর দিয়ে" Tc + Tm, "পাশাপাশি" শুধু Tm · k দ্বিগুণ → ইনডেক্সের এক বিট ট্যাগে · FIFO জন্মতারিখ, LRU শেষ ব্যবহার, OPT পরের ব্যবহার · ৩টি C: Cold, Crowded, Clash</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="30" width="230" height="36" class="ink-k"/>
+      <rect x="10" y="30" width="110" height="36" class="ink-r fill-r"/><rect x="120" y="30" width="70" height="36" class="ink fill-b"/><rect x="190" y="30" width="50" height="36" class="ink-g fill-g"/>
+      <path class="ink-p" d="M262,48 H320" marker-end="url(#ahp)"/>
+      <rect x="340" y="14" width="250" height="68" rx="10" class="ink-p fill-p"/>
+    </g>
+    <text x="65" y="54" text-anchor="middle" class="bn r w6">ট্যাগ</text><text x="155" y="54" text-anchor="middle" class="bn w6">সেট</text><text x="215" y="53" text-anchor="middle" class="bn g s w6">অফসেট</text>
+    <text x="65" y="88" text-anchor="middle" class="bn r s">তুলনা</text><text x="155" y="88" text-anchor="middle" class="bn s">সেট বাছাই</text><text x="222" y="88" text-anchor="middle" class="bn g s">বাইট</text>
+    <text x="465" y="36" text-anchor="middle" class="bn p w6">১. অফসেট = log₂ ব্লক</text><text x="465" y="57" text-anchor="middle" class="bn p w6">২. ইনডেক্স = log₂ (লাইন / k)</text><text x="465" y="78" text-anchor="middle" class="bn p w6">৩. ট্যাগ = বাকি বিট</text>
+  </svg><figcaption>৩ ধাপে অ্যাড্রেস বিভাজন: সবসময় আগে অফসেট, শেষে ট্যাগ</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · মেমোরি হায়ারার্কি</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>কোন মেমোরিতে নিয়মিত রিফ্রেশ লাগে?<ol class="opts"><li>SRAM</li><li>DRAM</li><li>EPROM</li><li>ফ্ল্যাশ</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>হায়ারার্কিক্যাল: Tc 20 ns, Tm 200 ns, h 0.9। T = ?<ol class="opts"><li>38 ns</li><li>36 ns</li><li>40 ns</li><li>22 ns</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>1K × 4 চিপ দিয়ে 16K × 8 বানাতে লাগে:<ol class="opts"><li>32টি চিপ</li><li>16টি চিপ</li><li>8টি চিপ</li><li>64টি চিপ</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>ডাইরেক্ট, 32 KB, 16 B ব্লক, 32-বিট: ট্যাগ বিট?<ol class="opts"><li>15</li><li>21</li><li>11</li><li>17</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>ডার্টি বিট দরকার হয়:<ol class="opts"><li>রাইট-ব্যাকে</li><li>রাইট-থ্রুতে</li><li>ডাইরেক্ট ম্যাপিংয়ে</li><li>FIFO-তে</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>দুটি ব্লক একই লাইনের জন্য লড়লে হয়:<ol class="opts"><li>কম্পালসরি মিস</li><li>ক্যাপাসিটি মিস</li><li>কনফ্লিক্ট মিস</li><li>কোহেরেন্স মিস</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>ক্রম অনুযায়ী অ্যারে স্ক্যান কাজে লাগায়:<ol class="opts"><li>টেম্পোরাল লোকালিটি</li><li>স্পেশিয়াল লোকালিটি</li><li>ইন্টারলিভিং</li><li>রাইট-অ্যালোকেট</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>7200 rpm ডিস্কের গড় ল্যাটেন্সি:<ol class="opts"><li>8.33 ms</li><li>7.2 ms</li><li>2.08 ms</li><li>4.17 ms</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>ডিস্ট্রিবিউটেড প্যারিটিসহ স্ট্রাইপিং হলো:<ol class="opts"><li>RAID 5</li><li>RAID 1</li><li>RAID 4</li><li>RAID 0</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>k = লাইনের সংখ্যা হলে k-ওয়ে ক্যাশটি:<ol class="opts"><li>ডাইরেক্ট ম্যাপড</li><li>2-ওয়ে</li><li>ফুলি অ্যাসোসিয়েটিভ</li><li>ইন্টারলিভড</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ক · ৪-ঘ · ৫-ক · ৬-গ · ৭-খ · ৮-ঘ · ৯-ক · ১০-গ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> তিন ধরনের ক্যাশ ম্যাপিং ব্যাখ্যা করো। 64 B ব্লক ও 32-বিট অ্যাড্রেসের একটি 256 KB, 4-ওয়ে ক্যাশের ফিল্ডগুলোর প্রস্থ, 0x0001F2C4 অ্যাড্রেসের সেট ও ট্যাগ, এবং ট্যাগ স্টোরেজ (প্রতি লাইনে ১টি ভ্যালিড বিট) নির্ণয় করো। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>ডাইরেক্ট: লাইন = j mod L · ফুলি অ্যাসোসিয়েটিভ: যেকোনো লাইন · k-ওয়ে: সেট = j mod S (প্রতিটির একটি সুবিধা / অসুবিধা) <i class="mk">৩</i></li>
+    <li>অফসেট = log₂ 64 = <b>6</b>; 4096 লাইন ÷ 4 = 1024 সেট → <b>10</b>; ট্যাগ = 32 − 10 − 6 = <span class="circ">16</span> <i class="mk">২</i></li>
+    <li>অফসেট = 0xC4 AND 0x3F = <b>4</b>; সেট = ⌊0x1F2C4 ÷ 64⌋ mod 1024 = 1995 mod 1024 = <b>971</b>; ট্যাগ = <b>0x0001</b> <i class="mk">২</i></li>
+    <li>ট্যাগ স্টোরেজ = 4096 × (16 + 1) = 69,632 বিট = <b>8.5 KB</b> <i class="mk">১</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>কোন অ্যাক্সেস-টাইম সূত্র কখন খাটে, জানি</li>
+        <li>যেকোনো অ্যাড্রেস ট্যাগ / ইনডেক্স / অফসেটে ভাগ করতে পারি</li>
+        <li>ব্লক ক্রমে FIFO ও LRU ট্রেস করতে পারি</li>
+        <li>ডিস্ক অ্যাক্সেস টাইম ও RAID ধারণক্ষমতা হিসাব করতে পারি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① SRAM বনাম DRAM, ৬টি পার্থক্য<br>② 4K × 8 চিপ দিয়ে 32K × 16<br>③ রাইট-থ্রু বনাম রাইট-ব্যাক<br>④ গ্লোবাল মিস রেটসহ দুই-স্তর AMAT</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>
