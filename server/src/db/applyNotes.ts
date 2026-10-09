@@ -17,6 +17,8 @@ export interface NotesEntry {
   lessonTitleBn?: string;
   heading: Record<Lang, string>;
   takeaways: Record<Lang, string[]>;
+  /** Languages actually published for this note set. Defaults to both; a single-language set lists one. */
+  langs?: Lang[];
 }
 
 export interface NotesResult {
@@ -35,18 +37,31 @@ function escapeHtml(s: string): string {
 }
 
 /**
+ * The chapter folder a note set is published under: public/notes/<NN-chapter>/<slug>/, named after the
+ * seed module (number + title, e.g. "2. Introduction to Computer Systems" -> 02-introduction-to-computer-systems).
+ * notes/build/*.mjs mirror the folders of notes/src/, so a source must sit in the folder this returns.
+ */
+export function chapterDir(chapterNumber: number, seedModules: SeedModule[]): string | undefined {
+  const mod = seedModules[chapterNumber - 1];
+  if (!mod) return undefined;
+  const name = mod.title.replace(/^\d+\.\s*/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `${String(chapterNumber).padStart(2, "0")}-${name}`;
+}
+
+/**
  * Lesson body for a note set. The app's NotesViewer (src/components/NotesViewer.tsx) recognises this
  * block by its data-* attributes and renders the full viewer: notebook shown by default, a PDF tab
  * with preview, download and details. The markup itself is the plain fallback: the framed notebook
  * page (keeps its CSS and SVG ids isolated) with "Download PDF" and "Open full page" buttons.
  */
-export function viewerHtml(entry: NotesEntry, lang: Lang): string {
-  const base = `/notes/${entry.slug}/${entry.slug}.${lang}`;
+export function viewerHtml(entry: NotesEntry, lang: Lang, dir: string): string {
+  const lang_ = noteLang(entry, lang);
+  const base = `/notes/${dir}/${entry.slug}/${entry.slug}.${lang_}`;
   const heading = escapeHtml(entry.heading[lang]);
   const l = LABELS[lang];
   const kind = entry.mode === "add" ? ' data-notes-kind="revision"' : "";
   return (
-    `<div class="hn-viewer" data-notes="${entry.slug}" data-lang="${lang}" data-title="${heading}"${kind}>` +
+    `<div class="hn-viewer" data-notes="${entry.slug}" data-notes-dir="${dir}" data-lang="${lang_}" data-title="${heading}"${kind}>` +
     `<div class="hn-viewer-bar"><span class="hn-viewer-title">${heading}</span>` +
     `<span class="hn-viewer-links"><a href="${base}.pdf" download>${l.pdf}</a>` +
     `<a href="${base}.html" target="_blank" rel="noopener">${l.open}</a></span></div>` +
@@ -56,6 +71,17 @@ export function viewerHtml(entry: NotesEntry, lang: Lang): string {
 
 const managedBy = (content: string | null, slug: string) => (content ?? "").includes(`data-notes="${slug}"`);
 const same = (a: string | null | undefined, b: string | null | undefined) => (a ?? "").trim() === (b ?? "").trim();
+
+/** Languages a note set is expected to be published in; a bilingual set by default. */
+const publishedLangs = (entry: NotesEntry): Lang[] => entry.langs?.length ? entry.langs : ["en", "bn"];
+
+/**
+ * The language a note set can actually be shown in for a requested UI language: the requested one when
+ * published, otherwise the first published language (an English-only set is served in English everywhere,
+ * rather than iframing a file that was never published).
+ */
+const noteLang = (entry: NotesEntry, requested: Lang): Lang =>
+  publishedLangs(entry).includes(requested) ? requested : publishedLangs(entry)[0];
 
 /**
  * Attaches handwritten note sets to lessons. Guarded and idempotent: a lesson is only overwritten
@@ -70,10 +96,15 @@ export async function applyNotes(
 ): Promise<NotesResult[]> {
   const results: NotesResult[] = [];
   for (const entry of entries) {
+    const dir = chapterDir(entry.chapterNumber, seedModules);
+    if (!dir) {
+      results.push({ slug: entry.slug, action: "skipped", reason: `no seed module for chapter ${entry.chapterNumber}` });
+      continue;
+    }
     // Never point a lesson at files that are not published yet: the SPA fallback would frame the app itself.
     if (opts.publishedDir) {
-      const missing = (["en", "bn"] as const)
-        .map((lang) => `${entry.slug}/${entry.slug}.${lang}.html`)
+      const missing = publishedLangs(entry)
+        .map((lang) => `${dir}/${entry.slug}/${entry.slug}.${lang}.html`)
         .filter((f) => !fs.existsSync(path.join(opts.publishedDir as string, f)));
       if (missing.length) {
         results.push({ slug: entry.slug, action: "skipped", reason: `not published yet (missing ${missing.join(", ")}; run notes/build/publish.mjs)` });
@@ -95,8 +126,8 @@ export async function applyNotes(
       )
     ).rows[0];
     const fields = [
-      viewerHtml(entry, "en"),
-      viewerHtml(entry, "bn"),
+      viewerHtml(entry, "en", dir),
+      viewerHtml(entry, "bn", dir),
       entry.takeaways.en,
       entry.takeaways.bn,
     ];

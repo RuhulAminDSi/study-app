@@ -64,7 +64,7 @@ function notesViewerFor(content: string): ReactNode | null {
   const lang = el?.dataset.lang
   if (!el || !slug || (lang !== 'en' && lang !== 'bn')) return null
   const title = el.dataset.title || el.querySelector('.hn-viewer-title')?.textContent || slug
-  return <NotesViewer key={`${slug}.${lang}`} slug={slug} lang={lang} title={title} />
+  return <NotesViewer key={`${slug}.${lang}`} slug={slug} dir={el.dataset.notesDir} lang={lang} title={title} />
 }
 
 export function renderContent(content: string): ReactNode[] {

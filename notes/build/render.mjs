@@ -1,13 +1,10 @@
-// Render notes/src/<name>.html -> notes/pdf/<name>.pdf with headless Chrome/Edge (A4, backgrounds on).
-// Usage: node notes/build/render.mjs [name ...]   (no args = every file in src/)
+// Render notes/src/<NN-chapter>/<name>.html -> notes/pdf/<NN-chapter>/<name>.pdf with headless Chrome/Edge (A4, backgrounds on).
+// Usage: node notes/build/render.mjs [name | slug | NN-chapter ...]   (no args = every source)
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const srcDir = join(root, 'src');
-const outDir = join(root, 'pdf');
+import { existsSync, mkdirSync, statSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { outPath, selectSources } from './sources.mjs';
 
 export const BROWSERS = [
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -19,20 +16,15 @@ export const BROWSERS = [
 const browser = process.env.CHROME_PATH || BROWSERS.find(existsSync);
 if (!browser) { console.error('No Chrome/Edge found (set CHROME_PATH).'); process.exit(1); }
 
-mkdirSync(outDir, { recursive: true });
-const wanted = process.argv.slice(2);
-const names = readdirSync(srcDir)
-  .filter(f => f.endsWith('.html'))
-  .map(f => f.slice(0, -5))
-  .filter(n => wanted.length === 0 || wanted.includes(n));
-
 let failed = 0;
-for (const name of names) {
-  const out = join(outDir, `${name}.pdf`);
+for (const source of selectSources(process.argv.slice(2))) {
+  const { name } = source;
+  const out = outPath('pdf', source, `${name}.pdf`);
+  mkdirSync(dirname(out), { recursive: true });
   const r = spawnSync(browser, [
     '--headless=new', '--disable-gpu', '--no-first-run', '--no-pdf-header-footer',
     '--run-all-compositor-stages-before-draw', '--virtual-time-budget=10000',
-    `--print-to-pdf=${out}`, pathToFileURL(join(srcDir, `${name}.html`)).href,
+    `--print-to-pdf=${out}`, pathToFileURL(source.file).href,
   ], { encoding: 'utf8', timeout: 180000 });
   if (r.status === 0 && existsSync(out)) {
     console.log(`OK   ${name} -> ${out} (${(statSync(out).size / 1024).toFixed(0)} KB)`);

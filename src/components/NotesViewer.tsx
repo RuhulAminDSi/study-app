@@ -23,6 +23,8 @@ type Lang = 'en' | 'bn'
 
 interface Props {
   slug: string
+  /** Chapter folder the set is published under (public/notes/<dir>/<slug>/); lessons applied before the move have none */
+  dir?: string
   /** Language of the note files (the lesson's content_en / content_bn) */
   lang: Lang
   title: string
@@ -139,14 +141,14 @@ function DocumentView({ file, meta, lang, ui, t, title, detailsId, detailsOpen, 
  * Header controls: the two views (each with open-in-new-tab), Details and Download, which act on the
  * view that is currently shown.
  */
-export default function NotesViewer({ slug, lang, title }: Props) {
+export default function NotesViewer({ slug, dir, lang, title }: Props) {
   const { language: ui } = useApp()
   const t = translations[ui]
   const detailsId = useId()
   const [view, setView] = useState<View>('note')
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [meta, setMeta] = useState<NotesMeta | null>(null)
-  const base = `/notes/${slug}/${slug}.${lang}`
+  const base = `/notes/${dir ? `${dir}/` : ''}${slug}/${slug}.${lang}`
 
   useEffect(() => {
     let alive = true

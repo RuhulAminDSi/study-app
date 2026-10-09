@@ -1,17 +1,18 @@
-// Visual QA: screenshot every sheet of notes/src/<name>.html to PNG (one file per sheet) so a
+// Visual QA: screenshot every sheet of notes/src/<NN-chapter>/<name>.html to PNG (one file per sheet) so a
 // reviewer can look for overlaps, clipped doodles and missing Bangla glyphs.
-// Usage: node notes/build/snap.mjs <name> [outDir]   (default outDir: notes/snap/<name>/)
+// Usage: node notes/build/snap.mjs <name> [outDir]   (default outDir: notes/snap/<NN-chapter>/<name>/)
 import { existsSync, mkdirSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { listSources, outPath } from './sources.mjs';
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const [name, outArg] = process.argv.slice(2);
 if (!name) { console.error('usage: node notes/build/snap.mjs <name> [outDir]'); process.exit(1); }
-const src = join(root, 'src', `${name}.html`);
-if (!existsSync(src)) { console.error(`no such source: ${src}`); process.exit(1); }
-const outDir = resolve(outArg || join(root, 'snap', name));
+const source = listSources().find((s) => s.name === name);
+if (!source) { console.error(`no such source: ${name} (expected notes/src/<NN-chapter>/${name}.html)`); process.exit(1); }
+const src = source.file;
+const outDir = resolve(outArg || outPath('snap', source, name));
 mkdirSync(outDir, { recursive: true });
 
 const executablePath = process.env.CHROME_PATH || [

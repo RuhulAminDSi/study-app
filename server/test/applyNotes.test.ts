@@ -4,7 +4,7 @@ import path from "path";
 import { describe, it, expect, beforeEach } from "vitest";
 import { pool } from "../src/db/pool";
 import { seedModules, type SeedModule } from "../src/db/seed";
-import { applyNotes, loadNotesManifest, viewerHtml, type NotesEntry } from "../src/db/applyNotes";
+import { applyNotes, chapterDir, loadNotesManifest, viewerHtml, type NotesEntry } from "../src/db/applyNotes";
 import { seedExamPrep } from "../src/db/seedExamPrep";
 import { resetDb } from "./helpers/db";
 
@@ -40,17 +40,28 @@ const addEntry: NotesEntry = {
   takeaways: { en: ["F = kq₁q₂/r²"], bn: ["F = kq₁q₂/r²"] },
 };
 
+const CH1 = "01-basic-physics";
+
 const lesson = async (title: string) =>
   (await pool.query("SELECT lesson_number, content_en, content_bn, code_en, takeaways_en, is_published FROM lessons WHERE title_en = $1", [title])).rows;
 
+describe("chapterDir", () => {
+  it("names the folder after the seed module's number and title", () => {
+    expect(chapterDir(1, modules)).toBe(CH1);
+    expect(chapterDir(17, [...Array(16)].map(() => modules[0]).concat({ title: "17. Software Engineering & Information System Design", lessons: [] })))
+      .toBe("17-software-engineering-information-system-design");
+    expect(chapterDir(2, modules)).toBeUndefined();
+  });
+});
+
 describe("viewerHtml", () => {
   it("shows the notebook page by default with PDF and full-page buttons, and no Markdown button", () => {
-    const html = viewerHtml(replaceEntry, "bn");
+    const html = viewerHtml(replaceEntry, "bn", CH1);
     expect(html.startsWith("<div")).toBe(true); // rendered as HTML, not by the legacy parser
-    expect(html).toContain('data-notes="dld-logic-gates" data-lang="bn" data-title="লজিক গেট: নোট"');
-    expect(html).toContain('<iframe class="hn-viewer-frame" src="/notes/dld-logic-gates/dld-logic-gates.bn.html"');
-    expect(html).toContain('href="/notes/dld-logic-gates/dld-logic-gates.bn.pdf" download');
-    expect(html).toContain('href="/notes/dld-logic-gates/dld-logic-gates.bn.html" target="_blank"');
+    expect(html).toContain('data-notes="dld-logic-gates" data-notes-dir="01-basic-physics" data-lang="bn" data-title="লজিক গেট: নোট"');
+    expect(html).toContain('<iframe class="hn-viewer-frame" src="/notes/01-basic-physics/dld-logic-gates/dld-logic-gates.bn.html"');
+    expect(html).toContain('href="/notes/01-basic-physics/dld-logic-gates/dld-logic-gates.bn.pdf" download');
+    expect(html).toContain('href="/notes/01-basic-physics/dld-logic-gates/dld-logic-gates.bn.html" target="_blank"');
     expect(html).not.toContain(".md");
     expect(html).not.toContain("Markdown");
   });
@@ -61,8 +72,8 @@ describe("applyNotes", () => {
     await seedModules(pool, modules);
     expect(await applyNotes(pool, [replaceEntry], modules)).toEqual([{ slug: "dld-logic-gates", action: "replaced" }]);
     const [row] = await lesson("Logic Gates");
-    expect(row.content_en).toBe(viewerHtml(replaceEntry, "en"));
-    expect(row.content_bn).toBe(viewerHtml(replaceEntry, "bn"));
+    expect(row.content_en).toBe(viewerHtml(replaceEntry, "en", CH1));
+    expect(row.content_bn).toBe(viewerHtml(replaceEntry, "bn", CH1));
     expect(row.code_en).toBeNull();
     expect(row.takeaways_en).toEqual(["NAND and NOR are universal"]);
   });
@@ -106,14 +117,47 @@ describe("applyNotes", () => {
   it("skips note sets that are not published yet when given the published folder", async () => {
     await seedModules(pool, modules);
     const published = fs.mkdtempSync(path.join(os.tmpdir(), "notes-pub-"));
-    fs.mkdirSync(path.join(published, "dld-logic-gates"));
-    fs.writeFileSync(path.join(published, "dld-logic-gates", "dld-logic-gates.en.html"), "<html></html>");
+    fs.mkdirSync(path.join(published, CH1, "dld-logic-gates"), { recursive: true });
+    fs.writeFileSync(path.join(published, CH1, "dld-logic-gates", "dld-logic-gates.en.html"), "<html></html>");
     const [skipped] = await applyNotes(pool, [replaceEntry], modules, { publishedDir: published });
     expect(skipped).toMatchObject({ action: "skipped", reason: expect.stringContaining("dld-logic-gates.bn.html") });
     expect((await lesson("Logic Gates"))[0].content_en).not.toContain("data-notes");
 
-    fs.writeFileSync(path.join(published, "dld-logic-gates", "dld-logic-gates.bn.html"), "<html></html>");
+    fs.writeFileSync(path.join(published, CH1, "dld-logic-gates", "dld-logic-gates.bn.html"), "<html></html>");
     expect(await applyNotes(pool, [replaceEntry], modules, { publishedDir: published })).toEqual([{ slug: "dld-logic-gates", action: "replaced" }]);
+  });
+
+  it("accepts a single-language note set and falls back to it instead of pointing at an unpublished file", async () => {
+    await seedModules(pool, modules);
+    const published = fs.mkdtempSync(path.join(os.tmpdir(), "notes-pub-en-"));
+    fs.mkdirSync(path.join(published, CH1, "pyq-ai"), { recursive: true });
+    fs.writeFileSync(path.join(published, CH1, "pyq-ai", "pyq-ai.en.html"), "<html></html>");
+    const enOnly: NotesEntry = {
+      slug: "pyq-ai",
+      chapterNumber: 1,
+      mode: "add",
+      langs: ["en"],
+      lessonTitleEn: "Solved Past Questions",
+      heading: { en: "AI: solved questions", bn: "AI: সমাধানসহ প্রশ্ন" },
+      takeaways: { en: ["paradigms"], bn: ["প্যারাডাইগম"] },
+    };
+    expect(await applyNotes(pool, [enOnly], modules, { publishedDir: published })).toEqual([{ slug: "pyq-ai", action: "inserted" }]);
+
+    // The Bangla view must not iframe pyq-ai.bn.html, which was never published.
+    expect(viewerHtml(enOnly, "bn", CH1)).toContain('data-lang="en"');
+    expect(viewerHtml(enOnly, "bn", CH1)).toContain('src="/notes/01-basic-physics/pyq-ai/pyq-ai.en.html"');
+    expect(viewerHtml(enOnly, "bn", CH1)).not.toContain(".bn.html");
+    // The English view is unaffected.
+    expect(viewerHtml(enOnly, "en", CH1)).toContain('data-lang="en"');
+  });
+
+  it("still requires both languages for a note set that does not declare langs", async () => {
+    await seedModules(pool, modules);
+    const published = fs.mkdtempSync(path.join(os.tmpdir(), "notes-pub-both-"));
+    fs.mkdirSync(path.join(published, CH1, "dld-logic-gates"), { recursive: true });
+    fs.writeFileSync(path.join(published, CH1, "dld-logic-gates", "dld-logic-gates.en.html"), "<html></html>");
+    const [skipped] = await applyNotes(pool, [replaceEntry], modules, { publishedDir: published });
+    expect(skipped).toMatchObject({ action: "skipped", reason: expect.stringContaining("dld-logic-gates.bn.html") });
   });
 
   it("skips notes whose chapter or lesson does not exist", async () => {

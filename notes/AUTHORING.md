@@ -1,14 +1,19 @@
 # Authoring a lesson note set
 
-How to write one lesson's revision notes (`notes/src/<slug>.en.html` + `notes/src/<slug>.bn.html`) so they
-match the existing sets. Design spec: `../docs/superpowers/specs/2026-10-07-handwritten-notes-design.md`
+How to write one lesson's revision notes (`notes/src/<NN-chapter>/<slug>.en.html` + `.bn.html`) so they
+match the existing sets. Everything is organised by chapter: `<NN-chapter>` is the seed module's number and
+title (`02-introduction-to-computer-systems`, `03-electrical-circuits`, …; `chapterDir()` in
+`server/src/db/applyNotes.ts` derives it), and the same folder level is used under `notes/md`, `notes/pdf`,
+`notes/snap` and `public/notes`. A new set goes in the folder of the chapter its manifest entry names, or
+`notes:apply` skips it as "not published yet". The build scripts accept a name (`<slug>.<lang>`), a bare slug
+(both languages) or a chapter folder (every set in it). Design spec: `../docs/superpowers/specs/2026-10-07-handwritten-notes-design.md`
 (repo root `D:\COACH\docs\...`). Run every command from `study-app/`.
 
 ## Read first
-1. **The exemplar, in full:** `notes/src/dld-boolean-algebra.en.html`. Copy its skeleton exactly: the `<head>`,
+1. **The exemplar, in full:** `notes/src/04-digital-logic-design/dld-boolean-algebra.en.html`. Copy its skeleton exactly: the `<head>`,
    the hidden `<svg><defs>` block (wobble filters, arrow markers `ah` red, `ahb` blue, `ahg` green, `ahp` purple;
    drop the gate symbols unless you draw gates), the `section.page` sheets, and the fill/overflow `<script>` at the end.
-2. **Bangla conventions:** the first ~120 lines and the practice sheet of `notes/src/dld-logic-gates.bn.html`.
+2. **Bangla conventions:** the first ~120 lines and the practice sheet of `notes/src/04-digital-logic-design/dld-logic-gates.bn.html`.
 3. **The class vocabulary:** `notes/assets/hw.css` (do not edit it). Main pieces: `.def .trick .exam .ex .tipbox .sumbox`
    boxes with `<span class="lbl">`, `.hl` highlight, `.circ` red circle, `.mnote` margin note, `.sticky`, `table.hand`,
    `figure.doodle` (inline SVG; shapes inside `<g class="w">` get the wobble, text never does), `.cols`/`.cols3`/`.fgrid`,
@@ -61,14 +66,14 @@ Escape `&` as `&amp;` and `<` as `&lt;` in HTML (code blocks especially).
 ```
 node notes/build/check.mjs <slug>.en <slug>.bn     # PASS: no overflow, every sheet but the last >= 72% full,
                                                     # >= 15 .hl, >= 8 .circ, >= 6 doodles, >= 3 .trick
-node notes/build/snap.mjs <slug>.en                 # PNG per sheet in notes/snap/<slug>.en/
+node notes/build/snap.mjs <slug>.en                 # PNG per sheet in notes/snap/<NN-chapter>/<slug>.en/
 node notes/build/snap.mjs <slug>.bn
-node notes/build/render.mjs <slug>.en <slug>.bn     # PDF in notes/pdf/
+node notes/build/render.mjs <slug>.en <slug>.bn     # PDF in notes/pdf/<NN-chapter>/
 ```
 Then **look at every PNG** (Read tool) and fix overlaps, text running outside boxes or doodles, clipped SVG,
 labels colliding with shapes, missing Bangla glyphs (boxes/tofu), and lopsided columns. Re-run until clean.
 Finally confirm each PDF has exactly as many pages as there are sheets:
-`node -e "const s=require('fs').readFileSync('notes/pdf/<name>.pdf','latin1');console.log((s.match(/\/Type\s*\/Page[^s]/g)||[]).length)"`.
+`node -e "const s=require('fs').readFileSync('notes/pdf/<NN-chapter>/<name>.pdf','latin1');console.log((s.match(/\/Type\s*\/Page[^s]/g)||[]).length)"`.
 
 Fill tips: a sheet is 297 mm with fixed margins; if a sheet overflows move a block to the next sheet or tighten
 a table with `class="small"`; if it is under 72% add a worked example, a table row, or an exam trap, never filler.
@@ -76,3 +81,12 @@ a table with `class="small"`; if it is under 72% add a worked example, a table r
 ## Do not
 Edit `hw.css`, other note sources, `server/data/notes/manifest.json`, or anything in `public/`; run `publish.mjs`
 or `notes:apply`; commit. Report back instead (see the task for the report format).
+
+## Scratch files
+Several authors work at once. Keep helper scripts and temporary files in a folder of your own named after your
+slug (e.g. `<scratchpad>/<slug>/`), never at the top of a shared scratch directory.
+
+## Never in the notes
+Candidates never see the app's internals: no "seed", "seed lesson", "question bank", "manifest" or file names in
+the sheets. Put a corrected misconception in an "Exam trap" or "Common misconception" box, without saying where the
+wrong version came from; report the correction to the coordinator instead.
