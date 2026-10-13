@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Input/Output, Disks &amp; Clocks: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Input/Output, Disks &amp; Clocks</span></h1>
+  <p class="subtitle">controllers · interrupts · DMA · disk timings &amp; scheduling · RAID · exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 250" width="580">
+      <g class="w">
+        <ellipse cx="320" cy="116" rx="94" ry="34" class="ink-k fill-y"/>
+        <path class="ink" d="M246,102 L180,62 M246,130 L180,172 M320,82 L320,46 M394,102 L460,62 M394,130 L460,172 M320,150 L320,186 M226,116 L186,116 M414,116 L454,116"/>
+        <rect x="68" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="241" y="14" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="412" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="22" y="100" width="152" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="462" y="100" width="154" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="68" y="176" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="241" y="190" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="412" y="176" width="158" height="32" rx="12" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="115" text-anchor="middle" class="k l">I/O + DISKS</text><text x="320" y="134" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="147" y="46" text-anchor="middle" class="s" style="font-size:11px">controller · registers</text><text x="147" y="59" text-anchor="middle" class="s" style="font-size:11px">device addressing</text>
+      <text x="320" y="35" text-anchor="middle" class="r w6">polling · DMA ★</text>
+      <text x="491" y="46" text-anchor="middle" class="s" style="font-size:11px">interrupts ·</text><text x="491" y="59" text-anchor="middle" class="s" style="font-size:11px">block vs char</text>
+      <text x="98" y="112" text-anchor="middle" class="g w6">the I/O stack</text><text x="98" y="126" text-anchor="middle" class="g s" style="font-size:11px">4 layers</text>
+      <text x="539" y="112" text-anchor="middle" class="r w6">scheduling ★</text><text x="539" y="126" text-anchor="middle" class="r s" style="font-size:11px">buffering</text>
+      <text x="147" y="197" text-anchor="middle" class="r w6">disk structure ★</text><text x="147" y="210" text-anchor="middle" class="s" style="font-size:11px">seek + rotation</text>
+      <text x="320" y="211" text-anchor="middle" class="w6" style="font-size:13px">SCAN trace</text>
+      <text x="491" y="197" text-anchor="middle" class="r w6">RAID · terminals</text><text x="491" y="210" text-anchor="middle" class="r s" style="font-size:11px">clocks · timers</text>
+      <text x="320" y="238" text-anchor="middle" class="s" style="font-size:10.5px">· access time: seek + rotational delay + transfer · FCFS / SSTF / SCAN / C-SCAN / LOOK traces</text>
+      <text x="320" y="248" text-anchor="middle" class="s" style="font-size:10.5px">· formatting, bad blocks, boot blocks · RAID 0/1/5/6/10 · SSD vs magnetic disk</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the layer the first questions come from</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;font-size:11pt"><b>High-yield list</b><br>① access time = seek + ½ rotation + transfer<br>② ½ rotation = <b>30 ÷ rpm</b> seconds<br>③ transfer time = bytes ÷ transfer rate<br>④ the CPU touches only the controller's <b>registers</b><br>⑤ port-mapped = own IN/OUT space<br>⑥ DMA = <b>one</b> interrupt per block<br>⑦ SSTF starves · SCAN is fair · C-SCAN uniform<br>⑧ RAID 5 = (N − 1) disks, one may fail</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The syllabus line is "<span class="hl">Input/Output: hardware, software, disk, terminals, clocks</span>". Memory management is in the Memory lesson, file allocation in the File Systems lesson.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>I/O hardware &amp; registers … p. 2</li><li>Polling, interrupts, DMA … p. 3</li><li>The I/O software stack … p. 4</li><li>Scheduling &amp; buffering … p. 5</li></ul>
+    <ul class="tick"><li>Disk structure &amp; timings … p. 6</li><li>Disk scheduling traces … p. 7</li><li>Formatting, boot blocks, RAID … p. 8</li><li>Terminals &amp; clocks … p. 9 · Night p. 10 · Practice p. 11</li></ul>
+  </div>
+  <div class="def tiny"><span class="lbl">What the whole lesson is for</span> Every I/O operation is one long wait, and the whole subject is the art of <span class="circ">keeping the CPU busy while a slow device is not ready</span>.</div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: I/O hardware ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Hardware, registers &amp; interrupts</span></div>
+  <h2><span class="no">1</span>I/O Hardware: Devices, Controllers &amp; Registers</h2><span class="tag">basics ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>I/O</b> is any transfer of data between the computer and the outside world — a keyboard, a printer, a disk, a network. It is carried out by a <b>controller</b> (I/O subsystem, adapter or interface card), which does three jobs: it <span class="hl">moves data between the device and main memory</span>, it hides the device's speed from the CPU, and it lets the CPU <b>do other work while a transfer runs</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,214px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 164" width="228">
+      <g class="w">
+        <rect x="10" y="8" width="96" height="34" rx="6" class="ink-k fill-y"/>
+        <rect x="10" y="52" width="96" height="30" rx="5" class="ink fill-b"/>
+        <rect x="10" y="90" width="96" height="30" rx="5" class="ink fill-b"/>
+        <rect x="10" y="128" width="96" height="30" rx="5" class="ink-r fill-r"/>
+        <rect x="168" y="40" width="100" height="80" rx="8" class="ink-g fill-g"/>
+        <ellipse cx="218" cy="60" rx="26" ry="13" class="ink"/>
+        <path class="ink" d="M106,25 L166,60 M106,67 L166,72 M106,105 L166,88 M106,143 L166,100"/>
+      </g>
+      <text x="58" y="22" text-anchor="middle" class="k w6 s">CPU</text><text x="58" y="36" text-anchor="middle" class="s" style="font-size:10.5px">issues commands</text>
+      <text x="58" y="66" text-anchor="middle" class="k w6 s">control reg</text>
+      <text x="58" y="104" text-anchor="middle" class="k w6 s">status reg</text>
+      <text x="58" y="141" text-anchor="middle" class="r w6 s">data reg</text>
+      <text x="218" y="106" text-anchor="middle" class="g w6 s">controller</text><text x="218" y="118" text-anchor="middle" class="g s" style="font-size:10.5px">buffers · checks errors</text>
+      <text x="218" y="52" text-anchor="middle" class="s" style="font-size:10.5px">disk / printer</text>
+    </svg><figcaption>the CPU's whole view of a device is <b>three registers</b> and an interrupt line</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">Piece</th><th class="l">What it actually is</th></tr>
+      <tr><td class="l"><b>Device</b></td><td class="l">the physical unit that does the real work: head, drum, print head, keys</td></tr>
+      <tr><td class="l"><b>Controller</b></td><td class="l">the middleman — takes generic commands, buffers data, reports errors</td></tr>
+      <tr><td class="l"><b>Control register</b></td><td class="l">what the device should do next (read, write, seek to cylinder 53)</td></tr>
+      <tr><td class="l"><b>Status register</b></td><td class="l">how it is doing: <span class="circ">busy, ready, error</span> — the CPU reads this to decide</td></tr>
+      <tr><td class="l"><b>Data register</b></td><td class="l">the one-word buffer where a byte crosses between CPU and device</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Device addressing</th><th class="l">Port-mapped (isolated) I/O</th><th class="l">Memory-mapped I/O</th></tr>
+    <tr><td class="l"><b>Where the register lives</b></td><td class="l">in a <span class="hl">separate port address space</span> — x86 gives 2¹⁶ = 64 K ports</td><td class="l">at an <b>ordinary memory address</b> in the normal address space</td></tr>
+    <tr><td class="l"><b>Instructions used</b></td><td class="l">special <b>IN</b> / <b>OUT</b> only — few addressing modes</td><td class="l">ordinary <b>load</b> / <b>store</b>; every addressing mode works</td></tr>
+    <tr><td class="l"><b>What it costs</b></td><td class="l">a separate instruction set; <span class="circ">no memory is wasted</span></td><td class="l"><span class="red">it eats memory address space</span>, and those addresses must never be cached</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Interrupts</span> An <b>interrupt</b> lets a device call the CPU instead of the CPU calling the device. Three kinds: <b>trap</b> (an internal error — divide by zero, page fault), <b>interrupt</b> (a device, <span class="hl">asynchronous</span>), <b>software interrupt</b> (a system call). The CPU keeps each handler's address in a <b>vector table</b>; the <b>priority</b> decides who runs first.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Memory-mapped I/O does <b>not</b> turn a device into memory — the address still lands on a controller register. (ii) It is <b>port-mapped</b> I/O that has the small instruction set; memory-mapped I/O is what <b>costs address space</b>. (iii) A trap is caused by the instruction being executed; an interrupt is <b>asynchronous</b>.</div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>Three registers, one table.</b>" Control says <i>what</i>, status says <i>when</i>, data says <i>what byte</i>; the vector table says <i>who to jump to</i>. Everything else in this lesson is a way of avoiding the wait between control and status — and a modern machine still does exactly this through one PCIe/USB/SATA controller, <b>memory-mapped</b> registers and MSI-X interrupts.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: polling, interrupts, DMA ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Three ways to move data</span></div>
+  <h2><span class="no">2</span>Polling, Interrupt-Driven I/O &amp; Direct Memory Access</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> The question of this sheet is always the same: <span class="hl">who carries the bytes, and who pays while it happens?</span> In <b>polling</b> the CPU carries them and pays the whole wait; in <b>interrupt-driven I/O</b> it carries them one byte at a time, paying a handler each time; in <b>DMA</b> the <b>controller</b> carries the whole block and the CPU pays <span class="circ">once, at the end</span>.</div>  <div class="cols" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 120" width="228">
+      <g class="w">
+        <rect x="8" y="8" width="284" height="22" rx="5" class="ink-r fill-r"/>
+        <rect x="8" y="38" width="284" height="22" rx="5" class="ink fill-y"/>
+        <rect x="8" y="68" width="284" height="22" rx="5" class="ink-g fill-g"/>
+        <path class="ink" d="M150,30 L150,36 M150,60 L150,66" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M150,104 L150,30" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="20" y="23" class="r w6 s">polling — CPU spins, moves every byte</text>
+      <text x="20" y="53" class="w6 s">interrupt-driven — a handler per byte</text>
+      <text x="20" y="83" class="g w6 s">DMA — controller moves the block</text>
+      <text x="150" y="114" text-anchor="middle" class="g s k">only the last row grows without costing more CPU time</text>
+    </svg><figcaption>same 1 KB block, same device — only the CPU's share of the work changes</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Method</th><th class="l">Who moves data</th><th class="l">Interrupts</th><th class="l">Verdict</th></tr>
+        <tr><td class="l"><b>Polling</b></td><td class="l">the CPU, word by word</td><td class="l">none</td><td class="l"><span class="red">CPU spins; only for slow, rare transfers</span></td></tr>
+        <tr><td class="l"><b>Interrupt-driven</b></td><td class="l">the CPU, on every interrupt</td><td class="l"><span class="hl">one per byte</span></td><td class="l">works otherwise; <b>worse than polling below ~1 MB/s</b></td></tr>
+        <tr><td class="l"><b>DMA</b> ★</td><td class="l">the controller, the whole block</td><td class="l"><span class="circ">one per block</span></td><td class="l">the only method a disk can use</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">How DMA shares the bus — and the two device classes</span>
+    <div class="fgrid tiny">
+      <p><b>Cycle stealing</b> — one memory cycle at a time; the CPU slows but is <b>never blocked</b></p>
+      <p><b>Burst mode</b> — the controller holds the bus for the <b>whole block</b>; <span class="circ">best throughput</span></p>
+      <p><b>Transparent mode</b> — the bus is used only when the CPU is <b>not</b> using it</p>
+      <p><b>Block device</b> — fixed-size blocks, <b>random</b> access: buffering, caching and scheduling all pay off</p>
+      <p><b>Character device</b> — a <b>byte stream in sequence</b>: no seek, nothing to schedule or cache</p>
+    </div></div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ what does 1 KB really cost?</span> A device delivers <b>one byte every 1 µs</b> (1 MB/s); a block is <b>1 KB</b>; a handler costs <b>2 µs</b> of CPU. <b>(a)</b> The transfer takes 1024 µs. <b>(b)</b> <b>Polling:</b> the CPU is busy all 1024 µs moving bytes. <b>(c)</b> <b>Interrupt-driven:</b> 1024 × 2 µs = <span class="circ">2048 µs of CPU</span> — <b>twice</b> the transfer time, so at this rate the device is <b>faster with polling</b>. <b>(d)</b> <b>DMA:</b> 1 interrupt = 2 µs of CPU for 1024 bytes, i.e. <b>0.2 %</b> overhead.</div>
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) "Interrupt-driven is always better than polling" is <b>false</b>: a handler costs more CPU time than a few instructions. (ii) DMA still needs the CPU to <b>set up</b> the transfer — it removes the <b>copying</b>, not the CPU.</div>
+      <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Slow ⇒ spin, fast ⇒ interrupt, faster ⇒ DMA.</b>" And "<b>Steal a cycle, hold a burst, wait quietly.</b>" — cycle stealing, burst and transparent in three phrases.</div>
+    </div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: I/O software stack ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>The I/O software stack</span></div>
+  <h2><span class="no">3</span>The Four Layers of I/O Software</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> I/O software is built in <span class="hl">four layers</span>, and the whole design is one question: <b>how far down does the hardware-specific knowledge go?</b> Only the layer directly above the controller knows the device exists, so a new disk needs one new driver — not one new program.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,210px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 116" width="202">
+      <g class="w">
+        <rect x="6" y="6" width="288" height="22" rx="5" class="ink fill-y"/>
+        <rect x="6" y="34" width="288" height="22" rx="5" class="ink fill-y"/>
+        <rect x="6" y="62" width="288" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="6" y="90" width="288" height="22" rx="5" class="ink-r fill-r"/>
+      </g>
+      <text x="18" y="21" class="w6 s">1 · user-level I/O library</text>
+      <text x="18" y="49" class="w6 s">2 · device-independent OS software</text>
+      <text x="18" y="77" class="g w6 s">3 · device driver</text>
+      <text x="18" y="105" class="r w6 s">4 · interrupt handlers</text>
+    </svg><figcaption>the stack, from the program that calls <code>read()</code> down to the wire</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Layer</th><th class="l">What it does</th></tr>
+        <tr><td class="l"><b>1 · User-level I/O software</b></td><td class="l">the library the program calls; buffers output into lines, formats it, copies between user and kernel space</td></tr>
+        <tr><td class="l"><b>2 · Device-independent layer</b></td><td class="l">uniform naming and protection, allocating and releasing the device, <b>buffering</b>, block sizing, error reporting</td></tr>
+        <tr><td class="l"><b>3 · Device driver</b> ★</td><td class="l">the <span class="circ">only</span> hardware-aware layer: turns a generic request into controller commands, starts the I/O, reads the status register</td></tr>
+        <tr><td class="l"><b>4 · Interrupt handlers</b></td><td class="l">wait for the interrupt, save and restore context, identify the device, move the data, wake the waiting process</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> (i) The <b>device-independent</b> layer is where buffering and error handling live, <b>not</b> in the driver. (ii) A <b>driver</b> is kernel code; the <b>interrupt handler</b> is the <b>bottom</b> of the stack and runs in kernel mode on every interrupt.</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">Who answers what — and what happens without it</span>
+    <div class="fgrid tiny">
+      <p><b>Who names the device?</b> layer 2 — a table maps the logical name to the physical one</p>
+      <p><b>Who knows the device?</b> layer 3, the driver — and only layer 3</p>
+      <p><b>Who waits for the interrupt?</b> layer 4, the handler</p>
+      <p><b>Who pads a 300-byte write into whole blocks?</b> layer 2</p>
+    </div>
+    <p class="tiny" style="margin-top:1mm"><b>In-kernel drivers</b> — Linux — risk one bad driver taking the whole machine down. <b>User-mode drivers</b> isolate the damage: if the driver dies only that device is lost.</p></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Library, common, driver, handler.</b>" Read the layers as "<i>who asked</i>, <i>what rules</i>, <i>how the hardware works</i>, <i>what woke us up</i>". A written question almost always wants these four in that order.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> Loading a module for a new device — a USB printer, a graphics card — is exactly layer 3 being inserted at run time, and <span class="hl">nothing above it changes</span>.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: I/O scheduling, buffering, spooling ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Scheduling, buffering &amp; spooling</span></div>
+  <h2><span class="no">4</span>I/O Scheduling, Buffering, Caching &amp; Spooling</h2><span class="tag">high-yield ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A device can serve only one request at a time, so they queue in a <b>device queue</b>; <b>I/O scheduling</b> is the policy that picks the next one, and it exists to stop a request being <b>starved</b>.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">I/O scheduling policy</th><th class="l">It serves…</th><th class="l">Verdict</th></tr>
+    <tr><td class="l"><b>FCFS</b> / fair-share</td><td class="l">in arrival order, one round each per process</td><td class="l">fair, but one long seek blocks everything behind it</td></tr>
+    <tr><td class="l"><b>Priority</b></td><td class="l">the highest-priority request first</td><td class="l">low priority can starve</td></tr>
+    <tr><td class="l"><b>SSTF</b> (shortest seek first)</td><td class="l">the request <b>nearest</b> the current position</td><td class="l"><span class="circ">smallest average wait</span>, but starves far requests</td></tr>
+    <tr><td class="l"><b>EDF</b> (earliest deadline first)</td><td class="l">the request with the nearest deadline</td><td class="l">the fairest policy; used for real-time service</td></tr>
+    <tr><td class="l"><b>Random (no-seek)</b></td><td class="l">requests in any order</td><td class="l">terrible on a disk; <b>optimal on an SSD</b>, where every block is equally far</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,196px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 124" width="188">
+      <g class="w">
+        <rect x="10" y="10" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="150" y="10" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="10" y="48" width="120" height="28" rx="6" class="ink-g fill-g"/>
+        <rect x="150" y="48" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="10" y="86" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="150" y="86" width="120" height="28" rx="6" class="ink-r fill-r"/>
+        <path class="ink-r" d="M24,124 L262,124" marker-end="url(#ah)"/>
+      </g>
+      <text x="70" y="21" text-anchor="middle" class="w6 s">spool on disk</text><text x="70" y="33" text-anchor="middle" class="s" style="font-size:10px">output kept</text>
+      <text x="210" y="21" text-anchor="middle" class="w6 s">daemon</text><text x="210" y="33" text-anchor="middle" class="s" style="font-size:10px">one job at once</text>
+      <text x="70" y="59" text-anchor="middle" class="w6 s">printer</text>
+      <text x="210" y="59" text-anchor="middle" class="s" style="font-size:10.5px">its only owner</text>
+      <text x="210" y="71" text-anchor="middle" class="s" style="font-size:10.5px">for that moment</text>
+      <text x="70" y="97" text-anchor="middle" class="w6 s">P1 P2 P3</text>
+      <text x="210" y="97" text-anchor="middle" class="r w6 s">spooler</text><text x="210" y="109" text-anchor="middle" class="r s" style="font-size:10px">frees the caller</text>
+    </svg><figcaption>spooling does not make the printer faster — it makes it <b>never idle</b></figcaption></figure>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Buffering — the three schemes and their cost</span>
+        <div class="fgrid tiny">
+          <p><b>Single</b>: fill, then empty — the two sides take turns</p>
+          <p><b>Double</b>: fill one while emptying the other</p>
+          <p><b>Circular</b>: a ring; a used buffer is <b>reused</b></p>
+          <p>Let C = time to compute, M = time to transfer one block</p>
+        </div>
+        <p class="tiny" style="margin-top:0.8mm">T = <b>C + M</b> unbuffered · <b>max(C,M) + M</b> single · <b>max(C,M)</b> double · <b>max(C, M÷n) + M</b> with n circular buffers.</p></div>
+      <div class="def tiny" style="margin-top:1mm"><span class="lbl">Caching vs spooling</span> <b>Caching</b> keeps a copy that can be fetched again cheaply, so it speeds up <i>reads</i>. <b>Spooling</b> stores a process's <b>whole output</b> on disk so an <b>exclusive</b> device can be shared. Caching <span class="circ">serves the same reader again</span>; spooling <span class="circ">serves many processes</span>.</div>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ the printer case study</span> A laser printer finishes <b>1 page every 10 s</b> (6 pages/min). A program builds a 500-page report needing <b>0.2 s</b> of work per page. <b>(a)</b> Building the text = 500 × 0.2 = <b>100 s</b>; printing = 500 × 10 s = <span class="circ">5000 s ≈ 83.3 min</span>. <b>(b)</b> <b>No buffering:</b> 10 + 0.2 = 10.2 s per page. <b>Single:</b> max(0.2, 10) + 10 = 20 s per page ⇒ 500 pages = <span class="red">10 000 s</span>, <b>worse than no buffer at all</b>. <b>Double:</b> max(0.2, 10) = 10 s per page = 5000 s. <b>(c)</b> With <b>spooling</b> the program returns after 100 s and a daemon prints steadily while ten other programs queue their own output.</div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>SSTF is I/O scheduling, SJF is CPU scheduling</b>. (ii) Double buffering <b>overlaps</b> compute and transfer. (iii) Caching serves the <b>same</b> data again; spooling serves <b>different</b> processes.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Buffer to bridge a gap, spool to share an exclusive device, cache to avoid a re-read.</b>"</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: disk structure and timings ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Disk structure &amp; timings</span></div>
+  <h2><span class="no">5</span>Disk Structure and Access Time</h2><span class="tag">arithmetic ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A magnetic disk is a stack of <b>platters</b> on a <b>spindle</b>, turning at a fixed speed. Data lives on concentric <b>tracks</b>; each track is cut into fixed-length <b>sectors</b>, the smallest unit transferred; there is one <b>read/write head</b> per surface; and the tracks at the same radius on <b>every</b> surface form a <b>cylinder</b> — which can be read with no head movement at all.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,228px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 168" width="218">
+      <g class="w">
+        <ellipse cx="94" cy="82" rx="56" ry="43" class="ink-k fill-y"/>
+        <ellipse cx="94" cy="82" rx="35" ry="27" class="ink"/>
+        <ellipse cx="94" cy="82" rx="16" ry="12" class="ink"/>
+        <path class="ink" d="M94,82 L94,39 M94,82 L94,125 M94,82 L150,82 M94,82 L38,82 M94,82 L140,53 M94,82 L140,111 M94,82 L48,53 M94,82 L48,111"/>
+        <path class="ink-r" d="M232,30 L100,80"/>
+        <rect x="88" y="72" width="15" height="17" rx="3" class="ink-r fill-r"/>
+        <ellipse cx="94" cy="82" rx="69" ry="54" class="ink-g" style="stroke-dasharray:4 3"/>
+        <path class="ink" d="M72,66 L40,32"/>
+        <path class="ink" d="M120,104 L154,136"/>
+        <path class="ink-g" d="M163,82 L196,150"/>
+        <path class="ink-r" d="M226,22 L258,14"/>
+      </g>
+      <text x="94" y="26" text-anchor="middle" class="w6 s">platter</text>
+      <text x="10" y="28" class="s k">track</text>
+      <text x="156" y="140" class="s k">sector</text>
+      <text x="200" y="154" class="g s k">cylinder</text>
+      <text x="260" y="10" text-anchor="end" class="r s k">head + arm</text>
+      <text x="150" y="166" text-anchor="middle" class="s k">one head per surface; all heads move together</text>
+    </svg><figcaption>a cylinder is not a shape — it is every track at the same radius</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Term</th><th class="l">Meaning</th></tr>
+        <tr><td class="l"><b>Platter / surface</b></td><td class="l">one magnetised disc, one side usable ⇒ <b>heads = surfaces</b></td></tr>
+        <tr><td class="l"><b>Track</b></td><td class="l">a circle on one surface; <b>tracks per surface = cylinders</b></td></tr>
+        <tr><td class="l"><b>Sector</b></td><td class="l"><span class="hl">the unit of transfer</span> — <b>512 B</b>, or <b>4 KiB</b> in the advanced format</td></tr>
+        <tr><td class="l"><b>Address</b></td><td class="l"><b>CHS</b> = (cylinder, head, sector); modern disks expose <b>LBA</b></td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> (i) Old disks have the <b>same number of sectors on every track</b>; modern ones use <b>zone bit recording</b>, so outer tracks hold <b>more</b>. (ii) A cylinder is a <b>set of tracks</b>, not a shape.</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">The three timings and the one formula every question is built on</span>
+    <div class="fgrid tiny">
+      <p><b>Seek time</b> T<sub>s</sub> — move the head to the track</p>
+      <p><b>Rotational delay</b> T<sub>r</sub> = <b>½ × 60 ÷ rpm</b> s</p>
+      <p><b>Transfer time</b> T<sub>t</sub> = bytes ÷ transfer rate</p>
+      <p><b>Access time</b> = T<sub>s</sub> + T<sub>r</sub> + T<sub>t</sub></p>
+    </div>
+    <p class="tiny" style="margin-top:1mm">Because <span class="circ">a sector arrives at a random point in a revolution, the average rotational delay is half of one revolution</span> — so <b>T<sub>r</sub> = 30 ÷ rpm seconds</b>, and that is the shortest way to do the arithmetic.</p></div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ average access time</span> A disk turns at <b>7200 rpm</b>, average seek is <b>4 ms</b>, its transfer rate is <b>200 MB/s</b>, and the read moves one <b>4 KiB</b> block. <b>(a)</b> One revolution = 60 ÷ 7200 = <b>8.33 ms</b>, so the average rotational delay is half of it = <span class="circ">4.17 ms</span>. <b>(b)</b> Transfer = 4096 B ÷ (200 × 10⁶ B/s) = 2.05 × 10⁻⁵ s = <b>0.02 ms</b>. <b>(c)</b> Average access = 4 + 4.17 + 0.02 = <span class="circ">8.19 ms</span>. <b>(d)</b> Rotational delay is 4.17 ÷ 8.19 ≈ <b>51 %</b> of it — half of every access is spent merely <i>waiting for the sector</i>. <b>(e)</b> At <b>14400 rpm</b> that wait halves to 2.08 ms and the total falls to <b>6.10 ms</b>; doubling the transfer rate saves only 0.01 ms.</div>  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Seek, spin, ship.</b>" Head move, wait for the sector, move the bytes — always in that order, and <b>add them</b>. "<b>30 over rpm</b>" is the half-revolution wait in seconds.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">In practice</span> The drive reorders requests internally and keeps a small cache, so what the OS sees is a mean latency closer to <b>8–10 ms</b> however far the head really moved.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: disk scheduling ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Disk scheduling</span></div>
+  <h2><span class="no">6</span>Disk Scheduling: FCFS, SSTF, SCAN, C-SCAN, LOOK</h2><span class="tag">trace this ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Requests queue up as <b>cylinder numbers</b>, and disk scheduling fixes the order in which the head visits them. The measure is the <span class="hl">total head movement</span> in cylinders, because every cylinder crossed costs a seek. <b>SSTF</b> minimises that total and starves; <b>SCAN</b> gives every request a <b>bounded wait</b> — that trade-off is what a written answer has to argue.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Algorithm</th><th class="l">Order it serves in</th><th class="l">Verdict</th></tr>
+    <tr><td class="l"><b>FCFS</b></td><td class="l">arrival order</td><td class="l">fair, no starvation, <span class="red">largest total movement</span></td></tr>
+    <tr><td class="l"><b>SSTF</b></td><td class="l">whichever cylinder is <b>nearest</b> right now</td><td class="l"><span class="circ">smallest total</span> — far requests may wait for ever</td></tr>
+    <tr><td class="l"><b>SCAN</b> (elevator)</td><td class="l">one way to the <b>physical end</b> of the disk, then reverse</td><td class="l">the classic balanced answer</td></tr>
+    <tr><td class="l"><b>C-SCAN</b></td><td class="l">one way only; on the return trip it <b>serves nobody</b></td><td class="l"><span class="circ">most uniform wait</span> — like a queue, not a lift</td></tr>
+    <tr><td class="l"><b>LOOK</b> / <b>C-LOOK</b></td><td class="l">SCAN, but stopping at the <b>last request</b> instead of at the edge</td><td class="l">the practical versions; far less wasted travel</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">Worked trace ✍ head at cylinder 53, queue in arrival order 98, 183, 37, 122, 14, 124, 65, 67; disk 0–199</span>
+    <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:5.2mm">
+      <tr><th>Algorithm</th><th>Head movement, step by step</th><th>Total</th></tr>
+      <tr><td><b>FCFS</b></td><td>53→98→183→37→122→14→124→65→67 : 45+85+146+85+108+110+59+2</td><td><b>640</b></td></tr>
+      <tr><td><b>SSTF</b></td><td>53→65→67→37→14→98→122→124→183 : 12+2+30+23+84+24+2+59</td><td><b>236</b></td></tr>
+      <tr><td><b>SCAN</b> ↑</td><td>53→65→67→98→122→124→183→199, then down to 37→14 : 130+16+162+23</td><td><b>331</b></td></tr>
+      <tr><td><b>LOOK</b> ↑</td><td>as SCAN, but reversing at 183 and not 199 : 130+169</td><td><b>299</b></td></tr>
+      <tr><td><b>C-SCAN</b> ↑</td><td>up to 199 (146), jump to 0 (199), then 0→14→37 (14+23)</td><td><b>382</b></td></tr>
+      <tr><td><b>C-LOOK</b> ↑</td><td>up to 183 (130), jump back to 14 (169), then up to 124 (110)</td><td><b>409</b></td></tr>
+    </table></div>
+  <figure class="doodle" style="margin-top:1mm"><svg viewBox="0 0 460 112" width="440">
+    <g class="w">
+      <path class="ink-k" d="M64,100 V12" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M46,100 V16" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M28,16 V100" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      <path class="ink" d="M56,93 H78 M56,82 H78 M56,68 H78 M56,55 H78 M56,23 H78"/>
+      <path class="ink-r" d="M16,75 H46"/>
+    </g>
+    <text x="150" y="14" text-anchor="middle" class="s" style="font-size:10px">cylinder 199 — the edge of the disk</text>
+    <text x="300" y="34" text-anchor="middle" class="g w6 s">up: the lift serves everyone on the way</text>
+    <text x="300" y="54" text-anchor="middle" class="r w6 s">down: C-SCAN serves nobody</text>
+    <text x="300" y="74" text-anchor="middle" class="k s" style="font-size:10.5px">head starts at 53; SCAN serves on the way down too</text>
+    <text x="300" y="94" text-anchor="middle" class="s" style="font-size:10.5px">requests waiting at 14 · 37 · 65 · 67 · 98 · 122 · 124 · 183</text>
+    <text x="452" y="110" text-anchor="end" class="p w6 s" style="font-size:11px">no request waits more than one full sweep</text>
+  </svg><figcaption>the elevator family: every request is reached within one full sweep</figcaption></figure>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>SCAN</b> reaches the <b>end of the disk</b>; <b>LOOK</b> stops at the last request — that is the whole 331 − 32 = <b>299</b>. (ii) <b>C-SCAN</b> services in one direction only. (iii) "Smallest total movement" and "smallest average wait" are <b>not</b> the same question.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>SSTF is nearest, SCAN is the lift, C-SCAN is the queue.</b>" A lift takes people both ways up and down; a queue is served in one direction and the return trip carries nobody.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: formatting, boot blocks, RAID ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Formatting, boot blocks, RAID</span></div>
+  <h2><span class="no">7</span>Formatting, Boot Blocks, RAID &amp; Solid-State Disks</h2><span class="tag">arithmetic ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A blank disk must be marked before anything can be stored on it, at <b>two levels</b>. <b>Low-level (physical) formatting</b> divides the surface into sectors and writes the <span class="hl">preamble, header, ECC and inter-sector gaps</span>; it is the factory's job. <b>High-level (logical) formatting</b> writes the <b>free-space structure</b> — the bit map marking every block.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,204px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 128" width="196">
+      <g class="w">
+        <rect x="8" y="10" width="264" height="24" rx="4" class="ink-r fill-r"/>
+        <rect x="8" y="38" width="58" height="24" rx="4" class="ink fill-b"/>
+        <rect x="70" y="38" width="58" height="24" rx="4" class="ink fill-y"/>
+        <rect x="132" y="38" width="58" height="24" rx="4" class="ink fill-b"/>
+        <rect x="194" y="38" width="78" height="24" rx="4" class="ink fill-y"/>
+        <path class="ink-r" d="M72,50 H66 M132,50 H126 M198,50 H192" style="stroke-dasharray:2 2"/>
+      </g>
+      <text x="140" y="20" text-anchor="middle" class="r w6 s" style="font-size:11px">boot block (block 0) — the boot loader lives here</text>
+      <text x="37" y="49" text-anchor="middle" class="w6 s" style="font-size:9.5px">pre</text><text x="37" y="58" text-anchor="middle" class="s" style="font-size:8.5px">amble</text>
+      <text x="99" y="49" text-anchor="middle" class="w6 s" style="font-size:9.5px">head</text><text x="99" y="58" text-anchor="middle" class="s" style="font-size:8.5px">er</text>
+      <text x="161" y="49" text-anchor="middle" class="w6 s" style="font-size:9.5px">data</text><text x="161" y="58" text-anchor="middle" class="s" style="font-size:8.5px">512 B</text>
+      <text x="233" y="49" text-anchor="middle" class="w6 s" style="font-size:9.5px">ECC</text><text x="233" y="58" text-anchor="middle" class="s" style="font-size:8.5px">parity</text>
+      <text x="140" y="78" text-anchor="middle" class="r w6 s" style="font-size:11px">dashed = inter-sector gap: carries no data at all</text>
+      <text x="140" y="96" text-anchor="middle" class="s k">low-level formatting = this picture</text>
+      <text x="140" y="108" text-anchor="middle" class="s k">high-level formatting = the free-space bit map</text>
+      <text x="140" y="124" text-anchor="middle" class="p w6 s" style="font-size:11px">partition → file system → boot block</text>
+    </svg><figcaption>why a formatted disk always shows less than its nominal capacity</figcaption></figure>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">From a blank disk to a bootable system</span>
+        <div class="fgrid tiny">
+          <p><b>1 · Low-level format:</b> sectors, gaps, ECC</p>
+          <p><b>2 · Partition table:</b> MBR (4 primary, 2 TB) or GPT (128, huge)</p>
+          <p><b>3 · High-level format:</b> a file system on one partition</p>
+          <p><b>4 · Boot block:</b> block 0 holds the boot loader</p>
+        </div>
+        <p class="tiny" style="margin-top:0.8mm">The BIOS/UEFI reads block 0 and runs the boot loader, which loads the kernel. <b>Bad blocks</b> are handled by <b>sparing</b>: the content moves to a reserved sector and the number is remapped.</p></div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> (i) Sectors are separated by <span class="circ">inter-sector gaps</span>, so <b>a formatted disk never shows its full nominal capacity</b>. (ii) Low-level formatting is the <b>factory's</b> job; a bad block is <b>spared</b>.</div>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">RAID level</th><th class="l">How it works</th><th class="l">Usable capacity (min. disks)</th><th class="l">Disks that may fail</th></tr>
+    <tr><td class="l"><b>0 — striping</b></td><td class="l">data split across all disks, no redundancy</td><td class="l"><b>100 %</b> = N × size (2)</td><td class="l"><span class="red">0</span> — lose one, lose all</td></tr>
+    <tr><td class="l"><b>1 — mirroring</b></td><td class="l">an exact copy on every disk</td><td class="l">one disk's size (2)</td><td class="l">N − 1</td></tr>
+    <tr><td class="l"><b>5 — distributed parity</b> ★</td><td class="l">parity spread round-robin</td><td class="l"><b>(N − 1) × size</b> (3)</td><td class="l"><b>1</b></td></tr>
+    <tr><td class="l"><b>6 — double parity</b></td><td class="l">RAID 5 with <b>two</b> parity blocks</td><td class="l"><b>(N − 2) × size</b> (4)</td><td class="l"><b>2</b></td></tr>
+    <tr><td class="l"><b>10 — 1 + 0</b></td><td class="l">mirror pairs, then stripe across them</td><td class="l">50 % of raw (4)</td><td class="l">one per pair</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ RAID arithmetic</span> <b>(a)</b> RAID 0 of 4 × 1 TB → <b>4 TB</b>, no redundancy. <b>(b)</b> RAID 1 of 4 × 1 TB → <b>1 TB</b>, any <b>3</b> disks may fail. <b>(c)</b> RAID 5 of 4 × 1 TB → (4 − 1) = <span class="circ">3 TB</span>, one disk tolerated, but rebuilding rewrites everything. <b>(d)</b> RAID 6 of 5 × 1 TB → (5 − 2) = <span class="circ">3 TB</span> with <b>2</b> tolerated; RAID 10 of 8 × 1 TB → 8 ÷ 2 = <b>4 TB</b>. <b>(e)</b> A <b>small</b> write to RAID 5 costs <span class="circ">4 disk I/Os</span> — read old data, read old parity, write new data, write new parity.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Zero stripes, one mirror, five one parity, six two, ten half.</b>" Mirror-then-stripe is written <b>10</b>; stripe-then-mirror is <b>01</b> — the digits are the order of the operations.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">SSD vs magnetic disk</span> No head, no rotation, <span class="circ">random access ≈ 0.1 ms</span> against 4–10 ms; symmetric reads and writes; <b>wear levelling</b> spreads writes over the cells; TRIM marks dead blocks. Still dearer per TB.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: terminals and clocks ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Terminals &amp; clocks</span></div>
+  <h2><span class="no">8</span>Terminals, Line Discipline, Clocks &amp; Timer Interrupts</h2><span class="tag">last topic ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <b>terminal</b> is the device through which a person talks to the computer — a keyboard for input, a display for output, <span class="hl">character by character</span>. A <b>line discipline</b> in the device-independent layer sits between them and decides buffering, echo and special keys.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,208px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 116" width="200">
+      <g class="w">
+        <rect x="8" y="8" width="112" height="28" rx="6" class="ink fill-b"/>
+        <rect x="8" y="54" width="112" height="28" rx="6" class="ink-g fill-g"/>
+        <rect x="180" y="30" width="112" height="28" rx="6" class="ink-r fill-r"/>
+        <rect x="180" y="78" width="112" height="28" rx="6" class="ink fill-y"/>
+        <path class="ink" d="M120,22 L178,38" marker-end="url(#ahb)"/>
+        <path class="ink" d="M120,68 L178,52" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M178,52 L178,84" marker-end="url(#ah)"/>
+      </g>
+      <text x="64" y="19" text-anchor="middle" class="w6 s">terminal</text><text x="64" y="31" text-anchor="middle" class="s" style="font-size:10px">keys + screen</text>
+      <text x="64" y="65" text-anchor="middle" class="g w6 s">line discipline</text><text x="64" y="77" text-anchor="middle" class="g s" style="font-size:10px">canonical or raw</text>
+      <text x="236" y="41" text-anchor="middle" class="r w6 s">the program</text><text x="236" y="53" text-anchor="middle" class="s" style="font-size:10px">gets a whole line</text>
+      <text x="236" y="89" text-anchor="middle" class="w6 s">timer</text><text x="236" y="101" text-anchor="middle" class="s" style="font-size:10px">interrupt → scheduler</text>
+    </svg><figcaption>three keystrokes are three interrupts; one <code>read()</code> is one line</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Terminal</th><th class="l">What it is</th></tr>
+        <tr><td class="l"><b>Character terminal</b></td><td class="l">keyboard + character display; a <b>byte stream</b> in, text out — a <span class="circ">character device</span></td></tr>
+        <tr><td class="l"><b>Graphics terminal</b></td><td class="l">accepts <b>escape sequences</b> and draws at the pixel level</td></tr>
+        <tr><td class="l"><b>Line discipline</b></td><td class="l"><b>canonical</b> assembles a whole line and echoes it; <b>raw</b> passes each keystroke at once</td></tr>
+        <tr><td class="l"><b>Pseudo-terminal</b></td><td class="l">what SSH uses: a file the terminal writes and the line discipline reads, then sends over the network</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> A terminal is <b>not</b> a "remote console": it is an I/O device, so it has a <b>driver</b>, a <b>line discipline</b> and <b>interrupt-driven input</b>.</div>    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">The three jobs of a clock — and what breaks without each one</span>
+    <div class="fgrid tiny">
+      <p><b>1 · Measure elapsed time.</b> A free-running counter read on request</p>
+      <p><b>2 · Enforce time limits.</b> <span class="circ">the interval timer</span> — what makes scheduling <span class="hl">preemptive</span></p>
+      <p><b>3 · Account CPU time.</b> charge each process for the ticks it used</p>
+      <p><b>Time-of-day clock:</b> keeps wall-clock time — the battery-backed CMOS/RTC</p>
+    </div>
+    <p class="tiny" style="margin-top:1mm">Hardware is simple: a counter is decremented every clock tick and, on reaching zero, it <b>raises an interrupt</b> and is reloaded. That single interrupt is what stops a runaway process from keeping the CPU for ever. A typical tick is <b>10 ms</b>, so eight round-robin processes each get 10 ms in an 80 ms round.</p></div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Clock vs timer</span> A <b>clock</b> keeps the <b>time</b>; a <b>timer</b> <b>counts</b> and <span class="hl">raises an interrupt</span>. A time-of-day clock can be read but never interrupts; an interval timer interrupts on schedule. Real hardware merges them into one counter with a compare register.</div>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>The clock tells the time; the timer tells the process to stop.</b>" Only an interrupt can move a running process off the CPU, and that interrupt always comes from a timer.</div>
+      <div class="exam tiny"><span class="lbl">Exam trap</span> (i) Without a timer interrupt, scheduling is <b>non-preemptive</b>. (ii) The time-of-day clock does <b>not</b> enforce the quantum; Linux now runs <b>tickless</b>.</div>
+    </div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid tiny">
+      <p><b>Controller</b> = the middleman</p><p>Control, status, data registers</p>
+      <p>Status says <b>busy / ready / error</b></p><p>Vector table = handler addresses</p>
+      <p>Port-mapped = IN/OUT, own space</p><p>Memory-mapped = load/store, <b>eats space</b></p>
+      <p>Trap = internal error</p><p>Interrupt = device, asynchronous</p>
+      <p><b>Polling</b> = CPU spins</p><p>Interrupt = CPU per byte</p>
+      <p><b>DMA</b> = controller, whole block</p><p>DMA = <b>1</b> interrupt per block</p>
+      <p>Steal a cycle · hold a burst · wait quietly</p><p>Block device = blocks · char = stream</p>
+      <p>I/O stack: library, common, driver, handler</p><p>Only the driver knows the device</p>
+      <p>I/O policies: FCFS, priority, SSTF, EDF</p><p>On an SSD, <b>random is optimal</b></p>
+      <p>Buffer = speed + size mismatch</p><p>Cache = avoid a re-read</p>
+      <p>Spool = share an exclusive device</p><p>Spooling uses a <b>daemon</b></p>
+      <p>T = max(C,M) with double buffering</p><p>Platters → tracks → sectors → cylinder</p>
+      <p><b>T<sub>r</sub> = 30 ÷ rpm</b> seconds</p><p>T<sub>t</sub> = bytes ÷ rate</p>
+      <p>Access = seek + spin + ship</p><p>Same sectors per track: <b>no</b> (ZBR)</p>
+      <p>SSTF starves · SCAN is the lift</p><p>C-SCAN = a queue, one direction</p>
+      <p>LOOK stops at the last request</p><p>Formatting: gaps · ECC · sparing</p>
+      <p>Boot block = block 0 = the loader</p><p>RAID 0/1/5/6/10: 0 · 1 · N−1 · N−2 · N/2</p>
+      <p>Small RAID 5 write = <b>4</b> I/Os</p><p>SSD ≈ 0.1 ms · disk ≈ 8 ms</p>
+      <p>Line discipline: canonical or raw</p><p>Clock keeps time · timer interrupts</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>The CPU sees a device as <b>three registers</b></li>
+      <li>Memory-mapped I/O costs <b>address space</b></li>
+      <li>Interrupt-driven I/O is <b>1 interrupt per byte</b></li>
+      <li>DMA interrupts the CPU <b>once per block</b></li>
+      <li>7200 rpm ⇒ average rotational delay <b>4.17 ms</b></li>
+      <li>7200 rpm + 4 ms seek + 4 KiB ⇒ <b>8.19 ms</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>A cylinder = every track at the same radius</li>
+      <li>This queue under SSTF from 53 ⇒ <b>236</b></li>
+      <li>The same queue under SCAN ⇒ <b>331</b>; LOOK ⇒ <b>299</b></li>
+      <li>RAID 5 of 4 disks ⇒ <b>3</b> usable, <b>1</b> may fail</li>
+      <li>Keyboard, mouse, printer = <b>character</b> devices</li>
+      <li>Only a <b>timer interrupt</b> can preempt a process</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> saying polling is efficient because it needs no interrupt logic · saying interrupt-driven I/O always beats polling · DMA said to remove the CPU instead of the copying · a sector said to be the same size on every track · a cylinder drawn as a shape · SCAN said to stop at the last request · C-SCAN said to serve on the return trip · <b>RAID 5 said to survive two failures</b> · RAID 10 written 01 · low-level formatting said to be the user's job · the time-of-day clock said to enforce the quantum.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "Three registers, one table" · "Slow ⇒ spin, fast ⇒ interrupt, faster ⇒ DMA" · "Steal a cycle, hold a burst, wait quietly" · "Library, common, driver, handler" · "Buffer to bridge, spool to share, cache to avoid a re-read" · "Seek, spin, ship" · "30 over rpm" · "SSTF is nearest, SCAN is the lift, C-SCAN is the queue" · "Zero stripes, one mirror, five one, six two, ten half" · "The clock tells the time; the timer tells the process to stop".</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Input/Output &amp; Disks</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set" style="font-size:9.8pt;line-height:4.9mm">
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">1.</span>A controller transfers a whole block straight to memory and interrupts the CPU only at the end. That is:<ol class="opts"><li>programmed I/O</li><li>polling</li><li>direct memory access</li><li>spooling</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">2.</span>The main cost of memory-mapped I/O over port-mapped I/O is that it:<ol class="opts"><li>needs a special instruction</li><li>cannot raise interrupts</li><li>must use DMA</li><li>consumes memory address space</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">3.</span>At a low data rate a handler may cost more than the transfer, so which method can be <b>faster</b>?<ol class="opts"><li>DMA</li><li>polling</li><li>cycle stealing</li><li>spooling</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">4.</span>The tracks at the same radius on every platter surface form a:<ol class="opts"><li>cylinder</li><li>sector</li><li>surface</li><li>spindle</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">5.</span>A disk running at 7200 rpm has an average rotational latency of:<ol class="opts"><li>8.33 ms</li><li>2.08 ms</li><li>4.17 ms</li><li>16.7 ms</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">6.</span>Which of these is a <b>character</b>, not a block, device?<ol class="opts"><li>hard disk</li><li>SSD</li><li>USB flash drive</li><li>keyboard</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">7.</span>Which disk policy guarantees no request waits more than one full sweep?<ol class="opts"><li>FCFS</li><li>SCAN</li><li>SSTF</li><li>random</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">8.</span>Head at 53, queue 98, 183, 37, 122, 14, 124, 65, 67. Total movement under <b>SSTF</b>:<ol class="opts"><li>236</li><li>640</li><li>331</li><li>299</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">9.</span>Moving the head to the required track is the:<ol class="opts"><li>rotational latency</li><li>transfer time</li><li>queueing delay</li><li>seek time</li></ol></div>
+    <div class="mcq" style="line-height:4.9mm"><span class="qn">10.</span>What does a time-of-day clock do that an interval timer does not?<ol class="opts"><li>interrupt on schedule</li><li>keep the wall-clock time</li><li>end a time slice</li><li>charge CPU time to a process</li></ol></div>
+  </div>
+  <div class="anskey tiny">Answer key → 1-c · 2-d · 3-b · 4-a · 5-c · 6-d · 7-b · 8-a · 9-d · 10-b</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Explain the layers of I/O software. Describe DMA and its three modes of bus access. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5.2mm">
+    <li><b>The four layers</b> — (1) <b>user-level I/O library</b>: buffers output into lines. (2) <b>Device-independent OS software</b>: uniform naming, allocating the device, buffering, block sizing, error reporting. (3) <b>Device driver</b>: the only hardware-aware layer. (4) <b>Interrupt handlers</b>: run on the interrupt, move the data, wake the waiting process. <i class="mk">4</i></li>
+    <li><b>DMA</b> — the controller itself transfers a <b>whole block</b> between the device and main memory; the CPU only sets up the memory address, the count and the device port, then continues other work and is <b>interrupted once when the block has moved</b>. <i class="mk">3</i></li>
+    <li><b>Three modes</b> — <b>cycle stealing</b>: one memory cycle at a time, the bus returned, so the CPU slows but is never blocked. <b>Burst mode</b>: the bus is held for the whole block. <b>Transparent mode</b>: the bus is used only when the CPU is idle. <i class="mk">3</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>Can name the four layers of the I/O stack</li>
+      <li>Can tell polling, interrupt and DMA apart by CPU cost</li>
+      <li>Can compute average access time from rpm, seek and rate</li>
+    </ul>
+    <ul class="tick">
+      <li>Can trace a request queue under SCAN and total the movement</li>
+      <li>Can do RAID capacity arithmetic and say how many disks may fail</li>
+      <li>Can separate the clock from the timer</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

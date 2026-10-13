@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>মেমোরি ও I/O ইন্টারফেসিং: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">মেমোরি ও I/O ইন্টারফেসিং</span></h1>
+  <p class="subtitle">8284A · 8288 · ল্যাচ ও ট্রান্সসিভার · অ্যাড্রেস ডিকোডিং · 8255A PPI: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,106 L320,56 M400,132 L470,74 M400,168 L470,226 M320,194 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">মেমোরি ও I/O</text><text x="320" y="168" text-anchor="middle" class="bn r s">8086 ইন্টারফেসিং মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">8284A: ক্রিস্টাল ÷ 3</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">অ্যাড্রেস ডিকোডিং ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">8288 (ম্যাক্স মোড)</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">বাস সাইকেল T1–T4 ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">8255A কন্ট্রোল ওয়ার্ড ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">373 ল্যাচ · 245 বাফার</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">পোর্ট বনাম ম্যাপড I/O ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">কীপ্যাড · LCD · ADC</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = হার্ডওয়্যার / প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① CLK = ক্রিস্টাল ÷ 3<br>② ALE → 74LS373<br>③ 2ⁿ সেল → n লাইন<br>④ 74LS138 মেমোরি ম্যাপ<br>⑤ IN/OUT: AL/AX, DX<br>⑥ 8255A: 80H, 9BH, BSR</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"<span class="hl">Clock and bus controller interfacing</span>: clock generator, bus demultiplexer, bus controller interfacing; <span class="hl">Memory Interfacing</span>: SRAM and EEPROM interfacing, Types of I/O: parallel I/O, programmed I/O, interrupt driven I/O, <span class="hl">I/O port address decoding</span>, <span class="hl">programmable peripheral interface (8255A)</span>, interface examples: Keyboard matrix, LCD/7-Segment display, printer, stepper motor, A/D and D/A converter"। পিন: লেসন mp1 · 8254/8251: mp3 · 8259A, DMA: mp4।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ · <span class="ov">RD</span> = অ্যাকটিভ-লো সিগন্যাল</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>মিন/ম্যাক্স মোড, 8284A ক্লক ……… পৃ. ২</li><li>বাস সাইকেল, ওয়েট স্টেট, 8288 … পৃ. ৩</li><li>ডিমাল্টিপ্লেক্সিং ও বাফারিং ……… পৃ. ৪</li><li>মেমোরি চিপ ও ব্যাংক ……… পৃ. ৫</li><li>অ্যাড্রেস ডিকোডিং ও মেমোরি ম্যাপ … পৃ. ৬</li></ul>
+    <ul class="tick"><li>আইসোলেটেড বনাম ম্যাপড I/O ……… পৃ. ৭</li><li>8255A গঠন ও মোড ……… পৃ. ৮</li><li>কন্ট্রোল ওয়ার্ড ও ইন্টারফেস উদাহরণ … পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: system bus, min/max, 8284A ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>ক্লক জেনারেটর</span></div>
+  <h2><span class="no">১</span>8086-এর কেন সহায়ক চিপ লাগে</h2><span class="tag">ধারণা</span>
+  <div class="def"><span class="lbl">মূল কথা</span> অ্যাড্রেস ও ডেটা <span class="hl">একই পিন ভাগ করে</span> (AD0–AD15, ৪০ পিনে আঁটাতে), প্রতিটি পিন মাত্র ~<b>১০টি 74LS লোড</b> চালাতে পারে, আর চিপে কোনো অসিলেটর নেই। তাই বোর্ডে যোগ হয় <b>8284A</b> ক্লক, <b>74LS373</b> ল্যাচ, <b>74LS245</b> ট্রান্সসিভার এবং ম্যাক্সিমাম মোডে <b>8288</b> বাস কন্ট্রোলার।</div>
+  <table class="hand small">
+    <tr><th>পিন</th><th class="l">মিনিমাম মোড (MN/<span class="ov">MX</span> = 1)</th><th class="l">ম্যাক্সিমাম মোড (MN/<span class="ov">MX</span> = 0)</th></tr>
+    <tr><td>24–25</td><td class="l"><span class="ov">INTA</span>, ALE</td><td class="l">QS1, QS0 (কিউ স্ট্যাটাস)</td></tr>
+    <tr><td>26–28</td><td class="l"><span class="ov">DEN</span>, DT/<span class="ov">R</span>, M/<span class="ov">IO</span></td><td class="l"><span class="ov">S0</span>, <span class="ov">S1</span>, <span class="ov">S2</span> (স্ট্যাটাস → 8288)</td></tr>
+    <tr><td>29–31</td><td class="l"><span class="ov">WR</span>, HLDA, HOLD</td><td class="l"><span class="ov">LOCK</span>, <span class="ov">RQ</span>/<span class="ov">GT1</span>, <span class="ov">RQ</span>/<span class="ov">GT0</span></td></tr>
+    <tr><td>ব্যবহার</td><td class="l">একক CPU নিজেই কন্ট্রোল দেয়</td><td class="l">8087 / মাল্টিপ্রসেসর: <span class="hl">8288 কন্ট্রোল দেয়</span></td></tr>
+  </table>
+  <p class="small">দুই মোডেই অপরিবর্তিত: <span class="ov">RD</span>, READY, RESET, CLK, <span class="ov">BHE</span>/S7। 8088-এ পিন ২৮ হলো IO/<span class="ov">M</span> (উল্টো অর্থ)।</p>
+
+  <h2><span class="no">২</span>8284A ক্লক জেনারেটর (Clock Generator)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ১৮-পিনের চিপ, যা ক্রিস্টাল থেকে <b>CLK</b>, <b>PCLK</b> ও <b>OSC</b> তৈরি করে এবং <span class="hl">READY ও RESET-কে ক্লকের সাথে সিঙ্ক্রোনাইজ</span> করে। CLK = <span class="circ">f<sub>crystal</sub> ÷ 3</span>, ডিউটি সাইকেল <b>৩৩%</b>।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 136" width="640">
+    <g class="w">
+      <rect x="10" y="22" width="40" height="30" rx="4" class="ink-k fill-b"/>
+      <path class="ink-k" d="M20,26 V48 M40,26 V48"/>
+      <path class="ink" d="M50,37 H82" marker-end="url(#ahb)"/>
+      <rect x="84" y="20" width="88" height="34" rx="9" class="ink fill-b"/>
+      <path class="ink" d="M172,37 H212" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M192,37 V8 H214" marker-end="url(#ahg)"/>
+      <rect x="214" y="20" width="56" height="34" rx="9" class="ink-r fill-r"/>
+      <path class="ink-r" d="M270,37 H310" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M290,37 V74 H316" marker-end="url(#ah)"/>
+      <rect x="318" y="60" width="52" height="30" rx="9" class="ink fill-b"/>
+      <path class="ink" d="M370,75 H392" marker-end="url(#ahb)"/>
+      <rect x="100" y="100" width="90" height="30" rx="9" class="ink-g fill-g"/>
+      <rect x="430" y="100" width="90" height="30" rx="9" class="ink-g fill-g"/>
+      <path class="ink-g" d="M70,115 H98 M190,115 H226" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M400,115 H428 M520,115 H556" marker-end="url(#ahg)"/>
+    </g>
+    <text x="30" y="68" text-anchor="middle" class="bn s">ক্রিস্টাল</text>
+    <text x="128" y="42" text-anchor="middle" class="bn s">অসিলেটর</text>
+    <text x="218" y="12" class="g s">OSC = f (15 MHz)</text>
+    <text x="242" y="42" text-anchor="middle" class="r w6">÷ 3</text>
+    <text x="314" y="42" class="bn r w6">CLK = 5 MHz → 8086 (৩৩% ডিউটি)</text>
+    <text x="344" y="80" text-anchor="middle" class="w6">÷ 2</text>
+    <text x="396" y="80" class="bn s">PCLK = 2.5 MHz, ৫০% → পেরিফেরাল</text>
+    <text x="66" y="120" text-anchor="end" class="s"><tspan class="ov">RES</tspan> (RC)</text>
+    <text x="145" y="120" text-anchor="middle" class="bn g s">CLK-এ সিঙ্ক</text>
+    <text x="230" y="120" class="s">RESET</text>
+    <text x="396" y="120" text-anchor="end" class="s">RDY1, RDY2</text>
+    <text x="475" y="120" text-anchor="middle" class="bn g s">সিঙ্ক</text>
+    <text x="560" y="120" class="s">READY</text>
+  </svg><figcaption>একটি ক্রিস্টাল, তিনটি ক্লক; সাথে CPU-র জন্য পরিষ্কার RESET ও READY</figcaption></figure>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 15 MHz ক্রিস্টাল → CLK = <b>5 MHz</b> (T = 200 ns), PCLK = 2.5 MHz, OSC = 15 MHz। 8086-2 (8 MHz)-এর জন্য <span class="circ">24 MHz</span> ক্রিস্টাল লাগে; 8086-1 (10 MHz)-এর জন্য 30 MHz।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>OSC ÷ 1, CLK ÷ 3, PCLK ÷ 6</b>" (সবই ক্রিস্টাল থেকে)। F/<span class="ov">C</span> = 0 হলে ক্রিস্টাল, 1 হলে বাইরের EFI ইনপুট।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> CLK-এর ডিউটি <b>৩৩%</b>; ৫০% হলো PCLK। RESET অন্তত <b>৪টি ক্লক</b> HIGH রাখতে হয়; এরপর CS = FFFFH, IP = 0000H, তাই প্রথম ফেচ <span class="circ">FFFF0H</span>-এ: বুট EPROM থাকে মেমোরির একেবারে উপরে (পৃ. ৬)।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: bus cycle + 8288 ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>বাস সাইকেল · 8288</span></div>
+  <h2><span class="no">৩</span>বাস সাইকেল (Bus Cycle): T1–T4 ও ওয়েট স্টেট</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> একটি মেমোরি বা I/O রিড/রাইট = <span class="circ">৪টি ক্লকের</span> একটি <b>বাস সাইকেল</b>, T1–T4। ধীর মেমোরি বা পোর্ট <b>READY</b> লো করলে CPU <span class="hl">ওয়েট স্টেট (Tw)</span> ঢোকায়, প্রতিটি এক ক্লক।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 172" width="640">
+    <g class="w">
+      <path class="ink-k" d="M80,42 V20 H117 V42 H190 V20 H227 V42 H300 V20 H337 V42 H410 V20 H447 V42 H520 V20 H557 V42 H630"/>
+      <path class="ink" d="M80,72 H94 V54 H170 V72 H630"/>
+      <path class="ink fill-b" d="M86,94 L93,84 H183 L190,94 L183,104 H93 Z"/>
+      <path class="ink-k" d="M190,94 H300" stroke-dasharray="5 5"/>
+      <path class="ink-g fill-g" d="M300,94 L307,84 H583 L590,94 L583,104 H307 Z"/>
+      <path class="ink" d="M80,116 H200 V134 H572 V116 H630"/>
+      <path class="ink-r" d="M80,148 H318 V166 H448 V148 H630"/>
+      <path class="ink-k" d="M190,14 V168 M300,14 V168 M410,14 V168 M520,14 V168" stroke-dasharray="2 6" style="stroke-width:1"/>
+    </g>
+    <text x="135" y="12" text-anchor="middle" class="w6">T1</text><text x="245" y="12" text-anchor="middle" class="w6">T2</text><text x="355" y="12" text-anchor="middle" class="w6">T3</text><text x="465" y="12" text-anchor="middle" class="r w6">Tw</text><text x="575" y="12" text-anchor="middle" class="w6">T4</text>
+    <text x="4" y="36" class="s k">CLK</text><text x="4" y="68" class="s k">ALE</text><text x="4" y="98" class="s k">AD15–0</text><text x="4" y="130" class="s k"><tspan class="ov">RD</tspan></text><text x="4" y="162" class="s k r">READY</text>
+    <text x="138" y="98" text-anchor="middle" class="bn s">অ্যাড্রেস</text><text x="245" y="88" text-anchor="middle" class="bn s">ফ্লোট</text><text x="445" y="98" text-anchor="middle" class="bn g s">মেমোরি থেকে ডেটা</text>
+    <text x="198" y="66" class="bn s g">ALE ↓-এ ল্যাচ</text>
+    <text x="456" y="163" class="bn r s">← লো হলে অপেক্ষা</text>
+  </svg><figcaption>একটি ওয়েট স্টেটসহ রিড সাইকেল (Intel-এর চিত্রে Tw থাকে T3 ও T4-এর মাঝে)</figcaption></figure>
+  <table class="hand small">
+    <tr><th>স্টেট</th><th class="l">কী ঘটে</th></tr>
+    <tr><td>T1</td><td class="l">AD0–AD15, A16–A19, <span class="ov">BHE</span>-এ অ্যাড্রেস; <span class="hl">ALE পালস</span>; M/<span class="ov">IO</span>, DT/<span class="ov">R</span> সেট</td></tr>
+    <tr><td>T2</td><td class="l">অ্যাড্রেস সরে যায়; <span class="ov">RD</span> বা <span class="ov">WR</span> লো; <span class="ov">DEN</span> লো; রাইট ডেটা বাসে</td></tr>
+    <tr><td>T3</td><td class="l">মেমোরি/পোর্ট ডেটা দেয়; READY যাচাই হয়</td></tr>
+    <tr><td class="red"><b>Tw</b></td><td class="l">READY = 0 থাকলে বারবার; প্রতিটি এক ক্লক; সিগন্যাল স্থির</td></tr>
+    <tr><td>T4</td><td class="l">CPU রিড ডেটা নেয়; <span class="ov">RD</span>/<span class="ov">WR</span> হাই; সাইকেল শেষ</td></tr>
+  </table>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 5 MHz: T = 200 ns, সাইকেল = 4T = <span class="circ">800 ns</span>; ১টি Tw → 1000 ns। সর্বোচ্চ হার = 2 বাইট / 800 ns = 2.5 MB/s।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> Brey Tw দেখান T2 ও T3-এর মাঝে, Intel T3 ও T4-এর মাঝে; যেভাবেই হোক <b>READY লো ⇒ প্রতি Tw-তে +১ ক্লক</b>।</div>
+  </div>
+
+  <h2><span class="no">৪</span>8288 বাস কন্ট্রোলার (ম্যাক্সিমাম মোড)</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th><span class="ov">S2</span> <span class="ov">S1</span> <span class="ov">S0</span></th><th class="l">সাইকেল</th><th class="l">আউটপুট</th></tr>
+      <tr><td>0 0 0</td><td class="l">ইন্টারাপ্ট অ্যাক</td><td class="l"><span class="ov">INTA</span></td></tr>
+      <tr><td>0 0 1</td><td class="l">I/O রিড</td><td class="l"><span class="ov">IORC</span></td></tr>
+      <tr><td>0 1 0</td><td class="l">I/O রাইট</td><td class="l"><span class="ov">IOWC</span>, <span class="ov">AIOWC</span></td></tr>
+      <tr><td>0 1 1</td><td class="l">হল্ট</td><td class="l">নেই</td></tr>
+      <tr><td>1 0 0</td><td class="l">কোড ফেচ</td><td class="l"><span class="ov">MRDC</span></td></tr>
+      <tr><td>1 0 1</td><td class="l">মেমোরি রিড</td><td class="l"><span class="ov">MRDC</span></td></tr>
+      <tr><td>1 1 0</td><td class="l">মেমোরি রাইট</td><td class="l"><span class="ov">MWTC</span>, <span class="ov">AMWC</span></td></tr>
+      <tr><td>1 1 1</td><td class="l">প্যাসিভ</td><td class="l">নেই</td></tr>
+    </table>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">8288</span> ২০ পিন; স্ট্যাটাস বিট থেকে <b>কমান্ড</b> এবং ALE, DEN, DT/<span class="ov">R</span> তৈরি করে। "A" = <b>অ্যাডভান্সড</b> রাইট, এক ক্লক আগে।</div>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b><span class="ov">S2</span> = 0 → I/O দিক</b>, 1 → মেমোরি। নিচের দুই বিট: 00 বিশেষ, 01 রিড, 10 রাইট, 11 নিষ্ক্রিয়।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> বাস আর্বিট্রেশন <span class="circ">8289</span>-এর কাজ, 8288-এর নয়। 8288-এর DEN <b>অ্যাকটিভ HIGH</b>।</div>
+    </div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: demux & buffering ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>বাস ডিমাল্টিপ্লেক্সিং</span></div>
+  <h2><span class="no">৫</span>অ্যাড্রেস/ডেটা বাস ডিমাল্টিপ্লেক্সিং (Demultiplexing)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> AD0–AD15 <b>T1-এ অ্যাড্রেস</b> এবং <b>T2–T4-এ ডেটা</b> বহন করে। <span class="hl">ALE</span> (Address Latch Enable) T1-এ হাই থাকে; <b>ল্যাচ</b> ALE = 1 থাকা পর্যন্ত অ্যাড্রেস পার করে এবং <span class="hl">ALE-এর পতনশীল প্রান্ত থেকে</span> সাইকেলের শেষ পর্যন্ত তা ধরে রাখে। ল্যাচ করা লাইনগুলোই সিস্টেম অ্যাড্রেস বাস A0–A19।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 230" width="640">
+    <g class="w">
+      <rect x="10" y="8" width="110" height="214" rx="8" class="ink-k fill-y"/>
+      <rect x="220" y="14" width="124" height="104" rx="8" class="ink-r fill-r"/>
+      <rect x="220" y="146" width="124" height="74" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M120,34 H218 M120,70 H218 M120,100 H218"/>
+      <path class="ink" d="M168,34 V162 H218"/>
+      <path class="ink-r" d="M120,134 H282 V120" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M120,186 H218 M120,210 H218"/>
+      <path class="ink" d="M344,66 H420" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M348,183 H420" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+    </g>
+    <circle cx="168" cy="34" r="3.5" fill="#1d3f8f"/>
+    <text x="65" y="108" text-anchor="middle" class="k l">8086</text><text x="65" y="128" text-anchor="middle" class="bn s">মিন মোড</text>
+    <text x="124" y="28" class="s">AD0–AD15</text><text x="124" y="64" class="s">A16–A19</text><text x="124" y="94" class="s"><tspan class="ov">BHE</tspan></text>
+    <text x="124" y="128" class="s r">ALE</text><text x="124" y="180" class="s g">DT/<tspan class="ov">R</tspan></text><text x="124" y="204" class="s g"><tspan class="ov">DEN</tspan></text>
+    <text x="282" y="56" text-anchor="middle" class="r w6">3 × 74LS373</text><text x="282" y="76" text-anchor="middle" class="bn s">ল্যাচ (8282)</text><text x="282" y="110" text-anchor="middle" class="s r">G = ALE</text>
+    <text x="282" y="172" text-anchor="middle" class="g w6">2 × 74LS245</text><text x="282" y="190" text-anchor="middle" class="bn s">ট্রান্সসিভার (8286)</text><text x="282" y="212" text-anchor="middle" class="s g">DIR · <tspan class="ov">G</tspan></text>
+    <text x="426" y="62" class="w6">A0–A19, <tspan class="ov">BHE</tspan></text><text x="426" y="82" class="bn s">সিস্টেম অ্যাড্রেস বাস</text>
+    <text x="426" y="179" class="g w6">D0–D15</text><text x="426" y="199" class="bn s">সিস্টেম ডেটা বাস (দ্বিমুখী)</text>
+  </svg><figcaption>ক্লাসিক বাফারড 8086: অ্যাড্রেস ল্যাচ করো, ডেটা বাফার করো</figcaption></figure>
+  <table class="hand small">
+    <tr><th class="l">চিপ</th><th class="l">কী জিনিস</th><th class="l">8086 সিস্টেমে কাজ</th></tr>
+    <tr><td class="l"><b>74LS373</b> (8282)</td><td class="l">অক্টাল <b>ট্রান্সপারেন্ট ল্যাচ</b>, 3-স্টেট</td><td class="l">অ্যাড্রেস ল্যাচ: G ← ALE, <span class="ov">OE</span> ← GND</td></tr>
+    <tr><td class="l">74LS374</td><td class="l">অক্টাল <b>এজ-ট্রিগারড</b> D ফ্লিপ-ফ্লপ</td><td class="l">আউটপুট পোর্ট, <span class="ov">IOWC</span> দিয়ে ক্লক</td></tr>
+    <tr><td class="l">74LS244</td><td class="l">অক্টাল 3-স্টেট <b>বাফার</b>, একমুখী</td><td class="l">অ্যাড্রেস/কন্ট্রোল বাফার, ইনপুট পোর্ট</td></tr>
+    <tr><td class="l"><b>74LS245</b> (8286)</td><td class="l">অক্টাল <b>ট্রান্সসিভার</b>, দ্বিমুখী</td><td class="l">ডেটা বাস: DIR ← DT/<span class="ov">R</span>, <span class="ov">G</span> ← <span class="ov">DEN</span></td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">74LS245 সত্যক</span><br><span class="ov">G</span> = 0, DIR = 1 → A → B (CPU <b>রাইট</b>)<br><span class="ov">G</span> = 0, DIR = 0 → B → A (CPU <b>রিড</b>)<br><span class="ov">G</span> = 1 → দুই দিকই <b>Z</b> (বিচ্ছিন্ন)<br>DT/<span class="ov">R</span>: 1 = ট্রান্সমিট, 0 = রিসিভ</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">চিপ গণনা ✍</span><br><b>8086:</b> ২১টি লাইন ল্যাচ (AD0–15, A16–19, <span class="ov">BHE</span>) → <span class="circ">3 × 373</span>; ১৬টি ডেটা লাইন → 2 × 245<br><b>8088:</b> শুধু AD0–AD7 মাল্টিপ্লেক্সড → 2 × 373, A8–A15 একটি 244 দিয়ে, <b>1 × 245</b></div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>A</b>LE → <b>A</b>ddress ল্যাচ; <b>D</b>EN → <b>D</b>ata এনেবল; DT/<span class="ov">R</span> → <b>D</b>irection"। 37<b>3</b> ল্যাচ, 24<b>4</b> একমুখী, 24<b>5</b> দ্বিমুখী।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> বাফার লাগে <b>ফ্যান-আউটের</b> জন্য (~১০টির বেশি LS লোড) এবং DMA-র সময় বাস ছেড়ে দিতে। ১৬-বিট 8086-এ <b>দুটি</b> 245; 8088-এ একটি।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: memory chips, SRAM/EEPROM, banks ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>মেমোরি ইন্টারফেসিং</span></div>
+  <h2><span class="no">৬</span>মেমোরি চিপ ও তার পিন</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>N × M</b> চিপে N টি লোকেশন (<span class="circ">log₂N টি অ্যাড্রেস লাইন</span>), প্রতিটি M বিট (M টি ডেটা লাইন)। কন্ট্রোল পিন: <b><span class="ov">CS</span></b> চিপ সিলেক্ট ← ডিকোডার, <b><span class="ov">OE</span></b> ← <span class="ov">MRDC</span>/<span class="ov">RD</span>, <b><span class="ov">WE</span></b> ← <span class="ov">MWTC</span>/<span class="ov">WR</span>।</div>
+  <div class="cols" style="grid-template-columns:0.7fr 1.3fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>সাইজ</th><th>লাইন</th></tr>
+      <tr><td>1K</td><td>10</td></tr><tr><td>2K</td><td>11</td></tr><tr><td>4K</td><td>12</td></tr>
+      <tr><td>8K</td><td class="red"><b>13</b></td></tr><tr><td>16K</td><td>14</td></tr><tr><td>32K</td><td class="red"><b>15</b></td></tr>
+      <tr><td>64K</td><td>16</td></tr><tr><td>1M</td><td>20</td></tr>
+    </table>
+    <div>
+      <table class="hand small" style="margin-top:0;white-space:nowrap">
+        <tr><th class="l">চিপ</th><th class="l">ধরন</th><th>সাইজ (× 8)</th></tr>
+        <tr><td class="l">6116 / 6264 / 62256</td><td class="l">SRAM</td><td>2K / 8K / 32K</td></tr>
+        <tr><td class="l">2716 / 2764 / 27256</td><td class="l">EPROM</td><td>2K / 8K / 32K</td></tr>
+        <tr><td class="l">2816 / 2864</td><td class="l">EEPROM</td><td>2K / 8K</td></tr>
+      </table>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> ফ্যামিলি কোডের পরের অঙ্ক = <b>কিলোবিট</b>: 27<b>64</b> = 64 Kbit = <span class="hl">8 KB</span>; 62<b>256</b> = 32 KB; 61<b>16</b> = 2 KB।</div>
+      <div class="ex small"><span class="lbl">কয়টি চিপ ✍</span> (N<sub>total</sub> ÷ N<sub>chip</sub>) × (M<sub>total</sub> ÷ M<sub>chip</sub>): 8K × 8 দিয়ে 32K × 16 → 4 × 2 = <span class="circ">৮টি চিপ</span>।</div>
+    </div>
+  </div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">SRAM</th><th class="l">EEPROM</th></tr>
+    <tr><td class="l">ভোলাটাইল?</td><td class="l">হ্যাঁ</td><td class="l">না (ডেটা থাকে)</td></tr>
+    <tr><td class="l">রাইট</td><td class="l">কয়েক দশ ns, সীমাহীন</td><td class="l"><b>≈ 1–10 ms</b>, ~10⁵–10⁶ বার</td></tr>
+    <tr><td class="l">ইন্টারফেস</td><td class="l">A, D, <span class="ov">CS</span>, <span class="ov">OE</span>, <span class="ov">WE</span></td><td class="l">একই পিন; রাইটের পর অপেক্ষা বা পোলিং (D7)</td></tr>
+    <tr><td class="l">ব্যবহার</td><td class="l">ওয়ার্কিং মেমোরি, স্ট্যাক</td><td class="l">সেটিংস, ক্যালিব্রেশন ডেটা</td></tr>
+  </table>
+
+  <h2><span class="no">৭</span>8086-এর জোড় ও বিজোড় মেমোরি ব্যাংক</h2>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 168" width="296">
+      <g class="w">
+        <path class="ink" d="M20,20 H280 M75,20 V40 M225,20 V40"/>
+        <rect x="12" y="40" width="126" height="80" rx="8" class="ink fill-b"/>
+        <rect x="162" y="40" width="126" height="80" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M75,120 V142 M225,120 V142"/>
+      </g>
+      <text x="150" y="14" text-anchor="middle" class="bn s">A1–A19 দুই ব্যাংকেই</text>
+      <text x="75" y="64" text-anchor="middle" class="bn w6">লো ব্যাংক</text><text x="75" y="84" text-anchor="middle" class="bn s">জোড়: 0, 2, 4 …</text><text x="75" y="104" text-anchor="middle" class="bn s">সিলেক্ট A0 = 0</text>
+      <text x="225" y="64" text-anchor="middle" class="bn r w6">হাই ব্যাংক</text><text x="225" y="84" text-anchor="middle" class="bn s">বিজোড়: 1, 3, 5 …</text><text x="225" y="104" text-anchor="middle" class="bn s">সিলেক্ট <tspan class="ov">BHE</tspan> = 0</text>
+      <text x="75" y="160" text-anchor="middle" class="s">D0–D7</text><text x="225" y="160" text-anchor="middle" class="s r">D8–D15</text>
+    </svg><figcaption>1 MB = দুটি 512 KB ব্যাংক</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;white-space:nowrap">
+        <tr><th><span class="ov">BHE</span></th><th>A0</th><th class="l">ট্রান্সফার</th></tr>
+        <tr><td>0</td><td>0</td><td class="l">পুরো <b>ওয়ার্ড</b> (জোড় অ্যাড্রেস)</td></tr>
+        <tr><td>0</td><td>1</td><td class="l">বাইট, <b>বিজোড়</b> ব্যাংক (D8–D15)</td></tr>
+        <tr><td>1</td><td>0</td><td class="l">বাইট, <b>জোড়</b> ব্যাংক (D0–D7)</td></tr>
+        <tr><td>1</td><td>1</td><td class="l">কিছু না</td></tr>
+      </table>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>বিজোড়</b> অ্যাড্রেসে ওয়ার্ড পড়তে <span class="circ">২টি বাস সাইকেল</span> লাগে। 8088-এ একটিই ব্যাংক, <span class="ov">BHE</span> নেই।</div>
+    </div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: address decoding ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>অ্যাড্রেস ডিকোডিং</span></div>
+  <h2><span class="no">৮</span>অ্যাড্রেস ডিকোডিং: পূর্ণ বনাম আংশিক</h2><span class="tag">লিখিতের প্রিয়</span>
+  <div class="def"><span class="lbl">মূল কথা</span> <b>নিচের</b> অ্যাড্রেস লাইনগুলো সরাসরি চিপে যায় (8 KB চিপে ১৩টি)। <b>উপরের</b> লাইনগুলো যায় একটি <span class="hl">ডিকোডারে</span>, যা চিপের <span class="ov">CS</span> চালায়; ফলে প্রতিটি চিপ শুধু নিজের অ্যাড্রেস ব্লকে সাড়া দেয়।</div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">পূর্ণ ডিকোডিং</span> উপরের সব লাইন ডিকোড হয় → প্রতিটি লোকেশনের <b>ঠিক একটি</b> অ্যাড্রেস। পরিষ্কার, সম্প্রসারণযোগ্য মেমোরি ম্যাপের জন্য।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">আংশিক ডিকোডিং</span> কিছু লাইন বাদ → সস্তা, কিন্তু প্রতিটি লোকেশন <span class="circ">2ᵏ টি অ্যাড্রেসে</span> ফিরে আসে (k = বাদ পড়া লাইন): <b>ফোল্ড-ব্যাক / অ্যালিয়াসিং / মিরর ইমেজ</b>।</div>
+  </div>
+  <h3>74LS138 ৩-থেকে-৮ ডিকোডার</h3>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 204" width="326">
+      <g class="w">
+        <rect x="150" y="14" width="80" height="182" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M126,34 H150 M126,58 H150 M126,82 H150"/>
+        <path class="ink-g" d="M126,124 H150"/>
+        <path class="ink-r" d="M126,150 H150 M126,176 H150"/>
+        <path class="ink-r" d="M230,30 H258 M230,52 H258 M230,74 H258 M230,96 H258 M230,118 H258 M230,140 H258 M230,162 H258 M230,184 H258"/>
+      </g>
+      <text x="122" y="39" text-anchor="end" class="s">A13 → A</text><text x="122" y="63" text-anchor="end" class="s">A14 → B</text><text x="122" y="87" text-anchor="end" class="s">A15 → C</text>
+      <text x="122" y="129" text-anchor="end" class="s g">+5 V → G1</text>
+      <text x="122" y="155" text-anchor="end" class="s r">NAND(A16–19) → <tspan class="ov">G2A</tspan></text>
+      <text x="122" y="181" text-anchor="end" class="s r">IO/<tspan class="ov">M</tspan> → <tspan class="ov">G2B</tspan></text>
+      <text x="190" y="106" text-anchor="middle" class="w6">74LS</text><text x="190" y="124" text-anchor="middle" class="w6">138</text>
+      <text x="262" y="34" class="bn s r"><tspan class="ov">Y0</tspan> → চিপ 0</text><text x="262" y="188" class="bn s r"><tspan class="ov">Y7</tspan> → চিপ 7</text>
+      <text x="262" y="112" class="bn s">⋮ অ্যাকটিভ-লো</text>
+    </svg><figcaption>C = MSB; চালু হয় G1 = 1, <span class="ov">G2A</span> = <span class="ov">G2B</span> = 0 হলে</figcaption></figure>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">মেমোরি ম্যাপ ✍</span> 8088, আটটি 2764 EPROM (8K × 8) দিয়ে F0000H–FFFFFH পূরণ।
+        <ol class="steps"><li>8K = 2¹³ → A0–A12 প্রতিটি চিপে</li><li>A13–A15 → C B A, ৮টির একটি চিপ বাছে</li><li>A16–A19 = 1111 হতে হবে → NAND → <span class="ov">G2A</span>; মেমোরিতে IO/<span class="ov">M</span> = 0 → <span class="ov">G2B</span></li><li>13 + 3 + 4 = 20 লাইন → <b>পূর্ণ ডিকোডিং</b></li></ol></div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>আউটপুট</th><th>A15 A14 A13</th><th>অ্যাড্রেস পরিসর</th></tr>
+      <tr><td><span class="ov">Y0</span></td><td>0 0 0</td><td>F0000H–F1FFFH</td></tr>
+      <tr><td><span class="ov">Y1</span></td><td>0 0 1</td><td>F2000H–F3FFFH</td></tr>
+      <tr><td><span class="ov">Y2</span></td><td>0 1 0</td><td>F4000H–F5FFFH</td></tr>
+      <tr><td><span class="ov">Y3</span></td><td>0 1 1</td><td>F6000H–F7FFFH</td></tr>
+      <tr><td><span class="ov">Y4</span></td><td>1 0 0</td><td>F8000H–F9FFFH</td></tr>
+      <tr><td><span class="ov">Y5</span></td><td>1 0 1</td><td>FA000H–FBFFFH</td></tr>
+      <tr><td><span class="ov">Y6</span></td><td>1 1 0</td><td>FC000H–FDFFFH</td></tr>
+      <tr><td><span class="ov">Y7</span></td><td>1 1 1</td><td>FE000H–FFFFFH</td></tr>
+    </table>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">সূত্র</span><br>শেষ = শুরু + সাইজ − 1<br>8 KB = 2000H: F0000H + 1FFFH = F1FFFH<br>F5A3CH: 5A3CH = <b>010</b>1 1010 … → <span class="circ"><span class="ov">Y2</span></span></div>
+      <div class="ex small"><span class="lbl">আংশিক ডিকোডিং ✍</span> একটি 2K RAM (6116), <span class="ov">CS</span> = শুধু A19: A0–A10 চিপে, A11–A18 বাদ (৮টি) → <span class="hl">2⁸ = 256টি ইমেজ</span>: 00000–007FFH, 00800–00FFFH … 7F800–7FFFFH।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>সাইজ ঠিক করে নিচের লাইন, বাকিটা ডিকোডারের।</b>" চিপের লাইন + ডিকোড লাইন = 20 → পূর্ণ; কম → আংশিক।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ইমেজ = <b>2<sup>k</sup></b>, 2k নয়। বুট ROM-কে <b>FFFF0H</b> (রিসেট ভেক্টর) ঢাকতে হবে: EPROM উপরে, RAM 00000H থেকে (IVT)।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>I/O ইন্টারফেসিং</span></div>
+  <h2><span class="no">৯</span>আইসোলেটেড (I/O-ম্যাপড) বনাম মেমোরি-ম্যাপড I/O</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">আইসোলেটেড / পোর্ট-ম্যাপড I/O</th><th class="l">মেমোরি-ম্যাপড I/O</th></tr>
+    <tr><td class="l">স্পেস</td><td class="l">আলাদা: <span class="hl">64K বাইট পোর্ট</span></td><td class="l">1 MB-এর ভেতরে (অ্যাড্রেস খরচ হয়)</td></tr>
+    <tr><td class="l">ইনস্ট্রাকশন</td><td class="l">শুধু <b>IN / OUT</b></td><td class="l">যেকোনো মেমোরি ইনস্ট্রাকশন (MOV, AND …)</td></tr>
+    <tr><td class="l">ডেটা</td><td class="l">শুধু AL বা AX</td><td class="l">যেকোনো রেজিস্টার</td></tr>
+    <tr><td class="l">সিগন্যাল</td><td class="l">M/<span class="ov">IO</span> = 0; <span class="ov">IORC</span>, <span class="ov">IOWC</span></td><td class="l">M/<span class="ov">IO</span> = 1; <span class="ov">MRDC</span>, <span class="ov">MWTC</span></td></tr>
+    <tr><td class="l">ডিকোডিং</td><td class="l">৮ বা ১৬ লাইন (সহজ)</td><td class="l">সব ২০ লাইন</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">x86 PC (Intel)</td><td class="l">68000, ARM, মাইক্রোকন্ট্রোলার</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:center">
+    <div>
+      <div class="code" style="font-size:11pt;line-height:6.2mm">IN  AL, 60H    ; ফিক্সড পোর্ট 00H–FFH
+IN  AX, DX     ; DX = 0000H–FFFFH
+OUT 43H, AL    ; পোর্ট 43H-এ বাইট
+MOV DX, 0378H  ; FFH-এর বেশি হলে
+OUT DX, AL     ; DX লাগবেই</div>
+      <p class="small">ফিক্সড পোর্ট → <span class="circ">২৫৬টি পোর্ট</span> (A8–A15 = 00H)। DX → <span class="circ">৬৫,৫৩৬টি পোর্ট</span>। প্রতিটি I/O সাইকেলে A16–A19 = 0।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 176" width="266">
+      <g class="w">
+        <rect x="10" y="8" width="110" height="160" rx="6" class="ink fill-b"/>
+        <rect x="150" y="92" width="110" height="76" rx="6" class="ink-r fill-r"/>
+        <path class="ink-r" d="M150,142 H260" stroke-dasharray="4 4"/>
+      </g>
+      <text x="65" y="26" text-anchor="middle" class="s">FFFFFH</text><text x="65" y="86" text-anchor="middle" class="bn w6">মেমোরি</text><text x="65" y="106" text-anchor="middle" class="s">1 MB</text><text x="65" y="160" text-anchor="middle" class="s">00000H</text>
+      <text x="205" y="84" text-anchor="middle" class="s r">FFFFH</text><text x="205" y="116" text-anchor="middle" class="r w6">I/O 64 KB</text><text x="205" y="134" text-anchor="middle" class="bn s">DX পোর্ট</text><text x="205" y="161" text-anchor="middle" class="bn s">00–FFH ফিক্সড</text>
+      <text x="205" y="30" text-anchor="middle" class="bn s g">M/<tspan class="ov">IO</tspan> ঠিক করে</text><text x="205" y="48" text-anchor="middle" class="bn s g">কোন স্পেস</text>
+    </svg><figcaption>দুটি আলাদা অ্যাড্রেস স্পেস</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>IN BL, 60H</b> অবৈধ (শুধু AL/AX); <b>OUT 378H, AL</b> অবৈধ (FFH-এর বেশি পোর্টে DX লাগে)। মেমোরি-ম্যাপড I/O-তে কোনো IN/OUT সাইকেলই <b>নেই</b>।</div>
+
+  <h2><span class="no">১০</span>I/O পোর্ট ডিকোডিং ও I/O-এর প্রকার</h2>
+  <div class="ex small"><span class="lbl">ডিকোডিং ✍</span> 8088-এ পোর্ট F8H–FFH: A7–A3 = 11111 → 74LS30 NAND → <span class="ov">G2A</span>; IO/<span class="ov">M</span> (I/O-তে 1) → G1; A2 A1 A0 → C B A, তাই <span class="ov">Y</span>n = পোর্ট F8H + n। A8–A15 বাদ (DX পোর্টের জন্য আংশিক ডিকোডিং)। ইনপুট পোর্ট: <b>74LS244</b>, শুধু নিজের <span class="ov">IORC</span>-এ চালু; আউটপুট পোর্ট: <b>74LS374</b> ল্যাচ, <span class="ov">IOWC</span> দিয়ে ক্লক।</div>
+  <table class="hand small">
+    <tr><th class="l">পদ্ধতি</th><th class="l">কীভাবে</th><th class="l">মূল্যায়ন</th></tr>
+    <tr><td class="l"><b>প্রোগ্রামড</b> (পোলিং)</td><td class="l">CPU স্ট্যাটাস বিট বারবার পড়ে</td><td class="l">সহজ, CPU-র সময় নষ্ট</td></tr>
+    <tr><td class="l"><b>ইন্টারাপ্ট-ড্রিভেন</b></td><td class="l">ডিভাইস INTR দেয় (8259A, mp4)</td><td class="l">দরকার না হলে CPU মুক্ত</td></tr>
+    <tr><td class="l"><b>DMA</b></td><td class="l">8237 বাস নেয় (HOLD/HLDA)</td><td class="l">ব্লক ট্রান্সফারে দ্রুততম</td></tr>
+  </table>
+  <div class="tipbox small"><span class="lbl">IT সংযোগ</span> IBM PC শুধু A0–A9 ডিকোড করে (000H–3FFH): 20H 8259A · 40H–43H 8254 · <b>60H–63H 8255</b> (PC/XT) · 378H LPT1 · 3F8H COM1। প্যারালেল বনাম সিরিয়াল = ডেটা লাইনের সংখ্যা, ট্রান্সফার পদ্ধতি নয় (সিরিয়াল 8251: mp3)।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: 8255A architecture & modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>8255A PPI</span></div>
+  <h2><span class="no">১১</span>8255A প্রোগ্রামেবল পেরিফেরাল ইন্টারফেস</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ৪০-পিনের চিপ, তিনটি ৮-বিট পোর্ট A, B, C-তে মোট <span class="circ">২৪টি I/O লাইন</span>। <span class="hl">গ্রুপ A</span> = Port A + PC7–PC4 (উপরের C); <span class="hl">গ্রুপ B</span> = Port B + PC3–PC0 (নিচের C)। কন্ট্রোল ওয়ার্ড প্রতিটি পোর্টের দিক ও মোড ঠিক করে।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 226" width="640">
+    <g class="w">
+      <rect x="64" y="16" width="120" height="50" rx="8" class="ink fill-b"/>
+      <rect x="64" y="104" width="120" height="110" rx="8" class="ink fill-b"/>
+      <path class="ink-k" d="M202,12 V218" style="stroke-width:5"/>
+      <path class="ink" d="M184,41 H202 M184,159 H202"/>
+      <path class="ink" d="M20,41 H62" marker-start="url(#ahb)" marker-end="url(#ahb)"/>
+      <rect x="226" y="30" width="120" height="50" rx="8" class="ink-r fill-r"/>
+      <rect x="226" y="150" width="120" height="50" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M202,55 H226 M202,175 H226"/>
+      <rect x="394" y="10" width="110" height="38" rx="8" class="ink-r fill-r"/>
+      <rect x="394" y="62" width="110" height="38" rx="8" class="ink-r fill-r"/>
+      <rect x="394" y="128" width="110" height="38" rx="8" class="ink-g fill-g"/>
+      <rect x="394" y="180" width="110" height="38" rx="8" class="ink-g fill-g"/>
+      <path class="ink-r" d="M346,46 L394,29 M346,62 L394,81"/>
+      <path class="ink-g" d="M346,166 L394,147 M346,184 L394,199"/>
+      <path class="ink" d="M504,29 H526 M504,81 H526 M504,147 H526 M504,199 H526"/>
+    </g>
+    <text x="10" y="32" class="s">D0–D7</text>
+    <text x="124" y="38" text-anchor="middle" class="bn s w6">ডেটা বাস</text><text x="124" y="56" text-anchor="middle" class="bn s w6">বাফার</text>
+    <text x="124" y="130" text-anchor="middle" class="bn s w6">রিড/রাইট</text><text x="124" y="148" text-anchor="middle" class="bn s w6">কন্ট্রোল লজিক</text>
+    <text x="124" y="172" text-anchor="middle" class="s"><tspan class="ov">RD</tspan> <tspan class="ov">WR</tspan> <tspan class="ov">CS</tspan></text><text x="124" y="192" text-anchor="middle" class="s">A1 A0 RESET</text>
+    <text x="286" y="52" text-anchor="middle" class="bn r w6">গ্রুপ A</text><text x="286" y="70" text-anchor="middle" class="bn s r">কন্ট্রোল</text>
+    <text x="286" y="172" text-anchor="middle" class="bn g w6">গ্রুপ B</text><text x="286" y="190" text-anchor="middle" class="bn s g">কন্ট্রোল</text>
+    <text x="449" y="34" text-anchor="middle" class="s w6">Port A (8)</text><text x="449" y="86" text-anchor="middle" class="bn s w6">Port C উপরের (4)</text>
+    <text x="449" y="152" text-anchor="middle" class="bn s w6">Port C নিচের (4)</text><text x="449" y="204" text-anchor="middle" class="s w6">Port B (8)</text>
+    <text x="530" y="34" class="s">PA7–PA0</text><text x="530" y="86" class="s">PC7–PC4</text><text x="530" y="152" class="s">PC3–PC0</text><text x="530" y="204" class="s">PB7–PB0</text>
+    <text x="206" y="120" class="bn s k">অভ্যন্তরীণ বাস</text>
+  </svg><figcaption>8255A ব্লক ডায়াগ্রাম: লাল = গ্রুপ A, সবুজ = গ্রুপ B</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>A1 A0</th><th class="l">বাছাই</th><th>8088 / 8086</th></tr>
+      <tr><td>0 0</td><td class="l">Port A</td><td>60H / 80H</td></tr>
+      <tr><td>0 1</td><td class="l">Port B</td><td>61H / 82H</td></tr>
+      <tr><td>1 0</td><td class="l">Port C</td><td>62H / 84H</td></tr>
+      <tr><td>1 1</td><td class="l"><b>কন্ট্রোল রেজিস্টার</b></td><td>63H / 86H</td></tr>
+    </table>
+    <div class="small">
+      <p style="margin-top:0">(<span class="ov">CS</span> = 0।) 8086-এ 8255A বসে D0–D7-এ, তাই CPU-র <b>A1, A2</b> যায় এর A0, A1-এ → <span class="hl">পোর্ট অ্যাড্রেস জোড়</span> (80H, 82H, 84H, 86H)।</p>
+      <p><b>RESET</b> → ২৪টি লাইনই <span class="circ">ইনপুট</span> (মোড 0), তাই পাওয়ার-অনে ভুল করে কিছু চালিত হয় না।</p>
+    </div>
+  </div>
+  <h2><span class="no">১২</span>তিনটি মোড (+ BSR)</h2>
+  <table class="hand small">
+    <tr><th>মোড</th><th class="l">নাম</th><th class="l">পোর্ট</th><th class="l">মূল কথা</th></tr>
+    <tr><td>0</td><td class="l">বেসিক I/O</td><td class="l">A, B, C উপরের, C নিচের</td><td class="l">হ্যান্ডশেক নেই; আউটপুট ল্যাচড, ইনপুট নয়; ১৬টি ইন/আউট সমন্বয়</td></tr>
+    <tr><td>1</td><td class="l">স্ট্রোবড I/O</td><td class="l">A ও B</td><td class="l">হ্যান্ডশেক Port C-তে: A নেয় PC3–PC5 (ইন) বা PC3, PC6, PC7 (আউট); B নেয় PC0–PC2</td></tr>
+    <tr><td class="red"><b>2</b></td><td class="l">দ্বিমুখী</td><td class="l"><span class="circ">শুধু Port A</span></td><td class="l">PC3–PC7 = INTR, <span class="ov">STB</span>, IBF, <span class="ov">ACK</span>, <span class="ov">OBF</span></td></tr>
+    <tr><td>BSR</td><td class="l">বিট সেট/রিসেট</td><td class="l">Port C</td><td class="l">একবারে PC-এর একটি বিট সেট বা ক্লিয়ার</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>A-B-C = 3-2-1</b>": Port A-র ৩টি মোড (0, 1, 2), Port B-র ২টি (0, 1), Port C-র ১টি (মোড 0) আর BSR।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> Port C-র নিজস্ব হ্যান্ডশেক মোড নেই; মোড 1/2-এ এর কিছু লাইন হ্যান্ডশেক পিন হয়, <b>বাকি</b> লাইন সাধারণ I/O থাকে।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: control words + interface examples ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>8255A কন্ট্রোল ওয়ার্ড</span></div>
+  <h2><span class="no">১৩</span>8255A কন্ট্রোল ওয়ার্ড: I/O মোড ও BSR মোড</h2><span class="tag">লিখিতের প্রিয়</span>
+  <figure class="doodle"><svg viewBox="0 0 640 168" width="640">
+    <g class="w">
+      <rect x="60" y="22" width="70" height="30" class="ink-k fill-y"/>
+      <rect x="130" y="22" width="140" height="30" class="ink-r fill-r"/>
+      <rect x="270" y="22" width="70" height="30" class="ink-r fill-r"/>
+      <rect x="340" y="22" width="70" height="30" class="ink-r fill-r"/>
+      <rect x="410" y="22" width="70" height="30" class="ink-g fill-g"/>
+      <rect x="480" y="22" width="70" height="30" class="ink-g fill-g"/>
+      <rect x="550" y="22" width="70" height="30" class="ink-g fill-g"/>
+      <rect x="60" y="104" width="70" height="30" class="ink-k fill-y"/>
+      <rect x="130" y="104" width="210" height="30" class="ink fill-b"/>
+      <rect x="340" y="104" width="210" height="30" class="ink-p fill-p"/>
+      <rect x="550" y="104" width="70" height="30" class="ink-r fill-r"/>
+    </g>
+    <text x="4" y="42" class="w6">I/O</text><text x="4" y="124" class="w6">BSR</text>
+    <text x="235" y="15" text-anchor="middle" class="bn r s w6">গ্রুপ A</text><text x="515" y="15" text-anchor="middle" class="bn g s w6">গ্রুপ B</text>
+    <text x="95" y="42" text-anchor="middle" class="w6">D7 = 1</text><text x="200" y="42" text-anchor="middle">D6 D5</text><text x="305" y="42" text-anchor="middle">D4</text><text x="375" y="42" text-anchor="middle">D3</text><text x="445" y="42" text-anchor="middle">D2</text><text x="515" y="42" text-anchor="middle">D1</text><text x="585" y="42" text-anchor="middle">D0</text>
+    <text x="95" y="69" text-anchor="middle" class="bn s">মোড সেট</text><text x="200" y="69" text-anchor="middle" class="s">00 = 0, 01 = 1, 1X = 2</text>
+    <text x="305" y="69" text-anchor="middle" class="s">Port A</text><text x="375" y="69" text-anchor="middle" class="s">PC7–4</text><text x="445" y="69" text-anchor="middle" class="bn s">মোড 0/1</text><text x="515" y="69" text-anchor="middle" class="s">Port B</text><text x="585" y="69" text-anchor="middle" class="s">PC3–0</text>
+    <text x="445" y="88" text-anchor="middle" class="bn r s">পোর্ট বিট: 1 = ইনপুট, 0 = আউটপুট</text>
+    <text x="95" y="124" text-anchor="middle" class="w6">D7 = 0</text><text x="235" y="124" text-anchor="middle" class="bn">D6 D5 D4 = X (000 দাও)</text><text x="445" y="124" text-anchor="middle" class="bn p">D3 D2 D1 = বিট নং</text><text x="585" y="124" text-anchor="middle" class="r">D0</text>
+    <text x="95" y="152" text-anchor="middle" class="bn s">BSR ফ্ল্যাগ</text><text x="235" y="152" text-anchor="middle" class="bn s">অব্যবহৃত</text><text x="445" y="152" text-anchor="middle" class="s p">000 = PC0 … 111 = PC7</text><text x="585" y="152" text-anchor="middle" class="bn s r">1 সেট, 0 রিসেট</text>
+  </svg><figcaption>D7 ঠিক করে কোন ফরম্যাট: 1 = মোড-ডেফিনিশন ওয়ার্ড, 0 = বিট সেট/রিসেট ওয়ার্ড</figcaption></figure>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">প্রয়োজনীয় সেট-আপ</th><th>D7 D6D5 D4 D3 D2 D1 D0</th><th>ওয়ার্ড</th></tr>
+    <tr><td class="l">সব পোর্ট আউটপুট (মোড 0)</td><td>1 00 0 0 0 0 0</td><td class="red"><b>80H</b></td></tr>
+    <tr><td class="l">সব পোর্ট ইনপুট (মোড 0)</td><td>1 00 1 1 0 1 1</td><td class="red"><b>9BH</b></td></tr>
+    <tr><td class="l">A ইন, C<sub>U</sub> আউট, B আউট, C<sub>L</sub> ইন</td><td>1 00 1 0 0 0 1</td><td><b>91H</b></td></tr>
+    <tr><td class="l">A আউট, C<sub>U</sub> ইন, B ইন, C<sub>L</sub> আউট</td><td>1 00 0 1 0 1 0</td><td><b>8AH</b></td></tr>
+    <tr><td class="l">A মোড 1 ইন, B মোড 0 আউট</td><td>1 01 1 0 0 0 0</td><td><b>B0H</b></td></tr>
+    <tr><td class="l">BSR: PC5 সেট · PC5 রিসেট</td><td>0 000 101 1 · 0 000 101 0</td><td><b>0BH · 0AH</b></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="code" style="font-size:11pt;line-height:6.1mm;margin-top:0">MOV AL, 91H  ; A ইন, B আউট
+OUT 86H, AL  ; কন্ট্রোল (8086)
+IN  AL, 80H  ; Port A পড়ো
+OUT 82H, AL  ; Port B-তে লেখো
+MOV AL, 0BH  ; BSR: PC5 সেট
+OUT 86H, AL  ; এটাও কন্ট্রোলে</div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> PCn-এর BSR ওয়ার্ড = সেট করতে <span class="circ">2n + 1</span>, রিসেট করতে <b>2n</b> (PC7: 0FH / 0EH)।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> BSR ওয়ার্ড যায় <b>কন্ট্রোল রেজিস্টারে</b>, কখনো Port C-তে নয়। নতুন মোড ওয়ার্ড <b>সব আউটপুট ল্যাচ শূন্য</b> করে দেয়।</div>
+    </div>
+  </div>
+  <h3>ইন্টারফেস উদাহরণ (সিলেবাসের তালিকা)</h3>
+  <table class="hand small">
+    <tr><th class="l">ডিভাইস</th><th class="l">সংযোগ · মূল তথ্য</th></tr>
+    <tr><td class="l">কীবোর্ড ম্যাট্রিক্স</td><td class="l">সারি ← আউটপুট পোর্ট, কলাম → ইনপুট পোর্ট; স্ক্যান, <b>ডিবাউন্স ১০–২০ ms</b></td></tr>
+    <tr><td class="l">৭-সেগমেন্ট</td><td class="l">কমন ক্যাথোড: 0 → 3FH, 1 → 06H, 8 → 7FH; কমন অ্যানোড = পূরক</td></tr>
+    <tr><td class="l">LCD 16 × 2</td><td class="l">RS = 0 কমান্ড, 1 ডেটা; E ল্যাচ করে; 38H, 0EH, 01H (ক্লিয়ার), 80H</td></tr>
+    <tr><td class="l">প্রিন্টার</td><td class="l">Port A মোড 1 আউট; প্রিন্টারের <span class="ov">ACK</span> → 8255A <span class="ov">ACK</span>; <span class="ov">STROBE</span> BSR দিয়ে; BUSY পোল</td></tr>
+    <tr><td class="l">স্টেপার মোটর</td><td class="l">ফুল স্টেপ 09H → 0CH → 06H → 03H; 1.8° = 200 স্টেপ/ঘূর্ণন</td></tr>
+    <tr><td class="l">ADC / DAC 0808</td><td class="l">৮-বিট: স্টেপ 5 V/256 = <b>19.5 mV</b>; DAC-এ 80H → 2.5 V</td></tr>
+  </table>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>CLK = f<sub>xtal</sub> ÷ 3 (33%) · PCLK = CLK ÷ 2</p><p>15 MHz → 5 MHz · 24 MHz → 8 MHz</p>
+      <p>বাস সাইকেল = 4T; প্রতি Tw-তে +1T</p><p>5 MHz: T = 200 ns, সাইকেল = 800 ns</p>
+      <p>MN/<span class="ov">MX</span> = 1 মিন · 0 ম্যাক্স (8288)</p><p>8288: <span class="ov">S2</span> = 0 I/O, 1 মেমোরি</p>
+      <p>ALE → 373 ল্যাচ · <span class="ov">DEN</span>, DT/<span class="ov">R</span> → 245</p><p>8086: 3 × 373, 2 × 245 · 8088: 1 × 245</p>
+      <p>N লোকেশন → log₂N লাইন (8K → 13)</p><p>ইমেজ = 2ᵏ (k = বাদ পড়া লাইন)</p>
+      <p><span class="ov">BHE</span> A0: 00 ওয়ার্ড · 01 বিজোড় · 10 জোড়</p><p>রিসেট: CS:IP = FFFF:0000 → FFFF0H</p>
+      <p>IN/OUT: AL/AX; ফিক্সড 00–FFH; DX 0–FFFFH</p><p>8255: A1A0 = 11 → কন্ট্রোল রেজিস্টার</p>
+      <p>CW: D7 = 1 মোড, 0 BSR · 1 = ইনপুট</p><p>80H সব আউট · 9BH সব ইন · 91H, 8AH</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>8284A ক্রিস্টালকে ৩ দিয়ে ভাগ করে</li>
+      <li>8288 শুধু ম্যাক্সিমাম মোডে লাগে</li>
+      <li>বাস আর্বিটার = 8289 (8288 নয়)</li>
+      <li>74LS373 = অ্যাড্রেস ল্যাচ, ALE দিয়ে চালু</li>
+      <li>74LS245 = দ্বিমুখী ডেটা ট্রান্সসিভার</li>
+      <li>74LS138: ৩-থেকে-৮, অ্যাকটিভ-লো আউটপুট</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>32K × 8 চিপ: ১৫টি অ্যাড্রেস, ৮টি ডেটা লাইন</li>
+      <li>8255A: ৩টি পোর্ট, ২৪টি লাইন, ৪০টি পিন</li>
+      <li>মোড 2 (দ্বিমুখী): শুধু Port A</li>
+      <li>Port B: শুধু মোড 0 ও 1</li>
+      <li>RESET-এ 8255A-র সব পোর্ট ইনপুট</li>
+      <li>আইসোলেটেড I/O: 64K পোর্ট, IN/OUT</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> CLK ডিউটি ৩৩%, ৫০% নয় · ওয়েট স্টেট = READY লো · 8288-এর DEN অ্যাকটিভ হাই · ইমেজ = 2ᵏ, 2k নয় · IN/OUT শুধু AL/AX দিয়ে; FFH-এর বেশি পোর্টে DX · BSR ওয়ার্ড কন্ট্রোল রেজিস্টারে · Port C-র নিজস্ব মোড 1/2 নেই</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> OSC ÷ 1, CLK ÷ 3, PCLK ÷ 6 · <span class="ov">S2</span> = 0 মানে I/O দিক · ALE → Address, DEN → Data, DT/<span class="ov">R</span> → Direction · 373 ল্যাচ, 244 একমুখী, 245 দ্বিমুখী · চিপের অঙ্ক = কিলোবিট · সাইজ নিচের লাইন ঠিক করে, বাকিটা ডিকোডারের · A-B-C = 3-2-1 · BSR = 2n + 1 (সেট), 2n (রিসেট)</div>
+  <figure class="doodle"><svg viewBox="0 0 640 96" width="640">
+    <g class="w">
+      <rect x="6" y="20" width="80" height="40" rx="10" class="ink fill-b"/>
+      <rect x="116" y="20" width="80" height="40" rx="10" class="ink-r fill-r"/>
+      <rect x="226" y="20" width="96" height="40" rx="10" class="ink-r fill-r"/>
+      <rect x="352" y="20" width="80" height="40" rx="10" class="ink-g fill-g"/>
+      <rect x="462" y="20" width="80" height="40" rx="10" class="ink-g fill-g"/>
+      <rect x="562" y="20" width="72" height="40" rx="10" class="ink-p fill-p"/>
+      <path class="ink" d="M86,40 H112 M196,40 H222 M322,40 H348 M432,40 H458 M542,40 H558" marker-end="url(#ahb)"/>
+    </g>
+    <text x="46" y="45" text-anchor="middle" class="bn s w6">ক্রিস্টাল</text><text x="156" y="45" text-anchor="middle" class="s r w6">8284A</text><text x="274" y="45" text-anchor="middle" class="s r w6">8086 (+8288)</text><text x="392" y="45" text-anchor="middle" class="s g w6">373 / 245</text><text x="502" y="45" text-anchor="middle" class="s g w6">74LS138</text><text x="598" y="45" text-anchor="middle" class="s p w6">RAM/ROM</text>
+    <text x="156" y="80" text-anchor="middle" class="s">CLK, READY, RESET</text><text x="274" y="80" text-anchor="middle" class="bn s">T1–T4, স্ট্যাটাস</text><text x="392" y="80" text-anchor="middle" class="s">A0–A19, D0–D15</text><text x="502" y="80" text-anchor="middle" class="bn s">ব্লক প্রতি <tspan class="ov">CS</tspan></text><text x="598" y="80" text-anchor="middle" class="bn s">বা 8255A</text>
+  </svg><figcaption>পুরো 8086 বোর্ডের সিগন্যাল-পথ, বাঁ থেকে ডানে</figcaption></figure>
+  <div class="tipbox"><span class="lbl">লিখিত পরীক্ষার টিপস</span> মেমোরি ডিজাইন: চিপের লাইন → ডিকোডার সংযোগ (C B A + এনেবল) → <b>মেমোরি ম্যাপ টেবিল</b> (শুরু/শেষ) → পূর্ণ না আংশিক। 8255A: আগে বিট ধরে ওয়ার্ড লেখো, তারপর হেক্স।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · মেমোরি ও I/O ইন্টারফেসিং</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>8284A + 24 MHz ক্রিস্টাল → CLK =<ol class="opts"><li>12 MHz</li><li>24 MHz</li><li>8 MHz</li><li>6 MHz</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>8086-এর কোন মোডে 8288 লাগে?<ol class="opts"><li>মিন মোড</li><li>সিঙ্গল স্টেপ</li><li>DMA মোড</li><li>ম্যাক্স মোড</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>74LS373 অ্যাড্রেস ল্যাচ করে কোন সিগন্যালে?<ol class="opts"><li><span class="ov">DEN</span></li><li>ALE</li><li>DT/<span class="ov">R</span></li><li>READY</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>8K × 8 চিপের অ্যাড্রেস লাইন কয়টি?<ol class="opts"><li>13</li><li>8</li><li>12</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>2K RAM, <span class="ov">CS</span> = শুধু A19: ইমেজ কয়টি?<ol class="opts"><li>2</li><li>8</li><li>256</li><li>512</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>PC6 সেট করার 8255A BSR ওয়ার্ড:<ol class="opts"><li>0DH</li><li>0CH</li><li>86H</li><li>06H</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>DX দিয়ে সর্বোচ্চ কয়টি ৮-বিট পোর্ট?<ol class="opts"><li>1024</li><li>256</li><li>1 M</li><li>65,536</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>8255A-র মোড 2 পাওয়া যায়:<ol class="opts"><li>Port B</li><li>Port C</li><li>Port A</li><li>Port A, B</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>5 MHz, ১টি ওয়েট স্টেট: বাস সাইকেল =<ol class="opts"><li>800 ns</li><li>1000 ns</li><li>600 ns</li><li>1200 ns</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span><span class="ov">BHE</span> = 0, A0 = 1 হলে ট্রান্সফার:<ol class="opts"><li>জোড় ওয়ার্ড</li><li>কিছু না</li><li>জোড় বাইট</li><li>বিজোড় বাইট</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ঘ · ৩-খ · ৪-ক · ৫-গ · ৬-ক · ৭-ঘ · ৮-গ · ৯-খ · ১০-ঘ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> একটি 8088-এ 8255A আছে পোর্ট 40H–43H-এ। Port A ইনপুট, Port B আউটপুট, উপরের C আউটপুট, নিচের C ইনপুট (মোড 0) করো; Port A-র সুইচগুলো Port B-র LED-তে কপি করো; তারপর BSR কমান্ডে PC6 সেট করো। <i class="mk">৮ নম্বর</i></div>
+  <div class="cols" style="grid-template-columns:1fr 190px;align-items:start">
+    <ol class="steps small">
+      <li>8255A-র A1 A0 = CPU-র A1 A0 → PA 40H, PB 41H, PC 42H, কন্ট্রোল <b>43H</b> <i class="mk">১</i></li>
+      <li>D7 = 1, মোড A 00, A ইন 1, C<sub>U</sub> আউট 0, মোড B 0, B আউট 0, C<sub>L</sub> ইন 1 → 1001 0001 = <span class="circ">91H</span> <i class="mk">২</i></li>
+      <li>কোড (ডানে): 91H → 43H, 40H থেকে IN, 41H-এ OUT <i class="mk">৩</i></li>
+      <li>BSR: 0 000 110 1 = <b>0DH</b>, পাঠাতে হবে <b>কন্ট্রোল পোর্ট 43H-এ</b>, Port C-তে নয় <i class="mk">২</i></li>
+    </ol>
+    <div class="code" style="font-size:11pt;line-height:6mm;margin-top:0">MOV AL, 91H
+OUT 43H, AL
+IN  AL, 40H
+OUT 41H, AL
+MOV AL, 0DH
+OUT 43H, AL</div>
+  </div>
+  <h3>পরীক্ষার আগে যাচাই ✓</h3>
+  <div class="cols">
+    <ul class="tick small">
+      <li>8284A, 373, 245-এর সংযোগ আঁকতে পারি</li>
+      <li>ALE, <span class="ov">RD</span>, READY সহ T1–T4 আঁকতে পারি</li>
+      <li>8288-এর স্ট্যাটাস টেবিল জানি</li>
+    </ul>
+    <ul class="tick small">
+      <li>74LS138 দিয়ে মেমোরি ম্যাপ বানাতে পারি</li>
+      <li>যেকোনো 8255A মোড/BSR ওয়ার্ড লিখতে পারি</li>
+      <li>IN/OUT-এর নিয়ম (AL/AX, DX) জানি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>গ্র্যাস্প প্যাটার্ন, ডিসিডি ও টেস্টিং কৌশল: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+<style>.mcq-set .mcq { font-size: 10.8pt; line-height: 5.2mm; }</style>
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="1.6"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>তারিখ: ১১.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">গ্র্যাস্প, ডিসিডি ও টেস্টিং কৌশল</span></h1>
+  <p class="subtitle">দায়িত্ব · নয়টি নির্দেশিকা · ডিজাইন ক্লাস ডায়াগ্রাম · হোয়াইট/ব্ল্যাক বক্স · সাইক্লোম্যাটিক জটিলতা: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="556">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="106" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M244,132 L170,74 M244,168 L170,226 M320,108 L320,56 M396,132 L470,74 M396,168 L470,226 M320,192 L320,244 M232,150 L176,150 M408,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="140" text-anchor="middle" class="bn k l">গ্র্যাস্প · ডিসিডি</text><text x="320" y="164" text-anchor="middle" class="bn r s">টপিক মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn s">দায়িত্ব বরাদ্দ</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">Carell ও Fowler, ১৯৯১ ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn r s w6">ডিসিডি বনাম ডোমেন মডেল ★</text>
+      <text x="96" y="150" text-anchor="middle" class="bn r s w6">ইনফো এক্সপার্ট ★</text>
+      <text x="96" y="166" text-anchor="middle" class="bn r s w6">ক্রিয়েটর ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r s w6">কাপলিং ↔ কোহেশন ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g s">পলিমরফিজম · কন্ট্রোলার</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r s w6">M = E − N + 2P ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g s">ইপি · বিভিএ · ভি-মডেল</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = পদ্ধতি / প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>১ গ্র্যাস্প = Carell ও Fowler, ১৯৯১<br>২ ইনফো এক্সপার্ট = তথ্য থাকা ক্লাস<br>৩ ক্রিয়েটর = ধারণকারী ক্লাস<br>৪ সবচেয়ে কম নির্ভরশীল ক্লাস জেতে<br>৫ ডিসিডি যোগ করে অপারেশন ও নেভিগেবিলিটি<br>৬ M = শর্তসংখ্যা + ১</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"… <span class="hl">Designing Objects with responsibilities</span>। <span class="hl">GRASP patterns with General Principles in assigning responsibilities</span>: Information expert, Creator, Low Coupling and High Cohesion, <span class="hl">Creating design class diagrams and mapping design to codes</span>। Software Testing: <span class="hl">White Box and Black Box testing</span>। <span class="hl">Basis Path Testing</span>।"</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>গ্র্যাস্প: উৎস ও নির্দেশিকা ……… পৃ. ২</li><li>ইনফো এক্সপার্ট ও ক্রিয়েটর ……… পৃ. ৩</li><li>লো কাপলিং ও হাই কোহেশন ……… পৃ. ৪</li><li>বাকি নির্দেশিকাগুলো ……… পৃ. ৫</li><li>ডিসিডি: ডোমেন মডেল বনাম ডিজাইন ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>ডিসিডির উদাহরণ ও কোড ……… পৃ. ৭</li><li>হোয়াইট বনাম ব্ল্যাক বক্স, ইপি, বিভিএ ……… পৃ. ৮</li><li>কভারেজ, সাইক্লোম্যাটিক, বেসিস পাথ ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: GRASP ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>গ্র্যাস্প</span></div>
+  <h2><span class="no">১</span>গ্র্যাস্প: দায়িত্ব বরাদ্দের সমস্যা</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>গ্র্যাস্প (GRASP)</b> = <span class="circ">জি</span>eneral <span class="circ">আর</span>esponsibility <span class="circ">এ</span>ssignment <span class="circ">এস</span>oftware <span class="circ">পি</span>atterns: কোন অবজেক্টের ওপর কোন দায়িত্ব বসবে তা ঠিক করার <span class="hl">নির্দেশিকা</span>, যাতে ফলাফল কম কাপলড, বেশি কোহেজিভ, রক্ষণাবেক্ষণযোগ্য ও পুনর্ব্যবহারযোগ্য হয়। প্রস্তাবক <span class="circ">জেমস ক্যারেল ও মার্টিন ফাউলার, ১৯৯১</span> (<i>Toward Unified Design Methodologies</i>, <i>IEEE Computer</i>)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr)">
+    <div>
+      <h3>দায়িত্বের দুই প্রকার</h3>
+      <ul class="dash small">
+        <li><b>জানা (knowing)</b> — নিজের অ্যাট্রিবিউট ও সঙ্গে যুক্ত অবজেক্ট।</li>
+        <li><b>করা (doing)</b> — যে কাজগুলো অবজেক্টটি করে (তার অপারেশন)।</li>
+      </ul>
+      <p class="small">একটি <b>প্যাটার্ন</b> (Singleton, Strategy, Observer …) হলো কাঠামোসহ একটি নামকরা সমাধান। আর একটি গ্র্যাস্প নির্দেশিকা হলো মাত্র <span class="hl">একটি বাক্য, যা বলে দায়িত্ব কোথায় রাখতে হবে</span> — এর সঙ্গে কোনো ক্লাস ডায়াগ্রাম বা কোড টেমপ্লেট থাকে না।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 400 190" width="300">
+      <g class="w">
+        <rect x="6" y="8" width="122" height="140" rx="10" class="ink fill-b"/>
+        <rect x="139" y="8" width="122" height="140" rx="10" class="ink-k fill-y"/>
+        <rect x="272" y="8" width="122" height="140" rx="10" class="ink-g fill-g"/>
+      </g>
+      <text x="67" y="30" text-anchor="middle" class="bn w6 k">তথ্য</text><text x="67" y="45" text-anchor="middle" class="bn w6 k">কোথায়?</text>
+      <text x="200" y="30" text-anchor="middle" class="bn w6 k">কতটা</text><text x="200" y="45" text-anchor="middle" class="bn w6 k">জট?</text>
+      <text x="333" y="30" text-anchor="middle" class="bn w6 g">কী বদলাতে</text><text x="333" y="45" text-anchor="middle" class="bn w6 g">পারে?</text>
+      <text x="67" y="72" text-anchor="middle" class="bn s">Information</text>
+      <text x="67" y="84" text-anchor="middle" class="bn s">Expert</text>
+      <text x="67" y="104" text-anchor="middle" class="bn s">Creator</text>
+      <text x="200" y="72" text-anchor="middle" class="bn s">Low Coupling</text>
+      <text x="200" y="92" text-anchor="middle" class="bn s">High Cohesion</text>
+      <text x="200" y="112" text-anchor="middle" class="bn s">Don't Talk to</text>
+      <text x="200" y="124" text-anchor="middle" class="bn s">Strangers</text>
+      <text x="200" y="142" text-anchor="middle" class="bn s">Indirection</text>
+      <text x="333" y="72" text-anchor="middle" class="bn s">Polymorphism</text>
+      <text x="333" y="92" text-anchor="middle" class="bn s">Protected</text>
+      <text x="333" y="104" text-anchor="middle" class="bn s">Variations</text>
+      <text x="333" y="124" text-anchor="middle" class="bn s">Known /</text>
+      <text x="333" y="136" text-anchor="middle" class="bn s">Unknown Deps</text>
+      <text x="200" y="178" text-anchor="middle" class="bn s k">তিনটি প্রশ্নে সাজানো নয়টি নির্দেশিকা</text>
+    </svg><figcaption>নয়টি নির্দেশিকা, তিনটি প্রশ্ন</figcaption></figure>
+  </div>
+  <h3>নয়টি নির্দেশিকা, প্রতিটি এক লাইনে</h3>
+  <table class="hand tiny" style="width:100%">
+    <tr><th>#</th><th class="l">নির্দেশিকা</th><th class="l">নীতি, এক লাইনে</th></tr>
+    <tr><td>১</td><td class="l"><b>Information Expert</b></td><td class="l">তথ্য যার কাছে <b>আছে</b>, তাকেই দায়িত্ব</td></tr>
+    <tr><td>২</td><td class="l"><b>Creator</b></td><td class="l">যে ক্লাস অন্যকে ধারণ বা একত্রিত করে, সে-ই তৈরি করে</td></tr>
+    <tr><td>৩</td><td class="l"><b>Low Coupling</b></td><td class="l">যে ক্লাস অন্যদের ওপর <b>সবচেয়ে কম নির্ভরশীল</b>, তাকে</td></tr>
+    <tr><td>৪</td><td class="l"><b>High Cohesion</b></td><td class="l">এক ক্লাসে <b>সর্বোচ্চ সম্পর্কযুক্ত</b> দায়িত্ব</td></tr>
+    <tr><td>৫</td><td class="l"><b>Polymorphism</b></td><td class="l">সাবক্লাসে সুপারক্লাসের আচরণ নতুন করে লিখবেন না</td></tr>
+    <tr><td>৬</td><td class="l"><b>Pure Arbiters</b></td><td class="l">যে অবজেক্ট দুই বা ততোধিকের মধ্যে <b>সালিশ করে</b></td></tr>
+    <tr><td>৭</td><td class="l"><b>Don't Talk to Strangers</b></td><td class="l">শুধু <b>নিজের সরাসরি সহযোগীর</b> কাছে জিজ্ঞাসা করুন</td></tr>
+    <tr><td>৮</td><td class="l"><b>Controller</b></td><td class="l">সিস্টেম ইভেন্ট পাওয়া <b>প্রথম non-UI</b> অবজেক্ট</td></tr>
+    <tr><td>৯</td><td class="l"><b>Intermediary</b> (Pure Fabrication)</td><td class="l">নির্ভরতা ভাঙতে বানানো <b>কাল্পনিক</b>, ডোমেন-নিরপেক্ষ ক্লাস</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">গ্র্যাস্পের সঙ্গে আরও যে তিনটি আসে</span> <b>Indirection</b> — এমন একটি মধ্যবর্তী অবজেক্ট যা পরস্পর অচেনা অবজেক্টগুলোকে যুক্ত করে। <b>Protected Variations</b> — <b>অনুমিত পরিবর্তনের</b> প্রতিটি বিন্দুকে একটি ইন্টারফেসের ভেতরে রাখুন। <b>Known / Unknown Dependencies</b> — <b>জানা</b> নির্ভরতা সরাসরি উল্লেখ করুন; বদলানো <b>যায় এমন</b> নির্ভরতার সামনে ইন্টারফেস।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> গ্র্যাস্প হলো <b>দায়িত্ব বরাদ্দের নির্দেশিকা</b>, প্রস্তাবক <b>Carell ও Fowler (১৯৯১)</b> — এটি প্যাটার্নের তালিকা নয়, GoF ডিজাইন প্যাটার্নও নয়। <b>Pure Arbiters</b> কখনো "Pure Arbiters / Information Expert" হিসেবে ছাপা হয়: দুটি করে গণনা করবেন না।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: Information Expert & Creator ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>ইনফো এক্সপার্ট ও ক্রিয়েটর</span></div>
+  <h2><span class="no">২</span>ইনফরমেশন এক্সপার্ট ও ক্রিয়েটর — উদাহরণসহ</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">Information Expert (ইনফরমেশন এক্সপার্ট)</span> সেই অবজেক্টকে দায়িত্ব দিন যার কাছে কাজটি করার জন্য প্রয়োজনীয় <span class="hl">তথ্য</span> আছে। <b>উদাহরণ:</b> <i>Invoice</i>-ই <span class="mono">getTotal()</span> হিসাব করবে, কারণ LineItem-এর তালিকা কেবল Invoice-এর কাছেই আছে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr)">
+    <div class="code" style="font-size:10pt;line-height:5.2mm">class LineItem {
+    Product product;
+    int quantity;
+    double getSubTotal() {
+        return product.price * quantity;
+    }
+}
+class Invoice {
+    List&lt;LineItem&gt; items;
+    double getTotal() {
+        return items.stream()
+            .mapToDouble(LineItem::getSubTotal)
+            .sum();
+    }
+}</div>
+    <div>
+      <h3>এই উত্তরটি কেন সঠিক</h3>
+      <ul class="dash small">
+        <li>লাইন আইটেমগুলো কেবল <b>Invoice</b>-এর কাছে, তাই যোগফল করতে পারে কেবল সেই।</li>
+        <li>কোনো প্যারামিটার পাঠাতে হয় না, কোনো <i>LineItem</i>-এর ব্যাক-পয়েন্টার লাগে না।</li>
+        <li>জ্ঞান থাকে <span class="hl">যে ক্লাসের কাছে ডেটা, তার ভেতরেই</span>: কাপলিং কমে, কোহেশন বাড়ে।</li>
+      </ul>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">পরীক্ষার ফাঁদ</span> Information Expert মানে "সবচেয়ে বেশি মেথড থাকা ক্লাস" <b>নয়</b>। এটি সেই ক্লাস যার কাছে <span class="circ">প্রয়োজনীয় ডেটা</span> আছে। ডেটা অন্যত্র থাকলে দায়িত্ব সেখানেই যাবে।</div>
+    </div>
+  </div>
+  <h3><span class="no">২ক</span> ক্রিয়েটর (Creator) — উদাহরণসহ</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <div class="def small"><span class="lbl">Creator</span> ক্লাস <b>B</b>-কে ক্লাস <b>A</b>-এর ইনস্ট্যান্স তৈরির দায়িত্ব দিন, যদি <span class="hl">যেকোনো একটি</span> শর্ত সত্য হয়: B <b>ধারণ</b> করে A · B <b>একত্রিত</b> করে A · B-তে A <b>রেকর্ড</b> আছে · B <b>ঘনিষ্ঠভাবে ব্যবহার</b> করে A · B-এর কাছে A-কে <b>initialise</b> করার ডেটা আছে।</div>
+      <div class="code" style="font-size:10pt;line-height:5.2mm;margin-top:2mm">class Sale {
+    List&lt;SalesLineItem&gt; lines;
+    SalesLineItem addLine(Product p, int q) {
+        SalesLineItem l = new SalesLineItem(p, q);
+        lines.add(l);
+        return l;
+    }
+}</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 400 168" width="330">
+      <g class="w">
+        <rect x="140" y="8" width="120" height="40" rx="8" class="ink fill-b"/>
+        <rect x="8" y="96" width="120" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="140" y="96" width="120" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="272" y="96" width="120" height="36" rx="8" class="ink-g fill-g"/>
+        <path class="ink-k" d="M180,48 L68,90 M200,48 V90 M220,48 L332,90" marker-end="url(#ahb)"/>
+      </g>
+      <text x="200" y="34" text-anchor="middle" class="w6 k">Sale</text>
+      <text x="68" y="120" text-anchor="middle" class="s g w6">SalesLine</text>
+      <text x="200" y="120" text-anchor="middle" class="s g w6">SalesLine</text>
+      <text x="332" y="120" text-anchor="middle" class="s g w6">SalesLine</text>
+      <text x="200" y="78" text-anchor="middle" class="s r w6">creates  (1 .. *)</text>
+      <text x="200" y="152" text-anchor="middle" class="bn s">Sale ধারণ করে, তাই Sale-ই Creator</text>
+    </svg><figcaption>ক্রিয়েটর: যে ধারণ করে, সেই তৈরিই করে</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>Creator = "C for Container"</b>। B যদি A ধারণ না করেও A-এর প্রতিটি ফিল্ডের initial মান বলতে পারে, তবে সেও স্বাভাবিক Creator — কারণ ওখানে তৈরি করলে কলকারকে যে আর্গুমেন্ট দিতে হয় <b>কমে যায়</b>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> Creator মানে "যে ক্লাস ব্যবহার করে" তা নয়। POS সিস্টেমে <b>Sale</b> — Register, ProductCatalog বা Payment নয় — <b>SalesLineItem</b> তৈরি করে, কারণ Sale সেগুলোকে <i>ধারণ</i> করে।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: Low Coupling & High Cohesion ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>কাপলিং ও কোহেশন</span></div>
+  <h2><span class="no">৩</span>লো কাপলিং ও হাই কোহেশন — উদাহরণসহ</h2><span class="tag">লিখিতে প্রিয়</span>
+  <div class="def"><span class="lbl">Low Coupling (লো কাপলিং)</span> এমনভাবে দায়িত্ব বরাদ্দ করুন যাতে <span class="hl">অপ্রয়োজনীয় নির্ভরতা সর্বনিম্ন</span> থাকে। পরীক্ষায় বলার নিয়ম: <span class="circ">দায়িত্ব সেই ক্লাসকে দিন যা অন্য ক্লাসের ওপর সবচেয়ে কম নির্ভরশীল</span>। নির্ভরতা মাপা হয় কতটা পরিমাণ অন্য অবজেক্টের <b>স্টেট</b> জানতে হয় তা দিয়ে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3>খারাপ — হাই কাপলিং</h3>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">class Customer {
+    String name;
+    void saveToDatabase() {
+        // opens a JDBC connection,
+        // builds SQL, commits a tx
+    }
+}</div>
+      <p class="small"><b>ক্ষতি:</b> <i>Customer</i> এখন DB, SQL, ড্রাইভার ও নেটওয়ার্ক জানে।</p>
+    </div>
+    <div>
+      <h3>ভালো — লো কাপলিং</h3>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">class CustomerRepository {
+    void save(Customer c) {
+        // all DB logic lives here
+    }
+}
+class Customer {
+    String name;  // no DB knowledge
+}</div>
+      <p class="small"><b>লাভ:</b> <i>Customer</i> পুনর্ব্যবহারযোগ্য, repository বদলানো যায়, দুটি আলাদা ইউনিট টেস্ট করা যায়।</p>
+    </div>
+  </div>
+  <h3><span class="no">৩ক</span> হাই কোহেশন — উদাহরণসহ</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">// LOW COHESION — the "god class"
+class CustomerManager {
+    void browseShop()  { }
+    void chargeCard()  { }
+    void shipOrder()   { }
+    void sendEmail()   { }
+    void updateDatabase(){ }
+}</div>
+      <p class="small">পাঁচটি অসম্পর্কিত কাজ: <span class="hl">পরিবর্তনের কোনো একটি কারণ নেই</span>, আর প্রতিটি পরিবর্তন পাঁচটিকেই ঝুঁকিতে ফেলে।</p>
+    </div>
+    <div>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">// HIGH COHESION — split it
+class Customer { /* customer data */ }
+class Cart     { /* cart operations */ }
+class Payment  { /* payment logic  */ }
+class Shipping { /* delivery       */ }
+class Notifier { /* e-mail         */ }</div>
+      <p class="small">প্রতিটির <span class="hl">পরিবর্তনের একটিমাত্র স্পষ্ট কারণ</span> আছে — SRP-রই আরেক রূপ।</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 275px;align-items:center">
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>কাপলিং হলো এই বেলুনে কতগুলো সুতো বাঁধা</b> — চারটি সুতো আর ওড়ে না। <b>কোহেশন হলো তার নিজের অংশগুলো কতটা জোরে জোড়া লেগে আছে</b>: পাঁচটি অসম্পর্কিত কাজ = নুড়ির ঢেলি, পাথর নয়।</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">পরীক্ষার ফাঁদ</span> দুটি আলাদা মাপকাঠি: কাপলিং হলো ক্লাসগুলোর <i>মধ্যে</i>, কোহেশন এক ক্লাসের <i>ভেতরে</i>। একটি ক্লাস অত্যন্ত কোহেজিভ হয়েও তিনটি অপ্রয়োজনীয় ক্লাসের সঙ্গে কাপলড হতে পারে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 150" width="270">
+      <g class="w">
+        <circle cx="52" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="112" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="52" cy="86" r="11" class="ink-r fill-r"/>
+        <circle cx="112" cy="86" r="11" class="ink-r fill-r"/>
+        <path class="ink-r" d="M63,24 H101 M63,86 H101 M52,35 V75 M112,35 V75 M52,24 L112,86 M112,24 L52,86" stroke-width="1.4"/>
+        <circle cx="238" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="298" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="238" cy="86" r="11" class="ink-r fill-r"/>
+        <circle cx="298" cy="86" r="11" class="ink-r fill-r"/>
+        <path class="ink-g" d="M160,55 H210 M249,24 H287 M249,86 H287" marker-end="url(#ahg)" stroke-width="1.6"/>
+      </g>
+      <text x="82" y="124" text-anchor="middle" class="bn s r w6">হাই কাপলিং</text>
+      <text x="82" y="142" text-anchor="middle" class="bn s">প্রতিটি নোড</text>
+      <text x="82" y="154" text-anchor="middle" class="bn s">সবাইকে জানে</text>
+      <text x="268" y="124" text-anchor="middle" class="bn s g w6">লো কাপলিং</text>
+      <text x="268" y="142" text-anchor="middle" class="bn s">একটি কেন্দ্র,</text>
+      <text x="268" y="154" text-anchor="middle" class="bn s">আলাদা স্পোক</text>
+    </svg><figcaption>একই চারটি অবজেক্ট, দুইভাবে যুক্ত</figcaption></figure>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> ব্যাংক কোর তার লেজার নিয়মগুলো ইন্টারফেসের পেছনে রাখে: ব্যবসায়িক ক্লাসগুলো না ছুঁয়েই SQL বদলানো যায়।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: remaining guidelines ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>বাকি নির্দেশিকা</span></div>
+  <h2><span class="no">৪</span>পলিমরফিজম, কন্ট্রোলার, ইন্টারমিডিয়ারি ও বাকিগুলো</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols3">
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Polymorphism (পলিমরফিজম)</span> সাবক্লাসকে এমন আচরণ দেবেন না যা সুপারক্লাসে <b>আগে থেকেই</b> আছে। দায়িত্বটি সুপারক্লাস বা ইন্টারফেসে রাখুন, রান টাইমে সঠিকটি বেছে নিতে <span class="circ">পলিমরফিজম</span> দিয়ে হবে। <span class="tiny green">CashPayment · CardPayment · MobileBanking — সবাই <i>process()</i> ভাগ করে।</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Pure Arbiters (পিওর আর্বাইটার্স)</span> এমন অবজেক্টকে দায়িত্ব দিন যা <b>দুই বা ততোধিকের মধ্যে সালিস করে</b> — যে নিয়ম দুপাশের দুজনেরই দরকার কিন্তু কারও নিজের নয়। <span class="tiny green">যে <i>TaxPolicy</i> <i>Invoice</i> ও <i>Refund</i> দুজনই জিজ্ঞাসা করে।</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Don't Talk to Strangers</span> কোনো মেথড অন্যের ওপর অতিরিক্ত নির্ভরতা রাখলে নিয়ম ভাঙে। শুধু <b>নিজের সরাসরি সহযোগীর</b> কাছে জিজ্ঞাসা করুন। <span class="tiny green">কখনো <i>Order</i>-এর ভেতর দিয়ে <i>Order.getCustomer().getAddress()</i> ধরবেন না।</span></div>
+  </div>
+  <div class="cols3">
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Controller (কন্ট্রোলার)</span> <i>enterItem</i>-এর মতো সিস্টেম ইভেন্ট যে অবজেক্ট <b>UI স্তরের পরে প্রথম</b> গ্রহণ করে ও সমন্বয় করে। দুই প্রকার: <b>ফ্যাসেড কন্ট্রোলার</b> (গোটা সিস্টেমের প্রতিনিধি) ও <b>ইউজ-কেস / সেশন কন্ট্রোলার</b> (একটি পরিস্থিতি)। <span class="circ">UI ক্লাসে কখনো নয়।</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Intermediary / Pure Fabrication</span> এমন ক্লাস যা <b>কোনো ডোমেন ধারণাই প্রতিনিধিত্ব করে না</b>, শুধু অস্বাভাবিক নির্ভরতা ভাঙতে বানানো; সাধারণত <b>নিম্ন-স্তরের সাধারণ প্যাকেজে</b> রাখা হয়। <span class="tiny green">ইনভয়েস আর ডেটাবেসের মাঝে একটি <i>ReportService</i>।</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Protected Variations</span> <b>অনুমিত পরিবর্তনের</b> বিন্দুগুলো চিহ্নিত করে প্রতিটির সামনে ইন্টারফেস বা অ্যাবস্ট্রাক্ট ক্লাস রাখুন, যাতে অস্থির অংশ বাকিটা না ছুঁয়েই বদলায়। <span class="tiny green">Open/Closed নীতি; সাধারণত Strategy প্যাটার্ন।</span></div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:center">
+    <div>
+      <h3>SOLID-এর সঙ্গে নির্দেশিকাগুলোর মিল</h3>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">গ্র্যাস্প নির্দেশিকা</th><th class="l">আসলে এই নীতি</th></tr>
+        <tr><td class="l"><b>High Cohesion</b></td><td class="l">Single Responsibility নীতি</td></tr>
+        <tr><td class="l"><b>Low Coupling</b></td><td class="l">Dependency Inversion · Open/Closed</td></tr>
+        <tr><td class="l"><b>Protected Variations</b></td><td class="l">Open/Closed নীতি · Strategy</td></tr>
+        <tr><td class="l"><b>Polymorphism</b></td><td class="l">Liskov Substitution</td></tr>
+        <tr><td class="l"><b>Indirection / Intermediary</b></td><td class="l">Dependency Inversion নীতি</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 190" width="300">
+      <g class="w">
+        <rect x="6" y="8" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="122" y="8" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="238" y="8" width="96" height="34" rx="8" class="ink-k fill-y"/>
+        <path class="ink-k" d="M102,25 H122 M218,25 H238" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M54,46 C54,70 286,70 286,46" stroke-dasharray="6 5" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M166,58 L178,72 M178,58 L166,72"/>
+        <rect x="6" y="102" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="238" y="102" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="122" y="102" width="96" height="34" rx="8" class="ink-p fill-p"/>
+        <path class="ink-g" d="M102,119 H122" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M218,119 H238" marker-end="url(#ahg)"/>
+      </g>
+      <text x="54" y="30" text-anchor="middle" class="w6 k">UI</text>
+      <text x="170" y="30" text-anchor="middle" class="w6 k">Controller</text>
+      <text x="286" y="30" text-anchor="middle" class="s k w6">Domain</text>
+      <text x="170" y="86" text-anchor="middle" class="bn s r" style="font-size:9px">UI নিজে ইভেন্ট সামলাবে না</text>
+      <text x="54" y="125" text-anchor="middle" class="w6 k">A</text>
+      <text x="170" y="125" text-anchor="middle" class="p w6">mediator</text>
+      <text x="286" y="125" text-anchor="middle" class="w6 k">B</text>
+      <text x="170" y="154" text-anchor="middle" class="bn s g" style="font-size:9px">অচেনা বন্ধুর সঙ্গে কথা নয়: A কেবল সহযোগীকে জিজ্ঞাসা করে</text>
+      <text x="170" y="176" text-anchor="middle" class="bn s k" style="font-size:9px">পিওর ফ্যাব্রিকেশন বানানো, ডোমেন থেকে নয়</text>
+    </svg><figcaption>UI-এর পরে কন্ট্রোলার; মিডিয়েটর শর্টকাট কাটে</figcaption></figure>
+  </div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>Controller</b> নির্দেশিকা মানে "ব্যবহারকারী যে ক্লাসে ক্লিক করেন" <b>নয়</b> — ইভেন্ট গ্রহণকারী UI ক্লাস তো গ্র্যাস্প নিষিদ্ধ করে। আর <b>Pure Fabrication</b> ডোমেন মডেল ক্লাস থেকে আলাদা: এর <span class="circ">কোনো ডোমেন অর্থ নেই</span>, থাকে শুধু decoupling-এর জন্য।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: DCD ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>ডিসিডি</span></div>
+  <h2><span class="no">৫</span>ডিজাইন ক্লাস ডায়াগ্রাম (DCD)</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>ডিজাইন ক্লাস ডায়াগ্রাম (DCD)</b> হলো <span class="hl">ডিজাইন লেভেলে</span> আঁকা UML ক্লাস ডায়াগ্রাম: বিশ্লেষণ/ডোমেন মডেলের ক্লাস ডায়াগ্রামের সঙ্গে বাস্তবায়নকারীর দরকারি সবকিছু যোগ করা — স্বাক্ষরসহ <b>অপারেশন</b>, <b>টাইপ</b>, <b>ভিজিবিলিটি</b> চিহ্ন এবং <b>নেভিগেবিলিটি</b> তীর।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.08fr) minmax(0,0.92fr)">
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">ডোমেন / বিশ্লেষণ মডেল</th><th class="l">ডিজাইন ক্লাস ডায়াগ্রাম</th></tr>
+      <tr><td class="l">ডোমেনের <b>ধারণাগত</b> দৃষ্টিভঙ্গি</td><td class="l">বাস্তবায়নের <b>সফটওয়্যার</b> দৃষ্টিভঙ্গি</td></tr>
+      <tr><td class="l">ক্লাস, অ্যাট্রিবিউট, অ্যাসোসিয়েশন, মাল্টিপ্লিসিটি</td><td class="l">সেগুলো <b>মেথড ও রিটার্ন টাইপ</b>সহ</td></tr>
+      <tr><td class="l"><b>বহুবচন</b> ডোমেন নাম (Sales)</td><td class="l"><b>একবচন</b> নাম (Sale)</td></tr>
+      <tr><td class="l">সফটওয়্যার-নির্দিষ্ট টাইপ নেই</td><td class="l">সুনির্দিষ্ট টাইপ: <b>String, double, List</b></td></tr>
+      <tr><td class="l">ভিজিবিলিটি চিহ্ন নেই</td><td class="l"><b>+ public · − private · # protected</b></td></tr>
+      <tr><td class="l">অ্যাসোসিয়েশন দিকহীন</td><td class="l"><b>নেভিগেবিলিটি</b> — রেফারেন্স কে রাখে</td></tr>
+      <tr><td class="l">ইন্টারফেস বা প্যাকেজ নেই</td><td class="l"><b>&lt;&lt;interface&gt;&gt;</b>, <b>&lt;&lt;abstract&gt;&gt;</b>, প্যাকেজ</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 210" width="225">
+      <g class="w">
+        <rect x="6" y="8" width="132" height="94" rx="7" class="ink" style="fill:rgba(255,255,255,.6)"/>
+        <path class="ink-k" d="M6,30 H138 M6,56 H138" style="stroke-width:1.3"/>
+        <rect x="162" y="8" width="132" height="94" rx="7" class="ink-r"/>
+        <path class="ink-r" d="M162,30 H294 M162,56 H294" style="stroke-width:1.3"/>
+        <path class="ink-k" d="M140,46 H158" marker-end="url(#ahb)"/>
+        <text x="149" y="40" text-anchor="middle" class="s k" style="font-size:8px">+</text>
+      </g>
+      <text x="14" y="24" class="w6 k">DOMAIN</text>
+      <text x="14" y="46" class="s k">Customer</text>
+      <text x="14" y="72" class="s k">− name</text>
+      <text x="14" y="86" class="s k">− email</text>
+      <text x="14" y="100" class="s r">no methods</text>
+      <text x="170" y="24" class="w6 r">DESIGN</text>
+      <text x="170" y="46" class="s k">Customer</text>
+      <text x="170" y="72" class="s k">− name</text>
+      <text x="170" y="86" class="s k">− email</text>
+      <text x="170" y="100" class="s g">+ register()</text>
+      <rect x="6" y="130" width="288" height="58" rx="7" class="ink-p" style="fill:rgba(106,63,160,.08)"/>
+      <text x="150" y="150" text-anchor="middle" class="bn s p w6">ডিজাইন লেভেল যা যোগ করে</text>
+      <text x="18" y="170" class="bn s g">স্বাক্ষরসহ মেথড</text>
+      <text x="170" y="170" class="bn s g">অ্যাট্রিবিউট ও রিটার্ন টাইপ</text>
+      <text x="18" y="184" class="bn s g">ভিজিবিলিটি চিহ্ন</text>
+      <text x="170" y="184" class="bn s g">নেভিগেবিলিটি তীর</text>
+      <text x="150" y="204" text-anchor="middle" class="bn s">ডোমেন মডেলে এর কোনোটিই নেই</text>
+    </svg><figcaption>একই বিষয়, দুইবার: ধারণাগত, তারপর ডিজাইন করা</figcaption></figure>
+  </div>
+  <h3>ডিজাইন থেকে কোডে ম্যাপিং: এক-এক-এক নিয়ম</h3>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ডিসিডির উপাদান</th><th class="l">কোডে পরিণত হয়</th></tr>
+    <tr><td class="l">একটি ক্লাস বক্স</td><td class="l">একটি <b>ক্লাস</b> — বা স্টেরিওটাইপ &lt;&lt;interface&gt;&gt; হলে ইন্টারফেস</td></tr>
+    <tr><td class="l">অ্যাট্রিবিউট <span class="mono">− price : double</span></td><td class="l">ওই টাইপের একটি <b>ফিল্ড</b> / প্রপার্টি</td></tr>
+    <tr><td class="l">অপারেশন <span class="mono">+ total() : double</span></td><td class="l">ওই রিটার্ন টাইপের একটি <b>মেথড</b></td></tr>
+    <tr><td class="l">নেভিগেবিলিটিসহ অ্যাসোসিয়েশন <b>1</b> → <b>*</b></td><td class="l">একটি রেফারেন্স ফিল্ড ও একটি <b>কালেকশন</b> (অ্যারে / <i>List</i> / <i>Set</i>)</td></tr>
+    <tr><td class="l">অ্যাগ্রিগেশন ◇ বা কম্পোজিশন ◆</td><td class="l">পূর্ণাংশের দ্বারা ধারণ করা whole–part রেফারেন্স</td></tr>
+    <tr><td class="l">জেনারালাইজেশন △ / রিয়ালাইজেশন ▷</td><td class="l"><b>ইনহেরিট্যান্স</b> / ডেলিগেশনে কম্পোজিশন</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ডোমেন মডেলে যা নেই কিন্তু ডিসিডিতে আছে, তা হলো একটাই জিনিস: <span class="circ">মেথড (অপারেশন) ও নেভিগেবিলিটি</span>। কনসেপ্ট ক্লাস, অ্যাসোসিয়েশন ও মাল্টিপ্লিসিটি <b>দুটোতেই</b> থাকে।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ডোমেন মডেল = <b>কী আছে</b>। ডিসিডি = <b>কী আছে, আর সেটি কী করে</b>। রিটার্ন টাইপসহ মেথড স্বাক্ষর দেখলেই বুঝে যাবেন, এটি ডিসিডি।</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">ডিসিডি তৈরির চার ধাপ</span> ① ডোমেন মডেলের প্রতিটি কনসেপ্ট ক্লাস নিন, নাম <b>একবচনে</b> করুন (Sales → <i>Sale</i>)। ② প্রতিটি ক্লাসের অ্যাট্রিবিউটে <b>সফটওয়্যার টাইপ</b> দিন (age: Integer নয়, <i>int</i>)। ③ প্রতিটি ক্লাসকে এক-দুইটি করে দায়িত্ব দিয়ে সেগুলোকে অপারেশন হিসেবে সাজান, <b>রিটার্ন টাইপ</b> লিখুন। ④ যে অ্যাসোসিয়েশনে রেফারেন্স রাখতে হবে, সেখানে <b>নেভিগেবিলিটি তীর</b> আঁকুন — তীর যার দিকে, রেফারেন্স তার কাছে।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: DCD worked example ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>ডিসিডি উদাহরণ</span></div>
+  <h2><span class="no">৬</span>একটি ডিসিডি ধাপে ধাপে, আর যে কোড হয়ে দাঁড়ায়</h2><span class="tag">লিখিতে প্রিয়</span>
+  <figure class="doodle">
+    <svg viewBox="0 0 660 246" width="620">
+      <g class="w">
+        <rect x="10" y="6" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M10,26 H190 M10,58 H190" style="stroke-width:1.3"/>
+        <rect x="240" y="6" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M240,26 H420 M240,58 H420" style="stroke-width:1.3"/>
+        <rect x="470" y="6" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M470,26 H650 M470,58 H650" style="stroke-width:1.3"/>
+        <rect x="10" y="140" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M10,160 H190 M10,192 H190" style="stroke-width:1.3"/>
+        <rect x="240" y="140" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M240,160 H420 M240,192 H420" style="stroke-width:1.3"/>
+        <rect x="470" y="140" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M470,160 H650 M470,192 H650" style="stroke-width:1.3"/>
+        <path class="ink-g" d="M100,92 V136" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M330,92 V136" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M190,183 H236" marker-end="url(#ahg)"/>
+      </g>
+      <text x="100" y="21" text-anchor="middle" class="w6 k">Customer</text>
+      <text x="14" y="40" class="s k">− name : String</text>
+      <text x="14" y="52" class="s k">− email : String</text>
+      <text x="14" y="72" class="s g">+ register() : void</text>
+      <text x="14" y="84" class="s g">+ checkout() : Order</text>
+      <text x="330" y="21" text-anchor="middle" class="w6 k">Cart</text>
+      <text x="244" y="40" class="s k">− items : List&lt;Line&gt;</text>
+      <text x="244" y="52" class="s k">− customer : Customer</text>
+      <text x="244" y="72" class="s g">+ add(p : Product) : void</text>
+      <text x="244" y="84" class="s g">+ createOrder() : Order</text>
+      <text x="560" y="21" text-anchor="middle" class="w6 k">Product</text>
+      <text x="474" y="40" class="s k">− sku : String</text>
+      <text x="474" y="52" class="s k">− price : double</text>
+      <text x="474" y="72" class="s g">+ inStock() : bool</text>
+      <text x="100" y="118" text-anchor="middle" class="s g">1 .. *</text>
+      <text x="330" y="118" text-anchor="middle" class="s g">1</text>
+      <text x="100" y="154" text-anchor="middle" class="w6 k">Order</text>
+      <text x="14" y="174" class="s k">− id : int</text>
+      <text x="14" y="186" class="s k">− lines : List&lt;Line&gt;</text>
+      <text x="14" y="206" class="s g">+ confirm() : void</text>
+      <text x="14" y="218" class="s g">+ total() : double</text>
+      <text x="330" y="154" text-anchor="middle" class="w6 k">Line</text>
+      <text x="244" y="174" class="s k">− qty : int</text>
+      <text x="244" y="186" class="s k">− product : Product</text>
+      <text x="244" y="206" class="s g">+ subTotal() : double</text>
+      <text x="560" y="154" text-anchor="middle" class="w6 k">Payment</text>
+      <text x="474" y="174" class="s k">− method : String</text>
+      <text x="474" y="186" class="s k">− amount : double</text>
+      <text x="474" y="206" class="s g">+ process() : boolean</text>
+      <text x="213" y="178" text-anchor="middle" class="bn s g" style="font-size:9px">তৈরি করে</text>
+      <text x="330" y="240" text-anchor="middle" class="s">navigable: Cart ▸ Order ▸ Line ▸ Product</text>
+    </svg>
+    <figcaption>একটি ডিজাইন ক্লাস ডায়াগ্রাম — Customer 1 — * Cart — * Order — * Line — * Product, সঙ্গে একটি Payment সহযোগী; প্রতিটি বাক্সে এখন রিটার্ন টাইপসহ অপারেশন</figcaption>
+  </figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="code" style="font-size:10pt;line-height:5.2mm">class Customer {
+    String name;
+    String email;
+    Cart cart = new Cart();
+
+    void checkout() {
+        Order o = cart.createOrder();
+        o.confirm();
+    }
+}
+class Line {
+    Product product;   // navigable ▸
+    int qty;
+    double subTotal() {
+        return product.price * qty;
+    }
+}</div>
+    <div class="code" style="font-size:10pt;line-height:5.2mm">class Cart {
+    List&lt;Line&gt; items = new ArrayList&lt;&gt;();
+
+    void add(Product p, int q) {
+        items.add(new Line(p, q));
+    }
+    double calculateTotal() {
+        return items.stream()
+            .mapToDouble(Line::subTotal)
+            .sum();
+    }
+    Order createOrder() {
+        return new Order(items);
+    }
+}</div>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">ছবি থেকে ম্যাপিং পড়ুন</span> <span class="mono">Cart.items : List&lt;Line&gt;</span> → ফিল্ড <span class="mono">List&lt;Line&gt; items</span>; <span class="mono">Line.product : Product</span> → ফিল্ড <span class="mono">Product product</span>; <span class="mono">Line.subTotal() : double</span> → মেথড। <b>ডিসিডির কোথাও কিছু নতুন করে বানাতে হয় না</b> — ক্লাসের নাম, অ্যাট্রিবিউটের নাম, টাইপ ও মেথডের নামই প্রোগ্রামারের প্রয়োজনীয় শনাক্তকারী।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ডিসিডি CRC কার্ড থেকে আলাদা জিনিস: CRC দিয়ে দায়িত্ব <i>আবিষ্কার</i> করা হয়, ডিসিডিতে তা <i>লিখে রাখা</i> হয়। "ডিজাইন সরাসরি কোডে যায়" মানে <b>এক-এক-এক ম্যাপিং</b> — প্রতিটি ডায়াগ্রাম উপাদানের আলাদা ফাইল নয়।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: white-box vs black-box, EP, BVA ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>হোয়াইট ও ব্ল্যাক বক্স</span></div>
+  <h2><span class="no">৭</span>স্ট্রাকচারাল বনাম ফাংশনাল টেস্টিং, ইপি ও বিভিএ</h2><span class="tag">MCQ + লিখিত</span>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">বিষয়</th><th class="l">হোয়াইট বক্স (স্ট্রাকচারাল, গ্লাস-বক্স)</th><th class="l">ব্ল্যাক বক্স (ফাংশনাল, বিহেভিয়ারাল)</th></tr>
+    <tr><td class="l">টেস্ট কেস কীস থেকে</td><td class="l">কোডের <b>অভ্যন্তরীণ কাঠামো</b> থেকে</td><td class="l"><b>স্পেসিফিকেশন</b> থেকে, কোড থেকে নয়</td></tr>
+    <tr><td class="l">টেস্টারের জ্ঞান</td><td class="l">প্রোগ্রামের ভেতরের বিষয় জানেন</td><td class="l">কীভাবে লেখা হয়েছে তা <span class="circ">জানেন না</span></td></tr>
+    <tr><td class="l">আরেক নাম</td><td class="l">স্ট্রাকচারাল, ক্লিয়ার-বক্স, গ্লাস-বক্স</td><td class="l">ফাংশনাল, স্পেসিফিকেশন-ভিত্তিক</td></tr>
+    <tr><td class="l">মূল প্রশ্ন</td><td class="l">"প্রতিটি স্টেটমেন্ট / ব্রাঞ্চ <b>চলেছে</b> কি?"</td><td class="l">"প্রতিটি বৈধ ইনপুটে <b>আউটপুট</b> ঠিক আছে কি?"</td></tr>
+    <tr><td class="l">পদ্ধতি</td><td class="l">বেসিস পাথ টেস্টিং, কভারেজ বিশ্লেষণ</td><td class="l">সমতুল্য বিভাজন, বিভিএ, কজ-ইফেক্ট গ্রাফিং</td></tr>
+    <tr><td class="l">সবচেয়ে ভালো ধরে</td><td class="l">ডেড কোড, চালানো হয়নি এমন ব্রাঞ্চ</td><td class="l">বাদ পড়া প্রয়োজন, ভুল আউটপুট</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="def small" style="margin-top:0"><span class="lbl">টেস্ট বেসিস</span> যে নথি থেকে টেস্ট বের করা হয়: <b>হোয়াইট বক্স</b> টেস্টের বেসিস <b>ডিজাইন মডেল / কোড</b>, <b>ব্ল্যাক বক্স</b> টেস্টের বেসিস <b>প্রয়োজনীয়তার স্পেসিফিকেশন</b>। টেস্টিং ত্রুটের <span class="circ">উপস্থিতি</span> দেখাতে পারে, অনুপস্থিতি কখনো নয়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> টেস্টিং প্রোগ্রাম <b>সঠিক প্রমাণ করতে পারে না</b>; শুধু আস্থা বাড়ায়। যে টেস্ট <b>কখনো ব্যর্থ হয়নি</b>, তাকে ভালো টেস্ট বলা এখনো প্রমাণিত নয়। ইউনিট → ইন্টিগ্রেশন → ভ্যালিডেশন → সিস্টেম লেভেল, ডিবাগিং, রক্ষণাবেক্ষণ ও টেস্ট মেট্রিক্স <b>টেস্টিং কৌশল, রক্ষণাবেক্ষণ, মান ও মেট্রিক্স</b> নোটে আছে।</div>
+  </div>
+  <h3><span class="no">৭ক</span> সমতুল্য বিভাজন ও সীমানা মান বিশ্লেষণ</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">সমতুল্য শ্রেণি (বয়স)</th><th class="l">ধরন</th><th class="l">ইপি বাছাই</th></tr>
+        <tr><td class="l">বয়স &lt; ১৮</td><td class="l">অবৈধ</td><td class="l">১০</td></tr>
+        <tr><td class="l">১৮ ≤ বয়স ≤ ৬০</td><td class="l"><b>বৈধ</b></td><td class="l">৩৫</td></tr>
+        <tr><td class="l">বয়স &gt; ৬০</td><td class="l">অবৈধ</td><td class="l">৭০</td></tr>
+      </table>
+      <p class="small"><b>সমতুল্য বিভাজন (EP)</b> ইনপুট ডোমেনকে এমন শ্রেণিতে ভাগ করে যেগুলো একইভাবে ব্যবস্থিত হয়, তারপর প্রতিটি থেকে <b>একটি প্রতিনিধি</b> পরীক্ষা করে — কম টেস্ট, বড় কভারেজ। বৈধ ও অবৈধ শ্রেণি <b>আলাদা করে</b> গোনা হয়।</p>
+    </div>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">সীমানা</th><th class="l">বিভিএ বাছাই</th></tr>
+        <tr><td class="l">নিম্ন, ১৮</td><td class="l">১৭ · <b>১৮</b> · ১৯</td></tr>
+        <tr><td class="l">উচ্চ, ৬০</td><td class="l">৫৯ · <b>৬০</b> · ৬১</td></tr>
+      </table>
+      <p class="small"><b>বিভিএ (BVA)</b> প্রতিটি সীমানার <b>ঠিক নিচে, ঠিক ওপরে ও ঠিক মাঝে</b> পরীক্ষা করে। অফ-বাই-ওয়ান ত্রুটি থাকে <span class="hl">ধারের কাছে</span> — ঠিক যেখানে ইপি মাত্র একটি নমুনা নেয়।</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">কখন কোনটি ব্যবহার করবেন ✍</span> ইনপুট ডোমেন ছোট হলে (যেমন ১–২০) শুধু ইপিই যথেষ্ট — সব মান না দেখে শ্রেণিগুলোর প্রতিনিধি একটি করে দিলেই ক্লাসে পৌঁছে যায়। ডোমেন বড় হলে (বছর, পরিমাণ, তারিখ) একাই ইপি ঝুঁকি বাড়ায়, তখন <b>বিভিএ</b> যোগ করুন। বাস্তবে বেশিরভাগ দলীকৃত চেকলিস্টে <b>ইপি + বিভিএ</b> — দুটো একসঙ্গে। কারণ ইপি ধরে রাখে <i>প্রতিনিধি</i> আর বিভিএ ধরে রাখে <i>প্রান্তিক মান</i>: একটি শ্রেণির ভেতরের মান ভুল হলে ইপি ধরতে পারে না, কারণ সে মাঝের মানের কাছাকাছি যায়।</div>
+  <figure class="doodle"><svg viewBox="0 0 470 152" width="380">
+    <g class="w">
+      <rect x="40" y="62" width="88" height="22" class="ink-r fill-r"/>
+      <rect x="128" y="62" width="205" height="22" class="ink-g fill-g"/>
+      <rect x="333" y="62" width="97" height="22" class="ink-r fill-r"/>
+      <path class="ink" d="M40,73 H430" style="stroke:#1d3f8f"/>
+      <path class="ink-k" d="M124,56 V94 M128,56 V94 M333,56 V94 M337,56 V94" stroke-width="1.4"/>
+      <circle cx="84" cy="56" r="5" class="ink-k fill-y"/><circle cx="230" cy="56" r="5" class="ink-k fill-y"/><circle cx="382" cy="56" r="5" class="ink-k fill-y"/>
+    </g>
+    <text x="126" y="30" text-anchor="middle" class="bn s r" style="font-size:9px">১৮</text>
+    <text x="335" y="30" text-anchor="middle" class="bn s r" style="font-size:9px">৬০</text>
+    <text x="84" y="46" text-anchor="middle" class="bn s g" style="font-size:9px">ইপি ১০</text>
+    <text x="230" y="46" text-anchor="middle" class="bn s g" style="font-size:9px">ইপি ৩৫</text>
+    <text x="382" y="46" text-anchor="middle" class="bn s g" style="font-size:9px">ইপি ৭০</text>
+    <text x="84" y="112" text-anchor="middle" class="bn s k" style="font-size:9px">১৭ ১৮ ১৯</text>
+    <text x="335" y="112" text-anchor="middle" class="bn s k" style="font-size:9px">৫৯ ৬০ ৬১</text>
+    <text x="84" y="128" text-anchor="middle" class="bn s" style="font-size:9px">অবৈধ</text>
+    <text x="230" y="128" text-anchor="middle" class="bn s" style="font-size:9px">বৈধ  ১৮ – ৬০</text>
+    <text x="382" y="128" text-anchor="middle" class="bn s" style="font-size:9px">অবৈধ</text>
+    <text x="235" y="148" text-anchor="middle" class="bn s r" style="font-size:9px">বিভিএ প্রতিটি ধারে ওপরে-নিচে যোগ করে</text>
+  </svg><figcaption>তিনটি সমতুল্য শ্রেণি; বিভিএ দুই ধারে ছয়টি মান যোগ করে</figcaption></figure>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: coverage, cyclomatic, basis path ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>কভারেজ ও বেসিস পাথ</span></div>
+  <h2><span class="no">৮</span>কভারেজ, সাইক্লোম্যাটিক জটিলতা ও বেসিস-পাথ টেস্টিং</h2><span class="tag">লিখিতে প্রিয়</span>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">কভারেজ মানদণ্ড</th><th class="l">কীভাবে মাপা হয়</th><th class="l">শক্তি</th></tr>
+    <tr><td class="l"><b>স্টেটমেন্ট</b></td><td class="l">চলা ÷ মোট এক্সিকিউটেবল স্টেটমেন্ট × ১০০ %</td><td class="l">সবচেয়ে দুর্বল — ব্রাঞ্প ফাঁকা থাকে</td></tr>
+    <tr><td class="l"><b>ব্রাঞ্চ / ডিসিশন</b></td><td class="l">নেওয়া আউটকাম ÷ মোট আউটকাম × ১০০ %</td><td class="l"><span class="circ">সাধারণ ন্যূনতম লক্ষ্য</span></td></tr>
+    <tr><td class="l"><b>কন্ডিশন</b></td><td class="l">মূল্যায়িত শর্ত ÷ মোট শর্ত × ১০০ %</td><td class="l"><span class="mono">a &amp;&amp; b</span>-এর প্রতিটি অংশ দুইভাবে</td></tr>
+    <tr><td class="l"><b>মাল্টিপল কন্ডিশন</b></td><td class="l">n শর্তের সব সত্য-মিথ্যা সংমিশ্রণ — <span class="circ">2ⁿ</span></td><td class="l">খুব শক্তিশালী, খুব ব্যয়বহুল</td></tr>
+    <tr><td class="l"><b>পাথ</b></td><td class="l">চলা পাথ ÷ মোট পাথ × ১০০ %</td><td class="l">সবচেয়ে শক্তিশালী, প্রচেষ্টা সূচকীয়</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">সাইক্লোম্যাটিক জটিলতা (McCabe, ১৯৭৬)</span> &nbsp;<span class="circ">M = E − N + 2P</span> — <b>E</b> = কন্ট্রোল-ফ্লো গ্রাফের শিখা, <b>N</b> = নোড, <b>P</b> = সংযুক্ত অংশ। সাধারণ মডিউলে <b>P = 1</b>, তাই পরিচিত রূপ <b>M = E − N + 2</b>। <b>M</b> আসলে স্বাধীন পাথের সংখ্যাই — ফ্লো গ্রাফের ক্ষেত্রসমূহ — এবং সরল শর্তীয় কোডে <b>M = (স্বাধীন শর্ত) + 1</b>। কোনো শর্তই না থাকলে <b>M = 1</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr)">
+    <div>
+      <div class="code" style="font-size:9pt;line-height:4.4mm">double total(int qty, double price,
+              boolean member) {
+  if (qty &gt; 0 &amp;&amp; price &gt; 0) {
+    double t = qty * price;
+    if (member &amp;&amp; t &gt; 1000)
+      t = t * 0.90;
+    return t;
+  }
+  return 0.0;
+}</div>
+      <ol class="steps tiny" style="margin-top:2mm">
+        <li>ফ্লো গ্রাফ আঁকুন</li>
+        <li><b>M</b> গণনা করুন</li>
+        <li><b>M</b>টি স্বাধীন পাথ খুঁজুন</li>
+        <li>প্রতি পাথে একটি টেস্ট কেস</li>
+      </ol>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 470 228" width="300">
+      <g class="w">
+        <circle cx="24" cy="30" r="6" class="ink"/>
+        <circle cx="96" cy="30" r="6" class="ink-r"/>
+        <circle cx="168" cy="30" r="6" class="ink-r"/>
+        <circle cx="240" cy="30" r="6" class="ink-r"/>
+        <circle cx="312" cy="30" r="6" class="ink-r"/>
+        <circle cx="312" cy="86" r="6" class="ink-r"/>
+        <circle cx="440" cy="140" r="6" class="ink"/>
+        <rect x="222" y="126" width="62" height="28" rx="4" class="ink-g fill-g"/>
+        <rect x="76" y="66" width="62" height="28" rx="4" class="ink-p fill-p"/>
+        <path class="ink" d="M30,30 H90 M102,30 H162 M174,30 H234 M246,30 H306" marker-end="url(#aho)"/>
+        <path class="ink" d="M96,37 V54 H107 V64" marker-end="url(#aho)"/>
+        <path class="ink" d="M168,37 V64" marker-end="url(#aho)"/>
+        <path class="ink" d="M240,37 V122" marker-end="url(#aho)"/>
+        <path class="ink" d="M312,37 V80" marker-end="url(#aho)"/>
+        <path class="ink" d="M312,93 V104 H253 V124" marker-end="url(#aho)"/>
+        <path class="ink" d="M284,140 H434" marker-end="url(#aho)"/>
+        <path class="ink" d="M107,95 V170 H440 V147" marker-end="url(#aho)"/>
+      </g>
+      <text x="96" y="20" text-anchor="middle" class="s" style="font-size:9px">qty&gt;0?</text>
+      <text x="168" y="20" text-anchor="middle" class="s" style="font-size:9px">price&gt;0?</text>
+      <text x="240" y="20" text-anchor="middle" class="s" style="font-size:9px">member?</text>
+      <text x="312" y="20" text-anchor="middle" class="s" style="font-size:9px">t&gt;1000?</text>
+      <text x="107" y="85" text-anchor="middle" class="s p" style="font-size:9px">return 0</text>
+      <text x="253" y="146" text-anchor="middle" class="s g" style="font-size:9px">return t</text>
+      <text x="415" y="132" text-anchor="middle" class="s" style="font-size:9px">exit</text>
+      <text x="141" y="23" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="213" y="23" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="285" y="23" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="330" y="60" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="82" y="46" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="184" y="52" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="247" y="88" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="290" y="98" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="55" y="200" text-anchor="middle" class="s k">E = 12 edges · N = 9 nodes</text>
+      <text x="235" y="200" text-anchor="middle" class="s r w6">M = 12 − 9 + 2 = 5</text>
+      <text x="235" y="218" text-anchor="middle" class="bn s g">পাঁচটি স্বাধীন পাথ</text>
+    </svg><figcaption>কন্ট্রোল-ফ্লো গ্রাফ: E = ১২, N = ৯, তাই পাঁচটি স্বাধীন পাথ</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">উদাহরণ ✍</span> চারটি মূল শর্তে <b>M = 4 + 1 = 5</b>, যা মেলে <b>E − N + 2 = 12 − 9 + 2 = 5</b>-এর সঙ্গে। বেসিস সেট: <span class="tiny">P1 <span class="mono">qty=0 → 0.0</span> · P2 <span class="mono">price=0 → 0.0</span> · P3 <span class="mono">2×100, সদস্য নয় → 200</span> · P4 <span class="mono">2×100, সদস্য, t≤1000 → 200</span> · P5 <span class="mono">20×100, সদস্য → 2000×0.9 = 1800</span>।</span></div>
+  <div class="cols3">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">স্বাধীন পাথ</span> এমন পাথ যা অন্তত একটি <b>নতুন নোড</b> বা <b>নতুন শর্ত</b> আনে, যা আগের কোনো পাথে ছিল না। সংখ্যাটি সবসময় <span class="circ">M</span>-এর সমান।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">ভি-মডেলে ডিজাইন</span> ব্যবসায়িক প্রয়োজন ↔ <b>গ্রহণযোগ্যতা</b> · সিস্টেম প্রয়োজন ↔ <b>সিস্টেম টেস্ট</b> · <span class="hl">আর্কিটেকচার ↔ ইন্টিগ্রেশন</span> · <span class="hl">বিস্তারিত ডিজাইন ↔ ইউনিট টেস্ট</span>।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">সম্পর্ক ও সীমা</span> স্টেটমেন্ট ⊂ ব্রাঞ্চ ⊂ কন্ডিশন ⊂ পাথ; McCabe-এর ঐতিহাসিক সীমা <b>10</b>।</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">বিশেষ পরিবেশের টেস্ট লক্ষ্য</span> রিয়েল-টাইম → টাইমিং, স্ট্রেস · ডিস্ট্রিবিউটেড → লেটেন্সি, আংশিক ব্যর্থতা · ওয়েব → SQL ইনজেকশন, XSS · মোবাইল → ডিভাইস, স্ক্রিন · এমবেডেড → CPU, মেমরি। পূর্ণ পাথ কভারেজ প্রচেষ্টা সূচকীয় বেড়ে যায়, তাই "১০০ % পাথ কভারেজ" কখনোই বাস্তবসম্মত লক্ষ্য নয়।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">ফ্যাক্ট শিট</span>
+    <div class="fgrid tiny">
+      <p>GRASP = General Responsibility Assignment Software Patterns</p><p>Carell ও Fowler, ১৯৯১, IEEE Computer</p>
+      <p>নির্দেশিকা, প্যাটার্নের তালিকা নয়</p><p>জানার দায়িত্ব + করার দায়িত্ব</p>
+      <p>Info Expert = তথ্য থাকা ক্লাস</p><p>Creator = ধারণ · একত্রিত · initialise</p>
+      <p>Low Coupling = সবচেয়ে কম নির্ভরশীল ক্লাস</p><p>High Cohesion = পরিবর্তনের একটি কারণ</p>
+      <p>Polymorphism = সাবক্লাসে নতুন করে লেখা নয়</p><p>Pure Arbiters = দুই বা ততোধিকের মাঝে সালিস</p>
+      <p>Don't Talk to Strangers = কেবল সহযোগীকে জিজ্ঞাসা</p><p>Controller = UI-এর পরের প্রথম non-UI অবজেক্ট</p>
+      <p>Intermediary / Pure Fabrication = বানানো ক্লাস</p><p>Protected Variations = পরিবর্তনের ওপর ইন্টারফেস</p>
+      <p>High Cohesion ≈ SRP · Protected Var. ≈ OCP</p><p>Polymorphism ≈ LSP · Intermediary ≈ DIP</p>
+      <p>ডোমেন মডেল = ধারণাগত, অপারেশন নেই</p><p>ডিসিডি = অপারেশন, টাইপ, নেভিগেবিলিটি</p>
+      <p>ডিসিডি ↔ কোড এক-এক-এক</p><p>হোয়াইট = কাঠামো · ব্ল্যাক = স্পেসিফিকেশন</p>
+      <p>টেস্টিং ত্রুটের উপস্থিতি দেখায়, অনুপস্থিতি নয়</p><p>স্টেটমেন্ট · ব্রাঞ্চ · কন্ডিশন · পাথ</p>
+      <p>মাল্টিপল-কন্ডিশনে 2ⁿ সংমিশ্রণ লাগে</p><p>M = E − N + 2P ; সাধারণ মডিউলে P = 1</p>
+      <p>M = শর্ত + 1 ; শর্ত না থাকলে M = 1</p><p>M = স্বাধীন পাথ · McCabe-এর সীমা 10</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১৪টি এক-লাইনের তথ্য</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>গ্র্যাস্প প্রস্তাবক <b>Carell ও Fowler, ১৯৯১</b></li>
+      <li>গ্র্যাস্প <b>দায়িত্ব বরাদ্দের</b> নির্দেশিকা</li>
+      <li>Information Expert → <b>ডেটা থাকা</b> ক্লাস</li>
+      <li>Creator → যে ক্লাস <b>ধারণ</b> করে</li>
+      <li>Low Coupling → <b>সবচেয়ে কম নির্ভরশীল</b> ক্লাস</li>
+      <li>High Cohesion → <b>একটিমাত্র</b> স্পষ্ট উদ্দেশ্য</li>
+      <li>Controller → প্রথম <b>non-UI</b> অবজেক্ট</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>Pure Fabrication = <b>ডোমেন অর্থ নেই</b></li>
+      <li>Protected Variations → একটি <b>ইন্টারফেস</b></li>
+      <li>ডিসিডিতে <b>অপারেশন ও নেভিগেবিলিটি</b>, ডোমেন মডেলে নয়</li>
+      <li>ডিসিডি <b>এক-এক-এক</b> কোডে ম্যাপ হয়</li>
+      <li>হোয়াইট <b>কাঠামো</b> থেকে; ব্ল্যাক <b>স্পেস</b> থেকে</li>
+      <li><b>M = E − N + 2P</b> সাইক্লোম্যাটিক সংখ্যা</li>
+      <li>বেসিস পাথে ঠিক <b>M</b>টি টেস্ট কেস</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">সেরা ফাঁদগুলো</span> গ্র্যাস্প GoF ক্যাটালগ নয় · কন্ট্রোলার UI ক্লাস নয় · ক্রিয়েটর "যে ব্যবহার করে" তা নয় · কাপলিং ক্লাসগুলোর <i>মধ্যে</i>, কোহেশন একটির <i>ভেতরে</i> · ডোমেন মডেলে অপারেশন নেই · "হোয়াইট বক্স সঠিকতা প্রমাণ করে" ভুল · স্টেটমেন্ট কভারেজ <b>সবচেয়ে দুর্বল</b> · M = E − N + 2 কেবল P = 1 হলে · বেসিস পাথ Mটি কেস দেয়, পূর্ণ পাথ কভারেজ <b>নয়</b> · বিভিএ ধার পরীক্ষা করে, ইপি শ্রেণি থেকে নমুনা নেয়।</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসঙ্গে</span> "তথ্য কার কাছে?" = Information Expert · "C for Container" = Creator · অনেক সুতো = কাপলিং, নুড়ির ঢেলি = কোহেশন · রিটার্ন টাইপ মানেই ডিসিডি · হোয়াইট কোড হেঁটে যায়, ব্ল্যাক স্পেস পড়ে · M = শর্ত + 1, আর M পাথে M কেস · ইপি মাঝ থেকে নমুনা নেয়, বিভিএ ধারে হাঁটে।</div>
+  <figure class="doodle"><svg viewBox="0 0 450 70" width="360">
+    <g class="w">
+      <rect x="96" y="6" width="70" height="12" rx="5" class="ink fill-b"/>
+      <rect x="96" y="22" width="170" height="12" rx="5" class="ink fill-b"/>
+      <rect x="96" y="38" width="250" height="12" rx="5" class="ink-r fill-r"/>
+      <rect x="96" y="54" width="340" height="12" rx="5" class="ink-r fill-r"/>
+    </g>
+    <text x="88" y="16" text-anchor="end" class="s k">Statement</text>
+    <text x="88" y="32" text-anchor="end" class="s k">Branch</text>
+    <text x="88" y="48" text-anchor="end" class="s r">Condition</text>
+    <text x="88" y="64" text-anchor="end" class="s r">Path</text>
+  </svg><figcaption>কভারেজের সিঁড়ি — সবচেয়ে দুর্বল ও সস্তা উপরে</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · গ্র্যাস্প ও ডিসিডি</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>কোন নির্দেশিকা <b>ডেটা থাকা</b> ক্লাসটিকে ব্যবহার করে?<ol class="opts"><li>Creator</li><li>Controller</li><li>Information Expert</li><li>Low Coupling</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>একটি <b>Sale</b> অনেক <b>SalesLineItem</b> ধারণ করে। কে তৈরি করবে?<ol class="opts"><li>Sale</li><li>Register</li><li>ProductCatalog</li><li>Payment</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>UI স্তরের পরে সিস্টেম ইভেন্ট সামলায়:<ol class="opts"><li>Pure Fabrication</li><li>Controller</li><li>Indirection</li><li>Polymorphism</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>ডিসিডিতে আছে কিন্তু ডোমেন মডেলে নেই:<ol class="opts"><li>কনসেপ্ট ক্লাস</li><li>অ্যাসোসিয়েশন</li><li>অপারেশন, নেভিগেবিলিটি</li><li>মাল্টিপ্লিসিটি</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>গ্র্যাস্প কারা তৈরি করেছেন?<ol class="opts"><li>Booch ও Rumbaugh</li><li>Carell ও Fowler</li><li>Beck ও Cunningham</li><li>IEEE</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>কাপলিং কী নির্ভরতা মাপে?<ol class="opts"><li>এক ক্লাসের ভেতরে</li><li>ক্লাসগুলোর মধ্যে</li><li>দুই ধাপের মধ্যে</li><li>হার্ডওয়্যারের ওপর</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>কোনো শর্ত না থাকলে সাইক্লোম্যাটিক সংখ্যা:<ol class="opts"><li>0</li><li>1</li><li>2</li><li>−1</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>E = 14, N = 11, P = 1 ⇒ M =<ol class="opts"><li>3</li><li>4</li><li>5</li><li>23</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>M = 7 হলে বেসিস পাথ কেস:<ol class="opts"><li>6</li><li>7</li><li>8</li><li>14</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>ব্ল্যাক বক্স কেস আসে কোথা থেকে?<ol class="opts"><li>সোর্স কোড</li><li>ফ্লো গ্রাফ</li><li>স্পেসিফিকেশন</li><li>CRC কার্ড</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-খ · ৪-গ · ৫-খ · ৬-খ · ৭-খ · ৮-গ · ৯-খ · ১০-গ</div>
+
+  <div class="wq small"><span class="lbl">লিখিত প্রশ্ন ১</span> গ্র্যাস্পের সংজ্ঞা দাও, প্রস্তাবক ও সাল উল্লেখ করো, এবং <b>Information Expert</b> ও <b>Creator</b> একটি করে উদাহরণসহ ব্যাখ্যা করো। <i class="mk">১০ নম্বর</i></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 175px;align-items:start">
+    <ol class="steps tiny">
+      <li><b>গ্র্যাস্প</b> = General Responsibility Assignment Software Patterns — দায়িত্ব বরাদ্দের নির্দেশিকা <i class="mk">২</i></li>
+      <li><b>প্রস্তাবক</b> — জেমস ক্যারেল ও মার্টিন ফাউলার, ১৯৯১, <i>Toward Unified Design Methodologies</i>, IEEE Computer <i class="mk">২</i></li>
+      <li><b>Information Expert</b> — যে ক্লাসের কাছে তথ্য আছে তারই দায়িত্ব; <i>Invoice.getTotal()</i>, কারণ Invoice-ই লাইন আইটেম ধারণ করে <i class="mk">৩</i></li>
+      <li><b>Creator</b> — যে ক্লাস অন্যকে ধারণ, একত্রিত করে, রেকর্ড রাখে, ঘনিষ্ঠভাবে ব্যবহার করে বা initialise করার ডেটা রাখে, সে তৈরি করে; <i>Sale</i> তৈরি করে <i>SalesLineItem</i> <i class="mk">৩</i></li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 175 132" width="170">
+      <g class="w">
+        <rect x="6" y="8" width="163" height="20" rx="6" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M6,28 H169" style="stroke-width:1.2"/>
+        <rect x="8" y="32" width="159" height="16" rx="4" class="ink-g fill-g"/>
+        <rect x="8" y="50" width="159" height="16" rx="4" class="ink-g fill-g"/>
+        <rect x="8" y="68" width="159" height="16" rx="4" class="ink-g fill-g"/>
+        <rect x="8" y="86" width="159" height="16" rx="4" class="ink-g fill-g"/>
+      </g>
+      <text x="12" y="22" class="s k">condition</text>
+      <text x="60" y="22" class="s">y</text><text x="73" y="22" class="s">n</text>
+      <text x="108" y="22" class="s k">action</text>
+      <text x="17" y="45" class="s k">Y</text><text x="30" y="45" class="s">Y</text><text x="102" y="45" class="s g">accept</text>
+      <text x="17" y="63" class="s k">Y</text><text x="30" y="63" class="s">N</text><text x="102" y="63" class="s r">reject</text>
+      <text x="17" y="81" class="s k">N</text><text x="30" y="81" class="s">Y</text><text x="102" y="81" class="s r">reject</text>
+      <text x="17" y="99" class="s k">N</text><text x="30" y="99" class="s">N</text><text x="102" y="99" class="s r">reject</text>
+      <text x="88" y="126" text-anchor="middle" class="bn s r">২ শর্ত → 2² = ৪ সারি</text>
+    </svg><figcaption>কজ-ইফেক্ট গ্রাফিং থেকে ডিসিশন টেবিল</figcaption></figure>
+  </div>
+
+  <div class="wq small"><span class="lbl">লিখিত প্রশ্ন ২</span> একটি মেথডে দুটি নেস্টেড <span class="mono">if</span> আছে এবং দুটি <span class="mono">&amp;&amp;</span> শর্ত আছে। এর সাইক্লোম্যাটিক সংখ্যা বের করো এবং কতগুলো বেসিস পাথ টেস্ট কেস লাগবে তা বলো। <i class="mk">৮ নম্বর</i> &nbsp;<span class="tiny"><b>উত্তর:</b> চারটি মূল শর্ত ⇒ <b>M = 4 + 1 = 5</b>; <b>M = E − N + 2P</b> দিয়ে যাচাই করে ঠিক <b>পাঁচটি</b> বেসিস পাথ কেস লিখুন।</span></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick tiny">
+        <li>গ্র্যাস্পের প্রস্তাবক ও সাল বলো</li>
+        <li>নয়টি নির্দেশিকা এক লাইনে বলো</li>
+        <li>একটি পরীক্ষায় ডোমেন মডেল ও ডিসিডি আলাদা করো</li>
+        <li>E, N, P থেকে ও শর্ত থেকে M বের করো</li>
+        <li>সংখ্যা দিয়ে ইপি বনাম বিভিএ আলাদা করো</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:0 2mm 0 4mm"><b>পাশের লেসন:</b> ইউজ কেস মডেল ও ভি-মডেল <b>ওয়াটারফল ও UML</b>-এ; টেস্ট লেভেল, ডিবাগিং ও মেট্রিক্স <b>টেস্টিং কৌশল</b>-এ।</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

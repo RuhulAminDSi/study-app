@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Process, IPC &amp; Scheduling: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Process &amp; Scheduling</span></h1>
+  <p class="subtitle">PCB · five states · IPC &amp; semaphores · CPU scheduling: exam-ready in 13 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 286" width="470">
+      <g class="w">
+        <ellipse cx="320" cy="143" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M242,126 L176,72 M242,160 L176,214 M320,101 L320,54 M398,126 L464,72 M398,160 L464,214 M320,185 L320,232 M220,143 L178,143 M420,143 L462,143"/>
+        <rect x="68" y="38" width="158" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="158" height="38" rx="14" class="ink fill-b"/>
+        <rect x="20" y="124" width="154" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="466" y="124" width="154" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="68" y="210" width="158" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="232" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="210" width="158" height="38" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="139" text-anchor="middle" class="k l">PROCESS</text><text x="320" y="163" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="147" y="55" text-anchor="middle" class="s">program vs process</text><text x="147" y="71" text-anchor="middle" class="s">the PCB fields</text>
+      <text x="320" y="38" text-anchor="middle" class="r w6">Five-state model ★</text>
+      <text x="495" y="55" text-anchor="middle" class="s">IPC · pipes · sockets</text><text x="495" y="71" text-anchor="middle" class="s">shared memory</text>
+      <text x="97" y="149" text-anchor="middle" class="g w6">Scheduling</text>
+      <text x="543" y="141" text-anchor="middle" class="r w6">FCFS · SJF</text><text x="543" y="158" text-anchor="middle" class="r w6">SRTF · RR ★</text>
+      <text x="147" y="227" text-anchor="middle" class="s">Threads, many-to-many</text>
+      <text x="320" y="256" text-anchor="middle" class="r w6">Semaphores P / V ★</text>
+      <text x="495" y="227" text-anchor="middle" class="s">Multilevel queues</text><text x="495" y="243" text-anchor="middle" class="s">EDF · rate monotonic</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the idea the scheduling criteria hang from</figcaption>
+  </figure>
+  <div class="sticky" style="width:104mm"><b>High-yield list</b><br>① program = file · process = in memory<br>② PCB: PID, state, PC, registers, sched, mem, accounts<br>③ new → ready → running → waiting → terminated<br>④ ready wants the CPU · waiting wants an event<br>⑤ long-, medium-, short-term scheduler<br>⑥ threads share the address space<br>⑦ IPC: shm, pipe, FIFO, socket, signal<br>⑧ semaphore P = −1, V = +1<br>⑨ TAT = C − arrival · WT = TAT − burst<br>⑩ SJF best average wait · RR = q turns ★</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The syllabus line is "<span class="hl">Process: process model and implementation, Inter-Process Communication (IPC), classical IPC problems, process scheduling, multiprocessing and time-sharing</span>". Deadlock, memory management and file systems have their own lessons.</p>
+  <p class="small" style="margin-top:1mm"><span class="purple"><b>Neighbouring lessons.</b></span> Readers–writers, dining philosophers and the sleeping barber are synchronisation problems built on these primitives; deadlock prevention, Banker's algorithm and recovery are a separate lesson.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Program, process &amp; the PCB … p. 2</li><li>Five states &amp; the queues … p. 3</li><li>Creation &amp; termination … p. 4</li><li>Threads &amp; their models … p. 5</li><li>IPC mechanisms … p. 6</li><li>Semaphores, producer–consumer … p. 7</li></ul>
+    <ul class="tick"><li>Criteria &amp; preemption … p. 8</li><li>FCFS, SJF, priority … p. 9</li><li>SRTF &amp; round robin … p. 10</li><li>Multilevel queues, EDF … p. 11</li><li>Night-before p. 12 · Practice p. 13</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: program vs process, PCB ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Process model &amp; the PCB</span></div>
+  <h2><span class="no">1</span>Program vs Process &amp; the PCB</h2><span class="tag">definition ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">program</span> is a passive file of instructions on disk. A <span class="hl">process</span> is that program <b>loaded into memory and executing</b>, with its code, data, program counter, the CPU registers it owns and its open files. <span class="circ">A program is static, a process is dynamic</span> — one program may be many processes at once.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,222px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 260 176" width="212">
+      <g class="w">
+        <rect x="8" y="12" width="120" height="24" rx="5" class="ink fill-b"/>
+        <path class="ink-g" d="M68,36 L68,54" marker-end="url(#ahg)"/>
+        <rect x="8" y="58" width="130" height="98" rx="5" class="ink fill-y"/>
+        <path class="ink" d="M138,107 L172,107" marker-end="url(#ahb)"/>
+        <rect x="176" y="58" width="76" height="98" rx="5" class="ink fill-b"/>
+      </g>
+      <text x="68" y="29" text-anchor="middle" class="k s">program on disk</text>
+      <text x="76" y="50" class="g s">loaded</text>
+      <text x="17" y="76" class="k s">code (text)</text>
+      <text x="17" y="92" class="k s">data · variables</text>
+      <text x="17" y="108" class="k s">stack · heap</text>
+      <text x="17" y="124" class="k s">PC · registers</text>
+      <text x="17" y="140" class="k s">open files</text>
+      <text x="155" y="99" text-anchor="middle" class="s">OS</text>
+      <text x="214" y="76" text-anchor="middle" class="r w6 s">PCB</text>
+      <text x="184" y="92" class="k s">PID 4217</text>
+      <text x="184" y="108" class="k s">state</text>
+      <text x="184" y="124" class="k s">PC 121</text>
+      <text x="184" y="140" class="k s">R1…Rn</text>
+      <text x="130" y="172" text-anchor="middle" class="s">the process, and the record the OS keeps</text>
+    </svg><figcaption>one program, one instance</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">Point</th><th class="l">Program</th><th class="l">Process</th></tr>
+      <tr><td class="l">Nature</td><td class="l">passive, static</td><td class="l">active, dynamic</td></tr>
+      <tr><td class="l">Memory</td><td class="l">disk is enough</td><td class="l">needs main memory</td></tr>
+      <tr><td class="l">Identity</td><td class="l">one file name</td><td class="l"><span class="circ">PID</span>, many instances</td></tr>
+      <tr><td class="l">Life</td><td class="l">as long as the file</td><td class="l">new → running → terminated</td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">PCB field</th><th class="l">Contents</th><th class="l">Why the OS keeps it</th></tr>
+    <tr><td class="l"><b>Process state</b></td><td class="l">New · Ready · Running · Waiting · Terminated</td><td class="l">picks <b>the queue</b></td></tr>
+    <tr><td class="l"><b>Program counter</b></td><td class="l">address of the next instruction</td><td class="l">resume <b>exactly</b></td></tr>
+    <tr><td class="l"><b>CPU registers</b></td><td class="l">accumulator, base, limit, stack, R0…Rn</td><td class="l">unfinished arithmetic</td></tr>
+    <tr><td class="l"><b>CPU-scheduling info</b></td><td class="l">priority, queue pointers</td><td class="l">who runs next</td></tr>
+    <tr><td class="l"><b>Memory-management info</b></td><td class="l">page-table base, segment-table pointer</td><td class="l">address translation</td></tr>
+    <tr><td class="l"><b>Accounting info</b></td><td class="l">user &amp; kernel time, I/O counts, children</td><td class="l">billing, quotas, cleanup</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> The PCB is the process's <b>passport</b>: the <span class="hl">PID</span> says who it is, the <b>state</b> says where it is, the <b>PC and registers</b> remember exactly where it stopped; the rest says what it owns.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) The PCB is a <b>kernel</b> structure made by the OS; the process never writes into it. (ii) A process is <b>not</b> its PCB — terminating frees both. (iii) A PID is unique among <b>running</b> processes and may be <b>reused</b> afterwards.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ read a PCB dump</span> PID 4217, state <b>Waiting</b>, PC 121, base 240, limit 460, user time 128, kernel time 12.
+    <b>(a)</b> It is <b>not</b> in the ready queue — it waits for an I/O event. <b>(b)</b> Legal addresses = <span class="circ">240 … 459</span>. <b>(c)</b> CPU used = 128 + 12 = <span class="circ">140</span> units. <b>(d)</b> The PID is not a scheduling key by itself; <b>priority</b> is.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: five-state model ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Five states &amp; the queues</span></div>
+  <h2><span class="no">2</span>The Five-State Model &amp; the Queues</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A process is in exactly one of <b>five</b> states: <span class="hl">new</span> (being created), <span class="hl">ready</span> (in memory, waiting for the CPU), <span class="hl">running</span> (holds the CPU), <span class="hl">waiting / blocked</span> (waiting for an event that is not the CPU) and <span class="hl">terminated</span> (finished, resources reclaimed).</div>
+  <figure class="doodle"><svg viewBox="0 0 470 206" width="372">
+    <g class="w">
+      <rect x="8" y="40" width="80" height="30" rx="5" class="ink fill-b"/>
+      <rect x="120" y="40" width="80" height="30" rx="5" class="ink fill-y"/>
+      <rect x="232" y="40" width="92" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="356" y="40" width="96" height="30" rx="5" class="ink fill-y"/>
+      <rect x="232" y="162" width="92" height="30" rx="5" class="ink-k fill-y"/>
+      <path class="ink" d="M88,55 L116,55" marker-end="url(#ahb)"/>
+      <path class="ink" d="M200,55 L228,55" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M324,55 L352,55" marker-end="url(#ah)"/>
+      <path class="ink" d="M404,72 L404,110 L160,110 L160,74" marker-end="url(#ahb)"/>
+      <path class="ink" d="M278,38 L278,16 L160,16 L160,36" marker-end="url(#ahb)"/>
+      <path class="ink-k" d="M278,72 L278,158" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M48,72 L48,177 L228,177" marker-end="url(#ah)"/>
+    </g>
+    <text x="48" y="59" text-anchor="middle" class="k w6 s">NEW</text>
+    <text x="160" y="59" text-anchor="middle" class="k w6 s">READY</text>
+    <text x="278" y="59" text-anchor="middle" class="k w6 s">RUNNING</text>
+    <text x="404" y="59" text-anchor="middle" class="k w6 s">WAITING</text>
+    <text x="278" y="181" text-anchor="middle" class="k w6 s">TERMINATED</text>
+    <text x="102" y="88" text-anchor="middle" class="s">admit</text>
+    <text x="214" y="88" text-anchor="middle" class="s">dispatch</text>
+    <text x="338" y="88" text-anchor="middle" class="r s">I/O request</text>
+    <text x="352" y="104" text-anchor="middle" class="s">I/O completion</text>
+    <text x="219" y="11" text-anchor="middle" class="s">interrupt or slice ends</text>
+    <text x="298" y="128" class="s">exits or is killed</text>
+    <text x="140" y="171" text-anchor="end" class="r s">admission failed</text>
+  </svg><figcaption>seven transitions; the CPU scheduler only ever picks from <b>ready</b></figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,258px);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">From → To</th><th class="l">Trigger</th><th class="l">By whom</th></tr>
+      <tr><td class="l">New → Ready</td><td class="l">admitted</td><td class="l">long-term scheduler</td></tr>
+      <tr><td class="l">Ready → Running</td><td class="l">CPU allocated</td><td class="l">short-term scheduler</td></tr>
+      <tr><td class="l">Running → Ready</td><td class="l">interrupt, slice ended, higher priority ready</td><td class="l">short-term scheduler</td></tr>
+      <tr><td class="l">Running → Waiting</td><td class="l">I/O request or event wait</td><td class="l">the process itself</td></tr>
+      <tr><td class="l">Waiting → Ready</td><td class="l">I/O done, event occurred</td><td class="l">interrupt handler</td></tr>
+      <tr><td class="l">Running → Terminated</td><td class="l">finished, fatal error, killed</td><td class="l">the process itself</td></tr>
+      <tr><td class="l">New → Terminated</td><td class="l">admission refused</td><td class="l">long-term scheduler</td></tr>
+    </table>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">Queue</th><th class="l">Holds / drained by</th></tr>
+        <tr><td class="l"><b>Job queue</b></td><td class="l">not yet admitted; long-term scheduler</td></tr>
+        <tr><td class="l"><b>Ready queue</b></td><td class="l">in memory, waiting for the CPU; short-term scheduler</td></tr>
+        <tr><td class="l"><b>Device queues</b></td><td class="l">waiting for that I/O; the device controller</td></tr>
+      </table>
+      <div class="exam tiny"><span class="lbl">Exam trap</span> Three schedulers exist: <b>long-term</b> (job queue), <b>medium-term</b> (swapping a process out and in) and <b>short-term</b> (the CPU). Only the CPU scheduler runs constantly.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Ready</b> asks for the <b>CPU</b>, <b>waiting</b> asks for <b>something else</b>." Both return the same way — the event ends and the process goes back to the <b>ready</b> queue, never straight to the CPU.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Waiting <b>only</b> for the CPU means <span class="circ">ready</span>, not waiting — the single most asked state question. A process in the device queue is waiting even though it is in memory.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ trace one process</span> You type a command. <b>(a)</b> new → ready when the long-term scheduler admits it. <b>(b)</b> ready → running when the CPU scheduler dispatches it. <b>(c)</b> running → waiting the moment it issues the print request. <b>(d)</b> waiting → ready when the printer finishes. <b>(e)</b> Earlier a clock interrupt ended its slice: that is running → ready, <b>not</b> running → waiting.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: creation & termination ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Creation &amp; termination</span></div>
+  <h2><span class="no">3</span>Process Creation &amp; Termination</h2><span class="tag">written question ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Creation</b>: the OS takes a PID, allocates and fills a PCB, sets up an address space, attaches open files, and puts the PCB in the <span class="hl">ready queue</span>. <b>Termination</b>: the state is marked terminated, memory and files are released, and the exit status goes to the parent.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,206px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 290 168" width="196">
+      <g class="w">
+        <rect x="108" y="10" width="74" height="26" rx="5" class="ink-k fill-y"/>
+        <path class="ink" d="M130,36 L58,62 M130,36 L145,62 M130,36 L232,62"/>
+        <rect x="10" y="64" width="98" height="26" rx="5" class="ink fill-b"/>
+        <rect x="96" y="64" width="98" height="26" rx="5" class="ink fill-b"/>
+        <rect x="182" y="64" width="98" height="26" rx="5" class="ink fill-b"/>
+        <path class="ink-g" d="M59,90 L59,116 M145,90 L145,116 M231,90 L231,116"/>
+        <rect x="24" y="118" width="70" height="24" rx="5" class="ink fill-y"/>
+        <rect x="110" y="118" width="70" height="24" rx="5" class="ink fill-y"/>
+        <rect x="196" y="118" width="70" height="24" rx="5" class="ink fill-y"/>
+      </g>
+      <text x="145" y="28" text-anchor="middle" class="k w6 s">init</text>
+      <text x="59" y="82" text-anchor="middle" class="k s">parent</text>
+      <text x="145" y="82" text-anchor="middle" class="k s">child 1</text>
+      <text x="231" y="82" text-anchor="middle" class="k s">child 2</text>
+      <text x="59" y="135" text-anchor="middle" class="k s">PID 301</text>
+      <text x="145" y="135" text-anchor="middle" class="k s">PID 302</text>
+      <text x="231" y="135" text-anchor="middle" class="k s">PID 303</text>
+      <text x="145" y="164" text-anchor="middle" class="g s">each fork() copies the parent's image</text>
+    </svg><figcaption>every child has exactly <b>one</b> parent</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">Step of creation</th><th class="l">What happens</th></tr>
+      <tr><td class="l">1. Get a PID</td><td class="l">from the PID table; reused after release</td></tr>
+      <tr><td class="l">2. Allocate the PCB</td><td class="l">memory reserved for the control block</td></tr>
+      <tr><td class="l">3. Initialise it</td><td class="l">state, <b>PC at the entry point</b>, accounts = 0, queue pointers</td></tr>
+      <tr><td class="l">4. Address space</td><td class="l">copy the parent's image; build page/segment table</td></tr>
+      <tr><td class="l">5. Open files</td><td class="l">descriptors point at the same inodes</td></tr>
+      <tr><td class="l">6. Resources</td><td class="l">I/O, memory and CPU quota</td></tr>
+      <tr><td class="l">7. Ready the context</td><td class="l">stack and registers for the first dispatch</td></tr>
+      <tr><td class="l">8. Enqueue</td><td class="l">PCB → <span class="circ">ready queue</span>, never straight to running</td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Way a process ends</th><th class="l">Typical cause</th></tr>
+    <tr><td class="l"><b>Normal exit</b></td><td class="l">main() returns or <code>exit(0)</code>; the value becomes the exit status</td></tr>
+    <tr><td class="l"><b>Error exit</b></td><td class="l">fatal error — divide by zero, invalid memory reference</td></tr>
+    <tr><td class="l"><b>Killed by another process</b></td><td class="l">a signal such as SIGKILL, which cannot be caught</td></tr>
+    <tr><td class="l"><b>Killed by the OS</b></td><td class="l">memory limit exceeded, protection fault, shutdown</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A child that finished before its parent collected it stays as a <span class="circ">zombie</span>: finished, but its exit status and table entries remain until the parent waits. A <b>child whose parent dies first</b> is an <b>orphan</b>, adopted by init.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Born ready, die finished.</b>" Creation ends in the ready queue; termination frees the PID and the PCB. Because init adopts orphans, no zombie is left uncollected.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ a shell session</span> You type <code>ls &gt; out.txt</code>. <b>(a)</b> The shell forks twice — once for <code>ls</code>, once for the right-hand side of the redirection. <b>(b)</b> The child opens the file before <code>exec</code>; the inode is <b>shared</b>, not copied. <b>(c)</b> <code>exec</code> replaces the image but <b>keeps the PID</b>. <b>(d)</b> When <code>ls</code> exits, the shell's <code>wait()</code> reaps it, so the zombie lives milliseconds.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: threads ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Threads</span></div>
+  <h2><span class="no">4</span>Threads: Sharing One Address Space</h2><span class="tag">high-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">thread</span> is the unit of <b>execution</b> inside a process. Threads of one process <span class="circ">share the address space, code, data, open files and signals</span>; each keeps its own <b>stack, registers, program counter and thread-local storage</b>.</div>
+  <div class="cols small" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 158" width="214">
+      <g class="w">
+        <rect x="8" y="8" width="234" height="132" rx="6" class="ink fill-y"/>
+        <rect x="20" y="22" width="96" height="17" class="ink fill-b"/>
+        <rect x="20" y="44" width="96" height="17" class="ink fill-b"/>
+        <rect x="138" y="22" width="92" height="17" class="ink fill-b"/>
+        <rect x="138" y="44" width="92" height="17" class="ink fill-b"/>
+        <rect x="20" y="78" width="60" height="46" rx="4" class="ink-g fill-g"/>
+        <rect x="94" y="78" width="60" height="46" rx="4" class="ink-g fill-g"/>
+        <rect x="168" y="78" width="60" height="46" rx="4" class="ink-g fill-g"/>
+        <path class="ink-g" d="M50,124 L50,136 M124,124 L124,136 M198,124 L198,136" marker-end="url(#ahg)"/>
+      </g>
+      <text x="68" y="35" text-anchor="middle" class="k">code, shared</text>
+      <text x="68" y="57" text-anchor="middle" class="k">data, shared</text>
+      <text x="184" y="35" text-anchor="middle" class="k">files</text>
+      <text x="184" y="57" text-anchor="middle" class="k">signals</text>
+      <text x="50" y="98" text-anchor="middle" class="k w6">T1</text>
+      <text x="124" y="98" text-anchor="middle" class="k w6">T2</text>
+      <text x="198" y="98" text-anchor="middle" class="k w6">T3</text>
+      <text x="50" y="116" text-anchor="middle" class="k">own PC</text>
+      <text x="124" y="116" text-anchor="middle" class="k">own PC</text>
+      <text x="198" y="116" text-anchor="middle" class="k">own PC</text>
+      <text x="125" y="156" text-anchor="middle" class="s">one process, three threads, one memory map</text>
+    </svg><figcaption>own stacks, one address space</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">Point</th><th class="l">Process</th><th class="l">Thread</th></tr>
+      <tr><td class="l">Address space</td><td class="l">its own, protected</td><td class="l"><span class="hl">shared with siblings</span></td></tr>
+      <tr><td class="l">Private state</td><td class="l">everything</td><td class="l">stack, registers, PC, TLS</td></tr>
+      <tr><td class="l">Creation cost</td><td class="l">heavy: the image is copied</td><td class="l">cheap: a thread control block</td></tr>
+      <tr><td class="l">Communication</td><td class="l">needs IPC</td><td class="l">just read the shared variables</td></tr>
+      <tr><td class="l">Failure effect</td><td class="l">contained</td><td class="l">a bad write can kill <b>all</b> threads</td></tr>
+      <tr><td class="l">In the scheduler</td><td class="l">always a separate entity</td><td class="l">depends on the model below</td></tr>
+    </table>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 520 140" width="430">
+    <g class="w">
+      <rect x="6" y="34" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="6" y="6" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="6" y="62" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="142" y="6" width="80" height="82" rx="5" class="ink fill-b"/>
+      <rect x="300" y="6" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="300" y="34" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="300" y="62" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="300" y="90" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="418" y="32" width="98" height="44" rx="5" class="ink-r fill-r"/>
+      <path class="ink" d="M78,48 L140,48" marker-end="url(#ahb)"/>
+      <path class="ink" d="M224,48 L298,48" marker-end="url(#ahb)"/>
+      <path class="ink" d="M372,48 L416,48" marker-end="url(#ah)"/>
+    </g>
+    <text x="182" y="44" text-anchor="middle" class="k w6 s">1 kernel</text>
+    <text x="182" y="62" text-anchor="middle" class="s">many-to-one</text>
+    <text x="467" y="50" text-anchor="middle" class="r w6 s">1 : 1</text>
+    <text x="467" y="68" text-anchor="middle" class="r s">one-to-one</text>
+    <text x="41" y="24" text-anchor="middle" class="k s">U</text>
+    <text x="41" y="80" text-anchor="middle" class="k s">U</text>
+    <text x="182" y="82" text-anchor="middle" class="k s">K</text>
+    <text x="335" y="24" text-anchor="middle" class="k s">U</text>
+    <text x="335" y="80" text-anchor="middle" class="k s">U</text>
+    <text x="335" y="108" text-anchor="middle" class="k s">U</text>
+    <text x="222" y="136" text-anchor="middle" class="s">many-to-many: <tspan class="ov">m</tspan> user threads on <tspan class="ov">n</tspan> kernel threads, m ≥ n</text>
+  </svg><figcaption>the three multithreaded models — the OS always schedules <b>kernel</b> threads</figcaption></figure>
+  <table class="hand small" style="width:100%;font-size:10.5pt">
+    <tr><th class="l">Level</th><th class="l">Where it lives</th><th class="l">What it gives</th></tr>
+    <tr><td class="l"><b>User-level</b></td><td class="l">a library inside the process</td><td class="l">cheap switch, but one blocking call blocks <b>the whole process</b></td></tr>
+    <tr><td class="l"><b>Kernel-level</b></td><td class="l">the OS keeps a real thread per entity</td><td class="l">a blocking call blocks <b>one</b> thread; true parallelism on many cores</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> In <b>many-to-one</b> a blocking call stops <b>all</b> threads and there is <b>no parallelism</b>; in <b>one-to-one</b> parallelism is real but every thread costs a PCB and a kernel stack. <span class="circ">Thread scheduling ≠ process scheduling</span> in the first two models: the kernel schedules kernel threads, the library schedules user threads.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Threads share, they do not copy.</b>" If you have to say <code>fork()</code> it is a <b>process</b>; if you can simply assign to a global it is a <b>thread</b>.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: IPC ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>IPC mechanisms</span></div>
+  <h2><span class="no">5</span>Inter-Process Communication</h2><span class="tag">frequently tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">IPC</span> lets one process <b>send data to</b> another and <b>coordinate</b> with it. Two families: <span class="circ">message passing</span> (copies move through the kernel) and <span class="hl">shared memory</span> (fastest — no copy — but it carries <b>no</b> synchronisation at all).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,206px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 208 150" width="198">
+      <g class="w">
+        <rect x="8" y="10" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="8" y="96" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="120" y="10" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="120" y="96" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="96" y="66" width="16" height="18" rx="3" class="ink fill-y"/>
+        <path class="ink" d="M88,32 L120,32" marker-end="url(#ahb)"/>
+        <path class="ink" d="M120,118 L88,118" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M48,56 L48,94" marker-end="url(#ahg)"/>
+      </g>
+      <text x="48" y="38" text-anchor="middle" class="k w6">P1</text>
+      <text x="48" y="124" text-anchor="middle" class="k w6">P2</text>
+      <text x="160" y="38" text-anchor="middle" class="k w6">P3</text>
+      <text x="160" y="124" text-anchor="middle" class="k w6">P4</text>
+      <text x="104" y="80" text-anchor="middle" class="g w6 s">shm</text>
+      <text x="46" y="72" text-anchor="end" class="r s">copies</text>
+      <text x="162" y="72" class="r s">copies</text>
+      <text x="104" y="148" text-anchor="middle" class="s">kernel copies · one mapped buffer</text>
+    </svg><figcaption>message passing versus shared memory</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">Mechanism</th><th class="l">Kind</th><th class="l">Notes</th></tr>
+      <tr><td class="l"><b>Shared memory</b></td><td class="l">shared</td><td class="l">fastest; <span class="circ">you add your own locking</span></td></tr>
+      <tr><td class="l"><b>Anonymous pipe</b></td><td class="l">message</td><td class="l">byte stream, only <b>related</b> processes</td></tr>
+      <tr><td class="l"><b>Named pipe (FIFO)</b></td><td class="l">message</td><td class="l">filesystem name, <b>unrelated</b> processes</td></tr>
+      <tr><td class="l"><b>Message queue</b></td><td class="l">message</td><td class="l">kernel list of <b>discrete</b> messages</td></tr>
+      <tr><td class="l"><b>Socket</b></td><td class="l">message</td><td class="l">named endpoint, local <b>or</b> TCP/IP</td></tr>
+      <tr><td class="l"><b>Signal</b></td><td class="l">message</td><td class="l">one-way <b>notice</b>; SIGKILL uncatchable</td></tr>
+      <tr><td class="l"><b>Mailbox</b></td><td class="l">message</td><td class="l">indirect: a named drop box</td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%;font-size:10.5pt">
+    <tr><th class="l">Choose it when</th><th class="l">Cost</th></tr>
+    <tr><td class="l"><b>Shared memory</b> for huge buffers — video frames, indexes</td><td class="l">every lock is yours to write</td></tr>
+    <tr><td class="l"><b>Pipe / FIFO</b> for a stream of bytes, filtered in flight</td><td class="l">buffer-limited, no message boundaries</td></tr>
+    <tr><td class="l"><b>Message queue</b> for discrete jobs that keep their order</td><td class="l">fixed maximum queue length</td></tr>
+    <tr><td class="l"><b>Socket</b> to reach another machine or a service</td><td class="l">serialisation, an address space per connection</td></tr>
+    <tr><td class="l"><b>Signal</b> for "something changed — re-read your state"</td><td class="l">no payload; handler runs at an odd moment</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Pipes serve related processes only</b> — a shell pipeline, a parent and its child. Two unrelated programs need a <b>named FIFO</b>, a socket or shared memory. Shared memory gives <b>no</b> mutual exclusion: two racing writers lose data.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Copy</b> means message passing, <b>map</b> means shared memory, <b>named</b> means unrelated." If the data never moves, a mutex's job is to make it safe.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ pick the mechanism</span> <b>(a)</b> <code>sort &lt; file | head</code> — anonymous <b>pipe</b>. <b>(b)</b> A logger daemon and 40 unrelated services — <b>named FIFO</b> or <b>socket</b>. <b>(c)</b> A video server writing 4 MB frames to two decoders — <b>shared memory</b> plus a mutex. <b>(d)</b> "Your config file changed" — a <b>signal</b>, then the process re-reads the file itself: a signal is a nudge, not a transfer.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: semaphores ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Semaphores &amp; producer–consumer</span></div>
+  <h2><span class="no">6</span>Semaphores, Mutexes &amp; Producer–Consumer</h2><span class="tag">written question ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">semaphore</span> (Dijkstra, 1965) is a non-negative integer plus a waiting queue, touched only by two <b>atomic</b> operations: <span class="circ">P (wait): if S = 0 block, then S ← S − 1</span> and <span class="circ">V (signal): S ← S + 1, wake one waiter</span>. A <b>binary</b> semaphore — a mutex — stays at 0 or 1.</div>
+  <div class="cols small" style="grid-template-columns:minmax(0,158px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 210 142" width="152">
+      <g class="w">
+        <circle cx="105" cy="68" r="50" class="ink fill-y"/>
+        <rect x="30" y="56" width="22" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="86" y="56" width="22" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="142" y="56" width="22" height="24" rx="3" class="ink-g fill-g"/>
+        <path class="ink-g" d="M30,44 L78,54" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M105,44 L105,52" marker-end="url(#ahg)"/>
+      </g>
+      <text x="105" y="74" text-anchor="middle" class="k w6 s">buffer 2</text>
+      <text x="41" y="98" text-anchor="middle" class="k s">1</text>
+      <text x="97" y="98" text-anchor="middle" class="k s">2</text>
+      <text x="153" y="98" text-anchor="middle" class="k s">3</text>
+      <text x="60" y="34" text-anchor="middle" class="g s">producers</text>
+      <text x="150" y="34" text-anchor="middle" class="g s">producers</text>
+      <text x="105" y="132" text-anchor="middle" class="s">a circular buffer: in and out wrap</text>
+    </svg><figcaption>two slots used, so empty = 0</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+        <tr><th class="l">Construct</th><th class="l">Value</th><th class="l">Owner?</th><th class="l">Best for</th></tr>
+        <tr><td class="l"><b>Semaphore</b></td><td class="l">integer ≥ 0</td><td class="l"><b>no</b> — any process may V it</td><td class="l">counting resources, ordering</td></tr>
+        <tr><td class="l"><b>Mutex</b></td><td class="l">0 or 1</td><td class="l"><b>yes</b> — only the holder unlocks</td><td class="l">a critical section</td></tr>
+        <tr><td class="l"><b>Monitor</b></td><td class="l">implicit, one thread inside</td><td class="l">automatic</td><td class="l">data + procedures + condition variables</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">The solution ✍ three semaphores</span> For a buffer of N slots: <b>mutex = 1</b> (one process inside the buffer code), <b>empty = N</b> (free slots), <b>full = 0</b> (filled slots).
+    <div class="code tiny">producer:                  consumer:
+wait(empty);  wait(full);
+wait(mutex);   wait(mutex);
+  put item;       take item
+signal(mutex);  signal(mutex);
+signal(full);   signal(empty);</div>
+    The <b>order of the two outer waits is the whole problem</b>: a producer claims a free slot <span class="circ">before</span> the mutex, a consumer a filled slot before the mutex. Reverse them and both can sit on the mutex for ever.</div>
+  <table class="hand small" style="width:100%;white-space:nowrap;font-size:10pt">
+    <tr><th class="l">Trace, buffer of 2</th><th class="l">Operation</th><th>mutex</th><th>empty</th><th>full</th><th class="l">buffer (in → out)</th></tr>
+    <tr><td class="l">—</td><td class="l">start</td><td>1</td><td>2</td><td>0</td><td class="l">empty</td></tr>
+    <tr><td class="l">1</td><td class="l">P1 puts <b>x</b></td><td>1</td><td>1</td><td>1</td><td class="l">x</td></tr>
+    <tr><td class="l">2</td><td class="l">P2 puts <b>y</b></td><td>1</td><td>0</td><td>2</td><td class="l">x y</td></tr>
+    <tr><td class="l">3</td><td class="l">P3 wants to put <b>z</b></td><td>1</td><td><b>0</b></td><td>2</td><td class="l"><span class="red"><b>P3 blocks</b></span></td></tr>
+    <tr><td class="l">4</td><td class="l">C1 takes <b>x</b></td><td>1</td><td>1</td><td>1</td><td class="l">y</td></tr>
+    <tr><td class="l">5</td><td class="l">C2 takes <b>y</b></td><td>1</td><td>2</td><td>0</td><td class="l">empty</td></tr>
+    <tr><td class="l">6</td><td class="l">P3 wakes, puts <b>z</b></td><td>1</td><td>1</td><td>1</td><td class="l">z</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>empty counts spaces, full counts items, mutex counts permission, and empty + full always = N.</b>" In every row above empty + full = 2; if it is not, the trace is wrong.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>P decreases, V increases</b> — the semaphore pays out on P. A counting semaphore starting at 7 with 10 P and 6 V ends at <span class="circ">7 − 10 + 6 = 3</span>. Unlocking a mutex you do not own is meaningless.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: criteria & preemption ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Scheduling criteria</span></div>
+  <h2><span class="no">7</span>Scheduling Criteria &amp; Preemption</h2><span class="tag">formulas ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> CPU scheduling chooses <b>which ready process runs next</b> and <b>for how long</b>. No algorithm wins on every measure, so scheduling is judged against <span class="hl">five criteria</span> — and the algorithm a system picks depends on which one that system cares about.</div>
+  <table class="hand small" style="width:100%;font-size:10.5pt">
+    <tr><th class="l">Criterion</th><th class="l">Definition &amp; formula</th><th class="l">Wanted</th></tr>
+    <tr><td class="l"><b>CPU utilisation</b></td><td class="l">busy fraction = <b>1 − idle fraction</b></td><td class="l">as <b>high</b> as possible</td></tr>
+    <tr><td class="l"><b>Throughput</b></td><td class="l">processes completed <b>per unit time</b></td><td class="l">as <b>high</b> as possible</td></tr>
+    <tr><td class="l"><b>Turnaround time</b></td><td class="l"><b>completion − arrival</b>, the whole life</td><td class="l"><span class="circ">as low as possible</span></td></tr>
+    <tr><td class="l"><b>Waiting time</b></td><td class="l"><b>turnaround − CPU burst</b></td><td class="l"><span class="circ">as low as possible</span></td></tr>
+    <tr><td class="l"><b>Response time</b></td><td class="l"><b>first response − arrival</b></td><td class="l">low — what an <b>interactive</b> user feels</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,196px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 232 138" width="188">
+      <g class="w">
+        <path class="ink-k" d="M14,74 L222,74" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M20,74 V32" style="stroke-dasharray:4 4"/>
+        <path class="ink-r" d="M56,74 V32" style="stroke-dasharray:4 4"/>
+        <path class="ink-r" d="M188,74 V32" style="stroke-dasharray:4 4"/>
+        <rect x="56" y="62" width="46" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="102" y="62" width="28" height="24" rx="3" class="ink fill-r"/>
+        <rect x="130" y="62" width="58" height="24" rx="3" class="ink-g fill-g"/>
+        <path class="ink-r" d="M20,104 L56,104" marker-end="url(#ah)"/>
+        <path class="ink" d="M20,118 L188,118" marker-end="url(#ah)"/>
+      </g>
+      <text x="20" y="26" text-anchor="start" class="s r">arrival</text>
+      <text x="56" y="26" text-anchor="middle" class="s r">first run</text>
+      <text x="188" y="26" text-anchor="middle" class="s r">completion</text>
+      <text x="38" y="96" text-anchor="middle" class="s r">response</text>
+      <text x="104" y="114" text-anchor="middle" class="s">turnaround</text>
+      <text x="116" y="94" text-anchor="middle" class="s r">I/O wait</text>
+      <text x="116" y="136" text-anchor="middle" class="s">waiting time = turnaround − burst</text>
+    </svg><figcaption>everything not spent on the CPU is waiting</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">Point</th><th class="l">Non-preemptive</th><th class="l">Preemptive</th></tr>
+      <tr><td class="l">A running process</td><td class="l">keeps the CPU till it finishes <b>or blocks</b></td><td class="l">can be <b>interrupted</b> and requeued</td></tr>
+      <tr><td class="l">Needs</td><td class="l">nothing special</td><td class="l">a timer interrupt, OS support</td></tr>
+      <tr><td class="l">Overhead</td><td class="l">low — few switches</td><td class="l">one switch per preemption</td></tr>
+      <tr><td class="l">Response time</td><td class="l">can be <b>poor</b>: a long job blocks all</td><td class="l">good, bounded by q</td></tr>
+      <tr><td class="l">Trap</td><td class="l">never preempt <b>inside a critical section</b></td><td class="l">doing so corrupts the state</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Multiprocessing vs time-sharing — the distinction the syllabus asks for</span>
+    <div class="fgrid three tiny">
+      <p><b>Multiprogramming</b>: several programs in memory, the CPU switches between them</p>
+      <p><b>Multiprocessing</b>: several <b>processors</b>, genuine parallelism</p>
+      <p><b>Time-sharing</b>: one CPU shared in <b>time slices</b> — the classic time-sharing OS is round robin</p>
+      <p><b>Multitasking</b>: several tasks on one CPU, the idea behind time-sharing</p>
+      <p><b>Real-time</b>: deadlines matter more than throughput</p>
+      <p><b>Batch</b>: throughput maximised, response ignored</p>
+    </div></div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Waiting time is <b>not</b> turnaround time, and response time is <b>not</b> waiting time. Burst 10, arrival 2, completion 20: TAT = <b>18</b>, WT = <b>8</b>, response uses the <b>first</b> dispatch.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Turn</b>around = arri<b>b</b>al to fin<b>i</b>sh. <b>W</b>aiting = turnaround minus <b>b</b>urst. <b>R</b>esponse = arrival to first <b>r</b>un."</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ all three times</span> A job arrives at t = 2, is first dispatched at t = 5, blocks for I/O at t = 9, is dispatched again at t = 12 and completes at t = 24; its CPU burst totals 12. <b>(a)</b> Turnaround = 24 − 2 = <span class="circ">22</span>. <b>(b)</b> Waiting = 22 − 12 = <span class="circ">10</span>; the gaps confirm it — (5−2) + (12−9) = 6 while queued, plus 4 in its last dispatch. <b>(c)</b> Response = 5 − 2 = <span class="circ">3</span>. <b>(d)</b> Non-preemptively its response would be 0 — but its neighbours would pay.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: FCFS, SJF, priority ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>FCFS, SJF, priority</span></div>
+  <h2><span class="no">8</span>Non-Preemptive: FCFS, SJF &amp; Priority</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A process keeps the CPU until it finishes or blocks. <span class="hl">FCFS</span> serves arrival order, <span class="hl">SJF</span> always picks the shortest CPU burst, <span class="hl">priority scheduling</span> picks the highest-priority process and breaks ties by FCFS.</div>
+  <table class="hand small" style="width:100%;font-size:10pt">
+    <tr><th class="l">Algorithm</th><th class="l">Rule</th><th class="l">Good</th><th class="l">Bad</th></tr>
+    <tr><td class="l"><b>FCFS</b></td><td class="l">arrival order</td><td class="l">fair in CPU time, simple, no starvation</td><td class="l"><span class="circ">convoy effect</span>: one long job delays every short one</td></tr>
+    <tr><td class="l"><b>SJF</b></td><td class="l">shortest burst first</td><td class="l"><span class="circ">minimum average waiting time</span>, provably optimal</td><td class="l">needs bursts in advance; long jobs may <b>starve</b></td></tr>
+    <tr><td class="l"><b>SRTF</b> (preemptive)</td><td class="l">shortest <i>remaining</i> time</td><td class="l">also optimal for average waiting</td><td class="l">frequent switches; needs burst estimates</td></tr>
+    <tr><td class="l"><b>Priority</b></td><td class="l">highest priority first</td><td class="l">expresses importance; quick response for urgent work</td><td class="l"><b>starvation</b> for low-priority processes</td></tr>
+    <tr><td class="l"><b>Round robin</b> (preemptive)</td><td class="l">one <b>time quantum</b> each, in turn</td><td class="l">fair CPU share, bounded response time</td><td class="l">switch overhead if the quantum is small</td></tr>
+  </table>
+<figure class="doodle"><svg viewBox="0 0 452 92" width="452">
+      <g class="w">
+        <path class="ink-k" d="M18,20 L424,20"/>
+        <path class="ink-g" d="M18,20 V30 M66,20 V30 M164,20 V30 M278,20 V30 M408,20 V30" style="stroke-width:1.6"/>
+        <rect x="18" y="34" width="48" height="26" rx="3" class="ink-g fill-g"/>
+        <rect x="66" y="34" width="98" height="26" rx="3" class="ink fill-b"/>
+        <rect x="164" y="34" width="114" height="26" rx="3" class="ink fill-b"/>
+        <rect x="278" y="34" width="130" height="26" rx="3" class="ink fill-b"/>
+      </g>
+      <text x="18" y="14" text-anchor="middle" class="s">0</text>
+      <text x="66" y="14" text-anchor="middle" class="s">3</text>
+      <text x="164" y="14" text-anchor="middle" class="s">9</text>
+      <text x="278" y="14" text-anchor="middle" class="s">16</text>
+      <text x="408" y="14" text-anchor="middle" class="s">24</text>
+      <text x="42" y="52" text-anchor="middle" class="k s">P4</text>
+      <text x="115" y="52" text-anchor="middle" class="k s">P1</text>
+      <text x="221" y="52" text-anchor="middle" class="k s">P3</text>
+      <text x="343" y="52" text-anchor="middle" class="k s">P2</text>
+      <text x="42" y="80" text-anchor="middle" class="s">WT 0</text>
+      <text x="115" y="80" text-anchor="middle" class="s">WT 3</text>
+      <text x="221" y="80" text-anchor="middle" class="s">WT 9</text>
+      <text x="343" y="80" text-anchor="middle" class="s">WT 16</text>
+    </svg><figcaption>SJF on bursts 6, 8, 7, 3 ms: P4 0–3, P1 3–9, P3 9–16, P2 16–24</figcaption></figure>
+  <div class="cols small">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 1 ✍ FCFS</span> Bursts <b>24, 3, 3</b>, all at t = 0. P1 0–24, P2 24–27, P3 27–30. Waiting 0, 24, 27 → average 51/3 = <span class="circ">17 ms</span>. Two 3 ms jobs sat behind a 24 ms job — the convoy.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 2 ✍ SJF</span> Bursts P1 = 6, P2 = 8, P3 = 7, P4 = 3. Order P4 0–3, P1 3–9, P3 9–16, P2 16–24. Waiting 0, 3, 9, 16 → average 28/4 = <span class="circ">7 ms</span>. FCFS gives 0, 6, 14, 21 → <b>10.25 ms</b>.</div>
+  </div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> SJF is optimal for <b>average waiting time</b> — not for turnaround or response, and not for weighted combinations. It also needs the burst <b>known</b>; in practice the OS estimates it from the process's history, which is why SRTF is really "shortest remaining time <i>next</i>".</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Short first, long last</b>" for SJF; the <b>convoy</b> is FCFS's disease; <b>starvation</b> is priority's, and its cure is <span class="hl">ageing</span> — the effective priority rises with waiting time.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">Ageing, precisely</span> After each wait interval the OS may raise a process's effective priority, or treat "waited too long" as a promotion. <b>Ageing cures starvation only</b>: it has no effect on a deadlock, where nothing is progressing and no priority is ever re-evaluated. A pure priority queue without ageing is rejected in nearly every real design.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: SRTF & round robin ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>SRTF &amp; round robin</span></div>
+  <h2><span class="no">9</span>Preemptive: SRTF &amp; Round Robin</h2><span class="tag">Gantt charts ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">SRTF</span> preempts the running process whenever a newly arrived job has a shorter remaining time. <span class="hl">Round Robin</span> keeps a circular <b>ready queue</b> and preempts after every <span class="circ">time quantum q</span>; a process with time left goes to the <b>back</b> of the queue.</div>
+  <figure class="doodle"><svg viewBox="0 0 442 92" width="442">
+      <g class="w">
+        <path class="ink-k" d="M14,20 L428,20"/>
+        <path class="ink-g" d="M14,20 V30 M64,20 V30 M101,20 V30 M138,20 V30 M188,20 V30 M392,20 V30" style="stroke-width:1.6"/>
+        <rect x="14" y="34" width="50" height="26" rx="3" class="ink fill-b"/>
+        <rect x="64" y="34" width="37" height="26" rx="3" class="ink fill-b"/>
+        <rect x="101" y="34" width="37" height="26" rx="3" class="ink fill-b"/>
+        <rect x="138" y="34" width="50" height="26" rx="3" class="ink fill-b"/>
+        <rect x="188" y="34" width="204" height="26" rx="3" class="ink fill-b"/>
+      </g>
+      <text x="14" y="14" text-anchor="start" class="s">0</text>
+      <text x="64" y="14" text-anchor="middle" class="s">4</text>
+      <text x="101" y="14" text-anchor="middle" class="s">7</text>
+      <text x="138" y="14" text-anchor="middle" class="s">10</text>
+      <text x="188" y="14" text-anchor="middle" class="s">14</text>
+      <text x="392" y="14" text-anchor="middle" class="s">30</text>
+      <text x="39" y="52" text-anchor="middle" class="k s">P1</text>
+      <text x="82" y="52" text-anchor="middle" class="k s">P2</text>
+      <text x="119" y="52" text-anchor="middle" class="k s">P3</text>
+      <text x="163" y="52" text-anchor="middle" class="k s">P1</text>
+      <text x="290" y="52" text-anchor="middle" class="k s">P1, five quanta left</text>
+      <text x="39" y="80" text-anchor="middle" class="s">WT 6</text>
+      <text x="82" y="80" text-anchor="middle" class="s">WT 4</text>
+      <text x="119" y="80" text-anchor="middle" class="s">WT 7</text>
+    </svg><figcaption>round robin with q = 4 ms; all three arrived at 0, bursts 24 / 3 / 3 — waiting time = completion − arrival − burst</figcaption></figure>
+  <div class="cols small">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 1 ✍ round robin, q = 4</span> P1 = 24, P2 = 3, P3 = 3, all arriving at 0. Gantt: P1 0–4, P2 4–7, P3 7–10, then P1 alone 10–30. Waiting = completion − burst: P1 = 30 − 24 = 6, P2 = 7 − 3 = 4, P3 = 10 − 3 = 7 → average 17/3 = <span class="circ">5.67 ms</span>. On this set SJF would give 0, 3, 6 → <b>3 ms</b>; FCFS 17 ms.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 2 ✍ SRTF, staggered arrivals</span> P1 (0, 8), P2 (1, 4), P3 (2, 9), P4 (3, 5). At t = 1, P2 (4) beats P1's remaining 7 → preempt; at t = 5 P4 (5) beats P1 (7) and P3 (9); at t = 10 P1 (7) beats P3 (9). Gantt: <b>P1 0–1 | P2 1–5 | P4 5–10 | P1 10–17 | P3 17–26</b>. Completion 17, 5, 26, 10 → turnaround 17, 4, 24, 7 → average <span class="circ">13 ms</span>; waiting 9, 0, 15, 2 → average <span class="circ">6.5 ms</span>.</div>
+  </div>
+  <table class="hand small" style="width:100%;font-size:10pt">
+    <tr><th class="l">Time quantum q</th><th class="l">Behaviour</th></tr>
+    <tr><td class="l"><b>q → large</b> (q ≥ burst)</td><td class="l">no preemption in practice → <span class="circ">RR degenerates into FCFS</span></td></tr>
+    <tr><td class="l"><b>q → small</b></td><td class="l">many context switches; most time is spent switching, throughput falls</td></tr>
+    <tr><td class="l"><b>q just above the average burst</b></td><td class="l">the usual choice — fast enough to be interactive, slow enough to batch most work in a few turns</td></tr>
+    <tr><td class="l">Worst-case response</td><td class="l">bounded by <b>(n − 1) × q</b> for n ready processes</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "The quantum is a <b>promise about waiting</b>: small q promises fairness and a quick first response and pays in switches; large q promises efficiency and pays in response time."</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) In RR, waiting time is <b>completion − arrival − burst</b>, not "time in the queue" counted per quantum. (ii) A process that finishes inside its quantum <b>never waits again</b>. (iii) RR is <b>preemptive</b>; "run to completion in slices" describes FCFS.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">Thread vs process scheduling, once more</span> If each process holds one thread, RR gives each <b>process</b> a turn — unfair when one process owns fifty threads. Modern kernels therefore schedule <b>threads</b>, so every runnable thread gets its own slice.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: multilevel queues & real time ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Multilevel &amp; real-time</span></div>
+  <h2><span class="no">10</span>Multilevel Queues, Feedback &amp; Real-Time</h2><span class="tag">advanced ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">multilevel queue</span> keeps permanent classes — system processes with a short quantum and round robin, user processes with FCFS or SJF. A <span class="hl">multilevel feedback queue (MLFQ)</span> allows movement: a process that burns its whole quantum is demoted, one that waits long enough is promoted.</div>
+  <figure class="doodle"><svg viewBox="0 0 460 146" width="452">
+    <g class="w">
+      <rect x="6" y="10" width="146" height="30" rx="5" class="ink-r fill-r"/>
+      <rect x="6" y="48" width="146" height="30" rx="5" class="ink fill-y"/>
+      <rect x="6" y="86" width="146" height="30" rx="5" class="ink fill-y"/>
+      <path class="ink-k" d="M156,64 L186,64" marker-end="url(#ahb)"/>
+      <rect x="190" y="10" width="146" height="30" rx="5" class="ink-r fill-r"/>
+      <rect x="190" y="48" width="146" height="30" rx="5" class="ink fill-y"/>
+      <rect x="190" y="86" width="146" height="30" rx="5" class="ink fill-y"/>
+      <path class="ink-r" d="M290,42 L290,46" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M290,80 L290,84" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M320,46 L320,42" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M320,84 L320,80" marker-end="url(#ahg)"/>
+      <path class="ink" d="M340,64 L382,64" marker-end="url(#ahb)"/>
+      <rect x="386" y="44" width="68" height="40" rx="5" class="ink-g fill-g"/>
+    </g>
+    <text x="79" y="30" text-anchor="middle" class="r w6">Q0 · q = 2 ms</text>
+    <text x="79" y="68" text-anchor="middle" class="k">Q1 · q = 8 ms</text>
+    <text x="79" y="106" text-anchor="middle" class="k">Q2 · q = 32 ms</text>
+    <text x="263" y="30" text-anchor="middle" class="r w6">Q0 · q = 4 ms</text>
+    <text x="263" y="68" text-anchor="middle" class="k">Q1 · q = 16 ms</text>
+    <text x="263" y="106" text-anchor="middle" class="k">Q2 · FCFS</text>
+    <text x="420" y="69" text-anchor="middle" class="k w6">CPU</text>
+    <text x="171" y="136" text-anchor="middle" class="p w6">MLFQ</text>
+    <text x="79" y="132" text-anchor="middle" class="s">fixed classes</text>
+    <text x="263" y="132" text-anchor="middle" class="s">demote ↓ / promote ↑</text>
+  </svg><figcaption>the whole difference: may a process <b>change queue</b>?</figcaption></figure>
+  <table class="hand small" style="width:100%;font-size:10pt">
+    <tr><th class="l">Point</th><th class="l">Multilevel queue</th><th class="l">Multilevel feedback queue</th></tr>
+    <tr><td class="l">Movement</td><td class="l"><b>none</b> — the class is fixed</td><td class="l">a process is promoted or demoted</td></tr>
+    <tr><td class="l">Quantum per queue</td><td class="l">one per class</td><td class="l">grows as priority falls</td></tr>
+    <tr><td class="l">Strength</td><td class="l">simple and cheap; a different admission policy per class</td><td class="l">separates <b>interactive</b> from <b>CPU-bound</b> automatically</td></tr>
+    <tr><td class="l">Weakness</td><td class="l">a low class can <b>starve</b></td><td class="l">needs promotion rules to avoid starvation</td></tr>
+  </table>
+  <div class="cols small">
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">Real-time policy</th><th class="l">Priority rule</th></tr>
+      <tr><td class="l"><b>Rate monotonic</b></td><td class="l"><b>static</b>: shorter period → higher priority</td></tr>
+      <tr><td class="l"><b>EDF</b></td><td class="l"><b>dynamic</b>: earliest deadline first</td></tr>
+    </table>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Hard real-time in one line</span> A periodic set of n tasks on <b>one</b> processor needs C ≤ T for every task <span class="circ">and</span> total utilisation ≤ <b>n(2^(1/n) − 1)</b>: 1 task 100 %, 2 tasks 83 %, 3 tasks 78 %.</div>
+      <div class="exam tiny"><span class="lbl">Exam trap</span> <b>EDF is optimal</b> — it misses a deadline only when no feasible schedule exists. Rate monotonic is optimal only for <b>static</b> priorities and loses to EDF above about 76 % utilisation.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Fixed classes don't move; feedback queues teach the scheduler.</b>" And "<b>rate</b> is fixed, <b>deadline</b> is re-read every instant."</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> The long scheduler services only the <b>highest</b> queue when it is non-empty, so low classes can wait for ever — a starvation failure that <b>ageing</b> or promotion fixes.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ two periodic tasks</span> A control loop needs 10 ms every 40 ms; a logger needs 5 ms every 100 ms.
+    <b>(a)</b> Utilisation = 10/40 + 5/100 = 0.25 + 0.05 = <span class="circ">0.30</span>. <b>(b)</b> Two tasks, so the rate-monotonic bound is 2(2^(1/2) − 1) ≈ <b>0.828</b>; 0.30 &lt; 0.828, so the set is <b>feasible under rate monotonic</b>. <b>(c)</b> EDF meets the same deadlines and could absorb far more load. <b>(d)</b> If the loop's period shrank to 12 ms, utilisation ≈ 0.883 &gt; 0.828, so rate monotonic can no longer guarantee it and EDF must be used.</div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid tiny">
+      <p>program = passive file · process = executing</p><p>process = code, data, PC, registers</p>
+      <p><b>PID</b> identifies; reused after release</p><p>PCB: state, PC, regs, sched, mem, acc</p>
+      <p>new → ready → running → waiting → terminated</p><p>ready = wants the CPU, waiting = an event</p>
+      <p>long-term = job queue · medium-term = swap</p><p>short-term = the CPU scheduler</p>
+      <p>threads share the address space, own stacks</p><p>user-level blocks the process</p>
+      <p>many-to-one · one-to-one · many-to-many</p><p>kernel-level blocks one thread</p>
+      <p>IPC: shm, pipe, FIFO, queue, socket, signal</p><p>an anonymous pipe = related processes</p>
+      <p>semaphore P = −1 (may block), V = +1</p><p>a mutex has an owner, a semaphore not</p>
+      <p>empty + full = buffer size N</p><p>producer waits empty, consumer waits full</p>
+      <p>TAT = completion − arrival</p><p>WT = TAT − burst · response = first run − arrival</p>
+      <p>SJF = minimum average waiting time</p><p>FCFS = convoy · priority = starvation</p>
+      <p>RR: q large → FCFS, q small → switches</p><p>RR worst-case response = (n − 1)q</p>
+      <p>MLFQ demotes CPU-bound, promotes the idle</p><p>EDF optimal · RM bound n(2^(1/n) − 1)</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num tiny">
+      <li>Five states, not four — <b>new</b> is separate</li>
+      <li>Ready = waiting <b>only</b> for the CPU</li>
+      <li>Three schedulers: long, medium, short</li>
+      <li>The PCB is a <b>kernel</b> structure</li>
+      <li>Threads share the address space, not the stack</li>
+      <li>Many-to-one: a blocking call stops <b>all</b> threads</li>
+    </ol>
+    <ol class="num tiny" start="7">
+      <li>Shared memory is fastest but needs <b>your own</b> lock</li>
+      <li>P decrements, V increments</li>
+      <li>SJF is optimal for <b>average waiting</b></li>
+      <li>FCFS's disease is the <b>convoy</b></li>
+      <li>RR degenerates into FCFS as q grows</li>
+      <li>EDF optimal; RM bound n(2^(1/n) − 1)</li>
+    </ol>
+  </div>
+  <div class="exam tiny"><span class="lbl">Top traps</span> ready vs waiting · WT ≠ TAT, response ≠ WT · SJF optimal for average <b>waiting</b> only · a new process enters the <b>ready</b> queue, not running · anonymous pipes cannot cross unrelated processes · shared memory carries <b>no</b> mutual exclusion · unlocking a mutex you do not own is meaningless · ageing cures starvation, never deadlock · FCFS does not starve, priority and SJF do · the real-time bound for two tasks is 83 %, not 100 %.</div>
+  <div class="trick tiny"><span class="lbl">All tricks together</span> "Program is a recipe, process is the dish plus the ticket" · "Ready asks for the CPU, waiting asks for something else" · "Born ready, die finished" · "Threads share, they do not copy" · "Copy = message passing, map = shared memory, named = unrelated" · "the semaphore pays out on P" · "empty + full always = N" · "short first, long last" · "the quantum is a promise about waiting" · "fixed classes don't move; feedback queues teach the scheduler" · "rate is fixed, deadline is re-read every instant".</div>
+  <figure class="doodle"><svg viewBox="0 0 520 104" width="430">
+    <g class="w">
+      <rect x="8" y="10" width="152" height="66" rx="10" class="ink-g fill-g"/>
+      <rect x="184" y="10" width="152" height="66" rx="10" class="ink-g fill-g"/>
+      <rect x="360" y="10" width="152" height="66" rx="10" class="ink-r fill-r"/>
+      <path class="ink-g" d="M162,43 L180,43" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M338,43 L356,43" marker-end="url(#ah)"/>
+    </g>
+    <text x="84" y="38" text-anchor="middle" class="g w6 l">P</text>
+    <text x="84" y="56" text-anchor="middle" class="g s">PCB + states</text>
+    <text x="84" y="72" text-anchor="middle" class="g s">who it is, where it is</text>
+    <text x="260" y="38" text-anchor="middle" class="g w6 l">S</text>
+    <text x="260" y="56" text-anchor="middle" class="g s">semaphores</text>
+    <text x="260" y="72" text-anchor="middle" class="g s">P −1, V +1</text>
+    <text x="436" y="38" text-anchor="middle" class="r w6 l">A</text>
+    <text x="436" y="56" text-anchor="middle" class="r s">algorithms</text>
+    <text x="436" y="72" text-anchor="middle" class="r s">FCFS SJF SRTF RR</text>
+    <text x="260" y="100" text-anchor="middle" class="p s">every scheduling question is a Gantt chart plus a subtraction</text>
+  </svg><figcaption>process, synchronisation, scheduling — the three halves of this lesson</figcaption></figure>
+  <div class="pg-no">12</div>
+</section>
+
+<!-- ============ SHEET 13: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Process &amp; Scheduling</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>In memory, waiting only for the CPU:<ol class="opts"><li>New</li><li>Waiting</li><li>Terminated</li><li>Ready</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>A newly created process goes to:<ol class="opts"><li>running</li><li>a device queue</li><li>waiting</li><li>ready queue</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Which is <b>not</b> a PCB field?<ol class="opts"><li>program counter</li><li>CPU registers</li><li>last disk sector</li><li>process state</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>A blocked process needing only the CPU is:<ol class="opts"><li>preempted</li><li>terminated</li><li>dispatched</li><li>admitted</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Round Robin mainly serves:<ol class="opts"><li>batch</li><li>time-sharing</li><li>single-tasking</li><li>spooling</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Threads of one process share:<ol class="opts"><li>stacks</li><li>address space</li><li>registers</li><li>PC values</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>S = 7, then 10 P and 6 V gives:<ol class="opts"><li>3</li><li>1</li><li>13</li><li>0</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Bursts 24, 3, 3 at t = 0; FCFS average wait:<ol class="opts"><li>3 ms</li><li>13 ms</li><li>17 ms</li><li>27 ms</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Same bursts, q = 4, RR average wait:<ol class="opts"><li>4.00 ms</li><li>5.67 ms</li><li>7.33 ms</li><li>17.00 ms</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>A child whose parent died first is:<ol class="opts"><li>a zombie</li><li>an orphan</li><li>a daemon</li><li>a kernel thread</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-d · 2-d · 3-c · 4-c · 5-b · 6-b · 7-a · 8-c · 9-b · 10-b</div>
+  <div class="wq small"><span class="lbl">Written question</span> What is a process, and what does the Process Control Block contain? Draw the five-state transition diagram with all seven arrows and say which queue a process in main memory waiting only for the CPU belongs to. Bursts P1 = 24, P2 = 3, P3 = 3 ms all arrive at t = 0: find the average waiting time under FCFS and under round robin with q = 4 ms, and name the algorithm optimal for average waiting time. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>Process and PCB</b> — a program loaded into memory and executing, with its code, data, program counter, registers and open files. PCB = state, program counter, CPU registers, CPU-scheduling information, memory-management information, accounting information. <i class="mk">3</i></li>
+    <li><b>The diagram</b> — new → ready (admitted); ready → running (dispatch); running → ready (interrupt or slice ends); running → waiting (I/O or event wait); waiting → ready (completion); running → terminated; new → terminated (admission refused). Waiting only for the CPU ⇒ <b>ready queue</b>, not a device queue. <i class="mk">3</i></li>
+    <li><b>FCFS</b> — P1 0–24, P2 24–27, P3 27–30. Waiting 0, 24, 27 → average 51/3 = <b>17 ms</b>. <i class="mk">2</i></li>
+    <li><b>RR, q = 4</b> — P1 0–4, P2 4–7, P3 7–10, then P1 alone 10–30. Waiting = completion − burst: 6, 4, 7 → average 17/3 = <b>5.67 ms</b>. Optimal for average waiting: <b>SJF</b> (SRTF preemptively) — 0, 3, 6 → <b>3 ms</b>. <i class="mk">2</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>Can name the five states and all seven transitions</li>
+      <li>Can list the PCB fields without looking</li>
+    </ul>
+    <ul class="tick">
+      <li>Can draw a Gantt chart for FCFS, SJF and RR</li>
+      <li>Can trace a semaphore through producer–consumer</li>
+    </ul>
+  </div>
+  <div class="pg-no">13</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

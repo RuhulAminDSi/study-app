@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Combinational Circuits: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+<style>table.hand.tight th, table.hand.tight td { padding: 0 1.6mm; } table.hand.tight { line-height: 5.9mm; }</style>
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, gate symbols (inline attributes!)
+     pins: 2-input at (0,12) and (0,28), output at (60,20); NOT input at (0,20) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <g id="g-and"><path d="M0,12H10M0,28H10M44,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-or"><path d="M0,12H11M0,28H11M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-xor"><path d="M0,12H6M0,28H6M50,20H60M3,4Q11,20 3,36" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(255,105,180,.25)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <!-- 4-input OR: back curve x 0..6, input pins at y 10, 23, 37, 50; output at (66,30) -->
+    <g id="g-or4"><path d="M0,0H22Q50,0 66,30Q50,60 22,60H0Q12,30 0,0Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Combinational Circuits</span></h1>
+  <p class="subtitle">Adders · CLA · BCD · comparator · decoder · MUX · PLA: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M240,128 L170,80 M240,172 L170,220 M320,106 L320,56 M400,128 L470,80 M400,172 L470,220 M320,194 L320,244 M216,150 L184,150 M424,150 L456,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="215" y="14" width="210" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="8" y="130" width="176" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="456" y="130" width="176" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">COMBINATIONAL</text><text x="320" y="170" text-anchor="middle" class="r s">no memory · Y = f(X)</text>
+      <text x="140" y="65" text-anchor="middle">Design procedure</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Adders · subtractors ★</text>
+      <text x="500" y="65" text-anchor="middle">BCD adder · 7485</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">MUX / DEMUX ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Decoder / encoder ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Code conv. · 7-seg</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">74xx ICs ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">ROM · PLA · PAL</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = applied / programmable</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① HA / FA equations<br>② FA = 2 HA + 1 OR<br>③ CLA: G and P terms<br>④ n selects → 2ⁿ inputs<br>⑤ decoder = minterms<br>⑥ 7483 · 74138 · 74151</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Digital logic: … <span class="hl">combinational logic circuits</span>, minimization techniques; <span class="hl">Arithmetic and data handling logic circuits, decoders and encoders, multiplexers and demultiplexers</span>; <span class="hl">Combinational circuit design</span>; … <span class="hl">PLA design</span>". This notebook covers all of these. Flip-flops and counters are in the Sequential Circuits notes; K-maps are in the Boolean Algebra notes.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Basics, design, half adder ……… p. 2</li><li>Full adder &amp; subtractors ……… p. 3</li><li>Ripple-carry &amp; look-ahead ……… p. 4</li><li>Adder-subtractor, BCD, comparator … p. 5</li><li>Decoders &amp; encoders ……… p. 6</li></ul>
+    <ul class="tick"><li>MUX &amp; DEMUX ……… p. 7</li><li>Code converters, parity, 7-seg … p. 8</li><li>ROM · PLA · PAL · hazards ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: basics, design procedure, half adder ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Basics &amp; design</span></div>
+  <h2><span class="no">1</span>Combinational vs Sequential</h2><span class="tag">MCQ favourite</span>
+  <div class="def"><span class="lbl">Definition</span> A <span class="hl">combinational circuit</span> is a network of gates whose outputs depend <b>only on the present inputs</b>: Y = f(X). No memory, no clock, no feedback. A <b>sequential</b> circuit also uses <b>stored state</b> (flip-flops) → Sequential Circuits notes.</div>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 290 190" width="285">
+      <g class="w">
+        <path class="ink" d="M10,22 H70 M10,36 H70 M10,50 H70 M200,22 H262 M200,36 H262 M200,50 H262"/>
+        <rect x="70" y="10" width="130" height="52" rx="6" class="ink-k" style="fill:rgba(255,238,0,.45)"/>
+        <path class="ink" d="M10,118 H70 M10,132 H70 M200,118 H262 M200,132 H262"/>
+        <rect x="70" y="104" width="130" height="44" rx="6" class="ink-k fill-b"/>
+        <rect x="100" y="158" width="72" height="26" rx="4" class="ink-r fill-r"/>
+        <path class="ink-r" d="M200,140 H226 V171 H176" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M100,171 H44 V142 H66" marker-end="url(#ah)"/>
+      </g>
+      <text x="135" y="33" text-anchor="middle" class="k w6">combinational</text><text x="135" y="52" text-anchor="middle" class="k s">logic (gates)</text>
+      <text x="8" y="72" class="s">n inputs</text><text x="206" y="72" class="s">m outputs</text>
+      <text x="135" y="130" text-anchor="middle" class="s">gates</text>
+      <text x="136" y="176" text-anchor="middle" class="r s w6">memory</text>
+      <text x="8" y="98" class="g s w6">Sequential: feedback + state</text>
+    </svg><figcaption>top: Y = f(X) · bottom: Y = f(X, state)</figcaption></figure>
+    <table class="hand small tight">
+      <tr><th class="l">Feature</th><th>Combinational</th><th>Sequential</th></tr>
+      <tr><td class="l">Memory</td><td>none</td><td>flip-flops</td></tr>
+      <tr><td class="l">Clock</td><td>not needed</td><td>usually</td></tr>
+      <tr><td class="l">Feedback</td><td>none</td><td>yes</td></tr>
+      <tr><td class="l">Model</td><td>truth table</td><td>state table</td></tr>
+      <tr><td class="l">Examples</td><td>adder, MUX</td><td>counter, register</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">2</span>Design Procedure</h2><span class="tag">written favourite</span>
+  <div class="cols" style="grid-template-columns:1.12fr 1fr">
+    <ol class="steps small">
+      <li>Fix the <b>inputs and outputs</b>; name them</li>
+      <li>Write the <span class="hl">truth table</span> (2ⁿ rows; unused codes = X)</li>
+      <li>Simplify each output (K-map, Boolean Algebra sheets 7–8)</li>
+      <li>Draw the circuit (AND-OR → NAND-NAND)</li>
+      <li>Verify a few rows</li>
+    </ol>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> 3-bit <b>prime detector</b>: F = 1 when ABC (A = MSB) is 2, 3, 5 or 7.<br>F = Σm(2, 3, 5, 7): pairs m2, m3 = <b>A′B</b>; m5, m7 = <b>AC</b><br>F = <span class="circ">A′B + AC</span> · check 001: 0 ✓</div>
+  </div>
+  <div class="sumbox small"><span class="lbl">Families</span> <b>Arithmetic:</b> adders, subtractors, comparators, ALU · <b>Data routing:</b> MUX, DEMUX, decoders, encoders · <b>Code conversion:</b> BCD↔XS-3, binary↔Gray, 7-segment · <b>Error detection:</b> parity · <b>Programmable:</b> ROM, PLA, PAL</div>
+  <h2><span class="no">3</span>Half Adder (HA)</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:150px 1fr 230px;align-items:center">
+    <table class="hand small" style="margin-top:0"><tr><th>A</th><th>B</th><th>S</th><th>C</th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr></table>
+    <div class="small">Adds <b>two</b> bits; no carry-in.<br>Sum <span class="circ">S = A ⊕ B</span><br>Carry <span class="circ">C = A · B</span><br>1 XOR + 1 AND (or 5 NAND)</div>
+    <figure class="doodle"><svg viewBox="0 0 230 110" width="225">
+      <g class="w">
+        <path class="ink" d="M10,22 H60 M10,38 H60 M30,22 V74 H60 M45,38 V90 H60 M120,30 H160 M120,82 H160"/>
+        <circle cx="30" cy="22" r="3" fill="#1d3f8f"/><circle cx="45" cy="38" r="3" fill="#1d3f8f"/>
+        <use href="#g-xor" x="60" y="10"/><use href="#g-and" x="60" y="62"/>
+      </g>
+      <text x="6" y="26" text-anchor="end" class="s">A</text><text x="6" y="42" text-anchor="end" class="s">B</text>
+      <text x="164" y="35" class="r w6">S = A⊕B</text><text x="164" y="87" class="r w6">C = AB</text>
+    </svg></figure>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> <b>Sum = XOR</b> ("exactly one 1"), <b>Carry = AND</b> ("both 1"): 1 + 1 = 10₂.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: full adder, subtractors ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Full adder &amp; subtractors</span></div>
+  <h2><span class="no">4</span>Full Adder (FA)</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:250px 1fr">
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th>m</th><th>A</th><th>B</th><th>C<sub>in</sub></th><th>S</th><th>C<sub>out</sub></th></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+      <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><td>3</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>4</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><td>5</td><td>1</td><td>0</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>6</td><td>1</td><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>7</td><td>1</td><td>1</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr>
+    </table>
+    <div>
+      <p class="small">Adds <b>three</b> bits: A, B and the carry-in from the previous stage.</p>
+      <p class="small">S = Σm(1, 2, 4, 7) → 1 when the number of 1s is <b>odd</b>:</p>
+      <p class="center"><span class="circ">S = A ⊕ B ⊕ C<sub>in</sub></span></p>
+      <p class="small">C<sub>out</sub> = Σm(3, 5, 6, 7) → K-map gives three pairs:</p>
+      <p class="center"><span class="circ">C<sub>out</sub> = AB + BC<sub>in</sub> + AC<sub>in</sub></span></p>
+      <p class="small">= <span class="hl">AB + C<sub>in</sub>(A ⊕ B)</span> (the form used by two half adders) = majority of A, B, C<sub>in</sub></p>
+    </div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 400 114" width="400">
+    <g class="w">
+      <rect x="40" y="10" width="60" height="62" rx="5" class="ink-k fill-b"/>
+      <rect x="150" y="10" width="60" height="58" rx="5" class="ink-k fill-b"/>
+      <path class="ink" d="M8,25 H40 M8,55 H40 M100,25 H120 V45 H150 M8,4 H135 V22 H150 M210,22 H330 M210,45 H240 V82 H264 M100,55 H112 V98 H264 M326,90 H350"/>
+      <use href="#g-or" x="264" y="70"/>
+    </g>
+    <text x="70" y="46" text-anchor="middle" class="k w6">HA₁</text><text x="180" y="44" text-anchor="middle" class="k w6">HA₂</text>
+    <text x="4" y="29" text-anchor="end" class="s">A</text><text x="4" y="59" text-anchor="end" class="s">B</text><text x="4" y="8" text-anchor="end" class="s">C<tspan dy="3" font-size="9">in</tspan></text>
+    <text x="104" y="20" class="s g">A⊕B</text><text x="116" y="92" class="s g">AB</text><text x="246" y="62" class="s g">(A⊕B)C<tspan dy="3" font-size="9">in</tspan></text>
+    <text x="334" y="26" class="r w6">S</text><text x="354" y="95" class="r w6">C<tspan dy="3" font-size="10">out</tspan></text>
+  </svg><figcaption>FA = two half adders + one OR gate (C<sub>out</sub> = C₁ + C₂)</figcaption></figure>
+  <table class="hand small">
+    <tr><th class="l">Circuit</th><th class="l">With basic gates</th><th>NAND only</th><th>NOR only</th></tr>
+    <tr><td class="l">HA / HS</td><td class="l">1 XOR + 1 AND (+1 NOT for HS)</td><td class="red"><b>5</b></td><td class="red"><b>5</b></td></tr>
+    <tr><td class="l">FA / FS</td><td class="l">2 XOR + 2 AND + 1 OR (2 halves + OR)</td><td class="red"><b>9</b></td><td class="red"><b>9</b></td></tr>
+  </table>
+  <h2><span class="no">5</span>Half &amp; Full Subtractor</h2>
+  <div class="cols3" style="grid-template-columns:140px 190px 1fr;align-items:start">
+    <table class="hand small tight" style="margin-top:0"><tr><th>A</th><th>B</th><th>D</th><th>B<sub>o</sub></th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td>0</td></tr></table>
+    <table class="hand small tight" style="margin-top:0"><tr><th>A</th><th>B</th><th>B<sub>in</sub></th><th>D</th><th>B<sub>out</sub></th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>0</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td class="red"><b>1</b></td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr></table>
+    <div class="small">
+      <p><b>Half subtractor</b> (A − B):<br><span class="circ">D = A ⊕ B</span><br><span class="circ">B<sub>o</sub> = A′B</span><br>(borrow only for 0 − 1)</p>
+      <p><b>Full subtractor</b> (A − B − B<sub>in</sub>): borrow when A &lt; B + B<sub>in</sub>.</p>
+      <p>FS = two half subtractors + one OR (B<sub>out</sub> = B₁ + B₂).</p>
+    </div>
+  </div>
+  <p class="small">FS: D = A ⊕ B ⊕ B<sub>in</sub> = Σm(1, 2, 4, 7) · B<sub>out</sub> = Σm(1, 2, 3, 7) = <span class="hl">A′B + A′B<sub>in</sub> + BB<sub>in</sub></span> = A′B + B<sub>in</sub>(A ⊕ B)′</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Difference = Sum (same XOR). Borrow = carry with <b>A complemented</b>: AB → A′B, AC<sub>in</sub> → A′B<sub>in</sub>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> FA = 2 HA + <b>OR</b> (not AND). C<sub>out</sub> ≠ A ⊕ B ⊕ C<sub>in</sub>: that is the sum. HA cannot take a carry-in.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: ripple-carry & carry look-ahead ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Parallel adders</span></div>
+  <h2><span class="no">6</span>Ripple-Carry (Parallel) Adder</h2>
+  <div class="def"><span class="lbl">Definition</span> An <b>n-bit parallel adder</b> chains <span class="hl">n full adders</span>: each C<sub>out</sub> feeds the next C<sub>in</sub> (C₀ = 0). All bits are applied at once, but the carry <b>ripples</b> from LSB to MSB.</div>
+  <figure class="doodle"><svg viewBox="0 0 560 158" width="560">
+    <g class="w">
+      <rect x="50" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/><rect x="170" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/>
+      <rect x="290" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/><rect x="410" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/>
+      <path class="ink" d="M75,18 V40 M105,18 V40 M195,18 V40 M225,18 V40 M315,18 V40 M345,18 V40 M435,18 V40 M465,18 V40 M90,94 V116 M210,94 V116 M330,94 V116 M450,94 V116"/>
+      <path class="ink" d="M410,67 H372" marker-end="url(#ahb)"/><path class="ink" d="M290,67 H252" marker-end="url(#ahb)"/><path class="ink" d="M170,67 H132" marker-end="url(#ahb)"/>
+      <path class="ink" d="M530,67 H492" marker-end="url(#ahb)"/><path class="ink" d="M50,67 H14" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M490,136 H60" stroke-dasharray="7 5" marker-end="url(#ah)"/>
+    </g>
+    <text x="90" y="72" text-anchor="middle" class="k w6">FA₃</text><text x="210" y="72" text-anchor="middle" class="k w6">FA₂</text><text x="330" y="72" text-anchor="middle" class="k w6">FA₁</text><text x="450" y="72" text-anchor="middle" class="k w6">FA₀</text>
+    <text x="75" y="13" text-anchor="middle" class="s">A₃</text><text x="105" y="13" text-anchor="middle" class="s">B₃</text><text x="195" y="13" text-anchor="middle" class="s">A₂</text><text x="225" y="13" text-anchor="middle" class="s">B₂</text>
+    <text x="315" y="13" text-anchor="middle" class="s">A₁</text><text x="345" y="13" text-anchor="middle" class="s">B₁</text><text x="435" y="13" text-anchor="middle" class="s">A₀</text><text x="465" y="13" text-anchor="middle" class="s">B₀</text>
+    <text x="90" y="128" text-anchor="middle" class="s g">S₃</text><text x="210" y="128" text-anchor="middle" class="s g">S₂</text><text x="330" y="128" text-anchor="middle" class="s g">S₁</text><text x="450" y="128" text-anchor="middle" class="s g">S₀</text>
+    <text x="391" y="60" text-anchor="middle" class="s">C₁</text><text x="271" y="60" text-anchor="middle" class="s">C₂</text><text x="151" y="60" text-anchor="middle" class="s">C₃</text>
+    <text x="510" y="60" text-anchor="middle" class="s">C₀</text><text x="14" y="56" class="r s w6">C₄</text>
+    <text x="275" y="155" text-anchor="middle" class="r s">carry ripples LSB → MSB</text>
+  </svg></figure>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Delay</span> Carry path per stage = 2 gate levels (AND → OR); worst case it passes <b>all n stages</b>: t ≈ <span class="circ">n × t<sub>carry</sub></span> ≈ 2n gate delays. 16 bits × 10 ns = <b>160 ns</b>.</div>
+    <div class="small">
+      <p><b>IC 7483</b> (newer pinout <b>74283</b>): 4-bit binary adder with fast carry; cascade two for 8 bits (C₄ → next C₀).</p>
+      <p>Cheap (n FAs) but <b>slow</b>: delay grows linearly with n.</p>
+    </div>
+  </div>
+  <h2><span class="no">7</span>Carry Look-Ahead Adder (CLA)</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Idea</span> Compute every carry <b>directly from the inputs</b>, no ripple. Per bit: <span class="circ">G<sub>i</sub> = A<sub>i</sub>B<sub>i</sub></span> (generate: makes a carry itself), <span class="circ">P<sub>i</sub> = A<sub>i</sub> ⊕ B<sub>i</sub></span> (propagate: passes C<sub>i</sub> on).</div>
+  <div class="cols" style="grid-template-columns:1.75fr 1fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Equations</span> C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub>C<sub>i</sub> · S<sub>i</sub> = P<sub>i</sub> ⊕ C<sub>i</sub><br>
+      C₁ = G₀ + P₀C₀<br>C₂ = G₁ + P₁G₀ + P₁P₀C₀<br>C₃ = G₂ + P₂G₁ + P₂P₁G₀ + P₂P₁P₀C₀<br>C₄ = G₃ + P₃G₂ + P₃P₂G₁ + P₃P₂P₁G₀ + P₃P₂P₁P₀C₀</div>
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th class="l"></th><th>Ripple</th><th>Look-ahead</th></tr>
+      <tr><td class="l">Carry delay</td><td>≈ 2n</td><td class="red"><b>3 (fixed)</b></td></tr>
+      <tr><td class="l">Gates</td><td>few</td><td>many</td></tr>
+      <tr><td class="l">Fan-in</td><td>2–3</td><td>up to n + 1</td></tr>
+      <tr><td class="l">IC</td><td>7483</td><td>74182</td></tr>
+    </table>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> A = 1011, B = 0101, C₀ = 0 → G = 0001, P = 1110 · C₁ = G₀ = 1, C₂ = P₁C₁ = 1, C₃ = 1, C₄ = 1 (one carry propagated three places, yet all four appear together) · S = P ⊕ C₃C₂C₁C₀ = 1110 ⊕ 1110 = 0000 → <b>1 0000</b> (11 + 5 = 16 ✓)</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>G</b> = "both 1, I <b>G</b>ive a carry" · <b>P</b> = "one 1, I <b>P</b>ass it on". 3 levels: P/G → AND → OR.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> CLA delay is fixed only in theory: fan-in grows with n, so real adders use 4-bit CLA blocks + the 74182.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: adder-subtractor, BCD adder, comparator ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Arithmetic circuits</span></div>
+  <h2><span class="no">8</span>4-bit Adder-Subtractor (XOR trick)</h2>
+  <div class="cols" style="grid-template-columns:340px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 340 196" width="335">
+      <g class="w">
+        <path class="ink" d="M320,30 H62 M320,30 V140 H300"/>
+        <path class="ink" d="M78,8 V40 M154,8 V40 M230,8 V40 M306,8 V40"/>
+        <circle cx="62" cy="30" r="3" fill="#1d3f8f"/><circle cx="138" cy="30" r="3" fill="#1d3f8f"/><circle cx="214" cy="30" r="3" fill="#1d3f8f"/><circle cx="290" cy="30" r="3" fill="#1d3f8f"/>
+        <path class="ink" d="M62,30 V40 M138,30 V40 M214,30 V40 M290,30 V40"/>
+        <use href="#g-xor" transform="translate(90,40) rotate(90)"/><use href="#g-xor" transform="translate(166,40) rotate(90)"/><use href="#g-xor" transform="translate(242,40) rotate(90)"/><use href="#g-xor" transform="translate(318,40) rotate(90)"/>
+        <path class="ink" d="M70,100 V120 M146,100 V120 M222,100 V120 M298,100 V120"/>
+        <rect x="40" y="120" width="260" height="40" rx="6" class="ink-k fill-b"/>
+        <path class="ink" d="M40,140 H12 M100,160 V182 M240,160 V182"/>
+      </g>
+      <text x="78" y="6" text-anchor="middle" class="s">B₃</text><text x="154" y="6" text-anchor="middle" class="s">B₂</text><text x="230" y="6" text-anchor="middle" class="s">B₁</text><text x="306" y="6" text-anchor="middle" class="s">B₀</text>
+      <text x="326" y="26" class="r w6">M</text><text x="304" y="134" class="s">C₀</text>
+      <text x="170" y="145" text-anchor="middle" class="k s w6">4-bit adder (7483) + A₃…A₀</text>
+      <text x="2" y="134" class="s">C₄</text><text x="170" y="192" text-anchor="middle" class="g s">S₃ … S₀</text>
+    </svg></figure>
+    <div class="small">
+      <p>Each B<sub>i</sub> goes through an XOR with mode line <b>M</b>; C₀ = M:</p>
+      <p><b>M = 0</b> → B ⊕ 0 = B, C₀ = 0 → <span class="hl">A + B</span></p>
+      <p><b>M = 1</b> → B ⊕ 1 = B′, C₀ = 1 → A + B′ + 1 = <span class="hl">A − B</span> (2's complement)</p>
+      <p>Signed overflow: <span class="circ">V = C₄ ⊕ C₃</span></p>
+      <p>Unsigned: C₄ = 1 → A ≥ B; C₄ = 0 → negative result.</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> 7 − 5: 0111 + 1010 + 1 = <b>1 0010</b> → 2 (drop C₄) · 5 − 7: 0101 + 1000 + 1 = <b>0 1110</b> = −2 · 6 + 5 = 1011: C₃ = 1, C₄ = 0 → V = 1, <b>overflow</b></div>
+  <h2><span class="no">9</span>BCD Adder</h2>
+  <div class="cols" style="grid-template-columns:1fr 330px;align-items:center">
+    <div class="small">
+      <p>Adds two BCD digits + carry. A 4-bit binary adder gives K Z₈Z₄Z₂Z₁ (max 9 + 9 + 1 = 19).</p>
+      <p>If the sum <b>&gt; 9</b> (or K = 1), <span class="hl">add 0110 (6)</span> to skip the 6 unused codes:</p>
+      <p class="center"><span class="circ">C = K + Z₈Z₄ + Z₈Z₂</span></p>
+      <p>Two 4-bit adders + correction logic (2 AND + 1 OR); C is the decimal carry out.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 230" width="325">
+      <g class="w">
+        <rect x="80" y="28" width="200" height="40" rx="6" class="ink-k fill-b"/>
+        <path class="ink" d="M130,4 V28 M230,4 V28 M300,48 H282"/>
+        <path class="ink" d="M80,48 H40 V122 H58" marker-end="url(#ahb)"/>
+        <path class="ink" d="M180,68 V168" marker-end="url(#ahb)"/>
+        <path class="ink" d="M180,96 H140 V104" marker-end="url(#ahb)"/><circle cx="180" cy="96" r="3" fill="#1d3f8f"/>
+        <rect x="60" y="106" width="100" height="36" rx="6" class="ink-r fill-r"/>
+        <path class="ink-r" d="M110,142 V190 H148" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M110,165 H32" marker-end="url(#ah)"/><circle cx="110" cy="165" r="3" fill="#d32f2f"/>
+        <rect x="150" y="170" width="150" height="40" rx="6" class="ink-k fill-g"/>
+        <path class="ink" d="M225,210 V228"/>
+      </g>
+      <text x="180" y="53" text-anchor="middle" class="k s w6">4-bit binary adder</text>
+      <text x="120" y="16" text-anchor="end" class="s">A</text><text x="240" y="16" class="s">B</text><text x="304" y="52" class="s">C<tspan dy="3" font-size="9">in</tspan></text>
+      <text x="46" y="44" class="s">K</text><text x="186" y="88" class="s">Z₈Z₄Z₂Z₁</text>
+      <text x="110" y="129" text-anchor="middle" class="r s w6">&gt; 9 ?</text>
+      <text x="192" y="128" class="r s">C = K + Z₈Z₄ + Z₈Z₂</text>
+      <text x="4" y="154" class="r s w6">C<tspan dy="3" font-size="9">out</tspan></text><text x="113" y="184" class="r s" style="font-size:11px">0CC0</text>
+      <text x="225" y="195" text-anchor="middle" class="k s w6">4-bit adder</text><text x="234" y="227" class="g s">BCD sum</text>
+    </svg></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> 8 + 7 = 1111 → + 0110 = 1 0101 → <b>0001 0101</b> = 15 ✓ · 9 + 9 = 1 0010 (K = 1) → 0010 + 0110 = 1000 → <b>0001 1000</b> = 18 ✓ · 4 + 5 = 1001: no correction</div>
+  <h2><span class="no">10</span>Magnitude Comparator</h2>
+  <div class="cols" style="grid-template-columns:230px 1fr">
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th>A</th><th>B</th><th>A &gt; B</th><th>A = B</th><th>A &lt; B</th></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+    </table>
+    <div class="small"><p><b>1-bit:</b> (A &gt; B) = AB′ · (A &lt; B) = A′B · (A = B) = <span class="hl">A ⊙ B</span> (XNOR)</p>
+      <p><b>4-bit:</b> x<sub>i</sub> = A<sub>i</sub> ⊙ B<sub>i</sub> · <span class="circ">(A = B) = x₃x₂x₁x₀</span></p>
+      <p>(A &gt; B) = A₃B₃′ + x₃A₂B₂′ + x₃x₂A₁B₁′ + x₃x₂x₁A₀B₀′</p>
+      <p>(A &lt; B): same pattern with A<sub>i</sub>′B<sub>i</sub>. Compare from the <b>MSB</b> down.</p></div>
+  </div>
+  <p class="small"><b>IC 7485</b>: 4-bit magnitude comparator with cascade inputs (&gt;, =, &lt;); for a single chip tie "=" HIGH. Example: A = 1011, B = 1001 → x₃ = x₂ = 1, A₁B₁′ = 1 → <b>A &gt; B</b> (11 &gt; 9 ✓).</p>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: decoders & encoders ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Decoders &amp; encoders</span></div>
+  <h2><span class="no">11</span>Decoder (n → 2ⁿ)</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A decoder converts an n-bit code into <span class="hl">2ⁿ output lines</span>, exactly one active (e.g. memory <b>chip select</b>). Each output is one <b>minterm</b>, so a decoder is a <span class="circ">minterm generator</span>.</div>
+  <div class="cols" style="grid-template-columns:250px 1fr">
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th>E</th><th>A</th><th>B</th><th>D₀</th><th>D₁</th><th>D₂</th><th>D₃</th></tr>
+      <tr><td>0</td><td>X</td><td>X</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+    </table>
+    <div class="small">
+      <p>2-to-4 with enable: <b>D<sub>i</sub> = E · m<sub>i</sub></b> (D₀ = EA′B′ … D₃ = EAB). 3-to-8 = 3 NOT + 8 AND.</p>
+      <p><b>74138</b>: 3-to-8, <span class="hl">active-LOW</span> outputs, enables G1 (high), G2A, G2B (low) · <b>74139</b>: dual 2-to-4 · <b>74154</b>: 4-to-16 · <b>7442</b>: BCD-to-decimal.</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:400px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 400 190" width="395">
+      <g class="w">
+        <rect x="60" y="8" width="90" height="166" rx="6" class="ink-k fill-b"/>
+        <path class="ink" d="M20,55 H60 M20,90 H60 M20,125 H60 M150,20 H160"/>
+        <path class="ink" d="M150,40 H170 V22 H264 M150,60 H180 V35 H264 M150,100 H190 V49 H264 M150,160 H200 V62 H264"/>
+        <path class="ink" d="M150,80 H245 V128 H264 M150,120 H235 V141 H264 M150,140 H225 V155 H264 M200,160 H215 V168 H264"/>
+        <circle cx="200" cy="160" r="3" fill="#1d3f8f"/>
+        <use href="#g-or4" x="260" y="12"/><use href="#g-or4" x="260" y="118"/>
+        <path class="ink" d="M326,42 H350 M326,148 H350"/>
+      </g>
+      <text x="14" y="59" text-anchor="end" class="s">A</text><text x="14" y="94" text-anchor="end" class="s">B</text><text x="14" y="129" text-anchor="end" class="s">C</text>
+      <text x="96" y="82" text-anchor="middle" class="k s w6">3-to-8</text><text x="96" y="98" text-anchor="middle" class="k s w6">decoder</text>
+      <text x="144" y="24" text-anchor="end" class="s">0</text><text x="144" y="44" text-anchor="end" class="s">1</text><text x="144" y="64" text-anchor="end" class="s">2</text><text x="144" y="84" text-anchor="end" class="s">3</text><text x="144" y="104" text-anchor="end" class="s">4</text><text x="144" y="124" text-anchor="end" class="s">5</text><text x="144" y="144" text-anchor="end" class="s">6</text><text x="144" y="164" text-anchor="end" class="s">7</text>
+      <text x="354" y="47" class="r w6">S</text><text x="354" y="153" class="r w6">C<tspan dy="3" font-size="10">out</tspan></text>
+      <text x="268" y="102" class="g s">Σm(1,2,4,7)</text><text x="268" y="188" class="g s">Σm(3,5,6,7)</text>
+    </svg><figcaption>full adder = one 3-to-8 decoder + two 4-input OR gates</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Any function</span> n-to-2ⁿ decoder + one OR gate per output (OR the minterms). With active-LOW outputs (74138) use a <b>NAND</b> gate instead.</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> 4-to-16 from 3-to-8: <b>2</b> decoders (A₃ drives the enables). 4-to-16 from 2-to-4: 4 + 1 = <b>5</b>.</div>
+    </div>
+  </div>
+  <h2><span class="no">12</span>Encoder &amp; Priority Encoder (2ⁿ → n)</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p>Reverse of a decoder. <b>8-to-3</b> (octal-to-binary), one input active at a time; just 3 OR gates:</p>
+      <p>A₂ = D₄ + D₅ + D₆ + D₇<br>A₁ = D₂ + D₃ + D₆ + D₇<br>A₀ = D₁ + D₃ + D₅ + D₇</p>
+      <p><b>Two faults:</b> D₃ and D₆ together → 111 (wrong); "D₀ active" and "nothing active" both give 000.</p>
+    </div>
+    <div class="small">
+      <p><b>Priority encoder</b>: the highest active input wins; <b>V</b> (valid) = 1 if any input is active. D₃ highest:</p>
+      <table class="hand small tight" style="margin:0 auto">
+        <tr><th>D₀</th><th>D₁</th><th>D₂</th><th>D₃</th><th>x</th><th>y</th><th>V</th></tr>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>X</td><td>X</td><td class="red"><b>0</b></td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>X</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>X</td><td>X</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+        <tr><td>X</td><td>X</td><td>X</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="small">x = <span class="hl">D₂ + D₃</span> · y = <span class="hl">D₃ + D₁D₂′</span> · V = D₀ + D₁ + D₂ + D₃ · <b>74148</b>: 8-to-3 priority encoder (active-LOW, input 7 highest) · <b>74147</b>: 10-to-4 (decimal-to-BCD). Use: interrupt priority in a CPU, keyboard encoding.</p>
+  <div class="trick small"><span class="lbl">Memory trick</span> <b>DE</b>coder <b>DE</b>-compresses: n → 2ⁿ. <b>EN</b>coder compresses: 2ⁿ → n. The side with more lines is "one-hot".</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: MUX & DEMUX ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>MUX &amp; DEMUX</span></div>
+  <h2><span class="no">13</span>Multiplexer (MUX): Data Selector</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A MUX routes <b>one of 2ⁿ data inputs</b> to a single output; <span class="circ">n select lines</span> choose which. Many-to-one, "data selector", <span class="hl">parallel-to-serial</span> converter.</div>
+  <div class="cols" style="grid-template-columns:230px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 220 196" width="215">
+      <g class="w">
+        <path class="ink-k" style="fill:rgba(255,238,0,.45)" d="M60,15 L140,42 L140,128 L60,155 Z"/>
+        <path class="ink" d="M20,40 H60 M20,70 H60 M20,100 H60 M20,130 H60 M140,85 H180"/>
+        <path class="ink-r" d="M85,180 V147 M115,180 V137"/>
+      </g>
+      <text x="100" y="80" text-anchor="middle" class="k w6">4 : 1</text><text x="100" y="99" text-anchor="middle" class="k w6">MUX</text>
+      <text x="14" y="44" text-anchor="end" class="s">I₀</text><text x="14" y="74" text-anchor="end" class="s">I₁</text><text x="14" y="104" text-anchor="end" class="s">I₂</text><text x="14" y="134" text-anchor="end" class="s">I₃</text>
+      <text x="184" y="90" class="r w6">Y</text><text x="85" y="194" text-anchor="middle" class="r s">S₁</text><text x="115" y="194" text-anchor="middle" class="r s">S₀</text>
+    </svg></figure>
+    <div class="small">
+      <p><b>2:1:</b> Y = S′I₀ + SI₁</p>
+      <p><b>4:1:</b> Y = <span class="hl">S₁′S₀′I₀ + S₁′S₀I₁ + S₁S₀′I₂ + S₁S₀I₃</span></p>
+      <p>4:1 gates: 2 NOT + 4 AND + 1 OR.</p>
+      <table class="hand small" style="margin:1mm 0">
+        <tr><th>Inputs</th><th>2</th><th>4</th><th>8</th><th>16</th><th>32</th></tr>
+        <tr><td>Select lines</td><td>1</td><td>2</td><td>3</td><td>4</td><td class="red"><b>5</b></td></tr>
+      </table>
+      <p><b>ICs:</b> <span class="circ">74151</span> 8:1 (outputs Y and Y′) · <b>74153</b> dual 4:1 · <b>74157</b> quad 2:1 · <b>74150</b> 16:1</p>
+    </div>
+  </div>
+  <h3>Implementing a function with a MUX</h3>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p>An n-variable function needs only a <span class="hl">2ⁿ⁻¹ : 1 MUX</span>: n − 1 variables drive the selects; each data input is <b>0, 1, x or x′</b> (x = last variable).</p>
+      <p>(A 2ⁿ:1 MUX works directly: I<sub>i</sub> = the truth-table output, 0 or 1.)</p>
+    </div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> F(A, B, C) = Σm(1, 2, 6, 7), 4:1 MUX, S₁S₀ = AB
+      <table class="hand small tight" style="margin:0 auto"><tr><th>AB</th><th>C = 0</th><th>C = 1</th><th>I</th></tr><tr><td>00</td><td>0</td><td>1</td><td class="red"><b>C</b></td></tr><tr><td>01</td><td>1</td><td>0</td><td class="red"><b>C′</b></td></tr><tr><td>10</td><td>0</td><td>0</td><td class="red"><b>0</b></td></tr><tr><td>11</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr></table>
+      I₀…I₃ = <b>C, C′, 0, 1</b></div>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">MUX trees</span> 16:1 from 4:1 → 4 + 1 = <span class="circ">5</span><br>16:1 from 2:1 → 8 + 4 + 2 + 1 = <b>15</b> · 8:1 from 2:1 → <b>7</b><br>2ᵏ:1 from 2:1 MUXes → 2ᵏ − 1</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>MUX = many in, one out</b>: a rotary switch set by the select number. Selects = log₂(inputs).</div>
+  </div>
+  <h2><span class="no">14</span>Demultiplexer (DEMUX): Data Distributor</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p>One input D → <b>one of 2ⁿ outputs</b>, chosen by n selects. One-to-many, <span class="hl">serial-to-parallel</span>.</p>
+      <p>1:4 → Y₀ = S₁′S₀′D, Y₁ = S₁′S₀D, Y₂ = S₁S₀′D, Y₃ = S₁S₀D</p>
+    </div>
+    <div class="small">
+      <p>A <span class="hl">decoder with enable = DEMUX</span>: feed the data into E, the selects into the code inputs. So the <b>74138</b> also works as 1:8 DEMUX, and the <b>74155</b> is a dual 2-to-4 decoder/DEMUX.</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> A MUX has <b>1 output</b>, a DEMUX <b>1 input</b>. 16:1 from 4:1 needs 5, not 4. A MUX is a <b>universal logic module</b> (any function).</div>
+  <div class="tipbox small"><span class="lbl">IT link</span> A MUX picks the ALU operand in a CPU; TDM links = MUX + DEMUX.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: code converters, parity, 7-segment ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Converters &amp; displays</span></div>
+  <h2><span class="no">15</span>Code Converters</h2>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div class="small">
+      <p><b>BCD → Excess-3</b> (XS-3 = BCD + 0011; codes 10–15 are don't-cares). Inputs ABCD (A = MSB), outputs wxyz:</p>
+      <p class="center"><span class="circ">z = D′</span> · y = CD + C′D′ = (C ⊕ D)′<br>x = B′C + B′D + BC′D′ · w = A + BC + BD</p>
+      <p>Check 5 = 0101 → w = BD = 1, x = 0, y = 0, z = 0 → <b>1000</b> = 8 ✓</p>
+      <p><b>Binary → Gray:</b> <span class="hl">G₃ = B₃, G<sub>i</sub> = B<sub>i+1</sub> ⊕ B<sub>i</sub></span> (n − 1 XORs)<br><b>Gray → binary:</b> B₃ = G₃, B<sub>i</sub> = B<sub>i+1</sub> ⊕ G<sub>i</sub> (uses the new B)</p>
+      <p>1011 → <b>1110</b> (Gray) and back: 1, 1⊕1 = 0, 0⊕1 = 1, 1⊕0 = 1 → 1011 ✓</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 156" width="285">
+      <g class="w">
+        <path class="ink" d="M20,20 H250 M20,60 H150 M20,100 H150 M20,140 H150"/>
+        <path class="ink" d="M100,20 V44 H150 M110,60 V84 H150 M120,100 V124 H150"/>
+        <circle cx="100" cy="20" r="3" fill="#1d3f8f"/><circle cx="110" cy="60" r="3" fill="#1d3f8f"/><circle cx="120" cy="100" r="3" fill="#1d3f8f"/>
+        <use href="#g-xor" x="150" y="32"/><use href="#g-xor" x="150" y="72"/><use href="#g-xor" x="150" y="112"/>
+        <path class="ink" d="M210,52 H250 M210,92 H250 M210,132 H250"/>
+      </g>
+      <text x="14" y="24" text-anchor="end" class="s">B₃</text><text x="14" y="64" text-anchor="end" class="s">B₂</text><text x="14" y="104" text-anchor="end" class="s">B₁</text><text x="14" y="144" text-anchor="end" class="s">B₀</text>
+      <text x="256" y="24" class="r s w6">G₃</text><text x="256" y="56" class="r s w6">G₂</text><text x="256" y="96" class="r s w6">G₁</text><text x="256" y="136" class="r s w6">G₀</text>
+    </svg><figcaption>binary → Gray: copy the MSB, XOR neighbours</figcaption></figure>
+  </div>
+  <h2><span class="no">16</span>Parity Generator &amp; Checker</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p><b>Even-parity generator</b> (3-bit message ABC): <span class="circ">P = A ⊕ B ⊕ C</span>, so the total number of 1s (with P) is even. Odd parity: P = (A ⊕ B ⊕ C)′.</p>
+      <p><b>Checker</b> (receiver): PEC = A ⊕ B ⊕ C ⊕ P; <b>0 = OK, 1 = error</b>.</p>
+    </div>
+    <div class="small">
+      <p>n bits → n − 1 two-input XOR gates (a "parity tree"). ICs: <b>74180</b>, <b>74280</b> (9-bit generator/checker).</p>
+      <p>Example: 101 → P = 0, send 1010; receive 1110 → PEC = 1 → error ✓</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Parity detects any <b>odd</b> number of bit errors, but <b>not</b> 2 (or any even number) and it cannot correct (Hamming code can).</div>
+  <h2><span class="no">17</span>BCD-to-7-Segment Decoder</h2>
+  <div class="cols" style="grid-template-columns:150px 1fr">
+    <figure class="doodle"><svg viewBox="0 0 140 170" width="138">
+      <g class="w">
+        <rect x="36" y="8" width="56" height="10" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="94" y="20" width="10" height="56" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="94" y="88" width="10" height="56" rx="5" class="ink-k" style="fill:rgba(31,31,36,.06)"/>
+        <rect x="36" y="146" width="56" height="10" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="24" y="88" width="10" height="56" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="24" y="20" width="10" height="56" rx="5" class="ink-k" style="fill:rgba(31,31,36,.06)"/>
+        <rect x="36" y="77" width="56" height="10" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+      </g>
+      <text x="64" y="34" text-anchor="middle" class="s w6">a</text><text x="116" y="52" class="s w6">b</text><text x="116" y="120" class="s w6">c</text><text x="64" y="140" text-anchor="middle" class="s w6">d</text>
+      <text x="6" y="120" class="s w6">e</text><text x="6" y="52" class="s w6">f</text><text x="64" y="102" text-anchor="middle" class="s w6">g</text>
+    </svg><figcaption>digit 2: a b d e g</figcaption></figure>
+    <div class="small">
+      <table class="hand small" style="margin:0 0 1mm">
+        <tr><th>Digit</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+        <tr><td>Segments lit</td><td>6</td><td class="red"><b>2</b></td><td>5</td><td>5</td><td>4</td><td>5</td><td>6</td><td>3</td><td class="red"><b>7</b></td><td>6</td></tr>
+      </table>
+      <p>4 BCD inputs → 7 outputs (a–g), one function per segment; codes 10–15 = don't-cares. Segment a is off only for 1 and 4: <span class="hl">a = A + C + BD + B′D′</span></p>
+      <p><span class="circ">7447</span>: active-LOW (open-collector) outputs → <b>common-anode</b> display · <b>7448</b>: active-HIGH → <b>common-cathode</b> · CMOS: 4511.</p>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>47 is LOW, Anode</b>": 7447 pulls a segment LOW to light it, so the common pin goes to +V (anode). 7448 is the opposite.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: ROM, PLA, PAL, hazards ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Programmable logic &amp; hazards</span></div>
+  <h2><span class="no">18</span>ROM, PLA, PAL</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Idea</span> Any SOP = an <b>AND array</b> (product terms) feeding an <b>OR array</b>. PLDs differ only in <span class="hl">which array is programmable</span>.</div>
+  <table class="hand small tight">
+    <tr><th class="l">Device</th><th>AND array</th><th>OR array</th><th class="l">Key point</th></tr>
+    <tr><td class="l">ROM / PROM</td><td>fixed (decoder)</td><td class="red"><b>programmable</b></td><td class="l">all 2ⁿ minterms; stores the truth table as is</td></tr>
+    <tr><td class="l">PLA</td><td class="red"><b>programmable</b></td><td class="red"><b>programmable</b></td><td class="l">most flexible; product terms <b>shared</b></td></tr>
+    <tr><td class="l">PAL</td><td class="red"><b>programmable</b></td><td>fixed</td><td class="l">cheaper, faster; no sharing (GAL: erasable)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 200" width="325">
+      <g class="w">
+        <rect x="26" y="34" width="132" height="98" rx="4" class="ink-k" stroke-dasharray="6 4" style="fill:rgba(255,238,0,.12)"/>
+        <rect x="226" y="34" width="66" height="98" rx="4" class="ink-k" stroke-dasharray="6 4" style="fill:rgba(31,138,92,.08)"/>
+        <path class="ink" d="M40,24 V140 M60,24 V140 M80,24 V140 M100,24 V140 M120,24 V140 M140,24 V140"/>
+        <path class="ink" d="M30,52 H286 M30,82 H286 M30,112 H286"/>
+        <path class="ink-g" d="M244,40 V170 M272,40 V170" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M35,47 l10,10 m0,-10 l-10,10 M95,47 l10,10 m0,-10 l-10,10 M35,77 l10,10 m0,-10 l-10,10 M115,77 l10,10 m0,-10 l-10,10 M75,107 l10,10 m0,-10 l-10,10 M115,107 l10,10 m0,-10 l-10,10"/>
+        <path class="ink-r" d="M239,47 l10,10 m0,-10 l-10,10 M239,77 l10,10 m0,-10 l-10,10 M267,77 l10,10 m0,-10 l-10,10 M267,107 l10,10 m0,-10 l-10,10"/>
+      </g>
+      <text x="40" y="18" text-anchor="middle" class="s">A</text><text x="60" y="18" text-anchor="middle" class="s"><tspan class="ov">A</tspan></text><text x="80" y="18" text-anchor="middle" class="s">B</text><text x="100" y="18" text-anchor="middle" class="s"><tspan class="ov">B</tspan></text><text x="120" y="18" text-anchor="middle" class="s">C</text><text x="140" y="18" text-anchor="middle" class="s"><tspan class="ov">C</tspan></text>
+      <text x="192" y="47" text-anchor="middle" class="p s">A<tspan class="ov">B</tspan></text><text x="192" y="77" text-anchor="middle" class="p s">AC</text><text x="192" y="107" text-anchor="middle" class="p s">BC</text>
+      <text x="92" y="152" text-anchor="middle" class="k s w6">AND array</text><text x="258" y="28" text-anchor="middle" class="k s w6">OR array</text>
+      <text x="244" y="190" text-anchor="middle" class="g s w6">F₁</text><text x="276" y="190" text-anchor="middle" class="g s w6">F₂</text>
+    </svg><figcaption>PLA: × = programmed link; AC is shared</figcaption></figure>
+    <div class="small">
+      <p>F₁ = AB′ + AC, F₂ = AC + BC: a PLA needs <b>3</b> product terms (AC shared); a PAL needs 4.</p>
+      <p><b>ROM size 2ⁿ × m</b>: 32 × 8 → 5 address lines, 8 outputs, 256 bits. Full adder = 8 × 2 ROM.</p>
+      <p><b>PLA size</b> n × k × m (inputs × products × outputs): minimise <b>distinct product terms</b>, not literals.</p>
+      <p>Modern: CPLD, <b>FPGA</b> (look-up tables).</p>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> <b>ROM</b>: AND fixed · <b>PAL</b>: OR fixed (P-A-L: "<b>A</b>ND is programmable, the <b>L</b>ast stage is locked") · <b>PLA</b>: nothing fixed.</div>
+  <h2><span class="no">19</span>Hazards (glitches)</h2>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p>A <span class="hl">hazard</span> is a momentary wrong output caused by unequal path delays.</p>
+      <ul class="dash">
+        <li><b>Static-1:</b> should stay 1, dips to 0 (SOP)</li>
+        <li><b>Static-0:</b> should stay 0, jumps to 1 (POS)</li>
+        <li><b>Dynamic:</b> changes 3+ times instead of once</li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 140" width="295">
+      <g class="w">
+        <path class="ink" d="M40,16 H110 V36 H270"/>
+        <path class="ink" d="M40,76 H132 V56 H270"/>
+        <path class="ink-r" d="M40,96 H110 V118 H132 V96 H270"/>
+        <path class="ink-k" d="M110,8 V130 M132,8 V130" stroke-dasharray="3 4" style="stroke-width:1.2"/>
+        <ellipse cx="121" cy="110" rx="22" ry="16" class="ink-r"/>
+      </g>
+      <text x="10" y="30" class="w6">A</text><text x="10" y="70" class="w6"><tspan class="ov">A</tspan></text><text x="10" y="110" class="r w6">F</text>
+      <text x="150" y="128" class="r s">glitch (static-1)</text><text x="136" y="50" class="s">NOT delay</text>
+    </svg><figcaption>B = C = 1, A falls: F should stay 1</figcaption></figure>
+  </div>
+  <p class="small">F = AB + A′C, B = C = 1: when A falls, AB turns off before A′C turns on. <b>Fix:</b> add the consensus term <span class="circ">BC</span> (Boolean Algebra notes, sheet 3), i.e. cover every pair of adjacent 1s by one K-map group.</p>
+  <div class="exam small"><span class="lbl">Exam trap</span> The redundant term a minimal K-map drops is exactly what removes the hazard. Clocked systems sample after outputs settle, so hazards matter most in asynchronous circuits.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Combinational: Y = f(present X), no memory</p><p>n inputs → 2ⁿ truth-table rows</p>
+      <p>HA: S = A⊕B · C = AB</p><p>FA: S = A⊕B⊕C<sub>in</sub> · C<sub>out</sub> = AB + C<sub>in</sub>(A⊕B)</p>
+      <p>HS: D = A⊕B · B<sub>o</sub> = A′B</p><p>FS: B<sub>out</sub> = A′B + A′B<sub>in</sub> + BB<sub>in</sub></p>
+      <p>FA = 2 HA + OR · 9 NAND · HA = 5 NAND</p><p>Ripple delay ∝ n (≈ 2n gate delays)</p>
+      <p>CLA: G = AB, P = A⊕B, C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub>C<sub>i</sub></p><p>Add-sub: B ⊕ M, C₀ = M · V = C₄ ⊕ C₃</p>
+      <p>BCD: add 0110 if K + Z₈Z₄ + Z₈Z₂</p><p>Comparator: A = B ⇔ all x<sub>i</sub> = A<sub>i</sub> ⊙ B<sub>i</sub> = 1</p>
+      <p>Decoder n → 2ⁿ · encoder 2ⁿ → n</p><p>MUX: 2ⁿ inputs, n selects · DEMUX reverse</p>
+      <p>n-var function → 2ⁿ⁻¹ : 1 MUX</p><p>Gray: G<sub>i</sub> = B<sub>i+1</sub> ⊕ B<sub>i</sub> · XS-3 = BCD + 0011</p>
+      <p>Even parity P = XOR of the data bits</p><p>ROM: fixed AND · PAL: fixed OR</p>
+    </div>
+  </div>
+  <h3>74xx ICs to know</h3>
+  <table class="hand small tight" style="white-space:nowrap">
+    <tr><th>IC</th><th class="l">Function</th><th>IC</th><th class="l">Function</th></tr>
+    <tr><td><span class="circ">7483</span></td><td class="l">4-bit adder (also 74283)</td><td><span class="circ">74151</span></td><td class="l">8:1 MUX</td></tr>
+    <tr><td>74182</td><td class="l">look-ahead carry generator</td><td>74153</td><td class="l">dual 4:1 MUX</td></tr>
+    <tr><td>74181</td><td class="l">4-bit ALU</td><td>74157 · 74150</td><td class="l">quad 2:1 · 16:1 MUX</td></tr>
+    <tr><td>7485</td><td class="l">4-bit comparator</td><td>74155</td><td class="l">dual 2-to-4 decoder/DEMUX</td></tr>
+    <tr><td><span class="circ">74138</span></td><td class="l">3-to-8 decoder, active-LOW</td><td>74148</td><td class="l">8-to-3 priority encoder</td></tr>
+    <tr><td>74139 · 74154</td><td class="l">dual 2-to-4 · 4-to-16</td><td>74147</td><td class="l">10-to-4 priority encoder</td></tr>
+    <tr><td>7442</td><td class="l">BCD-to-decimal</td><td>7447 · 7448</td><td class="l">BCD-to-7-seg (CA · CC)</td></tr>
+    <tr><td>74180 · 74280</td><td class="l">parity gen./checker</td><td>4511 (CMOS)</td><td class="l">BCD-to-7-seg, CC</td></tr>
+  </table>
+  <div class="exam"><span class="lbl">Top traps</span> FA = 2 HA + OR (not AND) · difference = sum (A⊕B⊕C) · 16:1 from 4:1 = 5 · BCD correction is +6, XS-3 is +3 · plain encoder fails with 2 active inputs · 74138 / 7447 outputs are active-LOW · parity misses 2-bit errors</div>
+  <div class="trick"><span class="lbl">All tricks together</span> Sum = XOR, carry = AND · borrow = carry with A′ · G gives, P passes · MUX = many in, one out; selects = log₂(inputs) · DEcoder DE-compresses · "over nine? add six" · 47 is LOW, anode · ROM fixed AND, PAL fixed OR, PLA nothing fixed · Gray: copy MSB, XOR neighbours</div>
+  <figure class="doodle"><svg viewBox="0 0 600 80" width="600">
+    <g class="w">
+      <rect x="10" y="20" width="110" height="40" rx="10" class="ink fill-b"/><rect x="170" y="20" width="110" height="40" rx="10" class="ink fill-b"/>
+      <rect x="330" y="20" width="110" height="40" rx="10" class="ink-r fill-r"/><rect x="490" y="20" width="100" height="40" rx="10" class="ink-g fill-g"/>
+      <path class="ink-g" d="M122,40 H166 M282,40 H326 M442,40 H486" marker-end="url(#ahg)"/>
+    </g>
+    <text x="65" y="45" text-anchor="middle" class="s w6">HA (2 bits)</text><text x="225" y="45" text-anchor="middle" class="s w6">FA (3 bits)</text>
+    <text x="385" y="45" text-anchor="middle" class="r s w6">n FAs: ripple</text><text x="540" y="45" text-anchor="middle" class="g s w6">CLA: fast</text>
+    <text x="300" y="76" text-anchor="middle" class="s p">the adder family: each step builds on the last</text>
+  </svg></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Combinational Circuits</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>The carry output of a half adder is:<ol class="opts"><li>A ⊕ B</li><li>A + B</li><li>A · B</li><li>(A · B)′</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Select lines of a 32:1 MUX:<ol class="opts"><li>5</li><li>4</li><li>32</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Minimum 2-input NAND gates for a full adder:<ol class="opts"><li>5</li><li>7</li><li>8</li><li>9</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Output lines of a decoder with 4 inputs:<ol class="opts"><li>8</li><li>16</li><li>4</li><li>2</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>In a carry look-ahead adder, the generate term G<sub>i</sub> is:<ol class="opts"><li>A<sub>i</sub> ⊕ B<sub>i</sub></li><li>A<sub>i</sub> + B<sub>i</sub></li><li>A<sub>i</sub>B<sub>i</sub></li><li>(A<sub>i</sub>B<sub>i</sub>)′</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>A BCD adder corrects a sum above 9 by adding:<ol class="opts"><li>0011</li><li>0110</li><li>1010</li><li>1001</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Which IC is an 8-to-1 multiplexer?<ol class="opts"><li>74138</li><li>7485</li><li>7447</li><li>74151</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Programmable AND + fixed OR array:<ol class="opts"><li>PAL</li><li>PROM</li><li>PLA</li><li>RAM</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>How many 4:1 MUXes make a 16:1 MUX?<ol class="opts"><li>4</li><li>5</li><li>8</li><li>3</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>XOR adder-subtractor, for A − B:<ol class="opts"><li>M = 0, C₀ = 0</li><li>M = 1, C₀ = 0</li><li>M = 1, C₀ = 1</li><li>M = 0, C₀ = 1</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-c · 6-b · 7-d · 8-a · 9-b · 10-c</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Implement F(A, B, C, D) = Σm(1, 3, 4, 11, 12, 13, 14, 15) with an 8:1 multiplexer (A, B, C on the select lines, A = MSB). <i class="mk">8 marks</i></div>
+  <div class="cols" style="grid-template-columns:1fr 230px;align-items:start">
+    <ol class="steps small">
+      <li>Selects = A, B, C; each data input is 0, 1, D or D′ <i class="mk">1</i></li>
+      <li>For each ABC, list F at D = 0 and D = 1 (table) <i class="mk">3</i></li>
+      <li>(0, 1) → D · (1, 0) → D′ · (0, 0) → 0 · (1, 1) → 1, so I₀…I₇ = <span class="circ">D, D, D′, 0, 0, D, 1, 1</span> <i class="mk">2</i></li>
+      <li>One 74151 + one NOT for D′; check m12: I₆ = 1 ✓ <i class="mk">2</i></li>
+    </ol>
+    <table class="hand small tight" style="margin-top:0"><tr><th>ABC</th><th>D=0</th><th>D=1</th><th>I</th></tr><tr><td>000</td><td>0</td><td>1</td><td>D</td></tr><tr><td>001</td><td>0</td><td>1</td><td>D</td></tr><tr><td>010</td><td>1</td><td>0</td><td>D′</td></tr><tr><td>011</td><td>0</td><td>0</td><td>0</td></tr><tr><td>100</td><td>0</td><td>0</td><td>0</td></tr><tr><td>101</td><td>0</td><td>1</td><td>D</td></tr><tr><td>110</td><td>1</td><td>1</td><td>1</td></tr><tr><td>111</td><td>1</td><td>1</td><td>1</td></tr></table>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>HA, FA, HS, FS tables and equations</li>
+        <li>FA from two HAs and from a decoder</li>
+        <li>CLA carries C₁…C₄; MUX data inputs</li>
+        <li>7483, 74138, 74151, 7485, 74148, 7447</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① BCD adder block diagram<br>② 4-bit comparator equations<br>③ BCD → XS-3 with K-maps<br>④ FA with a 3-to-8 decoder</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

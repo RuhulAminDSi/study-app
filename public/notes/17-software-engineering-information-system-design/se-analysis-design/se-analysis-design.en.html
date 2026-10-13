@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Analysis, Modeling, Design &amp; Architecture: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Date: 11.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">Analysis, Modeling, Design &amp; Architecture</span></h1>
+  <p class="subtitle">Requirements · DFD · ER modelling · design principles · architecture — in 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="520">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">ANALYSIS</text><text x="320" y="174" text-anchor="middle" class="r l">+ DESIGN</text>
+      <text x="140" y="65" text-anchor="middle">Six principles</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Feasibility TELOS ★</text>
+      <text x="500" y="65" text-anchor="middle">Elicitation × 4</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">DFD + dictionary ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">ER model + mapping ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Cohesion · coupling</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Design principles ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Layered · MVC · UI</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① analysis = what, design = how<br>② context diagram = one process<br>③ DFD balancing rule<br>④ functional cohesion is best<br>⑤ data coupling best, content worst<br>⑥ M:N → a new relation, 2 FKs</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Analysis Concepts and principles: requirement analysis, <span class="hl">Analysis modeling</span>, <span class="hl">data modeling</span>. <span class="hl">Design concepts and principles</span>, <span class="hl">Architectural design</span>, User Interface design". Use cases, the Unified Process and the full UML treatment are in the Use Cases / OO Design notes.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Analysis &amp; six principles … p. 2</li><li>Functional vs non-functional; SRS … p. 2</li><li>Elicitation: four techniques … p. 3</li><li>Feasibility TELOS &amp; validation … p. 3</li><li>DFD: elements, context, balancing … p. 4</li></ul>
+    <ul class="tick"><li>Data dictionary + library DFD … p. 5</li><li>ER: entities, attrs, relations … p. 6</li><li>Library ERD → relational schema … p. 7</li><li>Cohesion, coupling, principles … p. 8</li><li>Design types, architecture, UI … p. 9–10</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: analysis principles + requirements ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Analysis &amp; requirements</span></div>
+  <h2><span class="no">1</span>Analysis: the "What" Before the "How"</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> <b>Software analysis</b> = <span class="hl">understanding and specifying what the software must do</span>, before design and implementation. It studies the problem and the <b>information domain</b>, never the solution. Analysis answers <span class="circ">WHAT</span>, design answers <span class="circ">HOW</span>, implementation is the doing.</div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Principle</th><th class="l">What it demands</th></tr>
+      <tr><td class="l">Correctness</td><td class="l">every real need captured</td></tr>
+      <tr><td class="l">Consistency</td><td class="l">no two requirements clash</td></tr>
+      <tr><td class="l">Completeness</td><td class="l">functional + non-functional</td></tr>
+      <tr><td class="l">Feasibility</td><td class="l">achievable within limits</td></tr>
+      <tr><td class="l">Traceability</td><td class="l">traced to source and test</td></tr>
+      <tr><td class="l">Understandability</td><td class="l">clear to every reader</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 320 150" width="270">
+      <g class="w">
+        <rect x="10" y="16" width="124" height="44" rx="12" class="ink-r fill-r"/>
+        <rect x="186" y="16" width="124" height="44" rx="12" class="ink-g fill-g"/>
+        <path class="ink" d="M134,38 H186" marker-end="url(#ahb)"/>
+        <rect x="10" y="92" width="300" height="46" rx="10" class="ink-k" style="fill:rgba(255,238,0,.35)"/>
+      </g>
+      <text x="72" y="38" text-anchor="middle" class="r w6">ANALYSIS</text>
+      <text x="72" y="54" text-anchor="middle" class="s">what it does</text>
+      <text x="248" y="38" text-anchor="middle" class="g w6">DESIGN</text>
+      <text x="248" y="54" text-anchor="middle" class="s">how it is built</text>
+      <text x="160" y="110" text-anchor="middle" class="k s">study the problem and the</text>
+      <text x="160" y="128" text-anchor="middle" class="k s">information domain, not the solution</text>
+    </svg><figcaption>the sentence that separates the two phases</figcaption></figure>
+  </div>
+  <h2><span class="no">2</span>Functional vs Non-Functional Requirements</h2>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">Functional</th><th class="l">Non-functional</th></tr>
+    <tr><td class="l">Answers</td><td class="l">which services and behaviours</td><td class="l">how <b>well</b> and how <b>much</b></td></tr>
+    <tr><td class="l">Examples</td><td class="l">log in, search, issue a book</td><td class="l">reply in 2 s; 99.9 % uptime; AES-256</td></tr>
+    <tr><td class="l">Interested party</td><td class="l">the end user, the analyst</td><td class="l">the user <b>and</b> the organisation</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="trick" style="margin-top:0"><span class="lbl">Memory trick</span> Three levels: <b>business</b> "cut overdue returns" → <b>user</b> "staff see a due-date list" → <b>system</b> "the query returns in 2 s".</div>
+    <div class="exam" style="margin-top:0"><span class="lbl">Exam trap</span> "The system shall be <b>fast</b>" is not a requirement — it is unverifiable. Every non-functional need needs a measurable criterion.</div>
+  </div>
+  <h2><span class="no">3</span>Specification: What the SRS Must Contain</h2>
+  <div class="sumbox small"><span class="lbl">SRS (IEEE 830 / ISO-IEC 29148)</span>
+    <b>1 Introduction</b> — purpose, scope, definitions, overview, references ·
+    <b>2 Overall description</b> — perspective, functions, user classes, environment, constraints, assumptions ·
+    <b>3 Specific requirements</b> — external interface, functional, performance, design constraints, system attributes ·
+    <b>4 Appendices</b> — glossary, index.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: elicitation, feasibility, validation ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Elicitation &amp; feasibility</span></div>
+  <h2><span class="no">4</span>Requirements Elicitation: the Four Techniques</h2><span class="tag">high-yield</span>
+  <table class="hand small">
+    <tr><th class="l">Technique</th><th class="l">Strength</th><th class="l">Weakness</th></tr>
+    <tr><td class="l">Interview</td><td class="l">deep detail; instant follow-up</td><td class="l">slow; costly; interviewer bias</td></tr>
+    <tr><td class="l">Workshop / <span class="hl">JAD</span></td><td class="l">fast; builds consensus; ownership</td><td class="l">needs a skilled facilitator</td></tr>
+    <tr><td class="l">Questionnaire</td><td class="l">cheap; repeatable; wide coverage</td><td class="l">low response; no clarification</td></tr>
+    <tr><td class="l">Observation</td><td class="l">captures the workflow <b>used</b></td><td class="l">slow; users behave differently</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 540 150" width="430">
+    <g class="w">
+      <rect x="8" y="14" width="120" height="32" rx="9" class="ink fill-b"/>
+      <rect x="148" y="14" width="120" height="32" rx="9" class="ink fill-b"/>
+      <rect x="288" y="14" width="120" height="32" rx="9" class="ink fill-b"/>
+      <rect x="428" y="14" width="104" height="32" rx="9" class="ink fill-b"/>
+      <path class="ink" d="M128,30 H148" marker-end="url(#ahb)"/>
+      <path class="ink" d="M268,30 H288" marker-end="url(#ahb)"/>
+      <path class="ink" d="M408,30 H428" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M480,46 V74 H68 V48" marker-end="url(#ahp)"/>
+      <rect x="8" y="92" width="300" height="46" rx="10" class="ink-k" style="fill:rgba(255,238,0,.35)"/>
+      <rect x="320" y="92" width="212" height="46" rx="10" class="ink-g fill-g"/>
+    </g>
+    <text x="68" y="35" text-anchor="middle" class="w6">ELICIT</text>
+    <text x="208" y="35" text-anchor="middle" class="w6">ANALYSE</text>
+    <text x="348" y="35" text-anchor="middle" class="w6">SPECIFY</text>
+    <text x="480" y="35" text-anchor="middle" class="w6">VALIDATE</text>
+    <text x="274" y="70" text-anchor="middle" class="p s">feedback &amp; rework</text>
+    <text x="16" y="112" class="s k">① interviews   ② JAD workshop</text>
+    <text x="16" y="130" class="s k">③ questionnaire   ④ observation</text>
+    <text x="328" y="112" class="s g">out → SRS + models</text>
+    <text x="328" y="130" class="s g">back → fix the requirements</text>
+  </svg><figcaption>requirements engineering is a loop, not a line — validation sends work back</figcaption></figure>
+  <h2><span class="no">5</span>Feasibility Study: TELOS</h2>
+  <div class="cols small">
+    <ul class="dash" style="margin-top:0">
+      <li><b>T</b>echical — can it be built at all with the available hardware, software and skills?</li>
+      <li><b>E</b>conomic — cost–benefit: do the benefits exceed the costs? (payback period)</li>
+      <li><b>L</b>egal — law, privacy, licensing, contracts, standards</li>
+      <li><b>O</b>perational — will it fit the way the organisation works?</li>
+      <li><b>S</b>chedule — can it be delivered in the time available?</li>
+    </ul>
+    <div>
+      <div class="trick" style="margin-top:0"><span class="lbl">Memory trick</span> Say it as a word: <b>T-E-L-O-S</b> — Greek <i>telos</i> = the goal. The report ends in a <b>go / no-go</b> call.</div>
+      <div class="exam" style="margin-top:0"><span class="lbl">Exam trap</span> Feasibility is judged <b>before</b> the SRS and again when the model is built — it is not the last step.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">Validation</span> Proving the model and spec are right: reviews and inspections, prototypes, acceptance test cases, model walkthrough, decision tables. Check correctness, completeness, consistency, realism, verifiability.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked judgement ✍</span> A hospital wants online appointments. <b>T</b>: a server and a biometric device must be bought. <b>E</b>: six staff-years saved, licences cost three, payback five years? <b>L</b>: patient data must stay in the country. <b>O</b>: counter staff will not re-key everything. <b>S</b>: go-live before the quarter closes? Only T, L and O clear — the project waits.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: analysis model + DFD ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>DFD</span></div>
+  <h2><span class="no">6</span>The Analysis Model and the DFD</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Analysis model</span> an <b>abstract representation of the system</b> built from the requirements. <span class="hl">DFD = what happens</span> (functions and flows) · <span class="hl">ERD = what exists</span> (data structure) — complements, never rivals.</div>
+  <div class="cols" style="grid-template-columns:1.25fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Element</th><th class="l">Symbol</th><th class="l">Meaning</th></tr>
+      <tr><td class="l">External entity</td><td class="l">square</td><td class="l">a source or sink outside the system</td></tr>
+      <tr><td class="l">Process</td><td class="l">circle</td><td class="l">turns input data into output data; numbered 1.0, 2.0 …</td></tr>
+      <tr><td class="l">Data store</td><td class="l">two lines</td><td class="l">related data at rest, inside the system</td></tr>
+      <tr><td class="l">Data flow</td><td class="l">arrow</td><td class="l">a <b>named data element</b> moving between elements</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 320 176" width="250">
+      <g class="w">
+        <rect x="88" y="6" width="144" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink-k" d="M160,40 V62" marker-end="url(#ah)"/>
+        <rect x="8" y="62" width="304" height="66" rx="10" class="ink-k" style="fill:rgba(255,238,0,.3)"/>
+        <rect x="20" y="80" width="132" height="24" rx="9" class="ink fill-b"/>
+        <rect x="168" y="80" width="132" height="24" rx="9" class="ink fill-b"/>
+        <path class="ink" d="M152,92 H168"/>
+        <path class="ink-r" d="M10,23 H86" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M234,23 H310" marker-end="url(#ahg)"/>
+      </g>
+      <text x="48" y="16" text-anchor="middle" class="r s">in-flow</text>
+      <text x="272" y="16" text-anchor="middle" class="g s">out-flow</text>
+      <text x="160" y="28" text-anchor="middle" class="r w6">1.0 Issue &amp; Return</text>
+      <text x="160" y="76" text-anchor="middle" class="s">level-2 DFD of 1.0</text>
+      <text x="86" y="97" text-anchor="middle" class="k s">2.1 Check stock</text>
+      <text x="234" y="97" text-anchor="middle" class="k s">2.2 Write loan</text>
+      <text x="160" y="150" text-anchor="middle" class="r s w6">balanced: the child's in-flow = the parent's</text>
+      <text x="160" y="168" text-anchor="middle" class="r s w6">and its out-flow = the parent's</text>
+    </svg><figcaption>balancing: level n+1 replaces one parent process, flows unchanged</figcaption></figure>
+  </div>
+  <h2><span class="no">7</span>Level 0: the Context Diagram</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Level 0 = context diagram ★</span> The <b>whole system as one process</b>, joined to its external entities by the flows crossing the system boundary. <span class="circ">No store, no internal process</span> — level 1 adds those.</div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> It shows neither the database tables (that is the ERD), nor the internal processes (level 1), nor timed messages.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 470 200" width="360">
+      <g class="w">
+        <rect x="6" y="92" width="100" height="34" class="ink fill-b"/>
+        <rect x="364" y="92" width="100" height="34" class="ink fill-b"/>
+        <circle cx="235" cy="109" r="52" class="ink-k fill-y"/>
+        <path class="ink-r" d="M106,101 H180" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M180,117 H106" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M290,101 H364" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M364,117 H290" marker-end="url(#ah)"/>
+      </g>
+      <text x="56" y="114" text-anchor="middle" class="k w6">MEMBER</text>
+      <text x="414" y="114" text-anchor="middle" class="k w6">LIBRARIAN</text>
+      <text x="235" y="102" text-anchor="middle" class="k l">0</text>
+      <text x="235" y="124" text-anchor="middle" class="k s">Library</text>
+      <text x="235" y="140" text-anchor="middle" class="k s">System</text>
+      <text x="143" y="94" text-anchor="middle" class="r w6">①</text><text x="327" y="94" text-anchor="middle" class="g w6">③</text>
+      <text x="143" y="132" text-anchor="middle" class="g w6">②</text><text x="327" y="132" text-anchor="middle" class="r w6">④</text>
+      <text x="235" y="178" text-anchor="middle" class="s">① borrow / search request   ② book + due date</text>
+      <text x="235" y="195" text-anchor="middle" class="s">③ loan &amp; fine report   ④ new book record</text>
+    </svg><figcaption>frequently tested: one bubble = the entire system</figcaption></figure>
+  </div>
+  <div class="cols small">
+    <div class="sumbox" style="margin-top:0"><span class="lbl">Levels &amp; decomposition</span> Context (0) → level 1 = one bubble per major function → level 2, 3 … Numbering: 1.0, 2.0, then 2.1, 2.2. Complexity is handled by <span class="hl">divide and conquer</span>.</div>
+    <div class="exam" style="margin-top:0"><span class="lbl">Rules (DFD)</span> No store → store, no store → entity, no entity → store. Every process needs ≥ 1 input and ≥ 1 output (a grey or black hole is an error). Flows are <b>logical</b> and <b>named</b>.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: data dictionary + case A ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Data dictionary &amp; case A</span></div>
+  <h2><span class="no">8</span>The Data Dictionary</h2><span class="tag">notation</span>
+  <div class="def"><span class="lbl">Definition</span> The <span class="hl">specification of every data flow, data store and data element</span> in the DFD. Each entry has four parts: <b>name = composition / definition / where used / comment</b>. An entry that cannot be written down is a requirement that is still fuzzy.</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Symbol</th><th class="l">Means</th></tr>
+      <tr><td>x = a + b</td><td class="l">x is <b>composed of</b> a and b</td></tr>
+      <tr><td>x = a, b</td><td class="l">alternatives — a <b>or</b> b</td></tr>
+      <tr><td>x = [a]</td><td class="l">repeated <b>one or more</b> times</td></tr>
+      <tr><td>x = {a}</td><td class="l">optional — <b>zero or one</b></td></tr>
+      <tr><td>qualifier/x</td><td class="l">x is the key that identifies one y</td></tr>
+      <tr><td>* text *</td><td class="l">comment / alias</td></tr>
+    </table>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Entries for case A ✍</span><br>
+      <span class="mono">Loan = loan_id + member_id +</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;accession_no + issue_date +</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;due_date + {return_date}</span><br>
+      <span class="mono">Member = member_id + name +</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;phone + membership_type</span><br>
+      <span class="mono">Book = accession_no + isbn + title + author</span>
+    </div>
+  </div>
+  <h3>Case A — the same library system, drawn as a DFD</h3>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 560 210" width="320">
+      <g class="w">
+        <rect x="6" y="22" width="88" height="30" class="ink fill-b"/>
+        <circle cx="150" cy="37" r="28" class="ink-k fill-b"/>
+        <circle cx="290" cy="37" r="28" class="ink-k fill-b"/>
+        <circle cx="430" cy="37" r="28" class="ink-k fill-b"/>
+        <path class="ink-k" d="M120,108 H220 M120,128 H220"/>
+        <path class="ink-k" d="M260,108 H360 M260,128 H360"/>
+        <rect x="466" y="152" width="88" height="30" class="ink fill-b"/>
+        <path class="ink" d="M94,37 H122" marker-end="url(#ahb)"/>
+        <path class="ink" d="M150,65 V88" marker-end="url(#ahg)"/>
+        <path class="ink" d="M180,88 V68" marker-end="url(#ahb)"/>
+        <path class="ink" d="M178,37 H262" marker-end="url(#ahb)"/>
+        <path class="ink" d="M290,65 V88" marker-end="url(#ahg)"/>
+        <path class="ink" d="M94,46 H106 V145 H418 V62" marker-end="url(#ahb)"/>
+        <path class="ink" d="M220,99 H240 V128 H412 V62" marker-end="url(#ahg)"/>
+        <path class="ink" d="M466,162 H440 V118 H364" marker-end="url(#ahb)"/>
+        <path class="ink" d="M456,40 H488 V144 H510 V150" marker-end="url(#ahg)"/>
+      </g>
+      <text x="50" y="43" text-anchor="middle" class="k w6" style="font-size:19px">MEMBER</text>
+      <text x="510" y="173" text-anchor="middle" class="k w6" style="font-size:19px">LIBRARIAN</text>
+      <text x="150" y="36" text-anchor="middle" class="w6" style="font-size:21px">1.0</text><text x="150" y="56" text-anchor="middle" class="s">Register</text>
+      <text x="290" y="36" text-anchor="middle" class="w6" style="font-size:21px">2.0</text><text x="290" y="56" text-anchor="middle" class="s">Search</text>
+      <text x="430" y="36" text-anchor="middle" class="w6" style="font-size:21px">3.0</text><text x="430" y="56" text-anchor="middle" class="s">Loan</text>
+      <text x="170" y="124" text-anchor="middle" class="k s">D1 Members</text>
+      <text x="310" y="124" text-anchor="middle" class="k s">D2 Books</text>
+    </svg><figcaption>level 1: three processes, two stores, two external entities</figcaption></figure>
+    <div>
+      <ul class="dash small">
+        <li><b>1.0 Register</b>: member data → D1 Members.</li>
+        <li><b>2.0 Search</b>: catalogue query → book list; reads D2.</li>
+        <li><b>3.0 Loan</b>: issue / return → checks D2, writes D1, returns book + due date.</li>
+        <li><b>Librarian</b>: maintains D2, receives the overdue report.</li>
+      </ul>
+      <p class="small">Balanced against the context diagram of sheet 4: every flow entering the system there is consumed by a process here, and every flow leaving there is produced here.</p>
+      <div class="exam" style="margin-top:0"><span class="lbl">Exam trap</span> A DFD shows <b>logical</b> flow, so a "book file" is not "C:\library\books.txt". If the question asks for the database design, draw the ERD.</div>
+    </div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: ER modelling fundamentals ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>ER modelling</span></div>
+  <h2><span class="no">9</span>Entity–Relationship Modelling</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> The <b>ER model</b> (Chen, <span class="circ">1976</span>) is a <span class="hl">conceptual data model</span>: it pictures the real world as <b>entities</b>, the <b>attributes</b> they carry and the <b>relationships</b> between them, with no reference to any DBMS, table or file.</div>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <figure class="doodle"><svg viewBox="0 0 500 185" width="400">
+      <g class="w">
+        <rect x="10" y="66" width="86" height="42" class="ink fill-b"/>
+        <ellipse cx="155" cy="87" rx="42" ry="17" class="ink"/>
+        <ellipse cx="270" cy="87" rx="48" ry="17" class="ink"/>
+        <ellipse cx="390" cy="87" rx="44" ry="17" class="ink"/>
+        <ellipse cx="150" cy="25" rx="48" ry="16" class="ink"/>
+        <ellipse cx="150" cy="25" rx="56" ry="23" class="ink"/>
+        <ellipse cx="278" cy="25" rx="46" ry="16" class="ink" style="stroke-dasharray:4 3"/>
+        <ellipse cx="330" cy="142" rx="44" ry="16" class="ink"/>
+        <ellipse cx="430" cy="142" rx="44" ry="16" class="ink"/>
+        <path class="ink" d="M96,87 H113 M197,87 H222 M318,87 H346"/>
+        <path class="ink" d="M150,48 V70 M278,41 V70 M390,104 L360,126 M390,104 L404,126"/>
+        <path class="ink-r" d="M236,92 H304"/>
+      </g>
+      <text x="53" y="92" text-anchor="middle" class="k w6">BOOK</text>
+      <text x="155" y="92" text-anchor="middle" class="s">Title</text>
+      <text x="270" y="92" text-anchor="middle" class="s">Accession</text>
+      <text x="390" y="92" text-anchor="middle" class="s">Author</text>
+      <text x="150" y="30" text-anchor="middle" class="s">Keywords</text>
+      <text x="278" y="30" text-anchor="middle" class="p s">Available</text>
+      <text x="330" y="147" text-anchor="middle" class="s">First</text>
+      <text x="430" y="147" text-anchor="middle" class="s">Last</text>
+      <text x="250" y="176" text-anchor="middle" class="s">double ellipse = multivalued · dashed = derived · red = key</text>
+    </svg><figcaption>attribute notation: simple, key, composite, multivalued, derived</figcaption></figure>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Entity</span> a real-world object or event that can be distinctly identified. A <b>strong</b> entity owns its key; a <b>weak</b> entity (double rectangle, partial key) has none of its own and is identified only through its <b>owner</b>.</div>
+      <div class="def small"><span class="lbl">Attributes</span> <b>simple / composite</b> (name = first + last) · <b>single / multivalued</b> (several phone numbers) · <b>derived</b> (age from date of birth) · <b>key</b> (underlined, minimal).</div>
+      <div class="def small"><span class="lbl">Relationships</span> an association among entities. <b>Degree</b> = how many entity types take part: unary (1), binary (2), ternary (3). Unary is also <b>recursive</b> — Employee <i>manages</i> Employee.</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <figure class="doodle"><svg viewBox="0 0 610 134" width="400">
+      <g class="w">
+        <rect x="4" y="50" width="50" height="24" class="ink fill-b"/>
+        <polygon points="80,62 102,49 124,62 102,75" class="ink-k fill-y"/>
+        <rect x="146" y="50" width="50" height="24" class="ink fill-b"/>
+        <path class="ink" d="M54,62 H58 M124,62 H146"/>
+        <rect x="184" y="50" width="50" height="24" class="ink fill-b"/>
+        <polygon points="260,62 282,49 304,62 282,75" class="ink-k fill-y"/>
+        <rect x="326" y="36" width="50" height="22" class="ink fill-b"/>
+        <rect x="326" y="62" width="50" height="22" class="ink fill-b"/>
+        <path class="ink" d="M234,62 H238 M304,58 L326,47 M304,66 L326,73"/>
+        <rect x="404" y="50" width="50" height="24" class="ink fill-b"/>
+        <polygon points="478,62 500,49 522,62 500,75" class="ink-k fill-y"/>
+        <rect x="548" y="50" width="50" height="24" class="ink fill-b"/>
+        <path class="ink" d="M454,62 H458 M522,62 H548"/>
+        <path class="ink-r" d="M573,74 V94 M579,74 V94"/>
+      </g>
+      <text x="80" y="28" text-anchor="middle" class="r w6">1 : 1</text>
+      <text x="260" y="28" text-anchor="middle" class="r w6">1 : N</text>
+      <text x="500" y="28" text-anchor="middle" class="r w6">M : N</text>
+      <text x="29" y="67" text-anchor="middle" class="s">A</text>
+      <text x="171" y="67" text-anchor="middle" class="s">B</text>
+      <text x="209" y="67" text-anchor="middle" class="s">A</text>
+      <text x="351" y="52" text-anchor="middle" class="s">B</text>
+      <text x="351" y="78" text-anchor="middle" class="s">B</text>
+      <text x="429" y="67" text-anchor="middle" class="s">A</text>
+      <text x="573" y="67" text-anchor="middle" class="s">B</text>
+      <text x="102" y="67" text-anchor="middle" class="s">has</text>
+      <text x="282" y="67" text-anchor="middle" class="s">has</text>
+      <text x="500" y="67" text-anchor="middle" class="s">buys</text>
+      <text x="305" y="106" text-anchor="middle" class="r s">total participation = double line</text>
+      <text x="305" y="124" text-anchor="middle" class="s">partial participation = single line</text>
+    </svg><figcaption>cardinality (how many at most) and participation (must it join?)</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Cardinality</th><th class="l">Library example</th></tr>
+        <tr><td class="l">1 : 1</td><td class="l">one member ↔ one card</td></tr>
+        <tr><td class="l">1 : N</td><td class="l">one member → many loans</td></tr>
+        <tr><td class="l">M : N</td><td class="l">members ↔ books, over time</td></tr>
+        <tr><td class="l">Total part.</td><td class="l">every instance <b>must</b> join</td></tr>
+        <tr><td class="l">Partial part.</td><td class="l">an entity <b>may</b> stay out</td></tr>
+      </table>
+      <div class="exam" style="margin-top:0"><span class="lbl">Exam trap</span> Cardinality and participation are different questions: "how many at most?" vs "must it take part?". 1 : N does <b>not</b> make the N side mandatory.</div>
+    </div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: case B ERD + mapping + data models ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>ER → relation</span></div>
+  <h2><span class="no">10</span>Case B — the ER diagram, then the relational schema</h2>
+  <div class="cols" style="grid-template-columns:280px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 520 215" width="270">
+      <g class="w">
+        <rect x="16" y="16" width="110" height="34" class="ink fill-b"/>
+        <rect x="394" y="16" width="110" height="34" class="ink fill-b"/>
+        <polygon points="190,84 250,110 190,136 130,110" class="ink-k fill-y"/>
+        <polygon points="330,84 392,110 330,136 268,110" class="ink-k fill-y"/>
+        <rect x="192" y="168" width="140" height="40" class="ink fill-b"/>
+        <rect x="198" y="174" width="128" height="28" class="ink fill-b"/>
+        <path class="ink" d="M71,50 V70 H190 V82" marker-end="url(#ahb)"/>
+        <path class="ink" d="M449,50 V70 H330 V82" marker-end="url(#ahb)"/>
+        <path class="ink" d="M190,136 V152 H238 V166" marker-end="url(#ahb)"/>
+        <path class="ink" d="M330,136 V152 H286 V166" marker-end="url(#ahb)"/>
+      </g>
+      <text x="71" y="33" text-anchor="middle" class="k w6">MEMBER</text>
+      <text x="449" y="33" text-anchor="middle" class="k w6">BOOK</text>
+      <text x="190" y="115" text-anchor="middle" class="s">issues</text>
+      <text x="330" y="115" text-anchor="middle" class="s">on loan</text>
+      <text x="262" y="193" text-anchor="middle" class="k w6">LOAN</text>
+      <text x="120" y="66" text-anchor="middle" class="r s">1</text>
+      <text x="410" y="66" text-anchor="middle" class="r s">1</text>
+      <text x="214" y="160" class="r s">0..*</text>
+      <text x="304" y="160" class="r s">0..*</text>
+    </svg><figcaption>Chen notation — LOAN is weak: key = Member_id + Accession_no</figcaption></figure>
+    <div>
+      <p class="small">A <b>MEMBER</b> issues 0..* <b>LOAN</b>s and a <b>BOOK</b> appears in 0..* <b>LOAN</b>s; LOAN joins both totally, so it cannot exist without both. It carries Issue_date, Due_date and {Return_date}. When the same two entities meet again later in time — loans, orders, enrolments — you need a <span class="hl">third relation holding the event</span>.</p>
+      <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> MEMBER–LOAN is <b>not</b> a plain 1:N on one line: the pair (member, book) repeats over time, so it is <b>M:N</b>, resolved by making LOAN the <b>associative entity</b>.</div>
+    </div>
+  </div>
+  <h2><span class="no">11</span>ER → Relational Mapping: the Seven Rules</h2>
+  <table class="hand small">
+    <tr><th>#</th><th class="l">Source construct</th><th class="l">Relation produced</th></tr>
+    <tr><td>1</td><td class="l">Strong entity</td><td class="l">same attributes; its key = <b>primary key</b></td></tr>
+    <tr><td>2</td><td class="l">Weak entity</td><td class="l">owner key as FK; PK = owner key + partial key</td></tr>
+    <tr><td>3</td><td class="l">1 : 1 relationship</td><td class="l">one side's key as FK in the <b>other</b> relation</td></tr>
+    <tr><td>4</td><td class="l">1 : N relationship</td><td class="l">key of the <b>one</b> side as FK in the <b>many</b> side</td></tr>
+    <tr><td>5</td><td class="l">M : N relationship</td><td class="l"><b>new relation</b>: the two keys as FKs; the pair is the PK</td></tr>
+    <tr><td>6</td><td class="l">Multivalued attribute</td><td class="l"><b>new relation</b>: entity key + attribute = the PK</td></tr>
+    <tr><td>7</td><td class="l">N-ary relationship</td><td class="l"><b>new relation</b>: all participants' keys = the PK</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Case B applied ✍</span>
+      <span class="mono">MEMBER(<u>member_id</u>, name, phone)</span><br>
+      <span class="mono">BOOK(<u>accession_no</u>, isbn, title)</span><br>
+      <span class="mono">LOAN(<u>member_id</u>, <u>accession_no</u>,</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;issue_date, due_date, {return_date})</span><br>
+      <span class="mono">AUTHOR_BOOK(isbn, author_name)</span><br>
+      <span class="tiny">rule 2 gives the LOAN key; rule 6 splits a multi-author title.</span>
+    </div>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Data model</th><th class="l">Answers</th></tr>
+        <tr><td class="l">Conceptual</td><td class="l">which entities and relationships exist — the ERD</td></tr>
+        <tr><td class="l">Logical</td><td class="l">attributes, domains, keys; mapped to the relational model</td></tr>
+        <tr><td class="l">Physical</td><td class="l">tables, columns, data types, indexes — DBMS-specific</td></tr>
+      </table>
+      <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Conceptual → logical → <b>physical</b>. The conceptual model has <span class="circ">no attributes and no keys</span>.</div>
+    </div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: design principles + cohesion/coupling ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Design principles</span></div>
+  <h2><span class="no">12</span>Design: Turning Requirements into a Blueprint</h2>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Principle</th><th class="l">In practice</th></tr>
+      <tr><td class="l">Abstraction</td><td class="l">describe <b>what</b> a unit does, hide <b>how</b></td></tr>
+      <tr><td class="l">Modularity</td><td class="l">split into separately testable <span class="hl">modules</span></td></tr>
+      <tr><td class="l">Information hiding ★</td><td class="l">(<span class="circ">Parnas, 1972</span>) hide what is <b>likely to change</b></td></tr>
+      <tr><td class="l">Separation of concerns</td><td class="l">one module, one concern</td></tr>
+      <tr><td class="l">Refinement</td><td class="l">top-down, step by step to code</td></tr>
+      <tr><td class="l">Reuse</td><td class="l">reuse an existing design or component</td></tr>
+    </table>
+    <div>
+      <div class="tipbox small" style="margin-top:0"><span class="lbl">Why it pays</span> Modules are understood, unit-tested, reused and changed independently; a fix stays inside one module.</div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Abstraction ≠ encapsulation.</b> Abstraction decides what to expose; encapsulation bundles data with its operations. <b>Modularity is the goal, information hiding the technique.</b></div>
+    </div>
+  </div>
+  <h2><span class="no">13</span>Functional Independence: Cohesion &amp; Coupling</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Cohesion</span> how strongly the <b>elements inside one module</b> belong together for one purpose. <b>Higher is better.</b></div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th>#</th><th class="l">Type</th><th class="l">Ask</th></tr>
+        <tr><td class="green">1</td><td class="l"><b>Functional</b> ★</td><td class="l">one clear job?</td></tr>
+        <tr><td>2</td><td class="l">Sequential</td><td class="l">output → input?</td></tr>
+        <tr><td>3</td><td class="l">Communicational</td><td class="l">same data in-out</td></tr>
+        <tr><td>4</td><td class="l">Procedural</td><td class="l">fixed order?</td></tr>
+        <tr><td>5</td><td class="l">Temporal</td><td class="l">run together only</td></tr>
+        <tr><td>6</td><td class="l">Logical</td><td class="l">any one chosen?</td></tr>
+        <tr><td class="red">7</td><td class="l"><b>Coincidental</b></td><td class="l">same file only</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Coupling</span> how strongly one module <b>depends on</b> another. <b>Lower is better.</b></div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th>#</th><th class="l">Type</th><th class="l">Shared</th></tr>
+        <tr><td class="green">1</td><td class="l"><b>Data</b> ★</td><td class="l">simple parameters</td></tr>
+        <tr><td>2</td><td class="l">Stamp</td><td class="l">a whole structure</td></tr>
+        <tr><td>3</td><td class="l">Control</td><td class="l">a control flag</td></tr>
+        <tr><td>4</td><td class="l">External</td><td class="l">an interface</td></tr>
+        <tr><td>5</td><td class="l">Common</td><td class="l">a global area</td></tr>
+        <tr><td class="red">6</td><td class="l"><b>Content</b></td><td class="l">internal data</td></tr>
+      </table>
+    </div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 380 130" width="370">
+    <g class="w">
+      <rect x="4" y="4" width="186" height="122" rx="10" class="ink-k" style="fill:rgba(255,238,0,.22)"/>
+      <rect x="190" y="4" width="186" height="122" rx="10" class="ink-k" style="fill:rgba(211,47,47,.12)"/>
+    </g>
+    <text x="97" y="22" text-anchor="middle" class="w6">COHESION ↓</text>
+    <text x="283" y="22" text-anchor="middle" class="w6">COUPLING ↓</text>
+    <text x="97" y="38" text-anchor="middle" class="g w6">functional</text>
+    <text x="97" y="52" text-anchor="middle" class="s">sequential</text>
+    <text x="97" y="66" text-anchor="middle" class="s">communicational</text>
+    <text x="97" y="80" text-anchor="middle" class="s">procedural</text>
+    <text x="97" y="94" text-anchor="middle" class="s">temporal</text>
+    <text x="97" y="108" text-anchor="middle" class="s">logical</text>
+    <text x="97" y="122" text-anchor="middle" class="r w6">coincidental</text>
+    <text x="283" y="38" text-anchor="middle" class="g w6">data</text>
+    <text x="283" y="56" text-anchor="middle" class="s">stamp</text>
+    <text x="283" y="74" text-anchor="middle" class="s">control</text>
+    <text x="283" y="92" text-anchor="middle" class="s">external</text>
+    <text x="283" y="110" text-anchor="middle" class="s">common</text>
+    <text x="283" y="124" text-anchor="middle" class="r w6">content</text>
+  </svg><figcaption>both lists are examined directly — learn them in this order</figcaption></figure>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: design types + design process + case C ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Design process</span></div>
+  <h2><span class="no">14</span>Three Levels of Design</h2><span class="tag">written favourite</span>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr">
+    <figure class="doodle"><svg viewBox="0 0 500 126" width="380">
+      <g class="w">
+        <rect x="8" y="10" width="140" height="34" rx="10" class="ink-r fill-r"/>
+        <rect x="178" y="10" width="140" height="34" rx="10" class="ink-r fill-r"/>
+        <rect x="348" y="10" width="140" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M148,27 H178" marker-end="url(#ahb)"/>
+        <path class="ink" d="M318,27 H348" marker-end="url(#ahb)"/>
+        <rect x="178" y="80" width="140" height="28" rx="10" class="ink-g fill-g"/>
+        <path class="ink-g" d="M418,44 V62 H248 V78" marker-end="url(#ahg)"/>
+      </g>
+      <text x="78" y="32" text-anchor="middle" class="w6">1 Architectural</text>
+      <text x="248" y="32" text-anchor="middle" class="w6">2 High-level</text>
+      <text x="418" y="32" text-anchor="middle" class="w6">3 Detailed</text>
+      <text x="248" y="99" text-anchor="middle" class="g w6">4 Code</text>
+      <text x="248" y="120" text-anchor="middle" class="g s">refinement, top-down</text>
+    </svg><figcaption>each level refines the one above it</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Level</th><th class="l">Decides</th></tr>
+      <tr><td class="l">1 Architectural</td><td class="l">the system structure: components, their relationships and constraints; the data architecture and interfaces</td></tr>
+      <tr><td class="l">2 High-level (modular)</td><td class="l">modules → submodules; which data structures and abstract data types each module owns</td></tr>
+      <tr><td class="l">3 Detailed</td><td class="l">the exact algorithm, nesting of records, language-level data structures</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">15</span>The Architectural Design Process</h2>
+  <ol class="steps small">
+    <li>Address the design: <b>which functions</b> must the design model perform?</li>
+    <li>Design the data — the domain model becomes the <b>design class diagram</b> (DCD)</li>
+    <li>Assign functions to components: map each class onto a component or subsystem</li>
+    <li>Refine the <b>design classes</b>: attributes, operations, associations and <b>navigability</b></li>
+      <li>Define the <b>design sequence</b>: the <span class="hl">order in which classes are implemented and unit-tested</span></li>
+  </ol>
+  <div class="cols" style="grid-template-columns:260px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 470 180" width="250">
+      <g class="w">
+        <rect x="16" y="10" width="170" height="58" class="ink fill-b"/>
+        <rect x="16" y="112" width="170" height="58" class="ink fill-b"/>
+        <rect x="230" y="10" width="170" height="58" class="ink fill-b"/>
+        <rect x="230" y="112" width="170" height="58" class="ink fill-b"/>
+        <path class="ink-k" d="M16,36 H186 M16,76 H186 M230,36 H400 M230,76 H400"/>
+        <path class="ink-g" d="M101,68 V112" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M315,68 V92 H186 V118" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M186,141 H230" marker-end="url(#ahg)"/>
+      </g>
+      <text x="101" y="28" text-anchor="middle" class="w6">Member</text>
+      <text x="101" y="50" text-anchor="middle" class="s">- id : int</text>
+      <text x="101" y="64" text-anchor="middle" class="g s">+ borrow(b)</text>
+      <text x="101" y="130" text-anchor="middle" class="w6">Loan</text>
+      <text x="101" y="152" text-anchor="middle" class="s">- issue : Date</text>
+      <text x="315" y="28" text-anchor="middle" class="w6">Book</text>
+      <text x="315" y="50" text-anchor="middle" class="s">- accession : String</text>
+      <text x="315" y="64" text-anchor="middle" class="g s">+ issueTo(m)</text>
+      <text x="315" y="130" text-anchor="middle" class="w6">Fine</text>
+      <text x="315" y="152" text-anchor="middle" class="s">- amount : double</text>
+      <text x="120" y="95" text-anchor="middle" class="r s">1</text>
+      <text x="82" y="95" text-anchor="middle" class="r s">0..*</text>
+      <text x="208" y="134" text-anchor="middle" class="r s">1</text>
+    </svg><figcaption>case C: domain classes → design classes</figcaption></figure>
+    <div>
+      <ul class="dash small">
+        <li>The <b>domain model</b> (data only) gains <b>operations</b>, <b>navigability arrows</b> and packages.</li>
+        <li><b>Case C</b>: Member 1 → 0..* Loan, Book 1 → 0..* Loan, Loan 1 → 0..1 Fine.</li>
+        <li>Design sequence: <b>Book</b> and <b>Member</b> first (they carry the data), then <b>Loan</b>, then <b>Fine</b>; unit-test each with its collaborators.</li>
+        <li>The named GRASP patterns do exactly this job.</li>
+      </ul>
+      <p class="small" style="margin:1mm 0 0 1mm;white-space:nowrap"><span class="circ" style="font-size:.8em">Information Expert, Creator, Low Coupling–High Cohesion</span></p>
+      <div class="exam" style="margin-top:0"><span class="lbl">Exam trap</span> The DCD is <b>not</b> the domain model: it is implementation-aware, while the domain model holds only classes, attributes and associations.</div>
+    </div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: architectural styles + UI ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Architecture &amp; UI</span></div>
+  <h2><span class="no">16</span>Architectural Styles</h2><span class="tag">high-yield</span>
+  <table class="hand small">
+    <tr><th class="l">Style</th><th class="l">How the components talk</th><th class="l">Example</th></tr>
+    <tr><td class="l">Layered</td><td class="l">serves the layer above, uses the one below</td><td class="l">UI → business → data</td></tr>
+    <tr><td class="l">Pipe-and-filter</td><td class="l">a stream through a chain of filters</td><td class="l">Unix shell: cat f | grep x</td></tr>
+    <tr><td class="l">Client–server</td><td class="l">a client requests services</td><td class="l">browser and web server</td></tr>
+    <tr><td class="l">Repository</td><td class="l">components read/write one store</td><td class="l">shared database</td></tr>
+    <tr><td class="l">Event-driven</td><td class="l">components announce events</td><td class="l">GUI listeners, queues</td></tr>
+    <tr><td class="l">Broker</td><td class="l">a broker matches request and service</td><td class="l">service lookup, CORBA bus</td></tr>
+    <tr><td class="l">MVC</td><td class="l">Model data, View render, Control events</td><td class="l">web frameworks, desktop apps</td></tr>
+    <tr><td class="l">Microservices</td><td class="l">one service per business capability</td><td class="l">separate payment service</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <figure class="doodle"><svg viewBox="0 0 330 215" width="240">
+      <g class="w">
+        <rect x="45" y="8" width="240" height="44" rx="10" class="ink fill-b"/>
+        <rect x="45" y="76" width="240" height="44" rx="10" class="ink fill-b"/>
+        <rect x="45" y="144" width="240" height="44" rx="10" class="ink fill-b"/>
+        <path class="ink" d="M165,52 V74" marker-end="url(#ahb)"/>
+        <path class="ink" d="M165,120 V142" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M205,140 V122" marker-end="url(#ahg)"/>
+      </g>
+      <text x="165" y="28" text-anchor="middle" class="w6">Presentation layer</text>
+      <text x="165" y="46" text-anchor="middle" class="s">web page, mobile screen, CLI</text>
+      <text x="165" y="96" text-anchor="middle" class="w6">Business layer</text>
+      <text x="165" y="114" text-anchor="middle" class="s">member · catalogue · loan · fine</text>
+      <text x="165" y="164" text-anchor="middle" class="w6">Data-access layer</text>
+      <text x="165" y="182" text-anchor="middle" class="s">repositories → SQL database</text>
+      <text x="165" y="208" text-anchor="middle" class="r s">strict layering: a layer calls only the one below</text>
+    </svg><figcaption>the library system as a three-layer architecture</figcaption></figure>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">Why layered wins ✍</span> Move the database from MySQL to PostgreSQL and only the data-access layer changes; restyle the UI and only the top layer changes. Each layer is unit-tested alone; the price is a copy of the data object at every boundary.</div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick: MVC</span> <b>M</b>odel = what is true · <b>V</b>iew = what it looks like · <b>C</b>ontroller = what the user just did.</div>
+    </div>
+  </div>
+  <h2><span class="no">17</span>UI Design: Principles for a Usable Interface</h2>
+  <div class="cols small">
+    <ul class="dash" style="margin-top:0">
+      <li><b>Visibility of system status</b> — show what is happening.</li>
+      <li><b>Match the real world</b> — the user's language, their units.</li>
+      <li><b>User control and freedom</b> — undo, cancel, a clear exit.</li>
+      <li><b>Consistency and standards</b> — one look, one meaning.</li>
+      <li><b>Error prevention</b> — constrain, confirm, offer a default.</li>
+      <li><b>Recognition over recall</b> — show the options.</li>
+      <li><b>Accessibility</b> — usable by elderly and disabled users.</li>
+    </ul>
+    <div>
+      <div class="def" style="margin-top:0"><span class="lbl">Goal</span> intuitive, efficient, pleasant use. Three <span class="circ">golden rules</span>: <b>place the user in control</b>, <b>reduce the user's memory load</b>, <b>make the system consistent</b>.</div>
+      <div class="exam" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Usability ≠ learnability.</b> A system can be learnable and still not usable; a novice-friendly system can be unusable for an expert doing the same job all day.</div>
+    </div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Analysis = <b>what</b> · design = <b>how</b></p><p>6 principles: correct, consistent, complete</p>
+      <p>…feasible, traceable, understandable</p><p>Elicitation: interview, JAD, survey, observe</p>
+      <p>TELOS = T, E, L, O, S feasibility</p><p>DFD: entity, process, store, flow</p>
+      <p>Level 0 = context = <b>1 process</b>, no store</p><p>Balancing: child's flows = parent's flows</p>
+      <p>Levels: 1.0, 2.0 → 2.1, 2.2 …</p><p>Cohesion: functional → coincidental</p>
+      <p>Coupling: data → content</p><p>ER: entity, attribute, relationship</p>
+      <p>Degree = number of participants</p><p>Double line = total participation</p>
+      <p>M:N, multivalued, n-ary → new relation</p><p>Conceptual → logical → physical</p>
+      <p>Design: architectural → high → detailed</p><p>Layered, MVC, client–server, events</p>
+    </div>
+  </div>
+  <div class="cols small">
+    <ol class="num">
+      <li>Context diagram = one process</li>
+      <li>DFD never links store → store</li>
+      <li>Every process needs in and out</li>
+      <li>Functional cohesion is best</li>
+      <li>Data coupling is the loosest</li>
+      <li>Content coupling is the worst</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>M:N becomes a junction relation</li>
+      <li>Weak key = owner key + partial</li>
+      <li>Double line = total participation</li>
+      <li>Conceptual model has no attributes</li>
+      <li>Information hiding: Parnas, 1972</li>
+      <li>Microservices deploy independently</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> "what" and "how" swapped · a context diagram drawn with data stores · a flow read as physical storage · cohesion and coupling ranks reversed · an M:N left as two columns · total participation read as cardinality · attributes given to the conceptual model</div>
+  <div class="trick"><span class="lbl">All tricks together</span> context = one bubble · balance in against out · number every process · the flow must carry a name · weak = double box + dashed diamond · underlining = key, double ellipse = many, dashed = derived · strict layering calls downward only · control, memory load, consistency</div>
+  <figure class="doodle"><svg viewBox="0 0 520 104" width="430">
+    <g class="w">
+      <circle cx="70" cy="45" r="26" class="ink fill-b"/>
+      <circle cx="260" cy="45" r="26" class="ink fill-b"/>
+      <circle cx="450" cy="45" r="26" class="ink fill-b"/>
+      <path class="ink-g" d="M98,45 H232" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M288,45 H422" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M450,74 C380,86 140,86 70,74" marker-end="url(#ahp)"/>
+    </g>
+    <text x="70" y="51" text-anchor="middle" class="w6">WHAT</text>
+    <text x="260" y="51" text-anchor="middle" class="w6">MODEL</text>
+    <text x="450" y="51" text-anchor="middle" class="w6">HOW</text>
+    <text x="165" y="36" text-anchor="middle" class="g s">requirements</text>
+    <text x="355" y="36" text-anchor="middle" class="g s">blueprint</text>
+    <text x="260" y="101" text-anchor="middle" class="p s">validation sends work back to the model</text>
+  </svg><figcaption>requirements → model → design, and back again</figcaption></figure>
+  <div class="cols small">
+    <div class="sumbox" style="margin-top:0"><span class="lbl">Also practise (written)</span> ① Context + level-1 DFD for a hospital, with balancing · ② A data dictionary for six flows · ③ ER → relations for a bank with M:N accounts</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Where the neighbours live</span> Use cases, the Unified Process and the UML by type sit with the Use Cases / OO Design notes; GRASP patterns sit with the GRASP notes.</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · Analysis &amp; Design</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Loosest coupling is:<ol class="opts"><li>Data coupling</li><li>Content</li><li>Common</li><li>Control</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Strongest cohesion is:<ol class="opts"><li>Coincidental</li><li>Functional</li><li>Temporal</li><li>Logical</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Level 0 DFD shows:<ol class="opts"><li>Processes</li><li>The tables</li><li>Messages</li><li>One process</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Not allowed in a DFD:<ol class="opts"><li>Proc → store</li><li>Proc → entity</li><li>Store → store</li><li>Entity → proc</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Weak entity key is:<ol class="opts"><li>Partial key</li><li>Owner + partial</li><li>Surrogate key</li><li>Owner key only</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>M : N maps to:<ol class="opts"><li>A new relation</li><li>Nothing</li><li>A new column</li><li>A procedure</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Double line means:<ol class="opts"><li>Partial part.</li><li>Ident. rel.</li><li>Total part.</li><li>Multivalued</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Multivalued maps to:<ol class="opts"><li>An array</li><li>Two columns</li><li>A derived</li><li>A relation</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>UI / business / data:<ol class="opts"><li>Layered</li><li>Repository</li><li>Broker</li><li>Pipe-filter</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>"Can it be built?":<ol class="opts"><li>Legal</li><li>Economic</li><li>Schedule</li><li>Technical</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-a · 2-b · 3-d · 4-c · 5-b · 6-a · 7-c · 8-d · 9-a · 10-d</div>
+
+  <div class="wq"><span class="lbl">Written question</span> What are cohesion and coupling? Why should a good design have high cohesion and low coupling? List the types of each from best to worst. <i class="mk">10 marks</i></div>
+  <div class="cols" style="grid-template-columns:190px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 132" width="180">
+      <g class="w">
+        <rect x="8" y="10" width="126" height="44" rx="10" class="ink fill-b"/>
+        <rect x="166" y="10" width="126" height="44" rx="10" class="ink fill-b"/>
+        <rect x="96" y="82" width="108" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink-r" d="M70,54 V72" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M230,54 V72" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M118,72 V80" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M182,72 V80" marker-end="url(#ah)"/>
+      </g>
+      <text x="71" y="39" text-anchor="middle" class="k l" style="font-size:16px">Module A</text>
+      <text x="229" y="39" text-anchor="middle" class="k l" style="font-size:16px">Module B</text>
+      <text x="150" y="105" text-anchor="middle" class="r l" style="font-size:16px">shared</text>
+      <text x="150" y="126" text-anchor="middle" class="r s">coupling — remove it</text>
+    </svg><figcaption>high cohesion inside, low coupling between</figcaption></figure>
+    <ol class="steps small">
+      <li><b>Cohesion</b> = how much one module's elements belong together; <b>coupling</b> = how much modules depend on each other. <i class="mk">3</i></li>
+      <li>A good design keeps modules <span class="hl">easy to understand, test, reuse and change</span>: a change in one hardly affects the others. <i class="mk">2</i></li>
+      <li>Cohesion, best → worst: <b>functional, sequential, communicational, procedural, temporal, logical, coincidental</b>. <i class="mk">2</i></li>
+      <li>Coupling: <b>data, stamp, control, external, common, content</b>. <i class="mk">3</i></li>
+    </ol>
+  </div>
+  <div class="cols small">
+    <div style="margin-top:0">
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can state the six principles of analysis</li>
+        <li>Can name the four elicitation techniques</li>
+        <li>Can draw a context diagram and a balanced DFD</li>
+      </ul>
+    </div>
+    <div style="margin-top:0">
+      <ul class="tick small">
+        <li>Can draw an ER diagram and map it to relations</li>
+        <li>Can recite both cohesion and coupling ranks</li>
+        <li>Can name the three levels of design</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

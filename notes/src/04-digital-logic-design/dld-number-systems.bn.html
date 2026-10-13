@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>সংখ্যা পদ্ধতি ও কোড: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">সংখ্যা পদ্ধতি ও কোড</span></h1>
+  <p class="subtitle">পরিপূরক · ওভারফ্লো · BCD · গ্রে · হ্যামিং · IEEE 754: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">সংখ্যা পদ্ধতি</text><text x="320" y="168" text-anchor="middle" class="bn r s">ও বাইনারি কোড: মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">ভিত্তি · রূপান্তর</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">2's complement ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">r's · (r−1)'s পরিপূরক</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">ওভারফ্লো · সম্প্রসারণ ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">BCD · +6 নিয়ম ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">ASCII · ইউনিকোড</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">গ্রে · হ্যামিং ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">IEEE 754 ফ্লোট</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = প্রয়োগ / ডেটা ফরম্যাট</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① 2's complement-এর পরিসর<br>② −N বের করার শর্টকাট<br>③ ওভারফ্লো নিয়ম (V ফ্ল্যাগ)<br>④ BCD: &gt; 9 হলে 6 যোগ<br>⑤ বাইনারি ↔ গ্রে<br>⑥ হ্যামিং প্যারিটি বিট<br>⑦ IEEE 754 সিঙ্গেল</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Number system: <span class="hl">binary, octal, hexadecimal</span>, binary arithmetic" (কম্পিউটার ফান্ডামেন্টালস) এবং "Digital logic: … <span class="hl">Arithmetic and data handling logic circuits</span>" (DLD)। ভিত্তি সংক্ষেপে; গভীরতা <span class="hl">চিহ্নযুক্ত সংখ্যা, পরিপূরক, ওভারফ্লো</span>, বাইনারি কোড, ত্রুটি সংশোধন কোড ও ফ্লোটিং পয়েন্টে। পূর্ণ গাণিতিক অংশ কম্পিউটার ফান্ডামেন্টালসের "সংখ্যা পদ্ধতি ও বাইনারি গণিত" নোটে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>ভিত্তি ও রূপান্তর ……… পৃ. ২</li><li>চিহ্নযুক্ত সংখ্যার উপস্থাপন ……… পৃ. ৩</li><li>2's complement, ওভারফ্লো ……… পৃ. ৪</li><li>r's / (r−1)'s পরিপূরক ……… পৃ. ৫</li><li>দশমিক কোড ও গ্রে কোড ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>BCD যোগ, ASCII, ইউনিকোড … পৃ. ৭</li><li>প্যারিটি ও হ্যামিং কোড ……… পৃ. ৮</li><li>IEEE 754 ফ্লোটিং পয়েন্ট ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: bases & conversions ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>ভিত্তি ও রূপান্তর</span></div>
+  <h2><span class="no">১</span>স্থানিক সংখ্যা পদ্ধতি</h2><span class="tag">MCQ</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ভিত্তি (radix) <b>r</b>-এর <span class="hl">স্থানিক (positional, weighted)</span> পদ্ধতিতে অঙ্ক 0 … r − 1; i-তম স্থানের মান rⁱ: <span class="circ">N = Σ dᵢ · rⁱ</span> (ভগ্নাংশে i &lt; 0)। বাঁয়ের বিট = <b>MSB</b>, ডানের বিট = <b>LSB</b>।</div>
+  <table class="hand small">
+    <tr><th class="l">পদ্ধতি</th><th>ভিত্তি</th><th>অঙ্ক</th><th>উদাহরণ</th><th class="l">কোথায় দেখি</th></tr>
+    <tr><td class="l">বাইনারি</td><td>2</td><td>0, 1</td><td>(1011)₂ = 11</td><td class="l">সব হার্ডওয়্যার, বিট মাস্ক</td></tr>
+    <tr><td class="l">অক্টাল</td><td>8</td><td>0 – 7</td><td>(157)₈ = 111</td><td class="l">ইউনিক্স পারমিশন: chmod 755</td></tr>
+    <tr><td class="l">ডেসিমাল</td><td>10</td><td>0 – 9</td><td>(111)₁₀</td><td class="l">মানুষের ইনপুট/আউটপুট</td></tr>
+    <tr><td class="l">হেক্সাডেসিমাল</td><td>16</td><td>0 – 9, A – F</td><td>(6F)₁₆ = 111</td><td class="l">অ্যাড্রেস, MAC, রং #FF8800</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div>
+      <p class="small">১ নিবল = 4 বিট · ১ বাইট = 8 বিট · n বিটে <span class="hl">2ⁿ টি বিন্যাস</span>; N টি মানের জন্য ⌈log₂ N⌉ বিট লাগে (যেমন ১০০০টি মান → ১০ বিট)।</p>
+      <div class="exam small"><span class="lbl">প্রচলিত ভুল ধারণা</span> "সব সংখ্যা পদ্ধতি স্থানিক": <b>ভুল</b>। রোমান সংখ্যা (XIV) অস্থানিক। কম্পিউটারের চারটি পদ্ধতি স্থানিক।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 112" width="295">
+      <g class="w">
+        <rect x="10" y="34" width="280" height="36" rx="6" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M45,34V70M80,34V70M115,34V70M185,34V70M220,34V70" style="stroke-width:1.3"/>
+        <path class="ink-r" d="M150,34V70" style="stroke-dasharray:4 3"/>
+      </g>
+      <text x="28" y="58" text-anchor="middle" class="k l">1</text><text x="63" y="58" text-anchor="middle" class="k l">1</text><text x="98" y="58" text-anchor="middle" class="k l">0</text><text x="132" y="58" text-anchor="middle" class="k l">1</text><text x="150" y="62" text-anchor="middle" class="r l">.</text><text x="168" y="58" text-anchor="middle" class="k l">1</text><text x="203" y="58" text-anchor="middle" class="k l">0</text><text x="255" y="58" text-anchor="middle" class="k l">1</text>
+      <text x="28" y="24" text-anchor="middle" class="r s">2³</text><text x="63" y="24" text-anchor="middle" class="r s">2²</text><text x="98" y="24" text-anchor="middle" class="r s">2¹</text><text x="132" y="24" text-anchor="middle" class="r s">2⁰</text><text x="168" y="24" text-anchor="middle" class="r s">2⁻¹</text><text x="203" y="24" text-anchor="middle" class="r s">2⁻²</text><text x="255" y="24" text-anchor="middle" class="r s">2⁻³</text>
+      <text x="28" y="90" text-anchor="middle" class="g s">8</text><text x="63" y="90" text-anchor="middle" class="g s">4</text><text x="98" y="90" text-anchor="middle" class="g s">0</text><text x="132" y="90" text-anchor="middle" class="g s">1</text><text x="168" y="90" text-anchor="middle" class="g s">.5</text><text x="203" y="90" text-anchor="middle" class="g s">0</text><text x="255" y="90" text-anchor="middle" class="g s">.125</text>
+      <text x="150" y="108" text-anchor="middle" class="g w6">= 13.625</text>
+    </svg><figcaption>(1101.101)₂-এর স্থানীয় মান</figcaption></figure>
+  </div>
+
+  <h2><span class="no">২</span>এক পাতায় সব রূপান্তর</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="cols">
+    <div>
+      <h3>ভিত্তি r → ডেসিমাল</h3>
+      <p class="small">প্রতিটি অঙ্ককে তার স্থানীয় মান দিয়ে গুণ করে যোগ করো।<br>(3A.C)₁₆ = 3×16 + 10 + 12/16 = <span class="circ">58.75</span><br>(101.11)₂ = 4 + 1 + 0.5 + 0.25 = <b>5.75</b></p>
+    </div>
+    <div>
+      <h3>ডেসিমাল → ভিত্তি r</h3>
+      <p class="small"><b>পূর্ণ অংশ:</b> r দিয়ে বারবার ভাগ, ভাগশেষ <b>নিচ থেকে ওপরে</b> পড়ো।<br><b>ভগ্নাংশ:</b> r দিয়ে বারবার গুণ, পূর্ণ অংশ <b>ওপর থেকে নিচে</b> পড়ো।</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> (235.625)₁₀ → বাইনারি
+    <table class="hand small" style="white-space:nowrap;margin:1mm 0">
+      <tr><th class="l">÷ 2</th><td>235</td><td>117</td><td>58</td><td>29</td><td>14</td><td>7</td><td>3</td><td>1</td><th class="l">× 2</th><td>.625</td><td>.25</td><td>.5</td></tr>
+      <tr><th class="l">ভাগশেষ</th><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><th class="l">পূর্ণ</th><td>1</td><td>0</td><td>1</td></tr>
+    </table>
+    ভাগশেষ ডান → বাঁ (শেষেরটি আগে): 11101011; ভগ্নাংশ বাঁ → ডান: .101 → <span class="circ">(11101011.101)₂</span> = (353.5)₈ = (EB.A)₁₆</div>
+  <h3>বাইনারি ↔ অক্টাল ↔ হেক্স: বিন্দু থেকে বাইরের দিকে গ্রুপ, ফাঁকা হলে 0</h3>
+  <p class="small">(157)₈ → 001 101 111 → 0110 1111 → <span class="circ">(6F)₁₆</span> · অক্টাল ↔ হেক্স যায় <b>বাইনারি হয়ে</b></p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>অক্টাল ৩, হেক্স ৪</b>": 8 = 2³, 16 = 2⁴ বিট প্রতি অঙ্কে। 2¹⁰ = 1024, 2¹⁶ = 65 536 মুখস্থ রাখো।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (0.1)₁₀ = 0.000110011…₂ <b>কখনো শেষ হয় না</b>; শুধু k/2ᵐ আকারের ভগ্নাংশ বাইনারিতে সসীম।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: signed representations ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>চিহ্নযুক্ত সংখ্যা</span></div>
+  <h2><span class="no">৩</span>চিহ্নযুক্ত সংখ্যার উপস্থাপন</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> হার্ডওয়্যারে "−" চিহ্ন নেই, তাই <span class="hl">MSB-কে চিহ্ন বিট (sign bit)</span> ধরা হয় (0 = +, 1 = −)। ধনাত্মক সংখ্যা তিন পদ্ধতিতেই একই; পার্থক্য শুধু −N লেখায়:
+    <ul class="dash small" style="margin-top:1mm">
+      <li><b>চিহ্ন-মান (Sign-magnitude, SM):</b> চিহ্ন বিট 1, মান অপরিবর্তিত</li>
+      <li><b>১-এর পরিপূরক (1's complement):</b> +N-এর প্রতিটি বিট উল্টাও (= (2ⁿ − 1) − N)</li>
+      <li><b>২-এর পরিপূরক (2's complement):</b> বিট উল্টে 1 যোগ (= <span class="circ">2ⁿ − N</span>)</li>
+    </ul></div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 8 বিটে −45 (+45 = 0010 1101): SM = <b>1010 1101</b> · 1's = <b>1101 0010</b> · 2's = 1101 0010 + 1 = <span class="circ">1101 0011</span></div>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:start">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>বিট</th><th>চিহ্নহীন</th><th>SM</th><th>1's</th><th>2's</th></tr>
+      <tr><td>0000</td><td>0</td><td>+0</td><td>+0</td><td>0</td></tr>
+      <tr><td>0001</td><td>1</td><td>+1</td><td>+1</td><td>+1</td></tr>
+      <tr><td>0011</td><td>3</td><td>+3</td><td>+3</td><td>+3</td></tr>
+      <tr><td>0111</td><td>7</td><td>+7</td><td>+7</td><td class="red"><b>+7 (সর্বোচ্চ)</b></td></tr>
+      <tr><td>1000</td><td>8</td><td class="red"><b>−0</b></td><td>−7</td><td class="red"><b>−8 (সর্বনিম্ন)</b></td></tr>
+      <tr><td>1001</td><td>9</td><td>−1</td><td>−6</td><td>−7</td></tr>
+      <tr><td>1011</td><td>11</td><td>−3</td><td>−4</td><td>−5</td></tr>
+      <tr><td>1100</td><td>12</td><td>−4</td><td>−3</td><td>−4</td></tr>
+      <tr><td>1110</td><td>14</td><td>−6</td><td>−1</td><td>−2</td></tr>
+      <tr><td>1111</td><td>15</td><td>−7</td><td class="red"><b>−0</b></td><td>−1</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 262 250" width="262">
+      <g class="w">
+        <circle cx="125" cy="125" r="82" class="ink"/>
+        <circle cx="125" cy="125" r="40" class="ink-k fill-y"/>
+        <path class="ink-r" d="M139,196 L148,243" style="stroke-width:3"/>
+        <path class="ink-g" d="M205,110 A82,82 0 0 1 205,140" marker-end="url(#ahg)"/>
+      </g>
+      <text x="125" y="29" text-anchor="middle" class="s">0000</text><text x="125" y="68" text-anchor="middle" class="g w6">0</text><text x="163" y="37" text-anchor="middle" class="s">0001</text><text x="149" y="73" text-anchor="middle" class="g w6">+1</text><text x="196" y="58" text-anchor="middle" class="s">0010</text><text x="169" y="86" text-anchor="middle" class="g w6">+2</text><text x="217" y="91" text-anchor="middle" class="s">0011</text><text x="182" y="106" text-anchor="middle" class="g w6">+3</text><text x="230" y="129" text-anchor="middle" class="s">0100</text><text x="187" y="130" text-anchor="middle" class="g w6">+4</text><text x="217" y="167" text-anchor="middle" class="s">0101</text><text x="182" y="154" text-anchor="middle" class="g w6">+5</text><text x="196" y="200" text-anchor="middle" class="s">0110</text><text x="169" y="174" text-anchor="middle" class="g w6">+6</text><text x="168" y="223" text-anchor="middle" class="s">0111</text><text x="149" y="187" text-anchor="middle" class="g w6">+7</text><text x="118" y="229" text-anchor="middle" class="s">1000</text><text x="126" y="196" text-anchor="middle" class="r w6">−8</text><text x="82" y="221" text-anchor="middle" class="s">1001</text><text x="98" y="186" text-anchor="middle" class="r w6">−7</text><text x="54" y="200" text-anchor="middle" class="s">1010</text><text x="81" y="174" text-anchor="middle" class="r w6">−6</text><text x="33" y="167" text-anchor="middle" class="s">1011</text><text x="68" y="154" text-anchor="middle" class="r w6">−5</text><text x="22" y="129" text-anchor="middle" class="s">1100</text><text x="63" y="130" text-anchor="middle" class="r w6">−4</text><text x="33" y="91" text-anchor="middle" class="s">1101</text><text x="68" y="106" text-anchor="middle" class="r w6">−3</text><text x="54" y="58" text-anchor="middle" class="s">1110</text><text x="81" y="86" text-anchor="middle" class="r w6">−2</text><text x="87" y="37" text-anchor="middle" class="s">1111</text><text x="101" y="73" text-anchor="middle" class="r w6">−1</text>
+      <text x="125" y="121" text-anchor="middle" class="k s w6">4-bit</text><text x="125" y="137" text-anchor="middle" class="k s w6">2's</text>
+      <text x="206" y="246" text-anchor="middle" class="bn r s w6">ওভারফ্লো সীমা</text>
+    </svg><figcaption>2's complement চাকা: +1 = ঘড়ির কাঁটার দিকে এক ধাপ</figcaption></figure>
+  </div>
+  <table class="hand small">
+    <tr><th class="l">পদ্ধতি (n বিট)</th><th>পরিসর</th><th>8-বিট</th><th>শূন্য</th></tr>
+    <tr><td class="l">চিহ্নহীন (unsigned)</td><td>0 … 2ⁿ − 1</td><td>0 … 255</td><td>একটি</td></tr>
+    <tr><td class="l">চিহ্ন-মান</td><td>−(2ⁿ⁻¹ − 1) … +(2ⁿ⁻¹ − 1)</td><td>−127 … +127</td><td class="red"><b>দুটি (±0)</b></td></tr>
+    <tr><td class="l">1's complement</td><td>−(2ⁿ⁻¹ − 1) … +(2ⁿ⁻¹ − 1)</td><td>−127 … +127</td><td class="red"><b>দুটি (±0)</b></td></tr>
+    <tr><td class="l">2's complement</td><td><span class="hl">−2ⁿ⁻¹ … +(2ⁿ⁻¹ − 1)</span></td><td class="red"><b>−128 … +127</b></td><td>একটি</td></tr>
+  </table>
+  <p class="small center">2's complement 16-বিট: <b>−32 768 … +32 767</b> · 32-বিট (C <span class="mono">int</span>): <b>−2³¹ … 2³¹ − 1</b></p>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> −2ⁿ⁻¹ … 2ⁿ⁻¹ − 1 পরিসর <b>শুধু 2's complement-এর</b>; SM ও 1's complement-এ একটি বিন্যাস −0-তে যায়, তাই সেগুলো −(2ⁿ⁻¹ − 1)-এ থামে।</div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> 2's complement-এ <b>একটি ঋণাত্মক সংখ্যা বেশি</b>: −128 = 1000 0000-এর কোনো +128 জোড়া নেই; একে ঋণাত্মক করলে আবার নিজেকেই পাওয়া যায়।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: 2's complement arithmetic, overflow, sign extension ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>হার্ডওয়্যারে 2's complement</span></div>
+  <h2><span class="no">৪</span>সব CPU কেন 2's complement ব্যবহার করে</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols">
+    <ul class="dash small">
+      <li><b>একটিই শূন্য</b> (±0 যাচাইয়ের ঝামেলা নেই)</li>
+      <li><span class="hl">A − B = A + B′ + 1</span>: একই অ্যাডার</li>
+      <li>MSB-এর ক্যারি আউট শুধু ফেলে দাও</li>
+      <li>চিহ্ন সম্প্রসারণ = MSB কপি</li>
+    </ul>
+    <div class="def small" style="margin-top:0"><span class="lbl">ভারযুক্ত দৃষ্টিভঙ্গি</span> MSB-এর মান <span class="circ">−2ⁿ⁻¹</span>:<br>1101 0011 = −128 + 64 + 16 + 2 + 1 = <b>−45</b></div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল: শর্টকাট</span> ডান দিক থেকে: <b>প্রথম 1 পর্যন্ত (সেটিসহ) বিট হুবহু লেখো, বাকিগুলো উল্টাও</b>: 0110 1<u>000</u> (104) → 1001 1<u>000</u> (−104) ✓</div>
+
+  <h2><span class="no">৫</span>চিহ্ন সম্প্রসারণ (Sign Extension)</h2>
+  <div class="cols" style="grid-template-columns:1.2fr 1fr">
+    <p class="small">2's complement সংখ্যাকে বেশি বিটে নিতে নতুন প্রতিটি উচ্চ বিটে <span class="hl">চিহ্ন বিট কপি</span> করো; মান বদলায় না।<br>−5: 1011 → <span class="circ">1111 1011</span> · +5: 0101 → 0000 0101<br>(x86: <span class="mono">MOVSX</span> চিহ্ন-সম্প্রসারণ, <span class="mono">MOVZX</span> শূন্য-সম্প্রসারণ)</p>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ঋণাত্মক সংখ্যার সামনে 0 বসালে মান বদলে যায়: 1011 (−5) → 0000 1011 = <b>+11</b>। শূন্য-সম্প্রসারণ শুধু চিহ্নহীন সংখ্যার জন্য।</div>
+  </div>
+
+  <h2><span class="no">৬</span>ওভারফ্লো শনাক্তকরণ</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="def"><span class="lbl">নিয়ম</span> ওভারফ্লো: <b>একই চিহ্নের</b> দুটি সংখ্যা যোগে ফল <b>বিপরীত চিহ্নের</b> হলে (ভিন্ন চিহ্নে কখনো ওভারফ্লো হয় না)। হার্ডওয়্যারে: <span class="circ">V = C<sub>n−1</sub> ⊕ C<sub>n</sub></span>, অর্থাৎ MSB-<b>তে আসা</b> ক্যারি XOR MSB <b>থেকে বের হওয়া</b> ক্যারি।</div>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">8-বিট যোগ</th><th>বাইনারি</th><th>ফলের বিট</th><th>C<sub>in</sub> C<sub>out</sub></th><th>V</th><th class="l">অর্থ</th></tr>
+    <tr><td class="l">70 + 80</td><td>0100 0110 + 0101 0000</td><td>1001 0110</td><td>1 &nbsp;0</td><td class="red"><b>1</b></td><td class="l">−106 পড়ায়: ওভারফ্লো</td></tr>
+    <tr><td class="l">−70 + (−80)</td><td>1011 1010 + 1011 0000</td><td>(1) 0110 1010</td><td>0 &nbsp;1</td><td class="red"><b>1</b></td><td class="l">+106 পড়ায়: ওভারফ্লো</td></tr>
+    <tr><td class="l">45 + (−20)</td><td>0010 1101 + 1110 1100</td><td>(1) 0001 1001</td><td>1 &nbsp;1</td><td>0</td><td class="l">+25 ✓ ক্যারি বাদ</td></tr>
+    <tr><td class="l">100 + 27</td><td>0110 0100 + 0001 1011</td><td>0111 1111</td><td>0 &nbsp;0</td><td>0</td><td class="l">+127 ✓ ঠিক আঁটে</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 330px;align-items:center">
+    <div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ক্যারি ≠ ওভারফ্লো।</b> ক্যারি আউট (C ফ্ল্যাগ) চিহ্নহীন ওভারফ্লো বোঝায়; V ফ্ল্যাগ চিহ্নযুক্ত ওভারফ্লো। ৩য় সারিতে ক্যারি আছে, ওভারফ্লো নেই।</div>
+      <p class="small">ADD-এর পর CPU ফ্ল্যাগ: <b>C</b> ক্যারি, <b>V/O</b> ওভারফ্লো, <b>N/S</b> চিহ্ন = MSB, <b>Z</b> শূন্য।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 170" width="325">
+      <g class="w">
+        <rect x="70" y="62" width="200" height="44" rx="8" class="ink-k fill-y"/>
+        <circle cx="120" cy="36" r="13" class="ink-p fill-p"/>
+        <path class="ink" d="M120,8 V23 M120,49 V62 M200,8 V62" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M20,22 H60 M60,22 V36 H107" />
+        <path class="ink-p" d="M60,36 V84 H70" marker-end="url(#ahp)"/>
+        <path class="ink" d="M170,106 V138" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M70,96 H44 V130" marker-end="url(#ah)"/>
+        <rect x="230" y="120" width="56" height="30" rx="8" class="ink-r fill-r"/>
+        <path class="ink-r" d="M250,106 V120 M270,106 V120"/>
+        <path class="ink-r" d="M286,135 H312" marker-end="url(#ah)"/>
+      </g>
+      <text x="120" y="41" text-anchor="middle" class="p w6">⊕</text>
+      <text x="128" y="16" class="s">B</text><text x="208" y="16" class="s">A</text><text x="8" y="18" class="p s w6">M</text>
+      <text x="170" y="90" text-anchor="middle" class="bn k w6">n-বিট অ্যাডার</text>
+      <text x="74" y="80" class="p s">C₀</text>
+      <text x="170" y="156" text-anchor="middle" class="s">S = A ± B</text>
+      <text x="44" y="146" text-anchor="middle" class="bn r s">ক্যারি</text>
+      <text x="258" y="140" text-anchor="middle" class="r s w6">XOR</text><text x="318" y="140" class="r w6">V</text>
+      <text x="258" y="166" text-anchor="middle" class="r s" style="font-size:10.5px">C(n−1) ⊕ C(n)</text>
+    </svg><figcaption>অ্যাডার-সাবট্রাক্টর: M = 0 যোগ, M = 1 বিয়োগ</figcaption></figure>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: r's and (r-1)'s complement ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>পরিপূরক</span></div>
+  <h2><span class="no">৭</span>r's ও (r − 1)'s পরিপূরক</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> r ভিত্তির n-অঙ্কের N: <b>r's (radix)</b> = <span class="circ">rⁿ − N</span> · <b>(r − 1)'s (diminished radix)</b> = <span class="circ">(rⁿ − 1) − N</span> · r's = (r − 1)'s + 1</div>
+  <table class="hand small">
+    <tr><th>ভিত্তি</th><th>(r − 1)'s</th><th>r's</th><th class="l">(r − 1)'s পাওয়ার উপায়</th><th class="l">উদাহরণ</th></tr>
+    <tr><td>10</td><td>9's</td><td>10's</td><td class="l">প্রতিটি অঙ্ক 9 থেকে বিয়োগ</td><td class="l">546700 → 453299 / <b>453300</b></td></tr>
+    <tr><td>2</td><td>1's</td><td>2's</td><td class="l">প্রতিটি বিট উল্টাও</td><td class="l">1101100 → 0010011 / <b>0010100</b></td></tr>
+    <tr><td>8</td><td>7's</td><td>8's</td><td class="l">প্রতিটি অঙ্ক 7 থেকে বিয়োগ</td><td class="l">(325)₈ → 452 / <b>453</b></td></tr>
+    <tr><td>16</td><td>15's</td><td>16's</td><td class="l">প্রতিটি অঙ্ক F থেকে বিয়োগ</td><td class="l">(3A)₁₆ → C5 / <b>C6</b></td></tr>
+  </table>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল: এক টানে 10's complement</span> ডানের শূন্যগুলো রেখে দাও, প্রথম অশূন্য অঙ্ক <b>10</b> থেকে, তার বাঁয়ের সব অঙ্ক <b>9</b> থেকে বিয়োগ: 5467<u>00</u> → 4533<u>00</u>।</div>
+
+  <h2><span class="no">৮</span>পরিপূরকের সাহায্যে বিয়োগ: M − N</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">r's পরিপূরক দিয়ে</span>
+      <ol class="steps"><li>N-কে M-এর সমান অঙ্কে আনো</li><li>M + N-এর r's পরিপূরক</li><li><b>শেষ ক্যারি</b> → বাদ দাও (+)</li><li><b>ক্যারি নেই</b> → −(যোগফলের r's)</li></ol></div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">(r − 1)'s পরিপূরক দিয়ে</span>
+      <ol class="steps"><li>M + N-এর (r − 1)'s পরিপূরক</li><li><b>শেষ ক্যারি</b> → LSB-তে 1 যোগ (<span class="hl">এন্ড-অ্যারাউন্ড ক্যারি</span>)</li><li><b>ক্যারি নেই</b> → −(যোগফলের (r − 1)'s)</li></ol></div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ১: ডেসিমাল ✍</span> 72532 − 3250: 03250-এর 10's complement = 96750; 72532 + 96750 = <b>1</b>69282 → ক্যারি বাদ → <span class="circ">69282</span>।<br>
+    3250 − 72532: 03250 + 27468 = 30718, <b>ক্যারি নেই</b> → −(30718-এর 10's complement) = <b>−69282</b>।</div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ২: বাইনারি ✍</span> X = 1010100 (84), Y = 1000011 (67)
+    <table class="hand small" style="white-space:nowrap;margin:1mm 0 1mm">
+      <tr><th class="l">কাজ</th><th class="l">হিসাব</th><th class="l">ফল</th></tr>
+      <tr><td class="l">X − Y, 2's</td><td class="l">1010100 + 0111101 = <b>1</b> 0010001 → ক্যারি বাদ</td><td class="l"><b>0010001 = 17</b></td></tr>
+      <tr><td class="l">X − Y, 1's</td><td class="l">1010100 + 0111100 = <b>1</b> 0010000 → + 1 (এন্ড-অ্যারাউন্ড)</td><td class="l"><b>0010001 = 17</b></td></tr>
+      <tr><td class="l">Y − X, 2's</td><td class="l">1000011 + 0101100 = 1101111, ক্যারি নেই</td><td class="l"><b>−0010001 = −17</b></td></tr>
+      <tr><td class="l">Y − X, 1's</td><td class="l">1000011 + 0101011 = 1101110, ক্যারি নেই</td><td class="l"><b>−0010001 = −17</b></td></tr>
+    </table></div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> আগে N-এর সামনে <b>0 বসাও</b> (3250 → 03250)। 1's/9's-এ এন্ড-অ্যারাউন্ড ক্যারি ভুলে গেলে উত্তর <b>১ কম</b> হয়।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">আইটি সংযোগ</span> ALU বিয়োগ করে B উল্টে ও carry-in = 1 দিয়ে: SUB আসলে 2's complement দিয়ে ADD (অ্যাডার-সাবট্রাক্টর, পৃ. ৪)।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: decimal codes & Gray code ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>বাইনারি কোড</span></div>
+  <h2><span class="no">৯</span>দশমিক অঙ্কের কোড (BCD পরিবার)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">BCD (8421)</span> প্রতিটি দশমিক অঙ্ক <b>আলাদাভাবে</b> 4 বিটে, ভার 8-4-2-1। ১৬টি বিন্যাসের মাত্র ১০টি ব্যবহৃত: <span class="circ">1010 – 1111 অবৈধ</span> (৬টি অব্যবহৃত)।</div>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th>দশমিক</th><th>8421 (BCD)</th><th>2421 (Aiken)</th><th>Excess-3</th><th>84-2-1</th><th>গ্রে</th></tr>
+    <tr><td>0</td><td>0000</td><td>0000</td><td>0011</td><td>0000</td><td>0000</td></tr>
+    <tr><td>1</td><td>0001</td><td>0001</td><td>0100</td><td>0111</td><td>0001</td></tr>
+    <tr><td>2</td><td>0010</td><td>0010</td><td>0101</td><td>0110</td><td>0011</td></tr>
+    <tr><td>3</td><td>0011</td><td>0011</td><td>0110</td><td>0101</td><td>0010</td></tr>
+    <tr><td>4</td><td>0100</td><td>0100</td><td>0111</td><td>0100</td><td>0110</td></tr>
+    <tr><td>5</td><td>0101</td><td class="red"><b>1011</b></td><td>1000</td><td>1011</td><td>0111</td></tr>
+    <tr><td>6</td><td>0110</td><td>1100</td><td>1001</td><td>1010</td><td>0101</td></tr>
+    <tr><td>7</td><td>0111</td><td>1101</td><td>1010</td><td>1001</td><td>0100</td></tr>
+    <tr><td>8</td><td>1000</td><td>1110</td><td>1011</td><td>1000</td><td>1100</td></tr>
+    <tr><td>9</td><td>1001</td><td>1111</td><td>1100</td><td>1111</td><td>1101</td></tr>
+  </table>
+  <div class="cols">
+    <ul class="dash small">
+      <li><b>ভারযুক্ত (weighted):</b> 8421, 2421, 84-2-1 (ভার ঋণাত্মকও হতে পারে)</li>
+      <li><b>ভারহীন:</b> <span class="hl">এক্সেস-৩ (Excess-3)</span> (= BCD + 0011), গ্রে</li>
+      <li><b>স্ব-পরিপূরক (self-complementing)</b> (বিট উল্টালেই 9's complement): <span class="hl">2421, Excess-3, 84-2-1</span>; 8421 <b>নয়</b></li>
+      <li><b>একক-দূরত্ব / চক্রীয়:</b> গ্রে</li>
+    </ul>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ✍</span> 59 → বাইনারি 111011 (৬ বিট) · BCD <span class="circ">0101 1001</span> · XS-3 1000 1100</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> BCD ≠ বাইনারি: 59-এর BCD 0101 1001, 0011 1011 নয়। BCD-তে বিট বেশি লাগে, কিন্তু অঙ্কে রূপান্তর সহজ (ক্যালকুলেটর, মিটার, RTC চিপ)।</div>
+    </div>
+  </div>
+
+  <h2><span class="no">১০</span>গ্রে কোড (Reflected Binary)</h2>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:start">
+    <div class="small">
+      <p>পরপর দুটি মানে <span class="hl">ঠিক একটি বিট</span> বদলায় (শেষ → প্রথমেও)। ভারহীন: <b>গাণিতিক কাজে অচল</b>।</p>
+      <p><b>বাইনারি → গ্রে:</b> g<sub>MSB</sub> = b<sub>MSB</sub>; g<sub>i</sub> = b<sub>i+1</sub> ⊕ b<sub>i</sub> &nbsp;(G = B ⊕ (B &gt;&gt; 1))<br>1011 → 1, 1⊕0, 0⊕1, 1⊕1 = <span class="circ">1110</span></p>
+      <p><b>গ্রে → বাইনারি:</b> b<sub>MSB</sub> = g<sub>MSB</sub>; b<sub>i</sub> = b<sub>i+1</sub> ⊕ g<sub>i</sub> (সদ্য পাওয়া <b>বাইনারি</b> বিটের সাথে XOR)<br>1101 → 1, 1⊕1 = 0, 0⊕0 = 0, 0⊕1 = 1 → <span class="circ">1001</span></p>
+      <p>ব্যবহার: K-ম্যাপের ক্রম, রোটারি/শ্যাফট এনকোডার, async FIFO পয়েন্টার।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 200" width="245">
+      <g class="w">
+        <path class="ink-r" d="M100,70 H150 M185,102 H235" style="stroke-dasharray:5 4"/>
+        <path class="ink-g" d="M60,10 H100 M150,10 H186" marker-end="url(#ahg)"/>
+      </g>
+      <text x="40" y="16" text-anchor="middle" class="s w6">1-bit</text><text x="125" y="16" text-anchor="middle" class="s w6">2-bit</text><text x="210" y="16" text-anchor="middle" class="s w6">3-bit</text>
+      <text x="40" y="42" text-anchor="middle">0</text><text x="40" y="58" text-anchor="middle">1</text>
+      <text x="125" y="42" text-anchor="middle"><tspan class="g">0</tspan>0</text><text x="125" y="58" text-anchor="middle"><tspan class="g">0</tspan>1</text><text x="125" y="88" text-anchor="middle"><tspan class="r">1</tspan>1</text><text x="125" y="104" text-anchor="middle"><tspan class="r">1</tspan>0</text>
+      <text x="210" y="42" text-anchor="middle"><tspan class="g">0</tspan>00</text><text x="210" y="58" text-anchor="middle"><tspan class="g">0</tspan>01</text><text x="210" y="74" text-anchor="middle"><tspan class="g">0</tspan>11</text><text x="210" y="90" text-anchor="middle"><tspan class="g">0</tspan>10</text>
+      <text x="210" y="120" text-anchor="middle"><tspan class="r">1</tspan>10</text><text x="210" y="136" text-anchor="middle"><tspan class="r">1</tspan>11</text><text x="210" y="152" text-anchor="middle"><tspan class="r">1</tspan>01</text><text x="210" y="168" text-anchor="middle"><tspan class="r">1</tspan>00</text>
+      <text x="70" y="150" text-anchor="middle" class="bn r s">- - আয়না রেখা</text>
+      <text x="125" y="196" text-anchor="middle" class="bn g s">কপি, প্রতিফলন, সামনে 0 / 1</text>
+    </svg></figure>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> B → G: "প্রথমটি কপি, তারপর <b>পাশাপাশি</b> দুটির XOR"। G → B: "প্রথমটি কপি, তারপর <b>নতুন বাইনারি বিট</b> XOR পরের গ্রে বিট" (কোনাকুনি)।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: BCD addition & alphanumeric codes ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>BCD যোগ · অক্ষর কোড</span></div>
+  <h2><span class="no">১১</span>BCD যোগ: +6 সংশোধন</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="def"><span class="lbl">নিয়ম</span> BCD অঙ্ক দুটি সাধারণ বাইনারির মতো যোগ করো। 4-বিট যোগফল <span class="circ">&gt; 9 (1010–1111)</span> <b>অথবা</b> ক্যারি বের হলে <span class="hl">0110 (6) যোগ করো</span> এবং ক্যারি পরের অঙ্কে পাঠাও। কেন 6? 16 − 10 = 6, অর্থাৎ ৬টি অবৈধ কোড ডিঙানো।</div>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">যোগ</th><th>বাইনারি যোগফল</th><th>বৈধ?</th><th>সংশোধন</th><th>BCD ফল</th></tr>
+    <tr><td class="l">4 + 5</td><td>0100 + 0101 = 1001</td><td>হ্যাঁ (9)</td><td>লাগবে না</td><td>0000 1001 = 9</td></tr>
+    <tr><td class="l">8 + 7</td><td>1000 + 0111 = 1111</td><td class="red">&gt; 9</td><td>+ 0110 → 1 0101</td><td><b>0001 0101 = 15</b></td></tr>
+    <tr><td class="l">9 + 9</td><td>1001 + 1001 = 1 0010</td><td class="red">ক্যারি</td><td>+ 0110 → 1 1000</td><td><b>0001 1000 = 18</b></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 280px;align-items:center">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> BCD-তে 59 + 38
+      <ol class="steps"><li>একক: 1001 + 1000 = 1 0001 → ক্যারি, তাই + 0110 = 0111, ক্যারি 1</li><li>দশক: 0101 + 0011 + 1 = 1001 (বৈধ)</li><li>উত্তর <span class="circ">1001 0111</span> = 97 ✓</li></ol>
+      <p>সংশোধন সংকেত: <b>C = K + Z₈Z₄ + Z₈Z₂</b> (K = ক্যারি আউট, Z = যোগফলের বিট)</p></div>
+    <figure class="doodle"><svg viewBox="0 0 280 178" width="275">
+      <g class="w">
+        <rect x="80" y="18" width="160" height="34" rx="8" class="ink-k fill-b"/>
+        <rect x="10" y="72" width="104" height="34" rx="8" class="ink-r fill-r"/>
+        <rect x="140" y="118" width="120" height="34" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M130,2 V18 M190,2 V18" marker-end="url(#ahb)"/>
+        <path class="ink" d="M200,52 V118" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M100,52 L80,72" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M90,106 V135 H140" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M30,106 V150" marker-end="url(#ah)"/>
+        <path class="ink" d="M200,152 V170" marker-end="url(#ahb)"/>
+      </g>
+      <text x="160" y="40" text-anchor="middle" class="bn k s w6"><tspan style="font-family:KalamL">4</tspan>-বিট অ্যাডার ১</text>
+      <text x="62" y="94" text-anchor="middle" class="bn r s w6"><tspan style="font-family:KalamL">Z &gt; 9</tspan> বা <tspan style="font-family:KalamL">K</tspan>?</text>
+      <text x="200" y="140" text-anchor="middle" class="bn k s w6">অ্যাডার ২: <tspan style="font-family:KalamL">+ 0110</tspan></text>
+      <text x="120" y="12" text-anchor="end" class="s">A</text><text x="198" y="12" class="s">B</text>
+      <text x="208" y="90" class="s">Z</text>
+      <text x="96" y="129" class="bn r s"><tspan style="font-family:KalamL">0</tspan> বা <tspan style="font-family:KalamL">6</tspan></text><text x="30" y="166" text-anchor="middle" class="bn r s">ক্যারি আউট</text>
+      <text x="212" y="174" class="bn s">BCD অঙ্ক</text>
+    </svg><figcaption>একটি BCD অ্যাডার ধাপ (কম্বিনেশনাল সার্কিট)</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> 9 + 9 = 1 0010 <b>দেখতে</b> বৈধ (0010), কিন্তু ক্যারি আউটের কারণে + 6 লাগবেই। দুটি শর্তই দেখো। এক্সেস-৩ যোগে নিয়ম ভিন্ন: ক্যারি হলে +0011, না হলে −0011।</div>
+
+  <h2><span class="no">১২</span>আলফানিউমেরিক কোড</h2><span class="tag">MCQ</span>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">কোড</th><th>বিট</th><th>প্রতীক</th><th class="l">মনে রাখো</th></tr>
+    <tr><td class="l">ASCII</td><td class="red"><b>7</b></td><td>128</td><td class="l">0–31 ও 127 কন্ট্রোল · 32 স্পেস · 95 মুদ্রণযোগ্য</td></tr>
+    <tr><td class="l">Extended ASCII</td><td>8</td><td>256</td><td class="l">যেমন ISO 8859-1 (Latin-1)</td></tr>
+    <tr><td class="l">EBCDIC</td><td>8</td><td>256</td><td class="l">IBM মেইনফ্রেম · 'A' = C1h · বর্ণ ধারাবাহিক নয়</td></tr>
+    <tr><td class="l">ইউনিকোড</td><td>≤ 21</td><td>1 114 112</td><td class="l">U+0000 … U+10FFFF · বাংলা <span class="hl">U+0980 – U+09FF</span></td></tr>
+  </table>
+  <div class="cols">
+    <div class="small">
+      <p><b>ASCII:</b> 'A' = <span class="circ">65</span> = 41h · 'a' = <b>97</b> = 61h · '0' = <b>48</b> = 30h · CR = 13, LF = 10, DEL = 127।</p>
+      <p><b>ইউনিকোডের এনকোডিং:</b> <span class="hl">UTF-8</span> ১–৪ বাইট, ASCII-সামঞ্জস্যপূর্ণ (ওয়েবের ডিফল্ট) · UTF-16 ২ বা ৪ বাইট · UTF-32 সবসময় ৪। 'অ' = U+0985 = UTF-8-এ <b>E0 A6 85</b> (৩ বাইট)।</p>
+    </div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>A-65, a-97, 0-48</b>": বড় ↔ ছোট হাতের পার্থক্য 32 = বিট 5 (0x20)। C-তে: <span class="mono">c ^ 0x20</span> কেস বদলায়, <span class="mono">'7' − '0'</span> = 7।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> মূল ASCII <b>7-বিট</b>, 8 নয়। ইউনিকোড হলো অক্ষর-সেট; UTF-8 তার একটি <b>এনকোডিং</b>।</div>
+    </div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: parity & Hamming ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>ত্রুটি শনাক্ত ও সংশোধন</span></div>
+  <h2><span class="no">১৩</span>প্যারিটি: ত্রুটি শনাক্তকরণ</h2><span class="tag">MCQ</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> প্যারিটি বিট মোট 1-এর সংখ্যাকে <b>জোড়</b> (even parity) বা <b>বিজোড়</b> (odd parity) করে। জেনারেটর/চেকার = <span class="hl">সব বিটের XOR</span> (XOR ট্রি, লজিক গেট নোট দেখো)।</div>
+  <div class="cols">
+    <p class="small">ডেটা 1011001-এ চারটি 1 → জোড় প্যারিটি বিট <b>0</b>, বিজোড় প্যারিটি বিট <b>1</b>। জোড় প্যারিটিতে পাঠানো হয়: 1011001<b>0</b>।<br><span class="circ">বিজোড় সংখ্যক</span> বিট উল্টালে ধরা পড়ে; ২, ৪ … টি ত্রুটি ধরা পড়ে না; অবস্থান নির্ণয় বা সংশোধন অসম্ভব।</p>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> একই বাইটে দুটি বিট উল্টালে প্যারিটি একই থাকে: <b>সাধারণ প্যারিটি তা ধরতে পারে না</b>। দ্বিমাত্রিক (সারি + কলাম) প্যারিটি একটি ত্রুটি সংশোধন করতে পারে।</div>
+  </div>
+  <div class="sumbox small"><span class="lbl">হ্যামিং দূরত্ব d</span> = দুটি কোড-শব্দ যত অবস্থানে ভিন্ন। ন্যূনতম দূরত্ব d<sub>min</sub> হলে কোডটি সর্বোচ্চ <span class="circ">d<sub>min</sub> − 1</span>টি ত্রুটি <b>শনাক্ত</b> এবং <span class="circ">⌊(d<sub>min</sub> − 1)/2⌋</span>টি <b>সংশোধন</b> করতে পারে। প্যারিটি: d = 2 (১টি শনাক্ত) · হ্যামিং(7,4): d = 3 (১টি সংশোধন) · SEC-DED: d = 4।</div>
+
+  <h2><span class="no">১৪</span>হ্যামিং কোড: একক ত্রুটি সংশোধন</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="cols" style="grid-template-columns:1fr 260px;align-items:start">
+    <div class="small">
+      <p><b>প্যারিটি বিট সংখ্যা:</b> ক্ষুদ্রতম p যাতে <span class="hl">2ᵖ ≥ m + p + 1</span> (m = ডেটা বিট)।</p>
+      <table class="hand small" style="margin:1mm 0">
+        <tr><th>m</th><th>4</th><th>8</th><th>16</th><th>32</th><th>64</th></tr>
+        <tr><th>p</th><td class="red"><b>3</b></td><td class="red"><b>4</b></td><td>5</td><td>6</td><td>7</td></tr>
+        <tr><th>কোড</th><td>(7,4)</td><td>(12,8)</td><td>(21,16)</td><td>(38,32)</td><td>(71,64)</td></tr>
+      </table>
+      <p><b>অবস্থান:</b> প্যারিটি বিট 1, 2, 4, 8 … (2-এর ঘাত) স্থানে, বাকিগুলোতে ডেটা। P1 দেখে 1, 3, 5, 7 · P2 দেখে 2, 3, 6, 7 · P4 দেখে 4, 5, 6, 7 (যে স্থানের বাইনারি সূচকে ওই বিট 1)।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 260 230" width="255">
+      <g class="w">
+        <circle cx="95" cy="88" r="62" class="ink-r fill-r"/>
+        <circle cx="165" cy="88" r="62" class="ink-g fill-g"/>
+        <circle cx="130" cy="146" r="62" class="ink-p fill-p"/>
+      </g>
+      <text x="62" y="70" text-anchor="middle" class="r w6">P1</text><text x="198" y="70" text-anchor="middle" class="g w6">P2</text><text x="130" y="196" text-anchor="middle" class="p w6">P4</text>
+      <text x="130" y="68" text-anchor="middle" class="k w6">D3</text><text x="94" y="134" text-anchor="middle" class="k w6">D5</text><text x="166" y="134" text-anchor="middle" class="k w6">D6</text><text x="130" y="112" text-anchor="middle" class="r l">D7</text>
+      <text x="130" y="224" text-anchor="middle" class="bn s">প্রতিটি বৃত্তে জোড় প্যারিটি থাকবে</text>
+    </svg></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> জোড় প্যারিটি, ডেটা 1101 → D3 = 1, D5 = 1, D6 = 0, D7 = 1
+    <ol class="steps"><li>P1 = D3⊕D5⊕D7 = 1 · P2 = D3⊕D6⊕D7 = 0 · P4 = D5⊕D6⊕D7 = 0</li><li>কোড-শব্দ (অবস্থান 1 → 7): <span class="circ">1 0 1 0 1 0 1</span></li><li>প্রাপ্ত 1000101: C1 = b1⊕b3⊕b5⊕b7 = 1 · C2 = b2⊕b3⊕b6⊕b7 = 1 · C4 = b4⊕b5⊕b6⊕b7 = 0</li><li>সিনড্রোম C4C2C1 = 011 = <b>3</b> → বিট 3 উল্টাও → 1010101 ✓ (000 = ত্রুটি নেই)</li></ol></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "প্যারিটি বিট থাকে <b>2-এর ঘাতে</b>; সিনড্রোম হলো ভুল বিটের <b>ঠিকানা</b>।"</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">আইটি সংযোগ</span> সার্ভারের ECC RAM = SEC-DED (72,64): হ্যামিং(71,64) + ১টি সামগ্রিক প্যারিটি বিট। ইথারনেটে CRC-32; TCP/IP-তে চেকসাম।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: IEEE 754 ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>ফ্লোটিং পয়েন্ট</span></div>
+  <h2><span class="no">১৫</span>ফিক্সড পয়েন্ট বনাম ফ্লোটিং পয়েন্ট</h2>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>ফিক্সড পয়েন্ট</b>: বাইনারি বিন্দু নির্দিষ্ট স্থানে (পূর্ণসংখ্যা, Q-ফরম্যাট)। <b>ফ্লোটিং পয়েন্ট</b>: মান = <span class="hl">চিহ্ন × ম্যান্টিসা × 2<sup>এক্সপোনেন্ট</sup></span>, তাই বিন্দু "ভাসে"; সীমিত নির্ভুলতায় বিশাল পরিসর। ম্যান্টিসা 1.f আকারে থাকলে সংখ্যাটি <b>নরমালাইজড</b>, তাই শুরুর 1 সংরক্ষণ করতে হয় না (<span class="hl">লুকানো বিট, hidden bit</span>)।</div>
+
+  <h2><span class="no">১৬</span>IEEE 754 ফরম্যাট</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 132" width="640">
+    <g class="w">
+      <rect x="20" y="22" width="24" height="30" class="ink-r fill-r"/><rect x="44" y="22" width="128" height="30" class="ink-g fill-g"/><rect x="172" y="22" width="368" height="30" class="ink fill-b"/>
+      <rect x="20" y="80" width="12" height="30" class="ink-r fill-r"/><rect x="32" y="80" width="88" height="30" class="ink-g fill-g"/><rect x="120" y="80" width="500" height="30" class="ink fill-b"/>
+    </g>
+    <text x="20" y="16" class="bn k s w6">সিঙ্গেল (<tspan style="font-family:KalamL">32</tspan> বিট)</text><text x="32" y="43" text-anchor="middle" class="r w6">S</text><text x="108" y="43" text-anchor="middle" class="bn g w6">এক্সপোনেন্ট <tspan style="font-family:KalamL">8</tspan></text><text x="356" y="43" text-anchor="middle" class="bn w6">ভগ্নাংশ <tspan style="font-family:KalamL">23</tspan></text><text x="560" y="43" class="bn r s">বায়াস <tspan style="font-family:KalamL">127</tspan></text>
+    <text x="20" y="74" class="bn k s w6">ডাবল (<tspan style="font-family:KalamL">64</tspan> বিট)</text><text x="26" y="101" text-anchor="middle" class="r s w6">S</text><text x="76" y="101" text-anchor="middle" class="bn g w6">এক্স. <tspan style="font-family:KalamL">11</tspan></text><text x="370" y="101" text-anchor="middle" class="bn w6">ভগ্নাংশ <tspan style="font-family:KalamL">52</tspan></text><text x="620" y="128" text-anchor="end" class="bn r s">বায়াস <tspan style="font-family:KalamL">1023</tspan></text>
+  </svg><figcaption>মান = (−1)<sup>S</sup> × 1.F × 2<sup>E − bias</sup></figcaption></figure>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">ফরম্যাট</th><th>বিট</th><th>S / E / F</th><th>বায়াস</th><th>নির্ভুলতা</th><th>সর্বোচ্চ ≈</th><th>ক্ষুদ্রতম নরমাল ≈</th></tr>
+    <tr><td class="l">হাফ</td><td>16</td><td>1 / 5 / 10</td><td>15</td><td>11 বিট ≈ ৩ অঙ্ক</td><td>65 504</td><td>6.1 × 10⁻⁵</td></tr>
+    <tr><td class="l">সিঙ্গেল</td><td>32</td><td class="red"><b>1 / 8 / 23</b></td><td class="red"><b>127</b></td><td>24 বিট ≈ ৭ অঙ্ক</td><td>3.4 × 10³⁸</td><td>1.2 × 10⁻³⁸</td></tr>
+    <tr><td class="l">ডাবল</td><td>64</td><td class="red"><b>1 / 11 / 52</b></td><td class="red"><b>1023</b></td><td>53 বিট ≈ ১৬ অঙ্ক</td><td>1.8 × 10³⁰⁸</td><td>2.2 × 10⁻³⁰⁸</td></tr>
+  </table>
+  <div class="cols">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>E (সিঙ্গেল)</th><th>F = 0</th><th>F ≠ 0</th></tr>
+      <tr><td>0</td><td>±0</td><td>সাবনরমাল</td></tr>
+      <tr><td>1 … 254</td><td colspan="2">নরমাল: 2<sup>E−127</sup></td></tr>
+      <tr><td class="red"><b>255</b></td><td class="red"><b>±∞</b></td><td class="red"><b>NaN</b></td></tr>
+    </table>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>1-8-23, বায়াস 127; 1-11-52, বায়াস 1023</b>"। k-বিট এক্সপোনেন্টে বায়াস = 2<sup>k−1</sup> − 1। নির্ভুলতা = ভগ্নাংশ বিট + ১টি লুকানো বিট।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ১: −6.75 এনকোড ✍</span>
+    <ol class="steps"><li>6.75 = 110.11₂ = 1.1011 × 2² → S = 1</li><li>E = 2 + 127 = 129 = 1000 0001</li><li>F = 1011 0000 … 0 (23 বিট; শুরুর 1 লুকানো)</li><li>1 10000001 10110000000000000000000 = <span class="circ">C0D8 0000₁₆</span></li></ol></div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ২: 4120 0000₁₆ ডিকোড ✍</span> 0 10000010 0100…0 → S = 0, E = 130 − 127 = 3, মান = 1.01₂ × 2³ = 1010₂ = <b>10.0</b></div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> 0.1-এর সঠিক বাইনারি রূপ নেই (float 0.1 = 3DCC CCCD₁₆), তাই double-এ 0.1 + 0.2 = 0.30000000000000004 ≠ 0.3: float কখনো == দিয়ে তুলনা কোরো না। বায়াস 127, <b>128 নয়</b>। ব্যাংকিং সফটওয়্যার টাকা রাখে পূর্ণসংখ্যায় (পয়সা) বা decimal-এ, float-এ কখনো নয়।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>N = Σ dᵢ rⁱ · n বিট → 2ⁿ বিন্যাস</p><p>অক্টাল = 3, হেক্স = 4 বিট প্রতি অঙ্কে</p>
+      <p>পূর্ণ অংশ: ÷ r, ভাগশেষ নিচ থেকে</p><p>ভগ্নাংশ: × r, পূর্ণ অংশ ওপর থেকে</p>
+      <p>1's: উল্টাও · 2's: উল্টে + 1 = 2ⁿ − N</p><p>2's পরিসর −2ⁿ⁻¹ … 2ⁿ⁻¹ − 1</p>
+      <p>SM, 1's পরিসর ±(2ⁿ⁻¹ − 1), দুটি শূন্য</p><p>2's-এ MSB-এর মান = −2ⁿ⁻¹</p>
+      <p>V = C<sub>n−1</sub> ⊕ C<sub>n</sub></p><p>চিহ্ন সম্প্রসারণ: MSB কপি</p>
+      <p>r's = rⁿ − N · (r−1)'s = rⁿ − 1 − N</p><p>(r−1)'s: এন্ড-অ্যারাউন্ড ক্যারি</p>
+      <p>BCD: &gt; 9 বা ক্যারি → + 0110</p><p>XS-3 = BCD + 0011</p>
+      <p>G = B ⊕ (B &gt;&gt; 1)</p><p>হ্যামিং 2ᵖ ≥ m + p + 1</p>
+      <p>শনাক্ত d − 1, সংশোধন ⌊(d − 1)/2⌋</p><p>IEEE: (−1)ˢ × 1.F × 2<sup>E − bias</sup></p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>8-বিট 2's পরিসর: −128 … +127</li>
+      <li>−45 (8-বিট 2's) = 1101 0011</li>
+      <li>1's complement ও SM-এ দুটি শূন্য</li>
+      <li>অবৈধ BCD কোড: 1010 – 1111 (৬টি)</li>
+      <li>স্ব-পরিপূরক: 2421, XS-3, 84-2-1</li>
+      <li>1011-এর গ্রে কোড = 1110</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>ASCII = 7 বিট, 128টি অক্ষর</li>
+      <li>'A' = 65, 'a' = 97, '0' = 48</li>
+      <li>প্যারিটি শুধু বিজোড় সংখ্যক ত্রুটি ধরে</li>
+      <li>হ্যামিং(7,4): ৩টি প্যারিটি বিট, d = 3</li>
+      <li>৮ ডেটা বিট → ৪ প্যারিটি বিট (12,8)</li>
+      <li>সিঙ্গেল float: 1-8-23, বায়াস 127</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> 2's পরিসর অপ্রতিসম · ক্যারি ≠ ওভারফ্লো · ঋণাত্মক সংখ্যায় 0 বসালে মান বদলায় · BCD ≠ বাইনারি · BCD-তে 9 + 9-এ ক্যারির জন্য + 6 লাগে · গ্রে → বাইনারিতে আগের <b>বাইনারি</b> বিট লাগে · ASCII 7-বিট · এক্সপোনেন্ট 255 = ∞/NaN · 0.1 বাইনারিতে সঠিক নয়</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> অক্টাল ৩, হেক্স ৪ · প্রথম 1 পর্যন্ত কপি, বাকিটা উল্টাও · একটি ঋণাত্মক বেশি · 10's: শেষের 0 থাকে, প্রথম অশূন্য 10 থেকে, বাকি 9 থেকে · 9-এর বেশি বা ক্যারি → 6 যোগ · গ্রে: প্রথমটি কপি, পাশাপাশি XOR · A-65, a-97, 0-48 · প্যারিটি বিট 2-এর ঘাতে, সিনড্রোম = ঠিকানা · 1-8-23 বায়াস 127</div>
+  <figure class="doodle"><svg viewBox="0 0 560 96" width="560">
+    <g class="w">
+      <rect x="10" y="26" width="100" height="40" rx="12" class="ink fill-b"/>
+      <rect x="150" y="26" width="110" height="40" rx="12" class="ink-r fill-r"/>
+      <rect x="300" y="26" width="110" height="40" rx="12" class="ink-r fill-r"/>
+      <rect x="450" y="26" width="100" height="40" rx="12" class="ink-g fill-g"/>
+      <path class="ink-g" d="M110,46 H148 M260,46 H298 M410,46 H448" marker-end="url(#ahg)"/>
+    </g>
+    <text x="60" y="51" text-anchor="middle" class="w6">+45</text>
+    <text x="205" y="51" text-anchor="middle" class="r w6">0010 1101</text>
+    <text x="355" y="51" text-anchor="middle" class="r w6">1101 0010</text>
+    <text x="500" y="51" text-anchor="middle" class="g w6">1101 0011</text>
+    <text x="129" y="18" text-anchor="middle" class="bn s">বাইনারি</text><text x="279" y="18" text-anchor="middle" class="bn s">উল্টাও</text><text x="429" y="18" text-anchor="middle" class="s">+ 1</text>
+    <text x="500" y="88" text-anchor="middle" class="g s">= −45</text><text x="355" y="88" text-anchor="middle" class="s">1's complement</text>
+  </svg><figcaption>যে রূপান্তর প্রায় প্রতিটি প্রশ্নপত্রে আসে: 2's complement-এ −N</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সংখ্যা পদ্ধতি</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>8-বিট 2's complement সংখ্যার পরিসর:<ol class="opts"><li>−127 … +127</li><li>−128 … +127</li><li>0 … 255</li><li>−128 … +128</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>0110 1000-এর 2's complement:<ol class="opts"><li>1001 0111</li><li>1001 1001</li><li>1001 1000</li><li>0110 1001</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>দশমিক 7-এর এক্সেস-৩ কোড:<ol class="opts"><li>0111</li><li>1010</li><li>1001</li><li>1011</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>বাইনারি 1101-এর গ্রে কোড:<ol class="opts"><li>1001</li><li>1110</li><li>0110</li><li>1011</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>৮টি ডেটা বিটের হ্যামিং কোডে প্যারিটি বিট লাগে:<ol class="opts"><li>3</li><li>4</li><li>5</li><li>8</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>BCD-তে 0111 + 0110-এর যোগফল:<ol class="opts"><li>0001 0011</li><li>1101</li><li>0000 1101</li><li>0001 1001</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>IEEE 754 সিঙ্গেল প্রিসিশনের বায়াস:<ol class="opts"><li>127</li><li>128</li><li>1023</li><li>255</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>কোন কোডটি স্ব-পরিপূরক?<ol class="opts"><li>8421</li><li>গ্রে</li><li>2421</li><li>ASCII</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>'a'-এর ASCII মান (দশমিকে):<ol class="opts"><li>65</li><li>48</li><li>32</li><li>97</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>2's complement যোগে ওভারফ্লো ধরা হয় যখন:<ol class="opts"><li>C<sub>out</sub> = 1</li><li>দুটি ইনপুট &lt; 0</li><li>MSB-তে C<sub>in</sub> ≠ C<sub>out</sub></li><li>ফল = 0</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-খ · ৪-ঘ · ৫-খ · ৬-ক · ৭-ক · ৮-গ · ৯-ঘ · ১০-গ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> জোড় প্যারিটির হ্যামিং(7,4) কোডে ডেটা 1011 এনকোড করো। প্রাপক পেল 0110001: ত্রুটি নির্ণয় ও সংশোধন করো। ১৬টি ডেটা বিটে কয়টি প্যারিটি বিট লাগবে? <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>বিন্যাস P1 P2 D3 P4 D5 D6 D7; D3 = 1, D5 = 0, D6 = 1, D7 = 1 <i class="mk">১</i></li>
+    <li>P1 = 1⊕0⊕1 = 0 · P2 = 1⊕1⊕1 = 1 · P4 = 0⊕1⊕1 = 0 → কোড-শব্দ <span class="circ">0110011</span> <i class="mk">২</i></li>
+    <li>প্রাপ্ত 0110001: C1 = b1⊕b3⊕b5⊕b7 = 0⊕1⊕0⊕1 = 0 · C2 = b2⊕b3⊕b6⊕b7 = 1⊕1⊕0⊕1 = 1 · C4 = b4⊕b5⊕b6⊕b7 = 0⊕0⊕0⊕1 = 1 <i class="mk">২</i></li>
+    <li>সিনড্রোম C4C2C1 = 110 = <b>6</b> → বিট 6 ভুল → সংশোধিত 0110011, ডেটা 1011 ✓ <i class="mk">২</i></li>
+    <li>১৬ ডেটা বিট: 2⁵ = 32 ≥ 16 + 5 + 1 = 22 (2⁴ = 16 &lt; 21) → <b>p = 5</b>, অর্থাৎ (21,16) কোড <i class="mk">১</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>ভগ্নাংশসহ ভিত্তি রূপান্তর</li>
+        <li>SM, 1's, 2's-এ −N; সব পরিসর</li>
+        <li>ওভারফ্লো ও চিহ্ন সম্প্রসারণ</li>
+        <li>BCD যোগ, বাইনারি ↔ গ্রে</li>
+        <li>হ্যামিং(7,4), IEEE 754 সিঙ্গেল</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① 10's complement-এ 3250 − 72532<br>② 1's complement-এ 1010100 − 1000011<br>③ BCD-তে 59 + 38<br>④ IEEE 754 সিঙ্গেলে −13.625</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

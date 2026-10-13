@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>অ্যানালাইসিস, মডেলিং, ডিজাইন ও আর্কিটেকচার: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>তারিখ: ১১.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title" style="font-size:25pt"><span class="u">অ্যানালাইসিস, মডেলিং, ডিজাইন ও আর্কিটেকচার</span></h1>
+  <p class="subtitle">প্রয়োজনীয়তা · DFD · ER মডেলিং · ডিজাইন নীতি · আর্কিটেকচার — ১২ পাতায়</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="520">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">অ্যানালাইসিস</text><text x="320" y="174" text-anchor="middle" class="bn r l">+ ডিজাইন</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">ছয়টি নীতি</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">সম্ভাব্যতা TELOS ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">আহরণের ৪ পদ্ধতি</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">DFD + ডিকশনারি ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">ER মডেল + ম্যাপিং ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">কোহিশন · কাপলিং</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">ডিজাইন নীতি ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">লেয়ার্ড · MVC · UI</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① অ্যানালাইসিস = কী, ডিজাইন = কীভাবে<br>② কনটেক্সট ডায়াগ্রাম = একটি প্রসেস<br>③ DFD ব্যালান্সিং নিয়ম<br>④ ফাংশনাল কোহিশন সেরা<br>⑤ ডেটা কাপলিং সেরা, কনটেন্ট সবচেয়ে খারাপ<br>⑥ M:N → নতুন রিলেশন, ২টি FK</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Analysis Concepts and principles: requirement analysis, <span class="hl">Analysis modeling</span>, <span class="hl">data modeling</span>. <span class="hl">Design concepts and principles</span>, <span class="hl">Architectural design</span>, User Interface design"। ইউজ কেস, ইউনিফাইড প্রসেস ও পূর্ণ UML আলোচনা আছে ইউজ কেস / OO ডিজাইন নোটে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>অ্যানালাইসিস ও ছয় নীতি … পৃ. ২</li><li>কার্যকরী বনাম অ-কার্যকরী; SRS … পৃ. ২</li><li>আহরণ: চারটি পদ্ধতি … পৃ. ৩</li><li>সম্ভাব্যতা TELOS ও বৈধকরণ … পৃ. ৩</li><li>DFD: উপাদান, কনটেক্সট, ব্যালান্সিং … পৃ. ৪</li></ul>
+    <ul class="tick"><li>ডেটা ডিকশনারি + লাইব্রেরি DFD … পৃ. ৫</li><li>ER: এন্টিটি, অ্যাট্রিবিউট, সম্পর্ক … পৃ. ৬</li><li>লাইব্রেরি ERD → রিলেশনাল স্কিমা … পৃ. ৭</li><li>কোহিশন, কাপলিং, ডিজাইন নীতি … পৃ. ৮</li><li>ডিজাইনের স্তর, আর্কিটেকচার, UI … পৃ. ৯–১০</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: analysis principles + requirements ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>অ্যানালাইসিস ও প্রয়োজনীয়তা</span></div>
+  <h2><span class="no">১</span>অ্যানালাইসিস: "কী" আগে, তারপর "কীভাবে"</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>সফটওয়্যার অ্যানালাইসিস</b> = ডিজাইন ও ইমপ্লিমেন্টেশনের আগে <span class="hl">সফটওয়্যারটি কী করা উচিত তা বোঝা ও নির্দিষ্ট করা</span>। এটি সমস্যা ও তথ্যের ক্ষেত্র বুঝে, সমাধান বুঝে নয়। অ্যানালাইসিসের উত্তর <span class="circ">কী</span>, ডিজাইনের উত্তর <span class="circ">কীভাবে</span>, ইমপ্লিমেন্টেশন হলো করা।</div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">নীতি</th><th class="l">এর কী চাই</th></tr>
+      <tr><td class="l">সঠিকতা</td><td class="l">প্রতিটি প্রকৃত প্রয়োজন ধরা পড়ে</td></tr>
+      <tr><td class="l">ধারাবাহিকতা</td><td class="l">দুটি প্রয়োজনীয়তা দ্বন্দ্বী নয়</td></tr>
+      <tr><td class="l">সম্পূর্ণতা</td><td class="l">কার্যকরী + অ-কার্যকরী, দুটোই</td></tr>
+      <tr><td class="l">সম্ভাব্যতা</td><td class="l">সীমার মধ্যেই অর্জনযোগ্য</td></tr>
+      <tr><td class="l">ট্রেসেবিলিটি</td><td class="l">উৎস থেকে টেস্ট পর্যন্ত ট্রেসযোগ্য</td></tr>
+      <tr><td class="l">বোধগম্যতা</td><td class="l">সব পাঠক এক অর্থে পড়েন</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 320 150" width="270">
+      <g class="w">
+        <rect x="10" y="16" width="124" height="44" rx="12" class="ink-r fill-r"/>
+        <rect x="186" y="16" width="124" height="44" rx="12" class="ink-g fill-g"/>
+        <path class="ink" d="M134,38 H186" marker-end="url(#ahb)"/>
+        <rect x="10" y="92" width="300" height="46" rx="10" class="ink-k" style="fill:rgba(255,238,0,.35)"/>
+      </g>
+      <text x="72" y="38" text-anchor="middle" class="bn r w6">অ্যানালাইসিস</text>
+      <text x="72" y="54" text-anchor="middle" class="bn s">সিস্টেম কী করে</text>
+      <text x="248" y="38" text-anchor="middle" class="bn g w6">ডিজাইন</text>
+      <text x="248" y="54" text-anchor="middle" class="bn s">কীভাবে হয়</text>
+      <text x="160" y="110" text-anchor="middle" class="bn k s">বোঝা হয় সমস্যা ও তথ্যের</text>
+      <text x="160" y="128" text-anchor="middle" class="bn k s">ক্ষেত্র, সমাধান নয়</text>
+    </svg><figcaption>দুই ধাপের পার্থক্য এক বাক্যে</figcaption></figure>
+  </div>
+  <h2><span class="no">২</span>কার্যকরী বনাম অ-কার্যকরী প্রয়োজনীয়তা</h2>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">কার্যকরী (functional)</th><th class="l">অ-কার্যকরী (non-functional)</th></tr>
+    <tr><td class="l">উত্তর দেয়</td><td class="l">কোন কোন সেবা ও আচরণ</td><td class="l">কতটা ভালো ও কতটা বেশি</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">লগইন, সার্চ, বই ইস্যু</td><td class="l">২ সেকেন্ডে উত্তর; ৯৯.৯% আপটাইম; AES-256</td></tr>
+    <tr><td class="l">কে চায়</td><td class="l">শেষ ব্যবহারকারী ও বিশ্লেষক</td><td class="l">ব্যবহারকারী <b>ও</b> প্রতিষ্ঠান</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="trick" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> তিন স্তর: <b>ব্যবসায়িক</b> "ওভারডিউ ফেরত কমানো" → <b>ব্যবহারকারী</b> "কর্মীরা ডিউ-ডেট তালিকা দেখেন" → <b>সিস্টেম</b> "কোয়েরি ২ সেকেন্ডে ফেরত আসে"।</div>
+    <div class="exam" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "সিস্টেম দ্রুত হবে" — এটি প্রয়োজনীয়তা নয়, যাচাইযোগ্যই নয়। প্রতিটি অ-কার্যকরী প্রয়োজনের সঙ্গে <b>মাপার মানদণ্ড</b> থাকতে হয়।</div>
+  </div>
+  <h2><span class="no">৩</span>স্পেসিফিকেশন: SRS-এ কী থাকে</h2>
+  <div class="sumbox small"><span class="lbl">SRS (IEEE 830 / ISO-IEC 29148)</span>
+    <b>১ ভূমিকা</b> — উদ্দেশ্য, পরিধি, সংজ্ঞা, সারসংক্ষেপ, তথ্যসূত্র ·
+    <b>২ সামগ্রিক বর্ণনা</b> — দৃষ্টিভঙ্গি, ফাংশন, ব্যবহারকারী শ্রেণি, পরিবেশ, সীমাবদ্ধতা, অনুমান ·
+    <b>৩ নির্দিষ্ট প্রয়োজন</b> — বাইরের ইন্টারফেস, কার্যকরী, কর্মক্ষমতা, নকশা-সীমাবদ্ধতা, সিস্টেম বৈশিষ্ট্য ·
+    <b>৪ সংযোজন</b> — শব্দতালিকা, সূচক।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: elicitation, feasibility, validation ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>আহরণ ও সম্ভাব্যতা</span></div>
+  <h2><span class="no">৪</span>প্রয়োজনীয়তা আহরণ: চারটি পদ্ধতি</h2><span class="tag">high-yield</span>
+  <table class="hand small">
+    <tr><th class="l">পদ্ধতি</th><th class="l">শক্তি</th><th class="l">দুর্বলতা</th></tr>
+    <tr><td class="l">ইন্টারভিউ</td><td class="l">গভীর তথ্য; সঙ্গে সঙ্গে প্রশ্ন করা যায়</td><td class="l">ধীর ও ব্যয়বহুল; প্রশ্নকারীর পক্ষপাত</td></tr>
+    <tr><td class="l">কর্মশালা / <span class="hl">JAD</span></td><td class="l">দ্রুত; ঐকমত্য তৈরি; মালিকান্বোধ</td><td class="l">দক্ষ সফাস্টকারী দরকার</td></tr>
+    <tr><td class="l">প্রশ্নোত্তরী</td><td class="l">সস্তা; পুনরাবৃত্তিযোগ্য; বহু মানুষ</td><td class="l">উত্তর কম; ব্যাখ্যা করা যায় না</td></tr>
+    <tr><td class="l">পর্যবেক্ষণ</td><td class="l">বাস্তবে <b>যেভাবে করা হয়</b> তা ধরে</td><td class="l">ধীর; লক্ষ্যে থাকলে আচরণ বদলায়</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 540 150" width="430">
+    <g class="w">
+      <rect x="8" y="14" width="120" height="32" rx="9" class="ink fill-b"/>
+      <rect x="148" y="14" width="120" height="32" rx="9" class="ink fill-b"/>
+      <rect x="288" y="14" width="120" height="32" rx="9" class="ink fill-b"/>
+      <rect x="428" y="14" width="104" height="32" rx="9" class="ink fill-b"/>
+      <path class="ink" d="M128,30 H148" marker-end="url(#ahb)"/>
+      <path class="ink" d="M268,30 H288" marker-end="url(#ahb)"/>
+      <path class="ink" d="M408,30 H428" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M480,46 V74 H68 V48" marker-end="url(#ahp)"/>
+      <rect x="8" y="92" width="300" height="46" rx="10" class="ink-k" style="fill:rgba(255,238,0,.35)"/>
+      <rect x="320" y="92" width="212" height="46" rx="10" class="ink-g fill-g"/>
+    </g>
+    <text x="68" y="35" text-anchor="middle" class="bn w6">আহরণ</text>
+    <text x="208" y="35" text-anchor="middle" class="bn w6">বিশ্লেষণ</text>
+    <text x="348" y="35" text-anchor="middle" class="bn w6">স্পেসিফি.</text>
+    <text x="480" y="35" text-anchor="middle" class="bn w6">বৈধকরণ</text>
+    <text x="274" y="70" text-anchor="middle" class="bn p s">ফিডব্যাক ও সংশোধন</text>
+    <text x="16" y="112" class="bn s k">১ ইন্টারভিউ  ২ কর্মশালা (JAD)</text>
+    <text x="16" y="130" class="bn s k">৩ প্রশ্নোত্তরী  ৪ পর্যবেক্ষণ</text>
+    <text x="328" y="112" class="bn s g">বাইরে → SRS + মডেল</text>
+    <text x="328" y="130" class="bn s g">ভেতরে → প্রয়োজন ঠিক করো</text>
+  </svg><figcaption>প্রয়োজনীয়তা প্রকৌশল একটি রেখা নয়, বর্তনীয় প্রক্রিয়া</figcaption></figure>
+  <h2><span class="no">৫</span>সম্ভাব্যতা যাচাই: TELOS</h2>
+  <div class="cols small">
+    <ul class="dash" style="margin-top:0">
+      <li><b>T</b>echnical — প্রযুক্তিগত: প্রচলিত হার্ডওয়্যার, সফটওয়্যার ও দক্ষতা দিয়ে কি এটি বানানোই যায়?</li>
+      <li><b>E</b>conomic — অর্থনৈতিক: সুবিধা কি ব্যয়ের চেয়ে বেশি? (পেব্যাক পিরিয়ড)</li>
+      <li><b>L</b>egal — আইনগত: আইন, গোপনীয়তা, লাইসেন্স, চুক্তি, মান</li>
+      <li><b>O</b>perational — পরিচালনগত: প্রতিষ্ঠানের কাজের ধরনের সঙ্গে মানাবে?</li>
+      <li><b>S</b>chedule — সময়সূচিগত: কত সময়ের মধ্যে ডেলিভারি সম্ভব?</li>
+    </ul>
+    <div>
+      <div class="trick" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> শব্দ হিসেবে মনে রাখো: <b>T-E-L-O-S</b> — গ্রিক <i>telos</i> = লক্ষ্য। রিপোর্ট শেষে <b>গো-নো-গো</b> সিদ্ধান্ত।</div>
+      <div class="exam" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> সম্ভাব্যতা যাচাই হয় SRS লেখার <b>আগে</b>, আবার মডেল তৈরির সময় — এটি শেষ ধাপ নয়।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">বৈধকরণ (validation)</span> প্রমাণ করা যে মডেল ও স্পেস ঠিক: পুনরীক্ষা ও পরিদর্শন, প্রোটোটাইপ, গ্রহণযোগ্যতার টেস্ট কেস, মডেল ওয়াকথ্রু, ডিসিশন টেবিল। যাচাই করি: সঠিকতা, সম্পূর্ণতা, ধারাবাহিকতা, বাস্তবতা, যাচাইযোগ্যতা।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">কাজের উদাহরণ ✍</span> একটি হাসপাতাল অনলাইনে অ্যাপয়েন্টমেন্ট চায়। <b>T</b>: সার্ভার ও বায়োমেট্রিক যন্ত্র কিনতে হবে। <b>E</b>: ছয়জন বছর সাশ্রয়, লাইসেন্স খরচ তিন, পেব্যাক পাঁচ বছর? <b>L</b>: রোগীর তথ্য দেশের ভেতরেই থাকতে হবে। <b>O</b>: কাউন্টারের কর্মী সব তথ্য আবার টাইপ করবেন না। <b>S</b>: কোয়ার্টার শেষের আগে চালু? কেবল T, L ও O পাশ — প্রকল্প অপেক্ষায়।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: analysis model + DFD ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>DFD</span></div>
+  <h2><span class="no">৬</span>অ্যানালাইসিস মডেল ও ডেটা ফ্লো ডায়াগ্রাম</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">অ্যানালাইসিস মডেল</span> প্রয়োজনীয়তা থেকে তৈরি সিস্টেমের <b>বিমূর্ত প্রতিনিধিত্ব</b>। <span class="hl">DFD = কী ঘটে</span> (ফাংশন ও প্রবাহ) · <span class="hl">ERD = কী আছে</span> (তথ্যের কাঠামো) — দুটো পরিপূরক, প্রতিদ্বন্দ্বী নয়।</div>
+  <div class="cols" style="grid-template-columns:1.25fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">উপাদান</th><th class="l">চিহ্ন</th><th class="l">অর্থ</th></tr>
+      <tr><td class="l">বাইরের এন্টিটি</td><td class="l">বর্গাকার</td><td class="l">সিস্টেমের বাইরের উৎস বা গন্তব্য</td></tr>
+      <tr><td class="l">প্রসেস</td><td class="l">বৃত্ত</td><td class="l">ইনপুট ডেটাকে আউটপুটে রূপান্তর; 1.0, 2.0 …</td></tr>
+      <tr><td class="l">ডেটা স্টোর</td><td class="l">দুই রেখা</td><td class="l">সিস্টেমের ভেতরে সংরক্ষিত সম্পর্কিত তথ্য</td></tr>
+      <tr><td class="l">ডেটা ফ্লো</td><td class="l">তির</td><td class="l">উপাদানগুলোর মধ্যে চলা একটি <b>নাম দেওয়া ডেটা</b></td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 320 176" width="250">
+      <g class="w">
+        <rect x="88" y="6" width="144" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink-k" d="M160,40 V62" marker-end="url(#ah)"/>
+        <rect x="8" y="62" width="304" height="66" rx="10" class="ink-k" style="fill:rgba(255,238,0,.3)"/>
+        <rect x="20" y="80" width="132" height="24" rx="9" class="ink fill-b"/>
+        <rect x="168" y="80" width="132" height="24" rx="9" class="ink fill-b"/>
+        <path class="ink" d="M152,92 H168"/>
+        <path class="ink-r" d="M10,23 H86" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M234,23 H310" marker-end="url(#ahg)"/>
+      </g>
+      <text x="48" y="16" text-anchor="middle" class="r s">in-flow</text>
+      <text x="272" y="16" text-anchor="middle" class="g s">out-flow</text>
+      <text x="160" y="28" text-anchor="middle" class="w6">1.0 Issue &amp; Return</text>
+      <text x="160" y="76" text-anchor="middle" class="s">level-2 DFD of 1.0</text>
+      <text x="86" y="97" text-anchor="middle" class="k s">2.1 Check stock</text>
+      <text x="234" y="97" text-anchor="middle" class="k s">2.2 Write loan</text>
+      <text x="160" y="150" text-anchor="middle" class="bn r s w6">ব্যালান্সড: সন্তানের ইন-ফ্লো = পিতার</text>
+      <text x="160" y="168" text-anchor="middle" class="bn r s w6">আউট-ফ্লোও পিতার মতো</text>
+    </svg><figcaption>ব্যালান্সিং: নিচের স্তর পিতা প্রসেসের প্রবাহ না বদলে বদলায়</figcaption></figure>
+  </div>
+  <h2><span class="no">৭</span>লেভেল ০: কনটেক্সট ডায়াগ্রাম</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">লেভেল ০ = কনটেক্সট ডায়াগ্রাম ★</span> <b>পুরো সিস্টেমকে একটি মাত্র প্রসেস</b> হিসেবে দেখানো; সিস্টেম সীমানা পেরিয়ে যাওয়া প্রবাহ দিয়ে বাইরের এন্টিটির সঙ্গে যুক্ত। <span class="circ">কোনো স্টোর বা অভ্যন্তরীণ প্রসেস থাকে না</span> — সেগুলো লেভেল ১-এ আসে।</div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> এখানে ডেটাবেজের টেবিল (সেটা ERD), অভ্যন্তরীণ প্রসেস (লেভেল ১) বা সময়ক্রম অনুযায়ী বার্তা (sequence diagram) দেখানো হয় না।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 470 200" width="360">
+      <g class="w">
+        <rect x="6" y="92" width="100" height="34" class="ink fill-b"/>
+        <rect x="364" y="92" width="100" height="34" class="ink fill-b"/>
+        <circle cx="235" cy="109" r="52" class="ink-k fill-y"/>
+        <path class="ink-r" d="M106,101 H180" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M180,117 H106" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M290,101 H364" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M364,117 H290" marker-end="url(#ah)"/>
+      </g>
+      <text x="56" y="114" text-anchor="middle" class="k w6">MEMBER</text>
+      <text x="414" y="114" text-anchor="middle" class="k w6">LIBRARIAN</text>
+      <text x="235" y="102" text-anchor="middle" class="k l">0</text>
+      <text x="235" y="124" text-anchor="middle" class="k s">Library</text>
+      <text x="235" y="140" text-anchor="middle" class="k s">System</text>
+      <text x="143" y="94" text-anchor="middle" class="r w6">①</text><text x="327" y="94" text-anchor="middle" class="g w6">③</text>
+      <text x="143" y="132" text-anchor="middle" class="g w6">②</text><text x="327" y="132" text-anchor="middle" class="r w6">④</text>
+      <text x="235" y="178" text-anchor="middle" class="bn s">① ধার বা সার্চের অনুরোধ  ② বই ও ডিউ-ডেট</text>
+      <text x="235" y="195" text-anchor="middle" class="bn s">③ ধার ও জরিমানার রিপোর্ট  ④ নতুন বইয়রেকর্ড</text>
+    </svg><figcaption>বেশি আসে: একটি বৃত্ত = পুরো সিস্টেম</figcaption></figure>
+  </div>
+  <div class="cols small">
+    <div class="sumbox" style="margin-top:0"><span class="lbl">স্তর ও বিভাজন</span> কনটেক্সট (০) → লেভেল ১ = প্রতিটি প্রধান ফাংশনে একটি বৃত্ত → লেভেল ২, ৩ … নম্বরকরণ: লেভেল ১-এ 1.0, 2.0; লেভেল ২-এ 2.1, 2.2। জটিলতা সামলাতে <span class="hl">divide and conquer</span>।</div>
+    <div class="exam" style="margin-top:0"><span class="lbl">নিয়ম (DFD)</span> স্টোর → স্টোর নয়, স্টোর → এন্টিটি নয়, এন্টিটি → স্টোর নয়। প্রতিটি প্রসেসে ≥ ১টি ইনপুট ও ≥ ১টি আউটপুট লাগে (ধূসর বা কালো গর্ত = ভুল)। প্রবাহ <b>যুক্তিগত</b> এবং <b>নামযুক্ত</b>।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: data dictionary + case A ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>ডেটা ডিকশনারি ও কেস A</span></div>
+  <h2><span class="no">৮</span>ডেটা ডিকশনারি</h2><span class="tag">নোটেশন</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> DFD-র প্রতিটি ডেটা ফ্লো, ডেটা স্টোর ও ডেটা উপাদানের <span class="hl">বিস্তারিত বর্ণনা</span>। প্রতিটি এন্ট্রির চারটি অংশ: <b>নাম = গঠন / সংজ্ঞা / কোথায় ব্যবহৃত / মন্তব্য</b>। যে এন্ট্রি লেখা যায় না, প্রয়োজনীয়তা এখনো ঝাপসা।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>চিহ্ন</th><th class="l">অর্থ</th></tr>
+      <tr><td>x = a + b</td><td class="l">x গঠিত a ও b দিয়ে</td></tr>
+      <tr><td>x = a, b</td><td class="l">বিকল্প — a <b>অথবা</b> b</td></tr>
+      <tr><td>x = [a]</td><td class="l">পুনরাবৃত্তি — <b>এক বা তার বেশি</b></td></tr>
+      <tr><td>x = {a}</td><td class="l">ঐচ্ছিক — <b>শূন্য বা এক</b></td></tr>
+      <tr><td>qualifier/x</td><td class="l">x হলো সেই key, যা একটি y চিহ্নিত করে</td></tr>
+      <tr><td>* লেখা *</td><td class="l">মন্তব্য / ছদ্মনাম</td></tr>
+    </table>
+    <div class="ex small" style="margin-top:0"><span class="lbl">কেস A-এর এন্ট্রি ✍</span><br>
+      <span class="mono">Loan = loan_id + member_id +</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;accession_no + issue_date +</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;due_date + {return_date}</span><br>
+      <span class="mono">Member = member_id + name +</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;phone + membership_type</span><br>
+      <span class="mono">Book = accession_no + isbn + title</span>
+    </div>
+  </div>
+  <h3>কেস A — একই লাইব্রেরি সিস্টেম, DFD হিসেবে</h3>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 560 210" width="320">
+      <g class="w">
+        <rect x="6" y="22" width="88" height="30" class="ink fill-b"/>
+        <circle cx="150" cy="37" r="28" class="ink-k fill-b"/>
+        <circle cx="290" cy="37" r="28" class="ink-k fill-b"/>
+        <circle cx="430" cy="37" r="28" class="ink-k fill-b"/>
+        <path class="ink-k" d="M120,108 H220 M120,128 H220"/>
+        <path class="ink-k" d="M260,108 H360 M260,128 H360"/>
+        <rect x="466" y="152" width="88" height="30" class="ink fill-b"/>
+        <path class="ink" d="M94,37 H122" marker-end="url(#ahb)"/>
+        <path class="ink" d="M150,65 V88" marker-end="url(#ahg)"/>
+        <path class="ink" d="M180,88 V68" marker-end="url(#ahb)"/>
+        <path class="ink" d="M178,37 H262" marker-end="url(#ahb)"/>
+        <path class="ink" d="M290,65 V88" marker-end="url(#ahg)"/>
+        <path class="ink" d="M94,46 H106 V145 H418 V62" marker-end="url(#ahb)"/>
+        <path class="ink" d="M220,99 H240 V128 H412 V62" marker-end="url(#ahg)"/>
+        <path class="ink" d="M466,162 H440 V118 H364" marker-end="url(#ahb)"/>
+        <path class="ink" d="M456,40 H488 V144 H510 V150" marker-end="url(#ahg)"/>
+      </g>
+      <text x="50" y="43" text-anchor="middle" class="k w6" style="font-size:19px">MEMBER</text>
+      <text x="510" y="173" text-anchor="middle" class="k w6" style="font-size:19px">LIBRARIAN</text>
+      <text x="150" y="36" text-anchor="middle" class="w6" style="font-size:21px">1.0</text><text x="150" y="56" text-anchor="middle" class="s">Register</text>
+      <text x="290" y="36" text-anchor="middle" class="w6" style="font-size:21px">2.0</text><text x="290" y="56" text-anchor="middle" class="s">Search</text>
+      <text x="430" y="36" text-anchor="middle" class="w6" style="font-size:21px">3.0</text><text x="430" y="56" text-anchor="middle" class="s">Loan</text>
+      <text x="170" y="124" text-anchor="middle" class="k s">D1 Members</text>
+      <text x="310" y="124" text-anchor="middle" class="k s">D2 Books</text>
+    </svg><figcaption>লেভেল ১: তিনটি প্রসেস, দুটি স্টোর, দুটি বাইরের এন্টিটি</figcaption></figure>
+    <div>
+      <ul class="dash small">
+        <li><b>1.0 Register</b>: সদস্যের তথ্য → D1 Members।</li>
+        <li><b>2.0 Search</b>: ক্যাটালগ কোয়েরি → বইয়ের তালিকা; D2 পড়ে।</li>
+        <li><b>3.0 Loan</b>: ধার/ফেরত → D2 দেখে, D1-এ লেখে, বই ও ডিউ-ডেট ফেরত দেয়।</li>
+        <li><b>লাইব্রেরিয়ান</b>: D2 রক্ষণাবেক্ষণ করে, ওভারডিউ রিপোর্ট পায়।</li>
+      </ul>
+      <p class="small">পৃষ্ঠা ৪-এর কনটেক্সট ডায়াগ্রামের সঙ্গে ব্যালান্সড: সেখানে ঢোকা প্রতিটি প্রবাহ এখানে কোনো প্রসেস নেয়, আর বেরোনো প্রতিটি প্রবাহ এখানে তৈরি হয়।</p>
+      <div class="exam" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> DFD <b>যুক্তিগত</b> প্রবাহ দেখায়, তাই "book file" মানে "C:\library\books.txt" নয়। ডেটাবেজ ডিজাইন চাইলে ERD আঁকো।</div>
+    </div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: ER modelling fundamentals ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>ER মডেলিং</span></div>
+  <h2><span class="no">৯</span>এন্টিটি-রিলেশনশিপ (ER) মডেলিং</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>ER মডেল</b> (Chen, <span class="circ">১৯৭৬</span>) একটি <span class="hl">কনসেপচুয়াল তথ্য মডেল</span>: বাস্তব জগতকে দেখায় <b>এন্টিটি</b>, তার <b>অ্যাট্রিবিউট</b> এবং এন্টিটিগুলোর মধ্যে <b>সম্পর্ক</b> দিয়ে — কোনো DBMS বা ফাইলের উল্লেখ ছাড়াই।</div>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <figure class="doodle"><svg viewBox="0 0 500 185" width="400">
+      <g class="w">
+        <rect x="10" y="66" width="86" height="42" class="ink fill-b"/>
+        <ellipse cx="155" cy="87" rx="42" ry="17" class="ink"/>
+        <ellipse cx="270" cy="87" rx="48" ry="17" class="ink"/>
+        <ellipse cx="390" cy="87" rx="44" ry="17" class="ink"/>
+        <ellipse cx="150" cy="25" rx="48" ry="16" class="ink"/>
+        <ellipse cx="150" cy="25" rx="56" ry="23" class="ink"/>
+        <ellipse cx="278" cy="25" rx="46" ry="16" class="ink" style="stroke-dasharray:4 3"/>
+        <ellipse cx="330" cy="142" rx="44" ry="16" class="ink"/>
+        <ellipse cx="430" cy="142" rx="44" ry="16" class="ink"/>
+        <path class="ink" d="M96,87 H113 M197,87 H222 M318,87 H346"/>
+        <path class="ink" d="M150,48 V70 M278,41 V70 M390,104 L360,126 M390,104 L404,126"/>
+        <path class="ink-r" d="M236,92 H304"/>
+      </g>
+      <text x="53" y="92" text-anchor="middle" class="k w6">BOOK</text>
+      <text x="155" y="92" text-anchor="middle" class="s">Title</text>
+      <text x="270" y="92" text-anchor="middle" class="s">Accession</text>
+      <text x="390" y="92" text-anchor="middle" class="s">Author</text>
+      <text x="150" y="30" text-anchor="middle" class="s">Keywords</text>
+      <text x="278" y="30" text-anchor="middle" class="p s">Available</text>
+      <text x="330" y="147" text-anchor="middle" class="s">First</text>
+      <text x="430" y="147" text-anchor="middle" class="s">Last</text>
+      <text x="250" y="176" text-anchor="middle" class="bn s">দুই অন্ডকার = বহুমূল্য · ছোটানো রেখা = উদ্ভূত · লাল = key</text>
+    </svg><figcaption>অ্যাট্রিবিউট নোটেশন: সরল, key, কম্পোজিট, বহুমূল্য, উদ্ভূত</figcaption></figure>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">এন্টিটি</span> বাস্তব জগতের বস্তু বা ঘটনা যা স্পষ্টভাবে শনাক্ত করা যায়। <b>শক্তিশালী (strong)</b> এন্টিটির নিজস্ব key থাকে; <b>দুর্বল (weak)</b> এন্টিটির (দ্বিবর্গাকার ফ্রেম, পার্টিয়াল key) নিজের key নেই, শুধু <b>মালিক</b> এন্টিটির মাধ্যমে চিহ্নিত হয়।</div>
+      <div class="def small"><span class="lbl">অ্যাট্রিবিউট</span> <b>সরল / কম্পোজিট</b> (নাম = প্রথম + শেষ) · <b>একক / বহুমূল্য</b> (কয়েকটি ফোন নম্বর) · <b>উদ্ভূত</b> (জন্মদিন থেকে বয়স) · <b>key</b> (নিচে রেখা, স্বল্পতম)।</div>
+      <div class="def small"><span class="lbl">সম্পর্ক (relationship)</span> এন্টিটিগুলোর মধ্যে সংযোগ। <b>ডিগ্রি</b> = কয়টি এন্টিটি ধরন অংশ নেয়: ইউনারি (১), বাইনারি (২), টার্নারি (৩)। ইউনারিকে <b>রিকার্সিভ</b>ও বলে — কর্মী <i>পরিচালনা করে</i> কর্মী।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <figure class="doodle"><svg viewBox="0 0 610 134" width="400">
+      <g class="w">
+        <rect x="4" y="50" width="50" height="24" class="ink fill-b"/>
+        <polygon points="80,62 102,49 124,62 102,75" class="ink-k fill-y"/>
+        <rect x="146" y="50" width="50" height="24" class="ink fill-b"/>
+        <path class="ink" d="M54,62 H58 M124,62 H146"/>
+        <rect x="184" y="50" width="50" height="24" class="ink fill-b"/>
+        <polygon points="260,62 282,49 304,62 282,75" class="ink-k fill-y"/>
+        <rect x="326" y="36" width="50" height="22" class="ink fill-b"/>
+        <rect x="326" y="62" width="50" height="22" class="ink fill-b"/>
+        <path class="ink" d="M234,62 H238 M304,58 L326,47 M304,66 L326,73"/>
+        <rect x="404" y="50" width="50" height="24" class="ink fill-b"/>
+        <polygon points="478,62 500,49 522,62 500,75" class="ink-k fill-y"/>
+        <rect x="548" y="50" width="50" height="24" class="ink fill-b"/>
+        <path class="ink" d="M454,62 H458 M522,62 H548"/>
+        <path class="ink-r" d="M573,74 V94 M579,74 V94"/>
+      </g>
+      <text x="80" y="28" text-anchor="middle" class="r w6">1 : 1</text>
+      <text x="260" y="28" text-anchor="middle" class="r w6">1 : N</text>
+      <text x="500" y="28" text-anchor="middle" class="r w6">M : N</text>
+      <text x="29" y="67" text-anchor="middle" class="s">A</text>
+      <text x="171" y="67" text-anchor="middle" class="s">B</text>
+      <text x="209" y="67" text-anchor="middle" class="s">A</text>
+      <text x="351" y="52" text-anchor="middle" class="s">B</text>
+      <text x="351" y="78" text-anchor="middle" class="s">B</text>
+      <text x="429" y="67" text-anchor="middle" class="s">A</text>
+      <text x="573" y="67" text-anchor="middle" class="s">B</text>
+      <text x="102" y="67" text-anchor="middle" class="s">has</text>
+      <text x="282" y="67" text-anchor="middle" class="s">has</text>
+      <text x="500" y="67" text-anchor="middle" class="s">buys</text>
+      <text x="305" y="106" text-anchor="middle" class="bn r s">টোটাল অংশগ্রহণ = দুই রেখা</text>
+      <text x="305" y="124" text-anchor="middle" class="bn s">পার্শিয়াল অংশগ্রহণ = এক রেখা</text>
+    </svg><figcaption>কার্ডিনালিটি (সর্বোচ্চ কত) ও অংশগ্রহণ (অবশ্যই কি?)</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">কার্ডিনালিটি</th><th class="l">লাইব্রেরির উদাহরণ</th></tr>
+        <tr><td class="l">1 : 1</td><td class="l">এক সদস্য ↔ এক কার্ড</td></tr>
+        <tr><td class="l">1 : N</td><td class="l">এক সদস্য → অনেক ধার</td></tr>
+        <tr><td class="l">M : N</td><td class="l">সদস্য ↔ বই, সময়ের সঙ্গে</td></tr>
+        <tr><td class="l">টোটাল</td><td class="l">প্রতিটি উদাহরণকে <b>অবশ্যই</b> যেতে হয়</td></tr>
+        <tr><td class="l">পার্শিয়াল</td><td class="l">এন্টিটি <b>বাইরে থাকতে</b> পারে</td></tr>
+      </table>
+      <div class="exam" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> কার্ডিনালিটি ও অংশগ্রহণ <b>ভিন্ন</b> প্রশ্ন: "সর্বোচ্চ কত?" বনাম "অবশ্যই অংশ নেবে?"। 1 : N মানে N-পক্ষ বাধ্যতামূলক নয়।</div>
+    </div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: case B ERD + mapping + data models ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>ER → রিলেশন</span></div>
+  <h2><span class="no">১০</span>কেস B — ER ডায়াগ্রাম, তারপর রিলেশনাল স্কিমা</h2>
+  <div class="cols" style="grid-template-columns:280px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 520 215" width="270">
+      <g class="w">
+        <rect x="16" y="16" width="110" height="34" class="ink fill-b"/>
+        <rect x="394" y="16" width="110" height="34" class="ink fill-b"/>
+        <polygon points="190,84 250,110 190,136 130,110" class="ink-k fill-y"/>
+        <polygon points="330,84 392,110 330,136 268,110" class="ink-k fill-y"/>
+        <rect x="192" y="168" width="140" height="40" class="ink fill-b"/>
+        <rect x="198" y="174" width="128" height="28" class="ink fill-b"/>
+        <path class="ink" d="M71,50 V70 H190 V82" marker-end="url(#ahb)"/>
+        <path class="ink" d="M449,50 V70 H330 V82" marker-end="url(#ahb)"/>
+        <path class="ink" d="M190,136 V152 H238 V166" marker-end="url(#ahb)"/>
+        <path class="ink" d="M330,136 V152 H286 V166" marker-end="url(#ahb)"/>
+      </g>
+      <text x="71" y="33" text-anchor="middle" class="k w6">MEMBER</text>
+      <text x="449" y="33" text-anchor="middle" class="k w6">BOOK</text>
+      <text x="190" y="115" text-anchor="middle" class="s">issues</text>
+      <text x="330" y="115" text-anchor="middle" class="s">on loan</text>
+      <text x="262" y="193" text-anchor="middle" class="k w6">LOAN</text>
+      <text x="120" y="66" text-anchor="middle" class="r s">1</text>
+      <text x="410" y="66" text-anchor="middle" class="r s">1</text>
+      <text x="214" y="160" class="r s">0..*</text>
+      <text x="304" y="160" class="r s">0..*</text>
+    </svg><figcaption>Chen নোটেশন — LOAN দুর্বল: key = Member_id + Accession_no</figcaption></figure>
+    <div>
+      <p class="small">একজন <b>MEMBER</b> 0..*টি <b>LOAN</b> দেন, আর একটি <b>BOOK</b> 0..*টি <b>LOAN</b>-এ থাকে; LOAN দুটির সঙ্গেই টোটাল অংশ নেয়, তাই দুটো ছাড়া তার অস্তিত্ব নেই। এতে থাকে Issue_date, Due_date ও {Return_date}। একই দুই এন্টিটি পরে আবার মেলে — ধার, অর্ডার, ভর্তি — তখন ঘটনাটি ধরে রাখতে <span class="hl">তৃতীয় একটি রিলেশন</span> লাগে।</p>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> MEMBER–LOAN এক লাইনের সাধারণ 1:N নয়: (সদস্য, বই) জোড়া সময়ের সঙ্গে আবার আসে, তাই এটি <b>M:N</b>, এবং LOAN হয় <b>সহায়ক (associative) এন্টিটি</b>।</div>
+    </div>
+  </div>
+  <h2><span class="no">১১</span>ER → রিলেশনাল ম্যাপিং: সাতটি নিয়ম</h2>
+  <table class="hand small">
+    <tr><th>#</th><th class="l">উৎস উপাদান</th><th class="l">যে রিলেশন তৈরি হয়</th></tr>
+    <tr><td>১</td><td class="l">শক্তিশালী এন্টিটি</td><td class="l">একই অ্যাট্রিবিউট; তার key = <b>primary key</b></td></tr>
+    <tr><td>২</td><td class="l">দুর্বল এন্টিটি</td><td class="l">মালিকের key আসে FK হিসেবে; PK = মালিকের key + পার্টিয়াল key</td></tr>
+    <tr><td>৩</td><td class="l">1 : 1 সম্পর্ক</td><td class="l">এক পক্ষের key <b>অন্য</b> রিলেশনে FK</td></tr>
+    <tr><td>৪</td><td class="l">1 : N সম্পর্ক</td><td class="l"><b>এক</b> পক্ষের key <b>অনেক</b> পক্ষের রিলেশনে FK</td></tr>
+    <tr><td>৫</td><td class="l">M : N সম্পর্ক</td><td class="l"><b>নতুন রিলেশন</b>: দুটি key FK; জোড়াই PK</td></tr>
+    <tr><td>৬</td><td class="l">বহুমূল্য অ্যাট্রিবিউট</td><td class="l"><b>নতুন রিলেশন</b>: এন্টিটির key + অ্যাট্রিবিউট = PK</td></tr>
+    <tr><td>৭</td><td class="l">N-ary সম্পর্ক</td><td class="l"><b>নতুন রিলেশন</b>: সব অংশগ্রহণকারীর key = PK</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">কেস B প্রয়োগ ✍</span>
+      <span class="mono">MEMBER(<u>member_id</u>, name, phone)</span><br>
+      <span class="mono">BOOK(<u>accession_no</u>, isbn, title)</span><br>
+      <span class="mono">LOAN(<u>member_id</u>, <u>accession_no</u>,</span><br>
+      <span class="mono">&nbsp;&nbsp;&nbsp;&nbsp;issue_date, due_date, {return_date})</span><br>
+      <span class="mono">AUTHOR_BOOK(isbn, author_name)</span><br>
+      <span class="tiny">নিয়ম ২ দেয় LOAN-এর key; নিয়ম ৬ ভাগ করে বহু-লেখকের বই।</span>
+    </div>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">তথ্য মডেল</th><th class="l">উত্তর দেয়</th></tr>
+        <tr><td class="l">কনসেপচুয়াল</td><td class="l">কোন এন্টিটি ও সম্পর্ক আছে — ERD</td></tr>
+        <tr><td class="l">লজিক্যাল</td><td class="l">অ্যাট্রিবিউট, ডোমেইন, key; রিলেশনাল মডেলে</td></tr>
+        <tr><td class="l">ফিজিক্যাল</td><td class="l">টেবিল, কলাম, ডেটা টাইপ, ইনডেক্স — DBMS-নির্দিষ্ট</td></tr>
+      </table>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> কনসেপচুয়াল → লজিক্যাল → <b>ফিজিক্যাল</b>। কনসেপচুয়াল মডেলে <span class="circ">অ্যাট্রিবিউট ও key থাকে না</span>।</div>
+    </div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: design principles + cohesion/coupling ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>ডিজাইনের নীতি</span></div>
+  <h2><span class="no">১২</span>ডিজাইন: প্রয়োজনীয়তা থেকে ব্লুপ্রিন্ট</h2>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">নীতি</th><th class="l">বাস্তবে</th></tr>
+      <tr><td class="l">অ্যাবস্ট্রাকশন</td><td class="l">একটি ইউনিট <b>কী</b> করে তা বলো, <b>কীভাবে</b> তা লুকাও</td></tr>
+      <tr><td class="l">মডুলারিটি</td><td class="l">আলাদা করে পরীক্ষাযোগ্য <span class="hl">মডিউলে</span> ভাগ করো</td></tr>
+      <tr><td class="l">তথ্য গোপনকরণ ★</td><td class="l">(<span class="circ">Parnas, 1972</span>) যা বদলাতে পারে তা লুকাও</td></tr>
+      <tr><td class="l">উদ্বেগ পৃথকীকরণ</td><td class="l">এক মডিউল, এক উদ্বেগ</td></tr>
+      <tr><td class="l">রিফাইনমেন্ট</td><td class="l">উপর থেকে নিচে ধাপে ধাপে কোড পর্যন্ত</td></tr>
+      <tr><td class="l">পুনঃব্যবহার</td><td class="l">বিদ্যমান ডিজাইন বা কম্পোনেন্ট ব্যবহার করো</td></tr>
+    </table>
+    <div>
+      <div class="tipbox small" style="margin-top:0"><span class="lbl">কী লাভ</span> মডিউল বোঝা, একক পরীক্ষা, পুনঃব্যবহার ও স্বাধীনভাবে পরিবর্তনযোগ্য; সংশোধন এক মডিউলেই থাকে।</div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>অ্যাবস্ট্রাকশন ≠ এনক্যাপসুলেশন</b>। অ্যাবস্ট্রাকশন ঠিক করে কী দেখানো হবে; এনক্যাপসুলেশন ডেটা ও তার অপারেশন একসঙ্গে বাঁধে। <b>মডুলারিটি লক্ষ্য, তথ্য গোপনকরণ তার কৌশল।</b></div>
+    </div>
+  </div>
+  <h2><span class="no">১৩</span>ফাংশনাল ইনডিপেন্ডেন্স: কোহিশন ও কাপলিং</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">কোহিশন (cohesion)</span> একটি মডিউলের ভেতরের উপাদানগুলো একটি উদ্দেশ্যে কতটা জড়িয়ে। <b>যত বেশি, তত ভালো।</b></div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th>#</th><th class="l">প্রকার</th><th class="l">জিজ্ঞাসা</th></tr>
+        <tr><td class="green">১</td><td class="l"><b>ফাংশনাল</b> ★</td><td class="l">একটি স্পষ্ট কাজ?</td></tr>
+        <tr><td>২</td><td class="l">সিকোয়েন্শিয়াল</td><td class="l">আউটপুট → পরের ইনপুট?</td></tr>
+        <tr><td>৩</td><td class="l">কমিউনিকেশনাল</td><td class="l">একই ডেটা ভেতরে-বাইরে?</td></tr>
+        <tr><td>৪</td><td class="l">প্রসিডিউরাল</td><td class="l">নির্দিষ্ট ক্রমে?</td></tr>
+        <tr><td>৫</td><td class="l">টেম্পোরাল</td><td class="l">শুধু একসঙ্গে চলে?</td></tr>
+        <tr><td>৬</td><td class="l">লজিক্যাল</td><td class="l">যেকোনো একটি বাছা?</td></tr>
+        <tr><td class="red">৭</td><td class="l"><b>কয়েন্সিডেন্টাল</b></td><td class="l">শুধু একই ফাইলে?</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">কাপলিং (coupling)</span> একটি মডিউল অন্যটির উপর কতটা নির্ভর করে। <b>যত কম, তত ভালো।</b></div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th>#</th><th class="l">প্রকার</th><th class="l">ভাগ করে</th></tr>
+        <tr><td class="green">১</td><td class="l"><b>ডেটা</b> ★</td><td class="l">সরল প্যারামিটার</td></tr>
+        <tr><td>২</td><td class="l">স্ট্যাম্প</td><td class="l">গোটা স্ট্রাকচার</td></tr>
+        <tr><td>৩</td><td class="l">কন্ট্রোল</td><td class="l">একটি ফ্ল্যাগ</td></tr>
+        <tr><td>৪</td><td class="l">এক্সটার্নাল</td><td class="l">একটি ইন্টারফেস</td></tr>
+        <tr><td>৫</td><td class="l">কমন</td><td class="l">একটি গ্লোবাল এরিয়া</td></tr>
+        <tr><td class="red">৬</td><td class="l"><b>কনটেন্ট</b></td><td class="l">অন্যের <b>অভ্যন্তরীণ</b> তথ্য</td></tr>
+      </table>
+    </div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 380 130" width="370">
+    <g class="w">
+      <rect x="4" y="4" width="186" height="122" rx="10" class="ink-k" style="fill:rgba(255,238,0,.22)"/>
+      <rect x="190" y="4" width="186" height="122" rx="10" class="ink-k" style="fill:rgba(211,47,47,.12)"/>
+    </g>
+    <text x="97" y="22" text-anchor="middle" class="w6">COHESION ↓</text>
+    <text x="283" y="22" text-anchor="middle" class="w6">COUPLING ↓</text>
+    <text x="97" y="38" text-anchor="middle" class="g w6">functional</text>
+    <text x="97" y="52" text-anchor="middle" class="s">sequential</text>
+    <text x="97" y="66" text-anchor="middle" class="s">communicational</text>
+    <text x="97" y="80" text-anchor="middle" class="s">procedural</text>
+    <text x="97" y="94" text-anchor="middle" class="s">temporal</text>
+    <text x="97" y="108" text-anchor="middle" class="s">logical</text>
+    <text x="97" y="122" text-anchor="middle" class="r w6">coincidental</text>
+    <text x="283" y="38" text-anchor="middle" class="g w6">data</text>
+    <text x="283" y="56" text-anchor="middle" class="s">stamp</text>
+    <text x="283" y="74" text-anchor="middle" class="s">control</text>
+    <text x="283" y="92" text-anchor="middle" class="s">external</text>
+    <text x="283" y="110" text-anchor="middle" class="s">common</text>
+    <text x="283" y="124" text-anchor="middle" class="r w6">content</text>
+  </svg><figcaption>দুটি তালিকাই সরাসরি পরীক্ষায় আসে — এই ক্রমেই মুখস্থ করো</figcaption></figure>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: design types + design process + case C ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>ডিজাইন প্রক্রিয়া</span></div>
+  <h2><span class="no">১৪</span>ডিজাইনের তিনটি স্তর</h2><span class="tag">লিখিতে প্রিয়</span>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr">
+    <figure class="doodle"><svg viewBox="0 0 500 126" width="380">
+      <g class="w">
+        <rect x="8" y="10" width="140" height="34" rx="10" class="ink-r fill-r"/>
+        <rect x="178" y="10" width="140" height="34" rx="10" class="ink-r fill-r"/>
+        <rect x="348" y="10" width="140" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M148,27 H178" marker-end="url(#ahb)"/>
+        <path class="ink" d="M318,27 H348" marker-end="url(#ahb)"/>
+        <rect x="178" y="80" width="140" height="28" rx="10" class="ink-g fill-g"/>
+        <path class="ink-g" d="M418,44 V62 H248 V78" marker-end="url(#ahg)"/>
+      </g>
+      <text x="78" y="32" text-anchor="middle" class="bn w6">১ আর্কিটেকচার</text>
+      <text x="248" y="32" text-anchor="middle" class="bn w6">২ উচ্চ-স্তর</text>
+      <text x="418" y="32" text-anchor="middle" class="bn w6">৩ বিস্তারিত</text>
+      <text x="248" y="99" text-anchor="middle" class="bn g w6">৪ কোড</text>
+      <text x="248" y="120" text-anchor="middle" class="bn g s">রিফাইনমেন্ট, উপরে থেকে নিচে</text>
+    </svg><figcaption>প্রতিটি স্তর উপরেরটিকে পরিশীলিত করে</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">স্তর</th><th class="l">যা ঠিক করে</th></tr>
+      <tr><td class="l">১ আর্কিটেকচারাল</td><td class="l">সিস্টেমের কাঠামো: কম্পোনেন্ট, সম্পর্ক ও সীমাবদ্ধতা; তথ্য কাঠামো ও ইন্টারফেস</td></tr>
+      <tr><td class="l">২ উচ্চ-স্তর (মডিউলার)</td><td class="l">মডিউল → সাবমডিউল; কোন মডিউল কোন ডেটা স্ট্রাকচারের মালিক</td></tr>
+      <tr><td class="l">৩ বিস্তারিত</td><td class="l">সঠিক অ্যালগরিদম, রেকর্ডের নেস্টিং, ভাষাভিত্তিক ডেটা স্ট্রাকচার</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">১৫</span>আর্কিটেকচারাল ডিজাইন প্রক্রিয়া</h2>
+  <ol class="steps small">
+    <li>ডিজাইনের ঠিকানা: ডিজাইন মডেলকে <b>কোন কোন ফাংশন</b> করতে হবে?</li>
+    <li>তথ্য নকশা করো — ডোমেইন মডেল থেকে <b>ডিজাইন ক্লাস ডায়াগ্রাম</b> (DCD) হয়</li>
+    <li>ফাংশন বণ্টন: প্রতিটি ক্লাস কোন কম্পোনেন্ট বা সাবসিস্টেমে থাকবে</li>
+    <li><b>ডিজাইন ক্লাস</b> পরিশীলিত করো: অ্যাট্রিবিউট, অপারেশন, অ্যাসোসিয়েশন ও <b>নেভিগেবিলিটি</b></li>
+    <li><b>ডিজাইন সিকোয়েন্স</b> ঠিক করো: ক্লাসগুলো <span class="hl">যে ক্রমে বাস্তবায়িত ও একক পরীক্ষিত হবে</span></li>
+  </ol>
+  <div class="cols" style="grid-template-columns:260px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 470 180" width="250">
+      <g class="w">
+        <rect x="16" y="10" width="170" height="58" class="ink fill-b"/>
+        <rect x="16" y="112" width="170" height="58" class="ink fill-b"/>
+        <rect x="230" y="10" width="170" height="58" class="ink fill-b"/>
+        <rect x="230" y="112" width="170" height="58" class="ink fill-b"/>
+        <path class="ink-k" d="M16,36 H186 M16,76 H186 M230,36 H400 M230,76 H400"/>
+        <path class="ink-g" d="M101,68 V112" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M315,68 V92 H186 V118" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M186,141 H230" marker-end="url(#ahg)"/>
+      </g>
+      <text x="101" y="28" text-anchor="middle" class="w6">Member</text>
+      <text x="101" y="50" text-anchor="middle" class="s">- id : int</text>
+      <text x="101" y="64" text-anchor="middle" class="g s">+ borrow(b)</text>
+      <text x="101" y="130" text-anchor="middle" class="w6">Loan</text>
+      <text x="101" y="152" text-anchor="middle" class="s">- issue : Date</text>
+      <text x="315" y="28" text-anchor="middle" class="w6">Book</text>
+      <text x="315" y="50" text-anchor="middle" class="s">- accession : String</text>
+      <text x="315" y="64" text-anchor="middle" class="g s">+ issueTo(m)</text>
+      <text x="315" y="130" text-anchor="middle" class="w6">Fine</text>
+      <text x="315" y="152" text-anchor="middle" class="s">- amount : double</text>
+      <text x="120" y="95" text-anchor="middle" class="r s">1</text>
+      <text x="82" y="95" text-anchor="middle" class="r s">0..*</text>
+      <text x="208" y="134" text-anchor="middle" class="r s">1</text>
+    </svg><figcaption>কেস C: ডোমেইন ক্লাস → ডিজাইন ক্লাস</figcaption></figure>
+    <div>
+      <ul class="dash small">
+        <li><b>ডোমেইন মডেল</b> (শুধু তথ্য) থেকে যোগ হয় <b>অপারেশন</b>, <b>নেভিগেবিলিটি তির</b> ও প্যাকেজ।</li>
+        <li><b>কেস C</b>: Member 1 → 0..* Loan, Book 1 → 0..* Loan, Loan 1 → 0..1 Fine।</li>
+        <li>ডিজাইন সিকোয়েন্স: আগে <b>Book</b> ও <b>Member</b> (এরা তথ্য ধরে), তারপর <b>Loan</b>, তারপর <b>Fine</b>।</li>
+        <li>এই কাজের জন্যই GRASP প্যাটার্ন।</li>
+      </ul>
+      <p class="small" style="margin:1mm 0 0 1mm;white-space:nowrap"><span class="circ" style="font-size:.8em">Information Expert, Creator, Low Coupling–High Cohesion</span></p>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> DCD ডোমেইন মডেল <b>নয়</b>: এটি বাস্তবায়ন-সচেতন, আর ডোমেইন মডেলে শুধু ক্লাস, অ্যাট্রিবিউট ও অ্যাসোসিয়েশন থাকে।</div>
+    </div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: architectural styles + UI ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>আর্কিটেকচার ও UI</span></div>
+  <h2><span class="no">১৬</span>আর্কিটেকচারাল স্টাইল</h2><span class="tag">high-yield</span>
+  <table class="hand small">
+    <tr><th class="l">স্টাইল</th><th class="l">কম্পোনেন্ট কীভাবে কথা বলে</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l">লেয়ার্ড</td><td class="l">উপরের স্তরকে সেবা দেয়, নিচেরটি ব্যবহার করে</td><td class="l">UI → ব্যবসা → ডেটা</td></tr>
+    <tr><td class="l">পাইপ-অ্যান্ড-ফিল্টার</td><td class="l">ফিল্টারের শৃঙ্খলে স্ট্রিম বয়ে যায়</td><td class="l">Unix shell: cat f | grep x</td></tr>
+    <tr><td class="l">ক্লায়েন্ট-সার্ভার</td><td class="l">ক্লায়েন্ট সার্ভারের সেবা চায়</td><td class="l">ব্রাউজার ও ওয়েব সার্ভার</td></tr>
+    <tr><td class="l">রিপোজিটরি</td><td class="l">সব কম্পোনেন্ট একটি স্টোর পড়ে-লেখে</td><td class="l">যৌথ ডেটাবেজ</td></tr>
+    <tr><td class="l">ইভেন্ট-চালিত</td><td class="l">কম্পোনেন্ট ইভেন্ট ঘোষণা করে</td><td class="l">GUI লিসেনার, কিউ</td></tr>
+    <tr><td class="l">ব্রোকার</td><td class="l">ব্রোকার অনুরোধ ও সেবা মেলায়</td><td class="l">সার্ভিস লুকআপ, CORBA বাস</td></tr>
+    <tr><td class="l">MVC</td><td class="l">Model = তথ্য, View = রেন্ডার, Control = ইভেন্ট</td><td class="l">ওয়েব ফ্রেমওয়ার্ক</td></tr>
+    <tr><td class="l">মাইক্রোসার্ভিসেস</td><td class="l">প্রতিটি ব্যবসায়িক সক্ষমতায় আলাদা সেবা</td><td class="l">আলাদা পেমেন্ট সার্ভিস</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <figure class="doodle"><svg viewBox="0 0 330 215" width="240">
+      <g class="w">
+        <rect x="45" y="8" width="240" height="44" rx="10" class="ink fill-b"/>
+        <rect x="45" y="76" width="240" height="44" rx="10" class="ink fill-b"/>
+        <rect x="45" y="144" width="240" height="44" rx="10" class="ink fill-b"/>
+        <path class="ink" d="M165,52 V74" marker-end="url(#ahb)"/>
+        <path class="ink" d="M165,120 V142" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M205,140 V122" marker-end="url(#ahg)"/>
+      </g>
+      <text x="165" y="28" text-anchor="middle" class="bn w6">প্রেজেন্টেশন স্তর</text>
+      <text x="165" y="46" text-anchor="middle" class="bn s">ওয়েব পেজ, মোবাইল স্ক্রিন</text>
+      <text x="165" y="96" text-anchor="middle" class="bn w6">ব্যবসায়িক স্তর</text>
+      <text x="165" y="114" text-anchor="middle" class="bn s">সদস্য · ক্যাটালগ · ধার · জরিমানা</text>
+      <text x="165" y="164" text-anchor="middle" class="bn w6">ডেটা-অ্যাক্সেস স্তর</text>
+      <text x="165" y="182" text-anchor="middle" class="bn s">রিপোজিটরি → SQL ডেটাবেজ</text>
+      <text x="165" y="208" text-anchor="middle" class="bn r s">স্ট্রিক্ট লেয়ারিং: নিচেরটিই কেবল ডাকা হয়</text>
+    </svg><figcaption>লাইব্রেরি সিস্টেম তিন স্তরের আর্কিটেকচারে</figcaption></figure>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">লেয়ার্ড কেন জেতে ✍</span> ডেটাবেজ MySQL থেকে PostgreSQL-এ গেলে কেবল ডেটা-অ্যাক্সেস স্তর বদলায়; UI বদলালে কেবল উপরের স্তর। প্রতিটি স্তর আলাদা করে পরীক্ষা করা যায়; দাম হলো প্রতিটি সীমানায় ডেটা অবজেক্টের একটি কপি।</div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল: MVC</span> <b>M</b>odel = যা সত্য · <b>V</b>iew = যেভাবে দেখায় · <b>C</b>ontroller = ব্যবহারকারী এইমাত্র কী করেছে।</div>
+    </div>
+  </div>
+  <h2><span class="no">১৭</span>UI ডিজাইন: ব্যবহারযোগ্য ইন্টারফেসের নীতি</h2>
+  <div class="cols small">
+    <ul class="dash" style="margin-top:0">
+      <li><b>সিস্টেমের অবস্থা দৃশ্যমান</b> — কী হচ্ছে তা দেখান।</li>
+      <li><b>বাস্তব জগতের সঙ্গে মিল</b> — ব্যবহারকারীর ভাষা ও একক।</li>
+      <li><b>ব্যবহারকারীর নিয়ন্ত্রণ ও স্বাধীনতা</b> — undo, cancel, পরিষ্কার বহিরপথ।</li>
+      <li><b>ধারাবাহিকতা ও মান</b> — এক রূপ, এক অর্থ।</li>
+      <li><b>ভুল প্রতিরোধ</b> — সীমাবদ্ধ রাখো, নিশ্চিত করো, ডিফল্ট দাও।</li>
+      <li><b>স্মরণের বদলে চিনতা</b> — অপশন দেখিয়ে দাও।</li>
+      <li><b>অ্যাক্সেসযোগ্যতা</b> — প্রবীণ ও প্রতিবন্ধী ব্যবহারকারীও পারেন।</li>
+    </ul>
+    <div>
+      <div class="def" style="margin-top:0"><span class="lbl">লক্ষ্য</span> সহজ, দক্ষ ও আনন্দময় ব্যবহার। তিনটি <span class="circ">স্বর্ণ নিয়ম</span>: <b>ব্যবহারকারীকে নিয়ন্ত্রণে রাখো</b>, <b>ব্যবহারকারীর স্মরণের বোঝা কমাও</b>, <b>সিস্টেমকে ধারাবাহিক রাখো</b>।</div>
+      <div class="exam" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ব্যবহারযোগ্যতা ≠ শেখার সহজতা</b>। একটি সিস্টেম শিখতে সহজ হয়েও ব্যবহারযোগ্য না হতে পারে; নতুনদের জন্য সহজ সিস্টেম দিনজুড়ে কাজ করা একজন অভিজ্ঞের জন্য অব্যবহারযোগ্যও হতে পারে।</div>
+    </div>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>রিভিশন I</span></div>
+  <h1 class="title" style="font-size:25pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্যশালা</span>
+    <div class="fgrid small">
+      <p>অ্যানালাইসিস = <b>কী</b> · ডিজাইন = <b>কীভাবে</b></p><p>৬ নীতি: সঠিক, ধারাবাহিক, সম্পূর্ণ</p>
+      <p>…সম্ভব, ট্রেসযোগ্য, বোধগম্য</p><p>আহরণ: ইন্টারভিউ, JAD, জরিপ, পর্যবেক্ষণ</p>
+      <p>TELOS = T, E, L, O, S</p><p>DFD: এন্টিটি, প্রসেস, স্টোর, ফ্লো</p>
+      <p>লেভেল ০ = কনটেক্সট = <b>১ প্রসেস</b></p><p>ব্যালান্সিং: সন্তানের প্রবাহ = পিতার</p>
+      <p>স্তর: 1.0, 2.0 → 2.1, 2.2 …</p><p>কোহিশন: ফাংশনাল → কয়েন্সিডেন্টাল</p>
+      <p>কাপলিং: ডেটা → কনটেন্ট</p><p>ER: এন্টিটি, অ্যাট্রিবিউট, সম্পর্ক</p>
+      <p>ডিগ্রি = অংশগ্রহণকারীর সংখ্যা</p><p>দুই রেখা = টোটাল অংশগ্রহণ</p>
+      <p>M:N, বহুমূল্য, n-ary → নতুন রিলেশন</p><p>কনসেপচুয়াল → লজিক্যাল → ফিজিক্যাল</p>
+      <p>ডিজাইন: আর্কিটেকচারাল → উচ্চ → বিস্তারিত</p><p>লেয়ার্ড, MVC, ক্লায়েন্ট-সার্ভার</p>
+    </div>
+  </div>
+  <div class="cols small">
+    <ol class="num">
+      <li>কনটেক্সট = একটি প্রসেস</li>
+      <li>স্টোর → স্টোর কখনো নয়</li>
+      <li>প্রতিটি প্রসেসে ইন ও আউট লাগে</li>
+      <li>ফাংশনাল কোহিশন সেরা</li>
+      <li>ডেটা কাপলিং সবচেয়ে শিথিল</li>
+      <li>কনটেন্ট কাপলিং সবচেয়ে খারাপ</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>M:N → জাংশন রিলেশন</li>
+      <li>দুর্বল key = মালিকের key + পার্টিয়াল</li>
+      <li>দুই রেখা = টোটাল অংশগ্রহণ</li>
+      <li>কনসেপচুয়াল মডেলে অ্যাট্রিবিউট নেই</li>
+      <li>তথ্য গোপনকরণ: Parnas, 1972</li>
+      <li>মাইক্রোসার্ভিস আলাদা ডিপ্লয় হয়</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">সবচেয়ে বড় ফাঁদ</span> "কী" ও "কীভাবে" অ্যানালাইসিস-ডিজাইনের মধ্যে গুলিয়ে যাওয়া · স্টোরসহ আঁকা কনটেক্সট ডায়াগ্রাম · প্রবাহকে ফিজিক্যাল স্টোরেজ ভাবা · কোহিশন ও কাপলিংয়ের ক্রম উলটো করা · M:N-কে দুটি কলামে রেখে দেওয়া · টোটাল অংশগ্রহণকে কার্ডিনালিটি ভাবা · কনসেপচুয়াল মডেলে অ্যাট্রিবিউট ঢোকানো</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসঙ্গে</span> কনটেক্সট = একটি বৃত্ত · ইন-ফ্লোর বিরুদ্ধে আউট-ফ্লো · প্রতিটি প্রসেস নম্বরযুক্ত · প্রবাহের নাম থাকতে হবে · দুর্বল = দ্বিবর্গাকার ফ্রেম + ছোটানো রোম্বাস · নিচে রেখা = key, দুই অন্ডকার = বহুমূল্য, ছোটানো = উদ্ভূত · স্ট্রিক্ট লেয়ারিং শুধু নিচে ডাকে · নিয়ন্ত্রণ, স্মরণ, ধারাবাহিকতা</div>
+  <figure class="doodle"><svg viewBox="0 0 520 104" width="430">
+    <g class="w">
+      <circle cx="70" cy="45" r="26" class="ink fill-b"/>
+      <circle cx="260" cy="45" r="26" class="ink fill-b"/>
+      <circle cx="450" cy="45" r="26" class="ink fill-b"/>
+      <path class="ink-g" d="M98,45 H232" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M288,45 H422" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M450,74 C380,86 140,86 70,74" marker-end="url(#ahp)"/>
+    </g>
+    <text x="70" y="51" text-anchor="middle" class="bn w6">কী</text>
+    <text x="260" y="51" text-anchor="middle" class="bn w6">মডেল</text>
+    <text x="450" y="51" text-anchor="middle" class="bn w6">কীভাবে</text>
+    <text x="165" y="36" text-anchor="middle" class="bn g s">প্রয়োজনীয়তা</text>
+    <text x="355" y="36" text-anchor="middle" class="bn g s">ব্লুপ্রিন্ট</text>
+    <text x="260" y="101" text-anchor="middle" class="bn p s">বৈধকরণ কাজ মডেলে ফিরিয়ে দেয়</text>
+  </svg><figcaption>প্রয়োজনীয়তা → মডেল → ডিজাইন, আবার ফিরে</figcaption></figure>
+  <div class="cols small">
+    <div class="sumbox" style="margin-top:0"><span class="lbl">আরও অনুশীলন (লিখিত)</span> ① হাসপাতালের কনটেক্সট ও লেভেল-১ DFD, ব্যালান্সিং সহ · ② ছয়টি প্রবাহের ডেটা ডিকশনারি · ③ M:N অ্যাকাউন্ট থাকা ব্যাংকের ER → রিলেশন</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">পাশের লেসনে কী আছে</span> ইউজ কেস, ইউনিফাইড প্রসেস ও UML — ইউজ কেস / OO ডিজাইন নোটে; GRASP প্যাটার্ন — GRASP নোটে।</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · অ্যানালাইসিস ও ডিজাইন</span><span>রিভিশন II: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>সবচেয়ে শিথিল কাপলিং কোনটি?<ol class="opts"><li>ডেটা কাপলিং</li><li>কনটেন্ট কাপলিং</li><li>কমন কাপলিং</li><li>কন্ট্রোল কাপলিং</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>সবচেয়ে শক্তিশালী কোহিশন কোনটি?<ol class="opts"><li>কয়েন্সিডেন্টাল</li><li>ফাংশনাল</li><li>টেম্পোরাল</li><li>লজিক্যাল</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>লেভেল ০ DFD কী দেখায়?<ol class="opts"><li>প্রতিটি প্রসেস</li><li>টেবিলগুলো</li><li>বার্তাসমূহ</li><li>একটি প্রসেস</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>DFD-এ কোনটি নিষিদ্ধ?<ol class="opts"><li>প্রসেস → স্টোর</li><li>প্রসেস → এন্টিটি</li><li>স্টোর → স্টোর</li><li>এন্টিটি → প্রসেস</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>দুর্বল এন্টিটির key কী?<ol class="opts"><li>শুধু পার্টিয়াল key</li><li>মালিকের key + পার্টিয়াল</li><li>সারোজেট key</li><li>শুধু মালিকের key</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>M : N কীভাবে রূপান্তর হয়?<ol class="opts"><li>নতুন রিলেশন</li><li>কিছু নয়</li><li>নতুন কলাম</li><li>প্রসিডিউর</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>দুই রেখা মানে কী?<ol class="opts"><li>পার্শিয়াল অংশগ্রহণ</li><li>আইডেন্টিফাইং</li><li>টোটাল অংশগ্রহণ</li><li>বহুমূল্য</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>বহুমূল্য কীভাবে রূপান্তর হয়?<ol class="opts"><li>অ্যারে কলাম</li><li>দুটি কলাম</li><li>উদ্ভূত</li><li>নতুন রিলেশন</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>UI / ব্যবসা / ডেটা কোনটি?<ol class="opts"><li>লেয়ার্ড</li><li>রিপোজিটরি</li><li>ব্রোকার</li><li>পাইপ-অ্যান্ড-ফিল্টার</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>"এটি কি বানানো যাবে?" — কোনটি?<ol class="opts"><li>আইনগত</li><li>অর্থনৈতিক</li><li>সময়সূচিগত</li><li>প্রযুক্তিগত</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ক · ২-খ · ৩-ঘ · ৪-গ · ৫-খ · ৬-ক · ৭-গ · ৮-ঘ · ৯-ক · ১০-ঘ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> কোহিশন ও কাপলিং কী? ভালো ডিজাইনে উচ্চ কোহিশন ও নিম্ন কাপলিং কেন থাকা উচিত? প্রত্যেকটির প্রকারভেদ ভালো থেকে খারাপ ক্রমে লেখো। <i class="mk">১০ নম্বর</i></div>
+  <div class="cols" style="grid-template-columns:190px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 132" width="180">
+      <g class="w">
+        <rect x="8" y="10" width="126" height="44" rx="10" class="ink fill-b"/>
+        <rect x="166" y="10" width="126" height="44" rx="10" class="ink fill-b"/>
+        <rect x="96" y="82" width="108" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink-r" d="M70,54 V72" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M230,54 V72" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M118,72 V80" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M182,72 V80" marker-end="url(#ah)"/>
+      </g>
+      <text x="71" y="39" text-anchor="middle" class="k l" style="font-size:16px">Module A</text>
+      <text x="229" y="39" text-anchor="middle" class="k l" style="font-size:16px">Module B</text>
+      <text x="150" y="105" text-anchor="middle" class="r l" style="font-size:16px">shared</text>
+      <text x="150" y="126" text-anchor="middle" class="bn r s">কাপলিং — সরিয়ে দাও</text>
+    </svg><figcaption>ভেতরে উচ্চ কোহিশন, বাইরে নিম্ন কাপলিং</figcaption></figure>
+    <ol class="steps small">
+      <li><b>কোহিশন</b> = একটি মডিউলের ভেতরের উপাদানগুলো একটি উদ্দেশ্যের জন্য কতটা জড়িয়ে; <b>কাপলিং</b> = মডিউলগুলোর পারস্পরিক নির্ভরতার মাত্রা। <i class="mk">৩</i></li>
+      <li>ভালো ডিজাইনে মডিউল বোঝা, পরীক্ষা, পুনঃব্যবহার ও পরিবর্তন সহজ থাকে: একটির পরিবর্তন অন্যগুলোকে সামান্যই প্রভাবিত করে। <i class="mk">২</i></li>
+      <li>কোহিশন, ভালো → খারাপ: <b>ফাংশনাল, সিকোয়েন্শিয়াল, কমিউনিকেশনাল, প্রসিডিউরাল, টেম্পোরাল, লজিক্যাল, কয়েন্সিডেন্টাল</b>। <i class="mk">২</i></li>
+      <li>কাপলিং, ভালো → খারাপ: <b>ডেটা, স্ট্যাম্প, কন্ট্রোল, এক্সটার্নাল, কমন, কনটেন্ট</b>। <i class="mk">৩</i></li>
+    </ol>
+  </div>
+  <div class="cols small">
+    <div style="margin-top:0">
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>অ্যানালাইসিসের ছয় নীতি বলতে পারি</li>
+        <li>আহরণের চারটি পদ্ধতি বলতে পারি</li>
+        <li>কনটেক্সট ও ব্যালান্সড লেভেল-১ DFD আঁকতে পারি</li>
+      </ul>
+    </div>
+    <div style="margin-top:0">
+      <ul class="tick small">
+        <li>ডেটা ডিকশনারির এন্ট্রি লিখতে পারি</li>
+        <li>কার্ডিনালিটিসহ ER ডায়াগ্রাম আঁকতে পারি</li>
+        <li>কোহিশন ও কাপলিংয়ের ক্রম মুখস্থ</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

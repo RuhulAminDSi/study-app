@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BJT: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, circuit symbols (inline attributes!)
+     q-npn / q-pnp pins: base (0,30), collector (40,0), emitter (40,60)
+     r-v: vertical resistor (0,0) to (0,40) · r-h: horizontal resistor (0,0) to (40,0) · gnd: ground at (0,0) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <g id="q-npn"><circle cx="26" cy="30" r="24" fill="rgba(135,190,255,.18)" stroke="#1d3f8f" stroke-width="1.6"/><path d="M0,30H20M20,14V46M20,22L40,8V0M20,38L40,52V60" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linecap="round"/><polygon points="37,50 29,49.3 33.6,42.7" fill="#1d3f8f"/></g>
+    <g id="q-pnp"><circle cx="26" cy="30" r="24" fill="rgba(255,105,180,.14)" stroke="#1d3f8f" stroke-width="1.6"/><path d="M0,30H20M20,14V46M20,22L40,8V0M20,38L40,52V60" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linecap="round"/><polygon points="24,41 27.4,48.3 32,41.7" fill="#1d3f8f"/></g>
+    <g id="r-v"><path d="M0,0v6l5,3l-10,5l10,5l-10,5l10,5l-10,5l5,3v3" fill="none" stroke="#1f1f24" stroke-width="2" stroke-linejoin="round"/></g>
+    <g id="r-h"><path d="M0,0h6l3,-5l5,10l5,-10l5,10l5,-10l5,10l3,-5h3" fill="none" stroke="#1f1f24" stroke-width="2" stroke-linejoin="round"/></g>
+    <g id="gnd"><path d="M-9,0H9M-5.5,4H5.5M-2,8H2" fill="none" stroke="#1f1f24" stroke-width="2" stroke-linecap="round"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Bipolar Junction Transistor</span></h1>
+  <p class="subtitle">Construction · α, β · regions · CB/CE/CC · load line · biasing · switch · models: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">BJT</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Construction · npn/pnp</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">α, β, IE = IB + IC ★</text>
+      <text x="500" y="65" text-anchor="middle">Characteristics</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Regions ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">CB / CE / CC ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Load line · Q-point</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Biasing · S ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Switch · re / h-models</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① doping E &gt; C &gt; B<br>② β = α/(1 − α)<br>③ ICEO = (1 + β)ICBO<br>④ junction bias per region<br>⑤ CB/CE/CC table<br>⑥ S: fixed = 1 + β<br>⑦ re = 26 mV / IE</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"<span class="hl">Bipolar junction transistors</span>: construction and operation, amplifying action, common base, common emitter, common collector, <span class="hl">load line</span>, different biasing, <span class="hl">stability factor</span>, small signal equivalent circuit models, BJT as a switch". Gain, input and output impedance of the single-stage amplifiers are worked out in the Single Stage Amplifiers &amp; FET notes; diodes are in Diode Circuits.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Construction, npn / pnp ……… p. 2</li><li>Operation, α, β, leakage ……… p. 3</li><li>Regions &amp; characteristics ……… p. 4</li><li>CB, CE, CC configurations ……… p. 5</li><li>DC load line &amp; Q-point ……… p. 6</li><li>Biasing &amp; stability factor ……… p. 7</li></ul>
+    <ul class="tick"><li>Bias examples, thermal runaway … p. 8</li><li>Switch &amp; small-signal models … p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: construction ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Construction</span></div>
+  <h2><span class="no">1</span>Construction: Three Layers, Two Junctions</h2><span class="tag">MCQ favourite</span>
+  <div class="def small"><span class="lbl">Definition</span> A BJT is three doped regions, <b>emitter (E), base (B), collector (C)</b>, forming two p–n junctions: emitter–base (J<sub>E</sub>) and collector–base (J<sub>C</sub>). <span class="hl">Bipolar</span> = both electrons and holes carry the current (a FET is unipolar). It is a <span class="hl">current-controlled</span> device: a small I<sub>B</sub> controls a large I<sub>C</sub>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 172" width="620">
+    <g class="w">
+      <rect x="20" y="40" width="90" height="70" class="ink-k" style="fill:rgba(29,63,143,.28)"/>
+      <rect x="110" y="40" width="22" height="70" class="ink-k fill-y"/>
+      <rect x="132" y="40" width="150" height="70" class="ink-k" style="fill:rgba(29,63,143,.08)"/>
+      <path class="ink-k" d="M20,75 H2 M121,110 V138 M282,75 H300"/>
+      <path class="ink-r" d="M110,34 V116 M132,34 V116" style="stroke-width:1.4" stroke-dasharray="4 3"/>
+      <use href="#q-npn" transform="translate(372,40) scale(1.5)"/>
+      <use href="#q-pnp" transform="translate(510,40) scale(1.5)"/>
+    </g>
+    <text x="65" y="30" text-anchor="middle" class="w6">Emitter</text><text x="121" y="20" text-anchor="middle" class="w6">Base</text><text x="207" y="30" text-anchor="middle" class="w6">Collector</text>
+    <text x="65" y="82" text-anchor="middle" class="k l">n⁺</text><text x="121" y="82" text-anchor="middle" class="k l">p</text><text x="207" y="82" text-anchor="middle" class="k l">n</text>
+    <text x="102" y="130" text-anchor="end" class="r s">J<tspan dy="3" style="font-size:9px">E</tspan></text><text x="140" y="130" class="r s">J<tspan dy="3" style="font-size:9px">C</tspan></text>
+    <text x="65" y="150" text-anchor="middle" class="s">heaviest doping</text><text x="121" y="166" text-anchor="middle" class="s">thin, light</text><text x="207" y="150" text-anchor="middle" class="s">moderate, widest</text>
+    <text x="364" y="90" text-anchor="end" class="s w6">B</text><text x="440" y="36" class="s w6">C</text><text x="440" y="132" class="s w6">E</text>
+    <text x="502" y="90" text-anchor="end" class="s w6">B</text><text x="578" y="36" class="s w6">C</text><text x="578" y="132" class="s w6">E</text>
+    <text x="410" y="160" text-anchor="middle" class="g w6">npn: arrow OUT</text><text x="548" y="160" text-anchor="middle" class="r w6">pnp: arrow IN</text>
+  </svg><figcaption>npn layer sandwich (not to scale: the base is far thinner) and the two symbols</figcaption></figure>
+  <table class="hand small">
+    <tr><th class="l">Region</th><th class="l">Doping</th><th class="l">Width</th><th class="l">Job</th></tr>
+    <tr><td class="l">Emitter</td><td class="l red"><b>heaviest</b></td><td class="l">medium</td><td class="l">injects (emits) majority carriers into the base</td></tr>
+    <tr><td class="l">Base</td><td class="l">lightest</td><td class="l red"><b>thinnest</b> (µm)</td><td class="l">passes carriers through with little recombination</td></tr>
+    <tr><td class="l">Collector</td><td class="l">moderate</td><td class="l red"><b>widest</b></td><td class="l">collects carriers, dissipates most of the heat</td></tr>
+  </table>
+  <p>Order to memorise: doping <span class="circ">E &gt; C &gt; B</span> · width <span class="circ">C &gt; E &gt; B</span>. A thin, lightly doped base means few recombinations, so I<sub>C</sub> ≈ I<sub>E</sub>.</p>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l"></th><th class="l">npn</th><th class="l">pnp</th></tr>
+    <tr><td class="l">Majority carrier in E</td><td class="l">electrons</td><td class="l">holes</td></tr>
+    <tr><td class="l">Normal supply</td><td class="l">C +, V<sub>BE</sub> ≈ +0.7 V</td><td class="l">C −, V<sub>EB</sub> ≈ +0.7 V</td></tr>
+    <tr><td class="l">Emitter arrow</td><td class="l">out (conventional I leaves E)</td><td class="l">in</td></tr>
+    <tr><td class="l">Speed</td><td class="l"><span class="hl">faster</span> (µ<sub>n</sub> ≈ 2.8 µ<sub>p</sub> in Si)</td><td class="l">slower</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> npn = "<b>N</b>ot <b>P</b>ointing i<b>N</b>"; pnp = "<b>P</b>oints i<b>N</b> <b>P</b>roudly". The arrow is always on the <b>emitter</b> and points p → n.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> E and C of an npn are both n-type but <b>not interchangeable</b> (doping and size differ). Two separate diodes back to back do <b>not</b> make a transistor: the base must be thin.</div>
+  </div>
+  <p class="small"><b>History:</b> point-contact transistor, Bardeen &amp; Brattain, Bell Labs, <span class="circ">1947</span>; junction (bipolar) transistor, Shockley, 1948; Nobel Prize 1956. "Transistor" = <span class="hl">transfer + resistor</span>. Silicon replaced germanium: lower leakage, works to ≈ 150 °C.</p>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: operation & currents ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Operation &amp; currents</span></div>
+  <h2><span class="no">2</span>Operation (npn, Active Mode)</h2><span class="tag">written favourite</span>
+  <div class="cols" style="grid-template-columns:1fr 330px;align-items:center">
+    <ol class="steps small">
+      <li>J<sub>E</sub> <b>forward</b>-biased: the n⁺ emitter injects electrons into the base → I<sub>E</sub></li>
+      <li>The base is thin and lightly doped: only <span class="hl">1–5%</span> recombine with holes → I<sub>B</sub></li>
+      <li>J<sub>C</sub> <b>reverse</b>-biased: its field sweeps the other 95–99% into the collector → I<sub>C</sub></li>
+      <li>A small I<sub>B</sub> controls a large I<sub>C</sub>: this is <b>amplifying action</b></li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 340 190" width="330">
+      <g class="w">
+        <rect x="30" y="40" width="100" height="60" class="ink-k" style="fill:rgba(29,63,143,.24)"/>
+        <rect x="130" y="40" width="24" height="60" class="ink-k fill-y"/>
+        <rect x="154" y="40" width="140" height="60" class="ink-k" style="fill:rgba(29,63,143,.08)"/>
+        <path class="ink-k" d="M30,70 H6 M294,70 H330 M142,100 V150"/>
+        <path class="ink-g" d="M44,58 H284" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M142,60 V92" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M28,84 H8" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M330,84 H300" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M152,150 V108" marker-end="url(#ah)"/>
+      </g>
+      <text x="164" y="16" text-anchor="middle" class="g s w6">e⁻ injected → cross base → swept into C</text>
+      <text x="80" y="35" text-anchor="middle" class="k w6">n⁺</text><text x="142" y="35" text-anchor="middle" class="k w6">p</text><text x="224" y="35" text-anchor="middle" class="k w6">n</text>
+      <text x="10" y="104" class="r s w6">IE</text><text x="314" y="104" class="r s w6">IC</text><text x="160" y="140" class="r s w6">IB</text>
+      <text x="160" y="124" class="r s">1–5% recombine</text>
+      <text x="70" y="178" text-anchor="middle" class="s">JE forward (0.7 V)</text><text x="250" y="178" text-anchor="middle" class="s">JC reverse</text>
+    </svg></figure>
+  </div>
+  <div class="sumbox"><span class="lbl">Current relations</span> <span class="circ">I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub></span> · α = I<sub>C</sub>/I<sub>E</sub> (0.95–0.995) · β = I<sub>C</sub>/I<sub>B</sub> (50–300)<br>
+    <span class="circ">β = α/(1 − α)</span> · α = β/(1 + β) · I<sub>E</sub> = (1 + β)I<sub>B</sub> · γ = I<sub>E</sub>/I<sub>B</sub> = 1 + β (CC)</div>
+  <h3>Leakage currents</h3>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <ul class="dash small">
+      <li><b>I<sub>CBO</sub></b>: C–B reverse current with the <b>emitter open</b> (Si: nA, Ge: µA); minority carriers, <span class="hl">doubles every 10 °C</span></li>
+      <li>CB: I<sub>C</sub> = αI<sub>E</sub> + I<sub>CBO</sub></li>
+      <li>CE: I<sub>C</sub> = βI<sub>B</sub> + (1 + β)I<sub>CBO</sub> = βI<sub>B</sub> + I<sub>CEO</sub></li>
+      <li><b>I<sub>CEO</sub></b> (base open) = <span class="circ">(1 + β)I<sub>CBO</sub></span>: β times worse</li>
+    </ul>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">dc vs ac β</span> β<sub>dc</sub> = h<sub>FE</sub> = I<sub>C</sub>/I<sub>B</sub> · β<sub>ac</sub> = h<sub>fe</sub> = ΔI<sub>C</sub>/ΔI<sub>B</sub>; nearly equal in the active region.</div>
+      <div class="trick small"><span class="lbl">Memory trick</span> <b>α</b> = "<b>A</b>lmost 1", <b>β</b> = "<b>B</b>ig". β = "a over one-minus-a".</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked examples 1–2 ✍</span> I<sub>E</sub> = 10 mA, I<sub>C</sub> = 9.9 mA → I<sub>B</sub> = 0.1 mA, α = <b>0.99</b>, β = <b>99</b> (0.99/0.01 = 99 ✓) · α = 0.98 → β = 0.98/0.02 = <span class="circ">49</span> · β = 200 → α = 200/201 = <b>0.995</b></div>
+  <div class="ex small"><span class="lbl">Worked example 3 ✍</span> Ge transistor, β = 50, I<sub>CBO</sub> = 5 µA, I<sub>B</sub> = 40 µA → I<sub>CEO</sub> = 51 × 5 = <b>255 µA</b>; I<sub>C</sub> = 50 × 40 + 255 = 2255 µA ≈ <b>2.26 mA</b>. Leakage is 11% of I<sub>C</sub>, which is why Ge circuits drift with heat.</div>
+  <div class="ex small"><span class="lbl">Worked example 4 ✍</span> Si, β = 120, I<sub>B</sub> = 50 µA → I<sub>C</sub> = <b>6 mA</b>, I<sub>E</sub> = 121 × 50 µA = <b>6.05 mA</b>, α = 120/121 = 0.9917, so I<sub>C</sub> ≈ I<sub>E</sub>.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> β is <b>not</b> a constant: it rises with temperature, varies with I<sub>C</sub>, and spreads widely between units of one type (e.g. h<sub>FE</sub> 100–300 on one datasheet). Good bias design must not depend on it.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: regions & characteristics ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Regions &amp; characteristics</span></div>
+  <h2><span class="no">3</span>Regions of Operation</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Region</th><th>J<sub>E</sub> (B–E)</th><th>J<sub>C</sub> (B–C)</th><th class="l">npn values</th><th class="l">Use</th></tr>
+    <tr><td class="l">Cutoff</td><td>reverse</td><td>reverse</td><td class="l">V<sub>BE</sub> &lt; 0.5 V, I<sub>C</sub> ≈ I<sub>CEO</sub> ≈ 0</td><td class="l">switch OFF</td></tr>
+    <tr><td class="l red"><b>Active</b></td><td class="red"><b>forward</b></td><td class="red"><b>reverse</b></td><td class="l">V<sub>BE</sub> ≈ 0.7 V, I<sub>C</sub> = βI<sub>B</sub></td><td class="l">amplifier</td></tr>
+    <tr><td class="l">Saturation</td><td>forward</td><td>forward</td><td class="l">V<sub>CE(sat)</sub> ≈ 0.2 V, I<sub>C</sub> &lt; βI<sub>B</sub></td><td class="l">switch ON</td></tr>
+    <tr><td class="l">Inverse active</td><td>reverse</td><td>forward</td><td class="l">β very small (≈ 1)</td><td class="l">rarely (TTL input)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Read (J<sub>E</sub>, J<sub>C</sub>): <b>F-R</b> = "<b>F</b>or <b>R</b>eal gain" (active) · <b>F-F</b> = fully ON · <b>R-R</b> = really OFF.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> In saturation I<sub>C</sub> = βI<sub>B</sub> is <b>false</b>: I<sub>C</sub> is set by the circuit (≈ V<sub>CC</sub>/R<sub>C</sub>) and is smaller than βI<sub>B</sub>.</div>
+  </div>
+  <h2><span class="no">4</span>CE Characteristics</h2>
+  <div class="cols" style="grid-template-columns:1.45fr 1fr;align-items:end">
+    <figure class="doodle"><svg viewBox="0 0 400 235" width="390">
+      <g class="w">
+        <rect x="41" y="40" width="20" height="158" class="fill-r" style="stroke:none"/>
+        <rect x="62" y="193" width="238" height="6" class="fill-b" style="stroke:none"/>
+        <path class="ink-k" d="M40,20 V200 H350" marker-start="url(#ahb)" marker-end="url(#ahb)"/>
+        <path class="ink" d="M40,200 Q48,75 66,75 L300,65 M40,200 Q48,105 66,105 L300,97 M40,200 Q48,135 66,135 L300,129 M40,200 Q48,165 66,165 L300,161 M40,200 Q48,194 66,194 L300,192"/>
+        <path class="ink-r" d="M200,213 V198" marker-end="url(#ah)"/>
+      </g>
+      <text x="14" y="26" class="w6">IC</text><text x="352" y="214" class="w6">VCE</text>
+      <text x="304" y="70" class="s">IB = 80 µA</text><text x="304" y="102" class="s">60 µA</text><text x="304" y="134" class="s">40 µA</text><text x="304" y="166" class="s">20 µA</text><text x="304" y="196" class="s">0</text>
+      <text x="56" y="34" class="r s w6">saturation</text>
+      <text x="180" y="152" text-anchor="middle" class="g w6">active region</text>
+      <text x="200" y="228" text-anchor="middle" class="r s">cutoff (IB = 0, IC = ICEO)</text>
+      <text x="100" y="50" class="p s">slight slope = Early effect</text>
+    </svg><figcaption>output: IC vs VCE for steps of IB</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 240 200" width="230">
+      <g class="w">
+        <path class="ink-k" d="M40,16 V170 H225" marker-start="url(#ahb)" marker-end="url(#ahb)"/>
+        <path class="ink" d="M40,168 H112 Q140,166 150,120 L160,30"/>
+        <path class="ink-g" d="M40,168 H124 Q152,166 162,120 L172,30"/>
+        <path class="ink-r" d="M150,172 V60" stroke-dasharray="4 4" style="stroke-width:1.4"/>
+      </g>
+      <text x="14" y="22" class="w6">IB</text><text x="196" y="190" class="w6">VBE</text>
+      <text x="150" y="190" text-anchor="middle" class="r s">0.7 V</text>
+      <text x="108" y="26" text-anchor="end" class="s">VCE = 1 V</text><text x="176" y="40" class="g s">10 V</text>
+      <text x="60" y="150" class="s">cut-in ≈ 0.5 V</text>
+    </svg><figcaption>input: a forward diode curve</figcaption></figure>
+  </div>
+  <ul class="dash small">
+    <li><b>Early effect</b> (base-width modulation): V<sub>CE</sub> ↑ → C–B depletion widens → effective base narrower → β and I<sub>C</sub> rise a little. Extended curves meet the V<sub>CE</sub> axis at −V<sub>A</sub> (Early voltage, 50–200 V); output resistance <span class="hl">r<sub>o</sub> = V<sub>A</sub>/I<sub>C</sub></span> (V<sub>A</sub> = 100 V, I<sub>C</sub> = 1 mA → 100 kΩ).</li>
+    <li>The same effect shifts the input curve <b>right</b> as V<sub>CE</sub> rises (less I<sub>B</sub> for the same V<sub>BE</sub>).</li>
+    <li><b>CB characteristics:</b> input I<sub>E</sub> vs V<sub>BE</sub> (diode); output I<sub>C</sub> ≈ I<sub>E</sub>, almost flat, and I<sub>C</sub> still flows at V<sub>CB</sub> = 0 (needs a small forward V<sub>CB</sub> to stop).</li>
+    <li><b>Breakdown:</b> BV<sub>CEO</sub> &lt; BV<sub>CBO</sub>; <b>punch-through</b> when the C–B depletion layer reaches the emitter.</li>
+  </ul>
+  <div class="ex small"><span class="lbl">Worked example: active or saturated? ✍</span> V<sub>CC</sub> = 10 V, R<sub>C</sub> = 1 kΩ, β = 100, I<sub>B</sub> = 0.2 mA. βI<sub>B</sub> = 20 mA, but I<sub>C(sat)</sub> = (10 − 0.2)/1 kΩ = 9.8 mA &lt; 20 mA → <span class="circ">saturated</span>, V<sub>CE</sub> ≈ 0.2 V, I<sub>C</sub> = 9.8 mA.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: configurations ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Configurations</span></div>
+  <h2><span class="no">5</span>Three Configurations: CB, CE, CC</h2><span class="tag">high-yield</span>
+  <p class="small">The name tells which terminal is <b>common</b> to input and output (tied to AC ground).</p>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 180 150" width="180"><g class="w"><use href="#q-npn" x="70" y="40"/><path class="ink" d="M110,40 V22 H150 M30,70 H70 M110,100 V118"/><use href="#gnd" x="110" y="118"/></g><text x="10" y="22" class="r w6">CE</text><text x="4" y="66" class="s">in → B</text><text x="152" y="18" class="s">out</text><text x="132" y="36" class="s">C</text><text x="60" y="142" class="g s">emitter common</text></svg></figure>
+    <figure class="doodle"><svg viewBox="0 0 180 150" width="180"><g class="w"><use href="#q-npn" x="70" y="40"/><path class="ink" d="M110,40 V22 H150 M70,70 H50 V96 M110,100 V118 H26"/><use href="#gnd" x="50" y="96"/></g><text x="10" y="22" class="r w6">CB</text><text x="4" y="114" class="s">in → E</text><text x="152" y="18" class="s">out</text><text x="132" y="36" class="s">C</text><text x="56" y="142" class="g s">base common</text></svg></figure>
+    <figure class="doodle"><svg viewBox="0 0 180 150" width="180"><g class="w"><use href="#q-npn" x="70" y="40"/><path class="ink" d="M110,40 V22 H134 M30,70 H70 M110,100 V108 H150"/><use href="#r-v" x="110" y="108"/><use href="#gnd" x="110" y="148"/></g><text x="10" y="22" class="r w6">CC</text><text x="4" y="66" class="s">in → B</text><text x="136" y="26" class="s">+VCC</text><text x="152" y="104" class="s">out</text><text x="122" y="134" class="s">RE</text></svg></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th>CB</th><th>CE</th><th>CC (emitter follower)</th></tr>
+    <tr><td class="l">Input → output</td><td>E → C</td><td>B → C</td><td>B → E</td></tr>
+    <tr><td class="l">Current gain</td><td>α (&lt; 1, ≈ 0.99)</td><td class="red"><b>β (high)</b></td><td>1 + β (highest)</td></tr>
+    <tr><td class="l">Voltage gain</td><td>high</td><td class="red"><b>high</b></td><td>≈ 1 (slightly less)</td></tr>
+    <tr><td class="l">Power gain</td><td>medium</td><td class="red"><b>highest</b></td><td>low</td></tr>
+    <tr><td class="l">Input impedance</td><td>very low (≈ 20–50 Ω)</td><td>medium (≈ 1 kΩ)</td><td class="red"><b>very high (≈ βR<sub>E</sub>)</b></td></tr>
+    <tr><td class="l">Output impedance</td><td class="red"><b>very high (≈ MΩ)</b></td><td>medium-high (≈ 10–50 kΩ)</td><td>very low (≈ tens of Ω)</td></tr>
+    <tr><td class="l">Phase (in → out)</td><td>0°</td><td class="red"><b>180°</b></td><td>0°</td></tr>
+    <tr><td class="l">Leakage</td><td>I<sub>CBO</sub></td><td>I<sub>CEO</sub></td><td>I<sub>CEO</sub></td></tr>
+    <tr><td class="l">Main use</td><td>RF/VHF, cascode, current buffer</td><td>general voltage amplifier</td><td>buffer, impedance matching</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> C<b>B</b> = current gain <b>B</b>elow 1 · C<b>E</b> = gains <b>E</b>verything, and inverts · C<b>C</b> = <b>C</b>opies the voltage (follower).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> CC current gain is <b>1 + β</b>, not β; its voltage gain is <b>just under 1</b>, not exactly 1. CB has a <b>high</b> voltage gain despite α &lt; 1.</div>
+  </div>
+  <h3>Amplifying action (CB): voltage gain with no current gain</h3>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> v<sub>i</sub> = 20 mV across r<sub>i</sub> = 20 Ω → I<sub>e</sub> = 1 mA; I<sub>c</sub> = αI<sub>e</sub> ≈ 1 mA flows in R<sub>L</sub> = 5 kΩ → v<sub>L</sub> = 5 V. A<sub>v</sub> = 5 V/20 mV = <span class="circ">250</span>, A<sub>i</sub> ≈ 1, A<sub>p</sub> = A<sub>v</sub>A<sub>i</sub> ≈ 250. The current is <span class="hl">transferred</span> from a low-resistance input to a high-resistance output: "transfer resistor".</div>
+  <p class="small"><b>Darlington pair</b> (two CC stages): β<sub>total</sub> ≈ β<sub>1</sub>β<sub>2</sub> (100 × 100 = 10 000), V<sub>BE</sub> ≈ 1.4 V. Gains, Z<sub>in</sub>, Z<sub>out</sub> with h-parameters: see Single Stage Amplifiers &amp; FET.</p>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: load line & Q-point ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Load line &amp; Q-point</span></div>
+  <h2><span class="no">6</span>DC Load Line &amp; Q-point</h2><span class="tag">written favourite</span>
+  <div class="def"><span class="lbl">Definition</span> The <span class="hl">DC load line</span> is the set of all (V<sub>CE</sub>, I<sub>C</sub>) the external circuit allows: <span class="circ">V<sub>CE</sub> = V<sub>CC</sub> − I<sub>C</sub>(R<sub>C</sub> + R<sub>E</sub>)</span> (R<sub>E</sub> = 0 if there is none). The <span class="hl">Q-point</span> (quiescent point) is where it meets the transistor's I<sub>B</sub> curve with no signal applied.</div>
+  <div class="cols" style="grid-template-columns:360px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 360 235" width="355">
+      <g class="w">
+        <path class="ink-k" d="M50,16 V200 H340" marker-start="url(#ahb)" marker-end="url(#ahb)"/>
+        <path class="ink" d="M50,200 Q56,80 66,80 L300,76 M50,200 Q56,120 66,120 L300,116 M50,200 Q56,160 66,160 L300,156" style="stroke-width:1.4"/>
+        <path class="ink-r" d="M50,40 L290,200" style="stroke-width:2.6"/>
+        <path class="ink-p" d="M110,40 L230,200" stroke-dasharray="6 4"/>
+        <path class="ink-k" d="M170,120 V200 M170,120 H50" stroke-dasharray="3 4" style="stroke-width:1.2"/>
+        <circle cx="170" cy="120" r="6" class="ink-r" style="fill:#d32f2f"/>
+      </g>
+      <text x="22" y="22" class="w6">IC</text><text x="318" y="190" class="w6">VCE</text>
+      <text x="46" y="44" text-anchor="end" class="s">4 mA</text><text x="46" y="124" text-anchor="end" class="s">2 mA</text>
+      <text x="170" y="216" text-anchor="middle" class="s">6 V</text><text x="230" y="216" text-anchor="middle" class="p s">9 V</text><text x="290" y="216" text-anchor="middle" class="s">12 V = VCC</text>
+      <text x="302" y="80" class="s">30 µA</text><text x="302" y="120" class="s">20 µA</text><text x="302" y="160" class="s">10 µA</text>
+      <text x="180" y="110" class="r w6">Q</text>
+      <text x="58" y="32" class="r s">IC(sat) = VCC/RC</text>
+      <text x="256" y="168" class="r s">dc</text><text x="140" y="58" class="p s">ac load line</text>
+    </svg><figcaption>dc load line (red), ac load line (purple)</figcaption></figure>
+    <ul class="dash small">
+      <li><b>Saturation end</b> (V<sub>CE</sub> = 0): I<sub>C(sat)</sub> = V<sub>CC</sub>/(R<sub>C</sub> + R<sub>E</sub>)</li>
+      <li><b>Cutoff end</b> (I<sub>C</sub> = 0): V<sub>CE(off)</sub> = V<sub>CC</sub></li>
+      <li>Slope = −1/(R<sub>C</sub> + R<sub>E</sub>)</li>
+      <li>Q near saturation → output clipped at the bottom (V<sub>CE(sat)</sub>); near cutoff → clipped at the top (V<sub>CC</sub>)</li>
+      <li>Q in the <span class="hl">middle</span> → largest symmetrical swing (class A)</li>
+    </ul>
+  </div>
+  <div class="ex"><span class="lbl">Worked example (fixed bias) ✍</span> V<sub>CC</sub> = 12 V, R<sub>B</sub> = 565 kΩ, R<sub>C</sub> = 3 kΩ, β = 100, V<sub>BE</sub> = 0.7 V.
+    <ol class="steps small"><li>I<sub>B</sub> = (12 − 0.7)/565 kΩ = <b>20 µA</b>; I<sub>C</sub> = βI<sub>B</sub> = <b>2 mA</b></li><li>V<sub>CE</sub> = 12 − 2 mA × 3 kΩ = <span class="circ">6 V</span> → Q = (6 V, 2 mA)</li><li>Ends: I<sub>C(sat)</sub> = 12/3 kΩ = 4 mA, V<sub>CE(off)</sub> = 12 V → Q exactly mid-line</li></ol></div>
+  <table class="hand small">
+    <tr><th class="l">Change</th><th class="l">Effect on line / Q</th></tr>
+    <tr><td class="l">R<sub>B</sub> ↑</td><td class="l">I<sub>B</sub> ↓: Q slides down the same line toward cutoff</td></tr>
+    <tr><td class="l">R<sub>C</sub> ↑</td><td class="l">line flatter (I<sub>C(sat)</sub> ↓); Q moves toward saturation</td></tr>
+    <tr><td class="l">V<sub>CC</sub> ↑</td><td class="l">line shifts outward, parallel (same slope)</td></tr>
+    <tr><td class="l">β ↑ (heat, new transistor)</td><td class="l">fixed bias: I<sub>C</sub> ↑, Q climbs toward saturation</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">AC load line ✍</span> With a load R<sub>L</sub> = 3 kΩ coupled by a capacitor, r<sub>ac</sub> = R<sub>C</sub> ∥ R<sub>L</sub> = 1.5 kΩ; the steeper ac line passes through Q: i<sub>c(sat)</sub> = I<sub>CQ</sub> + V<sub>CEQ</sub>/r<sub>ac</sub> = 2 + 6/1.5 = 6 mA, v<sub>ce(off)</sub> = V<sub>CEQ</sub> + I<sub>CQ</sub>r<sub>ac</sub> = 6 + 3 = 9 V. Largest undistorted peak = min(6, 3) = <b>3 V</b>.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Same circuit, β = 200: βI<sub>B</sub> = 4 mA would need V<sub>CE</sub> = 0, so it <b>saturates</b> (I<sub>C</sub> ≈ 11.8 V/3 kΩ = 3.93 mA). A fixed-bias Q-point depends entirely on β.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: biasing & stability ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Biasing &amp; stability</span></div>
+  <h2><span class="no">7</span>Biasing Methods &amp; Stability Factor</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Why bias?</span> To place Q in the active region and <b>keep it there</b> while β (unit spread, temperature), <span class="hl">I<sub>CBO</sub> (doubles / 10 °C)</span> and V<sub>BE</sub> (falls ≈ 2.5 mV/°C) change.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 222" width="640">
+    <g class="w">
+      <!-- 1 fixed -->
+      <path class="ink-k" d="M30,18 H140 M50,18 V22 M50,62 V110 H80 M120,18 V22 M120,62 V80 M120,140 V150"/>
+      <use href="#r-v" x="50" y="22"/><use href="#r-v" x="120" y="22"/><use href="#q-npn" x="80" y="80"/><use href="#gnd" x="120" y="150"/>
+      <!-- 2 collector feedback -->
+      <path class="ink-k" d="M240,18 H300 M280,18 V22 M280,62 V80 M280,70 H210 M210,110 H240 M280,140 V150"/>
+      <use href="#r-v" x="280" y="22"/><use href="#r-v" x="210" y="70"/><use href="#q-npn" x="240" y="80"/><use href="#gnd" x="280" y="150"/>
+      <circle cx="280" cy="70" r="2.5" style="fill:#1f1f24"/>
+      <!-- 3 emitter stabilised -->
+      <path class="ink-k" d="M350,18 H460 M370,18 V22 M370,62 V110 H400 M440,18 V22 M440,62 V80 M440,140 V144"/>
+      <use href="#r-v" x="370" y="22"/><use href="#r-v" x="440" y="22"/><use href="#q-npn" x="400" y="80"/><use href="#r-v" x="440" y="144"/><use href="#gnd" x="440" y="186"/>
+      <!-- 4 voltage divider -->
+      <path class="ink-k" d="M510,18 H620 M530,18 V22 M530,62 V136 M530,110 H560 M600,18 V22 M600,62 V80 M600,140 V144"/>
+      <use href="#r-v" x="530" y="22"/><use href="#r-v" x="600" y="22"/><use href="#r-v" x="530" y="136"/><use href="#gnd" x="530" y="178"/><use href="#q-npn" x="560" y="80"/><use href="#r-v" x="600" y="144"/><use href="#gnd" x="600" y="186"/>
+      <circle cx="530" cy="110" r="2.5" style="fill:#1f1f24"/>
+    </g>
+    <text x="30" y="12" class="s">VCC</text><text x="58" y="46" class="s">RB</text><text x="128" y="46" class="s">RC</text>
+    <text x="246" y="12" class="s">VCC</text><text x="288" y="46" class="s">RC</text><text x="186" y="94" class="s">RB</text>
+    <text x="350" y="12" class="s">VCC</text><text x="378" y="46" class="s">RB</text><text x="448" y="46" class="s">RC</text><text x="448" y="168" class="s">RE</text>
+    <text x="510" y="12" class="s">VCC</text><text x="538" y="46" class="s">R1</text><text x="538" y="160" class="s">R2</text><text x="608" y="46" class="s">RC</text><text x="608" y="168" class="s">RE</text>
+    <text x="80" y="214" text-anchor="middle" class="r s w6">① fixed</text><text x="250" y="214" text-anchor="middle" class="r s w6">② collector-feedback</text><text x="410" y="214" text-anchor="middle" class="r s w6">③ emitter-stabilised</text><text x="570" y="214" text-anchor="middle" class="r s w6">④ voltage-divider</text>
+  </svg></figure>
+  <div class="sumbox small"><span class="lbl">Stability factors</span> <span class="circ">S = ∂I<sub>C</sub>/∂I<sub>CBO</sub></span> (β, V<sub>BE</sub> constant) · S′ = ∂I<sub>C</sub>/∂V<sub>BE</sub> · S″ = ∂I<sub>C</sub>/∂β. Range <b>1 ≤ S ≤ 1 + β</b>; <span class="hl">smaller S = more stable</span>. General: S = (1+β)/(1 − β·∂I<sub>B</sub>/∂I<sub>C</sub>)</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Method</th><th class="l">I<sub>B</sub></th><th class="l">V<sub>CE</sub></th><th class="l">S</th></tr>
+    <tr><td class="l">① Fixed</td><td class="l">(V<sub>CC</sub> − V<sub>BE</sub>)/R<sub>B</sub></td><td class="l">V<sub>CC</sub> − I<sub>C</sub>R<sub>C</sub></td><td class="l red"><b>1 + β</b> (worst)</td></tr>
+    <tr><td class="l" style="white-space:nowrap">② Coll.-feedback</td><td class="l">(V<sub>CC</sub> − V<sub>BE</sub>)/(R<sub>B</sub> + (1+β)R<sub>C</sub>)</td><td class="l">V<sub>CC</sub> − I<sub>E</sub>R<sub>C</sub></td><td class="l">(1+β)/(1+βR<sub>C</sub>/(R<sub>C</sub> + R<sub>B</sub>))</td></tr>
+    <tr><td class="l" style="white-space:nowrap">③ Emitter-stab.</td><td class="l">(V<sub>CC</sub> − V<sub>BE</sub>)/(R<sub>B</sub> + (1+β)R<sub>E</sub>)</td><td class="l">≈ V<sub>CC</sub> − I<sub>C</sub>(R<sub>C</sub> + R<sub>E</sub>)</td><td class="l">(1+β)(1+R<sub>B</sub>/R<sub>E</sub>)/(1+β+R<sub>B</sub>/R<sub>E</sub>)</td></tr>
+    <tr><td class="l" style="white-space:nowrap">④ Volt.-divider</td><td class="l">(V<sub>Th</sub> − V<sub>BE</sub>)/(R<sub>Th</sub> + (1+β)R<sub>E</sub>)</td><td class="l">≈ V<sub>CC</sub> − I<sub>C</sub>(R<sub>C</sub> + R<sub>E</sub>)</td><td class="l red"><b>same, R<sub>B</sub> → R<sub>Th</sub>; ≈ 1 + R<sub>Th</sub>/R<sub>E</sub></b></td></tr>
+  </table>
+  <p class="small">④: R<sub>Th</sub> = R<sub>1</sub> ∥ R<sub>2</sub>, V<sub>Th</sub> = V<sub>CC</sub>R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>). <b>Approximate method</b> when <span class="circ">βR<sub>E</sub> ≥ 10R<sub>2</sub></span>: V<sub>B</sub> = V<sub>Th</sub>, I<sub>E</sub> = (V<sub>B</sub> − 0.7)/R<sub>E</sub>, independent of β. Most stable, most widely used.</p>
+  <div class="ex small"><span class="lbl">Derivation ✍</span> ③: V<sub>CC</sub> = I<sub>B</sub>R<sub>B</sub> + V<sub>BE</sub> + (I<sub>B</sub> + I<sub>C</sub>)R<sub>E</sub> → ∂I<sub>B</sub>/∂I<sub>C</sub> = −R<sub>E</sub>/(R<sub>B</sub> + R<sub>E</sub>) → S = (1+β)/(1+βR<sub>E</sub>/(R<sub>B</sub> + R<sub>E</sub>)). Fixed bias: I<sub>B</sub> does not depend on I<sub>C</sub>, so ∂I<sub>B</sub>/∂I<sub>C</sub> = 0 and S = 1 + β.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> R<sub>E</sub> looks <b>(1+β) times bigger</b> from the base. Small R<sub>B</sub>/R<sub>E</sub> (or R<sub>Th</sub>/R<sub>E</sub>) → S → 1.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A bypass capacitor across R<sub>E</sub> removes the <b>AC</b> feedback (gain comes back) but keeps the <b>DC</b> stability. Collector-feedback also cuts the AC gain.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: bias examples & thermal runaway ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Bias examples · thermal runaway</span></div>
+  <h2><span class="no">8</span>Bias Worked Examples</h2><span class="tag">written favourite</span>
+  <div class="ex"><span class="lbl">Example A: voltage-divider ✍</span> V<sub>CC</sub> = 18 V, R<sub>1</sub> = 39 kΩ, R<sub>2</sub> = 8.2 kΩ, R<sub>C</sub> = 3.3 kΩ, R<sub>E</sub> = 1 kΩ, β = 120.
+    <ol class="steps small">
+      <li>Check: βR<sub>E</sub> = 120 kΩ ≥ 10R<sub>2</sub> = 82 kΩ ✓ → approximate method allowed</li>
+      <li>V<sub>B</sub> = 18 × 8.2/47.2 = 3.13 V; V<sub>E</sub> = 2.43 V; I<sub>C</sub> ≈ I<sub>E</sub> = <b>2.43 mA</b></li>
+      <li>V<sub>CE</sub> = 18 − 2.43 × (3.3 + 1) = <span class="circ">7.56 V</span></li>
+      <li>Exact: R<sub>Th</sub> = 6.78 kΩ, I<sub>B</sub> = 2.43/(6.78 + 121) = 19.0 µA, I<sub>C</sub> = 2.28 mA, V<sub>CE</sub> ≈ 8.18 V (approx. is 6% high)</li>
+      <li>S = 121(1 + 6.78)/(121 + 6.78) ≈ <b>7.4</b> (fixed bias would be 121)</li>
+    </ol></div>
+  <div class="ex"><span class="lbl">Example B: emitter-stabilised ✍</span> V<sub>CC</sub> = 20 V, R<sub>B</sub> = 430 kΩ, R<sub>C</sub> = 2 kΩ, R<sub>E</sub> = 1 kΩ, β = 50.
+    <ol class="steps small">
+      <li>I<sub>B</sub> = 19.3 V/(430 + 51 × 1) kΩ = <b>40.1 µA</b>; I<sub>C</sub> ≈ <b>2.01 mA</b>; V<sub>CE</sub> ≈ 20 − 2.01 × 3 = <b>13.97 V</b></li>
+      <li>S = 51(1 + 430)/(51 + 430) ≈ 45.7: better than fixed (51), far worse than Example A</li>
+    </ol></div>
+  <table class="hand small">
+    <tr><th class="l">β doubles (circuit)</th><th>I<sub>C</sub> before → after</th><th>Change</th></tr>
+    <tr><td class="l">Fixed bias (any values)</td><td>I<sub>C</sub> → 2I<sub>C</sub></td><td class="red"><b>+100%</b></td></tr>
+    <tr><td class="l">Emitter-stabilised (Ex. B, 50 → 100)</td><td>2.01 → 3.63 mA</td><td>+81%</td></tr>
+    <tr><td class="l">Collector-feedback (12 V, R<sub>B</sub> 200 k, R<sub>C</sub> 2 k; 100 → 200)</td><td>2.81 → 3.75 mA</td><td>+34%</td></tr>
+    <tr><td class="l">Voltage-divider (Ex. A, 120 → 240)</td><td>2.28 → 2.35 mA</td><td class="green"><b>+3%</b></td></tr>
+  </table>
+  <h2><span class="no">9</span>Thermal Runaway</h2>
+  <div class="def small"><span class="lbl">Definition</span> A <span class="hl">self-destroying positive feedback</span> loop: heat raises I<sub>CBO</sub> (and β) → I<sub>C</sub> rises → collector dissipation P<sub>C</sub> = V<sub>CE</sub>I<sub>C</sub> rises → the junction heats further, until the transistor burns out.</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <ul class="dash small">
+      <li>Prevent: R<sub>E</sub> / low S, <b>heat sink</b> (low thermal resistance θ), diode or thermistor compensation in the bias network</li>
+      <li>No runaway if <span class="circ">V<sub>CE</sub> &lt; V<sub>CC</sub>/2</span>: P<sub>C</sub> = I<sub>C</sub>(V<sub>CC</sub> − I<sub>C</sub>R) → dP<sub>C</sub>/dI<sub>C</sub> = 2V<sub>CE</sub> − V<sub>CC</sub> &lt; 0, so a rise in I<sub>C</sub> <b>lowers</b> P<sub>C</sub> (R = R<sub>C</sub> + R<sub>E</sub>)</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 340 170" width="300">
+      <g class="w">
+        <rect x="10" y="20" width="120" height="40" rx="12" class="ink-r fill-r"/>
+        <rect x="200" y="20" width="130" height="40" rx="12" class="ink-r fill-r"/>
+        <rect x="200" y="112" width="130" height="40" rx="12" class="ink-r fill-r"/>
+        <rect x="10" y="112" width="150" height="40" rx="12" class="ink-r fill-r"/>
+        <path class="ink-r" d="M132,40 H194" marker-end="url(#ah)"/><path class="ink-r" d="M265,62 V106" marker-end="url(#ah)"/><path class="ink-r" d="M198,132 H166" marker-end="url(#ah)"/><path class="ink-r" d="M70,110 V66" marker-end="url(#ah)"/>
+      </g>
+      <text x="70" y="46" text-anchor="middle" class="w6">IC ↑</text>
+      <text x="265" y="46" text-anchor="middle" class="w6">PC = VCE·IC ↑</text>
+      <text x="265" y="138" text-anchor="middle" class="w6">Tj ↑</text>
+      <text x="85" y="138" text-anchor="middle" class="w6">ICBO ↑ (×2/10 °C)</text>
+      <text x="168" y="92" text-anchor="middle" class="g s w6">RE + heat sink break it</text>
+    </svg><figcaption>the runaway loop</figcaption></figure>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: switch & small-signal models ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Switch · small-signal models</span></div>
+  <h2><span class="no">10</span>BJT as a Switch</h2><span class="tag">IT link</span>
+  <div class="cols" style="grid-template-columns:240px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 240 185" width="235">
+      <g class="w">
+        <path class="ink-k" d="M100,18 H190 M160,18 V22 M160,62 V80 M160,70 H215 M30,110 H60 M100,110 H120 M160,140 V150"/>
+        <use href="#r-v" x="160" y="22"/><use href="#r-h" x="60" y="110"/><use href="#q-npn" x="120" y="80"/><use href="#gnd" x="160" y="150"/>
+        <circle cx="160" cy="70" r="2.5" style="fill:#1f1f24"/>
+      </g>
+      <text x="104" y="12" class="s">+5 V</text><text x="168" y="46" class="s">RC 1 kΩ</text><text x="62" y="98" class="s">RB 10 kΩ</text>
+      <text x="4" y="114" class="s w6">Vin</text><text x="196" y="88" class="s w6">Vout</text>
+      <text x="120" y="178" text-anchor="middle" class="g s">Vout = (Vin)′: NOT gate</text>
+    </svg></figure>
+    <table class="hand small" style="white-space:nowrap">
+      <tr><th>V<sub>in</sub></th><th>Region</th><th>Switch</th><th>V<sub>out</sub></th></tr>
+      <tr><td>0 V (0)</td><td>cutoff</td><td>open</td><td>5 V (1)</td></tr>
+      <tr><td>5 V (1)</td><td>saturation</td><td>closed</td><td>0.2 V (0)</td></tr>
+    </table>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> I<sub>C(sat)</sub> = (5 − 0.2)/1 kΩ = 4.8 mA; with β = 100, I<sub>B(min)</sub> = 4.8 mA/100 = 48 µA. Actual I<sub>B</sub> = (5 − 0.7)/10 kΩ = 0.43 mA ≈ 9 × I<sub>B(min)</sub> → <span class="circ">hard saturation</span> ✓. R<sub>B</sub> must stay below 4.3 V/48 µA ≈ 89.6 kΩ. Rule: <span class="hl">I<sub>B</sub> &gt; I<sub>C(sat)</sub>/β</span>, overdrive 2–10×.</div>
+  <ul class="dash small">
+    <li>Switching times: t<sub>on</sub> = t<sub>d</sub> (delay) + t<sub>r</sub> (rise); t<sub>off</sub> = <span class="hl">t<sub>s</sub> (storage)</span> + t<sub>f</sub> (fall). t<sub>s</sub> is the longest: stored base charge must leave. A Schottky clamp (74LS TTL) stops deep saturation.</li>
+    <li>Dissipation is low in both states (I<sub>C</sub> ≈ 0, or V<sub>CE</sub> ≈ 0.2 V); it peaks during transitions. Relay coil: add a <b>flyback diode</b>.</li>
+  </ul>
+  <h2><span class="no">11</span>Small-Signal Models</h2><span class="tag">MCQ + Written</span>
+  <figure class="doodle"><svg viewBox="0 0 660 150" width="640">
+    <g class="w">
+      <path class="ink-k" d="M20,40 H60 M60,80 V120 M20,120 H280 M170,40 H280 M170,40 V64 M170,96 V120 M230,40 V60 M230,100 V120"/>
+      <use href="#r-v" x="60" y="40"/><use href="#r-v" x="230" y="60"/>
+      <circle cx="170" cy="80" r="16" class="ink"/><path class="ink" d="M170,70 V90" marker-end="url(#ahb)"/>
+      <path class="ink-k" d="M340,40 H360 M400,40 H420 M420,40 V64 M420,96 V120 M340,120 H630 M520,40 H630 M520,40 V64 M520,96 V120 M600,40 V60 M600,100 V120"/>
+      <use href="#r-h" x="360" y="40"/><use href="#r-v" x="600" y="60"/>
+      <circle cx="420" cy="80" r="16" class="ink"/><circle cx="520" cy="80" r="16" class="ink"/><path class="ink" d="M520,70 V90" marker-end="url(#ahb)"/>
+    </g>
+    <text x="8" y="44" class="s w6">B</text><text x="284" y="44" class="s w6">C</text><text x="150" y="140" class="s w6">E</text>
+    <text x="70" y="64" class="r s w6">βre</text><text x="190" y="84" class="s">βib</text><text x="240" y="84" class="s">ro</text><text x="30" y="32" class="s">ib →</text>
+    <text x="330" y="44" class="s w6">B</text><text x="634" y="44" class="s w6">C</text><text x="480" y="140" class="s w6">E</text>
+    <text x="380" y="30" text-anchor="middle" class="r s w6">hie</text><text x="420" y="76" text-anchor="middle" class="s">+</text><text x="420" y="92" text-anchor="middle" class="s">−</text>
+    <text x="442" y="84" class="s">hre·vce</text><text x="540" y="84" class="s">hfe·ib</text><text x="608" y="84" class="s">1/hoe</text>
+    <text x="150" y="16" text-anchor="middle" class="g w6">CE re model</text><text x="485" y="16" text-anchor="middle" class="g w6">CE h-parameter (hybrid) model</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p><b>re model:</b> <span class="circ">r<sub>e</sub> = 26 mV/I<sub>E</sub></span> (V<sub>T</sub> = kT/q ≈ 26 mV at 300 K). CE input = βr<sub>e</sub>; CB input = r<sub>e</sub>. Hybrid-π: g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub>, r<sub>π</sub> = β/g<sub>m</sub>.</p>
+      <p><b>h-parameters:</b> v<sub>1</sub> = h<sub>i</sub>i<sub>1</sub> + h<sub>r</sub>v<sub>2</sub>; i<sub>2</sub> = h<sub>f</sub>i<sub>1</sub> + h<sub>o</sub>v<sub>2</sub>. Units: h<sub>i</sub> Ω, h<sub>r</sub> and h<sub>f</sub> none, h<sub>o</sub> S. "Hybrid" = mixed units.</p>
+    </div>
+    <table class="hand small" style="margin-top:0">
+      <tr><th>CE</th><th>Typical</th><th>Link</th></tr>
+      <tr><td>h<sub>ie</sub></td><td>1–3 kΩ</td><td>= βr<sub>e</sub></td></tr>
+      <tr><td>h<sub>re</sub></td><td>≈ 10⁻⁴</td><td>≈ 0 (approx.)</td></tr>
+      <tr><td>h<sub>fe</sub></td><td>50–300</td><td>= β; h<sub>fb</sub> = −α</td></tr>
+      <tr><td>h<sub>oe</sub></td><td>≈ 20 µS</td><td>= 1/r<sub>o</sub></td></tr>
+    </table>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> I<sub>C</sub> ≈ I<sub>E</sub> = 2 mA, β = 120, V<sub>A</sub> = 100 V: r<sub>e</sub> = 26/2 = <b>13 Ω</b>; h<sub>ie</sub> = r<sub>π</sub> = 120 × 13 = <b>1.56 kΩ</b>; g<sub>m</sub> = 2/26 = 76.9 mS; r<sub>o</sub> = 100/2 = 50 kΩ → h<sub>oe</sub> = 20 µS. Gain analysis: Single Stage Amplifiers notes.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Formula sheet</span>
+    <div class="fgrid small">
+      <p>I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub> · I<sub>E</sub> = (1 + β)I<sub>B</sub></p><p>α = I<sub>C</sub>/I<sub>E</sub> · β = I<sub>C</sub>/I<sub>B</sub></p>
+      <p>β = α/(1 − α) · α = β/(1 + β)</p><p>I<sub>CEO</sub> = (1 + β)I<sub>CBO</sub></p>
+      <p>I<sub>C</sub> = βI<sub>B</sub> + (1 + β)I<sub>CBO</sub></p><p>I<sub>CBO</sub> doubles every 10 °C</p>
+      <p>V<sub>BE</sub> 0.7 V (Si), 0.3 V (Ge)</p><p>V<sub>CE(sat)</sub> ≈ 0.2 V</p>
+      <p>Load line: V<sub>CE</sub> = V<sub>CC</sub> − I<sub>C</sub>(R<sub>C</sub> + R<sub>E</sub>)</p><p>I<sub>C(sat)</sub> = V<sub>CC</sub>/(R<sub>C</sub> + R<sub>E</sub>)</p>
+      <p>S = ∂I<sub>C</sub>/∂I<sub>CBO</sub>; fixed: 1 + β</p><p>VD: S ≈ 1 + R<sub>Th</sub>/R<sub>E</sub>; βR<sub>E</sub> ≥ 10R<sub>2</sub></p>
+      <p>r<sub>e</sub> = 26 mV/I<sub>E</sub> · h<sub>ie</sub> = βr<sub>e</sub></p><p>g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> · r<sub>o</sub> = V<sub>A</sub>/I<sub>C</sub></p>
+      <p>Switch: I<sub>B</sub> &gt; I<sub>C(sat)</sub>/β</p><p>No runaway: V<sub>CE</sub> &lt; V<sub>CC</sub>/2</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Doping E &gt; C &gt; B; width C &gt; E &gt; B</li>
+      <li>Base: thinnest and lightest doped</li>
+      <li>Active = J<sub>E</sub> forward, J<sub>C</sub> reverse</li>
+      <li>Saturation = both forward (switch ON)</li>
+      <li>CE: 180° phase shift, highest power gain</li>
+      <li>CC: highest Z<sub>in</sub>, A<sub>v</sub> ≈ 1, buffer</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>CB: lowest Z<sub>in</sub>, A<sub>i</sub> = α &lt; 1</li>
+      <li>Most stable bias: voltage-divider</li>
+      <li>Least stable: fixed bias, S = 1 + β</li>
+      <li>npn faster than pnp (electron mobility)</li>
+      <li>Early effect = base-width modulation</li>
+      <li>Storage time t<sub>s</sub> limits switching speed</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> E and C are not interchangeable · in saturation I<sub>C</sub> &lt; βI<sub>B</sub> · CC current gain = 1 + β, not β · I<sub>CEO</sub> ≫ I<sub>CBO</sub> · bypassing R<sub>E</sub> keeps DC stability · β is not constant</div>
+  <div class="trick"><span class="lbl">All tricks together</span> npn = Not Pointing iN · α Almost 1, β Big · F-R = For Real gain, F-F fully ON, R-R really OFF · CB Below 1, CE gains Everything, CC Copies · R<sub>E</sub> looks (1 + β) times bigger from the base</div>
+  <figure class="doodle"><svg viewBox="0 0 560 100" width="540">
+    <g class="w">
+      <rect x="10" y="20" width="150" height="50" rx="14" class="ink-k fill-b"/>
+      <rect x="205" y="20" width="150" height="50" rx="14" class="ink-g fill-g"/>
+      <rect x="400" y="20" width="150" height="50" rx="14" class="ink-r fill-r"/>
+      <path class="ink-p" d="M162,45 H200" marker-end="url(#ahp)"/><path class="ink-p" d="M357,45 H395" marker-end="url(#ahp)"/>
+    </g>
+    <text x="85" y="42" text-anchor="middle" class="w6">CUTOFF (R-R)</text><text x="85" y="60" text-anchor="middle" class="s">OFF, IC ≈ 0</text>
+    <text x="280" y="42" text-anchor="middle" class="g w6">ACTIVE (F-R)</text><text x="280" y="60" text-anchor="middle" class="s">IC = βIB, amplifier</text>
+    <text x="475" y="42" text-anchor="middle" class="r w6">SATURATION (F-F)</text><text x="475" y="60" text-anchor="middle" class="s">ON, VCE ≈ 0.2 V</text>
+    <text x="280" y="92" text-anchor="middle" class="p s">increasing IB →</text>
+  </svg><figcaption>one picture for all three regions</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · BJT</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>The most heavily doped region of a BJT is the:<ol class="opts"><li>base</li><li>collector</li><li>emitter</li><li>depletion layer</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>If α = 0.98, β is:<ol class="opts"><li>49</li><li>98</li><li>0.02</li><li>50</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>In saturation, (E–B, C–B) are:<ol class="opts"><li>forward, reverse</li><li>reverse, reverse</li><li>reverse, forward</li><li>forward, forward</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Highest input impedance, voltage gain ≈ 1:<ol class="opts"><li>CB</li><li>CC</li><li>CE</li><li>CE, bypassed R<sub>E</sub></li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>I<sub>CEO</sub> equals:<ol class="opts"><li>I<sub>CBO</sub></li><li>βI<sub>CBO</sub></li><li>(1 + β)I<sub>CBO</sub></li><li>I<sub>CBO</sub>/β</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Fixed-bias S with β = 99:<ol class="opts"><li>1</li><li>99</li><li>50</li><li>100</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>r<sub>e</sub> at I<sub>E</sub> = 2 mA (room temp.):<ol class="opts"><li>13 Ω</li><li>26 Ω</li><li>52 Ω</li><li>1.3 Ω</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>V<sub>CC</sub> = 10 V, R<sub>C</sub> = 2 kΩ: I<sub>C(sat)</sub> =<ol class="opts"><li>2 mA</li><li>20 mA</li><li>5 mA</li><li>10 mA</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>The widest region of a BJT is the:<ol class="opts"><li>emitter</li><li>base</li><li>all equal</li><li>collector</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Which delay is usually longest when a saturated BJT switches?<ol class="opts"><li>delay t<sub>d</sub></li><li>storage t<sub>s</sub></li><li>rise t<sub>r</sub></li><li>fall t<sub>f</sub></li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-c · 6-d · 7-a · 8-c · 9-d · 10-b</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Define stability factor S and derive it for voltage-divider bias. For V<sub>CC</sub> = 12 V, R<sub>1</sub> = 40 kΩ, R<sub>2</sub> = 10 kΩ, R<sub>C</sub> = 2 kΩ, R<sub>E</sub> = 1 kΩ, β = 100, find the Q-point and S, and compare S with fixed bias. <i class="mk">10 marks</i></div>
+  <ol class="steps small">
+    <li>S = ∂I<sub>C</sub>/∂I<sub>CBO</sub>; Thevenin: V<sub>Th</sub> = I<sub>B</sub>R<sub>Th</sub> + V<sub>BE</sub> + (I<sub>B</sub> + I<sub>C</sub>)R<sub>E</sub> → ∂I<sub>B</sub>/∂I<sub>C</sub> = −R<sub>E</sub>/(R<sub>Th</sub> + R<sub>E</sub>) → S = (1 + β)(1 + R<sub>Th</sub>/R<sub>E</sub>)/(1 + β + R<sub>Th</sub>/R<sub>E</sub>) <i class="mk">3</i></li>
+    <li>βR<sub>E</sub> = 100 kΩ ≥ 10R<sub>2</sub> = 100 kΩ ✓; V<sub>B</sub> = 12 × 10/50 = 2.4 V; I<sub>E</sub> = 1.7 mA; V<sub>CE</sub> = 12 − 1.7 × 3 = <b>6.9 V</b> <i class="mk">3</i></li>
+    <li>Exact check: R<sub>Th</sub> = 8 kΩ, I<sub>B</sub> = 1.7/(8 + 101) = 15.6 µA, I<sub>C</sub> = 1.56 mA, V<sub>CE</sub> ≈ 7.3 V <i class="mk">1</i></li>
+    <li>S = 101 × 9/109 ≈ <b>8.3</b> vs fixed bias 101: about 12 times more stable <i class="mk">3</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can draw npn/pnp symbols and layer doping</li>
+        <li>Can convert α ↔ β and use I<sub>CEO</sub></li>
+        <li>Know junction bias in all regions</li>
+        <li>Can fill the CB/CE/CC table from memory</li>
+        <li>Can solve bias circuits, draw the load line</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① Explain thermal runaway<br>② S for collector-feedback<br>③ BJT inverter with R<sub>B</sub> design<br>④ CE input/output curves</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

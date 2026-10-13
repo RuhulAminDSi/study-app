@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Interrupts &amp; DMA: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Interrupts, 8259A PIC, DMA &amp; 8237</span></h1>
+  <p class="subtitle">Types · vector table · 8259A ICW/OCW · DMA · 8237: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">INTERRUPTS &amp; DMA</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Polling vs interrupt</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Types 0–4 · NMI ★</text>
+      <text x="500" y="65" text-anchor="middle" class="r w6">IVT: address = 4N ★</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Response · IRET ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">8259A ICW/OCW ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Cascade → 64 IRQs</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">DMA · HOLD/HLDA ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">8237: 4 ch · mode word</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = applied / programming</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① vector at 4 × type<br>② NMI = type 2<br>③ IVT = 1 KB at 0<br>④ 2 <span class="ov">INTA</span> cycles, IRET<br>⑤ type = ICW2 + IR<br>⑥ 1 + 8 PICs → 64<br>⑦ HOLD → HLDA<br>⑧ 8237: 4 ch, 64 KB</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Types of I/O: … programmed I/O, <span class="hl">interrupt driven I/O</span> … Interrupts: interrupt driven I/O, <span class="hl">software &amp; hardware interrupts</span>, <span class="hl">interrupt vectors and vector table</span>, interrupt processing, <span class="hl">programmable interrupt controller (8259A)</span>, DMA: <span class="hl">DMA controller (8237)</span>". The 8086 architecture and flags are in lesson 1; 8255A and I/O decoding in lesson 2; the 8254 timer and 8251 USART in lesson 3.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Polling vs interrupts, classes ……… p. 2</li><li>8086 types &amp; vector table ……… p. 3</li><li>Response sequence, IRET, priority … p. 4</li><li>8259A PIC architecture ……… p. 5</li><li>ICW1–ICW4 ……… p. 6</li></ul>
+    <ul class="tick"><li>OCWs, modes, cascading ……… p. 7</li><li>DMA: why, modes, HOLD/HLDA … p. 8</li><li>8237 DMAC ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: polling vs interrupts, classification ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>Basics</span></div>
+  <h2><span class="no">1</span>Polling vs Interrupt-Driven I/O</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Interrupt</span> A signal (hardware, instruction or CPU-generated) that makes the CPU <span class="hl">suspend the program after the current instruction</span>, run an <b>Interrupt Service Routine (ISR)</b>, then <b>resume where it stopped</b>.</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p><b>Polling (programmed I/O):</b> the CPU keeps reading a status port in a loop until the device is ready → simple, but <span class="hl">wastes CPU time</span> and a fast event can be missed.</p>
+      <p><b>Interrupt-driven I/O:</b> the device <b>tells</b> the CPU when it is ready; the CPU does useful work in between. Cost: a little extra hardware and the save/restore overhead (<b>interrupt latency</b>).</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="295">
+      <g class="w">
+        <path class="ink" d="M8,46 H118"/>
+        <path class="ink" d="M190,46 H292" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M124,10 V34" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M120,50 L134,98" marker-end="url(#ah)"/>
+        <rect x="118" y="102" width="88" height="34" rx="10" class="ink-r fill-r"/>
+        <path class="ink-g" d="M196,100 L188,52" marker-end="url(#ahg)"/>
+      </g>
+      <text x="10" y="36" class="s">main program</text>
+      <text x="132" y="20" class="r s">IRQ</text>
+      <text x="162" y="124" text-anchor="middle" class="r w6">ISR</text>
+      <text x="114" y="84" text-anchor="end" class="s">save FLAGS, CS, IP</text>
+      <text x="202" y="82" class="g s">IRET</text>
+      <text x="238" y="36" class="g s">resume</text>
+    </svg><figcaption>the ISR is a detour, not a jump</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Polling</th><th class="l">Interrupt-driven</th><th class="l">DMA</th></tr>
+    <tr><td class="l">Who moves data</td><td class="l">CPU</td><td class="l">CPU (in the ISR)</td><td class="l"><b>DMAC</b>, not the CPU</td></tr>
+    <tr><td class="l">CPU time lost</td><td class="l red"><b>highest</b> (busy-wait)</td><td class="l">only during ISR</td><td class="l">lowest (bus lent)</td></tr>
+    <tr><td class="l">Use</td><td class="l">simple, slow devices</td><td class="l">keyboard, timer, UART</td><td class="l">disk, sound, network</td></tr>
+  </table>
+  <div class="trick small"><span class="lbl">Memory trick</span> Polling = checking your phone every minute · interrupt = it <b>rings</b> · DMA = a courier with the store-room key.</div>
+  <h2><span class="no">2</span>Classifying Interrupts</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Basis</th><th class="l">Classes (8086 examples)</th></tr>
+    <tr><td class="l">Source</td><td class="l"><b>hardware</b> (NMI, INTR) · <b>software</b> (INT n, INT 3, INTO) · <b>exceptions</b> (÷ error, single-step)</td></tr>
+    <tr><td class="l">Masking</td><td class="l"><b>maskable</b> (INTR: obeys IF, STI/CLI) · <b>non-maskable</b> (NMI)</td></tr>
+    <tr><td class="l">Vector</td><td class="l"><b>vectored</b>: ISR address fixed (NMI → type 2) · <b>non-vectored</b>: source found by polling</td></tr>
+    <tr><td class="l">Trigger</td><td class="l"><b>edge</b>-triggered (NMI, rising edge) · <b>level</b>-triggered (INTR, held high)</td></tr>
+  </table>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">8086 pin</th><th class="l">NMI (pin 17)</th><th class="l">INTR (pin 18)</th></tr>
+    <tr><td class="l">Maskable?</td><td class="l"><span class="circ">No</span> (CLI cannot stop it)</td><td class="l">Yes: accepted only if <b>IF = 1</b></td></tr>
+    <tr><td class="l">Trigger</td><td class="l">rising edge (high ≥ 2 clocks)</td><td class="l">high level until acknowledged</td></tr>
+    <tr><td class="l">Type number</td><td class="l">fixed <b>type 2</b> (power fail, parity)</td><td class="l">from the 8259A in the 2nd <span class="ov">INTA</span></td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">Exam trap</span> <b>IF masks only INTR.</b> NMI, INT n, INT 3, INTO, divide error and single-step all ignore IF. Only INTR produces <span class="ov">INTA</span> bus cycles.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: types and vector table ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>Types &amp; vector table</span></div>
+  <h2><span class="no">3</span>The 256 Interrupt Types of the 8086</h2><span class="tag">high-yield</span>
+  <p><b>Type N = 00H–FFH</b> (256): <span class="hl">0–4 dedicated</span> · 5–31 Intel-reserved · 32–255 user.</p>
+  <table class="hand small" style="width:100%">
+    <tr><th>Type</th><th class="l">Name</th><th class="l">Raised when …</th><th>Vector at</th></tr>
+    <tr><td>0</td><td class="l"><b>Divide error</b></td><td class="l">DIV/IDIV by 0, or the quotient does not fit</td><td>00000H</td></tr>
+    <tr><td>1</td><td class="l"><b>Single step</b></td><td class="l">TF = 1: after every instruction (debugging)</td><td>00004H</td></tr>
+    <tr><td>2</td><td class="l red"><b>NMI</b></td><td class="l">rising edge on the NMI pin</td><td><span class="circ">00008H</span></td></tr>
+    <tr><td>3</td><td class="l"><b>Breakpoint</b></td><td class="l">INT 3: the <b>1-byte</b> opcode CCH, planted by debuggers</td><td>0000CH</td></tr>
+    <tr><td>4</td><td class="l"><b>Overflow</b></td><td class="l">INTO executed while OF = 1</td><td>00010H</td></tr>
+  </table>
+  <p class="small"><b>INT n</b> = 2 bytes (CDH, n) · <b>INT 3</b> = 1 byte (CCH) · <b>INTO</b> = CEH · <b>IRET</b> = CFH. No instruction sets TF directly: PUSHF → set bit 8 in the copy → POPF.</p>
+  <h2><span class="no">4</span>Interrupt Vector Table (IVT)</h2>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 236" width="295">
+      <g class="w">
+        <rect x="74" y="8" width="170" height="212" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M74,32 H244 M74,56 H244 M74,80 H244 M74,104 H244 M74,128 H244 M74,164 H244 M74,196 H244" style="stroke-width:1.3"/>
+        <rect x="76" y="58" width="166" height="20" class="fill-r" style="stroke:none"/>
+        <path class="ink-g" d="M252,10 V218" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+      </g>
+      <text x="68" y="25" text-anchor="end" class="s">00000H</text><text x="68" y="49" text-anchor="end" class="s">00004H</text><text x="68" y="73" text-anchor="end" class="s r">00008H</text><text x="68" y="97" text-anchor="end" class="s">0000CH</text><text x="68" y="121" text-anchor="end" class="s">00010H</text><text x="68" y="150" text-anchor="end" class="s">00014H</text><text x="68" y="184" text-anchor="end" class="s">00080H</text><text x="68" y="213" text-anchor="end" class="s">003FCH</text>
+      <text x="159" y="25" text-anchor="middle" class="s">type 0: ÷ error</text><text x="159" y="49" text-anchor="middle" class="s">type 1: single step</text><text x="159" y="73" text-anchor="middle" class="s r w6">type 2: NMI</text><text x="159" y="97" text-anchor="middle" class="s">type 3: breakpoint</text><text x="159" y="121" text-anchor="middle" class="s">type 4: overflow</text><text x="159" y="150" text-anchor="middle" class="s">5–31 reserved</text><text x="159" y="184" text-anchor="middle" class="s g">32–255 user</text><text x="159" y="213" text-anchor="middle" class="s">type 255</text>
+      <text x="262" y="110" class="g s">1 KB</text><text x="159" y="234" text-anchor="middle" class="s">ends at 003FFH</text>
+    </svg><figcaption>IVT at the very bottom of memory</figcaption></figure>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Vector</span> the 4-byte far address (IP, CS) of an ISR. IVT = 256 × 4 = <span class="circ">1 KB</span> at <span class="hl" style="white-space:nowrap">00000H–003FFH</span>.</div>
+      <div class="sumbox small"><span class="lbl">Formula</span> vector address = <span class="circ">4 × N</span><br>IP ← word at 4N (low) · CS ← word at 4N + 2<br>ISR physical address = CS × 10H + IP</div>
+      <figure class="doodle"><svg viewBox="0 0 330 74" width="325">
+        <g class="w">
+          <rect x="6" y="18" width="318" height="30" class="ink fill-b"/>
+          <path class="ink" d="M85,18 V48 M165,18 V48 M245,18 V48" style="stroke-width:1.4"/>
+          <rect x="6" y="18" width="159" height="30" class="fill-y" style="stroke:none;opacity:.6"/>
+        </g>
+        <text x="45" y="38" text-anchor="middle" class="s w6">IP low</text><text x="125" y="38" text-anchor="middle" class="s w6">IP high</text><text x="205" y="38" text-anchor="middle" class="s r w6">CS low</text><text x="285" y="38" text-anchor="middle" class="s r w6">CS high</text>
+        <text x="45" y="12" text-anchor="middle" class="s g">4N</text><text x="125" y="12" text-anchor="middle" class="s g">4N+1</text><text x="205" y="12" text-anchor="middle" class="s g">4N+2</text><text x="285" y="12" text-anchor="middle" class="s g">4N+3</text>
+        <text x="165" y="68" text-anchor="middle" class="s">little-endian: offset first, segment second</text>
+      </svg></figure>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span>
+    <table class="hand small" style="margin:1mm 0">
+      <tr><th class="l">Given</th><th class="l">Working</th><th class="l">Answer</th></tr>
+      <tr><td class="l">INT 21H (DOS)</td><td class="l">21H × 4 = 84H</td><td class="l"><b>00084H–00087H</b></td></tr>
+      <tr><td class="l">INT 08H (PC timer, IRQ0)</td><td class="l">08H × 4 = 20H</td><td class="l"><b>00020H</b></td></tr>
+      <tr><td class="l">vector found at 0002CH</td><td class="l">2CH ÷ 4 = 0BH</td><td class="l"><b>type 0BH</b> (11)</td></tr>
+      <tr><td class="l">vector found at 000A0H</td><td class="l">A0H ÷ 4 = 28H</td><td class="l"><b>type 28H</b> (40)</td></tr>
+    </table>
+    Bytes at 00084H = 56H 34H 00H 12H → IP = 3456H, CS = 1200H → ISR at 12000H + 3456H = <span class="circ">15456H</span></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> × 4 = <b>shift left 2</b>: 0010 0001 → 1000 0100 (21H → 84H). "<b>I</b> before <b>C</b>": IP first, then CS.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The vector of INT 21H is at 84H, <b>not</b> at 21H. The type number is an index; the address is 4 times it.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: response sequence ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>Interrupt processing</span></div>
+  <h2><span class="no">5</span>What the 8086 Does on an Interrupt</h2><span class="tag">written favourite</span>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:start">
+    <ol class="steps small">
+      <li>Finishes the <b>current instruction</b>, then samples NMI and INTR (INTR only if <b>IF = 1</b>)</li>
+      <li><b>INTR only:</b> <span class="circ">two <span class="ov">INTA</span> cycles</span>. 1st: 8259A resolves priority; 2nd: it puts <b>type N</b> on D0–D7 (NMI, software: N already known)</li>
+      <li>Pushes <b>FLAGS</b> (SP − 2)</li>
+      <li>Clears <span class="hl">IF and TF</span>: no INTR, no single-step in the ISR</li>
+      <li>Pushes <b>CS</b>, then <b>IP</b> (SP − 4 more: <b>6 bytes</b> in all)</li>
+      <li>Loads <b>IP from 4N</b>, <b>CS from 4N + 2</b> → ISR runs</li>
+      <li>ISR saves registers, services the device, sends <b>EOI</b>, ends with <b>IRET</b></li>
+      <li><b>IRET</b> pops IP, CS, FLAGS (old IF, TF return)</li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 250 230" width="245">
+      <g class="w">
+        <rect x="70" y="20" width="110" height="160" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M70,60 H180 M70,100 H180 M70,140 H180" style="stroke-width:1.3"/>
+        <rect x="72" y="62" width="106" height="36" class="fill-y" style="stroke:none"/>
+        <rect x="72" y="102" width="106" height="36" class="fill-r" style="stroke:none"/>
+        <rect x="72" y="142" width="106" height="36" class="fill-g" style="stroke:none"/>
+        <path class="ink" d="M200,40 H184" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M200,160 H184" marker-end="url(#ah)"/>
+      </g>
+      <text x="125" y="44" text-anchor="middle" class="s">(old data)</text>
+      <text x="125" y="85" text-anchor="middle" class="w6">FLAGS</text><text x="125" y="125" text-anchor="middle" class="r w6">CS</text><text x="125" y="165" text-anchor="middle" class="g w6">IP</text>
+      <text x="64" y="44" text-anchor="end" class="s">0100H</text><text x="64" y="85" text-anchor="end" class="s">00FEH</text><text x="64" y="125" text-anchor="end" class="s">00FCH</text><text x="64" y="165" text-anchor="end" class="s">00FAH</text>
+      <text x="204" y="44" class="s">old SP</text><text x="204" y="164" class="r s">new SP</text>
+      <text x="125" y="202" text-anchor="middle" class="s">stack grows downward</text>
+      <text x="125" y="222" text-anchor="middle" class="r s">SP 0100H → 00FAH (− 6)</text>
+    </svg><figcaption>stack after the interrupt is accepted</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>RET vs IRET</h3>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Instruction</th><th class="l">Pops</th><th>Bytes</th></tr>
+        <tr><td class="l">RET (near)</td><td class="l">IP</td><td>2</td></tr>
+        <tr><td class="l">RETF (far)</td><td class="l">IP, CS</td><td>4</td></tr>
+        <tr><td class="l red"><b>IRET</b></td><td class="l">IP, CS, <b>FLAGS</b></td><td><b>6</b></td></tr>
+      </table>
+    </div>
+    <div class="code small">; ISR skeleton (PC: 8259A at 20H)
+ISR:  PUSH AX
+      ...            ; service device
+      MOV  AL, 20H   ; non-specific EOI
+      OUT  20H, AL
+      POP  AX
+      IRET</div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> Push order <b>"F-C-I"</b> (Flags, CS, IP), pop order reversed <b>"I-C-F"</b>. Interrupt = a far CALL that also saves the flags.</div>
+  <h2><span class="no">6</span>Priority, Latency &amp; Nesting</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Priority</th><th class="l">8086 interrupt</th></tr>
+      <tr><td class="red"><b>highest</b></td><td class="l">divide error, INT n, INTO</td></tr>
+      <tr><td>↓</td><td class="l">NMI</td></tr>
+      <tr><td>↓</td><td class="l">INTR</td></tr>
+      <tr><td class="red"><b>lowest</b></td><td class="l">single step</td></tr>
+    </table>
+    <ul class="dash small">
+      <li><b>Nesting:</b> IF = 0 inside the ISR; put <b>STI</b> in the ISR to let higher-priority INTRs in</li>
+      <li><b>Latency</b> = request → first ISR instruction</li>
+      <li>After <b>MOV SS / POP SS</b> interrupts wait one more instruction</li>
+      <li>REP string instructions can be interrupted between iterations</li>
+    </ul>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Interrupts are recognised at the end of an <b>instruction</b>, but a HOLD (DMA) request is granted at the end of the current <b>bus cycle</b>. And RET in place of IRET leaves FLAGS on the stack: the program crashes.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: 8259A architecture ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>8259A PIC</span></div>
+  <h2><span class="no">7</span>8259A Programmable Interrupt Controller</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Why a PIC?</span> The 8086 has <b>one</b> maskable input (INTR). The 8259A takes <span class="hl">8 requests (IR0–IR7)</span>, masks and prioritises them, raises INTR and hands the CPU the winner's <b>type number</b>.</div>
+  <div class="cols small">
+    <ul class="dash">
+      <li>28-pin DIP, single +5 V, works with 8085 and 8086/88</li>
+      <li><span class="circ">8 levels</span>; cascade 1 master + 8 slaves → <b>64 levels</b></li>
+      <li>Each IR can be <b>masked</b> separately (IMR)</li>
+    </ul>
+    <ul class="dash">
+      <li>Edge- or level-triggered inputs (LTIM bit)</li>
+      <li>Priority modes: fully nested, rotating, special mask, poll</li>
+      <li>Programmed with <b>4 ICWs</b> (init) and <b>3 OCWs</b> (run time)</li>
+    </ul>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 640 250" width="640">
+    <g class="w">
+      <rect x="72" y="14" width="130" height="42" rx="8" class="ink fill-b"/>
+      <rect x="72" y="92" width="130" height="46" rx="8" class="ink fill-b"/>
+      <rect x="72" y="176" width="130" height="46" rx="8" class="ink fill-b"/>
+      <path class="ink-k" d="M224,10 V230" style="stroke-width:5"/>
+      <path class="ink" d="M202,35 H224 M202,115 H224 M202,199 H224 M224,31 H252 M224,115 H252 M224,199 H252"/>
+      <rect x="252" y="12" width="268" height="40" rx="8" class="ink-g fill-g"/>
+      <rect x="252" y="92" width="92" height="46" rx="8" class="ink-r fill-r"/>
+      <rect x="366" y="92" width="104" height="46" rx="8" class="ink-r fill-r"/>
+      <rect x="492" y="92" width="80" height="46" rx="8" class="ink-r fill-r"/>
+      <rect x="252" y="180" width="320" height="40" rx="8" class="ink-p fill-p"/>
+      <path class="ink" d="M634,115 H576" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M492,115 H474" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M366,115 H348" marker-end="url(#ah)"/>
+      <path class="ink-p" d="M418,180 V142" marker-end="url(#ahp)"/>
+      <path class="ink-g" d="M418,92 V56" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M520,24 H596" marker-end="url(#ah)"/>
+      <path class="ink" d="M596,42 H524" marker-end="url(#ahb)"/>
+    </g>
+    <text x="137" y="40" text-anchor="middle" class="s w6">Data bus buffer</text>
+    <text x="137" y="112" text-anchor="middle" class="s w6">Read/Write</text><text x="137" y="130" text-anchor="middle" class="s w6">logic</text>
+    <text x="137" y="196" text-anchor="middle" class="s w6">Cascade buffer/</text><text x="137" y="214" text-anchor="middle" class="s w6">comparator</text>
+    <text x="64" y="40" text-anchor="end" class="s">D0–D7</text>
+    <text x="64" y="112" text-anchor="end" class="s"><tspan class="ov">RD</tspan> <tspan class="ov">WR</tspan></text><text x="64" y="130" text-anchor="end" class="s">A0 <tspan class="ov">CS</tspan></text>
+    <text x="64" y="196" text-anchor="end" class="s">CAS0–2</text><text x="64" y="214" text-anchor="end" class="s"><tspan class="ov">SP</tspan>/<tspan class="ov">EN</tspan></text>
+    <text x="386" y="37" text-anchor="middle" class="g w6">Control logic</text>
+    <text x="600" y="28" class="r s w6">INT</text><text x="600" y="47" class="s"><tspan class="ov">INTA</tspan></text>
+    <text x="298" y="112" text-anchor="middle" class="r w6">ISR</text><text x="298" y="130" text-anchor="middle" class="s">in service</text>
+    <text x="418" y="112" text-anchor="middle" class="s w6">Priority</text><text x="418" y="130" text-anchor="middle" class="s w6">resolver</text>
+    <text x="532" y="112" text-anchor="middle" class="r w6">IRR</text><text x="532" y="130" text-anchor="middle" class="s">requests</text>
+    <text x="605" y="106" text-anchor="middle" class="s">IR0–IR7</text>
+    <text x="412" y="205" text-anchor="middle" class="p s w6">IMR: Interrupt Mask Register (bit = 1 → masked)</text>
+    <text x="224" y="245" text-anchor="middle" class="s">internal bus</text>
+  </svg><figcaption>8259A block diagram: request → mask → priority → in-service → INT</figcaption></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Register</th><th class="l">Holds</th><th class="l">Set / cleared by</th></tr>
+    <tr><td class="l"><b>IRR</b> (request)</td><td class="l">IR lines now requesting</td><td class="l">set by IR input; cleared on 1st <span class="ov">INTA</span></td></tr>
+    <tr><td class="l"><b>ISR</b> (in-service)</td><td class="l">levels being serviced</td><td class="l">set on 1st <span class="ov">INTA</span>; cleared by <span class="hl">EOI</span>/AEOI</td></tr>
+    <tr><td class="l"><b>IMR</b> (mask)</td><td class="l">masked levels (1 = masked)</td><td class="l">written by OCW1</td></tr>
+    <tr><td class="l"><b>Priority resolver</b></td><td class="l">highest unmasked IRR bit</td><td class="l">mode set by OCW2</td></tr>
+  </table>
+  <h3>One request, step by step (8086 mode)</h3>
+  <ol class="steps small">
+    <li>IR3 goes high → <b>IRR bit 3</b> set; if unmasked and higher than anything in service, 8259A raises <b>INT</b></li>
+    <li>CPU (IF = 1) answers with the 1st <span class="ov">INTA</span> → ISR bit 3 set, IRR bit 3 cleared</li>
+    <li>2nd <span class="ov">INTA</span> → 8259A puts the type byte on D0–D7: <span class="circ">T7–T3 of ICW2 + 011</span></li>
+    <li>ISR bit 3 stays set (blocks equal/lower levels) until the ISR sends <b>EOI</b>; in AEOI mode it clears itself at the end of the 2nd <span class="ov">INTA</span></li>
+  </ol>
+  <div class="exam small"><span class="lbl">Exam trap</span> The 8259A sends the <b>type number</b> (one byte), not the ISR address. With an 8085 it sends a CALL opcode + 2 address bytes (<b>3</b> <span class="ov">INTA</span> pulses); with an 8086, <b>2</b> pulses.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: ICWs ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>8259A: ICWs</span></div>
+  <h2><span class="no">8</span>Initialization Command Words (ICW1–ICW4)</h2><span class="tag">written favourite</span>
+  <p class="small">One address line, <b>A0</b> → two ports (PC: 20H = A0 0, 21H = A0 1). ICWs go <b>in order</b>, after reset.</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Word</th><th>A0</th><th>D7</th><th>D6</th><th>D5</th><th>D4</th><th>D3</th><th>D2</th><th>D1</th><th>D0</th></tr>
+    <tr><td class="l"><b>ICW1</b></td><td>0</td><td>A7</td><td>A6</td><td>A5</td><td class="red"><b>1</b></td><td>LTIM</td><td>ADI</td><td>SNGL</td><td>IC4</td></tr>
+    <tr><td class="l"><b>ICW2</b></td><td>1</td><td>T7</td><td>T6</td><td>T5</td><td>T4</td><td>T3</td><td class="red">ID2</td><td class="red">ID1</td><td class="red">ID0</td></tr>
+    <tr><td class="l"><b>ICW3</b> master</td><td>1</td><td>S7</td><td>S6</td><td>S5</td><td>S4</td><td>S3</td><td>S2</td><td>S1</td><td>S0</td></tr>
+    <tr><td class="l"><b>ICW3</b> slave</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>ID2</td><td>ID1</td><td>ID0</td></tr>
+    <tr><td class="l"><b>ICW4</b></td><td>1</td><td>0</td><td>0</td><td>0</td><td>SFNM</td><td>BUF</td><td>M/<span class="ov">S</span></td><td>AEOI</td><td>µPM</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 210px;align-items:start">
+    <ul class="dash small">
+      <li><b>ICW1:</b> D4 = 1 marks it as ICW1 · <b>LTIM</b> 1 = level, 0 = edge · <b>SNGL</b> 1 = single, 0 = cascade · <b>IC4</b> 1 = ICW4 follows (<span class="hl">always 1 for the 8086</span>) · A7–A5, ADI: 8085 only</li>
+      <li><b>ICW2:</b> upper 5 bits of the type; the 8259A fills the lower 3 bits with the IR number → <span class="circ">type = ICW2 + IR no.</span> (ICW2 is a multiple of 8)</li>
+      <li><b>ICW3</b> (only if SNGL = 0): master: 1 in each bit with a slave · slave: its ID = the master IR it is wired to</li>
+      <li><b>ICW4:</b> <b>µPM</b> 1 = 8086/88 · <b>AEOI</b> 1 = auto EOI · <b>BUF</b> buffered mode, then <b>M/<span class="ov">S</span></b> 1 = master · <b>SFNM</b> special fully nested (master in cascade)</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 210 340" width="178">
+      <g class="w">
+        <rect x="45" y="6" width="120" height="30" rx="8" class="ink fill-b"/>
+        <rect x="45" y="58" width="120" height="30" rx="8" class="ink fill-b"/>
+        <path class="ink-k" d="M105,106 L150,128 L105,150 L60,128 Z" style="fill:rgba(255,238,0,.35)"/>
+        <rect x="45" y="170" width="120" height="30" rx="8" class="ink-p fill-p"/>
+        <path class="ink-k" d="M105,222 L150,244 L105,266 L60,244 Z" style="fill:rgba(255,238,0,.35)"/>
+        <rect x="45" y="284" width="120" height="28" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M105,36 V56 M105,88 V104 M105,150 V168 M105,200 V220 M105,266 V282" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M150,128 H196 V210 H110" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M60,244 H14 V330 H70" marker-end="url(#ah)"/>
+      </g>
+      <text x="105" y="26" text-anchor="middle" class="s w6">ICW1 (A0 = 0)</text>
+      <text x="105" y="78" text-anchor="middle" class="s w6">ICW2 (A0 = 1)</text>
+      <text x="105" y="133" text-anchor="middle" class="s">SNGL=1?</text>
+      <text x="105" y="190" text-anchor="middle" class="p s w6">ICW3</text>
+      <text x="105" y="249" text-anchor="middle" class="s">IC4=1?</text>
+      <text x="105" y="303" text-anchor="middle" class="g s w6">ICW4</text>
+      <text x="74" y="334" class="g s w6">ready (OCWs)</text>
+      <text x="178" y="122" class="r s">yes</text><text x="112" y="164" class="s">no</text>
+      <text x="22" y="238" class="r s">no</text><text x="112" y="279" class="s">yes</text>
+    </svg></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked words ✍</span>
+    <table class="hand small" style="margin:1mm 0;white-space:nowrap">
+      <tr><th class="l">Requirement</th><th>Binary</th><th>Hex</th></tr>
+      <tr><td class="l">ICW1: edge, single, ICW4 needed</td><td>0001 0011</td><td class="red"><b>13H</b></td></tr>
+      <tr><td class="l">ICW1: edge, cascade, ICW4 needed</td><td>0001 0001</td><td><b>11H</b></td></tr>
+      <tr><td class="l">ICW2: IR0 → type 08H (IR3 → 0BH)</td><td>0000 1000</td><td><b>08H</b></td></tr>
+      <tr><td class="l">ICW4: 8086, normal EOI, non-buffered</td><td>0000 0001</td><td class="red"><b>01H</b></td></tr>
+      <tr><td class="l">ICW4: 8086, auto EOI</td><td>0000 0011</td><td><b>03H</b></td></tr>
+      <tr><td class="l">ICW4: 8086, buffered master</td><td>0000 1101</td><td><b>0DH</b></td></tr>
+    </table></div>
+  <div class="cols">
+    <div class="code small">; single 8259A, ports 20H/21H
+MOV AL,13H  ; OUT 20H,AL  ; ICW1
+MOV AL,08H  ; OUT 21H,AL  ; ICW2
+MOV AL,01H  ; OUT 21H,AL  ; ICW4
+MOV AL,0FCH ; OUT 21H,AL  ; OCW1
+; IR0, IR1 enabled</div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Order "<b>1-2-(3)-(4)</b>": ICW3 only if <b>cascaded</b>, ICW4 only if <b>IC4 = 1</b> (always, for an 8086).</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> On an 8086 (16-bit bus) the 8259A sits on D0–D7 and its A0 is wired to CPU <b>A1</b>, so its ports are e.g. 80H and <b>82H</b>, not 80H/81H.</div>
+    </div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: OCWs, priority modes, cascading ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>8259A: OCWs &amp; cascade</span></div>
+  <h2><span class="no">9</span>Operation Command Words (OCW1–OCW3)</h2>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Word</th><th>A0</th><th>D7</th><th>D6</th><th>D5</th><th>D4</th><th>D3</th><th>D2</th><th>D1</th><th>D0</th></tr>
+    <tr><td class="l"><b>OCW1</b> (= IMR)</td><td>1</td><td>M7</td><td>M6</td><td>M5</td><td>M4</td><td>M3</td><td>M2</td><td>M1</td><td>M0</td></tr>
+    <tr><td class="l"><b>OCW2</b></td><td>0</td><td>R</td><td>SL</td><td>EOI</td><td class="red"><b>0</b></td><td class="red"><b>0</b></td><td>L2</td><td>L1</td><td>L0</td></tr>
+    <tr><td class="l"><b>OCW3</b></td><td>0</td><td>0</td><td>ESMM</td><td>SMM</td><td class="red"><b>0</b></td><td class="red"><b>1</b></td><td>P</td><td>RR</td><td>RIS</td></tr>
+  </table>
+  <p class="small"><b>How the chip tells words apart:</b> A0 = 0 &amp; D4 = 1 → ICW1 · A0 = 0, D4 D3 = 00 → OCW2 · A0 = 0, D4 D3 = 01 → OCW3 · A0 = 1 → ICW2/3/4 during init, otherwise <span class="hl">OCW1</span>.</p>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">OCW2 command (R SL EOI)</th><th>Word</th></tr>
+      <tr><td class="l">001 non-specific EOI</td><td class="red"><b>20H</b></td></tr>
+      <tr><td class="l">011 specific EOI (IR3)</td><td><b>63H</b></td></tr>
+      <tr><td class="l">101 rotate on non-spec. EOI</td><td><b>A0H</b></td></tr>
+      <tr><td class="l">100 rotate in AEOI (set)</td><td><b>80H</b></td></tr>
+      <tr><td class="l">110 set priority (IR5 lowest)</td><td><b>C5H</b></td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">OCW3 / OCW1 use</th><th>Word</th></tr>
+      <tr><td class="l">read IRR on next <span class="ov">RD</span></td><td><b>0AH</b></td></tr>
+      <tr><td class="l">read ISR on next <span class="ov">RD</span></td><td><b>0BH</b></td></tr>
+      <tr><td class="l">poll command</td><td><b>0CH</b></td></tr>
+      <tr><td class="l">set / reset special mask</td><td><b>68H / 48H</b></td></tr>
+      <tr><td class="l">OCW1: enable IR0, IR1 only</td><td><b>FCH</b></td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Priority mode</th><th class="l">Rule</th></tr>
+    <tr><td class="l"><b>Fully nested</b> (default)</td><td class="l">IR0 highest … IR7 lowest; ISR blocks equal/lower</td></tr>
+    <tr><td class="l"><b>Automatic rotation</b></td><td class="l">level just served → <b>lowest</b> (IR4 served → IR5 top)</td></tr>
+    <tr><td class="l"><b>Specific rotation</b></td><td class="l">software sets the lowest (C5H → IR6 highest)</td></tr>
+    <tr><td class="l"><b>Special mask</b></td><td class="l">lower levels allowed while an ISR runs</td></tr>
+    <tr><td class="l"><b>Poll</b></td><td class="l">no INT; poll byte D7 = request, D2–D0 = level</td></tr>
+  </table>
+  <h2><span class="no">10</span>Cascading: up to 64 Levels</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 330 176" width="325">
+      <g class="w">
+        <rect x="120" y="10" width="96" height="66" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="116" width="92" height="50" rx="8" class="ink fill-b"/>
+        <rect x="230" y="116" width="92" height="50" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M56,116 V54 H118" marker-end="url(#ahb)"/>
+        <path class="ink" d="M276,116 V54 H220" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M168,76 V100 M70,100 H262 M70,100 V114 M262,100 V114" style="stroke-dasharray:5 4"/>
+        <path class="ink-r" d="M168,10 V2 H318" marker-end="url(#ah)"/>
+      </g>
+      <text x="168" y="34" text-anchor="middle" class="r w6">Master</text><text x="168" y="56" text-anchor="middle" class="s">ICW3 = 24H</text>
+      <text x="56" y="138" text-anchor="middle" class="w6">Slave A</text><text x="56" y="156" text-anchor="middle" class="s">ICW3 = 02H</text>
+      <text x="276" y="138" text-anchor="middle" class="w6">Slave B</text><text x="276" y="156" text-anchor="middle" class="s">ICW3 = 05H</text>
+      <text x="64" y="48" class="s">IR2</text><text x="244" y="48" class="s">IR5</text>
+      <text x="168" y="116" text-anchor="middle" class="g s">CAS0–CAS2</text>
+      <text x="236" y="18" class="r s">INT → 8086</text>
+    </svg></figure>
+    <ul class="dash small">
+      <li>Slave INT → a master IR input; master <b>CAS0–2</b> outputs the slave ID; slaves read it as inputs</li>
+      <li>Hardware sets master/slave by <b><span class="ov">SP</span>/<span class="ov">EN</span></b> (1 = master) or by ICW4 in buffered mode</li>
+      <li>On the 2nd <span class="ov">INTA</span> the <b>selected slave</b> puts the type on the bus</li>
+      <li>Levels with s slaves = <span class="circ">8 + 7s</span>: 1 slave → 15 (PC/AT), 8 slaves → <b>64</b></li>
+      <li>ISR on a slave level sends <b>two EOIs</b>: slave, then master</li>
+    </ul>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Master + slaves on IR2 and IR5 (edge, 8086): master ICW1 = <b>11H</b> (cascade), ICW2 = 08H, ICW3 = 0010 0100 = <b>24H</b>, ICW4 = 01H · slave A: 11H, 70H, ICW3 = <b>02H</b>, 01H · slave B: ICW3 = <b>05H</b>. Levels = 8 + 7 × 2 = <span class="circ">22</span>.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: DMA ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>DMA</span></div>
+  <h2><span class="no">11</span>Direct Memory Access (DMA)</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> DMA moves a block between an I/O device and memory (or memory to memory) <span class="hl">without the CPU running an instruction per byte</span>: a <b>DMA controller (DMAC)</b> borrows the bus, drives addresses and strobes itself, then returns the bus.</div>
+  <div class="cols small">
+    <div><b>Why?</b> Polling/interrupt I/O moves every byte <b>through the CPU</b> (IN, MOV, INC, LOOP ≈ tens of clocks). A DMAC needs <span class="circ">one bus cycle per byte</span> (4 clocks on the 8237).</div>
+    <div><b>Cost:</b> an extra chip, and the CPU is <b>held off the bus</b> during transfers (it may still run from its queue).</div>
+  </div>
+  <h3>The HOLD / HLDA handshake (8086 minimum mode)</h3>
+  <figure class="doodle"><svg viewBox="0 0 640 222" width="640">
+    <g class="w">
+      <rect x="14" y="24" width="140" height="66" rx="10" class="ink fill-b"/>
+      <rect x="250" y="24" width="140" height="66" rx="10" class="ink-r fill-r"/>
+      <rect x="486" y="24" width="140" height="66" rx="10" class="ink-g fill-g"/>
+      <rect x="250" y="168" width="140" height="48" rx="10" class="ink-p fill-p"/>
+      <path class="ink-r" d="M250,40 H158" marker-end="url(#ah)"/>
+      <path class="ink" d="M154,74 H246" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M486,40 H394" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M390,74 H482" marker-end="url(#ahg)"/>
+      <path class="ink-k" d="M14,140 H626" style="stroke-width:6"/>
+      <path class="ink-k" d="M84,90 V137 M320,90 V137 M556,90 V137 M320,143 V166" style="stroke-width:2"/>
+      <path class="ink-p" d="M556,146 C556,192 470,196 396,192" marker-end="url(#ahp)" style="stroke-dasharray:6 4"/>
+    </g>
+    <text x="84" y="54" text-anchor="middle" class="w6">8086 CPU</text><text x="84" y="76" text-anchor="middle" class="s">pins 31 / 30</text>
+    <text x="320" y="54" text-anchor="middle" class="r w6">8237 DMAC</text><text x="320" y="76" text-anchor="middle" class="s">HRQ · HLDA</text>
+    <text x="556" y="54" text-anchor="middle" class="g w6">I/O device</text><text x="556" y="76" text-anchor="middle" class="s">disk controller</text>
+    <text x="320" y="197" text-anchor="middle" class="p w6">Memory</text>
+    <text x="200" y="30" text-anchor="middle" class="r s">② HRQ→HOLD</text><text x="200" y="68" text-anchor="middle" class="s">③ HLDA</text>
+    <text x="440" y="30" text-anchor="middle" class="g s">① DREQ</text><text x="440" y="68" text-anchor="middle" class="g s">④ DACK</text>
+    <text x="300" y="134" text-anchor="middle" class="s">system bus (address, data, control)</text>
+    <text x="500" y="216" text-anchor="middle" class="p s">⑤ data: device ⇄ memory directly</text>
+    <text x="84" y="164" text-anchor="middle" class="s">CPU buses floated</text>
+    <text x="124" y="200" text-anchor="middle" class="r s">⑥ TC/EOP: HRQ low → CPU resumes</text>
+  </svg><figcaption>DREQ → HRQ/HOLD → HLDA → DACK → transfer → release</figcaption></figure>
+  <ol class="steps small">
+    <li>Device asks the DMAC with <b>DREQ</b>; DMAC raises <b>HRQ</b>, wired to the 8086 <b>HOLD</b> pin</li>
+    <li>8086 finishes the current <span class="hl">bus cycle</span>, floats its address/data/control lines and answers <b>HLDA</b></li>
+    <li>DMAC sends <b>DACK</b>, drives the address and <span class="ov">MEMR</span> + <span class="ov">IOW</span> (or <span class="ov">IOR</span> + <span class="ov">MEMW</span>)</li>
+    <li>At terminal count (or <span class="ov">EOP</span>) HRQ drops → the 8086 drops HLDA and takes the bus back</li>
+  </ol>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">DMA mode</th><th class="l">How the bus is used</th><th class="l">Effect</th></tr>
+    <tr><td class="l"><b>Burst</b> (block)</td><td class="l">whole block in one bus grant</td><td class="l red"><b>CPU off the bus</b>; fastest</td></tr>
+    <tr><td class="l"><b>Cycle stealing</b> (single)</td><td class="l">one byte per grant, bus returned</td><td class="l">CPU slowed slightly</td></tr>
+    <tr><td class="l"><b>Transparent</b> (hidden)</td><td class="l">only cycles the CPU leaves idle</td><td class="l">no slowdown; slowest</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Burst</b> = take the road for the whole convoy · <b>stealing</b> = slip in one car at a time · <b>transparent</b> = drive only when the road is empty.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> HOLD is honoured even when IF = 0 (it is not an interrupt). In <b>maximum mode</b> HOLD/HLDA are replaced by <b><span class="ov">RQ</span>/<span class="ov">GT0</span></b> (higher priority) and <b><span class="ov">RQ</span>/<span class="ov">GT1</span></b>.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: 8237 ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>8237 DMAC</span></div>
+  <h2><span class="no">12</span>8237 Programmable DMA Controller</h2><span class="tag">high-yield</span>
+  <div class="cols small">
+    <ul class="dash">
+      <li>40 pins, <span class="circ">4 channels</span> (DREQ/DACK 0–3)</li>
+      <li>16-bit address + count → <span class="hl">64 KB per block</span></li>
+      <li>8237A-5: 5 MHz, up to <b>1.6 MB/s</b></li>
+      <li>Fixed (ch0 highest) or rotating priority</li>
+    </ul>
+    <ul class="dash">
+      <li><b>A8–A15 sent on DB0–DB7</b>, latched by <b>ADSTB</b></li>
+      <li><b>AEN</b> cuts off the CPU address latches</li>
+      <li><span class="ov">EOP</span>: out at TC, or in to stop a transfer</li>
+      <li>PC/AT: 2 cascaded → <b>7</b> usable channels</li>
+    </ul>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Register</th><th>Bits × no.</th><th class="l">Role</th></tr>
+    <tr><td class="l">Base / current address</td><td>16 × 4 each</td><td class="l">start / next address</td></tr>
+    <tr><td class="l">Base / current count</td><td>16 × 4 each</td><td class="l">load <b>N − 1</b>; TC at 0000H → FFFFH</td></tr>
+    <tr><td class="l">Command</td><td>8 × 1</td><td class="l">enable, mem-to-mem, priority, timing</td></tr>
+    <tr><td class="l">Mode</td><td>6 × 4</td><td class="l">mode, type, inc/dec, auto-init</td></tr>
+    <tr><td class="l">Mask · request · status · temp</td><td>4 · 4 · 8 · 8</td><td class="l">disable ch · soft DREQ · TC flags · mem-to-mem</td></tr>
+  </table>
+  <h3>Mode register (one per channel)</h3>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="640">
+    <g class="w">
+      <rect x="20" y="10" width="600" height="34" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+      <path class="ink-k" d="M95,10 V44 M170,10 V44 M245,10 V44 M320,10 V44 M395,10 V44 M470,10 V44 M545,10 V44" style="stroke-width:1.3"/>
+      <path class="ink-r" d="M24,52 H166"/><path class="ink-p" d="M174,52 H241"/><path class="ink-g" d="M249,52 H316"/><path class="ink" d="M324,52 H466"/><path class="ink-r" d="M474,52 H616"/>
+    </g>
+    <text x="57" y="33" text-anchor="middle" class="w6">D7</text><text x="132" y="33" text-anchor="middle" class="w6">D6</text><text x="207" y="33" text-anchor="middle" class="w6">D5</text><text x="282" y="33" text-anchor="middle" class="w6">D4</text><text x="357" y="33" text-anchor="middle" class="w6">D3</text><text x="432" y="33" text-anchor="middle" class="w6">D2</text><text x="507" y="33" text-anchor="middle" class="w6">D1</text><text x="582" y="33" text-anchor="middle" class="w6">D0</text>
+    <text x="95" y="70" text-anchor="middle" class="r s w6">mode</text><text x="95" y="86" text-anchor="middle" class="s">00 demand · 01 single</text><text x="95" y="102" text-anchor="middle" class="s">10 block · 11 cascade</text>
+    <text x="207" y="70" text-anchor="middle" class="p s w6">address</text><text x="207" y="86" text-anchor="middle" class="s">0 = inc</text><text x="207" y="102" text-anchor="middle" class="s">1 = dec</text>
+    <text x="282" y="70" text-anchor="middle" class="g s w6">auto-init</text><text x="282" y="86" text-anchor="middle" class="s">1 = on</text>
+    <text x="395" y="70" text-anchor="middle" class="s w6">transfer type</text><text x="395" y="86" text-anchor="middle" class="s">00 verify · 01 write</text><text x="395" y="102" text-anchor="middle" class="s">10 read · 11 illegal</text>
+    <text x="545" y="70" text-anchor="middle" class="r s w6">channel</text><text x="545" y="86" text-anchor="middle" class="s">00 … 11 = ch0 … ch3</text>
+  </svg></figure>
+  <p class="small"><b>Write</b> = I/O → <b>memory</b> (<span class="ov">IOR</span> + <span class="ov">MEMW</span>) · <b>Read</b> = <b>memory</b> → I/O (<span class="ov">MEMR</span> + <span class="ov">IOW</span>) · <b>Verify</b> = no strobes. Named from the <span class="hl">memory's side</span>.</p>
+  <div class="ex small"><span class="lbl">Worked mode words ✍</span>
+    <table class="hand small" style="margin:1mm 0;white-space:nowrap">
+      <tr><th class="l">Requirement</th><th>D7…D0</th><th>Hex</th></tr>
+      <tr><td class="l">ch2, single, inc, no auto-init, <b>write</b> (disk → memory)</td><td>01 0 0 01 10</td><td class="red"><b>46H</b></td></tr>
+      <tr><td class="l">ch2, single, inc, no auto-init, <b>read</b> (memory → disk)</td><td>01 0 0 10 10</td><td><b>4AH</b></td></tr>
+      <tr><td class="l">ch1, block, inc, auto-init, read</td><td>10 0 1 10 01</td><td><b>99H</b></td></tr>
+      <tr><td class="l">ch3, cascade (second 8237 hangs here)</td><td>11 0 0 00 11</td><td><b>C3H</b></td></tr>
+    </table>
+    1 KB on ch1: count = 1024 − 1 = <span class="circ">03FFH</span>; clear the byte flip-flop, write address and count (low, high), mode 45H, unmask ch1.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Mode word = "<b>M-A-A-T-C</b>": Mode (2), Address dir (1), Auto-init (1), Type (2), Channel (2).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> 16-bit address → a block cannot cross a <b>64 KB page</b>; the PC adds a <b>page register</b> for A16–A19. Mem-to-mem uses <b>ch0 → ch1</b> only.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>256 types · IVT 00000H–003FFH = 1 KB</p><p>Vector at 4N: IP at 4N, CS at 4N + 2</p>
+      <p>0 ÷ error · 1 step · 2 NMI · 3 break · 4 INTO</p><p>0–4 dedicated · 5–31 reserved · 32–255 user</p>
+      <p>Push FLAGS · clear IF, TF · push CS, IP</p><p>IRET pops IP, CS, FLAGS</p>
+      <p>Priority: ÷/INT n/INTO &gt; NMI &gt; INTR &gt; step</p><p>INTR: IF = 1 needed, 2 <span class="ov">INTA</span> cycles</p>
+      <p>8259A: 8 IRs, 28 pins, 4 ICW + 3 OCW</p><p>Type = ICW2 (T7–T3) + IR number</p>
+      <p>ICW1 13H · ICW4 01H · OCW2 EOI 20H</p><p>IRR → priority → ISR; IMR = OCW1</p>
+      <p>Levels = 8 + 7s → 64 with 8 slaves</p><p>DMA: DREQ → HOLD → HLDA → DACK</p>
+      <p>Burst · cycle stealing · transparent</p><p>8237: 4 ch · 64 KB · count = N − 1</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>NMI = type 2, vector at 00008H</li>
+      <li>INT 3 is the only 1-byte INT (CCH)</li>
+      <li>CLI/STI affect INTR only</li>
+      <li>TF = 1 → type 1 after each instruction</li>
+      <li>INT 21H vector at 00084H</li>
+      <li>8259A gives the type, not the address</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>ICW3 only when cascaded</li>
+      <li>Default mode: fully nested, IR0 highest</li>
+      <li>AEOI: ISR bit cleared by the 2nd <span class="ov">INTA</span></li>
+      <li>HOLD granted after the current bus cycle</li>
+      <li>Write transfer = I/O → memory</li>
+      <li>Max-mode DMA pins: <span class="ov">RQ</span>/<span class="ov">GT0</span>, <span class="ov">RQ</span>/<span class="ov">GT1</span></li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> type number ≠ vector address · IF does not mask NMI or software INTs · IRET ≠ RET · 8086 needs IC4 = 1 and µPM = 1 · a slave-level ISR needs two EOIs · 8237 count register = bytes − 1 · read/write transfers are named for memory · a DMA block cannot cross a 64 KB page</div>
+  <div class="tipbox small"><span class="lbl">Compare: 8085</span> 5 hardware interrupts: <b>TRAP</b> (non-maskable, 0024H) &gt; RST 7.5 (003CH) &gt; RST 6.5 (0034H) &gt; RST 5.5 (002CH) &gt; INTR (non-vectored). Vector = RST number × 8.</div>
+  <div class="trick"><span class="lbl">All tricks together</span> phone check / ring / courier · × 4 = shift left 2 · "I before C" in the IVT · push F-C-I, pop I-C-F · ICW order 1-2-(3)-(4) · burst / steal / transparent = convoy / one car / empty road · mode word M-A-A-T-C</div>
+  <figure class="doodle"><svg viewBox="0 0 600 74" width="600">
+    <g class="w">
+      <rect x="10" y="20" width="150" height="44" rx="10" class="ink fill-b"/>
+      <rect x="200" y="20" width="110" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="350" y="20" width="100" height="44" rx="10" class="ink-p fill-p"/>
+      <rect x="490" y="20" width="100" height="44" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M162,42 H196" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M312,42 H346" marker-end="url(#ah)"/>
+      <path class="ink-p" d="M452,42 H486" marker-end="url(#ahp)"/>
+    </g>
+    <text x="85" y="40" text-anchor="middle" class="s w6">ICW2 = 40H</text><text x="85" y="57" text-anchor="middle" class="s">+ IR3 (011)</text>
+    <text x="255" y="40" text-anchor="middle" class="r s w6">type 43H</text><text x="255" y="57" text-anchor="middle" class="s">0100 0011</text>
+    <text x="400" y="47" text-anchor="middle" class="p s w6">× 4</text>
+    <text x="540" y="40" text-anchor="middle" class="g s w6">0010CH</text><text x="540" y="57" text-anchor="middle" class="s">IP; CS at 0010EH</text>
+  </svg><figcaption>from an IR pin to the IVT in three moves</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Interrupts &amp; DMA</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>The vector of INT 13H begins at:<ol class="opts"><li>00013H</li><li>0004CH</li><li>00026H</li><li>00130H</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>The 8086 NMI has type number:<ol class="opts"><li>0</li><li>1</li><li>3</li><li>2</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Size of the 8086 interrupt vector table:<ol class="opts"><li>1 KB</li><li>256 bytes</li><li>64 KB</li><li>4 KB</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>An ISR must end with:<ol class="opts"><li>RET</li><li>IRET</li><li>RETF</li><li>HLT</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>How many <span class="ov">INTA</span> cycles does the 8086 run for an INTR?<ol class="opts"><li>1</li><li>3</li><li>2</li><li>0</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Levels with 1 master + 8 slave 8259As:<ol class="opts"><li>64</li><li>72</li><li>56</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>The OCW2 word for a non-specific EOI is:<ol class="opts"><li>60H</li><li>A0H</li><li>0BH</li><li>20H</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>A DMAC requests the bus (min mode) on:<ol class="opts"><li>INTR</li><li>HLDA</li><li>HOLD</li><li>READY</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>8237 mode: ch2, single, inc, write:<ol class="opts"><li>46H</li><li>4AH</li><li>42H</li><li>56H</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>DMA mode using only idle bus cycles:<ol class="opts"><li>burst</li><li>cycle stealing</li><li>block</li><li>transparent</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-d · 3-a · 4-b · 5-c · 6-a · 7-d · 8-c · 9-a · 10-d</div>
+
+  <div class="wq"><span class="lbl">Written question</span> A single 8259A at ports 20H/21H serves an 8086 system. Initialise it for edge-triggered inputs, IR0 = type 40H and normal EOI, then enable only IR0–IR3. Give each control word and the code, and find the IVT address used by IR3. <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>ICW1 = 0001 0011 = <b>13H</b> (edge, single, ICW4 needed) → port 20H <i class="mk">2</i></li>
+    <li>ICW2 = <b>40H</b> → port 21H (IR0–IR7 = types 40H–47H); no ICW3, since single <i class="mk">1</i></li>
+    <li>ICW4 = 0000 0001 = <b>01H</b> (8086 mode, normal EOI, non-buffered) → port 21H <i class="mk">1</i></li>
+    <li>OCW1 = 1111 0000 = <b>F0H</b> → 21H (IR4–7 masked); each: MOV AL,w / OUT p,AL <i class="mk">2</i></li>
+    <li>IR3 → type 43H → 43H × 4 = <b>0010CH–0010FH</b> (IP at 0010CH, CS at 0010EH); its ISR ends with MOV AL,20H / OUT 20H,AL / IRET <i class="mk">2</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Types 0–4 and their vectors</li>
+        <li>Type ↔ IVT address, both ways</li>
+        <li>INTR response sequence in order</li>
+        <li>ICW1/2/4, OCW1/2 in binary</li>
+        <li>HOLD/HLDA and the 8237 mode word</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① ICWs: slaves on IR2, IR6<br>② 8259A block diagram<br>③ Polling vs interrupt vs DMA<br>④ 8237 for a 4 KB disk read</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

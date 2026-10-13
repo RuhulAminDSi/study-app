@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import type { ReactNode } from 'react'
 import NotesViewer from './NotesViewer'
 
@@ -83,6 +84,7 @@ export function renderContent(content: string): ReactNode[] {
     const line = allLines[i]
 
     if (isTableLine(line)) {
+      const start = i
       const tableLines: string[] = [line]
       i++
       while (i < allLines.length && isTableLine(allLines[i])) {
@@ -92,7 +94,7 @@ export function renderContent(content: string): ReactNode[] {
 
       if (tableLines.length >= 2) {
         const table = parseTable(tableLines)
-        if (table) result.push(table)
+        if (table) result.push(<Fragment key={start}>{table}</Fragment>)
       }
       continue
     }

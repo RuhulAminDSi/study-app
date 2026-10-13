@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>প্রসেস, আইপিসি ও সিডিউলিং: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">প্রক্রিয়া ও সিডিউলিং</span></h1>
+  <p class="subtitle">PCB · পাঁচ অবস্থা · IPC ও সেমাফোর · CPU সিডিউলিং: ১৩ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 286" width="470">
+      <g class="w">
+        <ellipse cx="320" cy="143" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M242,126 L176,72 M242,160 L176,214 M320,101 L320,54 M398,126 L464,72 M398,160 L464,214 M320,185 L320,232 M220,143 L178,143 M420,143 L462,143"/>
+        <rect x="68" y="38" width="158" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="158" height="38" rx="14" class="ink fill-b"/>
+        <rect x="20" y="124" width="154" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="466" y="124" width="154" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="68" y="210" width="158" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="232" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="210" width="158" height="38" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="139" text-anchor="middle" class="bn k l">প্রসেস</text><text x="320" y="163" text-anchor="middle" class="bn r s">টপিকের মাইন্ড-ম্যাপ</text>
+      <text x="147" y="55" text-anchor="middle" class="bn s">প্রোগ্রাম বনাম প্রসেস</text><text x="147" y="71" text-anchor="middle" class="bn s">PCB-এর ঘরগুলো</text>
+      <text x="320" y="38" text-anchor="middle" class="bn r w6">পাঁচ অবস্থার মডেল ★</text>
+      <text x="495" y="55" text-anchor="middle" class="bn s">পাইপ · সকেট</text><text x="495" y="71" text-anchor="middle" class="bn s">শেয়ার্ড মেমোরি</text>
+      <text x="97" y="149" text-anchor="middle" class="bn g w6">সিডিউলিং</text>
+      <text x="543" y="141" text-anchor="middle" class="bn r w6">FCFS · SJF</text><text x="543" y="158" text-anchor="middle" class="bn r w6">SRTF · RR ★</text>
+      <text x="147" y="227" text-anchor="middle" class="bn s">থ্রেড, many-to-many</text>
+      <text x="320" y="256" text-anchor="middle" class="bn r w6">সেমাফোর P / V ★</text>
+      <text x="495" y="227" text-anchor="middle" class="bn s">মাল্টিলেভেল সারি</text><text x="495" y="243" text-anchor="middle" class="bn s">EDF · রেট মনোটনিক</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = যে ধারণার ওপর সিডিউলিংয়ের সব মাপ দাঁড়ায়</figcaption>
+  </figure>
+  <div class="sticky" style="width:104mm"><b>হাই-ইল্ড তালিকা</b><br>① প্রোগ্রাম = ফাইল · প্রসেস = মেমোরিতে<br>② PCB: PID, state, PC, রেজিস্টার, শিডিউলিং, মেমোরি, অ্যাকাউন্ট<br>③ new → ready → running → waiting → terminated<br>④ রেডি CPU চায় · ওয়েটিং কোনো ঘটনা চায়<br>⑤ দীর্ঘ-, মধ্যবর্তী-, স্বল্পমেয়াদি শিডিউলার<br>⑥ থ্রেডরা অ্যাড্রেস স্পেস ভাগ করে<br>⑦ IPC: shm, pipe, FIFO, socket, signal<br>⑧ সেমাফোর P = −1, V = +1<br>⑨ TAT = C − অ্যারাইভাল · WT = TAT − বার্স্ট<br>⑩ SJF সেরা গড় অপেক্ষা · RR = q পালা ★</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">সিলেবাসে আছে "<span class="hl">Process: process model and implementation, Inter-Process Communication (IPC), classical IPC problems, process scheduling, multiprocessing and time-sharing</span>"। ডেডলক, মেমোরি ম্যানেজমেন্ট ও ফাইল সিস্টেমের নিজস্ব লেসন আছে।</p>
+  <p class="small" style="margin-top:1mm"><span class="purple"><b>পাশের লেসনগুলো।</b></span> রিডার্স–রাইটার্স, ডাইনিং ফিলোসফার্স ও স্লিপিং বার্বার এই আদর্শগুলোর ওপর দাঁড়ানো সিঙ্ক্রোনাইজেশন সমস্যা; ডেডলক প্রতিরোধ, ব্যাংকার অ্যালগরিদম ও পুনরুদ্ধার আলাদা লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>প্রোগ্রাম, প্রসেস ও PCB … পৃ. ২</li><li>পাঁচ অবস্থা ও সারিগুলো … পৃ. ৩</li><li>তৈরি ও সমাপ্তি … পৃ. ৪</li><li>থ্রেড ও তার মডেল … পৃ. ৫</li><li>IPC-এর পদ্ধতি … পৃ. ৬</li><li>সেমাফোর, প্রোডিউসার–কনজিউমার … পৃ. ৭</li></ul>
+    <ul class="tick"><li>সিডিউলিংয়ের মাপ ও প্রিম্পশন … পৃ. ৮</li><li>FCFS, SJF, প্রায়োরিটি … পৃ. ৯</li><li>SRTF ও রাউন্ড রবিন … পৃ. ১০</li><li>মাল্টিলেভেল সারি, EDF … পৃ. ১১</li><li>রাতের পাতা পৃ. ১২ · অনুশীলন পৃ. ১৩</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: program vs process, PCB ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>প্রসেস মডেল ও PCB</span></div>
+  <h2><span class="no">১</span>প্রোগ্রাম বনাম প্রসেস ও PCB</h2><span class="tag">সংজ্ঞা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি <span class="hl">প্রোগ্রাম</span> হলো ডিস্কে রাখা নির্দেশনার নিষ্ক্রিয় ফাইল। একটি <span class="hl">প্রসেস</span> হলো সেই প্রোগ্রাম <b>মেমোরিতে তুলে চালু হওয়া</b> — তার কোড, ডেটা, প্রোগ্রাম কাউন্টার, সে যে রেজিস্টারগুলো ধরে আছে এবং খোলা ফাইলসহ। <span class="circ">প্রোগ্রাম স্থির, প্রসেস গতিশীল</span> — একটি প্রোগ্রাম একসঙ্গে অনেক প্রসেস হতে পারে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,222px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 260 176" width="212">
+      <g class="w">
+        <rect x="8" y="12" width="120" height="24" rx="5" class="ink fill-b"/>
+        <path class="ink-g" d="M68,36 L68,54" marker-end="url(#ahg)"/>
+        <rect x="8" y="58" width="130" height="98" rx="5" class="ink fill-y"/>
+        <path class="ink" d="M138,107 L172,107" marker-end="url(#ahb)"/>
+        <rect x="176" y="58" width="76" height="98" rx="5" class="ink fill-b"/>
+      </g>
+      <text x="68" y="29" text-anchor="middle" class="bn k s">ডিস্কে প্রোগ্রাম</text>
+      <text x="76" y="50" class="bn g s">লোড</text>
+      <text x="17" y="76" class="bn k s">কোড</text>
+      <text x="17" y="92" class="bn k s">ডেটা · ভ্যারিয়েবল</text>
+      <text x="17" y="108" class="bn k s">স্ট্যাক · হিপ</text>
+      <text x="17" y="124" class="bn k s">PC · রেজিস্টার</text>
+      <text x="17" y="140" class="bn k s">খোলা ফাইল</text>
+      <text x="155" y="99" text-anchor="middle" class="bn s">OS</text>
+      <text x="214" y="76" text-anchor="middle" class="bn r w6 s">PCB</text>
+      <text x="184" y="92" class="bn k s">PID 4217</text>
+      <text x="184" y="108" class="bn k s">স্টেট</text>
+      <text x="184" y="124" class="bn k s">PC 121</text>
+      <text x="184" y="140" class="bn k s">R1…Rn</text>
+      <text x="130" y="172" text-anchor="middle" class="bn s">প্রসেস, আর OS যে রেকর্ড পাশে রাখে</text>
+    </svg><figcaption>একটি প্রোগ্রাম, একটি ইনস্ট্যান্স</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">বিষয়</th><th class="l">প্রোগ্রাম</th><th class="l">প্রসেস</th></tr>
+      <tr><td class="l">প্রকৃতি</td><td class="l">নিষ্ক্রিয়, স্থির</td><td class="l">সক্রিয়, গতিশীল</td></tr>
+      <tr><td class="l">মেমোরি</td><td class="l">ডিস্কই যথেষ্ট</td><td class="l">মেইন মেমোরি লাগে</td></tr>
+      <tr><td class="l">পরিচয়</td><td class="l">একটি ফাইলের নাম</td><td class="l"><span class="circ">PID</span>, অনেক ইনস্ট্যান্স</td></tr>
+      <tr><td class="l">জীবন</td><td class="l">যতদিন ফাইল আছে</td><td class="l">new → running → terminated</td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">PCB-র ঘর</th><th class="l">কী থাকে</th><th class="l">OS-র কেন দরকার</th></tr>
+    <tr><td class="l"><b>প্রসেস স্টেট</b></td><td class="l">New · Ready · Running · Waiting · Terminated</td><td class="l">ঠিক করে <b>কোন সারিতে</b> আছে</td></tr>
+    <tr><td class="l"><b>প্রোগ্রাম কাউন্টার</b></td><td class="l">পরবর্তী নির্দেশনার ঠিকানা</td><td class="l"><b>ঠিক যেখানে</b> থেমেছিল সেখান থেকেই চালু করতে</td></tr>
+    <tr><td class="l"><b>CPU রেজিস্টার</b></td><td class="l">অ্যাকুমুলেটর, base, limit, স্ট্যাক, R0…Rn</td><td class="l">অসমাপ্ত হিসাব মনে রাখা</td></tr>
+    <tr><td class="l"><b>CPU শিডিউলিং তথ্য</b></td><td class="l">অগ্রাধিকার, সারির পয়েন্টার</td><td class="l">পরে কে চলবে ঠিক করা</td></tr>
+    <tr><td class="l"><b>মেমোরি ম্যানেজমেন্ট তথ্য</b></td><td class="l">পেজ টেবিল বেস, সেগমেন্ট টেবিল পয়েন্টার</td><td class="l">ঠিকানা অনুবাদ</td></tr>
+    <tr><td class="l"><b>অ্যাকাউন্টিং তথ্য</b></td><td class="l">ইউজার ও কার্নেল সময়, I/O গণনা, শিশুর PID</td><td class="l">হিসাব, কোটা, পরিষ্কার</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> PCB হলো প্রসেসের <b>পাসপোর্ট</b>: <span class="hl">PID</span> বলে সে কে, <b>স্টেট</b> বলে কোথায়, <b>PC ও রেজিস্টার</b> মনে রাখে ঠিক কোথায় থেমেছিল; বাকিগুলো বলে সার কী ধরে আছে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) PCB একটি <b>কার্নেল</b> কাঠামো, OS-ই বানায়; প্রসেস কখনো তার ভেতরে লেখে না। (ii) প্রসেস <b>তার PCB নয়</b> — শেষ হলে দুটোই মুক্তি পায়। (iii) PID চলমান প্রসেসের মধ্যে অনন্য, পরে <b>পুনরায় ব্যবহৃত</b> হতে পারে।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি PCB ডাম্প পড়ো</span> PID 4217, স্টেট <b>Waiting</b>, PC 121, base 240, limit 460, ইউজার সময় 128, কার্নেল সময় 12.
+    <b>(ক)</b> এটি রেডি সারিতে <b>নয়</b> — এটি একটি I/O ঘটনার অপেক্ষায়। <b>(খ)</b> বৈধ ঠিকানা = <span class="circ">240 … 459</span>। <b>(গ)</b> ব্যবহৃত CPU = 128 + 12 = <span class="circ">140</span> ইউনিট। <b>(ঘ)</b> PID নিজে শিডিউলিংয়ের চাবিকাঠি নয়; <b>অগ্রাধিকার</b> হলো।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: five-state model ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>পাঁচ অবস্থা ও সারিগুলো</span></div>
+  <h2><span class="no">২</span>পাঁচ-অবস্থার মডেল ও সারিগুলো</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি প্রসেস ঠিক <b>পাঁচটি</b> অবস্থার একটিতে থাকে: <span class="hl">new</span> (তৈরি হচ্ছে), <span class="hl">ready</span> (মেমোরিতে, CPU-এর অপেক্ষায়), <span class="hl">running</span> (CPU ধরে আছে), <span class="hl">waiting / blocked</span> (CPU ছাড়া অন্য কোনো ঘটনার অপেক্ষায়) এবং <span class="hl">terminated</span> (শেষ, রিসোর্স মুক্ত)।</div>
+  <figure class="doodle"><svg viewBox="0 0 470 206" width="372">
+    <g class="w">
+      <rect x="8" y="40" width="80" height="30" rx="5" class="ink fill-b"/>
+      <rect x="120" y="40" width="80" height="30" rx="5" class="ink fill-y"/>
+      <rect x="232" y="40" width="92" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="356" y="40" width="96" height="30" rx="5" class="ink fill-y"/>
+      <rect x="232" y="162" width="92" height="30" rx="5" class="ink-k fill-y"/>
+      <path class="ink" d="M88,55 L116,55" marker-end="url(#ahb)"/>
+      <path class="ink" d="M200,55 L228,55" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M324,55 L352,55" marker-end="url(#ah)"/>
+      <path class="ink" d="M404,72 L404,110 L160,110 L160,74" marker-end="url(#ahb)"/>
+      <path class="ink" d="M278,38 L278,16 L160,16 L160,36" marker-end="url(#ahb)"/>
+      <path class="ink-k" d="M278,72 L278,158" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M48,72 L48,177 L228,177" marker-end="url(#ah)"/>
+    </g>
+    <text x="48" y="59" text-anchor="middle" class="k w6 s">NEW</text>
+    <text x="160" y="59" text-anchor="middle" class="k w6 s">READY</text>
+    <text x="278" y="59" text-anchor="middle" class="k w6 s">RUNNING</text>
+    <text x="404" y="59" text-anchor="middle" class="k w6 s">WAITING</text>
+    <text x="278" y="181" text-anchor="middle" class="k w6 s">TERMINATED</text>
+    <text x="102" y="88" text-anchor="middle" class="bn s">ভর্তি</text>
+    <text x="214" y="88" text-anchor="middle" class="bn s">পাঠানো</text>
+    <text x="338" y="88" text-anchor="middle" class="bn r s">I/O অনুরোধ</text>
+    <text x="352" y="104" text-anchor="middle" class="bn s">I/O শেষ</text>
+    <text x="219" y="11" text-anchor="middle" class="bn s">ইন্টারাপ্ট বা স্লাইস শেষ</text>
+    <text x="298" y="128" class="bn s">শেষ বা বন্ধ হলো</text>
+    <text x="140" y="171" text-anchor="end" class="bn r s">ভর্তি বাতিল</text>
+  </svg><figcaption>সাতটি রূপান্তর; CPU শিডিউলার শুধু <b>রেডি</b> থেকেই বাছাই করে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,258px);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">থেকে → পর্যন্ত</th><th class="l">কী ঘটে</th><th class="l">কে করে</th></tr>
+      <tr><td class="l">New → Ready</td><td class="l">ভর্তি</td><td class="l">দীর্ঘমেয়াদি শিডিউলার</td></tr>
+      <tr><td class="l">Ready → Running</td><td class="l">CPU বরাদ্দ</td><td class="l">স্বল্পমেয়াদি শিডিউলার</td></tr>
+      <tr><td class="l">Running → Ready</td><td class="l">ইন্টারাপ্ট, স্লাইস শেষ, বেশি অগ্রাধিকারার প্রসেস এল</td><td class="l">স্বল্পমেয়াদি শিডিউলার</td></tr>
+      <tr><td class="l">Running → Waiting</td><td class="l">I/O অনুরোধ বা ঘটনার অপেক্ষা</td><td class="l">প্রসেস নিজে</td></tr>
+      <tr><td class="l">Waiting → Ready</td><td class="l">I/O শেষ, ঘটনা ঘটেছে</td><td class="l">ইন্টারাপ্ট হ্যান্ডলার</td></tr>
+      <tr><td class="l">Running → Terminated</td><td class="l">শেষ, ভুল, বা বন্ধ করা হয়েছে</td><td class="l">প্রসেস নিজে</td></tr>
+      <tr><td class="l">New → Terminated</td><td class="l">ভর্তি বাতিল</td><td class="l">দীর্ঘমেয়াদি শিডিউলার</td></tr>
+    </table>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">সারি</th><th class="l">কী রাখে / কে খালি করে</th></tr>
+        <tr><td class="l"><b>জব সারি</b></td><td class="l">এখনো ভর্তি হয়নি; দীর্ঘমেয়াদি শিডিউলার</td></tr>
+        <tr><td class="l"><b>রেডি সারি</b></td><td class="l">মেমোরিতে CPU-এর অপেক্ষায়; স্বল্পমেয়াদি শিডিউলার</td></tr>
+        <tr><td class="l"><b>ডিভাইস সারি</b></td><td class="l">ওই I/O-এর অপেক্ষায়; ডিভাইস কন্ট্রোলার</td></tr>
+      </table>
+      <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> তিনটি শিডিউলার আছে — <b>দীর্ঘমেয়াদি</b> (জব সারি), <b>মধ্যবর্তী</b> (প্রসেস বাইরে-ভেতরে সোয়াপ) ও <b>স্বল্পমেয়াদি</b> (CPU)। শুধু CPU শিডিউলারটিই অবিরাম চলে।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>রেডি</b> চায় <b>CPU</b>, <b>ওয়েটিং</b> চায় <b>অন্য কিছু</b>।" দুটোই একইভাবে ফেরে — ঘটনা শেষ, প্রসেস আবার <b>রেডি</b> সারিতে যায়, সরাসরি CPU-তে নয়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> শুধু CPU-এর অপেক্ষা মানে <span class="circ">রেডি</span>, ওয়েটিং নয় — এটিই সবচেয়ে বেশি জিজ্ঞাসিত অবস্থা-প্রশ্ন। ডিভাইস সারিতে থাকা প্রসেস মেমোরিতে থেকেও ওয়েটিং।</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি প্রসেসের পথ ধরো</span> আপনি একটি কমান্ড লিখলেন। <b>(ক)</b> দীর্ঘমেয়াদি শিডিউলার ভর্তি করলে new → ready। <b>(খ)</b> CPU শিডিউলার পাঠালে ready → running। <b>(গ)</b> প্রিন্টের অনুরোধ দিলেই running → waiting। <b>(ঘ)</b> প্রিন্টার শেষ করলে waiting → ready। <b>(ঙ)</b> আগে ঘড়ির ইন্টারাপ্টে স্লাইস শেষ হয়েছিল: এটি running → ready, <b>running → waiting নয়</b>।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: creation & termination ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>তৈরি ও সমাপ্তি</span></div>
+  <h2><span class="no">৩</span>প্রসেস তৈরি ও সমাপ্তি</h2><span class="tag">লিখিত প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>তৈরি</b>: OS একটি PID নেয়, PCB বরাদ্দ করে পূরণ করে, অ্যাড্রেস স্পেস বানায়, খোলা ফাইল জুড়ে দেয় এবং PCB-কে <span class="hl">রেডি সারিতে</span> রাখে। <b>সমাপ্তি</b>: স্টেট টার্মিনেটেড হয়, মেমোরি ও ফাইল মুক্ত হয়, এক্সিট স্ট্যাটাস প্যারেন্টের কাছে যায়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,206px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 290 168" width="196">
+      <g class="w">
+        <rect x="108" y="10" width="74" height="26" rx="5" class="ink-k fill-y"/>
+        <path class="ink" d="M130,36 L58,62 M130,36 L145,62 M130,36 L232,62"/>
+        <rect x="10" y="64" width="98" height="26" rx="5" class="ink fill-b"/>
+        <rect x="96" y="64" width="98" height="26" rx="5" class="ink fill-b"/>
+        <rect x="182" y="64" width="98" height="26" rx="5" class="ink fill-b"/>
+        <path class="ink-g" d="M59,90 L59,116 M145,90 L145,116 M231,90 L231,116"/>
+        <rect x="24" y="118" width="70" height="24" rx="5" class="ink fill-y"/>
+        <rect x="110" y="118" width="70" height="24" rx="5" class="ink fill-y"/>
+        <rect x="196" y="118" width="70" height="24" rx="5" class="ink fill-y"/>
+      </g>
+      <text x="145" y="28" text-anchor="middle" class="bn k w6 s">init</text>
+      <text x="59" y="82" text-anchor="middle" class="bn k s">প্যারেন্ট</text>
+      <text x="145" y="82" text-anchor="middle" class="bn k s">শিশু ১</text>
+      <text x="231" y="82" text-anchor="middle" class="bn k s">শিশু ২</text>
+      <text x="59" y="135" text-anchor="middle" class="bn k s">PID 301</text>
+      <text x="145" y="135" text-anchor="middle" class="bn k s">PID 302</text>
+      <text x="231" y="135" text-anchor="middle" class="bn k s">PID 303</text>
+      <text x="145" y="164" text-anchor="middle" class="bn g s">প্রতি fork() প্যারেন্টের ছবি কপি করে</text>
+    </svg><figcaption>প্রতিটি শিশুর ঠিক <b>একজন</b> প্যারেন্ট থাকে</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">তৈরির ধাপ</th><th class="l">যা ঘটে</th></tr>
+        <tr><td class="l">১. PID নাও</td><td class="l">PID টেবিল থেকে; মুক্তির পর পুনর্ব্যবহার</td></tr>
+        <tr><td class="l">২. PCB বরাদ্দ</td><td class="l">কন্ট্রোল ব্লকের জন্য মেমোরি সংরক্ষিত</td></tr>
+        <tr><td class="l">৩. প্রাথমিকায়ন</td><td class="l">স্টেট, <b>PC এন্ট্রি পয়েন্টে</b>, অ্যাকাউন্ট = 0, সারির পয়েন্টার</td></tr>
+        <tr><td class="l">৪. অ্যাড্রেস স্পেস</td><td class="l">প্যারেন্টের ছবি কপি; পেজ/সেগমেন্ট টেবিল তৈরি</td></tr>
+        <tr><td class="l">৫. খোলা ফাইল</td><td class="l">ডেস্ক্রিপ্টর একই ইনোডের দিকে যায়</td></tr>
+        <tr><td class="l">৬. রিসোর্স</td><td class="l">I/O, মেমোরি ও CPU কোটা</td></tr>
+        <tr><td class="l">৭. কনটেক্সট প্রস্তুত</td><td class="l">প্রথম পাঠানোর জন্য স্ট্যাক ও রেজিস্টার</td></tr>
+        <tr><td class="l">৮. সারিতে ঢোকা</td><td class="l">PCB → <span class="circ">রেডি সারি</span>, কখনো সরাসরি running নয়</td></tr>
+      </table>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">প্রসেস শেষ হওয়ার উপায়</th><th class="l">সাধারণ কারণ</th></tr>
+    <tr><td class="l"><b>স্বাভাবিক শেষ</b></td><td class="l">main() ফেরত হয় বা <code>exit(0)</code>; মানটিই এক্সিট স্ট্যাটাস</td></tr>
+    <tr><td class="l"><b>ভুলে শেষ</b></td><td class="l">ফ্যাটাল এরর — শূন্যে ভাগ, অবৈধ মেমোরি রেফারেন্স</td></tr>
+    <tr><td class="l"><b>অন্য প্রসেস বন্ধ করে</b></td><td class="l">SIGKILL-এর মতো সিগন্যাল, যা ধরা যায় না</td></tr>
+    <tr><td class="l"><b>OS বন্ধ করে</b></td><td class="l">মেমোরি সীমা অতিক্রম, প্রোটেকশন ফল্ট, শাটডাউন</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> প্যারেন্ট তার খবর না নেওয়া পর্যন্ত শেষ হয়ে যাওয়া শিশুকে <span class="circ">জম্বি</span> বলে: কাজ শেষ, কিন্তু এক্সিট স্ট্যাটাস ও কিছু টেবিল এন্ট্রি প্যারেন্ট অপেক্ষা করে। প্যারেন্ট আগে মারা গেলে শিশু হয় <b>অরফান</b>, init তাকে গ্রহণ করে।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>জন্ম রেডি, মৃত্যু শেষ।</b>" তৈরি শেষ হয় রেডি সারিতে; সমাপ্তিতে PID ও PCB মুক্তি পায়। init অরফান গ্রহণ করে বলে কোনো জম্বি অসংগৃহীত থাকে না।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি শেল সেশন</span> আপনি লিখলেন <code>ls &gt; out.txt</code>। <b>(ক)</b> শেল দুইবার fork করে — একবার <code>ls</code>-এর জন্য, একবার রিডাইরেকশনের ডান পাশের জন্য। <b>(খ)</b> <code>exec</code>-এর আগে শিশু ফাইলটি খোলে; ইনোড <b>ভাগ</b> হয়, কপি নয়। <b>(গ)</b> <code>exec</code> ছবি বদলায় কিন্তু <b>PID রাখে</b>। <b>(ঘ)</b> <code>ls</code> শেষ হলে শেলের <code>wait()</code> তাকে সংগ্রহ করে, তাই জম্বি মিলিসেকেন্ডই থাকে।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: threads ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>থ্রেড</span></div>
+  <h2><span class="no">৪</span>থ্রেড: এক অ্যাড্রেস স্পেসের ভাগ</h2><span class="tag">হাই-ইল্ড ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি <span class="hl">থ্রেড</span> হলো প্রসেসের ভেতরে <b>কার্যকরণের একক</b>। একই প্রসেসের থ্রেডগুলো <span class="circ">অ্যাড্রেস স্পেস, কোড, ডেটা, খোলা ফাইল ও সিগন্যাল ভাগ করে</span>; প্রতিটির নিজস্ব <b>স্ট্যাক, রেজিস্টার, প্রোগ্রাম কাউন্টার ও থ্রেড-লোকাল স্টোরেজ</b> থাকে।</div>
+  <div class="cols small" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 158" width="214">
+      <g class="w">
+        <rect x="8" y="8" width="234" height="132" rx="6" class="ink fill-y"/>
+        <rect x="20" y="22" width="96" height="17" class="ink fill-b"/>
+        <rect x="20" y="44" width="96" height="17" class="ink fill-b"/>
+        <rect x="138" y="22" width="92" height="17" class="ink fill-b"/>
+        <rect x="138" y="44" width="92" height="17" class="ink fill-b"/>
+        <rect x="20" y="78" width="60" height="46" rx="4" class="ink-g fill-g"/>
+        <rect x="94" y="78" width="60" height="46" rx="4" class="ink-g fill-g"/>
+        <rect x="168" y="78" width="60" height="46" rx="4" class="ink-g fill-g"/>
+        <path class="ink-g" d="M50,124 L50,136 M124,124 L124,136 M198,124 L198,136" marker-end="url(#ahg)"/>
+      </g>
+      <text x="68" y="35" text-anchor="middle" class="bn k">কোড, ভাগ</text>
+      <text x="68" y="57" text-anchor="middle" class="bn k">ডেটা, ভাগ</text>
+      <text x="184" y="35" text-anchor="middle" class="bn k">ফাইল</text>
+      <text x="184" y="57" text-anchor="middle" class="bn k">সিগন্যাল</text>
+      <text x="50" y="98" text-anchor="middle" class="bn k w6">T1</text>
+      <text x="124" y="98" text-anchor="middle" class="bn k w6">T2</text>
+      <text x="198" y="98" text-anchor="middle" class="bn k w6">T3</text>
+      <text x="50" y="116" text-anchor="middle" class="bn k">নিজ PC</text>
+      <text x="124" y="116" text-anchor="middle" class="bn k">নিজ PC</text>
+      <text x="198" y="116" text-anchor="middle" class="bn k">নিজ PC</text>
+      <text x="125" y="156" text-anchor="middle" class="bn s">এক প্রসেস, তিন থ্রেড, এক মেমোরি মানচিত্র</text>
+    </svg><figcaption>নিজস্ব স্ট্যাক, এক অ্যাড্রেস স্পেস</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">বিষয়</th><th class="l">প্রসেস</th><th class="l">থ্রেড</th></tr>
+      <tr><td class="l">অ্যাড্রেস স্পেস</td><td class="l">নিজস্ব, সুরক্ষিত</td><td class="l"><span class="hl">ভাইদের সাথে ভাগ</span></td></tr>
+      <tr><td class="l">নিজস্ব অবস্থা</td><td class="l">সবকিছু</td><td class="l">স্ট্যাক, রেজিস্টার, PC, TLS</td></tr>
+      <tr><td class="l">তৈরির খরচ</td><td class="l">ভারী: ছবি কপি হয়</td><td class="l">সস্তা: একটি TCB</td></tr>
+      <tr><td class="l">যোগাযোগ</td><td class="l">IPC লাগে</td><td class="l">শেয়ার্ড ভ্যারিয়েবল পড়লেই হলো</td></tr>
+      <tr><td class="l">ব্যর্থতার প্রভাব</td><td class="l">সীমাবদ্ধ</td><td class="l">খারাপ লেখা <b>সব</b> থ্রেড মারতে পারে</td></tr>
+      <tr><td class="l">শিডিউলারে</td><td class="l">সবসময় আলাদা সত্তা</td><td class="l">নিচের মডেলের ওপর নির্ভর করে</td></tr>
+    </table>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 520 140" width="430">
+    <g class="w">
+      <rect x="6" y="34" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="6" y="6" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="6" y="62" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="142" y="6" width="80" height="82" rx="5" class="ink fill-b"/>
+      <rect x="300" y="6" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="300" y="34" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="300" y="62" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="300" y="90" width="70" height="26" rx="4" class="ink-g fill-g"/>
+      <rect x="418" y="32" width="98" height="44" rx="5" class="ink-r fill-r"/>
+      <path class="ink" d="M78,48 L140,48" marker-end="url(#ahb)"/>
+      <path class="ink" d="M224,48 L298,48" marker-end="url(#ahb)"/>
+      <path class="ink" d="M372,48 L416,48" marker-end="url(#ah)"/>
+    </g>
+    <text x="182" y="44" text-anchor="middle" class="bn k w6 s">১ কার্নেল</text>
+    <text x="182" y="62" text-anchor="middle" class="bn s">many-to-one</text>
+    <text x="467" y="50" text-anchor="middle" class="bn r w6 s">১ : ১</text>
+    <text x="467" y="68" text-anchor="middle" class="bn r s">one-to-one</text>
+    <text x="41" y="24" text-anchor="middle" class="k s">U</text>
+    <text x="41" y="80" text-anchor="middle" class="k s">U</text>
+    <text x="182" y="82" text-anchor="middle" class="k s">K</text>
+    <text x="335" y="24" text-anchor="middle" class="k s">U</text>
+    <text x="335" y="80" text-anchor="middle" class="k s">U</text>
+    <text x="335" y="108" text-anchor="middle" class="k s">U</text>
+    <text x="222" y="136" text-anchor="middle" class="bn s">many-to-many: <tspan class="ov">m</tspan> ইউজার থ্রেড <tspan class="ov">n</tspan> কার্নেল থ্রেডে, m ≥ n</text>
+  </svg><figcaption>তিনটি মাল্টিথ্রেডেড মডেল — OS সবসময় <b>কার্নেল</b> থ্রেড শিডিউল করে</figcaption></figure>
+  <table class="hand small" style="width:100%;font-size:10.5pt">
+    <tr><th class="l">স্তর</th><th class="l">কোথায় থাকে</th><th class="l">যা দেয়</th></tr>
+    <tr><td class="l"><b>ইউজার-লেভেল</b></td><td class="l">প্রসেসের ভেতরের একটি লাইব্রেরি</td><td class="l">সস্তা সুইচ, কিন্তু একটি ব্লকিং কল পুরো <b>প্রসেসকেই</b> থামায়</td></tr>
+    <tr><td class="l"><b>কার্নেল-লেভেল</b></td><td class="l">OS প্রতিটি সত্তার জন্য আসল থ্রেড রাখে</td><td class="l">একটি ব্লকিং কল <b>একটি</b> থ্রেড থামায়; অনেক কোরে সত্যিকারের সমান্তরালতা</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>many-to-one</b>-এ ব্লকিং কল <b>সব</b> থ্রেড থামায় এবং কোনো সমান্তরালতা নেই; <b>one-to-one</b>-এ সমান্তরালতা আসল, কিন্তু প্রতিটি থ্রেডের জন্য PCB ও কার্নেল স্ট্যাক লাগে। প্রথম দুই মডেলে <span class="circ">থ্রেড শিডিউলিং ≠ প্রসেস শিডিউলিং</span>: কার্নেল কার্নেল থ্রেড শিডিউল করে, লাইব্রেরি ইউজার থ্রেড।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>থ্রেড ভাগ করে, কপি করে না।</b>" <code>fork()</code> বলতে হলে সেটি <b>প্রসেস</b>; শুধু একটি গ্লোবালে মান বসালেই হলো সেটি <b>থ্রেড</b>।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: IPC ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>IPC পদ্ধতি</span></div>
+  <h2><span class="no">৫</span>ইন্টার-প্রসেস কমিউনিকেশন</h2><span class="tag">বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">IPC</span> একটি প্রসেসকে অন্যকে <b>তথ্য পাঠাতে</b> এবং তার সাথে <b>সমন্বয়</b> করতে দেয়। দুই পরিবার: <span class="circ">মেসেজ পাসিং</span> (কপি কার্নেল দিয়ে যায়) এবং <span class="hl">শেয়ার্ড মেমোরি</span> (সবচেয়ে দ্রুত — কোনো কপি নেই — তবে এতে <b>কোনো</b> সিঙ্ক্রোনাইজেশন নেই)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,206px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 208 150" width="198">
+      <g class="w">
+        <rect x="8" y="10" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="8" y="96" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="120" y="10" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="120" y="96" width="80" height="44" rx="5" class="ink fill-b"/>
+        <rect x="96" y="66" width="16" height="18" rx="3" class="ink fill-y"/>
+        <path class="ink" d="M88,32 L120,32" marker-end="url(#ahb)"/>
+        <path class="ink" d="M120,118 L88,118" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M48,56 L48,94" marker-end="url(#ahg)"/>
+      </g>
+      <text x="48" y="38" text-anchor="middle" class="bn k w6">P1</text>
+      <text x="48" y="124" text-anchor="middle" class="bn k w6">P2</text>
+      <text x="160" y="38" text-anchor="middle" class="bn k w6">P3</text>
+      <text x="160" y="124" text-anchor="middle" class="bn k w6">P4</text>
+      <text x="104" y="80" text-anchor="middle" class="bn g w6 s">shm</text>
+      <text x="46" y="72" text-anchor="end" class="bn r s">কপি</text>
+      <text x="162" y="72" class="bn r s">কপি</text>
+      <text x="104" y="148" text-anchor="middle" class="bn s">কার্নেল কপি · এক ম্যাপ করা বাফার</text>
+    </svg><figcaption>মেসেজ পাসিং বনাম শেয়ার্ড মেমোরি</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">পদ্ধতি</th><th class="l">ধরন</th><th class="l">নোট</th></tr>
+      <tr><td class="l"><b>শেয়ার্ড মেমোরি</b></td><td class="l">shared</td><td class="l">সবচেয়ে দ্রুত; <span class="circ">লক নিজেই লিখতে হয়</span></td></tr>
+      <tr><td class="l"><b>অ্যানোনিমাস পাইপ</b></td><td class="l">message</td><td class="l">বাইট স্ট্রিম, কেবল <b>সম্পর্কিত</b> প্রসেস</td></tr>
+      <tr><td class="l"><b>নেমড পাইপ (FIFO)</b></td><td class="l">message</td><td class="l">ফাইলসিস্টেমের নাম আছে, <b>অসম্পর্কিত</b> প্রসেসও খুলতে পারে</td></tr>
+      <tr><td class="l"><b>মেসেজ কিউ</b></td><td class="l">message</td><td class="l">কার্নেলে <b>বিভিন্ন</b> বার্তার তালিকা</td></tr>
+      <tr><td class="l"><b>সকেট</b></td><td class="l">message</td><td class="l">নামযুক্ত প্রান্ত, স্থানীয় <b>বা</b> TCP/IP</td></tr>
+      <tr><td class="l"><b>সিগন্যাল</b></td><td class="l">message</td><td class="l">একপাশে <b>সংকেত</b>; SIGKILL ধরা যায় না</td></tr>
+      <tr><td class="l"><b>মেইলবক্স</b></td><td class="l">message</td><td class="l">পরোক্ষ: নামযুক্ত ড্রপ বক্স</td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%;font-size:10pt">
+    <tr><th class="l">কখন বেছে নেবেন</th><th class="l">খরচ</th></tr>
+    <tr><td class="l"><b>শেয়ার্ড মেমোরি</b> বড় বাফারের জন্য — ভিডিও ফ্রেম</td><td class="l">প্রতিটি লক আপনাকেই লিখতে হবে</td></tr>
+    <tr><td class="l"><b>পাইপ / FIFO</b> বাইটের ধারা ছাঁকতে</td><td class="l">বাফার সীমিত, বার্তার সীমানা নেই</td></tr>
+    <tr><td class="l"><b>মেসেজ কিউ</b> ক্রম ঠিক রেখে টুকরো কাজের জন্য</td><td class="l">কিউয়ের নির্দিষ্ট সর্বোচ্চ দৈর্ঘ্য</td></tr>
+    <tr><td class="l"><b>সকেট</b> অন্য মেশিন বা সার্ভিসে পৌঁছাতে</td><td class="l">সিরিয়ালাইজেশন, প্রতি কানেকশনে আলাদা অ্যাড্রেস স্পেস</td></tr>
+    <tr><td class="l"><b>সিগন্যাল</b> "কিছু বদলেছে — আবার পড়ো" বলতে</td><td class="l">কোনো তথ্য নেই; হ্যান্ডলার অস্বাভাবিক সময়ে চলে</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>পাইপ কেবল সম্পর্কিত প্রসেসের জন্য</b> — একটি শেল পাইপলাইন, বা প্যারেন্ট ও তার শিশু। দুটি অসম্পর্কিত প্রোগ্রামের জন্য লাগবে <b>নেমড FIFO</b>, সকেট বা শেয়ার্ড মেমোরি। আর শেয়ার্ড মেমোরি কোনো <b>মিউচুয়াল এক্সক্লুশন</b> দেয় না: দুই লেখক দৌড়ে গেলে ডেটা হারায়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কপি</b> মানে মেসেজ পাসিং, <b>ম্যাপ</b> মানে শেয়ার্ড মেমোরি, <b>নামযুক্ত</b> মানে অসম্পর্কিত।" ডেটা যদি নড়েই না, তবে নিরাপদ করার কাজ মিউটেক্সের।</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ পদ্ধতি বাছো</span> <b>(ক)</b> <code>sort &lt; file | head</code> — অ্যানোনিমাস <b>পাইপ</b>। <b>(খ)</b> একটি লগার ডেমন ও ৪০টি অসম্পর্কিত সার্ভিস — <b>নেমড FIFO</b> বা <b>সকেট</b>। <b>(গ)</b> দুই ডিকোডারে ৪ MB ফ্রেম লেখা একটি ভিডিও সার্ভার — <b>শেয়ার্ড মেমোরি</b> প্লাস মিউটেক্স। <b>(ঘ)</b> "কনফিগ ফাইল বদলেছে" — একটি <b>সিগন্যাল</b>, তারপর প্রসেস নিজে ফাইল আবার পড়ে: সিগন্যাল একটা ঠেলা, স্থানান্তর নয়।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: semaphores ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>সেমাফোর ও প্রোডিউসার–কনজিউমার</span></div>
+  <h2><span class="no">৬</span>সেমাফোর, মিউটেক্স ও প্রোডিউসার–কনজিউমার</h2><span class="tag">লিখিত প্রশ্ন ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি <span class="hl">সেমাফোর</span> (ডিকস্ট্রা, ১৯৬৫) হলো ঋণাত্মক নয় এমন একটি পূর্ণসংখ্যা ও একটি অপেক্ষা-সারি, যা কেবল দুটি <b>অ্যাটমিক</b> ক্রিয়ায় বদলায়: <span class="circ">P (ওয়েট): S = 0 হলে ব্লক, তারপর S ← S − 1</span> এবং <span class="circ">V (সিগন্যাল): S ← S + 1, একজন অপেক্থাকে জাগান</span>। <b>বাইনারি</b> সেমাফোর — মিউটেক্স — 0 বা 1-এই থাকে।</div>
+  <div class="cols small" style="grid-template-columns:minmax(0,158px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 210 142" width="152">
+      <g class="w">
+        <circle cx="105" cy="68" r="50" class="ink fill-y"/>
+        <rect x="30" y="56" width="22" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="86" y="56" width="22" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="142" y="56" width="22" height="24" rx="3" class="ink-g fill-g"/>
+        <path class="ink-g" d="M30,44 L78,54" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M105,44 L105,52" marker-end="url(#ahg)"/>
+      </g>
+      <text x="105" y="74" text-anchor="middle" class="bn k w6 s">বাফার ২</text>
+      <text x="41" y="98" text-anchor="middle" class="bn k s">১</text>
+      <text x="97" y="98" text-anchor="middle" class="bn k s">২</text>
+      <text x="153" y="98" text-anchor="middle" class="bn k s">৩</text>
+      <text x="60" y="34" text-anchor="middle" class="bn g s">প্রোডিউসার</text>
+      <text x="150" y="34" text-anchor="middle" class="bn g s">প্রোডিউসার</text>
+      <text x="105" y="132" text-anchor="middle" class="bn s">গোলাকার বাফার: in ও out ঘুরতে থাকে</text>
+    </svg><figcaption>দুই স্লট ভর্তি, তাই empty = 0</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+        <tr><th class="l">কনস্ট্রাক্ট</th><th class="l">মান</th><th class="l">মালিক?</th><th class="l">সেরা কাজে</th></tr>
+        <tr><td class="l"><b>সেমাফোর</b></td><td class="l">পূর্ণসংখ্যা ≥ 0</td><td class="l"><b>না</b> — যে কেউ V করতে পারে</td><td class="l">গণনার রিসোর্স, ক্রম</td></tr>
+        <tr><td class="l"><b>মিউটেক্স</b></td><td class="l">0 বা 1</td><td class="l"><b>হ্যাঁ</b> — ধারকই আনলক করে</td><td class="l">ক্রিটিক্যাল সেকশন</td></tr>
+        <tr><td class="l"><b>মনিটর</b></td><td class="l">সুত্ত্বক, ভেতরে একটি থ্রেড</td><td class="l">স্বয়ংক্রিয়</td><td class="l">ডেটা + প্রসিডিউর + কন্ডিশন ভ্যারিয়েবল</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সমাধান ✍ তিনটি সেমাফোর</span> N স্লটের বাফারের জন্য: <b>mutex = 1</b> (বাফারের কোডে একসময়ে একটি প্রসেস), <b>empty = N</b> (খালি স্লট), <b>full = 0</b> (ভর্তি স্লট)।
+    <div class="code tiny">producer:                  consumer:
+wait(empty);  wait(full);
+wait(mutex);   wait(mutex);
+  put item;       take item
+signal(mutex);  signal(mutex);
+signal(full);   signal(empty);</div>
+    বাইরের দুটি wait-এর <b>ক্রমাই পুরো সমস্যা</b>: প্রোডিউসার মিউটেক্সের <span class="circ">আগে</span> খালি স্লট দাবি করে, কনজিউমার ভর্তি স্লট আগে। ক্রম উল্টালে দুজনেই মিউটেক্সের ওপর আটকে থাকে।</div>
+  <table class="hand small" style="width:100%;white-space:nowrap;font-size:10pt">
+    <tr><th class="l">ট্রেস, বাফার ২</th><th class="l">কাজ</th><th>mutex</th><th>empty</th><th>full</th><th class="l">বাফার (in → out)</th></tr>
+    <tr><td class="l">—</td><td class="l">শুরু</td><td>1</td><td>2</td><td>0</td><td class="l">খালি</td></tr>
+    <tr><td class="l">১</td><td class="l">P1 রাখে <b>x</b></td><td>1</td><td>1</td><td>1</td><td class="l">x</td></tr>
+    <tr><td class="l">২</td><td class="l">P2 রাখে <b>y</b></td><td>1</td><td>0</td><td>2</td><td class="l">x y</td></tr>
+    <tr><td class="l">৩</td><td class="l">P3 রাখতে চায় <b>z</b></td><td>1</td><td><b>0</b></td><td>2</td><td class="l"><span class="red"><b>P3 ব্লক</b></span></td></tr>
+    <tr><td class="l">৪</td><td class="l">C1 নেয় <b>x</b></td><td>1</td><td>1</td><td>1</td><td class="l">y</td></tr>
+    <tr><td class="l">৫</td><td class="l">C2 নেয় <b>y</b></td><td>1</td><td>2</td><td>0</td><td class="l">খালি</td></tr>
+    <tr><td class="l">৬</td><td class="l">P3 জেগে <b>z</b> রাখে</td><td>1</td><td>1</td><td>1</td><td class="l">z</td></tr>
+  </table>
+  <div class="cols small">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>empty গোনে ফাঁকা জায়গা, full গোনে জিনিস, mutex গোনে অনুমতি, আর empty + full সবসময় = N।</b>" উপরের প্রতিটি সারিতে empty + full = ২; না হলে ট্রেসটাই ভুল।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>P কমায়, V বাড়ায়</b> — সেমাফোর P-তে টাকা ঢালে। ৭ থেকে শুরু করে ১০টি P ও ৬টি V হলে শেষ মান <span class="circ">7 − 10 + 6 = 3</span>। যে মিউটেক্স তুমি ধরে না, তা আনলক করার অর্থ নেই।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: criteria & preemption ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>সিডিউলিংয়ের মাপ</span></div>
+  <h2><span class="no">৭</span>সিডিউলিংয়ের মাপ ও প্রিম্পশন</h2><span class="tag">সূত্র ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> CPU শিডিউলিং ঠিক করে <b>কোন রেডি প্রসেস পরে চলবে</b> এবং <b>কতক্ষণ</b>। কোনো অ্যালগরিদম সব মাপে জেতে না, তাই সিডিউলিংকে বিচার করা হয় <span class="hl">পাঁচটি মাপের</span> বিপরীতে — কোন মাপটি গুরুত্বপূর্ণ তার ওপরই অ্যালগরিদম নির্ভর করে।</div>
+  <table class="hand small" style="width:100%;font-size:10.5pt">
+    <tr><th class="l">মাপ</th><th class="l">সংজ্ঞা ও সূত্র</th><th class="l">চাওয়া</th></tr>
+    <tr><td class="l"><b>CPU ব্যবহার</b></td><td class="l">ব্যস্ত অংশ = <b>1 − খালি অংশ</b></td><td class="l">যত <b>বেশি</b> তত ভালো</td></tr>
+    <tr><td class="l"><b>থ্রুপুট</b></td><td class="l">একক সময়ে সম্পন্ন প্রসেস <b>সংখ্যা</b></td><td class="l">যত <b>বেশি</b> তত ভালো</td></tr>
+    <tr><td class="l"><b>টার্নঅ্যারাউন্ড টাইম</b></td><td class="l"><b>সমাপ্তি − অ্যারাইভাল</b>, পুরো জীবন</td><td class="l"><span class="circ">যত কম তত ভালো</span></td></tr>
+    <tr><td class="l"><b>ওয়েটিং টাইম</b></td><td class="l"><b>টার্নঅ্যারাউন্ড − CPU বার্স্ট</b></td><td class="l"><span class="circ">যত কম তত ভালো</span></td></tr>
+    <tr><td class="l"><b>রেসপন্স টাইম</b></td><td class="l"><b>প্রথম সাড়া − অ্যারাইভাল</b></td><td class="l">কম — <b>ইন্টারঅ্যাক্টিভ</b> ব্যবহারকারী যা অনুভব করে</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,196px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 232 138" width="188">
+      <g class="w">
+        <path class="ink-k" d="M14,74 L222,74" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M20,74 V32" style="stroke-dasharray:4 4"/>
+        <path class="ink-r" d="M56,74 V32" style="stroke-dasharray:4 4"/>
+        <path class="ink-r" d="M188,74 V32" style="stroke-dasharray:4 4"/>
+        <rect x="56" y="62" width="46" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="102" y="62" width="28" height="24" rx="3" class="ink fill-r"/>
+        <rect x="130" y="62" width="58" height="24" rx="3" class="ink-g fill-g"/>
+        <path class="ink-r" d="M20,104 L56,104" marker-end="url(#ah)"/>
+        <path class="ink" d="M20,118 L188,118" marker-end="url(#ah)"/>
+      </g>
+      <text x="20" y="26" text-anchor="start" class="bn r s">অ্যারাইভাল</text>
+      <text x="56" y="26" text-anchor="middle" class="bn r s">প্রথম চাল</text>
+      <text x="188" y="26" text-anchor="middle" class="bn r s">সমাপ্তি</text>
+      <text x="38" y="96" text-anchor="middle" class="bn r s">রেসপন্স</text>
+      <text x="104" y="114" text-anchor="middle" class="bn s">টার্নঅ্যারাউন্ড</text>
+      <text x="116" y="94" text-anchor="middle" class="bn r s">I/O অপেক্ষা</text>
+      <text x="116" y="136" text-anchor="middle" class="bn s">ওয়েটিং = টার্নঅ্যারাউন্ড − বার্স্ট</text>
+    </svg><figcaption>CPU-তে না কাটানো সবই অপেক্ষা</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">বিষয়</th><th class="l">নন-প্রিমপটিভ</th><th class="l">প্রিমপটিভ</th></tr>
+      <tr><td class="l">চলমান প্রসেস</td><td class="l">শেষ বা ব্লক হওয়া পর্যন্ত CPU রাখে</td><td class="l"><b>বাধা দেওয়া</b> যায় ও আবার সারিতে যায়</td></tr>
+      <tr><td class="l">যা লাগে</td><td class="l">কিছু বিশেষ নয়</td><td class="l">টাইমার ইন্টারাপ্ট, OS সহায়তা</td></tr>
+      <tr><td class="l">খরচ</td><td class="l">কম — সুইচ কম</td><td class="l">বেশি — প্রতি প্রিম্পশনে একটি</td></tr>
+      <tr><td class="l">রেসপন্স টাইম</td><td class="l"><b>খারাপ</b> হতে পারে: লম্বা কাজ সবাকে আটকায়</td><td class="l">ভালো, q দিয়ে সীমাবদ্ধ</td></tr>
+      <tr><td class="l">ফাঁদ</td><td class="l"><b>ক্রিটিক্যাল সেকশনের</b> ভেতরে কখনো প্রিম্পট নয়</td><td class="l">তা করলে অবস্থা নষ্ট হয়</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">মাল্টিপ্রসেসিং বনাম টাইম-শেয়ারিং — সিলেবাসের যে পার্থক্য চায়</span>
+    <div class="fgrid three tiny">
+      <p><b>মাল্টিপ্রোগ্রামিং</b>: মেমোরিতে অনেক প্রোগ্রাম, CPU তাদের মধ্যে বদলায়</p>
+      <p><b>মাল্টিপ্রসেসিং</b>: অনেক <b>প্রসেসর</b>, সত্যিকারের সমান্তরালতা</p>
+      <p><b>টাইম-শেয়ারিং</b>: একটি CPU <b>সময় ভাগে</b> ভাগ করে — চিরায়ত টাইম-শেয়ারিং OS হলো রাউন্ড রবিন</p>
+      <p><b>মাল্টিটাস্কিং</b>: একটি CPU-তে অনেক কাজ, টাইম-শেয়ারিংয়ের পেছনের ধারণা</p>
+      <p><b>রিয়েল-টাইম</b>: থ্রুপুটের চেয়ে ডেডলাইন গুরুত্বপূর্ণ</p>
+      <p><b>ব্যাচ</b>: থ্রুপুট বাড়ানো হয়, রেসপন্স উপেক্ষা করা হয়</p>
+    </div></div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ওয়েটিং টাইম <b>টার্নঅ্যারাউন্ড নয়</b>, আর রেসপন্স টাইম <b>ওয়েটিং টাইম নয়</b>। বার্স্ট 10, অ্যারাইভাল 2, সমাপ্তি 20 হলে TAT = <b>18</b>, WT = <b>8</b>, আর রেসপন্স হিসাব হয় <b>প্রথম</b> পাঠানো থেকে।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>T</b>ার্নঅ্যা<b>র</b>াউন্ড = অ্যা<b>র</b>াইভাল থেকে <b>স</b>মাপ্তি। <b>W</b>েটিং = টার্নঅ্যারাউন্ড − <b>B</b>ার্স্ট। <b>R</b>েসপন্স = অ্যারাইভাল থেকে প্রথম <b>R</b>ান।"</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ তিনটি সময়ই হিসাব করো</span> একটি কাজ t = 2-এ আসে, প্রথমবার t = 5-এ পাঠানো হয়, t = 9-এ I/O-র জন্য ব্লক হয়, t = 12-এ আবার পাঠানো হয় এবং t = 24-এ শেষ হয়; মোট CPU বার্স্ট 12।
+    <b>(ক)</b> টার্নঅ্যারাউন্ড = 24 − 2 = <span class="circ">22</span>। <b>(খ)</b> ওয়েটিং = 22 − 12 = <span class="circ">10</span>; ফাঁক দিয়ে যাচাই — (5−2) + (12−9) = 6 সারিতে থেকে, আর শেষ পাঠানোর ভেতরে 4। <b>(গ)</b> রেসপন্স = 5 − 2 = <span class="circ">3</span>। <b>(ঘ)</b> নন-প্রিমপটিভ হলে রেসপন্স 0 হতো — কিন্তু পাশের প্রসেসরা দিত।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: FCFS, SJF, priority ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>FCFS, SJF, প্রায়োরিটি</span></div>
+  <h2><span class="no">৮</span>নন-প্রিমপটিভ: FCFS, SJF ও প্রায়োরিটি</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> প্রসেস CPU রাখে যতক্ষণ না শেষ হয় বা ব্লক হয়। <span class="hl">FCFS</span> অ্যারাইভালের ক্রমে সেবা করে, <span class="hl">SJF</span> সবচেয়ে ছোট CPU বার্স্ট বাছে, <span class="hl">প্রায়োরিটি শিডিউলিং</span> সবচেয়ে উচ্চ অগ্রাধিকারার প্রসেস বাছে এবং টাই রাখে FCFS।</div>
+  <table class="hand small" style="width:100%;font-size:10pt">
+    <tr><th class="l">অ্যালগরিদম</th><th class="l">নিয়ম</th><th class="l">ভালো</th><th class="l">খারাপ</th></tr>
+    <tr><td class="l"><b>FCFS</b></td><td class="l">অ্যারাইভালের ক্রম</td><td class="l">CPU সময়ে ন্যায্য, সহজ, স্টারভেশন নেই</td><td class="l"><span class="circ">কনভয় ইফেক্ট</span>: একটি লম্বা কাজ প্রতিটি ছোট কাজ দেরি করায়</td></tr>
+    <tr><td class="l"><b>SJF</b></td><td class="l">ছোট বার্স্ট আগে</td><td class="l"><span class="circ">ন্যূনতম গড় অপেক্ষা</span>, প্রমাণযোগ্যভাবে সেরা</td><td class="l">বার্স্ট আগেই জানা লাগে; লম্বা কাজ <b>স্টার্ভ</b> হতে পারে</td></tr>
+    <tr><td class="l"><b>SRTF</b> (প্রিমপটিভ)</td><td class="l">ছোট <i>বাকি</i> সময় আগে</td><td class="l">গড় অপেক্ষাতেও সেরা</td><td class="l">বেশি সুইচ; বার্স্টের অনুমান লাগে</td></tr>
+    <tr><td class="l"><b>প্রায়োরিটি</b></td><td class="l">বেশি অগ্রাধিকারা আগে</td><td class="l">গুরুত্ব বোঝায়; জরুরি কাজে দ্রুত সাড়া</td><td class="l">কম অগ্রাধিকারার প্রসেস <b>স্টার্ভ</b> হয়</td></tr>
+    <tr><td class="l"><b>রাউন্ড রবিন</b> (প্রিমপটিভ)</td><td class="l">পালা করে একটি <b>টাইম কোয়ান্টাম</b></td><td class="l">ন্যায্য CPU ভাগ, সীমিত রেসপন্স</td><td class="l">কোয়ান্টাম ছোট হলে সুইচের খরচ</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 452 92" width="452">
+      <g class="w">
+        <path class="ink-k" d="M18,20 L424,20"/>
+        <path class="ink-g" d="M18,20 V30 M66,20 V30 M164,20 V30 M278,20 V30 M408,20 V30" style="stroke-width:1.6"/>
+        <rect x="18" y="34" width="48" height="26" rx="3" class="ink-g fill-g"/>
+        <rect x="66" y="34" width="98" height="26" rx="3" class="ink fill-b"/>
+        <rect x="164" y="34" width="114" height="26" rx="3" class="ink fill-b"/>
+        <rect x="278" y="34" width="130" height="26" rx="3" class="ink fill-b"/>
+      </g>
+      <text x="18" y="14" text-anchor="middle" class="s">0</text>
+      <text x="66" y="14" text-anchor="middle" class="s">3</text>
+      <text x="164" y="14" text-anchor="middle" class="s">9</text>
+      <text x="278" y="14" text-anchor="middle" class="s">16</text>
+      <text x="408" y="14" text-anchor="middle" class="s">24</text>
+      <text x="42" y="52" text-anchor="middle" class="k s">P4</text>
+      <text x="115" y="52" text-anchor="middle" class="k s">P1</text>
+      <text x="221" y="52" text-anchor="middle" class="k s">P3</text>
+      <text x="343" y="52" text-anchor="middle" class="k s">P2</text>
+      <text x="42" y="80" text-anchor="middle" class="bn s">ওয়েটিং ০</text>
+      <text x="115" y="80" text-anchor="middle" class="bn s">ওয়েটিং ৩</text>
+      <text x="221" y="80" text-anchor="middle" class="bn s">ওয়েটিং ৯</text>
+      <text x="343" y="80" text-anchor="middle" class="bn s">ওয়েটিং ১৬</text>
+    </svg><figcaption>বার্স্ট 6, 8, 7, 3 ms-এ SJF: P4 0–3, P1 3–9, P3 9–16, P2 16–24</figcaption></figure>
+  <div class="cols small">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ FCFS</span> বার্স্ট <b>24, 3, 3</b>, সবাই t = 0-এ। P1 0–24, P2 24–27, P3 27–30। ওয়েটিং 0, 24, 27 → গড় 51/3 = <span class="circ">17 ms</span>। দুটো 3 ms কাজ 24 ms কাজের পেছনে বসে ছিল — এটাই কনভয়।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ SJF</span> বার্স্ট P1 = 6, P2 = 8, P3 = 7, P4 = 3। ক্রম P4 0–3, P1 3–9, P3 9–16, P2 16–24। ওয়েটিং 0, 3, 9, 16 → গড় 28/4 = <span class="circ">7 ms</span>। একই সেটে FCFS দিলে 0, 6, 14, 21 → <b>10.25 ms</b>।</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> SJF <b>গড় অপেক্ষার</b> জন্য সেরা — টার্নঅ্যারাউন্ড বা রেসপন্সের জন্য নয়, ওজনযুক্ত সমন্বয়ের জন্যও নয়। বার্স্ট <b>আগে থেকে জানা</b> লাগে; বাস্তবে OS ইতিহাস থেকে অনুমান করে, তাই SRTF আসলে "শর্টেস্ট রিমেইনিং টাইম <i>নেক্সট</i>"।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> SJF-র জন্য "<b>ছোট আগে, লম্বা পরে</b>"; FCFS-এর রোগ <b>কনভয়</b>; প্রায়োরিটির রোগ <b>স্টারভেশন</b>, আর তার ওষুধ <span class="hl">এজিং</span> — অপেক্ষার সময় বাড়লে কার্যকর অগ্রাধিকারাও বাড়ে।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">এজিং ঠিকভাবে</span> প্রতিটি অপেক্ষার ধাপ পর প্রসেসের কার্যকর অগ্রাধিকারা বাড়ানো যায়, অথবা "অনেক দিন ধরে অপেক্ষা করেছে" ধরে সেটিকে উন্নীত করা যায়। <b>এজিং কেবল স্টারভেশন ঠিকায়</b>: ডেডলকে এর কোনো প্রভাব নেই, কারণ সেখানে কিছুই এগোয় না এবং অগ্রাধিকারা পুনরায় মূল্যায়ন হয় না। এজিং ছাড়া খাঁটি প্রায়োরিটি সারি প্রায় সব বাস্তব নকশায় গ্রহণ করা হয় না।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: SRTF & round robin ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>SRTF ও রাউন্ড রবিন</span></div>
+  <h2><span class="no">৯</span>প্রিমপটিভ: SRTF ও রাউন্ড রবিন</h2><span class="tag">গ্যান্ট চার্ট ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">SRTF</span> নতুন আসা কোনো কাজের বাকি সময় ছোট হলেই চলমান প্রসেসকে প্রিম্পট করে। <span class="hl">রাউন্ড রবিন (Round Robin)</span> একটি গোলাকার <b>রেডি সারি</b> রাখে এবং প্রতি <span class="circ">টাইম কোয়ান্টাম q</span>-এর পর প্রিম্পট করে; সময় অবশিষ্ট থাকলে প্রসেসটি সারির <b>পিছনে</b> যায়।</div>
+  <figure class="doodle"><svg viewBox="0 0 442 92" width="442">
+      <g class="w">
+        <path class="ink-k" d="M14,20 L428,20"/>
+        <path class="ink-g" d="M14,20 V30 M64,20 V30 M101,20 V30 M138,20 V30 M188,20 V30 M392,20 V30" style="stroke-width:1.6"/>
+        <rect x="14" y="34" width="50" height="26" rx="3" class="ink fill-b"/>
+        <rect x="64" y="34" width="37" height="26" rx="3" class="ink fill-b"/>
+        <rect x="101" y="34" width="37" height="26" rx="3" class="ink fill-b"/>
+        <rect x="138" y="34" width="50" height="26" rx="3" class="ink fill-b"/>
+        <rect x="188" y="34" width="204" height="26" rx="3" class="ink fill-b"/>
+      </g>
+      <text x="14" y="14" text-anchor="start" class="s">0</text>
+      <text x="64" y="14" text-anchor="middle" class="s">4</text>
+      <text x="101" y="14" text-anchor="middle" class="s">7</text>
+      <text x="138" y="14" text-anchor="middle" class="s">10</text>
+      <text x="188" y="14" text-anchor="middle" class="s">14</text>
+      <text x="392" y="14" text-anchor="middle" class="s">30</text>
+      <text x="39" y="52" text-anchor="middle" class="k s">P1</text>
+      <text x="82" y="52" text-anchor="middle" class="k s">P2</text>
+      <text x="119" y="52" text-anchor="middle" class="k s">P3</text>
+      <text x="163" y="52" text-anchor="middle" class="k s">P1</text>
+      <text x="290" y="52" text-anchor="middle" class="bn k s">P1, বাকি পাঁচটি কোয়ান্টাম</text>
+      <text x="39" y="80" text-anchor="middle" class="bn s">ওয়েটিং ৬</text>
+      <text x="82" y="80" text-anchor="middle" class="bn s">ওয়েটিং ৪</text>
+      <text x="119" y="80" text-anchor="middle" class="bn s">ওয়েটিং ৭</text>
+    </svg><figcaption>রাউন্ড রবিন, q = 4 ms; তিনটিই 0-এ এসেছে, বার্স্ট 24 / 3 / 3 — ওয়েটিং = সমাপ্তি − অ্যারাইভাল − বার্স্ট</figcaption></figure>
+  <div class="cols small">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ রাউন্ড রবিন, q = 4</span> P1 = 24, P2 = 3, P3 = 3, সবাই 0-এ। গ্যান্ট: P1 0–4, P2 4–7, P3 7–10, এরপর P1 একাই 10–30। ওয়েটিং = সমাপ্তি − বার্স্ট: P1 = 30 − 24 = 6, P2 = 7 − 3 = 4, P3 = 10 − 3 = 7 → গড় 17/3 = <span class="circ">5.67 ms</span>। এই সেটে SJF দিলে 0, 3, 6 → <b>3 ms</b>; FCFS 17 ms।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ SRTF, ভিন্ন সময়ে অ্যারাইভাল</span> P1 (0, 8), P2 (1, 4), P3 (2, 9), P4 (3, 5)। t = 1-এ P2 (4) হারায় P1-এর বাকি 7-কে → প্রিম্পট; t = 5-এ P4 (5) হারায় P1 (7) ও P3 (9)-কে; t = 10-এ P1 (7) হারায় P3 (9)-কে। গ্যান্ট: <b>P1 0–1 | P2 1–5 | P4 5–10 | P1 10–17 | P3 17–26</b>। সমাপ্তি 17, 5, 26, 10 → টার্নঅ্যারাউন্ড 17, 4, 24, 7 → গড় <span class="circ">13 ms</span>; ওয়েটিং 9, 0, 15, 2 → গড় <span class="circ">6.5 ms</span>।</div>
+  </div>
+  <table class="hand small" style="width:100%;font-size:10pt">
+    <tr><th class="l">টাইম কোয়ান্টাম q</th><th class="l">আচরণ</th></tr>
+    <tr><td class="l"><b>q বড়</b> (q ≥ বার্স্ট)</td><td class="l">বাস্তবে প্রিম্পশন হয় না → <span class="circ">RR আসলে FCFS হয়ে যায়</span></td></tr>
+    <tr><td class="l"><b>q ছোট</b></td><td class="l">অনেক কনটেক্সট সুইচ; বেশি সময় সোয়াপেই যায়, থ্রুপুট কমে</td></tr>
+    <tr><td class="l"><b>গড় বার্স্টের সামান্য বেশি</b></td><td class="l">সাধারণ পছন্দ — ইন্টারঅ্যাক্টিভ থাকার মতো দ্রুত, আবার অধিকাংশ কাজ কয়েক পালায় শেষ</td></tr>
+    <tr><td class="l">সবচেয়ে খারাপ রেসপন্স</td><td class="l">nটি রেডি প্রসেসে সীমাবদ্ধ <b>(n − 1) × q</b></td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "কোয়ান্টাম আসলে <b>অপেক্ষার একটা প্রতিশ্রুতি</b>: ছোট q ন্যায্যতা ও দ্রুত প্রথম সাড়ার কথা বলে এবং সেজি খরচে চোখায়; বড় q দক্ষতার কথা বলে এবং রেসপন্স টাইমে ভরি করে।"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) RR-তে ওয়েটিং টাইম হলো <b>সমাপ্তি − অ্যারাইভাল − বার্স্ট</b>, প্রতি কোয়ান্টাম গুনে "সারিতে থাকা সময়" নয়। (ii) কোয়ান্টামের ভেতরেই শেষ হয়ে গেলে প্রসেস <b>আর অপেক্ষা করে না</b>। (iii) RR <b>প্রিমপটিভ</b>; "স্লাইসে শেষ পর্যন্ত চালানো" বলে যা লেখা সেটা FCFS।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">আবার থ্রেড বনাম প্রসেস শিডিউলিং</span> প্রতিটি প্রসেসে একটি থ্রেড থাকলে RR প্রতিটি <b>প্রসেসকে</b> পালা দেয় — একটি প্রসেসের পঞ্চাশ থ্রেড থাকলে এটি অন্যায়। আধুনিক কার্নেল তাই <b>থ্রেড</b> শিডিউল করে, যাতে প্রতিটি চালনোগার্য থ্রেড নিজের পালা পায়।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: multilevel queues & real time ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>মাল্টিলেভেল ও রিয়েল-টাইম</span></div>
+  <h2><span class="no">১০</span>মাল্টিলেভেল সারি, ফিডব্যাক ও রিয়েল-টাইম</h2><span class="tag">অগ্রাসর ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি <span class="hl">মাল্টিলেভেল সারি</span> স্থায়ী শ্রেণি রাখে — সিস্টেম প্রসেস ছোট কোয়ান্টাম ও রাউন্ড রবিনে, ইউজার প্রসেড FCFS বা SJF-তে। একটি <span class="hl">মাল্টিলেভেল ফিডব্যাক সারি (MLFQ)</span> সরতে দেয়: পুরো কোয়ান্টাম খাটিয়ে ফেললে প্রসেস নিচে নামে, বেশি অপেক্ষা করলে উপরে ওঠে।</div>
+  <figure class="doodle"><svg viewBox="0 0 460 146" width="452">
+    <g class="w">
+      <rect x="6" y="10" width="146" height="30" rx="5" class="ink-r fill-r"/>
+      <rect x="6" y="48" width="146" height="30" rx="5" class="ink fill-y"/>
+      <rect x="6" y="86" width="146" height="30" rx="5" class="ink fill-y"/>
+      <path class="ink-k" d="M156,64 L186,64" marker-end="url(#ahb)"/>
+      <rect x="190" y="10" width="146" height="30" rx="5" class="ink-r fill-r"/>
+      <rect x="190" y="48" width="146" height="30" rx="5" class="ink fill-y"/>
+      <rect x="190" y="86" width="146" height="30" rx="5" class="ink fill-y"/>
+      <path class="ink-r" d="M290,42 L290,46" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M290,80 L290,84" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M320,46 L320,42" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M320,84 L320,80" marker-end="url(#ahg)"/>
+      <path class="ink" d="M340,64 L382,64" marker-end="url(#ahb)"/>
+      <rect x="386" y="44" width="68" height="40" rx="5" class="ink-g fill-g"/>
+    </g>
+    <text x="79" y="30" text-anchor="middle" class="bn r w6">Q0 · q = 2 ms</text>
+    <text x="79" y="68" text-anchor="middle" class="bn k">Q1 · q = 8 ms</text>
+    <text x="79" y="106" text-anchor="middle" class="bn k">Q2 · q = 32 ms</text>
+    <text x="263" y="30" text-anchor="middle" class="bn r w6">Q0 · q = 4 ms</text>
+    <text x="263" y="68" text-anchor="middle" class="bn k">Q1 · q = 16 ms</text>
+    <text x="263" y="106" text-anchor="middle" class="bn k">Q2 · FCFS</text>
+    <text x="420" y="69" text-anchor="middle" class="bn k w6">CPU</text>
+    <text x="171" y="136" text-anchor="middle" class="bn p w6">MLFQ</text>
+    <text x="79" y="140" text-anchor="middle" class="bn s">স্থায়ী শ্রেণি</text>
+    <text x="263" y="140" text-anchor="middle" class="bn s">নামানো ↓ / ওঠানো ↑</text>
+  </svg><figcaption>পুরো পার্থক্য: প্রসেস কি <b>সারি বদলাতে</b> পারে?</figcaption></figure>
+  <table class="hand small" style="width:100%;font-size:10pt">
+    <tr><th class="l">বিষয়</th><th class="l">মাল্টিলেভেল সারি</th><th class="l">মাল্টিলেভেল ফিডব্যাক সারি</th></tr>
+    <tr><td class="l">চলাচল</td><td class="l"><b>নেই</b> — শ্রেণি স্থায়ী</td><td class="l">প্রসেস উপরে-নিচে যায়</td></tr>
+    <tr><td class="l">প্রতি সারির কোয়ান্টাম</td><td class="l">প্রতি শ্রেণিতে একটি</td><td class="l">অগ্রাধিকারা কমলে বাড়ে</td></tr>
+    <tr><td class="l">শক্তি</td><td class="l">সহজ ও সস্তা; প্রতি শ্রেণিতে আলাদা ভর্তি নীতি</td><td class="l"><b>ইন্টারঅ্যাক্টিভ</b> ও <b>CPU-বাউন্ড</b> কাজ নিজে থেকেই আলাদা করে</td></tr>
+    <tr><td class="l">দুর্বলতা</td><td class="l">নিচের শ্রেণি <b>স্টার্ভ</b> হতে পারে</td><td class="l">স্টারভেশন এড়াতে প্রমোশন নিয়ম লাগে</td></tr>
+  </table>
+  <div class="cols small">
+    <table class="hand small" style="margin-top:0;width:100%;font-size:10pt">
+      <tr><th class="l">রিয়েল-টাইম নীতি</th><th class="l">অগ্রাধিকারার নিয়ম</th></tr>
+      <tr><td class="l"><b>রেট মনোটনিক</b></td><td class="l"><b>স্থির</b>: ছোট পিরিয়ড → বেশি অগ্রাধিকারা</td></tr>
+      <tr><td class="l"><b>EDF</b></td><td class="l"><b>পরিবর্তনশীল</b>: সবার আগে ডেডলাইন আছে যার</td></tr>
+    </table>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">হার্ড রিয়েল-টাইম এক লাইনে</span> এক প্রসেসরে nটি পিরিয়ডিক কাজের জন্য প্রতিটির C ≤ T লাগে <span class="circ">এবং</span> মোট ব্যবহার ≤ <b>n(2^(1/n) − 1)</b>: ১ কাজ ১০০ %, ২ কাজ ৮৩ %, ৩ কাজ ৭৮ %।</div>
+      <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>EDF সেরা</b> — এটি কেবল তখনই ডেডলাইন বাদ দেয় যখন কোনো নির্ভেজ্ঞ সূচি-ই নেই। রেট মনোটনিক কেবল <b>স্থির</b> অগ্রাধিকারায় সেরা এবং ৭৬ %-এর বেশি ব্যবহারে EDF-এর কাছে হেরে যায়।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>স্থায়ী শ্রেণি সরে না; ফিডব্যাক সারি শিডিউলারকে শেখায়।</b>" আর "<b>রেট</b> স্থির, <b>ডেডলাইন</b> প্রতি মুহূর্তে আবার পড়া হয়।"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> দীর্ঘ শিডিউলার খালি না থাকলে কেবল <b>সর্বোচ্চ</b> সারিতেই সেবা দেয়, তাই নিচের শ্রেণি অনির্দিষ্টকাল অপেক্ষায় থাকে — যা <b>এজিং</b> বা প্রমোশনই ঠিক করে।</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ দুটি পিরিয়ডিক কাজ</span> একটি কন্ট্রোল লুপ প্রতি 40 ms-এ 10 ms চায়; একটি লগার প্রতি 100 ms-এ 5 ms চায়।
+    <b>(ক)</b> ব্যবহার = 10/40 + 5/100 = 0.25 + 0.05 = <span class="circ">0.30</span>। <b>(খ)</b> দুটি কাজ, তাই রেট মনোটনিক সীমা 2(2^(1/2) − 1) ≈ <b>0.828</b>; 0.30 &lt; 0.828, তাই সেটটি <b>রেট মনোটনিকে চালানোর উপযোগী</b>। <b>(গ)</b> EDF একই ডেডলাইন মেলায় অনেক বেশি ভার নিতে পারে। <b>(ঘ)</b> লুপের পিরিয়ড 12 ms হলে ব্যবহার ≈ 0.883 &gt; 0.828, তখন রেট মনোটনিক আর নিশ্চয়তা দিতে পারে না, EDF ব্যবহার করতে হবে।</div>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">রাতের-পরীক্ষার পাতা</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্য-পত্র</span>
+    <div class="fgrid tiny">
+      <p>প্রোগ্রাম = নিষ্ক্রিয় ফাইল · প্রসেস = চলমান</p><p>প্রসেস = কোড, ডেটা, PC, রেজিস্টার</p>
+      <p><b>PID</b> চিহ্নিত করে; পরে পুনর্ব্যবহার</p><p>PCB: স্টেট, PC, রেজিস্টার, শিডিউলিং, মেমোরি, হিসাব</p>
+      <p>new → ready → running → waiting → terminated</p><p>রেডি = CPU চায়, ওয়েটিং = ঘটনা চায়</p>
+      <p>দীর্ঘমেয়াদি = জব সারি · মধ্যবর্তী = সোয়াপ</p><p>স্বল্পমেয়াদি = CPU শিডিউলার</p>
+      <p>থ্রেডরা অ্যাড্রেস স্পেস ভাগ করে</p><p>নিজস্ব স্ট্যাক ও রেজিস্টার</p>
+      <p>ইউজার-লেভেল পুরো প্রসেস থামায়</p><p>কার্নেল-লেভেল একটি থ্রেড থামায়</p>
+      <p>many-to-one · one-to-one · many-to-many</p><p>কার্নেল শুধু কার্নেল থ্রেড শিডিউল করে</p>
+      <p>IPC: shm, pipe, FIFO, queue, socket, signal</p><p>অ্যানোনিমাস পাইপ = সম্পর্কিত প্রসেস</p>
+      <p>সেমাফোর P = −1 (ব্লক হতে পারে), V = +1</p><p>মিউটেক্সের মালিক আছে, সেমাফোরের নেই</p>
+      <p>empty + full = বাফারের আকার N</p><p>প্রোডিউসার empty আগে, কনজিউমার full আগে</p>
+      <p>TAT = সমাপ্তি − অ্যারাইভাল</p><p>WT = TAT − বার্স্ট · রেসপন্স = প্রথম চাল − অ্যারাইভাল</p>
+      <p>SJF = ন্যূনতম গড় অপেক্ষা</p><p>FCFS = কনভয় · প্রায়োরিটি = স্টারভেশন</p>
+      <p>RR: q বড় → FCFS, q ছোট → সুইচ বেশি</p><p>RR-এ সবচেয়ে খারাপ রেসপন্স = (n − 1)q</p>
+      <p>MLFQ CPU-বাউন্ডকে নামায়, অপেক্ষাকারীকে ওঠায়</p><p>EDF সেরা · RM সীমা n(2^(1/n) − 1)</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols small">
+    <ol class="num tiny">
+      <li>পাঁচটি অবস্থা, চার নয় — <b>new</b> আলাদা</li>
+      <li>রেডি মানে শুধু <b>CPU</b>-র অপেক্ষা</li>
+      <li>তিন শিডিউলার: দীর্ঘ, মধ্যবর্তী, স্বল্পমেয়াদি</li>
+      <li>PCB একটি <b>কার্নেল</b> কাঠামো</li>
+      <li>থ্রেড স্ট্যাক নয়, অ্যাড্রেস স্পেস ভাগ করে</li>
+      <li>many-to-one: একটি ব্লকিং কল <b>সব</b> থ্রেড থামায়</li>
+    </ol>
+    <ol class="num tiny" start="7">
+      <li>শেয়ার্ড মেমোরি দ্রুততম, কিন্তু <b>নিজের</b> লক লাগে</li>
+      <li>P কমায়, V বাড়ায়</li>
+      <li>SJF <b>গড় অপেক্ষায়</b> সেরা</li>
+      <li>FCFS-এর রোগ <b>কনভয়</b></li>
+      <li>q বাড়লে RR → FCFS হয়ে যায়</li>
+      <li>EDF সেরা; RM সীমা n(2^(1/n) − 1)</li>
+    </ol>
+  </div>
+  <div class="exam tiny"><span class="lbl">সবচেয়ে বড় ফাঁদ</span> রেডি বনাম ওয়েটিং · WT ≠ TAT, রেসপন্স ≠ WT · SJF কেবল গড় <b>অপেক্ষায়</b> সেরা · নতুন প্রসেস <b>রেডি</b> সারিতে যায়, running-এ নয় · অ্যানোনিমাস পাইপ অসম্পর্কিত প্রসেস অতিক্রম করতে পারে না · শেয়ার্ড মেমোরি <b>কোনো</b> মিউচুয়াল এক্সক্লুশন দেয় না · যে মিউটেক্স তুমি ধরো না তা আনলক করা অর্থহীন · এজিং স্টারভেশন ঠিকায়, ডেডলক কখনো নয় · FCFS-এ স্টারভেশন হয় না, প্রায়োরিটি ও SJF-তে হয় · দুই কাজের রিয়েল-টাইম সীমা ৮৩ %, ১০০ % নয়।</div>
+  <div class="trick tiny"><span class="lbl">সব কৌশল একসাথে</span> "প্রোগ্রাম রেসিপি, প্রসেস তৈরি হওয়া খাবার আর পাশে রাখা টিকিট" · "রেডি CPU চায়, ওয়েটিং অন্য কিছু চায়" · "জন্ম রেডি, মৃত্যু শেষ" · "থ্রেড ভাগ করে, কপি করে না" · "কপি = মেসেজ পাসিং, ম্যাপ = শেয়ার্ড মেমোরি, নামযুক্ত = অসম্পর্কিত" · "সেমাফোর P-তে টাকা ঢালে" · "empty + full সবসময় = N" · "ছোট আগে, লম্বা পরে" · "কোয়ান্টাম অপেক্ষার প্রতিশ্রুতি" · "স্থায়ী শ্রেণি সরে না; ফিডব্যাক সারি শেখায়" · "রেট স্থির, ডেডলাইন প্রতি মুহূর্তে নতুন করে পড়া হয়"।</div>
+  <figure class="doodle"><svg viewBox="0 0 520 104" width="430">
+    <g class="w">
+      <rect x="8" y="10" width="152" height="66" rx="10" class="ink-g fill-g"/>
+      <rect x="184" y="10" width="152" height="66" rx="10" class="ink-g fill-g"/>
+      <rect x="360" y="10" width="152" height="66" rx="10" class="ink-r fill-r"/>
+      <path class="ink-g" d="M162,43 L180,43" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M338,43 L356,43" marker-end="url(#ah)"/>
+    </g>
+    <text x="84" y="38" text-anchor="middle" class="bn g w6 l">প্র</text>
+    <text x="84" y="56" text-anchor="middle" class="bn g s">PCB + অবস্থা</text>
+    <text x="84" y="72" text-anchor="middle" class="bn g s">কে সে, কোথায়</text>
+    <text x="260" y="38" text-anchor="middle" class="bn g w6 l">সে</text>
+    <text x="260" y="56" text-anchor="middle" class="bn g s">সেমাফোর</text>
+    <text x="260" y="72" text-anchor="middle" class="bn g s">P −1, V +1</text>
+    <text x="436" y="38" text-anchor="middle" class="bn r w6 l">অ</text>
+    <text x="436" y="56" text-anchor="middle" class="bn r s">অ্যালগরিদম</text>
+    <text x="436" y="72" text-anchor="middle" class="bn r s">FCFS SJF SRTF RR</text>
+    <text x="260" y="100" text-anchor="middle" class="bn p s">প্রতিটি সিডিউলিং প্রশ্ন = একটি গ্যান্ট চার্ট আর একটি বিয়োগ</text>
+  </svg><figcaption>প্রসেস, সিঙ্ক্রোনাইজেশন, সিডিউলিং — এই লেসনের তিন অর্ধেক</figcaption></figure>
+  <div class="pg-no">১২</div>
+</section>
+
+<!-- ============ SHEET 13: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · প্রক্রিয়া ও সিডিউলিং</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>মেমোরিতে, শুধু CPU-এর অপেক্ষায়:<ol class="opts"><li>New</li><li>Waiting</li><li>Terminated</li><li>Ready</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>নতুন তৈরি প্রসেস যায়:<ol class="opts"><li>running অবস্থায়</li><li>ডিভাইস সারিতে</li><li>waiting অবস্থায়</li><li>রেডি সারিতে</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>PCB-র কোনটি <b>ঘর নয়</b>?<ol class="opts"><li>প্রোগ্রাম কাউন্টার</li><li>CPU রেজিস্টার</li><li>শেষ ডিস্ক সেক্টর</li><li>প্রসেস স্টেট</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>শুধু CPU-এর দরকার এমন একটি ব্লক করা প্রসেড:<ol class="opts"><li>প্রিমপট হয়</li><li>টার্মিনেট হয়</li><li>পাঠানো হয়</li><li>ভর্তি হয়</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>রাউন্ড রবিন মূলত কোনের জন্য:<ol class="opts"><li>ব্যাচ</li><li>টাইম-শেয়ারিং</li><li>সিঙ্গেল-টাস্কিং</li><li>স্পুলিং</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>একই প্রসেসের থ্রেডগুলো ভাগ করে:<ol class="opts"><li>স্ট্যাক</li><li>অ্যাড্রেস স্পেস</li><li>রেজিস্টার</li><li>PC-র মান</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>S = 7, তারপর ১০টি P ও ৬টি V:<ol class="opts"><li>৩</li><li>১</li><li>১৩</li><li>০</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>বার্স্ট 24, 3, 3, t = 0; FCFS গড় অপেক্ষা:<ol class="opts"><li>3 ms</li><li>13 ms</li><li>17 ms</li><li>27 ms</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>একই বার্স্ট, q = 4, RR গড় অপেক্ষা:<ol class="opts"><li>4.00 ms</li><li>5.67 ms</li><li>7.33 ms</li><li>17.00 ms</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>প্যারেন্ট আগে মারা গেলে শিশু:<ol class="opts"><li>জম্বি</li><li>অরফান</li><li>ডেমন</li><li>কার্নেল থ্রেড</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ঘ · ২-ঘ · ৩-গ · ৪-গ · ৫-খ · ৬-খ · ৭-ক · ৮-গ · ৯-খ · ১০-খ</div>
+  <div class="wq small"><span class="lbl">লিখিত প্রশ্ন</span> প্রসেস কী, আর প্রসেস কন্ট্রোল ব্লকে কী থাকে? পাঁচ-অবস্থার ডায়াগ্রামটি সাতটি তিরসহ আঁকো এবং মেমোরিতে থেকে শুধু CPU-এর অপেক্ষায় থাকা প্রসেস কোন সারিতে পড়ে। বার্স্ট P1 = 24, P2 = 3, P3 = 3 ms সবাই t = 0-এ এসেছে: FCFS-এ এবং q = 4 ms রাউন্ড রবিনে গড় ওয়েটিং টাইম বের করো, আর গড় অপেক্ষার জন্য কোন অ্যালগরিদম সেরা তা নামাও। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>প্রসেস ও PCB</b> — মেমোরিতে তুলে চলা একটি প্রোগ্রাম, সঙ্গে কোড, ডেটা, প্রোগ্রাম কাউন্টার, রেজিস্টার ও খোলা ফাইল। PCB = প্রসেস স্টেট, প্রোগ্রাম কাউন্টার, CPU রেজিস্টার, CPU শিডিউলিং তথ্য, মেমোরি ম্যানেজমেন্ট তথ্য, অ্যাকাউন্টিং তথ্য। <i class="mk">3</i></li>
+    <li><b>ডায়াগ্রাম</b> — new → ready (ভর্তি); ready → running (পাঠানো); running → ready (ইন্টারাপ্ট বা স্লাইস শেষ); running → waiting (I/O বা ঘটনার অপেক্ষা); waiting → ready (সমাপ্তি); running → terminated; new → terminated (ভর্তি বাতিল)। শুধু CPU-এর অপেক্ষা মানে <b>রেডি সারি</b>, ডিভাইস সারি নয়। <i class="mk">3</i></li>
+    <li><b>FCFS</b> — P1 0–24, P2 24–27, P3 27–30। ওয়েটিং 0, 24, 27 → গড় 51/3 = <b>17 ms</b>। <i class="mk">2</i></li>
+    <li><b>RR, q = 4</b> — P1 0–4, P2 4–7, P3 7–10, এরপর P1 একাই 10–30। ওয়েটিং = সমাপ্তি − বার্স্ট: 6, 4, 7 → গড় 17/3 = <b>5.67 ms</b>। গড় অপেক্ষায় সেরা: <b>SJF</b> (প্রিমপটিভ SRTF) — 0, 3, 6 → <b>3 ms</b>। <i class="mk">2</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>পাঁচটি অবস্থা ও সাতটি রূপান্তর নামাতে পারি</li>
+      <li>PCB-র ঘরগুলো মুখস্থ ছাড়া বলতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>FCFS, SJF ও RR-এর গ্যান্ট চার্ট আঁকতে পারি</li>
+      <li>প্রোডিউসার–কনজিউমারে সেমাফোর ট্রেস করতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১৩</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

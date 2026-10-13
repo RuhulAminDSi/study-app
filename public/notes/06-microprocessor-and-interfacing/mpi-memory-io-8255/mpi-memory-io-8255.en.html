@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memory &amp; I/O Interfacing: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Memory &amp; I/O Interfacing</span></h1>
+  <p class="subtitle">8284A · 8288 · latches &amp; transceivers · address decoding · 8255A PPI: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,106 L320,56 M400,132 L470,74 M400,168 L470,226 M320,194 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">MEMORY &amp; I/O</text><text x="320" y="168" text-anchor="middle" class="r s">8086 interfacing mind-map</text>
+      <text x="140" y="65" text-anchor="middle">8284A: crystal ÷ 3</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Address decoding ★</text>
+      <text x="500" y="65" text-anchor="middle">8288 (max mode)</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Bus cycle T1–T4 ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">8255A control word ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">373 latch · 245 buffer</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Port vs mapped I/O ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Keypad · LCD · ADC</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = hardware / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① CLK = crystal ÷ 3<br>② ALE → 74LS373<br>③ 2ⁿ cells → n lines<br>④ 74LS138 memory map<br>⑤ IN/OUT: AL/AX, DX<br>⑥ 8255A: 80H, 9BH, BSR</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"<span class="hl">Clock and bus controller interfacing</span>: clock generator, bus demultiplexer, bus controller interfacing; <span class="hl">Memory Interfacing</span>: SRAM and EEPROM interfacing, Types of I/O: parallel I/O, programmed I/O, interrupt driven I/O, <span class="hl">I/O port address decoding</span>, <span class="hl">programmable peripheral interface (8255A)</span>, interface examples: Keyboard matrix, LCD/7-Segment display, printer, stepper motor, A/D and D/A converter". Pins: lesson mp1 · 8254/8251: mp3 · 8259A, DMA: mp4.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example · <span class="ov">RD</span> = active-low signal</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Min/max mode, 8284A clock ……… p. 2</li><li>Bus cycle, wait states, 8288 ……… p. 3</li><li>Demultiplexing &amp; buffering ……… p. 4</li><li>Memory chips &amp; banks ……… p. 5</li><li>Address decoding &amp; memory map ……… p. 6</li></ul>
+    <ul class="tick"><li>Isolated vs mapped I/O ……… p. 7</li><li>8255A architecture &amp; modes ……… p. 8</li><li>Control words &amp; interface examples … p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: system bus, min/max, 8284A ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Clock generator</span></div>
+  <h2><span class="no">1</span>Why the 8086 Needs Support Chips</h2><span class="tag">concept</span>
+  <div class="def"><span class="lbl">Idea</span> Address and data <span class="hl">share pins</span> (AD0–AD15, to fit 40 pins), each pin drives only ~<b>10 74LS loads</b>, and there is no on-chip oscillator. So a board adds the <b>8284A</b> clock, <b>74LS373</b> latches, <b>74LS245</b> transceivers and, in maximum mode, the <b>8288</b> bus controller.</div>
+  <table class="hand small">
+    <tr><th>Pins</th><th class="l">Minimum mode (MN/<span class="ov">MX</span> = 1)</th><th class="l">Maximum mode (MN/<span class="ov">MX</span> = 0)</th></tr>
+    <tr><td>24–25</td><td class="l"><span class="ov">INTA</span>, ALE</td><td class="l">QS1, QS0 (queue status)</td></tr>
+    <tr><td>26–28</td><td class="l"><span class="ov">DEN</span>, DT/<span class="ov">R</span>, M/<span class="ov">IO</span></td><td class="l"><span class="ov">S0</span>, <span class="ov">S1</span>, <span class="ov">S2</span> (status → 8288)</td></tr>
+    <tr><td>29–31</td><td class="l"><span class="ov">WR</span>, HLDA, HOLD</td><td class="l"><span class="ov">LOCK</span>, <span class="ov">RQ</span>/<span class="ov">GT1</span>, <span class="ov">RQ</span>/<span class="ov">GT0</span></td></tr>
+    <tr><td>Use</td><td class="l">single CPU makes its own controls</td><td class="l">8087 / multiprocessor: <span class="hl">8288 makes them</span></td></tr>
+  </table>
+  <p class="small">Unchanged in both modes: <span class="ov">RD</span>, READY, RESET, CLK, <span class="ov">BHE</span>/S7. On the 8088, pin 28 is IO/<span class="ov">M</span> (opposite sense).</p>
+
+  <h2><span class="no">2</span>8284A Clock Generator</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> An 18-pin chip that turns a crystal into <b>CLK</b>, <b>PCLK</b> and <b>OSC</b> and <span class="hl">synchronises READY and RESET</span> with the clock. CLK = <span class="circ">f<sub>crystal</sub> ÷ 3</span> with a <b>33% duty cycle</b>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 136" width="640">
+    <g class="w">
+      <rect x="10" y="22" width="40" height="30" rx="4" class="ink-k fill-b"/>
+      <path class="ink-k" d="M20,26 V48 M40,26 V48"/>
+      <path class="ink" d="M50,37 H82" marker-end="url(#ahb)"/>
+      <rect x="84" y="20" width="88" height="34" rx="9" class="ink fill-b"/>
+      <path class="ink" d="M172,37 H212" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M192,37 V8 H214" marker-end="url(#ahg)"/>
+      <rect x="214" y="20" width="56" height="34" rx="9" class="ink-r fill-r"/>
+      <path class="ink-r" d="M270,37 H310" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M290,37 V74 H316" marker-end="url(#ah)"/>
+      <rect x="318" y="60" width="52" height="30" rx="9" class="ink fill-b"/>
+      <path class="ink" d="M370,75 H392" marker-end="url(#ahb)"/>
+      <rect x="100" y="100" width="90" height="30" rx="9" class="ink-g fill-g"/>
+      <rect x="430" y="100" width="90" height="30" rx="9" class="ink-g fill-g"/>
+      <path class="ink-g" d="M70,115 H98 M190,115 H226" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M400,115 H428 M520,115 H556" marker-end="url(#ahg)"/>
+    </g>
+    <text x="30" y="68" text-anchor="middle" class="s">crystal</text>
+    <text x="128" y="42" text-anchor="middle" class="s">oscillator</text>
+    <text x="218" y="12" class="g s">OSC = f (15 MHz)</text>
+    <text x="242" y="42" text-anchor="middle" class="r w6">÷ 3</text>
+    <text x="314" y="42" class="r w6">CLK = 5 MHz → 8086 (33% duty)</text>
+    <text x="344" y="80" text-anchor="middle" class="w6">÷ 2</text>
+    <text x="396" y="80" class="s">PCLK = 2.5 MHz, 50% → peripherals</text>
+    <text x="66" y="120" text-anchor="end" class="s"><tspan class="ov">RES</tspan> (RC)</text>
+    <text x="145" y="120" text-anchor="middle" class="g s">sync to CLK</text>
+    <text x="230" y="120" class="s">RESET</text>
+    <text x="396" y="120" text-anchor="end" class="s">RDY1, RDY2</text>
+    <text x="475" y="120" text-anchor="middle" class="g s">sync</text>
+    <text x="560" y="120" class="s">READY</text>
+  </svg><figcaption>one crystal, three clocks, plus clean RESET and READY for the CPU</figcaption></figure>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> 15 MHz crystal → CLK = <b>5 MHz</b> (T = 200 ns), PCLK = 2.5 MHz, OSC = 15 MHz. An 8086-2 (8 MHz) needs a <span class="circ">24 MHz</span> crystal; an 8086-1 (10 MHz) a 30 MHz one.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>OSC ÷ 1, CLK ÷ 3, PCLK ÷ 6</b>" (all from the crystal). F/<span class="ov">C</span> = 0 uses the crystal, 1 the external EFI input.</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> CLK duty is <b>33%</b>; PCLK is the 50% one. RESET must stay HIGH ≥ <b>4 clocks</b>; then CS = FFFFH, IP = 0000H, so the first fetch is at <span class="circ">FFFF0H</span>: the boot EPROM sits at the top of memory (p. 6).</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: bus cycle + 8288 ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Bus cycle · 8288</span></div>
+  <h2><span class="no">3</span>The Bus Cycle: T1–T4 and Wait States</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> One memory or I/O read/write = a <b>bus cycle</b> of <span class="circ">4 clocks</span>, T1–T4. A slow memory or port pulls <b>READY</b> low and the CPU inserts <span class="hl">wait states (Tw)</span>, one clock each.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 172" width="640">
+    <g class="w">
+      <path class="ink-k" d="M80,42 V20 H117 V42 H190 V20 H227 V42 H300 V20 H337 V42 H410 V20 H447 V42 H520 V20 H557 V42 H630"/>
+      <path class="ink" d="M80,72 H94 V54 H170 V72 H630"/>
+      <path class="ink fill-b" d="M86,94 L93,84 H183 L190,94 L183,104 H93 Z"/>
+      <path class="ink-k" d="M190,94 H300" stroke-dasharray="5 5"/>
+      <path class="ink-g fill-g" d="M300,94 L307,84 H583 L590,94 L583,104 H307 Z"/>
+      <path class="ink" d="M80,116 H200 V134 H572 V116 H630"/>
+      <path class="ink-r" d="M80,148 H318 V166 H448 V148 H630"/>
+      <path class="ink-k" d="M190,14 V168 M300,14 V168 M410,14 V168 M520,14 V168" stroke-dasharray="2 6" style="stroke-width:1"/>
+    </g>
+    <text x="135" y="12" text-anchor="middle" class="w6">T1</text><text x="245" y="12" text-anchor="middle" class="w6">T2</text><text x="355" y="12" text-anchor="middle" class="w6">T3</text><text x="465" y="12" text-anchor="middle" class="r w6">Tw</text><text x="575" y="12" text-anchor="middle" class="w6">T4</text>
+    <text x="4" y="36" class="s k">CLK</text><text x="4" y="68" class="s k">ALE</text><text x="4" y="98" class="s k">AD15–0</text><text x="4" y="130" class="s k"><tspan class="ov">RD</tspan></text><text x="4" y="162" class="s k r">READY</text>
+    <text x="138" y="98" text-anchor="middle" class="s">address</text><text x="245" y="88" text-anchor="middle" class="s">float</text><text x="445" y="98" text-anchor="middle" class="g s">data from memory</text>
+    <text x="198" y="66" class="s g">latched on ALE ↓</text>
+    <text x="383" y="161" text-anchor="middle" class="r s">low → wait</text>
+  </svg><figcaption>a read cycle with one wait state (Intel's drawing puts Tw between T3 and T4)</figcaption></figure>
+  <table class="hand small">
+    <tr><th>State</th><th class="l">What happens</th></tr>
+    <tr><td>T1</td><td class="l">address on AD0–AD15, A16–A19, <span class="ov">BHE</span>; <span class="hl">ALE pulses</span>; M/<span class="ov">IO</span>, DT/<span class="ov">R</span> set</td></tr>
+    <tr><td>T2</td><td class="l">address removed; <span class="ov">RD</span> or <span class="ov">WR</span> low; <span class="ov">DEN</span> low; write data out</td></tr>
+    <tr><td>T3</td><td class="l">memory/port drives the data; READY is checked</td></tr>
+    <tr><td class="red"><b>Tw</b></td><td class="l">repeated while READY = 0; one clock each; signals frozen</td></tr>
+    <tr><td>T4</td><td class="l">CPU takes read data; <span class="ov">RD</span>/<span class="ov">WR</span> go high; cycle ends</td></tr>
+  </table>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> 5 MHz: T = 200 ns, cycle = 4T = <span class="circ">800 ns</span>; 1 Tw → 1000 ns. Peak rate = 2 bytes / 800 ns = 2.5 MB/s.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Brey puts Tw between T2 and T3, Intel between T3 and T4; either way <b>READY low ⇒ +1 clock per Tw</b>.</div>
+  </div>
+
+  <h2><span class="no">4</span>8288 Bus Controller (Maximum Mode)</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th><span class="ov">S2</span> <span class="ov">S1</span> <span class="ov">S0</span></th><th class="l">Cycle</th><th class="l">Output</th></tr>
+      <tr><td>0 0 0</td><td class="l">interrupt ack</td><td class="l"><span class="ov">INTA</span></td></tr>
+      <tr><td>0 0 1</td><td class="l">I/O read</td><td class="l"><span class="ov">IORC</span></td></tr>
+      <tr><td>0 1 0</td><td class="l">I/O write</td><td class="l"><span class="ov">IOWC</span>, <span class="ov">AIOWC</span></td></tr>
+      <tr><td>0 1 1</td><td class="l">halt</td><td class="l">none</td></tr>
+      <tr><td>1 0 0</td><td class="l">code fetch</td><td class="l"><span class="ov">MRDC</span></td></tr>
+      <tr><td>1 0 1</td><td class="l">memory read</td><td class="l"><span class="ov">MRDC</span></td></tr>
+      <tr><td>1 1 0</td><td class="l">memory write</td><td class="l"><span class="ov">MWTC</span>, <span class="ov">AMWC</span></td></tr>
+      <tr><td>1 1 1</td><td class="l">passive</td><td class="l">none</td></tr>
+    </table>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">8288</span> 20 pins; turns the status bits into <b>commands</b> and ALE, DEN, DT/<span class="ov">R</span>. "A" = <b>advanced</b> write, one clock early.</div>
+      <div class="trick small"><span class="lbl">Memory trick</span> <b><span class="ov">S2</span> = 0 → I/O side</b>, 1 → memory. Low bits: 00 special, 01 read, 10 write, 11 idle.</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> Bus arbitration is the <span class="circ">8289</span>'s job, not the 8288's. 8288 DEN is <b>active HIGH</b>.</div>
+    </div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: demux & buffering ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Bus demultiplexing</span></div>
+  <h2><span class="no">5</span>Demultiplexing the Address/Data Bus</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> AD0–AD15 carry the <b>address in T1</b> and <b>data in T2–T4</b>. <span class="hl">ALE</span> (Address Latch Enable) is high in T1; a <b>latch</b> passes the address while ALE = 1 and <span class="hl">holds it from ALE's falling edge</span> to the end of the cycle. The latched lines form the system address bus A0–A19.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 230" width="640">
+    <g class="w">
+      <rect x="10" y="8" width="110" height="214" rx="8" class="ink-k fill-y"/>
+      <rect x="220" y="14" width="124" height="104" rx="8" class="ink-r fill-r"/>
+      <rect x="220" y="146" width="124" height="74" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M120,34 H218 M120,70 H218 M120,100 H218"/>
+      <path class="ink" d="M168,34 V162 H218"/>
+      <path class="ink-r" d="M120,134 H282 V120" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M120,186 H218 M120,210 H218"/>
+      <path class="ink" d="M344,66 H420" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M348,183 H420" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+    </g>
+    <circle cx="168" cy="34" r="3.5" fill="#1d3f8f"/>
+    <text x="65" y="108" text-anchor="middle" class="k l">8086</text><text x="65" y="128" text-anchor="middle" class="s">min mode</text>
+    <text x="124" y="28" class="s">AD0–AD15</text><text x="124" y="64" class="s">A16–A19</text><text x="124" y="94" class="s"><tspan class="ov">BHE</tspan></text>
+    <text x="124" y="128" class="s r">ALE</text><text x="124" y="180" class="s g">DT/<tspan class="ov">R</tspan></text><text x="124" y="204" class="s g"><tspan class="ov">DEN</tspan></text>
+    <text x="282" y="56" text-anchor="middle" class="r w6">3 × 74LS373</text><text x="282" y="76" text-anchor="middle" class="s">latch (8282)</text><text x="282" y="110" text-anchor="middle" class="s r">G = ALE</text>
+    <text x="282" y="172" text-anchor="middle" class="g w6">2 × 74LS245</text><text x="282" y="190" text-anchor="middle" class="s">transceiver (8286)</text><text x="282" y="212" text-anchor="middle" class="s g">DIR · <tspan class="ov">G</tspan></text>
+    <text x="426" y="62" class="w6">A0–A19, <tspan class="ov">BHE</tspan></text><text x="426" y="82" class="s">system address bus</text>
+    <text x="426" y="179" class="g w6">D0–D15</text><text x="426" y="199" class="s">system data bus (2-way)</text>
+  </svg><figcaption>the classic buffered 8086: latch the address, buffer the data</figcaption></figure>
+  <table class="hand small">
+    <tr><th class="l">Chip</th><th class="l">What it is</th><th class="l">Job in an 8086 system</th></tr>
+    <tr><td class="l"><b>74LS373</b> (8282)</td><td class="l">octal <b>transparent latch</b>, 3-state</td><td class="l">address latch: G ← ALE, <span class="ov">OE</span> ← GND</td></tr>
+    <tr><td class="l">74LS374</td><td class="l">octal <b>edge-triggered</b> D flip-flop</td><td class="l">output port, clocked by <span class="ov">IOWC</span></td></tr>
+    <tr><td class="l">74LS244</td><td class="l">octal 3-state <b>buffer</b>, one way</td><td class="l">address/control buffer, input port</td></tr>
+    <tr><td class="l"><b>74LS245</b> (8286)</td><td class="l">octal <b>transceiver</b>, two way</td><td class="l">data bus: DIR ← DT/<span class="ov">R</span>, <span class="ov">G</span> ← <span class="ov">DEN</span></td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">74LS245 truth</span><br><span class="ov">G</span> = 0, DIR = 1 → A → B (CPU <b>writes</b>)<br><span class="ov">G</span> = 0, DIR = 0 → B → A (CPU <b>reads</b>)<br><span class="ov">G</span> = 1 → both sides <b>Z</b> (isolated)<br>DT/<span class="ov">R</span>: 1 = transmit, 0 = receive</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Chip count ✍</span><br><b>8086:</b> 21 lines to latch (AD0–15, A16–19, <span class="ov">BHE</span>) → <span class="circ">3 × 373</span>; 16 data lines → 2 × 245<br><b>8088:</b> only AD0–AD7 multiplexed → 2 × 373, A8–A15 via a 244, <b>1 × 245</b></div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>A</b>LE → <b>A</b>ddress latch; <b>D</b>EN → <b>D</b>ata enable; DT/<span class="ov">R</span> → <b>D</b>irection". 37<b>3</b> latch, 24<b>4</b> one-way, 24<b>5</b> both ways.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Buffers are for <b>fan-out</b> (&gt; ~10 LS loads) and for floating the bus during DMA. The 16-bit 8086 needs <b>two</b> 245s; the 8088 one.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: memory chips, SRAM/EEPROM, banks ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Memory interfacing</span></div>
+  <h2><span class="no">6</span>Memory Chips and Their Pins</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> An <b>N × M</b> chip has N locations (<span class="circ">log₂N address lines</span>) of M bits (M data lines). Control pins: <b><span class="ov">CS</span></b> chip select ← decoder, <b><span class="ov">OE</span></b> ← <span class="ov">MRDC</span>/<span class="ov">RD</span>, <b><span class="ov">WE</span></b> ← <span class="ov">MWTC</span>/<span class="ov">WR</span>.</div>
+  <div class="cols" style="grid-template-columns:0.7fr 1.3fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Size</th><th>Lines</th></tr>
+      <tr><td>1K</td><td>10</td></tr><tr><td>2K</td><td>11</td></tr><tr><td>4K</td><td>12</td></tr>
+      <tr><td>8K</td><td class="red"><b>13</b></td></tr><tr><td>16K</td><td>14</td></tr><tr><td>32K</td><td class="red"><b>15</b></td></tr>
+      <tr><td>64K</td><td>16</td></tr><tr><td>1M</td><td>20</td></tr>
+    </table>
+    <div>
+      <table class="hand small" style="margin-top:0;white-space:nowrap">
+        <tr><th class="l">Chips</th><th class="l">Type</th><th>Size (× 8)</th></tr>
+        <tr><td class="l">6116 / 6264 / 62256</td><td class="l">SRAM</td><td>2K / 8K / 32K</td></tr>
+        <tr><td class="l">2716 / 2764 / 27256</td><td class="l">EPROM</td><td>2K / 8K / 32K</td></tr>
+        <tr><td class="l">2816 / 2864</td><td class="l">EEPROM</td><td>2K / 8K</td></tr>
+      </table>
+      <div class="trick small"><span class="lbl">Memory trick</span> Digits after the family code = <b>Kbits</b>: 27<b>64</b> = 64 Kbit = <span class="hl">8 KB</span>; 62<b>256</b> = 32 KB; 61<b>16</b> = 2 KB.</div>
+      <div class="ex small"><span class="lbl">Chips needed ✍</span> (N<sub>total</sub> ÷ N<sub>chip</sub>) × (M<sub>total</sub> ÷ M<sub>chip</sub>): 32K × 16 from 8K × 8 → 4 × 2 = <span class="circ">8 chips</span>.</div>
+    </div>
+  </div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">SRAM</th><th class="l">EEPROM</th></tr>
+    <tr><td class="l">Volatile?</td><td class="l">yes</td><td class="l">no (keeps data)</td></tr>
+    <tr><td class="l">Write</td><td class="l">tens of ns, unlimited</td><td class="l"><b>≈ 1–10 ms</b>, ~10⁵–10⁶ cycles</td></tr>
+    <tr><td class="l">Interface</td><td class="l">A, D, <span class="ov">CS</span>, <span class="ov">OE</span>, <span class="ov">WE</span></td><td class="l">same pins; wait or poll (D7) after a write</td></tr>
+    <tr><td class="l">Used for</td><td class="l">working memory, stack</td><td class="l">settings, calibration data</td></tr>
+  </table>
+
+  <h2><span class="no">7</span>8086 Even and Odd Memory Banks</h2>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 168" width="296">
+      <g class="w">
+        <path class="ink" d="M20,20 H280 M75,20 V40 M225,20 V40"/>
+        <rect x="12" y="40" width="126" height="80" rx="8" class="ink fill-b"/>
+        <rect x="162" y="40" width="126" height="80" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M75,120 V142 M225,120 V142"/>
+      </g>
+      <text x="150" y="14" text-anchor="middle" class="s">A1–A19 to both banks</text>
+      <text x="75" y="64" text-anchor="middle" class="w6">Low bank</text><text x="75" y="84" text-anchor="middle" class="s">even: 0, 2, 4 …</text><text x="75" y="104" text-anchor="middle" class="s">select A0 = 0</text>
+      <text x="225" y="64" text-anchor="middle" class="r w6">High bank</text><text x="225" y="84" text-anchor="middle" class="s">odd: 1, 3, 5 …</text><text x="225" y="104" text-anchor="middle" class="s">select <tspan class="ov">BHE</tspan> = 0</text>
+      <text x="75" y="160" text-anchor="middle" class="s">D0–D7</text><text x="225" y="160" text-anchor="middle" class="s r">D8–D15</text>
+    </svg><figcaption>1 MB = two 512 KB banks</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;white-space:nowrap">
+        <tr><th><span class="ov">BHE</span></th><th>A0</th><th class="l">Transfer</th></tr>
+        <tr><td>0</td><td>0</td><td class="l">whole <b>word</b> (even address)</td></tr>
+        <tr><td>0</td><td>1</td><td class="l">byte, <b>odd</b> bank (D8–D15)</td></tr>
+        <tr><td>1</td><td>0</td><td class="l">byte, <b>even</b> bank (D0–D7)</td></tr>
+        <tr><td>1</td><td>1</td><td class="l">none</td></tr>
+      </table>
+      <div class="exam small"><span class="lbl">Exam trap</span> A word at an <b>odd</b> address needs <span class="circ">2 bus cycles</span>. The 8088 has one bank and no <span class="ov">BHE</span>.</div>
+    </div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: address decoding ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Address decoding</span></div>
+  <h2><span class="no">8</span>Address Decoding: Full vs Partial</h2><span class="tag">written favourite</span>
+  <div class="def"><span class="lbl">Idea</span> The <b>low</b> address lines go straight to the chip (13 lines for an 8 KB chip). The <b>high</b> lines go to a <span class="hl">decoder</span> that drives the chip's <span class="ov">CS</span>, so each chip answers only in its own address block.</div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">Full decoding</span> every high line is decoded → each location has <b>exactly one</b> address. Needed for a clean, expandable memory map.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Partial decoding</span> some high lines ignored → cheaper, but each location repeats at <span class="circ">2ᵏ addresses</span> (k = ignored lines): <b>fold-back / aliasing / mirror images</b>.</div>
+  </div>
+  <h3>The 74LS138 3-to-8 decoder</h3>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 204" width="326">
+      <g class="w">
+        <rect x="150" y="14" width="80" height="182" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M126,34 H150 M126,58 H150 M126,82 H150"/>
+        <path class="ink-g" d="M126,124 H150"/>
+        <path class="ink-r" d="M126,150 H150 M126,176 H150"/>
+        <path class="ink-r" d="M230,30 H258 M230,52 H258 M230,74 H258 M230,96 H258 M230,118 H258 M230,140 H258 M230,162 H258 M230,184 H258"/>
+      </g>
+      <text x="122" y="39" text-anchor="end" class="s">A13 → A</text><text x="122" y="63" text-anchor="end" class="s">A14 → B</text><text x="122" y="87" text-anchor="end" class="s">A15 → C</text>
+      <text x="122" y="129" text-anchor="end" class="s g">+5 V → G1</text>
+      <text x="122" y="155" text-anchor="end" class="s r">NAND(A16–19) → <tspan class="ov">G2A</tspan></text>
+      <text x="122" y="181" text-anchor="end" class="s r">IO/<tspan class="ov">M</tspan> → <tspan class="ov">G2B</tspan></text>
+      <text x="190" y="106" text-anchor="middle" class="w6">74LS</text><text x="190" y="124" text-anchor="middle" class="w6">138</text>
+      <text x="262" y="34" class="s r"><tspan class="ov">Y0</tspan> → chip 0</text><text x="262" y="188" class="s r"><tspan class="ov">Y7</tspan> → chip 7</text>
+      <text x="262" y="112" class="s">⋮ active-low</text>
+    </svg><figcaption>C = MSB; enabled by G1 = 1, <span class="ov">G2A</span> = <span class="ov">G2B</span> = 0</figcaption></figure>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">Worked example: memory map ✍</span> 8088, eight 2764 EPROMs (8K × 8) filling F0000H–FFFFFH.
+        <ol class="steps"><li>8K = 2¹³ → A0–A12 to every chip</li><li>A13–A15 → C B A inputs pick 1 of 8 chips</li><li>A16–A19 must be 1111 → NAND → <span class="ov">G2A</span>; IO/<span class="ov">M</span> = 0 for memory → <span class="ov">G2B</span></li><li>13 + 3 + 4 = 20 lines used → <b>full decoding</b></li></ol></div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Output</th><th>A15 A14 A13</th><th>Address range</th></tr>
+      <tr><td><span class="ov">Y0</span></td><td>0 0 0</td><td>F0000H–F1FFFH</td></tr>
+      <tr><td><span class="ov">Y1</span></td><td>0 0 1</td><td>F2000H–F3FFFH</td></tr>
+      <tr><td><span class="ov">Y2</span></td><td>0 1 0</td><td>F4000H–F5FFFH</td></tr>
+      <tr><td><span class="ov">Y3</span></td><td>0 1 1</td><td>F6000H–F7FFFH</td></tr>
+      <tr><td><span class="ov">Y4</span></td><td>1 0 0</td><td>F8000H–F9FFFH</td></tr>
+      <tr><td><span class="ov">Y5</span></td><td>1 0 1</td><td>FA000H–FBFFFH</td></tr>
+      <tr><td><span class="ov">Y6</span></td><td>1 1 0</td><td>FC000H–FDFFFH</td></tr>
+      <tr><td><span class="ov">Y7</span></td><td>1 1 1</td><td>FE000H–FFFFFH</td></tr>
+    </table>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Formulas</span><br>End = Start + Size − 1<br>8 KB = 2000H: F0000H + 1FFFH = F1FFFH<br>F5A3CH: 5A3CH = <b>010</b>1 1010 … → <span class="circ"><span class="ov">Y2</span></span></div>
+      <div class="ex small"><span class="lbl">Partial decoding ✍</span> A 2K RAM (6116) with <span class="ov">CS</span> = A19 only: A0–A10 on chip, A11–A18 ignored (8 lines) → <span class="hl">2⁸ = 256 images</span>: 00000–007FFH, 00800–00FFFH … 7F800–7FFFFH.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Size picks the low lines, the decoder gets the rest.</b>" Lines on chip + decoded lines = 20 → full; fewer → partial.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Images = <b>2<sup>k</sup></b>, not 2k. Boot ROM must cover <b>FFFF0H</b> (reset vector), so EPROM goes at the top, RAM from 00000H (IVT).</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>I/O interfacing</span></div>
+  <h2><span class="no">9</span>Isolated (I/O-mapped) vs Memory-mapped I/O</h2><span class="tag">high-yield</span>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">Isolated / port-mapped I/O</th><th class="l">Memory-mapped I/O</th></tr>
+    <tr><td class="l">Space</td><td class="l">separate: <span class="hl">64K byte ports</span></td><td class="l">inside the 1 MB (uses up addresses)</td></tr>
+    <tr><td class="l">Instructions</td><td class="l"><b>IN / OUT</b> only</td><td class="l">any memory instruction (MOV, AND …)</td></tr>
+    <tr><td class="l">Data via</td><td class="l">AL or AX only</td><td class="l">any register</td></tr>
+    <tr><td class="l">Signals</td><td class="l">M/<span class="ov">IO</span> = 0; <span class="ov">IORC</span>, <span class="ov">IOWC</span></td><td class="l">M/<span class="ov">IO</span> = 1; <span class="ov">MRDC</span>, <span class="ov">MWTC</span></td></tr>
+    <tr><td class="l">Decoding</td><td class="l">8 or 16 lines (simpler)</td><td class="l">all 20 lines</td></tr>
+    <tr><td class="l">Typical</td><td class="l">x86 PCs (Intel)</td><td class="l">68000, ARM, microcontrollers</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:center">
+    <div>
+      <div class="code" style="font-size:11pt;line-height:6.2mm">IN  AL, 60H    ; fixed port 00H–FFH
+IN  AX, DX     ; DX = 0000H–FFFFH
+OUT 43H, AL    ; byte to port 43H
+MOV DX, 0378H  ; port above FFH:
+OUT DX, AL     ; must use DX</div>
+      <p class="small">Fixed port → <span class="circ">256 ports</span> (A8–A15 = 00H). DX → <span class="circ">65,536 ports</span>. A16–A19 = 0 in every I/O cycle.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 176" width="266">
+      <g class="w">
+        <rect x="10" y="8" width="110" height="160" rx="6" class="ink fill-b"/>
+        <rect x="150" y="92" width="110" height="76" rx="6" class="ink-r fill-r"/>
+        <path class="ink-r" d="M150,142 H260" stroke-dasharray="4 4"/>
+      </g>
+      <text x="65" y="26" text-anchor="middle" class="s">FFFFFH</text><text x="65" y="86" text-anchor="middle" class="w6">Memory</text><text x="65" y="106" text-anchor="middle" class="s">1 MB</text><text x="65" y="160" text-anchor="middle" class="s">00000H</text>
+      <text x="205" y="84" text-anchor="middle" class="s r">FFFFH</text><text x="205" y="116" text-anchor="middle" class="r w6">I/O 64 KB</text><text x="205" y="134" text-anchor="middle" class="s">DX ports</text><text x="205" y="161" text-anchor="middle" class="s">00–FFH fixed</text>
+      <text x="205" y="30" text-anchor="middle" class="s g">M/<tspan class="ov">IO</tspan> picks</text><text x="205" y="48" text-anchor="middle" class="s g">the space</text>
+    </svg><figcaption>two separate address spaces</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> <b>IN BL, 60H</b> is illegal (only AL/AX); <b>OUT 378H, AL</b> is illegal (port &gt; FFH needs DX). Memory-mapped I/O has <b>no</b> IN/OUT cycles at all.</div>
+
+  <h2><span class="no">10</span>I/O Port Decoding &amp; Types of I/O</h2>
+  <div class="ex small"><span class="lbl">Decoding ✍</span> Ports F8H–FFH on an 8088: A7–A3 = 11111 → 74LS30 NAND → <span class="ov">G2A</span>; IO/<span class="ov">M</span> (1 for I/O) → G1; A2 A1 A0 → C B A, so <span class="ov">Y</span>n = port F8H + n. A8–A15 are ignored (partial decoding for DX ports). Input port: a <b>74LS244</b> enabled only by its <span class="ov">IORC</span>; output port: a <b>74LS374</b> latch clocked by <span class="ov">IOWC</span>.</div>
+  <table class="hand small">
+    <tr><th class="l">Method</th><th class="l">How</th><th class="l">Verdict</th></tr>
+    <tr><td class="l"><b>Programmed</b> (polling)</td><td class="l">CPU loops on a status bit</td><td class="l">simple, wastes CPU time</td></tr>
+    <tr><td class="l"><b>Interrupt-driven</b></td><td class="l">device raises INTR (8259A, mp4)</td><td class="l">CPU free until needed</td></tr>
+    <tr><td class="l"><b>DMA</b></td><td class="l">8237 takes the bus (HOLD/HLDA)</td><td class="l">fastest for blocks</td></tr>
+  </table>
+  <div class="tipbox small"><span class="lbl">IT link</span> The IBM PC decodes only A0–A9 (000H–3FFH): 20H 8259A · 40H–43H 8254 · <b>60H–63H 8255</b> (PC/XT) · 378H LPT1 · 3F8H COM1. Parallel vs serial = number of data lines, not a transfer method (serial 8251: mp3).</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: 8255A architecture & modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>8255A PPI</span></div>
+  <h2><span class="no">11</span>8255A Programmable Peripheral Interface</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A 40-pin chip with <span class="circ">24 I/O lines</span> in three 8-bit ports A, B, C. <span class="hl">Group A</span> = Port A + PC7–PC4 (upper C); <span class="hl">Group B</span> = Port B + PC3–PC0 (lower C). A control word sets each port's direction and mode.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 226" width="640">
+    <g class="w">
+      <rect x="64" y="16" width="120" height="50" rx="8" class="ink fill-b"/>
+      <rect x="64" y="104" width="120" height="110" rx="8" class="ink fill-b"/>
+      <path class="ink-k" d="M202,12 V218" style="stroke-width:5"/>
+      <path class="ink" d="M184,41 H202 M184,159 H202"/>
+      <path class="ink" d="M20,41 H62" marker-start="url(#ahb)" marker-end="url(#ahb)"/>
+      <rect x="226" y="30" width="120" height="50" rx="8" class="ink-r fill-r"/>
+      <rect x="226" y="150" width="120" height="50" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M202,55 H226 M202,175 H226"/>
+      <rect x="394" y="10" width="110" height="38" rx="8" class="ink-r fill-r"/>
+      <rect x="394" y="62" width="110" height="38" rx="8" class="ink-r fill-r"/>
+      <rect x="394" y="128" width="110" height="38" rx="8" class="ink-g fill-g"/>
+      <rect x="394" y="180" width="110" height="38" rx="8" class="ink-g fill-g"/>
+      <path class="ink-r" d="M346,46 L394,29 M346,62 L394,81"/>
+      <path class="ink-g" d="M346,166 L394,147 M346,184 L394,199"/>
+      <path class="ink" d="M504,29 H526 M504,81 H526 M504,147 H526 M504,199 H526"/>
+    </g>
+    <text x="10" y="32" class="s">D0–D7</text>
+    <text x="124" y="38" text-anchor="middle" class="s w6">data bus</text><text x="124" y="56" text-anchor="middle" class="s w6">buffer</text>
+    <text x="124" y="130" text-anchor="middle" class="s w6">read/write</text><text x="124" y="148" text-anchor="middle" class="s w6">control logic</text>
+    <text x="124" y="172" text-anchor="middle" class="s"><tspan class="ov">RD</tspan> <tspan class="ov">WR</tspan> <tspan class="ov">CS</tspan></text><text x="124" y="192" text-anchor="middle" class="s">A1 A0 RESET</text>
+    <text x="286" y="52" text-anchor="middle" class="r w6">Group A</text><text x="286" y="70" text-anchor="middle" class="s r">control</text>
+    <text x="286" y="172" text-anchor="middle" class="g w6">Group B</text><text x="286" y="190" text-anchor="middle" class="s g">control</text>
+    <text x="449" y="34" text-anchor="middle" class="s w6">Port A (8)</text><text x="449" y="86" text-anchor="middle" class="s w6">Port C upper (4)</text>
+    <text x="449" y="152" text-anchor="middle" class="s w6">Port C lower (4)</text><text x="449" y="204" text-anchor="middle" class="s w6">Port B (8)</text>
+    <text x="530" y="34" class="s">PA7–PA0</text><text x="530" y="86" class="s">PC7–PC4</text><text x="530" y="152" class="s">PC3–PC0</text><text x="530" y="204" class="s">PB7–PB0</text>
+    <text x="206" y="120" class="s k">internal bus</text>
+  </svg><figcaption>8255A block diagram: red = Group A, green = Group B</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>A1 A0</th><th class="l">Selects</th><th>8088 / 8086</th></tr>
+      <tr><td>0 0</td><td class="l">Port A</td><td>60H / 80H</td></tr>
+      <tr><td>0 1</td><td class="l">Port B</td><td>61H / 82H</td></tr>
+      <tr><td>1 0</td><td class="l">Port C</td><td>62H / 84H</td></tr>
+      <tr><td>1 1</td><td class="l"><b>Control register</b></td><td>63H / 86H</td></tr>
+    </table>
+    <div class="small">
+      <p style="margin-top:0">(<span class="ov">CS</span> = 0.) On an 8086 the 8255A sits on D0–D7, so CPU <b>A1, A2</b> drive its A0, A1 → <span class="hl">even port addresses</span> (80H, 82H, 84H, 86H).</p>
+      <p><b>RESET</b> → all 24 lines become <span class="circ">inputs</span> (mode 0), so nothing is driven by accident at power-on.</p>
+    </div>
+  </div>
+  <h2><span class="no">12</span>The Three Modes (+ BSR)</h2>
+  <table class="hand small">
+    <tr><th>Mode</th><th class="l">Name</th><th class="l">Ports</th><th class="l">Key points</th></tr>
+    <tr><td>0</td><td class="l">Basic I/O</td><td class="l">A, B, C upper, C lower</td><td class="l">no handshake; outputs latched, inputs not; 16 in/out combinations</td></tr>
+    <tr><td>1</td><td class="l">Strobed I/O</td><td class="l">A and B</td><td class="l">handshake on Port C: A uses PC3–PC5 (in) or PC3, PC6, PC7 (out); B uses PC0–PC2</td></tr>
+    <tr><td class="red"><b>2</b></td><td class="l">Bidirectional</td><td class="l"><span class="circ">Port A only</span></td><td class="l">PC3–PC7 = INTR, <span class="ov">STB</span>, IBF, <span class="ov">ACK</span>, <span class="ov">OBF</span></td></tr>
+    <tr><td>BSR</td><td class="l">Bit set/reset</td><td class="l">Port C</td><td class="l">sets or clears one PC bit at a time</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>A-B-C = 3-2-1</b>": Port A has 3 modes (0, 1, 2), Port B 2 (0, 1), Port C 1 (mode 0) plus BSR.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Port C has no handshake mode of its own; in modes 1/2 some of its lines become handshake pins and the <b>leftover</b> lines stay normal I/O.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: control words + interface examples ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>8255A control words</span></div>
+  <h2><span class="no">13</span>8255A Control Words: I/O Mode &amp; BSR Mode</h2><span class="tag">written favourite</span>
+  <figure class="doodle"><svg viewBox="0 0 640 168" width="640">
+    <g class="w">
+      <rect x="60" y="22" width="70" height="30" class="ink-k fill-y"/>
+      <rect x="130" y="22" width="140" height="30" class="ink-r fill-r"/>
+      <rect x="270" y="22" width="70" height="30" class="ink-r fill-r"/>
+      <rect x="340" y="22" width="70" height="30" class="ink-r fill-r"/>
+      <rect x="410" y="22" width="70" height="30" class="ink-g fill-g"/>
+      <rect x="480" y="22" width="70" height="30" class="ink-g fill-g"/>
+      <rect x="550" y="22" width="70" height="30" class="ink-g fill-g"/>
+      <rect x="60" y="104" width="70" height="30" class="ink-k fill-y"/>
+      <rect x="130" y="104" width="210" height="30" class="ink fill-b"/>
+      <rect x="340" y="104" width="210" height="30" class="ink-p fill-p"/>
+      <rect x="550" y="104" width="70" height="30" class="ink-r fill-r"/>
+    </g>
+    <text x="4" y="42" class="w6">I/O</text><text x="4" y="124" class="w6">BSR</text>
+    <text x="235" y="15" text-anchor="middle" class="r s w6">Group A</text><text x="515" y="15" text-anchor="middle" class="g s w6">Group B</text>
+    <text x="95" y="42" text-anchor="middle" class="w6">D7 = 1</text><text x="200" y="42" text-anchor="middle">D6 D5</text><text x="305" y="42" text-anchor="middle">D4</text><text x="375" y="42" text-anchor="middle">D3</text><text x="445" y="42" text-anchor="middle">D2</text><text x="515" y="42" text-anchor="middle">D1</text><text x="585" y="42" text-anchor="middle">D0</text>
+    <text x="95" y="69" text-anchor="middle" class="s">mode set</text><text x="200" y="69" text-anchor="middle" class="s">00 = 0, 01 = 1, 1X = 2</text>
+    <text x="305" y="69" text-anchor="middle" class="s">Port A</text><text x="375" y="69" text-anchor="middle" class="s">PC7–4</text><text x="445" y="69" text-anchor="middle" class="s">mode 0/1</text><text x="515" y="69" text-anchor="middle" class="s">Port B</text><text x="585" y="69" text-anchor="middle" class="s">PC3–0</text>
+    <text x="445" y="88" text-anchor="middle" class="r s">port bits: 1 = input, 0 = output</text>
+    <text x="95" y="124" text-anchor="middle" class="w6">D7 = 0</text><text x="235" y="124" text-anchor="middle">D6 D5 D4 = X (use 000)</text><text x="445" y="124" text-anchor="middle" class="p">D3 D2 D1 = bit no.</text><text x="585" y="124" text-anchor="middle" class="r">D0</text>
+    <text x="95" y="152" text-anchor="middle" class="s">BSR flag</text><text x="235" y="152" text-anchor="middle" class="s">unused</text><text x="445" y="152" text-anchor="middle" class="s p">000 = PC0 … 111 = PC7</text><text x="585" y="152" text-anchor="middle" class="s r">1 set, 0 reset</text>
+  </svg><figcaption>D7 picks the format: 1 = mode-definition word, 0 = bit set/reset word</figcaption></figure>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">Required set-up</th><th>D7 D6D5 D4 D3 D2 D1 D0</th><th>Word</th></tr>
+    <tr><td class="l">all ports output (mode 0)</td><td>1 00 0 0 0 0 0</td><td class="red"><b>80H</b></td></tr>
+    <tr><td class="l">all ports input (mode 0)</td><td>1 00 1 1 0 1 1</td><td class="red"><b>9BH</b></td></tr>
+    <tr><td class="l">A in, C<sub>U</sub> out, B out, C<sub>L</sub> in</td><td>1 00 1 0 0 0 1</td><td><b>91H</b></td></tr>
+    <tr><td class="l">A out, C<sub>U</sub> in, B in, C<sub>L</sub> out</td><td>1 00 0 1 0 1 0</td><td><b>8AH</b></td></tr>
+    <tr><td class="l">A mode 1 in, B mode 0 out</td><td>1 01 1 0 0 0 0</td><td><b>B0H</b></td></tr>
+    <tr><td class="l">BSR: set PC5 · reset PC5</td><td>0 000 101 1 · 0 000 101 0</td><td><b>0BH · 0AH</b></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="code" style="font-size:11pt;line-height:6.1mm;margin-top:0">MOV AL, 91H  ; A in, B out
+OUT 86H, AL  ; control (8086)
+IN  AL, 80H  ; read Port A
+OUT 82H, AL  ; write Port B
+MOV AL, 0BH  ; BSR: set PC5
+OUT 86H, AL  ; also to CONTROL</div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> BSR word for PCn = <span class="circ">2n + 1</span> to set, <b>2n</b> to reset (PC7: 0FH / 0EH).</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> BSR words go to the <b>control register</b>, never to Port C. A new mode word <b>clears all output latches</b>.</div>
+    </div>
+  </div>
+  <h3>Interface examples (syllabus list)</h3>
+  <table class="hand small">
+    <tr><th class="l">Device</th><th class="l">Hook-up · key fact</th></tr>
+    <tr><td class="l">Keyboard matrix</td><td class="l">rows ← output port, columns → input port; scan, <b>debounce 10–20 ms</b></td></tr>
+    <tr><td class="l">7-segment</td><td class="l">common cathode: 0 → 3FH, 1 → 06H, 8 → 7FH; anode = complement</td></tr>
+    <tr><td class="l">LCD 16 × 2</td><td class="l">RS = 0 command, 1 data; E latches; 38H, 0EH, 01H (clear), 80H</td></tr>
+    <tr><td class="l">Printer</td><td class="l">Port A mode 1 out; printer <span class="ov">ACK</span> → 8255A <span class="ov">ACK</span>; <span class="ov">STROBE</span> via BSR; poll BUSY</td></tr>
+    <tr><td class="l">Stepper motor</td><td class="l">full step 09H → 0CH → 06H → 03H; 1.8° = 200 steps/rev</td></tr>
+    <tr><td class="l">ADC / DAC 0808</td><td class="l">8-bit: step 5 V/256 = <b>19.5 mV</b>; DAC 80H → 2.5 V</td></tr>
+  </table>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>CLK = f<sub>xtal</sub> ÷ 3 (33%) · PCLK = CLK ÷ 2</p><p>15 MHz → 5 MHz · 24 MHz → 8 MHz</p>
+      <p>Bus cycle = 4T; +1 T per wait state</p><p>5 MHz: T = 200 ns, cycle = 800 ns</p>
+      <p>MN/<span class="ov">MX</span> = 1 min · 0 max (8288)</p><p>8288: <span class="ov">S2</span> = 0 I/O, 1 memory</p>
+      <p>ALE → 373 latch · <span class="ov">DEN</span>, DT/<span class="ov">R</span> → 245</p><p>8086: 3 × 373, 2 × 245 · 8088: 1 × 245</p>
+      <p>N locations → log₂N lines (8K → 13)</p><p>Images = 2ᵏ (k = ignored lines)</p>
+      <p><span class="ov">BHE</span> A0: 00 word · 01 odd · 10 even</p><p>Reset: CS:IP = FFFF:0000 → FFFF0H</p>
+      <p>IN/OUT: AL/AX; fixed 00–FFH; DX 0–FFFFH</p><p>8255: A1A0 = 11 → control register</p>
+      <p>CW: D7 = 1 mode set, 0 BSR · 1 = input</p><p>80H all out · 9BH all in · 91H, 8AH</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>8284A divides the crystal by 3</li>
+      <li>8288 is used in maximum mode only</li>
+      <li>Bus arbiter = 8289 (not the 8288)</li>
+      <li>74LS373 = address latch, strobed by ALE</li>
+      <li>74LS245 = bidirectional data transceiver</li>
+      <li>74LS138: 3-to-8, active-low outputs</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>32K × 8 chip: 15 address, 8 data lines</li>
+      <li>8255A: 3 ports, 24 lines, 40 pins</li>
+      <li>Mode 2 (bidirectional): Port A only</li>
+      <li>Port B: modes 0 and 1 only</li>
+      <li>RESET makes all 8255A ports inputs</li>
+      <li>Isolated I/O: 64K ports, IN/OUT</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> CLK duty 33%, not 50% · wait state = READY low · 8288 DEN is active high · images = 2ᵏ, not 2k · IN/OUT only via AL/AX; ports &gt; FFH need DX · BSR words go to the control register · Port C has no mode 1/2 of its own</div>
+  <div class="trick"><span class="lbl">All tricks together</span> OSC × 1, CLK ÷ 3, PCLK ÷ 6 · <span class="ov">S2</span> = 0 is the I/O side · ALE → Address, DEN → Data, DT/<span class="ov">R</span> → Direction · 373 latch, 244 one-way, 245 two-way · chip name digits = Kbits · size picks the low lines, the decoder gets the rest · A-B-C = 3-2-1 · BSR = 2n + 1 (set), 2n (reset)</div>
+  <figure class="doodle"><svg viewBox="0 0 640 96" width="640">
+    <g class="w">
+      <rect x="6" y="20" width="80" height="40" rx="10" class="ink fill-b"/>
+      <rect x="116" y="20" width="80" height="40" rx="10" class="ink-r fill-r"/>
+      <rect x="226" y="20" width="96" height="40" rx="10" class="ink-r fill-r"/>
+      <rect x="352" y="20" width="80" height="40" rx="10" class="ink-g fill-g"/>
+      <rect x="462" y="20" width="80" height="40" rx="10" class="ink-g fill-g"/>
+      <rect x="562" y="20" width="72" height="40" rx="10" class="ink-p fill-p"/>
+      <path class="ink" d="M86,40 H112 M196,40 H222 M322,40 H348 M432,40 H458 M542,40 H558" marker-end="url(#ahb)"/>
+    </g>
+    <text x="46" y="45" text-anchor="middle" class="s w6">crystal</text><text x="156" y="45" text-anchor="middle" class="s r w6">8284A</text><text x="274" y="45" text-anchor="middle" class="s r w6">8086 (+8288)</text><text x="392" y="45" text-anchor="middle" class="s g w6">373 / 245</text><text x="502" y="45" text-anchor="middle" class="s g w6">74LS138</text><text x="598" y="45" text-anchor="middle" class="s p w6">RAM/ROM</text>
+    <text x="156" y="80" text-anchor="middle" class="s">CLK, READY, RESET</text><text x="274" y="80" text-anchor="middle" class="s">T1–T4, status</text><text x="392" y="80" text-anchor="middle" class="s">A0–A19, D0–D15</text><text x="502" y="80" text-anchor="middle" class="s"><tspan class="ov">CS</tspan> per block</text><text x="598" y="80" text-anchor="middle" class="s">or 8255A</text>
+  </svg><figcaption>the signal path of a whole 8086 board, left to right</figcaption></figure>
+  <div class="tipbox"><span class="lbl">Written-exam tips</span> Memory design: chip lines → decoder wiring (C B A + enables) → <b>memory map table</b> (start/end) → full or partial. 8255A: write the word bit by bit, then the hex.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · Memory &amp; I/O Interfacing</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>8284A + 24 MHz crystal → CLK =<ol class="opts"><li>12 MHz</li><li>24 MHz</li><li>8 MHz</li><li>6 MHz</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>The 8288 is needed in the 8086's:<ol class="opts"><li>min mode</li><li>single step</li><li>DMA mode</li><li>max mode</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>The 74LS373 latches the address on:<ol class="opts"><li><span class="ov">DEN</span></li><li>ALE</li><li>DT/<span class="ov">R</span></li><li>READY</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Address lines of an 8K × 8 chip:<ol class="opts"><li>13</li><li>8</li><li>12</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>2K RAM, <span class="ov">CS</span> = A19 only: images?<ol class="opts"><li>2</li><li>8</li><li>256</li><li>512</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>8255A BSR word to set PC6:<ol class="opts"><li>0DH</li><li>0CH</li><li>86H</li><li>06H</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Max. 8-bit ports reachable via DX:<ol class="opts"><li>1024</li><li>256</li><li>1 M</li><li>65,536</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>8255A mode 2 is allowed on:<ol class="opts"><li>Port B</li><li>Port C</li><li>Port A</li><li>Ports A, B</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>5 MHz, one wait state: bus cycle =<ol class="opts"><li>800 ns</li><li>1000 ns</li><li>600 ns</li><li>1200 ns</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span><span class="ov">BHE</span> = 0, A0 = 1 transfers:<ol class="opts"><li>even word</li><li>nothing</li><li>even byte</li><li>odd byte</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-d · 3-b · 4-a · 5-c · 6-a · 7-d · 8-c · 9-b · 10-d</div>
+
+  <div class="wq"><span class="lbl">Written question</span> An 8255A sits at ports 40H–43H of an 8088. Program Port A as input, Port B as output, upper C as output, lower C as input (mode 0); copy the switches on Port A to the LEDs on Port B; then set PC6 with a BSR command. <i class="mk">8 marks</i></div>
+  <div class="cols" style="grid-template-columns:1fr 190px;align-items:start">
+    <ol class="steps small">
+      <li>8255A A1 A0 = CPU A1 A0 → PA 40H, PB 41H, PC 42H, control <b>43H</b> <i class="mk">1</i></li>
+      <li>D7 = 1, mode A 00, A in 1, C<sub>U</sub> out 0, mode B 0, B out 0, C<sub>L</sub> in 1 → 1001 0001 = <span class="circ">91H</span> <i class="mk">2</i></li>
+      <li>Code (right): 91H → 43H, IN from 40H, OUT to 41H <i class="mk">3</i></li>
+      <li>BSR: 0 000 110 1 = <b>0DH</b>, sent to the <b>control port 43H</b>, not Port C <i class="mk">2</i></li>
+    </ol>
+    <div class="code" style="font-size:11pt;line-height:6mm;margin-top:0">MOV AL, 91H
+OUT 43H, AL
+IN  AL, 40H
+OUT 41H, AL
+MOV AL, 0DH
+OUT 43H, AL</div>
+  </div>
+  <h3>Before the exam ✓</h3>
+  <div class="cols">
+    <ul class="tick small">
+      <li>Can draw the 8284A, 373, 245 hook-up</li>
+      <li>Can draw T1–T4 with ALE, <span class="ov">RD</span>, READY</li>
+      <li>Know the 8288 status table</li>
+    </ul>
+    <ul class="tick small">
+      <li>Can build a 74LS138 memory map</li>
+      <li>Can write any 8255A mode/BSR word</li>
+      <li>Know IN/OUT rules (AL/AX, DX)</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

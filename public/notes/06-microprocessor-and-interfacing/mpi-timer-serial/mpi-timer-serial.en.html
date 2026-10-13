@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>8254 Timer &amp; Serial I/O: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">8254 Timer, Serial I/O, RS-232, 8251</span></h1>
+  <p class="subtitle">PIT modes · control word · counts · async frame · RS-232 · 8251: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M240,128 L170,74 M240,172 L170,226 M320,106 L320,56 M400,128 L470,74 M400,172 L470,226 M320,194 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="230" y="14" width="180" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="170" height="40" rx="14" class="ink fill-b"/>
+        <rect x="6" y="130" width="170" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="170" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="50" y="220" width="170" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="230" y="244" width="180" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="170" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">TIMER + SERIAL I/O</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">8253 vs 8254 · pins</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Control word (36H) ★</text>
+      <text x="505" y="65" text-anchor="middle">Latch · read-back</text>
+      <text x="91" y="155" text-anchor="middle" class="r w6">6 modes + waves ★</text>
+      <text x="549" y="155" text-anchor="middle" class="r w6">Async frame · baud ★</text>
+      <text x="135" y="245" text-anchor="middle" class="g">N = f_clk ÷ f_out</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">RS-232 levels, DB-9 ★</text>
+      <text x="505" y="245" text-anchor="middle" class="g">8251 mode/cmd/status</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = calculation / programming</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① 3 × 16-bit, 6 modes<br>② CW: SC RW M BCD<br>③ Mode 3 = square<br>④ N = f_clk ÷ f_out<br>⑤ RS-232: 1 = −ve<br>⑥ 8251: 4EH, 37H</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Timer interfacing: <span class="hl">The 8254 programmable interval timer (PIT)</span>, timing applications; Serial I/O interface: <span class="hl">asynchronous and synchronous communication</span>, physical communication standard-<span class="hl">EIA RS232</span>, programmable communication interface, interfacing serial I/O devices- mouse, modem, PC Keyboard". The programmable communication interface here is the <b>8251A USART</b>. The 8255A PPI and port decoding are in lesson mp2; interrupts (8259A) and DMA (8237) in mp4.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>8254: features, pins, vs 8253 ……… p. 2</li><li>Control word &amp; reading counters … p. 3</li><li>The six modes (waveforms) ……… p. 4</li><li>Count maths &amp; programming ……… p. 5</li><li>Serial basics: frame, baud, duplex … p. 6</li></ul>
+    <ul class="tick"><li>EIA RS-232 standard ……… p. 7</li><li>8251 USART: architecture ……… p. 8</li><li>8251 mode, command, status ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: 8254 overview ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>8254 PIT</span></div>
+  <h2><span class="no">1</span>The 8254 Programmable Interval Timer</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> The Intel 8254 PIT is a 24-pin, +5 V counter/timer chip with <span class="hl">three independent 16-bit down counters</span> (Counter 0, 1, 2). Each counter has a <b>CLK</b> input, a <b>GATE</b> input and an <b>OUT</b> output, works in any of <span class="circ">6 modes</span> (0–5) and counts in <b>binary or BCD</b>, decrementing on each <b>falling CLK edge</b>. It replaces software delay loops, so the CPU is free while time is measured in hardware.</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 340 214" width="330">
+      <g class="w">
+        <rect x="14" y="14" width="96" height="40" rx="6" class="ink fill-b"/>
+        <rect x="14" y="80" width="96" height="54" rx="6" class="ink fill-b"/>
+        <rect x="14" y="160" width="96" height="44" rx="6" class="ink-r fill-r"/>
+        <path class="ink-k" d="M130,14 V206" style="stroke-width:5"/>
+        <path class="ink" d="M110,34 H130 M110,107 H130 M110,182 H130 M130,36 H172 M130,107 H172 M130,178 H172"/>
+        <rect x="172" y="12" width="96" height="48" rx="6" class="ink-g fill-g"/>
+        <rect x="172" y="83" width="96" height="48" rx="6" class="ink-g fill-g"/>
+        <rect x="172" y="154" width="96" height="48" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M296,22 H268 M296,38 H268" marker-end="url(#ahb)"/><path class="ink-r" d="M268,54 H296" marker-end="url(#ah)"/>
+        <path class="ink" d="M296,93 H268 M296,109 H268" marker-end="url(#ahb)"/><path class="ink-r" d="M268,125 H296" marker-end="url(#ah)"/>
+        <path class="ink" d="M296,164 H268 M296,180 H268" marker-end="url(#ahb)"/><path class="ink-r" d="M268,196 H296" marker-end="url(#ah)"/>
+      </g>
+      <text x="62" y="31" text-anchor="middle" class="s w6">Data bus</text><text x="62" y="47" text-anchor="middle" class="s w6">buffer</text>
+      <text x="62" y="97" text-anchor="middle" class="s w6">Read/Write</text><text x="62" y="112" text-anchor="middle" class="s">RD′ WR′ CS′</text><text x="62" y="127" text-anchor="middle" class="s">A1 A0</text>
+      <text x="62" y="178" text-anchor="middle" class="s r w6">Control word</text><text x="62" y="194" text-anchor="middle" class="s r w6">register</text>
+      <text x="220" y="40" text-anchor="middle" class="g w6">Counter 0</text><text x="220" y="111" text-anchor="middle" class="g w6">Counter 1</text><text x="220" y="182" text-anchor="middle" class="g w6">Counter 2</text>
+      <text x="300" y="26" class="s">CLK0</text><text x="300" y="42" class="s">GATE0</text><text x="300" y="58" class="s r">OUT0</text>
+      <text x="300" y="97" class="s">CLK1</text><text x="300" y="113" class="s">GATE1</text><text x="300" y="129" class="s r">OUT1</text>
+      <text x="300" y="168" class="s">CLK2</text><text x="300" y="184" class="s">GATE2</text><text x="300" y="200" class="s r">OUT2</text>
+      <text x="2" y="10" class="s">D7–D0 ⇄</text><text x="138" y="212" class="s">internal bus</text>
+    </svg><figcaption>8254 block diagram</figcaption></figure>
+    <div>
+      <h3>24 pins at a glance</h3>
+      <ul class="dash small">
+        <li><b>D7–D0</b>: 8-bit data bus (8 pins)</li>
+        <li><b>CLK, GATE, OUT</b> × 3 counters (9 pins)</li>
+        <li><b>RD′, WR′, CS′</b> (active low), <b>A1, A0</b></li>
+        <li><b>V<sub>CC</sub></b>, <b>GND</b> → total <span class="circ">24</span></li>
+      </ul>
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>A1</th><th>A0</th><th class="l">Selects</th></tr>
+        <tr><td>0</td><td>0</td><td class="l">Counter 0</td></tr>
+        <tr><td>0</td><td>1</td><td class="l">Counter 1</td></tr>
+        <tr><td>1</td><td>0</td><td class="l">Counter 2</td></tr>
+        <tr><td>1</td><td>1</td><td class="l red"><b>Control word reg.</b></td></tr>
+      </table>
+    </div>
+  </div>
+  <h3>8253 vs 8254 (the favourite comparison)</h3>
+  <table class="hand small">
+    <tr><th class="l">Feature</th><th>8253</th><th>8254</th></tr>
+    <tr><td class="l">Maximum CLK input</td><td><span class="circ">2.6 MHz</span></td><td>8 MHz; <span class="circ">10 MHz</span> (8254-2)</td></tr>
+    <tr><td class="l">Read-back command</td><td>no</td><td class="red"><b>yes</b> (latch count + status)</td></tr>
+    <tr><td class="l">Status byte of a counter</td><td>no</td><td>yes</td></tr>
+    <tr><td class="l">Counters · modes · pins</td><td>3 · 6 · 24</td><td>3 · 6 · 24 (pin-compatible)</td></tr>
+  </table>
+  <p class="small">Inside each counter: <b>CR</b> (count register, written by the CPU) → <b>CE</b> (16-bit counting element) → <b>OL</b> (output latch, read by the CPU). The count moves CR → CE on the <span class="hl">next CLK pulse</span> after it is written.</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>3-16-6-24</b>": 3 counters, 16 bits each, 6 modes, 24 pins. 8254 = 8253 + <b>read-back</b> + faster clock.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The control word register is <b>write-only</b>; A1A0 = 11 never reads a count. Max count is loaded as <b>0000</b> = 65,536 (binary) or 10,000 (BCD).</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: control word, reading counters ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>Control word</span></div>
+  <h2><span class="no">2</span>The Control Word (A1A0 = 11)</h2><span class="tag">high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 560 104" width="560">
+    <g class="w">
+      <rect x="40" y="30" width="480" height="40" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+      <path class="ink-k" d="M100,30V70M160,30V70M220,30V70M280,30V70M340,30V70M400,30V70M460,30V70" style="stroke-width:1.4"/>
+      <rect x="40" y="30" width="120" height="40" class="fill-r" style="stroke:none"/>
+      <rect x="160" y="30" width="120" height="40" class="fill-b" style="stroke:none"/>
+      <rect x="280" y="30" width="180" height="40" class="fill-g" style="stroke:none"/>
+      <rect x="460" y="30" width="60" height="40" class="fill-p" style="stroke:none"/>
+      <path class="ink-r" d="M44,78 Q100,92 156,78"/><path class="ink" d="M164,78 Q220,92 276,78"/><path class="ink-g" d="M284,78 Q370,94 456,78"/>
+    </g>
+    <text x="70" y="22" text-anchor="middle" class="s">D7</text><text x="130" y="22" text-anchor="middle" class="s">D6</text><text x="190" y="22" text-anchor="middle" class="s">D5</text><text x="250" y="22" text-anchor="middle" class="s">D4</text><text x="310" y="22" text-anchor="middle" class="s">D3</text><text x="370" y="22" text-anchor="middle" class="s">D2</text><text x="430" y="22" text-anchor="middle" class="s">D1</text><text x="490" y="22" text-anchor="middle" class="s">D0</text>
+    <text x="70" y="56" text-anchor="middle" class="w6">SC1</text><text x="130" y="56" text-anchor="middle" class="w6">SC0</text><text x="190" y="56" text-anchor="middle" class="w6">RW1</text><text x="250" y="56" text-anchor="middle" class="w6">RW0</text><text x="310" y="56" text-anchor="middle" class="w6">M2</text><text x="370" y="56" text-anchor="middle" class="w6">M1</text><text x="430" y="56" text-anchor="middle" class="w6">M0</text><text x="490" y="56" text-anchor="middle" class="w6">BCD</text>
+    <text x="100" y="102" text-anchor="middle" class="r s">select counter</text><text x="220" y="102" text-anchor="middle" class="s">read/write</text><text x="370" y="102" text-anchor="middle" class="g s">mode 0–5</text><text x="490" y="102" text-anchor="middle" class="p s">count type</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>SC1 SC0</th><th class="l">Counter</th><th>RW1 RW0</th><th class="l">Access</th><th>M2 M1 M0</th><th class="l">Mode</th></tr>
+    <tr><td>0 0</td><td class="l">Counter 0</td><td>0 0</td><td class="l red"><b>latch command</b></td><td>0 0 0</td><td class="l">0 interrupt on TC</td></tr>
+    <tr><td>0 1</td><td class="l">Counter 1</td><td>0 1</td><td class="l">LSB only</td><td>0 0 1</td><td class="l">1 one-shot</td></tr>
+    <tr><td>1 0</td><td class="l">Counter 2</td><td>1 0</td><td class="l">MSB only</td><td>X 1 0</td><td class="l">2 rate generator</td></tr>
+    <tr><td>1 1</td><td class="l red"><b>read-back</b> (8254)</td><td>1 1</td><td class="l"><span class="hl">LSB, then MSB</span></td><td>X 1 1</td><td class="l">3 square wave</td></tr>
+    <tr><td colspan="4" class="l">D0 = BCD bit: <b>0</b> = 16-bit binary (max 65,536)</td><td>1 0 0</td><td class="l">4 soft strobe</td></tr>
+    <tr><td colspan="4" class="l"><b>1</b> = 4-decade BCD (max 10,000)</td><td>1 0 1</td><td class="l">5 hard strobe</td></tr>
+  </table>
+  <div class="ex"><span class="lbl">Worked examples: build the word ✍</span>
+    <ol class="steps small">
+      <li>Counter 0, LSB then MSB, mode 3, binary → 00 11 011 0 = <span class="circ">36H</span></li>
+      <li>Counter 2, LSB then MSB, mode 0, binary → 10 11 000 0 = <b>B0H</b></li>
+      <li>Counter 1, LSB then MSB, mode 3, BCD → 01 11 011 1 = <b>77H</b></li>
+      <li>Decode <b>74H</b> = 01 11 010 0 → counter 1, LSB/MSB, <b>mode 2</b>, binary</li>
+      <li>PC speaker: counter 2, LSB/MSB, mode 3, binary → 10 11 011 0 = <b>B6H</b></li>
+    </ol></div>
+  <h2><span class="no">3</span>Reading a Counter While It Runs</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <ol class="num small">
+      <li><b>Simple read</b>: stop the count first (GATE = 0 or block CLK), then read LSB, MSB</li>
+      <li><b>Counter latch command</b>: SC bits + <b>RW = 00</b> freezes CE into OL; counting continues (latch counter 1 = <b>40H</b>)</li>
+      <li><b>Read-back</b> (8254 only): latches count and/or <span class="hl">status</span> of several counters at once</li>
+    </ol>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Read-back word</span><br>1 1 COUNT′ STATUS′ CNT2 CNT1 CNT0 0<br>(COUNT′/STATUS′ = 0 → latch it)<br><b>Status byte:</b> OUT · NULL COUNT · RW1 RW0 · M2 M1 M0 · BCD</div>
+  </div>
+  <div class="ex small"><span class="lbl">Read-back examples ✍</span> latch count + status of counter 1 → 11 0 0 0 1 0 0 = <span class="circ">C4H</span> · latch status only of all three → 11 1 0 1 1 1 0 = <b>EEH</b> · latch counts of counters 0 and 2 → 11 0 1 1 0 1 0 = <b>DAH</b></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Who · How · What · Which number</b>": counter, access, mode, binary/BCD = 2 + 2 + 3 + 1 bits.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Mode 2 = X10, mode 3 = X11 (so 110 is mode 2). RW = 00 is <b>not</b> "no access": it is the latch command.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: six modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>Modes 0–5</span></div>
+  <h2><span class="no">4</span>The Six Modes with Output Waveforms</h2><span class="tag">high-yield</span>
+  <p class="small">All sketches use count <b>N = 4</b>; the red dashed line marks the moment the count is written (W). Count loads on the next falling CLK edge.</p>
+  <div class="cols" style="gap:0 4mm">
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,100 H146 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="106" y="114" text-anchor="middle" class="s r">N + 1 clocks low</text><text x="230" y="80" text-anchor="middle" class="s">high until rewritten</text>
+    </svg><figcaption>Mode 0: interrupt on terminal count</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,66 H70 V52 H110 V66 H306"/>
+        <path class="ink" d="M46,86 H86 V100 H166 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="72" y="48" class="s g">↑ trigger</text><text x="126" y="116" text-anchor="middle" class="s r">low for N clocks</text><text x="240" y="80" text-anchor="middle" class="s">retriggerable</text>
+    </svg><figcaption>Mode 1: hardware-retriggerable one-shot</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,86 H126 V100 H146 V86 H206 V100 H226 V86 H286 V100 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="176" y="116" text-anchor="middle" class="s r">1 clock low every N · f = f_clk ÷ N</text>
+    </svg><figcaption>Mode 2: rate generator (÷N, auto-reload)</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,86 H106 V100 H146 V86 H186 V100 H226 V86 H266 V100 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="176" y="116" text-anchor="middle" class="s r">N/2 high, N/2 low (50% duty)</text>
+    </svg><figcaption>Mode 3: square-wave generator ★</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,86 H146 V100 H166 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="156" y="116" text-anchor="middle" class="s r">1-clock strobe after N + 1</text><text x="240" y="80" text-anchor="middle" class="s">once only</text>
+    </svg><figcaption>Mode 4: software-triggered strobe</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,66 H70 V52 H100 V66 H306"/>
+        <path class="ink" d="M46,86 H166 V100 H186 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="72" y="48" class="s g">↑ trigger</text><text x="176" y="116" text-anchor="middle" class="s r">strobe N + 1 clocks after ↑</text>
+    </svg><figcaption>Mode 5: hardware-triggered strobe</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th>Mode</th><th class="l">GATE low</th><th class="l">GATE rising edge</th><th class="l">Repeats?</th><th class="l">Typical use</th></tr>
+    <tr><td>0</td><td class="l">pauses count</td><td class="l">–</td><td class="l">no</td><td class="l">delay → interrupt</td></tr>
+    <tr><td>1</td><td class="l">–</td><td class="l"><b>starts / restarts</b></td><td class="l">per trigger</td><td class="l">monostable pulse</td></tr>
+    <tr><td>2</td><td class="l">stops, OUT high</td><td class="l">reloads count</td><td class="l"><span class="hl">yes, auto-reload</span></td><td class="l">tick, baud ÷N</td></tr>
+    <tr><td>3</td><td class="l">stops, OUT high</td><td class="l">reloads count</td><td class="l"><span class="hl">yes, auto-reload</span></td><td class="l">tone, baud clock</td></tr>
+    <tr><td>4</td><td class="l">pauses count</td><td class="l">–</td><td class="l">no</td><td class="l">software strobe</td></tr>
+    <tr><td>5</td><td class="l">–</td><td class="l"><b>starts / restarts</b></td><td class="l">per trigger</td><td class="l">delayed strobe</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick: pairs</span> <b>0 &amp; 4</b> = software, once · <b>1 &amp; 5</b> = GATE-triggered · <b>2 &amp; 3</b> = periodic. Adding 4 turns a long output into a <b>1-clock strobe</b>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Mode 2 (narrow pulse) and Mode 3 (square wave) give the <b>same frequency</b> f_clk ÷ N; only the duty cycle differs. Minimum count in modes 2 and 3 is <span class="circ">2</span>.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: count maths ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>Count calculation</span></div>
+  <h2><span class="no">5</span>Count Calculation &amp; Programming</h2><span class="tag">written favourite</span>
+  <div class="sumbox"><span class="lbl">Formulas</span>
+    <div class="fgrid small">
+      <p>Modes 2, 3: <span class="circ">N = f_clk ÷ f_out</span></p><p>Delay (modes 0, 1, 4, 5): N = t × f_clk</p>
+      <p>T_clk = 1 ÷ f_clk (2 MHz → 0.5 µs)</p><p>Lowest f_out = f_clk ÷ 65,536</p>
+      <p>Mode 3, odd N: high (N+1)/2, low (N−1)/2</p><p>N &gt; 65,536 → <span class="hl">cascade two counters</span></p>
+    </div>
+  </div>
+  <div class="ex"><span class="lbl">Example 1: the classic program ✍</span> Counter 0 at port 40H, control at 43H, CLK0 = 2 MHz, want 5 kHz square wave.
+    <div class="cols" style="grid-template-columns:1fr 1fr;align-items:start">
+      <ol class="steps small"><li>N = 2 MHz ÷ 5 kHz = 400 = <b>0190H</b> (for 1 kHz: <span class="circ">2000 = 07D0H</span>)</li><li>CW: 00 11 011 0 = <b>36H</b> (counter 0, LSB/MSB, mode 3, binary)</li><li>Write CW to 43H, then LSB 90H, then MSB 01H to <b>40H</b></li></ol>
+      <div class="code">MOV AL, 36H   ; control word
+OUT 43H, AL
+MOV AL, 90H   ; LSB of 0190H
+OUT 40H, AL
+MOV AL, 01H   ; MSB of 0190H
+OUT 40H, AL</div>
+    </div></div>
+  <div class="ex"><span class="lbl">Example 2: delay ✍</span> 1 ms delay on counter 2, mode 0, CLK = 2 MHz: N = 1 ms × 2 MHz = <b>2000</b> (07D0H); CW = 10 11 000 0 = <b>B0H</b>. OUT2 goes high after 2000 + 1 clocks ≈ 1 ms → wire it to an interrupt input (8259A, lesson mp4).</div>
+  <div class="ex"><span class="lbl">Example 3: BCD ✍</span> CLK1 = 1 MHz, 1 kHz in BCD: N = 1000 → write <b>00H</b> then <b>10H</b> (BCD digits 1 0 0 0); CW = 01 11 011 1 = <b>77H</b>.</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Example 4: cascade ✍</span> 1 Hz from 2 MHz needs N = 2,000,000 &gt; 65,536, so one counter cannot do it. Counter 0, mode 2, N = <b>2000</b> → 1 kHz; feed OUT0 into CLK1; counter 1, mode 3, N = <b>1000</b> → <span class="circ">1 Hz</span>. Check: 2000 × 1000 = 2 × 10⁶ ✓</div>
+    <figure class="doodle"><svg viewBox="0 0 300 92" width="295">
+      <g class="w">
+        <rect x="70" y="20" width="70" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="196" y="20" width="70" height="40" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M8,40 H70" marker-end="url(#ahb)"/><path class="ink" d="M140,40 H196" marker-end="url(#ahb)"/><path class="ink-r" d="M266,40 H296" marker-end="url(#ah)"/>
+      </g>
+      <text x="105" y="38" text-anchor="middle" class="s w6">C0 ÷2000</text><text x="105" y="54" text-anchor="middle" class="s">mode 2</text>
+      <text x="231" y="38" text-anchor="middle" class="s w6">C1 ÷1000</text><text x="231" y="54" text-anchor="middle" class="s">mode 3</text>
+      <text x="8" y="32" class="s">2 MHz</text><text x="146" y="32" class="s">1 kHz</text><text x="262" y="80" class="s r w6">1 Hz</text>
+      <text x="168" y="80" text-anchor="middle" class="s g">OUT0 → CLK1</text>
+    </svg><figcaption>two counters in series multiply the divisors</figcaption></figure>
+  </div>
+  <div class="tipbox small"><span class="lbl">IT link: the IBM PC</span> The PC's 8253/8254 sits at ports <b>40H–43H</b> with CLK = <span class="circ">1.193182 MHz</span>. Counter 0, mode 3, count 0 (65,536) → <b>18.2 Hz</b> system tick on IRQ0 (every 54.9 ms); counter 1, mode 2, count 18 (CW 54H) → DRAM refresh every 15.1 µs; counter 2, mode 3 (CW B6H) → speaker tone (1 kHz needs N ≈ 1193).</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> N is a <b>frequency ratio</b>; do not divide periods the wrong way round. Write the count to the <b>counter's</b> port, LSB first, never to the control port.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: serial basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>Serial basics</span></div>
+  <h2><span class="no">6</span>Serial vs Parallel; Synchronous vs Asynchronous</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:auto auto;gap:0 3mm">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l"></th><th>Serial</th><th>Parallel</th></tr>
+      <tr><td class="l">Bits/clock</td><td>1</td><td>8 or more</td></tr>
+      <tr><td class="l">Distance</td><td><b>long</b></td><td>short (skew)</td></tr>
+      <tr><td class="l">Wires</td><td>few</td><td>many</td></tr>
+      <tr><td class="l">Cost</td><td>low</td><td>high</td></tr>
+      <tr><td class="l">Example</td><td>RS-232</td><td>8255A</td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l"></th><th>Asynchronous</th><th>Synchronous</th></tr>
+      <tr><td class="l">Clock</td><td>none (agreed baud)</td><td>shared / SYNC</td></tr>
+      <tr><td class="l">Framing</td><td><span class="hl">start + stop / char</span></td><td>SYNC per <b>block</b></td></tr>
+      <tr><td class="l">Overhead</td><td>high (8N1: 20%)</td><td>low</td></tr>
+      <tr><td class="l">Speed</td><td>lower</td><td>higher</td></tr>
+      <tr><td class="l">Example</td><td>UART, mouse</td><td>HDLC, SPI</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">7</span>The Asynchronous Character Frame</h2><span class="tag">high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 640 132" width="640">
+    <g class="w">
+      <path class="ink-k" d="M20,80 V40" style="stroke-width:1.2"/>
+      <path class="ink" d="M20,40 H70 V80 H110 V40 H150 V80 H350 V40 H390 V80 H470 V40 H560" style="stroke-width:2.8"/>
+      <path class="ink-k" d="M70,30V92M110,30V92M150,30V92M190,30V92M230,30V92M270,30V92M310,30V92M350,30V92M390,30V92M430,30V92M470,30V92M510,30V92" stroke-dasharray="3 4" style="stroke-width:1"/>
+      <rect x="70" y="94" width="40" height="18" class="fill-r" style="stroke:none"/><rect x="110" y="94" width="320" height="18" class="fill-b" style="stroke:none"/><rect x="430" y="94" width="40" height="18" class="fill-p" style="stroke:none"/><rect x="470" y="94" width="40" height="18" class="fill-g" style="stroke:none"/>
+    </g>
+    <text x="4" y="45" class="s">1</text><text x="4" y="85" class="s">0</text>
+    <text x="36" y="28" class="s">idle</text><text x="530" y="28" class="s">idle (1)</text>
+    <text x="130" y="68" text-anchor="middle" class="s">1</text><text x="170" y="68" text-anchor="middle" class="s">0</text><text x="210" y="68" text-anchor="middle" class="s">0</text><text x="250" y="68" text-anchor="middle" class="s">0</text><text x="290" y="68" text-anchor="middle" class="s">0</text><text x="330" y="68" text-anchor="middle" class="s">0</text><text x="370" y="68" text-anchor="middle" class="s">1</text><text x="410" y="68" text-anchor="middle" class="s">0</text><text x="450" y="68" text-anchor="middle" class="s p">0</text>
+    <text x="90" y="107" text-anchor="middle" class="s r w6">start</text><text x="270" y="107" text-anchor="middle" class="s w6">D0 (LSB) … D7 (MSB)</text><text x="450" y="107" text-anchor="middle" class="s p w6">P</text><text x="490" y="107" text-anchor="middle" class="s g w6">stop</text>
+    <text x="320" y="128" text-anchor="middle" class="s r">'A' = 41H = 0100 0001 · even parity → P = 0 · 1 + 8 + 1 + 1 = 11 bits</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <ul class="dash small" style="margin-top:0">
+      <li>Idle line = <b>1 (mark)</b>; <span class="hl">start bit = 0</span> (1 bit, the 1→0 edge wakes the receiver)</li>
+      <li>Data: <b>5–8 bits, LSB first</b></li>
+      <li>Parity: even / odd / none (optional)</li>
+      <li>Stop bit(s) = 1: <b>1, 1.5 or 2</b> bits</li>
+    </ul>
+    <div class="def small" style="margin-top:0"><span class="lbl">Baud vs bit rate</span> <b>Baud</b> = signal changes (symbols) per second; <b>bit rate</b> = baud × bits per symbol. With 2-level signalling (RS-232, UART) <span class="circ">baud = bps</span>.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span> ① 9600 baud, 8N1 (1 + 8 + 1 = 10 bits) → <span class="circ">960 chars/s</span>; bit time = 1 ÷ 9600 = 104.17 µs · ② 9600 baud, 8 data + parity + 2 stop = 12 bits → <b>800 chars/s</b> · ③ modem at 2400 baud with 16 levels (4 bits/symbol) → 2400 × 4 = <b>9600 bps</b> · ④ efficiency of 8N1 = 8 ÷ 10 = <b>80%</b></div>
+  <h2><span class="no">8</span>Simplex, Half Duplex, Full Duplex</h2>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 120" width="325">
+      <g class="w">
+        <rect x="4" y="6" width="40" height="28" rx="6" class="ink fill-b"/><rect x="200" y="6" width="40" height="28" rx="6" class="ink fill-b"/>
+        <rect x="4" y="46" width="40" height="28" rx="6" class="ink fill-b"/><rect x="200" y="46" width="40" height="28" rx="6" class="ink fill-b"/>
+        <rect x="4" y="86" width="40" height="28" rx="6" class="ink fill-b"/><rect x="200" y="86" width="40" height="28" rx="6" class="ink fill-b"/>
+        <path class="ink-r" d="M48,20 H196" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M52,60 H192" marker-start="url(#ahp)" marker-end="url(#ahp)" stroke-dasharray="7 4"/>
+        <path class="ink-g" d="M48,94 H196" marker-end="url(#ahg)"/><path class="ink-g" d="M196,108 H48" marker-end="url(#ahg)"/>
+      </g>
+      <text x="24" y="25" text-anchor="middle" class="s">A</text><text x="220" y="25" text-anchor="middle" class="s">B</text><text x="24" y="65" text-anchor="middle" class="s">A</text><text x="220" y="65" text-anchor="middle" class="s">B</text><text x="24" y="105" text-anchor="middle" class="s">A</text><text x="220" y="105" text-anchor="middle" class="s">B</text>
+      <text x="248" y="25" class="s r w6">simplex</text><text x="248" y="65" class="s p w6">half duplex</text><text x="248" y="105" class="s g w6">full duplex</text>
+    </svg></figure>
+    <ul class="dash small">
+      <li><b>Simplex</b>: one way only (broadcast radio/TV, keyboard → CPU)</li>
+      <li><b>Half duplex</b>: both ways, <b>one at a time</b> (walkie-talkie)</li>
+      <li><b>Full duplex</b>: both ways <span class="hl">at the same time</span> (telephone; RS-232 with TxD + RxD)</li>
+    </ul>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> The frame "<b>starts low, stops high</b>": start = 0, stop = 1, so every character begins with a guaranteed 1 → 0 edge.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: RS-232 ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>EIA RS-232</span></div>
+  <h2><span class="no">9</span>EIA RS-232: the Physical Standard</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> RS-232 (EIA "Recommended Standard", 1962; RS-232-C 1969) defines the <span class="hl">electrical, mechanical and functional</span> interface between a <b>DTE</b> (data terminal equipment: PC) and a <b>DCE</b> (data circuit-terminating equipment: modem). Single-ended, point-to-point, <span class="hl">negative logic</span> on data lines.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 206" width="295">
+      <g class="w">
+        <path class="ink-k" d="M60,8 V198"/>
+        <rect x="62" y="12" width="120" height="66" class="fill-g" style="stroke:none"/>
+        <rect x="62" y="78" width="120" height="44" style="fill:rgba(150,150,150,.25);stroke:none"/>
+        <rect x="62" y="122" width="120" height="66" class="fill-r" style="stroke:none"/>
+        <path class="ink-k" d="M56,100 H186" style="stroke-width:1.2"/>
+        <path class="ink" d="M190,150 C215,150 210,40 236,40" marker-end="url(#ahb)"/>
+      </g>
+      <text x="54" y="18" text-anchor="end" class="s">+25 V</text><text x="54" y="82" text-anchor="end" class="s">+3 V</text><text x="54" y="104" text-anchor="end" class="s">0</text><text x="54" y="126" text-anchor="end" class="s">−3 V</text><text x="54" y="192" text-anchor="end" class="s">−25 V</text>
+      <text x="122" y="42" text-anchor="middle" class="g w6">SPACE = 0</text><text x="122" y="60" text-anchor="middle" class="s g">(control: ON)</text>
+      <text x="122" y="96" text-anchor="middle" class="s">undefined</text>
+      <text x="122" y="152" text-anchor="middle" class="r w6">MARK = 1</text><text x="122" y="170" text-anchor="middle" class="s r">(idle; control OFF)</text>
+      <text x="240" y="30" class="s w6">MAX232</text><text x="240" y="46" class="s">±V ↔ TTL</text><text x="240" y="62" class="s">(inverts)</text>
+    </svg><figcaption>RS-232 data-line levels</figcaption></figure>
+    <div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Parameter</th><th class="l">Value</th></tr>
+      <tr><td class="l">Logic 1 (mark)</td><td class="l"><span class="circ">−3 to −25 V</span></td></tr>
+      <tr><td class="l">Logic 0 (space)</td><td class="l"><b>+3 to +25 V</b></td></tr>
+      <tr><td class="l">Driver (typ.)</td><td class="l">±5 to ±15 V (±12 V)</td></tr>
+      <tr><td class="l">Max length</td><td class="l">≈ 15 m (50 ft)</td></tr>
+      <tr><td class="l">Max rate</td><td class="l">20 kbps (spec)</td></tr>
+      <tr><td class="l">Connector</td><td class="l">DB-25, DB-9 (PC)</td></tr>
+    </table>
+    <p class="small">TTL ↔ RS-232: <b>MAX232</b> (single +5 V, charge pumps) or MC1488 driver + MC1489 receiver.</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Signal (DTE view)</th><th>DB-9</th><th>DB-25</th></tr>
+      <tr><td class="l">TxD transmit data</td><td class="red"><b>3</b></td><td class="red"><b>2</b></td></tr>
+      <tr><td class="l">RxD receive data</td><td class="red"><b>2</b></td><td class="red"><b>3</b></td></tr>
+      <tr><td class="l">RTS request to send</td><td>7</td><td>4</td></tr>
+      <tr><td class="l">CTS clear to send</td><td>8</td><td>5</td></tr>
+      <tr><td class="l">DSR data set ready</td><td>6</td><td>6</td></tr>
+      <tr><td class="l">Signal ground</td><td><b>5</b></td><td><b>7</b></td></tr>
+      <tr><td class="l">DCD carrier detect</td><td>1</td><td>8</td></tr>
+      <tr><td class="l">DTR data terminal ready</td><td>4</td><td>20</td></tr>
+      <tr><td class="l">RI ring indicator</td><td>9</td><td>22</td></tr>
+    </table>
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 270 150" width="265">
+        <g class="w">
+          <rect x="6" y="8" width="66" height="134" rx="8" class="ink fill-b"/><rect x="198" y="8" width="66" height="134" rx="8" class="ink fill-b"/>
+          <path class="ink-r" d="M72,30 L198,52 M72,52 L198,30"/>
+          <path class="ink-g" d="M72,76 L198,98 M72,98 L198,76"/>
+          <path class="ink-p" d="M72,120 H198"/>
+        </g>
+        <text x="39" y="24" text-anchor="middle" class="s w6">DTE 1</text><text x="231" y="24" text-anchor="middle" class="s w6">DTE 2</text>
+        <text x="66" y="35" text-anchor="end" class="s">TxD</text><text x="66" y="57" text-anchor="end" class="s">RxD</text><text x="204" y="35" class="s">TxD</text><text x="204" y="57" class="s">RxD</text>
+        <text x="66" y="81" text-anchor="end" class="s">RTS</text><text x="66" y="103" text-anchor="end" class="s">CTS</text><text x="204" y="81" class="s">RTS</text><text x="204" y="103" class="s">CTS</text>
+        <text x="66" y="124" text-anchor="end" class="s">GND</text><text x="204" y="124" class="s">GND</text>
+        
+      </svg><figcaption>null modem: cross TxD↔RxD, RTS↔CTS, DTR↔DSR</figcaption></figure>
+    </div>
+  </div>
+  <p class="small"><b>Handshake:</b> DTR/DSR = "ready"; RTS/CTS = "may I send?" / "go ahead" (flow control); DCD = carrier; RI = ringing. A <span class="hl">null modem</span> links two DTEs (minimum: TxD, RxD crossed + GND).</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Standard</th><th>Signalling</th><th>Topology</th><th>Max distance</th><th>Max rate</th></tr>
+    <tr><td class="l"><b>RS-232</b></td><td>single-ended</td><td>1 driver, 1 receiver</td><td>≈ 15 m</td><td>20 kbps</td></tr>
+    <tr><td class="l">RS-422</td><td><span class="hl">differential</span></td><td>1 driver, 10 receivers</td><td>1200 m</td><td>10 Mbps</td></tr>
+    <tr><td class="l">RS-485</td><td>differential</td><td><b>multi-drop</b>, 32 nodes</td><td>1200 m</td><td>10 Mbps</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> TxD is pin <b>3</b> on DB-9 but pin <b>2</b> on DB-25; ground is 5 vs 7. Data lines use negative logic, but control lines are <b>asserted (ON) when positive</b>.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Mark is minus</b>": both start with M. A line idling at about −12 V is sending 1s.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: 8251 architecture ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>8251 USART</span></div>
+  <h2><span class="no">10</span>8251A USART (Communication Interface)</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> The Intel 8251A <span class="hl">Universal Synchronous/Asynchronous Receiver/Transmitter</span> (28 pins, +5 V) turns CPU bytes into serial bits (<b>P → S</b>, TxD) and serial input into bytes (<b>S → P</b>, RxD); full duplex.</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ul class="dash small" style="margin-top:0">
+      <li>Async: <b>5–8 data bits</b>, clock ×1, ×16 or ×64, 1/1.5/2 stop bits, up to <span class="circ">19.2 kbps</span></li>
+      <li>Sync: one or two SYNC characters, internal or external sync detect, up to <span class="circ">64 kbps</span></li>
+      <li>Parity even/odd/none; detects parity, overrun, framing errors and break</li>
+    </ul>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">UART vs USART</span><br><b>UART</b> = async only (8250, <b>16550</b>: 16-byte FIFO, PC COM ports)<br><b>USART</b> = both modes (<b>8251A</b>)</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 640 214" width="640">
+    <g class="w">
+      <path class="ink-k" d="M200,10 V206" style="stroke-width:5"/>
+      <rect x="40" y="12" width="130" height="40" rx="6" class="ink fill-b"/>
+      <rect x="40" y="66" width="130" height="62" rx="6" class="ink fill-b"/>
+      <rect x="40" y="142" width="130" height="62" rx="6" class="ink-p fill-p"/>
+      <rect x="240" y="12" width="150" height="40" rx="6" class="ink-g fill-g"/>
+      <rect x="240" y="62" width="150" height="40" rx="6" class="ink-g fill-g"/>
+      <rect x="240" y="116" width="150" height="40" rx="6" class="ink-r fill-r"/>
+      <rect x="240" y="166" width="150" height="40" rx="6" class="ink-r fill-r"/>
+      <path class="ink" d="M170,32 H200 M170,97 H200 M170,173 H200 M200,32 H240 M200,82 H240 M200,136 H240 M200,186 H240"/>
+      <path class="ink-g" d="M390,32 H470" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M390,82 H470" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M470,136 H390" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M470,186 H390" marker-end="url(#ah)"/>
+      <path class="ink" d="M4,32 H40" marker-start="url(#ahb)" marker-end="url(#ahb)"/>
+    </g>
+    <text x="105" y="37" text-anchor="middle" class="s w6">Data bus buffer</text><text x="2" y="68" class="s">D7–D0</text>
+    <text x="105" y="84" text-anchor="middle" class="s w6">Read/Write control</text><text x="105" y="101" text-anchor="middle" class="s">RD′ WR′ CS′</text><text x="105" y="118" text-anchor="middle" class="s">C/D′ RESET CLK</text>
+    <text x="105" y="164" text-anchor="middle" class="s p w6">Modem control</text><text x="105" y="182" text-anchor="middle" class="s">DSR′ DTR′</text><text x="105" y="198" text-anchor="middle" class="s">CTS′ RTS′</text>
+    <text x="315" y="37" text-anchor="middle" class="s w6">Transmit buffer (P→S)</text><text x="315" y="87" text-anchor="middle" class="s w6">Transmit control</text>
+    <text x="315" y="141" text-anchor="middle" class="s w6">Receive buffer (S→P)</text><text x="315" y="191" text-anchor="middle" class="s w6">Receive control</text>
+    <text x="476" y="37" class="s g w6">TxD</text><text x="476" y="87" class="s g">TxRDY · TxEMPTY · TxC′</text>
+    <text x="476" y="141" class="s r w6">RxD</text><text x="476" y="191" class="s r">RxRDY · RxC′ · SYNDET/BRKDET</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>C/D′</th><th>RD′</th><th>WR′</th><th class="l">Operation</th></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td class="l">CPU reads <b>data</b></td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td class="l">CPU writes <b>data</b></td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td class="l">CPU reads <span class="hl">status</span></td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td class="l">CPU writes <span class="hl">mode / command</span></td></tr>
+    </table>
+    <ul class="dash small" style="margin-top:0">
+      <li><b>TxRDY</b>: CPU may write the next byte</li>
+      <li><b>TxEMPTY</b>: last bit has left TxD</li>
+      <li><b>RxRDY</b>: a byte is waiting for the CPU</li>
+      <li>TxRDY/RxRDY can drive IRQs (8259A)</li>
+    </ul>
+  </div>
+  <h3>Interfacing serial I/O devices</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Device</th><th class="l">How it is interfaced</th></tr>
+    <tr><td class="l">Serial mouse</td><td class="l">async RS-232, classically <b>1200 baud, 7N1</b>, 3-byte packets</td></tr>
+    <tr><td class="l" style="white-space:nowrap">Modem (DCE)</td><td class="l">async RS-232 + full handshake; digital ↔ analog; AT commands</td></tr>
+    <tr><td class="l">PC keyboard</td><td class="l"><span class="hl">synchronous serial</span> (CLOCK + DATA), 11-bit frame, scan codes → 8042, port 60H, IRQ1</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> C/D′ = "<b>C</b>ontrol when 1, <b>D</b>ata when 0". Control + read = status; control + write = mode/command.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The 8251 has <b>no internal baud generator</b>: TxC/RxC must come from outside, typically an 8254 in mode 3.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: 8251 words ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>8251 words</span></div>
+  <h2><span class="no">11</span>Mode, Command and Status Words</h2><span class="tag">high-yield</span>
+  <h3>Mode word (asynchronous): written first after reset</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>D7 D6: S2 S1</th><th>D5: EP</th><th>D4: PEN</th><th>D3 D2: L2 L1</th><th>D1 D0: B2 B1</th></tr>
+    <tr><td>stop bits</td><td>parity type</td><td>parity enable</td><td>data bits</td><td>baud factor</td></tr>
+    <tr><td>00 invalid · 01 = 1</td><td>1 = even</td><td>1 = on</td><td>00 = 5 · 01 = 6</td><td>00 = <b>sync</b> · 01 = ×1</td></tr>
+    <tr><td>10 = 1.5 · 11 = 2</td><td>0 = odd</td><td>0 = none</td><td>10 = 7 · 11 = 8</td><td>10 = ×16 · 11 = ×64</td></tr>
+  </table>
+  <p class="small">Sync mode word: B2B1 = 00; D7 = <b>SCS</b> (1 = one SYNC char), D6 = <b>ESD</b> (1 = external sync).</p>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span> ① 8 data, no parity, 1 stop, ×16 → 01 0 0 11 10 = <span class="circ">4EH</span> · ② 7 data, even parity, 2 stop, ×64 → 11 1 1 10 11 = <b>FBH</b> · ③ 7 data, odd parity, 1 stop, ×16 → 01 0 1 10 10 = <b>5AH</b> · ④ decode <b>7EH</b> = 01 1 1 11 10 → 1 stop, even parity, 8 data, ×16</div>
+  <h3>Command word: every later control write</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th>D7</th><th>D6</th><th>D5</th><th>D4</th><th>D3</th><th>D2</th><th>D1</th><th>D0</th></tr>
+    <tr><td><b>EH</b></td><td><b>IR</b></td><td><b>RTS</b></td><td><b>ER</b></td><td><b>SBRK</b></td><td><b>RxE</b></td><td><b>DTR</b></td><td><b>TxEN</b></td></tr>
+    <tr class="tiny" style="white-space:nowrap"><td>hunt</td><td>reset</td><td>RTS′ = 0</td><td>clear errors</td><td>break</td><td>Rx on</td><td>DTR′ = 0</td><td>Tx on</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span> RTS + ER + RxE + DTR + TxEN → 0011 0111 = <span class="circ">37H</span> · ER + RxE + TxEN → <b>15H</b> · internal reset → <b>40H</b></div>
+  <h3>Status word: read with C/D′ = 1</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th>D7</th><th>D6</th><th>D5</th><th>D4</th><th>D3</th><th>D2</th><th>D1</th><th>D0</th></tr>
+    <tr><td>DSR</td><td>SYNDET</td><td><b>FE</b> framing</td><td><b>OE</b> overrun</td><td><b>PE</b> parity</td><td>TxEMPTY</td><td class="red"><b>RxRDY</b></td><td class="red"><b>TxRDY</b></td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Decode ✍</span> 85H = 1000 0101 → DSR, TxEMPTY, <b>TxRDY</b>: free to send · 1AH = 0001 1010 → <b>OE + PE + RxRDY</b>: byte with parity error, an earlier byte lost</div>
+  <h3>Initialise and poll (data 80H, control 81H)</h3>
+  <ol class="steps small">
+    <li>Reset: write <b>00H three times, then 40H</b> (internal reset) to the control port</li>
+    <li><b>Mode word</b> (e.g. 4EH); in sync mode follow it with 1 or 2 SYNC characters</li>
+    <li><b>Command word</b> (e.g. 37H), then poll status and move data</li>
+  </ol>
+  <div class="cols" style="grid-template-columns:1fr 1fr;margin-top:2mm">
+    <div class="code" style="margin-top:0">TX: IN   AL, 81H ; status
+    TEST AL, 01H ; TxRDY?
+    JZ   TX
+    MOV  AL, BL
+    OUT  80H, AL ; send</div>
+    <div class="code" style="margin-top:0">RX: IN   AL, 81H ; status
+    TEST AL, 02H ; RxRDY?
+    JZ   RX
+    IN   AL, 80H ; byte in</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> From D0 up: "<b>T-R-T</b>" (TxRDY, RxRDY, TxEMPTY), then errors "<b>P-O-F</b>".</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Baud = TxC ÷ factor: 9600 baud at ×16 needs TxC = <b>153.6 kHz</b>. FE exists in <b>async</b> mode only.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>8254: 3 × 16-bit, 6 modes, 24 pins</p><p>8253 2.6 MHz · 8254-2 10 MHz</p>
+      <p>A1A0 = 11 → control word (write-only)</p><p>CW = SC1 SC0 RW1 RW0 M2 M1 M0 BCD</p>
+      <p>RW 00 = latch · 11 = LSB then MSB</p><p>Read-back (8254 only): 11 C′ S′ C2 C1 C0 0</p>
+      <p>N = f_clk ÷ f_out · count 0 = 65,536</p><p>36H = C0, LSB/MSB, mode 3, binary</p>
+      <p>Frame: 0 · 5–8 data, LSB first · P · 1</p><p>8N1 at 9600 baud → 960 chars/s</p>
+      <p>RS-232: 1 = −3…−25 V · 0 = +3…+25 V</p><p>DB-9: TxD 3, RxD 2, GND 5</p>
+      <p>8251 C/D′: 1 = control/status, 0 = data</p><p>4EH = 8N1 ×16 · 37H = Tx Rx ER RTS DTR</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Mode 3 = square-wave generator</li>
+      <li>Mode 2 = rate generator (÷N)</li>
+      <li>Mode 0 = interrupt on terminal count</li>
+      <li>Modes 1, 5 = triggered by GATE ↑</li>
+      <li>Read-back command: 8254 only</li>
+      <li>PC timer clock 1.193182 MHz, 18.2 Hz tick</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>bps = baud × bits per symbol</li>
+      <li>Async = start/stop per character</li>
+      <li>RS-232 = negative logic, ≈ 15 m</li>
+      <li>MAX232: TTL ↔ RS-232 from +5 V</li>
+      <li>Null modem crosses TxD ↔ RxD</li>
+      <li>8251 status D0 = TxRDY, D1 = RxRDY</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> A1A0 = 11 is the control register, not counter 3 · RW = 00 is the latch command · LSB before MSB, to the counter port · mode 2 vs 3: same frequency, different duty · TxD = pin 3 on DB-9, pin 2 on DB-25 · mark (1) is negative · baud = bps only for 2-level signals · 8251 needs an external baud clock</div>
+  <div class="trick"><span class="lbl">All tricks together</span> 3-16-6-24 · "Who · How · What · Which number" for the CW · mode pairs 0&amp;4, 1&amp;5, 2&amp;3 · start low, stop high · mark is minus · C/D′: Control = 1 · status bits T-R-T, then P-O-F</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="26" width="100" height="44" rx="8" class="ink fill-b"/>
+      <rect x="170" y="26" width="110" height="44" rx="8" class="ink-g fill-g"/>
+      <rect x="340" y="26" width="100" height="44" rx="8" class="ink-p fill-p"/>
+      <rect x="500" y="26" width="90" height="44" rx="8" class="ink-r fill-r"/>
+      <path class="ink" d="M110,48 H170" marker-end="url(#ahb)"/><path class="ink-g" d="M280,48 H340" marker-end="url(#ahg)"/><path class="ink-p" d="M440,48 H500" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="53" text-anchor="middle" class="s w6">8086 CPU</text>
+    <text x="225" y="45" text-anchor="middle" class="s w6">8251 USART</text><text x="225" y="61" text-anchor="middle" class="s">TxC ← 8254</text>
+    <text x="390" y="45" text-anchor="middle" class="s w6">MAX232</text><text x="390" y="61" text-anchor="middle" class="s">TTL → ±V</text>
+    <text x="545" y="53" text-anchor="middle" class="s r w6">DB-9</text>
+    <text x="140" y="40" text-anchor="middle" class="s">bytes</text><text x="310" y="40" text-anchor="middle" class="s g">bits</text><text x="470" y="40" text-anchor="middle" class="s p">±12 V</text>
+    <text x="300" y="92" text-anchor="middle" class="s g">the complete serial port chain: parallel → serial → line levels → connector</text>
+  </svg></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 Timer &amp; Serial I/O</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Which feature does the 8254 have that the 8253 lacks?<ol class="opts"><li>Six modes</li><li>BCD count</li><li>3 counters</li><li>Read-back</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>The 8254 control word 36H selects:<ol class="opts"><li>C0, mode 3</li><li>C1, mode 2</li><li>C2, mode 3</li><li>C2, mode 0</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>In the 8254, A1A0 = 11 selects:<ol class="opts"><li>Counter 0</li><li>Counter 2</li><li>Control reg.</li><li>Status reg.</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>8254 mode for a square wave:<ol class="opts"><li>Mode 2</li><li>Mode 3</li><li>Mode 1</li><li>Mode 5</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>2 MHz CLK, 4 kHz square wave: N = ?<ol class="opts"><li>2000</li><li>400</li><li>250</li><li>500</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>In RS-232, logic 1 (mark) is:<ol class="opts"><li>+3 to +25 V</li><li>−3 to −25 V</li><li>0 to +5 V</li><li>−3 to +3 V</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>On a PC's DB-9 connector, TxD is pin:<ol class="opts"><li>2</li><li>3</li><li>5</li><li>7</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>9600 baud, 1 start + 8 data + parity + 2 stop: chars/s?<ol class="opts"><li>960</li><li>1200</li><li>800</li><li>873</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>8251 mode word 4EH means:<ol class="opts"><li>8N1, ×16</li><li>7E2, ×64</li><li>8O1, ×1</li><li>sync, 8 bits</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>8251 status bit: received byte waiting?<ol class="opts"><li>TxRDY</li><li>TxEMPTY</li><li>SYNDET</li><li>RxRDY</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-d · 2-a · 3-c · 4-b · 5-d · 6-b · 7-b · 8-c · 9-a · 10-d</div>
+
+  <div class="wq"><span class="lbl">Written question</span> 8254 counter 0 (port 80H, control 83H, CLK0 = 1.8432 MHz) must clock an 8251 (data 90H, control 91H) for 9600 baud at ×16. Program both (8251: 8 data, even parity, 1 stop, Tx + Rx on). <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>TxC = 9600 × 16 = 153.6 kHz → N = 1,843,200 ÷ 153,600 = <span class="circ">12 = 000CH</span> <i class="mk">2</i></li>
+    <li>8254 CW: counter 0, LSB/MSB, mode 3, binary = <b>36H</b> <i class="mk">2</i></li>
+    <li>8251 mode: 01 1 1 11 10 = <b>7EH</b> (1 stop, even parity, 8 bits, ×16) <i class="mk">2</i></li>
+    <li>8251 command: <b>37H</b> (TxEN, DTR, RxE, ER, RTS); program below <i class="mk">2</i></li>
+  </ol>
+  <div class="cols" style="grid-template-columns:1fr 1fr;margin-top:2mm">
+    <div class="code" style="margin-top:0">MOV AL, 36H
+OUT 83H, AL   ; 8254 CW
+MOV AL, 0CH
+OUT 80H, AL   ; LSB
+MOV AL, 00H
+OUT 80H, AL   ; MSB</div>
+    <div class="code" style="margin-top:0">MOV AL, 7EH
+OUT 91H, AL   ; 8251 mode
+MOV AL, 37H
+OUT 91H, AL   ; command</div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Build/decode any 8254 control word</li>
+        <li>Sketch OUT for all six modes</li>
+        <li>Find N; cascade when N &gt; 65,536</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:2mm 2mm 0 4mm"><b>Also practise (written):</b><br>① 8254 at 2 MHz: 1 ms delay<br>② Latch and read counter 1<br>③ 8251 receive with error check</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

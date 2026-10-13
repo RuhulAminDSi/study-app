@@ -77,6 +77,22 @@ Finally confirm each PDF has exactly as many pages as there are sheets:
 
 Fill tips: a sheet is 297 mm with fixed margins; if a sheet overflows move a block to the next sheet or tighten
 a table with `class="small"`; if it is under 72% add a worked example, a table row, or an exam trap, never filler.
+The **last sheet is exempt** from the 72% floor, so a short closing sheet is the right place to move overflow to.
+A sheet far over the gate needs redistribution — split it, then donate a whole section from an adjacent over-full
+sheet — because there is never enough content on one sheet to fill two.
+
+The gate does **not** check sideways. A sheet can read 88% and still be broken: a wide table's min-content width
+overflows a `minmax(0,1fr)` track into the neighbouring column, and `figure.doodle svg` has `overflow: visible`,
+so a `<text>` wider than the `viewBox` escapes onto the page. Also keep `.circ` from wrapping — it is
+`inline-block` with an ellipse sized to the box, so a wrapped phrase balloons the circle over its neighbours.
+
+`.ink-b` does not exist in `hw.css`; an unstyled path falls back to `fill: black` and renders as a solid blob.
+Use `.ink`.
+
+`.mnote` and `.sticky` are `float: right` at fixed widths (42mm / 52mm). At full page width that is the intended
+margin-note look; inside a two-column `.cols` layout they squeeze the neighbouring text into an unreadable ribbon and
+two of them overlap. Inside a column add `style="float:none;width:auto"`, or use `.def` / `.sumbox` / `.trick`, which
+are block elements and are safe anywhere. Neither overflow nor overlap is caught by `check.mjs` — read the PNGs.
 
 ## Do not
 Edit `hw.css`, other note sources, `server/data/notes/manifest.json`, or anything in `public/`; run `publish.mjs`

@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Query Languages: Relational Algebra &amp; SQL: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Query Languages: RA &amp; SQL</span></h1>
+  <p class="subtitle">Relational algebra · SQL command families · the six joins · aggregates, NULL &amp; GROUP BY: exam-ready in 10 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">QUERY LANGUAGES</text><text x="320" y="172" text-anchor="middle" class="r s">relational algebra · SQL</text>
+      <text x="142" y="58" text-anchor="middle" class="s" style="font-size:10px">Set operators</text><text x="142" y="72" text-anchor="middle" class="s" style="font-size:10px">∪ &nbsp;−&nbsp; ∩</text>
+      <text x="320" y="40" text-anchor="middle" class="r w6" style="font-size:11px">σ π ρ × ⋈ ★</text>
+      <text x="498" y="58" text-anchor="middle" class="s" style="font-size:10px">SELECT clause</text><text x="498" y="72" text-anchor="middle" class="s" style="font-size:10px">order ★</text>
+      <text x="96" y="148" text-anchor="middle" class="g w6" style="font-size:10px">DDL · DML</text><text x="96" y="163" text-anchor="middle" class="g w6" style="font-size:10px">DCL · TCL ★</text>
+      <text x="544" y="148" text-anchor="middle" class="r w6" style="font-size:10px">Six JOINs ★</text><text x="544" y="163" text-anchor="middle" class="r w6" style="font-size:10px">row counts</text>
+      <text x="142" y="238" text-anchor="middle" class="s" style="font-size:10px">Subqueries:</text><text x="142" y="252" text-anchor="middle" class="s" style="font-size:10px">correlated</text>
+      <text x="320" y="270" text-anchor="middle" class="r w6" style="font-size:10px">WHERE vs HAVING ★</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6" style="font-size:10px">Aggregates</text><text x="498" y="252" text-anchor="middle" class="r w6" style="font-size:10px">and NULL ★</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the practical side</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm;line-height:5.6mm"><b>High-yield list</b><br>① σ filters <b>rows</b>, π chooses <b>columns</b><br>② ρ renames; × pairs every row with every row<br>③ DDL · DML · DCL · TCL — four families<br>④ <span class="circ">DROP</span> kills structure; DELETE/TRUNCATE do not<br>⑤ WHERE filters <b>before</b> grouping, HAVING <b>after</b><br>⑥ <span class="circ">COUNT(*)=5, COUNT(a)=3</span> on 1,NULL,3,NULL,5<br>⑦ AVG of 10,NULL,20 = <b>15</b>, never 10<br>⑧ NULL never equals anything in a join<br>⑨ 6 joins: INNER, LEFT, RIGHT, FULL, CROSS, SELF<br>⑩ σ ⇒ the WHERE clause; π ⇒ the SELECT list</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The Database Systems syllabus reads: "Concepts of database systems; Data Models: Entity-Relationship model, Relational model; <span class="hl">Query Languages: Relational algebra, SQL</span>; Constraints and triggers; Functional dependencies and normalization; File organization and data storage; Indexing: primary and secondary indexes, B+ trees, hash tables; Query optimization; …" <b>This lesson takes the "Query Languages" clause only.</b> Constraints and triggers are one line further down the same line — they were covered with the data models; normalisation, indexing and transactions have their own lessons.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>RA: the eight operators … p. 2</li><li>Students / Courses worked in RA … p. 3</li><li>Product, rename, join, SQL ⇄ RA … p. 4</li><li>SQL: DDL, DML, DCL, TCL … p. 5</li><li>Aggregates, NULL, GROUP BY … p. 6</li><li>The six joins, row by row … p. 7</li></ul>
+    <ul class="tick"><li>Join patterns &amp; subqueries … p. 8</li><li>Night-before sheet … p. 9</li><li>Practice MCQs + written … p. 10</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: relational algebra operators ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>Relational algebra</span></div>
+  <h2><span class="no">1</span>Relational Algebra (RA): the Eight Operators</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Relational algebra</b> is the <span class="hl">theoretical</span> language of queries: every request is written as a sequence of operations applied to relations, and the result of one step is the input of the next. It has <span class="hl">five primitive operations</span> (σ, π, ρ, ×, and the assignment) from which the rest — join, intersection, division — are derived. Every step returns a <span class="hl">relation</span>, so steps can be chained freely.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Operation</th><th>Symbol</th><th class="l">What it does</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Selection</b></td><td class="l">σ</td><td class="l">keeps the <span class="hl">rows</span> that satisfy a condition</td><td class="l"><code>σ salary&gt;50000 (Emp)</code></td></tr>
+    <tr><td class="l"><b>Projection</b></td><td>π</td><td class="l">keeps the chosen <span class="hl">columns</span>; removes duplicates</td><td class="l"><code>π name,salary (Emp)</code></td></tr>
+    <tr><td class="l"><b>Union</b></td><td>∪</td><td class="l">every tuple of both relations, once</td><td class="l"><code>A ∪ B</code></td></tr>
+    <tr><td class="l"><b>Set difference</b></td><td>−</td><td class="l">tuples in A that are <b>not</b> in B</td><td class="l"><code>A − B</code></td></tr>
+    <tr><td class="l"><b>Intersection</b></td><td>∩</td><td class="l">tuples present in both</td><td class="l"><code>A ∩ B</code></td></tr>
+    <tr><td class="l"><b>Cartesian product</b></td><td>×</td><td class="l"><span class="red"><b>every row of A with every row of B</b></span></td><td class="l"><code>Emp × Dept</code></td></tr>
+    <tr><td class="l"><b>Rename</b></td><td>ρ</td><td class="l">renames a relation or an attribute</td><td class="l"><code>ρ pay/salary (Emp)</code></td></tr>
+    <tr><td class="l"><b>Join</b></td><td>⋈</td><td class="l">product then selection — natural or θ</td><td class="l"><code>Emp ⋈ Dept</code></td></tr>
+  </table>
+  <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Derived operations</span> Everything that is not primitive is built from the five: <b>θ-join</b> = <code>σ<sub>A=B</sub>(R × S)</code> · <b>natural join</b> = θ-join plus automatic removal of the duplicated join attribute · <b>intersection</b> = <code>A − (A − B)</code> · <b>rename</b> is primitive, but <code>ρ</code> is what makes a self-join legal.</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked example ✍ the set operators</span> <code>A = {1, 2, 3}</code>, <code>B = {3, 4}</code> → <code>A ∪ B = {1,2,3,4}</code> (<b>4</b>, the 3 appears once) · <code>A − B = {1,2}</code> · <code>A ∩ B = {3}</code> · <code>A × B</code> = <b>3 × 2 = 6</b> tuples, all distinct.<br>
+    <span class="tiny">∪, ∩ and − need <b>union-compatible</b> relations (same attributes, same domains) and never repeat a tuple. The product needs <b>no</b> common attribute name — which is why ρ comes before <code>Students × Courses</code>.</span></div>
+  <div class="cols" style="grid-template-columns:330px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 420 215" width="330">
+      <g class="w">
+        <rect x="8" y="16" width="96" height="94" rx="6" class="ink-k fill-b"/>
+        <rect x="8" y="16" width="96" height="30" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M8,46 H104 M8,78 H104 M40,46 V110 M72,46 V110"/>
+        <rect x="136" y="48" width="72" height="32" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M106,63 H132" marker-end="url(#ahb)"/>
+        <rect x="222" y="16" width="96" height="94" rx="6" class="ink-k fill-b"/>
+        <rect x="222" y="16" width="96" height="30" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M222,46 H318 M254,46 V110 M286,46 V110"/>
+        <rect x="352" y="48" width="60" height="32" rx="6" class="ink-p fill-p"/>
+        <path class="ink" d="M320,63 H348" marker-end="url(#ahp)"/>
+      </g>
+      <text x="56" y="38" text-anchor="middle" class="k w6" style="font-size:11px">3 rows</text>
+      <text x="56" y="68" text-anchor="middle" class="s">row 1</text>
+      <text x="56" y="100" text-anchor="middle" class="s">row 2</text>
+      <text x="172" y="69" text-anchor="middle" class="g w6" style="font-size:11px">1 row</text>
+      <text x="270" y="38" text-anchor="middle" class="k w6" style="font-size:11px">3 cols</text>
+      <text x="270" y="85" text-anchor="middle" class="s">row 1</text>
+      <text x="382" y="69" text-anchor="middle" class="p w6" style="font-size:11px">1 col</text>
+      <text x="100" y="140" text-anchor="middle" class="g w6" style="font-size:11px">σ keeps rows</text>
+      <text x="320" y="140" text-anchor="middle" class="p w6" style="font-size:11px">π keeps columns</text>
+      <text x="210" y="176" text-anchor="middle" class="k s" style="font-size:11px">a query is a chain: one relation feeds the next</text>
+      <text x="210" y="200" text-anchor="middle" class="r s" style="font-size:11px">read it inside out</text>
+    </svg><figcaption>σ narrows downwards, π narrows sideways</figcaption></figure>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Sigma picks rows, pi picks columns.</b>" σ is the letter you point at a <i>line</i> of a table with; π is used in a <i>list</i>. In SQL they are <span class="circ">WHERE</span> and <span class="circ">SELECT</span> — never the other way round.</div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> <b>σ does not change the number of columns</b> and <b>π does not change the number of rows</b> (it may remove duplicates). "Which operator drops a column?" → <b>π</b>. "Which operator drops a row?" → <b>σ</b>. And <b>ρ changes nothing at all</b>: only the label.</div>
+    </div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: Students/Courses in RA ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>RA worked</span></div>
+  <h2><span class="no">2</span>RA Worked on the Students / Courses Database</h2><span class="tag">written favourite ★</span>
+  <p class="tiny" style="margin-top:0">Every RA question in an exam is asked about some concrete pair of relations. Learn these two and the symbol stops being abstract.</p>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Students</th><th class="l">id</th><th class="l">name</th><th class="l">dept</th></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>1</u></td><td class="l">Alice</td><td class="l">CSE</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>2</u></td><td class="l">Bob</td><td class="l">EEE</td></tr>
+      <tr><th class="l">Courses</th><th class="l"><u>cid</u></th><th class="l"><u>name</u></th><th class="l">&nbsp;</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l">C1</td><td class="l">DBMS</td><td class="l">&nbsp;</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l">C2</td><td class="l">Algorithms</td><td class="l">&nbsp;</td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">RA query</th><th class="l">Result</th></tr>
+      <tr><td class="l"><code>σ dept='CSE'(Students)</code></td><td class="l">1 tuple: (1,Alice,CSE)</td></tr>
+      <tr><td class="l"><code>π name (Students)</code></td><td class="l">2 tuples: Alice, Bob</td></tr>
+      <tr><td class="l"><code>π dept (Students)</code></td><td class="l">2 tuples: CSE, EEE</td></tr>
+      <tr><td class="l"><code>Students × Courses</code></td><td class="l">2 × 2 = <b>4</b> tuples</td></tr>
+    </table>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> The Cartesian product of <i>these two</i> relations is <span class="circ">4</span> tuples, not 2 and not 3: <b>rows × rows</b>. In general a product of <i>m</i> rows and <i>n</i> rows gives <i>m × n</i> rows — a 3-row and a 3-row relation give <b>9</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 1 ✍</span> "List the name and department of every CSE student."<br>
+        <b>RA:</b> <code>π name,dept (σ dept='CSE'(Students))</code><br>
+        <b>SQL:</b> <code>SELECT name, dept FROM Students WHERE dept='CSE';</code><br>
+        <span class="tiny">Read the RA <b>inside out</b>: the innermost bracket is evaluated first, so σ filters and π then trims the columns.</span></div>
+      <div class="ex tiny"><span class="lbl">Worked example 2 ✍</span> "Show every student paired with every course."<br>
+        <b>RA:</b> <code>π name,cname (Students × ρ cname/name(Courses))</code><br>
+        <b>SQL:</b> <code>SELECT s.name, c.name FROM Students s, Courses c;</code><br>
+        <span class="tiny">ρ is <b>mandatory</b>: after the product both relations have an attribute called <i>name</i>, and a relation may not carry two attributes of the same name.</span></div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 240" width="290">
+      <g class="w">
+        <rect x="10" y="10" width="280" height="52" rx="8" class="ink-k fill-b"/>
+        <rect x="10" y="76" width="280" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="10" y="130" width="280" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="184" width="280" height="40" rx="8" class="ink-p fill-p"/>
+        <path class="ink" d="M150,62 V76" marker-end="url(#ahb)"/>
+        <path class="ink" d="M150,116 V130" marker-end="url(#ahb)"/>
+        <path class="ink" d="M150,170 V184" marker-end="url(#ahb)"/>
+      </g>
+      <text x="150" y="42" text-anchor="middle" class="k w6">Students (2 rows)</text>
+      <text x="150" y="101" text-anchor="middle" class="g w6">σ dept='CSE' → 1 row</text>
+      <text x="150" y="155" text-anchor="middle" class="r w6">π name,dept → 2 cols</text>
+      <text x="150" y="209" text-anchor="middle" class="p w6">1 tuple: Alice, CSE</text>
+    </svg><figcaption>inside-out evaluation</figcaption></figure>
+  </div>
+  <div class="exam tiny"><span class="lbl">Exam trap ✍ the classical pair</span> A paper offers <code>σ name (Students)</code> and <code>π dept (Students)</code>. The first is a <b>type error</b>: <i>name</i> is an attribute, not a predicate, so σ needs a <b>condition</b> while π needs a <b>list of attributes</b>. And "π removes duplicates" is true of <b>RA</b> — plain SQL's <code>SELECT</code> keeps duplicates unless you write <code>DISTINCT</code>.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: product, rename, join, RA vs SQL ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>Join &amp; translation</span></div>
+  <h2><span class="no">3</span>Product, Rename and Join — and Translating to SQL</h2><span class="tag">join is the favourite ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 260px;align-items:start">
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The join formula</span>
+        <b>θ-join</b> <code>R ⋈<sub>A=θB</sub> S ≡ σ<sub>A=θB</sub>(R × S)</code> · <b>natural join</b> <code>R ⋈ S</code> joins on every attribute the two relations share <b>by name</b>, then drops the duplicate copy.<br>
+        <b>Why ρ exists:</b> a relation may not carry two attributes of the same name, so <code>Emp × Emp</code> is illegal until one copy is renamed — which is also why <span class="circ">every self-join needs two aliases</span>.</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">Memory trick</span> "<b>Product first, then pick.</b>" That one sentence gives you the join, the semi-join and every θ-join you will be asked to expand. A <code>WHERE</code>-clause query <i>looks</i> like "join first, filter after" — the optimiser silently reorders it into exactly this shape.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 260 214" width="250">
+      <g class="w">
+        <rect x="8" y="6" width="108" height="34" rx="8" class="ink fill-b"/>
+        <rect x="144" y="6" width="108" height="34" rx="8" class="ink fill-b"/>
+        <rect x="8" y="80" width="108" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="144" y="80" width="108" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="8" y="154" width="244" height="34" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M62,40 V72" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,40 V72" marker-end="url(#ahb)"/>
+        <path class="ink" d="M62,114 V146" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,114 V146" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M116,23 H140" marker-end="url(#ah)"/>
+      </g>
+      <text x="62" y="28" text-anchor="middle" class="k w6" style="font-size:11px">R (m rows)</text>
+      <text x="198" y="28" text-anchor="middle" class="k w6" style="font-size:11px">S (n rows)</text>
+      <text x="62" y="102" text-anchor="middle" class="g w6" style="font-size:11px">ρ rename</text>
+      <text x="198" y="102" text-anchor="middle" class="g w6" style="font-size:11px">ρ rename</text>
+      <text x="130" y="176" text-anchor="middle" class="r w6" style="font-size:11px">σ condition → ρ result</text>
+      <text x="130" y="206" text-anchor="middle" class="k s" style="font-size:11px">m × n rows, then only the pairs that pass</text>
+    </svg><figcaption>join = product + selection</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">English question</th><th class="l">Relational algebra</th><th class="l">SQL</th></tr>
+    <tr><td class="l">Employees paid over 50 000</td><td class="l"><code>σ salary&gt;50000 (Emp)</code></td><td class="l"><code>SELECT * FROM Emp WHERE salary &gt; 50000</code></td></tr>
+    <tr><td class="l">Only names and salaries</td><td class="l"><code>π name,salary (Emp)</code></td><td class="l"><code>SELECT name, salary FROM Emp</code></td></tr>
+    <tr><td class="l">All CSE students</td><td class="l"><code>σ dept='CSE'(Students)</code></td><td class="l"><code>… WHERE dept='CSE'</code></td></tr>
+    <tr><td class="l">Salary renamed to pay</td><td class="l"><code>ρ pay/salary (Emp)</code></td><td class="l"><code>SELECT salary AS pay</code></td></tr>
+    <tr><td class="l">Students of the CSE department</td><td class="l"><code>Students ⋈ Dept</code></td><td class="l"><code>… JOIN Dept ON …</code></td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Feature</th><th class="l">Relational algebra</th><th class="l">SQL</th></tr>
+    <tr><td class="l">Nature</td><td class="l"><span class="hl">theoretical</span> foundation</td><td class="l"><span class="hl">practical</span>, what users and apps write</td></tr>
+    <tr><td class="l">Style</td><td class="l">procedural — say <i>how</i></td><td class="l"><span class="red"><b>declarative</b></span> — say only <i>what</i></td></tr>
+    <tr><td class="l">Duplicates</td><td class="l">none (set theory); π removes them</td><td class="l">kept unless <code>DISTINCT</code> is written</td></tr>
+    <tr><td class="l">"Paid over 50 000"</td><td class="l"><code>σ salary&gt;50000 (Emp)</code></td><td class="l"><code>SELECT * FROM Emp WHERE salary&gt;50000</code></td></tr>
+    <tr><td class="l">Optimisation</td><td class="l">rewrites are exactly equal relations</td><td class="l">the optimiser <b>converts SQL into an RA tree</b>, then picks the cheapest equivalent one</td></tr>
+</table>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> RA works on <b>sets</b>, SQL on <b>bags</b>, so the same question may return different row counts from the two languages — a deliberate, examinable difference, not a bug. And because SQL is declarative the user does not choose the order of operations: the optimiser does, by pushing selections down towards the leaves so the huge product never happens.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: SQL command families ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>SQL command types</span></div>
+  <h2><span class="no">4</span>SQL Command Types and the Order Clauses Run In</h2><span class="tag">high-yield ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Family</th><th class="l">Full name</th><th class="l">Commands</th><th class="l">Acts on</th></tr>
+    <tr><td class="l"><b>DDL</b></td><td class="l">Data Definition Language</td><td class="l">CREATE, ALTER, DROP, TRUNCATE</td><td class="l"><span class="hl">structure</span></td></tr>
+    <tr><td class="l"><b>DML</b></td><td class="l">Data Manipulation Language</td><td class="l">SELECT, INSERT, UPDATE, DELETE (also MERGE)</td><td class="l"><span class="hl">rows</span></td></tr>
+    <tr><td class="l"><b>DCL</b></td><td class="l">Data Control Language</td><td class="l">GRANT, REVOKE</td><td class="l"><span class="hl">privileges</span></td></tr>
+    <tr><td class="l"><b>TCL</b></td><td class="l">Transaction Control Language</td><td class="l">COMMIT, ROLLBACK, SAVEPOINT</td><td class="l"><span class="hl">transactions</span></td></tr>
+  </table>
+  
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Command</th><th class="l">Data</th><th class="l">Structure</th><th class="l">WHERE allowed?</th><th class="l">Family</th></tr>
+    <tr><td class="l"><b>DROP TABLE</b></td><td class="l"><span class="red"><b>all rows gone</b></span></td><td class="l"><span class="red"><b>gone</b></span></td><td class="l">no</td><td class="l">DDL</td></tr>
+    <tr><td class="l"><b>DELETE</b></td><td class="l">matching rows gone</td><td class="l"><span class="circ">kept</span></td><td class="l"><b>yes</b></td><td class="l">DML</td></tr>
+    <tr><td class="l"><b>TRUNCATE</b></td><td class="l">all rows gone</td><td class="l"><span class="circ">kept</span></td><td class="l">no</td><td class="l">DDL</td></tr>
+    <tr><td class="l"><b>ALTER</b></td><td class="l">kept</td><td class="l"><span class="hl">changed</span></td><td class="l">no</td><td class="l">DDL</td></tr>
+  </table>
+  <div class="code">SELECT   name, salary          -- 5
+FROM     Employees             -- 1
+WHERE    salary &gt; 50000       -- 2
+GROUP BY dept_id              -- 3
+HAVING   COUNT(*) &gt; 3        -- 4
+ORDER BY salary DESC;         -- 6
+
+INSERT INTO Students (id, name, dept) VALUES (1, 'Alice', 'CSE');
+UPDATE Employees SET salary = salary * 1.10 WHERE dept = 'IT';
+DELETE FROM Students WHERE id = 1;   -- WHERE makes DELETE selective</div>
+  <figure class="doodle"><svg viewBox="0 0 620 96" width="580">
+    <g class="w">
+      <rect x="6" y="22" width="88" height="40" rx="8" class="ink-k fill-b"/>
+      <rect x="112" y="22" width="88" height="40" rx="8" class="ink-r fill-r"/>
+      <rect x="218" y="22" width="88" height="40" rx="8" class="ink fill-b"/>
+      <rect x="324" y="22" width="88" height="40" rx="8" class="ink-p fill-p"/>
+      <rect x="430" y="22" width="88" height="40" rx="8" class="ink fill-b"/>
+      <rect x="530" y="22" width="84" height="40" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M94,42 H110" marker-end="url(#ahb)"/>
+      <path class="ink" d="M200,42 H216" marker-end="url(#ahb)"/>
+      <path class="ink" d="M306,42 H322" marker-end="url(#ahb)"/>
+      <path class="ink" d="M412,42 H428" marker-end="url(#ahb)"/>
+      <path class="ink" d="M518,42 H528" marker-end="url(#ahg)"/>
+    </g>
+    <text x="50" y="47" text-anchor="middle" class="k w6" style="font-size:12px">FROM</text>
+    <text x="156" y="47" text-anchor="middle" class="r w6" style="font-size:12px">WHERE</text>
+    <text x="262" y="47" text-anchor="middle" class="k w6" style="font-size:12px">GROUP BY</text>
+    <text x="368" y="47" text-anchor="middle" class="p w6" style="font-size:12px">HAVING</text>
+    <text x="474" y="47" text-anchor="middle" class="k w6" style="font-size:12px">SELECT</text>
+    <text x="572" y="47" text-anchor="middle" class="g w6" style="font-size:12px">ORDER</text>
+    <text x="50" y="82" text-anchor="middle" class="r s" style="font-size:10px">tables</text>
+    <text x="156" y="82" text-anchor="middle" class="r s" style="font-size:10px">rows ★</text>
+    <text x="262" y="82" text-anchor="middle" class="s" style="font-size:10px">groups</text>
+    <text x="368" y="82" text-anchor="middle" class="p s" style="font-size:10px">groups ★</text>
+    <text x="474" y="82" text-anchor="middle" class="s" style="font-size:10px">columns</text>
+    <text x="572" y="82" text-anchor="middle" class="g s" style="font-size:10px">sorting</text>
+  </svg><figcaption>the order the clauses <i>run</i> in — not the order you write them</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>WHERE filters rows <i>before</i> grouping; HAVING filters groups <i>after</i> it.</b> That is the whole difference, and only HAVING may use an aggregate such as <code>HAVING COUNT(*) &gt; 5</code>.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick + good to know</span> "<b>Where before, having after.</b>" <i>W</i>here comes <i>W</i>hen rows are still rows. <code>HAVING</code> without <code>GROUP BY</code> is legal too: the whole table is one group, so <code>SELECT COUNT(*) FROM Emp HAVING COUNT(*) &gt; 5</code> returns either one number or nothing.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: aggregates and NULL ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>Aggregates &amp; NULL</span></div>
+  <h2><span class="no">5</span>Aggregate Functions and the NULL Rules</h2><span class="tag">every exam asks ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Aggregate</th><th class="l">Returns</th><th class="l">NULL inside the column</th><th class="l">Empty set</th></tr>
+    <tr><td class="l"><b>COUNT(*)</b></td><td class="l">number of <span class="hl">rows</span></td><td class="l"><span class="red"><b>counts them anyway</b></span></td><td class="l">0</td></tr>
+    <tr><td class="l"><b>COUNT(col)</b></td><td class="l">number of non-NULL values of col</td><td class="l">skipped</td><td class="l">0</td></tr>
+    <tr><td class="l"><b>SUM / AVG(col)</b></td><td class="l">total / mean of the non-NULL values</td><td class="l"><span class="red"><b>skipped — never read as 0</b></span></td><td class="l">NULL</td></tr>
+    <tr><td class="l"><b>MIN / MAX(col)</b></td><td class="l">smallest / largest non-NULL value</td><td class="l">skipped</td><td class="l">NULL</td></tr>
+  </table>
+  <div class="mnote">only COUNT(*) sees NULL</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start;clear:both">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 1 ✍ COUNT</span> <code>T(a)</code> holds <code>1, NULL, 3, NULL, 5</code>.<br>
+        <code>SELECT COUNT(*), COUNT(a) FROM T;</code> → <span class="circ">5, 3</span><br>
+        <b>COUNT(*)</b> counts <i>rows</i>, so the two NULL rows are counted; <b>COUNT(a)</b> counts <i>values of a</i>, and a NULL value is not a value.</div>
+      <div class="ex tiny"><span class="lbl">Worked example 2 ✍ AVG</span> <code>R(score)</code> holds <code>10, NULL, 20</code>.<br>
+        <code>SELECT AVG(score) FROM R;</code> → (10 + 20) / 2 = <span class="circ">15</span><br>
+        Every aggregate except <code>COUNT(*)</code> ignores NULL; reading it as 0 would give 10 — the <b>wrong</b> answer.</div>
+      <div class="ex tiny"><span class="lbl">Worked example 3 ✍ GROUP BY + HAVING</span> <code>Sales(region, amount)</code> = ('N',100), ('N',200), ('S',50), ('S',70), ('E',300)<br>
+        <code>SELECT region, SUM(amount) FROM Sales GROUP BY region HAVING SUM(amount) &gt; 150;</code><br>
+        Sums: N = 300, S = 120, E = 300. Only N and E pass 150 → <span class="circ">2 rows</span>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 152" width="240">
+      <g class="w">
+        <rect x="8" y="10" width="40" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="54" y="10" width="40" height="32" rx="5" class="ink-r fill-r"/>
+        <rect x="100" y="10" width="40" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="146" y="10" width="40" height="32" rx="5" class="ink-r fill-r"/>
+        <rect x="192" y="10" width="40" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="8" y="58" width="224" height="28" rx="6" class="ink-k fill-y"/>
+        <rect x="8" y="96" width="134" height="28" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M146,42 V54 M192,42 V54"/>
+      </g>
+      <text x="28" y="31" text-anchor="middle" class="k w6" style="font-size:11px">1</text>
+      <text x="74" y="31" text-anchor="middle" class="r w6" style="font-size:10px">NULL</text>
+      <text x="120" y="31" text-anchor="middle" class="k w6" style="font-size:11px">3</text>
+      <text x="166" y="31" text-anchor="middle" class="r w6" style="font-size:10px">NULL</text>
+      <text x="212" y="31" text-anchor="middle" class="k w6" style="font-size:11px">5</text>
+      <text x="120" y="77" text-anchor="middle" class="k w6" style="font-size:11px">COUNT(*) = 5 rows</text>
+      <text x="75" y="115" text-anchor="middle" class="k w6" style="font-size:11px">COUNT(a) = 3</text>
+      <text x="146" y="115" class="r s" style="font-size:10px">NULL skipped</text>
+      <text x="125" y="145" text-anchor="middle" class="k s" style="font-size:10px">same five rows, two answers</text>
+    </svg><figcaption>the same five rows, two counts</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam traps ✍ three of them</span> <b>1.</b> <code>AVG</code> over <code>10, NULL, 20</code> is <span class="circ">15</span>, not 10 — NULL is <b>unknown</b>, not zero. <b>2.</b> <code>COUNT(*)</code> on an empty table is 0, but <code>AVG</code>, <code>SUM</code>, <code>MIN</code> and <code>MAX</code> return NULL. <b>3.</b> A predicate on NULL is <b>unknown, never true</b>, so <code>WHERE a &gt; 0</code> drops those rows silently.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Star sees every row; a column sees only real values.</b>" The asterisk stands for the whole tuple, so a row that exists is counted even when one of its values is missing. Read <code>COUNT(*)</code> as "count the rows", <code>COUNT(col)</code> as "count the answers".</div>
+  </div>
+</section>
+
+<!-- ============ SHEET 7: the six joins ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>The six joins</span></div>
+  <h2><span class="no">6</span>The Six SQL Joins, Row by Row</h2><span class="tag">count the rows ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 250px;align-items:start">
+    <div>
+      <p class="tiny" style="margin:0 0 0.5mm 0"><b>Emp(eid, dept_id)</b></p>
+      <table class="hand tiny" style="width:100%">
+        <tr><th>eid</th><th>dept_id</th></tr>
+        <tr><td>1</td><td>10</td></tr>
+        <tr><td>2</td><td>20</td></tr>
+        <tr><td>3</td><td><span class="red"><b>NULL</b></span></td></tr>
+        <tr><td>4</td><td>10</td></tr>
+      </table>
+      <p class="tiny" style="margin:1mm 0 0.5mm 0"><b>Dept(dept_id, name)</b></p>
+      <table class="hand tiny" style="width:100%">
+        <tr><th>dept_id</th><th>name</th></tr>
+        <tr><td>10</td><td>IT</td></tr>
+        <tr><td>20</td><td>HR</td></tr>
+        <tr><td>30</td><td>Finance</td></tr>
+      </table>
+    </div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Join</th><th class="l">Keeps</th><th class="l"><span class="hl">Rows</span></th></tr>
+      <tr><td class="l"><b>INNER</b></td><td class="l">matches only</td><td class="l"><span class="circ">3</span></td></tr>
+      <tr><td class="l"><b>LEFT</b></td><td class="l">all of Emp</td><td class="l"><span class="circ">4</span></td></tr>
+      <tr><td class="l"><b>RIGHT</b></td><td class="l">all of Dept</td><td class="l"><span class="circ">4</span></td></tr>
+      <tr><td class="l"><b>FULL OUTER</b></td><td class="l">all of both</td><td class="l"><span class="circ">5</span></td></tr>
+      <tr><td class="l"><b>CROSS</b></td><td class="l">every pair</td><td class="l"><span class="circ">12</span></td></tr>
+      <tr><td class="l"><b>SELF</b></td><td class="l">itself, aliased</td><td class="l">rows &amp; mgrs</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 160" width="240">
+      <g class="w">
+        <circle cx="100" cy="62" r="52" class="ink-k" style="fill:rgba(255,238,0,.35)"/>
+        <circle cx="180" cy="62" r="52" class="ink-k"/>
+        <path d="M140,62 A40,40 0 0 1 180,22 A52,52 0 0 0 100,62 A40,40 0 0 1 140,62 Z" class="ink-g" style="fill:rgba(31,138,92,.30)"/>
+      </g>
+      <text x="62" y="34" text-anchor="middle" class="k w6" style="font-size:12px">Emp only</text>
+      <text x="232" y="34" text-anchor="middle" class="k w6" style="font-size:12px">Dept only</text>
+      <text x="140" y="66" text-anchor="middle" class="g w6" style="font-size:12px">INNER</text>
+      <text x="140" y="82" text-anchor="middle" class="g w6" style="font-size:11px">3 rows</text>
+      <text x="54" y="112" text-anchor="middle" class="r w6" style="font-size:11px">eid 3</text>
+      <text x="244" y="112" text-anchor="middle" class="r w6" style="font-size:11px">30</text>
+      <text x="140" y="146" text-anchor="middle" class="k s" style="font-size:11px">FULL OUTER = 3 + 1 + 1 = 5</text>
+    </svg><figcaption>the three regions, and the row counts</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">INNER JOIN ✍</span> <code>SELECT e.eid, d.name FROM Emp e JOIN Dept d ON e.dept_id = d.dept_id;</code><br>
+        eid 1 → 10 IT · eid 2 → 20 HR · eid 4 → 10 IT. eid 3 has NULL, and <b>NULL = 10 is not true</b>, so it is dropped; dept 30 has no employee. → <span class="circ">3 rows</span></div>
+      <div class="ex tiny"><span class="lbl">LEFT and RIGHT JOIN ✍</span> <b>LEFT</b> = 3 matches + the unmatched employee padded → <b>4 rows</b>: (1,IT) (2,HR) (3,NULL) (4,IT). <b>RIGHT</b> = 3 matches + the unmatched department padded → <b>4 rows</b>: (1,IT) (2,HR) (4,IT) (NULL,Finance).</div>
+      <div class="ex tiny"><span class="lbl">FULL OUTER and CROSS JOIN ✍</span> FULL OUTER = 3 matching pairs + 1 unmatched <i>Emp</i> row (eid 3) + 1 unmatched <i>Dept</i> row (30 Finance) = 3 + 1 + 1 = <span class="circ">5 rows</span>; the formula is <b>INNER + LEFT-only + RIGHT-only</b>. CROSS JOIN is 4 rows × 3 rows = <span class="circ">12 rows</span>, every row of one table against every row of the other with no condition at all; in general <i>m</i> × <i>n</i>, so two 3-row tables give <b>9</b>.</div>
+    </div>
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">SELF JOIN</span> A relation joined to <b>itself</b> under two aliases, to relate rows inside one table — an employee to her manager. Give <i>Emp</i> two more columns, <code>name</code> and <code>mgr_id</code> (the manager's <code>eid</code>), then:<br>
+        <code>SELECT a.name AS emp, b.name AS mgr
+FROM Emp a JOIN Emp b ON a.mgr_id = b.eid;</code><br>
+        <span class="tiny">Two aliases are <b>mandatory</b>: without them the condition would compare a column with itself.</span></div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ the NULL one</span> An employee with a NULL <code>dept_id</code> is in <b>no</b> inner-join and <b>no</b> right-join result; it survives a <b>LEFT</b> and a <b>FULL OUTER</b> join, padded with NULLs. "Why did my row disappear?" → because <span class="circ">NULL never equals anything</span>, so the ON condition is unknown, not true.</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">Memory trick</span> Read the keyword as a promise about the <b>first-named</b> table. <b>LEFT</b>: keep everything on the left, pad the right. <b>RIGHT</b>: swap the word. <b>FULL OUTER</b>: keep everything on both sides. <b>INNER</b>: keep only what agrees. <b>CROSS</b>: no promise at all.</div>
+    </div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: join patterns, subqueries, forward refs ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>Patterns &amp; subqueries</span></div>
+  <h2><span class="no">7</span>Join Patterns, Subqueries and Where the Rest Lives</h2><span class="tag">written pattern ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Pattern: every department, including those with no employees</span> The default join drops them, so ask for them with <code>LEFT JOIN</code> and count the <b>child</b> column, not <code>*</code>.</div>
+  <div class="code">SELECT d.dept_name, COUNT(e.emp_id) AS employee_count
+FROM   Department d
+LEFT JOIN Employee e ON e.dept_id = d.dept_id
+GROUP BY d.dept_id, d.dept_name
+ORDER BY employee_count DESC;</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam traps ✍ two counts, and WHERE that kills a LEFT JOIN</span> <code>COUNT(e.emp_id)</code> skips the NULLs the outer join produced and correctly gives <b>0</b> for an empty department, while <code>COUNT(*)</code> counts the padded row and wrongly gives <b>1</b>; grouping by <code>dept_id</code> as well as <code>dept_name</code> keeps two departments that share a name apart. And a condition on the <b>right</b> table placed in <code>WHERE</code> is evaluated <i>after</i> the join and discards the padded rows, quietly turning your LEFT JOIN into an INNER JOIN — put it in <code>ON</code> instead.</div>
+  <div class="sumbox tiny"><span class="lbl">Three kinds of subquery</span> <b>Scalar</b> — one value used in a comparison: <code>WHERE salary &gt; (SELECT AVG(salary) FROM Emp)</code>. <b>IN / EXISTS</b> — a set, or true/false: <code>WHERE id IN (SELECT emp_id FROM Emp)</code>. <b>Correlated</b> — references the outer row, so it is re-evaluated <b>once per outer row</b>: <code>WHERE e2.dept_id = e.dept_id</code>.</div>
+  <div class="code">SELECT MAX(salary) AS second_highest        -- 2nd highest DISTINCT salary
+FROM   Employee
+WHERE  salary &lt; (SELECT MAX(salary) FROM Employee);    -- NULL if there is none
+-- and, above the average of the employee's OWN department:
+SELECT e.name, e.salary, d.dept_name
+FROM   Employee e JOIN Department d ON d.dept_id = e.dept_id
+WHERE  e.salary &gt; ( SELECT AVG(e2.salary) FROM Employee e2
+                      WHERE e2.dept_id = e.dept_id );</div>
+  <div class="exam tiny"><span class="lbl">Exam traps ✍ three of them</span> <b>1.</b> The correlated subquery runs <b>once per outer row</b>, giving <i>e</i>'s <i>own</i> department average; a derived table pre-computing each average is usually the faster plan. <b>2.</b> The second-highest query uses <code>&lt;</code>, not <code>≤</code>, so it is right when the top salary repeats, and gives NULL when all salaries are equal. <b>3.</b> <code>NOT IN (subquery)</code> returns <b>no rows</b> if the subquery holds one NULL — prefer <code>NOT EXISTS</code>.</div>
+  <div class="tipbox tiny"><span class="lbl">Where the rest of this chapter lives</span> <b>Functional dependencies, 1NF–BCNF, normalisation</b> → <b>db3</b>. <b>File organisation, primary and secondary indexes, B+ trees, cost-based optimisation</b> — which index makes which algebra tree cheap → <span class="hl">db4</span>. <b>Transactions, ACID, isolation, concurrency, recovery</b> → <b>db5</b>. <b>Constraints and triggers</b> sit one line below this one on the syllabus and were covered with the data models — <b>db1</b>.</div>
+  <div class="pg-no">8</div>
+</section>
+
+
+<!-- ============ SHEET 9: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>σ = <b>rows</b> (SQL's WHERE)</p><p>π = <b>columns</b> (SQL's SELECT list)</p>
+      <p>ρ = rename · × = every row with every row</p><p>Join = <code>σ(R × S)</code></p>
+      <p>DDL: CREATE, ALTER, DROP, TRUNCATE</p><p>DML: SELECT, INSERT, UPDATE, DELETE</p>
+      <p>DCL: GRANT, REVOKE</p><p>TCL: COMMIT, ROLLBACK, SAVEPOINT</p>
+      <p>DROP kills structure and data</p><p>DELETE / TRUNCATE keep structure</p>
+      <p>Run order: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</p>
+      <p>WHERE filters rows <b>before</b> grouping</p><p>HAVING filters groups <b>after</b> it</p>
+      <p>COUNT(*) counts rows, NULLs included</p><p>COUNT(col) counts non-NULL only</p>
+      <p>AVG of 10, NULL, 20 = <b>15</b></p><p>Other aggregates skip NULL</p>
+      <p>NULL never equals anything in a join</p><p>FULL OUTER = INNER + left-only + right-only</p>
+      <p>Six joins: INNER, LEFT, RIGHT, FULL, CROSS, SELF</p><p>CROSS JOIN = m × n rows</p>
+      <p>Zero-staff departments: <code>COUNT(e.emp_id)</code></p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>Selection σ filters rows; projection π filters columns</li>
+      <li>Rename ρ renames; × pairs every row with every row</li>
+      <li>A join is a product plus a selection</li>
+      <li>DDL · DML · DCL · TCL — four families, four purposes</li>
+      <li><b>DROP</b> removes structure and data together</li>
+      <li><b>DELETE</b> and <b>TRUNCATE</b> both keep the structure</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>WHERE before grouping, HAVING after grouping</li>
+      <li>Only HAVING may use an aggregate</li>
+      <li>On 1, NULL, 3, NULL, 5: COUNT(*)=5, COUNT(a)=3</li>
+      <li>AVG of 10, NULL, 20 is 15, never 10</li>
+      <li>NULL never equals anything in a join condition</li>
+      <li>Zero-staff departments need <code>COUNT(e.emp_id)</code></li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">Top traps</span> σ and π swapped · π removes duplicates but SELECT does not · DROP vs DELETE vs TRUNCATE · WHERE confused with HAVING · <code>AVG</code> reading NULL as 0 · expecting a NULL-department employee in an inner join · <code>COUNT(*)</code> for zero-employee counts · a WHERE on the right table turning a LEFT JOIN into an INNER JOIN.</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">All tricks together</span> Sigma picks rows, pi picks columns · product first, then pick · where before, having after · star sees every row, a column sees only real values · keep everything on the left, pad the right · join by an alias, never by the bare table name.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 130" width="290">
+      <g class="w">
+        <circle cx="60" cy="52" r="30" class="ink-k fill-b"/>
+        <circle cx="150" cy="52" r="30" class="ink fill-b"/>
+        <circle cx="240" cy="52" r="30" class="ink-r fill-r"/>
+        <path class="ink" d="M92,52 H118" marker-end="url(#ahb)"/>
+        <path class="ink" d="M182,52 H208" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M240,84 C190,116 70,116 60,84" marker-end="url(#ahp)"/>
+      </g>
+      <text x="60" y="57" text-anchor="middle" class="k w6" style="font-size:12px">σ</text>
+      <text x="150" y="57" text-anchor="middle" class="k w6" style="font-size:12px">π</text>
+      <text x="240" y="57" text-anchor="middle" class="r w6" style="font-size:12px">×</text>
+      <text x="105" y="42" text-anchor="middle" class="p s" style="font-size:10px">rows</text>
+      <text x="195" y="42" text-anchor="middle" class="p s" style="font-size:10px">columns</text>
+      <text x="150" y="122" text-anchor="middle" class="p s" style="font-size:10px">⋈ = × then σ</text>
+    </svg><figcaption>two primitives make every join</figcaption></figure>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Query Languages</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">1.</span>Which SQL command removes a table's structure together with all its data?<ol class="opts"><li>DELETE</li><li>TRUNCATE</li><li>ALTER</li><li>DROP</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">2.</span>Which clause filters groups after <code>GROUP BY</code> has been applied?<ol class="opts"><li>HAVING</li><li>WHERE</li><li>ORDER BY</li><li>DISTINCT</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">3.</span>Which relational algebra operator keeps the tuples that satisfy a condition?<ol class="opts"><li>Projection (π)</li><li>Rename (ρ)</li><li>Selection (σ)</li><li>Cartesian product (×)</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">4.</span><code>T</code> has one column <code>a</code> with rows 1, NULL, 3, NULL, 5. <code>SELECT COUNT(*), COUNT(a) FROM T;</code> gives:<ol class="opts"><li>3 and 3</li><li>5 and 3</li><li>5 and 5</li><li>3 and 5</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">5.</span><code>R.score</code> holds 10, NULL, 20. <code>SELECT AVG(score) FROM R;</code> returns:<ol class="opts"><li>10</li><li>15</li><li>20</li><li>NULL</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">6.</span>With <code>Emp</code> = (1,10),(2,20),(3,NULL),(4,10) and <code>Dept</code> = (10,'IT'),(20,'HR'),(30,'Finance'), the INNER JOIN on <code>dept_id</code> returns:<ol class="opts"><li>3 rows</li><li>4 rows</li><li>5 rows</li><li>12 rows</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">7.</span>The same data with a FULL OUTER JOIN returns:<ol class="opts"><li>3 rows</li><li>4 rows</li><li>5 rows</li><li>6 rows</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">8.</span><code>Sales</code> = ('N',100),('N',200),('S',50),('S',70),('E',300). <code>GROUP BY region HAVING SUM(amount) &gt; 150</code> returns:<ol class="opts"><li>1 row</li><li>3 rows</li><li>5 rows</li><li>2 rows</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">9.</span>Listing every department with its employee count, including empty ones, needs:<ol class="opts"><li>COUNT(*)</li><li>COUNT(e.emp_id)</li><li>COUNT(d.dept_name)</li><li>SUM(e.salary)</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.4pt"><span class="qn">10.</span>In SQL, relational algebra's selection σ corresponds to:<ol class="opts"><li>the WHERE clause</li><li>the SELECT list</li><li>GROUP BY</li><li>ORDER BY</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-d · 2-a · 3-c · 4-b · 5-b · 6-a · 7-c · 8-d · 9-b · 10-a</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Explain the fundamental operations of relational algebra on <code>Students(id, name, dept)</code> and <code>Courses(cid, name)</code>. Distinguish DDL, DML, DCL and TCL, and say exactly what DROP, DELETE, TRUNCATE and ALTER each do. Then, for <code>Emp</code> = (1,10),(2,20),(3,NULL),(4,10) and <code>Dept</code> = (10,'IT'),(20,'HR'),(30,'Finance'), give the row count of INNER, LEFT, RIGHT, FULL OUTER and CROSS JOIN and explain why employee 3 never appears in an inner join. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:4.5mm">
+    <li><b>RA operators (2)</b> — <b>σ</b> keeps rows meeting a condition, <b>π</b> keeps columns and removes duplicates, <b>ρ</b> renames, <b>×</b> pairs every row of one relation with every row of another (2 × 2 = <b>4</b>), <b>∪ − ∩</b> are the set operators, and <b>⋈</b> is derived as <code>σ(R × S)</code>. <i class="mk">2</i></li>
+    <li><b>Command families (2)</b> — <b>DDL</b> (Definition) on <b>structure</b>: CREATE, ALTER, DROP, TRUNCATE. <b>DML</b> (Manipulation) on <b>rows</b>: SELECT, INSERT, UPDATE, DELETE. <b>DCL</b> (Control) on <b>privileges</b>: GRANT, REVOKE. <b>TCL</b> (Transaction Control): COMMIT, ROLLBACK, SAVEPOINT. <i class="mk">2</i></li>
+    <li><b>The four commands (2)</b> — <b>DROP</b> removes structure <i>and</i> data; <b>DELETE</b> removes rows, optionally by <code>WHERE</code>, keeping the structure; <b>TRUNCATE</b> removes all rows, keeps the structure, allows no <code>WHERE</code>; <b>ALTER</b> changes the structure and keeps the data. <i class="mk">2</i></li>
+    <li><b>Row counts (1)</b> — INNER <b>3</b>, LEFT <b>4</b>, RIGHT <b>4</b>, FULL OUTER <b>5</b> = 3 + 1 + 1, CROSS 4 × 3 = <b>12</b>. <i class="mk">1</i></li>
+    <li><b>Why employee 3 disappears (2)</b> — its <code>dept_id</code> is NULL and <b>NULL = 10 is unknown, not true</b>; an inner join keeps a row only when the ON condition is <b>true</b>. It survives LEFT and FULL OUTER, padded with NULLs. <i class="mk">2</i></li>
+    <li><b>Where vs having (1)</b> — <code>WHERE</code> filters <b>rows before</b> grouping; <code>HAVING</code> filters <b>groups after</b> <code>GROUP BY</code>, and is the only one that may use an aggregate. <i class="mk">1</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:0">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.0mm;margin-top:0">
+    <ul class="tick">
+      <li>Can name σ, π, ρ, × with an example each</li>
+      <li>Can write a join as σ(R × S) and explain ρ</li>
+      <li>Can place any command in DDL, DML, DCL or TCL</li>
+    </ul>
+    <ul class="tick">
+      <li>Can say what DROP, DELETE, TRUNCATE, ALTER do</li>
+      <li>Can count the rows of all six joins</li>
+      <li>Can state the COUNT(*) / AVG-with-NULL rules</li>
+    </ul>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

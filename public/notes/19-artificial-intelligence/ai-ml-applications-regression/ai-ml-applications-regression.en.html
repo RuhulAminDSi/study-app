@@ -1,0 +1,583 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Practical ML Applications &amp; Regression: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Practical ML Applications &amp; Regression</span></h1>
+  <p class="subtitle">y = mx + c · least squares · MAE / MSE / RMSE / R² · L1 &amp; L2: 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 280" width="620">
+      <g class="w">
+        <ellipse cx="320" cy="140" rx="106" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,122 L168,72 M238,158 L168,208 M320,98 L320,54 M402,122 L472,72 M402,158 L472,208 M320,182 L320,226 M216,140 L170,140 M424,140 L470,140"/>
+        <rect x="60" y="38" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="120" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="120" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="202" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="224" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="202" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="136" text-anchor="middle" class="k l">ML IN PRACTICE</text><text x="320" y="158" text-anchor="middle" class="r s">what it is asked for</text>
+      <text x="142" y="63" text-anchor="middle" class="s">Health · Finance</text>
+      <text x="320" y="39" text-anchor="middle" class="r w6">Regression ★</text>
+      <text x="498" y="63" text-anchor="middle" class="s">NLP · Vision</text>
+      <text x="96" y="145" text-anchor="middle" class="g w6">Least squares</text>
+      <text x="544" y="145" text-anchor="middle" class="r w6">L1 / L2 ★</text>
+      <text x="142" y="227" text-anchor="middle" class="s">Industry · Transport</text>
+      <text x="320" y="251" text-anchor="middle" class="r w6">y = mx + c ★</text>
+      <text x="498" y="227" text-anchor="middle" class="s">Agri · Security</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the rule everything is measured by</figcaption>
+  </figure>
+  <div class="sticky" style="width:70mm"><b>High-yield list</b><br>① Regression = a number, classification = a label<br>② ŷ = β₀ + β₁x, that is y = mx + c<br>③ OLS minimises Σ(yᵢ − ŷᵢ)²<br>④ MAE = mean|y − ŷ| · MSE = mean(y − ŷ)²<br>⑤ RMSE = √MSE, in the units of y<br>⑥ R² = 1 − SSres / SStot; R² = r²<br>⑦ Overfitting = train ≫ test; fix L1/L2<br>⑧ r ∈ [−1, 1] is not causation</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The AI syllabus lists: old and new AI techniques; knowledge representation; propositional and first-order logic; search; probabilistic reasoning; NLP; expert systems; machine learning; supervised and unsupervised learning; <span class="hl">practical application of machine learning</span>; <span class="hl">regression</span>. This notebook takes exactly those last two lines — the three paradigms belong to the ML-fundamentals lesson and Bayes/NLP theory to the probabilistic-reasoning lesson.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>ML pipeline &amp; task … p. 2</li><li>Applications I: health to trade … p. 3</li><li>Applications II: text to security … p. 4</li></ul>
+    <ul class="tick"><li>Regression &amp; y = mx + c … p. 5</li><li>Least squares · metrics … p. 6, 7</li><li>Night-before 10 · Practice 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: ML in practice — pipeline and task types ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>ML in practice</span></div>
+  <h2><span class="no">1</span>ML in Practice: Pipeline &amp; Task</h2><span class="tag">framing ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A machine-learning system is a <span class="hl">function fitted to data</span>, not a bundle of hand-written rules. Given input features <b>X</b>, produce an output <b>y</b> — and the kind of output decides the method: <span class="circ">a number is regression</span>, <span class="circ">a label is classification</span>, <span class="circ">a group is clustering</span>, <span class="circ">rewards after actions is reinforcement learning</span>.</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">Task</th><th class="l">Output</th><th class="l">Typical method</th><th class="l">One-line example</th></tr>
+    <tr><td class="l">Regression</td><td class="l">real number ŷ</td><td class="l">linear / polynomial regression, SVR, GBM</td><td class="l">tomorrow's sales</td></tr>
+    <tr><td class="l">Classification</td><td class="l">label + probability</td><td class="l">logistic regression, decision tree, SVM, CNN</td><td class="l">spam or not spam</td></tr>
+    <tr><td class="l">Clustering</td><td class="l">a group id</td><td class="l">k-means, hierarchical, DBSCAN</td><td class="l">customer segments</td></tr>
+    <tr><td class="l">Reinforcement</td><td class="l">a policy</td><td class="l">Q-learning, SARSA, DQN</td><td class="l">a robot learning to walk</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 310px;align-items:start">
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> One question — <b>"is the answer a ruler or a yes/no?"</b> Ruler → regression. Yes/no → classification. Neither → grouping or rewards after acting.</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> "ML predicts the future" is <b>wrong</b>: ML fits a function to <span class="hl">past data</span> and extrapolates. The test set must stay <b>unseen</b>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 310 226" width="304">
+      <g class="w">
+        <rect x="6" y="18" width="86" height="38" rx="12" class="ink fill-b"/>
+        <rect x="112" y="18" width="86" height="38" rx="12" class="ink fill-b"/>
+        <rect x="218" y="18" width="86" height="38" rx="12" class="ink-g fill-g"/>
+        <rect x="6" y="106" width="86" height="38" rx="12" class="ink-k fill-y"/>
+        <rect x="112" y="106" width="86" height="38" rx="12" class="ink fill-b"/>
+        <rect x="218" y="106" width="86" height="38" rx="12" class="ink-r fill-r"/>
+        <path class="ink" d="M92,37 H112 M198,37 H218 M92,125 H112"/>
+        <path class="ink-g" d="M261,56 V106" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M198,125 H218" marker-end="url(#ah)"/>
+        <path class="ink-k" d="M49,56 V106" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M261,144 V184 C261,202 49,202 49,184" marker-end="url(#ahp)"/>
+      </g>
+      <text x="49" y="35" text-anchor="middle" class="s k">data</text><text x="49" y="50" text-anchor="middle" class="s">features X</text>
+      <text x="155" y="35" text-anchor="middle" class="s k">split</text><text x="155" y="50" text-anchor="middle" class="s">train / test</text>
+      <text x="261" y="35" text-anchor="middle" class="s g">train</text><text x="261" y="50" text-anchor="middle" class="s">fit the model</text>
+      <text x="49" y="123" text-anchor="middle" class="s k">labels?</text><text x="49" y="138" text-anchor="middle" class="s">sup / unsup / RL</text>
+      <text x="155" y="123" text-anchor="middle" class="s k">validate</text><text x="155" y="138" text-anchor="middle" class="s">test score</text>
+      <text x="261" y="123" text-anchor="middle" class="s r">deploy</text><text x="261" y="138" text-anchor="middle" class="s r">predict ŷ</text>
+      <text x="155" y="220" text-anchor="middle" class="p s">drift → retrain · never score on the training data</text>
+    </svg><figcaption>one pipeline serves every application in the next two sheets</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 1 ✍ label the task</span> (i) predict the sale price of a flat → <b>regression</b>; (ii) decide whether a transaction is fraudulent → <b>classification</b>; (iii) group ATMs by usage pattern, no labels → <b>clustering</b>; (iv) an agent trades and is paid or fined → <b>reinforcement learning</b>.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 2 ✍ same data, two models</span> A bank wants the <b>probability of default</b> (logistic regression → a number in 0…1) and, once the loan is approved, the <b>expected loss in taka</b> (linear regression). One table, two targets.</div>
+  </div>
+  <div class="cols">
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">Why deployment is hard</span> Offline 0.92 can still fail in production once the input distribution moves — that is <b>model drift</b>.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">What a feature is</span> One input column — floor area, age, RMS, a word of the text. A numeric input is what a regressor wants.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: applications I ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Applications I</span></div>
+  <h2><span class="no">2</span>Applications I: Health, Finance, Trade</h2><span class="tag">most asked ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Practical application of machine learning</b> means putting a fitted model behind a real decision: a diagnosis, a loan, a shelf, a machine part. Every row below is a <span class="hl">prediction</span>, and the exam wants the <b>task</b> and the <b>model family</b>.</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">Application</th><th class="l">What the model does</th><th class="l">Task</th></tr>
+    <tr><td class="l">Health · diagnosis</td><td class="l">X-ray or MRI → tumour marked (CNN)</td><td class="l">classification</td></tr>
+    <tr><td class="l">Health · drug discovery</td><td class="l">a compound's activity, its toxicity</td><td class="l">regression</td></tr>
+    <tr><td class="l">Health · monitoring</td><td class="l">ICU sensors → deterioration</td><td class="l">regression</td></tr>
+    <tr><td class="l">Health · readmission</td><td class="l">back again within 30 days?</td><td class="l">classification</td></tr>
+    <tr><td class="l">Finance · credit score</td><td class="l">probability of default</td><td class="l">classification</td></tr>
+    <tr><td class="l">Finance · fraud</td><td class="l">the fake 0.01 % of payments</td><td class="l">unsupervised</td></tr>
+    <tr><td class="l">Finance · trading</td><td class="l">the next price move</td><td class="l">regression</td></tr>
+    <tr><td class="l">Finance · cash demand</td><td class="l">what an ATM needs next week</td><td class="l">regression</td></tr>
+    <tr><td class="l">Trade · recommend</td><td class="l">"bought X also bought Y"</td><td class="l">ranking</td></tr>
+    <tr><td class="l">Trade · segments</td><td class="l">group buyers with k-means</td><td class="l">unsupervised</td></tr>
+    <tr><td class="l">Trade · demand</td><td class="l">units to stock next month</td><td class="l">regression</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Read the <span class="hl">output word</span> in the stem: price, demand, temperature, amount, risk score → <b>regression</b>; spam, fraud, disease, default, defect → <b>classification</b>; segment, group, cluster → <b>unsupervised</b>. The words <b>rank</b> or <b>recommend</b> mean the model sorts rather than predicts.</div>
+    <figure class="doodle"><svg viewBox="0 0 330 178" width="322">
+      <g class="w">
+        <rect x="6" y="10" width="98" height="36" rx="12" class="ink fill-b"/>
+        <rect x="6" y="71" width="98" height="36" rx="12" class="ink fill-b"/>
+        <rect x="6" y="132" width="98" height="36" rx="12" class="ink fill-b"/>
+        <rect x="146" y="10" width="176" height="36" rx="12" class="ink-r fill-r"/>
+        <rect x="146" y="71" width="176" height="36" rx="12" class="ink-r fill-r"/>
+        <rect x="146" y="132" width="176" height="36" rx="12" class="ink-g fill-g"/>
+        <path class="ink" d="M104,28 H146 M104,89 H146 M104,150 H146"/>
+      </g>
+      <text x="55" y="33" text-anchor="middle" class="s k">health</text>
+      <text x="55" y="94" text-anchor="middle" class="s k">finance</text>
+      <text x="55" y="155" text-anchor="middle" class="s k">trade</text>
+      <text x="234" y="26" text-anchor="middle" class="s r">label + probability</text><text x="234" y="42" text-anchor="middle" class="s r">classification</text>
+      <text x="234" y="87" text-anchor="middle" class="s r">a number in taka</text><text x="234" y="103" text-anchor="middle" class="s r">regression</text>
+      <text x="234" y="148" text-anchor="middle" class="s g">groups, no labels</text><text x="234" y="164" text-anchor="middle" class="s g">clustering</text>
+    </svg><figcaption>same data, three targets — the output picks the method</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Credit scoring is <b>classification</b> (will this borrower default?), not regression, even though banks quote a "score". A recommender outputs a <b>ranking</b>, not a price. And <b>fraud data are tiny-class</b>: anomaly detection trained mostly on normal traffic is the useful model, and accuracy is a useless score.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ choosing the metric</span> Fraud data: 99 900 normal, 100 fraudulent. A model answering "normal" for everything scores <b>99.9 % accuracy and finds zero fraud</b>. The honest scores are <span class="hl">recall on the fraud class</span> and the <b>false positives</b> an analyst must clear per day.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">Where this touches other lessons</span> The <b>expert systems</b> lesson covers the older rule-based alternative to every row above; the <b>ML fundamentals</b> lesson defines the three paradigms properly. Here we need only the mapping <i>sector → task → model family</i>.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: applications II ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Applications II</span></div>
+  <h2><span class="no">3</span>Applications II: Text to Security</h2><span class="tag">written favourite</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The same pipeline with non-tabular data. Text becomes tokens and embeddings, an image becomes pixels, a machine becomes a <span class="hl">sensor time series</span>, a road becomes a stream of detector counts. The model family changes; the task grammar does not.</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">Application</th><th class="l">Input → output</th><th class="l">Task</th></tr>
+    <tr><td class="l">NLP · sentiment</td><td class="l">review → positive / negative</td><td class="l">classification</td></tr>
+    <tr><td class="l">NLP · translation</td><td class="l">sentence A → sentence B</td><td class="l">mapping</td></tr>
+    <tr><td class="l">NLP · spam filter</td><td class="l">email → keep or quarantine</td><td class="l">classification</td></tr>
+    <tr><td class="l">Vision · self-driving</td><td class="l">frames → objects, lanes, distance</td><td class="l">detection</td></tr>
+    <tr><td class="l">Vision · quality control</td><td class="l">line-scan image → pass / reject</td><td class="l">classification</td></tr>
+    <tr><td class="l">Industry · maintenance</td><td class="l">vibration → days to failure</td><td class="l"><b>regression</b></td></tr>
+    <tr><td class="l">Industry · process</td><td class="l">sensors → best set-point</td><td class="l">regression</td></tr>
+    <tr><td class="l">Transport · traffic</td><td class="l">loop detectors → speed, flow</td><td class="l">regression</td></tr>
+    <tr><td class="l">Transport · ride-hailing</td><td class="l">hour + weather → trips</td><td class="l">regression</td></tr>
+    <tr><td class="l">Agriculture · yield</td><td class="l">soil + NDVI → tonnes/ha</td><td class="l">regression</td></tr>
+    <tr><td class="l">Security · intrusion</td><td class="l">network flows → normal / attack</td><td class="l">unsupervised</td></tr>
+    <tr><td class="l">Security · malware</td><td class="l">binary → malware family</td><td class="l">classification</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:start">
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "Image or sensor in, <b>a number out</b> for predictive maintenance and traffic." Whenever the stem says <i>how much / how many / how long / when will</i>, you are in regression — even if the input was a photograph.</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> Predictive maintenance is <b>regression</b> (how many days of life are left) while <b>fault detection</b> is classification (is it faulty now?) — two models, and examiners do swap them. In "intrusion detection", <b>unsupervised</b> usually means trained on normal traffic only, so a <i>novel</i> attack is still caught.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 196" width="292">
+      <g class="w">
+        <rect x="6" y="12" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="108" y="12" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="210" y="12" width="84" height="34" rx="12" class="ink-g fill-g"/>
+        <rect x="6" y="98" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="108" y="98" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="210" y="98" width="84" height="34" rx="12" class="ink-g fill-g"/>
+        <path class="ink" d="M90,29 H108 M192,29 H210 M90,115 H108 M192,115 H210"/>
+        <path class="ink-p" d="M48,46 V98 M150,46 V98 M252,46 V98" marker-end="url(#ahp)" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="48" y="27" text-anchor="middle" class="s k">sensor</text><text x="48" y="41" text-anchor="middle" class="s">vibration</text>
+      <text x="150" y="27" text-anchor="middle" class="s k">features</text><text x="150" y="41" text-anchor="middle" class="s">RMS, temp</text>
+      <text x="252" y="27" text-anchor="middle" class="s g">regression</text><text x="252" y="41" text-anchor="middle" class="s g">days left</text>
+      <text x="48" y="113" text-anchor="middle" class="s k">camera</text><text x="48" y="127" text-anchor="middle" class="s">pixels</text>
+      <text x="150" y="113" text-anchor="middle" class="s k">features</text><text x="150" y="127" text-anchor="middle" class="s">edges, depth</text>
+      <text x="252" y="113" text-anchor="middle" class="s g">regression</text><text x="252" y="127" text-anchor="middle" class="s g">distance m</text>
+      <text x="150" y="168" text-anchor="middle" class="p s">the middle box is the same for every sector</text>
+      <text x="150" y="186" text-anchor="middle" class="s g">the third box is the exam answer</text>
+    </svg><figcaption>unstructured input, engineered features, numeric output</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ maintenance, end to end</span> A bearing's vibration RMS grows almost linearly from 0.4 to 1.8 mm/s over the last 400 hours before failure. Fit <b>remaining life = 400 − 220 × RMS</b>. At RMS = 1.2 mm/s the model warns <b>136 hours</b> ahead; at 1.6 mm/s, <b>48 hours</b>. The failure is called <i>before</i> it happens.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: regression and the linear model ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Regression</span></div>
+  <h2><span class="no">4</span>Regression &amp; the Model y = mx + c</h2><span class="tag">core definition ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Regression</b> is <span class="hl">supervised learning for a continuous numerical output</span>. With one feature it is the <b>simple linear regression</b> line <span class="circ">ŷ = m x + c</span>: m is the <b>slope</b> (change in ŷ per unit x), c the <b>intercept</b> (ŷ when x = 0). With p features it becomes <b>multiple linear regression</b>: ŷ = β₀ + β₁x₁ + … + β<sub>p</sub>x<sub>p</sub> + ε.</div>
+  <div class="mnote">c is ŷ at x = 0, nothing more</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">Point of comparison</th><th class="l">Regression</th><th class="l">Classification</th></tr>
+    <tr><td class="l">Output</td><td class="l">any real number, unbounded</td><td class="l">one of a fixed label set</td></tr>
+    <tr><td class="l">Typical loss</td><td class="l">squared error (MSE), MAE</td><td class="l">cross-entropy, 0–1 loss</td></tr>
+    <tr><td class="l">Typical scores</td><td class="l"><span class="hl">MAE, MSE, RMSE, R²</span></td><td class="l">accuracy, precision, recall, F1</td></tr>
+    <tr><td class="l">Baseline to beat</td><td class="l">predict the mean of y</td><td class="l">predict the majority class</td></tr>
+    <tr><td class="l">Symbolic form</td><td class="l">ŷ = mx + c</td><td class="l">P(Y=1|X) = 1/(1 + e<sup>−z</sup>)</td></tr>
+    <tr><td class="l">Examples</td><td class="l">house price, temperature</td><td class="l">spam or not spam</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 290 212" width="282">
+      <g class="w">
+        <path class="ink-k" d="M34,186 H276" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M34,186 V16" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M34,166 H276" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M46,178 L258,32" marker-end="url(#ahg)"/>
+        <circle cx="66" cy="168" r="3.5" class="ink-r"/><circle cx="86" cy="140" r="3.5" class="ink-r"/>
+        <circle cx="106" cy="142" r="3.5" class="ink-r"/><circle cx="126" cy="114" r="3.5" class="ink-r"/>
+        <circle cx="146" cy="112" r="3.5" class="ink-r"/><circle cx="166" cy="86" r="3.5" class="ink-r"/>
+        <circle cx="186" cy="84" r="3.5" class="ink-r"/><circle cx="206" cy="58" r="3.5" class="ink-r"/>
+      </g>
+      <text x="52" y="32" class="k w6">ŷ</text>
+      <text x="272" y="204" text-anchor="end" class="k w6">x</text>
+      <text x="112" y="36" text-anchor="middle" class="g w6">ŷ = mx + c</text>
+      <text x="98" y="66" text-anchor="middle" class="g s">slope m</text>
+      <text x="104" y="98" text-anchor="middle" class="r s">the training data</text>
+      <text x="270" y="158" text-anchor="end" class="p s">c: ŷ when x = 0</text>
+      <text x="58" y="182" class="s k">origin</text>
+    </svg><figcaption>the model is the green line; the red dots are what it must fit</figcaption></figure>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">Derivation sketch ✍ why the line passes through (x̄, ȳ)</span>
+        <ol class="steps">
+          <li>Least squares picks m, c so the vertical errors are smallest</li>
+          <li>Both derivatives zero ⟹ Σŷ = Σy ⟹ c = ȳ − m x̄, so the line <b>always</b> threads <span class="circ">(x̄, ȳ)</span></li>
+        </ol></div>
+      <div class="sumbox small"><span class="lbl">The two numbers you need</span>
+        <b>m = Σ(xᵢ − x̄)(yᵢ − ȳ) / Σ(xᵢ − x̄)²</b> &nbsp;·&nbsp; <b>c = ȳ − m x̄</b>, and m = r · σ<sub>y</sub>/σ<sub>x</sub> takes the sign of r.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>m moves, c anchors.</b>" m answers <i>how much does ŷ change when x rises by 1?</i>; c answers <i>what is ŷ at x = 0?</i> The fitted line always threads the mean point (x̄, ȳ) — the fastest way to see whether a candidate answer is plausible.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) The intercept is <b>ŷ at x = 0</b>, not the mean of y. (ii) <b>Logistic regression is classification</b> despite the name. (iii) A best-fit line is <b>not</b> required to pass through the origin. (iv) Regression needs no <b>balanced</b> class structure.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ read the model, then predict</span> A flat-price model in lakh BDT is <b>ŷ = 18.5 + 3.2 × (area in m²)</b>. For 90 m², ŷ = 18.5 + 288 = <span class="circ">306.5</span> lakh. Each extra m² adds <b>3.2 lakh</b> (m = 3.2), while a zero-area plot would be valued at <b>18.5 lakh</b> (c = 18.5) — really the price of the land and registration.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: least squares ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Least squares</span></div>
+  <h2><span class="no">5</span>Least Squares (OLS)</h2><span class="tag">derivable ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Ordinary least squares (OLS)</b> chooses the coefficients that minimise the <span class="hl">sum of squared residuals</span>: minimise SSE = Σ(yᵢ − ŷᵢ)² over every training point. Counting wrong answers belongs to classification; OLS never counts — it <b>squares and adds</b>.</div>
+  <div class="ex small"><span class="lbl">Derivation ✍ the normal equations</span>
+    <ol class="steps">
+      <li>Objective: SSE(a, b) = Σ(yᵢ − a − b xᵢ)²</li>
+      <li>Partials zero: ∂SSE/∂a = −2Σ(yᵢ − a − b xᵢ) = 0 and ∂SSE/∂b = −2Σxᵢ(yᵢ − a − b xᵢ) = 0</li>
+      <li>Two <span class="hl">normal equations</span>: na + b Σx = Σy and a Σx + b Σx² = Σxy</li>
+      <li>Solving: <b>b = [nΣxy − (Σx)(Σy)] / [nΣx² − (Σx)²]</b>, <b>a = ȳ − b x̄</b></li>
+    </ol></div>
+  <div class="cols" style="grid-template-columns:1fr 286px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">x</th><th>1</th><th>2</th><th>3</th><th>Σ</th></tr>
+        <tr><td class="l">y</td><td>2</td><td>4</td><td>5</td><td>11</td></tr>
+        <tr><td class="l">xy</td><td>2</td><td>8</td><td>15</td><td>25</td></tr>
+        <tr><td class="l">x²</td><td>1</td><td>4</td><td>9</td><td>14</td></tr>
+      </table>
+      <table class="hand small" style="width:100%">
+        <tr><th class="l">x</th><th>1</th><th>2</th><th>3</th><th class="l">Totals</th></tr>
+        <tr><td class="l">actual</td><td>2.000</td><td>4.000</td><td>5.000</td><td class="l">Σy = 11</td></tr>
+        <tr><td class="l">fitted ŷ</td><td>2.167</td><td>3.667</td><td>5.167</td><td class="l">Σŷ = 11</td></tr>
+        <tr><td class="l">residual</td><td>−0.167</td><td>+0.333</td><td>−0.167</td><td class="l">Σe = 0</td></tr>
+        <tr><td class="l">e²</td><td>0.028</td><td>0.111</td><td>0.028</td><td class="l">SSE = <b>0.167</b></td></tr>
+      </table>
+    </div>
+<figure class="doodle"><svg viewBox="0 0 286 200" width="278">
+      <g class="w">
+        <path class="ink-k" d="M26,180 H276" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M26,180 V14" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M56,146 L270,26" marker-end="url(#ahg)"/>
+        <circle cx="100" cy="150" r="4.5" class="ink-k"/>
+        <circle cx="160" cy="60" r="4.5" class="ink-k"/>
+        <circle cx="220" cy="88" r="4.5" class="ink-k"/>
+        <path class="ink-r" d="M100,150 L100,116" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M160,60 L160,83" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M220,88 L220,49" marker-end="url(#ah)"/>
+      </g>
+      <text x="42" y="28" class="k w6">y</text>
+      <text x="272" y="196" text-anchor="end" class="k w6">x</text>
+      <text x="146" y="26" text-anchor="middle" class="g w6">least-squares line</text>
+      <text x="108" y="138" class="r s">r₁</text>
+      <text x="168" y="72" class="r s">r₂</text>
+      <text x="228" y="70" class="r s">r₃</text>
+      <text x="146" y="176" text-anchor="middle" class="s p">minimise r₁² + r₂² + r₃²</text>
+    </svg><figcaption>the residuals rᵢ = yᵢ − ŷᵢ are squared and added — never counted</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">Answer for (1, 2), (2, 4), (3, 5)</span> n = 3, Σx = 6, Σy = 11, Σxy = 25, Σx² = 14 ⟹
+    <b>b = [3(25) − 6(11)] / [3(14) − 6²] = (75 − 66) / (42 − 36) = 9/6 = <span class="circ">1.5</span></b> and
+    <b>a = 11/3 − 1.5(2) = 2/3 ≈ <span class="circ">0.67</span></b>, so <b>ŷ = 0.67 + 1.5x</b>.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>O</b>ne line, <b>L</b>east <b>S</b>quares, so the <b>S</b>um is what shrinks." Check the giveaway: on a correct OLS fit the residuals <b>sum to zero</b> and the fitted values <b>sum to the actuals</b>, because the line passes through (x̄, ȳ).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> OLS is called <b>ordinary</b> because it weights every point equally — <b>weighted least squares</b> is the variant that does not. Squaring means one huge residual <b>dominates</b>, so with outliers use MAE-fitting, Huber loss or quantile regression.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">IT link ✍ the same maths in code</span>
+    <div class="code">b = (n*Sxy - Sx*Sy) / (n*Sxx - Sx^2);  a = ybar - b*xbar</div></div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: metrics ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>MAE · MSE · RMSE · R²</span></div>
+  <h2><span class="no">6</span>MAE, MSE, RMSE and R²</h2><span class="tag">MCQ staple ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Every metric is built from the residual <b>eᵢ = yᵢ − ŷᵢ</b>. MAE and MSE average the error in two different ways, RMSE is simply MSE brought back into the units of y, and <b>R² compares the model against the "always predict the mean" baseline</b>.</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">Metric</th><th class="l">Formula</th><th class="l">Property and when to use it</th></tr>
+    <tr><td class="l"><b>MAE</b></td><td class="l">(1/n) Σ|yᵢ − ŷᵢ|</td><td class="l">mean absolute error: in the units of y; <b>robust</b> — outliers barely matter</td></tr>
+    <tr><td class="l"><b>MSE</b></td><td class="l">(1/n) Σ(yᵢ − ŷᵢ)²</td><td class="l">mean squared error: units are y²; <span class="red"><b>punishes large errors much harder</b></span>; trains the model</td></tr>
+    <tr><td class="l"><b>RMSE</b></td><td class="l">√MSE</td><td class="l">root mean squared error: back in the units of y; "off by X units on average"</td></tr>
+    <tr><td class="l"><b>R²</b></td><td class="l">1 − SS<sub>res</sub>/SS<sub>tot</sub></td><td class="l">coefficient of determination: fraction of variance explained; <b>can be negative</b>; R² = r² for a simple line</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 316px;align-items:start">
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 1 ✍ the OLS fit of sheet 6</span> residuals −0.167, +0.333, −0.167:
+        <b>MAE</b> = 0.667/3 = <span class="circ">0.222</span> · <b>MSE</b> = 0.167/3 = <span class="circ">0.0556</span> · <b>RMSE</b> = √0.0556 = <span class="circ">0.236</span> in the units of y.
+        SS<sub>res</sub> = 0.167, SS<sub>tot</sub> = 2.778 + 0.111 + 1.778 = 4.667, so <b>R² = 1 − 0.167/4.667 = <span class="circ">0.964</span></b>: the line explains 96.4 % of the variation in y.</div>
+      <div class="sumbox small"><span class="lbl">Relations worth knowing</span>
+        <span class="tiny"><b>MAE ≤ RMSE</b> always · <b>MSE ≥ MAE²</b>, with equality only when every residual has the same size · SStot = SSreg + SSres · R² = SSreg/SStot · adjusted R² = 1 − (1 − R²)(n − 1)/(n − p − 1).</span></div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 316 226" width="308">
+      <g class="w">
+        <path class="ink-k" d="M40,196 H306" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M40,196 V18" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M40,196 L196,40" style="stroke-dasharray:5 4"/>
+        <circle cx="70" cy="166" r="4" class="ink-k"/>
+        <circle cx="130" cy="106" r="4" class="ink-k"/>
+        <circle cx="160" cy="76" r="4" class="ink-k"/>
+        <circle cx="190" cy="46" r="4" class="ink-k"/>
+        <circle cx="100" cy="164" r="4.5" class="ink-r"/>
+        <circle cx="160" cy="48" r="4.5" class="ink-g"/>
+        <path class="ink-r" d="M100,164 L100,136" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M160,48 L160,76" marker-end="url(#ahg)"/>
+      </g>
+      <text x="52" y="34" class="k w6">actual y</text>
+      <text x="300" y="214" text-anchor="end" class="k w6">predicted ŷ</text>
+      <text x="232" y="48" text-anchor="middle" class="p s">perfect: y = x</text>
+      <text x="88" y="150" text-anchor="end" class="r s">over-predicted</text>
+      <text x="176" y="34" class="g s">under-predicted</text>
+      <text x="84" y="176" class="r w6">e = −28</text>
+      <text x="172" y="68" class="g w6">e = +28</text>
+    </svg><figcaption>every dot is a prediction; the gap is the residual, and SSE sums its square</figcaption></figure>
+  </div>
+  <div class="cols3">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 2 ✍ one outlier flips MSE</span> Four residuals 10, 10, 10, 10 give MAE = 10, MSE = 100. Change the last to 40: MAE = 17.5, MSE = 475, RMSE = 21.8 — <b>MAE rose 75 %, MSE rose 375 %</b>.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<span class="hl">Square, average, root.</span>" MSE = average of squares, RMSE = root of that average, so RMSE = √MSE and it shares the units of y. For R²: <b>1</b> perfect, <b>0</b> = no better than the mean, <b>negative</b> = worse.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> R² is not a percentage and can be <b>negative</b>. MSE is in <b>y²</b>, so only RMSE is readable. MAE is not "more accurate", only differently behaved.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: overfitting, bias-variance, regularisation ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Overfitting &amp; L1/L2</span></div>
+  <h2><span class="no">7</span>Overfitting, Bias–Variance, L1/L2</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Overfitting</b> is fitting the training data so closely — noise included — that the model fails on unseen data. The symptom is the <span class="hl">train–test gap</span>: 99 % on training, 60 % on test, formally <span class="hl">high variance</span>. The opposite failure, poor scores on <i>both</i>, is <b>underfitting = high bias</b>.</div>
+  <table class="hand small" style="width:100%;margin-top:0">
+        <tr><th class="l">Symptom</th><th>Train</th><th>Test</th><th class="l">Diagnosis</th></tr>
+        <tr><td class="l">memorising noise</td><td>99%</td><td>60%</td><td class="l" style="white-space:nowrap"><b>overfitting</b>, high variance</td></tr>
+        <tr><td class="l">model too simple</td><td>58%</td><td>55%</td><td class="l" style="white-space:nowrap">underfitting, high bias</td></tr>
+        <tr><td class="l">healthy fit</td><td>88%</td><td>86%</td><td class="l">generalising ✓</td></tr>
+      </table>
+      <table class="hand small" style="width:100%">
+        <tr><th class="l">Method</th><th class="l">Penalty added to the loss</th><th class="l">Effect on the coefficients</th></tr>
+        <tr><td class="l"><b>L2</b> ridge</td><td class="l" style="white-space:nowrap">λ Σβ²</td><td class="l" style="white-space:nowrap">shrinks every coefficient, <b>none exactly 0</b></td></tr>
+        <tr><td class="l"><b>L1</b> lasso</td><td class="l" style="white-space:nowrap">λ Σ|β|</td><td class="l" style="white-space:nowrap">sets some coefficients <b>exactly 0 → feature selection</b></td></tr>
+        <tr><td class="l"><b>Elastic Net</b></td><td class="l" style="white-space:nowrap">λ₁Σ|β| + λ₂Σβ²</td><td class="l" style="white-space:nowrap">L1's sparsity with L2's stability</td></tr>
+      </table>
+      <div class="sumbox small" style="margin-top:2mm"><span class="lbl">Ridge and lasso objective</span>
+        <span class="tiny">minimise <b>Σ(yᵢ − β₀ − Σβⱼxⱼ)² + λ Σβⱼ²</b> (L2) or <b>+ λ Σ|βⱼ|</b> (L1). A bigger λ means heavier shrinkage, more bias and less variance; the intercept β₀ is not penalised.</span></div>
+  <div class="cols" style="grid-template-columns:288px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 288 190" width="280">
+        <g class="w">
+          <path class="ink-k" d="M28,162 H280" marker-end="url(#ahb)"/>
+          <path class="ink-k" d="M28,162 V16" marker-end="url(#ahb)"/>
+          <path class="ink-r" d="M36,152 C70,104 100,58 140,44 C190,36 230,34 272,34"/>
+          <path class="ink-g" d="M36,158 C80,152 120,96 156,60 C200,50 250,58 272,72"/>
+          <path class="ink-p" d="M44,22 H272" style="stroke-dasharray:5 4"/>
+          <path class="ink-k" d="M156,22 V162" style="stroke-dasharray:4 4"/>
+          <circle cx="156" cy="60" r="4" class="ink-g"/>
+        </g>
+        <text x="34" y="18" class="k w6">error</text>
+        <text x="276" y="180" text-anchor="end" class="k w6">complexity →</text>
+        <text x="62" y="44" class="r s">train error</text>
+        <text x="192" y="88" class="g s">test error</text>
+        <text x="192" y="104" class="g s">rises again</text>
+        <text x="164" y="156" class="s p">just right</text>
+      </svg><figcaption>train error falls for ever; test error turns back up</figcaption></figure>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Lasso zeroes, ridge shrinks.</b>" L1's absolute-value penalty is kinked at zero, so a coefficient that is not earning its place is pushed all the way to 0 and its feature is dropped; L2 only ever pulls towards 0.</div>
+  </div>
+  <div class="cols3">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Overfitting is <b>high variance</b>, underfitting is <b>high bias</b>. (ii) A larger λ = more regularisation, more bias, less variance. (iii) Regularisation adds no information. (iv) Only <b>L1</b> selects features.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ reading the gap</span> Train 99 %, test 60 % ⟹ a 39-point gap ⟹ overfitting. Fix in order of cost: <b>(1)</b> more data, <b>(2)</b> L2 / L1, <b>(3)</b> cross-validation, <b>(4)</b> a simpler model.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">Only a held-out set tells you</span> A test set — or k-fold cross-validation — exposes the gap; a common split is 60 / 20 / 20.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: polynomial regression, correlation vs causation ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Polynomial &amp; correlation</span></div>
+  <h2><span class="no">8</span>Polynomial &amp; Correlation ≠ Causation</h2><span class="tag">conceptual ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Polynomial regression</b> keeps the linear least-squares machinery but adds powers of the feature: <span class="circ">ŷ = β₀ + β₁x + β₂x² + … + β<sub>n</sub>x<sup>n</sup></span>. <b>Correlation</b> is the standardised strength of a <i>linear</i> association, Pearson's r = cov(x, y)/(σ<sub>x</sub>σ<sub>y</sub>), and it always lies in <span class="circ">[−1, +1]</span>.</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">Model</th><th class="l">Form</th><th class="l">Shape and main risk</th></tr>
+    <tr><td class="l">Linear</td><td class="l">ŷ = mx + c</td><td class="l">one straight line; cannot bend, so it underfits curved data</td></tr>
+    <tr><td class="l">Polynomial, degree n</td><td class="l">ŷ = β₀ + β₁x + … + β<sub>n</sub>x<sup>n</sup></td><td class="l">at most n − 1 turning points; <b>overfits</b> and oscillates between points</td></tr>
+    <tr><td class="l">Logistic</td><td class="l">1/(1 + e<sup>−z</sup>)</td><td class="l">S-shaped probability in 0…1; classification only, boundary linear in x</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ a line under-fits, a curve nails it</span> Data (0, 1), (1, 3), (2, 7), (3, 13). Second differences are 2, 2 — constant, so the data are exactly quadratic: <b>ŷ = 1 + x + x²</b>, SSE = <span class="circ">0</span>. The <b>linear</b> fit gives b = 20/5 = 4, a = 0, so ŷ = 4x with residuals <b>+1, −1, −1, +1</b>: MAE = 1, MSE = 1, R² = 1 − 4/84 = 0.952.</div>
+      <div class="trick small"><span class="lbl">Memory trick</span> A linear fit that is <b>wrong but not random</b> leaves a residual pattern: <b>+ − − +</b> is a curve, <b>random signs</b> is noise.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 310 206" width="302">
+      <g class="w">
+        <path class="ink-k" d="M18,178 H302" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M18,178 V14" marker-end="url(#ahb)"/>
+        <circle cx="50" cy="155" r="4.5" class="ink-k"/>
+        <circle cx="100" cy="135" r="4.5" class="ink-k"/>
+        <circle cx="150" cy="95" r="4.5" class="ink-k"/>
+        <circle cx="200" cy="35" r="4.5" class="ink-k"/>
+        <path class="ink-g" d="M50,155 C75,148 100,135 125,118 C150,95 175,68 200,35" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M46,167 L226,42" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M36,150 C52,108 66,120 100,135 C126,148 138,58 166,74 C190,88 204,24 232,38 C252,48 258,112 282,152" marker-end="url(#ahp)" style="stroke-dasharray:6 4"/>
+      </g>
+      <text x="30" y="26" class="k w6">y</text>
+      <text x="298" y="196" text-anchor="end" class="k w6">x</text>
+      <text x="110" y="32" text-anchor="middle" class="p s">degree 9 fits the dots</text>
+      <text x="110" y="46" text-anchor="middle" class="p s">and swings between them</text>
+      <text x="240" y="172" class="r s">degree 1: too flat</text>
+      <text x="150" y="170" text-anchor="end" class="g s">the true curve</text>
+    </svg><figcaption>more power always lowers training error — and can wreck the model</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">Correlation is not causation</span> r = 0.98 between ice-cream sales and drownings, and neither causes the other: both are driven by a <span class="hl">confounding variable</span> — hot weather. r says nothing about <b>direction</b> or non-linearity, and can vanish per individual (<b>Simpson's paradox</b>).</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) r = 0.9 does <b>not</b> prove causation. (ii) r = 0 does <b>not</b> prove independence — it rules out only a <b>linear</b> relation. (iii) For a <b>simple</b> line R² = r² exactly. (iv) A degree-n polynomial bends at most <b>n − 1</b> times.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ two coefficients, one data set</span> For the same four points: r = 20/√(5 × 84) = <span class="circ">0.976</span> and the linear R² = r² = 0.952. Add x² and R² becomes 1.000 while r is unchanged.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Formula sheet</span>
+    <div class="fgrid small">
+      <p><b>Model</b> ŷ = mx + c (m slope, c intercept)</p><p><b>General</b> ŷ = β₀ + Σβⱼxⱼ + ε</p>
+      <p><b>Fit passes through</b> (x̄, ȳ)</p><p><b>m</b> = Σ(x−x̄)(y−ȳ) / Σ(x−x̄)²</p>
+      <p><b>m</b> = [nΣxy − ΣxΣy] / [nΣx² − (Σx)²]</p><p><b>c</b> = ȳ − m x̄</p>
+      <p><b>Residual</b> e = y − ŷ · <b>OLS</b> minimises Σe²</p><p><b>MAE</b> = mean|e| · <b>MSE</b> = mean(e²)</p>
+      <p><b>RMSE</b> = √MSE, units of y</p><p><b>R²</b> = 1 − SSres/SStot</p>
+      <p><b>Adjusted R²</b> = 1 − (1−R²)(n−1)/(n−p−1)</p><p><b>r</b> = cov/(σxσy) ∈ [−1, 1]</p>
+      <p><b>Simple line</b> R² = r² · <b>L2</b> + λΣβ²</p><p><b>L1 lasso</b> + λΣ|β|</p>
+      <p><b>Logistic</b> 1/(1 + e<sup>−z</sup>)</p><p><b>Always</b> MAE ≤ RMSE, MSE ≥ MAE²</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Regression predicts a <b>continuous number</b></li>
+      <li>Classification predicts a <b>label</b> and a probability</li>
+      <li>k-means with no labels = <b>unsupervised</b></li>
+      <li>Reward after acting = <b>reinforcement learning</b></li>
+      <li>OLS minimises <b>Σ(y − ŷ)²</b>, never a count</li>
+      <li>c is <b>ŷ at x = 0</b>, not the mean of y</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>RMSE = <b>√</b>MSE, in the units of y</li>
+      <li>MAE is robust; MSE punishes big errors</li>
+      <li>R² can be <b>negative</b></li>
+      <li>Overfitting = <b>high variance</b>, train ≫ test</li>
+      <li>L1 lasso <b>zeroes</b> features, L2 ridge shrinks</li>
+      <li>r ∈ [−1, 1]; correlation ≠ causation</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> logistic regression is classification · the intercept is not ȳ · MSE is in y², only RMSE is readable · R² is not a percentage · bigger λ = more shrinkage = more bias · lasso selects features, ridge does not · a degree-n polynomial has n − 1 turning points · fraud and intrusion data are tiny-class, so accuracy means nothing · the test set must be unseen · r = 0 does not mean independent.</div>
+  <div class="trick"><span class="lbl">All tricks together</span> "Ruler or yes/no?" picks regression vs classification · "m moves, c anchors" · the fit threads (x̄, ȳ) and Σresidual = 0 · "square, average, root" for MSE and RMSE · "lasso zeroes, ridge shrinks" · a residual pattern of + − − + means bend the model, not blame it · two things moving together can both be driven by a third.</div>
+  <figure class="doodle"><svg viewBox="0 0 520 104" width="520">
+    <g class="w">
+      <circle cx="60" cy="40" r="34" class="ink fill-b"/>
+      <circle cx="168" cy="40" r="34" class="ink fill-b"/>
+      <circle cx="276" cy="40" r="34" class="ink fill-b"/>
+      <circle cx="384" cy="40" r="34" class="ink-r fill-r"/>
+      <circle cx="492" cy="40" r="34" class="ink-r fill-r"/>
+      <path class="ink" d="M96,40 H130 M204,40 H238 M312,40 H346 M420,40 H454" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M492,76 C410,90 140,90 58,76" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="37" text-anchor="middle" class="w6 s">data</text><text x="60" y="52" text-anchor="middle" class="s">X, y</text>
+    <text x="168" y="45" text-anchor="middle" class="w6 l">ŷ = mx + c</text>
+    <text x="276" y="45" text-anchor="middle" class="w6 s">least squares</text>
+    <text x="384" y="37" text-anchor="middle" class="r w6 s">MAE · MSE</text><text x="384" y="52" text-anchor="middle" class="r s">RMSE · R²</text>
+    <text x="492" y="37" text-anchor="middle" class="r w6 s">L1 / L2</text><text x="492" y="52" text-anchor="middle" class="r s">generalise</text>
+    <text x="113" y="30" text-anchor="middle" class="g s">fit</text>
+    <text x="221" y="30" text-anchor="middle" class="g s">choose</text>
+    <text x="329" y="30" text-anchor="middle" class="g s">score</text>
+    <text x="437" y="30" text-anchor="middle" class="g s">tune</text>
+    <text x="276" y="102" text-anchor="middle" class="p s">and never score a model on the data it was fitted to</text>
+  </svg><figcaption>data in, four numbers out, then the same four choices every time</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML Applications &amp; Regression</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Regression predicts:<ol class="opts"><li>a cluster id</li><li>a real number</li><li>a yes/no label</li><li>a best move</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>OLS minimises:<ol class="opts"><li>wrong answers</li><li>Σ(y − ŷ)²</li><li>the sum of x</li><li>correlation r</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Least upset by one outlier:<ol class="opts"><li>MAE</li><li>MSE</li><li>RMSE</li><li>none of them</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>For a simple line, R² is:<ol class="opts"><li>the slope</li><li>SSres/SStot</li><li>the mean ȳ</li><li>r squared</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>L1 (lasso) can:<ol class="opts"><li>shrink equally</li><li>ignore labels</li><li>zero some β</li><li>add no penalty</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Train 99 %, test 60 %:<ol class="opts"><li>overfitting</li><li>underfitting</li><li>the optimum</li><li>rate too small</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>True of correlation:<ol class="opts"><li>r proves cause</li><li>linear only</li><li>needs r = 1</li><li>p-value proves</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>MAE = 4 ⟹ MSE is:<ol class="opts"><li>≤ 4</li><li>= 4</li><li>&lt; 16</li><li>≥ 16</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Logistic regression predicts:<ol class="opts"><li>a sigmoid label</li><li>a real price</li><li>clusters</li><li>fewer features</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>A polynomial adds:<ol class="opts"><li>no extra term</li><li>no overfit risk</li><li>x², x³ … terms</li><li>images only</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-b · 3-a · 4-d · 5-c · 6-a · 7-b · 8-d · 9-a · 10-c</div>
+  <div class="wq"><span class="lbl">Written question</span> Fit an ordinary least-squares line to (1, 2), (2, 4), (3, 5). Give the slope, the intercept, the fitted values, MAE, MSE, RMSE and R², and comment on the fit. <i class="mk">10 marks</i></div>
+  <ol class="steps small" style="margin-top:2mm">
+    <li><b>Set-up (2)</b> — n = 3; Σx = 6, Σy = 11, Σxy = 25, Σx² = 14; minimise SSE = Σ(yᵢ − a − b xᵢ)². <i class="mk">2</i></li>
+    <li><b>Coefficients (3)</b> — b = [nΣxy − (Σx)(Σy)]/[nΣx² − (Σx)²] = (75 − 66)/(42 − 36) = <b>1.5</b>; a = ȳ − b x̄ = 11/3 − 3 = <b>2/3 ≈ 0.67</b>, so <b>ŷ = 0.67 + 1.5x</b>. <i class="mk">3</i></li>
+    <li><b>Fitted values (2)</b> — ŷ = 2.167, 3.667, 5.167; residuals e = −0.167, +0.333, −0.167. Check: Σe = 0 and Σŷ = Σy, since the line passes through (x̄, ȳ). <i class="mk">2</i></li>
+    <li><b>Metrics (2)</b> — MAE = 0.667/3 = <b>0.222</b>; MSE = 0.167/3 = <b>0.0556</b>; RMSE = √0.0556 = <b>0.236</b> in the units of y. <i class="mk">2</i></li>
+    <li><b>R² and comment (1)</b> — SSres = 0.167, SStot = 4.667, R² = 1 − 0.167/4.667 = <b>0.964</b>: 96.4 % of the variance in y is explained and there is no train–test gap at this size. <i class="mk">1</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>Can label any application regression / classification / clustering / RL</li>
+      <li>Can compute m and c by both formula routes</li>
+    </ul>
+    <ul class="tick">
+      <li>Can compute MAE, MSE, RMSE, R² from a residual list</li>
+      <li>Knows why R² can be negative and why r ≠ causation</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

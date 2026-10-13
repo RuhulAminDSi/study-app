@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memory Management: Paging &amp; Virtual Memory: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Memory Management</span></h1>
+  <p class="subtitle">Paging · segmentation · the TLB · page faults · replacement · exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 240" width="580">
+      <g class="w">
+        <ellipse cx="320" cy="116" rx="94" ry="34" class="ink-k fill-y"/>
+        <path class="ink" d="M246,102 L180,62 M246,130 L180,172 M320,82 L320,46 M394,102 L460,62 M394,130 L460,172 M320,150 L320,186 M226,116 L186,116 M414,116 L454,116"/>
+        <rect x="68" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="241" y="14" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="412" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="22" y="100" width="152" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="462" y="100" width="154" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="68" y="176" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="241" y="190" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="412" y="176" width="158" height="32" rx="12" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="115" text-anchor="middle" class="k l">MEMORY MGMT</text><text x="320" y="134" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="147" y="46" text-anchor="middle" class="s" style="font-size:11px">hierarchy · speeds</text><text x="147" y="59" text-anchor="middle" class="s" style="font-size:11px">registers → disk</text>
+      <text x="320" y="35" text-anchor="middle" class="r w6">logical vs physical ★</text>
+      <text x="491" y="46" text-anchor="middle" class="s" style="font-size:11px">relocation ·</text><text x="491" y="59" text-anchor="middle" class="s" style="font-size:11px">binding times</text>
+      <text x="98" y="112" text-anchor="middle" class="g w6">contiguous</text><text x="98" y="126" text-anchor="middle" class="g s" style="font-size:11px">+ swapping</text>
+      <text x="539" y="112" text-anchor="middle" class="r w6">paging ★</text><text x="539" y="126" text-anchor="middle" class="r w6">page table</text>
+      <text x="147" y="197" text-anchor="middle" class="r w6">fragmentation ★</text>
+      <text x="320" y="203" text-anchor="middle" class="w6" style="font-size:13px">segmentation</text>
+      <text x="491" y="197" text-anchor="middle" class="r w6">virtual memory ★</text>
+      <text x="320" y="228" text-anchor="middle" class="s" style="font-size:10.5px">+ TLB · multilevel page tables · segmentation with paging</text>
+      <text x="320" y="238" text-anchor="middle" class="s" style="font-size:10.5px">· page replacement · working set · thrashing</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the scheme the first questions come from</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;font-size:11pt"><b>High-yield list</b><br>① Paging kills external frag, not internal<br>② p = LA div P · d = LA mod P<br>③ PA = f·P + d · offset = log₂P bits<br>④ TLB hit = 1 access, miss = 2<br>⑤ 32-bit + 4 KB ⇒ 2²⁰ entries = 4 MB<br>⑥ Seg: PA = Base[s] + d, d &lt; Limit[s]<br>⑦ Variable segments ⇒ external frag<br>⑧ Fault: trap, test, take, read, PTE, retry<br>⑨ EAT = (1 − p)m + p·f<br>⑩ Thrashing ⇒ admit fewer processes</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The syllabus line is "<span class="hl">Memory management: swapping, paging, segmentation, virtual memory</span>". Scheduling and IPC are in the Process lesson; disk structure is in the Input/Output lesson.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>Why memory management? … p. 2</li><li>Fragmentation &amp; swapping … p. 3</li><li>Paging &amp; translation … p. 4</li><li>TLB, multilevel, PTE bits … p. 5</li><li>Segmentation … p. 6</li></ul>
+    <ul class="tick"><li>Virtual memory &amp; page fault … p. 7</li><li>Page replacement … p. 8</li><li>Working set &amp; thrashing … p. 9</li><li>Night-before p. 10 · Practice p. 11</li></ul>
+  </div>
+  <div class="def tiny"><span class="lbl">What the whole lesson is for</span> Every idea here — the fixed-size page, the offset that is copied rather than moved, the dirty bit that decides whether a disk write happens — keeps three promises at once: <span class="circ">the program gets a flat address space</span>, <span class="circ">two programs never overlap</span>, and <span class="circ">the OS can move anything at any moment</span>.</div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: hierarchy, binding, addresses ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Hierarchy, binding &amp; addresses</span></div>
+  <h2><span class="no">1</span>The Hierarchy, Binding and Addresses</h2><span class="tag">basics ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Memory management</b> controls how memory is <span class="hl">allocated to and reclaimed from</span> processes. Its two goals: <span class="circ">maximise memory utilisation</span> and <span class="circ">minimise the time spent swapping</span>. It also supplies <b>abstraction</b> (memory looks like a flat list of addresses), <b>protection</b> (no process touches another's memory) and <b>sharing</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 164" width="228">
+      <g class="w">
+        <rect x="10" y="6" width="260" height="32" rx="8" class="ink fill-b"/>
+        <rect x="34" y="44" width="212" height="32" rx="8" class="ink fill-b"/>
+        <rect x="58" y="82" width="164" height="32" rx="8" class="ink-r fill-r"/>
+        <rect x="82" y="120" width="116" height="32" rx="8" class="ink fill-b"/>
+      </g>
+      <text x="140" y="21" text-anchor="middle" class="k w6">Registers</text><text x="140" y="33" text-anchor="middle" class="s" style="font-size:10.5px">bytes · &lt; 1 ns</text>
+      <text x="140" y="59" text-anchor="middle" class="k w6">Cache · SRAM</text><text x="140" y="71" text-anchor="middle" class="s" style="font-size:10.5px">KB–MB · ~10 ns</text>
+      <text x="140" y="97" text-anchor="middle" class="k w6">Main memory</text><text x="140" y="109" text-anchor="middle" class="r s" style="font-size:10.5px">GB · ~100 ns · the OS job</text>
+      <text x="140" y="135" text-anchor="middle" class="k w6">Disk / SSD</text><text x="140" y="147" text-anchor="middle" class="s" style="font-size:10.5px">TB · ~10 ms</text>
+    </svg><figcaption>up = faster and smaller. The OS manages the <b>middle band only</b></figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">Level</th><th class="l">Size</th><th class="l">Access</th><th class="l">Managed by</th></tr>
+      <tr><td class="l"><b>Registers</b></td><td class="l">bytes</td><td class="l">&lt; 1 ns</td><td class="l">compiler</td></tr>
+      <tr><td class="l"><b>Cache</b> (SRAM)</td><td class="l">KB – MB</td><td class="l">1 – 100 ns</td><td class="l">hardware</td></tr>
+      <tr><td class="l"><b>Main memory</b> (DRAM)</td><td class="l">GB</td><td class="l">50 – 100 ns</td><td class="l"><span class="circ">the OS — this lesson</span></td></tr>
+      <tr><td class="l"><b>Secondary storage</b></td><td class="l">TB</td><td class="l">50 µs – 10 ms</td><td class="l">file system + swap</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Binding time</th><th class="l">The address is fixed</th><th class="l">If the process moves</th></tr>
+    <tr><td class="l"><b>Compile time</b></td><td class="l">while compiling; the structure is already known — absolute addresses</td><td class="l"><span class="red"><b>must be recompiled</b></span></td></tr>
+    <tr><td class="l"><b>Load time</b></td><td class="l">when it is loaded into memory — relocatable code, base + limit set at load</td><td class="l">just reload it</td></tr>
+    <tr><td class="l"><b>Execution time</b> ★</td><td class="l">on <b>every reference</b> — the MMU translates, using base/limit or a page table</td><td class="l"><span class="circ">nothing — true dynamic relocation</span></td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Logical vs physical</span> The <b>logical (relative)</b> address is what the program generates — counted from <b>0</b>, unrelated to where the program sits. The <b>physical (absolute)</b> address is the address in the real RAM unit; <span class="circ">only the memory hardware sees it</span>. Translating one into the other is <b>relocation</b>: because it happens while the program runs, the OS may move a process at any moment.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Base + limit</span> <b>Relocation (base) register</b> = where the partition begins; <b>limit register</b> = its size. Every logical address <i>a</i> is checked against the limit, then <span class="hl">physical = logical + base</span>. If <i>a</i> ≥ limit the CPU traps and aborts the process.</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Compile = frozen, load = pinned, run = live.</b>" Only <b>execution-time</b> binding lets a program move without being recompiled — which is why every real machine has an MMU. Hold on to this: <span class="hl">the program sees logical, only the chips see physical</span>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Binding at <b>load</b> time still needs relocatable code; <b>execution</b> time is what makes swapping and compaction possible. (ii) Absolute addresses mean <b>recompiling</b> for every new location. (iii) Base + limit belong to <b>contiguous</b> memory, the page table to <b>paging</b>.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: fragmentation, contiguous, swapping ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Fragmentation &amp; swapping</span></div>
+  <h2><span class="no">2</span>Fragmentation, Contiguous Allocation &amp; Swapping</h2><span class="tag">before paging ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Contiguous allocation</b> gives each process <b>one unbroken block</b> of memory, guarded by a <b>base (relocation)</b> register and a <b>limit</b> register. <b>Fragmentation</b> is free memory that cannot be used: <span class="hl">internal</span> = space <b>inside</b> a block already handed out, <span class="hl">external</span> = free space <b>between</b> blocks, not contiguous enough for the next request. Internal waste can never be recovered; external waste is cured only by <b>compaction</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,238px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 168" width="232">
+      <g class="w">
+        <rect x="8" y="8" width="264" height="30" rx="5" class="ink"/>
+        <rect x="8" y="42" width="104" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="116" y="42" width="46" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="166" y="42" width="106" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="8" y="74" width="70" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="82" y="74" width="64" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="150" y="74" width="122" height="28" rx="5" class="ink-g fill-g"/>
+      </g>
+      <text x="140" y="28" text-anchor="middle" class="k w6 s">one process = ONE unbroken block</text>
+      <text x="60" y="61" text-anchor="middle" class="g w6 s">P1</text><text x="139" y="61" text-anchor="middle" class="r w6 s">P4</text><text x="219" y="61" text-anchor="middle" class="g w6 s">P2</text>
+      <text x="43" y="93" text-anchor="middle" class="g w6 s">P3</text><text x="114" y="93" text-anchor="middle" class="r w6 s">P6</text><text x="211" y="93" text-anchor="middle" class="g w6 s">P5</text>
+      <text x="140" y="120" text-anchor="middle" class="r w6 s">holes = external fragmentation</text>
+      <text x="140" y="146" text-anchor="middle" class="s k">only the biggest contiguous run counts,</text>
+      <text x="140" y="158" text-anchor="middle" class="s k">never the sum of the free memory</text>
+    </svg><figcaption>compaction closes the holes; internal waste it can never touch</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Strategy</th><th class="l">Picks the hole that is…</th><th class="l">Verdict</th></tr>
+        <tr><td class="l"><b>First fit</b></td><td class="l">first big enough, from the start</td><td class="l">fast; slivers left at the <b>end</b></td></tr>
+        <tr><td class="l"><b>Best fit</b></td><td class="l">smallest hole that still fits</td><td class="l"><span class="red"><b>worst</b></span> leftover slivers</td></tr>
+        <tr><td class="l"><b>Worst fit</b></td><td class="l">largest hole available</td><td class="l">destroys the big block too soon</td></tr>
+        <tr><td class="l"><b>Next fit</b></td><td class="l">first that fits, resuming where it stopped</td><td class="l">spreads the damage evenly</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> (i) "<b>Which suffers external fragmentation?</b>" → contiguous and segmentation, <b>never paging</b>; "which internal?" → paging and <b>fixed</b> partitions. (ii) Compaction needs relocation hardware, i.e. <b>execution-time binding</b>. (iii) A swap can double the free space on paper and still leave no block big enough.</div>
+    </div>
+  </div>
+  <div class="def tiny"><span class="lbl">Swapping</span> <b>Swapping</b> moves an <b>entire process</b> out to the swap device on disk and later brings it back, which lets the system run <span class="hl">more processes than physical memory</span> and is a convenient moment to compact. Its whole cost is disk I/O. <span class="red">Swapping ≠ paging:</span> swapping moves a <b>whole process</b> on the OS's initiative; paging moves <b>one page</b> when the program itself references it, and is invisible to the process.</div>
+  <div class="cols" style="align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ what does a swap cost?</span> A disk transfers at 10 MB/s with ~10 ms seek. <b>(a)</b> A 1 MB process out and back = <span class="circ">200 ms + 20 ms = 220 ms</span>. <b>(b)</b> A 33 MB process swapped twice each way = 132 MB ÷ 10 = <b>13.2 s</b>. <b>(c)</b> One 4 KB page instead = <b>0.4 ms</b> — <span class="circ">550× cheaper</span>. <b>(d)</b> Paging, which moves only the pages actually needed, is therefore what keeps a machine responsive.</div>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Inside = internal, outside = external.</b>" Compaction can only fix the outside kind — the inside kind is baked into the size you handed over. Contiguous allocation needs one whole free hole; <span class="hl">paging never does</span>, which is exactly why paging exists.</div>
+      <div class="tipbox tiny"><span class="lbl">In practice</span> Demand paging has almost killed classic swapping. A machine with plenty of RAM never swaps; when it does, the kernel pages out cold anonymous memory, and the swap file is a last resort, not a workspace.</div>
+    </div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: paging ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Paging &amp; address translation</span></div>
+  <h2><span class="no">3</span>Paging: Pages, Frames, Page Table, Translation</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Paging</b> divides both memories into <span class="hl">fixed-size blocks</span>: a process's logical memory into <b>pages</b>, physical memory into <b>frames</b>, <b>page = frame in size</b>. A process may then occupy <b>any</b> frames in any order — contiguity is gone. The <b>page table</b> is an array of <span class="hl">page-table entries (PTEs)</span>, one per page, each holding a frame number plus control bits.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,272px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 192" width="266">
+      <g class="w">
+        <rect x="6" y="22" width="50" height="20" rx="3" class="ink fill-b"/>
+        <rect x="6" y="46" width="50" height="20" rx="3" class="ink fill-b"/>
+        <rect x="6" y="70" width="50" height="20" rx="3" class="ink-r fill-r"/>
+        <rect x="6" y="94" width="50" height="20" rx="3" class="ink fill-b"/>
+        <rect x="112" y="22" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="112" y="46" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="112" y="70" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="112" y="94" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="222" y="22" width="72" height="20" rx="3" class="ink fill-y"/>
+        <rect x="222" y="46" width="72" height="20" rx="3" class="ink fill-y"/>
+        <rect x="222" y="70" width="72" height="20" rx="3" class="ink fill-y"/>
+        <rect x="222" y="94" width="72" height="20" rx="3" class="ink fill-y"/>
+        <path class="ink" d="M58,32 L110,32 M58,56 L110,56 M58,80 L110,80 M58,104 L110,104"/>
+        <path class="ink" d="M170,32 L220,104 M170,56 L220,32 M170,80 L220,56 M170,104 L220,80"/>
+        <path class="ink-k" d="M6,128 H294"/>
+        <rect x="6" y="140" width="126" height="24" rx="4" class="ink-r fill-r"/>
+        <rect x="136" y="140" width="66" height="24" rx="4" class="ink-g fill-g"/>
+        <path class="ink" d="M206,152 L232,152" marker-end="url(#ahb)"/>
+        <rect x="238" y="140" width="56" height="24" rx="4" class="ink-g fill-g"/>
+      </g>
+      <text x="31" y="16" text-anchor="middle" class="k w6 s">logical</text>
+      <text x="140" y="16" text-anchor="middle" class="k w6 s">page table</text>
+      <text x="258" y="16" text-anchor="middle" class="k w6 s">physical</text>
+      <text x="31" y="37" text-anchor="middle" class="s">0</text><text x="31" y="61" text-anchor="middle" class="s">1</text>
+      <text x="31" y="85" text-anchor="middle" class="r w6">2</text><text x="31" y="109" text-anchor="middle" class="s">3</text>
+      <text x="140" y="37" text-anchor="middle" class="s">f 1</text><text x="140" y="61" text-anchor="middle" class="s">f 3</text>
+      <text x="140" y="85" text-anchor="middle" class="r w6">f 0</text><text x="140" y="109" text-anchor="middle" class="s">f 2</text>
+      <text x="258" y="37" text-anchor="middle" class="s">frame 1</text><text x="258" y="61" text-anchor="middle" class="s">frame 3</text>
+      <text x="258" y="85" text-anchor="middle" class="s">frame 0</text><text x="258" y="109" text-anchor="middle" class="s">frame 2</text>
+      <text x="69" y="157" text-anchor="middle" class="r w6 s">p = LA div P</text>
+      <text x="169" y="157" text-anchor="middle" class="g w6 s">d</text>
+      <text x="266" y="157" text-anchor="middle" class="g w6 s">f·P + d</text>
+      <text x="150" y="180" text-anchor="middle" class="s k">the offset d is copied unchanged — only the page number is replaced</text>
+      <text x="150" y="192" text-anchor="middle" class="g s k">page 2 lives in frame 0: the pages sit in no order at all</text>
+    </svg><figcaption>one frame per page, in any order — that sentence is the whole idea of paging</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Term</th><th class="l">Meaning</th></tr>
+        <tr><td class="l"><b>Page</b></td><td class="l">a fixed-size block of one process's <b>logical</b> memory</td></tr>
+        <tr><td class="l"><b>Frame</b></td><td class="l">a fixed-size block of <b>physical</b> memory, same size as a page</td></tr>
+        <tr><td class="l"><b>Page table</b></td><td class="l">per-process array of PTEs; it <i>is</i> the process's map</td></tr>
+        <tr><td class="l"><b>PTE</b></td><td class="l">frame number + valid / protection / dirty / reference</td></tr>
+        <tr><td class="l"><b>Free-frame list</b></td><td class="l">frames nobody is using, available at once</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> (i) The offset is copied <b>unchanged</b> — never add it to anything but f·P. (ii) <span class="circ">Paging removes external fragmentation only</span>; the last page is usually part-full, wasting on average <b>half a page</b> per process. (iii) Frames are the unit of allocation, so nothing inside a frame can be shared.</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">The four formulas — every paging question is one of them</span>
+    <div class="fgrid tiny">
+      <p><b>page number</b> p = ⌊LA ÷ P⌋ = LA div P</p>
+      <p><b>offset</b> d = LA mod P</p>
+      <p><b>physical address</b> PA = f·P + d</p>
+      <p><b>pages in a process</b> size ÷ P</p>
+    </div>
+    <p class="tiny" style="margin-top:1mm">If P = <b>2ⁿ</b> bytes the offset needs exactly <span class="circ">n = log₂P bits</span> and the page number takes the rest of the address. 4 KB = 2¹², so a 32-bit address splits into <b>20-bit p + 12-bit d</b>.</p></div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ logical 3000, page 2 → frame 5</span> P = 1 KB = 1024. <b>(a)</b> p = 3000 div 1024 = <b>2</b> (2 × 1024 = 2048; 3 × 1024 = 3072 &gt; 3000). <b>(b)</b> d = 3000 mod 1024 = 3000 − 2048 = <b>952</b>. <b>(c)</b> PTE[2] = <b>5</b>. <b>(d)</b> PA = 5 × 1024 + 952 = 5120 + 952 = <span class="circ">6072</span>. <b>(e)</b> Check: 5 × 1024 = 5120 ≤ 6072 &lt; 6144 ✓. <b>(f)</b> The offset travels from the logical address to the physical one completely untouched.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Page in, frame out.</b>" The page number is an <b>index</b> into the page table; the offset is a <b>position</b> inside the block. Paging swaps the index and keeps the position.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> Every x86-64 and ARM64 CPU walks exactly this table and caches recent PTEs in a <b>TLB</b> — the next sheet.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: TLB, multilevel tables, PTE bits ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>TLB, multilevel tables &amp; PTE bits</span></div>
+  <h2><span class="no">4</span>The TLB, Multilevel Page Tables &amp; PTE Bits</h2><span class="tag">high-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Consulting the page table on every reference would make each access cost <b>two</b> trips. The <b>translation lookaside buffer (TLB)</b> is a small, very fast <span class="hl">associative cache of recent PTEs</span> inside the MMU. On a <b>hit</b> the frame number comes from the TLB and the data is fetched in <b>one</b> further access; on a <b>miss</b> the page table is read from memory and the TLB is refilled.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,246px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 128" width="230">
+      <g class="w">
+        <rect x="8" y="8" width="88" height="20" rx="4" class="ink-r fill-r"/>
+        <rect x="100" y="8" width="88" height="20" rx="4" class="ink-r fill-r"/>
+        <rect x="192" y="8" width="102" height="20" rx="4" class="ink fill-y"/>
+        <rect x="8" y="52" width="88" height="26" rx="5" class="ink fill-b"/>
+        <rect x="100" y="52" width="88" height="26" rx="5" class="ink fill-b"/>
+        <rect x="192" y="52" width="102" height="26" rx="5" class="ink-g fill-g"/>
+        <path class="ink" d="M52,30 L52,48" marker-end="url(#ahb)"/>
+        <path class="ink" d="M144,30 L144,48" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M243,30 L243,48" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M52,82 L52,106" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M243,82 L243,106" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M84,102 L216,102" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="52" y="22" text-anchor="middle" class="r w6 s">p1 · 10 bits</text>
+      <text x="144" y="22" text-anchor="middle" class="r w6 s">p2 · 10 bits</text>
+      <text x="243" y="22" text-anchor="middle" class="w6 s">d · 12 bits</text>
+      <text x="52" y="69" text-anchor="middle" class="k w6 s">outer table</text>
+      <text x="144" y="69" text-anchor="middle" class="k w6 s">inner table</text>
+      <text x="243" y="69" text-anchor="middle" class="g w6 s">frame f</text>
+      <text x="150" y="120" text-anchor="middle" class="s k">p1 indexes the outer table, p2 the inner one — d is untouched</text>
+      <text x="150" y="128" text-anchor="middle" class="r s k">an inner table exists only once a page of that region is touched</text>
+    </svg><figcaption>a 32-bit address with 4 KB pages: 20 page-number bits, split 10 + 10</figcaption></figure>
+    <div>
+      <div class="sumbox" style="margin-top:0"><span class="lbl">TLB cost</span><p class="tiny">Let <b>t</b> = TLB lookup, <b>m</b> = one memory access, <b>h</b> = hit ratio.<br><b>EAT = h·(t + m) + (1 − h)·(t + 2m)</b></p></div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Scheme, 32-bit + 4 KB pages</th><th class="l">Size</th></tr>
+        <tr><td class="l"><b>Single-level</b></td><td class="l">2²⁰ entries × 4 B = <span class="circ">4 MB per process</span></td></tr>
+        <tr><td class="l"><b>Two-level</b> (10 + 10)</td><td class="l">outer 2¹⁰ × 4 B = <b>4 KB</b>, plus 4 KB per inner table in use</td></tr>
+        <tr><td class="l"><b>What you save</b></td><td class="l">a process using 32 pages holds <b>4 KB + 128 B</b>, not 4 MB</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ TLB timing</span> A TLB lookup takes <b>20 ns</b>, one memory access <b>100 ns</b>, hit ratio <b>80 %</b>. <b>(a)</b> Hit = 20 + 100 = <b>120 ns</b>. <b>(b)</b> Miss = 20 + 100 (page table) + 100 (data) = <b>220 ns</b>. <b>(c)</b> EAT = 0.8 × 120 + 0.2 × 220 = 96 + 44 = <span class="circ">140 ns</span>. <b>(d)</b> Without a TLB it would be 200 ns. <b>(e)</b> Multilevel tables do not change this arithmetic — they only make the <i>miss</i> shorter, because a missing outer entry ends the walk at once.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">PTE bit</th><th class="l">1 means</th><th class="l">0 means</th><th class="l">Read by</th></tr>
+    <tr><td class="l"><b>Valid</b></td><td class="l">page is in a frame now</td><td class="l">not in memory → <span class="circ">page fault</span></td><td class="l">MMU, every ref</td></tr>
+    <tr><td class="l"><b>Protection</b></td><td class="l">read / write / execute ok</td><td class="l">denied → fault</td><td class="l">MMU, every ref</td></tr>
+    <tr><td class="l"><b>Dirty</b></td><td class="l">written to since loading</td><td class="l">unchanged → no write-back</td><td class="l">replacement</td></tr>
+    <tr><td class="l"><b>Reference</b></td><td class="l">touched recently</td><td class="l">not touched</td><td class="l"><b>clock</b>, LRU</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) The TLB is <b>hardware</b>, not a table in memory — usually <b>associative memory</b> searched by content. (ii) Dirty = "changed", reference = "looked at"; swapping the two words loses the answer. (iii) A page can be <b>valid and never written</b> — validity is about presence, not modification.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Hit once, miss twice.</b>" And "<b>D for Dirty, R for Referenced</b> — dirty decides <i>whether to write back</i>, reference decides <i>who goes out next</i>." A TLB is a cache of the page table, so a huge table is still cheap while the working set of pages is small.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: segmentation ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Segmentation</span></div>
+  <h2><span class="no">5</span>Segmentation, and Segmentation with Paging</h2><span class="tag">written favourite ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Segmentation</b> divides memory into <span class="hl">variable-length logical units</span> — code, data, stack, heap — instead of equal blocks. A logical address is the pair <span class="circ">(segment number, offset)</span>. The <b>segment table</b> holds, per segment, a <b>base</b> (starting physical address) and a <b>limit</b> (length), plus protection bits, so <b>PA = Base[s] + d</b> whenever <b>d &lt; Limit[s]</b>; otherwise a <b>segmentation fault</b>.</div>
+<div class="cols" style="grid-template-columns:minmax(0,262px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 152" width="256">
+      <g class="w">
+        <rect x="8" y="8" width="86" height="24" rx="4" class="ink fill-b"/>
+        <rect x="8" y="36" width="86" height="20" rx="4" class="ink fill-b"/>
+        <rect x="8" y="60" width="86" height="24" rx="4" class="ink fill-g"/>
+        <rect x="8" y="88" width="86" height="40" rx="4" class="ink fill-g"/>
+        <rect x="158" y="8" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <rect x="158" y="38" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <rect x="158" y="68" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <rect x="158" y="98" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <path class="ink" d="M96,20 L156,20 M96,46 L156,50 M96,72 L156,80 M96,108 L156,110"/>
+      </g>
+      <text x="51" y="25" text-anchor="middle" class="w6 s">0 code</text>
+      <text x="51" y="51" text-anchor="middle" class="w6 s">1 data</text>
+      <text x="51" y="77" text-anchor="middle" class="w6 s">2 heap</text>
+      <text x="51" y="113" text-anchor="middle" class="w6 s">3 stack</text>
+      <text x="225" y="24" text-anchor="middle" class="s" style="font-size:11px">base 0 · limit 24</text>
+      <text x="225" y="54" text-anchor="middle" class="s" style="font-size:11px">base 24 · limit 20</text>
+      <text x="225" y="84" text-anchor="middle" class="s" style="font-size:11px">base 44 · limit 24</text>
+      <text x="225" y="114" text-anchor="middle" class="s" style="font-size:11px">base 68 · limit 40</text>
+      <text x="225" y="146" text-anchor="middle" class="r w6 s">every segment a different length ★</text>
+    </svg><figcaption>the variable-length partition problem again. Worked: segment 2 has base 44, limit 24, so (2, 23) → 67 ✓ but (2, 24) → <span class="red">fault</span>, because 24 ≥ limit</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Point</th><th class="l">Paging</th><th class="l">Segmentation</th></tr>
+        <tr><td class="l">Block size</td><td class="l">fixed</td><td class="l"><b>variable</b></td></tr>
+        <tr><td class="l">Address</td><td class="l">(p, d)</td><td class="l">(s, d)</td></tr>
+        <tr><td class="l">Table entry</td><td class="l">frame number + bits</td><td class="l">base + limit + bits</td></tr>
+        <tr><td class="l">Fragmentation</td><td class="l">internal only</td><td class="l"><span class="circ">external</span> only</td></tr>
+        <tr><td class="l">Grows with data?</td><td class="l">no</td><td class="l">yes — heap, stack</td></tr>
+        <tr><td class="l">Protection / sharing</td><td class="l">per page, awkward</td><td class="l">natural, per segment</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> (i) Segmentation gives <b>external</b> and paging gives <b>internal</b> fragmentation — opposite diseases. (ii) A segment number is <b>not</b> a page number; segments have no fixed size, so an address cannot be split into bits. (iii) Sharing a whole segment is natural; sharing <b>half</b> a page is not.</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">Segmentation with paging (segmented paging)</span>
+    <p class="tiny">Every segment is <b>again</b> divided into fixed-size pages and <b>each segment gets its own page table</b>; the segment-table entry now holds the <b>base address of that segment's page table</b> instead of a base+limit pair. A logical address <span class="hl">(s, p, d)</span> is translated in <b>three</b> steps — segment table → the page table of segment <i>s</i> → the frame of page <i>p</i> inside it — giving PA = f·P + d. The segment table itself can be small enough to sit in registers, so only the two memory hops cost anything.</p></div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Base adds, offset selects, limit refuses.</b>" In paging the frame number <b>replaces</b> the page number and the offset is copied; in segmentation the base is <b>added</b> to the offset.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">What real machines do</span> x86 real mode is pure segmentation; x86 protected mode is <b>segmented paging</b> — a selector picks a descriptor, which supplies the page-table base, then ordinary paging runs. ARM64 and Linux dropped segmentation entirely.</div>
+  </div>
+  <div class="exam tiny"><span class="lbl">Exam trap</span> The <b>limit</b> is a <b>length</b>, not an end address: with base 44 and limit 24 the last legal offset is <b>23</b>, because d &lt; Limit. A <b>segmentation fault</b> and a <b>page fault</b> are different traps with different causes.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: virtual memory, page fault ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Virtual memory &amp; the page fault</span></div>
+  <h2><span class="no">6</span>Virtual Memory, Demand Paging &amp; the Page Fault</h2><span class="tag">written question ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Virtual memory</b> lets a process be <span class="hl">executed while only part of it is in physical memory</span>: the program works with its own <b>virtual address space</b>, which may be larger than RAM, and the OS keeps the unused part on the back store. <b>Demand paging</b> is the usual implementation — <b>load a page only when it is first referenced</b>, also called <span class="circ">lazy loading</span>. Each PTE carries a <b>valid–invalid bit</b>: valid = present in memory, invalid = not present.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 200" width="244">
+      <g class="w">
+        <rect x="6" y="10" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="106" y="10" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="206" y="10" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="206" y="112" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="106" y="112" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="6" y="112" width="88" height="32" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M96,26 L104,26 M196,26 L204,26 M250,44 L250,110 M204,128 L196,128 M104,128 L96,128 M50,110 L50,44" marker-end="url(#ahb)"/>
+      </g>
+      <text x="50" y="31" text-anchor="middle" class="w6 s">1 trap to OS</text>
+      <text x="150" y="31" text-anchor="middle" class="w6 s">2 check legal?</text>
+      <text x="250" y="31" text-anchor="middle" class="w6 s">3 free frame?</text>
+      <text x="250" y="133" text-anchor="middle" class="w6 s">4 read from disk</text>
+      <text x="150" y="133" text-anchor="middle" class="w6 s">5 update the PTE</text>
+      <text x="50" y="133" text-anchor="middle" class="w6 s">6 restart insn</text>
+      <text x="150" y="172" text-anchor="middle" class="r w6 s">the six steps, in the order</text>
+      <text x="150" y="186" text-anchor="middle" class="r w6 s">an examiner wants them</text>
+      <text x="150" y="200" text-anchor="middle" class="s k" style="font-size:11px">step 6 is not optional</text>
+    </svg><figcaption>the loop closes because the faulting instruction is re-executed from the beginning</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Servicing a page fault — six steps, in order</span>
+      <ol class="steps tiny">
+        <li>The MMU finds <b>valid = 0</b> and <span class="circ">traps to the OS</span>; the process is blocked.</li>
+        <li>The OS checks the reference is <b>legal</b>. Illegal → <b>abort the process</b>.</li>
+        <li>Take a <b>free frame</b>; if there is none, run a <b>page-replacement algorithm</b> and write the victim out first if its <b>dirty bit</b> is set.</li>
+        <li>Schedule a <b>disk read</b> of the required page into that frame; the process waits.</li>
+        <li>When the read completes, <b>update the page table</b>: frame number, <b>valid = 1</b>, dirty = 0.</li>
+        <li><b>Restart</b> the instruction that caused the fault.</li>
+      </ol></div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ effective access time</span> m = 100 ns per access, f = 10 ms per fault, p = fault rate. <span class="hl">EAT = (1 − p)·m + p·f</span>. <b>(a)</b> p = 10⁻⁶: EAT ≈ 100 + 10⁻⁶ × 10⁷ = <b>110 ns</b>. <b>(b)</b> For the fault overhead to stay under one memory access, p·f &lt; m, so p &lt; 100 ns ÷ 10⁷ ns = <span class="circ">10⁻⁵</span>. <b>(c)</b> p = 10⁻³ gives about <b>10 µs</b> — a hundred times slower. <b>(d)</b> This is why a fault rate above roughly one in 100 000 is fatal, and why the working-set model exists.</div>
+    <div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) A page fault is <b>not</b> an error — it is the normal way a page arrives. (ii) The dirty bit is checked <b>before</b> the disk read, and only a dirty victim is written back. (iii) "Invalid" means <b>not in memory</b>, not "broken". (iv) Virtual memory lets <b>many</b> processes share the RAM, not just one process exceed it.</div>
+      <div class="trick small"><span class="lbl">Memory trick</span> "<b>Trap, test, take, read, write the PTE, retry.</b>" Six words, always in that order. And the last word is the giveaway: <span class="hl">if you never restart the instruction, the process stays dead for ever</span>.</div>
+    </div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">In practice</span> Reference counting and garbage collection are the same idea used for a different purpose: map a known-good image into memory, fault it in lazily, and page it out untouched. Linux calls the second case a <b>minor fault</b> — no disk I/O, just fill the PTE.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: page replacement ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Page replacement</span></div>
+  <h2><span class="no">7</span>Page Replacement: FIFO, Optimal, LRU, Clock</h2><span class="tag">trace this ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Page replacement</b> runs when a process needs a frame and none is free: the OS picks a resident page, writes it out if dirty, and reuses its frame. <span class="hl">Page-fault rate</span> PFR = page faults ÷ total references. <b>No algorithm avoids the first reference to a page</b>, and <b>more frames is not always fewer faults</b> — <span class="circ">Belady's anomaly</span>.</div>
+  <table class="hand tiny" style="width:100%;line-height:5.6mm">
+    <tr><th class="l">Algorithm</th><th class="l">Evicts the page that is…</th><th class="l">Realisable?</th><th class="l">Verdict</th></tr>
+    <tr><td class="l"><b>FIFO</b></td><td class="l">loaded longest ago, regardless of use</td><td class="l">yes — a queue</td><td class="l">simple; <span class="red">suffers Belady's anomaly</span></td></tr>
+    <tr><td class="l"><b>Optimal (MIN)</b></td><td class="l">needed <b>furthest in the future</b></td><td class="l">no — needs future knowledge</td><td class="l"><span class="circ">the benchmark, not a real choice</span></td></tr>
+    <tr><td class="l"><b>LRU</b></td><td class="l">used <b>longest ago</b></td><td class="l">exactly; practically approximated</td><td class="l">good; no Belady anomaly</td></tr>
+    <tr><td class="l"><b>Clock</b> ★</td><td class="l">found with a reference bit = 0 on a sweep</td><td class="l">yes — cheap, no extra bit</td><td class="l">LRU's idea at LRU's cost</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">Worked trace ✍ string 1 2 3 4 1 2 5 1 2 3 4 5, three frames, all empty — F = page fault, "hit" = already in a frame</span>
+    <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:5.2mm">
+      <tr><th>ref</th><th>page</th><th>FIFO frames</th><th>F/L</th><th>LRU frames</th><th>F/L</th><th>Optimal frames</th><th>F/L</th></tr>
+      <tr><td>1</td><td>1</td><td>1 – –</td><td>F</td><td>1 – –</td><td>F</td><td>1 – –</td><td>F</td></tr>
+      <tr><td>2</td><td>2</td><td>1 2 –</td><td>F</td><td>1 2 –</td><td>F</td><td>1 2 –</td><td>F</td></tr>
+      <tr><td>3</td><td>3</td><td>1 2 3</td><td>F</td><td>1 2 3</td><td>F</td><td>1 2 3</td><td>F</td></tr>
+      <tr><td>4</td><td>4</td><td>4 2 3</td><td>F</td><td>2 3 4</td><td>F</td><td>1 2 4</td><td>F</td></tr>
+      <tr><td>5</td><td>1</td><td>4 1 3</td><td>F</td><td>3 4 1</td><td>F</td><td>1 2 4</td><td>hit</td></tr>
+      <tr><td>6</td><td>2</td><td>4 1 2</td><td>F</td><td>4 1 2</td><td>F</td><td>1 2 4</td><td>hit</td></tr>
+      <tr><td>7</td><td>5</td><td>5 1 2</td><td>F</td><td>1 2 5</td><td>F</td><td>1 2 5</td><td>F</td></tr>
+      <tr><td>8</td><td>1</td><td>5 1 2</td><td>hit</td><td>2 5 1</td><td>hit</td><td>1 2 5</td><td>hit</td></tr>
+      <tr><td>9</td><td>2</td><td>5 1 2</td><td>hit</td><td>5 1 2</td><td>hit</td><td>1 2 5</td><td>hit</td></tr>
+      <tr><td>10</td><td>3</td><td>5 2 3</td><td>F</td><td>1 2 3</td><td>F</td><td>3 2 5</td><td>F</td></tr>
+      <tr><td>11</td><td>4</td><td>5 3 4</td><td>F</td><td>2 3 4</td><td>F</td><td>3 4 5</td><td>F</td></tr>
+      <tr><td>12</td><td>5</td><td>5 3 4</td><td>hit</td><td>3 4 5</td><td>F</td><td>3 4 5</td><td>hit</td></tr>
+      <tr><td colspan="3"><b>faults</b></td><td><b>9</b></td><td></td><td><b>10</b></td><td></td><td><b>7</b></td><td></td></tr>
+    </table></div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Belady's anomaly: with the <b>same</b> string and <b>four</b> frames FIFO gives <span class="red"><b>10 faults — more than the 9 it gives with three</b></span>. So "more frames means fewer faults" is <b>false</b> for FIFO and true for LRU and Optimal. Also, the first reference to each distinct page always faults, so <b>at least 5 faults are unavoidable</b> here.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>MIN is the ceiling, FIFO is the floor.</b>" Exact LRU needs a timestamp or a stack per frame, so real systems use <b>clock</b>, which just walks the frames and clears reference bits. FIFO forgets use; LRU remembers it; <span class="hl">clock remembers it cheaply</span>.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> Linux approximates LRU with <b>multi-gen LRU</b>: page-table entries carry young/old bit pairs, so no scan is needed. Windows and macOS use a variant of clock. The exam name for all of them is still "an LRU approximation".</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: working set & thrashing ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Working set &amp; thrashing</span></div>
+  <h2><span class="no">8</span>Working Set, Thrashing &amp; Its Control</h2><span class="tag">the last topic ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The <span class="hl">working set</span> of process <i>i</i> at time <i>t</i> is <b>WSS<sub>i</sub>(t)</b> = the pages it referenced in the last <b>Δ time units</b> (Δ ≈ a few milliseconds, enough to cover its normal burstiness). Total demand is <b>D(t) = Σ WSS<sub>i</sub>(t)</b>. If <span class="circ">D(t) &gt; the number of free frames</span>, pages are thrown out only to be wanted again — <b>thrashing</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 202" width="244">
+      <g class="w">
+        <path class="ink-k" d="M44,144 H286" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M44,144 V12" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M52,136 C80,126 96,66 118,42"/>
+        <path class="ink-r" d="M118,42 C138,66 146,118 168,128 C192,136 206,80 226,54"/>
+        <path class="ink-g" d="M226,54 C242,32 254,40 266,52"/>
+        <path class="ink-r" d="M168,128 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0"/>
+      </g>
+      <text x="60" y="12" class="k w6 s">CPU utilisation</text>
+      <text x="138" y="30" text-anchor="middle" class="g w6 s">rising</text>
+      <text x="248" y="30" text-anchor="middle" class="g w6 s">after recovery</text>
+      <text x="168" y="166" text-anchor="middle" class="r w6 s">thrashing</text>
+      <text x="168" y="180" text-anchor="middle" class="r s k" style="font-size:11px">more paging, less work</text>
+      <text x="286" y="200" text-anchor="end" class="k w6 s" style="font-size:12px">degree of multiprogramming →</text>
+      <text x="12" y="80" class="s k" style="font-size:10.5px">100%</text>
+    </svg><figcaption>adding one more process helps until the frames run out — then it hurts badly</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Two ways to stop thrashing</span>
+        <p class="tiny"><b>1. Working-set policy.</b> Keep each process allocated exactly its WSS. On a fault, if demand exceeds what is free, <b>evict pages from a process whose WSS is shrinking</b>, or suspend a whole process. Freed frames go to the process whose WSS is growing.</p>
+        <p class="tiny" style="margin-top:1mm"><b>2. Page-fault-frequency (PFF) control.</b> Measure each process's PFR over a window. If PFR &gt; <b>upper bound</b>, give it a free frame; if PFR &lt; <b>lower bound</b>, take one back. Direct, and needs no Δ.</p></div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Symptom</th><th class="l">Meaning</th></tr>
+        <tr><td class="l">PFR climbing</td><td class="l">too few frames for the working set</td></tr>
+        <tr><td class="l">CPU utilisation <b>falling</b></td><td class="l">the busy process is spending its time in I/O — <span class="circ">thrashing</span></td></tr>
+        <tr><td class="l">Disk writes climbing</td><td class="l">dirty pages written out again and again</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ does it thrash?</span> Four frames are free. <b>(a)</b> WSS(P1) = 6, WSS(P2) = 2, WSS(P3) = 3, so D = 11 &gt; 4 → <span class="circ">thrashing</span>: suspend P3 until frames free up. <b>(b)</b> P3's working set then collapses to 1 page; D = 6 + 2 + 1 = 9, still &gt; 4 → suspend P2, whose WSS has fallen to 0 → D = 7. <b>(c)</b> Reduce once more: D = 6 ≤ available frames → <span class="circ">stable</span>, utilisation climbs again. <b>(d)</b> PFF reading: P1 runs at 0.3 faults per reference, far above the upper bound — it is the culprit.</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>Thrashing ≠ deadlock</b>: the system is busy, not stuck — pages fly in and out. (ii) Thrashing is <b>high CPU utilisation → low</b>; in a deadlock nothing moves at all. (iii) Adding processes always helps <b>up to</b> the point D &gt; free frames, and hurts after it.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Demand over supply = thrashing.</b>" If the working sets will not fit, the OS either <b>suspends a process</b> or <b>gives frames to the greediest one</b>. And the cure that always works is the boring one: <span class="hl">admit fewer processes</span>.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid tiny">
+      <p><b>Binding</b>: compile / load / execution</p><p>Execution time = <b>relocation</b></p>
+      <p>Logical = from 0, <b>relative</b></p><p>physical = in the RAM unit</p>
+      <p>Base + limit ⇒ contiguous</p><p><b>Internal</b> = inside a block</p>
+      <p><b>External</b> = between blocks</p><p>Compaction fixes external only</p>
+      <p>Page = frame size, <b>fixed</b></p><p>p = LA <b>div</b> P · d = LA <b>mod</b> P</p>
+      <p>PA = f·P + d</p><p>P = 2ⁿ ⇒ offset = <b>n bits</b></p>
+      <p>32-bit + 4 KB ⇒ 2²⁰ entries</p><p>Single-level PT = <b>4 MB</b></p>
+      <p>TLB hit = 1 access, miss = 2</p><p>PTE: valid, protect, dirty, ref</p>
+      <p>Dirty = changed · Ref = looked at</p><p>Segment: PA = <b>Base[s] + d</b></p>
+      <p>d ≥ Limit[s] ⇒ fault</p><p>Seg + paging ⇒ (s, p, d)</p>
+      <p>Segments <b>grow</b> ⇒ external frag</p><p>VM: only part of a process in RAM</p>
+      <p>Demand paging = <b>lazy</b></p><p>Fault: trap→test→take→read→PTE→retry</p>
+      <p>EAT = (1 − p)m + p·f</p><p>FIFO may show <b>Belady</b></p>
+      <p>LRU and MIN never do</p><p>Clock = a cheap LRU</p>
+      <p>WSS = pages in the last Δ</p><p>D(t) &gt; free frames ⇒ <b>thrashing</b></p>
+      <p>Fix: suspend, or PFF control</p><p>PFR = faults ÷ references</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>Physical memory = <b>frames</b>, logical = <b>pages</b></li>
+      <li>Offset = LA <b>mod</b> P, copied <b>unchanged</b></li>
+      <li>P = 2ⁿ ⇒ the offset is exactly <b>n bits</b></li>
+      <li>P 1 KB, page 2 → frame 5, LA 3000 ⇒ <b>6072</b></li>
+      <li>TLB hit = <b>one</b> memory access</li>
+      <li>TLB miss = <b>two</b> memory accesses</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>32-bit + 4 KB page ⇒ <b>2²⁰</b> entries</li>
+      <li>4-byte PTE ⇒ <b>4 MB</b> single-level table</li>
+      <li>Segment fault when <b>d ≥ Limit[s]</b></li>
+      <li>Paging ⇒ <b>internal</b> fragmentation</li>
+      <li>VM ⇒ <b>demand paging</b>, valid–invalid bit</li>
+      <li>Thrashing ⇒ <b>fewer processes</b></li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> adding the offset to the base <b>and</b> to the frame · paging said to remove <b>all</b> fragmentation · FIFO said to be immune from Belady · the dirty bit confused with the reference bit · segmentation said to have fixed-size blocks · a page fault treated as an error · "more frames always means fewer faults" · virtual memory said to let <b>one</b> process exceed RAM.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "Compile = frozen, load = pinned, run = live" · "the program sees logical, only the chips see physical" · "inside = internal, outside = external" · "page in, frame out" · "hit once, miss twice" · "D for Dirty, R for Referenced" · "base adds, offset selects, limit refuses" · "trap, test, take, read, write the PTE, retry" · "MIN is the ceiling, FIFO is the floor" · "demand over supply = thrashing".</div>
+  <figure class="doodle"><svg viewBox="0 0 460 104" width="428">
+    <g class="w">
+      <rect x="8" y="6" width="140" height="66" rx="10" class="ink-g fill-g"/>
+      <rect x="160" y="6" width="140" height="66" rx="10" class="ink-r fill-r"/>
+      <rect x="312" y="6" width="140" height="66" rx="10" class="ink fill-b"/>
+    </g>
+    <text x="78" y="30" text-anchor="middle" class="g w6 l">SWAPPING</text>
+    <text x="78" y="50" text-anchor="middle" class="g s" style="font-size:11px">moves a whole process</text>
+    <text x="78" y="64" text-anchor="middle" class="g s" style="font-size:11px">on the OS's initiative</text>
+    <text x="230" y="30" text-anchor="middle" class="r w6 l">PAGING</text>
+    <text x="230" y="50" text-anchor="middle" class="r s" style="font-size:11px">moves one fixed-size page</text>
+    <text x="230" y="64" text-anchor="middle" class="r s" style="font-size:11px">on the program's reference</text>
+    <text x="382" y="30" text-anchor="middle" class="k w6 l">SEGMENTATION</text>
+    <text x="382" y="50" text-anchor="middle" class="s" style="font-size:11px">moves a logical segment</text>
+    <text x="382" y="64" text-anchor="middle" class="s" style="font-size:11px">of varying length</text>
+    <text x="230" y="94" text-anchor="middle" class="p w6 s">"what moves, how big, and who decided"</text>
+  </svg><figcaption>the three words that separate the three schemes — this question is asked constantly</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Memory Management</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set" style="font-size:11.4pt;line-height:6mm">
+    <div class="mcq" style="line-height:6mm"><span class="qn">1.</span>Paging removes external fragmentation, but still suffers:<ol class="opts"><li>starvation</li><li>race conditions</li><li>convoy effect</li><li>internal fragmentation</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">2.</span>More time swapping pages than executing means:<ol class="opts"><li>thrashing</li><li>starvation</li><li>deadlock</li><li>fragmentation</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">3.</span>Page 1 KB, page 2 → frame 5, logical 3000. Physical:<ol class="opts"><li>5072</li><li>3952</li><li>6072</li><li>7096</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">4.</span>32-bit address, 4 KB pages. Entries in one table:<ol class="opts"><li>2¹²</li><li>2²⁰</li><li>2³²</li><li>2¹⁰</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">5.</span>A PTE's <b>dirty bit</b> is set when the page:<ol class="opts"><li>is loaded in</li><li>is first referenced</li><li>is modified</li><li>is swapped out</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">6.</span>TLB 20 ns, memory 100 ns, hit ratio 80 %. Access time:<ol class="opts"><li>120 ns</li><li>140 ns</li><li>150 ns</li><li>220 ns</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">7.</span>In segmentation an offset <b>≥ the limit</b> causes:<ol class="opts"><li>a TLB miss</li><li>a page fault</li><li>compaction</li><li>a segmentation fault</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">8.</span>With a 4 KB page size the offset field needs:<ol class="opts"><li>4 bits</li><li>12 bits</li><li>20 bits</li><li>32 bits</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">9.</span>Demand paging loads a page:<ol class="opts"><li>at load time</li><li>in advance</li><li>never</li><li>on first reference</li></ol></div>
+    <div class="mcq" style="line-height:6mm"><span class="qn">10.</span>Segmentation with paging addresses memory as:<ol class="opts"><li>(p, d)</li><li>(s, d)</li><li>(s, p, d)</li><li>a linear address</li></ol></div>
+  </div>
+  <div class="anskey tiny">Answer key → 1-d · 2-a · 3-c · 4-b · 5-c · 6-b · 7-d · 8-b · 9-d · 10-c</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> What is virtual memory? Explain demand paging and the steps the operating system takes to service a page fault. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5.2mm">
+    <li><b>Virtual memory</b> — a technique that lets a process execute when only part of it is in physical memory; the program works with its own <b>virtual address space</b>, which may be larger than RAM, and the OS keeps the unused pages on the back store. <i class="mk">3</i></li>
+    <li><b>Demand paging</b> — pages are loaded <b>on demand</b>, only when first referenced (lazy loading). Each PTE carries a <b>valid–invalid bit</b>: valid = the page is in memory, invalid = it is not. <i class="mk">3</i></li>
+    <li><b>The six steps, in order</b> — (1) the MMU finds valid = 0 and <b>traps to the OS</b>, blocking the process; (2) the OS checks the reference is <b>legal</b>, aborting the process if not; (3) it takes a <b>free frame</b>, or runs a <b>page-replacement algorithm</b> to choose a victim and <b>writes the victim out first if its dirty bit is set</b>; (4) it <b>schedules a disk read</b> of the page into that frame; (5) when the read completes it <b>updates the page table</b> — frame number, valid = 1, dirty = 0; (6) it <b>restarts the instruction</b> that caused the fault. <i class="mk">4</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>Can split an address into page number and offset</li>
+      <li>Can compute a physical address from a PTE</li>
+    </ul>
+    <ul class="tick">
+      <li>Can trace a reference string under FIFO and LRU</li>
+      <li>Can recite the six page-fault steps in order</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

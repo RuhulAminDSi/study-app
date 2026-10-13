@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>প্রোবাবিলিস্টিক রিজনিং ও NLP: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">প্রোবাবিলিস্টিক রিজনিং ও NLP</span></h1>
+  <p class="subtitle">বেইজ · নেইভ বেইজ · BN DAG · HMM ও ভিটার্বি · স্টেমিং · এমবেডিং: ১২ পাতায়</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="570">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="106" ry="46" class="ink-k fill-y"/>
+        <path class="ink" d="M236,132 L166,74 M236,168 L166,226 M320,104 L320,56 M404,132 L474,74 M404,168 L474,226 M320,196 L320,244 M214,150 L168,150 M426,150 L472,150"/>
+        <rect x="58" y="40" width="166" height="40" rx="14" class="ink fill-b"/>
+        <rect x="237" y="14" width="166" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="166" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="58" y="220" width="166" height="40" rx="14" class="ink fill-b"/>
+        <rect x="237" y="244" width="166" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="166" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="148" text-anchor="middle" class="bn l">প্রোবাবিলিস্টিক</text>
+      <text x="320" y="172" text-anchor="middle" class="bn r s">রিজনিং ও NLP</text>
+      <text x="141" y="66" text-anchor="middle" class="bn s">সম্ভাবনার নিয়ম</text>
+      <text x="320" y="42" text-anchor="middle" class="bn r w6">বেইজের উপপাদ ★</text>
+      <text x="499" y="66" text-anchor="middle" class="bn s">নেইভ বেইজ</text>
+      <text x="96" y="156" text-anchor="middle" class="bn g w6">এলোমেলো চলক</text>
+      <text x="544" y="156" text-anchor="middle" class="bn r w6">BN ও HMM ★</text>
+      <text x="141" y="246" text-anchor="middle" class="bn s">ভ্যারিয়েবল বিলুপ্তি</text>
+      <text x="320" y="272" text-anchor="middle" class="bn r w6">স্টেমিং ও লেমা ★</text>
+      <text x="499" y="246" text-anchor="middle" class="bn s">এমবেডিং</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = যে একটি ভিত্তির ওপর সব দাঁড়িয়ে</figcaption>
+  </figure>
+  <div class="sticky" style="width:68mm"><b>হাই-ইল্ড তালিকা</b><br>① P(A|B) = P(A∧B)/P(B)<br>② P(H|E) = P(E|H)P(H)/P(E)<br>③ P(C|x₁…xₙ) ∝ P(C)∏ᵢP(xᵢ|C)<br>④ BN: ∏ᵢP(xᵢ|Pa(xᵢ))<br>⑤ নয়জি-ওআর: 1 − ∏ᵢ(1−pᵢ)<br>⑥ αₜ(j) = bⱼ(oₜ)Σᵢaᵢⱼαₜ₋₁(i)<br>⑦ স্টেমিং কাটে, লেমা অভিধানে খোঁজে<br>⑧ পেরপ্লেক্সিটি = exp(NLL)</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">আর্টিফিসিয়াল ইন্টেলিজেন্সের সিলেবাসে দশটি লাইন। এই নোটবুক ঠিক দুটি নেয়: "<span class="hl">প্রোবাবিলিস্টিক রিজনিং</span>" এবং "<span class="hl">প্রাকৃতিক ভাষা প্রক্রিয়াকরণ</span>"। জ্ঞান উপস্থাপন, যুক্তিবিদ্যা, অনুসন্ধান, এক্সপার্ট সিস্টেম ও মেশিন লার্নিং-এর নোট আলাদা।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>অনিশ্চয়তা ও সম্ভাবনার নিয়ম … পৃ. ২</li><li>শর্তসম্ভাবনা ও বেইজের উপপাদ … পৃ. ২</li><li>নেইভ বেইজ শ্রেণিবিন্যাস … পৃ. ৩</li><li>বেইজিয়ান নেটওয়ার্ক: DAG ও CPT … পৃ. ৪</li></ul>
+    <ul class="tick"><li>ভ্যারিয়েবল বিলুপ্তি, নয়জি-ওআর, D-S … পৃ. ৫</li><li>মার্কভ শৃঙ্খল ও গোপন মার্কভ মডেল … পৃ. ৬</li><li>ফরওয়ার্ড, ব্যাকওয়ার্ড ও ভিটার্বি … পৃ. ৭</li><li>NLP পত্র ১–৩ … পৃ. ৮–১০ · রাতের পাতা পৃ. ১১ · অনুশীলন পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: uncertainty, rules of probability, Bayes ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>অনিশ্চয়তা</span></div>
+  <h2><span class="no">১</span>অনিশ্চয়তা, সম্ভাবনার নিয়ম ও বেইজ</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">প্রোবাবিলিস্টিক রিজনিং</span> (probabilistic reasoning) হলো অনিশ্চয়তার অধীনে সিদ্ধান্ত নেওয়ার পদ্ধতি, যেখানে সম্ভাবতা দিয়ে বলা হয় কোন বিকল্পে কতটা বিশ্বাস করা উচিত। <span class="hl">এলোমেলো চলক</span> (random variable) হলো এমন রাশি যা পর্যবেক্ষণের আগে জানা নেই (বৃষ্টি = হ্যাঁ/না): <b>বিচ্ছিন্ন</b> রাশির মান সসীম, <b>অবিচ্ছিন্ন</b> রাশির মান একটি অংশ। AI-র এটি দরকার, কারণ উপকরণের তথ্য নোয়েজি ও প্রমাণ অসম্পূর্ণ।</div>
+  <div class="cols" style="grid-template-columns:258px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 146" width="216">
+      <g class="w">
+        <ellipse cx="112" cy="60" rx="70" ry="48" class="ink fill-b"/>
+        <ellipse cx="190" cy="60" rx="70" ry="48" class="ink-g fill-g"/>
+      </g>
+      <text x="94" y="30" text-anchor="middle" class="bn k w6">A</text>
+      <text x="210" y="30" text-anchor="middle" class="bn k w6">B</text>
+      <text x="151" y="64" text-anchor="middle" class="s r">A∧B</text>
+      <text x="151" y="124" text-anchor="middle" class="s">P(A∪B)=P(A)+P(B)−P(A∧B)</text>
+      <text x="151" y="144" text-anchor="middle" class="s g">P(A|B)=P(A∧B)/P(B)</text>
+    </svg><figcaption>সম্ভাবতার পুরো ভাষাই দুই বৃত্তে</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">পরিভাষা</th><th class="l">অর্থ</th></tr>
+      <tr><td class="l">এলোমেলো চলক</td><td class="l">বৃষ্টি = হ্যাঁ বা না</td></tr>
+      <tr><td class="l">সম্ভাবনা</td><td class="l">P(A) ∈ [0, 1]</td></tr>
+      <tr><td class="l">যৌগ সম্ভাবনা</td><td class="l">P(A∧B), দুটো একসাথে</td></tr>
+      <tr><td class="l">শর্তসম্ভাবনা</td><td class="l"><span class="hl">P(A|B)=P(A∧B)/P(B)</span></td></tr>
+      <tr><td class="l">প্রান্তিক সম্ভাবনা</td><td class="l">P(A) = Σ<sub>B</sub> P(A∧B)</td></tr>
+      <tr><td class="l">স্বাধীনতা</td><td class="l">P(A∧B) = P(A)P(B)</td></tr>
+    </table>
+  </div>
+  <div class="sumbox small"><span class="lbl">যে নিয়মগুলো আঙুলের ডগায় থাকতে হবে</span>
+    <b>স্বীকার্য (কোলমোগরোভ, ১৯৩৩)</b>: 0 ≤ P(A) ≤ 1, P(Ω) = 1, পৃথক A, B-এর জন্য P(A∪B) = P(A)+P(B)। <b>পরিপূরক</b>: P(A′) = 1 − P(A)। <b>গাণিতিক শৃঙ্খল</b>: P(A∧B) = P(A)P(B|A)। <b>মোট সম্ভাবনা</b>: P(B) = Σᵢ P(B|hᵢ)P(hᵢ)।</div>
+  <div class="cols" style="grid-template-columns:1fr 214px;align-items:start">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">বেইজের উপপাদ (Bayes' Theorem, ১৭৬৩)</span>
+      <span class="circ">P(H|E) = P(E|H)·P(H)/P(E)</span><br>
+      সমতুপরীয়ভাবে <b>P(E|H)P(H) = P(H|E)P(E)</b>।<br>
+      <b>অনুপাত আকারে</b>: <span class="hl">পরবর্তী অনুপাত = পূর্ব অনুপাত × সম্ভাবনা অনুপাত</span>। বেইজের নিবন্ধ মৃত্যুর পর প্রকাশিত হয়; লাপ্লাস (১৮১৩) এই উপপাদের প্রথম ছোট কার্যকর ব্যবহার দেখান।</div>
+    <figure class="doodle"><svg viewBox="0 0 290 186" width="188">
+      <g class="w">
+        <circle cx="26" cy="93" r="14" class="ink-k fill-y"/>
+        <path class="ink-k" d="M40,93 L96,48" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M40,93 L96,138" marker-end="url(#ahb)"/>
+        <circle cx="112" cy="48" r="15" class="ink fill-b"/><circle cx="112" cy="138" r="15" class="ink fill-b"/>
+        <path class="ink" d="M127,48 L196,18" marker-end="url(#ah)"/>
+        <path class="ink" d="M127,48 L196,78" marker-end="url(#ah)"/>
+        <path class="ink" d="M127,138 L196,108" marker-end="url(#ah)"/>
+        <path class="ink" d="M127,138 L196,168" marker-end="url(#ah)"/>
+        <circle cx="210" cy="18" r="13" class="ink-g fill-g"/><circle cx="210" cy="78" r="13" class="ink-g fill-g"/>
+        <circle cx="210" cy="108" r="13" class="ink-g fill-g"/><circle cx="210" cy="168" r="13" class="ink-g fill-g"/>
+      </g>
+      <text x="26" y="98" text-anchor="middle" class="bn s k">জনগোষ</text>
+      <text x="66" y="65" text-anchor="middle" class="s k">0.01</text>
+      <text x="66" y="136" text-anchor="middle" class="s k">0.99</text>
+      <text x="112" y="53" text-anchor="middle" class="bn s k">রোগ</text>
+      <text x="112" y="143" text-anchor="middle" class="bn s k">রোগ নেই</text>
+      <text x="164" y="28" text-anchor="middle" class="s r">0.90</text>
+      <text x="164" y="88" text-anchor="middle" class="s r">0.10</text>
+      <text x="164" y="102" text-anchor="middle" class="s r">0.10</text>
+      <text x="164" y="164" text-anchor="middle" class="s r">0.90</text>
+      <text x="210" y="23" text-anchor="middle" class="s k">+</text>
+      <text x="210" y="83" text-anchor="middle" class="s k">−</text>
+      <text x="210" y="113" text-anchor="middle" class="s k">+</text>
+      <text x="210" y="173" text-anchor="middle" class="s k">−</text>
+      <text x="288" y="23" text-anchor="end" class="s r">0.009</text>
+      <text x="288" y="173" text-anchor="end" class="s r">0.099</text>
+    </svg><figcaption>প্রতিটি শাখা = পিতা × প্রান্তের সংখ্যা</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> চারটি নামের অর্থ স্থির: <b>পূর্ব</b> P(H) = প্রমাণের আগে; <b>সম্ভাবনা</b> P(E|H) = H সত্য হলে প্রমাণ; <b>সাক্ষ্য</b> P(E) = স্বাভাবিকীকরণ পদ; <b>পরবর্তী</b> P(H|E) = পরে। "লাইকেলিহুড" ও "পোস্টেরিয়র" গুলিয়ে ফেলা এই অংশের সবচেয়ে বেশি ভুল উত্তর।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ভিত্তি ঢোকে, ফল বেরোয়।</b>" পূর্বকে সম্ভাবনা দিয়ে গুণ করে সাক্ষ্য দিয়ে ভাগ করো। অনুপাত আকারে <b>ভাগ করতেই হয় না</b>; প্রমাণ কেবল যাতে উত্তরগুলোর যোগ ১ হয়।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ বেস-রেট ফাঁদ</span>
+    রোগ ১ % মানুষের; পরীক্ষা ৯০ % সংবেদনশীল এবং ১০ % ভুল ইতিবাচক। P(D|+) = (0.9 × 0.01)/[(0.9 × 0.01) + (0.1 × 0.99)] = 0.009/0.108 = <span class="circ">0.083</span>। পূর্ব সম্ভাবনা ছোট হলে চমৎকার পরীক্ষাও ছোট পরবর্তী সম্ভাবনা দেয় — সাক্ষ্য দিয়ে ভাগ করা কখনো বাদ দেওয়া যায় না।</div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ অনুপাত আকার</span>
+    পূর্ব অনুপাত = 0.01/0.99 = 1/99; সম্ভাবনা অনুপাত = 0.9/0.1 = 9; পরবর্তী অনুপাত = 9/99 = 1/11, তাই P = (1/11)/(1 + 1/11) = <span class="circ">1/12 = 0.083</span> ✓ — একই উত্তর, কোথাও ভাগ নয়। ভগ্নাংশ জটিল হলে অনুপাত আকারই ধরো।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: naive Bayes ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>নেইভ বেইজ</span></div>
+  <h2><span class="no">২</span>নেইভ বেইজ শ্রেণিবিন্যাস</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">নেইভ বেইজ শ্রেণিবিন্যাসকারী</span> (naive Bayes classifier) প্রতিটি বৈশিষ্ট্যের জন্য একটি শর্তসম্ভাবনা গুণ করে সেই class-কে বেছে নেয় যার পরবর্তী সম্ভাবনা সবচেয়ে বেশি। স্বাভাবিকীকরণ P(x) সব class-এ এক, তাই বাদ পড়ে যায়:
+    <span class="circ">Ĉ = argmax<sub>C</sub> P(C)·P(x₁|C)·P(x₂|C)···P(xₙ|C)</span></div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 186" width="212">
+      <g class="w">
+        <rect x="10" y="12" width="82" height="28" rx="10" class="ink fill-b"/>
+        <rect x="110" y="12" width="82" height="28" rx="10" class="ink fill-b"/>
+        <rect x="210" y="12" width="82" height="28" rx="10" class="ink fill-b"/>
+        <path class="ink-r" d="M51,42 L51,64" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M151,42 L151,64" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M251,42 L251,64" marker-end="url(#ah)"/>
+        <rect x="18" y="70" width="264" height="32" rx="12" class="ink-g fill-g"/>
+        <rect x="18" y="112" width="52" height="32" rx="12" class="ink fill-b"/>
+      </g>
+      <text x="51" y="32" text-anchor="middle" class="s k">offer</text>
+      <text x="151" y="32" text-anchor="middle" class="s k">free</text>
+      <text x="251" y="32" text-anchor="middle" class="s k">money</text>
+      <text x="150" y="91" text-anchor="middle" class="bn s g">স্প্যাম স্কোর 3.0e-6</text>
+      <text x="80" y="133" class="s k">ham</text>
+      <text x="78" y="164" class="bn s">হ্যাম স্কোর 1.54e-7</text>
+      <text x="150" y="181" text-anchor="middle" class="bn s r">অনুপাত 19.4 : 1 → 95.1 % স্প্যাম</text>
+    </svg><figcaption>প্রতি class-এর একটি স্কোর, তারপর তুলনা</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">অংশ</th><th class="l">অর্থ</th></tr>
+      <tr><td class="l">P(C)</td><td class="l">পূর্ব — class-এর প্রচুতি</td></tr>
+      <tr><td class="l">P(xᵢ|C)</td><td class="l">C-এর ভেতরে xᵢ-এর সম্ভাবনা</td></tr>
+      <tr><td class="l">∏ᵢ P(xᵢ|C)</td><td class="l"><b>নেইভ ধাপ</b></td></tr>
+      <tr><td class="l">argmax</td><td class="l">সর্বোচ্চ স্কোরধারী class</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">তিন রকম</span>
+      <b>মাল্টিনোমিয়াল</b> (শব্দের গণনা): P(w|C) = count(w,C)/Σ count(·,C)<br>
+      <b>বার্নৌলি</b> (শব্দ আছে/নেই)<br>
+      <b>গাউসিয়ান</b> (বাস্তব বৈশিষ্ট্য): P(xᵢ|C) = 𝒩(xᵢ; μ, σ²)</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "নেইভ" মানে সমান পূর্ব, সমান উপাদান বা রেখা-বিভাজনীয়তা <b>নয়</b>। এর একমাত্র অর্থ <span class="circ">P(x₁,…,xₙ|C) = ∏ᵢ P(xᵢ|C)</span> — বাস্তবে প্রায় কখনো মিলে না, তবুও ভালো কাজ করে, তাই স্প্যাম ফিল্টারের ভিত্তি।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span>
+    ১০০টি স্প্যাম ও ২০০টি হ্যাম মেইল। স্প্যামে ২০০০ শব্দ (offer 40, free 60, money 30); হ্যামে ১২০০ (offer 5, free 10, money 8)।
+    <b>স্প্যাম</b> = (1/3)(40/2000)(60/2000)(30/2000) = <span class="circ">3.0 × 10⁻⁶</span> · <b>হ্যাম</b> = (2/3)(5/1200)(10/1200)(8/1200) = <span class="circ">1.54 × 10⁻⁷</span> · অনুপাত 19.4, তাই P(spam) = <span class="circ">95.1 %</span>।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>প্রতি বৈশিষ্ট্যের সম্ভাবনা গুণোগন, তারপর পূর্ব একবার যোগ।</b>" আর সবসময় <b>লগ স্পেসে</b> হিসাব করো — ১০ ০০০ বৈশিষ্ট্য হলে এটাই একমাত্র উপায়, যাতে সংখ্যা শূন্যে না নামে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">শূন্য-বার্টনার সমস্যা</span> class C-তে কখনো দেখা হয়নি এমন শব্দের P(w|C) = 0, আর একটি শূন্যই গুণশীলক মারে। সমাধান <b>অ্যাড-ওয়ান স্মুদিং</b>: (count+1)/(total+|V|) — ১২০০ শব্দে |V| = 5000 হলে 0 বার শব্দের জন্য <span class="circ">1/6200</span>।</div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">লাপ্লাসের ধারা সম্প্রসারণ সূত্র</span> দশটি চল এলে পরেরটির সম্ভাবনা (10+1)/(10+2) = <span class="circ">11/12 = 0.917</span> — একই হিসাব; কখনো গণনার শূন্যকে সম্ভাবনার শূন্য বানিও না।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">অতি-স্মুদিং, ও NB-এর কাজ</span> মডেল সমতল করে দিলে কম ব্যবহৃত শব্দের সংকেতও ধ্বংস হয়। ভারসাম্যহীন লেখায় <span class="hl">কমপ্লিমেন্ট নেইভ বেইজ</span> বা <b>বার্নৌলি</b> ভালো। MNB বৈশিষ্ট্যের সরলরৈখক, তাই এক পাসে প্রশিক্ষণ — তাই স্প্যাম ফিল্টারে বেঁচে আছে।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">প্রতিদিনের কাজ</span> স্প্যাম ফিল্টার · সেন্টিমেন্ট বিশ্লেষণ · নামচিহ্নিত সত্ত্ব শনাক্তকরণ · সংবাদ শ্রেণিবিন্যাস · ইমেইল ট্রায়াজ · রিভিউ রেটিং · লেখা থেকে মেডিকেল কোডিং। "নেইভ" মানে কেবল <b>class জানা থাকলে বৈশিষ্ট্যগুলো স্বাধীন</b> — কখনো সমান পূর্ব নয়, কখনো সমান উপাদান নয়।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: Bayesian networks ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>বেইজিয়ান নেটওয়ার্ক</span></div>
+  <h2><span class="no">৩</span>বেইজিয়ান নেটওয়ার্ক: DAG, CPT, গুণফল</h2><span class="tag">বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">বেইজিয়ান নেটওয়ার্ক</span> (belief network) হলো এমন একটি নির্দেশিত অ্যাসাইক্লিক গ্রাফ (DAG) যার node গুলো এলোমেলো চলক এবং X → Y তীরের অর্থ "X হলো Y-এর <b>সরাসরি কারণ</b>"। প্রতিটি node-এ থাকে <span class="hl">CPT</span> (শর্তসম্ভাবনা সারণি) <b>P(node | পিতা বা পিতারা)</b>, আর পিতাহীন node-এ মার্জিনাল। পুরো যৌগ বিতরণ লেখা হয়
+    <span class="circ">P(x₁,…,xₙ) = ∏ᵢ P(xᵢ | Pa(xᵢ))</span> — ২ⁿ ঘরের একটি বড় টেবিলের বদলে <b>n</b> ছোট টেবিল।</div>
+  <div class="cols" style="grid-template-columns:288px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 380 196" width="276">
+      <g class="w">
+        <circle cx="58" cy="34" r="26" class="ink-k fill-b"/>
+        <circle cx="58" cy="110" r="26" class="ink fill-b"/>
+        <ellipse cx="182" cy="162" rx="48" ry="24" class="ink fill-b"/>
+        <circle cx="212" cy="46" r="32" class="ink-g fill-g"/>
+        <path class="ink-k" d="M58,60 L58,84" marker-end="url(#ahb)"/>
+        <path class="ink" d="M80,98 L172,62" marker-end="url(#ahb)"/>
+        <path class="ink" d="M200,138 L206,80" marker-end="url(#ahb)"/>
+      </g>
+      <text x="58" y="30" text-anchor="middle" class="bn s k">ঝড়</text>
+      <text x="58" y="115" text-anchor="middle" class="bn s k">বৃষ্টি</text>
+      <text x="212" y="42" text-anchor="middle" class="bn s k">ভেজা ঘাস</text>
+      <text x="182" y="167" text-anchor="middle" class="bn s k">স্প্রিংকলার</text>
+      <text x="66" y="72" class="s r">P(R|S)</text>
+      <text x="140" y="50" text-anchor="middle" class="s">P(W|R,S)</text>
+      <text x="376" y="108" text-anchor="end" class="bn s r">চক্র নেই ⇒ DAG</text>
+      <text x="376" y="126" text-anchor="end" class="bn s r">d-বিচ্ছেদ ⇒ স্বাধীন</text>
+    </svg><figcaption>দুটি স্বাধীন কারণ, একটি প্রভাব</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">গ্রাফ যা বলে</th><th class="l">নিয়ম</th></tr>
+      <tr><td class="l">মূল node</td><td class="l">মার্জিনাল P(X) রাখে</td></tr>
+      <tr><td class="l">সন্তান node</td><td class="l">P(সন্তান | পিতা) রাখে</td></tr>
+      <tr><td class="l">স্থানীয় মার্কভ</td><td class="l">পিতা জানলে নিজসংক্ষেপ থেকে <b>স্বাধীন</b></td></tr>
+      <tr><td class="l">d-বিচ্ছেদ</td><td class="l">পথ বন্ধ ⇒ স্বাধীন</td></tr>
+      <tr><td class="l">কেন DAG</td><td class="l">চক্রে কোনো ক্রম থাকে না</td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%;margin-top:0">
+    <tr><th class="l">ভেজা ঘাসের CPT — প্রতি পিতাসেটের জন্য এক সারি</th><th class="l">P(W = হ্যাঁ | বৃষ্টি, স্প্রিংকলার চালু)</th><th class="l">P(W = হ্যাঁ | বৃষ্টি, বন্ধ)</th><th class="l">P(W = হ্যাঁ | বৃষ্টি নেই, চালু)</th><th class="l">P(W = হ্যাঁ | বৃষ্টি নেই, বন্ধ)</th></tr>
+    <tr><td class="l">সম্ভাবনা</td><td>0.90</td><td>0.80</td><td>0.40</td><td>0.10</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ প্রান্তিক করে তারপর শর্তাধীন</span>
+    P(Rain) = 0.30, P(S=on|Rain) = 0.10, P(S=on|¬Rain) = 0.50 নিলে: P(W=yes) = Σ<sub>r,s</sub> P(r)P(s|r)P(W|r,s) = 0.30[0.10(0.90)+0.90(0.80)] + 0.70[0.50(0.40)+0.50(0.10)] = 0.30(0.86) + 0.70(0.25) = <span class="circ">0.418</span>। ·
+    P(Rain|yes) = 0.243/0.418 = <span class="circ">0.581</span> — ভেজা ঘাস পূর্বসম্ভাবনা প্রায় তিন গুণ করে। P(Sprinkler|yes) = 0.167/0.418 = 0.399।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "BN <b>প্রতি পিতাসেটের জন্য একটি সারি</b> রাখে, পুরো টেবিল কখনো নয়।" গুণফলীকরণ হলো গাণিতিক শৃঙ্খল ও প্রতি node-এ মার্কভ অনুমান: <b>ফ্যাক্টরগুলো গুণো, তারপর যা ঠিক করা যায়নি তার ওপর Σ করো</b>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) BN একটি <b>DAG</b>: চক্র হলে node নিজেই পূর্বপুরুষ হয়, তাই ক্রম ও বৈধ CPT দুটোই অসম্ভব। (ii) তীর মানে সরাসরি নির্ভরশীলতা, <b>প্রমাণিত কারণ নয়</b>। (iii) দুটি <b>সংঘর্ষক</b> A → C ← B সরাসরি স্বাধীন, কিন্তু C পর্যবেক্ষণ করলে নির্ভরশীল হয়ে যায়।</div>
+  </div>
+  <div class="cols">
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">প্যারামিটার শেখা</span> <span class="hl">MLE</span>: P(data | θ) সর্বাধিক করে এমন θ বেছে নাও — বার্নৌলির ক্ষেত্রে p̂ = 7/20 = 0.35। <span class="hl">EM</span>: <b>E</b>-ধাপে গোপন লেবেলের প্রত্যাশা, <b>M</b>-ধাপে θ পুনরায় মাপা; সম্ভাবনা কখনো কমে না। EM দিয়ে মিশ্রণ মডেল ও HMM-এর প্যারামিটার প্রশিক্ষণ হয়।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">প্রশ্নের উত্তর তিনভাবে</span>
+      <b>সম্পূর্ণ গণনা</b> — CPT গুণে প্রতিটি গোপন চলকের ওপর Σ; দশটি চলক পর্যন্ত ঠিক আছে।<br>
+      <b>ভ্যারিয়েবল বিলুপ্তি</b> — একই যোগ, একবারে একটি চলক (পরের পাতা)।<br>
+      <b>নমুনায়ন</b> — গাছ-প্রস্থ বেশি হলে importance sampling বা MCMC; আনুমানিক, কিন্তু বড় হয়।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: variable elimination, noisy-OR, Dempster-Shafer ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>অনুমান ও সাক্ষ্য</span></div>
+  <h2><span class="no">৪</span>অনুমান: ভ্যারিয়েবল বিলুপ্তি, নয়জি-ওআর, D-S</h2><span class="tag">লিখিত ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> BN-এ সঠিক অনুমান মানে গোপন চলকের প্রতিটি বিন্যাসের ওপর Σ — তিনটি চলকে ভালো, তিনশো চলকে আর আদৌ হয় না। <span class="hl">ভ্যারিয়েবল ইলিমিনেশন</span> (variable elimination) একই যোগ <b>একবারে একটি চলক</b> করে: যে ফ্যাক্টরগুলোতে চলকটি আছে তা গুণো, তারপর চলকটি Σ করে বাদ দাও। খরচ হলো সবচেয়ে বড় মধ্যবর্তী ফ্যাক্টরের আকার, মোটামুটি <span class="circ">ট্রিউইডথ + 1</span> চলক — তাই বিলুপ্তির ক্রমই আসলে বেছে নেওয়া হয়।</div>
+  <div class="cols" style="grid-template-columns:1fr 200px;align-items:start">
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আগে বৃষ্টি বিলুপ্তি</span> f₁ = P(R), f₂ = P(S|R), f₃ = P(W|R,S)। f₁ ও f₂ গুণো (দুটোতেই R আছে), তারপর Σ<sub>R</sub> P(R)P(S|R) = P(S) = 0.30(0.10) + 0.70(0.50) = <span class="circ">0.38</span>। ফ্যাক্টরটি এখন কেবল S-এর কথা বলে, তাই পরের গুণফল খুব ছোট। R <b>সবার শেষে</b> বিলুপ্ত করলে (R, S, W)-এর ফ্যাক্টর থেকে যায় — উত্তর এক, খরচ অনেক।</div>
+      <div class="sumbox small"><span class="lbl">নয়জি-ওআর — সংক্ষিপ্ত কারণ মডেল</span>
+        একাধিক স্বাধীন কারণের প্রভাবের জন্য একটিও যথেষ্ট:
+        <span class="circ">P(Y|X₁…Xₙ) = 1 − ∏ᵢ (1 − P(Y|Xᵢ = 1, বাকিগুলো 0))</span>।<br>
+        0.4 ও 0.3 ও 0.2 দিলে 1 − 0.6·0.7·0.8 = <b>0.664</b>, কখনোই সরল যোগ 0.9 নয়। এতে 2ⁿ-এর বদলে মাত্র <b>n</b> প্যারামিটার, তাই নির্ণয়ের BN node-এ এটি ব্যবহৃত হয়।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 152" width="188">
+      <g class="w">
+        <rect x="10" y="14" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="110" y="14" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="210" y="14" width="80" height="26" rx="10" class="ink fill-b"/>
+        <path class="ink-g" d="M90,27 L106,27" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M190,27 L206,27" marker-end="url(#ahg)"/>
+        <circle cx="50" cy="90" r="24" class="ink-p fill-p"/>
+        <circle cx="150" cy="90" r="24" class="ink-p fill-p"/>
+        <circle cx="250" cy="90" r="24" class="ink-p fill-p"/>
+        <path class="ink-p" d="M50,44 L50,62" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M150,44 L150,62" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M250,44 L250,62" marker-end="url(#ahp)"/>
+      </g>
+      <text x="50" y="32" text-anchor="middle" class="s">f₁</text>
+      <text x="150" y="32" text-anchor="middle" class="s">f₂</text>
+      <text x="250" y="32" text-anchor="middle" class="s">f₃</text>
+      <text x="150" y="58" text-anchor="middle" class="s">f₁·f₂·f₃</text>
+      <text x="50" y="96" text-anchor="middle" class="s p">Σ</text>
+      <text x="150" y="96" text-anchor="middle" class="s p">Σ</text>
+      <text x="250" y="96" text-anchor="middle" class="s p">Σ</text>
+      <text x="150" y="134" text-anchor="middle" class="bn s g">R, তারপর S, তারপর W Σ</text>
+      <text x="150" y="149" text-anchor="middle" class="s r">আকার ≈ ট্রিউইডথ + 1</text>
+    </svg><figcaption>আগে গুণো, তারপর Σ করে বাদ দাও</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 200px;align-items:start">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">ডেম্পস্টার-শেফার — অজ্ঞতার কথা বলা</span>
+        m(A) বিশ্বাসটি একটি বিন্দুর বদলে একটি <span class="hl">ফোকাল উপাদানের</span> (set) ওপর দেওয়া হয়। <b>বন্ধ-জগত</b> অনুমানে <span class="circ">m(∅) = 0</span>, এবং প্রতিটি সম্ভাবনা একটি বন্ধনে থাকে: <span class="circ">Bel(A) = Σ<sub>B⊆A</sub> m(B) ≤ P(A) ≤ Σ<sub>B∩A≠∅</sub> m(B) = Pl(A)</span>। ডেম্পস্টারের সংযোজনী নিয়ম দুই উৎস মেলায় এবং দ্বন্দ্ব k = Σ<sub>B∩C=∅</sub> m₁(B)m₂(C) দিয়ে স্বাভাবিকীকরণ করে।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> বেইজ ধরে নেয় <b>একটিই সত্য মান</b> যার সম্ভাবনাগুলোর যোগ ১, আর তালিকাভুক্ত নয় এমন ঘটনা অসম্ভব; ডেম্পস্টার-শেফার <b>অজ্ঞতা</b> মেনে নেয়, তাই শুধু <b>বন্ধন</b> দিতে পারে। Bel ≤ Pl, উল্টো কখনো নয়। দুই সেন্সর {s}-এ 0.6 ও {s, f}-এ 0.4 দিলে Bel(s) = <span class="circ">0.84</span> ও Pl(s) = <span class="circ">1.00</span>।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 148" width="188">
+      <g class="w">
+        <circle cx="30" cy="24" r="16" class="ink fill-b"/>
+        <circle cx="30" cy="72" r="16" class="ink fill-b"/>
+        <circle cx="30" cy="120" r="16" class="ink fill-b"/>
+        <path class="ink-g" d="M46,24 L128,66" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M46,72 L128,72" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M46,120 L128,78" marker-end="url(#ahg)"/>
+        <circle cx="158" cy="72" r="32" class="ink-r fill-r"/>
+        <path class="ink-r" d="M190,72 L234,72" marker-end="url(#ah)"/>
+      </g>
+      <text x="30" y="29" text-anchor="middle" class="s">X₁</text>
+      <text x="30" y="77" text-anchor="middle" class="s">X₂</text>
+      <text x="30" y="125" text-anchor="middle" class="s">X₃</text>
+      <text x="158" y="77" text-anchor="middle" class="bn s k">বা</text>
+      <text x="236" y="77" text-anchor="end" class="s k">Y</text>
+      <text x="84" y="20" text-anchor="middle" class="s g">0.4</text>
+      <text x="84" y="104" text-anchor="middle" class="s g">0.2</text>
+      <text x="240" y="144" text-anchor="end" class="s r">Y = 1 − 0.6·0.7·0.8 = 0.664</text>
+    </svg><figcaption>একটি কারণই Y চালু করতে যথেষ্ট</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> সাক্ষ্য মেলানোর তিনটি রূপ, তিনটি আকৃতি: <b>Σ</b> = চলক Σ করে বাদ দেওয়া (ইলিমিনেশন), <b>∏(1−p)</b> = নয়জি-ওআর, <b>m(∅)=0 ও একটি বন্ধন</b> = ডেম্পস্টার-শেফার। সব ক্ষেত্রে একই নীতি: <b>আগে গুণো, পরে স্বাভাবিকীকরণ করো</b>।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT সংযোগ</span> ভ্যারিয়েবল ইলিমিনেশন আসলে ডেটাবেসের join-ক্রম: <b>β-join</b>-এর শৃঙ্খল। ফ্যাক্টর গুণো = সম্পর্ক জোড়া লাগানো; চলক Σ করা = একটি কলাম বাদ দেওয়া। "সবচেয়ে ছোট scope আগে" নিয়মটি query planner-এর নিয়মেরই সমতুল্য।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+<!-- ============ SHEET 6: Markov chains & HMM ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>মার্কভ ও HMM</span></div>
+  <h2><span class="no">৫</span>মার্কভ শৃঙ্খল ও গোপন মার্কভ মডেল</h2><span class="tag">বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">প্রকৃতির সম্ভাবনার নিয়ম</span> (Markov's chain) বলে: আগের সব ইতিহাসের বদলে <b>সাম্প্রতিক অবস্থাটুকুই</b> ভবিষ্যতের বিতরণ নির্ধারণ করে — <span class="circ">P(Xₜ₊₁ | Xₜ, Xₜ₋₁, …) = P(Xₜ₊₁ | Xₜ)</span>, অর্থাৎ <b>প্রথম-শ্রেণি মার্কভ শর্ত</b>। <span class="hl">গোপন মার্কভ মডেল</span> (HMM) তারই রূপ, যেখানে প্রকৃত অবস্থা <b>লুকানো</b> আছে আর আমরা শুধু পর্যবেক্ষণ (observation) দেখি। একটি HMM পাঁচটি জিনিস দিয়ে ঠিক হয়:
+    <span class="hl">H = (S, O, A, B, π)</span></div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">HMM-এর পাঁচটি অংশ</th><th class="l">কী রাখে</th></tr>
+        <tr><td class="l">S = {s₁,…,sN}</td><td class="l">গোপন অবস্থার সংখ্যা</td></tr>
+        <tr><td class="l">O = {o₁,…,oM}</td><td class="l">পর্যবেক্ষণের বর্ণমালা</td></tr>
+        <tr><td class="l">aᵢⱼ</td><td class="l">sᵢ → sⱼ স্থানান্তর</td></tr>
+        <tr><td class="l">bⱼ(o)</td><td class="l">sⱼ থেকে o আসার সম্ভাবনা</td></tr>
+        <tr><td class="l">πᵢ</td><td class="l">প্রথম অবস্থার বিতরণ</td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:0"><span class="lbl">অ্যাসুম্পশন</span> মার্কভ + স্বাধীনতর পর্যবেক্ষণ emission। অডিও-স্পিচ ছাড়া HMM-এর ভিত্তি এই দুটি অ্যাসুম্পশন; ভাঙলে <b>স্থান-নির্ভর (dependent)</b> মডেল লাগে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 194" width="300">
+      <g class="w">
+        <rect x="8" y="12" width="88" height="26" rx="11" class="ink fill-b"/>
+        <rect x="8" y="70" width="88" height="26" rx="11" class="ink fill-b"/>
+        <rect x="8" y="128" width="88" height="26" rx="11" class="ink fill-b"/>
+        <rect x="240" y="12" width="88" height="26" rx="11" class="ink-g fill-g"/>
+        <rect x="240" y="70" width="88" height="26" rx="11" class="ink-g fill-g"/>
+        <rect x="240" y="128" width="88" height="26" rx="11" class="ink-g fill-g"/>
+        <path class="ink-p" d="M100,25 L236,25" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M100,25 L236,83" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M100,83 L236,83" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M100,83 L236,141" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M100,141 L236,25" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M100,141 L236,141" marker-end="url(#ahp)"/>
+      </g>
+      <text x="52" y="30" text-anchor="middle" class="bn s k">বৃষ্টি</text>
+      <text x="52" y="88" text-anchor="middle" class="bn s k">মেঘলা</text>
+      <text x="52" y="146" text-anchor="middle" class="bn s k">রোদ</text>
+      <text x="284" y="30" text-anchor="middle" class="bn s k">ভেজা</text>
+      <text x="284" y="88" text-anchor="middle" class="bn s k">ভেজা</text>
+      <text x="284" y="146" text-anchor="middle" class="bn s k">শুকনো</text>
+      <text x="166" y="20" text-anchor="middle" class="s p">0.9</text>
+      <text x="176" y="126" text-anchor="middle" class="s p">0.2</text>
+      <text x="170" y="186" text-anchor="middle" class="bn s p">বাঁ পাশে অবস্থা · ডান পাশে পর্যবেক্ষণ</text>
+    </svg><figcaption>অবস্থা লুকানো, তাই পর্যবেক্ষণ থেকে অবস্থার অনুমান</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%;margin-top:0">
+    <tr><th class="l">আবহাওয়ার ধরন</th><th class="l">পরের রোদ</th><th class="l">পরের মেঘলা</th><th class="l">পরের বৃষ্টি</th></tr>
+    <tr><td class="l">রোদ (π)</td><td>0.50</td><td>0.30</td><td>0.20</td></tr>
+    <tr><td class="l">রোদ</td><td>0.50</td><td>0.30</td><td>0.20</td></tr>
+    <tr><td class="l">মেঘলা</td><td>0.20</td><td>0.40</td><td>0.40</td></tr>
+    <tr><td class="l">বৃষ্টি</td><td>0.40</td><td>0.40</td><td>0.20</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ দুই দিন পরে</span>
+    π = (0.5, 0.3, 0.2)। দ্বিতীয় দিন: π·A = (0.39, 0.35, 0.26)। তৃতীয় দিন: (0.369, 0.361, 0.270)। তাই <span class="circ">P(তৃতীয় দিন বৃষ্টি) = 0.27</span> — গতকাল বৃষ্টি হয়েছিল বলেই আজকের সম্ভাবনা এত বেড়েছে।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>স্মৃতি শুধু আগেরটা।</b>" মার্কভ = মেমোরি ১। লুকানো অবস্থা থাকলে সেটাই HMM, আর emission-এর সাথে জোড়া লাগলে বাক্য-মডেলিং।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "HMM হলো Markov chain" — <b>বিভ্রান্তিকর</b>। Markov chain-এ অবস্থাই লুকানো নয়; HMM-এ অবস্থা hidden, শুধু observation দেখা যায়। HMM মডেল করে, Markov chain নয় — Markov chain-এর <b>বিস্তার</b> করে।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">ব্যবহার</span> ASR · ভাষা শনাক্তকরণ (প্রাথমিক) · বায়ো-ইনফরমেটিকসে DNA প্রোটিন-স্ট্রাকচার · স্প্যাম ফিল্টারে markov chain এবং Markov random field।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: forward, backward, Viterbi ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>ফরওয়ার্ড, ব্যাকওয়ার্ড, ভিটার্বি</span></div>
+  <h2><span class="no">৬</span>ফরওয়ার্ড, ব্যাকওয়ার্ড ও ভিটার্বি</h2><span class="tag">ফর্মুলা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> পর্যবেক্ষণ বাক্য o₁,…,oT দেখে <b>তিনটি আলাদা প্রশ্নের</b> উত্তর চাই: (i) <b>ফরওয়ার্ড</b> — পুরো বাক্যের দেওয়া-করা কত? (ii) <b>ব্যাকওয়ার্ড</b> — সব ভবিষ্যতের তথ্য মিলিয়ে বর্তমান অবস্থার সম্ভাবনা কত? (iii) <b>ভিটার্বি</b> — সবচেয়ে সম্ভাব্য অবস্থা-পথ কোনটি? তিনটিই গুণফল-সম্প্রসারণ (product-sum) DP, শুধু স্বাভাবিকীকরণ আলাদা।</div>
+  <div class="cols" style="grid-template-columns:1fr 210px;align-items:start">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">১ · ফরওয়ার্ড (আগে)</span>
+        <span class="hl">αₜ(j) = bⱼ(oₜ)·Σᵢ [aᵢⱼ · αₜ₋₁(i)]</span><br>
+        α₁(j) = πⱼ·bⱼ(o₁)। পুরো বাক্যের সম্ভাবনা = Σⱼ αT(j) = <span class="circ">P(O)</span>। O(N²) সময়, O(NT) স্মৃতি।</div>
+      <div class="sumbox small"><span class="lbl">২ · ব্যাকওয়ার্ড (পিছনে)</span>
+        <span class="hl">βₜ(i) = Σⱼ [aᵢⱼ · bⱼ(oₜ₊₁) · βₜ₊₁(j)]</span><br>
+        βT(j) = 1, β₁(i) = P(ভবিষ্যত | সময় ১-এ অবস্থা i)।</div>
+      <div class="sumbox small"><span class="lbl">৩ · পোস্টেরিয়র ও ভিটার্বি</span>
+        γₜ(i) = αₜ(i)βₜ(i) / Σₖ αₜ(k)βₜ(k) · ভিটার্বি: <span class="hl">δₜ(j) = bⱼ(oₜ)·maxᵢ [aᵢⱼ·δₜ₋₁(i)]</span>, পথ তখন ব্যাকট্র্যাক করে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 280 216" width="188">
+      <g class="w">
+        <rect x="16" y="10" width="86" height="26" rx="11" class="ink fill-b"/>
+        <rect x="176" y="10" width="86" height="26" rx="11" class="ink fill-b"/>
+        <rect x="16" y="66" width="86" height="26" rx="11" class="ink fill-b"/>
+        <rect x="176" y="66" width="86" height="26" rx="11" class="ink fill-b"/>
+        <rect x="16" y="122" width="86" height="26" rx="11" class="ink fill-b"/>
+        <rect x="176" y="122" width="86" height="26" rx="11" class="ink fill-b"/>
+        <path class="ink" d="M102,23 L172,23" marker-end="url(#ah)"/>
+        <path class="ink" d="M102,79 L172,79" marker-end="url(#ah)"/>
+        <path class="ink" d="M102,135 L172,135" marker-end="url(#ah)"/>
+      </g>
+      <text x="59" y="28" text-anchor="middle" class="s">s₁</text>
+      <text x="59" y="84" text-anchor="middle" class="s">s₂</text>
+      <text x="59" y="140" text-anchor="middle" class="s">s₃</text>
+      <text x="219" y="28" text-anchor="middle" class="s">d</text>
+      <text x="219" y="84" text-anchor="middle" class="s">d</text>
+      <text x="219" y="140" text-anchor="middle" class="s">w</text>
+      <text x="137" y="172" text-anchor="middle" class="s r">α₁ = (.45, .18, .02)</text>
+      <text x="137" y="190" text-anchor="middle" class="s r">α₂ = (.1998, .1926, .0107)</text>
+      <text x="137" y="208" text-anchor="middle" class="s r">α₃ = (.0122, .0798, .0738)</text>
+    </svg><figcaption>অবস্থা বামে, পর্যবেক্ষণ ডানে</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ তিন অবস্থা, পর্যবেক্ষণ (শুকনো, শুকনো, ভেজা)</span>
+    π = (0.5, 0.3, 0.2); A আগের পাতার; b(শুকনো) = (0.9, 0.6, 0.1), b(ভেজা) = (0.1, 0.4, 0.9)। ·
+    α₁ = (0.45, 0.18, 0.02) · α₂ = (0.1998, 0.1926, 0.0107) · α₃ = (0.0122, 0.0798, 0.0738) ·
+    <span class="circ">P(O) = 0.1658</span> · δ₃ = (0.0065, 0.0324, 0.0365) ⇒ সেরা পথ <span class="circ">S₁ → S₂ → S₃</span>।</div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ প্রান্তিক সেরা পথ থেকে আলাদা</span>
+    γ₃ = α₃(j)β₃(j)/P(O) = (0.073, 0.481, 0.445): সময় t = 3-এ সবচেয়ে সম্ভাব্য অবস্থা S₂, অথচ সবচেয়ে সম্ভাব্য <b>পথ</b> S₃-এ শেষ হয়। প্রান্তিক ≠ পথ।</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">অ্যালগরিদম</th><th class="l">কোন প্রশ্নের উত্তর দেয়</th><th class="l">কীভাবে জোড়া লাগে</th></tr>
+    <tr><td class="l">ফরওয়ার্ড</td><td class="l">P(O) — কতটা অবাক হব?</td><td class="l">সব অবস্থার ওপর Σ</td></tr>
+    <tr><td class="l">ব্যাকওয়ার্ড</td><td class="l">অবস্থা j-এর "ভবিষ্যৎ" ওজন</td><td class="l">সব অবস্থার ওপর Σ</td></tr>
+    <tr><td class="l">ফরওয়ার্ড-ব্যাকওয়ার্ড</td><td class="l">P(অবস্থা<sub>t</sub>|O) — <b>পোস্টেরিয়র স্মুদিং</b></td><td class="l">α(j)β(j)/P(O)</td></tr>
+    <tr><td class="l">ভিটার্বি</td><td class="l">সেরা একক পথ</td><td class="l">অবস্থার ওপর max</td></tr>
+    <tr><td class="l">বম-ওয়েলচ</td><td class="l">A, B ও π শেখে (EM)</td><td class="l">E-ধাপ, M-ধাপ</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ফরওয়ার্ড যোগ করে, ভিটার্বি max নেয়, ব্যাকওয়ার্ড পিছনে তাকায়।</b>" ফরওয়ার্ড একবার লিখে নাও; তারপর <b>max</b> Σ-এর জায়গা নিলে, α-এর জায়গায় ψ এলেই ভিটার্বি।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ফরওয়ার্ড <b>P(O)</b> দেয়, ভিটার্বি <b>সেরা পথ</b>, আর সেরা পথ প্রতি মুহূর্তে <b>সবচেয়ে সম্ভাব্য অবস্থা</b> নয়। দীর্ঘ বাক্যে সংখ্যা শূন্যে পড়ে যায়: প্রতি ধাপে c<sub>t</sub> = Σ<sub>j</sub> α<sub>t</sub>(j) দিয়ে ভাগ এবং শেষে গুণ করতে হয়।</div>
+  </div>
+  <div class="cols">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">EM + HMM</span> E-ধাপে γ দিয়ে প্রত্যাশা গণনা, M-ধাপে b আর a পুনরায় মাপা। γ কেবল পর্যবেক্ষণের সাক্ষ্যেই মিলিত হয়, তাই ফরওয়ার্ড-ব্যাকওয়ার্ড হলো HMM-এর EM; ভিটার্বি হলো hard EM।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT সংযোগ</span> এই পুনরাবৃত্তিগুলো আসলে একটি <b>ল্যাটিসের ওপর গতিশীল প্রোগ্রামিং-ভিত্তিক সবচেয়ে ছোট পথ</b> — ওজনযুক্ত DAG-তে সবচেয়ে ছোট পথের মতো একই আকৃতি, আর স্পীচ রিকগনাইজারের beam search-এর মতো।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: NLP I ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>NLP পত্র ১</span></div>
+  <h2><span class="no">৭</span>NLP পত্র ১: n-গ্রাম, স্মুদিং, পেরপ্লেক্সিটি</h2><span class="tag">নম্বর আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> প্রাকৃতিক ভাষা প্রক্রিয়াকরণ (NLP) হলো কম্পিউটারে মানুষের ভাষা বোঝা ও তৈরি করা। সবচেয়ে সহজ পদ্ধতি: <span class="hl">n-গ্রাম</span> — পরপর <b>n</b> শব্দের টুকরো। n = 1 ইউনিগ্রাম, n = 2 বাইগ্রাম, n = 3 ট্রাইগ্রাম। সুবীকরণের যুক্তি: "মানুষ পরের শব্দটি <b>আগের কয়েকটির ভেতরে</b> খোঁজে"।</div>
+  <div class="cols" style="grid-template-columns:262px 1fr;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">মডেল</th><th class="l">যা মনে রাখে</th></tr>
+        <tr><td class="l">ইউনিগ্রাম</td><td class="l">একটি শব্দের গণনা</td></tr>
+        <tr><td class="l">বাইগ্রাম</td><td class="l">শব্দের জোড়া — পরের শব্দ</td></tr>
+        <tr><td class="l">ট্রাইগ্রাম</td><td class="l">তিন শব্দ — ব্যাকরণের ছোঁয়া</td></tr>
+        <tr><td class="l">প্রায়ই </td><td class="l"><span class="hl">সব শব্দের জোড়া</span></td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:0"><span class="lbl">শর্ত সম্ভাবনা</span>
+        <b>P(wᵢ | wᵢ₋₁)</b> · <b>P(wᵢ | wᵢ₋₂, wᵢ₋₁)</b> · <b>P(w | পূর্ব n−১টি)</b><br>
+        <span class="code">P(wᵢ|পূর্ব) = count(পূর্ব,wᵢ)/count(পূর্ব)</span></div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 130" width="292">
+      <g class="w">
+        <rect x="4" y="12" width="150" height="30" rx="12" class="ink fill-b"/>
+        <rect x="180" y="12" width="156" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="4" y="52" width="150" height="30" rx="12" class="ink fill-b"/>
+        <rect x="180" y="52" width="156" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="4" y="92" width="150" height="30" rx="12" class="ink fill-b"/>
+        <rect x="180" y="92" width="156" height="30" rx="11" class="ink-r fill-r"/>
+        <path class="ink-r" d="M156,27 L176,27" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M156,67 L176,67" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M156,107 L176,107" marker-end="url(#ah)"/>
+      </g>
+      <text x="79" y="32" text-anchor="middle" class="s">I</text>
+      <text x="258" y="32" text-anchor="middle" class="s">am</text>
+      <text x="79" y="72" text-anchor="middle" class="s">am</text>
+      <text x="258" y="72" text-anchor="middle" class="s">a</text>
+      <text x="79" y="112" text-anchor="middle" class="s">a</text>
+      <text x="258" y="112" text-anchor="middle" class="s">student</text>
+      <text x="170" y="10" text-anchor="middle" class="s r">×</text>
+      <text x="170" y="50" text-anchor="middle" class="s r">×</text>
+      <text x="170" y="90" text-anchor="middle" class="s r">×</text>
+    </svg><figcaption>শব্দের পর একটি শব্দ → বাইগ্রাম</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 216px;align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span>
+        বাক্য "I am a student"-এ ৪টি শব্দ, N = 19 (আগের বাক্যের সাথে), V = 6।
+        P(I) = 6/19, P(am|I) = 3/12, P(a|am) = 3/9, P(student|a) = 4/11<br>
+        P = <span class="circ">0.0789</span> (স্মুদিং ছাড়া)। একই বাক্য অ্যাড-ওয়ানে, |V| = 7 ধরে: 6/26 · 3/12 · 3/9 · 4/11 = <span class="circ">0.0070</span> — শব্দ না দেখা থাকলেও কোনো শূন্য হয় না।</div>
+      <div class="sumbox tiny"><span class="lbl">তিন ধরনের স্মুদিং</span>
+        <b>Laplace (অ্যাড-ওয়ান)</b> — (count+1)/(total+V)।<br>
+        <b>Good-Turing</b> — দুইবারের মধ্যে দেখা যায়নি এমন শব্দের জন্য count-এর সমন্বয়।<br>
+        <b>Kneser-Ney</b> — শুধু কতবার নয়, <b>কোন শব্দের পরে</b> এসেছে তা দেখে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 260 132" width="188">
+      <g class="w">
+        <rect x="10" y="10" width="240" height="26" rx="11" class="ink fill-b"/>
+        <rect x="10" y="52" width="240" height="26" rx="11" class="ink-g fill-g"/>
+        <rect x="10" y="94" width="240" height="26" rx="11" class="ink-r fill-r"/>
+      </g>
+      <text x="130" y="29" text-anchor="middle" class="bn s">প্রশিক্ষণ: বার্গ ডেটা</text>
+      <text x="130" y="71" text-anchor="middle" class="bn s">গণনা: প্রতিটি n-গ্রাম</text>
+      <text x="130" y="113" text-anchor="middle" class="bn s">মিলিয়ন বহু-উপাদান</text>
+    </svg><figcaption>শব্দের দফা → গণনা → সম্ভাবনা</figcaption></figure>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">পেরপ্লেক্সিটি ও NLL</span>
+    NLL = −(1/N) Σ log P(wᵢ) = <span class="hl">exp(NLL)</span> = পেরপ্লেক্সিটি। m₁ = (.4, .4, .2) হলে NLL = <span class="circ">1.147</span> ও পেরপ্লেক্সিটি <span class="circ">3.15</span>; m₂ = (.2, .2, .6) হলে NLL = 1.243 ও পেরপ্লেক্সিটি <b>3.47</b>। ছোট পেরপ্লেক্সিটি = ভালো মডেল।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "গুনো যেখানে শূন্য, বাড়াও এক।" কিন্তু n বাড়ালে গণনা ব্যাহারিক, তাই ভাষা মডেলে n = ৩–৫ সাধারণ।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> বাইগ্রামে (শুরু) হিসাব হয় <b>count(wᵢ₋₁, wᵢ)/count(wᵢ₋₁)</b> — ভবিষ্যৎ নয়, অতীত। আর "শব্দের সংখ্যা" মানে কখনো ngram নয়, কখনো ngram-এর count।</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">শব্দের সাজানোর ধরন</span>
+    <b>অনুক্রমে</b> (word, লেখার ক্রম বদলায় না): free text, ভাষা মডেল · <b>অবস্থানে</b> (ব্যাগ-অফ-ওয়ার্ডস, শব্দের ব্যাগ পরিসংখ্যান): বিচ্ছিন্নতা, পুনরাবৃত্তি নয় · <b>সমন্বয়</b> (skip-gram/CBOW): নেইভ বেইজ ও Word2Vec-এ কাজে লাগে।</div>
+  <div class="tipbox tiny"><span class="lbl">IT সংযোগ</span> n-গ্রাম গণনা হলো MapReduce-এর শব্দ-গণনা প্যাটার্ন; স্মুদিং ছাড়া ভবিষ্যতের শব্দ গুণে শূন্য হয়ে যায়, তাই বড় সিস্টেমে Kneser-Ney ব্যবহার হয়।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: NLP II ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>NLP পত্র ২</span></div>
+  <h2><span class="no">৮</span>NLP পত্র ২: স্টেমিং, POS, চাঙ্কিং, পার্সিং</h2><span class="tag">সংজ্ঞা আসে ★</span>
+  <div class="sumbox tiny" style="margin-top:0"><span class="lbl">স্টেমিং বনাম লেম্মাটাইজেশন</span>
+    <b>স্টেমিং</b> নিয়ম দিয়ে শব্দের শেষ ছিঁড়ে দেয় (Porter, <b>১৯৮০</b>): relational → relat, connected → connect — ফল <b>আসল শব্দ নয়</b>। <b>লেম্মাটাইজেশন</b> অভিধান ও পদ-বিভাগ ব্যবহার করে: better → good, teeth → tooth।</div>
+  <div class="cols" style="grid-template-columns:262px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 172" width="216">
+      <g class="w">
+        <rect x="14" y="8" width="272" height="26" rx="11" class="ink fill-b"/>
+        <rect x="14" y="46" width="272" height="26" rx="11" class="ink fill-b"/>
+        <rect x="14" y="84" width="272" height="26" rx="11" class="ink-g fill-g"/>
+        <rect x="14" y="122" width="272" height="26" rx="11" class="ink-r fill-r"/>
+        <path class="ink-g" d="M150,36 L150,44" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M150,74 L150,82" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M150,112 L150,120" marker-end="url(#ah)"/>
+      </g>
+      <text x="150" y="27" text-anchor="middle" class="bn s">কমা ডট ফাইল</text>
+      <text x="150" y="65" text-anchor="middle" class="bn s">টোকেনাইজেশন</text>
+      <text x="150" y="103" text-anchor="middle" class="bn s">স্টেমিং ও স্টপওয়ার্ড</text>
+      <text x="150" y="141" text-anchor="middle" class="bn s">মডেল → উত্তর</text>
+      <text x="286" y="166" text-anchor="end" class="s r">ভুল ঢোকা হলে সব নষ্ট</text>
+    </svg><figcaption>প্রক্রিয়াকরণ-পূর্ব পাইপলাইন</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">ধাপ</th><th class="l">কী করে</th></tr>
+        <tr><td class="l">টোকেনাইজেশন</td><td class="l">লেখা ভাঙে শব্দে/বাক্যে</td></tr>
+        <tr><td class="l">নরমালাইজেশন</td><td class="l">ছোট হাত, কোড-সংখ্যা সরানো</td></tr>
+        <tr><td class="l"><span class="hl">স্টপওয়ার্ড</span> তালিকা</td><td class="l">a, the, of, is, and… সরানো</td></tr>
+        <tr><td class="l">স্টেমিং</td><td class="l">মূল শব্দের অংশে কাটা</td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:0"><span class="lbl">শব্দ</span> শব্দ · স্টেম · লেম্মা · ট্যাগ: playing/ <b>play / play / VBG</b> · better/<b>better / good / JJR</b> · flies/<b>fli / fly / NNS</b> · mice/<b>mice / mouse / NNS</b>।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span>
+      <span class="hl">স্টেমিং কাটে, লেম্মা অভিধানে খোঁজে।</span> Porter stemmer (১৯৮০): <span class="code">caresses→caress, ponies→poni</span> · লেম্মাটাইজার: <span class="code">better→good, ran→run</span>। ঘন শব্দ বাদ দিলে অর্থ হারায়: <b>good</b> ≠ <b>best</b> ≠ <b>well</b> — তাই মূল্যায়নের সময় স্টপওয়ার্ড রাখা ভালো।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">POS ট্যাগিং ও চাঙ্কিং</span>
+      <b>POS tagging</b> প্রতিটি টোকেনের পদ-বিভাগ বলে। <span class="circ">Penn Treebank: ৪৫ ট্যাগ</span> (৩৬ ট্যাগের ছোট সেটও বলা হয়); <b>Universal POS</b> সেটে <span class="circ">১৭টি</span> ট্যাগ। <b>চাঙ্কিং</b> (অগভীর পার্সিং) ট্যাগগুলো জুড়ে সমতল পদগুচ্ছ বানায় — NP, VP, PP।</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ ট্যাগ দাও</span>
+      "The <i>flies</i> hit the wall" → The/DT flies/NNS hit/VBD the/DT wall/NN। কিন্তু "The flies <i>hit</i> the wall"-ও একটি পূর্ণ ব্যাকরণসম্মত বাক্য — শুধু প্রসঙ্গই সিদ্ধান্ত নেয়।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ চাঙ্ক বানাও</span>
+      "The boy hit the ball in the park" → [<b>NP</b> The boy] [<b>VP</b> hit the ball] [<b>PP</b> in the park]। চাঙ্কিং এখানেই থেমে যায় — কোন পদগুচ্ছ কোন ক্রিয়ার সাথে যুক্ত, তা বলে না।</div>
+  </div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">পার্সিং</span> <b>কনস্টিটুয়েন্সি পার্সিং</b> ব্যাকরণিক শব্দচিহ্ন ব্যবহার করে বাস্তবে থাকা স্তর তৈরি করে। <b>ডিপেনডেন্সি পার্সিং</b> প্রতিটি শব্দকে তার ব্যাকরণিক <b>head</b>-এর সাথে জুড়ে; Universal Dependencies-এ <span class="circ">১৬টি</span> সর্বজনীন সম্পর্ক — nsubj, obj, det, amod, ROOT, case, nmod।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "স্টেমিং হলো <b>কাঁচি</b>, লেম্মাটাইজেশন হলো <b>অভিধান</b>।" POS ট্যাগ বলে শব্দটি কী ধরনের; চাঙ্কিং আরেক স্তর যোগ করে; পার্সিং সব স্তর যোগ করে। সংখ্যা: <b>৪৫</b> Penn · <b>১৭</b> Universal POS · <b>১৬</b> UD সম্পর্ক।</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>POS tagging পার্সিং নয়</b> — ট্যাগার বলে "এটি কী ধরনের শব্দ?", পার্সার বলে "শব্দগুলো কীভাবে জোড়া লাগে?" স্টেমিং <b>লেম্মাটাইজেশনের সমান নয়</b>। আর "flies"-এ একাই <b>তিন</b> অর্থ: বহুবচন বিশেষ্য, তৃতীয় পুরুষ ক্রিয়া, বা পুতুল-নাচক।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">বহুত্বতা — চার ধরনের, সবই পরীক্ষায়</span> <b>শাব্দিক</b> (bank: নদী / টাকা) · <b>বাক্যগত</b> ("আমি দূরবিনীতে মানুষটিকে দেখলাম") · <b>অর্থগত</b> ("He kicked the bucket") · <b>ব্যবহারিক/সম্প্রসারণ</b> ("তাকে কুকুরসহ দেখলাম")।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT সংযোগ</span> একটি <b>inverted index</b> প্রতিটি পরিভাষার জন্য সেটি ধরে এমন নথির ক্রমাঙ্কৃত তালিকা রাখে; চাঙ্ক ও ডিপেনডেন্সি আর্ক তার পাশে বসে। র‍্যাংকার এরপর প্রতিটি (নথি, পরিভাষা) জোড়া স্কোর করে — নেইভ বেইজের নথি-স্কোরের মতোই আকৃতি, TF-IDF ওজনে।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: NLP III ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>NLP পত্র ৩</span></div>
+  <h2><span class="no">৯</span>NLP পত্র ৩: এমবেডিং ও ট্রান্সফর্মার</h2><span class="tag">আধুনিক ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ওয়ার্ড এমবেডিং</span> (word embedding) হলো প্রতিটি শব্দকে ঘন সংখ্যা-ভেক্টরে প্রতিস্থাপন করা, যেখানে অর্থ-কাছের শব্দের ভেক্টর কাছাকাছি থাকে। বাইলোয়াল "কাছাকাছি" = সাইকোসাইন তুলনামূলক কম।</div>
+  <table class="hand small" style="width:100%;margin-top:0">
+    <tr><th class="l">মডেল</th><th class="l">কী করে</th><th class="l">সীমাবদ্ধতা</th></tr>
+    <tr><td class="l">Word2Vec (২০১৩)</td><td class="l">CBOW মাঝের শব্দ থেকে আশপাশ · Skip-gram আশপাশ থেকে মাঝের শব্দ</td><td class="l">স্থির ভেক্টর</td></tr>
+    <tr><td class="l">GloVe (২০১৪)</td><td class="l">গ্লোবাল কো-ঘনিষ্ঠতা থেকে ভেক্টর</td><td class="l">স্থির ভেক্টর</td></tr>
+    <tr><td class="l">FastText (২০১৬)</td><td class="l">শব্দকে অক্ষরের n-গ্রামে ভাঙে</td><td class="l">অজানা শব্দও চিনতে পারে</td></tr>
+    <tr><td class="l">Transformer (২০১৭)</td><td class="l">অ্যাটেনশন দিয়ে লম্বা পরিসর — সমান্তরাল</td><td class="l">O(n²) মনোযোগ</td></tr>
+    <tr><td class="l">BERT (২০১৮)</td><td class="l">দুই-পাশের Transformer-এর encoder; ভাষা বোঝার Pretrained model</td><td class="l">আসল উদ্দেশ্য ছাড়াই pretrain</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 340 126" width="292">
+    <g class="w">
+      <rect x="4" y="10" width="96" height="26" rx="11" class="ink fill-b"/>
+      <rect x="122" y="10" width="96" height="26" rx="11" class="ink fill-b"/>
+      <rect x="240" y="10" width="96" height="26" rx="11" class="ink fill-b"/>
+      <rect x="26" y="66" width="120" height="26" rx="11" class="ink-r fill-r"/>
+      <rect x="194" y="66" width="120" height="26" rx="11" class="ink-r fill-r"/>
+      <path class="ink-p" d="M52,38 L70,62" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M170,38 L170,62" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M288,38 L270,62" marker-end="url(#ahp)"/>
+    </g>
+    <text x="52" y="28" text-anchor="middle" class="s">রাজা</text>
+    <text x="170" y="28" text-anchor="middle" class="s r">খেলার</text>
+    <text x="288" y="28" text-anchor="middle" class="s">দক্ষ</text>
+    <text x="86" y="84" text-anchor="middle" class="s p">ভেক্টর</text>
+    <text x="254" y="84" text-anchor="middle" class="s p">ভেক্টর</text>
+    <text x="170" y="112" text-anchor="middle" class="bn s p">king ≈ king-of-the-hill ≈ ruler</text>
+  </svg><figcaption>অর্থ-কাছের শব্দ = ভেক্টরে কাছে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 216px;align-items:start">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">অ্যাটেনশনের ধারণা</span>
+        কোন শব্দ বাক্যের কোন অংশে বেশি গুরুত্বপূর্ণ তা নিজেই শেখে — প্রতিটি শব্দ বাক্যের <b>প্রত্যেকটি শব্দ থেকে</b> তথ্য নেয়। এতে দূরত্বের সমস্যা কমে, তাই বহু-স্তরের নেটওয়ার্ক সম্ভব হয়।</div>
+      <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span>
+        "Ravi খেলছে", "Ravi বই পড়ছে" — দুই বাক্যে Ravi একই মানুষ। প্রথম কথায় ক্রিয়া খেলা (খেলোয়াড়), দ্বিতীয়ে পড়া (পাঠক)। চারপাশের শব্দ থেকে ভেক্টর বদলালেই শব্দটির অর্থ বদলায় — এই কারণেই স্ট্যাটিক Word2Vec "Ravi"-এর একটাই অর্থ দিতে পারে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 260 148" width="188">
+      <g class="w">
+        <rect x="20" y="10" width="220" height="26" rx="11" class="ink fill-b"/>
+        <rect x="20" y="50" width="220" height="26" rx="11" class="ink-p fill-p"/>
+        <rect x="20" y="90" width="220" height="26" rx="11" class="ink-r fill-r"/>
+        <path class="ink" d="M130,38 L130,48" marker-end="url(#ah)"/>
+        <path class="ink" d="M130,78 L130,88" marker-end="url(#ah)"/>
+      </g>
+      <text x="130" y="29" text-anchor="middle" class="bn s">Input embedding</text>
+      <text x="130" y="69" text-anchor="middle" class="bn s p">Multi-head attention</text>
+      <text x="130" y="109" text-anchor="middle" class="bn s">Feed-forward</text>
+      <text x="250" y="140" text-anchor="end" class="s r">× L স্তর</text>
+    </svg><figcaption>একটি Transformer ব্লক</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "Word2Vec দেখায় কখন, GloVe কত, FastText কী, BERT কে।" ২০১৩ → ২০১৪ → ২০১৬ → ২০১৭ → ২০১৮ — বছর মিলিয়ে লেখা খুব সহজ।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> FastText-কে "subword" বলা যায়, <b>"subword নয়"</b> বলা যায় <b>না</b> — এটি উপাদান-ভেক্টর। BERT <b>encoder</b>-ধরনের, GPT <b>decoder</b>-ধরনের।</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">one-hot বনাম এমবেডিং</span>
+    one-hot: উপাদানশীল, প্রতিটি শব্দের দূরত্ব <b>সমান</b>, কোনো অর্থ নেই, কিন্তু দ্রুত ও উঁচু (n টি বাস্তব, n² পরিসর)। এমবেডিং: ঘন, অর্ধেকের বেশি ০, কিন্তু অর্থ-অনুভূতি আছে।</div>
+  <div class="tipbox tiny"><span class="lbl">IT সংযোগ</span> এমবেডিং আজকাল ভেক্টর ডেটাবেসে (Chroma, FAISS, pgvector) কাজ করে; "সবচেয়ে কাছের k ভেক্টর" খোঁজা মানে সেই ডেটাবেসের ওপর ANN সূচক — একই অনুসন্ধান, অন্য বিন্যাসে।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>রাতের পাতা</span></div>
+  <h2><span class="no">১০</span>রাতের পাতা: বারো এক লাইনে সব</h2><span class="tag">পরীক্ষার আগে রাতে</span>
+  <div class="cols">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">#</th><th class="l">এক লাইনে</th></tr>
+        <tr><td class="l">১</td><td class="l">P(A|B) = P(A∧B)/P(B)</td></tr>
+        <tr><td class="l">২</td><td class="l">P(H|E) = P(E|H)P(H)/P(E)</td></tr>
+        <tr><td class="l">৩</td><td class="l">অনুপাত: পরবর্তী = পূর্ব × সম্ভাবনা অনুপাত</td></tr>
+        <tr><td class="l">৪</td><td class="l">নেইভ বেইজ: Ĉ = argmax P(C)∏P(xᵢ|C)</td></tr>
+        <tr><td class="l">৫</td><td class="l">নেইভ মানে <b>শুধু বৈশিষ্ট্য স্বাধীন</b></td></tr>
+        <tr><td class="l">৬</td><td class="l">BN: DAG, CPT, ∏P(xᵢ|Pa)</td></tr>
+        <tr><td class="l">৭</td><td class="l">d-বিচ্ছেদ ⇒ স্বাধীন; চক্র নেই</td></tr>
+        <tr><td class="l">৮</td><td class="l">অনুমান: Σ করে বিলুপ্তি, ক্রম বেছে নাও</td></tr>
+        <tr><td class="l">৯</td><td class="l">নয়জি-ওআর: 1 − ∏(1−pᵢ)</td></tr>
+        <tr><td class="l">১০</td><td class="l">D-S: Bel ≤ P ≤ Pl, m(∅)=0</td></tr>
+        <tr><td class="l">১১</td><td class="l">মার্কভ: সাম্প্রতিক অবস্থাই যথেষ্ট</td></tr>
+        <tr><td class="l">১২</td><td class="l">HMM = (S, O, A, B, π)</td></tr>
+      </table>
+    </div>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">#</th><th class="l">এক লাইনে</th></tr>
+        <tr><td class="l">১৩</td><td class="l">αₜ = bⱼ(oₜ)·Σᵢ aᵢⱼ αₜ₋₁(i)</td></tr>
+        <tr><td class="l">১৪</td><td class="l">βₜ = Σⱼ aᵢⱼ bⱼ(oₜ₊₁) βₜ₊₁(j)</td></tr>
+        <tr><td class="l">১৫</td><td class="l">γ = αβ/Σαβ; δ-তে max</td></tr>
+        <tr><td class="l">১৬</td><td class="l">বাইগ্রাম: count(w₋₁,w)/count(w₋₁)</td></tr>
+        <tr><td class="l">১৭</td><td class="l">অ্যাড-ওয়ান: (c+1)/(N+V)</td></tr>
+        <tr><td class="l">১৮</td><td class="l">পেরপ্লেক্সিটি = exp(NLL)</td></tr>
+        <tr><td class="l">১৯</td><td class="l">স্টেমিং কাটে, লেম্মা ফেরায়</td></tr>
+        <tr><td class="l">২০</td><td class="l">EM: E-তে γ, M-তে a, b</td></tr>
+        <tr><td class="l">২১</td><td class="l">Word2Vec ২০১৩ · GloVe ২০১৪ · FastText ২০১৬</td></tr>
+        <tr><td class="l">২২</td><td class="l">Transformer ২০১৭ · BERT ২০১৮ (encoder)</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> বিশ্বাস-ফাংশন লাইকলিহুড <b>নয়</b>, পরবর্তী পূর্ব <b>নয়</b> · "নেইভ" মানে শর্তগত স্বাধীনতা, সমান পূর্ব নয় · BN একটি <b>DAG</b>, চক্রযুক্ত গ্রাফ কখনো নয় · নয়জি-ওআর হলো <b>1 − ∏(1−p)</b>, যোগ নয় · hidden মানে পর্যবেক্ষকের কাছে <b>লুকানো</b>, অ্যালগরিদমের কাছে নয় · ভিটার্বি একটি পথে max করে, ফরওয়ার্ড সব যোগ করে · স্টেমিং ≠ লেম্মাটাইজেশন · POS tagging ≠ পার্সিং · এমবেডিং ভাষা-মডেল নয় · পেরপ্লেক্সিটি একটি সমীকরণ, সম্ভাবনা নয়।</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসাথে</span> "পূর্ব ঢোকে, পরবর্তী বেরোয়" (বেইজ) · "প্রতি বৈশিষ্ট্যের সম্ভাবনা গুণো, পূর্ব একবার যোগ, লগ স্পেসে" (নেইভ বেইজ) · "প্রতি পিতাসেটে একটি সারি" (BN) · "আগে গুণো, পরে Σ করে বাদ দাও; সবচেয়ে ছোট scope আগে" (বিলুপ্তি, নয়জি-ওআর, D-S) · "মার্কভ = মেমোরি ১; hidden = পর্যবেক্ষকের কাছে লুকানো" (HMM) · "স্টেমিং হলো কাঁচি, লেম্মাটাইজেশন হলো অভিধান" (NLP) · "n বাড়লে মডেল ভালো, শূন্যও বেশি" (ভাষা-মডেল)।</div>
+  <div class="sumbox small"><span class="lbl">ছয়টি সংখ্যা যা মনে থাকলে কাজ হয়</span>
+    0.083 (পরীক্ষা-পরবর্তী সম্ভাবনা) · 95.1 % (স্প্যাম) · 0.418 (ভেজা ঘাস) · 0.664 (নয়জি-ওআর) · 0.1658 (HMM বাক্য) · 0.27 (তৃতীয় দিন বৃষ্টি)।</div>
+  <div class="cols">
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">রাতের শেষ ১৫ মিনিট</span> শুধু <span class="hl">ফাঁদের তালিকা</span> পড়ো — আর কিছু নয়। নতুন কিছু শিখবে না, পুরনো ঝালসাল ঠিক করবে।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">ফর্মুলা পাতা</span> শুধু চারটি সূত্র লিখলেই বেশিরভাগ লিখিত প্রশ্ন হয়: <b>বেইজ</b>, <b>নেইভ বেইজের argmax</b>, <b>BN-এর গুণফল</b>, <b>হিস্টোগ্রাম/বাইগ্রাম</b>। ফর্মুলা মুখস্থ না হলে কেবল চার শব্দ লিখলেই কাজ চলে।</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · প্রোবাবিলিস্টিক রিজনিং</span><span>অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী বহুনির্বাচনী (পরীক্ষার ধরন, ১০ নম্বর)</h2><span class="tag">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>P(A|B) = 0.4, P(A) = 0.3 হলে:<ol class="opts"><li>0.7</li><li>P(A∧B) = 0.12</li><li>1.33</li><li>0.24</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>রোগ ১ %, পরীক্ষা ৯৯ % সংবেদনশীল, ৯৯ % নির্দিষ্ট:<ol class="opts"><li>0.99</li><li>0.10</li><li>≈ 0.50</li><li>0.01</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>নেইভ বেইজে "নেইভ" মানে:<ol class="opts"><li>শ্রেণি দেওয়ায় স্বাধীন</li><li>সমান পূর্ব</li><li>রেখা-বিভাজনীয়</li><li>সম বৈশিষ্ট্য</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>বেইজিয়ান নেটওয়ার্ক যেভাবে গুণফলী হয়:<ol class="opts"><li>∏ᵢ P(xᵢ)</li><li>সবার ওপর max</li><li>Σᵢ P(xᵢ | Pa)</li><li>∏ᵢ P(xᵢ | Pa(xᵢ))</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>বেইজিয়ান নেটওয়ার্ক কেন DAG:<ol class="opts"><li>তীর নিচে যায়</li><li>চক্র মানে নিজেই পূর্বপুরুষ</li><li>CPT-তে ২ পিতা লাগে</li><li>যৌগ বিতরণ সমরূপ</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>নয়জি-ওআর, ০.৪ করার দুটি কারণ:<ol class="opts"><li>0.80</li><li>0.16</li><li>0.64</li><li>0.36</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>ডেম্পস্টার-শেফার সম্পর্কে ঠিক:<ol class="opts"><li>Bel ≤ P ≤ Pl</li><li>সবসময় Pl ≤ Bel</li><li>প্রতি ঘটনায় একটিই সম্ভাবনা</li><li>নেইভ বেইজের সমান</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>ফরওয়ার্ড ও ভিটার্বির পার্থক্য:<ol class="opts"><li>ফরওয়ার্ড উপকরণ উপেক্ষা করে</li><li>ভিটার্বি সঠিক</li><li>ভিন্ন HMM</li><li>এক পথে Σ বনাম max</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>অভিধান দিয়ে "flies" → "fly":<ol class="opts"><li>স্টেমিং</li><li>লেম্মাটাইজেশন</li><li>টোকেনাইজেশন</li><li>চাঙ্কিং</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>ওয়ার্ড এমবেডিং সম্পর্কে ঠিক:<ol class="opts"><li>one-hot = অর্থ</li><li>GloVe = সমান্তরাল জোড়া</li><li>king ও queen কাছে</li><li>ট্রাইগ্রাম = এমবেডিং</li></ol></div>
+  </div>
+  <div class="anskey">উত্তর → ১-খ · ২-গ · ৩-ক · ৪-ঘ · ৫-খ · ৬-গ · ৭-ক · ৮-ঘ · ৯-খ · ১০-গ</div>
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> বেইজের উপপাদটি চারটি পরিভাষাসহ লেখো। একটি পরীক্ষা ৯০ % ক্ষেত্রে রোগ ধরে, রোগ ১ % মানুষের এবং সুস্থদের ১০ %-এর ক্ষেত্রে পরীক্ষা ইতিবাচক — P(রোগ | ধনাত্মক) বের করো, তারপর নেইভ বেইজের সূত্রটি লেখো এবং কেন তাকে নেইভ বলা হয় তা বলো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>উপপাদ (৩)</b> — P(H|E) = P(E|H)P(H)/P(E)। পূর্ব P(H): প্রমাণের আগে। সম্ভাবনা P(E|H): H সত্য হলে প্রমাণ। সাক্ষ্য P(E): স্বাভাবিকীকরণ পদ। পরবর্তী P(H|E): পরে। <i class="mk">৩</i></li>
+    <li>অঙ্গের ওপর 0.9 × 0.01 = 0.009; অঙ্গের নিচে 0.009 + 0.1 × 0.99 = 0.108। <i class="mk">২</i></li>
+    <li>P(D|+) = 0.009/0.108 = <b>0.083</b> — ভালো পরীক্ষা, ক্ষুদ্র পূর্ব, ছোট পরবর্তী। <i class="mk">২</i></li>
+    <li><b>সূত্র (২)</b> — Ĉ = argmax<sub>C</sub> P(C)P(x₁|C)···P(xₙ|C); P(x) স্বাভাবিকীকরণ পদ বাতিল হয়ে যায়। <i class="mk">২</i></li>
+    <li><b>কেন নেইভ (১)</b> — এটি ধরে নেয় P(x₁,…,xₙ|C) = ∏ᵢP(xᵢ|C): শ্রেণি দেওয়ায় বৈশিষ্ট্যগুলো স্বাধীন। <i class="mk">১</i></li>
+  </ol>
+  <h3 style="margin-top:2mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols3 tiny">
+    <ul class="tick"><li>P(A|B), চেইন নিয়ম</li><li>অনুপাতে বেইজ</li></ul>
+    <ul class="tick"><li>নথির স্কোর বানানো</li><li>BN এঁকে গণনা</li></ul>
+    <ul class="tick"><li>ফরওয়ার্ড, ব্যাকওয়ার্ড, ভিটার্বি</li><li>৪৫ / ১৭ / ১৬ নাম বলো</li></ul>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Amplifiers &amp; FET: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrow markers, circuit symbols (inline attributes!)
+     r-h: horizontal resistor, pins (0,0) (50,0) · r-v: vertical resistor, pins (0,0) (0,50)
+     c-h: horizontal capacitor, pins (0,0) (24,0) · c-v: vertical capacitor, pins (0,0) (0,24) · gnd: ground at (0,0)
+     q-npn: base (0,0), collector (26,-30), emitter (26,30)
+     q-jn / q-jp: n / p-channel JFET, gate (0,0), drain (28,-30), source (28,30)
+     q-md / q-me: n-channel D- / E-MOSFET, gate (0,0), drain (28,-30), source (28,30)
+     i-dn: current source pointing down, pins (0,-28) (0,28) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d3f8f"/></marker>
+    <g id="r-h"><path d="M0,0H10l3,-8l6,16l6,-16l6,16l6,-16l3,8H50" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="r-v"><path d="M0,0V10l8,3l-16,6l16,6l-16,6l16,6l-8,3V50" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="c-h"><path d="M0,0H9M15,0H24" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M9,-10V10M15,-10V10" fill="none" stroke="#1d3f8f" stroke-width="2.8" stroke-linecap="round"/></g>
+    <g id="c-v"><path d="M0,0V9M0,15V24" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M-10,9H10M-10,15H10" fill="none" stroke="#1d3f8f" stroke-width="2.8" stroke-linecap="round"/></g>
+    <g id="gnd"><path d="M0,0V6M-10,6H10M-6,11H6M-2,16H2" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="q-npn"><circle cx="18" cy="0" r="20" fill="rgba(135,190,255,.18)" stroke="#1d3f8f" stroke-width="1.6"/><path d="M0,0H12M12,-12V12M12,-5L26,-16V-30M12,5L26,16V30" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M12,5L24,14.4" fill="none" stroke="#1d3f8f" stroke-width="2.2" marker-end="url(#ahs)"/></g>
+    <g id="q-jn"><path d="M14,-16V16" fill="none" stroke="#1d3f8f" stroke-width="3.2" stroke-linecap="round"/><path d="M14,-10H28V-30M14,10H28V30" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M0,0H13" fill="none" stroke="#1d3f8f" stroke-width="2.2" marker-end="url(#ahs)"/></g>
+    <g id="q-jp"><path d="M14,-16V16" fill="none" stroke="#1d3f8f" stroke-width="3.2" stroke-linecap="round"/><path d="M14,-10H28V-30M14,10H28V30" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M14,0H2" fill="none" stroke="#1d3f8f" stroke-width="2.2" marker-end="url(#ahs)"/><path d="M0,0H3" fill="none" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="q-md"><path d="M0,0H8M8,-14V14" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linecap="round"/><path d="M14,-16V16" fill="none" stroke="#1d3f8f" stroke-width="3" stroke-linecap="round"/><path d="M14,-12H28V-30M14,12H28V30M28,0V12" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M28,0H15" fill="none" stroke="#1d3f8f" stroke-width="2" marker-end="url(#ahs)"/></g>
+    <g id="q-me"><path d="M0,0H8M8,-14V14" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linecap="round"/><path d="M14,-16V-8M14,-4V4M14,8V16" fill="none" stroke="#1d3f8f" stroke-width="3" stroke-linecap="round"/><path d="M14,-12H28V-30M14,12H28V30M28,0V12" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M28,0H15" fill="none" stroke="#1d3f8f" stroke-width="2" marker-end="url(#ahs)"/></g>
+    <g id="i-dn"><path d="M0,-28V-14M0,14V28" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><circle r="14" fill="rgba(120,255,120,.25)" stroke="#1d3f8f" stroke-width="2.2"/><path d="M0,-8V8M-5,3L0,9L5,3" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Single-Stage Amplifiers &amp; FET</span></h1>
+  <p class="subtitle">CE · CB · CC · re &amp; h-models · dB &amp; bandwidth · JFET · MOSFET · FET bias &amp; amplifiers: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">AMPLIFIERS &amp; FET</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Gain · dB · coupling C</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">CE / CB / CC table ★</text>
+      <text x="500" y="65" text-anchor="middle">re · h-parameters</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">−3 dB · bandwidth ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Shockley · gm ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">FET bias · CS/CD/CG</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">D- vs E-MOSFET ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">BJT vs FET · CMOS</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = applied / comparison</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① CE 180°, CB/CC 0°<br>② CC: buffer, A<sub>v</sub> ≈ 1<br>③ r<sub>e</sub> = 26 mV/I<sub>E</sub><br>④ −3 dB = ½ power<br>⑤ Shockley &amp; g<sub>m</sub><br>⑥ E-MOSFET: OFF at 0</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"<span class="hl">Single stage amplifier</span>: voltage and current gain, input and output impedance of a common base, common emitter and common collector, h-parameter; <span class="hl">Field effect transistor (FET)</span>: JFET structure, operation and characteristics. <span class="hl">MOSFET construction, operation and characteristics</span>." BJT construction, biasing and the switch are in the BJT notes (lesson 2); diodes in lesson 1.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Amplifier basics, dB, capacitors ……… p. 2</li><li>re model &amp; CE analysis ……… p. 3</li><li>CB, CC &amp; the comparison table … p. 4</li><li>h-parameters, frequency response … p. 5</li><li>FET family &amp; JFET ……… p. 6</li></ul>
+    <ul class="tick"><li>Shockley, gm, BJT vs FET ……… p. 7</li><li>MOSFET (D &amp; E), CMOS ……… p. 8</li><li>FET biasing &amp; CS/CD/CG ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: amplifier basics, dB, capacitors ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>Amplifier basics</span></div>
+  <h2><span class="no">1</span>The Single-Stage Amplifier</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> A single-stage amplifier uses <b>one</b> transistor (BJT or FET), biased in its <span class="hl">active region</span> (BJT) or <span class="hl">saturation / pinch-off region</span> (FET), to make a small AC signal larger. The DC bias sets the Q-point; the AC signal rides on it. Energy comes from the DC supply, not from the transistor.</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Gain</th><th class="l">Definition</th></tr>
+      <tr><td class="l">Voltage A<sub>v</sub></td><td class="l">v<sub>o</sub> / v<sub>i</sub></td></tr>
+      <tr><td class="l">Current A<sub>i</sub></td><td class="l">i<sub>o</sub> / i<sub>i</sub> = −A<sub>v</sub>·Z<sub>i</sub>/R<sub>L</sub></td></tr>
+      <tr><td class="l">Power A<sub>p</sub></td><td class="l"><span class="circ">A<sub>v</sub> × A<sub>i</sub></span></td></tr>
+      <tr><td class="l">Input Z<sub>i</sub></td><td class="l">v<sub>i</sub> / i<sub>i</sub> (looking in)</td></tr>
+      <tr><td class="l">Output Z<sub>o</sub></td><td class="l">v<sub>o</sub>/i<sub>o</sub> with v<sub>s</sub> = 0</td></tr>
+    </table>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Decibels (dB)</span><br>Power: <span class="hl">G = 10 log(P<sub>o</sub>/P<sub>i</sub>)</span><br>Voltage: <span class="hl">G = 20 log(V<sub>o</sub>/V<sub>i</sub>)</span><br>Cascade: <b>dB values add</b> (gains multiply)</div>
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>Voltage ratio</th><th>dB</th><th>Power ratio</th></tr>
+        <tr><td>0.707</td><td class="red"><b>−3</b></td><td>½</td></tr>
+        <tr><td>2</td><td>+6</td><td>4</td></tr>
+        <tr><td>10 / 100 / 1000</td><td>20 / 40 / 60</td><td>10² … 10⁶</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> A power ratio of 1000 is <b>30 dB</b> (10 log), but a voltage ratio of 1000 is <b>60 dB</b> (20 log). The bel honours A. G. Bell; 1 B = 10 dB.</div>
+
+  <h2><span class="no">2</span>Coupling &amp; Bypass Capacitors · DC vs AC Analysis</h2>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 270 222" width="268">
+      <g class="w">
+        <path class="ink-k" d="M60,20 H230"/>
+        <use href="#r-v" x="80" y="20"/><use href="#r-v" x="126" y="20"/>
+        <path class="ink" d="M80,70 V130 M14,110 H40 M64,110 H100 M126,70 V80 M126,76 H160 M184,76 H210 M126,140 V146 M126,146 H166 V160"/>
+        <use href="#r-v" x="80" y="130"/><use href="#gnd" x="80" y="180"/>
+        <use href="#c-h" x="40" y="110"/><use href="#c-h" x="160" y="76"/>
+        <use href="#q-npn" x="100" y="110"/>
+        <use href="#r-v" x="126" y="146"/><use href="#gnd" x="126" y="196"/>
+        <use href="#c-v" x="166" y="160"/><use href="#gnd" x="166" y="184"/>
+        <use href="#r-v" x="210" y="76"/><use href="#gnd" x="210" y="126"/>
+      </g>
+      <text x="236" y="25" class="s w6">+VCC</text>
+      <text x="56" y="50" class="s">R1</text><text x="56" y="160" class="s">R2</text><text x="138" y="50" class="s">RC</text>
+      <text x="100" y="178" class="s">RE</text><text x="180" y="178" class="s r w6">CE</text>
+      <text x="44" y="96" class="s r w6">C1</text><text x="164" y="62" class="s r w6">C2</text><text x="222" y="104" class="s">RL</text>
+      <text x="2" y="104" class="s g">vi</text><text x="214" y="68" class="s g">vo</text><text x="148" y="116" class="s">Q</text>
+    </svg><figcaption>voltage-divider CE amplifier: C1, C2 couple · CE bypasses RE</figcaption></figure>
+    <div>
+      <ul class="dash small">
+        <li><b>Coupling C (C1, C2):</b> <span class="hl">pass AC, block DC</span>, so the source and load do not upset the Q-point. Rule: X<sub>C</sub> ≤ R/10 at the lowest signal frequency.</li>
+        <li><b>Bypass C (C<sub>E</sub>):</b> shorts R<sub>E</sub> for AC only. R<sub>E</sub> keeps the <b>DC</b> stability, yet the AC gain rises from ≈ −R<sub>C</sub>/R<sub>E</sub> to <span class="circ">−R<sub>C</sub>/r<sub>e</sub></span>.</li>
+      </ul>
+      <ol class="steps small">
+        <li><b>DC analysis:</b> capacitors = <b>open</b>; find I<sub>E</sub>, V<sub>CE</sub> (bias, lesson 2)</li>
+        <li>r<sub>e</sub> = 26 mV / I<sub>E</sub></li>
+        <li><b>AC analysis:</b> capacitors = <b>short</b>, DC supply = <b>AC ground</b></li>
+        <li>Replace the transistor by its model; find Z<sub>i</sub>, Z<sub>o</sub>, A<sub>v</sub>, A<sub>i</sub></li>
+      </ol>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>DC: caps out, AC: caps in, V<sub>CC</sub> down</b>". For AC, R1 and R2 both end on ground, so they appear <b>in parallel</b>: R′ = R1 ∥ R2.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: re model & CE analysis ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>CE analysis</span></div>
+  <h2><span class="no">3</span>The r<sub>e</sub> Model &amp; the Common-Emitter Stage</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">r<sub>e</sub> model</span> The forward-biased BE junction has AC resistance <span class="circ">r<sub>e</sub> = 26 mV / I<sub>E</sub></span> (room temperature, V<sub>T</sub> ≈ 26 mV). Seen from the base it looks <b>β times larger</b>: Z<sub>b</sub> = <span class="hl">βr<sub>e</sub></span> (= h<sub>ie</sub>, also called r<sub>π</sub>). The output is a current source βI<sub>b</sub> (= I<sub>c</sub>), with r<sub>o</sub> = 1/h<sub>oe</sub> in parallel.</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 140" width="296">
+      <g class="w">
+        <path class="ink" d="M20,30 H80 M80,80 V112 M180,42 V30 H240 V45 M240,95 V112 M240,30 H284 M180,98 V112 M14,112 H284"/>
+        <use href="#r-v" x="80" y="30"/><use href="#i-dn" x="180" y="70"/><use href="#r-v" x="240" y="45"/>
+        <path class="ink-r" d="M30,22 H64" marker-end="url(#ah)"/>
+      </g>
+      <text x="4" y="34" class="s w6">b</text><text x="34" y="16" class="s r">Ib</text>
+      <text x="94" y="60" class="s w6">βre</text><text x="200" y="74" class="s r">βIb</text><text x="252" y="74" class="s">RC</text>
+      <text x="284" y="24" class="s g">vo</text><text x="186" y="24" class="s w6">c</text><text x="134" y="130" class="s w6">e (common)</text>
+    </svg><figcaption>CE in the r<sub>e</sub> model (r<sub>o</sub> ignored, C<sub>E</sub> bypassing)</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 280 130" width="276">
+      <g class="w">
+        <path class="ink-k" d="M10,65 H270" stroke-dasharray="4 4"/>
+        <path class="ink-g" d="M10,65 C25,50 35,50 50,65 S75,80 90,65"/>
+        <path class="ink-r" d="M130,65 C150,10 170,10 190,65 S230,120 250,65"/>
+        <path class="ink-k" d="M96,65 H124" marker-end="url(#ahb)"/>
+      </g>
+      <text x="22" y="40" class="s g">vi (small)</text><text x="140" y="118" class="s r">vo: ×178, inverted</text>
+      <text x="196" y="24" class="s r w6">180°</text>
+    </svg><figcaption>CE output is inverted: base ↑ → I<sub>C</sub> ↑ → drop on R<sub>C</sub> ↑ → V<sub>C</sub> ↓</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">CE, voltage-divider bias</th><th class="l">Z<sub>i</sub></th><th class="l">Z<sub>o</sub></th><th class="l">A<sub>v</sub></th></tr>
+    <tr><td class="l">R<sub>E</sub> bypassed</td><td class="l">R1 ∥ R2 ∥ βr<sub>e</sub></td><td class="l">R<sub>C</sub> (∥ r<sub>o</sub>)</td><td class="l red"><b>−R<sub>C</sub>/r<sub>e</sub></b></td></tr>
+    <tr><td class="l">R<sub>E</sub> unbypassed</td><td class="l">R1 ∥ R2 ∥ β(r<sub>e</sub> + R<sub>E</sub>)</td><td class="l">R<sub>C</sub></td><td class="l">−R<sub>C</sub>/(r<sub>e</sub> + R<sub>E</sub>) ≈ −R<sub>C</sub>/R<sub>E</sub></td></tr>
+    <tr><td class="l">With load R<sub>L</sub></td><td class="l">same</td><td class="l">R<sub>C</sub></td><td class="l">replace R<sub>C</sub> by R<sub>C</sub> ∥ R<sub>L</sub></td></tr>
+  </table>
+  <div class="ex"><span class="lbl">Worked example ✍</span> V<sub>CC</sub> = 12 V, R1 = 47 kΩ, R2 = 10 kΩ, R<sub>C</sub> = 3.3 kΩ, R<sub>E</sub> = 1 kΩ, β = 100, no load.
+    <ol class="steps small">
+      <li>βR<sub>E</sub> = 100 kΩ ≥ 10R2 ✓ → V<sub>B</sub> = 12 × 10/57 = 2.11 V, V<sub>E</sub> = 1.41 V, I<sub>E</sub> = <b>1.41 mA</b></li>
+      <li>r<sub>e</sub> = 26/1.41 = <b>18.5 Ω</b>; βr<sub>e</sub> = 1.85 kΩ; R1 ∥ R2 = 8.25 kΩ</li>
+      <li>Bypassed: Z<sub>i</sub> = 8.25k ∥ 1.85k = <b>1.51 kΩ</b>, Z<sub>o</sub> = 3.3 kΩ, A<sub>v</sub> = −3300/18.5 = <span class="circ">−178</span> (45 dB)</li>
+      <li>C<sub>E</sub> removed: Z<sub>b</sub> = 100 × 1018.5 Ω = 101.9 kΩ → Z<sub>i</sub> = <b>7.63 kΩ</b>, A<sub>v</sub> = −3300/1018.5 = <b>−3.24</b></li>
+    </ol></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> CE gain = "<b>what's in the collector ÷ what's in the emitter</b>", with a minus sign. Bypassed: only r<sub>e</sub> is left in the emitter.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Removing C<sub>E</sub> <b>lowers</b> the gain (here −178 → −3.24) but <b>raises</b> Z<sub>i</sub> and makes the gain stable and nearly independent of β (negative feedback).</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: CB, CC, comparison ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>CB · CC · comparison</span></div>
+  <h2><span class="no">4</span>Common Base &amp; Common Collector</h2>
+  <figure class="doodle"><svg viewBox="0 0 640 116" width="640">
+    <g class="w">
+      <use href="#q-npn" x="60" y="56"/><use href="#q-npn" x="300" y="56"/><use href="#q-npn" x="530" y="56"/>
+      <path class="ink-g" d="M14,56 H56" marker-end="url(#ahg)"/><path class="ink-r" d="M86,26 H130" marker-end="url(#ah)"/>
+      <path class="ink-k" d="M86,86 V92"/><use href="#gnd" x="86" y="92"/>
+      <path class="ink-k" d="M300,56 H286 V70"/><use href="#gnd" x="286" y="70"/>
+      <path class="ink-g" d="M326,112 V90" marker-end="url(#ahg)"/><path class="ink-r" d="M326,26 H370" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M484,56 H526" marker-end="url(#ahg)"/><path class="ink-k" d="M556,26 V12"/><path class="ink-r" d="M556,86 H600" marker-end="url(#ah)"/>
+    </g>
+    <text x="14" y="48" class="s g">in: B</text><text x="96" y="18" class="s r">out: C</text><text x="100" y="104" class="s">E common</text>
+    <text x="336" y="108" class="s g">in: E</text><text x="336" y="18" class="s r">out: C</text><text x="214" y="104" class="s">B common</text>
+    <text x="484" y="48" class="s g">in: B</text><text x="566" y="106" class="s r">out: E</text><text x="566" y="16" class="s">C → V<tspan>CC</tspan></text>
+    <text x="150" y="62" class="w6 k">CE</text><text x="390" y="62" class="w6 k">CB</text><text x="600" y="62" class="w6 k">CC</text>
+  </svg><figcaption>the common terminal is shared by input and output (it is AC ground; V<sub>CC</sub> is AC ground too)</figcaption></figure>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">Common base (CB)</span> Input at E, output at C.<br>Z<sub>i</sub> = R<sub>E</sub> ∥ r<sub>e</sub> ≈ <span class="hl">r<sub>e</sub> (very low, ~10–50 Ω)</span><br>Z<sub>o</sub> ≈ R<sub>C</sub> · A<sub>v</sub> = <b>+R<sub>C</sub>/r<sub>e</sub></b> (no inversion)<br>A<sub>i</sub> = α ≈ <span class="circ">0.98–0.99 (&lt; 1)</span><br>Use: RF / high-frequency stages (no Miller effect), low-Z sources.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Common collector (CC) = emitter follower</span> Input at B, output at E.<br>Z<sub>i</sub> = R<sub>B</sub> ∥ β(r<sub>e</sub> + R<sub>E</sub>) → <span class="hl">high</span><br>Z<sub>o</sub> = R<sub>E</sub> ∥ r<sub>e</sub> ≈ r<sub>e</sub> → <span class="hl">very low</span><br>A<sub>v</sub> = R<sub>E</sub>/(R<sub>E</sub> + r<sub>e</sub>) <span class="circ">≈ 1 (slightly &lt; 1)</span><br>A<sub>i</sub> ≈ β + 1. Use: <b>buffer</b>, impedance matching.</div>
+  </div>
+  <h3>The master comparison table (memorise)</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Property</th><th>CE</th><th>CB</th><th>CC (emitter follower)</th></tr>
+    <tr><td class="l">Z<sub>i</sub></td><td>medium (βr<sub>e</sub>, ~1 kΩ)</td><td class="red"><b>lowest</b> (≈ r<sub>e</sub>)</td><td class="red"><b>highest</b> (~100 kΩ)</td></tr>
+    <tr><td class="l">Z<sub>o</sub></td><td>medium (≈ R<sub>C</sub>)</td><td><b>highest</b> (device ~MΩ)</td><td><b>lowest</b> (≈ r<sub>e</sub>)</td></tr>
+    <tr><td class="l">A<sub>v</sub></td><td>high, −R<sub>C</sub>/r<sub>e</sub></td><td>high, +R<sub>C</sub>/r<sub>e</sub></td><td>≈ 1</td></tr>
+    <tr><td class="l">A<sub>i</sub></td><td>high (β)</td><td>α &lt; 1</td><td>high (β + 1)</td></tr>
+    <tr><td class="l">A<sub>p</sub></td><td class="red"><b>highest</b></td><td>moderate</td><td>moderate (≈ A<sub>i</sub>)</td></tr>
+    <tr><td class="l">Phase</td><td class="red"><b>180°</b></td><td>0°</td><td>0°</td></tr>
+    <tr><td class="l">Use</td><td>voltage amplifier</td><td>RF, current buffer</td><td>buffer, matching</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Emitter follower, I<sub>E</sub> = 2 mA, R<sub>E</sub> = 2.2 kΩ: r<sub>e</sub> = 26/2 = 13 Ω; A<sub>v</sub> = 2200/2213 = <b>0.994</b>; Z<sub>o</sub> = 2.2k ∥ 13 = <b>12.9 Ω</b>. A weak source now sees a high Z<sub>i</sub>, and the load sees a ~13 Ω source.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>CB: Big output, Baby input</b>" · "<b>CC: Copy Cat</b>": the emitter copies the base voltage (minus 0.7 V), so A<sub>v</sub> ≈ 1.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> CB has A<sub>i</sub> &lt; 1 but a <b>high</b> A<sub>v</sub>; CC has A<sub>v</sub> &lt; 1 but a <b>high</b> A<sub>i</sub>. Only CE inverts. Darlington = two CC stages: β<sub>D</sub> ≈ β₁β₂.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: h-parameters, frequency response ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>h-parameters · bandwidth</span></div>
+  <h2><span class="no">5</span>h-Parameters (Hybrid Model) in Amplifier Work</h2>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr">
+    <div>
+      <p class="small" style="margin:0"><b>Two-port equations</b> (inputs i₁, v₂):</p>
+      <p style="margin:0"><span class="circ">v₁ = h₁₁i₁ + h₁₂v₂</span><br><span class="circ">i₂ = h₂₁i₁ + h₂₂v₂</span></p>
+      <p class="small" style="margin:0">"Hybrid": <span class="hl">mixed units</span> (Ω, –, –, S). 2nd subscript = configuration: h<sub>ie</sub>, h<sub>ib</sub>, h<sub>ic</sub>.</p>
+    </div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>h</th><th class="l">Name</th><th>Unit</th><th>Typical CE</th></tr>
+      <tr><td>h<sub>ie</sub></td><td class="l">input impedance</td><td>Ω</td><td>~1 kΩ</td></tr>
+      <tr><td>h<sub>re</sub></td><td class="l">reverse voltage ratio</td><td>–</td><td>~10⁻⁴</td></tr>
+      <tr><td>h<sub>fe</sub></td><td class="l">forward current gain</td><td>–</td><td>50–200</td></tr>
+      <tr><td>h<sub>oe</sub></td><td class="l">output admittance</td><td>S</td><td>~25 μS</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Approximate CE (h<sub>re</sub>, h<sub>oe</sub> ≈ 0)</span><br>Z<sub>i</sub> = h<sub>ie</sub> · A<sub>i</sub> = h<sub>fe</sub> · Z<sub>o</sub> = 1/h<sub>oe</sub><br><span class="hl">A<sub>v</sub> = −h<sub>fe</sub>R<sub>L</sub>/h<sub>ie</sub></span><br>h<sub>fe</sub> = 50, h<sub>ie</sub> = 1.1 kΩ, R<sub>L</sub> = 2.2 kΩ → <b>A<sub>v</sub> = −100</b></div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Link to the r<sub>e</sub> model</span><br><span class="circ">h<sub>ie</sub> = βr<sub>e</sub></span> · h<sub>fe</sub> = β<br>h<sub>ib</sub> = r<sub>e</sub> · h<sub>fb</sub> = −α<br>h<sub>fc</sub> = −(1 + β) · h<sub>oe</sub> = 1/r<sub>o</sub></div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> h<sub>fe</sub> (small-signal AC) ≈ h<sub>FE</sub> (= β<sub>DC</sub>, capitals) but they are not identical. h<sub>fb</sub> is <b>negative</b> (≈ −0.99).</div>
+
+  <h2><span class="no">6</span>Frequency Response, −3 dB Points &amp; Bandwidth</h2><span class="tag">high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 640 160" width="640">
+    <g class="w">
+      <path class="ink-k" d="M60,142 V10 M60,142 H620" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M74,138 C110,80 140,40 200,34 H470 C530,40 560,80 596,138" style="stroke-width:2.6"/>
+      <path class="ink-r" d="M60,34 H600" stroke-dasharray="3 5"/><path class="ink-r" d="M60,54 H600" stroke-dasharray="7 5"/>
+      <path class="ink-r" d="M158,54 V142 M512,54 V142" stroke-dasharray="5 4"/>
+      <path class="ink-p" d="M164,84 H506" marker-end="url(#ahp)" marker-start="url(#ahp)"/>
+    </g>
+    <text x="16" y="38" class="s">Amid</text><text x="0" y="58" class="s r">0.707 A</text>
+    <text x="150" y="158" class="r w6">fL</text><text x="504" y="158" class="r w6">fH</text><text x="590" y="158" class="s">f (log)</text>
+    <text x="280" y="78" class="p w6">BW = fH − fL</text><text x="240" y="26" class="g s">mid-band: caps short, gain flat</text>
+    <text x="168" y="116" class="s">← coupling &amp; bypass C</text><text x="504" y="116" text-anchor="end" class="s">junction C, Miller →</text>
+    <text x="230" y="70" class="r s">−3 dB</text>
+  </svg><figcaption>RC-coupled stage: gain falls at both ends; each RC edge rolls off at 20 dB/decade (6 dB/octave)</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr">
+    <ul class="dash small" style="margin-top:0">
+      <li><b>Low end f<sub>L</sub>:</b> X<sub>C</sub> of C1, C2, C<sub>E</sub> grows; f<sub>L</sub> = 1/[2π(R<sub>s</sub> + Z<sub>i</sub>)C1]. C<sub>E</sub> usually sets the highest (dominant) f<sub>L</sub>.</li>
+      <li><b>High end f<sub>H</sub>:</b> C<sub>be</sub>, C<sub>bc</sub>, stray C. <span class="hl">Miller effect</span>: C<sub>Mi</sub> = (1 + |A<sub>v</sub>|)C<sub>bc</sub>.</li>
+      <li>At f<sub>L</sub>, f<sub>H</sub>: gain = <span class="circ">0.707 A<sub>mid</sub></span> (−3 dB), power = ½.</li>
+    </ul>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked examples ✍</span><br>① Sheet-3 stage, C1 = 10 μF, R<sub>s</sub> ≈ 0: f<sub>L</sub> = 1/(2π × 1511 × 10⁻⁵) = <b>10.5 Hz</b><br>② C<sub>bc</sub> = 4 pF, A<sub>v</sub> = −178: C<sub>Mi</sub> = 179 × 4 = <b>716 pF</b><br>③ f<sub>L</sub> = 50 Hz, f<sub>H</sub> = 20 kHz → BW = <b>19.95 kHz</b></div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>Big caps kill the bass, small caps kill the treble</b>": external μF capacitors set f<sub>L</sub>, internal pF capacitances set f<sub>H</sub>. Gain × bandwidth ≈ constant.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: FET family, JFET ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>FET &amp; JFET</span></div>
+  <h2><span class="no">7</span>The Field-Effect Transistor (FET) Family</h2><span class="tag">MCQ favourite</span>
+  <div class="def"><span class="lbl">Definition</span> A FET is a <span class="hl">voltage-controlled</span>, <span class="hl">unipolar</span> device: V<sub>GS</sub> sets the width (or existence) of a conducting <b>channel</b> between drain and source; only majority carriers flow (electrons in n-channel). The gate draws almost no current: <span class="circ">I<sub>G</sub> ≈ 0, Z<sub>i</sub> very high</span>.</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 116" width="296">
+      <g class="w">
+        <rect x="110" y="4" width="80" height="26" rx="10" class="ink-k fill-y"/>
+        <path class="ink" d="M150,30 V40 M70,40 H230 M70,40 V48 M230,40 V48 M70,74 V80 M30,80 H110 M30,80 V86 M110,80 V86 M230,74 V86"/>
+        <rect x="30" y="48" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="190" y="48" width="80" height="26" rx="10" class="ink-r fill-r"/>
+        <rect x="2" y="86" width="56" height="26" rx="8" class="ink-g fill-g"/><rect x="82" y="86" width="56" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="180" y="86" width="100" height="26" rx="8" class="ink-r fill-r"/>
+      </g>
+      <text x="150" y="22" text-anchor="middle" class="k w6">FET</text>
+      <text x="70" y="66" text-anchor="middle" class="w6">JFET</text><text x="230" y="66" text-anchor="middle" class="r w6">MOSFET</text>
+      <text x="30" y="104" text-anchor="middle" class="s g">n-ch</text><text x="110" y="104" text-anchor="middle" class="s g">p-ch</text>
+      <text x="230" y="104" text-anchor="middle" class="s r">D- / E-type</text>
+    </svg><figcaption>MOSFET = IGFET; every type comes as n- or p-channel</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">FET</th><th class="l">BJT analogue</th></tr>
+      <tr><td class="l">Gate G · Drain D · Source S</td><td class="l">Base · Collector · Emitter</td></tr>
+      <tr><td class="l">V<sub>GS</sub> controls I<sub>D</sub></td><td class="l">I<sub>B</sub> controls I<sub>C</sub></td></tr>
+    </table>
+  </div>
+  <h2><span class="no">8</span>JFET: Construction &amp; Operation</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 330 196" width="328">
+      <g class="w">
+        <rect x="50" y="56" width="230" height="70" class="ink fill-b"/>
+        <rect x="120" y="36" width="90" height="22" rx="4" class="ink-r fill-r"/><rect x="120" y="124" width="90" height="22" rx="4" class="ink-r fill-r"/>
+        <path d="M112,58 L220,58 L220,80 Q170,72 112,62 Z" class="ink-k" style="fill:rgba(160,160,160,.45);stroke-width:1.2"/>
+        <path d="M112,124 L220,124 L220,102 Q170,110 112,120 Z" class="ink-k" style="fill:rgba(160,160,160,.45);stroke-width:1.2"/>
+        <path class="ink" d="M50,91 H22 M280,91 H306 M165,36 V20 H240 M165,146 V160 H240 V20"/>
+      </g>
+      <text x="4" y="96" class="w6">S</text><text x="310" y="96" class="w6">D</text><text x="246" y="16" class="w6">G</text>
+      <text x="128" y="96" class="s w6">n-channel</text><text x="138" y="52" class="s r">p⁺</text><text x="138" y="142" class="s r">p⁺</text>
+      <text x="4" y="24" class="s k">grey = depletion,</text><text x="4" y="40" class="s k">wider near D</text>
+      <text x="30" y="186" class="s g">electrons S → D · conventional I<tspan>D</tspan> D → S</text>
+    </svg><figcaption>n-channel JFET: p⁺ gates tied together; the gate–channel junction is <b>reverse-biased</b></figcaption></figure>
+    <ol class="steps small">
+      <li>V<sub>GS</sub> = 0, small V<sub>DS</sub>: channel open, I<sub>D</sub> rises linearly (<b>ohmic</b> region: a voltage-controlled resistor)</li>
+      <li>V<sub>DS</sub> grows: depletion layers meet near the drain = <span class="hl">pinch-off</span>; I<sub>D</sub> levels off at <span class="circ">I<sub>DSS</sub></span> (max, V<sub>GS</sub> = 0)</li>
+      <li>V<sub>GS</sub> more negative: channel narrower, I<sub>D</sub> smaller</li>
+      <li>V<sub>GS</sub> = <b>V<sub>P</sub></b> (= V<sub>GS(off)</sub>): channel closed, I<sub>D</sub> ≈ 0 (<b>cut-off</b>)</li>
+    </ol>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Region (n-channel, V<sub>P</sub> &lt; 0)</th><th class="l">Condition</th><th class="l">I<sub>D</sub></th></tr>
+    <tr><td class="l">Cut-off</td><td class="l">V<sub>GS</sub> ≤ V<sub>P</sub></td><td class="l">≈ 0</td></tr>
+    <tr><td class="l">Ohmic (triode)</td><td class="l">V<sub>DS</sub> &lt; V<sub>GS</sub> − V<sub>P</sub></td><td class="l">∝ V<sub>DS</sub>; r<sub>d</sub> set by V<sub>GS</sub></td></tr>
+    <tr><td class="l">Saturation (pinch-off) ← amplifier</td><td class="l">V<sub>DS</sub> ≥ V<sub>GS</sub> − V<sub>P</sub></td><td class="l">Shockley, ~flat in V<sub>DS</sub></td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> JFET = a <b>garden hose</b>: the gate squeezes it; squeeze fully (V<sub>GS</sub> = V<sub>P</sub>) and the flow stops. Open at rest → <b>normally ON</b>, depletion-mode only.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> n-channel: V<sub>GS</sub> ≤ 0; p-channel: V<sub>GS</sub> ≥ 0. A forward-biased gate loses the high Z<sub>i</sub>. Carriers enter at the <b>source</b>, leave at the <b>drain</b>.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: characteristics, Shockley, gm ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>Shockley · gm</span></div>
+  <h2><span class="no">9</span>JFET Characteristics &amp; Shockley's Equation</h2><span class="tag">written favourite</span>
+  <figure class="doodle"><svg viewBox="0 0 640 200" width="640">
+    <g class="w">
+      <path class="ink-k" d="M250,180 V12 M30,180 H250 M250,180 H620" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M50,180 L75,177.7 L100,170.6 L125,158.9 L150,142.5 L175,121.4 L200,95.6 L225,65.2 L250,30" style="stroke-width:2.6"/>
+      <path class="ink-k" d="M250,30 H600 M250,95.6 H600 M250,142.5 H600" stroke-dasharray="3 6" style="stroke-width:1"/>
+      <path class="ink" d="M250,180 Q330,30 410,30 H600"/>
+      <path class="ink" d="M250,180 Q310,95.6 370,95.6 H600"/>
+      <path class="ink" d="M250,180 Q290,142.5 330,142.5 H600"/>
+      <path class="ink-g" d="M250,180 L270,177.7 L290,170.6 L310,158.9 L330,142.5 L350,121.4 L370,95.6 L390,65.2 L410,30" stroke-dasharray="5 4"/>
+      <path class="ink-k" d="M150,142.5 H250 M150,142.5 V180 M200,95.6 H250 M200,95.6 V180" stroke-dasharray="4 4" style="stroke-width:1"/>
+    </g>
+    <text x="256" y="22" class="s w6">ID</text><text x="200" y="26" class="r s w6">IDSS</text><text x="40" y="196" class="r s w6">VP</text>
+    <text x="134" y="196" class="s">−2</text><text x="190" y="196" class="s">−1</text><text x="146" y="138" text-anchor="end" class="s">2.5 mA</text><text x="196" y="90" text-anchor="end" class="s">5.6 mA</text>
+    <text x="590" y="196" class="s">VDS</text><text x="4" y="196" class="s">VGS</text>
+    <text x="530" y="24" class="s">VGS = 0</text><text x="530" y="90" class="s">−1 V</text><text x="530" y="137" class="s">−2 V</text><text x="530" y="174" class="s">−4 V = VP</text>
+    <text x="420" y="62" class="g s">pinch-off locus: VDS = VGS − VP</text><text x="266" y="196" class="s">ohmic</text><text x="420" y="196" class="s">saturation (flat ID)</text>
+    <text x="56" y="70" class="r s w6">transfer curve</text><text x="56" y="86" class="r s">(a parabola)</text>
+  </svg><figcaption>left: transfer curve I<sub>D</sub> vs V<sub>GS</sub> · right: drain curves · I<sub>DSS</sub> = 10 mA, V<sub>P</sub> = −4 V (drawn to scale)</figcaption></figure>
+  <div class="sumbox"><span class="lbl">Shockley's equation (saturation)</span> <span class="circ">I<sub>D</sub> = I<sub>DSS</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>)²</span> · inverse: <b>V<sub>GS</sub> = V<sub>P</sub>(1 − √(I<sub>D</sub>/I<sub>DSS</sub>))</b> · square law → <span class="hl">parabolic</span> transfer curve</div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked examples ✍</span><br>① I<sub>DSS</sub> = 10 mA, V<sub>P</sub> = −4 V, V<sub>GS</sub> = −2 V: I<sub>D</sub> = 10(1 − 0.5)² = <b>2.5 mA</b><br>② I<sub>DSS</sub> = 8 mA, V<sub>P</sub> = −4 V, V<sub>GS</sub> = −1 V: I<sub>D</sub> = 8(0.75)² = <b>4.5 mA</b><br>③ Same FET, I<sub>D</sub> = 4.5 mA → V<sub>GS</sub> = −4(1 − 0.75) = <b>−1 V</b> ✓</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick: 4-point sketch</span> V<sub>GS</sub> = 0 → I<sub>DSS</sub> · <b>0.3V<sub>P</sub> → I<sub>DSS</sub>/2</b> · <b>V<sub>P</sub>/2 → I<sub>DSS</sub>/4</b> · V<sub>P</sub> → 0. At V<sub>GS</sub> = 0, saturation starts at V<sub>DS</sub> = |V<sub>P</sub>|.</div>
+  </div>
+  <h2><span class="no">10</span>Transconductance g<sub>m</sub></h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">g<sub>m</sub> = ΔI<sub>D</sub>/ΔV<sub>GS</sub></span> at constant V<sub>DS</sub>: the <b>slope</b> of the transfer curve, in siemens (mS).<br><span class="circ">g<sub>m0</sub> = 2I<sub>DSS</sub>/|V<sub>P</sub>|</span><br>g<sub>m</sub> = g<sub>m0</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>) = g<sub>m0</sub>√(I<sub>D</sub>/I<sub>DSS</sub>)<br>Amplification factor μ = g<sub>m</sub>r<sub>d</sub></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> I<sub>DSS</sub> = 10 mA, V<sub>P</sub> = −4 V: g<sub>m0</sub> = 20/4 = <b>5 mS</b>; at V<sub>GS</sub> = −2 V: g<sub>m</sub> = 5(1 − 0.5) = <b>2.5 mS</b>. g<sub>m</sub> is largest at V<sub>GS</sub> = 0 and zero at V<sub>P</sub>.</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> g<sub>m</sub> is the <b>slope</b> ΔI<sub>D</sub>/ΔV<sub>GS</sub>, not I<sub>D</sub>/V<sub>GS</sub>. A BJT at 1 mA has g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> ≈ 38 mS, far above a FET's few mS: <b>FET stages give lower voltage gain</b>.</div>
+  <div class="tipbox small"><span class="lbl">Practical link</span> In the ohmic region a JFET is a <span class="hl">voltage-controlled resistor</span> (AGC circuits, analog switches, choppers). Its tiny gate current makes it the input stage of JFET-input op-amps (e.g. TL071) and of pH-meter / electrometer probes.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: MOSFET ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>MOSFET</span></div>
+  <h2><span class="no">11</span>MOSFET: Construction &amp; the Two Types</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> Metal-Oxide-Semiconductor FET: the gate is separated from the channel by a thin <span class="hl">SiO₂ insulating layer</span>, so it acts as a capacitor plate: <span class="circ">Z<sub>i</sub> ≈ 10¹⁰–10¹⁵ Ω</span> (JFET ~10⁸–10¹⁰ Ω). Four terminals: G, D, S and <b>substrate (body)</b>, usually tied to S. Also called <b>IGFET</b>.</div>
+  <div class="cols" style="align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="300">
+      <g class="w">
+        <rect x="20" y="70" width="290" height="96" class="ink-k" style="fill:rgba(255,105,180,.12)"/>
+        <rect x="36" y="70" width="70" height="34" rx="6" class="ink fill-b"/><rect x="224" y="70" width="70" height="34" rx="6" class="ink fill-b"/>
+        <rect x="96" y="56" width="138" height="12" class="ink-k" style="fill:rgba(200,200,200,.6)"/>
+        <rect x="104" y="38" width="122" height="16" class="ink-k" style="fill:rgba(120,120,140,.55)"/>
+        <path class="ink-g" d="M106,76 H224" stroke-dasharray="6 4" style="stroke-width:3"/>
+        <path class="ink" d="M70,70 V24 M260,70 V24 M165,38 V18 M165,166 V182"/>
+      </g>
+      <text x="62" y="18" class="w6">S</text><text x="252" y="18" class="w6">D</text><text x="172" y="16" class="w6">G</text><text x="172" y="186" class="s">body (B)</text>
+      <text x="60" y="94" class="s">n⁺</text><text x="250" y="94" class="s">n⁺</text><text x="240" y="52" class="s k">SiO₂</text>
+      <text x="130" y="140" class="s r w6">p-substrate</text><text x="112" y="98" class="s g">induced n-channel</text>
+    </svg><figcaption>n-E-MOSFET: V<sub>GS</sub> &gt; V<sub>T</sub> induces the channel</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 320 190" width="300">
+      <g class="w"><use href="#q-jn" x="40" y="50"/><use href="#q-jp" x="190" y="50"/><use href="#q-md" x="40" y="148"/><use href="#q-me" x="190" y="148"/></g>
+      <text x="74" y="28" class="s">D</text><text x="74" y="80" class="s">S</text><text x="20" y="44" class="s">G</text><text x="84" y="56" class="s g w6">n-JFET</text>
+      <text x="224" y="28" class="s">D</text><text x="224" y="80" class="s">S</text><text x="170" y="44" class="s">G</text><text x="234" y="56" class="s g w6">p-JFET</text>
+      <text x="74" y="126" class="s">D</text><text x="74" y="178" class="s">S</text><text x="20" y="142" class="s">G</text><text x="84" y="154" class="s r w6">n D-MOS</text>
+      <text x="224" y="126" class="s">D</text><text x="224" y="178" class="s">S</text><text x="170" y="142" class="s">G</text><text x="234" y="154" class="s r w6">n E-MOS</text>
+    </svg><figcaption>arrow <b>in</b> = n-channel · broken = enhancement</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l"></th><th class="l">D-MOSFET</th><th class="l">E-MOSFET</th></tr>
+    <tr><td class="l">Channel</td><td class="l">diffused in (built-in)</td><td class="l"><b>induced</b> by V<sub>GS</sub> &gt; V<sub>T</sub></td></tr>
+    <tr><td class="l">At V<sub>GS</sub> = 0</td><td class="l">ON, I<sub>D</sub> = I<sub>DSS</sub></td><td class="l red"><b>OFF</b></td></tr>
+    <tr><td class="l">Modes (n-ch)</td><td class="l">depletion (−) <b>and</b> enhancement (+)</td><td class="l">enhancement only</td></tr>
+    <tr><td class="l">Equation</td><td class="l">Shockley (V<sub>GS</sub> may be +)</td><td class="l">I<sub>D</sub> = k(V<sub>GS</sub> − V<sub>T</sub>)²</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">E-MOSFET (n-channel)</span><br>Cut-off: V<sub>GS</sub> &lt; <span class="hl">V<sub>T</sub> (threshold, V<sub>GS(th)</sub>)</span><br>Triode (V<sub>DS</sub> &lt; V<sub>GS</sub> − V<sub>T</sub>):<br>I<sub>D</sub> = k[2(V<sub>GS</sub> − V<sub>T</sub>)V<sub>DS</sub> − V<sub>DS</sub>²]<br>Saturation: <span class="circ">I<sub>D</sub> = k(V<sub>GS</sub> − V<sub>T</sub>)²</span><br>g<sub>m</sub> = 2k(V<sub>GS</sub> − V<sub>T</sub>)</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> I<sub>D(on)</sub> = 10 mA at V<sub>GS(on)</sub> = 8 V, V<sub>T</sub> = 3 V.<br>k = 10/(8 − 3)² = <b>0.4 mA/V²</b><br>V<sub>GS</sub> = 6 V: I<sub>D</sub> = 0.4 × 3² = <b>3.6 mA</b>; g<sub>m</sub> = 2 × 0.4 × 3 = <b>2.4 mS</b><br>V<sub>GS</sub> = 2 V (&lt; V<sub>T</sub>): I<sub>D</sub> = <b>0</b></div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> JFET: depletion only; <b>D-MOSFET: both modes</b>; E-MOSFET: enhancement only. Thin oxide: <b>ESD</b> kills it.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>E = Empty</b>": no channel until you <b>E</b>nhance past V<sub>T</sub>; broken line = empty channel. "<b>D = Done</b>": channel already made, normally ON.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">IT link: CMOS</span> <span class="hl">CMOS inverter</span> = p-channel E-MOSFET (to V<sub>DD</sub>) over n-channel E-MOSFET, gates and drains tied: in 0 → out 1, in 1 → out 0. One is always OFF, so <b>static power ≈ 0</b> (dynamic ≈ CV<sub>DD</sub>²f): CPUs and memories are CMOS.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: FET biasing, CS/CD/CG ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>FET bias &amp; amplifiers</span></div>
+  <h2><span class="no">12</span>FET Biasing</h2>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Method</th><th class="l">Bias equation</th><th class="l">Notes</th></tr>
+    <tr><td class="l">Fixed bias</td><td class="l">V<sub>GS</sub> = −V<sub>GG</sub> (I<sub>G</sub> = 0)</td><td class="l">2nd supply; Q varies with device</td></tr>
+    <tr><td class="l">Self bias</td><td class="l"><span class="hl">V<sub>GS</sub> = −I<sub>D</sub>R<sub>S</sub></span></td><td class="l">one supply; JFET, D-MOSFET</td></tr>
+    <tr><td class="l">Voltage divider</td><td class="l">V<sub>GS</sub> = V<sub>DD</sub>R2/(R1 + R2) − I<sub>D</sub>R<sub>S</sub></td><td class="l"><b>most stable</b>; any FET</td></tr>
+    <tr><td class="l">Drain feedback</td><td class="l">V<sub>GS</sub> = V<sub>DS</sub> (R<sub>G</sub> from D to G)</td><td class="l">E-MOSFET</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="298">
+      <g class="w">
+        <path class="ink-k" d="M150,182 V14 M10,182 H290" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M30,182 L45,179.6 L60,172.5 L75,160.6 L90,144 L105,122.6 L120,96.5 L135,65.6 L150,30" style="stroke-width:2.6"/>
+        <path class="ink-g" d="M150,182 L24,102" style="stroke-width:2.2"/>
+        <path class="ink-k" d="M90,144 H150 M90,144 V182" stroke-dasharray="4 4" style="stroke-width:1"/>
+        <circle cx="90" cy="144" r="6" class="ink-k" style="fill:#d32f2f"/>
+        <use href="#q-jn" x="210" y="70"/><use href="#r-v" x="238" y="100"/><use href="#gnd" x="238" y="150"/>
+        <path class="ink" d="M210,70 H200 V80 M238,40 V24"/><use href="#r-v" x="200" y="80"/><use href="#gnd" x="200" y="130"/>
+      </g>
+      <text x="156" y="26" class="s w6">ID</text><text x="156" y="44" class="s r">IDSS</text><text x="18" y="196" class="s r">VP</text><text x="262" y="196" class="s">VGS</text>
+      <text x="8" y="90" class="s g">VGS = −ID·RS</text><text x="98" y="174" class="s w6">Q</text><text x="156" y="140" class="s">2 mA</text><text x="76" y="196" class="s">−2 V</text>
+      <text x="252" y="130" class="s">RS</text><text x="172" y="112" class="s">RG</text><text x="244" y="30" class="s">to RD</text>
+    </svg><figcaption>self bias, solved graphically: the bias line through the origin cuts the parabola at Q</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example: self bias ✍</span> I<sub>DSS</sub> = 8 mA, V<sub>P</sub> = −4 V, R<sub>S</sub> = 1 kΩ, R<sub>D</sub> = 3.3 kΩ, V<sub>DD</sub> = 16 V.
+      <ol class="steps"><li>V<sub>GS</sub> = −I<sub>D</sub> (I<sub>D</sub> in mA) → I<sub>D</sub> = 8(1 − I<sub>D</sub>/4)²</li><li>I<sub>D</sub>² − 10I<sub>D</sub> + 16 = 0 → I<sub>D</sub> = 2 or 8 mA</li><li>8 mA gives V<sub>GS</sub> = −8 V, beyond V<sub>P</sub>: reject → <span class="circ">I<sub>D</sub> = 2 mA, V<sub>GS</sub> = −2 V</span></li><li>V<sub>DS</sub> = 16 − 2(3.3 + 1) = <b>7.4 V</b> ≥ V<sub>GS</sub> − V<sub>P</sub> = 2 V ✓</li></ol></div>
+  </div>
+  <h2><span class="no">13</span>FET Amplifiers: CS, CD, CG</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Config (BJT twin)</th><th class="l">Z<sub>i</sub></th><th class="l">Z<sub>o</sub></th><th class="l">A<sub>v</sub> (r<sub>d</sub> ignored)</th><th>Phase</th></tr>
+    <tr><td class="l">Common source (CE)</td><td class="l">R<sub>G</sub> (MΩ)</td><td class="l">R<sub>D</sub></td><td class="l red"><b>−g<sub>m</sub>R<sub>D</sub></b></td><td>180°</td></tr>
+    <tr><td class="l">… R<sub>S</sub> unbypassed</td><td class="l">R<sub>G</sub></td><td class="l">≈ R<sub>D</sub></td><td class="l">−g<sub>m</sub>R<sub>D</sub>/(1 + g<sub>m</sub>R<sub>S</sub>)</td><td>180°</td></tr>
+    <tr><td class="l">Common drain, source follower (CC)</td><td class="l">R<sub>G</sub></td><td class="l">R<sub>S</sub> ∥ 1/g<sub>m</sub></td><td class="l">g<sub>m</sub>R<sub>S</sub>/(1 + g<sub>m</sub>R<sub>S</sub>) &lt; 1</td><td>0°</td></tr>
+    <tr><td class="l">Common gate (CB)</td><td class="l">R<sub>S</sub> ∥ 1/g<sub>m</sub></td><td class="l">R<sub>D</sub></td><td class="l">+g<sub>m</sub>R<sub>D</sub></td><td>0°</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Same JFET at I<sub>D</sub> = 2 mA: g<sub>m</sub> = (16/4)(1 − 2/4) = <b>2 mS</b>. C<sub>S</sub> bypassed: A<sub>v</sub> = −2 × 3.3 = <span class="circ">−6.6</span>; unbypassed: −6.6/3 = <b>−2.2</b>; source follower (R<sub>S</sub> = 1 kΩ): A<sub>v</sub> = 2/3 = 0.67, Z<sub>o</sub> = 1k ∥ 500 = 333 Ω.</div>
+  <div class="trick small"><span class="lbl">Memory trick</span> Reuse the BJT table with <b>S↔E, D↔C, G↔B</b> and 1/r<sub>e</sub> → g<sub>m</sub>: CS = CE (inverting gain stage), CD = CC (buffer), CG = CB (low Z<sub>i</sub>, RF).</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <h3>BJT vs FET (5-mark written favourite)</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Feature</th><th class="l">BJT</th><th class="l">FET</th></tr>
+    <tr><td class="l">Control · carriers</td><td class="l">current (I<sub>B</sub>) · bipolar</td><td class="l"><b>voltage</b> (V<sub>GS</sub>) · <b>unipolar</b></td></tr>
+    <tr><td class="l">Input impedance</td><td class="l">low–medium (kΩ)</td><td class="l"><b>very high</b> (10⁸–10¹⁵ Ω)</td></tr>
+    <tr><td class="l">Gain parameter</td><td class="l">β; g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> (~38 mS/mA)</td><td class="l">g<sub>m</sub> = ΔI<sub>D</sub>/ΔV<sub>GS</sub> (few mS)</td></tr>
+    <tr><td class="l">Voltage gain, GBW</td><td class="l"><b>higher</b></td><td class="l">lower</td></tr>
+    <tr><td class="l">Noise · thermal</td><td class="l">noisier · thermal runaway</td><td class="l">quieter · I<sub>D</sub> falls with T</td></tr>
+    <tr><td class="l">Size · static power</td><td class="l">larger · more</td><td class="l">smaller · CMOS ≈ 0 · ESD-prone</td></tr>
+  </table>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>r<sub>e</sub> = 26 mV/I<sub>E</sub> · h<sub>ie</sub> = βr<sub>e</sub></p><p>CE: A<sub>v</sub> = −R<sub>C</sub>/r<sub>e</sub> (bypassed)</p>
+      <p>CB: Z<sub>i</sub> ≈ r<sub>e</sub>, A<sub>i</sub> = α</p><p>CC: A<sub>v</sub> ≈ 1, Z<sub>o</sub> ≈ r<sub>e</sub></p>
+      <p>A<sub>p</sub> = A<sub>v</sub>A<sub>i</sub> · 20 log V, 10 log P</p><p>−3 dB = 0.707 V = ½ P</p>
+      <p>C<sub>Mi</sub> = (1 + |A<sub>v</sub>|)C<sub>bc</sub></p><p>I<sub>D</sub> = I<sub>DSS</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>)²</p>
+      <p>g<sub>m0</sub> = 2I<sub>DSS</sub>/|V<sub>P</sub>|</p><p>E-MOS: I<sub>D</sub> = k(V<sub>GS</sub> − V<sub>T</sub>)²</p>
+      <p>Self bias: V<sub>GS</sub> = −I<sub>D</sub>R<sub>S</sub></p><p>CS: A<sub>v</sub> = −g<sub>m</sub>R<sub>D</sub></p>
+    </div>
+  </div>
+  <div class="cols small">
+    <ol class="num">
+      <li>Only CE (and CS) invert: 180°</li>
+      <li>Highest power gain: CE</li>
+      <li>Highest Z<sub>i</sub>, lowest Z<sub>o</sub>: CC</li>
+      <li>Lowest Z<sub>i</sub>, A<sub>i</sub> &lt; 1: CB</li>
+      <li>Bypass C raises A<sub>v</sub></li>
+    </ol>
+    <ol class="num" start="6">
+      <li>JFET ON, E-MOSFET OFF at 0 V</li>
+      <li>D-MOSFET: both modes</li>
+      <li>V<sub>GS</sub> = V<sub>P</sub> → I<sub>D</sub> = 0</li>
+      <li>V<sub>P</sub>/2 → I<sub>DSS</sub>/4</li>
+      <li>Broken line = E-MOSFET</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> power ×1000 = 30 dB, voltage ×1000 = 60 dB · removing C<sub>E</sub> lowers A<sub>v</sub> · CB: A<sub>i</sub> &lt; 1, A<sub>v</sub> high · h<sub>fb</sub> = −α · g<sub>m</sub> is a slope · no self bias for E-MOSFET · reject the root with |V<sub>GS</sub>| &gt; |V<sub>P</sub>|</div>
+  <div class="trick"><span class="lbl">All tricks together</span> DC: caps out, AC: caps in · collector ÷ emitter · Big output, Baby input · Copy Cat · big caps kill the bass · garden hose · 4-point parabola · E = Empty, D = Done · S↔E, D↔C, G↔B</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · Amplifiers &amp; FET</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Phase shift of a CE amplifier:<ol class="opts"><li>0°</li><li>90°</li><li>180°</li><li>270°</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Highest input impedance:<ol class="opts"><li>CB</li><li>CC</li><li>CE</li><li>all equal</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>At I<sub>E</sub> = 2 mA, r<sub>e</sub> ≈<ol class="opts"><li>13 Ω</li><li>26 Ω</li><li>52 Ω</li><li>1.3 kΩ</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>At f<sub>H</sub> the output power falls to:<ol class="opts"><li>70.7%</li><li>25%</li><li>0%</li><li>50%</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Which is a unipolar device?<ol class="opts"><li>FET</li><li>BJT</li><li>SCR</li><li>UJT</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>I<sub>DSS</sub> = 12 mA, V<sub>P</sub> = −6 V; I<sub>D</sub> at V<sub>GS</sub> = −3 V:<ol class="opts"><li>6 mA</li><li>4 mA</li><li>1.5 mA</li><li>3 mA</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>OFF at V<sub>GS</sub> = 0:<ol class="opts"><li>n-JFET</li><li>D-MOSFET</li><li>E-MOSFET</li><li>p-JFET</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>g<sub>m0</sub> for I<sub>DSS</sub> = 12 mA, V<sub>P</sub> = −6 V:<ol class="opts"><li>2 mS</li><li>4 mS</li><li>6 mS</li><li>72 mS</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Voltage gain 100 in dB:<ol class="opts"><li>20 dB</li><li>100 dB</li><li>10 dB</li><li>40 dB</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>FET twin of the emitter follower:<ol class="opts"><li>CS</li><li>CD</li><li>CG</li><li>cascode</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-b · 3-a · 4-d · 5-a · 6-d · 7-c · 8-b · 9-d · 10-b</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Distinguish JFET, D-MOSFET and E-MOSFET by their transfer characteristics. A JFET has I<sub>DSS</sub> = 8 mA, V<sub>P</sub> = −4 V: find I<sub>D</sub> and g<sub>m</sub> at V<sub>GS</sub> = −1 V, and the gain of a CS stage with R<sub>D</sub> = 2.2 kΩ (R<sub>S</sub> bypassed). <i class="mk">10 marks</i></div>
+  <ol class="steps small">
+    <li>JFET: V<sub>P</sub> ≤ V<sub>GS</sub> ≤ 0, I<sub>D</sub> ≤ I<sub>DSS</sub>; D-MOSFET: the same parabola continued into V<sub>GS</sub> &gt; 0; E-MOSFET: I<sub>D</sub> = 0 up to V<sub>T</sub>, then k(V<sub>GS</sub> − V<sub>T</sub>)². Sketch all three. <i class="mk">4</i></li>
+    <li>I<sub>D</sub> = 8(1 − 1/4)² = 8 × 0.5625 = <b>4.5 mA</b> <i class="mk">2</i></li>
+    <li>g<sub>m0</sub> = 2 × 8/4 = 4 mS; g<sub>m</sub> = 4(1 − 0.25) = <b>3 mS</b> <i class="mk">2</i></li>
+    <li>A<sub>v</sub> = −g<sub>m</sub>R<sub>D</sub> = −3 × 2.2 = <b>−6.6</b> (180° phase shift) <i class="mk">2</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can fill the CE/CB/CC table from memory</li>
+        <li>Can find Z<sub>i</sub>, Z<sub>o</sub>, A<sub>v</sub> with r<sub>e</sub></li>
+        <li>Can convert gains to dB, read −3 dB</li>
+        <li>Can use Shockley and g<sub>m</sub> both ways</li>
+        <li>Can draw all four FET symbols</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① CE with C<sub>E</sub> removed<br>② emitter follower Z<sub>o</sub><br>③ self bias by quadratic<br>④ CMOS inverter operation</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

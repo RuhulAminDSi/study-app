@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>CPU সংগঠন: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">CPU সংগঠন (CPU Organization)</span></h1>
+  <p class="subtitle">রেজিস্টার · RTL · অ্যাড্রেসিং · RISC/CISC · পাইপলাইন · পারফরম্যান্স: ১৪ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">CPU সংগঠন</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">ভন নিউম্যান · হার্ভার্ড</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">রেজিস্টার · RTL ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn r w6">অ্যাড্রেসিং মোড ★</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">0/1/2/3-অ্যাড্রেস ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">RISC vs CISC ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">হার্ডওয়্যার্ড · μ-প্রোগ্রাম</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">পাইপলাইন ও হ্যাজার্ড ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">CPI · MIPS · Amdahl</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = পদ্ধতি / গাণিতিক</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① PC · IR · MAR · MDR<br>② RTL-এ ফেচ সাইকেল<br>③ প্রতিটি মোডের EA<br>④ k + n − 1 সাইকেল<br>⑤ RAW · ফরওয়ার্ডিং<br>⑥ IC × CPI / f · Amdahl</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Computer Architecture: … <span class="hl">Measuring performance</span>; … representing instruction, <span class="hl">addressing styles</span>; ALU operations, floating point operations, designing ALU; Processor design: datapaths &amp; single cycle and multicycle implementations; <span class="hl">Control Unit design</span>: hardwired and microprogrammed; Hazards; Exceptions; <span class="hl">Pipeline</span> …, superscalar and dynamic pipelining; … channels."। ক্যাশ ও ভার্চুয়াল মেমরি আছে মেমরি হায়ারার্কি লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>ভন নিউম্যান, হার্ভার্ড, CPU ……… পৃ. ২</li><li>বাস, রেজিস্টার, ফ্ল্যাগ ……… পৃ. ৩</li><li>ইনস্ট্রাকশন সাইকেল ও RTL … পৃ. ৪</li><li>ইনস্ট্রাকশন ফরম্যাট ……… পৃ. ৫</li><li>অ্যাড্রেসিং মোড ……… পৃ. ৬</li><li>RISC/CISC, কন্ট্রোল ইউনিট … পৃ. ৭</li><li>পাইপলাইন ও স্পিডআপ ……… পৃ. ৮</li></ul>
+    <ul class="tick"><li>হ্যাজার্ড ও প্রতিকার ……… পৃ. ৯</li><li>পারফরম্যান্স ও Amdahl ……… পৃ. ১০</li><li>ALU, ফিক্সড ও ফ্লোটিং পয়েন্ট … পৃ. ১১</li><li>সুপারস্কেলার, ফ্লিন, I/O ……… পৃ. ১২</li><li>পরীক্ষার আগের রাতের পাতা … পৃ. ১৩</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১৪</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: von Neumann vs Harvard, CPU parts ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>আর্কিটেকচার</span></div>
+  <h2><span class="no">১</span>সংরক্ষিত প্রোগ্রাম: ভন নিউম্যান বনাম হার্ভার্ড</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংরক্ষিত প্রোগ্রাম ধারণা (Stored-program concept)</span> ইনস্ট্রাকশন থাকে <span class="hl">ডেটার সাথে একই রিড-রাইট মেমরিতে</span>, আর প্রোগ্রাম কাউন্টারের নিয়ন্ত্রণে একটির পর একটি ফেচ ও এক্সিকিউট হয়। জন ভন নিউম্যান, <span class="circ">১৯৪৫</span>, "First Draft of a Report on the EDVAC"।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 176" width="640">
+    <g class="w">
+      <rect x="20" y="40" width="100" height="62" rx="10" class="ink fill-b"/>
+      <rect x="190" y="26" width="120" height="90" rx="10" class="ink-k fill-y"/>
+      <path class="ink-r" d="M124,71 H186" marker-start="url(#ah)" marker-end="url(#ah)" style="stroke-width:3"/>
+      <rect x="350" y="48" width="96" height="62" rx="10" class="ink fill-b"/>
+      <rect x="512" y="14" width="118" height="54" rx="10" class="ink-g fill-g"/>
+      <rect x="512" y="92" width="118" height="54" rx="10" class="ink-p fill-p"/>
+      <path class="ink-g" d="M450,64 L508,42" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M450,96 L508,118" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+      <path class="ink-k" d="M326,6 V170" stroke-dasharray="4 6" style="stroke-width:1.2"/>
+    </g>
+    <text x="70" y="76" text-anchor="middle" class="w6">CPU</text>
+    <text x="250" y="62" text-anchor="middle" class="bn k w6">মেমরি</text><text x="250" y="82" text-anchor="middle" class="bn s">ইনস্ট্রাকশন</text><text x="250" y="98" text-anchor="middle" class="bn s">+ ডেটা</text>
+    <text x="155" y="60" text-anchor="middle" class="bn r s">১টি বাস</text>
+    <text x="160" y="140" text-anchor="middle" class="bn r s">একটি পথ → ভন নিউম্যান বটলনেক</text>
+    <text x="160" y="166" text-anchor="middle" class="bn k w6">ভন নিউম্যান (প্রিন্সটন)</text>
+    <text x="398" y="84" text-anchor="middle" class="w6">CPU</text>
+    <text x="571" y="46" text-anchor="middle" class="bn g w6">ইনস্ট্রাকশন মেমরি</text>
+    <text x="571" y="124" text-anchor="middle" class="bn p w6">ডেটা মেমরি</text>
+    <text x="476" y="166" text-anchor="middle" class="bn k w6">হার্ভার্ড</text>
+  </svg><figcaption>একটি শেয়ার্ড মেমরি + বাস (বামে) বনাম আলাদা ইনস্ট্রাকশন ও ডেটা পথ (ডানে)</figcaption></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বিষয়</th><th class="l">ভন নিউম্যান</th><th class="l">হার্ভার্ড</th></tr>
+    <tr><td class="l">মেমরি</td><td class="l">কোড ও ডেটার জন্য একটি মেমরি</td><td class="l">কোড ও ডেটার আলাদা মেমরি</td></tr>
+    <tr><td class="l">বাস</td><td class="l">একটি শেয়ার্ড সেট</td><td class="l">দুটি সেট: ফেচ + ডেটা <b>একসাথে</b></td></tr>
+    <tr><td class="l">গতি / খরচ</td><td class="l">ধীর (বটলনেক), সস্তা</td><td class="l">দ্রুত, বেশি ওয়্যারিং, ব্যয়বহুল</td></tr>
+    <tr><td class="l">ব্যবহার</td><td class="l">PC (মেইন মেমরি), EDVAC, IAS</td><td class="l">DSP, PIC/AVR MCU, Mark I (1944)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ভন নিউম্যান বটলনেক</b> মানে <b>একটিমাত্র</b> পথে CPU ও মেমরির মধ্যে সীমিত ডেটা-স্থানান্তর হার (শব্দটি জনপ্রিয় করেন জন ব্যাকাস, ১৯৭৭); ধীর ALU নয়।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">আধুনিক CPU</span> = <span class="hl">মডিফায়েড হার্ভার্ড</span>: L1-এ আলাদা ইনস্ট্রাকশন ও ডেটা ক্যাশ, কিন্তু মেইন মেমরি একটিই (দেখো: মেমরি হায়ারার্কি)।</div>
+  </div>
+
+  <h2><span class="no">২</span>CPU-এর ভেতরে: ALU, CU, রেজিস্টার</h2><span class="tag">MCQ</span>
+  <ul class="dash small">
+    <li><b>ALU</b>: গাণিতিক (যোগ, বিয়োগ, ইনক্রিমেন্ট, তুলনা) ও লজিক (AND, OR, XOR, NOT, শিফট) কাজ করে; ফ্ল্যাগ সেট করে।</li>
+    <li><b>কন্ট্রোল ইউনিট (CU)</b>: ইনস্ট্রাকশন ফেচ ও <b>ডিকোড</b> করে এবং টাইমিং ও কন্ট্রোল সিগন্যাল পাঠায়, যাতে ALU, রেজিস্টার, মেমরি ও I/O কাজ করে। CU নির্দেশ দেয়; কাজটি করে ALU ও ডেটাপাথ।</li>
+    <li><b>রেজিস্টার</b>: CPU-এর ভেতরের সবচেয়ে দ্রুত স্টোরেজ (পরের পাতা)। ALU + রেজিস্টার + অভ্যন্তরীণ বাস = <span class="hl">ডেটাপাথ (datapath)</span>।</li>
+  </ul>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: buses, registers, flags, stack ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>বাস ও রেজিস্টার</span></div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">সিস্টেম বাস</th><th class="l">দিক</th><th class="l">প্রস্থ যা ঠিক করে</th></tr>
+      <tr><td class="l">অ্যাড্রেস</td><td class="l">একমুখী, CPU →</td><td class="l"><span class="circ">2ⁿ</span> লোকেশন</td></tr>
+      <tr><td class="l">ডেটা</td><td class="l">দ্বিমুখী</td><td class="l">ওয়ার্ড সাইজ</td></tr>
+      <tr><td class="l">কন্ট্রোল</td><td class="l">মিশ্র লাইন</td><td class="l">RD, WR, INT, clock</td></tr>
+    </table>
+    <div class="ex small" style="margin-top:0"><span class="lbl">বাসের হিসাব ✍</span> 16-বিট অ্যাড্রেস বাস (8085) → 2¹⁶ = <b>64 KB</b> · 20-বিট (8086) → <b>1 MB</b> · 32-বিট → <b>4 GB</b>। MAR-এর প্রস্থ = অ্যাড্রেস বাস; MDR-এর প্রস্থ = ডেটা বাস।</div>
+  </div>
+  <h2><span class="no">৩</span>CPU-এর রেজিস্টারসমূহ</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>রেজি.</th><th class="l">পূর্ণ নাম</th><th class="l">কী রাখে / কী করে</th></tr>
+    <tr><td><b>PC</b></td><td class="l">Program Counter (x86: IP)</td><td class="l"><span class="hl">পরবর্তী ইনস্ট্রাকশনের</span> অ্যাড্রেস; প্রতি ফেচে +1</td></tr>
+    <tr><td><b>IR</b></td><td class="l">Instruction Register</td><td class="l">যে ইনস্ট্রাকশন <b>এখন ডিকোড / এক্সিকিউট</b> হচ্ছে</td></tr>
+    <tr><td><b>MAR</b></td><td class="l">Memory Address Register</td><td class="l">যে অ্যাড্রেস পড়া/লেখা হবে; অ্যাড্রেস বাস চালায়</td></tr>
+    <tr><td><b>MDR</b></td><td class="l">Memory Data Reg. (MBR)</td><td class="l">সদ্য পড়া, বা লিখতে যাওয়া ওয়ার্ড</td></tr>
+    <tr><td><b>AC</b></td><td class="l">Accumulator</td><td class="l">অন্তর্নিহিত অপারেন্ড + ALU-এর ফল (1-অ্যাড্রেস)</td></tr>
+    <tr><td><b>SP</b></td><td class="l">Stack Pointer</td><td class="l"><b>স্ট্যাকের শীর্ষ</b>: PUSH/POP, CALL/RET, ইন্টারাপ্ট</td></tr>
+    <tr><td><b>GPR</b></td><td class="l">R0 … Rn</td><td class="l">অপারেন্ড, অস্থায়ী মান (MIPS-এ 32টি)</td></tr>
+    <tr><td><b>PSW</b></td><td class="l">ফ্ল্যাগ / স্ট্যাটাস রেজিস্টার</td><td class="l">শেষ ফলের কন্ডিশন বিট + কন্ট্রোল বিট</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:0.85fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>ফ্ল্যাগ</th><th class="l">= 1 যখন</th></tr>
+      <tr><td>Z</td><td class="l">ফল শূন্য</td></tr>
+      <tr><td>S/N</td><td class="l">MSB = 1 (ঋণাত্মক)</td></tr>
+      <tr><td>C</td><td class="l">MSB থেকে ক্যারি / বরো</td></tr>
+      <tr><td>V/O</td><td class="l">সাইনড ওভারফ্লো</td></tr>
+      <tr><td>P</td><td class="l"><b>জোড়</b> প্যারিটি (x86)</td></tr>
+      <tr><td>AC</td><td class="l">বিট 3 → 4 ক্যারি (BCD)</td></tr>
+    </table>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">8086 ফ্ল্যাগ রেজিস্টার</span> ১৬ বিট, <span class="circ">৯টি ফ্ল্যাগ</span>: ৬টি স্ট্যাটাস (CF, PF, AF, ZF, SF, OF) + ৩টি কন্ট্রোল (TF ট্র্যাপ, IF ইন্টারাপ্ট, DF ডিরেকশন)।</div>
+      <div class="ex small"><span class="lbl">সমাধান ✍</span> 8-বিট 7FH + 01H = 80H<br>Z = 0, S = 1, C = 0, <b>V = 1</b> (+127 + 1 ≠ −128), AC = 1, P = 0 (একটি 1-বিট)</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 210px;align-items:center">
+    <div>
+      <p class="small"><b>স্ট্যাক (Stack, LIFO)</b> বেশিরভাগ CPU-তে (x86) নিচের অ্যাড্রেসের দিকে বাড়ে:</p>
+      <p class="small mono">PUSH: SP ← SP − 1, M[SP] ← DR<br>POP: &nbsp;DR ← M[SP], SP ← SP + 1</p>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>PC দেখায়, IR ধরে, MAR ঠিকানা দেয়, MDR বয়ে আনে</b>।" ফেচ সবসময় PC → MAR → MDR → IR পথে চলে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 210 150" width="200">
+      <g class="w">
+        <rect x="70" y="10" width="90" height="130" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+        <path class="ink-k" d="M70,36 H160 M70,62 H160 M70,88 H160 M70,114 H160" style="stroke-width:1.3"/>
+        <rect x="70" y="62" width="90" height="78" class="fill-y" style="stroke:none"/>
+        <path class="ink-r" d="M10,75 H64" marker-end="url(#ah)"/>
+      </g>
+      <text x="8" y="68" class="r w6">SP</text>
+      <text x="115" y="80" text-anchor="middle" class="bn s">শীর্ষ</text><text x="115" y="106" text-anchor="middle" class="s">…</text>
+      <text x="166" y="28" class="bn s">নিম্ন</text><text x="166" y="134" class="bn s">উচ্চ</text>
+      <text x="115" y="54" text-anchor="middle" class="bn g s">পরের PUSH</text>
+    </svg><figcaption>পাতায় ওপরে বাড়ে = নিচের অ্যাড্রেসে</figcaption></figure>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: instruction cycle & RTL ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>ইনস্ট্রাকশন সাইকেল</span></div>
+  <h2><span class="no">৪</span>ইনস্ট্রাকশন সাইকেল ও মাইক্রো-অপারেশন (RTL)</h2><span class="tag">লিখিতে প্রিয়</span>
+  <div class="def"><span class="lbl">ইনস্ট্রাকশন সাইকেল</span> <span class="hl">ফেচ → ডিকোড → (অপারেন্ড ফেচ / ইনডাইরেক্ট) → এক্সিকিউট → ইন্টারাপ্ট যাচাই</span>, HALT পর্যন্ত বারবার। প্রতিটি ধাপ কয়েকটি <b>মাইক্রো-অপারেশনের (micro-operation)</b> ধারা: এক ক্লক পালসে হওয়া মৌলিক রেজিস্টার ট্রান্সফার।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="10" y="40" width="100" height="44" rx="12" class="ink-r fill-r"/>
+      <rect x="150" y="40" width="100" height="44" rx="12" class="ink fill-b"/>
+      <rect x="290" y="40" width="110" height="44" rx="12" class="ink fill-b"/>
+      <rect x="440" y="40" width="90" height="44" rx="12" class="ink-g fill-g"/>
+      <path class="ink-p fill-p" d="M585,30 L630,62 L585,94 L540,62 Z"/>
+      <path class="ink" d="M110,62 H146" marker-end="url(#ahb)"/><path class="ink" d="M250,62 H286" marker-end="url(#ahb)"/><path class="ink" d="M400,62 H436" marker-end="url(#ahb)"/><path class="ink" d="M530,62 H538" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M585,94 C585,128 60,128 60,88" marker-end="url(#ah)"/>
+      <path class="ink-p" d="M585,30 C585,0 60,0 60,36" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="67" text-anchor="middle" class="bn r w6">ফেচ</text>
+    <text x="200" y="67" text-anchor="middle" class="bn w6">ডিকোড</text>
+    <text x="345" y="60" text-anchor="middle" class="bn w6">অপারেন্ড</text><text x="345" y="76" text-anchor="middle" class="bn s">(ইনডাইরেক্ট)</text>
+    <text x="485" y="67" text-anchor="middle" class="bn g w6">এক্সিকিউট</text>
+    <text x="585" y="67" text-anchor="middle" class="p s w6">INT?</text>
+    <text x="320" y="146" text-anchor="middle" class="bn r s">ইন্টারাপ্ট নেই → পরের ইনস্ট্রাকশন ফেচ</text>
+    <text x="320" y="30" text-anchor="middle" class="bn p s">হ্যাঁ → ইন্টারাপ্ট সাইকেল (PC সংরক্ষণ), তারপর ফেচ</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>ধাপ</th><th>পালস</th><th class="l">মাইক্রো-অপারেশন (RTL)</th><th class="l">অর্থ</th></tr>
+    <tr><td rowspan="3" class="red"><b>ফেচ</b></td><td>t1</td><td class="l"><b>MAR ← PC</b></td><td class="l">অ্যাড্রেস বাইরে</td></tr>
+    <tr><td>t2</td><td class="l"><b>MDR ← M[MAR], PC ← PC + 1</b></td><td class="l">পড়া, PC + 1</td></tr>
+    <tr><td>t3</td><td class="l"><b>IR ← MDR</b></td><td class="l">IR লোড</td></tr>
+    <tr><td rowspan="3">ADD X</td><td>t1</td><td class="l">MAR ← IR(address)</td><td class="l">অপারেন্ডের অ্যাড্রেস</td></tr>
+    <tr><td>t2</td><td class="l">MDR ← M[MAR]</td><td class="l">অপারেন্ড পড়া</td></tr>
+    <tr><td>t3</td><td class="l">AC ← AC + MDR</td><td class="l">ALU যোগ করে</td></tr>
+    <tr><td>STORE X</td><td>t1–t2</td><td class="l">MAR ← IR(addr), MDR ← AC;<br>M[MAR] ← MDR</td><td class="l">AC লেখা</td></tr>
+    <tr><td>JMP X</td><td>t1</td><td class="l">PC ← IR(address)</td><td class="l">মেমরি লাগে না</td></tr>
+    <tr><td class="p"><b>ইন্টারাপ্ট</b></td><td>t1–t3</td><td class="l">MDR ← PC; MAR ← save, PC ← ISR;<br>M[MAR] ← MDR</td><td class="l">PC সংরক্ষণ</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p><b>RTL চিহ্ন:</b> <span class="mono">←</span> ট্রান্সফার · কমা = একই ক্লক পালসে · <span class="mono">P: R2 ← R1</span> = কেবল কন্ট্রোল ফাংশন P = 1 হলে · <span class="mono">M[AR]</span> = AR অ্যাড্রেসের মেমরি ওয়ার্ড।</p>
+      <p><b>চার ধরনের মাইক্রো-অপারেশন:</b> রেজিস্টার ট্রান্সফার (R1 ← R2), গাণিতিক (R3 ← R1 + R2′ + 1), লজিক (R1 ← R1 ⊕ R2), শিফট (R1 ← shl R1)।</p>
+    </div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">ইনস্ট্রাকশনের ধরন</th><th class="l">উদাহরণ</th></tr>
+      <tr><td class="l">ডেটা ট্রান্সফার</td><td class="l">MOV, LOAD, STORE</td></tr>
+      <tr><td class="l">ডেটা প্রসেসিং</td><td class="l">ADD, SUB, AND, SHL</td></tr>
+      <tr><td class="l">প্রোগ্রাম কন্ট্রোল</td><td class="l">JMP, JZ, CALL, RET</td></tr>
+      <tr><td class="l">I/O</td><td class="l">IN, OUT</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> PC বাড়ে <b>ফেচের সময়েই</b>, তাই এক্সিকিউটের সময় PC-তে থাকে <b>পরের</b> ইনস্ট্রাকশনের অ্যাড্রেস। PC-রিলেটিভ অ্যাড্রেস সেখান থেকেই গোনা হয়।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ফেচ = "<b>৩টি T</b>": অ্যাড্রেস বাইরে, ডেটা ভেতরে (+ PC বাড়ে), IR-এ। প্রতিটি ইনস্ট্রাকশনকে এই ৩ পালস দিতেই হয়।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: instruction formats ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>ইনস্ট্রাকশন ফরম্যাট</span></div>
+  <h2><span class="no">৫</span>ইনস্ট্রাকশন ফরম্যাট: ৩, ২, ১ ও ০ অ্যাড্রেস</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">ফরম্যাট</span> একটি ইনস্ট্রাকশন = <span class="hl">অপকোড (opcode)</span> (কী করতে হবে) + <span class="hl">মোড</span> বিট (অপারেন্ড কীভাবে খুঁজবে) + <span class="hl">অ্যাড্রেস / রেজিস্টার ফিল্ড</span>। n বিট অপকোড → সর্বোচ্চ <span class="circ">2ⁿ</span>টি অপারেশন।</div>
+  <h3>চার ধরনের মেশিনে X = (A + B) × (C + D) নির্ণয়</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">৩-অ্যাড্রেস</th><th class="l">২-অ্যাড্রেস</th><th class="l">১-অ্যাড্রেস (অ্যাকুমুলেটর)</th><th class="l">০-অ্যাড্রেস (স্ট্যাক)</th></tr>
+    <tr><td class="l">ADD R1, A, B</td><td class="l">MOV R1, A</td><td class="l">LOAD A &nbsp;&nbsp;; AC ← A</td><td class="l">PUSH A</td></tr>
+    <tr><td class="l">ADD R2, C, D</td><td class="l">ADD R1, B</td><td class="l">ADD B</td><td class="l">PUSH B</td></tr>
+    <tr><td class="l">MUL X, R1, R2</td><td class="l">MOV R2, C</td><td class="l">STORE T &nbsp;; temp</td><td class="l">ADD</td></tr>
+    <tr><td class="l"></td><td class="l">ADD R2, D</td><td class="l">LOAD C</td><td class="l">PUSH C</td></tr>
+    <tr><td class="l"></td><td class="l">MUL R1, R2</td><td class="l">ADD D</td><td class="l">PUSH D</td></tr>
+    <tr><td class="l"></td><td class="l">MOV X, R1</td><td class="l">MUL T</td><td class="l">ADD</td></tr>
+    <tr><td class="l"></td><td class="l"></td><td class="l">STORE X</td><td class="l">MUL · POP X</td></tr>
+    <tr><td class="red"><b>৩টি</b></td><td class="red"><b>৬টি</b></td><td class="red"><b>৭টি</b></td><td class="red"><b>৮টি</b></td></tr>
+  </table>
+  <div class="mnote">অ্যাড্রেস কম → ইনস্ট্রাকশন ছোট, প্রোগ্রাম লম্বা</div>
+  <p class="small">০-অ্যাড্রেস কোড আসলে <span class="hl">পোস্টফিক্স (RPN)</span> রূপ AB+CD+× বাম থেকে ডানে পড়া: অপারেন্ড → PUSH, অপারেটর → দুটি POP করে ফল PUSH।</p>
+  <figure class="doodle"><svg viewBox="0 0 640 116" width="640">
+    <g class="w">
+      <rect x="10" y="62" width="50" height="26" class="ink fill-b"/>
+      <rect x="80" y="62" width="50" height="26" class="ink fill-b"/><rect x="80" y="36" width="50" height="26" class="ink fill-b"/>
+      <rect x="150" y="62" width="50" height="26" class="ink-g fill-g"/>
+      <rect x="220" y="62" width="50" height="26" class="ink-g fill-g"/><rect x="220" y="36" width="50" height="26" class="ink fill-b"/>
+      <rect x="290" y="62" width="50" height="26" class="ink-g fill-g"/><rect x="290" y="36" width="50" height="26" class="ink fill-b"/><rect x="290" y="10" width="50" height="26" class="ink fill-b"/>
+      <rect x="360" y="62" width="50" height="26" class="ink-g fill-g"/><rect x="360" y="36" width="50" height="26" class="ink-g fill-g"/>
+      <rect x="430" y="62" width="50" height="26" class="ink-r fill-r"/>
+      <rect x="520" y="62" width="100" height="26" class="ink-r fill-r"/>
+    </g>
+    <text x="35" y="80" text-anchor="middle" class="s">2</text>
+    <text x="105" y="80" text-anchor="middle" class="s">2</text><text x="105" y="54" text-anchor="middle" class="s">3</text>
+    <text x="175" y="80" text-anchor="middle" class="g s w6">5</text>
+    <text x="245" y="80" text-anchor="middle" class="g s">5</text><text x="245" y="54" text-anchor="middle" class="s">4</text>
+    <text x="315" y="80" text-anchor="middle" class="g s">5</text><text x="315" y="54" text-anchor="middle" class="s">4</text><text x="315" y="28" text-anchor="middle" class="s">1</text>
+    <text x="385" y="80" text-anchor="middle" class="g s">5</text><text x="385" y="54" text-anchor="middle" class="g s w6">5</text>
+    <text x="455" y="80" text-anchor="middle" class="r s w6">25</text>
+    <text x="570" y="80" text-anchor="middle" class="r s w6">X = 25</text>
+    <text x="35" y="108" text-anchor="middle" class="s">PUSH A</text><text x="105" y="108" text-anchor="middle" class="s">PUSH B</text><text x="175" y="108" text-anchor="middle" class="s">ADD</text><text x="245" y="108" text-anchor="middle" class="s">PUSH C</text><text x="315" y="108" text-anchor="middle" class="s">PUSH D</text><text x="385" y="108" text-anchor="middle" class="s">ADD</text><text x="455" y="108" text-anchor="middle" class="s">MUL</text><text x="570" y="108" text-anchor="middle" class="s">POP X</text>
+  </svg><figcaption>স্ট্যাকের ধাপ: A = 2, B = 3, C = 4, D = 1 → (2 + 3)(4 + 1) = 25</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">ফিল্ডের মাপ ✍</span> 32-বিট ইনস্ট্রাকশন, 64টি রেজিস্টার, 64K-ওয়ার্ড মেমরি, ফরম্যাট opcode | reg | address।<br>reg = log₂64 = 6 বিট · address = log₂65536 = 16 বিট<br>opcode = 32 − 6 − 16 = <span class="circ">10 বিট</span> → 1024টি অপারেশন</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">এক্সপান্ডিং অপকোড ✍</span> 32-বিট ইনস্ট্রাকশন, 12-বিট অ্যাড্রেস, ২৫০টি ২-অ্যাড্রেস ইনস্ট্রাকশন। কয়টি ১-অ্যাড্রেস ইনস্ট্রাকশন সম্ভব?<br>২-অ্যাড্রেস অপকোড = 32 − 24 = 8 বিট → 256টি প্যাটার্ন; 6টি খালি<br>প্রতিটি আরও 12 বিট পায়: 6 × 2¹² = <span class="circ">24 576</span></div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "০-অ্যাড্রেস" মেশিনেও <b>PUSH/POP-এ একটি অ্যাড্রেস থাকে</b>; শুধু ALU ইনস্ট্রাকশনে (ADD, MUL) কোনো অ্যাড্রেস নেই।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ৩-২-১-০ → <b>৩-৬-৭-৮</b>টি ইনস্ট্রাকশন (এই রাশিতে): অ্যাড্রেস যত কম, ইনস্ট্রাকশন তত বেশি।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: addressing modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>অ্যাড্রেসিং মোড</span></div>
+  <h2><span class="no">৬</span>অ্যাড্রেসিং মোড ও কার্যকর অ্যাড্রেস (EA)</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> অ্যাড্রেসিং মোড (Addressing mode) বলে দেয় ইনস্ট্রাকশনের অ্যাড্রেস ফিল্ড থেকে কীভাবে <span class="hl">কার্যকর অ্যাড্রেস (Effective Address, EA)</span> পাওয়া যাবে, অর্থাৎ অপারেন্ডের আসল মেমরি অ্যাড্রেস। মোডের কারণে ছোট ইনস্ট্রাকশনেই পয়েন্টার, অ্যারে, লুপ ও রিলোকেটেবল কোড সম্ভব।</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">মোড</th><th class="l">অপারেন্ড / EA</th><th class="l">উদাহরণ</th><th class="l">সাধারণ ব্যবহার</th></tr>
+    <tr><td class="l">ইমপ্লায়েড</td><td class="l">অপকোডেই নির্দিষ্ট</td><td class="l">CMA, CLC</td><td class="l">অ্যাকুমুলেটর, ফ্ল্যাগ</td></tr>
+    <tr><td class="l"><b>ইমিডিয়েট</b></td><td class="l">অপারেন্ড ইনস্ট্রাকশনের <b>ভেতরে</b></td><td class="l">MOV R1, #25</td><td class="l">ধ্রুবক, সবচেয়ে দ্রুত</td></tr>
+    <tr><td class="l">রেজিস্টার</td><td class="l">অপারেন্ড রেজিস্টার R-এ</td><td class="l">ADD R1, R2</td><td class="l">মেমরি অ্যাক্সেস নেই</td></tr>
+    <tr><td class="l">রেজিস্টার ইনডাইরেক্ট</td><td class="l">EA = (R)</td><td class="l">MOV R1, (R2)</td><td class="l">পয়েন্টার</td></tr>
+    <tr><td class="l"><b>ডাইরেক্ট</b> (অ্যাবসোলিউট)</td><td class="l">EA = অ্যাড্রেস ফিল্ড A</td><td class="l">LOAD 500</td><td class="l">গ্লোবাল ভেরিয়েবল</td></tr>
+    <tr><td class="l"><b>ইনডাইরেক্ট</b></td><td class="l">EA = M[A]</td><td class="l">LOAD @500</td><td class="l">মেমরিতে পয়েন্টার</td></tr>
+    <tr><td class="l">রিলেটিভ</td><td class="l">EA = PC + A</td><td class="l">BEQ +12</td><td class="l">ব্রাঞ্চ, রিলোকেশন</td></tr>
+    <tr><td class="l"><b>ইনডেক্সড</b></td><td class="l">EA = A + (XR)</td><td class="l">LOAD 500(X)</td><td class="l">অ্যারে</td></tr>
+    <tr><td class="l">বেস রেজিস্টার</td><td class="l">EA = (BR) + A</td><td class="l">[BX + 8]</td><td class="l">রিলোকেশন, সেগমেন্ট</td></tr>
+    <tr><td class="l">অটো-ইনক / ডেক</td><td class="l">EA = (R), R ± 1 পরে / আগে</td><td class="l">(R1)+, −(R1)</td><td class="l">অ্যারে, স্ট্যাক</td></tr>
+  </table>
+  <h3>সমাধানকৃত উদাহরণ (পরীক্ষার ক্লাসিক সেটিং)</h3>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 236" width="245">
+      <g class="w">
+        <rect x="120" y="8" width="120" height="220" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+        <path class="ink-k" d="M120,32 H240 M120,56 H240 M120,80 H240 M120,104 H240 M120,128 H240 M120,152 H240 M120,176 H240 M120,200 H240" style="stroke-width:1.2"/>
+        <rect x="120" y="8" width="120" height="48" class="fill-y" style="stroke:none"/>
+        <rect x="6" y="20" width="76" height="26" rx="6" class="ink fill-b"/>
+        <rect x="6" y="62" width="76" height="26" rx="6" class="ink fill-b"/>
+        <rect x="6" y="104" width="76" height="26" rx="6" class="ink fill-b"/>
+      </g>
+      <text x="44" y="38" text-anchor="middle" class="s">PC = 200</text><text x="44" y="80" text-anchor="middle" class="s">R1 = 400</text><text x="44" y="122" text-anchor="middle" class="s">XR = 100</text>
+      <text x="114" y="26" text-anchor="end" class="s">200</text><text x="180" y="26" text-anchor="middle" class="s w6">LOAD, mode</text>
+      <text x="114" y="50" text-anchor="end" class="s">201</text><text x="180" y="50" text-anchor="middle" class="s w6">500</text>
+      <text x="114" y="74" text-anchor="end" class="s">202</text><text x="180" y="74" text-anchor="middle" class="bn s">পরের ইনস্ট্রা.</text>
+      <text x="114" y="98" text-anchor="end" class="s">399</text><text x="180" y="98" text-anchor="middle" class="s">450</text>
+      <text x="114" y="122" text-anchor="end" class="s">400</text><text x="180" y="122" text-anchor="middle" class="s">700</text>
+      <text x="114" y="146" text-anchor="end" class="s">500</text><text x="180" y="146" text-anchor="middle" class="s">800</text>
+      <text x="114" y="170" text-anchor="end" class="s">600</text><text x="180" y="170" text-anchor="middle" class="s">900</text>
+      <text x="114" y="194" text-anchor="end" class="s">702</text><text x="180" y="194" text-anchor="middle" class="s">325</text>
+      <text x="114" y="218" text-anchor="end" class="s">800</text><text x="180" y="218" text-anchor="middle" class="s">300</text>
+      <text x="44" y="160" text-anchor="middle" class="bn r s">২-ওয়ার্ড</text><text x="44" y="176" text-anchor="middle" class="bn r s">ইনস্ট্রাকশন</text><text x="44" y="192" text-anchor="middle" class="bn r s">200–201-এ</text>
+    </svg></figure>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">মোড</th><th>EA</th><th>AC-তে যায়</th></tr>
+      <tr><td class="l">ডাইরেক্ট</td><td>500</td><td>800</td></tr>
+      <tr><td class="l">ইমিডিয়েট</td><td>201</td><td class="red"><b>500</b></td></tr>
+      <tr><td class="l">ইনডাইরেক্ট</td><td>800</td><td>300</td></tr>
+      <tr><td class="l">রিলেটিভ (PC = 202)</td><td class="red"><b>702</b></td><td>325</td></tr>
+      <tr><td class="l">ইনডেক্সড (XR = 100)</td><td>600</td><td>900</td></tr>
+      <tr><td class="l">রেজিস্টার (R1)</td><td>–</td><td>400</td></tr>
+      <tr><td class="l">রেজিস্টার ইনডাইরেক্ট</td><td>400</td><td>700</td></tr>
+      <tr><td class="l">অটোইনক্রিমেন্ট</td><td>400</td><td>700 (R1 → 401)</td></tr>
+      <tr><td class="l">অটোডিক্রিমেন্ট</td><td>399</td><td>450 (R1 → 399)</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> অপারেন্ড পর্যন্ত "<b>লাফ</b>" গোনো: ইমিডিয়েট 0, ডাইরেক্ট 1, ইনডাইরেক্ট 2। রেজিস্টার মোড একটি মেমরি-লাফের বদলে রেজিস্টার ব্যবহার করে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> রিলেটিভ মোডে যোগ হয় <b>হালনাগাদ</b> PC (এখানে 202), 200 নয়। ইমিডিয়েটের EA হলো অপারেন্ড ফিল্ডেরই অ্যাড্রেস (201)।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: RISC vs CISC, control unit ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>RISC/CISC · কন্ট্রোল</span></div>
+  <h2><span class="no">৭</span>RISC বনাম CISC</h2><span class="tag">লিখিতে প্রিয়</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বিষয়</th><th class="l">RISC (রিডিউসড)</th><th class="l">CISC (কমপ্লেক্স)</th></tr>
+    <tr><td class="l">ইনস্ট্রাকশন সেট</td><td class="l">কম, সরল</td><td class="l">অনেক, কিছু খুব জটিল</td></tr>
+    <tr><td class="l">দৈর্ঘ্য</td><td class="l"><span class="hl">নির্দিষ্ট</span> (32-বিট)</td><td class="l"><span class="hl">পরিবর্তনশীল</span> (x86: 1–15 বাইট)</td></tr>
+    <tr><td class="l">অ্যাড্রেসিং মোড</td><td class="l">কম</td><td class="l">অনেক</td></tr>
+    <tr><td class="l">মেমরি অ্যাক্সেস</td><td class="l"><span class="circ">শুধু LOAD/STORE</span></td><td class="l">ALU ইনস্ট্রাকশনেও মেমরি অপারেন্ড</td></tr>
+    <tr><td class="l">সাইকেল / ইনস্ট্রা.</td><td class="l">≈ 1, সহজে পাইপলাইন</td><td class="l">অনেক, অসমান; পাইপলাইন কঠিন</td></tr>
+    <tr><td class="l">কন্ট্রোল ইউনিট</td><td class="l">হার্ডওয়্যার্ড</td><td class="l">মাইক্রোপ্রোগ্রামড</td></tr>
+    <tr><td class="l">রেজিস্টার</td><td class="l">বড় রেজিস্টার ফাইল</td><td class="l">কম GPR</td></tr>
+    <tr><td class="l">কোড / কম্পাইলার</td><td class="l">কোড লম্বা, কম্পাইলারের কাজ বেশি</td><td class="l">কোড ছোট, হার্ডওয়্যারের কাজ বেশি</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">ARM, MIPS, RISC-V, SPARC</td><td class="l">Intel x86, VAX, Motorola 68000</td></tr>
+  </table>
+  <p class="small">আধুনিক x86 চিপ ভেতরে CISC ইনস্ট্রাকশনকে RISC-ধাঁচের <b>মাইক্রো-অপ (micro-op)</b>-এ ভেঙে নেয়, তাই সীমারেখা ঝাপসা। RISC-এর সূচনা IBM 801 (১৯৭৫), বার্কলে RISC ও স্ট্যানফোর্ড MIPS (১৯৮০-র দশকের শুরু) থেকে।</p>
+  <h2><span class="no">৮</span>কন্ট্রোল ইউনিট: হার্ডওয়্যার্ড বনাম মাইক্রোপ্রোগ্রামড</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <rect x="6" y="56" width="62" height="36" rx="6" class="ink fill-b"/>
+        <rect x="96" y="40" width="96" height="68" rx="6" class="ink-r fill-r"/>
+        <rect x="220" y="56" width="70" height="36" rx="6" class="ink fill-b"/>
+        <rect x="96" y="118" width="96" height="28" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M68,74 H92" marker-end="url(#ahb)"/><path class="ink" d="M192,74 H216" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M255,92 V132 H196" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M96,132 H37 V96" marker-end="url(#ahg)"/>
+        <path class="ink" d="M255,56 V20" marker-end="url(#ahb)"/>
+        <path class="ink" d="M37,20 V52" marker-end="url(#ahb)"/>
+      </g>
+      <text x="37" y="79" text-anchor="middle" class="w6">CAR</text>
+      <text x="144" y="70" text-anchor="middle" class="bn r w6">কন্ট্রোল</text><text x="144" y="88" text-anchor="middle" class="bn r w6">মেমরি</text>
+      <text x="255" y="79" text-anchor="middle" class="w6">CDR</text>
+      <text x="144" y="137" text-anchor="middle" class="bn g s w6">সিকোয়েন্সার</text>
+      <text x="250" y="14" text-anchor="middle" class="bn s">কন্ট্রোল সিগন্যাল</text>
+      <text x="48" y="14" text-anchor="middle" class="bn s">IR-এর অপকোড</text>
+    </svg><figcaption>মাইক্রোপ্রোগ্রামড CU (উইলকস, ১৯৫১)</figcaption></figure>
+    <div class="small">
+      <p><b>হার্ডওয়্যার্ড (Hardwired):</b> কন্ট্রোল সিগন্যাল আসে একটি স্থির লজিক সার্কিট থেকে: <span class="hl">সিকোয়েন্স কাউন্টার + ডিকোডার + গেট</span> (বা PLA/FSM)।</p>
+      <p><b>মাইক্রোপ্রোগ্রামড (Microprogrammed):</b> প্রতিটি মেশিন ইনস্ট্রাকশন <b>কন্ট্রোল মেমরিতে</b> (ROM) রাখা মাইক্রোইনস্ট্রাকশনের একটি ছোট <span class="hl">মাইক্রোপ্রোগ্রাম</span> চালায়; CAR = কন্ট্রোল অ্যাড্রেস রেজিস্টার, CDR = কন্ট্রোল ডেটা রেজিস্টার।</p>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বিষয়</th><th class="l">হার্ডওয়্যার্ড</th><th class="l">মাইক্রোপ্রোগ্রামড</th></tr>
+    <tr><td class="l">গতি</td><td class="l"><span class="circ">দ্রুততর</span></td><td class="l">ধীর (প্রতি ধাপে কন্ট্রোল মেমরি পড়া)</td></tr>
+    <tr><td class="l">পরিবর্তন / ডিবাগ</td><td class="l">সার্কিট নতুন করে নকশা</td><td class="l">মাইক্রোকোড বদলালেই: <b>নমনীয়</b></td></tr>
+    <tr><td class="l">জটিল ISA</td><td class="l">কঠিন, ব্যয়বহুল</td><td class="l">সহজ</td></tr>
+    <tr><td class="l">ব্যবহার</td><td class="l">RISC</td><td class="l">CISC</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">মাইক্রোইনস্ট্রাকশনের ধরন</span> <b>হরাইজন্টাল</b>: প্রতি কন্ট্রোল সিগন্যালে ১ বিট, চওড়া, বেশি সমান্তরালতা, ডিকোড লাগে না। <b>ভার্টিক্যাল</b>: এনকোডেড ফিল্ড, সরু, ডিকোডার লাগে, ধীর।</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">ডেটাপাথ নকশা</span> <b>সিঙ্গেল-সাইকেল</b>: CPI = 1, কিন্তু ক্লক = সবচেয়ে ধীর ইনস্ট্রাকশন (load)। <b>মাল্টিসাইকেল</b>: ছোট ক্লক, CPI 3–5, একই ইউনিট বিভিন্ন ধাপে পুনর্ব্যবহার।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>হার্ড = হুড়মুড় (দ্রুত), মাইক্রো = মডিফাই</b>": হার্ডওয়্যার্ড দ্রুত কিন্তু অনমনীয়; মাইক্রোপ্রোগ্রামড ধীর কিন্তু বদলানো যায়।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: pipelining ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>পাইপলাইন</span></div>
+  <h2><span class="no">৯</span>ইনস্ট্রাকশন পাইপলাইনিং (Pipelining)</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ইনস্ট্রাকশন এক্সিকিউশনকে k-টি ধাপে (stage) ভাগ করে ধাপগুলোকে <span class="hl">ওভারল্যাপ</span> করা, অ্যাসেম্বলি লাইনের মতো: একটি এক্সিকিউট হওয়ার সময় পরেরটি ডিকোড এবং তার পরেরটি ফেচ হয়। ক্লাসিক RISC পাইপলাইনে <span class="circ">৫টি ধাপ</span>: <b>IF</b> ফেচ, <b>ID</b> ডিকোড + রেজিস্টার পড়া, <b>EX</b> ALU, <b>MEM</b> মেমরি অ্যাক্সেস, <b>WB</b> রাইট ব্যাক।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="60" y="22" width="62" height="24" class="ink-r fill-r"/><rect x="122" y="22" width="62" height="24" class="ink fill-b"/><rect x="184" y="22" width="62" height="24" class="ink-g fill-g"/><rect x="246" y="22" width="62" height="24" class="ink-p fill-p"/><rect x="308" y="22" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="122" y="50" width="62" height="24" class="ink-r fill-r"/><rect x="184" y="50" width="62" height="24" class="ink fill-b"/><rect x="246" y="50" width="62" height="24" class="ink-g fill-g"/><rect x="308" y="50" width="62" height="24" class="ink-p fill-p"/><rect x="370" y="50" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="184" y="78" width="62" height="24" class="ink-r fill-r"/><rect x="246" y="78" width="62" height="24" class="ink fill-b"/><rect x="308" y="78" width="62" height="24" class="ink-g fill-g"/><rect x="370" y="78" width="62" height="24" class="ink-p fill-p"/><rect x="432" y="78" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="246" y="106" width="62" height="24" class="ink-r fill-r"/><rect x="308" y="106" width="62" height="24" class="ink fill-b"/><rect x="370" y="106" width="62" height="24" class="ink-g fill-g"/><rect x="432" y="106" width="62" height="24" class="ink-p fill-p"/><rect x="494" y="106" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="243" y="17" width="68" height="118" rx="6" class="ink-r" stroke-dasharray="5 4" style="stroke-width:1.4"/>
+    </g>
+    <text x="91" y="14" text-anchor="middle" class="s">1</text><text x="153" y="14" text-anchor="middle" class="s">2</text><text x="215" y="14" text-anchor="middle" class="s">3</text><text x="277" y="14" text-anchor="middle" class="s">4</text><text x="339" y="14" text-anchor="middle" class="s">5</text><text x="401" y="14" text-anchor="middle" class="s">6</text><text x="463" y="14" text-anchor="middle" class="s">7</text><text x="525" y="14" text-anchor="middle" class="s">8</text><text x="590" y="14" text-anchor="middle" class="bn s">সাইকেল</text>
+    <text x="8" y="39" class="s w6">I1</text><text x="8" y="67" class="s w6">I2</text><text x="8" y="95" class="s w6">I3</text><text x="8" y="123" class="s w6">I4</text>
+    <text x="91" y="39" text-anchor="middle" class="s">IF</text><text x="153" y="39" text-anchor="middle" class="s">ID</text><text x="215" y="39" text-anchor="middle" class="s">EX</text><text x="277" y="39" text-anchor="middle" class="s">MEM</text><text x="339" y="39" text-anchor="middle" class="s">WB</text>
+    <text x="153" y="67" text-anchor="middle" class="s">IF</text><text x="215" y="67" text-anchor="middle" class="s">ID</text><text x="277" y="67" text-anchor="middle" class="s">EX</text><text x="339" y="67" text-anchor="middle" class="s">MEM</text><text x="401" y="67" text-anchor="middle" class="s">WB</text>
+    <text x="215" y="95" text-anchor="middle" class="s">IF</text><text x="277" y="95" text-anchor="middle" class="s">ID</text><text x="339" y="95" text-anchor="middle" class="s">EX</text><text x="401" y="95" text-anchor="middle" class="s">MEM</text><text x="463" y="95" text-anchor="middle" class="s">WB</text>
+    <text x="277" y="123" text-anchor="middle" class="s">IF</text><text x="339" y="123" text-anchor="middle" class="s">ID</text><text x="401" y="123" text-anchor="middle" class="s">EX</text><text x="463" y="123" text-anchor="middle" class="s">MEM</text><text x="525" y="123" text-anchor="middle" class="s">WB</text>
+    <text x="566" y="70" class="bn r s">সাইকেল ৪:</text><text x="566" y="86" class="bn r s">৪টি ইনস্ট্রা.</text><text x="566" y="102" class="bn r s">একসাথে চলছে</text>
+  </svg><figcaption>স্পেস-টাইম ডায়াগ্রাম: ৪টি ইনস্ট্রাকশন ২০ নয়, ৫ + ৩ = ৮ সাইকেলে শেষ</figcaption></figure>
+  <div class="sumbox"><span class="lbl">সূত্র (k ধাপ, n ইনস্ট্রাকশন, ক্লক τ)</span>
+    <div class="fgrid small">
+      <p>পাইপলাইনে সময় = <span class="circ">(k + n − 1) τ</span></p><p>পাইপলাইন ছাড়া = n · t<sub>n</sub> (সুষম হলে t<sub>n</sub> = k τ)</p>
+      <p>স্পিডআপ S = n k / (k + n − 1) → <b>k</b></p><p>দক্ষতা η = n / (k + n − 1) = S / k</p>
+      <p>থ্রুপুট = n / ((k + n − 1) τ) → 1/τ</p><p>τ = ধীরতম ধাপ + ল্যাচ বিলম্ব</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">উদাহরণ ১ ✍</span> k = 5, n = 100, প্রতি ধাপে এক সাইকেল, স্টল নেই → 5 + 99 = <span class="circ">104 সাইকেল</span>; পাইপলাইন ছাড়া 500 সাইকেল; S = 500 / 104 ≈ <b>4.81</b>; η = 100 / 104 ≈ 96%।</div>
+  <div class="ex small"><span class="lbl">উদাহরণ ২: অসমান ধাপ ✍</span> ধাপের বিলম্ব 60, 50, 90, 80 ns; ল্যাচ 10 ns; n = 1000।<br>τ = 90 + 10 = 100 ns · পাইপলাইনে = (4 + 999) × 100 = 100 300 ns · পাইপলাইন ছাড়া = 1000 × (60 + 50 + 90 + 80) = 280 000 ns · S ≈ <b>2.79</b>, ধাপ অসমান বলে 4-এর অনেক নিচে।</div>
+  <div class="ex small"><span class="lbl">উদাহরণ ৩ ✍</span> IF 200, ID 100, EX 200, MEM 200, WB 100 ps। সিঙ্গেল-সাইকেল ক্লক = 800 ps (load পাঁচটি ধাপই ব্যবহার করে); পাইপলাইন ক্লক = 200 ps → আদর্শ স্পিডআপ 800 / 200 = <b>4</b>, 5 নয়।</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> পাইপলাইন <b>থ্রুপুট</b> বাড়ায়; একটি ইনস্ট্রাকশনের ল্যাটেন্সি (latency) কমায় <b>না</b> (ল্যাচের কারণে বরং সামান্য বাড়ে)।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>একবার ভরাও, তারপর প্রতি টিকে একটি</b>": প্রথম ফলের জন্য k সাইকেল, তারপর প্রতিটিতে আর 1 → k + n − 1।</div>
+  </div>
+  <p class="small"><b>পাইপলাইন রেজিস্টার</b> (IF/ID, ID/EX, EX/MEM, MEM/WB) ধাপগুলোর মাঝে থেকে প্রতিটি ইনস্ট্রাকশনের ডেটা ও কন্ট্রোল বিট ধরে রাখে; কন্ট্রোল সিগন্যাল ID-তে তৈরি হয়ে ইনস্ট্রাকশনের সাথে পাইপ ধরে এগোয়।</p>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: hazards ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>হ্যাজার্ড</span></div>
+  <h2><span class="no">১০</span>পাইপলাইন হ্যাজার্ড ও প্রতিকার</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">হ্যাজার্ড (Hazard)</span> যে অবস্থার কারণে পরের ইনস্ট্রাকশন সময়মতো তার ধাপে ঢুকতে পারে না, ফলে <span class="hl">স্টল (বাবল)</span> দিতে হয়। বাস্তব CPI = 1 + প্রতি ইনস্ট্রাকশনে স্টল সাইকেল।</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">হ্যাজার্ড</th><th class="l">কারণ</th><th class="l">উদাহরণ</th><th class="l">প্রতিকার</th></tr>
+    <tr><td class="l"><b>স্ট্রাকচারাল</b></td><td class="l">দুটি ইনস্ট্রা.-র একই ইউনিট দরকার</td><td class="l">একটি মেমরি পোর্ট</td><td class="l">আলাদা I/D ক্যাশ, স্টল</td></tr>
+    <tr><td class="l red"><b>ডেটা</b></td><td class="l">অসমাপ্ত ফল দরকার</td><td class="l">ADD <b>R1</b>,R2,R3 → SUB R4,<b>R1</b>,R5</td><td class="l"><span class="hl">ফরওয়ার্ডিং</span>, স্টল</td></tr>
+    <tr><td class="l"><b>কন্ট্রোল</b></td><td class="l">পরের PC অজানা</td><td class="l">BEQ, JMP, CALL</td><td class="l"><span class="hl">ব্রাঞ্চ প্রেডিকশন</span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p><b>ডেটা হ্যাজার্ডের ধরন</b> (i আগে, j পরে):</p>
+      <ul class="dash">
+        <li><span class="circ">RAW</span> রিড আফটার রাইট: প্রকৃত নির্ভরতা, সবচেয়ে সাধারণ</li>
+        <li><b>WAR</b> রাইট আফটার রিড: অ্যান্টি-ডিপেন্ডেন্স</li>
+        <li><b>WAW</b> রাইট আফটার রাইট: আউটপুট ডিপেন্ডেন্স</li>
+      </ul>
+      <p>WAR ও WAW শুধু আউট-অফ-অর্ডার এক্সিকিউশনে ঘটে; <b>রেজিস্টার রিনেমিং</b> এগুলো দূর করে।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 120" width="290">
+      <g class="w">
+        <rect x="40" y="20" width="50" height="24" class="ink-r fill-r"/><rect x="90" y="20" width="50" height="24" class="ink fill-b"/><rect x="140" y="20" width="50" height="24" class="ink-g fill-g"/><rect x="190" y="20" width="50" height="24" class="ink-p fill-p"/><rect x="240" y="20" width="50" height="24" class="ink-k fill-y"/>
+        <rect x="90" y="74" width="50" height="24" class="ink-r fill-r"/><rect x="140" y="74" width="50" height="24" class="ink fill-b"/><rect x="190" y="74" width="50" height="24" class="ink-g fill-g"/><rect x="240" y="74" width="50" height="24" class="ink-p fill-p"/>
+        <path class="ink-r" d="M190,46 L206,70" marker-end="url(#ah)" style="stroke-width:2.6"/>
+      </g>
+      <text x="4" y="37" class="s w6">ADD</text><text x="4" y="91" class="s w6">SUB</text>
+      <text x="65" y="37" text-anchor="middle" class="s">IF</text><text x="115" y="37" text-anchor="middle" class="s">ID</text><text x="165" y="37" text-anchor="middle" class="s">EX</text><text x="215" y="37" text-anchor="middle" class="s">MEM</text><text x="265" y="37" text-anchor="middle" class="s">WB</text>
+      <text x="115" y="91" text-anchor="middle" class="s">IF</text><text x="165" y="91" text-anchor="middle" class="s">ID</text><text x="215" y="91" text-anchor="middle" class="s">EX</text><text x="265" y="91" text-anchor="middle" class="s">MEM</text>
+      <text x="150" y="116" text-anchor="middle" class="bn r s">EX/MEM-এর ফল → ALU ইনপুট: স্টল 0</text>
+    </svg><figcaption>ফরওয়ার্ডিং (বাইপাসিং)</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ: লোড-ইউজ</span> LW R1, 0(R2)-এর ঠিক পরে ADD R3, <b>R1</b>, R4 থাকলে ফরওয়ার্ডিং থাকলেও <span class="circ">১টি স্টল</span> লাগে: লোড করা মান MEM-এর পরেই পাওয়া যায়। ফরওয়ার্ডিং না থাকলে পরের ইনস্ট্রাকশনে RAW-তে ২টি স্টল (WB-এর প্রথম অর্ধে রেজিস্টার ফাইলে লেখা, দ্বিতীয় অর্ধে পড়া)।</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div class="small">
+      <p><b>কন্ট্রোল হ্যাজার্ডের প্রতিকার:</b> <b>স্ট্যাটিক</b> প্রেডিকশন (সবসময় not-taken; পেছনে taken / সামনে not-taken), <b>ডায়নামিক</b> প্রেডিকশন: প্রতি ব্রাঞ্চে ১-বিট বা <span class="hl">২-বিট স্যাচুরেটিং কাউন্টার</span> + ব্রাঞ্চ টার্গেট বাফার (BTB), <b>ডিলেইড ব্রাঞ্চ</b> (ব্রাঞ্চের পরের স্লটে কম্পাইলার একটি কাজের ইনস্ট্রাকশন বসায়), ID-তেই ব্রাঞ্চ নিষ্পত্তি, ভুলভাবে ফেচ হওয়া ইনস্ট্রাকশন ফ্লাশ।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 110" width="245">
+      <g class="w">
+        <circle cx="24" cy="48" r="19" class="ink-g fill-g"/><circle cx="92" cy="48" r="19" class="ink-g fill-g"/><circle cx="160" cy="48" r="19" class="ink-r fill-r"/><circle cx="228" cy="48" r="19" class="ink-r fill-r"/>
+        <path class="ink-k" d="M45,41 H69" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M113,41 H137" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M181,41 H205" marker-end="url(#ahb)" style="stroke-width:1.6"/>
+        <path class="ink-k" d="M207,56 H183" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M139,56 H115" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M71,56 H47" marker-end="url(#ahb)" style="stroke-width:1.6"/>
+      </g>
+      <text x="24" y="53" text-anchor="middle" class="s w6">11</text><text x="92" y="53" text-anchor="middle" class="s w6">10</text><text x="160" y="53" text-anchor="middle" class="s w6">01</text><text x="228" y="53" text-anchor="middle" class="s w6">00</text>
+      <text x="60" y="92" text-anchor="middle" class="bn g s">taken অনুমান</text><text x="190" y="92" text-anchor="middle" class="bn r s">not taken অনুমান</text>
+      <text x="125" y="14" text-anchor="middle" class="bn s">not taken → (ওপরের তীর)</text><text x="125" y="108" text-anchor="middle" class="bn s">← taken (নিচের তীর)</text>
+    </svg><figcaption>২-বিট প্রেডিক্টর: পরপর দুবার ভুলে তবে বদলায়</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধান: স্টলসহ CPI ✍</span> ৫-ধাপ পাইপলাইন, ২০% ব্রাঞ্চ (২-সাইকেল পেনাল্টি), ৩০% লোড যার ২৫%-এর পরেই ব্যবহার (১টি স্টল)।<br>CPI = 1 + 0.2 × 2 + 0.3 × 0.25 × 1 = <span class="circ">1.475</span> → পাইপলাইনবিহীনের তুলনায় স্পিডআপ ≈ 5 / 1.475 ≈ <b>3.39</b>।<br>৯০% সঠিক প্রেডিক্টর ও ৩-সাইকেল মিসপ্রেডিক্ট পেনাল্টিতে: CPI = 1 + 0.2 × 0.1 × 3 = <b>1.06</b>।</div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> হ্যাজার্ড = "<b>SDC</b>": <b>S</b>hare (একই ইউনিট ভাগাভাগি), <b>D</b>epend (ডেটার ওপর নির্ভরতা), <b>C</b>hange (PC বদল)। একই ক্রমে প্রতিকার: ডুপ্লিকেট, ফরওয়ার্ড, প্রেডিক্ট।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: performance, Amdahl ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>পারফরম্যান্স</span></div>
+  <h2><span class="no">১১</span>পারফরম্যান্স পরিমাপ</h2><span class="tag">গাণিতিক</span>
+  <div class="sumbox"><span class="lbl">CPU পারফরম্যান্স সমীকরণ</span><br>
+    <span class="hl"><b>CPU time = IC × CPI × T = IC × CPI / f</b></span> &nbsp;(IC = ইনস্ট্রাকশন সংখ্যা, T = 1/f)<br>
+    <span class="small">গড় CPI = Σ (ভগ্নাংশ<sub>i</sub> × CPI<sub>i</sub>) · <b>MIPS = f / (CPI × 10⁶)</b> = IC / (সময় × 10⁶) · পারফরম্যান্স = 1 / সময় · স্পিডআপ = পুরনো সময় / নতুন সময়</span></div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">উপাদান</th><th class="l">IC</th><th class="l">CPI</th><th class="l">ক্লক রেট f</th></tr>
+    <tr><td class="l">নির্ভর করে</td><td class="l">প্রোগ্রাম, কম্পাইলার, ISA</td><td class="l">ISA, পাইপলাইন, ক্যাশ</td><td class="l">প্রযুক্তি, সংগঠন</td></tr>
+  </table>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ১ ✍</span> মিশ্রণ: ৫০% ALU (CPI 1), ৩০% load/store (CPI 2), ২০% ব্রাঞ্চ (CPI 3)।<br>CPI = 0.5 + 0.6 + 0.6 = <span class="circ">1.7</span><br>IC = 5 × 10⁸, f = 2 GHz → সময় = 5×10⁸ × 1.7 / 2×10⁹ = <b>0.425 s</b>; MIPS = 2000 / 1.7 ≈ <b>1176</b></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ২ ✍</span> একই প্রোগ্রাম। A: 2 GHz, CPI 2.0। B: 3 GHz, CPI 3.6।<br>A: IC × 2 / 2×10⁹ = 1.0 IC ns<br>B: IC × 3.6 / 3×10⁹ = 1.2 IC ns<br>ক্লক কম হলেও A <b>1.2 গুণ দ্রুত</b>।</div>
+  </div>
+  <div class="ex small"><span class="lbl">উদাহরণ ৩: MIPS ✍</span> 400 MHz, CPI 2 → MIPS = 400 × 10⁶ / (2 × 10⁶) = <span class="circ">200</span>। 400 MHz-এর ক্লক পিরিয়ড = 1 / (4 × 10⁸) = 2.5 ns।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> শুধু ক্লক রেট বা শুধু MIPS দিয়ে পারফরম্যান্স মাপা যায় না: একটি ইনস্ট্রাকশন কতটা কাজ করে MIPS তা ধরে না (RISC বনাম CISC তুলনা করো)। ন্যায্য মাপ কেবল বাস্তব প্রোগ্রামের <b>এক্সিকিউশন সময়</b> (যেমন SPEC বেঞ্চমার্ক)।</div>
+  <h2><span class="no">১২</span>অ্যামডালের সূত্র (Amdahl's Law)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div>
+      <p>সময়ের <b>f</b> ভগ্নাংশ <b>s</b> গুণ দ্রুত করলে:</p>
+      <p class="center"><span class="hl"><b>S = 1 / ((1 − f) + f / s)</b></span> &nbsp;→ সর্বোচ্চ <span class="circ">1 / (1 − f)</span></p>
+      <ul class="dash small">
+        <li>f = 0.4, s = 10 → 1 / (0.6 + 0.04) = <b>1.56</b></li>
+        <li>৯০% সমান্তরাল, ১০টি কোর → 1 / (0.1 + 0.09) = <b>5.26</b> (সীমা 10)</li>
+        <li>f = 0.8 দিয়ে মোট 2× চাই: 0.2 + 0.8/s = 0.5 → s = <b>2.67</b></li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="245">
+      <g class="w">
+        <path class="ink-k" d="M30,130 V10 M30,130 H240"/>
+        <path class="ink-r" d="M30,30 H236" stroke-dasharray="5 4" style="stroke-width:1.4"/>
+        <path class="ink" d="M30,120 C60,80 90,50 130,40 C170,33 210,31 236,31"/>
+      </g>
+      <text x="26" y="34" text-anchor="end" class="r s">10</text><text x="26" y="128" text-anchor="end" class="s">1</text>
+      <text x="236" y="146" text-anchor="end" class="bn s">s (বা কোর) →</text>
+      <text x="120" y="24" class="bn r s">ছাদ 1/(1 − f)</text>
+      <text x="140" y="76" class="s">f = 0.9</text>
+    </svg><figcaption>সিরিয়াল অংশই লাভের সীমা বেঁধে দেয়</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>সাধারণ ঘটনাটিকে দ্রুত করো</b>": যে অংশ উন্নত করোনি (1 − f), সেটিই ছাদ ঠিক করে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> f হলো <b>সময়ের</b> ভগ্নাংশ, ইনস্ট্রাকশনের নয়। f = 0.5 হলে s = ∞ দিলেও মাত্র 2×।</div>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: ALU, fixed & floating point ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>ALU ও সংখ্যা</span></div>
+  <h2><span class="no">১৩</span>ALU নকশা ও ফিক্সড-পয়েন্ট গণিত</h2>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:center">
+    <div class="small">
+      <p><b>১-বিট ALU স্লাইস</b> একসাথে AND, OR ও ফুল-অ্যাডারের যোগফল বের করে; অপারেশন-সিলেক্ট বিট অনুযায়ী একটি <span class="hl">মাল্টিপ্লেক্সার</span> একটিকে বেছে নেয়। ক্যারি জুড়ে ৩২টি স্লাইস = ৩২-বিট <b>রিপল-ক্যারি</b> ALU; <b>ক্যারি-লুকঅ্যাহেড</b> অ্যাডার ধীর ক্যারি-শৃঙ্খল এড়ায়।</p>
+      <p>বিয়োগ: A − B = A + B′ + 1 (B উল্টাও, carry-in = 1)।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 144" width="265">
+      <g class="w">
+        <rect x="60" y="10" width="60" height="26" rx="6" class="ink fill-b"/>
+        <rect x="60" y="50" width="60" height="26" rx="6" class="ink fill-b"/>
+        <rect x="60" y="90" width="60" height="34" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r fill-r" d="M170,14 L200,30 V110 L170,126 Z"/>
+        <path class="ink" d="M120,23 H166" marker-end="url(#ahb)"/><path class="ink" d="M120,63 H166" marker-end="url(#ahb)"/><path class="ink" d="M120,107 H166" marker-end="url(#ahb)"/><path class="ink" d="M200,70 H236" marker-end="url(#ahb)"/>
+        <path class="ink" d="M30,30 H60 M30,70 H60 M30,100 H60"/>
+        <path class="ink-p" d="M185,142 V122" marker-end="url(#ahp)"/>
+      </g>
+      <text x="90" y="28" text-anchor="middle" class="s">AND</text><text x="90" y="68" text-anchor="middle" class="s">OR</text><text x="90" y="111" text-anchor="middle" class="bn g s">অ্যাডার</text>
+      <text x="185" y="74" text-anchor="middle" class="r s w6">MUX</text>
+      <text x="244" y="74" class="s w6">R</text><text x="14" y="34" class="s">a</text><text x="14" y="74" class="s">b</text><text x="0" y="104" class="s">Cin</text>
+      <text x="196" y="140" class="p s">op</text>
+    </svg><figcaption>১-বিট ALU স্লাইস</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">n-বিট টু'স কমপ্লিমেন্ট</span> পরিসর −2ⁿ⁻¹ … 2ⁿ⁻¹ − 1 (8-বিট: <span class="circ">−128 … +127</span>)। ওভারফ্লো V = C<sub>in</sub>(MSB) ⊕ C<sub>out</sub>(MSB): একই চিহ্নের দুটি সংখ্যার যোগফল উল্টো চিহ্নের হলে।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">ওভারফ্লো ✍</span> 0110 0100 (+100) + 0100 0000 (+64) = 1010 0100 = 8 বিটে <b>−92</b>। MSB-তে ক্যারি ঢোকে 1, বের হয় 0 → <b>V = 1</b>।</div>
+  </div>
+  <p class="small"><b>গুণ</b>: শিফট-অ্যান্ড-অ্যাড; <b>বুথের অ্যালগরিদম (Booth's algorithm)</b> সাইনড (টু'স কমপ্লিমেন্ট) অপারেন্ড সামলায় এবং টানা 1-গুলো এড়িয়ে যায় (জোড়া 10 → বিয়োগ, 01 → যোগ)। <b>ভাগ</b>: রিস্টোরিং / নন-রিস্টোরিং।</p>
+  <h2><span class="no">১৪</span>ফ্লোটিং পয়েন্ট (IEEE 754)</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 74" width="640">
+    <g class="w">
+      <rect x="20" y="20" width="30" height="30" class="ink-r fill-r"/>
+      <rect x="50" y="20" width="160" height="30" class="ink fill-b"/>
+      <rect x="210" y="20" width="410" height="30" class="ink-g fill-g"/>
+    </g>
+    <text x="35" y="14" text-anchor="middle" class="r s">31</text><text x="56" y="14" class="s">30 … 23</text><text x="216" y="14" class="s">22 … 0</text>
+    <text x="35" y="40" text-anchor="middle" class="r s w6">S</text><text x="130" y="40" text-anchor="middle" class="bn s w6">এক্সপোনেন্ট E (8)</text><text x="415" y="40" text-anchor="middle" class="bn g s w6">ফ্র্যাকশন F (23), প্রথম 1 লুকানো</text>
+    <text x="320" y="68" text-anchor="middle" class="bn s">মান = (−1)ˢ × 1.F × 2^(E − 127)</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">ফরম্যাট</th><th>সাইন</th><th>এক্সপোনেন্ট</th><th>ফ্র্যাকশন</th><th>বায়াস</th><th class="l">নির্ভুলতা</th></tr>
+    <tr><td class="l">সিঙ্গেল (32-বিট)</td><td>1</td><td><span class="circ">8</span></td><td>23</td><td><b>127</b></td><td class="l">≈ 7 অঙ্ক, সর্বোচ্চ ≈ 3.4 × 10³⁸</td></tr>
+    <tr><td class="l">ডাবল (64-বিট)</td><td>1</td><td>11</td><td>52</td><td><b>1023</b></td><td class="l">≈ 15–16 অঙ্ক</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধান: সিঙ্গেল প্রিসিশনে −6.75 ✍</span> 6.75 = 110.11₂ = 1.1011 × 2² · সাইন = 1 · এক্সপোনেন্ট = 2 + 127 = 129 = 1000 0001 · ফ্র্যাকশন = 1011 000…0<br>1 | 10000001 | 10110000000000000000000 = <span class="circ">C0D80000H</span></div>
+  <div class="cols">
+    <div class="small"><b>FP যোগ/বিয়োগ:</b> ① মেলাও: ছোট এক্সপোনেন্টের ম্যান্টিসা ডানে শিফট ② ম্যান্টিসা যোগ/বিয়োগ ③ নরমালাইজ ④ রাউন্ড (গার্ড, রাউন্ড, স্টিকি বিট)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> এক্সপোনেন্ট সব 0 = শূন্য বা ডিনরমাল; সব 1 = ∞ (F = 0) বা NaN (F ≠ 0)। সংরক্ষিত এক্সপোনেন্ট বায়াসড: 2² রাখা হয় 129 হিসেবে, 2 নয়।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>1-8-23, বায়াস 127</b>" ও "<b>1-11-52, বায়াস 1023</b>": বায়াস = 2^(এক্সপোনেন্ট বিট − 1) − 1।</div>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: superscalar, Flynn, I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>সমান্তরালতা · I/O</span></div>
+  <h2><span class="no">১৫</span>সাধারণ পাইপলাইনের পরে</h2>
+  <ul class="dash small">
+    <li><b>সুপারস্কেলার (Superscalar)</b>: একাধিক পাইপলাইন; প্রতি সাইকেলে <span class="hl">২+ ইনস্ট্রাকশন ইস্যু</span>, তাই CPI &lt; 1 (IPC &gt; 1)। <b>সুপারপাইপলাইনিং</b>: আরও বেশি, ছোট ধাপ। <b>VLIW</b>: কম্পাইলার সমান্তরাল অপারেশনগুলো একটি লম্বা ওয়ার্ডে বসায়।</li>
+    <li><b>ডায়নামিক পাইপলাইনিং</b> = আউট-অফ-অর্ডার এক্সিকিউশন: রিজার্ভেশন স্টেশন (টোমাসুলো), রেজিস্টার রিনেমিং, ইন-অর্ডার কমিটের জন্য রিঅর্ডার বাফার।</li>
+    <li><b>এক্সেপশন (Exception)</b> (ওভারফ্লো, অবৈধ অপকোড, পেজ ফল্ট) ঘটে CPU-এর ভেতরে; <b>ইন্টারাপ্ট</b> আসে I/O থেকে। <i>প্রিসাইস</i> এক্সেপশনে ত্রুটিপূর্ণ PC (EPC) ও কারণ সংরক্ষিত হয় এবং পরের ইনস্ট্রাকশনগুলো ফ্লাশ হয়।</li>
+  </ul>
+  <h2><span class="no">১৬</span>ফ্লিনের শ্রেণিবিভাগ (Flynn's Taxonomy, ১৯৬৬)</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:260px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 260 170" width="255">
+      <g class="w">
+        <rect x="60" y="30" width="95" height="60" class="ink fill-b"/>
+        <rect x="155" y="30" width="95" height="60" class="ink-r fill-r"/>
+        <rect x="60" y="90" width="95" height="60" class="ink-p fill-p"/>
+        <rect x="155" y="90" width="95" height="60" class="ink-g fill-g"/>
+      </g>
+      <text x="155" y="14" text-anchor="middle" class="bn s">ডেটা স্ট্রিম: একক | একাধিক</text>
+      <text x="6" y="64" class="bn s">একক</text><text x="6" y="124" class="bn s">একাধিক</text>
+      <text x="107" y="66" text-anchor="middle" class="w6">SISD</text><text x="202" y="66" text-anchor="middle" class="r w6">SIMD</text>
+      <text x="107" y="126" text-anchor="middle" class="p w6">MISD</text><text x="202" y="126" text-anchor="middle" class="g w6">MIMD</text>
+      <text x="130" y="166" text-anchor="middle" class="bn s">↑ সারি: ইনস্ট্রাকশন স্ট্রিম</text>
+    </svg></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">শ্রেণি</th><th class="l">উদাহরণ</th></tr>
+      <tr><td class="l"><b>SISD</b></td><td class="l">ক্লাসিক একক প্রসেসর (ভন নিউম্যান)</td></tr>
+      <tr><td class="l"><b>SIMD</b></td><td class="l"><span class="hl">ভেক্টর ও অ্যারে প্রসেসর, GPU</span>, SSE/AVX</td></tr>
+      <tr><td class="l"><b>MISD</b></td><td class="l">বিরল: রিডান্ড্যান্ট ফল্ট-টলারেন্ট সিস্টেম</td></tr>
+      <tr><td class="l"><b>MIMD</b></td><td class="l">মাল্টিকোর CPU, SMP, ক্লাস্টার</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">১৭</span>I/O সংগঠন</h2><span class="tag">MCQ</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">পদ্ধতি</th><th class="l">কীভাবে</th><th class="l">CPU-এর ভূমিকা</th></tr>
+    <tr><td class="l">প্রোগ্রামড I/O</td><td class="l">CPU স্ট্যাটাস ফ্ল্যাগ পোল করে (busy-wait)</td><td class="l">প্রতি ওয়ার্ডে, সাইকেল নষ্ট</td></tr>
+    <tr><td class="l">ইন্টারাপ্ট-চালিত</td><td class="l">ডিভাইস INT দেয়; CPU ISR চালায়</td><td class="l">প্রতি ওয়ার্ডে, পোলিং নেই</td></tr>
+    <tr><td class="l"><b>DMA</b></td><td class="l">DMA কন্ট্রোলার পুরো ব্লক সরায়</td><td class="l"><span class="hl">শুধু শুরু ও শেষে</span></td></tr>
+    <tr><td class="l">IOP / চ্যানেল</td><td class="l">I/O প্রসেসর চ্যানেল প্রোগ্রাম চালায়</td><td class="l">সবচেয়ে কম</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 280px;align-items:center">
+    <ol class="steps small">
+      <li>CPU DMA কন্ট্রোলারে শুরুর অ্যাড্রেস, ওয়ার্ড সংখ্যা ও দিক লেখে</li>
+      <li>DMAC <b>BR</b> (8086: HOLD) দেয়; CPU বাস সাইকেল শেষ করে <b>BG</b> (HLDA) দেয়</li>
+      <li>DMAC সরাসরি মেমরি ↔ ডিভাইস ডেটা সরায়</li>
+      <li>গণনা = 0 → DMAC বাস ছেড়ে দিয়ে CPU-কে ইন্টারাপ্ট করে</li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 280 130" width="275">
+      <g class="w">
+        <rect x="10" y="10" width="70" height="40" rx="8" class="ink fill-b"/>
+        <rect x="200" y="10" width="70" height="40" rx="8" class="ink-k fill-y"/>
+        <rect x="100" y="80" width="80" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="200" y="80" width="70" height="40" rx="8" class="ink-g fill-g"/>
+        <path class="ink-k" d="M10,64 H270" style="stroke-width:3"/>
+        <path class="ink-k" d="M60,50 V64 M140,80 V64 M235,50 V64 M235,80 V64" style="stroke-width:2.4"/>
+        <path class="ink-p" d="M100,104 H26 V54" marker-start="url(#ahp)" marker-end="url(#ahp)" stroke-dasharray="4 3"/>
+      </g>
+      <text x="45" y="35" text-anchor="middle" class="w6">CPU</text><text x="235" y="35" text-anchor="middle" class="bn w6">মেমরি</text>
+      <text x="140" y="105" text-anchor="middle" class="r w6">DMAC</text><text x="235" y="105" text-anchor="middle" class="bn g w6">ডিস্ক</text>
+      <text x="104" y="58" class="bn s">সিস্টেম বাস</text><text x="40" y="96" class="p s">BR / BG</text>
+    </svg></figure>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> DMA <b>সাইকেল স্টিলিং</b>-এ একবারে এক ওয়ার্ডের জন্য বাস নেয়; <b>বার্স্ট মোডে</b> পুরো ব্লকের জন্য ধরে রাখে। দুই ক্ষেত্রেই ডেটা CPU-এর রেজিস্টার দিয়ে যায় না। চ্যানেল: <b>সিলেক্টর</b> (একবারে একটি দ্রুত ডিভাইস) বনাম <b>মাল্টিপ্লেক্সার</b> (অনেক ধীর ডিভাইস পালাক্রমে)।</div>
+  <div class="pg-no">১২</div>
+</section>
+
+<!-- ============ SHEET 13: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small" style="white-space:nowrap">
+      <p>ফেচ: MAR←PC; MDR←M[MAR], PC+1; IR←MDR</p><p>অ্যাড্রেস বাস n বিট → 2ⁿ লোকেশন</p>
+      <p>PC পরের · IR বর্তমান · MAR ঠিকানা · MDR ডেটা</p><p>8086: ৯টি ফ্ল্যাগ (৬ স্ট্যাটাস + ৩ কন্ট্রোল)</p>
+      <p>X = (A+B)(C+D): ৩/৬/৭/৮টি ইনস্ট্রাকশন</p><p>n বিট অপকোড → 2ⁿটি অপারেশন</p>
+      <p>ডাইরেক্ট EA = A · ইনডাইরেক্ট EA = M[A]</p><p>রিলেটিভ = নতুন PC + A · ইনডেক্সড = A + XR</p>
+      <p>পাইপলাইন: (k + n − 1) সাইকেল</p><p>S = nk/(k + n − 1) → k · η = S/k</p>
+      <p>τ = ধীরতম ধাপ + ল্যাচ</p><p>বাস্তব CPI = 1 + প্রতি ইনস্ট্রা. স্টল</p>
+      <p>সময় = IC × CPI / f</p><p>MIPS = f / (CPI × 10⁶)</p>
+      <p>Amdahl S = 1/((1 − f) + f/s)</p><p>সীমা 1/(1 − f)</p>
+      <p>IEEE সিঙ্গেল 1/8/23, বায়াস 127</p><p>ডাবল 1/11/52, বায়াস 1023</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১৪টি এক-লাইনার</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>সংরক্ষিত প্রোগ্রাম: ভন নিউম্যান, ১৯৪৫</li>
+      <li>আলাদা I ও D মেমরি = হার্ভার্ড</li>
+      <li>পরের ইনস্ট্রাকশনের অ্যাড্রেস → PC</li>
+      <li>অপারেন্ড ইনস্ট্রাকশনেই → ইমিডিয়েট</li>
+      <li>অ্যারে অ্যাক্সেস → ইনডেক্সড মোড</li>
+      <li>স্ট্যাক মেশিনের ADD = ০-অ্যাড্রেস</li>
+      <li>RISC: নির্দিষ্ট দৈর্ঘ্য, load/store</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>কন্ট্রোল মেমরি → মাইক্রোপ্রোগ্রামড</li>
+      <li>হার্ডওয়্যার্ড CU: দ্রুত, কম নমনীয়</li>
+      <li>RAW = ডেটা হ্যাজার্ড → ফরওয়ার্ডিং</li>
+      <li>ব্রাঞ্চ → কন্ট্রোল হ্যাজার্ড → প্রেডিকশন</li>
+      <li>লোড-ইউজ: ফরওয়ার্ডিংয়েও ১টি স্টল</li>
+      <li>GPU / ভেক্টর = SIMD; মাল্টিকোর = MIMD</li>
+      <li>DMA: CPU শুধু শুরু ও শেষে</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> CU ডিকোড করে ও নির্দেশ দেয়, নিজে "এক্সিকিউট" করে না · ক্যাশ মেমরির একটি স্তর, CPU-এর ইউনিট নয় · রিলেটিভ মোডে হালনাগাদ PC · ইমিডিয়েটের EA = অপারেন্ড ফিল্ডের অ্যাড্রেস · পাইপলাইন থ্রুপুট বাড়ায়, ল্যাটেন্সি কমায় না · ধাপ অসমান হলে স্পিডআপ &lt; k · MIPS ও GHz বিভ্রান্ত করে · 7FH + 01H-এ V সেট হয়, C নয়</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> PC দেখায়, IR ধরে, MAR ঠিকানা দেয়, MDR বয়ে আনে · ফেচ = ৩টি T · ৩-২-১-০ → ৩-৬-৭-৮ · লাফ গোনো · হার্ড = হুড়মুড়, মাইক্রো = মডিফাই · একবার ভরাও, তারপর প্রতি টিকে একটি · হ্যাজার্ড SDC → ডুপ্লিকেট, ফরওয়ার্ড, প্রেডিক্ট · সাধারণ ঘটনাটিকে দ্রুত করো · 1-8-23 বায়াস 127</div>
+  <figure class="doodle"><svg viewBox="0 0 600 80" width="560">
+    <g class="w">
+      <rect x="10" y="22" width="90" height="36" rx="10" class="ink-r fill-r"/>
+      <rect x="160" y="22" width="90" height="36" rx="10" class="ink fill-b"/>
+      <rect x="310" y="22" width="90" height="36" rx="10" class="ink fill-b"/>
+      <rect x="460" y="22" width="90" height="36" rx="10" class="ink-g fill-g"/>
+      <path class="ink-k" d="M100,40 H156" marker-end="url(#ahb)"/><path class="ink-k" d="M250,40 H306" marker-end="url(#ahb)"/><path class="ink-k" d="M400,40 H456" marker-end="url(#ahb)"/>
+    </g>
+    <text x="55" y="45" text-anchor="middle" class="r w6">PC</text><text x="205" y="45" text-anchor="middle" class="w6">MAR</text><text x="355" y="45" text-anchor="middle" class="w6">MDR</text><text x="505" y="45" text-anchor="middle" class="g w6">IR</text>
+    <text x="128" y="16" text-anchor="middle" class="s">t1</text><text x="278" y="16" text-anchor="middle" class="s">t2: M[MAR]</text><text x="428" y="16" text-anchor="middle" class="s">t3</text>
+    <text x="280" y="76" text-anchor="middle" class="bn p s">t2-তে PC ← PC + 1, তারপর ডিকোড → এক্সিকিউট → আবার</text>
+  </svg><figcaption>যে ফেচ পথটি RTL-এ লিখতে পারতেই হবে</figcaption></figure>
+  <div class="pg-no">১৩</div>
+</section>
+
+<!-- ============ SHEET 14: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU সংগঠন</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>ভন নিউম্যান মেশিনে ইনস্ট্রাকশন ও ডেটা থাকে:<ol class="opts"><li>দুটি মেমরিতে</li><li>একটি মেমরিতে</li><li>শুধু ROM-এ</li><li>রেজিস্টারে</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>ডিকোড হতে থাকা ইনস্ট্রাকশন কোন রেজিস্টারে থাকে?<ol class="opts"><li>PC</li><li>MAR</li><li>IR</li><li>SP</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>MOV R1, #25 কোন অ্যাড্রেসিং মোড?<ol class="opts"><li>ডাইরেক্ট</li><li>ইনডাইরেক্ট</li><li>ইনডেক্সড</li><li>ইমিডিয়েট</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>৫-ধাপ পাইপলাইন, ১০০টি ইনস্ট্রাকশন, স্টল নেই। সাইকেল?<ol class="opts"><li>104</li><li>500</li><li>105</li><li>100</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>স্ট্যাক মেশিনের ADD-এ অ্যাড্রেস ফিল্ড কয়টি?<ol class="opts"><li>1</li><li>0</li><li>2</li><li>3</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>2 GHz CPU, গড় CPI 4 হলে:<ol class="opts"><li>800 MIPS</li><li>8000 MIPS</li><li>500 MIPS</li><li>200 MIPS</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>রান টাইমের অর্ধেক 2× দ্রুত করা হলো। মোট স্পিডআপ:<ol class="opts"><li>2</li><li>1.5</li><li>1.25</li><li>1.33</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>অপারেন্ড ফরওয়ার্ডিং মূলত কমায়:<ol class="opts"><li>ডেটা হ্যাজার্ড</li><li>স্ট্রাকচারাল</li><li>কন্ট্রোল হ্যাজার্ড</li><li>ক্যাশ মিস</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>GPU / ভেক্টর প্রসেসর ফ্লিনের কোন শ্রেণিতে?<ol class="opts"><li>SISD</li><li>SIMD</li><li>MISD</li><li>MIMD</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>DMA-তে CPU যুক্ত থাকে:<ol class="opts"><li>প্রতি ওয়ার্ডে</li><li>কখনো না</li><li>শুরু ও শেষে</li><li>শুধু ত্রুটিতে</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ঘ · ৪-ক · ৫-খ · ৬-গ · ৭-ঘ · ৮-ক · ৯-খ · ১০-গ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> একটি ৫-ধাপ পাইপলাইনের ধাপ-বিলম্ব 150, 120, 160, 140, 130 ps এবং ল্যাচ বিলম্ব 20 ps। ১০০০টি ইনস্ট্রাকশনের জন্য নির্ণয় করো (ক) ক্লক পিরিয়ড, (খ) পাইপলাইনসহ ও পাইপলাইন ছাড়া সময়, (গ) স্পিডআপ, (ঘ) ২০% ইনস্ট্রাকশন ২-সাইকেল পেনাল্টির ব্রাঞ্চ হলে সময়। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>τ = ধীরতম ধাপ + ল্যাচ = 160 + 20 = <b>180 ps</b> <i class="mk">১</i></li>
+    <li>পাইপলাইনে: (5 + 999) × 180 = <b>180 720 ps</b>; পাইপলাইন ছাড়া: 1000 × 700 = <b>700 000 ps</b> <i class="mk">৩</i></li>
+    <li>স্পিডআপ = 700 000 / 180 720 ≈ <span class="circ">3.87</span> (সীমা 3.89, 5 নয়: ধাপ অসমান) <i class="mk">২</i></li>
+    <li>স্টল = 1000 × 0.2 × 2 = 400 → (1004 + 400) × 180 = <b>252 720 ps</b>, S ≈ 2.77 <i class="mk">২</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>ফেচ, ADD, ইন্টারাপ্ট সাইকেল RTL-এ</li>
+        <li>প্রতিটি মোডে EA ও অপারেন্ড</li>
+        <li>(A+B)(C+D) ৩/২/১/০-অ্যাড্রেস কোডে</li>
+        <li>পাইপলাইন, CPI, MIPS, Amdahl অঙ্ক</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① হার্ডওয়্যার্ড বনাম মাইক্রোপ্রোগ্রামড<br>② RISC বনাম CISC, ছয়টি পার্থক্য<br>③ তিন হ্যাজার্ড ও প্রতিকার<br>④ IEEE 754-এ 12.375</div>
+  </div>
+  <div class="pg-no">১৪</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

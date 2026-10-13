@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>টেস্টিং কৌশল, মেইনটেন্যান্স, গুণমান ও মেট্রিক্স: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+<style>.mcq-set .mcq { font-size: 10.8pt; line-height: 5.2mm; }</style>
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="1.6"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>সফটওয়্যার ইঞ্জিনিয়ারিং · টেস্টিং ও মেইনটেন্যান্স</span><span>তারিখ: ১১.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ: রিভিশন নোটবুক</span><span>✎ টপারের নোট</span></div>
+  <h1 class="title"><span class="u">টেস্টিং, মেইনটেন্যান্স, গুণমান ও মেট্রিক্স</span></h1>
+  <p class="subtitle">চার স্তর · ডিবাগিং · CAPPP · SQA · গুণমান মডেল ও মেট্রিক্স: ১৩ পাতায় পরীক্ষার জন্য প্রস্তুত</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="556">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="118" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M244,132 L170,74 M244,168 L170,226 M320,106 L320,58 M396,132 L470,74 M396,168 L470,226 M320,194 L320,244 M236,150 L176,150 M404,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="12" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="14" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="466" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="246" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k s w6">টেস্টিং · মেইনটেন্যান্স</text>
+      <text x="320" y="168" text-anchor="middle" class="bn r s">টপিক মানচিত্র</text>
+      <text x="140" y="65" text-anchor="middle" class="bn s">ইউনিট ও ইন্টিগ্রেশন</text>
+      <text x="320" y="36" text-anchor="middle" class="bn r s w6">ভি ও ভি · সিএমএমআই লেভেল ৩ ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn s">ভ্যালিডেশন · সিস্টেম</text>
+      <text x="94" y="155" text-anchor="middle" class="bn r s w6">ডিবাগিং ★</text>
+      <text x="546" y="155" text-anchor="middle" class="bn g s w6">মেইনটেন্যান্স</text>
+      <text x="140" y="245" text-anchor="middle" class="bn s">গুণমান ফ্যাক্টর</text>
+      <text x="320" y="272" text-anchor="middle" class="bn r s w6">মেট্রিক্স ও খরচ ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn s">এসকিএএ</text>
+    </svg>
+  </figure>
+  <div class="cols">
+    <div>
+      <h3>এই নোটে যা আছে</h3>
+      <ul>
+        <li><span class="hl">টেস্টিংয়ের চার স্তর</span> — ইউনিট থেকে সিস্টেম পর্যন্ত</li>
+        <li><span class="hl">ভেরিফিকেশন বনাম ভ্যালিডেশন</span> — সবচেয়ে সাধারণ বিভ্রান্তি</li>
+        <li><span class="hl">ইন্টিগ্রেশনের চার কৌশল</span> — বিগ ব্যাং থেকে স্যান্ডউইচ</li>
+        <li><span class="hl">ডিবাগিংয়ের পাঁচ ধাপ</span> ও কৌশল</li>
+        <li><span class="hl">মেইনটেন্যান্সের চার প্রকার</span> — কারেক্টিভ থেকে প্রিভেন্টিভ</li>
+        <li><span class="hl">ম্যাককলের ১১টি গুণমান ফ্যাক্টর</span> তিনটি ক্যাটাগরিতে</li>
+        <li><span class="hl">মেট্রিক্সের তিন পরিবার</span> ও MTBF, MTTR</li>
+      </ul>
+    </div>
+    <div>
+      <div class="sticky" style="float:none;width:auto"><b>কীভাবে ব্যবহার করবেন:</b> প্রথমে পাঁচটি স্তরের নাম ও প্রশ্ন মুখস্থ করুন, তারপর প্রতিটি সংজ্ঞার সাথে <i class="mk">উদাহরণ</i> জুড়ে দিন। পরীক্ষায় প্রায় সবসময় "সংজ্ঞা + উদাহরণ + ব্যতিক্রম" — এই তিনটি ধারাই আসে।</div>
+      <div class="trick">মনে রাখার সূত্র: <b>যাচাই</b> করা হয় "আমরা কি সঠিকভাবে তৈরি করছি?" আর <b>বৈধতা</b> যাচাই করা হয় "আমরা কি সঠিক জিনিস তৈরি করছি?"</div>
+    </div>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: V&V + four levels ============ -->
+<section class="page">
+  <div class="pg-head"><span>ভেরিফিকেশন ও স্তর</span><span>টেস্টিং কৌশল</span></div>
+  <h2>১. ভেরিফিকেশন বনাম ভ্যালিডেশন</h2>
+  <div class="cols">
+    <div>
+      <p><b>ভেরিফিকেশন</b> — "আমরা কি সঠিকভাবে তৈরি করছি?" ডিজাইন স্পেসিফিকেশন অনুযায়ী আচরণ কি ঠিক? এটি <span class="circ">অভ্যন্তরীণ</span> কাজ, বিনা অনুমতিরেই চলে।</p>
+      <p><b>ভ্যালিডেশন</b> — "আমরা কি সঠিক জিনিস তৈরি করছি?" গ্রাহকের প্রয়োজন পূরণ হচ্ছে কি? এর জন্য <span class="hl">SRS-এর সাথে তুলনা</span> করতে হয় এবং এতে <span class="circ">গ্রাহক</span> জড়িত।</p>
+      <div class="mnote" style="float:none;width:auto">দুটো একসাথে <b>ভি ও ভি (V&amp;V)</b>। ভ্যালিডেশন ছাড়া ভেরিফিকেশন অসম্পূর্ণ — সঠিকভাবে ভুল জিনিস বানানোও সম্ভব।</div>
+    </div>
+    <div>
+      <figure class="doodle">
+        <svg viewBox="0 0 320 300" width="236">
+          <g class="w">
+            <rect x="60" y="10" width="200" height="50" rx="16" class="ink-b fill-b"/>
+            <rect x="80" y="92" width="160" height="46" rx="14" class="ink fill-g"/>
+            <rect x="80" y="170" width="160" height="46" rx="14" class="ink-r fill-r"/>
+            <rect x="80" y="244" width="160" height="46" rx="14" class="ink fill-r"/>
+            <path class="ink-b" d="M160,60 L160,92 M160,138 L160,170 M160,216 L160,244" marker-end="url(#ahb)"/>
+          </g>
+          <text x="160" y="32" text-anchor="middle" class="bn b s w6">ইউনিট টেস্টিং</text>
+          <text x="160" y="47" text-anchor="middle" class="bn s">একক উপাদান</text>
+          <text x="160" y="112" text-anchor="middle" class="bn k s w6">ইন্টিগ্রেশন</text>
+          <text x="160" y="127" text-anchor="middle" class="bn s">মডিউল মিথস্ক্রিয়া</text>
+          <text x="160" y="190" text-anchor="middle" class="bn k s w6">ভ্যালিডেশন</text>
+          <text x="160" y="205" text-anchor="middle" class="bn s">SRS অনুযায়ী</text>
+          <text x="160" y="264" text-anchor="middle" class="bn r s w6">সিস্টেম টেস্টিং</text>
+          <text x="160" y="280" text-anchor="middle" class="bn s">পুরো সিস্টেম</text>
+        </svg>
+      </figure>
+    </div>
+  </div>
+
+  <h2>২. টেস্টিংয়ের চার স্তর, ক্রমে</h2>
+  <div class="cols">
+    <div>
+      <ol>
+<li><b>ইউনিট টেস্টিং</b> — পৃথক উপাদান বিচ্ছিন্নভাবে পরীক্ষা। সাধারণত <span class="hl">JUnit</span> দিয়ে স্বয়ংক্রিয়। সবচেয়ে সস্তা।</li>
+        <li><b>ইন্টিগ্রেশন টেস্টিং</b> — মডিউলগুলি <span class="hl">কীভাবে একে অপরের সাথে যোগাযোগ করে</span> তা পরীক্ষা করে।</li>
+        <li><b>ভ্যালিডেশন টেস্টিং</b> — SRS-এর ভিত্তিতে গ্রাহকের প্রয়োজন পূরণ হচ্ছে কি।</li>
+        <li><b>সিস্টেম টেস্টিং</b> — সম্পূর্ণ সিস্টেম; কার্যকরী ও <span class="circ">অকার্যকরী</span> উভয়ই।</li>
+      </ol>
+      <p class="small">ভেরিফিকেশন <span class="circ">অভ্যন্তরীণ</span> — ডেভেলপার ও পরীক্ষক করে। ভ্যালিডেশন <span class="circ">বাহ্যিক</span> — এতে গ্রাহক বা প্রকৃত ব্যবহারকারী জড়িত।</p>
+      <div class="trick">পাঁচটি স্তরের নাম এক বাক্যে: <b>U-I-V-S-T</b> — ইউনিট, ইন্টিগ্রেশন, ভ্যালিডেশন, সিস্টেম, টেস্টিং-অব-ইনস্টল।</div>
+    </div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: integration strategies ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইন্টিগ্রেশন টেস্টিং</span><span>চার কৌশল</span></div>
+  <h2>৩. ইন্টিগ্রেশন টেস্টিং: চার কৌশল</h2>
+  <div class="cols">
+    <div>
+      <table class="hand small">
+        <tr><th>কৌশল</th><th>ক্রম</th><th>সহায়ক</th></tr>
+        <tr><td><b>বিগ ব্যাং</b></td><td>উপর থেকে নিচে, সব একসাথে</td><td>ড্রাইভার</td></tr>
+        <tr><td><b>টপ-ডাউন</b></td><td>মূল থেকে নিচে ক্রমে</td><td><span class="hl">স্টাব</span></td></tr>
+        <tr><td><b>বটম-আপ</b></td><td>নিচ থেকে উপরে ক্রমে</td><td><span class="hl">ড্রাইভার</span></td></tr>
+        <tr><td><b>স্যান্ডউইচ</b></td><td>উপরে এক, নিচে এক — বার্তালী</td><td>দুটোই</td></tr>
+      </table>
+      <p class="small"><b>স্টাব (Stub)</b> হলো ক্ষণস্থায়ী নকল — কোনো মডিউলকে বদলে বসানো হয় যাতে উপরের মডিউল পরীক্ষা করা যায়, কিন্তু ভেতরে কাজ করে না। <b>ড্রাইভার (Driver)</b> এর উল্টো — নিচের মডিউলের সাময়িক কোড, যা পরীক্ষা কোডকে কল করে।</p>
+      <div class="trick">পরীক্ষায় শুধু জোড়া মনে রাখুন: <b>স্টাব ↔ টপ-ডাউন</b>, <b>ড্রাইভার ↔ বটম-আপ</b>। টপ-ডাউনে উপরের মডিউল আগে আসে, তাই তার নিচেরটা নকল করা হয় = স্টাব। বটম-আপে নিচের মডিউল আগে আসে, তাই তার উপরেরটা কল করানো হয় = ড্রাইভার।</div>
+      <div class="mnote" style="float:none;width:auto">বড় সিস্টেমে বাস্তবে <b>স্যান্ডউইচ</b> ব্যবহার হয়, কারণ এতে মিডলেয়ার পরীক্ষা দ্রুত হয় এবং বিভাগীয়ভাবে দল বিভক্ত করা যায়।</div>
+      <h3>কৌশল বাছাইয়ের নিয়ম</h3>
+      <table class="hand small">
+        <tr><th>পরিস্থিতি</th><th>বেছে নিন</th></tr>
+        <tr><td>উপরের মডিউল স্থির, নিচের বদলায়</td><td>টপ-ডাউন</td></tr>
+        <tr><td>নিচের মডিউল স্থির, উপরের বদলায়</td><td>বটম-আপ</td></tr>
+        <tr><td>দুই পাশই বদলায়, দ্রুত ফলাফল দরকার</td><td>স্যান্ডউইচ</td></tr>
+      </table>
+      <div class="trick">তিনটি কৌশলই আসলে একই সমস্যা সমাধান করে — <b>অসম্পূর্ণ মডিউলের বদলে সাময়িক কিছু বসানো</b>। পার্থক্য শুধু সেই সাময়িক জিনিসটি <span class="circ">উপরে</span> নাকি <span class="circ">নিচে</span> বসছে।</div>
+    </div>
+    <div>
+      <figure class="doodle">
+        <svg viewBox="0 0 330 290" width="300">
+          <g class="w">
+            <rect x="95" y="8" width="140" height="38" rx="12" class="ink-b fill-b"/>
+            <rect x="75" y="66" width="180" height="34" rx="12" class="ink fill-g"/>
+            <rect x="75" y="120" width="180" height="34" rx="12" class="ink fill-g"/>
+            <rect x="75" y="174" width="180" height="34" rx="12" class="ink fill-g"/>
+            <rect x="95" y="236" width="140" height="38" rx="12" class="ink-b fill-b"/>
+            <path class="ink-b" d="M165,46 L165,66 M165,100 L165,120 M165,154 L165,174 M165,208 L165,236" marker-end="url(#ahb)"/>
+            <path class="ink-r" d="M255,100 L295,120 M255,154 L295,174" marker-end="url(#ahr)"/>
+          </g>
+          <text x="165" y="32" text-anchor="middle" class="bn b s w6">ইউজার ইন্টারফেস</text>
+          <text x="165" y="88" text-anchor="middle" class="bn k s">অ্যাকাউন্ট</text>
+          <text x="165" y="142" text-anchor="middle" class="bn k s">অর্ডার</text>
+          <text x="165" y="196" text-anchor="middle" class="bn k s">পেমেন্ট</text>
+          <text x="165" y="260" text-anchor="middle" class="bn b s w6">ডেটাবেস</text>
+          <text x="300" y="145" text-anchor="middle" class="bn r s">উপরে</text>
+          <text x="300" y="160" text-anchor="middle" class="bn r s">ও নিচে</text>
+        </svg>
+      </figure>
+      <div class="exam">
+        <b>প্রশ্ন:</b> টপ-ডাউন ইন্টিগ্রেশনে উপরের মডিউল পরীক্ষার জন্য নিচের মডিউলের যে স্থানীয় বিকল্প বসানো হয়, তার নাম কী? এবং সেটি কোন দিক থেকে আসে?
+        <div class="anskey">উত্তর: স্টাব — উপরের মডিউল থেকে নিচের দিকে (১-ক)</div>
+      </div>
+    </div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: validation + system testing ============ -->
+<section class="page">
+  <div class="pg-head"><span>ভ্যালিডেশন ও সিস্টেম টেস্টিং</span><span>চতুর্থ স্তর</span></div>
+  <h2>৪. ভ্যালিডেশন ও সিস্টেম টেস্টিং</h2>
+  <div class="cols">
+    <div>
+      <p><b>ভ্যালিডেশন টেস্টিং</b> — গ্রাহকের প্রয়োজনীয়তা পূরণ করে কিনা। SRS এর ভিত্তিতে হয়।</p>
+      <div class="mnote" style="float:none;width:auto"><b>উদাহরণ:</b> "সিস্টেম ভুল পাসওয়ার্ড দিয়ে লগইন অনুমতি দেবে না" — এই শর্ত পূরণ হচ্ছে কি না পরীক্ষা করুন। ভুল পাসওয়ার্ডে অনুমতি দিলে ভ্যালিডেশন ব্যর্থ।</div>
+      <p><b>সিস্টেম টেস্টিং</b> — ইন্টিগ্রেশনের পরে সম্পূর্ণ সিস্টেম পরীক্ষা করে। কার্যকরী ও অকার্যকরী উভয় অন্তর্ভুক্ত।</p>
+      <table class="hand small">
+        <tr><th>প্রকার</th><th>কী দেখে</th></tr>
+        <tr><td>লোড টেস্টিং</td><td>একসাথে অনেক ব্যবহারকারী</td></tr>
+        <tr><td>স্ট্রেস টেস্টিং</td><td>চরম কাজের চাপ</td></tr>
+        <tr><td>সিকিউরিটি টেস্টিং</td><td>SQL ইনজেকশন, XSS</td></tr>
+        <tr><td>কম্প্যাটিবিলিটি টেস্টিং</td><td>ব্রাউজার, ডিভাইস</td></tr>
+      </table>
+      <div class="trick">ভ্যালিডেশন বলে <b>"সিস্টেমটা ঠিক কাজ করছে"</b> আর সিস্টেম টেস্টিং বলে <b>"সিস্টেমটা ভাঙলেও টিকে থাকে"</b>। শেষটা ইউজারের জন্য সবচেয়ে জরুরি।</div>
+      <h3>অযাচাইকৃত পথের গুরুত্ব</h3>
+      <p class="small">প্রতিটি টেস্ট কেবল একটি নির্দিষ্ট আচরণ যাচাই করে, পুরো সিস্টেম নয়। তাই অযাচাইকৃত পথ থেকে যায় এবং সেখান থেকেই বেশিরভাগ ত্রুটি বেরিয়ে আসে। তাই <span class="hl">পরীক্ষার পরিমাণ ও মান</span>—দুটোই গুরুত্বপূর্ণ।</p>
+      <div class="mnote" style="float:none;width:auto">উদাহরণ: একটি ফর্মে ১০টি ঘর আছে, কিন্তু পরীক্ষা করা হয়েছে ৮টি বৈধ মানের জন্য। বাকি ২টি ঘরে যে ভুল ইনপুট ঢুকলে ক্র্যাশ হবে, তা পরীক্ষা ধরতে পারবে না। <i class="mk">★</i></div>
+      <div class="trick">ভ্যালিডেশনের চার প্রচলিত কৌশল মনে রাখুন: <b>ক</b>োড চালিয়ে (স্ট্যাটিক), <b>দ</b>কুমেন্ট লিখিয়ে (পেপার), সরাসরি <b>ব্যবহার</b> করে, এবং <b>পরীক্ষা</b> করে।</div>
+    </div>
+    <div>
+      <div class="sticky" style="float:none;width:auto"><b>লোড বনাম স্ট্রেস — পার্থক্যটা মনে রাখুন</b></div>
+      <table class="hand small">
+        <tr><th>&nbsp;</th><th>লোড</th><th>স্ট্রেস</th></tr>
+        <tr><td>উদ্দেশ্য</td><td>স্বাভাবিক ভার মাপা</td><td>সীমা ভাঙা</td></tr>
+        <tr><td>প্রশ্ন</td><td>কতজন সামলায়?</td><td>কোথায় ভাঙে?</td></tr>
+        <tr><td>ফলাফল</td><td>টাইম আউট</td><td>ত্রুটি, ক্র্যাশ</td></tr>
+      </table>
+      <div class="mnote" style="float:none;width:auto">উদাহরণ: একটি ওয়েবসাইট সাধারণত ১০০ জন ব্যবহারকারী সামলায় (লোড)। কিন্তু ৫০,০০০ জন একসাথে ঢুকলে কোথায় ভাঙে — সেটাই স্ট্রেস টেস্টিং। <i class="mk">★</i></div>
+      <div class="exam">
+        <b>প্রশ্ন:</b> SQL ইনজেকশন কোন ধরনের টেস্টিংয়ে ধরা পড়ে?
+        <div class="anskey">উত্তর: সিকিউরিটি টেস্টিং (১-গ)</div>
+      </div>
+    </div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: debugging ============ -->
+<section class="page">
+  <div class="pg-head"><span>ডিবাগিং</span><span>ত্রুটি সনাক্ত ও সমাধান</span></div>
+  <h2>৫. ডিবাগিং: কারণ খুঁজে বের করা ও সরানো</h2>
+  <div class="cols">
+    <div>
+      <p><b>ডিবাগিং</b> হলো ত্রুটি খোঁজা, বিশ্লেষণ এবং ঠিক করার প্রক্রিয়া। পাঁচটি ধাপ:</p>
+      <ol>
+        <li>বাগ <b>পুনরুত্পাদন</b> করুন</li>
+        <li>অবস্থান <b>চিহ্নিত</b> করুন (লগ, ব্রেকপয়েন্ট)</li>
+        <li><span class="hl">মূল কারণ বিশ্লেষণ</span> করুন</li>
+        <li>কোড <b>ঠিক</b> করুন</li>
+        <li><span class="hl">পুনরায় পরীক্ষা</span> করুন</li>
+      </ol>
+      <div class="trick">তিন নম্বর ধাপটাই আসল কাজ। বেশিরভাগ ছাত্র লক্ষণ দেখে সরাসরি কোড বদলে ফেলে, ফলে <b>মূল কারণ</b> বদলে <b>লক্ষণ</b> চলে যায়। পরীক্ষায় "ডিবাগিংয়ের পাঁচ ধাপ" জিজ্ঞেস করলেই এই ক্রম লিখতে হবে।</div>
+      <div class="mnote" style="float:none;width:auto"><b>উদাহরণ (শূন্য দ্বারা ভাগ):</b></div>
+      <pre class="code tiny">int divide(int a, int b) {
+    if(b == 0)
+        throw new IllegalArgumentException("b শূন্য হতে পারে না");
+    return a / b;
+}</pre>
+    </div>
+    <div>
+      <figure class="doodle">
+        <svg viewBox="0 0 300 280" width="270">
+          <g class="w">
+            <ellipse cx="150" cy="50" rx="86" ry="30" class="ink-k fill-y"/>
+            <ellipse cx="150" cy="140" rx="86" ry="30" class="ink-b fill-b"/>
+            <ellipse cx="150" cy="230" rx="86" ry="30" class="ink-r fill-r"/>
+            <path class="ink-b" d="M236,58 L250,132" marker-end="url(#ahb)"/>
+            <path class="ink-r" d="M236,158 L250,222" marker-end="url(#ahr)"/>
+            <path class="ink" d="M64,58 L50,132" marker-end="url(#ah)"/>
+          </g>
+          <text x="150" y="48" text-anchor="middle" class="bn k s w6">অবস্থান চিহ্নিত</text>
+          <text x="150" y="62" text-anchor="middle" class="bn s">লগ · ব্রেকপয়েন্ট</text>
+          <text x="150" y="138" text-anchor="middle" class="bn k s w6">মূল কারণ বিশ্লেষণ</text>
+          <text x="150" y="152" text-anchor="middle" class="bn s">কেন ঘটল?</text>
+          <text x="150" y="228" text-anchor="middle" class="bn k s w6">ঠিক করে পুনরায় পরীক্ষা</text>
+          <text x="150" y="242" text-anchor="middle" class="bn s">ট্রুটি আর আসে না</text>
+        </svg>
+      </figure>
+      <p class="small"><b>ডিবাগিংয়ের কৌশল:</b> <span class="hl">প্রিন্ট ডিবাগিং</span> (সবচেয়ে সহজ), <span class="hl">ডিবাগার টুল</span> (গাঢা কাজের জন্য), <span class="hl">বাইনারি সার্চ</span> (মাঝের অংশ মুছে দিয়ে অর্ধেক করে নেওয়া)।</p>
+      <h3>ত্রুটির কয়েকটি সাধারণ কারণ</h3>
+      <ul class="tight small">
+        <li><span class="hl">অফ-বাই-ওয়ান ত্রুটি</span> — শর্ত বা সীমানা ভুল লেখা</li>
+        <li><span class="hl">বিজলী ত্রুটি</span> — একই কোড একসাথে দুই জায়গায় বদলানো, এক জায়গা বাদ পড়ে</li>
+        <li><span class="hl">পড়া না পড়া ভুল</span> — ধরা পড়েনি এমন কোড</li>
+        <li><span class="hl">রাইস ত্রুটি</span> — দুই জায়গায় একই সময় লেখা হয়েছে</li>
+      </ul>
+      <div class="mnote" style="float:none;width:auto">প্রথম ও দ্বিতীয়টি সবচেয়ে সাধারণ, আর তিন ও চতুর্থটি ব্যবহারকারীর চোখে ধরা পড়ে না বলেই কঠিন। <span class="circ">রাইস ত্রুটি</span> শনাক্ত করতে টেস্ট দরকার। <i class="mk">★</i></div>
+    </div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: maintenance types ============ -->
+<section class="page">
+  <div class="pg-head"><span>মেইনটেন্যান্স</span><span>কেন এটি আধিপত্য</span></div>
+  <h2>৬. সফটওয়্যার মেইনটেন্যান্স: কেন এটি আধিপত্য করে</h2>
+  <div class="cols">
+    <div>
+      <p>গবেষণায় দেখা গেছে সফটওয়্যার জীবদ্দশায়কালের <span class="hl">৬০-৮০%</span> সময় মেইনটেন্যান্সে যায়, উন্নয়নে নয়। কারণ সফটওয়্যার অবিচ্ছিন্ন সেবা দেয় — গ্রাহকের চাহিদা বদলায়, পরিবেশ বদলায়, আইন বদলায়।</p>
+      <div class="mnote" style="float:none;width:auto">একটি কারণ: সফটওয়্যারকে উৎপাদন শেষে "পাঠিয়ে দেওয়া" হয়, কিন্তু তা সারাজীবন <b>আপডেট ও পরিবর্তনের</b> জন্য তৈরি।</div>
+      <div class="sticky pink" style="float:none;width:auto;margin:2mm 0 2mm 0"><b>মেইনটেন্যান্সের চার প্রকার (CAPPP)</b></div>
+      <table class="hand small">
+        <tr><th>প্রকার</th><th>কখন হয়</th><th>উদাহরণ</th></tr>
+        <tr><td><b>কারেক্টিভ</b></td><td>ত্রুটি ঠিক করা</td><td>লগইন বাগ ঠিক করা</td></tr>
+        <tr><td><b>অ্যাডাপটিভ</b></td><td>পরিবেশ বদল</td><td>নতুন OS সমর্থন</td></tr>
+        <tr><td><b>পারফেক্টিভ</b></td><td>গতি বাড়ানো</td><td>SQL কোয়েরি দ্রুত করা</td></tr>
+        <tr><td><b>প্রিভেন্টিভ</b></td><td>ভবিষ্যতের জন্য</td><td>রিফ্যাক্টরিং</td></tr>
+      </table>
+    </div>
+    <div>
+      <figure class="doodle">
+        <svg viewBox="0 0 330 300" width="300">
+          <g class="w">
+            <rect x="15" y="14" width="140" height="60" rx="16" class="ink-r fill-r"/>
+            <rect x="175" y="14" width="140" height="60" rx="16" class="ink-b fill-b"/>
+            <rect x="15" y="120" width="140" height="60" rx="16" class="ink-g fill-g"/>
+            <rect x="175" y="120" width="140" height="60" rx="16" class="ink fill-y"/>
+            <path class="ink" d="M155,44 L175,44 M155,150 L175,150"/>
+            <path class="ink-k" d="M85,74 L85,120" marker-end="url(#ah)"/>
+            <path class="ink-k" d="M245,150 L245,74" marker-end="url(#ah)"/>
+          </g>
+          <text x="85" y="40" text-anchor="middle" class="bn k s w6">কারেক্টিভ</text>
+          <text x="85" y="56" text-anchor="middle" class="bn s">ত্রুটি ঠিক</text>
+          <text x="245" y="40" text-anchor="middle" class="bn k s w6">অ্যাডাপটিভ</text>
+          <text x="245" y="56" text-anchor="middle" class="bn s">পরিবেশ বদল</text>
+          <text x="85" y="146" text-anchor="middle" class="bn k s w6">পারফেক্টিভ</text>
+          <text x="85" y="162" text-anchor="middle" class="bn s">গতি বাড়ানো</text>
+          <text x="245" y="146" text-anchor="middle" class="bn k s w6">প্রিভেন্টিভ</text>
+          <text x="245" y="162" text-anchor="middle" class="bn s">ভবিষ্যৎ রক্ষা</text>
+          <text x="165" y="205" text-anchor="middle" class="bn r s w6">সব ধরনের কাজই মেইনটেন্যান্স</text>
+          <text x="165" y="230" text-anchor="middle" class="bn s">শুধু বাগ ফিক্স নয়</text>
+        </svg>
+      </figure>
+      <div class="trick">মনে রাখার সূত্র: <b>কা-অ-পা-প্রি</b> — কারেক্টিভ বাগ, অ্যাডাপটিভ পরিবেশ, পারফেক্টিফ গতি, প্রিভেন্টিভ ভবিষ্যৎ। চারটিই আসলে "আমরা সঠিকভাবে বানিয়েছি কি না" যাচাই করে।</div>
+      <h3>কারেক্টিভ মেইনটেন্যান্সের কয়েকটি রূপ</h3>
+      <p class="small"><b>শব্দের অর্থ বদলানো</b> — অন্যরা বোঝে না এমন শব্দ ব্যবহার। <b>ডেটা কাঠামো সংশোধন</b> — স্কিমা বা কোডের ভেতরের কাঠামো। <b>প্রান্তিক শর্ত সংশোধন</b> — দুই পরিস্থিতির মধ্যে সীমানা। <b>ডকুমেন্টেশন সংশোধন</b> — সহায়ক পাঠ বা নির্দেশনা।</p>
+      <div class="mnote" style="float:none;width:auto">কারেক্টিভ মেইনটেন্যান্স প্রায় সবসময়ই চলে, তাই খরচের সবচেয়ে বড় অংশ এখানে। কিন্তু কারণ বোঝা যায় না বলে এটি সবচেয়ে <span class="circ">কম গণনীভুক্ত</span> কাজ। <i class="mk">★</i></div>
+      <h3>প্রভাব বিশ্লেষণ কেন দরকার</h3>
+      <p class="small">প্রতিটি পরিবর্তন করার আগে জানতে হয় সেটি কোথায় কোথায় প্রভাব ফেলবে। ধরা যাক, লগইনের <b>পাসওয়ার্ড যাচাই</b> বদলাতে হলে — ডেটাবেস স্কিমা, ইন্টারফেস, টেস্ট কেস, ডকুমেন্টেশন, এমনকি গ্রাহকের অভ্যাসও প্রভাবিত হতে পারে।</p>
+      <div class="mnote" style="float:none;width:auto">এই কারণেই ছোট পরিবর্তনেরও প্রভাব বিশ্লেষণ করা হয় — "ছোট বদল" বলে কিছু নেই। পরীক্ষায় "মেইনটেন্যান্সে প্রভাব বিশ্লেষণ কেন করা হয়?" — উত্তর: পরিবর্তনের পার্শ্বপ্রতিক্রিয়া ও ঝুঁকি কমাতে। <span class="circ">★</span></div>
+    </div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: maintenance process ============ -->
+<section class="page">
+  <div class="pg-head"><span>মেইনটেন্যান্স প্রক্রিয়া</span><span>ছয় ধাপ</span></div>
+  <h2>৭. মেইনটেন্যান্সের প্রক্রিয়া</h2>
+  <div class="cols">
+    <div>
+      <p>প্রতিটি মেইনটেন্যান্স কাজ একই ছয় ধাপের ধারা অনুসরণ করে:</p>
+      <ol>
+        <li><b>পরিবর্তনের ধরন নির্ধারণ</b> — কোন প্রকারের মেইনটেন্যান্স (কারেক্টিভ নাকি অন্য কিছু)</li>
+        <li><b>পরিবর্তন বিশ্লেষণ</b> — কী কী অবস্থান প্রভাবিত হবে</li>
+        <li><b>ডিজাইন পরিকল্পনা</b> — কোথায় কী সম্পাদনা হবে</li>
+        <li><b>কোড বাস্তবায়ন</b> — প্রকৃত সম্পাদনা</li>
+        <li><b>পরীক্ষা ও যাচাই</b> — ভ্যালিডেশন সহ</li>
+        <li><b>রিলিজ</b> — নতুন সংস্করণ প্রকাশ</li>
+      </ol>
+      <div class="mnote" style="float:none;width:auto">প্রথম ও তৃতীয় ধাপ সবচেয়ে গুরুত্বপূর্ণ কারণ এখানেই ভুল হলে পরে খরচ বাড়ে। পরীক্ষায় প্রায়ই "মেইনটেন্যান্স প্রক্রিয়ার প্রথম ধাপ কী?" — উত্তর: <b>পরিবর্তনের ধরন নির্ধারণ</b>। <i class="mk">★</i></div>
+      <div class="sticky pink" style="float:none;width:auto;margin:2mm 0 2mm 0"><b>ধাপ ২ ও ৫-এর মধ্যে পার্থক্য:</b> বিশ্লেষণ হলো "কী করতে হবে বুঝে নেওয়া", বাস্তবায়ন হলো "সেটা করা"। পরীক্ষা করে দেখা হয় কাজটা ঠিক হয়েছে কি না — এটাই যাচাই।</div>
+      <div class="sticky" style="float:none;width:auto;margin:2mm 0 2mm 0"><b>প্রক্রিয়াটি কেন এত সুনির্দিষ্ট</b></div>
+      <p class="small">মেইনটেন্যান্স ছাড়া কোনো সফটওয়্যার নির্ভরযোগ্যভাবে চলতে পারে না — বাস্তব সিস্টেমের সাথে এর একটি চুক্তি থাকে: পরিবেশ বদলালে সফটওয়্যারও বদলাতে হবে। তাই প্রতিটি ধাপ আলাদা করে নির্ধারণ করা হয়, যাতে কোনো ধাপ বাদ না পড়ে।</p>
+      <div class="mnote" style="float:none;width:auto">একই কারণে মেইনটেন্যান্সের খরচ অভ্যন্তরীণ উন্নয়নের চেয়ে অনেক বেশি — কোডটি ইতিমধ্যে ব্যবহৃত অবস্থায় থাকে, অনেক ব্যবহারকারীর উপর নির্ভরশীল, এবং পরিবর্তনের পার্শ্বপ্রতিক্রিয়া অনেক বেশি। <i class="mk">★</i></div>
+    </div>
+    <div>
+      <div class="exam">
+        <b>প্রশ্ন:</b> মেইনটেন্যান্স প্রক্রিয়ার দ্বিতীয় ধাপে কী করা হয়?
+        <div class="anskey">উত্তর: পরিবর্তন বিশ্লেষণ — কোন কোন অবস্থান প্রভাবিত হবে তা নির্ধারণ (১-খ)</div>
+      </div>
+      <div class="exam">
+        <b>প্রশ্ন:</b> ষষ্ঠ ধাপে কী হয়?
+        <div class="anskey">উত্তর: রিলিজ — সংশোধিত সংস্করণ প্রকাশ (১-গ)</div>
+      </div>
+      <p class="small">মেইনটেন্যান্সের খরচ সাধারণত অভ্যন্তরীণ উন্নয়নের চেয়ে অনেক বেশি হয়, কারণ কোডটি ইতিমধ্যে ব্যবহৃত অবস্থায় থাকে এবং পরিবর্তনের পার্শ্বপ্রতিক্রিয়া অনেক বেশি।</p>
+    </div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: SQA ============ -->
+<section class="page">
+  <div class="pg-head"><span>সফটওয়্যার গুণমান নিশ্চয়তা</span><span>এসকিএএ</span></div>
+  <h2>৮. সফটওয়্যার গুণমান নিশ্চয়তা (SQA)</h2>
+  <div class="cols">
+    <div>
+      <p><b>SQA</b> হলো সফটওয়্যারের গুণমান সম্পর্কিত সকল পরিকল্পিত ও কার্যক্রম — অর্থাৎ মান নিশ্চিত করার সব প্রক্রিয়ার সম্মিলন। এটি একক কোনো পরীক্ষা নয়, বরং <span class="hl">পুরো SDLC জুড়ে</span> ছড়িয়ে থাকা কার্যক্রম।</p>
+      <div class="mnote" style="float:none;width:auto">SQA-র সাফল্য মাপা হয় <b>প্রক্রিয়া</b> দিয়ে, পণ্য দিয়ে নয়। অর্থাৎ "প্রতিটি ধাপে মান নিশ্চিত করার ব্যবস্থা আছে কি না" — এটিই SQA।</div>
+      <h3>এসকিএএ-র প্রধান কাজ</h3>
+      <ul>
+        <li><span class="hl">মান নীতিমালা</span> তৈরি ও প্রয়োগ — মান কী, কীভাবে মাপব</li>
+        <li><span class="hl">রিভিউ</span> — কোড ও ডিজাইন পর্যালোচনা</li>
+        <li><span class="hl">অডিট</span> — প্রক্রিয়া অনুসরণ করা হচ্ছে কি না দেখা</li>
+        <li><span class="hl">স্ট্যান্ডার্ড</span> — ISO 9000, CMMI-এর মতো মান নির্ধারণ</li>
+        <li>পরীক্ষা দল গঠন ও <span class="hl">টেস্ট প্ল্যান</span> পর্যালোচনা</li>
+        <li>ত্রুটির হিসাব রাখা ও <span class="hl">গুণমানের প্রতিবেদন</span></li>
+      </ul>
+      <h3>যাচাইয়ের তিন স্তর</h3>
+      <p class="small">গুণমান নিশ্চিত করার কাজ তিন স্তরে চলে: <span class="hl">ডিজাইন পর্যালোচনা</span> (কাগজে), <span class="hl">কোড পর্যালোচনা</span> (লেখার পরে), এবং <span class="hl">পরীক্ষা</span> (চলার পরে)। প্রথম দুটি সাশ্রয়ী, তাই যত আগে করা যায় তত ভালো।</p>
+      <div class="trick">পার্থক্যটা ধরুন: <b>QC (গুণমান নিয়ন্ত্রণ)</b> পণ্য পরীক্ষা করে — "এটা ঠিক আছে কি না?" আর <b>QA (গুণমান নিশ্চয়তা)</b> প্রক্রিয়া পরীক্ষা করে — "ঠিক হওয়ার ব্যবস্থা আছে কি না?"</div>
+    </div>
+    <div>
+      <div class="sticky pink" style="float:none;width:auto;margin:2mm 0 2mm 0"><b>CMMI স্তর — দ্রুত পরিচিতি</b></div>
+      <table class="hand small">
+        <tr><th>স্তর</th><th>নাম</th><th>ভাবনা</th></tr>
+        <tr><td>১</td><td>প্রাথমিক</td><td>কাজ হয়, যত্ন নেই</td></tr>
+        <tr><td>২</td><td>পরিচালিত</td><td>পরিকল্পনা ও ট্র্যাক</td></tr>
+        <tr><td><b>৩</b></td><td><b>সংজ্ঞায়িত</b></td><td><b>প্রক্রিয়া নির্ধারিত</b></td></tr>
+        <tr><td>৪</td><td>পরিমাপিত</td><td>মাপা হয়</td></tr>
+        <tr><td>৫</td><td>অপ্টিমাইজড</td><td>উন্নতিমুখী</td></tr>
+      </table>
+      <div class="mnote" style="float:none;width:auto">পরীক্ষায় "CMMI-তে সংজ্ঞায়িত প্রক্রিয়ার স্তর কোনটি?" — উত্তর: <b>স্তর ৩</b>। <i class="mk">★</i> এটি সবচেয়ে বেশি জিজ্ঞাসিত SQA প্রশ্নের একটি।</div>
+      <h3>ISO 9001 কী</h3>
+      <p class="small">এটি একটি <span class="hl">আন্তর্জাতিক মান</span> যা সংস্থার মান ব্যবস্থাপনা ও প্রক্রিয়ার নির্ভরযোগ্যতা নিশ্চিত করে। সফটওয়্যার ক্ষেত্রে এটি সাধারণত মান ব্যবস্থাপনার সঙ্গে যুক্ত থাকে। CMMI যেখানে প্রক্রিয়াগুলো <span class="circ">পরিমাপযোগ্য</span> ও উন্নত করার লক্ষ্যে, ISO 9001 একই জিনিস আরেক ভঙ্গিতে বলে।</p>
+      <div class="mnote" style="float:none;width:auto">দুটোর মধ্যে মূল পার্থক্য: <b>CMMI মডেলভিত্তিক</b> — প্রক্রিয়াগুলো কতটা পরিপক্ব। <b>ISO সনদভিত্তিক</b> — সংস্থা কি নির্ধারিত মান অনুসরণ করছে। <i class="mk">★</i></div>
+      <div class="exam">
+        <b>প্রশ্ন:</b> SQA কোন একক পরীক্ষার নাম নয় কেন?
+        <div class="anskey">উত্তর: এটি পুরো SDLC-তে ছড়িয়ে থাকা সব প্রক্রিয়ার সম্মিলন (১-ঘ)</div>
+      </div>
+    </div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: McCall + metrics families ============ -->
+<section class="page">
+  <div class="pg-head"><span>গুণমান মডেল</span><span>ম্যাককল ও মেট্রিক্স</span></div>
+  <h2>৯. ম্যাককলের গুণমান ফ্যাক্টর</h2>
+  <div class="cols">
+    <div>
+      <p>ম্যাককলের মডেলে ১১টি ফ্যাক্টর এবং তিনটি ক্যাটাগরি রয়েছে — পরীক্ষায় প্রায়ই এই ভাগটিই চাওয়া হয়।</p>
+      <table class="hand small">
+        <tr><th>ক্যাটাগরি</th><th>ফ্যাক্টরগুলো</th></tr>
+        <tr><td><b>অপারেশন</b></td><td>সঠিকতা, নির্ভরযোগ্যতা, কার্যকরতা, প্রতিরক্ষা, প্রাপ্যতা</td></tr>
+        <tr><td><b>রিভিশন</b></td><td>রক্ষণাবেক্ষণযোগ্যতা, পরীক্ষাযোগ্যতা, নমনীয়তা</td></tr>
+        <tr><td><b>ট্রানজিশন</b></td><td>পোর্টেবিলিটি, পুনর্ব্যবহারযোগ্যতা, ইন্টারঅপারেবিলিটি</td></tr>
+      </table>
+      <div class="mnote" style="float:none;width:auto"><b>একটি বাক্যে মনে রাখুন:</b> অপারেশন = এখন ঠিকভাবে কাজ করছে; রিভিশন = ভবিষ্যতে বদলানো সহজ; ট্রানজিশন = অন্য পরিবেশে নিয়ে যাওয়া যায়। <i class="mk">★</i></div>
+      <div class="trick">পরীক্ষার শর্টকাট: <b>অ-রি-ট্রা</b> — অপারেশন, রিভিশন, ট্রানজিশন। ফ্যাক্টরগুলো আলাদা মুখস্থ করতে হলে "সি-রি-ফা-প্রা-ই-পো-পু-ই-ন" ধরনের সংক্ষিপ্ত আদ্যক্ষরে লেখা যায়।</div>
+    </div>
+    <div>
+      <div class="sticky pink" style="float:none;width:auto;margin:2mm 0 2mm 0"><b>অপারেশনের পাঁচটি — কী কী</b></div>
+      <ul class="tight small">
+        <li><span class="hl">সঠিকতা</span> — ফলাফল ঠিক কি না</li>
+        <li><span class="hl">নির্ভরযোগ্যতা</span> — নির্দিষ্ট সময়ে কাজ করে কি না</li>
+        <li><span class="hl">কার্যকরতা</span> — কম সময় ও মেমরিতে কাজ করে কি না</li>
+        <li><span class="hl">প্রতিরক্ষা</span> — অপব্যবহার থেকে রক্ষা করে কি না</li>
+        <li><span class="hl">প্রাপ্যতা</span> — সহজে ব্যবহারযোগ্য কি না</li>
+      </ul>
+      <div class="mnote" style="float:none;width:auto">পরীক্ষায় ভুল হয় এখানে: "কার্যকরতা" মানে কাজ দ্রুত ও কম সম্পদে করা, আর "নির্ভরযোগ্যতা" মানে নির্দিষ্ট সময়ে উপলব্ধ থাকা। দুটো আলাদা।</div>
+      <div class="exam">
+        <b>প্রশ্ন:</b> কোন ফ্যাক্টরটি "ট্রানজিশন" ক্যাটাগরিতে পড়ে না?
+        <div class="anskey">উত্তর: নির্ভরযোগ্যতা — এটি অপারেশনের ফ্যাক্টর (১-ক)</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>১০. সফটওয়্যার মেট্রিক্স: তিন পরিবার</h2>
+  <div class="cols">
+    <div>
+      <table class="hand small">
+        <tr><th>পরিবার</th><th>কী মাপে</th></tr>
+        <tr><td><b>ফাংশন-ভিত্তিক</b></td><td>প্রোগ্রামের আকার — LOC, ফাংশন সংখ্যা</td></tr>
+        <tr><td><b>বহু-সাপেক্ষিক</b></td><td>তিন প্রকারের অন্তর্ভুক্তি</td></tr>
+        <tr><td><b>ধাপ-নির্দিষ্ট</b></td><td>নির্দিষ্ট ধাপের ফলাফল</td></tr>
+      </table>
+      <p class="small"><b>বহু-সাপেক্ষিক (BANG)</b> মেট্রিক্স চারটি গুণ করে — <span class="hl">B</span>ug প্রতি ইউনিট আউটপুট, <span class="hl">A</span>ttributes প্রতি ইউনিট, <span class="hl">N</span>ewlines প্রতি ইউনিট, <span class="hl">G</span>oal পালনের হার।</p>
+    </div>
+    <div>
+      <div class="mnote" style="float:none;width:auto">পরীক্ষায় "BANG মেট্রিক্সে কয়টি উপাদান আছে?" — উত্তর: <b>৪টি</b> (B, A, N, G)। <i class="mk">★</i></div>
+    </div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: defect + reliability metrics ============ -->
+<section class="page">
+  <div class="pg-head"><span>মেট্রিক্স</span><span>ত্রুটি ও নির্ভরযোগ্যতা</span></div>
+  <h2>১১. ত্রুটি, নির্ভরযোগ্যতা ও প্রাপ্যতার মেট্রিক্স</h2>
+  <div class="cols">
+    <div>
+      <p><b>প্রাপ্যতা (Availability)</b> হলো সিস্টেম যে সময়ের কত অংশ কাজ করে। এটি দুটি মেট্রিক্স দিয়ে হিসাব হয়:</p>
+      <div class="sticky pink nowrap" style="float:none;width:auto;margin:2mm 0 2mm 0">প্রাপ্যতা = MTBF ÷ (MTBF + MTTR)</div>
+      <table class="hand small">
+        <tr><th>মেট্রিক্স</th><th>পূর্ণ রূপ</th><th>কী মাপে</th></tr>
+        <tr><td><b>MTBF</b></td><td>গড় বিকল</td><td>দুর্ঘটনা হওয়ার গড় ব্যবধান</td></tr>
+        <tr><td><b>MTTR</b></td><td>গড় সময়</td><td>ঠিক করতে লাগা গড় সময়</td></tr>
+      </table>
+      <div class="mnote" style="float:none;width:auto">MTBF বাড়লে ও MTTR কমলে প্রাপ্যতা বাড়ে। পরীক্ষায় উদাহরণ হিসাব করতে দিতে পারে — সবসময় এই সূত্রটি লিখে নিন। <i class="mk">★</i></div>
+      <h3>ত্রুটি সংক্রান্ত মেট্রিক্স</h3>
+      <ul class="tight small">
+        <li><span class="hl">ত্রুটির ঘনত্ব</span> = ত্রুটি সংখ্যা ÷ কোডের আকার</li>
+        <li><span class="hl">ত্রুটির হার</span> = ত্রুটি সংখ্যা ÷ মোট টেস্ট সংখ্যা × ১০০</li>
+        <li><span class="hl">MTTF</span> = প্রত্যাশিত আগে পর্যন্ত নির্বিঘ্ন চলার সময়</li>
+      </ul>
+      <h3>সরল উদাহরণ</h3>
+      <p class="small">ধরা যাক, সিস্টেমটি গড়ে প্রতি ২০ দিন পর পর একবার ব্যর্থ হয়, তাই <b>MTBF = ২০ দিন</b>। আর প্রতিবার মেরামতে ১ দিন লাগে, তাই <b>MTTR = ১ দিন</b>। তাহলে প্রাপ্যতা = ২০ ÷ (২০ + ১) = ২০ ÷ ২১ ≈ <span class="hl">৯৫.২%</span>।</p>
+      <div class="mnote" style="float:none;width:auto">এই ধরনের হিসাব পরীক্ষায় সরাসরি আসে। শুধু সূত্রটি মনে রাখলেই যথেষ্ট — উত্তরে সূত্রটি লিখে দিলে নম্বর পাওয়া যায়। <span class="circ">≈৯৫%</span> বাস্তবসম্মত মান। <i class="mk">★</i></div>
+      <h3>নির্ভরযোগ্যতা ও প্রাপ্যতার পার্থক্য</h3>
+      <table class="hand tiny">
+        <tr><th>বিষয়</th><th>নির্ভরযোগ্যতা</th><th>প্রাপ্যতা</th></tr>
+        <tr><td>প্রশ্ন</td><td>ব্যর্থ হবে কি?</td><td>চালু থাকবে কি?</td></tr>
+        <tr><td>মাপে</td><td>MTBF</td><td>MTBF ও MTTR</td></tr>
+      </table>
+      <div class="trick">উদাহরণ — সার্ভার মাসে একবার ব্যর্থ হয় (MTBF ≈ ৩০ দিন), মেরামতে ১ দিন (MTTR = ১), তবে প্রাপ্যতা = ৩০ ÷ ৩১ ≈ <b>৯৬.৮%</b>। <span class="circ">★</span></div>
+    </div>
+    <div>
+      <div class="exam">
+        <b>প্রশ্ন:</b> MTBF-এর পূর্ণ রূপ কী?
+        <div class="anskey">উত্তর: Mean Time Between Failures (১-খ)</div>
+      </div>
+      <div class="exam">
+        <b>প্রশ্ন:</b> MTTR কমলে প্রাপ্যতার উপর কী প্রভাব পড়ে?
+        <div class="anskey">উত্তর: প্রাপ্যতা বাড়ে (১-গ)</div>
+      </div>
+      <div class="mnote" style="float:none;width:auto"><b>যা মনে রাখুন:</b> প্রাপ্যতা কখনো ১০০% হয় না, কারণ ঠিক করার সময়ও থাকে। তাই বাস্তবে ৯৫% বা তার বেশি প্রাপ্যতাই ভালো ধরা হয়।</div>
+    </div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: defect cost ============ -->
+<section class="page">
+  <div class="pg-head"><span>ত্রুটির খরচ</span><span>কেন আগে ধরা ভালো</span></div>
+  <h2>১২. ত্রুটি কেন আগে ধরা ভালো</h2>
+  <div class="cols">
+    <div>
+      <p>একটি ত্রুটি যত দেরিতে ধরা পড়ে, তত বেশি খরচে তা ঠিক করতে হয়। কারণ প্রতিটি ধাপে সংশোধনের কাজ বাড়ে।</p>
+      <table class="hand small">
+        <tr><th>যেখানে ধরা পড়ল</th><th>আনুমানিক খরচের অনুপাত</th></tr>
+        <tr><td>প্রয়োজনীয়তা পর্যায়ে</td><td><span class="hl">× ১</span> — সবচেয়ে সস্তা</td></tr>
+        <tr><td>ডিজাইন পর্যায়ে</td><td>× ৫</td></tr>
+        <tr><td>কোড লেখার সময়</td><td>× ১০</td></tr>
+        <tr><td>পরীক্ষার সময়</td><td>× ২৫</td></tr>
+        <tr><td><b>প্রকাশের পরে</b></td><td><b>× ১০০</b> — সবচেয়ে ব্যয়বহুল</td></tr>
+      </table>
+      <div class="trick">এই ক্রমটি মনে রাখতে সহজ উপায়: <b>১ → ৫ → ১০ → ২৫ → ১০০</b>। প্রতিবার ফ্যাক্টর প্রায় আড়াই গুণ বাড়ে। "১০০×" মনে রাখলেই পরীক্ষায় বেশিরভাগ প্রশ্নের উত্তর মিলে যাবে।</div>
+      <h3>প্রকাশের পরে কেন এত বেশি খরচ</h3>
+      <p class="small">কারণ চারটি বিষয় একসাথে যুক্ত হয়: <span class="hl">পুরো কোড</span> আবার পরীক্ষা করতে হয়, <span class="hl">ডেটা মাইগ্রেট</span> করতে হয়, <span class="hl">ব্যবহারকারীর কাছ থেকে অভিযোগ</span> আসে, এবং সবচেয়ে বড় কথা — <b>সম্মান ও বিশ্বাস</b> নষ্ট হয়। শেষটি আর কোড দিয়ে কেনা যায় না।</p>
+      <div class="mnote" style="float:none;width:auto">একটি প্রশ্ন সরাসরি আসতে পারে: "প্রয়োজনীয়তা পর্যায়ে ত্রুটি ধরলে খরচ কত বেশি?" — উত্তর: <span class="circ">×১</span>, অর্থাৎ সর্বনিম্ন। কারণ তখন কোডই লেখা হয়নি। <i class="mk">★</i></div>
+    </div>
+    <div>
+      <figure class="doodle">
+        <svg viewBox="0 0 330 260" width="290">
+          <g class="w">
+            <rect x="20" y="210" width="52" height="34" rx="8" class="ink-g fill-g"/>
+            <rect x="86" y="186" width="52" height="58" rx="8" class="ink-g fill-g"/>
+            <rect x="152" y="150" width="52" height="94" rx="8" class="ink fill-y"/>
+            <rect x="218" y="100" width="52" height="144" rx="8" class="ink-r fill-r"/>
+            <rect x="268" y="30" width="52" height="214" rx="8" class="ink-r fill-r"/>
+          </g>
+          <text x="46" y="204" text-anchor="middle" class="bn k s">১×</text>
+          <text x="112" y="180" text-anchor="middle" class="bn k s">৫×</text>
+          <text x="178" y="144" text-anchor="middle" class="bn k s">১০×</text>
+          <text x="244" y="94" text-anchor="middle" class="bn k s">২৫×</text>
+          <text x="294" y="24" text-anchor="middle" class="bn k s w6">১০০×</text>
+          <text x="45" y="238" text-anchor="middle" class="bn s">প্রয়োজন</text>
+          <text x="112" y="256" text-anchor="middle" class="bn s">ডিজাইন</text>
+          <text x="178" y="256" text-anchor="middle" class="bn s">কোড</text>
+          <text x="244" y="256" text-anchor="middle" class="bn s">পরীক্ষা</text>
+          <text x="294" y="256" text-anchor="middle" class="bn s">প্রকাশ</text>
+        </svg>
+      </figure>
+      <div class="mnote" style="float:none;width:auto">উপরের ধাপগুলো যত ডানে, খরচ তত বেশি। তাই <b>প্রয়োজনীয়তা পর্যায়েই ভুল ধরা সবচেয়ে সাশ্রয়ী</b>। <i class="mk">★</i></div>
+      <h3>ত্রুটির জীবনচক্র</h3>
+      <p class="small">একটি ত্রুটি সাধারণত এই ধাপগুলো দিয়ে যায়: <span class="hl">শনাক্ত</span> → <span class="hl">রিপোর্ট</span> → <span class="hl">বিশ্লেষণ</span> → <span class="hl">সংশোধন</span> → <span class="hl">যাচাই</span> → <span class="hl">বন্ধ</span>।</p>
+      <table class="hand small">
+        <tr><th>ধাপ</th><th>যা ঘটে</th></tr>
+        <tr><td>শনাক্ত ও রিপোর্ট</td><td>ত্রুটি লিখিতভাবে জানানো হয়</td></tr>
+        <tr><td>বিশ্লেষণ</td><td>মূল কারণ ও প্রভাব ঠিক হয়</td></tr>
+        <tr><td>সংশোধন ও যাচাই</td><td>ঠিক করে পুনরায় পরীক্ষা</td></tr>
+      </table>
+      <div class="trick">পরীক্ষায় "ত্রুটির জীবনচক্রে কোন ধাপে সবচেয়ে বেশি সময় লাগে?" — উত্তর: <b>বিশ্লেষণ ও সংশোধন</b>। কারণ ত্রুটি খুঁজে বের করা সহজ, কিন্তু তার মূল কারণ খুঁজে বের করাই কঠিন। <span class="circ">★</span></div>
+    </div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: MCQ set ============ -->
+<section class="page mcq-set">
+  <div class="pg-head"><span>অনুশীলনী</span><span>বহুনির্বাচনি</span></div>
+  <h2>✓ অনুশীলনী MCQ (পরীক্ষার ধরন, ১০ নম্বর)</h2>
+  <div class="mcq">
+    <div class="q">১. "আমরা কি সঠিক জিনিস তৈরি করছি?" — এই প্রশ্নটি কোন ধরনের যাচাই?
+      <div class="o">ক. ভেরিফিকেশন</div><div class="o">খ. ইন্টিগ্রেশন টেস্টিং</div><div class="o">গ. ভ্যালিডেশন</div><div class="o">ঘ. সিস্টেম টেস্টিং</div>
+    </div>
+    <div class="q">২. টপ-ডাউন ইন্টিগ্রেশনে নিচের মডিউলের স্থানে যা বসানো হয়?
+      <div class="o">ক. ড্রাইভার</div><div class="o">খ. স্টাব</div><div class="o">গ. মক</div><div class="o">ঘ. প্রক্সি</div>
+    </div>
+    <div class="q">৩. বটম-আপ কৌশলে উপরের মডিউলকে কল করানোর জন্য কী বসানো হয়?
+      <div class="o">ক. স্টাব</div><div class="o">খ. ড্রাইভার</div><div class="o">গ. ফেক</div><div class="o">ঘ. সেন্টিনেল</div>
+    </div>
+    <div class="q">৪. নতুন অপারেটিং সিস্টেমের সাপোর্ট যোগ করা কোন প্রকারের মেইনটেন্যান্স?
+      <div class="o">ক. কারেক্টিভ</div><div class="o">খ. অ্যাডাপটিভ</div><div class="o">গ. পারফেক্টিভ</div><div class="o">ঘ. প্রিভেন্টিভ</div>
+    </div>
+    <div class="q">৫. কোড দ্রুততর করার কাজকে কী বলে?
+      <div class="o">ক. কারেক্টিভ</div><div class="o">খ. অ্যাডাপটিভ</div><div class="o">গ. পারফেক্টিভ</div><div class="o">ঘ. প্রিভেন্টিভ</div>
+    </div>
+    <div class="q">৬. "সংজ্ঞায়িত প্রক্রিয়া" — এটি CMMI-এর কোন স্তর?
+      <div class="o">ক. ১</div><div class="o">খ. ২</div><div class="o">গ. ৩</div><div class="o">ঘ. ৫</div>
+    </div>
+    <div class="q">৭. কোন ফ্যাক্টরটি "রিভিশন" ক্যাটাগরিতে আছে?
+      <div class="o">ক. কার্যকরতা</div><div class="o">খ. নমনীয়তা</div><div class="o">গ. প্রাপ্যতা</div><div class="o">ঘ. পোর্টেবিলিটি</div>
+    </div>
+    <div class="q">৮. BANG মেট্রিক্সে কয়টি উপাদান আছে?
+      <div class="o">ক. ৩টি</div><div class="o">খ. ৪টি</div><div class="o">গ. ৫টি</div><div class="o">ঘ. ৬টি</div>
+    </div>
+    <div class="q">৯. প্রাপ্যতার সূত্র কোনটি?
+      <div class="o">ক. MTBF ÷ MTTR</div><div class="o">খ. MTTR ÷ MTBF</div><div class="o">গ. MTBF ÷ (MTBF + MTTR)</div><div class="o">ঘ. MTTF + MTBF</div>
+    </div>
+    <div class="q">১০. প্রকাশের পরে ত্রুটি ঠিক করার খরচ প্রায় কত বেড়ে যায়?
+      <div class="o">ক. ১০ গুণ</div><div class="o">খ. ২৫ গুণ</div><div class="o">গ. ১০০ গুণ</div><div class="o">ঘ. ৫ গুণ</div>
+    </div>
+  </div>
+  <div class="anskey">উত্তর: ১-গ · ২-খ · ৩-খ · ৪-খ · ৫-গ · ৬-গ · ৭-খ · ৮-খ · ৯-গ · ১০-গ</div>
+  <div class="pg-no">12</div>
+</section>
+
+<!-- ============ SHEET 13: closing ============ -->
+<section class="page">
+  <div class="pg-head"><span>সারসংক্ষেপ</span><span>পরীক্ষার আগে</span></div>
+  <h2>✓ সারসংক্ষেপ</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li><span class="hl">টেস্টিং কৌশল:</span> ইউনিট → ইন্টিগ্রেশন → ভ্যালিডেশন → সিস্টেম <i class="mk">★</i></li>
+        <li><span class="hl">ডিবাগিং:</span> খোঁজা → বিশ্লেষণ → ঠিক করা → পুনরায় পরীক্ষা</li>
+        <li><span class="hl">মেইনটেন্যান্স প্রকার:</span> কারেক্টিভ, অ্যাডাপটিভ, পারফেক্টিভ, প্রিভেন্টিভ</li>
+        <li><span class="hl">SQA:</span> পুরো SDLC জুড়ে গুণমান নিশ্চিত করে</li>
+        <li><span class="hl">গুণমানের কারণ:</span> ম্যাককলের মডেল — অপারেশন, রিভিশন, ট্রানজিশন</li>
+        <li><span class="hl">খরচ প্রভাব:</span> আগে সনাক্তকরণ = সস্তা সমাধান</li>
+        <li><span class="hl">নির্ভরযোগ্যতা ও প্রাপ্যতা:</span> MTBF, MTTR মেট্রিক্স</li>
+        <li><span class="hl">মেট্রিক্স:</span> ফাংশন-ভিত্তিক, BANG, ধাপ-নির্দিষ্ট পরিমাপ</li>
+      </ul>
+      <div class="sticky pink" style="float:none;width:auto;margin:2mm 0 0 0"><b>পার্শ্ববর্তী বিষয়:</b> সাদা/কালো বাক্স টেস্টিং, চক্রিক জটিলতা, ভিত্তি পথ, সমতুল্য পরীক্ষা ও সীমানা মান বিশ্লেষণ রয়েছে <b>গ্র্যাস্প প্যাটার্ন ও ডিজাইন-লেভেল টেস্টিং</b>-তে; ওয়াটারফল, ভি-মডেল ও ইউজ কেস রয়েছে <b>ওয়াটারফল ও ইউএমএল</b>-এ।</div>
+    </div>
+    <div>
+      <div>
+        <h3>পরীক্ষার আগে ✓</h3>
+        <ul class="tick tiny">
+          <li>চার স্তরের নাম ও প্রতিটির প্রশ্ন বলতে পারুন</li>
+          <li>স্টাব ও টপ-ডাউন, ড্রাইভার ও বটম-আপ — দ্বিমুখী সম্পর্ক ভুলনা দিয়ে বলুন</li>
+          <li>চার প্রকার মেইনটেন্যান্স উদাহরণ দিয়ে ব্যাখ্যা করুন</li>
+          <li>ম্যাককলের ১১টি ফ্যাক্টর সঠিক ক্যাটাগরিতে লিখতে পারুন</li>
+          <li>MTBF ও MTTR থেকে প্রাপ্যতা হিসাব করুন</li>
+          <li>ত্রুটির খরচের ক্রম ১ → ৫ → ১০ → ২৫ → ১০০ বলুন</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="pg-no">13</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>8086/8088 Microprocessor: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">The 8086/8088 Microprocessor</span></h1>
+  <p class="subtitle">BIU/EU · registers &amp; flags · segmentation · addressing · assembly: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="600">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">8086 / 8088</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Evolution · MPU vs MCU</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">BIU / EU · queue ★</text>
+      <text x="500" y="65" text-anchor="middle">Pins · min/max mode</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Registers · 9 flags ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Seg × 10H + offset ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Instruction groups</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Addressing modes ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Assembly · directives</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = programming</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① 16-bit data, 20-bit address, 1 MB<br>② queue 6 B (8086) / 4 B (8088)<br>③ PA = seg × 10H + offset<br>④ 9 flags: 6 status + 3 control<br>⑤ BP → SS, BX/SI/DI → DS<br>⑥ reset: CS:IP = FFFF:0000</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Introduction to microprocessor: overview of computer architecture, <span class="hl">evolution of microprocessors</span>, difference between microprocessor and microcontroller; Introduction to 8086/8088: <span class="hl">basic architecture of 8086, memory segmentation, flags, addressing modes</span>, pins &amp; signals, single and multi-processor systems; Microprocessor programming: instruction sets, introduction to assembly language programming; Tools: assemblers, debuggers, development systems". Bus controller, 8255A, timers, serial I/O, interrupts and DMA: other lessons of this chapter.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Microprocessor, buses, evolution ……… p. 2</li><li>8086 vs 8088, BIU/EU, queue ……… p. 3</li><li>Registers &amp; the 9 flags ……… p. 4</li><li>Segmentation &amp; physical address … p. 5</li><li>Banks, pins, min/max mode ……… p. 6</li></ul>
+    <ul class="tick"><li>Addressing modes ……… p. 7</li><li>Instruction set ……… p. 8</li><li>Programs, directives, tools ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: microprocessor, buses, evolution ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Basics &amp; evolution</span></div>
+  <h2><span class="no">1</span>Microprocessor &amp; the Computer Around It</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> A microprocessor (MPU) is a <span class="hl">programmable, clock-driven, register-based IC</span> that holds the whole CPU (ALU + control unit + registers) on one chip. It fetches instructions from memory, decodes and executes them; memory and I/O are <b>outside</b> the chip.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="295">
+      <g class="w">
+        <rect x="8" y="8" width="80" height="44" rx="8" class="ink-k" style="fill:rgba(255,238,0,.45)"/>
+        <rect x="112" y="8" width="80" height="44" rx="8" class="ink fill-b"/>
+        <rect x="214" y="8" width="80" height="44" rx="8" class="ink fill-b"/>
+        <path class="ink-r" d="M30,52 V76 H284 M134,76 V56 M236,76 V56"/>
+        <path class="ink-g" d="M48,52 V100 H284 M152,100 V52 M254,100 V52"/>
+        <path class="ink-p" d="M66,52 V124 H284 M170,124 V52 M272,124 V52"/>
+      </g>
+      <text x="48" y="35" text-anchor="middle" class="w6">CPU</text>
+      <text x="152" y="35" text-anchor="middle" class="w6">Memory</text><text x="254" y="35" text-anchor="middle" class="w6">I/O</text>
+      <text x="76" y="71" class="r s">address</text><text x="76" y="95" class="g s">data</text><text x="76" y="119" class="p s">control</text>
+      <text x="150" y="145" text-anchor="middle" class="s">the three-bus system</text>
+    </svg></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Bus</th><th>Direction</th><th class="l">Its width decides</th></tr>
+      <tr><td class="l">Address</td><td><span class="circ">uni</span></td><td class="l">memory size = 2ⁿ</td></tr>
+      <tr><td class="l">Data</td><td><b>bi</b></td><td class="l">word length (bits)</td></tr>
+      <tr><td class="l">Control</td><td>mixed</td><td class="l">RD, WR, M/IO</td></tr>
+    </table>
+  </div>
+  <p class="small"><b>Instruction cycle</b> = fetch → decode → execute. It has one or more <b>machine cycles</b>, each of several <b>T-states</b> (clock periods). n address lines → 2ⁿ bytes: 16 → 64 KB, <span class="hl">20 → 1 MB</span>, 32 → 4 GB.</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Point</th><th class="l">Microprocessor (MPU)</th><th class="l">Microcontroller (MCU)</th></tr>
+    <tr><td class="l">On the chip</td><td class="l">CPU only</td><td class="l">CPU + RAM + ROM + I/O + timers</td></tr>
+    <tr><td class="l">Memory · use</td><td class="l">von Neumann · general PCs</td><td class="l">usually Harvard · embedded, IoT</td></tr>
+    <tr><td class="l">Example</td><td class="l">8085, 8086, Core i7</td><td class="l">8051 (4 KB ROM, 128 B RAM), ATmega328</td></tr>
+  </table>
+
+  <h2><span class="no">2</span>Evolution of Microprocessors</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Chip</th><th>Year</th><th>Data</th><th>Address → size</th><th class="l">Remember it for</th></tr>
+    <tr><td class="l">4004</td><td><span class="circ">1971</span></td><td>4-bit</td><td>12 → 4 KB</td><td class="l">first commercial MPU</td></tr>
+    <tr><td class="l">8008 · 8080</td><td>1972 · 74</td><td>8-bit</td><td>14 · 16 → 16 · 64 KB</td><td class="l">8080: first popular 8-bit</td></tr>
+    <tr><td class="l">8085</td><td>1976</td><td>8-bit</td><td>16 → 64 KB</td><td class="l">single +5 V, AD0–AD7</td></tr>
+    <tr><td class="l red"><b>8086 · 8088</b></td><td><span class="circ">1978</span> · 79</td><td><b>16-bit</b></td><td><b>20 → 1 MB</b></td><td class="l">8088: IBM PC (1981)</td></tr>
+    <tr><td class="l">80286</td><td>1982</td><td>16-bit</td><td>24 → 16 MB</td><td class="l">protected mode</td></tr>
+    <tr><td class="l">80386 · 80486</td><td>1985 · 89</td><td><b>32-bit</b></td><td>32 → 4 GB</td><td class="l">paging · FPU + cache</td></tr>
+    <tr><td class="l">Pentium</td><td>1993</td><td>32-bit</td><td>32 → 4 GB</td><td class="l">superscalar (2 pipelines)</td></tr>
+    <tr><td class="l">AMD64 · Core 2</td><td>2003 · 06</td><td>64-bit</td><td>48 (virtual)</td><td class="l">x86-64 · multi-core</td></tr>
+  </table>
+  <div class="exam"><span class="lbl">Exam trap</span> The Pentium is a <b>32-bit</b> processor (its <i>external data bus</i> is 64 bits wide). 64-bit x86 arrived with AMD64 (Opteron, 2003). The data bus sets the "bit" size, not the address bus.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: 8086 vs 8088, BIU/EU, queue ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Architecture</span></div>
+  <h2><span class="no">3</span>8086 at a Glance &amp; 8086 vs 8088</h2><span class="tag">very high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">8086 facts</span><br>Intel <b>1978</b> · 40-pin DIP · +5 V · 29,000 transistors<br><span class="hl">16-bit ALU, registers and data bus</span><br><span class="hl">20-bit address bus → 2²⁰ = 1 MB</span><br>I/O: 16-bit port address → 64K ports<br>Clock 5, 8 or 10 MHz<br>256 interrupt types (lesson mp4)</div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Feature</th><th>8086</th><th>8088</th></tr>
+      <tr><td class="l">External data bus</td><td><b>16</b></td><td><b>8</b></td></tr>
+      <tr><td class="l">Instruction queue</td><td><span class="circ">6 B</span></td><td><span class="circ">4 B</span></td></tr>
+      <tr><td class="l">Pin 34</td><td><span class="ov">BHE</span>/S7</td><td><span class="ov">SS0</span></td></tr>
+      <tr><td class="l">Memory/IO pin</td><td>M/<span class="ov">IO</span></td><td>IO/<span class="ov">M</span></td></tr>
+      <tr><td class="l">Multiplexed lines</td><td>AD0–AD15</td><td>AD0–AD7</td></tr>
+      <tr><td class="l">Word access</td><td>1 or 2 cycles</td><td>always 2</td></tr>
+    </table>
+  </div>
+  <p class="small">Same EU, same registers, same instruction set, same 1 MB: the 8088 is an 8086 with an 8-bit outside bus, chosen for the IBM PC because 8-bit support chips were cheap.</p>
+
+  <h2><span class="no">4</span>Two Units: BIU and EU</h2><span class="tag">written favourite</span>
+  <figure class="doodle"><svg viewBox="0 0 640 262" width="640">
+    <g class="w">
+      <rect x="8" y="26" width="300" height="206" rx="10" class="ink-k" style="fill:rgba(29,63,143,.05)"/>
+      <rect x="336" y="26" width="296" height="206" rx="10" class="ink-k" style="fill:rgba(31,138,92,.06)"/>
+      <rect x="22" y="40" width="70" height="22" class="ink fill-b"/><rect x="22" y="62" width="70" height="22" class="ink fill-b"/><rect x="22" y="84" width="70" height="22" class="ink fill-b"/><rect x="22" y="106" width="70" height="22" class="ink fill-b"/><rect x="22" y="138" width="70" height="22" class="ink-r fill-r"/>
+      <circle cx="150" cy="96" r="22" class="ink-r fill-r"/>
+      <path class="ink" d="M92,84 H128 M92,149 H120 V112 L132,108" marker-end="url(#ahb)"/>
+      <rect x="196" y="40" width="100" height="44" rx="8" class="ink fill-b"/>
+      <path class="ink-r" d="M172,96 H246 V84" marker-end="url(#ah)"/>
+      <rect x="120" y="182" width="174" height="26" class="ink-k fill-y"/>
+      <path class="ink-k" d="M149,182 V208 M178,182 V208 M207,182 V208 M236,182 V208 M265,182 V208" style="stroke-width:1.3"/>
+      <path class="ink" d="M284,84 V178" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M294,195 H372 V196" marker-end="url(#ahg)"/>
+      <rect x="350" y="40" width="58" height="22" class="ink fill-g"/><rect x="350" y="62" width="58" height="22" class="ink fill-g"/><rect x="350" y="84" width="58" height="22" class="ink fill-g"/><rect x="350" y="106" width="58" height="22" class="ink fill-g"/>
+      <rect x="416" y="40" width="58" height="22" class="ink fill-g"/><rect x="416" y="62" width="58" height="22" class="ink fill-g"/><rect x="416" y="84" width="58" height="22" class="ink fill-g"/><rect x="416" y="106" width="58" height="22" class="ink fill-g"/>
+      <path class="ink-k" style="fill:rgba(255,238,0,.45)" d="M500,44 H556 L566,62 L576,44 H622 L596,104 H526 Z"/>
+      <rect x="500" y="132" width="120" height="26" class="ink-r fill-r"/>
+      <rect x="376" y="170" width="120" height="50" rx="8" class="ink-p fill-p"/>
+      <path class="ink" d="M58,232 V252"/>
+    </g>
+    <text x="158" y="20" text-anchor="middle" class="k w6">BIU: Bus Interface Unit</text><text x="484" y="20" text-anchor="middle" class="k w6">EU: Execution Unit</text>
+    <text x="57" y="56" text-anchor="middle" class="s w6">CS</text><text x="57" y="78" text-anchor="middle" class="s w6">DS</text><text x="57" y="100" text-anchor="middle" class="s w6">SS</text><text x="57" y="122" text-anchor="middle" class="s w6">ES</text><text x="57" y="154" text-anchor="middle" class="s r w6">IP</text>
+    <text x="150" y="102" text-anchor="middle" class="r l">Σ</text><text x="168" y="136" text-anchor="middle" class="r s">address adder</text>
+    <text x="246" y="59" text-anchor="middle" class="s">bus control</text><text x="246" y="75" text-anchor="middle" class="s">logic</text>
+    <text x="196" y="176" text-anchor="middle" class="s w6">6-byte queue (FIFO)</text>
+    <text x="134" y="200" text-anchor="middle" class="s">1</text><text x="163" y="200" text-anchor="middle" class="s">2</text><text x="192" y="200" text-anchor="middle" class="s">3</text><text x="221" y="200" text-anchor="middle" class="s">4</text><text x="250" y="200" text-anchor="middle" class="s">5</text><text x="279" y="200" text-anchor="middle" class="s">6</text>
+    <text x="64" y="256" class="s">↕ external bus: AD0–AD15, A16–A19 (20-bit address out)</text>
+    <text x="330" y="190" text-anchor="middle" class="g s">opcodes</text>
+    <text x="379" y="56" text-anchor="middle" class="s w6">AH|AL</text><text x="379" y="78" text-anchor="middle" class="s w6">BH|BL</text><text x="379" y="100" text-anchor="middle" class="s w6">CH|CL</text><text x="379" y="122" text-anchor="middle" class="s w6">DH|DL</text>
+    <text x="445" y="56" text-anchor="middle" class="s w6">SP</text><text x="445" y="78" text-anchor="middle" class="s w6">BP</text><text x="445" y="100" text-anchor="middle" class="s w6">SI</text><text x="445" y="122" text-anchor="middle" class="s w6">DI</text>
+    <text x="560" y="90" text-anchor="middle" class="k w6">ALU</text><text x="560" y="150" text-anchor="middle" class="r s w6">FLAGS</text>
+    <text x="436" y="191" text-anchor="middle" class="p s w6">control unit</text><text x="436" y="208" text-anchor="middle" class="p s">(decoder)</text>
+    <text x="560" y="190" text-anchor="middle" class="s">16-bit internal</text><text x="560" y="206" text-anchor="middle" class="s">data bus</text>
+  </svg><figcaption>the BIU talks to the outside world; the EU only executes</figcaption></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">BIU (outside work)</th><th class="l">EU (inside work)</th></tr>
+    <tr><td class="l">Fetches instruction bytes into the <span class="hl">queue</span></td><td class="l">Takes opcodes from the queue, executes</td></tr>
+    <tr><td class="l">Makes the 20-bit physical address (Σ)</td><td class="l">Computes the 16-bit offset (<b>effective address</b>)</td></tr>
+    <tr><td class="l">Reads/writes memory &amp; I/O operands</td><td class="l">ALU work, sets the flags</td></tr>
+    <tr><td class="l">Holds CS, DS, SS, ES, IP</td><td class="l">Holds AX–DX, SP, BP, SI, DI, FLAGS</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>BIU = the shopper</b> (goes out on the bus, fills the queue), <b>EU = the cook</b> (never leaves the kitchen, uses what is in the queue).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The EU makes the 16-bit <b>offset</b>; the 20-bit <b>physical address</b> is made in the <b>BIU</b>. IP belongs to the BIU, not the EU.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: queue, pipelining, registers, flags ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Queue · registers · flags</span></div>
+  <h2><span class="no">5</span>Queue &amp; Pipelining</h2>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div class="small">
+      <p>While the EU executes, the BIU <span class="hl">prefetches the next bytes</span>: fetch and execute overlap (2-stage pipeline).</p>
+      <p>8086 refills at <b>≥ 2</b> free bytes; 8088 at <b>≥ 1</b>.</p>
+      <p>On <span class="circ">JMP / CALL / RET / INT</span> the queue is <b>flushed</b> and refilled from the new CS:IP.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 120" width="285">
+      <g class="w">
+        <rect x="60" y="10" width="44" height="22" class="ink fill-b"/><rect x="104" y="10" width="44" height="22" class="ink fill-b"/><rect x="148" y="10" width="44" height="22" class="ink fill-b"/><rect x="192" y="10" width="44" height="22" class="ink fill-b"/>
+        <rect x="104" y="36" width="44" height="22" class="ink-g fill-g"/><rect x="148" y="36" width="44" height="22" class="ink-g fill-g"/><rect x="192" y="36" width="44" height="22" class="ink-g fill-g"/><rect x="236" y="36" width="44" height="22" class="ink-g fill-g"/>
+        <rect x="60" y="80" width="44" height="22" class="ink fill-b"/><rect x="104" y="80" width="44" height="22" class="ink-g fill-g"/><rect x="148" y="80" width="44" height="22" class="ink fill-b"/><rect x="192" y="80" width="44" height="22" class="ink-g fill-g"/>
+      </g>
+      <text x="4" y="26" class="s w6">BIU</text><text x="4" y="52" class="s w6">EU</text><text x="4" y="96" class="s w6">8085</text>
+      <text x="82" y="26" text-anchor="middle" class="s">F1</text><text x="126" y="26" text-anchor="middle" class="s">F2</text><text x="170" y="26" text-anchor="middle" class="s">F3</text><text x="214" y="26" text-anchor="middle" class="s">F4</text>
+      <text x="126" y="52" text-anchor="middle" class="s">E1</text><text x="170" y="52" text-anchor="middle" class="s">E2</text><text x="214" y="52" text-anchor="middle" class="s">E3</text><text x="258" y="52" text-anchor="middle" class="s">E4</text>
+      <text x="82" y="96" text-anchor="middle" class="s">F1</text><text x="126" y="96" text-anchor="middle" class="s">E1</text><text x="170" y="96" text-anchor="middle" class="s">F2</text><text x="214" y="96" text-anchor="middle" class="s">E2</text>
+      <text x="150" y="74" text-anchor="middle" class="r s">8086: overlap</text><text x="150" y="117" text-anchor="middle" class="r s">no overlap: 2 instr. in the same time</text>
+    </svg></figure>
+  </div>
+
+  <h2><span class="no">6</span>Register Set: 14 Registers, All 16-bit</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Group</th><th class="l">Registers and special job</th></tr>
+    <tr><td class="l">General (data)</td><td class="l"><b>AX</b> accumulator (MUL, DIV, IN, OUT) · <b>BX</b> base (only general reg. usable as a pointer) · <b>CX</b> count (LOOP, REP, shift count in CL) · <b>DX</b> data (port address, high word of MUL/DIV). Each splits into 8-bit halves: AH/AL …</td></tr>
+    <tr><td class="l">Segment</td><td class="l"><b>CS</b> code · <b>DS</b> data · <b>SS</b> stack · <b>ES</b> extra (string destination)</td></tr>
+    <tr><td class="l">Pointer &amp; index</td><td class="l"><b>SP</b> stack top · <b>BP</b> base pointer (stack frame) · <b>SI</b> source index · <b>DI</b> destination index</td></tr>
+    <tr><td class="l">Others</td><td class="l"><b>IP</b> offset of the next instruction (not directly writable) · <b>FLAGS</b></td></tr>
+  </table>
+  <div class="mnote">4 + 4 + 4 + 2 = 14 registers</div>
+  <p class="small">Default pairs: <span class="circ">CS:IP</span> · SS:SP · SS:BP · DS:BX · DS:SI · ES:DI (string destination).</p>
+
+  <h2><span class="no">7</span>Flag Register: 9 of 16 Bits Used</h2><span class="tag">very high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 640 74" width="640">
+    <g class="w">
+      <rect x="8" y="22" width="624" height="30" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+      <path class="ink-k" d="M47,22V52M86,22V52M125,22V52M164,22V52M203,22V52M242,22V52M281,22V52M320,22V52M359,22V52M398,22V52M437,22V52M476,22V52M515,22V52M554,22V52M593,22V52" style="stroke-width:1.2"/>
+      <rect x="164" y="22" width="156" height="30" class="ink-p fill-p"/>
+      <rect x="320" y="22" width="78" height="30" class="ink-r fill-r"/><rect x="437" y="22" width="39" height="30" class="ink-r fill-r"/><rect x="515" y="22" width="39" height="30" class="ink-r fill-r"/><rect x="593" y="22" width="39" height="30" class="ink-r fill-r"/>
+    </g>
+    <text x="27" y="16" text-anchor="middle" class="s">15</text><text x="183" y="16" text-anchor="middle" class="s">11</text><text x="222" y="16" text-anchor="middle" class="s">10</text><text x="261" y="16" text-anchor="middle" class="s">9</text><text x="300" y="16" text-anchor="middle" class="s">8</text><text x="339" y="16" text-anchor="middle" class="s">7</text><text x="378" y="16" text-anchor="middle" class="s">6</text><text x="456" y="16" text-anchor="middle" class="s">4</text><text x="534" y="16" text-anchor="middle" class="s">2</text><text x="612" y="16" text-anchor="middle" class="s">0</text>
+    <text x="27" y="43" text-anchor="middle" class="s">–</text><text x="66" y="43" text-anchor="middle" class="s">–</text><text x="105" y="43" text-anchor="middle" class="s">–</text><text x="144" y="43" text-anchor="middle" class="s">–</text>
+    <text x="183" y="43" text-anchor="middle" class="r w6">OF</text><text x="222" y="43" text-anchor="middle" class="p w6">DF</text><text x="261" y="43" text-anchor="middle" class="p w6">IF</text><text x="300" y="43" text-anchor="middle" class="p w6">TF</text><text x="339" y="43" text-anchor="middle" class="r w6">SF</text><text x="378" y="43" text-anchor="middle" class="r w6">ZF</text><text x="417" y="43" text-anchor="middle" class="s">–</text><text x="456" y="43" text-anchor="middle" class="r w6">AF</text><text x="495" y="43" text-anchor="middle" class="s">–</text><text x="534" y="43" text-anchor="middle" class="r w6">PF</text><text x="573" y="43" text-anchor="middle" class="s">–</text><text x="612" y="43" text-anchor="middle" class="r w6">CF</text>
+    <text x="242" y="68" text-anchor="middle" class="p s">purple = control (DF, IF, TF; OF is status)</text><text x="480" y="68" text-anchor="middle" class="r s">red = 6 status flags</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>Flag</th><th>Bit</th><th class="l">= 1 when …</th><th>Flag</th><th>Bit</th><th class="l">= 1 when / means …</th></tr>
+    <tr><td>CF</td><td>0</td><td class="l">carry out of / borrow into MSB</td><td>OF</td><td>11</td><td class="l">signed result out of range</td></tr>
+    <tr><td>PF</td><td>2</td><td class="l">low byte has <b>even</b> no. of 1s</td><td>TF</td><td>8</td><td class="l">single-step after each instr.</td></tr>
+    <tr><td>AF</td><td>4</td><td class="l">carry bit 3 → 4 (BCD)</td><td>IF</td><td>9</td><td class="l">INTR enabled (STI / CLI)</td></tr>
+    <tr><td>ZF</td><td>6</td><td class="l">result = 0</td><td>DF</td><td>10</td><td class="l">strings <b>decrement</b> (STD)</td></tr>
+    <tr><td>SF</td><td>7</td><td class="l">MSB of result = 1</td><td colspan="3" class="l">6 status + <span class="circ">3 control</span> = 9 flags</td></tr>
+  </table>
+  <div class="trick small"><span class="lbl">Memory trick</span> Status flags, bit 0 upward: "<b>C</b>an <b>P</b>eople <b>A</b>lways <b>Z</b>ip <b>S</b>afely? <b>O</b>K": CF 0, PF 2, AF 4, ZF 6, SF 7 … OF 11 (bits 0-2-4-6-7, then 11). Control = "<b>T-I-D</b>": TF 8, IF 9, DF 10.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Only AX, BX, CX, DX split into 8-bit halves; SP, BP, SI, DI do not (no "SIL" on the 8086). There is no instruction that loads IP directly: JMP, CALL, RET and INT change it.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: segmentation ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Flags · segmentation</span></div>
+  <h2><span class="no">8</span>Flags in Action: Worked Examples</h2><span class="tag">calculation</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Instructions</th><th>Result</th><th>CF</th><th>PF</th><th>AF</th><th>ZF</th><th>SF</th><th>OF</th></tr>
+    <tr><td class="l">MOV AL,7FH · ADD AL,01H</td><td>80H</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td class="red"><b>1</b></td></tr>
+    <tr><td class="l">MOV AL,0FFH · ADD AL,01H</td><td>00H</td><td class="red"><b>1</b></td><td>1</td><td>1</td><td class="red"><b>1</b></td><td>0</td><td>0</td></tr>
+    <tr><td class="l">MOV AL,80H · SUB AL,01H</td><td>7FH</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">Exam trap</span> CF is for <b>unsigned</b> overflow, OF for <b>signed</b>. +127 + 1 → −128 sets OF but not CF; FFH + 1 sets CF but not OF (−1 + 1 = 0 is correct). PF looks at the <b>low 8 bits only</b>.</div>
+
+  <h2><span class="no">9</span>Memory Segmentation</h2><span class="tag">very high-yield</span>
+  <div class="def"><span class="lbl">Why</span> Registers are 16-bit (max 64 KB) but the address bus is 20-bit (1 MB). The 1 MB is viewed as <span class="hl">segments of up to 64 KB</span>, each starting on a 16-byte (<b>paragraph</b>) boundary. A <b>logical address</b> = segment : offset.</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:start">
+    <div>
+      <div class="sumbox" style="margin-top:0"><span class="lbl">Formula</span> <span class="circ">PA = Segment × 10H + Offset</span><br><span class="small">× 10H = shift left 4 bits = append one hex 0</span></div>
+      <ol class="steps small">
+        <li>CS:IP = 1234:5678 → 12340 + 5678 = <span class="circ">179B8H</span></li>
+        <li>CS:IP = 2000:0150 → 20000 + 0150 = <b>20150H</b></li>
+        <li>DS = 3000H → spans <b>30000H – 3FFFFH</b></li>
+        <li>PA 4A3B2H, DS 4000H → offset <b>A3B2H</b></li>
+      </ol>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 230" width="245">
+      <g class="w">
+        <rect x="70" y="8" width="70" height="214" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+        <rect x="70" y="150" width="70" height="56" class="ink fill-b"/>
+        <rect x="70" y="100" width="70" height="66" class="ink-g fill-g" style="fill-opacity:.7"/>
+        <rect x="70" y="30" width="70" height="52" class="ink-r fill-r"/>
+        <path class="ink-p" d="M146,150 H176 M146,206 H176" />
+        <path class="ink-p" d="M170,150 V206" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+      </g>
+      <text x="64" y="16" text-anchor="end" class="s">FFFFFH</text><text x="64" y="224" text-anchor="end" class="s">00000H</text>
+      <text x="105" y="184" text-anchor="middle" class="s w6">CS</text><text x="105" y="138" text-anchor="middle" class="g s w6">DS</text><text x="105" y="62" text-anchor="middle" class="r s w6">SS</text>
+      <text x="64" y="154" text-anchor="end" class="s">base</text>
+      <text x="180" y="176" class="p s">≤ 64 KB</text>
+      <text x="180" y="120" class="g s">segments</text><text x="180" y="134" class="g s">may overlap</text>
+    </svg><figcaption>1 MB as 64 KB windows</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Many names, one byte ✍</span><br>1000:2345 → 10000 + 2345 = 12345H<br>1234:0005 → 12340 + 0005 = 12345H<br>1200:0345 → 12000 + 0345 = <span class="circ">12345H</span></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Stack &amp; byte order ✍</span><br>SS = 5000H, SP = 1000H, AX = 1234H<br>PUSH AX → SP = <b>0FFEH</b> (SP − 2 first)<br>[50FFEH] = 34H, [50FFFH] = 12H<br><span class="tiny">little-endian: low byte at the lower address</span></div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Add a zero, then add</b>": write the segment with a 0 on its right, line up the offset under it, add in hex.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> FFFF:0010 → 100000H needs 21 bits; the 8086 <b>wraps round to 00000H</b>. The highest FFFF:FFFF = 10FFEFH → 0FFEFH.</div>
+  </div>
+  <p class="small"><b>Advantages:</b> <span class="hl">relocatable programs</span> (change only the segment register), separate code/data/stack, 16-bit pointers within a segment. <b>Limits:</b> 64 KB per segment; 16 non-overlapping segments fill 1 MB.</p>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: banks, pins, min/max ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Banks · pins · modes</span></div>
+  <h2><span class="no">10</span>Memory Banks: <span class="ov">BHE</span> and A0</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 290 170" width="285">
+      <g class="w">
+        <rect x="20" y="20" width="110" height="110" class="ink fill-b"/>
+        <rect x="160" y="20" width="110" height="110" class="ink-g fill-g"/>
+        <path class="ink-k" d="M20,46H130M20,72H130M20,98H130M160,46H270M160,72H270M160,98H270" style="stroke-width:1.2"/>
+        <path class="ink-r" d="M75,130 V158 M215,130 V158" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      </g>
+      <text x="75" y="14" text-anchor="middle" class="s w6">odd (high) bank</text><text x="215" y="14" text-anchor="middle" class="g s w6">even (low) bank</text>
+      <text x="75" y="38" text-anchor="middle" class="s">FFFFF</text><text x="75" y="64" text-anchor="middle" class="s">…</text><text x="75" y="90" text-anchor="middle" class="s">00003</text><text x="75" y="116" text-anchor="middle" class="s">00001</text>
+      <text x="215" y="38" text-anchor="middle" class="s">FFFFE</text><text x="215" y="64" text-anchor="middle" class="s">…</text><text x="215" y="90" text-anchor="middle" class="s">00002</text><text x="215" y="116" text-anchor="middle" class="s">00000</text>
+      <text x="84" y="150" class="r s">D8–D15</text><text x="224" y="150" class="r s">D0–D7</text>
+      <text x="75" y="168" text-anchor="middle" class="s">enable: <tspan class="ov">BHE</tspan> = 0</text><text x="215" y="168" text-anchor="middle" class="s">enable: A0 = 0</text>
+    </svg></figure>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th><span class="ov">BHE</span></th><th>A0</th><th class="l">Transfer</th></tr>
+        <tr><td>0</td><td>0</td><td class="l red"><b>whole word</b> (even address)</td></tr>
+        <tr><td>0</td><td>1</td><td class="l">odd byte only (D8–D15)</td></tr>
+        <tr><td>1</td><td>0</td><td class="l">even byte only (D0–D7)</td></tr>
+        <tr><td>1</td><td>1</td><td class="l">none (idle)</td></tr>
+      </table>
+      <p class="small">Each bank = <b>512 KB</b>, addressed by A1–A19.</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> A word at an <b>odd</b> address (e.g. 2001H) is unaligned: it needs <span class="circ">2 bus cycles</span> (odd byte first, then the even byte at 2002H). An even-address word needs one. Keep word data on even addresses (<b>EVEN</b> directive).</div>
+
+  <h2><span class="no">11</span>Pins &amp; Signals; Minimum vs Maximum Mode</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:290px 1fr">
+    <figure class="doodle"><svg viewBox="0 0 290 300" width="285">
+      <g class="w">
+        <rect x="100" y="8" width="66" height="290" rx="6" class="ink-k" style="fill:rgba(255,238,0,.45)"/>
+        <path class="ink" d="M90,22H100M90,36H100M90,50H100M90,64H100M90,78H100M90,92H100M90,106H100M90,120H100M90,134H100M90,148H100M90,162H100M90,176H100M90,190H100M90,204H100M90,218H100M90,232H100M90,246H100M90,260H100M90,274H100M90,288H100M166,288H176M166,274H176M166,260H176M166,246H176M166,232H176M166,218H176M166,204H176M166,190H176M166,176H176M166,162H176M166,148H176M166,134H176M166,120H176M166,106H176M166,92H176M166,78H176M166,64H176M166,50H176M166,36H176M166,22H176" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M84,36 Q76,36 76,48 V122 Q76,134 68,134 Q76,134 76,146 V220 Q76,232 84,232"/>
+      </g>
+      <text x="133" y="150" text-anchor="middle" class="k w6">8086</text><text x="133" y="168" text-anchor="middle" class="s">40-pin DIP</text>
+      <text x="86" y="26" text-anchor="end" style="font-size:11px">1 GND</text><text x="86" y="250" text-anchor="end" style="font-size:11px">17 NMI</text><text x="86" y="264" text-anchor="end" style="font-size:11px">18 INTR</text><text x="86" y="278" text-anchor="end" style="font-size:11px">19 CLK</text><text x="86" y="292" text-anchor="end" style="font-size:11px">20 GND</text><text x="64" y="128" text-anchor="end" style="font-size:11px" class="g">2–16</text><text x="64" y="142" text-anchor="end" style="font-size:11px" class="g">AD14…AD0</text><text x="180" y="26" style="font-size:11px">40 VCC</text><text x="180" y="40" style="font-size:11px">39 AD15</text><text x="180" y="54" style="font-size:11px">38 A16/S3</text><text x="180" y="68" style="font-size:11px">37 A17/S4</text><text x="180" y="82" style="font-size:11px">36 A18/S5</text><text x="180" y="96" style="font-size:11px">35 A19/S6</text><text x="180" y="110" style="font-size:11px">34 BHE/S7</text><text x="180" y="124" style="font-size:11px" class="r">33 MN/MX</text><text x="180" y="138" style="font-size:11px">32 RD</text><text x="180" y="152" style="font-size:11px" class="p">31 RQ/GT0 (HOLD)</text><text x="180" y="166" style="font-size:11px" class="p">30 RQ/GT1 (HLDA)</text><text x="180" y="180" style="font-size:11px" class="p">29 LOCK (WR)</text><text x="180" y="194" style="font-size:11px" class="p">28 S2 (M/IO)</text><text x="180" y="208" style="font-size:11px" class="p">27 S1 (DT/R)</text><text x="180" y="222" style="font-size:11px" class="p">26 S0 (DEN)</text><text x="180" y="236" style="font-size:11px" class="p">25 QS0 (ALE)</text><text x="180" y="250" style="font-size:11px" class="p">24 QS1 (INTA)</text><text x="180" y="264" style="font-size:11px">23 TEST</text><text x="180" y="278" style="font-size:11px">22 READY</text><text x="180" y="292" style="font-size:11px">21 RESET</text>
+    </svg><figcaption>purple: max-mode name (min-mode name)</figcaption></figure>
+    <div class="small">
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l"></th><th class="l">Minimum</th><th class="l">Maximum</th></tr>
+        <tr><td class="l">MN/<span class="ov">MX</span></td><td class="l">= 1 (V<sub>CC</sub>)</td><td class="l">= 0 (GND)</td></tr>
+        <tr><td class="l">System</td><td class="l">one CPU</td><td class="l">multi-CPU, 8087</td></tr>
+        <tr><td class="l">Control</td><td class="l">by the 8086</td><td class="l"><span class="circ">8288</span> (S0–S2)</td></tr>
+        <tr><td class="l">Bus grant</td><td class="l">HOLD/HLDA</td><td class="l">RQ/GT0, 1</td></tr>
+      </table>
+      <ul class="dash">
+        <li><b>ALE</b> latches the address off AD0–AD15 (8282/74LS373)</li>
+        <li><b>DT/<span class="ov">R</span>, <span class="ov">DEN</span></b> steer the 8286 transceivers</li>
+        <li><b>READY</b> low → wait states (Tw)</li>
+        <li><b><span class="ov">TEST</span></b> is checked by WAIT (8087 BUSY)</li>
+        <li><b>QS0, QS1</b> = queue status for the 8087</li>
+        <li>S4 S3: 00 ES, 01 SS, 10 CS/none, 11 DS</li>
+      </ul>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">Reset &amp; timing</span> After RESET: <span class="circ">CS = FFFFH, IP = 0000H</span> → first fetch at <b>FFFF0H</b>; DS = SS = ES = 0, flags cleared (IF = 0), queue empty. A bus cycle = <b>4 T-states</b> (T1 address, T2–T4 data); at 5 MHz, T = 200 ns → 800 ns per cycle. Clock (8284A) and bus controller details: lesson mp2.</div>
+  <p class="small"><b>Multiprocessor configurations:</b> coprocessor (8087 NDP shares the bus, watches QS0/QS1) · closely coupled (8089 I/O processor) · loosely coupled (each CPU has a local bus, <span class="hl">8289 bus arbiter</span> on the shared bus). The <b>LOCK</b> prefix keeps the bus during a read-modify-write.</p>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: addressing modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Addressing modes</span></div>
+  <h2><span class="no">12</span>Addressing Modes</h2><span class="tag">very high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> An addressing mode is the way an instruction <span class="hl">specifies where its operand is</span>: in the instruction, in a register, or in memory at an <b>effective address</b> (EA, the 16-bit offset) that the EU computes.</div>
+  <figure class="doodle"><svg viewBox="0 0 600 120" width="600">
+    <g class="w">
+      <rect x="30" y="24" width="90" height="56" rx="8" class="ink fill-b"/>
+      <rect x="180" y="24" width="90" height="56" rx="8" class="ink-g fill-g"/>
+      <rect x="330" y="24" width="120" height="56" rx="8" class="ink-p fill-p"/>
+      <rect x="500" y="24" width="80" height="56" rx="8" class="ink-r fill-r"/>
+    </g>
+    <text x="75" y="18" text-anchor="middle" class="s w6">base</text><text x="225" y="18" text-anchor="middle" class="g s w6">index</text><text x="390" y="18" text-anchor="middle" class="p s w6">displacement</text><text x="540" y="18" text-anchor="middle" class="r s w6">EA</text>
+    <text x="75" y="48" text-anchor="middle" class="w6">BX → DS</text><text x="75" y="70" text-anchor="middle" class="w6">BP → SS</text>
+    <text x="225" y="48" text-anchor="middle" class="g w6">SI</text><text x="225" y="70" text-anchor="middle" class="g w6">DI</text>
+    <text x="390" y="48" text-anchor="middle" class="p w6">none, 8-bit</text><text x="390" y="70" text-anchor="middle" class="p w6">or 16-bit</text>
+    <text x="150" y="58" text-anchor="middle" class="l">+</text><text x="300" y="58" text-anchor="middle" class="l">+</text><text x="475" y="58" text-anchor="middle" class="l">=</text>
+    <text x="540" y="58" text-anchor="middle" class="r w6">offset</text>
+    <text x="300" y="108" text-anchor="middle" class="r">any part may be missing · PA = segment × 10H + EA</text>
+  </svg><figcaption>every memory mode is a special case of base + index + displacement</figcaption></figure>
+  <p class="small"><b>Worked set</b> (use for every row): DS = 2000H, SS = 3000H, BX = 0100H, BP = 0200H, SI = 0050H, DI = 0030H.</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Mode</th><th class="l">Example</th><th class="l">Operand / EA</th><th>PA</th></tr>
+    <tr><td class="l">Immediate</td><td class="l">MOV AX, 1234H</td><td class="l">data inside the instruction</td><td>–</td></tr>
+    <tr><td class="l">Register</td><td class="l">MOV AX, BX</td><td class="l">data in a register (fastest)</td><td>–</td></tr>
+    <tr><td class="l">Direct</td><td class="l">MOV AX, [1234H]</td><td class="l">EA = 1234H</td><td>21234H</td></tr>
+    <tr><td class="l">Register indirect</td><td class="l">MOV AX, [BX]</td><td class="l">EA = BX = 0100H</td><td>20100H</td></tr>
+    <tr><td class="l">Based</td><td class="l">MOV AX, [BX+10H]</td><td class="l">EA = 0110H</td><td>20110H</td></tr>
+    <tr><td class="l">Indexed</td><td class="l">MOV AX, [SI+10H]</td><td class="l">EA = 0060H</td><td>20060H</td></tr>
+    <tr><td class="l">Based-indexed</td><td class="l">MOV AX, [BX+SI]</td><td class="l">EA = 0150H</td><td>20150H</td></tr>
+    <tr><td class="l">Based-indexed + disp</td><td class="l">MOV AX, [BX+SI+10H]</td><td class="l">EA = 0160H</td><td>20160H</td></tr>
+    <tr><td class="l red"><b>BP-based (stack)</b></td><td class="l">MOV AX, [BP+DI+10H]</td><td class="l">EA = 0240H, segment <b>SS</b></td><td><span class="circ">30240H</span></td></tr>
+  </table>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Other modes</th><th class="l">Example</th><th class="l">Note</th></tr>
+    <tr><td class="l">String</td><td class="l">MOVSB</td><td class="l">source DS:SI, destination ES:DI, implied</td></tr>
+    <tr><td class="l">I/O port: direct / indirect</td><td class="l">IN AL, 80H · IN AL, DX</td><td class="l">8-bit port number (0–FFH) · DX for 0–FFFFH</td></tr>
+    <tr><td class="l">Relative (branch)</td><td class="l">JNZ NEXT</td><td class="l">IP + signed displacement</td></tr>
+    <tr><td class="l">Implied</td><td class="l">CLC, STD, CBW</td><td class="l">operand is fixed by the opcode</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>BP lives on the Stack</b>": any address built with BP (or SP) uses SS; BX, SI, DI use DS. Override with a prefix: MOV AX, ES:[BX].</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Only <b>BX, BP, SI, DI</b> can sit inside [ ]: MOV AX,[CX] and [DX] are illegal, as are [BX+BP] and [SI+DI] (two bases / two indexes).</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: instruction set ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Instruction set</span></div>
+  <h2><span class="no">13</span>Instruction Groups</h2><span class="tag">MCQ + Written</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Group</th><th class="l">Instructions</th><th class="l">Point to remember</th></tr>
+    <tr><td class="l">Data transfer</td><td class="l">MOV, XCHG, PUSH, POP, IN, OUT, LEA, LDS, LES, XLAT, LAHF, SAHF, PUSHF, POPF</td><td class="l">MOV / PUSH / POP change <b>no flags</b></td></tr>
+    <tr><td class="l">Arithmetic</td><td class="l">ADD, ADC, SUB, SBB, INC, DEC, NEG, CMP, MUL, IMUL, DIV, IDIV, CBW, CWD, DAA, DAS, AAA, AAS, AAM, AAD</td><td class="l">INC / DEC do not touch CF</td></tr>
+    <tr><td class="l">Logical, shift, rotate</td><td class="l">AND, OR, XOR, NOT, TEST, SHL/SAL, SHR, SAR, ROL, ROR, RCL, RCR</td><td class="l">count = 1 or CL on the 8086</td></tr>
+    <tr><td class="l">String</td><td class="l">MOVS, CMPS, SCAS, LODS, STOS + REP, REPE/REPZ, REPNE/REPNZ</td><td class="l">CX = count, DF picks direction</td></tr>
+    <tr><td class="l">Program transfer</td><td class="l">JMP, Jcc, LOOP, LOOPE, LOOPNE, JCXZ, CALL, RET, INT, INTO, IRET</td><td class="l">Jcc range: −128 … +127 bytes</td></tr>
+    <tr><td class="l">Processor control</td><td class="l">CLC, STC, CMC, CLD, STD, CLI, STI, HLT, NOP, WAIT, LOCK, ESC</td><td class="l">NOP = XCHG AX,AX (90H)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">MUL / DIV operands</span><br>MUL BL: <span class="hl">AX = AL × BL</span><br>MUL BX: <span class="hl">DX:AX = AX × BX</span><br>DIV BL: AL = AX ÷ BL, AH = remainder<br>DIV BX: AX = DX:AX ÷ BX, DX = rem.<br>quotient too big or ÷ 0 → type 0 interrupt</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked ✍</span><br>AX = 1234H, BX = 0100H, MUL BX<br>→ DX = <b>0012H</b>, AX = <b>3400H</b><br>AX = 0065H (101), BL = 0AH, DIV BL<br>→ AL = <b>0AH</b> (10), AH = <b>01H</b> (1)<br>CMP AX, BX = SUB without saving</div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 260px;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Test</th><th class="l">Unsigned</th><th class="l">Signed</th></tr>
+      <tr><td class="l">greater</td><td class="l">JA (CF = 0, ZF = 0)</td><td class="l">JG (ZF = 0, SF = OF)</td></tr>
+      <tr><td class="l">less</td><td class="l">JB = JC (CF = 1)</td><td class="l">JL (SF ≠ OF)</td></tr>
+      <tr><td class="l">equal</td><td class="l" colspan="2">JE = JZ (ZF = 1) · JNE = JNZ</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 260 150" width="255">
+      <g class="w">
+        <rect x="70" y="10" width="80" height="26" class="ink fill-b"/><rect x="70" y="36" width="80" height="26" class="ink fill-b"/><rect x="70" y="62" width="80" height="26" class="ink-g fill-g"/><rect x="70" y="88" width="80" height="26" class="ink-g fill-g"/><rect x="70" y="114" width="80" height="26" class="ink fill-b"/>
+        <path class="ink-r" d="M200,49 H156" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M200,101 H156" marker-end="url(#ahg)"/>
+      </g>
+      <text x="64" y="52" text-anchor="end" class="s">1000H</text><text x="64" y="104" text-anchor="end" class="s">0FFEH</text>
+      <text x="110" y="80" text-anchor="middle" class="g s w6">12H</text><text x="110" y="106" text-anchor="middle" class="g s w6">34H</text>
+      <text x="204" y="53" class="r s">SP before</text><text x="204" y="105" class="g s">SP after</text><text x="64" y="78" text-anchor="end" class="s">0FFFH</text>
+      <text x="130" y="148" text-anchor="middle" class="s">PUSH AX (AX = 1234H): SP − 2</text>
+    </svg></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>A</b>bove/<b>B</b>elow for <b>B</b>ytes without sign; <b>G</b>reater/<b>L</b>ess for <b>L</b>ife with sign". Stack: <b>LIFO</b>, grows <b>down</b>, PUSH = SP − 2 then store.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> PUSH/POP are <b>16-bit only</b> (no PUSH AL). MOV DS, 1234H is illegal: load a segment register through a general register. MOV [BX], [SI] is illegal (no memory-to-memory MOV; use MOVS).</div>
+  </div>
+  <p class="small"><b>String set-up:</b> source <span class="hl">DS:SI</span>, destination <span class="hl">ES:DI</span>, count CX; CLD → DF = 0 → SI, DI increase (by 1 for bytes, 2 for words); REP repeats while CX ≠ 0. LOOP = CX − 1, jump if CX ≠ 0 (flags unchanged).</p>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: programs, directives, tools ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Programming &amp; tools</span></div>
+  <h2><span class="no">14</span>Assembly Programs (MASM / TASM)</h2><span class="tag">written favourite</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <h3>P1: full program, add two words</h3>
+      <div class="code" style="font-size:10.5pt;line-height:5.05mm">.MODEL SMALL
+.STACK 100H
+.DATA
+N1   DW 9ABCH
+N2   DW 8765H
+SUM  DW ?
+CY   DB 0
+.CODE
+START: MOV AX, @DATA ; DS cannot
+     MOV DS, AX     ; take an imm.
+     MOV AX, N1
+     ADD AX, N2     ; 2221H, CF = 1
+     MOV SUM, AX
+     ADC CY, 0      ; CY = 1
+     MOV AX, 4C00H  ; exit to DOS
+     INT 21H
+     END START</div>
+      <p class="small">sum = <span class="circ">12221H</span> → SUM 2221H, CY 1</p>
+    </div>
+    <div>
+      <h3>P2: largest of 5 bytes</h3>
+      <div class="code" style="font-size:10.5pt;line-height:5.05mm">LIST DB 25H,7AH,13H,0C4H,56H
+BIG  DB ?
+     LEA SI, LIST
+     MOV CX, 4      ; 4 compares
+     MOV AL, [SI]   ; max = 25H
+NXT: INC SI
+     CMP AL, [SI]
+     JAE SKIP       ; unsigned
+     MOV AL, [SI]   ; new max
+SKIP: LOOP NXT
+     MOV BIG, AL    ; C4H</div>
+      <p class="small">AL: 25 → 7A → 7A → <b>C4</b> → C4 (JGE: 7AH)</p>
+      <h3>P3: count the 1s in a byte</h3>
+      <div class="code" style="font-size:10.5pt;line-height:5.05mm">     MOV AL, 0B5H   ; 1011 0101
+     MOV CX, 8
+     XOR BL, BL     ; count = 0
+AGN: SHL AL, 1      ; MSB → CF
+     JNC ZRO
+     INC BL
+ZRO: LOOP AGN       ; BL = 5</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">P4: block copy ✍</span> CLD · LEA SI,SRC · LEA DI,DST · MOV CX,10 · <b>REP MOVSB</b> → 10 bytes copied, CX = 0.</div>
+
+  <h2><span class="no">15</span>Assembler Directives &amp; Tools</h2><span class="tag">MCQ</span>
+  <p class="small"><span class="hl">Directives (pseudo-ops)</span> guide the assembler and produce <b>no machine code</b>; instructions do.</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Directive</th><th class="l">Meaning</th><th class="l">Directive</th><th class="l">Meaning</th></tr>
+    <tr><td class="l">DB · DW · DD · DQ · DT</td><td class="l"><span class="circ">1 · 2 · 4 · 8 · 10</span> bytes</td><td class="l">ASSUME</td><td class="l">seg. reg. ↔ segment</td></tr>
+    <tr><td class="l">SEGMENT / ENDS</td><td class="l">open / close a segment</td><td class="l">PROC / ENDP</td><td class="l">procedure</td></tr>
+    <tr><td class="l">EQU · ORG · DUP</td><td class="l">const · origin · repeat</td><td class="l">OFFSET · PTR</td><td class="l">offset · type</td></tr>
+    <tr><td class="l">.MODEL · .DATA · .CODE</td><td class="l">simplified segments</td><td class="l">END label</td><td class="l">end + entry</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 96" width="295">
+      <g class="w">
+        <rect x="4" y="8" width="58" height="30" rx="6" class="ink fill-b"/><rect x="120" y="8" width="58" height="30" rx="6" class="ink fill-b"/><rect x="236" y="8" width="58" height="30" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M62,23 H116 M178,23 H232" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M265,40 V70 H190" marker-end="url(#ahp)"/>
+      </g>
+      <text x="33" y="28" text-anchor="middle" class="s w6">.ASM</text><text x="149" y="28" text-anchor="middle" class="s w6">.OBJ</text><text x="265" y="28" text-anchor="middle" class="g s w6">.EXE</text>
+      <text x="89" y="52" text-anchor="middle" class="r s">assembler</text><text x="205" y="52" text-anchor="middle" class="r s">linker</text>
+      <text x="120" y="74" text-anchor="middle" class="p s">loader → debugger</text><text x="150" y="92" text-anchor="middle" class="s">(+ .LST listing, symbol table)</text>
+    </svg></figure>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> DB-DW-DD-DQ-DT = <b>B</b>yte, <b>W</b>ord, <b>D</b>ouble, <b>Q</b>uad, <b>T</b>en: 1, 2, 4, 8, 10.</div>
+  </div>
+  <p class="small"><b>Tools:</b> assemblers MASM, TASM, NASM (two-pass: pass 1 builds the <span class="hl">symbol table</span>, pass 2 emits code) · linker LINK/TLINK · debuggers DEBUG (R registers, D dump, E enter, A assemble, U unassemble, T trace, G go, Q quit), Turbo Debugger · development systems: emulator (emu8086), trainer kit, in-circuit emulator (ICE). A <b>.COM</b> file is one 64 KB segment starting at <b>ORG 100H</b>.</p>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>8086: 1978, 16-bit, 40 pins, +5 V</p><p>20 address lines → 2²⁰ = 1 MB</p>
+      <p>Queue: 8086 = 6 B · 8088 = 4 B</p><p>BIU: CS DS SS ES IP, Σ, queue</p>
+      <p>EU: AX–DX, SP BP SI DI, ALU, flags</p><p>14 registers, all 16-bit</p>
+      <p>PA = segment × 10H + offset</p><p>segment ≤ 64 KB, on 16-byte boundary</p>
+      <p>9 flags = 6 status + 3 control</p><p>CF0 PF2 AF4 ZF6 SF7 TF8 IF9 DF10 OF11</p>
+      <p>BP, SP → SS · BX, SI, DI → DS</p><p>strings: DS:SI → ES:DI, CX, DF</p>
+      <p><span class="ov">BHE</span> A0 = 00 word · 01 odd · 10 even</p><p>MN/<span class="ov">MX</span> = 1 min · 0 max (8288)</p>
+      <p>Reset → CS:IP = FFFF:0000 = FFFF0H</p><p>bus cycle = 4 T-states</p>
+      <p>MUL BL → AX · MUL BX → DX:AX</p><p>DB 1 · DW 2 · DD 4 · DQ 8 · DT 10</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>First MPU: Intel 4004 (1971), 4-bit</li>
+      <li>8085: 8-bit, 64 KB, single +5 V</li>
+      <li>8088 has an 8-bit external data bus</li>
+      <li>Physical address is computed in the BIU</li>
+      <li>Fetch/execute overlap = pipelining</li>
+      <li>Queue is flushed on a jump or call</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>IP cannot be loaded by MOV</li>
+      <li>PF = 1 for even 1s in the low byte</li>
+      <li>DF = 1 → strings auto-decrement</li>
+      <li>TF = 1 → single-step mode</li>
+      <li>Odd-address word = 2 bus cycles</li>
+      <li>Directives produce no machine code</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> Pentium is 32-bit · CF = unsigned, OF = signed · INC/DEC leave CF alone · [BP…] uses SS, not DS · no [CX], [DX], [BX+BP], [SI+DI] · no PUSH AL, no MOV DS, imm, no memory-to-memory MOV · FFFF:0010 wraps to 00000H · JA/JB unsigned, JG/JL signed</div>
+  <div class="trick"><span class="lbl">All tricks together</span> "Add a zero, then add" for PA · "C-P-A-Z-S … O" on bits 0-2-4-6-7-11, then "T-I-D" for control flags · "BP lives on the Stack" · Above/Below = unsigned, Greater/Less = signed · stack grows down, PUSH = SP − 2 first · BIU shops, EU cooks</div>
+  <figure class="doodle"><svg viewBox="0 0 560 104" width="560">
+    <g class="w">
+      <rect x="10" y="20" width="120" height="34" rx="8" class="ink fill-b"/>
+      <rect x="170" y="20" width="120" height="34" rx="8" class="ink-g fill-g"/>
+      <rect x="400" y="20" width="140" height="34" rx="8" class="ink-r fill-r"/>
+      <path class="ink-r" d="M290,37 H394" marker-end="url(#ah)"/>
+    </g>
+    <text x="70" y="16" text-anchor="middle" class="s">segment</text><text x="230" y="16" text-anchor="middle" class="g s">offset</text><text x="470" y="16" text-anchor="middle" class="r s">20-bit PA</text>
+    <text x="70" y="43" text-anchor="middle" class="w6">1234<tspan class="r">0</tspan></text><text x="150" y="43" text-anchor="middle" class="l">+</text><text x="230" y="43" text-anchor="middle" class="g w6">5678</text><text x="470" y="43" text-anchor="middle" class="r w6">179B8H</text>
+    <text x="342" y="30" text-anchor="middle" class="r s">Σ (BIU)</text>
+    <text x="280" y="84" text-anchor="middle" class="s">append one hex 0 to the segment, then add the offset</text>
+  </svg><figcaption>the calculation you will meet most often</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>The address bus of the 8086 is:<ol class="opts"><li>16 bits</li><li>24 bits</li><li>20 bits</li><li>32 bits</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>The instruction queue of the 8088 is:<ol class="opts"><li>4 bytes</li><li>6 bytes</li><li>8 bytes</li><li>2 bytes</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>CS = 2000H, IP = 0150H. Physical address:<ol class="opts"><li>02150H</li><li>21500H</li><li>2150H</li><li>20150H</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>MOV AX,[BP+4] takes its segment from:<ol class="opts"><li>DS</li><li>SS</li><li>ES</li><li>CS</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>The 20-bit physical address is formed by the:<ol class="opts"><li>EU</li><li>ALU</li><li>BIU</li><li>decoder</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>MOV AL,7FH then ADD AL,01H gives:<ol class="opts"><li>OF=0, CF=1</li><li>OF=1, CF=1</li><li>OF=0, SF=1</li><li>OF=1, SF=1</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>How many flags does the 8086 use?<ol class="opts"><li>9</li><li>6</li><li>16</li><li>8</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>After RESET the 8086 first fetches from:<ol class="opts"><li>00000H</li><li>FFFF0H</li><li>FFFFFH</li><li>00400H</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Maximum mode needs which bus controller?<ol class="opts"><li>8284</li><li>8255</li><li>8259</li><li>8288</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>DW reserves how many bytes per item?<ol class="opts"><li>1</li><li>2</li><li>4</li><li>8</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-c · 6-d · 7-a · 8-b · 9-d · 10-b</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Write an 8086 program that adds ten unsigned bytes stored from offset 0200H of the data segment and stores the 16-bit sum at offset 0300H (DS already set). Explain the addressing modes used. <i class="mk">8 marks</i></div>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:start">
+    <div class="code" style="font-size:10.5pt;line-height:5.6mm">     MOV SI, 0200H  ; pointer
+     MOV CX, 10     ; counter
+     XOR AX, AX     ; sum = 0
+NXT: ADD AL, [SI]   ; add byte
+     ADC AH, 0      ; keep carry
+     INC SI
+     LOOP NXT
+     MOV [0300H], AX
+     HLT</div>
+    <ol class="steps small">
+      <li>Set-up: SI pointer, CX count, AX = 0 <i class="mk">2</i></li>
+      <li>Loop: ADD AL,[SI] (register indirect) + <span class="hl">ADC AH,0</span> turns 8-bit adds into a 16-bit sum <i class="mk">3</i></li>
+      <li>INC SI, LOOP (CX − 1, repeat while ≠ 0) <i class="mk">1</i></li>
+      <li>MOV [0300H],AX: direct mode; low byte at 0300H, high at 0301H <i class="mk">2</i></li>
+    </ol>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can draw BIU/EU and say who does what</li>
+        <li>Can place all 9 flags on their bits</li>
+        <li>Can compute PA, segment range, offset</li>
+        <li>Can name the mode and PA of any MOV</li>
+        <li>Can write a LOOP program with a trace</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① min vs max mode with pins 24–31<br>② BHE/A0 and odd-address words<br>③ flags after 9AH + 7BH<br>④ reverse a string with SI/DI</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

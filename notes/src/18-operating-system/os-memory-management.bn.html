@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>মেমোরি ম্যানেজমেন্ট: পেজিং ও ভার্চুয়াল মেমোরি: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title" style="margin-top:1mm"><span class="u">মেমোরি ম্যানেজমেন্ট</span></h1>
+  <p class="subtitle">পেজিং · সেগমেন্টেশন · টিএলবি · পেজ ফল্ট · রিপ্লেসমেন্ট · ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 250" width="580">
+      <g class="w">
+        <ellipse cx="320" cy="112" rx="94" ry="34" class="ink-k fill-y"/>
+        <path class="ink" d="M246,98 L180,58 M246,126 L180,166 M320,78 L320,42 M394,98 L460,58 M394,126 L460,166 M320,146 L320,180 M226,112 L186,112 M414,112 L454,112"/>
+        <rect x="68" y="28" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="241" y="10" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="412" y="28" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="22" y="96" width="152" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="462" y="96" width="154" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="68" y="172" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="241" y="186" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="412" y="172" width="158" height="32" rx="12" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="111" text-anchor="middle" class="k l">MEMORY MGMT</text><text x="320" y="130" text-anchor="middle" class="bn r s">টপিক মাইন্ড-ম্যাপ</text>
+      <text x="147" y="41" text-anchor="middle" class="bn s" style="font-size:11px">মেমোরি স্তর</text><text x="147" y="54" text-anchor="middle" class="bn s" style="font-size:11px">গতি ও আকার</text>
+      <text x="320" y="23" text-anchor="middle" class="bn r w6" style="font-size:12px">লজিক্যাল বনাম</text><text x="320" y="36" text-anchor="middle" class="bn r w6" style="font-size:12px">ফিজিক্যাল ★</text>
+      <text x="491" y="41" text-anchor="middle" class="bn s" style="font-size:11px">রিলোকেশন ও</text><text x="491" y="54" text-anchor="middle" class="bn s" style="font-size:11px">বাইন্ডিং</text>
+      <text x="98" y="108" text-anchor="middle" class="bn g w6" style="font-size:12px">কনটিগুয়াস</text><text x="98" y="122" text-anchor="middle" class="bn g s" style="font-size:11px">+ সোয়াপিং</text>
+      <text x="539" y="108" text-anchor="middle" class="bn r w6" style="font-size:12px">পেজিং ★</text><text x="539" y="122" text-anchor="middle" class="bn r w6" style="font-size:12px">পেজ টেবিল</text>
+      <text x="147" y="192" text-anchor="middle" class="bn r w6" style="font-size:12px">ফ্র্যাগমেন্টেশন ★</text>
+      <text x="320" y="199" text-anchor="middle" class="bn w6" style="font-size:13px">সেগমেন্টেশন</text>
+      <text x="491" y="185" text-anchor="middle" class="bn r w6" style="font-size:12px">ভার্চুয়াল</text><text x="491" y="199" text-anchor="middle" class="bn r w6" style="font-size:12px">মেমোরি ★</text>
+      <text x="320" y="230" text-anchor="middle" class="bn s" style="font-size:11px">+ টিএলবি · মাল্টিলেভেল পেজ টেবিল · সেগমেন্টেড পেজিং</text>
+      <text x="320" y="244" text-anchor="middle" class="bn s" style="font-size:11px">· পেজ রিপ্লেসমেন্ট · ওয়ার্কিং সেট · থ্র্যাশিং</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = যে পদ্ধতি থেকে প্রথম প্রশ্নগুলো আসে</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;font-size:11pt"><b>হাই-ইল্ড তালিকা</b><br>① পেজিং বাহ্যিক ফ্র্যাগ ঠিকায়, ভেতরেরটা নয়<br>② p = LA div P · d = LA mod P<br>③ PA = f·P + d · অফসেট = log₂P বিট<br>④ টিএলবি হিট = ১ অ্যাক্সেস, মিস = ২<br>⑤ 32-bit + 4 KB ⇒ 2²⁦ এন্ট্রি = 4 MB<br>⑥ সেগ: PA = Base[s] + d, d &lt; Limit[s]<br>⑦ ভিন্ন দৈর্ঘ্য সেগমেন্ট ⇒ বাহ্যিক ফ্র্যাগ<br>⑧ ফল্ট: ট্র্যাপ, টেস্ট, নাও, পড়ো, PTE, আবার<br>⑨ EAT = (1 − p)m + p·f<br>⑩ থ্র্যাশিং ⇒ কম প্রসেস রাখো</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">সিলেবাসে আছে "<span class="hl">Memory management: swapping, paging, segmentation, virtual memory</span>"। শিডিউলিং ও IPC প্রসেস লেসনে আছে; ডিস্কের গঠন ইনপুট/আউটপুট লেসনে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>মেমোরি ম্যানেজমেন্ট কেন … পৃ. ২</li><li>ফ্র্যাগমেন্টেশন ও সোয়াপিং … পৃ. ৩</li><li>পেজিং ও অনুবাদ … পৃ. ৪</li><li>টিএলবি, মাল্টিলেভেল, PTE বিট … পৃ. ৫</li><li>সেগমেন্টেশন … পৃ. ৬</li></ul>
+    <ul class="tick"><li>ভার্চুয়াল মেমোরি ও পেজ ফল্ট … পৃ. ৭</li><li>পেজ রিপ্লেসমেন্ট … পৃ. ৮</li><li>ওয়ার্কিং সেট ও থ্র্যাশিং … পৃ. ৯</li><li>রাতের পাতা পৃ. ১০ · অনুশীলন পৃ. ১১</li></ul>
+  </div>
+  <div class="def tiny"><span class="lbl">এই পুরো লেসনের উদ্দেশ্য</span> মেমোরিই একমাত্র রিসোর্স যা ছাড়া কোনো প্রসেস চলতে পারে না, আবার সবচেয়ে সহজেই অতিরিক্ত বরাদ্দ হয়ে যায় এমন রিসোর্স। এখানকার প্রতিটি ধারণা — স্থির-আকারের পেজ, সরানো নয় বরং হুবহু নকল করা অফসেট, ডিস্কে লেখা হবে কি না তা ঠিক করা ডার্টি বিট — একসঙ্গে তিনটি প্রতিশ্রুতি রাখে: <span class="circ">প্রোগ্রাম পায় সমতল অ্যাড্রেস স্পেস</span>, <span class="circ">দুই প্রসেস কখনো ওভারল্যাপ করে না</span>, আর <span class="circ">OS যেকোনো সময় যেকোনো কিছু সরাতে পারে</span>।</div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: hierarchy, binding, addresses ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>স্তরবিন্যাস, বাইন্ডিং ও অ্যাড্রেস</span></div>
+  <h2><span class="no">১</span>স্তরবিন্যাস, বাইন্ডিং ও অ্যাড্রেস</h2><span class="tag">মূল বিষয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>মেমোরি ম্যানেজমেন্ট</b> (Memory management) নিয়ন্ত্রণ করে মেমোরি কীভাবে প্রসেসে <span class="hl">বরাদ্দ ও ফেরত</span> নেওয়া হয়। এর দুটি লক্ষ্য: <span class="circ">মেমোরির ব্যবহার সর্বাধিক করা</span> এবং <span class="circ">সোয়াপের সময় সর্বনিম্ন করা</span>। এটি আরও তিনটি জিনিস দেয় — <b>অ্যাবস্ট্রাকশন</b> (মেমোরি একটি সমতল অ্যাড্রেস তালিকা বলে মনে হয়), <b>প্রোটেকশন</b> (এক প্রসেস অন্যের মেমোরি ছুঁতে পারে না) এবং <b>শেয়ারিং</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 164" width="228">
+      <g class="w">
+        <rect x="10" y="6" width="260" height="32" rx="8" class="ink fill-b"/>
+        <rect x="34" y="44" width="212" height="32" rx="8" class="ink fill-b"/>
+        <rect x="58" y="82" width="164" height="32" rx="8" class="ink-r fill-r"/>
+        <rect x="82" y="120" width="116" height="32" rx="8" class="ink fill-b"/>
+      </g>
+      <text x="140" y="21" text-anchor="middle" class="bn k w6" style="font-size:13px">রেজিস্টার</text><text x="140" y="33" text-anchor="middle" class="bn s" style="font-size:10.5px">বাইট · &lt; 1 ns</text>
+      <text x="140" y="59" text-anchor="middle" class="bn k w6" style="font-size:13px">ক্যাশ · SRAM</text><text x="140" y="71" text-anchor="middle" class="bn s" style="font-size:10.5px">KB–MB · ~10 ns</text>
+      <text x="140" y="97" text-anchor="middle" class="bn k w6" style="font-size:13px">মেইন মেমোরি</text><text x="140" y="109" text-anchor="middle" class="bn r s" style="font-size:10.5px">GB · ~100 ns · OS-এর কাজ</text>
+      <text x="140" y="135" text-anchor="middle" class="bn k w6" style="font-size:13px">ডিস্ক / SSD</text><text x="140" y="147" text-anchor="middle" class="bn s" style="font-size:10.5px">TB · ~10 ms</text>
+    </svg><figcaption>উপরে গেলে দ্রুত ও ছোট। OS কেবল <b>মাঝের স্তরটি</b> সামলায়</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">স্তর</th><th class="l">আকার</th><th class="l">অ্যাক্সেস</th><th class="l">কে সামলায়</th></tr>
+      <tr><td class="l"><b>রেজিস্টার</b></td><td class="l">বাইট</td><td class="l">&lt; 1 ns</td><td class="l">কম্পাইলার</td></tr>
+      <tr><td class="l"><b>ক্যাশ</b> (SRAM)</td><td class="l">KB – MB</td><td class="l">1 – 100 ns</td><td class="l">হার্ডওয়্যার</td></tr>
+      <tr><td class="l"><b>মেইন মেমোরি</b> (DRAM)</td><td class="l">GB</td><td class="l">50 – 100 ns</td><td class="l"><span class="circ">OS — এই লেসন</span></td></tr>
+      <tr><td class="l"><b>সেকেন্ডারি স্টোরেজ</b></td><td class="l">TB</td><td class="l">50 µs – 10 ms</td><td class="l">ফাইল সিস্টেম + সোয়াপ</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বাইন্ডিং সময়</th><th class="l">অ্যাড্রেস কখন ঠিক হয়</th><th class="l">প্রসেস সরলে কী হয়</th></tr>
+    <tr><td class="l"><b>কম্পাইল টাইম</b></td><td class="l">কম্পাইলের সময়ই; কাঠামো তখনই জানা — পরম শুধু অ্যাড্রেস</td><td class="l"><span class="red"><b>আবার কম্পাইল করতে হবে</b></span></td></tr>
+    <tr><td class="l"><b>লোড টাইম</b></td><td class="l">মেমোরিতে ঢোকানোর সময় — রিলোকেটেবল কোড, লোডের সময়ই বেস + লিমিট বসে</td><td class="l">শুধু আবার লোড করলেই হবে</td></tr>
+    <tr><td class="l"><b>এক্সিকিউশন টাইম</b> ★</td><td class="l"><b>প্রতিটি রেফারেন্সের</b> সময় — MMU অনুবাদ করে, বেস/লিমিট বা পেজ টেবিল দিয়ে</td><td class="l"><span class="circ">কিছুই নয় — সত্যিকারের ডাইনামিক রিলোকেশন</span></td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">লজিক্যাল বনাম ফিজিক্যাল</span> <b>লজিক্যাল (রিলেটিভ)</b> অ্যাড্রেসটি প্রোগ্রাম নিজেই তৈরি করে — <b>0</b> থেকে গোনা, প্রসেস কোথায় বসে তার সাথে কোনো সম্পর্ক নেই। <b>ফিজিক্যাল (অ্যাবসলিউট)</b> অ্যাড্রেস আসল RAM ইউনিটের ঠিকানা; <span class="circ">শুধু মেমোরি হার্ডওয়্যারই তা দেখে</span>। একটিকে অন্যটিতে বদলানোই <b>রিলোকেশন</b>, আর যেহেতু প্রোগ্রাম চলতে চলতেই এটি হয়, তাই OS যেকোনো মুহূর্তে প্রসেস সরাতে পারে।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">বেস + লিমিট</span> <b>রিলোকেশন (বেস) রেজিস্টার</b> = পার্টিশন যেখানে শুরু হয়; <b>লিমিট রেজিস্টার</b> = তার আকার। প্রতিটি লজিক্যাল অ্যাড্রেস <i>a</i> আগে লিমিটের সাথে মিলিয়ে দেখা হয়, তারপর <span class="hl">ফিজিক্যাল = লজিক্যাল + বেস</span>। যদি <i>a</i> ≥ লিমিট হয়, CPU ট্র্যাপ করে প্রসেস বন্ধ করে দেয়।</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কম্পাইল = জমে গেল, লোড = বাঁধা, রান = চলমান।</b>" কেবল <b>এক্সিকিউশন টাইম</b> বাইন্ডিংয়েই প্রোগ্রাম সরানো যায় আবার কম্পাইল ছাড়াই — এজন্যই প্রতিটি আসল মেশিনে MMU আছে। আর এটা ধরে রাখো: <span class="hl">প্রোগ্রাম লজিক্যাল দেখে, শুধু চিপ ফিজিক্যাল</span>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <b>লোড</b> টাইমে বাইন্ডিংয়েও রিলোকেটেবল কোড লাগে; সোয়াপ ও কম্প্যাকশনকে সম্ভব করে <b>এক্সিকিউশন</b> টাইম। (ii) পরম অ্যাড্রেস থাকলে প্রতিটি নতুন অবস্থানে <b>আবার কম্পাইল</b> করতে হয়। (iii) বেস + লিমিট <b>কনটিগুয়াস</b> মেমোরির, পেজ টেবিল <b>পেজিং</b>-এর।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: fragmentation, contiguous, swapping ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>ফ্র্যাগমেন্টেশন ও সোয়াপিং</span></div>
+  <h2><span class="no">২</span>ফ্র্যাগমেন্টেশন, কনটিগুয়াস বরাদ্দ ও সোয়াপিং</h2><span class="tag">পেজিংয়ের আগে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>কনটিগুয়াস অ্যালোকেশন</b> (Contiguous allocation) প্রতিটি প্রসেসকে মেমোরির <b>একটি অবিচ্ছিন্ন ব্লক</b> দেয়, যার জন্য OS একটি <b>বেস (রিলোকেশন)</b> রেজিস্টার ও একটি <b>লিমিট</b> রেজিস্টার বসায়। <b>ফ্র্যাগমেন্টেশন</b> (Fragmentation) হলো এমন ফাঁকা মেমোরি যা ব্যবহার করা যায় না: <span class="hl">অভ্যন্তরীণ</span> = বরাদ্দ দেওয়া ব্লকের <b>ভেতরের</b> ফাঁকা, <span class="hl">বাহ্যিক</span> = ব্লকের <b>মাঝের</b> ফাঁকা, পরের অনুরোধের জন্য যা কনটিগুয়াস নয়। ভেতরের অপচয় কখনো ফেরত পাওয়া যায় না; বাইরের অপচয় কেবল <b>কম্প্যাকশন</b> দিয়ে যায়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,238px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 168" width="232">
+      <g class="w">
+        <rect x="8" y="8" width="264" height="30" rx="5" class="ink"/>
+        <rect x="8" y="42" width="104" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="116" y="42" width="46" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="166" y="42" width="106" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="8" y="74" width="70" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="82" y="74" width="64" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="150" y="74" width="122" height="28" rx="5" class="ink-g fill-g"/>
+      </g>
+      <text x="140" y="27" text-anchor="middle" class="bn k w6" style="font-size:11px">এক প্রসেস = একটাই অবিচ্ছিন্ন ব্লক</text>
+      <text x="60" y="61" text-anchor="middle" class="g w6 s">P1</text><text x="139" y="61" text-anchor="middle" class="r w6 s">P4</text><text x="219" y="61" text-anchor="middle" class="g w6 s">P2</text>
+      <text x="43" y="93" text-anchor="middle" class="g w6 s">P3</text><text x="114" y="93" text-anchor="middle" class="r w6 s">P6</text><text x="211" y="93" text-anchor="middle" class="g w6 s">P5</text>
+      <text x="140" y="120" text-anchor="middle" class="bn r w6" style="font-size:11px">গর্ত = বাহ্যিক ফ্র্যাগমেন্টেশন</text>
+      <text x="140" y="146" text-anchor="middle" class="bn s" style="font-size:11px">শুধু সবচেয়ে বড় কনটিগুয়াস ফাঁকাই গোনা হয়,</text>
+      <text x="140" y="158" text-anchor="middle" class="bn s" style="font-size:11px">ফাঁকা মেমোরির যোগফল কখনো নয়</text>
+    </svg><figcaption>কম্প্যাকশন গর্ত বন্ধ করে; ভেতরের অপচয় কখনো নয়</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">কৌশল</th><th class="l">যে গর্তটি বাছে</th><th class="l">মূল্যায়ন</th></tr>
+        <tr><td class="l"><b>ফার্স্ট ফিট</b></td><td class="l">শুরু থেকে স্ক্যান করে প্রথম যথেষ্ট বড় গর্ত</td><td class="l">দ্রুত; <b>শেষে</b> সরু টুকরো রেখে যায়</td></tr>
+        <tr><td class="l"><b>বেস্ট ফিট</b></td><td class="l">যে ছোট গর্তে মোড়ে</td><td class="l"><span class="red"><b>সবচেয়ে খারাপ</b></span> অব্যবহারীয় টুকরো</td></tr>
+        <tr><td class="l"><b>ওয়ার্স্ট ফিট</b></td><td class="l">সবচেয়ে বড় গর্তটি</td><td class="l">বড় ব্লকটাই তাড়াতাড়ি নষ্ট করে</td></tr>
+        <tr><td class="l"><b>নেক্সট ফিট</b></td><td class="l">যেখানে ছিল সেখান থেকেই শুরু করে প্রথম মিলে যায়</td><td class="l">ক্ষতি সমানভাবে ছড়ায়</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) "<b>কোনটিতে বাহ্যিক ফ্র্যাগমেন্টেশন?</b>" → কনটিগুয়াস ও সেগমেন্টেশন, <b>কখনোই পেজিং নয়</b>; "অভ্যন্তরীণ কোথায়?" → পেজিং ও <b>ফিক্সড</b> পার্টিশন। (ii) কম্প্যাকশনের জন্য রিলোকেশন হার্ডওয়্যার লাগে, অর্থাৎ <b>এক্সিকিউশন টাইম</b> বাইন্ডিং। (iii) সোয়াপ করলে কাগজে ফাঁকা জায়গা দ্বিগুণও হতে পারে, তবু পরের প্রসেসের জন্য বড় ব্লক না থাকতে পারে।</div>
+    </div>
+  </div>
+  <div class="def tiny"><span class="lbl">সোয়াপিং (Swapping)</span> <b>সোয়াপিং</b> একটি <b>পুরো প্রসেস</b> ডিস্কের সোয়াপ ডিভাইসে সরিয়ে দেয় এবং পরে আবার মেমোরিতে আনে, ফলে সিস্টেম <span class="hl">ফিজিক্যাল মেমোরির চেয়ে বেশি প্রসেস</span> চালাতে পারে, আর সুযোগ এলে কম্প্যাকশনও করা যায়। এর পুরো খরচ হলো ডিস্ক I/O। <span class="red">সোয়াপিং ≠ পেজিং:</span> সোয়াপিং <b>পুরো প্রসেস</b> OS-এর নিজস্ব সিদ্ধান্তে সরায়; পেজিং <b>একটি পেজ</b> সরায় যখন প্রোগ্রাম নিজেই সেটি রেফারেন্স করে, আর প্রসেসের নজরে এটি ঘটে না।</div>
+  <div class="cols" style="align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি সোয়াপে কত খরচ?</span> ডিস্ক 10 MB/s গতিতে চলে, গড় seek ~10 ms। (ক) 1 MB প্রসেস বাইরে ও ভেতরে = <span class="circ">200 ms + 20 ms = 220 ms</span>। (খ) 33 MB প্রসেস দুইবার করে বাইরে-ভেতরে = 132 MB ÷ 10 = <b>13.2 s</b>। (গ) বদলে একটি 4 KB পেজ = <b>0.4 ms</b> — <span class="circ">550 গুণ সস্তা</span>। (ঘ) তাই শুধু দরকারি পেজগুলোই সরানো <b>পেজিং</b>ই মেশিনকে সাড়া দেয়।</div>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ভেতরে = অভ্যন্তরীণ, বাইরে = বাহ্যিক।</b>" কম্প্যাকশন কেবল বাইরেরটাই সারায় — ভেতরেরটা আগে দেওয়া আকারের ভেতরেই বেঁচে থাকে। কনটিগুয়াস বরাদ্দের জন্য একটা সম্পূর্ণ ফাঁকা গর্ত লাগে; <span class="hl">পেজিংয় কখনো লাগে না</span> — এজন্যই পেজিং বানানো হয়েছে।</div>
+      <div class="tipbox tiny"><span class="lbl">বাস্তবে</span> ডিমান্ড পেজিং প্রায় ক্লাসিক সোয়াপিংকে শেষ করে দিয়েছে। যথেষ্ট RAM থাকা মেশিন কখনোই সোয়াপ করে না; তবু হলে কার্নেল পুরো প্রসেস নয়, <b>ঠান্ডা অ্যানোনিমাস মেমোরি</b> পেজ করে বের করে, আর সোয়াপ ফাইল কাজের জায়গা নয়, শেষ অবলম্বন।</div>
+    </div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: paging ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>পেজিং ও অ্যাড্রেস অনুবাদ</span></div>
+  <h2><span class="no">৩</span>পেজিং: পেজ, ফ্রেম, পেজ টেবিল, অনুবাদ</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>পেজিং</b> (Paging) দুই মেমোরিই <span class="hl">স্থির-আকারের ব্লকে</span> ভাগ করে: প্রসেসের লজিক্যাল মেমোরি <b>পেজে</b>, ফিজিক্যাল মেমোরি <b>ফ্রেমে</b>, <b>পেজ = ফ্রেম</b> আকারের। তাই প্রসেস যেকোনো ফ্রেমে যেকোনো ক্রমে বসতে পারে — কনটিগুয়াসতা আর থাকে না। <b>পেজ টেবিল</b> হলো <span class="hl">পেজ টেবিল এন্ট্রি (PTE)</span>-এর একটি অ্যারে, প্রতি পেজের জন্য একটি করে, যাতে ফ্রেম নম্বর ও নিয়ন্ত্রণ বিট থাকে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,272px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 192" width="266">
+      <g class="w">
+        <rect x="6" y="22" width="50" height="20" rx="3" class="ink fill-b"/>
+        <rect x="6" y="46" width="50" height="20" rx="3" class="ink fill-b"/>
+        <rect x="6" y="70" width="50" height="20" rx="3" class="ink-r fill-r"/>
+        <rect x="6" y="94" width="50" height="20" rx="3" class="ink fill-b"/>
+        <rect x="112" y="22" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="112" y="46" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="112" y="70" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="112" y="94" width="56" height="20" rx="3" class="ink-k fill-y"/>
+        <rect x="222" y="22" width="72" height="20" rx="3" class="ink fill-y"/>
+        <rect x="222" y="46" width="72" height="20" rx="3" class="ink fill-y"/>
+        <rect x="222" y="70" width="72" height="20" rx="3" class="ink fill-y"/>
+        <rect x="222" y="94" width="72" height="20" rx="3" class="ink fill-y"/>
+        <path class="ink" d="M58,32 L110,32 M58,56 L110,56 M58,80 L110,80 M58,104 L110,104"/>
+        <path class="ink" d="M170,32 L220,104 M170,56 L220,32 M170,80 L220,56 M170,104 L220,80"/>
+        <path class="ink-k" d="M6,128 H294"/>
+        <rect x="6" y="140" width="126" height="24" rx="4" class="ink-r fill-r"/>
+        <rect x="136" y="140" width="66" height="24" rx="4" class="ink-g fill-g"/>
+        <path class="ink" d="M206,152 L232,152" marker-end="url(#ahb)"/>
+        <rect x="238" y="140" width="56" height="24" rx="4" class="ink-g fill-g"/>
+      </g>
+      <text x="31" y="16" text-anchor="middle" class="bn k w6" style="font-size:10px">লজিক্যাল</text>
+      <text x="140" y="16" text-anchor="middle" class="bn k w6" style="font-size:10px">পেজ টেবিল</text>
+      <text x="258" y="16" text-anchor="middle" class="bn k w6" style="font-size:10px">ফিজিক্যাল</text>
+      <text x="31" y="37" text-anchor="middle" class="s">0</text><text x="31" y="61" text-anchor="middle" class="s">1</text>
+      <text x="31" y="85" text-anchor="middle" class="r w6">2</text><text x="31" y="109" text-anchor="middle" class="s">3</text>
+      <text x="140" y="37" text-anchor="middle" class="s">f 1</text><text x="140" y="61" text-anchor="middle" class="s">f 3</text>
+      <text x="140" y="85" text-anchor="middle" class="r w6">f 0</text><text x="140" y="109" text-anchor="middle" class="s">f 2</text>
+      <text x="258" y="37" text-anchor="middle" class="s">frame 1</text><text x="258" y="61" text-anchor="middle" class="s">frame 3</text>
+      <text x="258" y="85" text-anchor="middle" class="s">frame 0</text><text x="258" y="109" text-anchor="middle" class="s">frame 2</text>
+      <text x="69" y="157" text-anchor="middle" class="r w6 s">p = LA div P</text>
+      <text x="169" y="157" text-anchor="middle" class="g w6 s">d</text>
+      <text x="266" y="157" text-anchor="middle" class="g w6 s">f·P + d</text>
+      <text x="150" y="180" text-anchor="middle" class="bn s k" style="font-size:11px">অফসেট d হুবহু একই থাকে — শুধু পেজ নাম্বর বদলায়</text>
+      <text x="150" y="192" text-anchor="middle" class="bn g s k" style="font-size:11px">পেজ 2 আছে ফ্রেম 0-তে: পেজগুলো কোনো ক্রমেই নেই</text>
+    </svg><figcaption>প্রতি পেজের জন্য একটি ফ্রেম, যেকোনো ক্রমে — পেজিংয়ের পুরো ধারণা এই এক বাক্যেই আছে</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">পরিভাষা</th><th class="l">অর্থ</th></tr>
+        <tr><td class="l"><b>পেজ</b></td><td class="l">একটি প্রসেসের <b>লজিক্যাল</b> মেমোরির স্থির-আকারের ব্লক</td></tr>
+        <tr><td class="l"><b>ফ্রেম</b></td><td class="l"><b>ফিজিক্যাল</b> মেমোরির স্থির-আকারের ব্লক, পেজের সমান আকারের</td></tr>
+        <tr><td class="l"><b>পেজ টেবিল</b></td><td class="l">প্রতি প্রসেসের নিজস্ব PTE অ্যারে; এটিই প্রসেসের মানচিত্র</td></tr>
+        <tr><td class="l"><b>PTE</b></td><td class="l">ফ্রেম নম্বর + ভ্যালিড / প্রোটেকশন / ডার্টি / রেফারেন্স</td></tr>
+        <tr><td class="l"><b>ফ্রি-ফ্রেম তালিকা</b></td><td class="l">যে ফ্রেম কেউ ব্যবহার করছে না, সঙ্গে সঙ্গে ফাঁকা</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) অফসেট <b>হুবহু নকল</b> হয় — f·P ছাড়া আর কোথাও যোগ করা যায় না। (ii) <span class="circ">পেজিং কেবল বাহ্যিক ফ্র্যাগমেন্টেশন ঠিকায়</span>; শেষ পেজটা সাধারণত আংশিক খালি থাকে, প্রতি প্রসেসে গড়ে <b>অর্ধেক পেজ</b> নষ্ট হয়। (iii) বরাদ্দের একক ফ্রেম, তাই ফ্রেমের ভেতরের কিছু শেয়ার করা যায় না।</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">চারটি সূত্র — পেজিংয়ের প্রতিটি প্রশ্ন এর একটিই</span>
+    <div class="fgrid tiny">
+      <p><b>পেজ নাম্বর</b> p = ⌊LA ÷ P⌋ = LA div P</p>
+      <p><b>অফসেট</b> d = LA mod P</p>
+      <p><b>ফিজিক্যাল অ্যাড্রেস</b> PA = f·P + d</p>
+      <p><b>প্রসেসের পেজ সংখ্যা</b> size ÷ P</p>
+    </div>
+    <p class="tiny" style="margin-top:1mm">যদি P = <b>2ⁿ</b> বাইট হয় তবে অফসেটে ঠিক <span class="circ">n = log₂P বিট</span> লাগে, বাকি বিটগুলো পেজ নম্বর নেয়। 4 KB = 2¹², তাই 32-bit অ্যাড্রেস ভাগ হয় <b>20-বিট p + 12-বিট d</b>-এ।</p></div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ লজিক্যাল 3000, পেজ 2 → ফ্রেম 5</span> P = 1 KB = 1024। (ক) p = 3000 div 1024 = <b>2</b> (2 × 1024 = 2048; 3 × 1024 = 3072 &gt; 3000)। (খ) d = 3000 mod 1024 = 3000 − 2048 = <b>952</b>। (গ) PTE[2] = <b>5</b>। (ঘ) PA = 5 × 1024 + 952 = 5120 + 952 = <span class="circ">6072</span>। (ঙ) যাচাই: 5 × 1024 = 5120 ≤ 6072 &lt; 6144 ✓। (চ) অফসেট লজিক্যাল অ্যাড্রেস থেকে ফিজিক্যাল অ্যাড্রেসে সম্পূর্ণ অপরিবর্তিত যায়।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>পেজ ঢোকে, ফ্রেম বেরোয়।</b>" পেজ নম্বর পেজ টেবিলে একটি <b>সূচক</b>, অফসেট ব্লকের ভেতরে একটি <b>অবস্থান</b>। পেজিং সূচক বদলায়, অবস্থান হুবহু রাখে।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> প্রতিটি x86-64 ও ARM64 CPU ঠিক এই টেবিলই হাঁটে, আর সাম্প্রতিক PTE একটি <b>টিএলবি</b>-তে রাখে — পরের পাতা।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: TLB, multilevel tables, PTE bits ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>টিএলবি, মাল্টিলেভেল টেবিল ও PTE বিট</span></div>
+  <h2><span class="no">৪</span>টিএলবি, মাল্টিলেভেল পেজ টেবিল ও PTE বিট</h2><span class="tag">বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> প্রতিটি রেফারেন্সে পেজ টেবিল দেখলে প্রতি মেমোরি অ্যাক্সেসে <b>দুই</b>বার যেতে হতো। <b>ট্রান্সলেশন লুকঅ্যাসাইড বাফার (TLB)</b> হলো MMU-র ভেতরে থাকা একটি ছোট, খুব দ্রুত <span class="hl">সাম্প্রতিক PTE-এর অ্যাসোসিয়েটিভ ক্যাশ</span>। <b>হিট</b> হলে ফ্রেম নম্বর TLB থেকেই আসে আর ডেটা মাত্র <b>এক</b> অ্যাক্সেসে আসে; <b>মিস</b> হলে মেমোরি থেকে পেজ টেবিল পড়ে TLB নতুন করে ভরতে হয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,246px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 128" width="230">
+      <g class="w">
+        <rect x="8" y="8" width="88" height="20" rx="4" class="ink-r fill-r"/>
+        <rect x="100" y="8" width="88" height="20" rx="4" class="ink-r fill-r"/>
+        <rect x="192" y="8" width="102" height="20" rx="4" class="ink fill-y"/>
+        <rect x="8" y="52" width="88" height="26" rx="5" class="ink fill-b"/>
+        <rect x="100" y="52" width="88" height="26" rx="5" class="ink fill-b"/>
+        <rect x="192" y="52" width="102" height="26" rx="5" class="ink-g fill-g"/>
+        <path class="ink" d="M52,30 L52,48" marker-end="url(#ahb)"/>
+        <path class="ink" d="M144,30 L144,48" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M243,30 L243,48" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M52,82 L52,106" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M243,82 L243,106" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M84,102 L216,102" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="52" y="22" text-anchor="middle" class="r w6 s">p1 · 10 bits</text>
+      <text x="144" y="22" text-anchor="middle" class="r w6 s">p2 · 10 bits</text>
+      <text x="243" y="22" text-anchor="middle" class="w6 s">d · 12 bits</text>
+      <text x="52" y="69" text-anchor="middle" class="bn k w6" style="font-size:10.5px">বাইরের টেবিল</text>
+      <text x="144" y="69" text-anchor="middle" class="bn k w6" style="font-size:10.5px">ভেতরের টেবিল</text>
+      <text x="243" y="69" text-anchor="middle" class="bn g w6" style="font-size:10.5px">ফ্রেম f</text>
+      <text x="150" y="120" text-anchor="middle" class="bn s k" style="font-size:11px">p1 বাইরের টেবিল, p2 ভেতরেরটা — d অক্ষত</text>
+      <text x="150" y="128" text-anchor="middle" class="bn r s k" style="font-size:11px">ভেতরের টেবিল কেবল তখনই তৈরি হয়</text>
+    </svg><figcaption>4 KB পেজসহ 32-bit অ্যাড্রেস: ২০ বিট পেজ নম্বর, ভাগ 10 + 10</figcaption></figure>
+    <div>
+      <div class="sumbox" style="margin-top:0"><span class="lbl">টিএলবি-র খরচ</span><p class="tiny">ধরি <b>t</b> = TLB লুকআপ, <b>m</b> = একবার মেমোরি অ্যাক্সেস, <b>h</b> = হিট অনুপাত।<br><b>EAT = h·(t + m) + (1 − h)·(t + 2m)</b></p></div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">পদ্ধতি, 32-bit + 4 KB পেজ</th><th class="l">আকার</th></tr>
+        <tr><td class="l"><b>এক স্তরের</b></td><td class="l">2²⁦ এন্ট্রি × 4 B = প্রতি প্রসেসে <span class="circ">4 MB</span></td></tr>
+        <tr><td class="l"><b>দুই স্তরের</b> (10 + 10)</td><td class="l">বাইরে 2¹⁦ × 4 B = <b>4 KB</b>, সঙ্গে ব্যবহৃত প্রতি ভেতরের টেবিলে 4 KB</td></tr>
+        <tr><td class="l"><b>যা বাঁচে</b></td><td class="l">৩২ পেজ ব্যবহারকারী প্রসেসের জন্য <b>4 KB + 128 B</b>, 4 MB নয়</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ টিএলবির সময় গণনা</span> একটি TLB লুকআপে <b>20 ns</b>, একবার মেমোরি অ্যাক্সেসে <b>100 ns</b>, হিট অনুপাত <b>80 %</b>। (ক) হিট = 20 + 100 = <b>120 ns</b>। (খ) মিস = 20 + 100 (পেজ টেবিল) + 100 (ডেটা) = <b>220 ns</b>। (গ) EAT = 0.8 × 120 + 0.2 × 220 = 96 + 44 = <span class="circ">140 ns</span>। (ঘ) TLB ছাকরা হলে 200 ns। (ঙ) মাল্টিলেভেল টেবিল এই হিসাব বদলায় না — শুধু <i>মিস</i> ছোট হয়, কারণ বাইরের এন্ট্রি না থাকলেই হাঁটা ওখানেই শেষ।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">PTE বিট</th><th class="l">1 মানে</th><th class="l">0 মানে</th><th class="l">পড়ে কে</th></tr>
+    <tr><td class="l"><b>ভ্যালিড</b></td><td class="l">পেজটা এখন কোনো ফ্রেমে আছে</td><td class="l">মেমোরিতে নেই → <span class="circ">পেজ ফল্ট তোলো</span></td><td class="l">MMU, প্রতি রেফারেন্সে</td></tr>
+    <tr><td class="l"><b>প্রোটেকশন</b></td><td class="l">পড়া / লেখা / চালানোর অনুমতি আছে</td><td class="l">না → প্রোটেকশন ফল্ট</td><td class="l">MMU, প্রতি রেফারেন্সে</td></tr>
+    <tr><td class="l"><b>ডার্টি</b></td><td class="l">লোড হওয়ার পর লেখা হয়েছে</td><td class="l">অপরিবর্তিত → ফিরিয়ে লিখব না</td><td class="l">রিপ্লেসমেন্টের সময়</td></tr>
+    <tr><td class="l"><b>রেফারেন্স</b></td><td class="l">সম্প্রতি ব্যবহৃত</td><td class="l">ব্যবহৃত হয়নি</td><td class="l"><b>ক্লক</b> ও LRU</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) TLB <b>হার্ডওয়্যার</b>, মেমোরিতে থাকা টেবিল নয় — সাধারণত এটি <b>অ্যাসোসিয়েটিভ মেমোরি</b>, কনটেন্ট দিয়ে খোঁজা হয়। (ii) ডার্টি মানে "বদলেছে", রেফারেন্স মানে "দেখা হয়েছে"; দুটি শব্দ ভুল করলে উত্তর ভুল হয়। (iii) পেজ <b>ভ্যালিড থাকা সত্ত্বেও কখনো লেখা হয়নি</b> — ভ্যালিড মানে উপস্থিতি, পরিবর্তন নয়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>হিট একবার, মিস দুইবার।</b>" আর "<b>D = Dirty, R = Referenced</b> — ডার্টি ঠিক করে <i>ফিরিয়ে লিখব কি না</i>, রেফারেন্স ঠিক করে <i>পরের কে বেরোবে</i>।" TLB হলো পেজ টেবিলের ক্যাশ, তাই পেজগুলোর কাজের অংশ ছোট থাকলে টেবিল বড় হলেও সস্তা।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: segmentation ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>সেগমেন্টেশন</span></div>
+  <h2><span class="no">৫</span>সেগমেন্টেশন, এবং পেজিংসহ সেগমেন্টেশন</h2><span class="tag">লিখিত প্রশ্নের প্রিয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>সেগমেন্টেশন</b> (Segmentation) মেমোরিকে সমান ব্লকের বদলে <span class="hl">ভিন্ন দৈর্ঘ্যের লজিক্যাল একক</span> — কোড, ডেটা, স্ট্যাক, হিপ — ভাগ করে। একটি লজিক্যাল অ্যাড্রেস হলো জোড়া <span class="circ">(সেগমেন্ট নম্বর, অফসেট)</span>। <b>সেগমেন্ট টেবিল</b> প্রতি সেগমেন্টে একটি <b>বেস</b> (শুরুর ফিজিক্যাল অ্যাড্রেস) ও একটি <b>লিমিট</b> (দৈর্ঘ্য) রাখে, সঙ্গে প্রোটেকশন বিট, তাই <b>d &lt; Limit[s]</b> হলে <b>PA = Base[s] + d</b>; নয়তে <b>সেগমেন্টেশন ফল্ট</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,262px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 152" width="256">
+      <g class="w">
+        <rect x="8" y="8" width="86" height="24" rx="4" class="ink fill-b"/>
+        <rect x="8" y="36" width="86" height="20" rx="4" class="ink fill-b"/>
+        <rect x="8" y="60" width="86" height="24" rx="4" class="ink fill-g"/>
+        <rect x="8" y="88" width="86" height="40" rx="4" class="ink fill-g"/>
+        <rect x="158" y="8" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <rect x="158" y="38" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <rect x="158" y="68" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <rect x="158" y="98" width="134" height="24" rx="4" class="ink-k fill-y"/>
+        <path class="ink" d="M96,20 L156,20 M96,46 L156,50 M96,72 L156,80 M96,108 L156,110"/>
+      </g>
+      <text x="51" y="25" text-anchor="middle" class="bn w6 s" style="font-size:11px">0 কোড</text>
+      <text x="51" y="51" text-anchor="middle" class="bn w6 s" style="font-size:11px">1 ডেটা</text>
+      <text x="51" y="77" text-anchor="middle" class="bn w6 s" style="font-size:11px">2 হিপ</text>
+      <text x="51" y="113" text-anchor="middle" class="bn w6 s" style="font-size:11px">3 স্ট্যাক</text>
+      <text x="225" y="24" text-anchor="middle" class="s" style="font-size:11px">base 0 · limit 24</text>
+      <text x="225" y="54" text-anchor="middle" class="s" style="font-size:11px">base 24 · limit 20</text>
+      <text x="225" y="84" text-anchor="middle" class="s" style="font-size:11px">base 44 · limit 24</text>
+      <text x="225" y="114" text-anchor="middle" class="s" style="font-size:11px">base 68 · limit 40</text>
+      <text x="225" y="146" text-anchor="middle" class="bn r w6" style="font-size:11px">প্রতিটি সেগমেন্ট ভিন্ন দৈর্ঘ্যের ★</text>
+    </svg><figcaption>আবার সেই ভিন্ন-দৈর্ঘ্য পার্টিশনের সমস্যা। সমাধানকৃত: সেগমেন্ট 2-এর বেস 44, লিমিট 24, তাই (2, 23) → 67 ✓ কিন্তু (2, 24) → <span class="red">ফল্ট</span>, কারণ 24 ≥ লিমিট</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">বিষয়</th><th class="l">পেজিং</th><th class="l">সেগমেন্টেশন</th></tr>
+        <tr><td class="l">ব্লকের আকার</td><td class="l">স্থির</td><td class="l"><b>ভিন্ন</b></td></tr>
+        <tr><td class="l">অ্যাড্রেস</td><td class="l">(p, d)</td><td class="l">(s, d)</td></tr>
+        <tr><td class="l">টেবিল এন্ট্রি</td><td class="l">ফ্রেম নম্বর + বিট</td><td class="l">বেস + লিমিট + বিট</td></tr>
+        <tr><td class="l">ফ্র্যাগমেন্টেশন</td><td class="l">শুধু অভ্যন্তরীণ</td><td class="l">শুধু <span class="circ">বাহ্যিক</span></td></tr>
+        <tr><td class="l">ডেটার সাথে বাড়ে?</td><td class="l">না</td><td class="l">হ্যাঁ — হিপ, স্ট্যাক</td></tr>
+        <tr><td class="l">প্রোটেকশন / শেয়ারিং</td><td class="l">প্রতি পেজে, জটিল</td><td class="l">প্রতি সেগমেন্টে, স্বাভাবিক</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) সেগমেন্টেশন <b>বাহ্যিক</b>, পেজিং <b>অভ্যন্তরীণ</b> ফ্র্যাগমেন্টেশন দেয় — ঠিক বিপরীত রোগ। (ii) সেগমেন্ট নম্বর <b>পেজ নম্বর নয়</b>; সেগমেন্টের স্থির আকার নেই, তাই অ্যাড্রেস বিটে ভাগ করা যায় না। (iii) গোটা সেগমেন্ট শেয়ার করা স্বাভাবিক; <b>অর্ধেক</b> পেজ শেয়ার করা নয়।</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">পেজিংসহ সেগমেন্টেশন (segmented paging)</span>
+    <p class="tiny">প্রতিটি সেগমেন্টকে <b>আবার</b> স্থির-আকারের পেজে ভাগ করা হয় এবং <b>প্রতিটি সেগমেন্টের নিজস্ব পেজ টেবিল থাকে</b>; সেগমেন্ট টেবিল এন্ট্রি এখন বেস+লিমিট জোড়ার বদলে <b>ওই সেগমেন্টের পেজ টেবিলের বেস অ্যাড্রেস</b> রাখে। লজিক্যাল অ্যাড্রেস <span class="hl">(s, p, d)</span> <b>তিন</b> ধাপে অনুবাদ হয় — সেগমেন্ট টেবিল → সেগমেন্ট <i>s</i>-এর পেজ টেবিল → তার ভেতরের পেজ <i>p</i>-এর ফ্রেম — ফলে PA = f·P + d। সেগমেন্ট টেবিল নিজে এত ছোট হতে পারে যে রেজিস্টারে থাকে, তাই কেবল দুটি মেমোরি সাফার খরচ হয়।</p></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বেস যোগ করে, অফসেট বাছে, লিমিট ঠকায়।</b>" পেজিংয় ফ্রেম নম্বর পেজ নম্বরের <b>জায়গায়</b> বসে আর অফসেট নকল হয়; সেগমেন্টেশনে বেস অফসেটের সাথে <b>যোগ</b> হয়।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">আসল মেশিন কী করে</span> x86 রিয়েল মোড হলো সরাসরি সেগমেন্টেশন; x86 প্রোটেক্টেড মোড হলো <b>সেগমেন্টেড পেজিং</b> — একটি সিলেক্টর ডেসক্রিপ্টর বাছে, যা পেজ টেবিলের বেস দেয়, তারপর সাধারণ পেজিং চলে। ARM64 ও লিনাক্স সেগমেন্টেশন বাদ দিয়েছে, কারণ ভিন্ন-দৈর্ঘ্য পার্টিশনের সমস্যাটা সমাধান করার মতো মূল্যবান নয়।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>লিমিট</b> একটি <b>দৈর্ঘ্য</b>, শেষ অ্যাড্রেস নয়: বেস 44 ও লিমিট 24 হলে শেষ বৈধ অফসেট <b>23</b>, কারণ d &lt; লিমিট। <b>সেগমেন্টেশন ফল্ট</b> আর <b>পেজ ফল্ট</b> ভিন্ন ধরনের ট্র্যাপ — প্রথমটি সেগমেন্টের লিমিট অতিক্রম, দ্বিতীয়টি মেমোরিতে না থাকা পেজ।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: virtual memory, page fault ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>ভার্চুয়াল মেমোরি ও পেজ ফল্ট</span></div>
+  <h2><span class="no">৬</span>ভার্চুয়াল মেমোরি, ডিমান্ড পেজিং ও পেজ ফল্ট</h2><span class="tag">লিখিত প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ভার্চুয়াল মেমোরি</b> (Virtual memory) এমন কৌশল যা প্রসেসকে <span class="hl">শুধু অংশেই ফিজিক্যাল মেমোরিতে থেকে চালানোর সুযোগ দেয়</span>: প্রোগ্রাম নিজস্ব <b>ভার্চুয়াল অ্যাড্রেস স্পেস</b> ব্যবহার করে, যা RAM-এর চেয়ে বড় হতে পারে, আর অব্যবহৃত অংশ OS ব্যাক স্টোরে রাখে। সাধারণ বাস্তবায়ন হলো <b>ডিমান্ড পেজিং</b> — <b>পেজ কেবল প্রথমবার রেফারেন্স হলেই আনা হয়</b>, যাকে <span class="circ">লেজি লোডিং</span>-ও বলা হয়। প্রতিটি PTE-তে একটি <b>ভ্যালিড–ইনভ্যালিড বিট</b> থাকে: ভ্যালিড = মেমোরিতে আছে, ইনভ্যালিড = নেই।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 200" width="244">
+      <g class="w">
+        <rect x="6" y="10" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="106" y="10" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="206" y="10" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="206" y="112" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="106" y="112" width="88" height="32" rx="6" class="ink fill-b"/>
+        <rect x="6" y="112" width="88" height="32" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M96,26 L104,26 M196,26 L204,26 M250,44 L250,110 M204,128 L196,128 M104,128 L96,128 M50,110 L50,44" marker-end="url(#ahb)"/>
+      </g>
+      <text x="50" y="31" text-anchor="middle" class="bn w6" style="font-size:11px">১ ট্র্যাপ</text>
+      <text x="150" y="31" text-anchor="middle" class="bn w6" style="font-size:11px">২ বৈধ?</text>
+      <text x="250" y="31" text-anchor="middle" class="bn w6" style="font-size:11px">৩ ফ্রি ফ্রেম?</text>
+      <text x="250" y="133" text-anchor="middle" class="bn w6" style="font-size:11px">৪ ডিস্ক পড়া</text>
+      <text x="150" y="133" text-anchor="middle" class="bn w6" style="font-size:11px">৫ PTE হালনাগাদ</text>
+      <text x="50" y="133" text-anchor="middle" class="bn w6" style="font-size:11px">৬ আবার চালাও</text>
+      <text x="150" y="172" text-anchor="middle" class="bn r w6" style="font-size:11px">ছয় ধাপ, পরীক্ষক যে</text>
+      <text x="150" y="186" text-anchor="middle" class="bn r w6" style="font-size:11px">ক্রমে চাইবেন</text>
+      <text x="150" y="200" text-anchor="middle" class="bn s k" style="font-size:11px">৬ নম্বর ধাপ ঐচ্ছিক নয়</text>
+    </svg><figcaption>লুপটি বন্ধ হয় কারণ ফল্ট করানো ইনস্ট্রাকশনটি আবার শুরু থেকে চলে</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">পেজ ফল্ট সামলানোর ছয় ধাপ, ক্রমানুসারে</span>
+      <ol class="steps tiny">
+        <li>MMU দেখে <b>ভ্যালিড = 0</b> এবং <span class="circ">OS-এ ট্র্যাপ করে</span>; প্রসেস ব্লক হয়।</li>
+        <li>OS যাচাই করে রেফারেন্সটি <b>বৈধ কি না</b>। বৈধ নয় → <b>প্রসেস বন্ধ</b>।</li>
+        <li>একটি <b>ফ্রি ফ্রেম</b> নেওয়া হয়; না থাকলে <b>পেজ রিপ্লেসমেন্ট অ্যালগরিদম</b> চালিয়ে ভিকটিম বাছে, আর তার <b>ডার্টি বিট</b> সেট থাকলে আগে ডিস্কে লেখে নেওয়া হয়।</li>
+        <li>প্রয়োজনীয় পেজটি ওই ফ্রেমে আনার জন্য <b>ডিস্ক রিড</b> নির্ধারিত হয়; প্রসেস অপেক্ষা করে।</li>
+        <li>পড়া শেষ হলে <b>পেজ টেবিল হালনাগাদ</b>: ফ্রেম নম্বর, <b>ভ্যালিড = 1</b>, ডার্টি = 0।</li>
+        <li>ফল্ট করানো <b>ইনস্ট্রাকশনটি আবার চালানো</b> হয়।</li>
+      </ol></div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কার্যকর অ্যাক্সেস সময়</span> প্রতি অ্যাক্সেসে m = 100 ns, প্রতি ফল্টে f = 10 ms, ফল্টের হার p। <span class="hl">EAT = (1 − p)·m + p·f</span>। (ক) p = 10⁻⁶: EAT ≈ 100 + 10⁻⁶ × 10⁷ = <b>110 ns</b>। (খ) ফল্টের বাড়তি একটি মেমোরি অ্যাক্সেসের নিচে রাখতে p·f &lt; m লাগে, অর্থাৎ p &lt; 100 ns ÷ 10⁷ ns = <span class="circ">10⁻⁵</span>। (গ) p = 10⁻³ হলে প্রায় <b>10 µs</b> — ১০০ গুণ ধীর। (ঘ) তাই ১০০ ০০০ রেফারেন্সে ১-এর বেশি ফল্ট হলে ঘাত কাটে — এর জন্যই ওয়ার্কিং সেট মডেল।</div>
+    <div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) পেজ ফল্ট <b>কোনো এরর নয়</b> — এটিই পেজ আসার স্বাভাবিক পথ। (ii) ডার্টি বিট ডিস্ক রিডের <b>আগে</b> দেখা হয়, আর শুধু ডার্টি ভিকটিমই ফিরিয়ে লেখা হয়। (iii) "ইনভ্যালিড" মানে <b>মেমোরিতে নেই</b>, "ভাঙা" নয়। (iv) ভার্চুয়াল মেমোরি RAM <b>অনেক প্রসেসকে</b> ভাগ করে দিতে দেয়, কেবল একক প্রসেসকে RAM ছাড়ানো নয়।</div>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>ট্র্যাপ, টেস্ট, নাও, পড়ো, টেবিল লেখো, আবার।</b>" ছয় শব্দ, সবসময় এই ক্রমে। আর শেষ শব্দটিই ইঙ্গিত দেয়: <span class="hl">ইনস্ট্রাকশনটি না চালালে প্রসেস চিরকাল মৃত থাকবে</span>।</div>
+    </div>
+  </div>
+  <div class="tipbox small"><span class="lbl">বাস্তবে</span> রেফারেন্স কাউন্টিং ও গার্বেজ কালেকশন হলো একই ধারণা, ভিন্ন কাজে ব্যবহৃত: পরিচিত ভালো ইমেজ মেমোরিতে ম্যাপ করে ধীরে ধীরে ফল্ট করিয়ে আনা, আর অপরিবর্তিত অবস্থায় পেজ করে বের করা। লিনাক্স দ্বিতীয় ঘটনাকে <b>মাইনর ফল্ট</b> বলে — ডিস্ক I/O নেই, শুধু PTE পূরণ। ভার্চুয়াল মেমোরি সুবিধা হিসেবে দেওয়া হয় অনুবাদ, সুরক্ষা, শেয়ারিং ও প্রক্রিয়া বিচ্ছিন্নতা; পার্শ্বপ্রতিক্রিয়াগুলো ভেতরে থেকে দেখা যায় না।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: page replacement ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>পেজ রিপ্লেসমেন্ট</span></div>
+  <h2><span class="no">৭</span>পেজ রিপ্লেসমেন্ট: চারটি অ্যালগরিদম</h2><span class="tag">ট্রেসটি অনুসরণ করো ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>পেজ রিপ্লেসমেন্ট</b> তখন চলে যখন প্রসেসের ফ্রেম দরকার কিন্তু ফ্রি ফ্রেম নেই: OS একটি মেমোরিতে থাকা পেজ বাছে, সেটি ডার্টি হলে ডিস্কে লেখে ফেরত আনে। <span class="hl">পেজ ফল্ট রেট</span> PFR = মোট পেজ ফল্ট ÷ মোট রেফারেন্স। <b>কোনো অ্যালগরিদমই পেজের প্রথম রেফারেন্স এড়ায় না</b>, আর <b>বেশি ফ্রেম মানেই কম ফল্ট নয়</b> — <span class="circ">বেলাডির অ্যানোমালি</span>।</div>
+  <table class="hand tiny" style="width:100%;line-height:5.6mm">
+    <tr><th class="l">অ্যালগরিদম</th><th class="l">যে পেজটি বের করে</th><th class="l">বাস্তবায়নযোগ্য?</th><th class="l">মূল্যায়ন</th></tr>
+    <tr><td class="l"><b>FIFO</b></td><td class="l">সবচেয়ে আগে লোড হওয়াটি, ব্যবহার মানে না দেখে</td><td class="l">হ্যাঁ — একটি সারি</td><td class="l">সহজ; <span class="red">বেলাডির অ্যানোমালি আছে</span></td></tr>
+    <tr><td class="l"><b>অপটিমাল (MIN)</b></td><td class="l">যেটি <b>ভবিষ্যতে সবচেয়ে দেরিতে</b> লাগবে</td><td class="l">না — ভবিষ্যৎ জানতে হয়</td><td class="l"><span class="circ">মাপকাঠি, বাস্তব পছন্দ নয়</span></td></tr>
+    <tr><td class="l"><b>LRU</b></td><td class="l">যেটি <b>সবচেয়ে আগে</b> ব্যবহৃত হয়েছিল</td><td class="l">ঠিকঠাক; বাস্তবে কাছাকাছি</td><td class="l">ভালো; বেলাডির অ্যানোমালি হয় না</td></tr>
+    <tr><td class="l"><b>ক্লক</b> ★</td><td class="l">যেটি রেফারেন্স বিট = 0 থাকায় স্ক্যানে পাওয়া যায়</td><td class="l">হ্যাঁ — সস্তা, অতিরিক্ত বিট লাগে না</td><td class="l">LRU-র ধারণা, LRU-র দামে</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত ট্রেস ✍ স্ট্রিং 1 2 3 4 1 2 5 1 2 3 4 5, তিন ফ্রেম, সব ফাঁকা — F = পেজ ফল্ট, "hit" = আগেই ফ্রেমে আছে</span>
+    <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:5.2mm">
+      <tr><th>রেফ</th><th>পেজ</th><th>FIFO ফ্রেম</th><th>F/L</th><th>LRU ফ্রেম</th><th>F/L</th><th>অপটিমাল ফ্রেম</th><th>F/L</th></tr>
+      <tr><td>1</td><td>1</td><td>1 – –</td><td>F</td><td>1 – –</td><td>F</td><td>1 – –</td><td>F</td></tr>
+      <tr><td>2</td><td>2</td><td>1 2 –</td><td>F</td><td>1 2 –</td><td>F</td><td>1 2 –</td><td>F</td></tr>
+      <tr><td>3</td><td>3</td><td>1 2 3</td><td>F</td><td>1 2 3</td><td>F</td><td>1 2 3</td><td>F</td></tr>
+      <tr><td>4</td><td>4</td><td>4 2 3</td><td>F</td><td>2 3 4</td><td>F</td><td>1 2 4</td><td>F</td></tr>
+      <tr><td>5</td><td>1</td><td>4 1 3</td><td>F</td><td>3 4 1</td><td>F</td><td>1 2 4</td><td>hit</td></tr>
+      <tr><td>6</td><td>2</td><td>4 1 2</td><td>F</td><td>4 1 2</td><td>F</td><td>1 2 4</td><td>hit</td></tr>
+      <tr><td>7</td><td>5</td><td>5 1 2</td><td>F</td><td>1 2 5</td><td>F</td><td>1 2 5</td><td>F</td></tr>
+      <tr><td>8</td><td>1</td><td>5 1 2</td><td>hit</td><td>2 5 1</td><td>hit</td><td>1 2 5</td><td>hit</td></tr>
+      <tr><td>9</td><td>2</td><td>5 1 2</td><td>hit</td><td>5 1 2</td><td>hit</td><td>1 2 5</td><td>hit</td></tr>
+      <tr><td>10</td><td>3</td><td>5 2 3</td><td>F</td><td>1 2 3</td><td>F</td><td>3 2 5</td><td>F</td></tr>
+      <tr><td>11</td><td>4</td><td>5 3 4</td><td>F</td><td>2 3 4</td><td>F</td><td>3 4 5</td><td>F</td></tr>
+      <tr><td>12</td><td>5</td><td>5 3 4</td><td>hit</td><td>3 4 5</td><td>F</td><td>3 4 5</td><td>hit</td></tr>
+      <tr><td colspan="3"><b>ফল্ট</b></td><td><b>9</b></td><td></td><td><b>10</b></td><td></td><td><b>7</b></td><td></td></tr>
+    </table></div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> বেলাডির অ্যানোমালি: <b>একই</b> স্ট্রিংয়ে <b>চার</b> ফ্রেমে FIFO দেয় <span class="red"><b>10 টি ফল্ট — যা তিন ফ্রেমের চেয়ে বেশি</b></span>। তাই "বেশি ফ্রেম মানে কম ফল্ট" কথাটি FIFO-র ক্ষেত্রে <b>মিথ্যা</b>, LRU ও অপটিমালের ক্ষেত্রে সত্য। আর প্রতিটি আলাদা পেজের প্রথম রেফারেন্সে সবসময় ফল্ট হয়, তাই এই স্ট্রিংয়ে <b>কমপক্ষে ৫ টি ফল্ট</b> অনিবার্য।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>MIN ছাদ, FIFO মেঝে।</b>" নিখুঁত LRU-র জন্য প্রতি ফ্রেমে টাইমস্ট্যাম্প বা স্ট্যাক লাগে, তাই আসল সিস্টেম <b>ক্লক</b> ব্যবহার করে, যা শুধু ফ্রেমগুলো ঘুরে রেফারেন্স বিট মুছে। FIFO ব্যবহার ভুলে যায়; LRU মনে রাখে; <span class="hl">ক্লক সস্তায় মনে রাখে</span>।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> লিনাক্স LRU-র কাছাকাছি করে <b>মাল্টি-জেন LRU</b> দিয়ে: পেজ টেবিল এন্ট্রিতে তরুণ/বৃত বিট থাকে, তাই কোনো স্ক্যান লাগে না। উইন্ডোজ ও ম্যাকওএস ক্লকেরই একটি রূপ ব্যবহার করে। পরীক্ষায় সবার নাম মোটামুটি "LRU approximation"।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: working set & thrashing ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>ওয়ার্কিং সেট ও থ্র্যাশিং</span></div>
+  <h2><span class="no">৮</span>ওয়ার্কিং সেট, থ্র্যাশিং ও তার নিয়ন্ত্রণ</h2><span class="tag">শেষ টপিক ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> প্রসেস <i>i</i>-এর সময় <i>t</i>-এ <span class="hl">ওয়ার্কিং সেট</span> হলো <b>WSS<sub>i</sub>(t)</b> = গত <b>Δ সময়ের</b> মধ্যে সে যে পেজগুলো রেফারেন্স করেছে (Δ ≈ কয়েক মিলিসেকেন্ড, যা তার স্বাভাবিক ওঠানামা ধরে রাখার মতো)। মোট চাহিদা <b>D(t) = Σ WSS<sub>i</sub>(t)</b>। যদি <span class="circ">D(t) &gt; ফ্রি ফ্রেমের সংখ্যা</span>, পেজ বের করে কিছুক্ষণ পরেই আবার চাও হয় — এটিই <b>থ্র্যাশিং</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 202" width="244">
+      <g class="w">
+        <path class="ink-k" d="M44,144 H286" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M44,144 V12" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M52,136 C80,126 96,66 118,42"/>
+        <path class="ink-r" d="M118,42 C138,66 146,118 168,128 C192,136 206,80 226,54"/>
+        <path class="ink-g" d="M226,54 C242,32 254,40 266,52"/>
+        <path class="ink-r" d="M168,128 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0"/>
+      </g>
+      <text x="60" y="12" class="bn k w6" style="font-size:11px">CPU ব্যবহার</text>
+      <text x="138" y="30" text-anchor="middle" class="bn g w6" style="font-size:11px">বাড়ছে</text>
+      <text x="248" y="30" text-anchor="middle" class="bn g w6" style="font-size:11px">সেরে উঠে</text>
+      <text x="168" y="166" text-anchor="middle" class="bn r w6" style="font-size:12px">থ্র্যাশিং</text>
+      <text x="168" y="180" text-anchor="middle" class="bn r s k" style="font-size:11px">বেশি পেজিং, কম কাজ</text>
+      <text x="286" y="200" text-anchor="end" class="bn k w6" style="font-size:11px">বহুপ্রক্রিয়াশ্রমের মাত্রা →</text>
+      <text x="12" y="80" class="s k" style="font-size:10.5px">100%</text>
+    </svg><figcaption>ফ্রেম শেষ হওয়ার আগ পর্যন্ত আরেকটি প্রসেস যোগ করলে লাভ; তার পর ক্ষতি</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">থ্র্যাশিং থামানোর দুই পথ</span>
+        <p class="tiny"><b>১. ওয়ার্কিং-সেট নীতি।</b> প্রতিটি প্রসেসকে ঠিক তার WSS-এর সমান ফ্রেম দিয়ে রাখো। ফল্ট হলে চাহিদা ফাঁকা ফ্রেমের চেয়ে বেশি হলে <b>যে প্রসেসের WSS কমছে তার পেজ বের করো</b>, অথবা পুরো একটি প্রসেস সাসপেন্ড করো। খালি ফ্রেম যায় যে প্রসেসের WSS বাড়ছে তার কাছে।</p>
+        <p class="tiny" style="margin-top:1mm"><b>২. পেজ ফল্ট ফ্রিকোয়েন্সি (PFF) নিয়ন্ত্রণ।</b> একটি সময়সীমায় প্রতিটি প্রসেসের PFR মাপো। PFR &gt; <b>উপরের সীমা</b> হলে একটি ফ্রি ফ্রেম দাও; PFR &lt; <b>নিচের সীমা</b> হলে ফেরত নাও। সরল, এবং Δ লাগে না।</p></div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">লক্ষণ</th><th class="l">অর্থ</th></tr>
+        <tr><td class="l">PFR বাড়ছে</td><td class="l">ওয়ার্কিং সেটের জন্য ফ্রেম কম</td></tr>
+        <tr><td class="l">CPU ব্যবহার <b>কমছে</b></td><td class="l">ব্যবহৃত প্রসেস সময় নষ্ট করছে I/O-তে — <span class="circ">থ্র্যাশিং</span></td></tr>
+        <tr><td class="l">ডিস্ক লেখা বাড়ছে</td><td class="l">ডার্টি পেজ বারবার ফেরত লেখা হচ্ছে</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ থ্র্যাশিং হবে কি?</span> চারটি ফ্রেম ফাঁকা আছে। (ক) WSS(P1) = 6, WSS(P2) = 2, WSS(P3) = 3, তাই D = 11 &gt; 4 → <span class="circ">থ্র্যাশিং</span>: ফ্রেম না হওয়া পর্যন্ত P3 সাসপেন্ড করো। (খ) এরপর P3-এর ওয়ার্কিং সেট 1 পেজে নেমে আসে; D = 6 + 2 + 1 = 9, এখনো &gt; 4 → P2 সাসপেন্ড করো, তার WSS 0-তে নেমে এসেছে → D = 7। (গ) আরেকবার কমাও: D = 6 ≤ ফ্রেমসংখ্যা → <span class="circ">স্থিতিশীল</span>, ব্যবহার আবার বাড়ে। (ঘ) PFF-এর চোখে: P1 প্রতি রেফারেন্সে 0.3 ফল্ট করছে, যা উপরের সীমার অনেক ওপরে — সে-ই সমস্যা। (ঙ) কেন থ্র্যাশিং ঘটে: P1 ও P2 একসাথে মিলে চায় 8 ফ্রেম, কিন্তু মাত্র 4 আছে, তাই দুজনেই একে অপরকে ধাক্কা দিচ্ছে — অথচ সিস্টেম <b>চলছে</b>, থ্র্যাশিং একটি অগ্রগতিহীন অবস্থা নয়, ধীর নিম্নগতি।</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <b>থ্র্যাশিং ≠ ডেডলক</b>: সিস্টেম ব্যস্ত, আটকে নেই — পেজ একই একই আসা-যাওয়া করছে। (ii) থ্র্যাশিং <b>বেশি CPU ব্যবহার → কম</b> ব্যবহার; ডেডলকে কিছুই নড়ে না। (iii) প্রসেস যোগ করা <b>চাহিদা &gt; ফ্রি ফ্রেম</b> হওয়া পর্যন্ত সবসময় সাহায্য করে, তারপর ক্ষতি করে।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>চাহিদা বেশি, জায়গা কম = থ্র্যাশিং।</b>" ওয়ার্কিং সেটগুলো না গেলে OS হয় <b>প্রসেস সাসপেন্ড</b> করে, নয়তো <b>সবচেয়ে খিওর খাওয়াকে</b> ফ্রেম দেয়। আর সবসময় কাজ করা সমাধানটি একটু সাধারণ: <span class="hl">কম প্রসেস ঢোকাও</span>।</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">থ্র্যাশিং চেনার তিন লক্ষণ</span>
+    <div class="fgrid tiny">
+      <p>PFR ক্রমাগত বাড়ছে</p><p>ডিস্ক লেখা-পড়া বাড়ছে</p>
+      <p>CPU ব্যবহার <b>কমছে</b></p><p>একই প্রসেস বারবার ফল্ট করছে</p>
+    </div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পত্র</span>
+    <div class="fgrid tiny">
+      <p><b>বাইন্ডিং</b>: কম্পাইল / লোড / এক্সিকিউশন</p><p>এক্সিকিউশন = <b>রিলোকেশন</b></p>
+      <p>লজিক্যাল = 0 থেকে, <b>রিলেটিভ</b></p><p>ফিজিক্যাল = RAM ইউনিটে</p>
+      <p>বেস + লিমিট ⇒ কনটিগুয়াস</p><p><b>অভ্যন্তরীণ</b> = ব্লকের ভেতরে</p>
+      <p><b>বাহ্যিক</b> = ব্লকের মাঝে</p><p>কম্প্যাকশন কেবল বাহ্যিক ঠিকায়</p>
+      <p>পেজ = ফ্রেম আকার, <b>স্থির</b></p><p>p = LA <b>div</b> P · d = LA <b>mod</b> P</p>
+      <p>PA = f·P + d</p><p>P = 2ⁿ ⇒ অফসেট = <b>n বিট</b></p>
+      <p>32-bit + 4 KB ⇒ 2²⁦ এন্ট্রি</p><p>এক স্তরের টেবিল = <b>4 MB</b></p>
+      <p>টিএলবি হিট = 1, মিস = 2</p><p>PTE: ভ্যালিড, প্রোটেকশন, ডার্টি, রেফারেন্স</p>
+      <p>ডার্টি = বদলেছে · রেফারেন্স = দেখা</p><p>সেগমেন্ট: PA = <b>Base[s] + d</b></p>
+      <p>d ≥ Limit[s] ⇒ ফল্ট</p><p>সেগ + পেজিং ⇒ (s, p, d)</p>
+      <p>সেগমেন্ট <b>বাড়ে</b> ⇒ বাহ্যিক ফ্র্যাগ</p><p>VM: প্রসেসের অংশই RAM-এ</p>
+      <p>ডিমান্ড পেজিং = <b>লেজি</b></p><p>ফল্ট: ট্র্যাপ→টেস্ট→নাও→পড়ো→PTE→আবার</p>
+      <p>EAT = (1 − p)m + p·f</p><p>FIFO-তে <b>বেলাডি</b> হতে পারে</p>
+      <p>LRU ও MIN-এ কখনো না</p><p>ক্লক = সস্তা LRU</p>
+      <p>WSS = গত Δ-এর পেজ</p><p>D(t) &gt; ফ্রি ফ্রেম ⇒ <b>থ্র্যাশিং</b></p>
+      <p>সমাধান: সাসপেন্ড, বা PFF</p><p>PFR = ফল্ট ÷ রেফারেন্স</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>ফিজিক্যাল মেমোরি = <b>ফ্রেম</b>, লজিক্যাল = <b>পেজ</b></li>
+      <li>অফসেট = LA <b>mod</b> P, <b>হুবহু নকল</b> হয়</li>
+      <li>P = 2ⁿ ⇒ অফসেট ঠিক <b>n বিট</b></li>
+      <li>P 1 KB, পেজ 2 → ফ্রেম 5, LA 3000 ⇒ <b>6072</b></li>
+      <li>টিএলবি হিট = <b>এক</b> মেমোরি অ্যাক্সেস</li>
+      <li>টিএলবি মিস = <b>দুই</b> মেমোরি অ্যাক্সেস</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>32-bit + 4 KB পেজ ⇒ <b>2²⁦</b> এন্ট্রি</li>
+      <li>4 বাইটের PTE ⇒ <b>4 MB</b> এক স্তরের টেবিল</li>
+      <li>সেগমেন্ট ফল্ট হয় যখন <b>d ≥ Limit[s]</b></li>
+      <li>পেজিং ⇒ <b>অভ্যন্তরীণ</b> ফ্র্যাগমেন্টেশন</li>
+      <li>VM ⇒ <b>ডিমান্ড পেজিং</b>, ভ্যালিড–ইনভ্যালিড বিট</li>
+      <li>থ্র্যাশিং ⇒ <b>কম প্রসেস</b></li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> অফসেট বেসের সাথে <b>এবং</b> ফ্রেমের সাথে দুইবার যোগ · পেজিং সব ফ্র্যাগমেন্টেশন ঠিকায় বলা · FIFO বেলাডি থেকে অব্যাহতিপ্রাপ্ত · ডার্টি বিটকে রেফারেন্স বিটের সাথে গুলিয়ে ফেলা · সেগমেন্টেশনের ব্লক স্থির-আকারের বলা · পেজ ফল্টকে এরর ভাবা · "বেশি ফ্রেম মানেই কম ফল্ট" · ভার্চুয়াল মেমোরি <b>একক</b> প্রসেসকে RAM ছাড়তে দেয় বলা।</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসাথে</span> "কম্পাইল = জমে গেল, লোড = বাঁধা, রান = চলমান" · "প্রোগ্রাম লজিক্যাল দেখে, শুধু চিপ ফিজিক্যাল" · "ভেতরে = অভ্যন্তরীণ, বাইরে = বাহ্যিক" · "পেজ ঢোকে, ফ্রেম বেরোয়" · "হিট একবার, মিস দুইবার" · "D = Dirty, R = Referenced" · "বেস যোগ করে, অফসেট বাছে, লিমিট ঠকায়" · "ট্র্যাপ, টেস্ট, নাও, পড়ো, টেবিল লেখো, আবার" · "MIN ছাদ, FIFO মেঝে" · "চাহিদা বেশি, জায়গা কম = থ্র্যাশিং"।</div>
+  <figure class="doodle"><svg viewBox="0 0 460 104" width="428">
+    <g class="w">
+      <rect x="8" y="6" width="140" height="66" rx="10" class="ink-g fill-g"/>
+      <rect x="160" y="6" width="140" height="66" rx="10" class="ink-r fill-r"/>
+      <rect x="312" y="6" width="140" height="66" rx="10" class="ink fill-b"/>
+    </g>
+    <text x="78" y="30" text-anchor="middle" class="bn g w6" style="font-size:15px">সোয়াপিং</text>
+    <text x="78" y="50" text-anchor="middle" class="bn g s" style="font-size:11px">পুরো প্রসেস সরায়</text>
+    <text x="78" y="64" text-anchor="middle" class="bn g s" style="font-size:11px">OS-এর নিজস্ব সিদ্ধান্তে</text>
+    <text x="230" y="30" text-anchor="middle" class="bn r w6" style="font-size:15px">পেজিং</text>
+    <text x="230" y="50" text-anchor="middle" class="bn r s" style="font-size:11px">একটি স্থির-আকারের পেজ</text>
+    <text x="230" y="64" text-anchor="middle" class="bn r s" style="font-size:11px">প্রোগ্রামের রেফারেন্সে</text>
+    <text x="382" y="30" text-anchor="middle" class="bn k w6" style="font-size:15px">সেগমেন্টেশন</text>
+    <text x="382" y="50" text-anchor="middle" class="bn s" style="font-size:11px">একটি লজিক্যাল সেগমেন্ট</text>
+    <text x="382" y="64" text-anchor="middle" class="bn s" style="font-size:11px">ভিন্ন দৈর্ঘ্যের</text>
+    <text x="230" y="94" text-anchor="middle" class="bn p w6 s" style="font-size:12px">"কী সরে, কত বড়, আর কে ঠিক করল"</text>
+  </svg><figcaption>তিন পদ্ধতি আলাদা করার তিনটি শব্দ — এই প্রশ্নটি বারবার আসে</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · মেমোরি ম্যানেজমেন্ট</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set" style="font-size:12pt;line-height:6.6mm">
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">১.</span>পেজিং বাহ্যিক ফ্র্যাগমেন্টেশন ঠিকায়, তবে কী থেকে পীড়ায়:<ol class="opts"><li>স্টারভেশন</li><li>রেস কন্ডিশন</li><li>কনভয় ইফেক্ট</li><li>অভ্যন্তরীণ ফ্র্যাগমেন্টেশন</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">২.</span>চালানোর চেয়ে পেজ বদলাতেই বেশি সময় কাটে, মানে:<ol class="opts"><li>থ্র্যাশিং</li><li>স্টারভেশন</li><li>ডেডলক</li><li>ফ্র্যাগমেন্টেশন</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">৩.</span>পেজ 1 KB, পেজ 2 → ফ্রেম 5, লজিক্যাল 3000। ফিজিক্যাল:<ol class="opts"><li>5072</li><li>3952</li><li>6072</li><li>7096</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">৪.</span>32-bit অ্যাড্রেস, 4 KB পেজ। একটি টেবিলে এন্ট্রি:<ol class="opts"><li>2¹²</li><li>2²⁰</li><li>2³²</li><li>2¹⁰</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">৫.</span>PTE-র <b>ডার্টি বিট</b> কখন সেট হয়:<ol class="opts"><li>ফ্রেমে লোড হলে</li><li>প্রথম রেফারেন্সে</li><li>পরিবর্তিত হলে</li><li>সোয়াপ আউটে</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">৬.</span>টিএলবি 20 ns, মেমোরি 100 ns, হিট 80 %। অ্যাক্সেস সময়:<ol class="opts"><li>120 ns</li><li>140 ns</li><li>150 ns</li><li>220 ns</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">৭.</span>সেগমেন্টেশনে অফসেট <b>লিমিটের সমান বা বেশি</b> হলে কী হয়:<ol class="opts"><li>টিএলবি মিস</li><li>পেজ ফল্ট</li><li>কম্প্যাকশন</li><li>সেগমেন্টেশন ফল্ট</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">৮.</span>4 KB পেজ সাইজে অফসেট ফিল্ডে কত বিট লাগে:<ol class="opts"><li>4 বিট</li><li>12 বিট</li><li>20 বিট</li><li>32 বিট</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">৯.</span>ডিমান্ড পেজিং একটি পেজ কখন আনে:<ol class="opts"><li>লোডের সময়</li><li>আগেভাগে</li><li>কখনো না</li><li>প্রথম রেফারেন্সে</li></ol></div>
+    <div class="mcq" style="line-height:6.6mm"><span class="qn">১০.</span>পেজিংসহ সেগমেন্টেশন মেমোরিকে কীভাবে ঠিকানা দেয়:<ol class="opts"><li>(p, d)</li><li>(s, d)</li><li>(s, p, d)</li><li>একটি সরল রেখা অ্যাড্রেস</li></ol></div>
+  </div>
+  <div class="anskey tiny">উত্তরমালা → ১-ঘ · ২-ক · ৩-গ · ৪-খ · ৫-গ · ৬-খ · ৭-ঘ · ৮-খ · ৯-ঘ · ১০-গ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> ভার্চুয়াল মেমোরি কী? ডিমান্ড পেজিং ব্যাখ্যা করো এবং একটি পেজ ফল্ট সামলাতে অপারেটিং সিস্টেম কী কী ধাপ অনুসরণ করে তা লেখো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5.2mm">
+    <li><b>ভার্চুয়াল মেমোরি</b> — এমন কৌশল যা প্রসেসকে তখনই চালানোর সুযোগ দেয় যখন তার কেবল একটি অংশই ফিজিক্যাল মেমোরিতে আছে; প্রোগ্রাম নিজস্ব <b>ভার্চুয়াল অ্যাড্রেস স্পেস</b> ব্যবহার করে, যা RAM-এর চেয়ে বড় হতে পারে, আর অব্যবহৃত পেজগুলো OS ব্যাক স্টোরে রাখে। <i class="mk">৩</i></li>
+    <li><b>ডিমান্ড পেজিং</b> — পেজ <b>চাহিদামতো</b> আনা হয়, কেবল প্রথমবার রেফারেন্স হলেই (lazy loading)। প্রতিটি PTE-তে একটি <b>ভ্যালিড–ইনভ্যালিড বিট</b> থাকে: ভ্যালিড = পেজ মেমোরিতে আছে, ইনভ্যালিড = নেই। <i class="mk">৩</i></li>
+    <li><b>ছয় ধাপ, ক্রমানুসারে</b> — (১) MMU ভ্যালিড = 0 পেয়ে <b>OS-এ ট্র্যাপ করে</b>, প্রসেস ব্লক হয়; (২) OS যাচাই করে রেফারেন্সটি <b>বৈধ কি না</b>, নয়তে প্রসেস বন্ধ করে; (৩) একটি <b>ফ্রি ফ্রেম</b> নেয়, না থাকলে <b>পেজ রিপ্লেসমেন্ট অ্যালগরিদম</b> চালিয়ে ভিকটিম বাছে এবং <b>তার ডার্টি বিট সেট থাকলে আগে ডিস্কে লেখে নেয়</b>; (৪) প্রয়োজনীয় পেজটি ওই ফ্রেমে আনতে <b>ডিস্ক রিড নির্ধারণ</b> করে; (৫) পড়া শেষ হলে <b>পেজ টেবিল হালনাগাদ</b> করে — ফ্রেম নম্বর, ভ্যালিড = 1, ডার্টি = 0; (৬) ফল্ট করানো <b>ইনস্ট্রাকশনটি আবার চালায়</b>। <i class="mk">৪</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>অ্যাড্রেসকে পেজ নম্বর ও অফসেটে ভাগ করতে পারি</li>
+      <li>PTE থেকে ফিজিক্যাল অ্যাড্রেস বের করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>FIFO ও LRU-তে রেফারেন্স স্ট্রিং ট্রেস করতে পারি</li>
+      <li>পেজ ফল্টের ছয় ধাপ ক্রমানুসারে বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

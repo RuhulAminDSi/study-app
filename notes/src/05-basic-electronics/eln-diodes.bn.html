@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ডায়োড সার্কিট: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, circuit symbols (inline attributes!)
+     d-h: diode, anode (0,0) → cathode (50,0) · d-v: anode (0,0) top → cathode (0,50) · d-u: cathode (0,0) top, anode (0,50)
+     z-u: Zener, cathode (0,0) top, anode (0,50) · r-h: (0,0)-(50,0) · r-v: (0,0)-(0,50)
+     c-h: (0,0)-(40,0) · c-v: (0,0)-(0,40) · ac / batt: vertical, pins (0,-28) top (+) and (0,28) · gnd: pin (0,0) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <g id="d-h"><path d="M0,0H17M33,0H50" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M17,-9L33,0L17,9Z" fill="rgba(255,238,0,.45)" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round"/><path d="M33,-9V9" fill="none" stroke="#1d3f8f" stroke-width="2.4" stroke-linecap="round"/></g>
+    <g id="d-v"><path d="M0,0V17M0,33V50" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M-9,17L9,17L0,33Z" fill="rgba(255,238,0,.45)" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round"/><path d="M-9,33H9" fill="none" stroke="#1d3f8f" stroke-width="2.4" stroke-linecap="round"/></g>
+    <g id="d-u"><path d="M0,0V17M0,33V50" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M-9,33L9,33L0,17Z" fill="rgba(255,238,0,.45)" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round"/><path d="M-9,17H9" fill="none" stroke="#1d3f8f" stroke-width="2.4" stroke-linecap="round"/></g>
+    <g id="z-u"><path d="M0,0V17M0,33V50" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M-9,33L9,33L0,17Z" fill="rgba(255,105,180,.30)" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round"/><path d="M-13,13L-9,17H9L13,21" fill="none" stroke="#1d3f8f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="r-h"><path d="M0,0H10l3,-8l6,16l6,-16l6,16l6,-16l3,8H50" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="r-v"><path d="M0,0V10l8,3l-16,6l16,6l-16,6l16,6l-8,3V50" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="c-h"><path d="M0,0H17M23,0H40" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M17,-12V12M23,-12V12" fill="none" stroke="#1d3f8f" stroke-width="2.8" stroke-linecap="round"/></g>
+    <g id="c-v"><path d="M0,0V17M0,23V40" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M-12,17H12M-12,23H12" fill="none" stroke="#1d3f8f" stroke-width="2.8" stroke-linecap="round"/></g>
+    <g id="ac"><path d="M0,-28V-14M0,14V28" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><circle r="14" fill="rgba(135,190,255,.30)" stroke="#1d3f8f" stroke-width="2.2"/><path d="M-8,0C-6,-9 -2,-9 0,0S6,9 8,0" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="batt"><path d="M0,-28V-5M0,5V28" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M-14,-5H14" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linecap="round"/><path d="M-7,5H7" fill="none" stroke="#1d3f8f" stroke-width="4.5" stroke-linecap="round"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ডায়োড সার্কিট (Diode Circuits)</span></h1>
+  <p class="subtitle">I–V · মডেল · জেনার · রেকটিফায়ার · ক্লিপার · ক্ল্যাম্পার: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="590">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">ডায়োড সার্কিট</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">PN জাংশন · 0.7/0.3 V</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">I–V ও ডায়োড সমীকরণ ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">মডেল · r<tspan dy="3" font-size="11">d</tspan><tspan dy="-3"> · লোড লাইন</tspan></text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">জেনার রেগুলেটর ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">রেকটিফায়ার ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">C-ফিল্টার · মাল্টিপ্লায়ার</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">ক্লিপার ও ক্ল্যাম্পার ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">বিশেষ ডায়োড</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = প্রয়োগ / সার্কিট</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① Si 0.7 V · Ge 0.3 V<br>② r<sub>d</sub> = 26 mV/I<sub>D</sub><br>③ HW: γ 1.21, η 40.6%<br>④ FW: γ 0.48, η 81.2%<br>⑤ PIV: CT-তে 2V<sub>m</sub>, বাকিতে V<sub>m</sub><br>⑥ রিপল: f (HW), 2f (FW)<br>⑦ I<sub>Z</sub> = I<sub>S</sub> − I<sub>L</sub></div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Diode circuit: <span class="hl">current-voltage characteristics of a diode</span>, DC and AC models, dynamic resistance and capacitance, load line, <span class="hl">Zener regulator</span>, <span class="hl">half wave and full wave rectifier</span>, voltage multiplier, <span class="hl">clipper and clamper</span>"। শুরুতে এক পাতায় সেমিকন্ডাক্টরের ভিত্তি; ট্রানজিস্টর (BJT, FET, অ্যামপ্লিফায়ার) এই অধ্যায়ের পরের লেসনগুলোতে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>সেমিকন্ডাক্টর ও PN জাংশন ……… পৃ. ২</li><li>ডায়োড সমীকরণ, I–V, ব্রেকডাউন … পৃ. ৩</li><li>মডেল, r<sub>d</sub>, ক্যাপাসিট্যান্স, লোড লাইন … পৃ. ৪</li><li>জেনার রেগুলেটর, বিশেষ ডায়োড … পৃ. ৫</li><li>অর্ধতরঙ্গ ও সেন্টার-ট্যাপ রেকটিফায়ার … পৃ. ৬</li></ul>
+    <ul class="tick"><li>ব্রিজ রেকটিফায়ার ও তুলনা ……… পৃ. ৭</li><li>ক্যাপাসিটর ফিল্টার, মাল্টিপ্লায়ার … পৃ. ৮</li><li>ক্লিপার ও ক্ল্যাম্পার ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: semiconductors & PN junction ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>সেমিকন্ডাক্টর</span></div>
+  <h2><span class="no">১</span>এক পাতায় সেমিকন্ডাক্টর</h2><span class="tag">MCQ-র প্রিয়</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> সেমিকন্ডাক্টর বা অর্ধপরিবাহীর (semiconductor) রোধাঙ্ক পরিবাহী ও অন্তরকের মাঝামাঝি। Si ও Ge <span class="hl">গ্রুপ-IV (৪টি যোজ্যতা ইলেকট্রন)</span>, সমযোজী বন্ধনে আবদ্ধ। ব্যান্ড গ্যাপ: <span class="circ">Si 1.12 eV</span> · Ge 0.67 eV · GaAs 1.42 eV। তাপমাত্রা বাড়লে রোধ <b>কমে</b> (ঋণাত্মক তাপমাত্রা সহগ)।</div>
+  <div class="cols" style="grid-template-columns:1fr 1.25fr">
+    <div class="small">
+      <p><b>ইনট্রিনসিক (intrinsic)</b> = বিশুদ্ধ কেলাস: n = p = n<sub>i</sub> (Si-এ 300 K-এ ≈ 1.5 × 10¹⁰ cm⁻³)।</p>
+      <p><b>এক্সট্রিনসিক (extrinsic)</b> = ডোপড (প্রতি 10⁶–10⁸ Si পরমাণুতে ≈ ১টি অপদ্রব্য) → পরিবাহিতা অনেক বাড়ে।</p>
+      <p>ভর-ক্রিয়া সূত্র: <span class="hl">n · p = n<sub>i</sub>²</span></p>
+    </div>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l"></th><th>n-টাইপ</th><th>p-টাইপ</th></tr>
+      <tr><td class="l">অপদ্রব্য</td><td>পঞ্চযোজী (ডোনর)</td><td>ত্রিযোজী (অ্যাকসেপ্টর)</td></tr>
+      <tr><td class="l">উদাহরণ</td><td>P, As, Sb</td><td>B, Al, Ga, In</td></tr>
+      <tr><td class="l">সংখ্যাগুরু</td><td>ইলেকট্রন</td><td>হোল</td></tr>
+      <tr><td class="l">সংখ্যালঘু</td><td>হোল</td><td>ইলেকট্রন</td></tr>
+      <tr><td class="l">স্থির আয়ন</td><td>+ ডোনর আয়ন</td><td>− অ্যাকসেপ্টর আয়ন</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>পাঁচ দেয়</b> একটি বাড়তি ইলেকট্রন → n-টাইপ (P, As, Sb)। <b>তিন নেয়</b> একটি → হোল → p-টাইপ (B, Al, Ga, In)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> n-টাইপ কেলাস বৈদ্যুতিকভাবে <b>নিরপেক্ষ</b>, ঋণাত্মক নয়: প্রতিটি মুক্ত ইলেকট্রনের পেছনে একটি স্থির + ডোনর আয়ন থাকে।</div>
+  </div>
+
+  <h2><span class="no">২</span>PN জাংশন</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 320 190" width="320">
+      <g class="w">
+        <rect x="10" y="20" width="300" height="80" rx="4" class="ink-k"/>
+        <rect x="120" y="21" width="80" height="78" class="fill-y" style="opacity:.6"/>
+        <path class="ink-k" d="M120,20V100M200,20V100" stroke-dasharray="5 4"/>
+        <path class="ink-r" d="M160,20V100" style="stroke-width:1.4"/>
+        <circle cx="30" cy="40" r="5" class="ink-r"/><circle cx="62" cy="62" r="5" class="ink-r"/><circle cx="92" cy="40" r="5" class="ink-r"/><circle cx="40" cy="82" r="5" class="ink-r"/><circle cx="96" cy="82" r="5" class="ink-r"/>
+        <circle cx="225" cy="40" r="3.5" class="ink" style="fill:#1d3f8f"/><circle cx="262" cy="62" r="3.5" class="ink" style="fill:#1d3f8f"/><circle cx="292" cy="40" r="3.5" class="ink" style="fill:#1d3f8f"/><circle cx="230" cy="84" r="3.5" class="ink" style="fill:#1d3f8f"/><circle cx="288" cy="84" r="3.5" class="ink" style="fill:#1d3f8f"/>
+        <path class="ink-p" d="M196,118 H124" marker-end="url(#ahp)"/>
+        <use href="#d-h" x="135" y="160"/>
+        <path class="ink" d="M80,160H135M185,160H240"/>
+      </g>
+      <text x="140" y="46" text-anchor="middle" class="r w6">−</text><text x="140" y="70" text-anchor="middle" class="r w6">−</text><text x="140" y="94" text-anchor="middle" class="r w6">−</text>
+      <text x="180" y="46" text-anchor="middle" class="w6">+</text><text x="180" y="70" text-anchor="middle" class="w6">+</text><text x="180" y="94" text-anchor="middle" class="w6">+</text>
+      <text x="60" y="14" text-anchor="middle" class="bn r w6">p (হোল ○)</text><text x="258" y="14" text-anchor="middle" class="bn w6">n (ইলেকট্রন •)</text>
+      <text x="160" y="14" text-anchor="middle" class="bn k s">ডিপ্লেশন</text>
+      <text x="160" y="137" text-anchor="middle" class="bn p s">E ক্ষেত্র n → p · বাধা V₀</text>
+      <text x="62" y="165" text-anchor="end" class="bn s">অ্যানোড A (p)</text><text x="250" y="165" class="bn s">K (n) ক্যাথোড</text>
+    </svg></figure>
+    <div class="small">
+      <p>জাংশন পেরিয়ে বাহকের ব্যাপনের ফলে থেকে যায় <span class="hl">অচল আয়ন</span> → <b>ডিপ্লেশন (স্পেস-চার্জ) স্তর</b>, প্রস্থ ≈ 0.5 µm।</p>
+      <p>এর ক্ষেত্র তৈরি করে <b>বাধা বিভব (barrier potential)</b> V₀: <span class="circ">Si 0.7 V</span> &nbsp;<span class="circ">Ge 0.3 V</span> (25 °C)।</p>
+      <p>প্রতি °C বৃদ্ধিতে V₀ কমে ≈ <b>2 mV</b>।</p>
+    </div>
+  </div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">ফরওয়ার্ড বায়াস (p → +)</th><th class="l">রিভার্স বায়াস (p → −)</th></tr>
+    <tr><td class="l">ডিপ্লেশন</td><td class="l">বাধা কমে, স্তর <b>সরু হয়</b></td><td class="l">বাধা বাড়ে, স্তর <b>চওড়া হয়</b></td></tr>
+    <tr><td class="l">প্রবাহ</td><td class="l">বড় (mA–A), সংখ্যাগুরু বাহক</td><td class="l">ক্ষুদ্র I<sub>S</sub> (Si nA, Ge µA), সংখ্যালঘু বাহক</td></tr>
+    <tr><td class="l">আচরণ</td><td class="l">বন্ধ সুইচ (0.7 V-এর পর)</td><td class="l">খোলা সুইচ (ব্রেকডাউন পর্যন্ত)</td></tr>
+  </table>
+  <div class="mnote">P যায় Positive-এ = ফরওয়ার্ড</div>
+  <p class="small">রিভার্স স্যাচুরেশন কারেন্ট I<sub>S</sub> প্রতি <span class="hl">10 °C বৃদ্ধিতে প্রায় দ্বিগুণ</span> হয়। BJT (পরের লেসন) আসলে পিঠাপিঠি দুটি PN জাংশন।</p>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: diode equation, I–V, breakdown ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>I–V বৈশিষ্ট্য</span></div>
+  <h2><span class="no">৩</span>শকলি ডায়োড সমীকরণ</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="sumbox"><span class="lbl">সমীকরণ</span> <span class="circ">I<sub>D</sub> = I<sub>S</sub> (e<sup>V<sub>D</sub>/ηV<sub>T</sub></sup> − 1)</span> &nbsp; V<sub>T</sub> = kT/q ≈ <span class="hl">300 K-এ 26 mV</span><br>
+    I<sub>S</sub> = রিভার্স স্যাচুরেশন কারেন্ট · η = আইডিয়ালিটি ফ্যাক্টর: 1 (Ge, IC সিলিকন) থেকে 2 (কম কারেন্টে আলাদা Si ডায়োড)</div>
+  <div class="cols" style="grid-template-columns:1fr 310px;align-items:center">
+    <ul class="dash small">
+      <li>ফরওয়ার্ড, V<sub>D</sub> ≫ V<sub>T</sub>: I<sub>D</sub> ≈ I<sub>S</sub> e<sup>V<sub>D</sub>/ηV<sub>T</sub></sup> (সূচকীয়)</li>
+      <li>রিভার্স, V<sub>D</sub> ≪ −V<sub>T</sub>: I<sub>D</sub> ≈ <b>−I<sub>S</sub></b> (সমতল, ক্ষুদ্র)</li>
+      <li>কাট-ইন (নি) ভোল্টেজ: <b>Si 0.7 V, Ge 0.3 V</b>; এর নিচে কারেন্ট নগণ্য</li>
+      <li>কারেন্ট ১০ গুণ করতে লাগে মাত্র ΔV = ηV<sub>T</sub> ln 10 ≈ <span class="hl">60 mV</span> (η = 1)</li>
+      <li>স্থির কারেন্টে V<sub>D</sub> কমে ≈ 2 mV/°C: তাই ডায়োড তাপমাত্রা সেন্সর</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 310 230" width="305">
+      <g class="w">
+        <path class="ink-k" d="M10,150 H300 M150,220 V10" marker-end="url(#ahb)"/>
+        <path class="ink" d="M150,150 C185,149 195,144 200,118 S206,40 209,14" style="stroke-width:2.6"/>
+        <path class="ink-g" d="M150,150 C165,149 170,144 174,118 S180,40 183,14" stroke-dasharray="6 4"/>
+        <path class="ink-r" d="M150,150 C120,153 80,154 66,156 C62,170 61,195 60,218" style="stroke-width:2.4"/>
+        <path class="ink-k" d="M197,146V156M171,146V156" style="stroke-width:1.4"/>
+      </g>
+      <text x="158" y="16" class="s k">I<tspan dy="3" font-size="10">D</tspan></text><text x="290" y="168" class="s k">V<tspan dy="3" font-size="10">D</tspan></text>
+      <text x="200" y="172" text-anchor="middle" class="s">0.7</text><text x="168" y="172" text-anchor="middle" class="s g">0.3</text>
+      <text x="216" y="60" class="w6">Si</text><text x="152" y="60" class="g w6" text-anchor="end">Ge</text>
+      <text x="220" y="100" class="bn s">ফরওয়ার্ড: mA</text><text x="220" y="116" class="bn s">নি / কাট-ইন</text>
+      <text x="108" y="174" text-anchor="middle" class="r s">−I<tspan dy="3" font-size="10">S</tspan><tspan dy="-3"> (nA, µA)</tspan></text>
+      <text x="58" y="146" text-anchor="middle" class="r s w6">−V<tspan dy="3" font-size="10">BR</tspan></text>
+      <text x="68" y="206" class="bn r s">ব্রেকডাউন</text>
+    </svg><figcaption>I–V রেখা (রিভার্স স্কেল বড় করে দেখানো)</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> I<sub>S</sub> = 10 fA, η = 1, V<sub>T</sub> = 26 mV। 1 mA ও 10 mA-তে V<sub>D</sub> কত?<br>
+    V<sub>D</sub> = ηV<sub>T</sub> ln(I<sub>D</sub>/I<sub>S</sub>) = 0.026 ln(10¹¹) = <span class="circ">0.659 V</span> (1 mA); 10 mA-তে 0.026 ln(10¹²) = <b>0.718 V</b> (প্রতি দশগুণে +60 mV)। তাই যেকোনো সাধারণ কারেন্টে "0.7 V" ধরা চলে।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> I<sub>S</sub> আসে <b>সংখ্যালঘু বাহক</b> থেকে, তাই এটি নির্ভর করে <b>তাপমাত্রার</b> উপর, রিভার্স ভোল্টেজের উপর নয়। Ge-এর I<sub>S</sub> Si-এর চেয়ে অনেক বেশি: Si জনপ্রিয় হওয়ার একটি কারণ।</div>
+
+  <h2><span class="no">৪</span>রিভার্স ব্রেকডাউন: জেনার বনাম অ্যাভালাঞ্চ</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">জেনার ব্রেকডাউন</th><th class="l">অ্যাভালাঞ্চ ব্রেকডাউন</th></tr>
+    <tr><td class="l">ডোপিং</td><td class="l">বেশি ডোপিং, খুব সরু স্তর</td><td class="l">কম ডোপিং, চওড়া স্তর</td></tr>
+    <tr><td class="l">কৌশল</td><td class="l">ফিল্ড এমিশন: প্রবল ক্ষেত্র (~10⁷ V/m) বন্ধন থেকে ইলেকট্রন টেনে আনে</td><td class="l">ইমপ্যাক্ট আয়নাইজেশন: সংঘর্ষে বাহক বহুগুণ হয়</td></tr>
+    <tr><td class="l">ভোল্টেজ</td><td class="l"><span class="circ">≈ 5 V</span>-এর নিচে</td><td class="l">≈ 6 V-এর উপরে (kV পর্যন্ত)</td></tr>
+    <tr><td class="l">তাপ সহগ</td><td class="l red"><b>ঋণাত্মক</b> (T বাড়লে V<sub>Z</sub> কমে)</td><td class="l green"><b>ধনাত্মক</b></td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>জেনার</b> = ক্ষেত্রের টানে (সরু, কম V, TC −)। <b>অ্যাভালাঞ্চ</b> = তুষারধসের মতো সংঘর্ষ (চওড়া, বেশি V, TC +)। 5–6 V-এ দুটি কাটাকাটি → TC ≈ 0।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">ব্যবহারিক যোগ</span> ব্রেকডাউন নিজে ক্ষতিকর নয়; ক্ষতি করে তাপ (P = VI)। 1N4001…1N4007: 1 A, PIV 50…<b>1000 V</b>; 1N4148: দ্রুত সুইচিং ডায়োড।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: models, r_d, capacitance, load line ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>মডেল ও লোড লাইন</span></div>
+  <h2><span class="no">৫</span>ডায়োডের DC মডেল</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 180 112" width="175"><g class="w"><path class="ink-k" d="M10,92 H170 M50,110 V26" style="stroke-width:1.4"/><path class="ink-r" d="M12,92 H50 V28" style="stroke-width:3"/></g><text x="90" y="16" text-anchor="middle" class="bn k w6">আদর্শ (Ideal)</text><text x="100" y="60" class="bn s">ON: শর্ট</text><text x="100" y="78" class="bn s">OFF: ওপেন</text><text x="58" y="108" class="s">0</text></svg></figure>
+    <figure class="doodle"><svg viewBox="0 0 180 112" width="175"><g class="w"><path class="ink-k" d="M10,92 H170 M50,110 V26" style="stroke-width:1.4"/><path class="ink-r" d="M12,92 H90 V28" style="stroke-width:3"/></g><text x="90" y="16" text-anchor="middle" class="bn k w6">স্থির ড্রপ</text><text x="98" y="60" class="bn s">ON: 0.7 V</text><text x="98" y="78" class="bn s">ব্যাটারি</text><text x="90" y="108" text-anchor="middle" class="s">0.7</text></svg></figure>
+    <figure class="doodle"><svg viewBox="0 0 180 112" width="175"><g class="w"><path class="ink-k" d="M10,92 H170 M50,110 V26" style="stroke-width:1.4"/><path class="ink-r" d="M12,92 H90 L135,28" style="stroke-width:3"/></g><text x="90" y="16" text-anchor="middle" class="bn k w6">পিসওয়াইজ লিনিয়ার</text><text x="122" y="70" class="bn s">ঢাল 1/r<tspan dy="3" font-size="10">f</tspan></text><text x="90" y="108" text-anchor="middle" class="s">V<tspan dy="3" font-size="10">γ</tspan></text></svg></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">মডেল</th><th class="l">ON (ফরওয়ার্ড)</th><th class="l">OFF</th><th class="l">কখন ব্যবহার</th></tr>
+    <tr><td class="l">আদর্শ</td><td class="l">শর্ট, V<sub>D</sub> = 0</td><td class="l">ওপেন</td><td class="l">V<sub>S</sub> ≫ 0.7 V; দ্রুত যাচাই</td></tr>
+    <tr><td class="l">স্থির ড্রপ</td><td class="l">V<sub>D</sub> = <b>0.7 V</b> (Ge 0.3 V)</td><td class="l">ওপেন</td><td class="l">পরীক্ষার গাণিতিকে ডিফল্ট</td></tr>
+    <tr><td class="l">পিসওয়াইজ লিনিয়ার</td><td class="l">V<sub>γ</sub> + r<sub>f</sub> সিরিজে</td><td class="l">ওপেন</td><td class="l">r<sub>f</sub> দেওয়া থাকলে</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 5 V উৎস, 1 kΩ, ফরওয়ার্ড বায়াসে Si ডায়োড। আদর্শ: I = 5/1k = 5 mA · স্থির ড্রপ: (5 − 0.7)/1k = <span class="circ">4.3 mA</span> · PWL (r<sub>f</sub> = 20 Ω): 4.3/1020 = 4.22 mA।</div>
+
+  <h2><span class="no">৬</span>ডায়নামিক রোধ ও ক্যাপাসিট্যান্স (AC মডেল)</h2>
+  <p class="small"><b>স্ট্যাটিক (DC):</b> R<sub>D</sub> = V<sub>D</sub>/I<sub>D</sub> = 0.7 V/4.3 mA = 163 Ω। &nbsp;<b>ডায়নামিক (AC):</b> <span class="circ">r<sub>d</sub> = ηV<sub>T</sub>/I<sub>D</sub> ≈ 26 mV/I<sub>D</sub></span> = Q-তে রেখার ঢাল; 4.3 mA-তে r<sub>d</sub> = <b>6.0 Ω</b> (+ বাল্ক r<sub>B</sub> ≈ 0.1–2 Ω)।</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">ক্যাপাসিট্যান্স</th><th class="l">প্রাধান্য</th><th class="l">আচরণ</th></tr>
+    <tr><td class="l">ট্রানজিশন (ডিপ্লেশন) C<sub>T</sub> = εA/W</td><td class="l">রিভার্স বায়াসে</td><td class="l">V<sub>R</sub> বাড়লে কমে (W চওড়া) → <b>ভ্যারাক্টর</b></td></tr>
+    <tr><td class="l">ডিফিউশন (স্টোরেজ) C<sub>D</sub></td><td class="l">ফরওয়ার্ড বায়াসে</td><td class="l">∝ I<sub>D</sub>; সঞ্চিত চার্জ → t<sub>rr</sub></td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> কারেন্ট বাড়লে r<sub>d</sub> <b>কমে</b> (1 mA-তে 26 Ω, 10 mA-তে 2.6 Ω); ক্ষুদ্র সংকেত দেখে r<sub>d</sub>, কখনো R<sub>D</sub> নয়।</div>
+
+  <h2><span class="no">৭</span>লোড লাইন ও Q-পয়েন্ট</h2>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p>KVL: <span class="hl">V<sub>S</sub> = V<sub>D</sub> + I<sub>D</sub>R</span> → I–V তলে একটি সরলরেখা।</p>
+      <ol class="steps">
+        <li>I<sub>D</sub> = 0 → V<sub>D</sub> = V<sub>S</sub> (x-ছেদক)</li>
+        <li>V<sub>D</sub> = 0 → I<sub>D</sub> = V<sub>S</sub>/R (y-ছেদক)</li>
+        <li>Q-পয়েন্ট = রেখা যেখানে ডায়োড রেখাকে ছেদ করে</li>
+      </ol>
+      <p>R বড় → রেখা বেশি সমতল।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="295">
+      <g class="w">
+        <path class="ink-k" d="M40,165 V8 M30,140 H292" style="stroke-width:1.4"/>
+        <path class="ink" d="M40,140 C62,139.5 68,128 70,100 L73.6,36.8 L75.2,8" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M40,20 L280,140" style="stroke-width:2.4"/>
+        <circle cx="73.6" cy="36.8" r="5" class="ink-g" style="fill:rgba(31,138,92,.35)"/>
+        <path class="ink-k" d="M40,36.8 H73.6 V140" stroke-dasharray="4 4" style="stroke-width:1.2"/>
+      </g>
+      <text x="34" y="24" text-anchor="end" class="s r">5 mA</text><text x="280" y="158" text-anchor="middle" class="s r">5 V</text>
+      <text x="34" y="42" text-anchor="end" class="s g">4.3</text><text x="74" y="158" text-anchor="middle" class="s g">0.7</text>
+      <text x="90" y="40" class="g s w6">Q (0.7 V, 4.3 mA)</text>
+      <text x="170" y="74" class="bn r s">লোড লাইন, ঢাল −1/R</text>
+      <text x="236" y="158" text-anchor="middle" class="s k">V<tspan dy="3" font-size="10">D</tspan><tspan dy="-3"> →</tspan></text>
+    </svg><figcaption>V<sub>S</sub> = 5 V, R = 1 kΩ</figcaption></figure>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: Zener regulator, special diodes ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>জেনার ও বিশেষ ডায়োড</span></div>
+  <h2><span class="no">৮</span>জেনার ডায়োড ও শান্ট রেগুলেটর</h2><span class="tag">গাণিতিক</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> বেশি ডোপড ডায়োড, তৈরি <span class="hl">রিভার্স ব্রেকডাউনে</span> কাজের জন্য: I<sub>ZK</sub> থেকে I<sub>ZM</sub> পর্যন্ত V<sub>Z</sub> প্রায় স্থির। রেগুলেটরে: <b>রিভার্স বায়াসে, লোডের সমান্তরালে</b>।</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 170" width="330">
+      <g class="w">
+        <use href="#batt" x="30" y="95"/>
+        <path class="ink" d="M30,67 V30 H80 M130,30 H280 V55 M280,105 V150 H30 V123 M200,30 V70 M200,120 V150"/>
+        <use href="#r-h" x="80" y="30"/>
+        <use href="#z-u" x="200" y="70"/>
+        <use href="#r-v" x="280" y="55"/>
+        <circle cx="200" cy="30" r="3.5" class="ink" style="fill:#1d3f8f"/><circle cx="200" cy="150" r="3.5" class="ink" style="fill:#1d3f8f"/>
+        <path class="ink-r" d="M140,18 H185" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M218,72 V112" marker-end="url(#ahg)"/>
+        <path class="ink-p" d="M300,62 V102" marker-end="url(#ahp)"/>
+      </g>
+      <text x="48" y="100" class="s">V<tspan dy="3" font-size="10">in</tspan></text><text x="105" y="55" text-anchor="middle" class="s">R</text>
+      <text x="162" y="12" text-anchor="middle" class="r s w6">I<tspan dy="3" font-size="10">S</tspan></text>
+      <text x="226" y="128" class="g s w6">I<tspan dy="3" font-size="10">Z</tspan></text><text x="306" y="124" class="p s w6">I<tspan dy="3" font-size="10">L</tspan></text>
+      <text x="252" y="84" text-anchor="middle" class="s">R<tspan dy="3" font-size="10">L</tspan></text>
+      <text x="180" y="100" text-anchor="end" class="s r">V<tspan dy="3" font-size="10">Z</tspan></text>
+      <text x="240" y="20" class="s k">V<tspan dy="3" font-size="10">out</tspan><tspan dy="-3"> = V</tspan><tspan dy="3" font-size="10">Z</tspan></text>
+    </svg></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">সূত্র</span><br>I<sub>S</sub> = (V<sub>in</sub> − V<sub>Z</sub>)/R<br>I<sub>L</sub> = V<sub>Z</sub>/R<sub>L</sub><br><span class="circ">I<sub>Z</sub> = I<sub>S</sub> − I<sub>L</sub></span><br>P<sub>Z</sub> = V<sub>Z</sub> I<sub>Z</sub> · I<sub>ZM</sub> = P<sub>ZM</sub>/V<sub>Z</sub><br>জেনার ON শুধু যদি V<sub>in</sub>R<sub>L</sub>/(R + R<sub>L</sub>) ≥ V<sub>Z</sub><br>লোড রেগুলেশন = (V<sub>NL</sub> − V<sub>FL</sub>)/V<sub>FL</sub> × 100%</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> V<sub>in</sub> = 20 V, V<sub>Z</sub> = 12 V, R = 400 Ω।
+    <ol class="steps"><li>লোড নেই: I<sub>Z</sub> = I<sub>S</sub> = (20 − 12)/400 = <span class="circ">20 mA</span> (সবচেয়ে খারাপ অবস্থা: P<sub>Z</sub> = 240 mW)</li><li>R<sub>L</sub> = 1.2 kΩ: I<sub>L</sub> = 12/1.2k = 10 mA → I<sub>Z</sub> = 20 − 10 = 10 mA, P<sub>Z</sub> = 120 mW</li><li>I<sub>ZK</sub> ≈ 0 ধরে: I<sub>L(max)</sub> = 20 mA → R<sub>L(min)</sub> = 12/0.02 = <b>600 Ω</b></li></ol></div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ফরওয়ার্ড বায়াসে</b> জেনার সাধারণ 0.7 V ডায়োড মাত্র; রেগুলেশন হয় শুধু রিভার্সে।</div>
+
+  <h2><span class="no">৯</span>বিশেষ উদ্দেশ্যের ডায়োড</h2>
+  <figure class="doodle"><svg viewBox="0 0 600 70" width="600">
+    <g class="w">
+      <use href="#d-h" x="10" y="35"/><path class="ink-r" d="M30,22 L44,6 M40,26 L54,10" marker-end="url(#ah)"/>
+      <use href="#d-h" x="130" y="35"/><path class="ink-r" d="M164,6 L150,22 M174,10 L160,26" marker-end="url(#ah)"/>
+      <use href="#d-h" x="250" y="35"/><path class="ink" d="M290,26 V44" style="stroke-width:2.6"/>
+      <use href="#d-h" x="370" y="35"/><path class="ink" d="M403,26 H407 V30 M403,44 H399 V40" style="stroke-width:2.2"/>
+      <use href="#d-h" x="490" y="35"/><path class="ink" d="M523,26 L519,22 M523,44 L527,48" style="stroke-width:2.2"/>
+    </g>
+    <text x="35" y="66" text-anchor="middle" class="s w6">LED</text><text x="155" y="66" text-anchor="middle" class="bn s w6">ফটোডায়োড</text><text x="275" y="66" text-anchor="middle" class="bn s w6">ভ্যারাক্টর</text><text x="395" y="66" text-anchor="middle" class="bn s w6">শটকি</text><text x="515" y="66" text-anchor="middle" class="bn s w6">জেনার</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">ডায়োড</th><th>বায়াস</th><th class="l">মূল ধারণা</th><th class="l">ব্যবহার</th></tr>
+    <tr><td class="l">LED</td><td>ফরওয়ার্ড</td><td class="l">আলো নির্গত করে (GaAs IR, InGaN নীল)</td><td class="l">ইন্ডিকেটর</td></tr>
+    <tr><td class="l">ফটোডায়োড</td><td>রিভার্স</td><td class="l">রিভার্স কারেন্ট ∝ আলোর তীব্রতা</td><td class="l">আলো সেন্সর</td></tr>
+    <tr><td class="l">ভ্যারাক্টর</td><td>রিভার্স</td><td class="l">V<sub>R</sub> বাড়লে C<sub>T</sub> কমে</td><td class="l">টিউনিং, VCO</td></tr>
+    <tr><td class="l">শটকি (Schottky)</td><td>ফরওয়ার্ড</td><td class="l">ধাতু–সেমিকন্ডাক্টর, <span class="hl">V<sub>F</sub> 0.2–0.4 V</span>, t<sub>rr</sub> নেই</td><td class="l">SMPS, 74LS</td></tr>
+    <tr><td class="l">টানেল</td><td>ফরওয়ার্ড</td><td class="l">অতি বেশি ডোপিং → ঋণাত্মক রোধ</td><td class="l">মাইক্রোওয়েভ অসিলেটর</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> তীর <b>বাইরে</b> = LED, তীর <b>ভেতরে</b> = ফটোডায়োড। রিভার্স বায়াসের তিনজন: <b>জেনার, ফটোডায়োড, ভ্যারাক্টর</b>।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">LED ✍</span> 5 V, V<sub>F</sub> = 2 V, 15 mA → R = 3/0.015 = <b>200 Ω</b>।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: half-wave & centre-tap ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>রেকটিফায়ার ১</span></div>
+  <figure class="doodle"><svg viewBox="0 0 620 100" width="620">
+    <g class="w">
+      <rect x="10" y="56" width="100" height="36" rx="8" class="ink fill-b"/><rect x="130" y="56" width="100" height="36" rx="8" class="ink fill-b"/><rect x="250" y="56" width="100" height="36" rx="8" class="ink-r fill-r"/><rect x="370" y="56" width="100" height="36" rx="8" class="ink-g fill-g"/><rect x="490" y="56" width="110" height="36" rx="8" class="ink-p fill-p"/>
+      <path class="ink-k" d="M110,74 H128 M230,74 H248 M350,74 H368 M470,74 H488" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M20,30 Q32,-6 44,30 T68,30 T92,30" style="stroke-width:1.8"/>
+      <path class="ink-r" d="M140,30 Q152,14 164,30 T188,30 T212,30" style="stroke-width:1.8"/>
+      <path class="ink-r" d="M260,44 Q272,12 284,44 Q296,12 308,44 Q320,12 332,44" style="stroke-width:1.8"/>
+      <path class="ink-r" d="M380,24 L392,32 L398,24 L410,32 L416,24 L428,32 L434,24 L446,32 L452,24" style="stroke-width:1.8"/>
+      <path class="ink-r" d="M500,30 H590" style="stroke-width:1.8"/>
+    </g>
+    <text x="60" y="80" text-anchor="middle" class="bn s">230 V মেইনস</text><text x="180" y="80" text-anchor="middle" class="bn s">ট্রান্সফর্মার</text><text x="300" y="80" text-anchor="middle" class="bn s r w6">রেকটিফায়ার</text><text x="420" y="80" text-anchor="middle" class="bn s g">ফিল্টার (C)</text><text x="545" y="80" text-anchor="middle" class="bn s p">রেগুলেটর</text>
+  </svg><figcaption>লিনিয়ার DC পাওয়ার সাপ্লাই: এর প্রতিটি ব্লক এই লেসনে আছে</figcaption></figure>
+  <h2><span class="no">১০</span>অর্ধতরঙ্গ রেকটিফায়ার (HWR)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 150" width="330">
+      <g class="w">
+        <use href="#ac" x="30" y="75"/>
+        <path class="ink" d="M30,47 V30 H70 M120,30 H170 V50 M170,100 V122 H30 V103"/>
+        <use href="#d-h" x="70" y="30"/>
+        <use href="#r-v" x="170" y="50"/>
+        <path class="ink-k" d="M205,40 H325 M205,112 H325" style="stroke-width:1" stroke-dasharray="3 4"/>
+        <path class="ink" d="M205,40 Q220,0 235,40 T265,40 T295,40 T325,40"/>
+        <path class="ink-r" d="M205,112 Q220,72 235,112 L265,112 Q280,72 295,112 L325,112" style="stroke-width:2.4"/>
+      </g>
+      <text x="50" y="80" class="s">v<tspan dy="3" font-size="10">in</tspan></text><text x="95" y="18" text-anchor="middle" class="s">D</text><text x="185" y="80" class="s">R<tspan dy="3" font-size="10">L</tspan></text>
+      <text x="265" y="76" text-anchor="middle" class="bn s">ইনপুট</text><text x="265" y="140" text-anchor="middle" class="bn r s">আউটপুট (শুধু ধনাত্মক অর্ধ)</text>
+    </svg></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">HWR-এর ফল</span><br>V<sub>dc</sub> = <span class="circ">V<sub>m</sub>/π = 0.318 V<sub>m</sub></span> · V<sub>rms</sub> = V<sub>m</sub>/2<br>রিপল ফ্যাক্টর γ = <b>1.21</b> · রিপল কম্পাঙ্ক = <b>f</b><br>η<sub>max</sub> = 4/π² ≈ <b>40.6%</b> · PIV = <b>V<sub>m</sub></b><br>ফর্ম ফ্যাক্টর 1.57 · পিক ফ্যাক্টর 2 · TUF 0.287</div>
+  </div>
+  <div class="cols">
+    <div class="small">
+      <p><b>প্রতিপাদন:</b> V<sub>dc</sub> = (1/2π)∫₀<sup>π</sup> V<sub>m</sub> sin θ dθ = V<sub>m</sub>/π</p>
+      <p>γ = √((V<sub>rms</sub>/V<sub>dc</sub>)² − 1) = √(π²/4 − 1) = 1.21</p>
+      <p>η = P<sub>dc</sub>/P<sub>ac</sub> = (V<sub>m</sub>/π)²/(V<sub>m</sub>/2)² = 4/π² = 0.405 (বইয়ে লেখা থাকে 40.6%)</p>
+    </div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 230 V, 50 Hz মেইনস, 10 : 1 ট্রান্সফর্মার, Si ডায়োড।<br>V<sub>s</sub> = 23 V rms → V<sub>m</sub> = 23√2 = 32.5 V<br>V<sub>dc</sub> = (32.5 − 0.7)/π = <b>10.1 V</b> (আদর্শ 10.4 V)<br>PIV = 32.5 V · রিপল <b>50 Hz</b></div>
+  </div>
+  <h2><span class="no">১১</span>সেন্টার-ট্যাপ পূর্ণতরঙ্গ রেকটিফায়ার</h2>
+  <div class="cols" style="grid-template-columns:340px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 340 160" width="340">
+      <g class="w">
+        <path class="ink" d="M10,30 H40 M10,130 H40 M40,30 a12.5,12.5 0 0 0 0,25 a12.5,12.5 0 0 0 0,25 a12.5,12.5 0 0 0 0,25 a12.5,12.5 0 0 0 0,25"/>
+        <path class="ink-k" d="M50,28 V132 M55,28 V132" style="stroke-width:1.6"/>
+        <path class="ink" d="M66,30 a12.5,12.5 0 0 1 0,25 a12.5,12.5 0 0 1 0,25 a12.5,12.5 0 0 1 0,25 a12.5,12.5 0 0 1 0,25"/>
+        <path class="ink" d="M66,30 H100 M150,30 H200 V130 H150 M100,130 H66 M66,80 H110 M160,80 H200"/>
+        <use href="#d-h" x="100" y="30"/><use href="#d-h" x="100" y="130"/>
+        <use href="#r-h" x="110" y="80"/>
+        <circle cx="200" cy="80" r="3.5" class="ink" style="fill:#1d3f8f"/><circle cx="66" cy="80" r="3.5" class="ink" style="fill:#1d3f8f"/>
+        <path class="ink-k" d="M220,110 H335" style="stroke-width:1" stroke-dasharray="3 4"/>
+        <path class="ink-r" d="M220,110 Q235,50 250,110" style="stroke-width:2.4"/><path class="ink-g" d="M250,110 Q265,50 280,110" style="stroke-width:2.4"/><path class="ink-r" d="M280,110 Q295,50 310,110" style="stroke-width:2.4"/><path class="ink-g" d="M310,110 Q325,50 340,110" style="stroke-width:2.4"/>
+      </g>
+      <text x="125" y="18" text-anchor="middle" class="r s w6">D1</text><text x="125" y="152" text-anchor="middle" class="g s w6">D2</text>
+      <text x="135" y="64" text-anchor="middle" class="s">R<tspan dy="3" font-size="10">L</tspan></text><text x="76" y="96" class="s">CT</text>
+      <text x="82" y="52" class="s">V<tspan dy="3" font-size="10">m</tspan></text><text x="82" y="118" class="s">V<tspan dy="3" font-size="10">m</tspan></text>
+      <text x="280" y="134" text-anchor="middle" class="bn s">D1, D2 পালাক্রমে</text>
+    </svg></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">CT-এর ফল</span><br>২টি ডায়োড + সেন্টার-ট্যাপ ট্রান্সফর্মার<br>V<sub>dc</sub> = 2V<sub>m</sub>/π = 0.637 V<sub>m</sub><br>γ = 0.48 · η<sub>max</sub> = 81.2% · রিপল 2f<br>PIV = <span class="circ">2V<sub>m</sub></span> · TUF 0.693</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> CT সার্কিটে V<sub>m</sub> হলো সেকেন্ডারির <b>প্রতিটি অর্ধের</b> শীর্ষমান। বন্ধ (OFF) ডায়োড দুই অর্ধই সিরিজে দেখে → PIV = 2V<sub>m</sub> (প্রায়ই আসা প্রশ্ন)।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: bridge & comparison ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>রেকটিফায়ার ২</span></div>
+  <h2><span class="no">১২</span>ব্রিজ পূর্ণতরঙ্গ রেকটিফায়ার</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:350px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 350 190" width="345">
+      <g class="w">
+        <path class="ink" d="M120,20 H200 M120,180 H200 M120,20 V30 M120,80 V100 M120,150 V180 M200,20 V30 M200,80 V100 M200,150 V180 M120,100 H132 M188,100 H200 M200,20 H280 V75 M280,125 V180 H200"/>
+        <use href="#d-u" x="120" y="30"/><use href="#d-u" x="120" y="100"/><use href="#d-u" x="200" y="30"/><use href="#d-u" x="200" y="100"/>
+        <use href="#ac" transform="translate(160,100) rotate(90)"/>
+        <use href="#r-v" x="280" y="75"/>
+        <circle cx="120" cy="100" r="3.5" class="ink" style="fill:#1d3f8f"/><circle cx="200" cy="100" r="3.5" class="ink" style="fill:#1d3f8f"/>
+        <path class="ink-r" d="M300,82 V118" marker-end="url(#ah)"/>
+      </g>
+      <text x="104" y="60" text-anchor="end" class="r w6">D1</text><text x="216" y="130" class="r w6">D2</text>
+      <text x="216" y="60" class="g w6">D3</text><text x="104" y="130" text-anchor="end" class="g w6">D4</text>
+      <text x="160" y="76" text-anchor="middle" class="s">v<tspan dy="3" font-size="10">in</tspan></text>
+      <text x="262" y="104" text-anchor="end" class="s">R<tspan dy="3" font-size="10">L</tspan></text>
+      <text x="290" y="14" class="r s w6">+</text><text x="290" y="194" class="s w6">−</text>
+      <text x="308" y="104" class="r s">i</text>
+    </svg><figcaption>লাল জোড়া চলে + অর্ধে, সবুজ জোড়া − অর্ধে</figcaption></figure>
+    <div class="small">
+      <p>+ অর্ধ (বাম নোড +): <b class="red">D1 → R<sub>L</sub> → D2</b></p>
+      <p>− অর্ধ (ডান নোড +): <b class="green">D3 → R<sub>L</sub> → D4</b></p>
+      <p>দুই অর্ধেই লোড কারেন্ট <span class="hl">একই দিকে</span>।</p>
+      <p>প্রতিটি পথে ২টি ডায়োড → ড্রপ <b>1.4 V</b> (Si)।</p>
+      <p>সেন্টার ট্যাপ লাগে না; PIV মাত্র <span class="circ">V<sub>m</sub></span>; TUF 0.812।</p>
+    </div>
+  </div>
+  <h3>বড় তুলনা সারণি (মুখস্থ করো)</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">প্যারামিটার</th><th>অর্ধতরঙ্গ</th><th>সেন্টার-ট্যাপ FW</th><th>ব্রিজ FW</th></tr>
+    <tr><td class="l">ডায়োড</td><td>1</td><td>2</td><td>4</td></tr>
+    <tr><td class="l">V<sub>dc</sub> (আদর্শ)</td><td>V<sub>m</sub>/π = 0.318 V<sub>m</sub></td><td>2V<sub>m</sub>/π = 0.637 V<sub>m</sub></td><td>2V<sub>m</sub>/π = 0.637 V<sub>m</sub></td></tr>
+    <tr><td class="l">V<sub>rms</sub></td><td>V<sub>m</sub>/2</td><td>V<sub>m</sub>/√2</td><td>V<sub>m</sub>/√2</td></tr>
+    <tr><td class="l">রিপল ফ্যাক্টর γ</td><td class="red"><b>1.21</b></td><td>0.48</td><td>0.48</td></tr>
+    <tr><td class="l">সর্বোচ্চ দক্ষতা η</td><td class="red"><b>40.6%</b></td><td>81.2%</td><td>81.2%</td></tr>
+    <tr><td class="l">প্রতি ডায়োডে PIV</td><td>V<sub>m</sub></td><td class="red"><b>2V<sub>m</sub></b></td><td>V<sub>m</sub></td></tr>
+    <tr><td class="l">রিপল কম্পাঙ্ক</td><td>f (50 Hz)</td><td>2f (100 Hz)</td><td>2f (100 Hz)</td></tr>
+    <tr><td class="l">ফর্ম · পিক ফ্যাক্টর</td><td>1.57 · 2</td><td>1.11 · 1.414</td><td>1.11 · 1.414</td></tr>
+    <tr><td class="l">TUF</td><td>0.287</td><td>0.693</td><td>0.812</td></tr>
+    <tr><td class="l">পথে Si ড্রপ</td><td>0.7 V</td><td>0.7 V</td><td>1.4 V</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>তরঙ্গ দ্বিগুণ, DC ও দক্ষতাও দ্বিগুণ</b>: 0.318 → 0.637, 40.6 → 81.2। রিপল "<b>এক-দুই-এক</b>" (1.21) বনাম "<b>চার-আট</b>" (0.48)। PIV-তে <b>সেন্টার ট্যাপই ব্যতিক্রম</b> (2V<sub>m</sub>)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> HWR-এ γ = 1.21 &gt; 1: AC রিপল DC-র চেয়ে <b>বড়</b>। নিখুঁত মান 4/π² = 40.5% ও 8/π² = 81.1%; MCQ অপশনে থাকে <b>40.6%</b> ও <b>81.2%</b>।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ব্রিজ, 12 V rms সেকেন্ডারি, Si ডায়োড, R<sub>L</sub> = 100 Ω, 50 Hz।
+    <ol class="steps"><li>V<sub>m</sub> = 12√2 = 16.97 V; লোডে শীর্ষ = 16.97 − 1.4 = 15.57 V</li><li>V<sub>dc</sub> = 2 × 15.57/π = <span class="circ">9.91 V</span> (আদর্শ 10.8 V) → I<sub>dc</sub> = 99 mA</li><li>PIV ≈ V<sub>m</sub> = 17 V → 1N4001 (50 V, 1 A) যথেষ্ট; রিপল 100 Hz</li></ol></div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: capacitor filter & multipliers ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>ফিল্টার ও মাল্টিপ্লায়ার</span></div>
+  <h2><span class="no">১৩</span>ক্যাপাসিটর (শান্ট) ফিল্টার</h2><span class="tag">গাণিতিক</span>
+  <div class="def"><span class="lbl">ধারণা</span> R<sub>L</sub>-এর সমান্তরালে বড় C প্রতিটি শীর্ষে <b>V<sub>m</sub></b> পর্যন্ত চার্জ হয়, তারপর R<sub>L</sub> দিয়ে ধীরে ডিসচার্জ হয় → সামান্য <span class="hl">করাত-দাঁত রিপলসহ</span> DC।</div>
+  <figure class="doodle"><svg viewBox="0 0 400 150" width="420">
+    <g class="w">
+      <path class="ink-k" d="M14,130 H340 M20,138 V20" style="stroke-width:1.4"/>
+      <path class="ink" d="M20,130 Q50,-50 80,130 Q110,-50 140,130 Q170,-50 200,130 Q230,-50 260,130 Q290,-50 320,130" stroke-dasharray="5 4" style="stroke-width:1.4"/>
+      <path class="ink-r" d="M20,130 Q35,48 50,40 L98,56 Q104,44 110,40 L158,56 Q164,44 170,40 L218,56 Q224,44 230,40 L278,56 Q284,44 290,40 L320,48" style="stroke-width:2.6"/>
+      <path class="ink-k" d="M20,40 H345 M20,56 H345" stroke-dasharray="2 4" style="stroke-width:1"/>
+      <path class="ink-g" d="M352,40 V56" style="stroke-width:2"/>
+    </g>
+    <text x="350" y="34" class="s">V<tspan dy="3" font-size="10">m</tspan></text><text x="358" y="54" class="g s w6">V<tspan dy="3" font-size="10">r(p-p)</tspan></text>
+    <text x="150" y="20" class="bn s g">চার্জ (ডায়োড অল্প সময় ON)</text>
+    <text x="180" y="148" text-anchor="middle" class="bn s">ড্যাশ: ফিল্টারহীন FW · লাল: আউটপুট (R<tspan dy="3" font-size="10">L</tspan><tspan dy="-3"> দিয়ে ধীর ডিসচার্জ)</tspan></text>
+  </svg></figure>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">সূত্র</span> (f<sub>r</sub> = রিপল কম্পাঙ্ক)<br>V<sub>r(p-p)</sub> ≈ I<sub>dc</sub>/(f<sub>r</sub>C) = V<sub>m</sub>/(f<sub>r</sub>R<sub>L</sub>C)<br>V<sub>dc</sub> ≈ V<sub>m</sub> − V<sub>r(p-p)</sub>/2<br><span class="circ">γ = 1/(2√3 f<sub>r</sub>R<sub>L</sub>C)</span><br>HW: f<sub>r</sub> = f · FW: f<sub>r</sub> = 2f → γ = 1/(4√3 fR<sub>L</sub>C)</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> FW, 50 Hz, V<sub>m</sub> = 15 V, R<sub>L</sub> = 500 Ω, C = 1000 µF।<br>I<sub>dc</sub> ≈ 15/500 = 30 mA<br>V<sub>r(p-p)</sub> = 0.03/(100 × 0.001) = <b>0.30 V</b><br>V<sub>dc</sub> ≈ 15 − 0.15 = <b>14.85 V</b><br>γ = 1/(4√3 × 50 × 500 × 10⁻³) ≈ <b>0.0058</b></div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>অর্ধতরঙ্গ + ক্যাপাসিটর</b> → PIV = <b>2V<sub>m</sub></b> (ইনপুট −V<sub>m</sub>-এ থাকার সময় C ধরে রাখে +V<sub>m</sub>)।</div>
+    <div class="small"><p>C বড় বা R<sub>L</sub> বড় → রিপল কম।</p><p><b>অন্য ফিল্টার:</b> সিরিজ চোক (ভারী লোডে), LC (L-সেকশন), CLC <b>π-ফিল্টার</b> (সবচেয়ে কম রিপল)।</p></div>
+  </div>
+
+  <h2><span class="no">১৪</span>ভোল্টেজ মাল্টিপ্লায়ার</h2>
+  <div class="cols" style="grid-template-columns:340px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 340 160" width="340">
+      <g class="w">
+        <use href="#ac" x="30" y="80"/>
+        <path class="ink" d="M30,52 V30 H60 M100,30 H170 M150,30 V45 M150,95 V130 M220,30 H270 V60 M270,100 V130 H30 V108"/>
+        <use href="#c-h" x="60" y="30"/>
+        <use href="#d-u" x="150" y="45"/>
+        <use href="#d-h" x="170" y="30"/>
+        <use href="#c-v" x="270" y="60"/>
+        <circle cx="150" cy="30" r="3.5" class="ink" style="fill:#1d3f8f"/>
+        <path class="ink-g" d="M52,146 H160" style="stroke-width:1.6"/><path class="ink-p" d="M168,146 H290" style="stroke-width:1.6"/>
+      </g>
+      <text x="80" y="11" text-anchor="middle" class="s">C1: V<tspan dy="3" font-size="10">m</tspan></text><text x="132" y="74" text-anchor="end" class="s">D1</text><text x="195" y="18" text-anchor="middle" class="s">D2</text>
+      <text x="290" y="84" class="s">C2</text><text x="296" y="64" class="r s w6">2V<tspan dy="3" font-size="10">m</tspan></text>
+      <text x="106" y="158" text-anchor="middle" class="bn g s">ক্ল্যাম্পার</text><text x="229" y="158" text-anchor="middle" class="bn p s">পিক রেকটিফায়ার</text>
+    </svg><figcaption>অর্ধতরঙ্গ ভোল্টেজ ডাবলার</figcaption></figure>
+    <ol class="steps small">
+      <li>− অর্ধ: D1 ON, C1 চার্জ হয় V<sub>m</sub> পর্যন্ত</li>
+      <li>+ অর্ধ: উৎস V<sub>m</sub> + C1-এর V<sub>m</sub> = 2V<sub>m</sub>; D2 ON, C2 চার্জ হয় <span class="circ">2V<sub>m</sub></span> পর্যন্ত</li>
+      <li>প্রতি ডায়োডের PIV = 2V<sub>m</sub>; C2-এর রেটিং 2V<sub>m</sub>, C1-এর V<sub>m</sub></li>
+      <li>পূর্ণতরঙ্গ ডাবলার: দুটি C-ই V<sub>m</sub> রেটিং, রিপল 2f</li>
+    </ol>
+  </div>
+  <div class="cols">
+    <div class="small"><p>ট্রিপলার <b>3V<sub>m</sub></b> · কোয়াড্রুপলার <b>4V<sub>m</sub></b> · n ধাপে nV<sub>m</sub> (ককক্রফট–ওয়ালটন)। শুধু অল্প লোড কারেন্টে। ব্যবহার: CRT, এক্স-রে, ফটোকপিয়ার, লেজার প্রিন্টার।</p></div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ডাবলার = <b>ক্ল্যাম্পার + পিক রেকটিফায়ার</b>। প্রতিটি বাড়তি ডায়োড–ক্যাপাসিটর জোড়া আরও একটি V<sub>m</sub> যোগ করে।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: clippers & clampers ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>তরঙ্গ রূপায়ণ</span></div>
+  <h2><span class="no">১৫</span>ক্লিপার (লিমিটার)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ডায়োড + রোধ (ক্যাপাসিটর নেই) দিয়ে তৈরি সার্কিট, যা একটি স্তরের উপরের এবং/অথবা নিচের <span class="hl">তরঙ্গের অংশ কেটে ফেলে</span>। <b>সিরিজ</b>: ডায়োড লোডের সাথে সিরিজে; <b>শান্ট</b>: লোডের আড়াআড়ি; <b>বায়াসড</b>: ব্যাটারি স্তর ঠিক করে।</div>
+  <figure class="doodle"><svg viewBox="0 0 410 165" width="410">
+    <g class="w">
+      <use href="#ac" x="30" y="80"/>
+      <path class="ink" d="M30,52 V30 H60 M110,30 H220 M150,30 V40 M150,146 V150 M30,108 V150 H220"/>
+      <use href="#r-h" x="60" y="30"/>
+      <use href="#d-v" x="150" y="40"/>
+      <use href="#batt" x="150" y="118"/>
+      <circle cx="150" cy="30" r="3.5" class="ink" style="fill:#1d3f8f"/>
+      <circle cx="220" cy="30" r="3" class="ink-k"/><circle cx="220" cy="150" r="3" class="ink-k"/>
+      <path class="ink-k" d="M240,88 H405" style="stroke-width:1" stroke-dasharray="3 4"/>
+      <path class="ink" d="M240,88 Q257.5,-12 275,88 Q292.5,188 310,88 Q327.5,-12 345,88 Q362.5,188 380,88" stroke-dasharray="5 4" style="stroke-width:1.4"/>
+      <path class="ink-r" d="M240,88 L243,74.5 L272,74.5 L275,88 Q292.5,188 310,88 L313,74.5 L342,74.5 L345,88 Q362.5,188 380,88" style="stroke-width:2.6"/>
+    </g>
+    <text x="85" y="18" text-anchor="middle" class="s">R</text><text x="166" y="70" class="s">D</text><text x="170" y="122" class="s">V<tspan dy="3" font-size="10">B</tspan><tspan dy="-3"> = 2 V</tspan></text>
+    <text x="50" y="84" class="s">v<tspan dy="3" font-size="10">in</tspan></text><text x="214" y="94" class="s">v<tspan dy="3" font-size="10">o</tspan></text>
+    <text x="384" y="70" class="r s w6">+2.7 V</text><text x="258" y="30" class="bn s">+10 V ইনপুট</text><text x="292" y="160" text-anchor="middle" class="s">−10 V</text>
+  </svg><figcaption>বায়াসড শান্ট ক্লিপার: উপরের অংশ কাটে V<sub>B</sub> + 0.7 V-এ</figcaption></figure>
+  <div class="cols">
+    <ol class="steps small">
+      <li>যে ইনপুটে V<sub>AK</sub> = 0.7 V হয় তা বের করো: এখানে v<sub>in</sub> = V<sub>B</sub> + 0.7 = <span class="circ">2.7 V</span></li>
+      <li>এর উপরে: D ON → v<sub>o</sub> 2.7 V-এ আটকে থাকে</li>
+      <li>এর নিচে: D OFF → v<sub>o</sub> = v<sub>in</sub> (−10 V পর্যন্ত)</li>
+    </ol>
+    <div class="small">
+      <p><b>ডাবল (দুই-স্তর) ক্লিপার:</b> বিপরীতমুখী দুটি বায়াসড ডায়োড → আউটপুট +(V<sub>1</sub> + 0.7) ও −(V<sub>2</sub> + 0.7)-এর মধ্যে সীমিত।</p>
+      <p>পিঠাপিঠি দুটি জেনার: ±(V<sub>Z</sub> + 0.7)।</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>সিরিজ</b> ক্লিপারে পরিবাহী অর্ধ বের হয় v<sub>in</sub> − 0.7 V হিসেবে, তাই 10 V শীর্ষ থেকে আউটপুট শীর্ষ <b>9.3 V</b>, 10 V নয়। ব্যবহার: ইনপুট সুরক্ষা, রেডিও/টিভির লিমিটার, নয়েজ দূরীকরণ।</div>
+
+  <h2><span class="no">১৬</span>ক্ল্যাম্পার (DC রিস্টোরার)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:400px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 400 150" width="400">
+      <g class="w">
+        <use href="#ac" x="30" y="80"/>
+        <path class="ink" d="M30,52 V30 H60 M100,30 H190 V55 M140,30 V45 M140,95 V130 M190,105 V130 H30 V108"/>
+        <use href="#c-h" x="60" y="30"/>
+        <use href="#d-u" x="140" y="45"/>
+        <use href="#r-v" x="190" y="55"/>
+        <path class="ink-k" d="M215,100 H395" style="stroke-width:1"/>
+        <path class="ink" d="M220,70 H250 V130 H280 V70 H310 V130 H340 V70 H370 V130 H390" stroke-dasharray="5 4" style="stroke-width:1.4"/>
+        <path class="ink-r" d="M220,40 H250 V100 H280 V40 H310 V100 H340 V40 H370 V100 H390" style="stroke-width:2.6"/>
+      </g>
+      <text x="80" y="12" text-anchor="middle" class="s">C</text><text x="124" y="74" text-anchor="end" class="s">D</text><text x="205" y="84" class="s">R<tspan dy="3" font-size="10">L</tspan></text>
+      <text x="394" y="36" text-anchor="end" class="r s w6">+20 V</text><text x="394" y="114" text-anchor="end" class="s">0</text><text x="394" y="145" text-anchor="end" class="bn s">−10 V ইনপুট</text>
+    </svg><figcaption>পজিটিভ ক্ল্যাম্পার: ±10 V ইনপুট → 0 থেকে +20 V আউটপুট</figcaption></figure>
+    <div class="small">
+      <p>C + ডায়োড (+ R<sub>L</sub>) <span class="hl">পুরো তরঙ্গকে</span> উপরে বা নিচে সরায়। আকার ও <b>শীর্ষ-থেকে-শীর্ষ মান অপরিবর্তিত</b>।</p>
+      <p>শর্ত <span class="circ">R<sub>L</sub>C ≫ T/2</span>, যাতে C প্রায় ডিসচার্জ না হয়।</p>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ±10 V বর্গতরঙ্গ, 1 kHz, C = 1 µF, R<sub>L</sub> = 100 kΩ: τ = 100 ms ≫ T/2 = 0.5 ms ✓। পজিটিভ ক্ল্যাম্পার, Si: <b>−0.7 থেকে +19.3 V</b>; নেগেটিভ ক্ল্যাম্পার: −19.3 থেকে +0.7 V। দুটিতেই p-p = 20 V।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ক্লিপার <b>কাটে</b>, ক্ল্যাম্পার <b>সরায়</b>। ক্ল্যাম্পারে থাকে <b>ক্যাপাসিটর</b>। ডায়োড আউটপুট থেকে গ্রাউন্ডে আঁকো: তরঙ্গ সরে <b>তীর যেদিকে</b> (তীর উপরে → পজিটিভ ক্ল্যাম্পার)।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>Si: E<sub>g</sub> 1.12 eV, V₀ 0.7 V · Ge: 0.67 eV, 0.3 V</p><p>n-টাইপ: P, As, Sb · p-টাইপ: B, Al, Ga, In</p>
+      <p>I = I<sub>S</sub>(e<sup>V/ηV<sub>T</sub></sup> − 1) · V<sub>T</sub> ≈ 26 mV</p><p>r<sub>d</sub> = ηV<sub>T</sub>/I<sub>D</sub> ≈ 26 mV/I<sub>D</sub></p>
+      <p>কারেন্টের প্রতি দশগুণে 60 mV (η = 1)</p><p>V<sub>D</sub> −2 mV/°C · I<sub>S</sub> প্রতি 10 °C-এ ×2</p>
+      <p>জেনার &lt; 5 V (TC −) · অ্যাভালাঞ্চ &gt; 6 V (TC +)</p><p>লোড লাইন: V<sub>S</sub> = V<sub>D</sub> + I<sub>D</sub>R</p>
+      <p>জেনার: I<sub>Z</sub> = (V<sub>in</sub> − V<sub>Z</sub>)/R − V<sub>Z</sub>/R<sub>L</sub></p><p>HW: V<sub>m</sub>/π, γ 1.21, η 40.6%, PIV V<sub>m</sub></p>
+      <p>FW: 2V<sub>m</sub>/π, γ 0.48, η 81.2%</p><p>PIV: CT 2V<sub>m</sub> · ব্রিজ V<sub>m</sub> · HW + C 2V<sub>m</sub></p>
+      <p>রিপল: HW-এ f · FW-এ 2f</p><p>C-ফিল্টার: γ = 1/(4√3 fR<sub>L</sub>C) (FW)</p>
+      <p>ডাবলার 2V<sub>m</sub> · ট্রিপলার 3V<sub>m</sub> · n ধাপে nV<sub>m</sub></p><p>ক্ল্যাম্পার: R<sub>L</sub>C ≫ T/2, p-p অপরিবর্তিত</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>ডায়োডে কারেন্ট অ্যানোড → ক্যাথোড (p → n)</li>
+      <li>রিভার্স বায়াসে ডিপ্লেশন স্তর চওড়া হয়</li>
+      <li>রিভার্স কারেন্ট = সংখ্যালঘু বাহক</li>
+      <li>জেনার রেগুলেটর: রিভার্স বায়াস, লোডের ‖</li>
+      <li>ভ্যারাক্টর: ভোল্টেজে-পরিবর্তনশীল ক্যাপাসিট্যান্স</li>
+      <li>শটকি: সবচেয়ে কম V<sub>F</sub>, দ্রুততম সুইচ</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>LED ফরওয়ার্ড বায়াসে, ফটোডায়োড রিভার্সে</li>
+      <li>50 Hz মেইনসে FW রিপল 100 Hz</li>
+      <li>ব্রিজ: ৪টি ডায়োড, সেন্টার ট্যাপ নেই</li>
+      <li>ফর্ম ফ্যাক্টর: 1.57 (HW), 1.11 (FW)</li>
+      <li>TUF: 0.287 · 0.693 · 0.812</li>
+      <li>ক্ল্যাম্পার = DC রিস্টোরার, ক্লিপার = লিমিটার</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> n-টাইপ নিরপেক্ষ · I<sub>S</sub> তাপমাত্রায় নির্ভর, V<sub>R</sub>-এ নয় · r<sub>d</sub> ≠ R<sub>D</sub> · CT-তে V<sub>m</sub> প্রতি অর্ধ-ওয়াইন্ডিংয়ের · HWR-এ γ &gt; 1 · HW + ক্যাপাসিটর → PIV 2V<sub>m</sub> · ব্রিজে 1.4 V কমে · সিরিজ ক্লিপারে আউটপুট শীর্ষ = V<sub>m</sub> − 0.7 · ফরওয়ার্ডে জেনার = 0.7 V ডায়োড</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> পাঁচ দেয় (n), তিন নেয় (p) · P যায় Positive-এ = ফরওয়ার্ড · জেনার ক্ষেত্রের টানে, অ্যাভালাঞ্চ তুষারধস · তীর বাইরে = LED, ভেতরে = ফটোডায়োড · তরঙ্গ দ্বিগুণ, DC ও η দ্বিগুণ · রিপল এক-দুই-এক বনাম চার-আট · PIV-তে সেন্টার ট্যাপ ব্যতিক্রম · ক্লিপার কাটে, ক্ল্যাম্পার সরায় · ডাবলার = ক্ল্যাম্পার + পিক রেকটিফায়ার</div>
+  <figure class="doodle"><svg viewBox="0 0 620 90" width="620">
+    <g class="w">
+      <path class="ink-r" d="M10,60 Q25,10 40,60 L70,60 Q85,10 100,60 L110,60" style="stroke-width:2.2"/>
+      <path class="ink-r" d="M135,60 Q150,10 165,60 Q180,10 195,60 Q210,10 225,60" style="stroke-width:2.2"/>
+      <path class="ink-r" d="M250,60 Q258,24 265,20 L290,28 Q293,22 296,20 L321,28 Q324,22 327,20 L345,25" style="stroke-width:2.2"/>
+      <path class="ink-r" d="M370,45 L374,32 H392 L396,45 Q404,85 412,45 L416,32 H434 L438,45 Q446,85 454,45" style="stroke-width:2.2"/>
+      <path class="ink-k" d="M480,60 H610" style="stroke-width:1" stroke-dasharray="3 4"/>
+      <path class="ink-r" d="M485,15 H505 V60 H525 V15 H545 V60 H565 V15 H585 V60 H605" style="stroke-width:2.2"/>
+    </g>
+    <text x="60" y="84" text-anchor="middle" class="s">HWR</text><text x="180" y="84" text-anchor="middle" class="s">FWR</text><text x="298" y="84" text-anchor="middle" class="bn s">C-ফিল্টার</text><text x="412" y="84" text-anchor="middle" class="bn s">ক্লিপার</text><text x="545" y="84" text-anchor="middle" class="bn s">ক্ল্যাম্পার</text>
+  </svg><figcaption>পাঁচটি আউটপুট আকার মুখস্থ থেকে আঁকো</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ইলেকট্রনিক্স · ডায়োড সার্কিট</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>25 °C-এ Ge-এর বাধা বিভব:<ol class="opts"><li>0.7 V</li><li>0.3 V</li><li>1.1 V</li><li>0.1 V</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>Si-এ পঞ্চযোজী ডোপিংয়ে পাওয়া যায়:<ol class="opts"><li>p-টাইপ</li><li>বিশুদ্ধ Si</li><li>n-টাইপ</li><li>অন্তরক</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>I<sub>D</sub> = 2 mA-তে r<sub>d</sub> (V<sub>T</sub> = 26 mV, η = 1):<ol class="opts"><li>52 Ω</li><li>26 Ω</li><li>6.5 Ω</li><li>13 Ω</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>ব্রিজে প্রতি ডায়োডের PIV:<ol class="opts"><li>V<sub>m</sub></li><li>2V<sub>m</sub></li><li>V<sub>m</sub>/2</li><li>√2 V<sub>m</sub></li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>50 Hz মেইনসে HWR-এর রিপল কম্পাঙ্ক:<ol class="opts"><li>100 Hz</li><li>25 Hz</li><li>50 Hz</li><li>200 Hz</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>FW রেকটিফায়ারের সর্বোচ্চ দক্ষতা:<ol class="opts"><li>40.6%</li><li>81.2%</li><li>100%</li><li>121%</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>ইলেকট্রনিক টিউনিংয়ে ব্যবহৃত ডায়োড:<ol class="opts"><li>LED</li><li>শটকি</li><li>ফটোডায়োড</li><li>ভ্যারাক্টর</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>আদর্শ পজিটিভ ক্ল্যাম্পার, ±5 V ইনপুট। আউটপুট:<ol class="opts"><li>0 থেকে +10 V</li><li>−10 থেকে 0 V</li><li>−5 থেকে +5 V</li><li>0 থেকে +5 V</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>অ্যাভালাঞ্চ ব্রেকডাউনের তাপ সহগ:<ol class="opts"><li>ঋণাত্মক</li><li>ধনাত্মক</li><li>শূন্য</li><li>অসীম</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>V<sub>in</sub> 15, V<sub>Z</sub> 10 V, R 250 Ω, R<sub>L</sub> 1k: I<sub>Z</sub>?<ol class="opts"><li>20 mA</li><li>30 mA</li><li>10 mA</li><li>5 mA</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ঘ · ৪-ক · ৫-গ · ৬-খ · ৭-ঘ · ৮-ক · ৯-খ · ১০-গ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> তরঙ্গরূপসহ একটি অর্ধতরঙ্গ রেকটিফায়ার আঁকো। V<sub>dc</sub> ও V<sub>rms</sub> নির্ণয় করো, দেখাও যে γ = 1.21 ও η<sub>max</sub> ≈ 40.6%, এবং Si ডায়োডসহ 12 V rms সেকেন্ডারির জন্য V<sub>dc</sub> বের করো। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>0 &lt; θ &lt; π-তে D চলে: v<sub>o</sub> = V<sub>m</sub> sin θ; π &lt; θ &lt; 2π-তে v<sub>o</sub> = 0 <i class="mk">১</i></li>
+    <li>V<sub>dc</sub> = (1/2π)∫₀<sup>π</sup> V<sub>m</sub> sin θ dθ = (V<sub>m</sub>/2π)[−cos θ]₀<sup>π</sup> = <b>V<sub>m</sub>/π</b> <i class="mk">২</i></li>
+    <li>V<sub>rms</sub> = √[(1/2π)∫₀<sup>π</sup> V<sub>m</sub>² sin²θ dθ] = √(V<sub>m</sub>²/4) = <b>V<sub>m</sub>/2</b> <i class="mk">২</i></li>
+    <li>γ = √((V<sub>rms</sub>/V<sub>dc</sub>)² − 1) = √(π²/4 − 1) = <b>1.21</b>; η = (V<sub>m</sub>/π)²/(V<sub>m</sub>/2)² = 4/π² ≈ <b>0.406</b> <i class="mk">২</i></li>
+    <li>V<sub>m</sub> = 12√2 = 16.97 V; 0.7 V ড্রপসহ V<sub>dc</sub> = 16.27/π = <span class="circ">5.18 V</span> <i class="mk">১</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>HW, CT, ব্রিজ সার্কিট + তরঙ্গরূপ আঁকতে পারি</li>
+        <li>তুলনা সারণি সারি ধরে জানি</li>
+        <li>জেনার: I<sub>Z</sub> ও R<sub>L(min)</sub> বের করতে পারি</li>
+        <li>0.7 V ধরে ক্লিপার/ক্ল্যাম্পার আউটপুট আঁকতে পারি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① ব্রিজ: η = 81.2% প্রমাণ<br>② নির্দিষ্ট C-তে ফিল্টারের রিপল<br>③ ডাবল ক্লিপারের আউটপুট<br>④ ভোল্টেজ ডাবলারের কার্যপ্রণালী</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>
