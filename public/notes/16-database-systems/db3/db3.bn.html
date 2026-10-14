@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ফাংশনাল ডিপেন্ডেন্সি ও নরমালাইজেশন (১NF–BCNF): রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" height="4000" width="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>তারিখ: ১৩.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ফাংশনাল ডিপেন্ডেন্সি ও নরমালাইজেশন</span></h1>
+  <p class="subtitle">এফডি নোটেশন · অ্যাট্রিবিউট ক্লোজার · ১NF → ২NF → ৩NF → BCNF · লসলেস ডিকম্পোজিশন: ১১ পাতায় পরীক্ষার চেলেঞ্জ</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="330">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">নরমালাইজেশন</text><text x="320" y="172" text-anchor="middle" class="bn r s">এফডি · ১NF → BCNF</text>
+      <text x="142" y="58" text-anchor="middle" class="bn s" style="font-size:10px">এফডি নোটেশন</text><text x="142" y="72" text-anchor="middle" class="bn s" style="font-size:10px">A → B</text>
+      <text x="320" y="40" text-anchor="middle" class="bn r w6" style="font-size:11px">ক্লোজার a+ · কি ★</text>
+      <text x="498" y="58" text-anchor="middle" class="bn s" style="font-size:10px">এফডির</text><text x="498" y="72" text-anchor="middle" class="bn s" style="font-size:10px">প্রকার</text>
+      <text x="96" y="148" text-anchor="middle" class="bn g w6" style="font-size:10px">১NF: অ্যাটমিক</text><text x="96" y="163" text-anchor="middle" class="bn g w6" style="font-size:10px">মান</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:10px">৩NF: ট্রানজিটিভ</text><text x="544" y="163" text-anchor="middle" class="bn r w6" style="font-size:10px">নেই ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s" style="font-size:10px">২NF:</text><text x="142" y="252" text-anchor="middle" class="bn s" style="font-size:10px">পার্শিয়াল নেই</text>
+      <text x="320" y="270" text-anchor="middle" class="bn r w6" style="font-size:10px">BCNF: ডিটারমিন্যান্ট ★</text>
+      <text x="498" y="238" text-anchor="middle" class="bn r w6" style="font-size:10px">লসলেস</text><text x="498" y="252" text-anchor="middle" class="bn r w6" style="font-size:10px">ডিকম্পোজিশন ★</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = প্রথম সিঁড়ি</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>হাই-ইল্ড তালিকা</b><br>① <code>A → B</code>: একই A ⇒ একই B<br>② ট্রিভিয়াল: Y ⊆ X · নন-ট্রিভিয়াল: Y ⊄ X<br>③ ক্লোজার X<sup>+</sup> = A থেকে বের সব<br>④ সুপারকি = যেকোনো কি; ক্যান্ডিডেট = ছোটতম<br>⑤ ১NF: অ্যাটমিক মান, রিপিটিং গ্রুপ নেই<br>⑥ ২NF: পার্শিয়াল ডিপেন্ডেন্সি নেই<br>⑦ ৩NF: ট্রানজিটিভ ডিপেন্ডেন্সি নেই<br>⑧ <span class="circ">BCNF: প্রতিটি ডিটারমিন্যান্ট ক্যান্ডিডেট কি</span><br>⑨ লসলেস ⟺ <span class="circ">(R1∩R2)→R1</span> বা <span class="circ">→R2</span><br>⑩ লেখায় নরমালাইজ, পড়ায় ডিনরমালাইজ ★<br>⑪ শেয়ার করা কলাম এক পাশের কি হলে জয়েন লসলেস<br>⑫ প্রাইম = কোনো না কোনো কির ভেতরে</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">ডেটাবেস সিস্টেমের সিলেবাস লাইনটি পূর্ণ করে: "<span class="hl">Normalization — Process of reducing redundancy and improving data consistency. Steps: 1NF → 2NF → 3NF → BCNF.</span>" <b>এই লেসনে ওই অংশটিই নেওয়া হয়েছে।</b> এই টেবিলগুলো পড়ার রিলেশনাল অ্যালজেবরা ও SQL আগের লেসনে <b>db2</b>-তে এসেছে। পাশের কাজগুলো — ER ও রিলেশনাল মডেল, কনস্ট্রেইন্ট ও ট্রিগার, ফাইল সংগঠন ও স্টোরেজ, প্রাইমারি ও সেকেন্ডারি ইনডেক্স ও B+ ট্রি, কোয়েরি অপটিমাইজেশন — প্রতিটির নিজস্ব জায়গা আছে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>এফডি: নোটেশন ও প্রকার … পৃ. ২</li><li>অ্যাট্রিবিউট ক্লোজার, কি … পৃ. ৩</li><li>১NF ও ২NF … পৃ. ৪</li><li>৩NF ও BCNF … পৃ. ৫</li><li>সিঁড়িটি এক টেবিলে … পৃ. ৬</li></ul>
+    <ul class="tick"><li>লসলেস জয়েন, প্রিজার্ভেশন … পৃ. ৭</li><li>নরমালাইজেশন ধাপে ধাপে … পৃ. ৮</li><li>অ্যানোমালি ও ডিনরমালাইজেশন … পৃ. ৯</li><li>রাতের পরীক্ষার পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: functional dependencies ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>এফডি ও নোটেশন</span></div>
+  <h2><span class="no">১</span>ফাংশনাল ডিপেন্ডেন্সি: A → B আসলে বলে কী</h2><span class="tag">সবকিছুর ভিত্তি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> কোনো রিলেশন R ফাংশনাল ডিপেন্ডেন্সি (FD) <code>X → Y</code> সন্তুষ্ট করে, যদি <b>X-এর উপর একই মান থাকা যে কোনো দুটো টিপল, Y-এর উপরেও একই মান রাখে</b>। X হলো <span class="hl">ডিটারমিন্যান্ট</span>, Y হলো <span class="hl">ডিপেন্ডেন্ট</span>; <code>A → B</code> পড়ো "A নির্ধারণ করে B"। উদাহরণ: <code>StudentID → Name</code> — ID জানলেই নাম ঠিক, তাই একই ID-এর দুটো সারি কখনো ভিন্ন নাম রাখতে পারে না। FD বলে দেয় রিলেশন <i>কী বোঝায়</i>, আজকের সারিগুলো কী আছে তা নয়।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">প্রকার</th><th class="l">নিয়ম</th><th class="l">উদাহরণ</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l"><b>ট্রিভিয়াল</b></td><td class="l">Y ⊆ X</td><td class="l"><code>(StudentID, Name) → Name</code></td><td class="l"><span class="circ">সবসময় সত্য</span></td></tr>
+    <tr><td class="l"><b>নন-ট্রিভিয়াল</b></td><td class="l">Y ⊄ X</td><td class="l"><code>StudentID → Name</code></td><td class="l">আলোচনার যোগ্য এগুলোই</td></tr>
+    <tr><td class="l"><b>ফুল এফডি</b></td><td class="l">Y-এর জন্য X-এর পুরোটা দরকার</td><td class="l"><code>(StudentID, CourseID) → Grade</code></td><td class="l">২NF এটাই দাবি করে</td></tr>
+    <tr><td class="l"><b>পার্শিয়াল</b></td><td class="l">Y-এর জন্য X-এর অংশই যথেষ্ট</td><td class="l"><code>StudentID → StudentName</code>, কি (StudentID, CourseID)</td><td class="l"><span class="red"><b>২NF ভাঙে</b></span></td></tr>
+    <tr><td class="l"><b>ট্রানজিটিভ</b></td><td class="l">A→B ও B→C মিলে A→C</td><td class="l"><code>StudentID → DeptID → DeptName</code></td><td class="l"><span class="red"><b>৩NF ভাঙে</b></span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:290px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 420 200" width="280">
+      <g class="w">
+        <rect x="8" y="24" width="160" height="80" rx="6" class="ink-k fill-b"/>
+        <rect x="8" y="24" width="160" height="26" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M8,50 H168 M8,76 H168 M34,50 V104 M88,50 V104 M142,50 V104"/>
+        <rect x="248" y="24" width="160" height="80" rx="6" class="ink-k fill-b"/>
+        <rect x="248" y="24" width="160" height="26" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M248,50 H408 M328,50 V104 M248,76 H408"/>
+        <path class="ink" d="M172,64 H244" marker-end="url(#ah)"/>
+      </g>
+      <text x="88" y="43" text-anchor="middle" class="k w6" style="font-size:11px">StudentID</text>
+      <text x="34" y="68" text-anchor="middle" class="s" style="font-size:10px">101</text>
+      <text x="88" y="68" text-anchor="middle" class="s" style="font-size:10px">102</text>
+      <text x="142" y="68" text-anchor="middle" class="s" style="font-size:10px">101</text>
+      <text x="34" y="94" text-anchor="middle" class="s" style="font-size:10px">Alice</text>
+      <text x="88" y="94" text-anchor="middle" class="s" style="font-size:10px">Bob</text>
+      <text x="142" y="94" text-anchor="middle" class="s" style="font-size:10px">Alice</text>
+      <text x="328" y="43" text-anchor="middle" class="k w6" style="font-size:11px">Name</text>
+      <text x="328" y="94" text-anchor="middle" class="bn s" style="font-size:10px">101-এর একটিই নাম</text>
+      <text x="208" y="56" text-anchor="middle" class="r w6" style="font-size:13px">A → B</text>
+      <text x="208" y="142" text-anchor="middle" class="bn r w6" style="font-size:11px">একই A ⇒ একই B</text>
+      <text x="208" y="164" text-anchor="middle" class="bn k s" style="font-size:11px">স্কিমাকে রাখতে হবে এমন প্রতিশ্রুতি</text>
+      <text x="208" y="186" text-anchor="middle" class="bn p s" style="font-size:11px">শুধু বাম দিকই ঠিক করে</text>
+    </svg><figcaption>১ম ও ৩ম সারির ID 101, তাই নামও এক</figcaption></figure>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>তীর একটি প্রতিশ্রুতি, কাকতালীয় নয়।</b>" <code>A → B</code> মানে ডেটাবেস কখনোই একই A-সহ দুটি ভিন্ন B রাখতে পারবে না। তাই <code>StudentID</code> একটি কি-ক্যান্ডিডেট, আর "একই ছাত্র, দুটো নাম" একটি <span class="circ">ডিজাইনের ভুল</span>, ভাগ্যের ঘটনা নয়।</div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ দুটি</span> <b>১.</b> <code>(A, B) → A</code> হলো <b>ট্রিভিয়াল</b> এবং প্রতিটি রিলেশনে সত্য — কোনো তথ্য নয়, তাই পরীক্ষাও লাগে না। <b>২.</b> তীর <b>একমুখী</b>: <code>StudentID → Name</code> থেকে <code>Name → StudentID</code> কখনোই বের হয় না, কারণ দুজন ছাত্রের নাম এক হতে পারে।</div>
+    </div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">নরমালাইজেশন</span> <b>নরমালাইজেশন</b> হলো খারাপভাবে সাজানো একটি রিলেশনকে ছোট ভাগে ভেঙে <span class="hl">রিডান্ড্যান্সি কমানো</span> ও <span class="hl">ডেটার সামঞ্জস্য বাড়ানো</span>র প্রক্রিয়া, যেখানে প্রতিটি ভাগ একটি <b>নরমাল ফর্ম</b> মেনে চলে। সিঁড়িটি ক্রমবর্ধমান: <b>১NF → ২NF → ৩NF → BCNF</b> — প্রতিটি সিঁড়ি নিচেরটিতে আর একটি শর্ত যোগ করে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 260px;align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">কেন এত কাজ করি</span> BCNF-এ থাকা রিলেশন প্রতিটি তথ্য <b>ঠিক এক জায়গায়</b> রাখে, ফলে তিনটি <span class="red">অ্যানোমালি</span> — আপডেট, ইনসার্ট ও ডিলিট — অদৃশ্য হয়। বিনিময়ে পড়ার সময় বাড়তি জয়েন লাগে।</div>
+    <figure class="doodle"><svg viewBox="0 0 300 118" width="250">
+      <g class="w">
+        <rect x="76" y="4" width="120" height="24" rx="10" class="ink fill-b"/>
+        <rect x="76" y="34" width="120" height="24" rx="10" class="ink fill-b"/>
+        <rect x="76" y="64" width="120" height="24" rx="10" class="ink-r fill-r"/>
+        <rect x="76" y="94" width="120" height="24" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M136,28 V32" marker-end="url(#ahb)"/>
+        <path class="ink" d="M136,58 V62" marker-end="url(#ahb)"/>
+        <path class="ink" d="M136,88 V92" marker-end="url(#ahb)"/>
+      </g>
+      <text x="136" y="21" text-anchor="middle" class="k w6" style="font-size:12px">1NF</text>
+      <text x="136" y="51" text-anchor="middle" class="k w6" style="font-size:12px">2NF</text>
+      <text x="136" y="81" text-anchor="middle" class="r w6" style="font-size:12px">3NF</text>
+      <text x="136" y="111" text-anchor="middle" class="r w6" style="font-size:12px">BCNF</text>
+      <text x="70" y="21" text-anchor="end" class="bn s" style="font-size:10px">অ্যাটমিক</text>
+      <text x="70" y="51" text-anchor="end" class="bn s" style="font-size:10px">+ পার্শিয়াল নেই</text>
+      <text x="70" y="81" text-anchor="end" class="bn s" style="font-size:10px">+ ট্রানজিটিভ নেই</text>
+      <text x="70" y="111" text-anchor="end" class="bn s" style="font-size:10px">+ ডিটারমিন্যান্ট</text>
+      <text x="204" y="21" class="bn k s" style="font-size:10px">= কি</text>
+      <text x="204" y="111" class="bn r w6" style="font-size:10px">★ সবচেয়ে শক্ত</text>
+    </svg><figcaption>প্রতিটি সিঁড়ি নিচেরটিতে আর একটি শর্ত যোগ করে</figcaption></figure>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: closure and keys ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>ক্লোজার ও কি</span></div>
+  <h2><span class="no">২</span>অ্যাট্রিবিউট ক্লোজার, ক্যান্ডিডেট কি ও সুপারকি</h2><span class="tag">নম্বর যেখানে ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">অ্যাট্রিবিউট ক্লোজার X<sup>+</sup></span> F বারবার ব্যবহার করে X থেকে যে সব অ্যাট্রিবিউট বের হয়, তাদের সেট। <b>X হলো R-এর একটি কি তখনই, যখন X<sup>+</sup> = R।</b> X দিয়ে শুরু করো, তারপর যেকোনো FD <code>P → Q</code>-এর P আগে থেকেই সেটের ভেতরে থাকলে Q যোগ করো, নতুন কিছু না যোগ হওয়া পর্যন্ত।</div>
+    <div class="code">X⁺ = X
+repeat:
+  for every FD  P → Q  in F:
+      if  P ⊆ X⁺ :  X⁺ ← X⁺ ∪ Q
+until  X⁺ stops growing</div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ ক্লাসিক ক্লোজার</span> <code>R(A, B, C, D, E)</code>, <code>F = {A→B, BC→D, D→E}</code>। {A, C}<sup>+</sup> বের করো:<br>
+    শুরু <b>{A, C}</b> → <code>A→B</code> প্রযোজ্য → <b>{A, B, C}</b> → <code>BC→D</code> প্রযোজ্য → <b>{A, B, C, D}</b> → <code>D→E</code> প্রযোজ্য → <b>{A, B, C, D, E}</b> = R, তাই <span class="circ">{A,C}⁺ = {A,B,C,D,E}</span> এবং <b>AC হলো R-এর একটি কি</b>। পাঁচটি অ্যাট্রিবিউট ঢুকে গেলে F-এর প্রতিটি FD প্রযোজ্য, তাই আর কিছু যোগ হবে না।</div>
+  <figure class="doodle"><svg viewBox="0 0 600 108" width="540">
+    <g class="w">
+      <rect x="8" y="14" width="112" height="40" rx="8" class="ink-k fill-y"/>
+      <rect x="148" y="14" width="112" height="40" rx="8" class="ink fill-b"/>
+      <rect x="288" y="14" width="112" height="40" rx="8" class="ink fill-b"/>
+      <rect x="428" y="14" width="164" height="40" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M124,34 H144" marker-end="url(#ahb)"/>
+      <path class="ink" d="M264,34 H284" marker-end="url(#ahb)"/>
+      <path class="ink" d="M404,34 H424" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M64,58 V76" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M352,58 V76" marker-end="url(#ah)"/>
+    </g>
+    <text x="64" y="39" text-anchor="middle" class="k w6" style="font-size:12px">{A, C}</text>
+    <text x="204" y="39" text-anchor="middle" class="k w6" style="font-size:12px">{A,B,C}</text>
+    <text x="344" y="39" text-anchor="middle" class="k w6" style="font-size:12px">{A,B,C,D}</text>
+    <text x="510" y="31" text-anchor="middle" class="g w6" style="font-size:12px">{A,B,C,D,E}</text>
+    <text x="510" y="47" text-anchor="middle" class="bn g w6" style="font-size:10px">= R → AC একটি কি</text>
+    <text x="64" y="98" text-anchor="middle" class="r s" style="font-size:10px">A→B</text>
+    <text x="204" y="98" text-anchor="middle" class="r s" style="font-size:10px">BC→D</text>
+    <text x="344" y="98" text-anchor="middle" class="r s" style="font-size:10px">D→E</text>
+    <text x="510" y="98" text-anchor="middle" class="bn k s" style="font-size:10px">আর বাড়ে না</text>
+  </svg><figcaption>ক্লোজারের সিঁড়ি: বাম দিক আগে থেকেই সেটে থাকলে প্রতিটি FD আর একটি অ্যাট্রিবিউট ঢোকায়</figcaption></figure>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">সুপারকি · ক্যান্ডিডেট কি · প্রাইম অ্যাট্রিবিউট</span> যেসব অ্যাট্রিবিউট-সেটের ক্লোজার পুরো R হয় তা <b>সুপারকি</b> — উপরে AB তা-ই, কারণ {A,B}<sup>+</sup> = {A,B,C,D,E}। <b>ক্যান্ডিডেট কি</b> হলো <span class="hl">মিনিমাল</span> সুপারকি: তার কোনো উপসেট আর পুরো R বানায় না। কোনো অ্যাট্রিবিউট যদি <i>কোনো না কোনো</i> ক্যান্ডিডেট কি-র ভেতরে থাকে, তাকে <b>প্রাইম</b> বলে। ৩NF ও BCNF-এর পুরো যুক্তি এই তিনটি শব্দের উপর দাঁড়ায়।</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ সুপারকির ফাঁদ</span> <code>R(A, B, C, D)</code>, <code>F = {A→B, B→C, C→D}</code>। <b>A<sup>+</sup>:</b> A → {A,B} → {A,B,C} → {A,B,C,D} = R, তাই A একটি সুপারকি; আর A একটি <b>একক অ্যাট্রিবিউট</b> বলে মিনিমাল, ফলে <span class="circ">A-ই ক্যান্ডিডেট কি</span>। A কোনো FD-এর ডান পাশে নেই, তাই R-এর প্রতিটি কিতেই A থাকতেই হবে। তারপর <b>AB একটি সুপারকি কিন্তু মিনিমাল নয়</b> (B সরালে A নিজেই R বানায়), তাই AB <b>ক্যান্ডিডেট কি নয়</b>। আর <b>B<sup>+</sup> = {B, C, D}</b> — B থেকে A কখনো আসে না।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ পুরো প্রশ্নটাই মিনিমালিটি</span> "ক্যান্ডিডেট কি কোনটি?" মানে <b>"কোন সেট সব অ্যাট্রিবিউট নির্ধারণ করে?" নয়</b> — সেট হলো সুপারকি, আর তা সাধারণত একাধিক। তাই দ্বিতীয় ধাপে <b>মিনিমালিটি</b> যাচাই করো: একটি অ্যাট্রিবিউট সরিয়ে আবার ক্লোজার বের করো, আর সেট এখনো পুরো R হলে বোঝা সেট বড় ছিল। উপরের R(A,B,C,D)-তে সুপারকি আছে AB, AC, AD, ABC, ABD, ACD, ABCD — আর ক্যান্ডিডেট কি ঠিক <span class="circ">একটিই</span>, A।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>সুপার মানে বড় সেট; ক্যান্ডিডেট মানে তার ভেতরের সবচেয়ে ছোটটা।</b>" আর "<b>প্রাইম মানে কোনো না কোনো কির ভেতরে</b>", "সব কির ভেতরে" নয় — কি হিসেবে A থাকা R(A,B,C)-তে শুধু A-ই প্রাইম, যদিও A একমাত্র কি। ৩NF ও BCNF-এর পার্থক্য ঠিক প্রাইম/নন-প্রাইম দিয়েই হয়।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: 1NF and 2NF ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>১NF ও ২NF</span></div>
+  <h2><span class="no">৩</span>প্রথম ও দ্বিতীয় নরমাল ফর্ম</h2><span class="tag">দুটো সহজ সিঁড়ি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">১NF — প্রথম নরমাল ফর্ম</span> প্রতিটি অ্যাট্রিবিউটে একটিমাত্র <span class="hl">অ্যাটমিক মান</span> থাকবে। কোনো রিপিটিং গ্রুপ নয়, কোনো তালিকা বা অ্যারে নয়, "এক সারি = অনেক তথ্য" ধরনের কলাম নয়। কোনো মানকে স্বাধীন কয়েকটি মানে ভাঙলে কাজে লাগে না, তাকেই অ্যাটমিক বলে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">১NF-এর আগে</th><th>StudentID</th><th>Courses</th></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>101</u></td><td class="l"><span class="red"><b>CSE101, MAT201</b></span></td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">১NF-এর পরে</th><th>StudentID</th><th>Course</th></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>101</u></td><td class="l">CSE101</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>101</u></td><td class="l">MAT201</td></tr>
+    </table>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> কমা দিয়ে আলাদা করা তালিকা একসাথে <b>তিনটি</b> নিয়ম ভাঙছে: সেট অ্যাটমিক নয়, রিপিটিং গ্রুপ, আর এক সারিতে দ্বিতীয় তথ্য লুকিয়ে আছে। ফলে <code>CSE101</code>-এ ইনডেক্স করতে স্ট্রিং ছেঁড়ে লাগে, আর "১০১ কতটি কোর্স নিয়েছে?" জিজ্ঞেসের জন্য <code>LIKE</code> দিয়ে অনুমান করতে হয়। সমাধানে মাত্র একটি বাড়তি সারি লাগে — তাই সবসময় নাও।</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">২NF — দ্বিতীয় নরমাল ফর্ম</span> R তখনই ২NF-এ, যখন সে <b>১NF</b>-এ এবং কোনো <b>নন-প্রাইম</b> অ্যাট্রিবিউট কম্পোজিট ক্যান্ডিডেট কি-এর <b>অংশবিশেষের</b> উপর নির্ভর করে না। কি একক অ্যাট্রিবিউট হলে পার্শিয়াল ডিপেন্ডেন্সি অসম্ভব, তাই ২NF কখনোই শুধু <span class="hl">কম্পোজিট-কি টেবিলে</span> দাঁড়ায়।</div>
+  <div class="cols" style="grid-template-columns:290px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 186" width="280">
+      <g class="w">
+        <rect x="10" y="10" width="280" height="40" rx="8" class="ink-k fill-b"/>
+        <rect x="10" y="66" width="280" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="140" width="86" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="107" y="140" width="86" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="204" y="140" width="86" height="40" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M150,50 V62" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M110,106 V136" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M200,106 V136" marker-end="url(#ah)"/>
+      </g>
+      <text x="150" y="32" text-anchor="middle" class="bn k w6" style="font-size:11px">ENROLLMENT (কি = StudentID + CourseID)</text>
+      <text x="150" y="90" text-anchor="middle" class="bn r w6" style="font-size:11px">পার্শিয়াল: StudentName ← শুধু StudentID</text>
+      <text x="53" y="164" text-anchor="middle" class="bn g w6" style="font-size:11px">Student</text>
+      <text x="150" y="164" text-anchor="middle" class="bn g w6" style="font-size:11px">Course</text>
+      <text x="247" y="164" text-anchor="middle" class="bn g w6" style="font-size:11px">Enrollment</text>
+    </svg><figcaption>পার্শিয়াল ডিপেন্ডেন্সিই ভাঙটা ঘটায়</figcaption></figure>
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ২NF-এর আগে</span> কি হলো কম্পোজিট <b>(StudentID, CourseID)</b>।<br>
+        <code>(StudentID, CourseID) → StudentName, Instructor, Grade</code><br>
+        <b>সমস্যা:</b> StudentName শুধু StudentID-এর উপর নির্ভর করে (পার্শিয়াল); Instructor শুধু CourseID-এর উপর নির্ভর করে (পার্শিয়াল)। শুধু <code>→ Grade</code> পুরো কি লাগে, তাই শুধু সেটিই এখানে থাকে।</div>
+      <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:0 2mm">
+        <table class="hand tiny" style="width:100%">
+          <tr><th class="l">Student</th></tr>
+          <tr><td class="l"><u>StudentID</u> PK</td></tr>
+          <tr><td class="l">StudentName</td></tr>
+        </table>
+        <table class="hand tiny" style="width:100%">
+          <tr><th class="l">Course</th></tr>
+          <tr><td class="l"><u>CourseID</u> PK</td></tr>
+          <tr><td class="l">Instructor</td></tr>
+        </table>
+        <table class="hand tiny" style="width:100%">
+          <tr><th class="l">Enrollment</th></tr>
+          <tr><td class="l"><u>StudentID</u> PK, FK</td></tr>
+          <tr><td class="l"><u>CourseID</u> PK, FK</td></tr>
+          <tr><td class="l">Grade</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ দুটি</span> <b>১.</b> পার্শিয়াল ডিপেন্ডেন্সি কম্পোজিট কির বিপরীতে চিহ্নিত; একক অ্যাট্রিবিউট কির রিলেশনে ২NF <span class="circ">স্বয়ংক্রিয়</span> পূরণ হয়, আসল প্রশ্ন তখন ৩NF। <b>২.</b> ভাগটি <b>লসলেস</b> হতে হবে: এখানে R1 ∩ R2 = {StudentID}, আর StudentID → Student (R1-এর পুরোটা), তাই তিনটি টেবিল জয়েন করলে মূল সারিগুলো হুবহু ফিরে আসে।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কলাম ধরে নয়, তীর ধরে ভাঙো।</b>" প্রথমে FD গুলো আঁকো; যেসব তীরের লেজ কি-এর <i>অর্ধেক</i> মাত্র, সেগুলো পার্শিয়াল ডিপেন্ডেন্সি, আর সেই তীরের মাথা নিজের আলাদা টেবিলে চলে যায়। ১NF ভাঙে <b>মান</b> অনুযায়ী; ২NF ভাঙে <b>নির্ভরতা</b> অনুযায়ী।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: 3NF and BCNF ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>৩NF ও BCNF</span></div>
+  <h2><span class="no">৪</span>তৃতীয় ও বয়েস-কড নরমাল ফর্ম</h2><span class="tag">সবচেয়ে বেশি পরীক্ষা হয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">৩NF — তৃতীয় নরমাল ফর্ম</span> R তখনই ৩NF-এ, যখন সে <b>২NF</b>-এ এবং কোনো নন-প্রাইম অ্যাট্রিবিউট কির উপর <b>ট্রানজিটিভ</b>ভাবে নির্ভর করে না: প্রতিটি FD <code>X → A</code>-এ, যেখানে A নন-প্রাইম, X অবশ্যই সুপারকি। সহজ কথায়: <span class="hl">কির অংশ নয় এমন কোনো অ্যাট্রিবিউট অন্য অ্যাট্রিবিউটের উপর নির্ভর করতে পারে না</span>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আসল ৩NF লঙ্ঘন</span>
+      <b>আগে</b> — <code>Student(StudentID, Name, DeptID, DeptName)</code>, কি <b>StudentID</b>:<br>
+      <code>StudentID → Name, DeptID</code>, তারপর <code>DeptID → DeptName</code><br>
+      তাই <code>StudentID → DeptID → DeptName</code>। DeptID কি-এর অংশ <b>নয়</b>, অথচ DeptName তার উপর ঝুলে আছে — নন-কি অ্যাট্রিবিউটের উপর ট্রানজিটিভ নির্ভরতা। <b>পরে</b> — <code>Student(StudentID, Name, DeptID·FK)</code> এবং <code>Department(DeptID, DeptName)</code>। এখন DeptName যত ছাত্র থাকুক বিভাগ প্রতি একবারই সংরক্ষিত হয়।</div>
+    <figure class="doodle"><svg viewBox="0 0 300 190" width="290">
+      <g class="w">
+        <circle cx="66" cy="66" r="34" class="ink-k fill-y"/>
+        <circle cx="66" cy="152" r="34" class="ink fill-b"/>
+        <circle cx="234" cy="152" r="34" class="ink fill-b"/>
+        <path class="ink" d="M100,84 L204,134" marker-end="url(#ah)"/>
+        <path class="ink" d="M234,118 L100,84" marker-end="url(#ahb)"/>
+      </g>
+      <text x="66" y="62" text-anchor="middle" class="bn k w6" style="font-size:12px">Student</text>
+      <text x="66" y="76" text-anchor="middle" class="k w6" style="font-size:10px">ID</text>
+      <text x="66" y="152" text-anchor="middle" class="k w6" style="font-size:11px">DeptID</text>
+      <text x="234" y="148" text-anchor="middle" class="bn k w6" style="font-size:10px">Dept</text>
+      <text x="234" y="162" text-anchor="middle" class="k w6" style="font-size:10px">Name</text>
+      <text x="150" y="102" text-anchor="middle" class="bn r w6" style="font-size:11px">ট্রানজিটিভ</text>
+      <text x="150" y="118" text-anchor="middle" class="r w6" style="font-size:10px">3NF ✗</text>
+      <text x="150" y="182" text-anchor="middle" class="bn g w6" style="font-size:10px">ভাঙলে → 3NF ✓</text>
+    </svg><figcaption>৩NF-এ কথা হয় এই তীর নিয়েই</figcaption></figure>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">BCNF — বয়েস-কড নরমাল ফর্ম</span> R তখনই BCNF-এ, যখন <b>প্রতিটি</b> নন-ট্রিভিয়াল FD <code>X → Y</code>-এর জন্য X একটি <span class="hl">সুপারকি</span>। পরীক্ষার সবচেয়ে ছোট রূপ: <b>প্রতিটি ডিটারমিন্যান্ট একটি ক্যান্ডিডেট কি হতে হবে</b>। এটি ৩NF-এর চেয়ে কঠোর — ৩NF এই শর্তটি তখনই চায় যখন ডিপেন্ডেন্ট <i>নন-প্রাইম</i>।</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ৩NF যা সারাতে পারে না</span> ধরো <code>R(CourseID, Semester, Instructor)</code>, যেখানে <code>(CourseID, Semester) → Instructor</code> এবং <code>Instructor → CourseID</code>। প্রতিটি পাশ হাতে আলাদা করে দেখো: না <b>CourseID</b> একা, না <b>Semester</b> একা পুরো রিলেশন নির্ধারণ করে, তাই ডিটারমিন্যান্ট (CourseID, Semester)-ও সুপারকি নয়। কিন্তু Instructor একটি প্রাইম অ্যাট্রিবিউট, তাই রিলেশনটি <b>২NF</b>-ই মেনে চলে — BCNF লঙ্ঘন। <b>BCNF সমাধান:</b> ভাঙো — <code>Instructor(CourseID, Instructor)</code> (কি Instructor) এবং <code>Offering(CourseID, Semester)</code>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> ৩NF বলে "প্রতিটি <i>নন-প্রাইম</i> অ্যাট্রিবিউট কির উপর নির্ভর করে"; BCNF বলে "প্রতিটি <i>ডিটারমিন্যান্ট</i> কি"। শৃঙ্খল যখন একটি <b>প্রাইম</b> অ্যাট্রিবিউটের উপর দিয়ে যায়, তখন রিলেশন ৩NF মেনে চলেও BCNF লঙ্ঘন করে। <b>২.</b> একক অ্যাট্রিবিউট কির ক্ষেত্রে কোনো পার্শিয়াল ডিপেন্ডেন্সি থাকে না, তাই রিলেশন ২NF-এ থেকে ৩NF লঙ্ঘন করতে পারে। <b>৩.</b> <b>BCNF সিঁড়ির শেষ নয়</b>: মাল্টিভ্যালুড ডিপেন্ডেন্সির জন্য ৪NF আছে।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>১NF একটি মান, ২NF পুরো কি, ৩NF কোনো ঘুরপথ নয়, BCNF প্রতিটি তীর কি থেকে।</b>" BCNF-কে <i>বাম দিকের</i> নিয়ম হিসেবে পড়ো: F-এর প্রতিটি FD দিয়ে যাও এবং প্রশ্ন করো "এই ডিটারমিন্যান্ট কি তো?" যেকোনো একটির উত্তর না হলে সেই রিলেশন ভাঙো।</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ আরও দুটি</span> <b>৪.</b> <b>সুপারকি ও ক্যান্ডিডেট কি গুলিয়ে ফেলা</b> যায় — BCNF-এ "determinant is a candidate key" বলতে গিয়ে অনেকে পুরো সুপারকির কথা বলে ফেলে; পরীক্ষায় খোঁজা হয় <b>মিনিমাল</b> সেটটিকে। আর <b>৫.</b> "৩NF-এ ট্রানজিটিভ নির্ভরতা নেই" — কথাটা যত বড়, তত ভুল ধরার ঝুঁকি; মনে রাখো শর্তটি হলো <b>নন-প্রাইম</b> গন্তব্যের উপর যাওয়া ট্রানজিটিভ নির্ভরতা।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: ladder summary + highest normal form ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>সিঁড়ি</span></div>
+  <h2><span class="no">৫</span>সিঁড়িটি এক টেবিলে — আর কতদূর ওঠা যায়</h2><span class="tag">টেবিলটি মুখস্থ ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">নরমাল ফর্ম</th><th class="l">শর্ত</th><th class="l">সহজ কথায়</th></tr>
+    <tr><td class="l"><b>১NF</b></td><td class="l">অ্যাটমিক মান, রিপিটিং গ্রুপ নেই</td><td class="l">এক সেলে একটি তথ্য</td></tr>
+    <tr><td class="l"><b>২NF</b></td><td class="l">১NF + <span class="hl">পার্শিয়াল ডিপেন্ডেন্সি নেই</span></td><td class="l">কম্পোজিট কি-এর অর্ধেকের উপর কিছু ঝোলে না</td></tr>
+    <tr><td class="l"><b>৩NF</b></td><td class="l">২NF + <span class="hl">ট্রানজিটিভ ডিপেন্ডেন্সি নেই</span></td><td class="l">নন-কি অ্যাট্রিবিউটের উপর কিছু ঝোলে না</td></tr>
+    <tr><td class="l"><b>BCNF</b></td><td class="l">৩NF + <span class="hl">প্রতিটি ডিটারমিন্যান্ট একটি ক্যান্ডিডেট কি</span></td><td class="l">প্রতিটি তীর কি থেকে শুরু হয়</td></tr>
+  </table>
+<div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ "সর্বোচ্চ নরমাল ফর্ম"</span> <code>R(A, B, C)</code>, <code>F = {A→B, B→C}</code>, আর A-ই একমাত্র ক্যান্ডিডেট কি।<br>
+        <b>কি বের করা।</b> A কোনো ডান পাশে নেই, তাই প্রতিটি কিতে A থাকবেই। A<sup>+</sup> = {A, B, C} = R, আর A একটি অ্যাট্রিবিউট, তাই A-ই <b>একমাত্র ক্যান্ডিডেট কি</b> ও একমাত্র <b>প্রাইম</b> অ্যাট্রিবিউট।<br>
+        <b>২NF?</b> কি একটি <b>একক</b> অ্যাট্রিবিউট, তাই পার্শিয়াল ডিপেন্ডেন্সি সম্ভবই নয়। <span class="circ">R হলো ২NF-এ।</span><br>
+        <b>৩NF?</b> <code>A→B→C</code> ট্রানজিটিভ: <code>B→C</code>-এ B সুপারকি নয়, C-ও প্রাইম নয়। তাই R <span class="red">৩NF লঙ্ঘন করে</span>, BCNF-ও। <b>উত্তর: ২NF।</b> <b>ডিকম্পোজিশন:</b> <code>R1(A, B)</code> ও <code>R2(B, C)</code>।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কম্পোজিট কি হলে</span> <code>R(StudentID, CourseID, Grade, StudentName)</code>, কি <b>(StudentID, CourseID)</b>।<br>
+        <code>StudentID → StudentName</code> — লেজ কি-এর অর্ধেক মাত্র, তাই <b>পার্শিয়াল</b>।<br>
+        ধাপ ৩ ধাপেই শেষ: পার্শিয়াল ডিপেন্ডেন্সি থাকলে রিলেশন <span class="red">২NF-এই আটকে</span> থাকে, ট্রানজিটিভ বা ডিটারমিন্যান্ট পরীক্ষা করার দরকার হয় না। ভাঙো <code>Student(StudentID, StudentName)</code> ও <code>Enrollment(StudentID, CourseID, Grade)</code>-এ।</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 108" width="580">
+    <g class="w">
+      <rect x="8" y="14" width="132" height="42" rx="8" class="ink-k fill-y"/>
+      <rect x="164" y="14" width="132" height="42" rx="8" class="ink fill-b"/>
+      <rect x="320" y="14" width="132" height="42" rx="8" class="ink-g fill-g"/>
+      <rect x="476" y="14" width="132" height="42" rx="8" class="ink-r fill-r"/>
+      <path class="ink" d="M144,35 H160" marker-end="url(#ahb)"/>
+      <path class="ink" d="M300,35 H316" marker-end="url(#ahb)"/>
+      <path class="ink" d="M456,35 H472" marker-end="url(#ah)"/>
+    </g>
+    <text x="74" y="32" text-anchor="middle" class="k w6" style="font-size:11px">R(A, B, C)</text>
+    <text x="74" y="47" text-anchor="middle" class="k w6" style="font-size:10px">A→B, B→C</text>
+    <text x="230" y="32" text-anchor="middle" class="bn g w6" style="font-size:11px">একক কি A</text>
+    <text x="230" y="47" text-anchor="middle" class="bn g w6" style="font-size:10px">পার্শিয়াল নেই → 2NF ✓</text>
+    <text x="386" y="32" text-anchor="middle" class="bn r w6" style="font-size:11px">A→B→C</text>
+    <text x="386" y="47" text-anchor="middle" class="bn r w6" style="font-size:10px">C প্রাইম নয় → 3NF ✗</text>
+    <text x="542" y="32" text-anchor="middle" class="k w6" style="font-size:11px">R1(A, B)</text>
+    <text x="542" y="47" text-anchor="middle" class="k w6" style="font-size:10px">R2(B, C)</text>
+    <text x="310" y="92" text-anchor="middle" class="bn k s" style="font-size:11px">উত্তর ২NF — একটিই উত্তর, দুটো ধাপ মিলিয়ে নয়</text>
+  </svg><figcaption>একক কি হলে ২NF স্বয়ং, আর ট্রানজিটিভ থাকলে ৩NF ভাঙে</figcaption></figure>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">যেকোনো "সর্বোচ্চ নরমাল ফর্ম" প্রশ্নের উত্তর</span> চারটি ধাপ, এই ক্রমে: <b>১.</b> ক্যান্ডিডেট কি বের করো (ক্লোজার ও মিনিমালিটি); <b>২.</b> প্রাইম অ্যাট্রিবিউটগুলো লিখো; <b>৩.</b> কি কম্পোজিট হলে <b>পার্শিয়াল</b> ডিপেন্ডেন্সি খোঁজো — থাকলেই ১NF-এ থেমে যাও; <b>৪.</b> না থাকলে নন-কি অ্যাট্রিবিউটের উপর <b>ট্রানজিটিভ</b> ডিপেন্ডেন্সি খোঁজো — থাকলে ২NF; না থাকলেও কোনো ডিটারমিন্যান্ট কি না হলে ৩NF; নইলে <span class="circ">BCNF</span>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">গোটা সিঁড়ির মনে রাখার কৌশল</span> "<b>অ্যাটমিক, পুরো কি, কি-র বাইরে নয়, আর প্রতিটি তীর কি থেকে।</b>" ১NF মানের ব্যাপার, ২NF কি-এর অংশের ব্যাপার, ৩NF নন-কি ঘুরপথের ব্যাপার, BCNF ডিটারমিন্যান্টগুলোর নিজের ব্যাপার। প্রতিটি সিঁড়ি হলো "নিচেরটা + আর একটি শর্ত", তাই BCNF-এ থাকা রিলেশন নিচের তিনটাতেই থাকে, উল্টোটা কখনো নয়।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍</span> ট্রানজিটিভ ডিপেন্ডেন্সি দেখেই অনেকে "৩NF" লিখে ফেলেন, ভুলে যান যে ৩NF কেবল <b>নন-প্রাইম</b> গন্তব্যের উপর যাওয়া ট্রানজিটিভ নির্ভরতাই নিষেধ করে। আর A একা যখনই R বানিয়ে ফেলে তখন <code>AB</code>-কে ক্যান্ডিডেট কি বলে ফেলা হয় — পরীক্ষা হয় <b>মিনিমালিটি</b> নিয়ে, আকার নিয়ে নয়।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: lossless join and dependency preservation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>লসলেস ও প্রিজার্ভেশন</span></div>
+  <h2><span class="no">৬</span>ডিকম্পোজিশন: লসলেস জয়েন ও ডিপেন্ডেন্সি প্রিজার্ভেশন</h2><span class="tag">প্রমাণ না করলে ব্যর্থ ★</span>
+  <p class="tiny" style="margin-top:0">একটি রিলেশন ভাঙা তখনই বৈধ নরমালাইজেশন, যখন সেটি <b>লসলেস</b> (কোনো তথ্য বানানো বা নষ্ট হয় না) এবং <b>ডিপেন্ডেন্সি-প্রিজার্ভিং</b> (জয়েন ছাড়াই FD মানা যায়)।</p>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">লসলেস-জয়েনের নিয়ম</span> R → R1, R2-তে জয়েন তখনই <b>লসলেস</b>, যখন<br><code>(R1 ∩ R2) → R1</code> &nbsp;অথবা&nbsp; <code>(R1 ∩ R2) → R2</code><br> পড়ো: দুই ভাগের <b>যে অ্যাট্রিবিউটগুলো শেয়ার করে</b>, তারা অন্তত একটি ভাগের কি হতে হবে।</div>
+      <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">ডিপেন্ডেন্সি প্রিজার্ভেশন</span> ডিকম্পোজিশন তখনই <b>ডিপেন্ডেন্সি-প্রিজার্ভিং</b>, যখন F-এর R1 ও R2-তে প্রক্ষিপ্ত অংশের ইউনিয়ন ঠিক F-ই হয় — বাস্তবে তখন, যখন <b>F-এর প্রতিটি FD সম্পূর্ণভাবে একটি ভাগের ভেতরে থাকে</b> এবং জয়েন ছাড়াই সেখানে মানা যায়।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 150" width="280">
+      <g class="w">
+        <ellipse cx="160" cy="28" rx="106" ry="22" class="ink-k fill-y"/>
+        <rect x="24" y="76" width="118" height="46" rx="8" class="ink fill-b"/>
+        <rect x="178" y="76" width="118" height="46" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M106,48 L86,74" marker-end="url(#ahb)"/>
+        <path class="ink" d="M214,48 L234,74" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M142,99 H178" marker-end="url(#ah)"/>
+      </g>
+      <text x="160" y="34" text-anchor="middle" class="k w6" style="font-size:12px">R(A, B, C)</text>
+      <text x="83" y="96" text-anchor="middle" class="k w6" style="font-size:12px">R1(A, B)</text>
+      <text x="83" y="113" text-anchor="middle" class="k w6" style="font-size:11px">A→B</text>
+      <text x="237" y="96" text-anchor="middle" class="k w6" style="font-size:12px">R2(A, C)</text>
+      <text x="237" y="113" text-anchor="middle" class="bn k w6" style="font-size:11px">কোনো FD নেই</text>
+      <text x="160" y="68" text-anchor="middle" class="bn r w6" style="font-size:11px">শেয়ার করা কলাম A</text>
+      <text x="160" y="136" text-anchor="middle" class="bn g w6" style="font-size:11px">A → R1 ⇒ লসলেস ✓ · A→B R1-তেই ✓</text>
+    </svg><figcaption>শেয়ার করা অ্যাট্রিবিউট একটি পুরো পাশ ঠিক করে</figcaption></figure>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সমাধানকৃত উদাহরণ ✍ দুই অংশের উত্তর</span> <code>R(A, B, C)</code>, <code>F = {A→B}</code>, ভাঙা হয়েছে <code>R1(A, B)</code> ও <code>R2(A, C)</code>-এ।<br>
+    <b>লসলেস?</b> <code>R1 ∩ R2 = {A}</code>, আর <code>A→B</code> মানে <code>A→R1</code>, তাই শেয়ার করা অ্যাট্রিবিউট A হলো R1-এর কি। নিয়মের প্রথম বিকল্প সত্য → <span class="circ">লসলেস</span>: প্রতিটি মূল টিপলের একটাই A-মান, তাই ঠিক একটি R1 সারি ও একটি R2 সারি জোড়া হবে।<br>
+    <b>প্রিজার্ভড?</b> F-এর একমাত্র FD <code>A→B</code> সম্পূর্ণভাবে R1-এর ভেতরে, তাই জয়েন ছাড়াই সেখানে মানা যায় → <span class="circ">ডিপেন্ডেন্সি-প্রিজার্ভিং</span>।</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ লসি উদাহরণ</span> একই R(A, B, C), F = {A→B} নিয়ে ভুলভাবে ভাঙো <code>R1(A, C)</code> ও <code>R2(B, C)</code>-এ। এখন R1 ∩ R2 = {C}, আর C কোনো ভাগই ঠিক করে না, তাই নিয়ম ভাঙে: জয়েন <span class="red"><b>লসি</b></span> — R1 থেকে C = 3 কে R2-এর C = 3 এর সঙ্গে জোড়া করলে (3, 3) সারি তৈরি হয়, যা R-এ কখনো ছিল না। ভাগ এমনভাবে করতে হবে যাতে শেয়ার করা অ্যাট্রিবিউট একটি পাশে <b>কি</b> হয়।</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সমাধানকৃত উদাহরণ ✍ লসলেস, কিন্তু প্রিজার্ভড নয়</span> <code>R(A, B, C)</code>, <code>F = {A→B, B→C}</code>, ভাঙা হয়েছে <code>R1(A, B)</code> ও <code>R2(A, C)</code>-এ।<br>
+    <b>লসলেস?</b> R1 ∩ R2 = {A}, আর <code>A→B</code> মানে <code>A→R1</code>, তাই প্রথম বিকল্প সত্য — জয়েন লসলেস।<br>
+    <b>প্রিজার্ভড?</b> <code>A→B</code> ঠিক আছে R1-এর ভেতরে, কিন্তু <code>B→C</code> কোনো একটি ভাগের ভেতরে নেই — মানতে জয়েন লাগবে। তাই <span class="red">ডিপেন্ডেন্সি-প্রিজার্ভিং নয়</span>। ডেটাবেস <code>B→C</code> একা কোথাও মানাতে পারবে না।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ লসলেস ≠ প্রিজার্ভড</span> দুটো পরীক্ষা আলাদা প্রশ্নের উত্তর, আর একটি ডিকম্পোজিশন একটায় পাশ আর অন্যটায় ফেলতে পারে। লসলেস হয়েও <code>A→B</code> মানতে <b>জয়েন</b> বসাতে হতে পারে, তখন ডেটাবেস কনস্ট্রেন্ট মানতে পারে না। আবার প্রতিটি FD প্রিজার্ভ করেও জয়েন লসি হতে পারে — তখন নিঃশব্দে ডেটা নষ্ট হয়। দুটো উত্তর আলাদা করে দাও।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>লসলেস জিজ্ঞেস করে ওভারল্যাপ নিয়ে, প্রিজার্ভেশন জিজ্ঞেস করে তীর নিয়ে।</b>" ওভারল্যাপ: শেয়ার করা কলাম একটি পুরো পাশ ঠিক করতে হবে। তীর: প্রতিটি FD একটি পাশের ভেতরে থাকতে হবে। কোনো পরীক্ষার জন্যই ডেটা বা সারির সংখ্যা লাগে না — <b>শুধু FD থেকেই উত্তর বের হয়</b>।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: full worked normalization example ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>ধাপে ধাপে</span></div>
+  <h2><span class="no">৭</span>সম্পূর্ণ নরমালাইজেশনের উদাহরণ, ধাপে ধাপে</h2><span class="tag">লিখিত পরীক্ষার আদর্শ উত্তর ★</span>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th>StudentID</th><th>Name</th><th>DeptID</th><th>DeptName</th><th>CourseID</th><th>CourseName</th><th>Grade</th></tr>
+    <tr><td><u>101</u></td><td>Alice</td><td>10</td><td>CSE</td><td>C101</td><td>DBMS</td><td>A</td></tr>
+    <tr><td><u>101</u></td><td>Alice</td><td>10</td><td>CSE</td><td>C102</td><td>Algorithms</td><td>B</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">এই এক টেবিলের সমস্যা কী</span> এটি আগে থেকেই ১NF-এ — প্রতিটি সেলে একটিমাত্র মান। কিন্তু কি কম্পোজিট (StudentID, CourseID), আর টেবিলে তিনটি তথ্য পুনরাবৃত্ত: <b>Alice</b> দুবার লেখা, <b>10 / CSE</b> দুবার লেখা, আর কোর্সের নাম প্রতি ছাত্রের জন্য একবার করে লেখা হতো। তাই ছাত্রের নাম ও বিভাগের নাম প্রতিটি কয়েক সারিতে আছে, আর ওই সারিগুলোর যেকোনো একটি অন্যগুলোর সঙ্গে দ্বিমত করতে পারে।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">যে তিনটি অ্যানোমালি হয়</span> <b>আপডেট</b> — Alice-এর নাম বদলাতে হলে 101 যেসব সারিতে আছে সবগুলোতে করতে হবে; একটি বাদ পড়লেই ডেটাবেসে ছাত্র ১০১-এর দুটো নাম থাকবে। <b>ইনসার্ট</b> — একেবারে নতুন ও কোনো ছাত্র নেই এমন বিভাগ রেকর্ড করা যায় না। <b>ডিলিট</b> — Alice-এর একমাত্র এনরোলমেন্ট সারিটি মুছলে তার নাম <i>এবং</i> বিভাগ ১০ আছে এই তথ্যও হারিয়ে যায়।</div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">ধাপ ১ — ১NF ✍</span> আগে থেকেই পূরণ: প্রতিটি কলামে একটি অ্যাটমিক মান, আর গ্রেড কোনো একক ছাত্রের নয়, জোড়া (ছাত্র, কোর্স)-এর। কিছু করার নেই।<br>
+    <b>ধাপ ২ — ২NF ✍</b> কি (StudentID, CourseID) কম্পোজিট, আর তিনটি নন-কি অ্যাট্রিবিউট কি-এর <b>অর্ধেকের</b> উপর নির্ভর করে: <code>StudentID → Name</code>, <code>CourseID → CourseName</code> ও <code>StudentID → DeptID</code> — সবই পার্শিয়াল; অথচ <code>(StudentID, CourseID) → Grade</code> ফুল।<br>
+    <b>ধাপ ৩ — ৩NF ✍</b> আসল অবশিষ্ট লঙ্ঘন হলো <code>Student(StudentID, Name, DeptID, DeptName)</code>-এর ট্রানজিটিভ শৃঙ্খল <code>StudentID → DeptID → DeptName</code>: DeptID কি-এর অংশ <b>নয়</b>, অথচ DeptName তার উপর ঝোলে। DeptName বেরিয়ে নিজস্ব Department টেবিলে যাওয়াই ঠিক যেটা এটা সরায় — ৩NF ধাপের পুরো বিষয় এটাই।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 250px;align-items:start">
+    <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 4mm">
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Student</th><th>Name</th><th>DeptID</th></tr>
+        <tr><td class="l"><u>101</u></td><td class="l">Alice</td><td class="l">10</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Department</th><th>DeptName</th></tr>
+        <tr><td class="l"><u>10</u></td><td class="l">CSE</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Course</th><th>CourseName</th></tr>
+        <tr><td class="l"><u>C101</u></td><td class="l">DBMS</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Enrollment</th><th>Grade</th></tr>
+        <tr><td class="l"><u>101</u></td><td class="l">A</td></tr>
+      </table>
+      <p class="tiny" style="margin:0">কি রেখা দেওয়া আছে; DeptID এবং Enrollment-এর দুটো ID-ই উপরের টেবিলে ফরেন কি।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 164" width="240">
+      <g class="w">
+        <rect x="10" y="8" width="90" height="40" rx="8" class="ink-k fill-b"/>
+        <rect x="232" y="8" width="98" height="40" rx="8" class="ink fill-b"/>
+        <rect x="120" y="116" width="110" height="40" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M100,22 L230,22" marker-end="url(#ah)"/>
+        <path class="ink" d="M56,50 L128,114" marker-end="url(#ah)"/>
+        <path class="ink" d="M182,114 L240,50" marker-end="url(#ah)"/>
+      </g>
+      <text x="55" y="26" text-anchor="middle" class="k w6" style="font-size:11px">Student</text>
+      <text x="55" y="40" text-anchor="middle" class="k w6" style="font-size:10px">101 · Alice</text>
+      <text x="281" y="26" text-anchor="middle" class="k w6" style="font-size:11px">Course</text>
+      <text x="281" y="40" text-anchor="middle" class="k w6" style="font-size:10px">C101 · DBMS</text>
+      <text x="175" y="132" text-anchor="middle" class="k w6" style="font-size:11px">Enrollment</text>
+      <text x="175" y="146" text-anchor="middle" class="k w6" style="font-size:10px">Grade = A</text>
+      <text x="163" y="80" text-anchor="middle" class="bn k s" style="font-size:10px">Department(10, CSE)</text>
+      <text x="58" y="92" text-anchor="middle" class="k s" style="font-size:10px">DeptID</text>
+      <text x="272" y="92" text-anchor="middle" class="k s" style="font-size:10px">CourseID</text>
+    </svg><figcaption>একটি তথ্য, এক জায়গায়</figcaption></figure>
+  </div>
+  <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">চূড়ান্ত ডিজাইন, ও যা আমরা পাই</span> চারটি রিলেশন: <b>Student(StudentID, Name, DeptID)</b> · <b>Department(DeptID, DeptName)</b> · <b>Course(CourseID, CourseName)</b> · <b>Enrollment(StudentID, CourseID, Grade)</b>। গ্রেড থাকে তার নিজের জোড়ার সঙ্গে, বিভাগের নাম <b>একবার</b> সংরক্ষিত, কোর্সের নামও <b>একবার</b>। ছাত্রের নাম বদলাতে এখন <b>একটিমাত্র</b> সারির আপডেট লাগে, খালি বিভাগ ঢোকানো যায় কোনো ছাত্র বানিয়ে না দিয়েই, আর এনরোলমেন্ট মুছলে বিভাগও চলে যায় না।</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ ভাগ কি লসলেস ছিল?</span> ছয় ধাপেই ভাগ ছিল, এবং প্রতিবার ওই শর্ত ছিল যে শেয়ার করা অ্যাট্রিবিউট সংশ্লিষ্ট ভাগগুলোর একটির কি। ২NF-এর ভাগে শেয়ার করা ছিল StudentID, যা Student-এর কি; ৩NF-এর ভাগে DeptID, যা Department-এর কি। তাই জয়েন করলে মূল টেবিলের প্রতিটি সারি হুবহু ফিরে আসে, কোনো সারি বাড়ে না বা কমে না।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: anomalies and denormalization ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>অ্যানোমালি ও ডিনরমালাইজেশন</span></div>
+  <h2><span class="no">৮</span>অ্যানোমালি, ডিনরমালাইজেশন ও ট্রেড-অফ</h2><span class="tag">"কেন" প্রশ্নগুলো ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">তিনটি অ্যানোমালির নাম</span> একই তথ্য কয়েক জায়গায় রাখার ফলেই যে ভুল আপডেট ঘটে, তাকে <b>অ্যানোমালি</b> বলে। মাত্র তিনটি প্রকার আছে, আর লিখিত প্রশ্নে সাধারণত তিনটির নামই চায়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">আপডেট অ্যানোমালি ✍</span> একটি তথ্য <b>সব কপিতে</b> বদলাতে হয়, নইলে রিলেশন নিজেই অসংগত হয়ে যায়। Alice-এর নাম বদলাতে 101 যেসব সারিতে আছে সবগুলোতে করতে হবে; একটি বাদ পড়লে একই ছাত্রের দুটো নাম থেকে যায়।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">ইনসার্ট অ্যানোমালি ✍</span> একটি বৈধ তথ্য <b>সংরক্ষণই করা যায় না</b>, কারণ কি এমন একটি সঙ্গী তথ্য চায় যা এখনো নেই। কোনো ছাত্র নেই এমন নতুন বিভাগের সঙ্গে রাখার মতো কোনো StudentID নেই।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">ডিলিট অ্যানোমালি ✍</span> একটি সারি মুছে দিলে সেটির সঙ্গে কোনো সম্পর্ক নেই এমন তথ্যও নিঃশব্দে চলে যায়। Alice-এর একমাত্র এনরোলমেন্ট সারিটি মুছলে তার নাম ও বিভাগ ১০ আছে—এই তথ্যও মুছে যায়।</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 600 128" width="540">
+    <g class="w">
+      <rect x="8" y="14" width="176" height="44" rx="10" class="ink-k fill-y"/>
+      <rect x="212" y="14" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="416" y="14" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="8" y="76" width="176" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="212" y="76" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="416" y="76" width="176" height="44" rx="10" class="ink fill-b"/>
+      <path class="ink" d="M188,36 H208" marker-end="url(#ahb)"/>
+      <path class="ink" d="M392,36 H412" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M96,62 V72" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M300,62 V72" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M504,62 V72" marker-end="url(#ah)"/>
+    </g>
+    <text x="96" y="34" text-anchor="middle" class="bn k w6" style="font-size:12px">এনরোলমেন্ট টেবিল</text>
+    <text x="96" y="49" text-anchor="middle" class="bn r w6" style="font-size:10px">প্রতিটি তথ্য পুনরাবৃত্ত</text>
+    <text x="300" y="34" text-anchor="middle" class="bn k w6" style="font-size:12px">নরমালাইজ</text>
+    <text x="300" y="49" text-anchor="middle" class="g w6" style="font-size:10px">1NF → 2NF → 3NF</text>
+    <text x="504" y="34" text-anchor="middle" class="bn k w6" style="font-size:12px">চারটি ছোট টেবিল</text>
+    <text x="504" y="49" text-anchor="middle" class="bn g w6" style="font-size:10px">একটি তথ্য, এক ঘরে</text>
+    <text x="96" y="96" text-anchor="middle" class="bn r w6" style="font-size:11px">আপডেট ✗</text>
+    <text x="96" y="111" text-anchor="middle" class="bn r w6" style="font-size:10px">একটি কপি বাদ পড়ে</text>
+    <text x="300" y="96" text-anchor="middle" class="bn g w6" style="font-size:11px">ইনসার্ট ✓</text>
+    <text x="300" y="111" text-anchor="middle" class="bn g w6" style="font-size:10px">খালি বিভাগও রাখা যায়</text>
+    <text x="504" y="96" text-anchor="middle" class="bn g w6" style="font-size:11px">ডিলিট ✓</text>
+    <text x="504" y="111" text-anchor="middle" class="bn g w6" style="font-size:10px">অপ্রাসঙ্গিক কিছু হারায় না</text>
+  </svg><figcaption>ভাঙাটা কেন করা সার্থবহ</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">নরমালাইজেশনের সুবিধা</span> <b>১.</b> কম রিডান্ড্যান্সি, তাই কম ডিস্ক ও একসঙ্গে রাখার কম কপি। <b>২.</b> ভালো ইন্টিগ্রিটি — প্রতিটি তথ্যের একটিই ঘর, তাই একটি আপডেটই পুরো আপডেট। <b>৩.</b> কম <span class="red">আপডেট, ইনসার্ট ও ডিলিট অ্যানোমালি</span>। <b>৪.</b> <span class="hl">ছোট ও অর্থবহ টেবিল</span>, তাই ইনডেক্স ও জয়েন পরিকল্পনা সস্তা।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">ডিনরমালাইজেশন — ইচ্ছাকৃত উল্টো চাল</span> <b>ডিনরমালাইজেশন</b> হলো নরমালাইজ করার পর <span class="red"><b>ইচ্ছাকৃতভাবে</b> রিডান্ড্যান্সি ফিরিয়ে আনা</span>, যাতে <b>পড়া</b> দ্রুত হয়। নরমালাইজড স্কিমায় রিপোর্টের একটি সারি বের করতে তিনটি টেবিল জয়েন লাগে; ফ্যাক্ট টেবিলে বিভাগের নাম কপি করলে সেই জয়েন একটি স্ক্যানে হয়ে যায়। এটি সচেতন বাণিজ্য — <b>একবার লিখুক, লক্ষবার পড়ুক</b> — আর এতে তিনটি অ্যানোমালি ফিরে আসে।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ দিকটার প্রশ্ন</span> "কোনটি ভালো?"-এর কোনো নির্দিষ্ট উত্তর নেই — নির্ভর করে কাজের ধরনের উপর। অল্প ছোট ইনসার্ট, আপডেট ও ডিলিট এবং ডেটাবেস-চালিত ইন্টিগ্রিটি থাকলে <b>OLTP</b>-র জন্য নরমালাইজ করো; বিশাল পড়ার ভলিউম ও মাঝে মাঝে ব্যাচ রিলোড থাকলে <b>রিপোর্টিং / ডেটা ওয়্যারহাউসিং</b>-এর জন্য ডিনরমালাইজ করো। "ডিনরমালাইজেশন সবসময় কর্মক্ষমতা বাড়ায়" — এটি <b>মিথ্যা</b>: এটি পড়া দ্রুত করে আর প্রতিটি লেখা ধীর করে।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ ঝুঁকিগুলো</span> কপি করা তথ্য দুই জায়গায় বাস্তব, তাই দুই জায়গাতেই আপডেট দিতে হয় — আর একটি বাদ পড়লেই সেটি অ্যানোমালি। তাই ডিনরমালাইজেশন করা হয় শুধু তখনই, যখন পড়া:লেখার অনুপাত সত্যিই অনেক বেশি, এবং অ্যাপ্লিকেশন সেই অতিরিক্ত কপি ঠিক রাখার দায়িত্ব নিতে পারে। সাধারণ উপায়: সময়-সময় পুরো ফ্যাক্ট টেবিল ব্যাচ রিবিল্ড করা।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">এই অধ্যায়ের বাকি অংশ কোথায়</span> <b>এই টেবিলগুলো পড়া</b> — সিলেকশন, প্রজেকশন, ছয় জয়েন, অ্যাগ্রিগেট — আগের লেসনে <b>db2</b>। <b>রিলেশনাল ও ER মডেল, কনস্ট্রেইন্ট</b> — <b>db1</b>। <b>ফাইল সংগঠন, ইনডেক্স, B+ ট্রি, কস্ট-বেসড অপটিমাইজেশন</b> — কোন ইনডেক্স কোন কোয়েরি সস্তা করে → <span class="hl">db4</span>। <b>ট্রানজ্যাকশন, ACID, আইসোলেশন, কনকারেন্সি, রিকভারি</b> → <b>db5</b>।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">রাতের পরীক্ষার পাতা</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small">
+      <p><code>X → Y</code>: একই X ⇒ একই Y</p><p>X ডিটারমিন্যান্ট, Y ডিপেন্ডেন্ট</p>
+      <p>ট্রিভিয়াল: Y ⊆ X · নন-ট্রিভিয়াল: Y ⊄ X</p><p>পার্শিয়াল: X-এর অংশে · ট্রানজিটিভ: A→B, B→C</p>
+      <p><code>X⁺</code> = X থেকে বের সব</p><p>X একটি কি তখনই, যখন X<sup>+</sup> = R</p>
+      <p>সুপারকি = যেকোনো কি</p><p>ক্যান্ডিডেট কি = মিনিমাল সুপারকি</p>
+      <p>প্রাইম = কোনো কির ভেতরে</p><p>১NF: অ্যাটমিক মান</p>
+      <p>২NF: + পার্শিয়াল ডিপেন্ডেন্সি নেই</p><p>৩NF: + ট্রানজিটিভ ডিপেন্ডেন্সি নেই</p>
+      <p>BCNF: + প্রতিটি ডিটারমিন্যান্ট কি</p><p>অ্যানোমালি: আপডেট, ইনসার্ট, ডিলিট</p>
+      <p>লসলেস ⟺ (R1∩R2)→R1 বা →R2</p><p>প্রিজার্ভড ⟺ প্রতিটি FD এক ভাগে</p>
+      <p>R(A,B,C,D,E)-তে {A,C}<sup>+</sup> = পাঁচটিই</p><p>A→B→C→D-এ R(A,B,C,D)-র কি একা A</p>
+      <p>A→B→C, কি A হলে মাত্র ২NF</p><p>ভাঙো: R1(A, B), R2(B, C)</p>
+      <p>শেয়ার করা অ্যাট্রিবিউট এক পাশের কি হলে লসলেস</p><p>প্রতিটি FD এক ভাগে থাকলে প্রিজার্ভড</p>
+      <p>লেখায় নরমালাইজ, পড়ায় ডিনরমালাইজ</p><p>BCNF-এর পরে ৪NF আছে (মাল্টিভ্যালুড ডিপেন্ডেন্সি)</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li><code>A → B</code>: A-তে মিললে B-তেও মিলবে</li>
+      <li>ট্রিভিয়াল FD: Y ⊆ X — সবসময় সত্য, মজার নয়</li>
+      <li><code>X⁺ = R</code> মানে X একটি কি</li>
+      <li>সুপারকি = যেকোনো কি; ক্যান্ডিডেট = ছোটতমটা</li>
+      <li>প্রাইম অ্যাট্রিবিউট = কোনো ক্যান্ডিডেট কির ভেতরে</li>
+      <li>১NF মানে প্রতি সেলে একটি অ্যাটমিক মান</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>২NF কম্পোজিট কির ক্ষেত্রেই কাজ করে</li>
+      <li>৩NF নন-কি অ্যাট্রিবিউটের ট্রানজিটিভ নির্ভরতা নিষেধ করে</li>
+      <li>BCNF: প্রতিটি ডিটারমিন্যান্ট একটি ক্যান্ডিডেট কি</li>
+      <li>লসলেস ⟺ (R1∩R2)→R1 বা (R1∩R2)→R2</li>
+      <li>লসলেস ওভারল্যাপ দেখে, প্রিজার্ভেশন তীর দেখে</li>
+      <li>অ্যানোমালি তিনটি: আপডেট, ইনসার্ট ও ডিলিট</li>
+      <li>কম্পোজিট কি থাকলে পার্শিয়াল থাকলেই ২NF-এ থামো</li>
+      <li>৪NF আছে, তবে "সর্বোচ্চ" মানে BCNF</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> <b>সুপারকি</b>কে ক্যান্ডিডেট কি বলা · <b>মিনিমালিটি</b> যাচাই না করা · প্রাইম মেম্বারশিপ দেখা ছাড়া "৩NF" বলা · একক অ্যাট্রিবিউট কিতে ২NF দেখানো · তীর উল্টো দিকে পড়া · ২NF-এর "আগে" টেবিলে <b>কম্পোজিট কি</b> না লেখা · <b>লসলেস-জয়েন</b> না যাচাই করেই ডিকম্পোজিশন নিরাপদ বলা · লসলেস ও প্রিজার্ভেশন গুলিয়ে ফেলা।</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">সব কৌশল একসাথে</span> তীর একটি প্রতিশ্রুতি · প্রথমে মান অনুযায়ী, তারপর তীর অনুযায়ী একটি তথ্য এক টেবিলে · কলাম ধরে নয়, তীর ধরে ভাঙো · সুপার মানে বড় সেট, ক্যান্ডিডেট মানে ভেতরের সবচেয়ে ছোটটা · অ্যাটমিক, পুরো কি, কি-র বাইরে নয়, প্রতিটি তীর কি থেকে · লেখায় নরমালাইজ, পড়ায় ডিনরমালাইজ।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 130" width="290">
+      <g class="w">
+        <circle cx="60" cy="52" r="30" class="ink-k fill-b"/>
+        <circle cx="150" cy="52" r="30" class="ink fill-b"/>
+        <circle cx="240" cy="52" r="30" class="ink-r fill-r"/>
+        <path class="ink" d="M92,52 H118" marker-end="url(#ahb)"/>
+        <path class="ink" d="M182,52 H208" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M240,84 C190,116 70,116 60,84" marker-end="url(#ahp)"/>
+      </g>
+      <text x="60" y="57" text-anchor="middle" class="k w6" style="font-size:12px">1NF</text>
+      <text x="150" y="57" text-anchor="middle" class="k w6" style="font-size:12px">3NF</text>
+      <text x="240" y="57" text-anchor="middle" class="r w6" style="font-size:12px">BCNF</text>
+      <text x="105" y="42" text-anchor="middle" class="bn p s" style="font-size:10px">+ পার্শিয়াল</text>
+      <text x="195" y="42" text-anchor="middle" class="bn p s" style="font-size:10px">+ ট্রানজিটিভ</text>
+      <text x="150" y="122" text-anchor="middle" class="bn p s" style="font-size:10px">প্রতি সিঁড়িতে একটি শর্ত</text>
+    </svg><figcaption>প্রতি সিঁড়িতে একটি শর্ত</figcaption></figure>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাংশনাল ডিপেন্ডেন্সি</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১.</span>একটি রিলেশন First Normal Form (১NF)-এ থাকে যদি:<ol class="opts"><li>প্রতিটি অ্যাট্রিবিউটে কেবল অ্যাটমিক মান থাকে</li><li>এতে কোনো পার্শিয়াল ডিপেন্ডেন্সি নেই</li><li>এতে কোনো ট্রানজিটিভ ডিপেন্ডেন্সি নেই</li><li>প্রতিটি ডিটারমিন্যান্ট একটি ক্যান্ডিডেট কি</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">২.</span><code>R(A, B, C, D)</code>-এ <code>A→B</code>, <code>B→C</code>, <code>C→D</code>। R-এর ক্যান্ডিডেট কি কোনটি?<ol class="opts"><li>B</li><li>AB</li><li>A</li><li>CD</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৩.</span><code>R(A, B, C, D, E)</code>-এ <code>A→B</code>, <code>BC→D</code>, <code>D→E</code>। ক্লোজার {A, C}<sup>+</sup> কী?<ol class="opts"><li>{A, B, C}</li><li>{A, B, C, D}</li><li>{A, C, E}</li><li>{A, B, C, D, E}</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৪.</span><code>R(A, B, C)</code>-এ <code>A→B</code>, <code>B→C</code>, আর A একমাত্র ক্যান্ডিডেট কি। R সর্বোচ্চ কোন ফর্মে?<ol class="opts"><li>কেবল ১NF</li><li>২NF</li><li>৩NF</li><li>BCNF</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৫.</span><code>F = {A→B}</code> সহ <code>R(A, B, C)</code>-কে <code>R1(A, B)</code> ও <code>R2(A, C)</code>-তে ভাঙা হলো। কোনটি সঠিক?<ol class="opts"><li>লসি কিন্তু ডিপেন্ডেন্সি-প্রিজার্ভিং</li><li>লসলেসও নয়, প্রিজার্ভিংও নয়</li><li>লসলেস কিন্তু প্রিজার্ভিং নয়</li><li>লসলেস-জয়েন ও ডিপেন্ডেন্সি-প্রিজার্ভিং</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৬.</span>কি (StudentID, CourseID) রেখে <code>Enrollment(StudentID, CourseID, Grade, StudentName, Instructor)</code>-এ কোন FD পার্শিয়াল?<ol class="opts"><li>StudentID→StudentName</li><li>(StudentID, CourseID)→Grade</li><li>CourseID→Instructor</li><li>তিনটিই</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৭.</span>একটি রিলেশন BCNF-এ থাকবে কেবল যখন:<ol class="opts"><li>এতে ট্রানজিটিভ ডিপেন্ডেন্সি নেই</li><li>প্রতিটি ডিটারমিন্যান্ট একটি ক্যান্ডিডেট কি</li><li>এতে পার্শিয়াল ডিপেন্ডেন্সি নেই</li><li>প্রতিটি অ্যাট্রিবিউট অ্যাটমিক মান রাখে</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৮.</span>R কে R1 ও R2-তে ভাঙলে জয়েন লসলেস হবে যখন:<ol class="opts"><li>R1 ∩ R2 খালি</li><li>R1 ও R2 দুটোই ৩NF-এ</li><li>(R1 ∩ R2)→R1 বা (R1 ∩ R2)→R2</li><li>প্রতিটি ডিপেন্ডেন্সি প্রিজার্ভ হয়</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৯.</span>ডিনরমালাইজেশন ইচ্ছাকৃতভাবে ব্যবহার করা হয় কেন?<ol class="opts"><li>রিডান্ড্যান্সি ও অ্যানোমালি সরাতে</li><li>রিডান্ড্যান্সি মেনে নিয়ে পড়ার কোয়েরি দ্রুত করতে</li><li>ফরেন-কি কনস্ট্রেইন্ট স্বয়ংক্রিয়ভাবে মানাতে</li><li>আপডেট অ্যানোমালি কমাতে</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১০.</span><code>R(A, B, C)</code>-এ <code>A→B</code>, <code>B→C</code> আর A একমাত্র ক্যান্ডিডেট কি হলে কতটি প্রাইম অ্যাট্রিবিউট আছে?<ol class="opts"><li>1</li><li>2</li><li>3</li><li>0</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ক · ২-গ · ৩-ঘ · ৪-খ · ৫-ঘ · ৬-ক · ৭-খ · ৮-গ · ৯-খ · ১০-ক</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> ফাংশনাল ডিপেন্ডেন্সির সংজ্ঞা দাও এবং পাঁচটি প্রকারের নাম দাও — ট্রিভিয়াল বনাম নন-ট্রিভিয়াল পার্থক্য করে। <code>F = {A→B, BC→D, D→E}</code> সহ <code>R(A, B, C, D, E)</code>-এর {A, C}<sup>+</sup> বের করো এবং AC কি কিনা বলো। <code>A→B, B→C</code> সহ <code>R(A, B, C)</code>-এ, যেখানে A একমাত্র ক্যান্ডিডেট কি, সর্বোচ্চ নরমাল ফর্ম বলো ও ডিকম্পোজিশন দাও। <code>F = {A→B}</code> সহ ওই R-কে <code>R1(A, B)</code> ও <code>R2(A, C)</code>-তে ভাঙা হলে জয়েন লসলেস কিনা ও ডিপেন্ডেন্সি প্রিজার্ভ কিনা পরীক্ষা করো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:4.4mm">
+    <li><b>সংজ্ঞা (২)</b> — <code>X → Y</code> তখনই সত্য যখন X-এ মিলে যাওয়া যে কোনো দুটো টিপল Y-এও মেলে; X হলো ডিটারমিন্যান্ট। <b>ট্রিভিয়াল</b>: Y ⊆ X, যেমন (A, B)→A। <b>নন-ট্রিভিয়াল</b>: Y ⊄ X, যেমন StudentID→Name। <b>ফুল</b>: Y-এর জন্য X-এর পুরোটা দরকার। <b>পার্শিয়াল</b>: X-এর অংশবিশেষই যথেষ্ট। <b>ট্রানজিটিভ</b>: A→B ও B→C মিলে A→C। <i class="mk">২</i></li>
+    <li><b>ক্লোজার (২)</b> — {A, C}; A→B এ B যোগ করে → {A, B, C}; BC→D এ D যোগ করে → {A, B, C, D}; D→E এ E যোগ করে → <b>{A, B, C, D, E} = R</b>, তাই <b>AC একটি ক্যান্ডিডেট কি</b>। <i class="mk">২</i></li>
+    <li><b>সর্বোচ্চ নরমাল ফর্ম (২)</b> — A কোনো ডান পাশে নেই এবং একটি অ্যাট্রিবিউট, তাই এটিই একমাত্র ক্যান্ডিডেট কি ও একমাত্র প্রাইম অ্যাট্রিবিউট। একক কি মানে পার্শিয়াল ডিপেন্ডেন্সি নেই, তাই R <b>২NF</b>-এ। কিন্তু A→B→C ট্রানজিটিভ, আর B→C-এ ডিটারমিন্যান্ট সুপারকি নয় ও C প্রাইম নয়, তাই ৩NF ব্যর্থ: উত্তর <b>২NF</b>, ডিকম্পোজিশন <b>R1(A, B)</b> ও <b>R2(B, C)</b>। <i class="mk">২</i></li>
+    <li><b>লসলেস (২)</b> — R1 ∩ R2 = {A}, আর A→B মানে A→R1, তাই শেয়ার করা অ্যাট্রিবিউট R1-এর কি: জয়েন <b>লসলেস</b>। <i class="mk">২</i></li>
+    <li><b>প্রিজার্ভেশন ও নিয়ম (২)</b> — একমাত্র FD <code>A→B</code> সম্পূর্ণভাবে R1-এর ভেতরে, তাই জয়েন ছাড়াই মানা যায়: <b>ডিপেন্ডেন্সি-প্রিজার্ভিং</b>। সাধারণ নিয়ম: লসলেস ⟺ (R1∩R2)→R1 বা (R1∩R2)→R2; প্রিজার্ভিং ⟺ F-এর প্রক্ষিপ্ত অংশের ইউনিয়ন F। <i class="mk">২</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:0">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.0mm;margin-top:0">
+    <ul class="tick">
+      <li>সংজ্ঞা ও পাঁচটি এফডি প্রকার লিখতে পারি</li>
+      <li>X<sup>+</sup> বের করে ক্যান্ডিডেট কি খুঁজতে পারি</li>
+      <li>সুপারকি আর ক্যান্ডিডেট কি আলাদা করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>চারটি নরমাল ফর্মের শর্ত বলতে পারি</li>
+      <li>ডিকম্পোজিশন লসলেস কিনা যাচাই করতে পারি</li>
+      <li>অ্যানোমালি ও ডিনরমালাইজেশনের নাম বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c =>{ bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

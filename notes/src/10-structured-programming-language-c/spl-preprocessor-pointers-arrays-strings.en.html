@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPL: Header Files, Preprocessor, Pointers, Arrays &amp; Strings: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Addresses, Arrays &amp; Strings in C</span></h1>
+  <p class="subtitle">Header files · Preprocessor · Macros · Pointers · 1D/2D arrays · Strings: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L176,145 M424,145 L464,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink fill-b"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="k l">Memory in C</text><text x="320" y="164" text-anchor="middle" class="r s">address · element · character</text>
+      <text x="142" y="62" text-anchor="middle" class="s">header files &lt;&gt; vs ""</text>
+      <text x="320" y="38" text-anchor="middle" class="r w6">Macros: SQUARE trap ★</text>
+      <text x="498" y="62" text-anchor="middle" class="r w6">&amp; and * ★</text>
+      <text x="96" y="150" text-anchor="middle" class="s">#if · #ifdef · #error</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6">p + 1 = +sizeof ★</text>
+      <text x="142" y="238" text-anchor="middle" class="r w6">2D address formula ★</text>
+      <text x="320" y="264" text-anchor="middle" class="g w6">arr[i] ≡ *(arr + i)</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6">'\0' · strlen ≠ sizeof ★</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = the rule everything else hangs on</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm"><b>High-yield list</b><br>① <code>&lt;&gt;</code> system dirs; <code>""</code> own dir first<br>② Preprocessor = text work before compiling<br>③ <code>SQUARE(2+3)</code> with <code>x*x</code> → 11<br>④ <code>&amp;</code> address-of; <code>*</code> value-at<br>⑤ <code>p + 1</code> moves <code>sizeof(*p)</code> bytes<br>⑥ <code>arr[i] ≡ *(arr+i) ≡ i[arr]</code><br>⑦ <code>sizeof(arr)</code> ≠ <code>sizeof(p)</code><br>⑧ C is row-major<br>⑨ Strings end in <code>'\0'</code> (ASCII 0)<br>⑩ <code>gets()</code> removed in C11 → <code>fgets()</code></div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The Structured Programming Language syllabus lists: "<span class="hl">Header files; Preprocessor; Pointers and arrays; Strings; Multidimensional array</span>". Data types, operators and control flow, and functions, scope and storage classes, were the previous lessons; structures, unions and enums, then I/O, files and <code>malloc</code>, come next.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>Header files &amp; the build pipeline … p. 2</li><li>Preprocessor directives &amp; macros … p. 3</li><li>Pointers: &amp;, *, kinds, const … p. 4</li><li>Pointer arithmetic … p. 5</li><li>1D arrays &amp; the array–pointer link … p. 6</li></ul>
+    <ul class="tick"><li>2D arrays &amp; address formula … p. 7</li><li>Strings and <code>'\0'</code> … p. 8</li><li>string.h &amp; string input … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: header files ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Header files</span></div>
+  <h2><span class="no">1</span>Header Files and the Build Pipeline</h2><span class="tag">MCQ favourite ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">header file</span> (<code>.h</code>) holds <b>declarations</b> shared by source files: function prototypes, macros, constants and type definitions (<code>typedef</code>, <code>struct</code>). <code>#include</code> pastes the file's whole text in place of the line <b>before compilation</b>. A header holds no compiled code: the bodies of <code>printf</code>, <code>sqrt</code> … live in the <span class="circ">library</span>, joined in by the <b>linker</b>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 100" width="500">
+    <g class="w">
+      <rect x="2" y="14" width="86" height="46" rx="10" class="ink fill-b"/>
+      <rect x="108" y="14" width="110" height="46" rx="10" class="ink-r fill-r"/>
+      <rect x="238" y="14" width="86" height="46" rx="10" class="ink fill-b"/>
+      <rect x="344" y="14" width="86" height="46" rx="10" class="ink fill-b"/>
+      <rect x="450" y="14" width="86" height="46" rx="10" class="ink-p fill-p"/>
+      <rect x="554" y="14" width="84" height="46" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M89,37 H104" marker-end="url(#ahb)"/>
+      <path class="ink" d="M219,37 H234" marker-end="url(#ahb)"/>
+      <path class="ink" d="M325,37 H340" marker-end="url(#ahb)"/>
+      <path class="ink" d="M431,37 H446" marker-end="url(#ahb)"/>
+      <path class="ink" d="M537,37 H550" marker-end="url(#ahb)"/>
+    </g>
+    <text x="45" y="33" text-anchor="middle" class="s k">hello.c</text><text x="45" y="51" text-anchor="middle" class="s">source</text>
+    <text x="163" y="33" text-anchor="middle" class="s r w6">preprocessor</text><text x="163" y="51" text-anchor="middle" class="s r">→ hello.i</text>
+    <text x="281" y="33" text-anchor="middle" class="s k">compiler</text><text x="281" y="51" text-anchor="middle" class="s">→ hello.s</text>
+    <text x="387" y="33" text-anchor="middle" class="s k">assembler</text><text x="387" y="51" text-anchor="middle" class="s">→ hello.o</text>
+    <text x="493" y="33" text-anchor="middle" class="s p w6">linker</text><text x="493" y="51" text-anchor="middle" class="s p">+ libraries</text>
+    <text x="596" y="33" text-anchor="middle" class="s g w6">hello.exe</text><text x="596" y="51" text-anchor="middle" class="s g">run</text>
+    <text x="320" y="88" text-anchor="middle" class="s k">headers are pasted in at the preprocessor; library code joins at the linker</text>
+  </svg><figcaption>gcc -E stops after preprocessing, -S after compiling, -c after assembling</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">Header</th><th class="l">What it gives you · names to recognise</th></tr>
+    <tr><td class="l"><code>&lt;stdio.h&gt;</code></td><td class="l">standard I/O: printf, scanf, puts, fgets, getchar, fopen, FILE, EOF</td></tr>
+    <tr><td class="l"><code>&lt;conio.h&gt;</code></td><td class="l">console I/O, <b>not standard C</b> (Turbo C/DOS, MSVC): clrscr, getch, getche</td></tr>
+    <tr><td class="l"><code>&lt;math.h&gt;</code></td><td class="l">maths on double: sqrt, pow, fabs, ceil, floor, sin, log (gcc: link with -lm)</td></tr>
+    <tr><td class="l"><code>&lt;string.h&gt;</code></td><td class="l">strings and memory blocks: strlen, strcpy, strcat, strcmp, strstr, memcpy</td></tr>
+    <tr><td class="l"><code>&lt;stdlib.h&gt;</code></td><td class="l">general utilities: malloc, calloc, free, atoi, rand, exit, abs, qsort</td></tr>
+    <tr><td class="l"><code>&lt;ctype.h&gt;</code></td><td class="l">character tests and case: isalpha, isdigit, isspace, toupper, tolower</td></tr>
+    <tr><td class="l"><code>&lt;time.h&gt;</code></td><td class="l">date and time: time, clock, difftime, CLOCKS_PER_SEC</td></tr>
+    <tr><td class="l"><code>&lt;limits.h&gt;</code></td><td class="l">integer limits: INT_MAX, INT_MIN, CHAR_BIT, LONG_MAX</td></tr>
+    <tr><td class="l"><code>&lt;float.h&gt;</code></td><td class="l">floating-point limits: FLT_MAX, DBL_MAX, FLT_EPSILON, FLT_DIG</td></tr>
+    <tr><td class="l"><code>&lt;stddef.h&gt;</code> · <code>&lt;stdbool.h&gt;</code></td><td class="l">NULL, size_t, ptrdiff_t · bool, true, false (C99)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">/* myheader.h */
+#ifndef MYHEADER_H     /* include guard */
+#define MYHEADER_H
+int add(int a, int b); /* prototype */
+#define MAX 100
+#endif
+/* main.c */
+#include &lt;stdio.h&gt;      /* system dirs */
+#include "myheader.h"   /* own dir 1st */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl"><code>&lt;…&gt;</code> vs <code>"…"</code></span> <code>&lt;stdio.h&gt;</code> is searched in the standard (system) include directories only — use it for library headers. <code>"my.h"</code> is searched in the <span class="circ">own folder first</span>, then the system directories — use it for your own headers. An <span class="hl">include guard</span> stops a second copy, so no "redefinition" errors; <code>#pragma once</code> does the same (non-standard, widely supported).</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Angle brackets = the library shelf; quotes = your own desk</b>, checked first, then the shelf."</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A header does <b>not</b> link its library: with <code>&lt;math.h&gt;</code> gcc still needs <code>-lm</code>, else "undefined reference". <code>conio.h</code>, <code>clrscr()</code>, <code>getch()</code> are not ISO C.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ which header?</span> <code>INT_MAX</code> → limits.h · <code>toupper</code> → ctype.h · <code>malloc</code> → stdlib.h · <code>fabs</code> → math.h but <code>abs</code> → <span class="circ">stdlib.h</span>.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: preprocessor & macros ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Preprocessor &amp; macros</span></div>
+  <h2><span class="no">2</span>Preprocessor Directives and Macros</h2><span class="tag">output questions ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> The <span class="hl">preprocessor</span> runs <b>before the compiler</b> and handles every line that starts with <code>#</code> (a <b>directive</b>). It does pure text work — file inclusion, <span class="hl">macro</span> substitution, conditional compilation — after comments are stripped. A directive ends at the end of its line: <span class="circ">no semicolon</span> (continue a long one with <code>\</code>).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Directive</th><th class="l">Purpose</th></tr>
+      <tr><td class="l"><code>#include</code></td><td class="l">insert a file's text</td></tr>
+      <tr><td class="l"><code>#define</code></td><td class="l">constant or macro: <code>#define PI 3.1416</code></td></tr>
+      <tr><td class="l"><code>#undef</code></td><td class="l">remove a macro definition</td></tr>
+      <tr><td class="l"><code>#ifdef</code> · <code>#ifndef</code></td><td class="l">compile if defined · not defined</td></tr>
+      <tr><td class="l"><code>#if #elif #else #endif</code></td><td class="l">compile by a constant integer test; <code>defined(X)</code> allowed</td></tr>
+      <tr><td class="l"><code>#error msg</code></td><td class="l">stop compilation with a message</td></tr>
+      <tr><td class="l"><code>#pragma</code> · <code>#line</code></td><td class="l">compiler-specific order (<code>once</code>, <code>pack</code>) · reset line number</td></tr>
+    </table>
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">#define DEBUG 1
+#define VERSION 2
+#ifdef DEBUG
+  printf("Debug mode ON\n");
+#endif
+#if VERSION &gt;= 2
+  newApi();
+#elif VERSION == 1
+  oldApi();
+#else
+  #error "unknown VERSION"
+#endif
+#undef DEBUG /* gone from here */</div>
+  </div>
+  <p class="tiny" style="margin:1mm 0"><b>Predefined macros:</b> <code>__FILE__</code> file name (string) · <code>__LINE__</code> line number (int) · <code>__DATE__</code> <code>"Oct 14 2026"</code> · <code>__TIME__</code> <code>"hh:mm:ss"</code> · <code>__STDC__</code> 1 on a conforming compiler · <code>__STDC_VERSION__</code> <code>199901L</code> (C99), <code>201112L</code> (C11).</p>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="460">
+    <g class="w">
+      <rect x="4" y="22" width="150" height="44" rx="10" class="ink fill-b"/>
+      <rect x="220" y="4" width="200" height="38" rx="10" class="ink-r fill-r"/>
+      <rect x="220" y="50" width="200" height="38" rx="10" class="ink-g fill-g"/>
+      <rect x="478" y="4" width="156" height="38" rx="10" class="ink-r fill-r"/>
+      <rect x="478" y="50" width="156" height="38" rx="10" class="ink-g fill-g"/>
+      <path class="ink-r" d="M156,38 L216,24" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M156,52 L216,68" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M422,23 H474" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M422,69 H474" marker-end="url(#ahg)"/>
+    </g>
+    <text x="79" y="49" text-anchor="middle" class="s k w6">SQUARE(2+3)</text>
+    <text x="320" y="28" text-anchor="middle" class="s r">x*x → 2+3*2+3</text>
+    <text x="320" y="74" text-anchor="middle" class="s g">((x)*(x)) → ((2+3)*(2+3))</text>
+    <text x="556" y="28" text-anchor="middle" class="s r w6">= 11 ✗</text>
+    <text x="556" y="74" text-anchor="middle" class="s g w6">= 25 ✓</text>
+  </svg><figcaption>a macro is replaced as text; then normal precedence applies</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1.2fr) minmax(0,0.8fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Point</th><th class="l">Macro</th><th class="l">Function</th></tr>
+      <tr><td class="l">Handled</td><td class="l">preprocessing: text</td><td class="l">run time: a call</td></tr>
+      <tr><td class="l">Type check</td><td class="l"><b>none</b></td><td class="l">yes (prototype)</td></tr>
+      <tr><td class="l">Arguments</td><td class="l">re-evaluated per use</td><td class="l">evaluated once</td></tr>
+      <tr><td class="l">Speed · size</td><td class="l">no call cost · grows</td><td class="l">call cost · one copy</td></tr>
+      <tr><td class="l">Address</td><td class="l">none</td><td class="l">function pointer</td></tr>
+    </table>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl"># and ##</span> <b>#</b> stringizes: <code>#define STR(x) #x</code>, <code>STR(Dhaka)</code> → <code>"Dhaka"</code>. <b>##</b> pastes tokens: <code>#define CAT(a,b) a##b</code>, <code>CAT(var,1)</code> → <code>var1</code>. Safer than a function-like macro: an <code>inline</code> function (C99).</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Brackets inside, brackets outside</b>": wrap every parameter and the whole body — <code>((x)*(x))</code>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>#define PI 3.14;</code> pastes the <b>;</b> too. <code>SQUARE(i++)</code> increments i twice: undefined. <code>#define SQ (x)</code> with a space is object-like.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ output</span> <code>#define SQ(x) (x)*(x)</code>: <code>100/SQ(5)</code> → <code>100/(5)*(5)</code> = 20×5 = <span class="circ">100</span>, not 4. Fully bracketed: 4.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: pointers ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Pointers</span></div>
+  <h2><span class="no">3</span>Pointers: &amp;, *, Kinds and const</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">pointer</span> is a variable that stores the <b>memory address</b> of another object: <code>type *name;</code>. <code>&amp;</code> (<b>address-of</b>) gives an address; <code>*</code> (<b>indirection</b>, "value at") gives the object at an address. A pointer's own size is fixed by the machine — 4 bytes on 32-bit, <span class="circ">8 on 64-bit</span> — whatever it points to; its type decides how many bytes <code>*</code> reads and how far <code>+1</code> moves.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 128" width="480">
+    <g class="w">
+      <rect x="20" y="30" width="140" height="48" rx="8" class="ink-g fill-g"/>
+      <rect x="250" y="30" width="140" height="48" rx="8" class="ink fill-b"/>
+      <rect x="480" y="30" width="140" height="48" rx="8" class="ink-p fill-p"/>
+      <path class="ink" d="M248,54 H164" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M478,54 H394" marker-end="url(#ahp)"/>
+    </g>
+    <text x="90" y="22" text-anchor="middle" class="s k w6">int a = 10;</text>
+    <text x="90" y="60" text-anchor="middle" class="g w6">10</text>
+    <text x="90" y="96" text-anchor="middle" class="s">address 1000</text>
+    <text x="320" y="22" text-anchor="middle" class="s k w6">int *p = &amp;a;</text>
+    <text x="320" y="60" text-anchor="middle" class="w6">1000</text>
+    <text x="320" y="96" text-anchor="middle" class="s">address 2000</text>
+    <text x="550" y="22" text-anchor="middle" class="s k w6">int **q = &amp;p;</text>
+    <text x="550" y="60" text-anchor="middle" class="p w6">2000</text>
+    <text x="550" y="96" text-anchor="middle" class="s">address 3000</text>
+    <text x="320" y="122" text-anchor="middle" class="s r">*p = 10 · **q = 10 · *q = p = 1000 · &amp;p = 2000</text>
+  </svg><figcaption>a pointer's box holds another box's address</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int a = 10;
+int *p;           /* declare      */
+p = &amp;a;           /* address of a */
+printf("%d", *p); /* 10           */
+*p = 20;          /* a is now 20  */
+int **q = &amp;p;     /* ptr to ptr   */
+printf("%d", **q);/* 20           */
+int *x, y;     /* x ptr, y int!   */</div>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Expression</th><th class="l">Value</th></tr>
+      <tr><td class="l"><code>a</code> · <code>&amp;a</code></td><td class="l">20 · 1000</td></tr>
+      <tr><td class="l"><code>p</code> · <code>*p</code> · <code>&amp;p</code></td><td class="l">1000 · 20 · 2000</td></tr>
+      <tr><td class="l"><code>*&amp;a</code> (they cancel)</td><td class="l">20</td></tr>
+      <tr><td class="l"><code>q</code> · <code>*q</code> · <code>**q</code></td><td class="l">2000 · 1000 · 20</td></tr>
+      <tr><td class="l"><code>printf("%p", (void *)p)</code></td><td class="l">prints 1000</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">Kind</th><th class="l">What it is</th><th class="l">Danger and fix</th></tr>
+    <tr><td class="l"><b>NULL</b></td><td class="l"><code>int *p = NULL;</code> points nowhere</td><td class="l">dereference → crash; test <code>p != NULL</code></td></tr>
+    <tr><td class="l"><b>void (generic)</b></td><td class="l">holds any object address; <code>malloc</code> returns one</td><td class="l">no <code>*v</code> or <code>v+1</code> without a cast: <code>*(int *)v</code></td></tr>
+    <tr><td class="l"><b>Wild</b></td><td class="l">never initialised: garbage address</td><td class="l">initialise to <code>NULL</code> or an address</td></tr>
+    <tr><td class="l"><b>Dangling</b></td><td class="l">object gone: after <code>free(p)</code>, or a local's address returned</td><td class="l"><code>p = NULL;</code> after <code>free</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Declaration</th><th><code>*p=5</code></th><th><code>p++</code></th></tr>
+      <tr><td class="l"><code>const int *p</code> = <code>int const *p</code></td><td>✗</td><td>✓</td></tr>
+      <tr><td class="l"><code>int *const p = &amp;a;</code></td><td>✓</td><td>✗</td></tr>
+      <tr><td class="l"><code>const int *const p</code></td><td>✗</td><td>✗</td></tr>
+    </table>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Look-alikes</span> <code>int *p[3]</code>: array of 3 pointers. <code>int (*p)[3]</code>: one pointer to an array of 3 ints. <code>int (*fp)(int)</code>: function pointer. Passing <code>&amp;x</code> to a function: previous lesson.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>&amp; asks where; * asks what's there.</b>" Read right to left: <code>int *const p</code> = "p is a const pointer to int".</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> In <code>int *x, y;</code> only <b>x</b> is a pointer: <code>*</code> binds to the name. A NULL or wild dereference compiles, then fails at run time.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ trace</span> <code>int a = 5, *p = &amp;a, **q = &amp;p; **q += *p;</code> → both name a, so a = 5 + 5 = <span class="circ">10</span>.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: pointer arithmetic ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Pointer arithmetic</span></div>
+  <h2><span class="no">4</span>Pointer Arithmetic</h2><span class="tag">numeric MCQs ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> Adding an integer n to a pointer moves it <b>n elements</b>, not n bytes: <span class="hl">address(p + n) = address(p) + n × sizeof(*p)</span>. Subtracting two pointers into the same array gives the <b>number of elements</b> between them (type <code>ptrdiff_t</code>). Results are defined only inside one array, plus the position <span class="circ">one past the end</span>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 130" width="500">
+    <g class="w">
+      <rect x="40" y="40" width="100" height="40" class="ink fill-b"/>
+      <rect x="140" y="40" width="100" height="40" class="ink-g fill-g"/>
+      <rect x="240" y="40" width="100" height="40" class="ink fill-b"/>
+      <rect x="340" y="40" width="100" height="40" class="ink-r fill-r"/>
+      <rect x="440" y="40" width="100" height="40" class="ink fill-b"/>
+      <path class="ink" d="M90,10 V36" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M190,10 V36" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M390,10 V36" marker-end="url(#ah)"/>
+      <path class="ink-p" d="M90,100 C140,124 340,124 386,102" marker-end="url(#ahp)"/>
+    </g>
+    <text x="104" y="16" text-anchor="start" class="s k">p</text>
+    <text x="204" y="16" text-anchor="start" class="s g">p + 1</text>
+    <text x="404" y="16" text-anchor="start" class="s r">p + 3</text>
+    <text x="90" y="66" text-anchor="middle" class="w6">10</text><text x="190" y="66" text-anchor="middle" class="w6">20</text><text x="290" y="66" text-anchor="middle" class="w6">30</text><text x="390" y="66" text-anchor="middle" class="w6">40</text><text x="490" y="66" text-anchor="middle" class="w6">50</text>
+    <text x="90" y="96" text-anchor="middle" class="s">1000</text><text x="190" y="96" text-anchor="middle" class="s">1004</text><text x="290" y="96" text-anchor="middle" class="s">1008</text><text x="390" y="96" text-anchor="middle" class="s">1012</text><text x="490" y="96" text-anchor="middle" class="s">1016</text>
+    <text x="590" y="58" text-anchor="middle" class="s k">int = 4 B</text>
+    <text x="240" y="127" text-anchor="middle" class="s p">(p + 3) − p = 3 elements, not 12</text>
+  </svg><figcaption>int a[5] = {10,20,30,40,50}; int *p = a; — each step jumps 4 bytes</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Pointer type</th><th>sizeof(*p)</th><th><code>p+1</code> from 1000</th></tr>
+      <tr><td class="l"><code>char *</code></td><td>1</td><td>1001</td></tr>
+      <tr><td class="l"><code>short *</code></td><td>2</td><td>1002</td></tr>
+      <tr><td class="l"><code>int *</code>, <code>float *</code></td><td>4</td><td>1004</td></tr>
+      <tr><td class="l"><code>double *</code></td><td>8</td><td>1008</td></tr>
+      <tr><td class="l"><code>int **</code> (64-bit)</td><td>8</td><td>1008</td></tr>
+      <tr><td class="l">12-byte <code>struct *</code></td><td>12</td><td>1012</td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Operation</th><th>OK?</th><th class="l">Result</th></tr>
+      <tr><td class="l"><code>p + n</code>, <code>p − n</code>, <code>p++</code>, <code>p--</code></td><td>✓</td><td class="l">moves n elements</td></tr>
+      <tr><td class="l"><code>p2 − p1</code></td><td>✓</td><td class="l">elements between</td></tr>
+      <tr><td class="l"><code>p1 &lt; p2</code>, <code>p == NULL</code></td><td>✓</td><td class="l">compare positions</td></tr>
+      <tr><td class="l"><code>p1 + p2</code></td><td><span class="red"><b>✗</b></span></td><td class="l">compile error</td></tr>
+      <tr><td class="l"><code>p * 2</code>, <code>p / 2</code>, <code>p % 2</code></td><td><span class="red"><b>✗</b></span></td><td class="l">compile error</td></tr>
+      <tr><td class="l"><code>void *</code> arithmetic</td><td><span class="red"><b>✗</b></span></td><td class="l">not ISO C (gcc: 1 B)</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int a[] = {10, 20, 30, 40};
+int *p = a;
+int x = *p++;   /* x=10, p-&gt;a[1] */
+int y = (*p)++; /* y=20, a[1]=21 */
+int z = *++p;   /* z=30, p-&gt;a[2] */
+printf("%d %d %d %d", x, y, z, a[1]);
+                /* 10 20 30 21   */
+int *q = &amp;a[3];
+printf("%d", (int)(q - a)); /* 3 */</div>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Expression</th><th class="l">Changes</th><th class="l">Value used</th></tr>
+      <tr><td class="l"><code>*p++</code> = <code>*(p++)</code></td><td class="l"><b>p</b>, after</td><td class="l">old <code>*p</code></td></tr>
+      <tr><td class="l"><code>*++p</code></td><td class="l"><b>p</b>, first</td><td class="l">new <code>*p</code></td></tr>
+      <tr><td class="l"><code>(*p)++</code></td><td class="l"><b>value</b>, after</td><td class="l">old value</td></tr>
+      <tr><td class="l"><code>++*p</code></td><td class="l"><b>value</b>, first</td><td class="l">new value</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Walking an array with a pointer</span> <code>for (p = a; p &lt; a + n; p++) sum += *p;</code> — comparing with <code>a + n</code> (one past the end) is legal, but reading <code>*(a + n)</code> is not. Pointers into <b>different</b> arrays must not be subtracted or ordered with <code>&lt;</code>; <code>==</code> is always allowed. Print a pointer difference with <code>%td</code>.</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>The type is the ruler.</b>" A pointer counts in elements; its type says how long one step is.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>*p++</code> moves the <b>pointer</b>, not the value: postfix <code>++</code> binds tighter than <code>*</code>. Two int pointers 12 bytes apart differ by <b>3</b>.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ address</span> <code>double *d</code> holds 2000: <code>d + 5</code> = 2000 + 5×8 = <span class="circ">2040</span>. As <code>char *</code>: 2005.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: 1D arrays ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Arrays and pointers</span></div>
+  <h2><span class="no">5</span>1D Arrays and the Array–Pointer Link</h2><span class="tag">highest-yield ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> An <span class="hl">array</span> is a fixed-size collection of elements of the <b>same type</b> in <b>contiguous</b> memory, indexed <code>0 … n−1</code>; <code>int arr[5]</code> reserves 5 × 4 = 20 bytes. C does <b>no bounds checking</b>: <code>arr[5]</code> compiles and is undefined behaviour. In most expressions the name <span class="hl">decays</span> to a pointer to element 0, so <span class="circ">arr[i] ≡ *(arr + i)</span> ≡ <code>*(i + arr)</code> ≡ <code>i[arr]</code>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 118" width="500">
+    <g class="w">
+      <rect x="60" y="38" width="96" height="36" class="ink-g fill-g"/>
+      <rect x="156" y="38" width="96" height="36" class="ink fill-b"/>
+      <rect x="252" y="38" width="96" height="36" class="ink fill-b"/>
+      <rect x="348" y="38" width="96" height="36" class="ink fill-b"/>
+      <rect x="444" y="38" width="96" height="36" class="ink fill-b"/>
+      <path class="ink-g" d="M108,4 V34" marker-end="url(#ahg)"/>
+      <path class="ink" d="M204,4 V34" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M92,80 C200,116 520,116 552,80" marker-end="url(#ah)"/>
+    </g>
+    <text x="116" y="16" text-anchor="start" class="s g w6">arr</text>
+    <text x="212" y="16" text-anchor="start" class="s k">arr + 1 → 1004 (one int)</text>
+    <text x="108" y="61" text-anchor="middle" class="s">a[0] 1000</text><text x="204" y="61" text-anchor="middle" class="s">a[1] 1004</text><text x="300" y="61" text-anchor="middle" class="s">a[2] 1008</text><text x="396" y="61" text-anchor="middle" class="s">a[3] 1012</text><text x="492" y="61" text-anchor="middle" class="s">a[4] 1016</text>
+    <text x="596" y="74" text-anchor="middle" class="s r w6">1020</text>
+    <text x="320" y="114" text-anchor="middle" class="s r">&amp;arr + 1 → 1020 (the whole 20-byte array)</text>
+  </svg><figcaption>arr and &amp;arr print the same number; their types and steps differ</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Expression</th><th class="l">Type</th><th class="l">Value</th></tr>
+      <tr><td class="l"><code>arr</code>, <code>&amp;arr[0]</code></td><td class="l"><code>int *</code></td><td class="l">1000</td></tr>
+      <tr><td class="l"><code>arr + 1</code></td><td class="l"><code>int *</code></td><td class="l">1004</td></tr>
+      <tr><td class="l"><code>&amp;arr</code></td><td class="l"><code>int (*)[5]</code></td><td class="l">1000 (same!)</td></tr>
+      <tr><td class="l"><code>&amp;arr + 1</code></td><td class="l"><code>int (*)[5]</code></td><td class="l">1020</td></tr>
+      <tr><td class="l"><code>sizeof(arr)</code></td><td class="l"><code>size_t</code></td><td class="l"><span class="circ">20</span></td></tr>
+      <tr><td class="l"><code>sizeof arr / sizeof arr[0]</code></td><td class="l"><code>size_t</code></td><td class="l">5</td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Declaration</th><th class="l">Contents</th></tr>
+      <tr><td class="l"><code>int a[5]={1,2};</code></td><td class="l">1 2 0 0 0</td></tr>
+      <tr><td class="l"><code>int a[]={1,2,3};</code></td><td class="l">size taken as 3</td></tr>
+      <tr><td class="l"><code>int a[5]={0};</code></td><td class="l">all zero</td></tr>
+      <tr><td class="l"><code>int a[5];</code> local · global</td><td class="l">garbage · all zero</td></tr>
+      <tr><td class="l"><code>int a[5]={[2]=7};</code></td><td class="l">0 0 7 0 0 (C99)</td></tr>
+      <tr><td class="l"><code>int a[n];</code></td><td class="l">VLA: C99; optional in C11</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int sum(int a[], int n) { /* int *a */
+    int s = 0;
+    for (int i = 0; i &lt; n; i++)
+        s += a[i];       /* *(a + i) */
+    return s;  /* sizeof(a) = 8 here */
+}
+int arr[5] = {1, 2, 3, 4, 5};
+int n = sizeof arr / sizeof arr[0];
+sum(arr, n);   /* passes &amp;arr[0] */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">When the name does NOT decay</span> ① under <code>sizeof</code> → whole array size; ② under <code>&amp;</code> → pointer to the whole array; ③ a string literal initialising a <code>char</code> array. The name is <b>not a modifiable lvalue</b>: <code>arr++</code>, <code>arr = p</code> fail; <code>p++</code> is fine. A function gets only the address, so its changes to <code>a[i]</code> reach the caller.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Array name = a fixed signpost to element 0; a pointer = a signpost you can carry.</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> An array parameter is a pointer: <code>sizeof(a)</code> inside the function gives 8 (or 4), not the array size. Always pass n.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ output</span> <code>int a[5]={1,2,3,4,5}; int *p=(int *)(&amp;a+1); printf("%d",*(p-1));</code> → <span class="circ">5</span>.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: 2D arrays ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>2D arrays</span></div>
+  <h2><span class="no">6</span>2D Arrays and the Address Formula</h2><span class="tag">written + numeric ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <code>int m[R][C]</code> is an array of R rows, each an array of C ints. Memory is one straight line, and C stores the elements in <span class="hl">row-major order</span>: all of row 0, then row 1, … Only the <b>first</b> (row) size may be left out — <code>int m[][3] = {…};</code>, <code>void f(int m[][3], int rows)</code> — because the <span class="circ">column size is required</span> to find where each row starts.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 116" width="500">
+    <g class="w">
+      <rect x="10" y="20" width="44" height="30" class="ink-g fill-g"/><rect x="54" y="20" width="44" height="30" class="ink-g fill-g"/><rect x="98" y="20" width="44" height="30" class="ink-g fill-g"/>
+      <rect x="10" y="50" width="44" height="30" class="ink-p fill-p"/><rect x="54" y="50" width="44" height="30" class="ink-p fill-p"/><rect x="98" y="50" width="44" height="30" class="ink-p fill-p"/>
+      <path class="ink" d="M160,50 H206" marker-end="url(#ahb)"/>
+      <rect x="216" y="34" width="68" height="34" class="ink-g fill-g"/><rect x="284" y="34" width="68" height="34" class="ink-g fill-g"/><rect x="352" y="34" width="68" height="34" class="ink-g fill-g"/>
+      <rect x="420" y="34" width="68" height="34" class="ink-p fill-p"/><rect x="488" y="34" width="68" height="34" class="ink-p fill-p"/><rect x="556" y="34" width="68" height="34" class="ink-p fill-p"/>
+    </g>
+    <text x="76" y="14" text-anchor="middle" class="s k w6">m[2][3]</text>
+    <text x="32" y="40" text-anchor="middle" class="s">1</text><text x="76" y="40" text-anchor="middle" class="s">2</text><text x="120" y="40" text-anchor="middle" class="s">3</text>
+    <text x="32" y="70" text-anchor="middle" class="s">4</text><text x="76" y="70" text-anchor="middle" class="s">5</text><text x="120" y="70" text-anchor="middle" class="s">6</text>
+    <text x="250" y="56" text-anchor="middle" class="s">1</text><text x="318" y="56" text-anchor="middle" class="s">2</text><text x="386" y="56" text-anchor="middle" class="s">3</text><text x="454" y="56" text-anchor="middle" class="s">4</text><text x="522" y="56" text-anchor="middle" class="s">5</text><text x="590" y="56" text-anchor="middle" class="s">6</text>
+    <text x="250" y="88" text-anchor="middle" class="s">1000</text><text x="318" y="88" text-anchor="middle" class="s">1004</text><text x="386" y="88" text-anchor="middle" class="s">1008</text><text x="454" y="88" text-anchor="middle" class="s">1012</text><text x="522" y="88" text-anchor="middle" class="s">1016</text><text x="590" y="88" text-anchor="middle" class="s">1020</text>
+    <text x="318" y="24" text-anchor="middle" class="s g w6">row 0</text><text x="522" y="24" text-anchor="middle" class="s p w6">row 1</text>
+    <text x="420" y="110" text-anchor="middle" class="s k">m + 1 jumps a whole row: 1000 → 1012</text>
+  </svg><figcaption>the grid is how we think; the line is how memory holds it</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int m[2][3] = { {1, 2, 3},
+                {4, 5, 6} };
+for (int i = 0; i &lt; 2; i++) {
+    for (int j = 0; j &lt; 3; j++)
+        printf("%d ", m[i][j]);
+    printf("\n");
+}            /* 1 2 3
+                4 5 6 */
+int (*row)[3] = m; /* ptr to a row */</div>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Expression</th><th class="l">Means</th><th class="l">Value</th></tr>
+      <tr><td class="l"><code>m</code></td><td class="l">→ row 0</td><td class="l">1000</td></tr>
+      <tr><td class="l"><code>m + 1</code></td><td class="l">→ row 1 (+12 B)</td><td class="l">1012</td></tr>
+      <tr><td class="l"><code>*m + 1</code></td><td class="l"><code>&amp;m[0][1]</code> (+4 B)</td><td class="l">1004</td></tr>
+      <tr><td class="l"><code>*(m + 1) + 2</code></td><td class="l"><code>&amp;m[1][2]</code></td><td class="l">1020</td></tr>
+      <tr><td class="l"><code>*(*(m + 1) + 2)</code></td><td class="l"><code>m[1][2]</code></td><td class="l">6</td></tr>
+      <tr><td class="l"><code>sizeof m</code> · <code>m[0]</code></td><td class="l">all · one row</td><td class="l">24 · 12</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Address formula</span> M rows, N columns, W bytes per element, base address B, lower bounds L<sub>r</sub>, L<sub>c</sub> (both 0 in C).<br><b>Row-major:</b> <span class="hl">LOC(A[i][j]) = B + W × [N × (i − L<sub>r</sub>) + (j − L<sub>c</sub>)]</span><br><b>Column-major:</b> <span class="hl">LOC(A[i][j]) = B + W × [M × (j − L<sub>c</sub>) + (i − L<sub>r</sub>)]</span><br>
+    C, C++, Pascal and NumPy (default) are row-major; Fortran, MATLAB and R are column-major.</div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ A[1..10][1..15], W = 2, B = 100: find A[4][8]</span> M = 10, N = 15. <b>Row-major:</b> 100 + 2 × [15 × 3 + 7] = 100 + 2 × 52 = <span class="circ">204</span>. <b>Column-major:</b> 100 + 2 × [10 × 7 + 3] = 100 + 2 × 73 = <span class="circ">246</span>. In C, <code>int A[5][4]</code> at 1000: <code>&amp;A[3][2]</code> = 1000 + 4 × (3×4 + 2) = 1056.</div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ pointer to a row</span> <code>int a[2][3] = {{1,2,3},{4,5,6}}; int (*r)[3] = a;</code> → <code>r[1][1]</code> = 5, <code>*(*(r + 1))</code> = <span class="circ">4</span> (first element of row 1), <code>*(*r + 2)</code> = 3. <code>r + 1</code> moves 12 bytes because <code>*r</code> is a whole row of 3 ints.</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Row-major reads like a book</b>": finish a line, then the next. Column-major reads a newspaper column.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>int m[][] = {…};</code> is an error. <code>m + 1</code> jumps a row, <code>*m + 1</code> one element. Check whether bounds start at 0 or 1.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ size</span> <code>int a[2][3][4]</code> holds 24 ints = <b>96 bytes</b>; <code>a[1]</code> is a 3×4 block of 48 bytes.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: strings ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Strings</span></div>
+  <h2><span class="no">7</span>Strings and the Null Character</h2><span class="tag">MCQ + output ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> C has no string type: a <span class="hl">string</span> is a <code>char</code> array ending in the <span class="hl">null character <code>'\0'</code></span> (ASCII 0). Every string function — <code>strlen</code>, <code>printf("%s")</code>, <code>strcpy</code> — walks until it meets <code>'\0'</code>. So the literal <code>"Hello"</code> occupies <span class="circ">6 bytes</span>: 5 letters + the terminator, added by the compiler.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 124" width="480">
+    <g class="w">
+      <rect x="20" y="34" width="56" height="38" class="ink fill-b"/><rect x="76" y="34" width="56" height="38" class="ink fill-b"/><rect x="132" y="34" width="56" height="38" class="ink fill-b"/><rect x="188" y="34" width="56" height="38" class="ink fill-b"/><rect x="244" y="34" width="56" height="38" class="ink fill-b"/>
+      <rect x="300" y="34" width="56" height="38" class="ink-r fill-r"/>
+      <rect x="356" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/><rect x="412" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/><rect x="468" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/><rect x="524" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/>
+      <path class="ink-g" d="M20,84 H292" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M20,102 H576" marker-end="url(#ahp)"/>
+    </g>
+    <text x="300" y="20" text-anchor="middle" class="s k w6">char s[10] = "Hello";</text>
+    <text x="48" y="59" text-anchor="middle" class="w6">H</text><text x="104" y="59" text-anchor="middle" class="w6">e</text><text x="160" y="59" text-anchor="middle" class="w6">l</text><text x="216" y="59" text-anchor="middle" class="w6">l</text><text x="272" y="59" text-anchor="middle" class="w6">o</text>
+    <text x="328" y="59" text-anchor="middle" class="r w6">\0</text>
+    <text x="384" y="58" text-anchor="middle" class="s">\0</text><text x="440" y="58" text-anchor="middle" class="s">\0</text><text x="496" y="58" text-anchor="middle" class="s">\0</text><text x="552" y="58" text-anchor="middle" class="s">\0</text>
+    <text x="304" y="89" text-anchor="start" class="s g">strlen(s) = 5</text>
+    <text x="578" y="120" text-anchor="end" class="s p">sizeof(s) = 10 (unused bytes filled with \0)</text>
+  </svg><figcaption>strlen stops at the first '\0'; sizeof counts every byte the array owns</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1.25fr) minmax(0,0.75fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">Declaration</th><th>Bytes</th><th class="l">Note</th></tr>
+      <tr><td class="l"><code>char s1[] = {'H','i','\0'};</code></td><td>3</td><td class="l"><code>'\0'</code> by hand</td></tr>
+      <tr><td class="l"><code>char s2[] = "Hello";</code></td><td>6</td><td class="l"><code>'\0'</code> added</td></tr>
+      <tr><td class="l"><code>char s3[10] = "Hello";</code></td><td>10</td><td class="l">rest <code>'\0'</code></td></tr>
+      <tr><td class="l"><code>char s4[5] = "Hello";</code></td><td>5</td><td class="l"><b>no <code>'\0'</code></b></td></tr>
+    </table>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Common misconception</span> The terminator is <code>'\0'</code>, value 0 — <b>not</b> <code>' '</code> (space, 32), <code>'0'</code> (digit, 48) or <code>'\n'</code> (10). <code>NULL</code> is a <b>pointer</b>; <code>'\0'</code> a <b>character</b>.</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">Point</th><th class="l"><code>char s[] = "Dhaka";</code></th><th class="l"><code>char *p = "Dhaka";</code></th></tr>
+    <tr><td class="l">What it is</td><td class="l">array: own copy, 6 bytes</td><td class="l">pointer to a string literal</td></tr>
+    <tr><td class="l">Change a letter</td><td class="l"><code>s[0] = 'd';</code> ✓</td><td class="l"><code>p[0] = 'd';</code> <span class="red"><b>✗</b></span> undefined (literal often read-only → crash)</td></tr>
+    <tr><td class="l">Assign new text</td><td class="l"><code>s = "Khulna";</code> ✗ → <code>strcpy</code></td><td class="l"><code>p = "Khulna";</code> ✓ re-points</td></tr>
+    <tr><td class="l"><code>sizeof</code></td><td class="l">6</td><td class="l">8 (pointer, 64-bit)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">char s[] = "abc";
+printf("%zu %zu", sizeof s, strlen(s)); /* 4 3 */
+printf("%zu", sizeof("abc"));       /* 4 */
+char *p = "Hello";
+printf("%c %s", *(p + 1), p + 2);   /* e llo */
+printf("%c", "Hello"[4]);           /* o */
+char *names[] = {"Ali", "Rina"}; /* 2 ptrs */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl"><code>'A'</code> vs <code>"A"</code></span> <code>'A'</code> is a character constant of type <code>int</code> in C: <code>sizeof('A')</code> = 4 (1 in C++). <code>"A"</code> is <code>{'A','\0'}</code>: <code>sizeof("A")</code> = 2. <code>char *names[]</code> = array of pointers; <code>char g[2][5]</code> = fixed 5-byte rows.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Every string carries an invisible full stop</b>": bytes needed = letters + 1.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>s1 == s2</code> compares <b>addresses</b>, not text → <code>strcmp</code>. <code>char t[] = {'H','i'};</code> has no <code>'\0'</code>: <code>%s</code> runs on.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ own strlen</span> <code>size_t len(const char *s){ const char *p = s; while (*p) p++; return p - s; }</code> → difference = <span style="white-space:nowrap"><span class="circ">count</span>.</span></div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: string.h & string input ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>string.h &amp; input</span></div>
+  <h2><span class="no">8</span>string.h Functions and String Input</h2><span class="tag">frequently tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <code>&lt;string.h&gt;</code> declares the functions for <code>'\0'</code>-terminated strings and raw memory blocks. None of them knows the destination's size: <span class="hl">the caller must leave room</span>, including the byte for <code>'\0'</code>. Comparison is <b>lexicographic by character code</b>.</div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">Function</th><th class="l">Does</th><th class="l">Returns / note</th></tr>
+    <tr><td class="l"><code>strlen(s)</code></td><td class="l">counts characters before <code>'\0'</code></td><td class="l"><code>size_t</code>; <code>'\0'</code> not counted</td></tr>
+    <tr><td class="l"><code>strcpy(d, s)</code></td><td class="l">copies s with its <code>'\0'</code> into d</td><td class="l">d; no size check</td></tr>
+    <tr><td class="l"><code>strncpy(d, s, n)</code></td><td class="l">copies at most n chars</td><td class="l"><b>no <code>'\0'</code></b> if <code>strlen(s) ≥ n</code></td></tr>
+    <tr><td class="l"><code>strcat</code> · <code>strncat(d, s, n)</code></td><td class="l">appends s (≤ n chars) to d</td><td class="l">d; <code>strncat</code> adds <code>'\0'</code></td></tr>
+    <tr><td class="l"><code>strcmp(a, b)</code> · <code>strncmp</code></td><td class="l">compares char by char</td><td class="l"><span class="circ">0 if equal</span>, &lt;0 or &gt;0</td></tr>
+    <tr><td class="l"><code>strchr</code> · <code>strrchr</code> · <code>strstr</code></td><td class="l">first c · last c · substring</td><td class="l">pointer, or <code>NULL</code></td></tr>
+    <tr><td class="l"><code>strtok</code> · <code>memcpy</code> · <code>memset</code></td><td class="l">split · copy · fill raw bytes</td><td class="l"><code>strtok</code> modifies s</td></tr>
+    <tr><td class="l"><code>strrev</code>, <code>strupr</code>, <code>itoa</code></td><td class="l">reverse · upper case · int → text</td><td class="l"><span class="red"><b>not standard C</b></span></td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 640 96" width="440">
+    <g class="w">
+      <rect x="120" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="164" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="208" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="252" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="296" y="8" width="44" height="30" class="ink-r fill-r"/>
+      <rect x="120" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="164" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="208" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="252" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="296" y="48" width="44" height="30" class="ink-r fill-r"/>
+      <path class="ink-r" d="M346,43 H388" marker-end="url(#ah)"/>
+    </g>
+    <text x="60" y="28" text-anchor="middle" class="s k">a = "apple"</text><text x="60" y="68" text-anchor="middle" class="s k">b = "apply"</text>
+    <text x="142" y="28" text-anchor="middle" class="s">a</text><text x="186" y="28" text-anchor="middle" class="s">p</text><text x="230" y="28" text-anchor="middle" class="s">p</text><text x="274" y="28" text-anchor="middle" class="s">l</text><text x="318" y="28" text-anchor="middle" class="s r w6">e</text>
+    <text x="142" y="68" text-anchor="middle" class="s">a</text><text x="186" y="68" text-anchor="middle" class="s">p</text><text x="230" y="68" text-anchor="middle" class="s">p</text><text x="274" y="68" text-anchor="middle" class="s">l</text><text x="318" y="68" text-anchor="middle" class="s r w6">y</text>
+    <text x="512" y="38" text-anchor="middle" class="s r">'e' (101) &lt; 'y' (121)</text>
+    <text x="512" y="60" text-anchor="middle" class="s r w6">strcmp(a, b) &lt; 0</text>
+    <text x="320" y="92" text-anchor="middle" class="s g">equal characters are skipped; the first difference decides</text>
+  </svg><figcaption>strcmp works like a dictionary, but by ASCII code</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">Input call</th><th class="l">Stops at</th><th class="l">Size check</th><th class="l">Note</th></tr>
+    <tr><td class="l"><code>scanf("%s", s)</code></td><td class="l">whitespace</td><td class="l">no → <code>"%49s"</code></td><td class="l">no <code>&amp;</code>: s is an address</td></tr>
+    <tr><td class="l"><code>scanf("%[^\n]", s)</code></td><td class="l">newline</td><td class="l">no</td><td class="l">reads spaces too</td></tr>
+    <tr><td class="l"><code>gets(s)</code></td><td class="l">newline</td><td class="l"><span class="red"><b>none</b></span></td><td class="l"><span class="circ">removed in C11</span></td></tr>
+    <tr><td class="l"><code>fgets(s, n, stdin)</code></td><td class="l">newline (kept) or n−1</td><td class="l">✓ safe</td><td class="l">adds <code>'\0'</code>; <code>NULL</code> at EOF</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">char name[50];
+fgets(name, sizeof name, stdin);
+name[strcspn(name, "\n")] = '\0';
+if (strcmp(name, "Rahim") == 0)
+    puts("match");   /* puts adds \n */
+char d[6];
+strncpy(d, "Bangladesh", 5);
+d[5] = '\0';         /* "Bangl" */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Why gets() went</span> No size parameter: a long line writes past the array over neighbouring memory — a <span class="hl">buffer overflow</span> (the 1988 Morris worm exploited one in <code>fingerd</code>). Deprecated in C99 (TC3), removed in C11. More I/O: later lesson.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>strcmp = dictionary order by ASCII</b>": uppercase (65–90) sorts before lowercase (97–122).</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>if (strcmp(a, b))</code> is true when the strings <b>differ</b>. Only the sign is guaranteed, not −1/+1.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ mixed input</span> <code>scanf("%d",&amp;n); fgets(s,50,stdin);</code> → fgets gets the leftover <code>'\n'</code>: an <b>empty line</b>.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p><code>&lt;h&gt;</code>: system dirs · <code>"h"</code>: own dir, then system</p><p>Pipeline: preprocess → compile → assemble → link</p>
+      <p>Directives: no <code>;</code>, end at the line end</p><p>Guard: <code>#ifndef X / #define X / #endif</code></p>
+      <p><code>#</code> stringize · <code>##</code> token paste</p><p><code>__FILE__ __LINE__ __DATE__ __TIME__</code></p>
+      <p><code>p + n</code> = address + n × sizeof(*p)</p><p><code>p2 − p1</code> = elements, not bytes</p>
+      <p><code>arr[i] ≡ *(arr+i) ≡ i[arr]</code></p><p>No decay: <code>sizeof arr</code>, <code>&amp;arr</code></p>
+      <p>Row-major: B + W[N(i−L<sub>r</sub>) + (j−L<sub>c</sub>)]</p><p>Column-major: B + W[M(j−L<sub>c</sub>) + (i−L<sub>r</sub>)]</p>
+      <p><code>"Hello"</code> = 6 bytes; <code>'\0'</code> = ASCII 0</p><p><code>strcmp</code>: 0 equal, &lt;0, &gt;0</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li><code>printf</code>/<code>scanf</code> → stdio.h; <code>malloc</code> → stdlib.h</li>
+      <li><code>conio.h</code> is not standard C</li>
+      <li><code>SQUARE(2+3)</code> with <code>x*x</code> → 11</li>
+      <li><code>const int *p</code>: value fixed; <code>int *const p</code>: pointer fixed</li>
+      <li><code>void *</code> cannot be dereferenced without a cast</li>
+      <li><code>*p++</code> moves p; <code>(*p)++</code> changes the value</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Pointer size: 4 B (32-bit), 8 B (64-bit)</li>
+      <li><code>&amp;arr + 1</code> skips the whole array</li>
+      <li>Array parameter = pointer; pass the length</li>
+      <li>Only the first dimension may be omitted</li>
+      <li><code>strlen("abc")</code> = 3, <code>sizeof("abc")</code> = 4</li>
+      <li><code>gets</code> removed in C11 → <code>fgets</code></li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 168px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Top traps</span> <code>#define</code> with <code>;</code> · <code>100/SQ(5)</code> = 100 · <code>int *x, y;</code> · dangling after <code>free</code> · <code>sizeof</code> of an array parameter · <code>m[][]</code> without columns · modifying <code>char *p = "…"</code> · <code>==</code> on strings · <code>strncpy</code> without <code>'\0'</code>.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">All tricks together</span> shelf vs desk · brackets inside, brackets outside · &amp; asks where, * asks what's there · the type is the ruler · fixed vs carried signpost · row-major reads like a book · invisible full stop · strcmp = dictionary by ASCII.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="164">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="s">&amp;a</text>
+      <text x="75" y="64" text-anchor="middle" class="r s">arr + i</text>
+      <text x="75" y="100" text-anchor="middle" class="g s">"Hi"</text>
+      <text x="215" y="28" text-anchor="middle" class="s">an address</text>
+      <text x="215" y="64" text-anchor="middle" class="s">&amp;arr[i]</text>
+      <text x="215" y="100" text-anchor="middle" class="k s">'H' 'i' '\0'</text>
+    </svg><figcaption>three ideas, three lines</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ one snippet, five facts</span> <code>char s[] = "Dhaka"; char *p = s + 1;</code> → <code>sizeof s</code> = 6, <code>strlen(s)</code> = 5, <code>*p</code> = 'h', <code>p[2]</code> = 'k', <code>p - s</code> = <span class="circ">1</span>. And <code>*s = 'd'</code> is fine because s is an array, not a literal.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · Preprocessor, Pointers, Arrays, Strings</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">1.</span>With <code>#define SQUARE(x) x*x</code>, <code>SQUARE(3+1)</code> evaluates to:<ol class="opts"><li>16</li><li>8</li><li>7</li><li>10</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">2.</span>Inside <code>void f(int a[])</code> on a 64-bit system, <code>sizeof(a)</code> is:<ol class="opts"><li>8</li><li>20</li><li>5</li><li>4</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">3.</span>Which header declares <code>strlen()</code>?<ol class="opts"><li>stdio.h</li><li>stdlib.h</li><li>ctype.h</li><li>string.h</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">4.</span>An <code>int *p</code> (4-byte int) holds 2000. <code>p + 3</code> is:<ol class="opts"><li>2003</li><li>2012</li><li>2006</li><li>2024</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">5.</span><code>const int *p;</code> means:<ol class="opts"><li><code>*p</code> is read-only</li><li><code>p</code> is read-only</li><li>both are fixed</li><li>neither is fixed</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">6.</span><code>int A[5][4]</code>, base 1000, 4-byte int, row-major. Address of <code>A[3][2]</code>:<ol class="opts"><li>1052</li><li>1048</li><li>1056</li><li>1060</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">7.</span>Which function was removed from the C11 standard?<ol class="opts"><li>fgets</li><li>gets</li><li>puts</li><li>scanf</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">8.</span><code>char s[] = "Dhaka";</code> — <code>sizeof(s)</code> is:<ol class="opts"><li>5</li><li>4</li><li>8</li><li>6</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">9.</span><code>strcmp("abc", "abd")</code> returns:<ol class="opts"><li>0</li><li>a positive value</li><li>a negative value</li><li>3</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">10.</span>A header is kept from being included twice by:<ol class="opts"><li><code>#pragma pack</code></li><li><code>#ifndef</code> / <code>#define</code> / <code>#endif</code></li><li><code>#error</code></li><li><code>#undef</code></li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-a · 6-c · 7-b · 8-d · 9-c · 10-b</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Explain the relationship between arrays and pointers in C. Show how <code>arr[i]</code> is evaluated, why <code>sizeof</code> gives different results for an array and a pointer, derive the row-major address of <code>A[i][j]</code>, and write a pointer-based function that returns the length of a string. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>Decay (2)</b> — an array name in an expression becomes <code>&amp;arr[0]</code>; <code>arr[i]</code> is defined as <code>*(arr + i)</code>, and <code>arr + i</code> adds <code>i × sizeof(int)</code> bytes. <i class="mk">2</i></li>
+    <li><b>sizeof (2)</b> — no decay under <code>sizeof</code>/<code>&amp;</code>: <code>int arr[5]</code> → 20; a pointer (or array parameter) → 8 on 64-bit; the name cannot be assigned or incremented. <i class="mk">2</i></li>
+    <li><b>Address (3)</b> — rows stored one after another: skip i full rows of N elements, then j: LOC = B + W[N(i − L<sub>r</sub>) + (j − L<sub>c</sub>)]; e.g. <code>int A[5][4]</code> at 1000 → <code>A[3][2]</code> = 1056. <i class="mk">3</i></li>
+    <li><b>Function (3)</b> — <code>size_t len(const char *s){ const char *p = s; while (*p) p++; return p - s; }</code>: walk to <code>'\0'</code>, pointer difference = length. <i class="mk">3</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">Before the exam ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>Can name the header of any common function</li>
+      <li>Can expand a macro and spot the trap</li>
+      <li>Can compute <code>p + n</code> and <code>p2 − p1</code></li>
+    </ul>
+    <ul class="tick">
+      <li>Can tell <code>arr</code>, <code>&amp;arr</code>, <code>sizeof</code> apart</li>
+      <li>Can apply both 2D address formulas</li>
+      <li>Can count string bytes with <code>'\0'</code></li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

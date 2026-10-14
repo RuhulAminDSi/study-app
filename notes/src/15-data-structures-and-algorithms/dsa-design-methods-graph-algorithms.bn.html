@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>অ্যালগরিদম ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">অ্যালগরিদম ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span></h1>
+  <p class="subtitle">ডিভাইড অ্যান্ড কনকার · গ্রিডি · DP · ব্যাকট্র্যাকিং · ব্রাঞ্চ অ্যান্ড বাউন্ড · BFS/DFS · টপোলজিক্যাল সর্ট · SCC · MST · শর্টেস্ট পাথ: ১১ পাতায় পরীক্ষার প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="390">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="148" text-anchor="middle" class="bn k l">অ্যালগরিদম</text><text x="320" y="174" text-anchor="middle" class="bn r s">ডিজাইন · গ্রাফ</text>
+      <text x="142" y="57" text-anchor="middle" class="bn s" style="font-size:15px">ডিভাইড অ্যান্ড কনকার</text><text x="142" y="74" text-anchor="middle" class="s" style="font-size:15px">aT(n/b)+f(n)</text>
+      <text x="320" y="33" text-anchor="middle" class="bn r w6" style="font-size:16px">গ্রিডি বনাম DP ★</text><text x="320" y="50" text-anchor="middle" class="bn r s" style="font-size:15px">ভগ্নাংশ বনাম 0/1</text>
+      <text x="498" y="57" text-anchor="middle" class="bn r w6" style="font-size:15px">ব্যাকট্র্যাক · B&amp;B ★</text><text x="498" y="74" text-anchor="middle" class="bn r s" style="font-size:15px">ছাঁটাই LB ≥ best</text>
+      <text x="96" y="147" text-anchor="middle" class="bn s" style="font-size:15px">BFS কিউ</text><text x="96" y="164" text-anchor="middle" class="bn s" style="font-size:15px">DFS স্ট্যাক · O(V+E)</text>
+      <text x="544" y="147" text-anchor="middle" class="bn r w6" style="font-size:15px">শর্টেস্ট পাথ ★</text><text x="544" y="164" text-anchor="middle" class="s r" style="font-size:15px">Dijkstra · BF · FW</text>
+      <text x="142" y="237" text-anchor="middle" class="bn s" style="font-size:15px">টপোলজিক্যাল সর্ট</text><text x="142" y="254" text-anchor="middle" class="bn s" style="font-size:15px">শুধু DAG</text>
+      <text x="320" y="263" text-anchor="middle" class="bn r w6" style="font-size:16px">MST: প্রিম · ক্রুসকাল ★</text><text x="320" y="280" text-anchor="middle" class="bn r s" style="font-size:15px">V − 1টি এজ</text>
+      <text x="498" y="237" text-anchor="middle" class="bn g w6" style="font-size:15px">SCC: কোসারাজু</text><text x="498" y="254" text-anchor="middle" class="bn g s" style="font-size:15px">টারজান · ব্রিজ</text>
+    </svg>
+    <figcaption>↑ এক নজরে: লাল = হাই-ইল্ড, সবুজ = DFS-পরিবার</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm;line-height:5.3mm"><b>হাই-ইল্ড তালিকা</b><br>① মার্জ সর্ট 2T(n/2)+n = Θ(n log n)<br>② স্ট্র্যাসেন (Strassen) O(n<sup>log₂7</sup>) ≈ O(n<sup>2.81</sup>)<br>③ v/w অনুপাতে গ্রিডি: শুধু <span class="circ">ভগ্নাংশ</span> ন্যাপস্যাক<br>④ DP = ওভারল্যাপিং + অপটিমাল সাবস্ট্রাকচার<br>⑤ ফ্লয়েড-ওয়ারশাল ও বেলম্যান-ফোর্ড DP<br>⑥ ব্যাকট্র্যাকিং = স্টেট-স্পেসের DFS<br>⑦ B&amp;B (min): LB ≥ best হলে ছাঁটাই<br>⑧ BFS/DFS: লিস্টে O(V+E), ম্যাট্রিক্সে O(V²)<br>⑨ টপোলজিক্যাল ক্রম ⇔ DAG<br>⑩ MST-তে ঠিক V − 1টি এজ<br>⑪ ডায়াক্সট্রা: ঋণাত্মক এজ চলবে না<br>⑫ বেলম্যান-ফোর্ড O(VE), ঋণাত্মক চক্র ধরে</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">Data Structures and Algorithms অংশের লাইন: "…<span class="hl">Methods for the design of efficient algorithms: divide and conquer, greedy method, dynamic programming, back tracking, branch and bound; Basic search and traversal techniques; Topological sorting; Connected components, spanning trees, shortest paths;</span> Flow algorithms; …" এই সেট ডিজাইন পদ্ধতি থেকে শর্টেস্ট পাথ পর্যন্ত সবটা নেয়। <b>মাস্টার থিওরেম</b> ও সর্টিং-এর খুঁটিনাটি রিকার্শন ও সর্টিং লেসনে, ডায়াক্সট্রা/প্রিমের পেছনের <b>হিপ</b> হিপ লেসনে, <b>ফ্লো</b> ফ্লো ও অ্যাপ্রক্সিমেশন লেসনে, আর <b>NP-কমপ্লিটনেস</b> শেষ লেসনে; গ্রাফ তত্ত্বের মৌলিক বিষয় অধ্যায় ১৩-তে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>ডিভাইড অ্যান্ড কনকার … পৃ. ২</li><li>গ্রিডি পদ্ধতি … পৃ. ৩</li><li>DP: ফিবোনাচ্চি, LCS … পৃ. ৪</li><li>DP: ন্যাপস্যাক, ম্যাট্রিক্স চেইন … পৃ. ৫</li><li>ব্যাকট্র্যাকিং, ব্রাঞ্চ অ্যান্ড বাউন্ড … পৃ. ৬</li></ul>
+    <ul class="tick"><li>BFS, DFS, টপোলজিক্যাল সর্ট … পৃ. ৭</li><li>কম্পোনেন্ট, SCC, MST … পৃ. ৮</li><li>শর্টেস্ট পাথ … পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: divide and conquer ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>ডিভাইড অ্যান্ড কনকার</span></div>
+  <h2><span class="no">১</span>ডিভাইড অ্যান্ড কনকার: ভাগ, সমাধান, জোড়া</h2><span class="tag">রিকারেন্স ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ডিভাইড অ্যান্ড কনকার (Divide and Conquer)</span> তিন ধাপে সমস্যা সমাধান করে: (১) <b>ভাগ (Divide)</b>: সমস্যাকে একই ধরনের a-টি ছোট উপসমস্যায় ভাঙা, (২) <b>জয় (Conquer)</b>: প্রতিটি রিকার্সিভভাবে সমাধান (খুব ছোট হলে সরাসরি), (৩) <b>জোড়া (Combine)</b>: উপ-উত্তরগুলো মিলিয়ে মূল উত্তর। উপসমস্যাগুলো <b>স্বাধীন</b> (ওভারল্যাপ করে না) — এটাই ডায়নামিক প্রোগ্রামিং থেকে পার্থক্য। খরচের রিকারেন্স <span class="circ">T(n) = aT(n/b) + f(n)</span>: n/b আকারের a-টি উপসমস্যা, f(n) = ভাগ + জোড়ার কাজ।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 200" width="246">
+      <g class="w">
+        <rect x="70" y="6" width="160" height="26" rx="6" class="ink fill-y"/>
+        <rect x="16" y="62" width="120" height="26" rx="6" class="ink fill-b"/>
+        <rect x="164" y="62" width="120" height="26" rx="6" class="ink fill-b"/>
+        <rect x="4" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <rect x="84" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <rect x="152" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <rect x="232" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M130,32 L80,62 M170,32 L220,62 M60,88 L36,118 M92,88 L116,118 M208,88 L184,118 M240,88 L264,118"/>
+      </g>
+      <text x="150" y="24" text-anchor="middle" class="k">38 27 43 3 9 82 10 4</text>
+      <text x="76" y="80" text-anchor="middle" class="k" style="font-size:12px">38 27 43 3</text>
+      <text x="224" y="80" text-anchor="middle" class="k" style="font-size:12px">9 82 10 4</text>
+      <text x="36" y="136" text-anchor="middle" class="k" style="font-size:12px">27 38</text>
+      <text x="116" y="136" text-anchor="middle" class="k" style="font-size:12px">3 43</text>
+      <text x="184" y="136" text-anchor="middle" class="k" style="font-size:12px">9 82</text>
+      <text x="264" y="136" text-anchor="middle" class="k" style="font-size:12px">4 10</text>
+      <text x="150" y="168" text-anchor="middle" class="bn r w6" style="font-size:12px">মার্জ ↑ : 3 27 38 43 | 4 9 10 82</text>
+      <text x="150" y="190" text-anchor="middle" class="g w6" style="font-size:12px">3 4 9 10 27 38 43 82</text>
+    </svg><figcaption>মার্জ সর্ট: log₂n স্তর × প্রতি স্তরে n কাজ = n log n</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;white-space:nowrap;line-height:5.6mm">
+      <tr><th class="l">অ্যালগরিদম</th><th class="l">রিকারেন্স</th><th class="l">ফল</th></tr>
+      <tr><td class="l">বাইনারি সার্চ</td><td class="l">T(n/2) + 1</td><td class="l">Θ(log n)</td></tr>
+      <tr><td class="l">মার্জ সর্ট</td><td class="l">2T(n/2) + n</td><td class="l"><b>Θ(n log n)</b></td></tr>
+      <tr><td class="l">কুইক সর্ট সেরা/গড়</td><td class="l">2T(n/2) + n</td><td class="l">Θ(n log n)</td></tr>
+      <tr><td class="l">কুইক সর্ট খারাপতম</td><td class="l">T(n−1) + n</td><td class="l">Θ(n²)</td></tr>
+      <tr><td class="l">ম্যাক্স–মিন (n টি)</td><td class="l">2T(n/2) + 2</td><td class="l">3n/2 − 2 তুলনা</td></tr>
+      <tr><td class="l">কারাৎসুবা</td><td class="l">3T(n/2) + n</td><td class="l">n<sup>1.585</sup></td></tr>
+      <tr><td class="l">স্ট্র্যাসেন</td><td class="l">7T(n/2) + n²</td><td class="l"><b>n<sup>2.81</sup></b></td></tr>
+      <tr><td class="l">ক্লোজেস্ট পেয়ার</td><td class="l">2T(n/2) + n</td><td class="l">Θ(n log n)</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ স্ট্র্যাসেন</span> সাধারণ ব্লক-গুণে n×n ম্যাট্রিক্সকে চারটি n/2 ব্লকে ভেঙে <b>৮টি</b> ব্লক-গুণফল লাগে: T(n) = 8T(n/2) + n² = Θ(n³)। স্ট্র্যাসেন কাজটি সাজিয়ে <b>৭টি</b> গুণফলে (আর ১৮টি যোগে) নামান: T(n) = 7T(n/2) + Θ(n²)। যেহেতু log₂7 ≈ 2.807 &gt; 2, পাতাগুলোর খরচই প্রধান: <span class="circ">Θ(n<sup>log₂7</sup>) ≈ O(n<sup>2.81</sup>)</span>।</div>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">দ্রুত সমাধান</span> f(n)-কে n<sup>log<sub>b</sub>a</sup>-এর সাথে তুলনা করুন। পাতা ভারী → Θ(n<sup>log<sub>b</sub>a</sup>); সমান → Θ(n<sup>log<sub>b</sub>a</sup> · log n); মূল ভারী → Θ(f(n))। নিয়মিততা শর্তসহ পূর্ণ মাস্টার থিওরেম: রিকার্শন ও সর্টিং লেসন।</div>
+      <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) কুইক সর্টের <b>জোড়া</b> ধাপ ফাঁকা, তবু এটি D&amp;C — কাজ হয় <b>পার্টিশনে</b>। মার্জ সর্ট উল্টো: ভাগ সহজ, জোড়াতেই আসল কাজ। (ii) বাইনারি সার্চ <b>একটি</b> অর্ধেকই রাখে (a = 1), তাই একে কখনো "ডিক্রিজ অ্যান্ড কনকার" বলে।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ভাগ-জয়-জোড়া (D-C-C)।</b>" স্ট্র্যাসেন: "<b>আট নয়, সাত</b>" → log₂7 ≈ 2.81। কারাৎসুবা: "<b>চার নয়, তিন</b>" → log₂3 ≈ 1.585।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">কখন D&amp;C খাটে</span> উপসমস্যা একই ধরনের, স্বাধীন ও প্রায় সমান আকারের হলে। একই উপসমস্যা বারবার ফিরে এলে (সাধারণ রিকার্সিভ ফিবোনাচ্চি) <b>DP</b>-তে যান।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ বাইনারি সার্চ</span> A = [3, 9, 14, 21, 27, 35, 42], কী 27। mid = A[3] = 21 &lt; 27 → ডান অর্ধেক [27, 35, 42]; mid = 35 &gt; 27 → বাম অর্ধেক [27]; পাওয়া গেল। <b>৩টি তুলনা</b> = ⌊log₂7⌋ + 1, n = 7-এর খারাপতম ক্ষেত্র। দরকার <b>সাজানো</b> অ্যারে ও র‍্যান্ডম অ্যাক্সেস।</div>
+    <div class="code" style="font-size:10.5pt;line-height:5.4mm;margin-top:0">MergeSort(A, l, r):
+  if l &lt; r:
+    m = (l + r) / 2
+    MergeSort(A, l, m)      // conquer
+    MergeSort(A, m + 1, r)  // conquer
+    Merge(A, l, m, r)       // combine, O(n)</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: greedy ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>গ্রিডি পদ্ধতি</span></div>
+  <h2><span class="no">২</span>গ্রিডি পদ্ধতি: এখনই সেরাটা নাও, আর ফিরো না</h2><span class="tag">ভগ্নাংশ ন্যাপস্যাক ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">গ্রিডি অ্যালগরিদম (Greedy Algorithm)</span> ধাপে ধাপে সমাধান গড়ে; প্রতি ধাপে <b>এই মুহূর্তে</b> যেটি সেরা মনে হয় (লোকাল অপটিমাম) সেটি নেয় এবং কখনো ফিরে দেখে না। গ্লোবাল অপটিমাম তখনই মেলে যখন সমস্যায় দুটি ধর্মই থাকে: <span class="hl">গ্রিডি-চয়েস ধর্ম (greedy-choice property)</span> (কোনো একটি অপটিমাল সমাধান গ্রিডি পছন্দ দিয়েই শুরু হয়) এবং <span class="hl">অপটিমাল সাবস্ট্রাকচার (optimal substructure)</span> (ওই পছন্দের পর বাকিটা ছোট সমস্যার অপটিমাল সমাধান)। নইলে উত্তর দ্রুত আসে, কিন্তু ভুলও হতে পারে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,290px);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ভগ্নাংশ ন্যাপস্যাক (Fractional Knapsack), W = 50</span> আইটেম (মান, ওজন): I₁ (60, 10), I₂ (100, 20), I₃ (120, 30)। অনুপাত v/w = <b>6, 5, 4</b>। অনুপাত অনুযায়ী সাজিয়ে ভরুন: পুরো I₁ (w 10, v 60), পুরো I₂ (w 30, v 160), তারপর I₃-এর 20/30 অংশ → 120 × 2/3 = 80। <span class="circ">মোট = 240</span>, অপটিমাল। খরচ: সাজাতে O(n log n)।</div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 170" width="270">
+      <g class="w">
+        <rect x="20" y="10" width="70" height="140" rx="4" class="ink-k" fill="none"/>
+        <rect x="24" y="122" width="62" height="24" class="ink fill-y"/>
+        <rect x="24" y="74" width="62" height="46" class="ink fill-b"/>
+        <rect x="24" y="16" width="62" height="56" class="ink-r fill-r"/>
+        <rect x="170" y="40" width="70" height="110" rx="4" class="ink-k" fill="none"/>
+        <rect x="174" y="98" width="62" height="48" class="ink fill-b"/>
+        <rect x="174" y="44" width="62" height="52" class="ink-r fill-r"/>
+      </g>
+      <text x="55" y="139" text-anchor="middle" class="k" style="font-size:11px">I₁ 60</text>
+      <text x="55" y="101" text-anchor="middle" class="k" style="font-size:11px">I₂ 100</text>
+      <text x="55" y="48" text-anchor="middle" class="r" style="font-size:11px">⅔ I₃ 80</text>
+      <text x="55" y="166" text-anchor="middle" class="bn g w6" style="font-size:12px">ভগ্নাংশ 240</text>
+      <text x="205" y="126" text-anchor="middle" class="k" style="font-size:11px">I₂ 100</text>
+      <text x="205" y="74" text-anchor="middle" class="r" style="font-size:11px">I₃ 120</text>
+      <text x="205" y="166" text-anchor="middle" class="bn g w6" style="font-size:12px">0/1 সেরা 220</text>
+      <text x="205" y="28" text-anchor="middle" class="bn r s" style="font-size:11px">গ্রিডি 0/1 → 160 ✗</text>
+    </svg><figcaption>একই আইটেম, দুই সমস্যা, দুই উত্তর</figcaption></figure>
+  </div>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ: এখানে গ্রিডি ব্যর্থ</span> (i) <b>0/1 ন্যাপস্যাক</b> (আইটেম ভাঙা যায় না): অনুপাত ধরে গ্রিডি নেয় I₁ + I₂ = 160, অথচ অপটিমাম I₂ + I₃ = <span class="circ">220</span>। এখানে DP লাগবে। (ii) <b>কয়েন চেঞ্জ</b>, কয়েন {1, 3, 4}, পরিমাণ 6: গ্রিডি দেয় 4 + 1 + 1 (৩টি কয়েন), অপটিমাম 3 + 3 (২টি কয়েন)। গ্রিডি শুধু 1, 2, 5, 10-এর মতো "ক্যানোনিকাল" ব্যবস্থায় অপটিমাল।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">গ্রিডি অ্যালগরিদম</th><th class="l">গ্রিডি নিয়ম</th><th class="l">সময়</th></tr>
+    <tr><td class="l">ভগ্নাংশ ন্যাপস্যাক</td><td class="l">সর্বোচ্চ মান/ওজন আগে</td><td class="l">O(n log n)</td></tr>
+    <tr><td class="l">অ্যাক্টিভিটি সিলেকশন</td><td class="l">যেটি আগে <b>শেষ</b> হয় সেটি আগে, সংঘাত বাদ</td><td class="l">O(n log n)</td></tr>
+    <tr><td class="l">হাফম্যান কোডিং</td><td class="l">সবচেয়ে কম ফ্রিকোয়েন্সির দুটি নোড জোড়া (min-heap)</td><td class="l">O(n log n)</td></tr>
+    <tr><td class="l">ডেডলাইনসহ জব সিকোয়েন্সিং</td><td class="l">বেশি লাভ আগে, ডেডলাইনের মধ্যে শেষ খালি স্লট</td><td class="l">O(n²)</td></tr>
+    <tr><td class="l">প্রিম (Prim) / ক্রুসকাল (Kruskal)</td><td class="l">সবচেয়ে সস্তা নিরাপদ এজ</td><td class="l">পৃ. ৮</td></tr>
+    <tr><td class="l">ডায়াক্সট্রা (Dijkstra)</td><td class="l">সবচেয়ে কাছের অমীমাংসিত ভার্টেক্স স্থির</td><td class="l">পৃ. ৯</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ অ্যাক্টিভিটি সিলেকশন</span> (শুরু, শেষ): A(1,4) B(3,5) C(0,6) D(5,7) E(3,9) F(5,9) G(6,10) H(8,11) I(8,12) J(2,14) K(12,16)। শেষ-সময়ে সাজিয়ে: A নিন (শেষ 4) → শুরু ≥ 4 এমন প্রথমটি D (শেষ 7) → H (শেষ 11) → K। <b>৪টি কাজ</b> {A, D, H, K}। <i>শুরুর</i> সময় বা <i>সবচেয়ে ছোট</i> সময়কাল ধরে সাজালে সবসময় কাজ করে না।</div>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l"></th><th class="l">গ্রিডি</th><th class="l">DP</th></tr>
+        <tr><td class="l">পছন্দ</td><td class="l">একটি, আর ফেরে না</td><td class="l">সব, সেরাটা রাখে</td></tr>
+        <tr><td class="l">লাগে</td><td class="l">গ্রিডি-চয়েস + অপ. সাবস্ট্র.</td><td class="l">ওভারল্যাপ + অপ. সাবস্ট্র.</td></tr>
+        <tr><td class="l">গতি</td><td class="l">দ্রুততর</td><td class="l">ধীর, টেবিল লাগে</td></tr>
+        <tr><td class="l">ন্যাপস্যাক</td><td class="l">ভগ্নাংশ ✓</td><td class="l">0/1 ✓</td></tr>
+      </table>
+      <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>গ্রিডি খপ করে ধরে, DP ভেবে দেখে।</b>" ভাগ করা যায় এমন জিনিস (সোনার গুঁড়া) → গ্রিডি; ভাগ করা যায় না (সোনার বার) → DP।</div>
+    </div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: DP I ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>ডায়নামিক প্রোগ্রামিং ১</span></div>
+  <h2><span class="no">৩</span>ডায়নামিক প্রোগ্রামিং: প্রতিটি উপসমস্যা একবারই</h2><span class="tag">দুটি ধর্ম ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ডায়নামিক প্রোগ্রামিং (Dynamic Programming, DP)</span> সমস্যাকে এমন উপসমস্যায় ভাঙে যেগুলো <b>ওভারল্যাপ</b> করে; প্রতিটি একবারই সমাধান করে উত্তর টেবিলে রাখে। দুটি ধর্ম লাগে: <span class="hl">ওভারল্যাপিং উপসমস্যা (overlapping sub-problems)</span> (একই উপসমস্যা বারবার আসে) এবং <span class="hl">অপটিমাল সাবস্ট্রাকচার</span> (অপটিমাল সমাধান অপটিমাল উপ-সমাধান দিয়ে গঠিত)। ধাপ: উপসমস্যা ঠিক করা → রিকারেন্স লেখা → বেস কেস → নিরাপদ ক্রমে টেবিল ভরা → পেছনে ফিরে উত্তর বের করা।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,290px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 290 160" width="280">
+      <g class="w">
+        <ellipse cx="145" cy="18" rx="24" ry="13" class="ink fill-y"/>
+        <ellipse cx="75" cy="62" rx="24" ry="13" class="ink fill-y"/>
+        <ellipse cx="215" cy="62" rx="24" ry="13" class="ink-r fill-r"/>
+        <ellipse cx="38" cy="106" rx="22" ry="13" class="ink-r fill-r"/>
+        <ellipse cx="112" cy="106" rx="22" ry="13" class="ink-g fill-g"/>
+        <ellipse cx="190" cy="106" rx="22" ry="13" class="ink-g fill-g"/>
+        <ellipse cx="250" cy="106" rx="22" ry="13" class="ink fill-b"/>
+        <path class="ink" d="M130,28 L90,52 M160,28 L200,52 M64,74 L46,94 M86,74 L104,94 M205,74 L194,94 M225,74 L244,94"/>
+      </g>
+      <text x="145" y="23" text-anchor="middle" class="k" style="font-size:12px">F(5)</text>
+      <text x="75" y="67" text-anchor="middle" class="k" style="font-size:12px">F(4)</text>
+      <text x="215" y="67" text-anchor="middle" class="r w6" style="font-size:12px">F(3)</text>
+      <text x="38" y="111" text-anchor="middle" class="r w6" style="font-size:12px">F(3)</text>
+      <text x="112" y="111" text-anchor="middle" class="g w6" style="font-size:12px">F(2)</text>
+      <text x="190" y="111" text-anchor="middle" class="g w6" style="font-size:12px">F(2)</text>
+      <text x="250" y="111" text-anchor="middle" class="k" style="font-size:12px">F(1)</text>
+      <text x="145" y="140" text-anchor="middle" class="bn r s" style="font-size:12px">F(3) দুবার, F(2) তিনবার …</text>
+      <text x="145" y="157" text-anchor="middle" class="bn r s" style="font-size:12px">সাধারণ কল বাড়ে φⁿ ≈ 1.618ⁿ হারে</text>
+    </svg><figcaption>একই রং = একই উপসমস্যা আবার সমাধান</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l"></th><th class="l">মেমোইজেশন</th><th class="l">ট্যাবুলেশন</th></tr>
+        <tr><td class="l">দিক</td><td class="l"><b>টপ-ডাউন</b>: রিকার্শন + ক্যাশ</td><td class="l"><b>বটম-আপ</b>: লুপ</td></tr>
+        <tr><td class="l">সমাধান করে</td><td class="l">শুধু দরকারি উপসমস্যা</td><td class="l">টেবিলের সব ঘর</td></tr>
+        <tr><td class="l">বাড়তি খরচ</td><td class="l">কল স্ট্যাক</td><td class="l">নেই; মেমরি কমানো যায়</td></tr>
+      </table>
+      <div class="ex tiny" style="margin-top:1mm"><span class="lbl">ফিবোনাচ্চি টেবিল</span> F[i] = F[i−1] + F[i−2], F[0] = 0, F[1] = 1।
+        <table class="hand tiny" style="margin:1mm 0 0"><tr><th>i</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><th>F</th><td>0</td><td>1</td><td>1</td><td>2</td><td>3</td><td>5</td><td>8</td></tr></table>
+        সাধারণ রিকার্শন: এক্সপোনেনশিয়াল; DP: <span class="circ">O(n) সময়</span>, দুটি ভেরিয়েবলে O(1) মেমরি।</div>
+    </div>
+  </div>
+  <h3>লংগেস্ট কমন সাবসিকোয়েন্স (LCS)</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">রিকারেন্স</span> c[i][j] = 0 যদি i = 0 বা j = 0; <b>c[i−1][j−1] + 1</b> যদি xᵢ = yⱼ; নইলে <b>max(c[i−1][j], c[i][j−1])</b>। সময় ও মেমরি <span class="circ">O(mn)</span>। সাবসিকোয়েন্সে ক্রম ঠিক থাকে কিন্তু পাশাপাশি হতে হয় না (সাবস্ট্রিংকে হতে হয়)।</div>
+      <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>মিললে → কোনাকুনি + 1; না মিললে → উপর ও বামের max।</b>" নিচের-ডান ঘর থেকে পেছনে ফিরুন: মিলের ঘরে কোনাকুনি চালগুলোই LCS।</div>
+    </div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ X = ABCB, Y = BDCAB</span>
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th></th><th>∅</th><th>B</th><th>D</th><th>C</th><th>A</th><th>B</th></tr>
+        <tr><th>A</th><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><th>B</th><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><th>C</th><td>0</td><td>1</td><td>1</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><th>B</th><td>0</td><td>1</td><td>1</td><td>2</td><td>2</td><td class="red"><b>3</b></td></tr>
+      </table>
+      LCS-এর দৈর্ঘ্য <b>৩</b> = "BCB" (দুটিতেই B…C…B)।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) সব সমস্যায় DP মানে "টেবিলসহ রিকার্শন" নয়: <b>ওভারল্যাপিং</b> উপসমস্যা না থাকলে (মার্জ সর্ট) টেবিলে কিছুই বাঁচে না — সেটি সাধারণ D&amp;C। (ii) m ও n দৈর্ঘ্যের LCS-এর খরচ O(mn), O(m + n) নয়। (iii) মেমোইজেশন ও ট্যাবুলেশনের অ্যাসিম্পটোটিক সময় <b>একই</b>; পার্থক্য শুধু ক্রম ও বাড়তি খরচে।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: DP II ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>ডায়নামিক প্রোগ্রামিং ২</span></div>
+  <h2><span class="no">৪</span>DP-র ক্লাসিক: ন্যাপস্যাক ও ম্যাট্রিক্স চেইন</h2><span class="tag">হাতে-কলমে টেবিল ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">0/1 ন্যাপস্যাক রিকারেন্স</span> K[i][w] = আইটেম 1..i দিয়ে ধারণক্ষমতা w-তে সর্বোচ্চ মান।<br>K[i][w] = K[i−1][w] যদি wᵢ &gt; w; নইলে <b>max(K[i−1][w], vᵢ + K[i−1][w − wᵢ])</b>।<br>সময় <span class="circ">O(nW)</span> — <span class="hl">সিউডো-পলিনোমিয়াল (pseudo-polynomial)</span> (W-এর <i>মানে</i> পলিনোমিয়াল, এর বিট-দৈর্ঘ্যে এক্সপোনেনশিয়াল)।</div>
+      <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ: ১-D সংস্করণ</span> একটি অ্যারে দিয়ে K[w] = max(K[w], vᵢ + K[w − wᵢ]) তখনই সঠিক যখন w <b>W থেকে wᵢ পর্যন্ত নিচের দিকে</b> চলে। w উপরের দিকে চালালে একই পাসে আইটেম i আবার ব্যবহৃত হয় — তখন সমাধান হয় <b>আনবাউন্ডেড</b> ন্যাপস্যাকের (অসীম কপি)।</div>
+    </div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ W = 5</span> (w, v): 1 (2, 3) · 2 (3, 4) · 3 (4, 5) · 4 (5, 6)
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th>i \ w</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+        <tr><th>0</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><th>1</th><td>0</td><td>0</td><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+        <tr><th>2</th><td>0</td><td>0</td><td>3</td><td>4</td><td>4</td><td>7</td></tr>
+        <tr><th>3</th><td>0</td><td>0</td><td>3</td><td>4</td><td>5</td><td>7</td></tr>
+        <tr><th>4</th><td>0</td><td>0</td><td>3</td><td>4</td><td>5</td><td class="red"><b>7</b></td></tr>
+      </table>
+      K[2][5] = max(3, 4 + K[1][2]) = 7। উত্তর <b>7</b> = আইটেম ১ + ২ (ওজন 5)।</div>
+  </div>
+  <h3>ম্যাট্রিক্স-চেইন গুণন (MCM)</h3>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সমস্যা</span> ম্যাট্রিক্স Aᵢ-এর মাপ p<sub>i−1</sub> × pᵢ। A₁A₂…Aₙ-এর এমন বন্ধনী-বিন্যাস বাছতে হবে যাতে স্কেলার গুণ সবচেয়ে কম হয় (p×q গুণ q×r-এর খরচ <b>pqr</b>)। ক্রম বদলালে খরচ বদলায়, ফল নয়। রিকারেন্স: <span class="hl">m[i][j] = min (i ≤ k &lt; j) m[i][k] + m[k+1][j] + p<sub>i−1</sub>p<sub>k</sub>p<sub>j</sub></span>, m[i][i] = 0। সময় <span class="circ">O(n³)</span>, মেমরি O(n²)। বন্ধনী-বিন্যাসের সংখ্যা কাতালান সংখ্যা C<sub>n−1</sub>, তাই ব্রুট ফোর্স এক্সপোনেনশিয়াল।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ৩টি ম্যাট্রিক্স</span> A₁ 10×30, A₂ 30×5, A₃ 5×60।<br>(A₁A₂)A₃ = 10·30·5 + 10·5·60 = 1500 + 3000 = <b>4500</b><br>A₁(A₂A₃) = 30·5·60 + 10·30·60 = 9000 + 18000 = 27000<br>একই গুণফল, ভুল ক্রমে <b>৬ গুণ কাজ</b>।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ p = (5, 4, 6, 2, 7)</span>
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th>m</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+        <tr><th>1</th><td>0</td><td>120</td><td>88</td><td class="red"><b>158</b></td></tr>
+        <tr><th>2</th><td></td><td>0</td><td>48</td><td>104</td></tr>
+        <tr><th>3</th><td></td><td></td><td>0</td><td>84</td></tr>
+      </table>
+      সেরা: <b>((A₁(A₂A₃))A₄)</b> = 48 + 40 + 70 = 158।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">DP সমস্যা</th><th class="l">উপসমস্যা</th><th class="l">সময়</th></tr>
+    <tr><td class="l">ফ্লয়েড-ওয়ারশাল (Floyd-Warshall)</td><td class="l">d<sub>k</sub>[i][j]: ভেতরে শুধু 1..k ভার্টেক্স ব্যবহার করা পাথ</td><td class="l">O(V³)</td></tr>
+    <tr><td class="l">বেলম্যান-ফোর্ড (Bellman-Ford)</td><td class="l">≤ k টি এজ ব্যবহার করে শর্টেস্ট পাথ</td><td class="l">O(VE)</td></tr>
+    <tr><td class="l">এডিট ডিস্ট্যান্স</td><td class="l">দুই স্ট্রিংয়ের প্রিফিক্স</td><td class="l">O(mn)</td></tr>
+    <tr><td class="l">লংগেস্ট ইনক্রিজিং সাবসিকোয়েন্স</td><td class="l">i-তে শেষ হওয়া LIS</td><td class="l">O(n²) / O(n log n)</td></tr>
+    <tr><td class="l">TSP (হেল্ড-কার্প)</td><td class="l">(দেখা শহরের সেট, শেষ শহর)</td><td class="l">O(n²·2ⁿ)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ফ্লয়েড প্রতিটি k-এর ভেতর দিয়ে ভাসে</b>" — বাইরের লুপটি মধ্যবর্তী ভার্টেক্স k, তাই ফ্লয়েড-ওয়ারশাল DP, গ্রিডি নয়।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">আইটি সংযোগ</span> <b>diff</b>, Git ও DNA অ্যালাইনমেন্ট চলে LCS / এডিট ডিস্ট্যান্সে; SQL অপটিমাইজার জয়েনের ক্রম বাছে যেভাবে MCM বন্ধনী বাছে।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: backtracking and B&B ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>ব্যাকট্র্যাকিং · ব্রাঞ্চ অ্যান্ড বাউন্ড</span></div>
+  <h2><span class="no">৫</span>ব্যাকট্র্যাকিং: স্টেট-স্পেসের DFS</h2><span class="tag">N-কুইন ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ব্যাকট্র্যাকিং (Backtracking)</span> একটি <span class="hl">স্টেট-স্পেস ট্রি (state-space tree)</span> ধরে একটি করে অংশ যোগ করে সমাধান গড়ে, ট্রিটি ঘোরে <b>ডেপথ-ফার্স্ট</b> ক্রমে। প্রতিটি নোডে একটি <b>বাউন্ডিং (সম্ভাব্যতা) ফাংশন</b> আংশিক সমাধান যাচাই করে; সেখান থেকে বৈধ উত্তরে পৌঁছানো অসম্ভব হলে পুরো সাবট্রি ছেঁটে আগের পছন্দে ফিরে যায়। ব্যবহার: N-কুইন, সাম অব সাবসেটস, গ্রাফ m-কালারিং, হ্যামিলটোনিয়ান সাইকেল, সুডোকু। খারাপতম ক্ষেত্রে এখনো এক্সপোনেনশিয়াল।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 240 150" width="240">
+      <g class="w">
+        <rect x="10" y="6" width="120" height="120" class="ink-k" fill="none"/>
+        <path class="ink" d="M40,6 V126 M70,6 V126 M100,6 V126 M10,36 H130 M10,66 H130 M10,96 H130"/>
+        <circle cx="85" cy="21" r="10" class="ink-r fill-r"/>
+        <circle cx="25" cy="51" r="10" class="ink-r fill-r"/>
+        <circle cx="115" cy="81" r="10" class="ink-r fill-r"/>
+        <circle cx="55" cy="111" r="10" class="ink-r fill-r"/>
+      </g>
+      <text x="185" y="30" text-anchor="middle" class="bn k s" style="font-size:12px">সারি ১ → কলাম ৩</text>
+      <text x="185" y="56" text-anchor="middle" class="bn k s" style="font-size:12px">সারি ২ → কলাম ১</text>
+      <text x="185" y="86" text-anchor="middle" class="bn k s" style="font-size:12px">সারি ৩ → কলাম ৪</text>
+      <text x="185" y="116" text-anchor="middle" class="bn k s" style="font-size:12px">সারি ৪ → কলাম ২</text>
+      <text x="120" y="146" text-anchor="middle" class="bn r w6" style="font-size:12px">(3, 1, 4, 2) — আয়না (2, 4, 1, 3)</text>
+    </svg><figcaption>৪-কুইনের ঠিক ২টি সমাধান</figcaption></figure>
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ৪-কুইন</span> প্রতি সারিতে একটি কুইন। (r₁, c₁) ও (r₂, c₂) সংঘাত করে যদি c₁ = c₂ বা <b>|r₁ − r₂| = |c₁ − c₂|</b> (কর্ণ)। সারি ১ কলাম ১ → সারি ২ কলাম ৩ → সারি ৩-এ নিরাপদ কলাম নেই → সারি ২ কলাম ৪-এ ফেরা → সারি ৩ কলাম ২ → সারি ৪ অচল → সারি ১ কলাম ২-এ ফেরা → (2, 4, 1, 3) ✓। ৮-কুইন: <span class="circ">৯২টি সমাধান</span> (১২টি স্বতন্ত্র)।</div>
+      <div class="ex tiny"><span class="lbl">সাম অব সাবসেটস</span> S = {3, 5, 6, 7}, লক্ষ্য 15: প্রতিটি আইটেম নেওয়া/না-নেওয়া; যোগফল 15 ছাড়ালে বা আর পৌঁছাতে না পারলে ছাঁটাই। একমাত্র সমাধান <b>{3, 5, 7}</b>।</div>
+    </div>
+  </div>
+  <h2><span class="no">৬</span>ব্রাঞ্চ অ্যান্ড বাউন্ড: বাউন্ডে ট্রি ছাঁটা</h2><span class="tag">LB ≥ best ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ব্রাঞ্চ অ্যান্ড বাউন্ড (Branch and Bound, B&amp;B)</span>-ও স্টেট-স্পেস ট্রি খোঁজে, তবে <b>অপটিমাইজেশনের</b> জন্য। প্রতিটি জীবিত নোড পায় একটি <b>বাউন্ড</b> — ওই নোড দিয়ে সর্বোচ্চ কত ভালো উত্তর সম্ভব; বাউন্ড যদি <b>এ পর্যন্ত পাওয়া সেরা পূর্ণ সমাধানকে</b> হারাতে না পারে, নোডটি বাদ। ক্রম: <b>FIFO</b> (BFS-এর মতো), <b>LIFO</b> বা প্রায়োরিটি কিউ দিয়ে <span class="hl">LC (least-cost)</span> সার্চ। ব্যবহার: TSP (রিডিউসড কস্ট ম্যাট্রিক্স), 0/1 ন্যাপস্যাক (ভগ্নাংশ বাউন্ড), জব অ্যাসাইনমেন্ট।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,250px);align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ: ছাঁটাইয়ের নিয়ম</span> <b>মিনিমাইজেশনে</b> (TSP, অ্যাসাইনমেন্ট): LB(নোড) = যেকোনো পূর্ণতার ন্যূনতম খরচ; UB / best = এ পর্যন্ত পাওয়া সেরা পূর্ণ সমাধানের খরচ। ছাঁটাই করুন যখন <span class="circ">LB ≥ best</span> — LB সমান হলে বড়জোর সমান হয়, তাই সেটিও ছাঁটা হয় ("LB &gt; UB" নিয়মে সমান-ক্ষেত্র বাদ পড়ে)। <b>ম্যাক্সিমাইজেশনে</b> (0/1 ন্যাপস্যাক): নোডের আপার বাউন্ড ≤ সেরা মান হলে ছাঁটাই।</div>
+      <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>ব্যাকট্র্যাকিং জিজ্ঞেস করে 'এটা কি বৈধ?', B&amp;B জিজ্ঞেস করে 'এটা কি এখনো জিততে পারে?'</b>" ব্যাকট্র্যাকিং = DFS + সম্ভাব্যতা; B&amp;B = যেকোনো ক্রম (সাধারণত BFS / LC) + বাউন্ড।</div>
+    </div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 250 140" width="246">
+      <g class="w">
+        <ellipse cx="125" cy="18" rx="34" ry="14" class="ink fill-y"/>
+        <ellipse cx="45" cy="70" rx="36" ry="14" class="ink fill-b"/>
+        <ellipse cx="125" cy="70" rx="36" ry="14" class="ink-r fill-r"/>
+        <ellipse cx="205" cy="70" rx="36" ry="14" class="ink fill-b"/>
+        <ellipse cx="45" cy="120" rx="36" ry="14" class="ink-g fill-g"/>
+        <path class="ink" d="M108,30 L62,58 M125,32 V56 M142,30 L188,58 M45,84 V106"/>
+        <path class="ink-r" d="M106,62 L144,78 M144,62 L106,78"/>
+      </g>
+      <text x="125" y="23" text-anchor="middle" class="k" style="font-size:11px">LB 20</text>
+      <text x="45" y="75" text-anchor="middle" class="k" style="font-size:11px">LB 22</text>
+      <text x="125" y="96" text-anchor="middle" class="r w6" style="font-size:11px">LB 28 ≥ 26 ✗</text>
+      <text x="205" y="75" text-anchor="middle" class="k" style="font-size:11px">LB 24</text>
+      <text x="45" y="125" text-anchor="middle" class="bn g w6" style="font-size:11px">ট্যুর 26</text>
+      <text x="200" y="120" text-anchor="middle" class="g s" style="font-size:11px">best = 26</text>
+    </svg><figcaption>মিনিমাইজেশন: LB ≥ 26 হলেই বাদ</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">পদ্ধতি</th><th class="l">মূল ভাবনা</th><th class="l">উপসমস্যা</th><th class="l">পরিচিত উদাহরণ</th></tr>
+    <tr><td class="l">ডিভাইড অ্যান্ড কনকার</td><td class="l">ভাগ, রিকার্শন, জোড়া</td><td class="l">স্বাধীন</td><td class="l">মার্জ সর্ট, বাইনারি সার্চ, স্ট্র্যাসেন</td></tr>
+    <tr><td class="l">গ্রিডি</td><td class="l">লোকাল সেরা, ফেরে না</td><td class="l">একটিই বাছা</td><td class="l">ভগ্নাংশ ন্যাপস্যাক, হাফম্যান, MST</td></tr>
+    <tr><td class="l">ডায়নামিক প্রোগ্রামিং</td><td class="l">উপ-উত্তর জমা</td><td class="l"><b>ওভারল্যাপিং</b></td><td class="l">LCS, 0/1 ন্যাপস্যাক, MCM, ফ্লয়েড</td></tr>
+    <tr><td class="l">ব্যাকট্র্যাকিং</td><td class="l">DFS + সম্ভাব্যতা</td><td class="l">স্টেট-স্পেস ট্রি</td><td class="l">N-কুইন, সাবসেট সাম, কালারিং</td></tr>
+    <tr><td class="l">ব্রাঞ্চ অ্যান্ড বাউন্ড</td><td class="l">BFS / LC + বাউন্ড</td><td class="l">স্টেট-স্পেস ট্রি</td><td class="l">TSP, 0/1 ন্যাপস্যাক, অ্যাসাইনমেন্ট</td></tr>
+  </table>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: BFS DFS topo ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>BFS · DFS · টপোলজিক্যাল সর্ট</span></div>
+  <h2><span class="no">৭</span>গ্রাফ ট্রাভার্সাল: BFS ও DFS</h2><span class="tag">O(V+E) ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,250px);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">BFS</span> <span class="hl">ব্রেডথ-ফার্স্ট সার্চ (Breadth-First Search)</span> <b>কিউ</b> ব্যবহার করে: আগে উৎস, তারপর দূরত্ব ১-এর সব ভার্টেক্স, তারপর ২, … এটি <b>ওজনহীন গ্রাফে শর্টেস্ট পাথ</b> (সবচেয়ে কম এজ) দেয়, বাইপার্টাইট যাচাই করে, এডমন্ডস-কার্প ও ওয়েব ক্রলার চালায়।</div>
+      <div class="def tiny"><span class="lbl">DFS</span> <span class="hl">ডেপথ-ফার্স্ট সার্চ (Depth-First Search)</span> <b>স্ট্যাক</b> (বা রিকার্শন) ব্যবহার করে: যত গভীরে যাওয়া যায় যাও, তারপর ফেরো। এটি ডিসকভারি/ফিনিশ সময় রাখে; সাইকেল শনাক্তকরণ, টপোলজিক্যাল সর্ট, SCC, আর্টিকুলেশন পয়েন্ট ও গোলকধাঁধা সমাধানের ভিত্তি।</div>
+    </div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 250 150" width="246">
+      <g class="w">
+        <circle cx="30" cy="75" r="15" class="ink-r fill-r"/>
+        <circle cx="95" cy="30" r="15" class="ink fill-y"/>
+        <circle cx="95" cy="120" r="15" class="ink fill-y"/>
+        <circle cx="160" cy="75" r="15" class="ink fill-b"/>
+        <circle cx="160" cy="135" r="13" class="ink fill-b"/>
+        <circle cx="225" cy="75" r="15" class="ink-g fill-g"/>
+        <path class="ink" d="M43,66 L81,38" marker-end="url(#ahb)"/><path class="ink" d="M43,84 L81,112" marker-end="url(#ahb)"/><path class="ink" d="M108,38 L146,66" marker-end="url(#ahb)"/><path class="ink" d="M108,112 L146,82" marker-end="url(#ahb)"/><path class="ink" d="M110,124 L146,132" marker-end="url(#ahb)"/><path class="ink" d="M175,75 L208,75" marker-end="url(#ahb)"/><path class="ink" d="M172,128 L213,86" marker-end="url(#ahb)"/>
+      </g>
+      <text x="30" y="80" text-anchor="middle" class="k w6">A</text>
+      <text x="95" y="35" text-anchor="middle" class="k w6">B</text>
+      <text x="95" y="125" text-anchor="middle" class="k w6">C</text>
+      <text x="160" y="80" text-anchor="middle" class="k w6">D</text>
+      <text x="160" y="140" text-anchor="middle" class="k w6">E</text>
+      <text x="225" y="80" text-anchor="middle" class="k w6">F</text>
+    </svg><figcaption>A→B, A→C, B→D, C→D, C→E, D→F, E→F</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l"></th><th class="l">BFS</th><th class="l">DFS</th></tr>
+    <tr><td class="l">কাঠামো</td><td class="l">কিউ (FIFO)</td><td class="l">স্ট্যাক (LIFO) / রিকার্শন</td></tr>
+    <tr><td class="l">A থেকে ক্রম (বর্ণানুক্রমে)</td><td class="l"><b>A B C D E F</b></td><td class="l"><b>A B D F C E</b></td></tr>
+    <tr><td class="l">সময়</td><td class="l" colspan="2">অ্যাডজেসেন্সি লিস্টে <span class="circ">O(V + E)</span> · অ্যাডজেসেন্সি ম্যাট্রিক্সে O(V²)</td></tr>
+    <tr><td class="l">ট্রি-তে যা দেয়</td><td class="l">লেভেল-অর্ডার ট্রাভার্সাল</td><td class="l">প্রি-, ইন-, পোস্ট-অর্ডার ট্রাভার্সাল</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">DFS এজ-শ্রেণি (ডিরেক্টেড)</span> <b>ট্রি</b>: নতুন ভার্টেক্সে · <b>ব্যাক</b>: এখনো খোলা পূর্বপুরুষে · <b>ফরোয়ার্ড</b>: শেষ-হওয়া উত্তরসূরিতে · <b>ক্রস</b>: অন্য শেষ-হওয়া শাখার ভার্টেক্সে। আনডিরেক্টেড DFS-এ শুধু ট্রি ও ব্যাক এজ। <span class="hl">ব্যাক এজ আছে ⇔ গ্রাফে সাইকেল আছে।</span></div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "DFS = প্রি/ইন/পোস্ট-অর্ডার, BFS = লেভেল অর্ডার" কথাটি শুধু <b>ট্রি</b>-র জন্য সত্য; সাধারণ গ্রাফে "ইন-অর্ডার" বলে কিছু নেই। BFS দেয় সবচেয়ে কম-<b>এজের</b> পাথ, সবচেয়ে কম-<b>ওজনের</b> নয়। বিচ্ছিন্ন গ্রাফে প্রতিটি অদেখা ভার্টেক্স থেকে নতুন BFS/DFS লাগে।</div>
+  </div>
+  <h2><span class="no">৮</span>টপোলজিক্যাল সর্টিং</h2><span class="tag">শুধু DAG ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> ডিরেক্টেড গ্রাফের <span class="hl">টপোলজিক্যাল ক্রম (topological order)</span> ভার্টেক্সগুলোকে এমনভাবে সাজায় যে প্রতিটি এজ u → v-তে u আগে আসে। এমন ক্রম থাকে <span class="circ">যদি এবং কেবল যদি গ্রাফটি DAG</span> (ডিরেক্টেড অ্যাসাইক্লিক গ্রাফ) হয়, এবং সাধারণত তা <b>অনন্য নয়</b>। ব্যবহার: টাস্ক শিডিউলিং, কোর্সের পূর্বশর্ত, বিল্ড সিস্টেম (make), স্প্রেডশিট পুনর্গণনা, প্যাকেজ ইনস্টলার।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">কানের অ্যালগরিদম (BFS) ✍</span> ইন-ডিগ্রি A0 B1 C1 D2 E1 F2। ০-গুলো কিউতে: A। A বের → B, C হয় 0। B বের → D = 1। C বের → D = 0, E = 0। D বের → F = 1। E বের → F = 0। F বের। ক্রম <b>A B C D E F</b>। V-এর কম ভার্টেক্স বের হলে গ্রাফে সাইকেল আছে।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">DFS পদ্ধতি ✍</span> DFS চালান; কোনো ভার্টেক্স <b>শেষ</b> হলে তালিকায় রাখুন। শেষ হওয়ার ক্রম F, D, B, E, C, A → উল্টে: <b>A C E B D F</b>। কানের ক্রম থেকে আলাদা, কিন্তু সমান বৈধ। দুটিই <b>O(V + E)</b>।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>কান গোনে ইন-ডিগ্রি, DFS উল্টায় শেষের সময়।</b>" পূর্বশর্তের উদাহরণ: গণিত → ডেটা স্ট্রাকচার → অ্যালগরিদম, পদার্থবিজ্ঞান → রোবোটিক্স থেকে পাই গণিত, পদার্থবিজ্ঞান, ডেটা স্ট্রাকচার, অ্যালগরিদম, রোবোটিক্স।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: components and MST ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>কম্পোনেন্ট · SCC · MST</span></div>
+  <h2><span class="no">৯</span>কানেক্টেড ও স্ট্রংলি কানেক্টেড কম্পোনেন্ট</h2><span class="tag">কোসারাজু ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,230px);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">আনডিরেক্টেড</span> <span class="hl">কানেক্টেড কম্পোনেন্ট (connected component)</span> হলো সর্বোচ্চ সংযুক্ত সাবগ্রাফ। প্রতিটি অদেখা ভার্টেক্স থেকে BFS/DFS শুরু করুন: শুরুর সংখ্যা = কম্পোনেন্টের সংখ্যা, O(V + E)।</div>
+      <div class="def tiny"><span class="lbl">ডিরেক্টেড</span> <span class="hl">স্ট্রংলি কানেক্টেড কম্পোনেন্ট (SCC)</span> হলো সর্বোচ্চ সেট যেখানে প্রতিটি ভার্টেক্স অন্য প্রতিটিতে পৌঁছায়। <b>কোসারাজু (Kosaraju)</b>: (১) G-তে DFS, শেষ-ক্রম লিখুন; (২) ট্রান্সপোজ Gᵀ বানান (সব এজ উল্টো); (৩) শেষ-সময়ের অধঃক্রমে Gᵀ-তে DFS — প্রতিটি ট্রি একটি SCC। <b>টারজান (Tarjan)</b>: স্ট্যাক ও low-link মান নিয়ে একটিই DFS; low[v] = disc[v] হলে v একটি SCC-র মূল। দুটিই <span class="circ">O(V + E)</span>।</div>
+    </div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 240 130" width="230">
+      <g class="w">
+        <rect x="4" y="6" width="120" height="118" rx="20" class="ink-r" fill="none" style="stroke-dasharray:5 4"/>
+        <rect x="136" y="30" width="100" height="72" rx="18" class="ink-g" fill="none" style="stroke-dasharray:5 4"/>
+        <circle cx="34" cy="34" r="13" class="ink fill-y"/>
+        <circle cx="94" cy="34" r="13" class="ink fill-y"/>
+        <circle cx="64" cy="96" r="13" class="ink fill-y"/>
+        <circle cx="158" cy="66" r="13" class="ink fill-b"/>
+        <circle cx="214" cy="66" r="13" class="ink fill-b"/>
+        <path class="ink" d="M48,34 H78" marker-end="url(#ahb)"/><path class="ink" d="M90,47 L72,82" marker-end="url(#ahb)"/><path class="ink" d="M56,84 L40,48" marker-end="url(#ahb)"/><path class="ink" d="M106,40 L145,59" marker-end="url(#ahb)"/><path class="ink" d="M170,59 Q186,46 201,59" marker-end="url(#ahb)"/><path class="ink" d="M202,74 Q186,86 171,74" marker-end="url(#ahb)"/>
+      </g>
+      <text x="34" y="39" text-anchor="middle" class="k w6">1</text>
+      <text x="94" y="39" text-anchor="middle" class="k w6">2</text>
+      <text x="64" y="101" text-anchor="middle" class="k w6">3</text>
+      <text x="158" y="71" text-anchor="middle" class="k w6">4</text>
+      <text x="214" y="71" text-anchor="middle" class="k w6">5</text>
+    </svg><figcaption>SCC: {1,2,3} ও {4,5}</figcaption></figure>
+  </div>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> প্রতিটি SCC-কে একটি নোডে সংকুচিত করলে পাই <b>কনডেনসেশন</b>, যা সবসময় DAG। <span class="hl">আর্টিকুলেশন পয়েন্ট (cut vertex)</span> এমন ভার্টেক্স যা সরালে গ্রাফ বিচ্ছিন্ন হয়; এমন এজকে বলে <b>ব্রিজ</b>। DFS low মান দিয়ে: মূল নোড কাট ভার্টেক্স যদি এর ≥ ২টি DFS সন্তান থাকে; অন্য ভার্টেক্স u কাট ভার্টেক্স যদি কোনো সন্তান v-এর low[v] ≥ disc[u]; এজ (u, v) ব্রিজ যদি low[v] &gt; disc[u]।</div>
+  <h2><span class="no">১০</span>মিনিমাম স্প্যানিং ট্রি: প্রিম ও ক্রুসকাল</h2><span class="tag">গ্রিডি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> সংযুক্ত আনডিরেক্টেড গ্রাফের <span class="hl">স্প্যানিং ট্রি (spanning tree)</span>-তে সব V ভার্টেক্স ও ঠিক <span class="circ">V − 1টি এজ</span> থাকে, কোনো সাইকেল নেই। <b>মিনিমাম স্প্যানিং ট্রি</b> (MST)-র মোট ওজন সবচেয়ে কম। <b>কাট ধর্ম (cut property)</b>: যেকোনো কাট পার হওয়া সবচেয়ে হালকা এজ কোনো না কোনো MST-তে থাকে — দুটি গ্রিডি অ্যালগরিদম সঠিক হওয়ার কারণ এটিই। সব ওজন ভিন্ন হলে MST অনন্য।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 260 160" width="246">
+      <g class="w">
+        <path class="ink-k" d="M40,30 L130,30" style="stroke-dasharray:5 4"/>
+        <path class="ink-g" d="M40,30 L40,130" style="stroke-width:3.5"/>
+        <path class="ink-g" d="M130,30 L40,130" style="stroke-width:3.5"/>
+        <path class="ink-g" d="M130,30 L220,30" style="stroke-width:3.5"/>
+        <path class="ink-k" d="M40,130 L220,30" style="stroke-dasharray:5 4"/>
+        <path class="ink-g" d="M220,30 L220,130" style="stroke-width:3.5"/>
+        <path class="ink-k" d="M40,130 L220,130" style="stroke-dasharray:5 4"/>
+        <circle cx="40" cy="30" r="13" class="ink fill-y"/>
+        <circle cx="130" cy="30" r="13" class="ink fill-y"/>
+        <circle cx="220" cy="30" r="13" class="ink fill-y"/>
+        <circle cx="40" cy="130" r="13" class="ink fill-y"/>
+        <circle cx="220" cy="130" r="13" class="ink fill-y"/>
+      </g>
+      <text x="40" y="35" text-anchor="middle" class="k w6">A</text>
+      <text x="130" y="35" text-anchor="middle" class="k w6">B</text>
+      <text x="220" y="35" text-anchor="middle" class="k w6">D</text>
+      <text x="40" y="135" text-anchor="middle" class="k w6">C</text>
+      <text x="220" y="135" text-anchor="middle" class="k w6">E</text>
+      <text x="85" y="22" text-anchor="middle" class="k" style="font-size:12px">4</text>
+      <text x="28" y="84" text-anchor="middle" class="g w6" style="font-size:12px">1</text>
+      <text x="74" y="74" text-anchor="middle" class="g w6" style="font-size:12px">2</text>
+      <text x="175" y="22" text-anchor="middle" class="g w6" style="font-size:12px">5</text>
+      <text x="142" y="94" text-anchor="middle" class="k" style="font-size:12px">8</text>
+      <text x="234" y="84" text-anchor="middle" class="g w6" style="font-size:12px">3</text>
+      <text x="130" y="148" text-anchor="middle" class="k" style="font-size:12px">9</text>
+    </svg><figcaption>সবুজ = MST, ওজন 11</figcaption></figure>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একই গ্রাফ, দুই অ্যালগরিদম</span> এজ AB 4, AC 1, BC 2, BD 5, CD 8, DE 3, CE 9।<br><b>ক্রুসকাল</b> (সাজাও, সাইকেল না হলে যোগ): AC 1 ✓, BC 2 ✓, DE 3 ✓, AB 4 ✗ (সাইকেল A-B-C), BD 5 ✓ → ৪টি এজ, থামুন।<br><b>প্রিম</b> A থেকে (একটি ট্রি বাড়াও): AC 1 → CB 2 → BD 5 → DE 3।<br>দুটিতেই: <span class="circ">ওজন 1 + 2 + 3 + 5 = 11</span>, ৪টি = V − 1 এজ।</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l"></th><th class="l" style="width:52%">প্রিম</th><th class="l">ক্রুসকাল</th></tr>
+    <tr><td class="l">কীভাবে</td><td class="l">একটি ট্রি বাড়ায়; প্রান্তের ভার্টেক্সের প্রায়োরিটি কিউ</td><td class="l">সাজানো এজ + <b>ইউনিয়ন-ফাইন্ড</b> ফরেস্ট</td></tr>
+    <tr><td class="l">সময়</td><td class="l"><b>O(V²)</b> ম্যাট্রিক্স · O(E log V) বাইনারি হিপ · O(E + V log V) ফিবোনাচ্চি হিপ</td><td class="l">O(E log E) = <b>O(E log V)</b></td></tr>
+    <tr><td class="l">উপযুক্ত</td><td class="l"><b>ঘন (dense)</b> গ্রাফ (O(V²) সংস্করণ)</td><td class="l"><b>বিরল (sparse)</b> গ্রাফ</td></tr>
+  </table>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> ঘন গ্রাফে (E ≈ V²) হিপ-প্রিমের খরচ O(V² log V), তাই সাধারণ <span class="hl">O(V²) ম্যাট্রিক্স প্রিম</span>-ই দ্রুততর। E ≤ V² বলে log E = O(log V)। MST ≠ শর্টেস্ট-পাথ ট্রি।</div>
+  <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>প্রিম = পাশের এজ (ট্রি থেকে বাড়ে), ক্রুসকাল = কোথাও সবচেয়ে কম দামি এজ।</b>"</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: shortest paths ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>শর্টেস্ট পাথ</span></div>
+  <h2><span class="no">১১</span>শর্টেস্ট পাথ: স্থির না হওয়া পর্যন্ত রিল্যাক্স</h2><span class="tag">রিল্যাক্সেশন ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">রিল্যাক্সেশন</span> d[s] = 0, বাকি সব ∞ রেখে এজ <span class="hl">রিল্যাক্স (relax)</span> করুন: যদি d[u] + w(u, v) &lt; d[v] তবে d[v] ← d[u] + w(u, v), parent[v] ← u। অ্যালগরিদমগুলোর পার্থক্য শুধু <b>কোন</b> এজ এবং <b>কোন ক্রমে</b> রিল্যাক্স করে তাতে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,220px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 220 150" width="216">
+      <g class="w">
+        <circle cx="30" cy="75" r="15" class="ink-r fill-r"/>
+        <circle cx="110" cy="25" r="15" class="ink fill-y"/>
+        <circle cx="110" cy="125" r="15" class="ink fill-y"/>
+        <circle cx="190" cy="75" r="15" class="ink-g fill-g"/>
+        <path class="ink" d="M44,66 L94,34" marker-end="url(#ahb)"/><path class="ink" d="M44,84 L94,116" marker-end="url(#ahb)"/><path class="ink" d="M110,108 L110,42" marker-end="url(#ahb)"/><path class="ink" d="M124,34 L174,66" marker-end="url(#ahb)"/><path class="ink" d="M124,116 L174,84" marker-end="url(#ahb)"/>
+      </g>
+      <text x="30" y="80" text-anchor="middle" class="k w6">A</text>
+      <text x="110" y="30" text-anchor="middle" class="k w6">B</text>
+      <text x="110" y="130" text-anchor="middle" class="k w6">C</text>
+      <text x="190" y="80" text-anchor="middle" class="k w6">D</text>
+      <text x="60" y="40" text-anchor="middle" class="k" style="font-size:12px">4</text>
+      <text x="60" y="118" text-anchor="middle" class="k" style="font-size:12px">1</text>
+      <text x="122" y="80" text-anchor="middle" class="r w6" style="font-size:12px">2</text>
+      <text x="160" y="40" text-anchor="middle" class="r w6" style="font-size:12px">1</text>
+      <text x="160" y="118" text-anchor="middle" class="k" style="font-size:12px">5</text>
+    </svg><figcaption>ডিরেক্টেড, ওজন ছবির মতো</figcaption></figure>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ A থেকে ডায়াক্সট্রা</span>
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th class="l">স্থির</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td class="l">শুরু</td><td>0</td><td>∞</td><td>∞</td><td>∞</td></tr>
+        <tr><td class="l">A (0)</td><td>0</td><td>4</td><td>1</td><td>∞</td></tr>
+        <tr><td class="l">C (1)</td><td>0</td><td>3</td><td>1</td><td>6</td></tr>
+        <tr><td class="l">B (3)</td><td>0</td><td>3</td><td>1</td><td>4</td></tr>
+        <tr><td class="l">D (4)</td><td>0</td><td><b>3</b></td><td><b>1</b></td><td class="red"><b>4</b></td></tr>
+      </table>
+      চূড়ান্ত: <b>A 0, C 1, B 3, D 4</b>; D-এর পাথ = A → C → B → D।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">ডায়াক্সট্রা (গ্রিডি)</span> বারবার সবচেয়ে ছোট d-ওয়ালা অমীমাংসিত ভার্টেক্সকে <b>স্থির</b> করে তার বহির্গামী এজ রিল্যাক্স করে; স্থির দূরত্বই চূড়ান্ত। শর্ত: <span class="circ">অঋণাত্মক ওজন</span>। সময়: O(V²) অ্যারে · O((V+E) log V) বাইনারি হিপ · O(E + V log V) ফিবোনাচ্চি হিপ।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ: ঋণাত্মক এজ</span> A→B 2, A→C 3, C→B −2। ডায়াক্সট্রা B-কে 2-তে স্থির করে আর ফিরে দেখে না, অথচ A→C→B = <b>1</b>। একটি ঋণাত্মক এজই একে ভাঙতে যথেষ্ট; বেলম্যান-ফোর্ড ব্যবহার করুন।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">বেলম্যান-ফোর্ড (DP)</span> <b>সব</b> এজ V − 1 বার রিল্যাক্স (শর্টেস্ট পাথে ≤ V − 1টি এজ)। আরও এক পাস: কোনো এজ তখনো রিল্যাক্স হলে উৎস থেকে পৌঁছানো যায় এমন <span class="hl">ঋণাত্মক-ওজনের সাইকেল</span> আছে। ঋণাত্মক এজ চলে। সময় <span class="circ">O(VE)</span>।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">ফ্লয়েড-ওয়ারশাল (DP)</span> সব জোড়া: k = 1..V, প্রতিটি i, j-এর জন্য d[i][j] = min(d[i][j], d[i][k] + d[k][j])। সময় <span class="circ">O(V³)</span>, মেমরি O(V²)। ঋণাত্মক এজ চলে; ঋণাত্মক সাইকেল দেখা যায় d[i][i] &lt; 0 হিসেবে, তখন শর্টেস্ট পাথ অসংজ্ঞায়িত।</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">অ্যালগরিদম</th><th class="l">পরিসর</th><th class="l">পদ্ধতি</th><th class="l">সময়</th><th class="l">ঋণাত্মক এজ?</th></tr>
+    <tr><td class="l">BFS</td><td class="l">এক উৎস, ওজনহীন</td><td class="l">কিউ</td><td class="l">O(V + E)</td><td class="l">প্রযোজ্য নয়</td></tr>
+    <tr><td class="l">DAG শর্টেস্ট পাথ</td><td class="l">এক উৎস, DAG</td><td class="l">টপো ক্রম</td><td class="l">O(V + E)</td><td class="l">হ্যাঁ</td></tr>
+    <tr><td class="l">ডায়াক্সট্রা</td><td class="l">এক উৎস</td><td class="l">গ্রিডি</td><td class="l">O((V+E) log V)</td><td class="l"><b>না</b></td></tr>
+    <tr><td class="l">বেলম্যান-ফোর্ড</td><td class="l">এক উৎস</td><td class="l">DP</td><td class="l">O(VE)</td><td class="l">হ্যাঁ; ঋণাত্মক সাইকেল <b>ধরে</b></td></tr>
+    <tr><td class="l">ফ্লয়েড-ওয়ারশাল</td><td class="l">সব জোড়া</td><td class="l">DP</td><td class="l">O(V³)</td><td class="l">হ্যাঁ; ঋণাত্মক সাইকেল <b>নয়</b></td></tr>
+  </table>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> বেলম্যান-ফোর্ড শুধু <b>ঋণাত্মক-ওজনের</b> সাইকেল ধরে (সাধারণ সাইকেল শনাক্ত করা DFS-এর কাজ)। ফ্লয়েড-ওয়ারশাল ঋণাত্মক সাইকেল দেখাতে পারে, কিন্তু তার পাশ কাটিয়ে উত্তর দিতে পারে না। ওয়ারশাল (একই লুপ, AND/OR) দেয় <b>ট্রানজিটিভ ক্লোজার</b>।</div>
+  <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>ওজন নেই → BFS, ধনাত্মক → ডায়াক্সট্রা, ঋণাত্মক → বেলম্যান, সব জোড়া → ফ্লয়েড।</b>" জটিলতাও একই ক্রমে বাড়ে: V+E → E log V → VE → V³।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">সূত্র ও জটিলতা</span>
+    <div class="fgrid small">
+      <p>D&amp;C: T(n) = aT(n/b) + f(n)</p><p>মার্জ সর্ট 2T(n/2)+n → Θ(n log n)</p>
+      <p>বাইনারি সার্চ T(n/2)+1 → Θ(log n)</p><p>কুইক সর্ট খারাপতম Θ(n²)</p>
+      <p>স্ট্র্যাসেন 7T(n/2)+n² → n<sup>2.81</sup></p><p>কারাৎসুবা 3T(n/2)+n → n<sup>1.585</sup></p>
+      <p>LCS O(mn) · এডিট ডিস্ট্যান্স O(mn)</p><p>0/1 ন্যাপস্যাক O(nW) সিউডো-পলি</p>
+      <p>MCM O(n³), প্রতি গুণে খরচ pqr</p><p>ফিবোনাচ্চি DP O(n), সাধারণ এক্সপো.</p>
+      <p>BFS/DFS লিস্টে O(V+E), ম্যাট্রিক্সে O(V²)</p><p>টপোলজিক্যাল সর্ট O(V+E), শুধু DAG</p>
+      <p>SCC (কোসারাজু/টারজান) O(V+E)</p><p>MST: V − 1টি এজ</p>
+      <p>প্রিম O(V²) / O(E log V) / O(E+V log V)</p><p>ক্রুসকাল O(E log E) = O(E log V)</p>
+      <p>ডায়াক্সট্রা O((V+E) log V), w ≥ 0</p><p>বেলম্যান-ফোর্ড O(VE)</p>
+      <p>ফ্লয়েড-ওয়ারশাল O(V³), DP</p><p>DAG শর্টেস্ট পাথ O(V+E)</p>
+    </div>
+  </div>
+  <h3>MCQ-র সেরা ১৪টি এক-লাইনার</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>D&amp;C-র উপসমস্যা স্বাধীন; DP-র ওভারল্যাপিং</li>
+      <li>গ্রিডি: গ্রিডি-চয়েস + অপটিমাল সাবস্ট্রাকচার</li>
+      <li>ভগ্নাংশ ন্যাপস্যাক → v/w অনুপাতে গ্রিডি</li>
+      <li>0/1 ন্যাপস্যাক → DP (গ্রিডি ব্যর্থ)</li>
+      <li>হাফম্যান, প্রিম, ক্রুসকাল, ডায়াক্সট্রা = গ্রিডি</li>
+      <li>ফ্লয়েড, বেলম্যান-ফোর্ড, LCS, MCM = DP</li>
+      <li>ব্যাকট্র্যাকিং = স্টেট-স্পেস ট্রির DFS</li>
+    </ol>
+    <ol class="num" start="8" style="list-style-type:bengali">
+      <li>B&amp;B: FIFO / LIFO / LC সার্চ</li>
+      <li>BFS = কিউ, DFS = স্ট্যাক</li>
+      <li>ব্যাক এজ ⇔ সাইকেল (ডিরেক্টেড DFS)</li>
+      <li>টপোলজিক্যাল ক্রম আছে ⇔ DAG</li>
+      <li>কোসারাজু: DFS, ট্রান্সপোজ, DFS</li>
+      <li>৪-কুইন: ২টি সমাধান; ৮-কুইন: ৯২টি</li>
+      <li>বেলম্যান-ফোর্ড: V − 1 পাস + ১ যাচাই</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">প্রধান ফাঁদ</span> অনুপাত-গ্রিডি ভগ্নাংশ ন্যাপস্যাকে অপটিমাল, 0/1-এ নয় · কয়েন {1,3,4}-এ গ্রিডি ভাঙে · B&amp;B মিনিমাইজেশনে LB ≥ best হলে ছাঁটাই · ১-D ন্যাপস্যাকে w নিচের দিকে চলে · "প্রি/ইন/পোস্ট বনাম লেভেল অর্ডার" শুধু ট্রি-র কথা · একটি ঋণাত্মক এজেই ডায়াক্সট্রা ব্যর্থ · বেলম্যান-ফোর্ড শুধু ঋণাত্মক-ওজনের সাইকেল ধরে · ফ্লয়েড-ওয়ারশাল ঋণাত্মক সাইকেল সামলাতে পারে না · ঘন গ্রাফ → O(V²) প্রিম · MST ≠ শর্টেস্ট-পাথ ট্রি · টপোলজিক্যাল ক্রম অনন্য নয়</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসাথে</span> "ভাগ-জয়-জোড়া" · "আট নয়, সাত" (স্ট্র্যাসেন) · "গ্রিডি খপ করে ধরে, DP ভেবে দেখে" (সোনার গুঁড়া বনাম সোনার বার) · "মিললে → কোনাকুনি + 1" (LCS) · "ফ্লয়েড প্রতিটি k-এর ভেতর দিয়ে ভাসে" · "ব্যাকট্র্যাকিং: 'বৈধ কি?', B&amp;B: 'এখনো জিততে পারে কি?'" · "কান গোনে ইন-ডিগ্রি, DFS উল্টায় শেষের সময়" · "প্রিম = পাশের এজ, ক্রুসকাল = কোথাও সবচেয়ে সস্তা এজ" · "ওজন নেই BFS, ধনাত্মক ডায়াক্সট্রা, ঋণাত্মক বেলম্যান, সব জোড়া ফ্লয়েড"।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডিজাইন পদ্ধতি ও গ্রাফ অ্যালগরিদম</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>স্ট্র্যাসেনের ম্যাট্রিক্স গুণনের সময়:<ol class="opts"><li>O(n³)</li><li>O(n<sup>2.81</sup>)</li><li>O(n² log n)</li><li>O(n²)</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>ফ্লয়েড-ওয়ারশাল অ্যালগরিদম ব্যবহার করে:<ol class="opts"><li>গ্রিডি</li><li>ডিভাইড-কনকার</li><li>ডায়নামিক প্রো.</li><li>ব্যাকট্র্যাকিং</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>সর্বোচ্চ মান/ওজন অনুপাতে গ্রিডি সবসময় অপটিমাল ___ ন্যাপস্যাকে:<ol class="opts"><li>0/1</li><li>ভগ্নাংশ</li><li>বাউন্ডেড</li><li>বহু-শর্ত</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>বেলম্যান-ফোর্ডের সময়-জটিলতা:<ol class="opts"><li>O(V + E)</li><li>O(E log V)</li><li>O(V³)</li><li>O(VE)</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>উৎস থেকে পৌঁছানো যায় এমন ঋণাত্মক-ওজনের সাইকেল কোনটি ধরে?<ol class="opts"><li>ডায়াক্সট্রা</li><li>প্রিম</li><li>বেলম্যান-ফোর্ড</li><li>ক্রুসকাল</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>টপোলজিক্যাল ক্রম থাকে যদি এবং কেবল যদি গ্রাফটি:<ol class="opts"><li>DAG</li><li>কমপ্লিট</li><li>বাইপার্টাইট</li><li>সাইক্লিক</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>T(n) = 2T(n/2) + n-এর সমাধান:<ol class="opts"><li>Θ(n)</li><li>Θ(n log n)</li><li>Θ(n²)</li><li>Θ(log n)</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>এজ A→B 4, A→C 1, C→B 2, B→D 1, C→D 5। A থেকে D-এর শর্টেস্ট দূরত্ব:<ol class="opts"><li>৬</li><li>৫</li><li>৪</li><li>৩</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>১০টি ভার্টেক্সের সংযুক্ত গ্রাফের MST-তে এজ কয়টি?<ol class="opts"><li>১০</li><li>৪৫</li><li>১১</li><li>৯</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>মিনিমাইজেশন সমস্যায় ব্রাঞ্চ অ্যান্ড বাউন্ডে নোড ছাঁটা হয় যখন:<ol class="opts"><li>LB ≥ best</li><li>LB &lt; best</li><li>এটি পাতা</li><li>এটি মূল</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-খ · ৪-ঘ · ৫-গ · ৬-ক · ৭-খ · ৮-গ · ৯-ঘ · ১০-ক</div>
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> চারটি ম্যাট্রিক্স A₁…A₄-এর মাপ p = (5, 4, 6, 2, 7)। ম্যাট্রিক্স-চেইন গুণনের ডায়নামিক প্রোগ্রামিং রিকারেন্স লিখুন, খরচের টেবিল পূরণ করুন, অপটিমাল বন্ধনী-বিন্যাস দিন এবং সময়-জটিলতা বলুন। <i class="mk">১০</i></div>
+  <ol class="steps small" style="margin-top:1mm">
+    <li><b>রিকারেন্স</b> — m[i][i] = 0; m[i][j] = min<sub>i≤k&lt;j</sub> { m[i][k] + m[k+1][j] + p<sub>i−1</sub>p<sub>k</sub>p<sub>j</sub> }। <i class="mk">২</i></li>
+    <li><b>২-এর চেইন</b> — m[1][2] = 5·4·6 = 120; m[2][3] = 4·6·2 = 48; m[3][4] = 6·2·7 = 84। <i class="mk">২</i></li>
+    <li><b>৩-এর চেইন</b> — m[1][3] = min(0 + 48 + 5·4·2 = 88, 120 + 0 + 5·6·2 = 180) = 88 (k = 1); m[2][4] = min(0 + 84 + 4·6·7 = 252, 48 + 0 + 4·2·7 = 104) = 104 (k = 3)। <i class="mk">২</i></li>
+    <li><b>পূর্ণ চেইন</b> — m[1][4] = min(k=1: 0 + 104 + 140 = 244; k=2: 120 + 84 + 210 = 414; k=3: 88 + 0 + 70 = 158) = <b>158</b>, বিভাজন k = 3। <i class="mk">২</i></li>
+    <li><b>উত্তর</b> — ((A₁(A₂A₃))A₄), ১৫৮টি গুণ; সময় O(n³), মেমরি O(n²)। <i class="mk">২</i></li>
+  </ol>
+  <div class="sumbox tiny"><span class="lbl">পরীক্ষার আগে ✓</span> ☐ মার্জ সর্ট, বাইনারি সার্চ, স্ট্র্যাসেনের রিকারেন্স · ☐ ভগ্নাংশ বনাম 0/1 ন্যাপস্যাক একবার কষে দেখা · ☐ LCS ও ন্যাপস্যাক টেবিল হাতে · ☐ ৪-কুইনের ব্যাকট্র্যাক · ☐ দুই দিকেই B&amp;B ছাঁটাইয়ের নিয়ম · ☐ BFS/DFS ক্রম ও এজ-শ্রেণি · ☐ ছোট DAG-এ কানের অ্যালগরিদম · ☐ এক গ্রাফে ক্রুসকাল ও প্রিম · ☐ ডায়াক্সট্রার টেবিল · ☐ শর্টেস্ট-পাথ তুলনার টেবিল</div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

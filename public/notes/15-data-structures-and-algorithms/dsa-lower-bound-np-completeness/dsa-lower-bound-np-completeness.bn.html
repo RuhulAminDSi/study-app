@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>বীজগাণিতিক সরলীকরণ, লোয়ার বাউন্ড ও এনপি-সম্পূর্ণতা: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">বীজগাণিতিক সরলীকরণ, লোয়ার বাউন্ড ও এনপি-সম্পূর্ণতা</span></h1>
+  <p class="subtitle">হর্নার · দ্রুত ঘাত · কারাতসুবা · স্ট্রাসেন · FFT · ডিসিশন ট্রি · অ্যাডভার্সারি · P, NP, NP-হার্ড, NP-কমপ্লিট: এগারো পাতায় পরীক্ষার জন্য প্রস্তুত</p>
+  <p class="tiny center" style="margin:0 0 1mm"><b>এগারো পাতা:</b> একটি বীজগাণিতিক সমস্যাকে নতুন করে লিখলে কীভাবে তা সস্তা হয়, বুলিয়ান সূত্রের সংক্ষিপ্ত রিক্যাপ, <b>লোয়ার বাউন্ড</b> আসলে কী ও তা প্রমাণের তিনটি পথ, প্রমাণিত বাউন্ডের সারণি, তারপর জটিলতা শ্রেণি, রিডাকশন এবং কোনো সমস্যা NP-কমপ্লিট হলে কী করণীয়।</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink fill-b"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">কত দ্রুত সম্ভব?</text><text x="320" y="172" text-anchor="middle" class="bn r s">সীমা ও কাঠিন্য</text>
+      <text x="142" y="58" text-anchor="middle" class="bn r w6" style="font-size:15px">হর্নারের নিয়ম ★</text><text x="142" y="72" text-anchor="middle" class="bn r s" style="font-size:15px">n গুণ + n যোগ</text>
+      <text x="320" y="32" text-anchor="middle" class="bn s" style="font-size:15px">কারাতসুবা n^1.585</text><text x="320" y="47" text-anchor="middle" class="bn s" style="font-size:15px">স্ট্রাসেন n^2.81</text>
+      <text x="498" y="58" text-anchor="middle" class="bn s" style="font-size:15px">FFT · দ্রুত ঘাত</text><text x="498" y="72" text-anchor="middle" class="s" style="font-size:15px">n log n · log n</text>
+      <text x="96" y="148" text-anchor="middle" class="bn g w6" style="font-size:15px">বুলিয়ান সূত্র</text><text x="96" y="163" text-anchor="middle" class="bn g s" style="font-size:15px">রিক্যাপ (DLD)</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:15px">ডিসিশন ট্রি ★</text><text x="544" y="163" text-anchor="middle" class="r s" style="font-size:15px">h ≥ log₂ n!</text>
+      <text x="142" y="238" text-anchor="middle" class="bn r w6" style="font-size:15px">অ্যাডভার্সারি ★</text><text x="142" y="252" text-anchor="middle" class="r s" style="font-size:15px">max+min ⌈3n/2⌉−2</text>
+      <text x="320" y="262" text-anchor="middle" class="r w6" style="font-size:15px">NPC = NP ∩ NP-hard ★</text><text x="320" y="277" text-anchor="middle" class="r s" style="font-size:15px">P ⊆ NP</text>
+      <text x="498" y="238" text-anchor="middle" class="bn r w6" style="font-size:15px">রিডাকশন ★</text><text x="498" y="252" text-anchor="middle" class="r s" style="font-size:15px">known NPC ≤p X</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক নজরে: লাল = বেশি আসে, সবুজ = অন্য অধ্যায়ের রিক্যাপ</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>হাই-ইল্ড তালিকা</b><br>① হর্নার: n গুণ + n যোগ<br>② কারাতসুবা n^1.585 · স্ট্রাসেন n^2.81<br>③ দ্রুত ঘাত: O(log n) গুণ<br>④ Ω = লোয়ার বাউন্ড, "বেস্ট কেস" নয়<br>⑤ <span class="circ">তুলনাভিত্তিক সর্ট Ω(n log n)</span> ★<br>⑥ ম্যাক্স: n−1 · ম্যাক্স+মিন: ⌈3n/2⌉−2<br>⑦ দ্বিতীয় বৃহত্তম: n + ⌈log₂ n⌉ − 2<br>⑧ NP = বহুপদী সময়ে যাচাইযোগ্য<br>⑨ NPC = NP ∩ NP-হার্ড ★<br>⑩ কুক–লেভিন ১৯৭১: SAT প্রথম NPC<br>⑪ X কঠিন প্রমাণ: জানা NPC ≤p X ★<br>⑫ 2-SAT ∈ P, 3-SAT NP-কমপ্লিট</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">ডেটা স্ট্রাকচার ও অ্যালগরিদমের সিলেবাস-লাইন শেষ হয়: "<span class="hl">Algebraic simplification and transformations; Lower bound theory; NP-completeness, NP-hard and NP-complete problems.</span>" তিনটি অংশই এখানে আছে। অ্যালগরিদমের সিলেবাসে "বীজগাণিতিক সরলীকরণ" মানে <b>বীজগাণিতিক অ্যালগরিদম</b> — বহুপদী, ঘাত ও গুণফলকে এমনভাবে লেখা যাতে কম অপারেশন লাগে — তাই এটিই মূল ধারা; বুলিয়ান সরলীকরণের জন্য এক পাতার রিক্যাপ, কারণ কে-ম্যাপ ডিজিটাল লজিক অধ্যায়ের বিষয়। <b>অ্যাপ্রক্সিমেশন অ্যালগরিদম</b> এই অধ্যায়ের ফ্লো / অ্যাপ্রক্সিমেশন / প্যারালাল লেসনে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>ট্রান্সফর্ম-অ্যান্ড-কনকার, হর্নার … পৃ. ২</li><li>দ্রুত ঘাত, কারাতসুবা, স্ট্রাসেন, FFT … পৃ. ৩</li><li>বুলিয়ান রিক্যাপ · O, Ω, Θ … পৃ. ৪</li><li>লোয়ার বাউন্ড ও ডিসিশন ট্রি … পৃ. ৫</li><li>অ্যাডভার্সারি ও বাউন্ডের সারণি … পৃ. ৬</li></ul>
+    <ul class="tick"><li>P, NP, co-NP, NP-হার্ড, NPC … পৃ. ৭</li><li>রিডাকশন ও কুক–লেভিন … পৃ. ৮</li><li>সহজ/কঠিন জোড়া, মোকাবিলা … পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: transform and conquer, Horner ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>বীজগাণিতিক রূপান্তর</span></div>
+  <h2><span class="no">১</span>ট্রান্সফর্ম-অ্যান্ড-কনকার ও হর্নারের নিয়ম</h2><span class="tag">আগে রূপান্তর, পরে সমাধান ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>বীজগাণিতিক সরলীকরণ / রূপান্তর (Algebraic Simplification / Transformation)</b> মানে <span class="hl">একটি সমস্যা বা তার সূত্রকে এমন সমতুল্য রূপে লেখা যা হিসাব করতে সস্তা</span>: উত্তর একই, অপারেশন কম। এই কৌশলের নাম <b>ট্রান্সফর্ম-অ্যান্ড-কনকার (Transform-and-Conquer)</b>; এর তিনটি রূপ।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">রূপ</th><th class="l">ধারণা</th><th class="l">ক্লাসিক উদাহরণ</th></tr>
+    <tr><td class="l"><b>ইনস্ট্যান্স সরলীকরণ</b></td><td class="l"><b>একই</b> সমস্যার সহজতর ইনস্ট্যান্স</td><td class="l"><b>প্রিসর্টিং</b>: element uniqueness O(n²) → সর্ট + স্ক্যান O(n log n); গাউসীয় অপনয়ন</td></tr>
+    <tr><td class="l"><b>রিপ্রেজেন্টেশন পরিবর্তন</b></td><td class="l">একই ইনস্ট্যান্স, <b>নতুন রূপ</b></td><td class="l"><span class="hl">হর্নারের রূপ</span>; বাইনারি এক্সপোনেনশিয়েশন; পয়েন্ট-ভ্যালু রূপ; হিপ, AVL ট্রি</td></tr>
+    <tr><td class="l"><b>প্রবলেম রিডাকশন</b></td><td class="l">জানা অ্যালগরিদমসহ <b>ভিন্ন</b> সমস্যা</td><td class="l"><code>lcm(m,n) = m·n / gcd(m,n)</code>; <code>max f = −min(−f)</code>; k-ধাপের পথ = <code>A^k</code></td></tr>
+  </table>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">হর্নারের নিয়ম (Horner's Rule)</span> বারবার x বের করে আনো: <code>p(x) = aₙxⁿ + … + a₁x + a₀ = (…((aₙx + aₙ₋₁)x + aₙ₋₂)x + … )x + a₀</code>। মুখ্য সহগ থেকে একবার চললেই: n ঘাতের জন্য <span class="circ">n গুণ + n যোগ</span>, কোনো ঘাত আলাদা করে হিসাব করতে হয় না।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 150" width="540">
+    <g class="w">
+      <rect x="20" y="22" width="70" height="34" rx="8" class="ink-r fill-r"/>
+      <path class="ink-k" d="M110,92 H500"/>
+      <path class="ink-k" d="M110,10 V130"/>
+      <circle cx="450" cy="116" r="16" class="ink-r"/>
+      <path class="ink-p" d="M160,110 L234,80" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M260,110 L334,80" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M360,110 L434,80" marker-end="url(#ahp)"/>
+    </g>
+    <text x="55" y="44" text-anchor="middle" class="r w6" style="font-size:15px">x = 3</text>
+    <text x="150" y="36" text-anchor="middle" class="k w6" style="font-size:15px">2</text>
+    <text x="250" y="36" text-anchor="middle" class="k w6" style="font-size:15px">−6</text>
+    <text x="350" y="36" text-anchor="middle" class="k w6" style="font-size:15px">2</text>
+    <text x="450" y="36" text-anchor="middle" class="k w6" style="font-size:15px">−1</text>
+    <text x="250" y="76" text-anchor="middle" class="s" style="font-size:13px">6</text>
+    <text x="350" y="76" text-anchor="middle" class="s" style="font-size:13px">0</text>
+    <text x="450" y="76" text-anchor="middle" class="s" style="font-size:13px">6</text>
+    <text x="150" y="121" text-anchor="middle" class="g w6" style="font-size:15px">2</text>
+    <text x="250" y="121" text-anchor="middle" class="g w6" style="font-size:15px">0</text>
+    <text x="350" y="121" text-anchor="middle" class="g w6" style="font-size:15px">2</text>
+    <text x="450" y="121" text-anchor="middle" class="r w6" style="font-size:15px">5</text>
+    <text x="55" y="80" text-anchor="middle" class="bn p s" style="font-size:12px">× x, তারপর যোগ</text>
+    <text x="560" y="36" text-anchor="middle" class="bn s" style="font-size:12px">সহগ</text>
+    <text x="560" y="76" text-anchor="middle" class="bn s" style="font-size:12px">গুণফল</text>
+    <text x="560" y="114" text-anchor="middle" class="r w6" style="font-size:13px">p(3) = 5</text>
+    <text x="560" y="130" text-anchor="middle" class="g s" style="font-size:12px">q(x) = 2x² + 2</text>
+    <text x="300" y="146" text-anchor="middle" class="bn p s" style="font-size:12px">ঘাত 3 হলে 3টি গুণ + 3টি যোগ</text>
+  </svg><figcaption>হর্নার = সিনথেটিক ডিভিশন: p(x) = 2x³ − 6x² + 2x − 1, x = 3 বসিয়ে (যাচাই: 54 − 54 + 6 − 1 = 5)</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code tiny" style="margin-top:0">HORNER(a[0..n], x):
+  p = a[n]
+  for i = n − 1 downto 0:
+      p = p · x + a[i]     // 1 mult, 1 add
+  return p                 // Θ(n)</div>
+    <table class="hand tiny" style="width:100%;margin-top:0">
+      <tr><th class="l">পদ্ধতি (ঘাত n)</th><th>গুণ</th><th>যোগ</th></tr>
+      <tr><td class="l">প্রতিটি পদ aᵢxⁱ আলাদা করে</td><td>n(n+1)/2</td><td>n</td></tr>
+      <tr><td class="l">চলমান ঘাত xⁱ রেখে</td><td>2n − 1</td><td>n</td></tr>
+      <tr><td class="l"><b>হর্নার</b></td><td><span class="hl">n</span></td><td>n</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> ঘাত n হলে সহগ <b>n + 1</b>টি, কিন্তু হর্নারে গুণ <b>n</b>টি — n + 1 বা 2n নয়। <b>২.</b> হর্নার <b>অপটিমাল</b> প্রমাণিত: কোনো সাধারণ পদ্ধতি n-এর কম গুণে পারে না। <b>৩.</b> শেষ মানটি <b>p(x₀)</b> (ভাগশেষ উপপাদ্য); বাকিগুলো ভাগফলের সহগ।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ইভ্যালুয়েশন ↔ ইন্টারপোলেশন</span> n ঘাতের একটি বহুপদী নির্দিষ্ট হয় তার <b>n + 1টি সহগ</b> দিয়ে, অথবা <b>n + 1টি ভিন্ন বিন্দুতে</b> তার মান দিয়ে। n + 1 বিন্দুতে হর্নার দিয়ে <b>ইভ্যালুয়েশন</b>: O(n²)। <b>ইন্টারপোলেশন</b> (লাগ্রাঞ্জ / নিউটন): <b>O(n²)</b>। পয়েন্ট-ভ্যালু রূপে গুণ <b>O(n)</b> — এটাই FFT-র ধারণা।</div>
+  </div>
+  <div class="trick tiny" style="margin-top:1mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>হর্নার = বন্ধনীর ভেতরে বন্ধনী = n আর n।</b>" বাইনারি 1101 → <code>((1·2 + 1)·2 + 0)·2 + 1 = 13</code> — এটি x = 2 বসানো হর্নার।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: fast algebra ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>দ্রুত বীজগাণিতিক অ্যালগরিদম</span></div>
+  <h2><span class="no">২</span>দ্রুত ঘাত, কারাতসুবা, স্ট্রাসেন ও FFT</h2><span class="tag">একটি গুণ বাঁচাও ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">দ্রুত (বাইনারি) এক্সপোনেনশিয়েশন</span> <code>xⁿ = (x^(n/2))²</code> (n জোড়) বা <code>x·(x^((n−1)/2))²</code> (n বিজোড়): প্রতি বিটে একটি বর্গ, সর্বোচ্চ <span class="hl">2⌊log₂ n⌋টি গুণ</span>, n − 1টি নয় ⇒ <b>O(log n)</b>। x¹³ (13 = 1101₂): x → x² → x³ → x⁶ → x¹² → x¹³ = <b>৫</b>টি গুণ, ১২টি নয়।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">উদাহরণ: মডুলার ঘাত ✍</span> <b>3¹³ mod 7:</b> 3¹ = 3, 3² = 9 ≡ 2, 3⁴ ≡ 4, 3⁸ ≡ 16 ≡ 2। 13 = 8 + 4 + 1 ⇒ 3¹³ ≡ 2·4·3 = 24 ≡ <span class="hl">3</span> (mod 7)। প্রতি ধাপে mod নিলে সংখ্যা ছোট থাকে — <b>RSA</b> ও ডিফি–হেলম্যান এভাবেই বিশাল ঘাত হিসাব করে।</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">কারাতসুবা গুণন (১৯৬০)</span> দুটি n-অঙ্কের সংখ্যা ভাঙো: <code>x = a·10^m + b</code>, <code>y = c·10^m + d</code>। সাধারণ পদ্ধতিতে চারটি গুণফল ac, ad, bc, bd লাগে। বীজগাণিতিক কৌশল <span class="hl"><code>ad + bc = (a + b)(c + d) − ac − bd</code></span> দিয়ে <b>তিনটিই</b> যথেষ্ট। <code>T(n) = 3T(n/2) + O(n)</code> ⇒ <span class="circ">Θ(n^log₂3) ≈ Θ(n^1.585)</span>: রিকার্শন ট্রির k গভীরতায় 3ᵏটি কল, তাই n^log₂3টি লিফই প্রধান।</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সমাধানকৃত উদাহরণ ✍ 1234 × 5678</span> a = 12, b = 34, c = 56, d = 78 (m = 2)। ac = 672, bd = 2652, (a + b)(c + d) = 46 × 134 = 6164 ⇒ ad + bc = 6164 − 672 − 2652 = 2840। ফল = 672·10⁴ + 2840·10² + 2652 = <span class="hl">7,006,652</span> ✓ — তিনটি গুণফলেই।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">স্ট্রাসেন (১৯৬৯)</span> n × n ম্যাট্রিক্সকে চারটি n/2 ব্লকে ভাঙো। সাধারণ ব্লক-গুণে ৮টি গুণফল; স্ট্রাসেনের অভেদে <span class="circ">৭টি গুণফল</span> (সঙ্গে ১৮টি ব্লক-যোগ)। <code>T(n) = 7T(n/2) + Θ(n²)</code> ⇒ <b>Θ(n^log₂7) ≈ Θ(n^2.81)</b>, Θ(n³)-এর বদলে। কেবল বড় n-এ লাভ; সংখ্যাগতভাবে কম স্থিতিশীল।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">FFT দিয়ে বহুপদী গুণ</span> সহগ রূপে: <b>Θ(n²)</b>। বদলে উভয়কে 2nটি জটিল একক-মূলে <b>ইভ্যালুয়েট</b> করো (FFT), <b>বিন্দুভিত্তিক গুণ</b> (O(n)), তারপর <b>ইন্টারপোলেট</b> (ইনভার্স FFT) ⇒ <span class="hl">O(n log n)</span>। FFT: <code>T(n) = 2T(n/2) + O(n)</code> (কুলি–টুকি, ১৯৬৫)।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">সমস্যা</th><th>প্রচলিত</th><th class="l">পদ্ধতি</th><th>রিকারেন্স</th><th>ফল</th></tr>
+    <tr><td class="l">n ঘাতের বহুপদী মান</td><td>Θ(n²)</td><td class="l">হর্নার</td><td>একটি লুপ</td><td>Θ(n)</td></tr>
+    <tr><td class="l">ঘাত xⁿ</td><td>n − 1</td><td class="l">বর্গ করে</td><td>T(n/2) + O(1)</td><td>O(log n)</td></tr>
+    <tr><td class="l">n-অঙ্ক × n-অঙ্ক</td><td>Θ(n²)</td><td class="l">কারাতসুবা</td><td>3T(n/2) + O(n)</td><td><span class="hl">Θ(n^1.585)</span></td></tr>
+    <tr><td class="l">n × n ম্যাট্রিক্স</td><td>Θ(n³)</td><td class="l">স্ট্রাসেন</td><td>7T(n/2) + O(n²)</td><td>Θ(n^2.81)</td></tr>
+    <tr><td class="l">বহুপদী × বহুপদী</td><td>Θ(n²)</td><td class="l">FFT</td><td>2T(n/2) + O(n)</td><td>Θ(n log n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍</span> স্ট্রাসেনের ঘাতাঙ্ক <b>log₂ 7 ≈ 2.807</b>, 2.376 নয় (ওটি অব্যবহারিক কপারস্মিথ–উইনোগ্রাড ধারার)। অর্ধ-আকারের ৪টি ও ৮টি গুণফলে ঘাতাঙ্ক ২ ও ৩-ই থাকে — সাশ্রয় হলো বাদ দেওয়া <b>একটি</b> গুণফল। ম্যাট্রিক্স গুণের তুচ্ছ লোয়ার বাউন্ড <b>Ω(n²)</b>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>একটি গুণ বাঁচাও, ঘাতাঙ্ক নামাও।</b>" a-টি অর্ধ-আকারের উপসমস্যা ও সস্তা জোড়া লাগানো ⇒ <b>n^log₂ a</b> (মাস্টার থিওরেম): ৪ → ৩ দেয় log₂ 3 ≈ 1.585; ৮ → ৭ দেয় log₂ 7 ≈ 2.807।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: Boolean recap + asymptotic notation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>বুলিয়ান রিক্যাপ · O, Ω, Θ</span></div>
+  <h2><span class="no">৩</span>বুলিয়ান সরলীকরণ: সংক্ষিপ্ত রিক্যাপ</h2><span class="tag">পূর্ণ কে-ম্যাপ: DLD অধ্যায়</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">সূত্র</th><th class="l">OR রূপ</th><th class="l">AND রূপ (ডুয়াল)</th></tr>
+    <tr><td class="l">আইডেনটিটি</td><td class="l">A + 0 = A</td><td class="l">A · 1 = A</td></tr>
+    <tr><td class="l">নাল (ডমিন্যান্স)</td><td class="l">A + 1 = 1</td><td class="l">A · 0 = 0</td></tr>
+    <tr><td class="l">আইডেম্পোটেন্ট</td><td class="l">A + A = A</td><td class="l">A · A = A</td></tr>
+    <tr><td class="l">কমপ্লিমেন্ট</td><td class="l">A + A′ = 1</td><td class="l">A · A′ = 0</td></tr>
+    <tr><td class="l">ডিস্ট্রিবিউটিভ</td><td class="l">A(B + C) = AB + AC</td><td class="l"><span class="hl">A + BC = (A + B)(A + C)</span></td></tr>
+    <tr><td class="l">অ্যাবজর্পশন</td><td class="l">A + AB = A</td><td class="l">A(A + B) = A</td></tr>
+    <tr><td class="l">ডি মরগান</td><td class="l">(A + B)′ = A′B′</td><td class="l">(AB)′ = A′ + B′</td></tr>
+    <tr><td class="l">কনসেনসাস</td><td class="l">AB + A′C + BC = AB + A′C</td><td class="l">(A+B)(A′+C)(B+C) = (A+B)(A′+C)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">উদাহরণ ✍ দুটি ক্লাসিক</span> <b>F = AB + AB′</b> = A(B + B′) [ডিস্ট্রিবিউটিভ] = A·1 [কমপ্লিমেন্ট] = <span class="hl">A</span> [আইডেনটিটি]।<br><b>G = A + A′B</b> = (A + A′)(A + B) [OR-ডিস্ট্রিবিউটিভ] = 1·(A + B) = <b>A + B</b>।<br>কনসেনসাস প্রমাণ: BC = BC(A + A′) = ABC + A′BC, যা AB ও A′C-তে শোষিত।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">আইটি সংযোগ: কম্পাইলার</span> অপটিমাইজিং কম্পাইলার কোডে <b>বীজগাণিতিক সরলীকরণ</b> করে: <code>x*1 → x</code>, <code>x+0 → x</code>, কনস্ট্যান্ট ফোল্ডিং <code>2*3.14 → 6.28</code>, আর <b>স্ট্রেংথ রিডাকশন</b> <code>x*2 → x&lt;&lt;1</code>, <code>pow(x,2)</code>-এর বদলে <code>x*x</code>। মিনটার্ম, কে-ম্যাপ, কুইন–ম্যাকক্লাস্কি: ডিজিটাল লজিক অধ্যায়।</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>A + 1 = 1</b>, A নয়। <b>A + BC = (A + B)(A + C)</b> বুলিয়ান বীজগণিতে সত্য, সাধারণ বীজগণিতে নয়। <b>ডুয়ালিটি:</b> + ↔ · এবং 0 ↔ 1 বদলাও (চলক অপরিবর্তিত), সূত্র সত্যই থাকে।</div>
+  <h2><span class="no">৪</span>অ্যাসিম্পটোটিক বাউন্ড: O, Ω, Θ সঠিকভাবে</h2><span class="tag">Ω ≠ বেস্ট কেস ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>f = O(g)</b>: ∃ c &gt; 0, n₀ যাতে সব n ≥ n₀-এ <code>f(n) ≤ c·g(n)</code> (আপার বাউন্ড)।<br><b>f = Ω(g)</b>: ∃ c &gt; 0, n₀ যাতে সব n ≥ n₀-এ <code>f(n) ≥ c·g(n)</code> (<span class="hl">লোয়ার বাউন্ড</span>)।<br><b>f = Θ(g)</b>: দুটোই — <code>c₁g(n) ≤ f(n) ≤ c₂g(n)</code> (টাইট)। কঠোর রূপ: o ও ω।</div>
+    <figure class="doodle" style="margin:0"><svg viewBox="0 0 300 150" width="280">
+      <g class="w">
+        <path class="ink-k" d="M20,135 H290 M20,135 V8"/>
+        <path class="ink-r" d="M20,110 C90,95 180,50 280,14"/>
+        <path class="ink" d="M20,122 C70,112 110,104 140,90 C180,80 220,62 280,46"/>
+        <path class="ink-g" d="M20,128 C100,120 190,100 280,76"/>
+        <path class="ink-p" d="M110,135 V20" stroke-dasharray="4 4"/>
+      </g>
+      <text x="240" y="16" class="r s" style="font-size:10px">c₂·g(n)</text>
+      <text x="250" y="42" class="s" style="font-size:10px">f(n)</text>
+      <text x="240" y="92" class="g s" style="font-size:10px">c₁·g(n)</text>
+      <text x="110" y="148" text-anchor="middle" class="p s" style="font-size:10px">n₀</text>
+      <text x="62" y="30" text-anchor="middle" class="bn k s" style="font-size:10px">Θ: দুই রেখার মাঝে</text>
+      <text x="62" y="44" text-anchor="middle" class="bn k s" style="font-size:10px">n ≥ n₀ হলে</text>
+    </svg><figcaption>n₀-এর পরে f = Θ(g)</figcaption></figure>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">প্রচলিত ভুল ধারণা ✍</span> "Ω মানে বেস্ট কেস, O মানে ওয়ার্স্ট কেস" — <b>ভুল</b>। O, Ω ও Θ <b>ফাংশনের</b> সীমা; বেস্ট, অ্যাভারেজ ও ওয়ার্স্ট কেস তিনটি আলাদা ফাংশন, এবং প্রতিটিরই O, Ω বা Θ দেওয়া যায়। ইনসার্শন সর্ট: ওয়ার্স্ট কেস <b>Θ(n²)</b> (তাই Ω(n²)-ও), বেস্ট কেস <b>Θ(n)</b>। <b>একটি সমস্যার লোয়ার বাউন্ড</b> হলো <b>প্রতিটি অ্যালগরিদমের ওয়ার্স্ট কেসের</b> উপর একটি Ω — পরের পাতা।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: lower bounds, decision tree ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>লোয়ার বাউন্ড তত্ত্ব</span></div>
+  <h2><span class="no">৫</span>লোয়ার বাউন্ড তত্ত্ব ও ডিসিশন-ট্রি যুক্তি</h2><span class="tag">সমস্যার নিজস্ব তথ্য ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি সমস্যার <b>লোয়ার বাউন্ড (Lower Bound)</b> L(n) হলো এমন খরচ যা একটি নির্দিষ্ট মডেলে (যেমন "শুধু তুলনা") <span class="hl">প্রতিটি অ্যালগরিদমকে ওয়ার্স্ট কেসে দিতেই হবে</span>। এটি <b>সমস্যার</b> সম্পর্কে বক্তব্য, কোনো একটি অ্যালগরিদমের নয়। <b>আপার বাউন্ড</b> হলো জানা সেরা অ্যালগরিদমের খরচ। দুটি মিললে সেই অ্যালগরিদম <span class="hl">অপটিমাল</span> (মার্জ সর্ট, হিপসর্ট: Θ(n log n) তুলনা)। ফাঁক থাকলে তা খোলা প্রশ্ন: ম্যাট্রিক্স গুণে Ω(n²) বনাম O(n^2.37…)।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কৌশল</th><th class="l">ধারণা</th><th class="l">ক্লাসিক ফল</th></tr>
+    <tr><td class="l"><b>তুচ্ছ (I/O আকার)</b></td><td class="l">প্রতিটি ইনপুট পড়া, প্রতিটি আউটপুট লেখা</td><td class="l">ম্যাট্রিক্স গুণ Ω(n²); সব পারমুটেশন Ω(n!)</td></tr>
+    <tr><td class="l"><b>ডিসিশন ট্রি</b></td><td class="l">kটি সম্ভাব্য উত্তরে ≥ <code>⌈log₂ k⌉</code>টি হ্যাঁ/না পরীক্ষা</td><td class="l">সর্টিং <span class="circ">Ω(n log n)</span>; সার্চ ⌈log₂(n+1)⌉</td></tr>
+    <tr><td class="l"><b>অ্যাডভার্সারি</b></td><td class="l">প্রতিটি প্রশ্নের এমন উত্তর যাতে কাজ সর্বাধিক</td><td class="l">ম্যাক্স n − 1; ম্যাক্স + মিন ⌈3n/2⌉ − 2</td></tr>
+    <tr><td class="l"><b>প্রবলেম রিডাকশন</b></td><td class="l">কঠিন P সস্তায় Q-তে রূপান্তরিত ⇒ Q-ও কঠিন</td><td class="l">সর্টিং ≤ কনভেক্স হাল ⇒ Ω(n log n)</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 222" width="630">
+    <g class="w">
+      <ellipse cx="310" cy="22" rx="26" ry="15" class="ink-r fill-r"/>
+      <ellipse cx="160" cy="76" rx="26" ry="15" class="ink fill-b"/>
+      <ellipse cx="460" cy="76" rx="26" ry="15" class="ink fill-b"/>
+      <ellipse cx="230" cy="136" rx="26" ry="15" class="ink fill-b"/>
+      <ellipse cx="530" cy="136" rx="26" ry="15" class="ink fill-b"/>
+      <rect x="55" y="124" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="355" y="124" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="145" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="245" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="445" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="545" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M290,32 L178,64 M330,32 L442,64 M146,89 L98,124 M174,89 L216,122 M446,89 L398,124 M474,89 L516,122 M218,149 L188,186 M242,149 L272,186 M518,149 L488,186 M542,149 L572,186"/>
+    </g>
+    <text x="310" y="26" text-anchor="middle" class="k w6" style="font-size:13px">a:b</text>
+    <text x="160" y="80" text-anchor="middle" class="k w6" style="font-size:13px">b:c</text>
+    <text x="460" y="80" text-anchor="middle" class="k w6" style="font-size:13px">a:c</text>
+    <text x="230" y="140" text-anchor="middle" class="k w6" style="font-size:13px">a:c</text>
+    <text x="530" y="140" text-anchor="middle" class="k w6" style="font-size:13px">b:c</text>
+    <text x="222" y="44" class="p s" style="font-size:12px">a&lt;b</text><text x="382" y="44" class="p s" style="font-size:12px">a&gt;b</text>
+    <text x="104" y="106" class="p s" style="font-size:12px">b&lt;c</text><text x="200" y="106" class="p s" style="font-size:12px">b&gt;c</text>
+    <text x="404" y="106" class="p s" style="font-size:12px">a&lt;c</text><text x="500" y="106" class="p s" style="font-size:12px">a&gt;c</text>
+    <text x="90" y="140" text-anchor="middle" class="g w6" style="font-size:12px">a &lt; b &lt; c</text>
+    <text x="390" y="140" text-anchor="middle" class="g w6" style="font-size:12px">b &lt; a &lt; c</text>
+    <text x="180" y="202" text-anchor="middle" class="g w6" style="font-size:12px">a &lt; c &lt; b</text>
+    <text x="280" y="202" text-anchor="middle" class="g w6" style="font-size:12px">c &lt; a &lt; b</text>
+    <text x="480" y="202" text-anchor="middle" class="g w6" style="font-size:12px">b &lt; c &lt; a</text>
+    <text x="580" y="202" text-anchor="middle" class="g w6" style="font-size:12px">c &lt; b &lt; a</text>
+    <text x="60" y="22" text-anchor="middle" class="bn r w6" style="font-size:13px">৬টি লিফ = 3!</text>
+    <text x="545" y="22" text-anchor="middle" class="bn r w6" style="font-size:13px">ওয়ার্স্ট = 3 = ⌈log₂ 6⌉</text>
+    <text x="70" y="196" text-anchor="middle" class="bn p s" style="font-size:12px">বেস্ট পথ: 2</text>
+  </svg><figcaption>a, b, c সাজানোর একটি সঠিক ডিসিশন ট্রি: প্রতিটি অভ্যন্তরীণ নোড একটি তুলনা, প্রতিটি লিফ একটি ক্রম</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">প্রমাণ ✍ ৪ নম্বর</span> n-টি ভিন্ন কি-র যেকোনো তুলনাভিত্তিক সর্ট একটি <b>বাইনারি ডিসিশন ট্রি</b>। <b>n!</b>টি ক্রমের প্রতিটির জন্য আলাদা লিফ চাই ⇒ ≥ n! লিফ। h উচ্চতার বাইনারি ট্রিতে ≤ 2ʰ লিফ ⇒ <code>2ʰ ≥ n!</code> ⇒ <span class="circ">h ≥ log₂(n!)</span>। যেহেতু <code>n! ≥ (n/2)^(n/2)</code>, <code>log₂ n! ≥ (n/2)·log₂(n/2) = Ω(n log n)</code>। (স্টার্লিং: log₂ n! ≈ n log₂ n − 1.44n।)</div>
+    <table class="hand tiny" style="width:100%;margin-top:0">
+      <tr><th>n</th><th>n!</th><th>⌈log₂ n!⌉ = ন্যূনতম ওয়ার্স্ট-কেস তুলনা</th></tr>
+      <tr><td>3</td><td>6</td><td><span class="hl">3</span></td></tr>
+      <tr><td>4</td><td>24</td><td>5</td></tr>
+      <tr><td>5</td><td>120</td><td>7 (মার্জ-ইনসার্শনে অর্জিত)</td></tr>
+      <tr><td>10</td><td>3,628,800</td><td>22</td></tr>
+    </table>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍</span> এই বাউন্ড কেবল <b>তুলনাভিত্তিক</b> সর্টের জন্য। <b>কাউন্টিং সর্ট O(n + k)</b>, <b>র‍্যাডিক্স সর্ট O(d(n + k))</b> ও বাকেট সর্ট (গড়ে O(n)) কি-র মানকে অ্যারে ইনডেক্স হিসেবে ব্যবহার করে, তাই এই সীমায় বাঁধা নয়। বাউন্ডটি <b>অ্যাভারেজ</b> কেসেও খাটে: লিফের গড় গভীরতা ≥ log₂ n!।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: adversary, bounds table ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>অ্যাডভার্সারি যুক্তি</span></div>
+  <h2><span class="no">৬</span>অ্যাডভার্সারি যুক্তি ও প্রমাণিত লোয়ার বাউন্ড</h2><span class="tag">⌈3n/2⌉ − 2 ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">অ্যাডভার্সারি যুক্তি (Adversary Argument)</span> ধরো অ্যালগরিদম প্রশ্ন করছে ("aᵢ &lt; aⱼ?") আর এক দুষ্ট <b>প্রতিপক্ষ</b> উত্তর দিচ্ছে — সবসময় কোনো না কোনো ইনপুটের সঙ্গে <b>সামঞ্জস্যপূর্ণ</b>, কিন্তু এমন উত্তর যা সবচেয়ে কম তথ্য দেয়। প্রতিপক্ষ k − 1টি প্রশ্ন পর্যন্ত দুটি ভিন্ন উত্তর সম্ভব রাখতে পারলে প্রতিটি অ্যালগরিদমের <b>k</b>টি প্রশ্ন লাগবে। <b>nটির ম্যাক্স:</b> <span class="hl">ম্যাক্স ছাড়া বাকি n − 1টি উপাদানকে অন্তত একবার হারতে হবে</span>, আর একটি তুলনায় মাত্র একজন হারে ⇒ <b>n − 1</b>, যা লিনিয়ার স্ক্যানে অর্জিত।</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">ম্যাক্স ও মিন একসঙ্গে: জোড়া পদ্ধতি</span> আলাদাভাবে করলে <code>(n − 1) + (n − 1) = 2n − 2</code>। ভালো উপায়: <b>উপাদানগুলোকে জোড়ায় জোড়ায় তুলনা করো</b> (n/2টি তুলনা); ম্যাক্স থাকবে <b>বিজয়ীদের</b> মধ্যে (আরও n/2 − 1), মিন <b>পরাজিতদের</b> মধ্যে (আরও n/2 − 1)। জোড় n-এ মোট <code>3n/2 − 2</code>; বিজোড় n-এ প্রথমটিকে ম্যাক্স = মিন ধরে বাকিগুলো জোড়ায় ⇒ সাধারণভাবে <span class="circ">⌈3n/2⌉ − 2</span>, এবং অ্যাডভার্সারি যুক্তি প্রমাণ করে এর চেয়ে কম সম্ভব নয়।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 160" width="600">
+    <g class="w">
+      <rect x="40" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="100" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <rect x="180" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="240" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <rect x="320" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="380" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <rect x="460" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="520" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <path class="ink-p" d="M65,56 C70,44 120,44 125,56 M205,56 C210,44 260,44 265,56 M345,56 C350,44 400,44 405,56 M485,56 C490,44 540,44 545,56"/>
+      <rect x="60" y="6" width="500" height="24" rx="10" class="ink-r fill-r"/>
+      <rect x="60" y="112" width="500" height="24" rx="10" class="ink-g fill-g"/>
+    </g>
+    <text x="65" y="77" text-anchor="middle" class="k w6" style="font-size:15px">3</text><text x="125" y="77" text-anchor="middle" class="k w6" style="font-size:15px">9</text>
+    <text x="205" y="77" text-anchor="middle" class="k w6" style="font-size:15px">2</text><text x="265" y="77" text-anchor="middle" class="k w6" style="font-size:15px">7</text>
+    <text x="345" y="77" text-anchor="middle" class="k w6" style="font-size:15px">5</text><text x="405" y="77" text-anchor="middle" class="k w6" style="font-size:15px">1</text>
+    <text x="485" y="77" text-anchor="middle" class="k w6" style="font-size:15px">8</text><text x="545" y="77" text-anchor="middle" class="k w6" style="font-size:15px">4</text>
+    <text x="310" y="23" text-anchor="middle" class="bn r w6" style="font-size:13px">বিজয়ী 9 · 7 · 5 · 8 → ম্যাক্স = 9, 3টি তুলনায়</text>
+    <text x="310" y="129" text-anchor="middle" class="bn g w6" style="font-size:13px">পরাজিত 3 · 2 · 1 · 4 → মিন = 1, 3টি তুলনায়</text>
+    <text x="596" y="48" text-anchor="middle" class="bn p s" style="font-size:12px">৪ জোড়া</text>
+    <text x="310" y="154" text-anchor="middle" class="bn p s" style="font-size:12px">4 + 3 + 3 = 10 = 3·8/2 − 2 (আলাদাভাবে: 7 + 7 = 14)</text>
+  </svg><figcaption>৮টি সংখ্যায় জোড়া পদ্ধতি: প্রতিটি জোড়া-তুলনা একটি সংখ্যাকে উপরে, একটিকে নিচে পাঠায়</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">সমস্যা (তুলনা, nটি উপাদান)</th><th>লোয়ার বাউন্ড</th><th class="l">অপটিমাল অ্যালগরিদম</th></tr>
+    <tr><td class="l">ম্যাক্সিমাম (বা মিনিমাম)</td><td>n − 1</td><td class="l">লিনিয়ার স্ক্যান</td></tr>
+    <tr><td class="l"><b>ম্যাক্সিমাম ও মিনিমাম</b></td><td><span class="hl">⌈3n/2⌉ − 2</span></td><td class="l">জোড়া পদ্ধতি</td></tr>
+    <tr><td class="l">দ্বিতীয় বৃহত্তম</td><td><span class="circ">n + ⌈log₂ n⌉ − 2</span></td><td class="l">টুর্নামেন্ট + ম্যাক্সের প্রতিপক্ষরা</td></tr>
+    <tr><td class="l">সাজানো অ্যারেতে সার্চ</td><td>⌈log₂(n + 1)⌉</td><td class="l">বাইনারি সার্চ</td></tr>
+    <tr><td class="l">অসাজানো অ্যারেতে সার্চ</td><td>n</td><td class="l">লিনিয়ার সার্চ</td></tr>
+    <tr><td class="l">nটি করে দুটি সাজানো লিস্ট মার্জ</td><td>2n − 1</td><td class="l">সাধারণ মার্জ</td></tr>
+    <tr><td class="l">তুলনাভিত্তিক সর্টিং</td><td>⌈log₂ n!⌉</td><td class="l">মার্জ সর্ট, হিপসর্ট</td></tr>
+    <tr><td class="l">এলিমেন্ট ইউনিকনেস</td><td>Ω(n log n)</td><td class="l">সর্ট, তারপর স্ক্যান</td></tr>
+    <tr><td class="l">কানেক্টিভিটি (অ্যাডজ. লিস্ট)</td><td>Ω(V + E)</td><td class="l">BFS / DFS</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">উদাহরণ ✍ n = 100</span> ম্যাক্স + মিন: <code>⌈300/2⌉ − 2 = 148</code> (৫০ জোড়া + ৪৯ + ৪৯), ১৯৮ নয়। দ্বিতীয় বৃহত্তম: <code>100 + ⌈log₂ 100⌉ − 2 = 100 + 7 − 2 = 105</code>। n = 8 হলে: <b>৭</b>টি খেলায় চ্যাম্পিয়ন, যে <b>৩</b> জনকে হারিয়েছে; তাদের সেরাকে পেতে আরও <b>২</b>টি ⇒ 9 = 8 + 3 − 2।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ম্যাক্স + মিনের <b>2n − 2</b> (বা 2n − 3) সাধারণ গণনা, বাউন্ড নয়। <b>⌈3n/2⌉ − 2</b> (ম্যাক্স + মিন) আর <b>n + ⌈log₂ n⌉ − 2</b> (দ্বিতীয় বৃহত্তম) গুলিয়ে ফেলো না। "ওয়ার্স্ট কেসে ন্যূনতম তুলনা" মানে <b>লোয়ার বাউন্ড</b>, ভাগ্যক্রমে পাওয়া বেস্ট কেস নয়।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: complexity classes ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>P, NP, NP-হার্ড, NPC</span></div>
+  <h2><span class="no">৭</span>P, NP, co-NP, NP-হার্ড ও NP-কমপ্লিট</h2><span class="tag">সঠিক ছবিটি আঁকো ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">শ্রেণি</th><th class="l">সংজ্ঞা (হ্যাঁ/না ডিসিশন সমস্যা)</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>P</b></td><td class="l">ডিটারমিনিস্টিকভাবে <span class="hl">বহুপদী সময়ে O(nᵏ)</span> সমাধানযোগ্য</td><td class="l">সর্টিং, MST, শর্টেস্ট পাথ, 2-SAT, LP, প্রাইমালিটি</td></tr>
+    <tr><td class="l"><b>NP</b></td><td class="l">"হ্যাঁ" উত্তরের একটি <b>সার্টিফিকেট</b> আছে যা <span class="hl">বহুপদী সময়ে যাচাইযোগ্য</span> (= ননডিটারমিনিস্টিক বহুপদী সময়)</td><td class="l">P-এর সব; SAT, হ্যামিল্টনিয়ান সাইকেল, সাবসেট সাম, ফ্যাক্টরিং</td></tr>
+    <tr><td class="l"><b>co-NP</b></td><td class="l">পরিপূরক: "না" উত্তরের ছোট সার্টিফিকেট আছে</td><td class="l">TAUTOLOGY, UNSAT</td></tr>
+    <tr><td class="l"><b>NP-হার্ড</b></td><td class="l"><b>প্রতিটি</b> NP সমস্যা ≤p এটি; NP-তে বা এমনকি ডিসাইডেবল হওয়াও জরুরি নয়</td><td class="l">হল্টিং সমস্যা, TSP-অপটিমাইজেশন</td></tr>
+    <tr><td class="l"><b>NP-কমপ্লিট</b></td><td class="l"><span class="circ">NP-তে এবং NP-হার্ড</span> — NP-র কঠিনতম</td><td class="l">SAT, 3-SAT, ক্লিক, ভার্টেক্স কভার, TSP-ডিসিশন</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 214" width="560">
+    <g class="w">
+      <ellipse cx="245" cy="122" rx="85" ry="82" class="ink-r fill-r"/>
+      <ellipse cx="112" cy="122" rx="100" ry="66" class="ink fill-b"/>
+      <ellipse cx="72" cy="122" rx="44" ry="34" class="ink-g fill-g"/>
+      <ellipse cx="500" cy="122" rx="112" ry="84" class="ink-r fill-r"/>
+      <ellipse cx="468" cy="128" rx="72" ry="48" class="ink-g fill-g"/>
+      <path class="ink-k" d="M338,30 V206" stroke-dasharray="5 5"/>
+    </g>
+    <text x="165" y="18" text-anchor="middle" class="bn k w6" style="font-size:14px">যদি P ≠ NP (প্রচলিত বিশ্বাস)</text>
+    <text x="480" y="18" text-anchor="middle" class="bn k w6" style="font-size:14px">যদি P = NP</text>
+    <text x="72" y="120" text-anchor="middle" class="g w6" style="font-size:15px">P</text>
+    <text x="72" y="136" text-anchor="middle" class="bn g s" style="font-size:11px">সর্টিং · MST</text>
+    <text x="118" y="76" text-anchor="middle" class="k w6" style="font-size:15px">NP</text>
+    <text x="186" y="126" text-anchor="middle" class="r w6" style="font-size:13px">NPC</text>
+    <text x="275" y="74" text-anchor="middle" class="bn r w6" style="font-size:14px">NP-হার্ড</text>
+    <text x="280" y="148" text-anchor="middle" class="bn r s" style="font-size:12px">হল্টিং</text>
+    <text x="280" y="163" text-anchor="middle" class="r s" style="font-size:12px">TSP-opt</text>
+    <text x="468" y="124" text-anchor="middle" class="g w6" style="font-size:14px">P = NP</text>
+    <text x="468" y="140" text-anchor="middle" class="bn g w6" style="font-size:13px">= NP-কমপ্লিট</text>
+    <text x="568" y="70" text-anchor="middle" class="bn r w6" style="font-size:14px">NP-হার্ড</text>
+    <text x="574" y="160" text-anchor="middle" class="bn r s" style="font-size:12px">হল্টিং</text>
+  </svg><figcaption>NP-কমপ্লিট হলো NP ও NP-হার্ডের ছেদ; দুই অবস্থাতেই NP-হার্ড NP-র বাইরে ছড়িয়ে থাকে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">প্রচলিত ভুল ধারণা ✍</span> <b>P ⊂ NP ⊂ NP-কমপ্লিট ⊂ NP-হার্ড</b> — এমন স্তরে স্তরে আঁকা ছবি ভুল। NP-কমপ্লিট NP-র <b>সুপারসেট নয়</b>: এটি NP-র সেই অংশ যা NP-হার্ডও, আর NP-হার্ড NP-র <b>বাইরে</b> ছড়িয়ে আছে। <b>P ⊆ NP</b> প্রমাণিত (সমাধানকারী নিজেই যাচাইকারী); <b>P = NP</b> কিনা তা খোলা প্রশ্ন।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ডিসিশন বনাম অপটিমাইজেশন</span> <b>TSP-ডিসিশন</b>: "খরচ ≤ k এমন ট্যুর আছে কি?" — NP-তে, NP-কমপ্লিট। <b>TSP-অপটিমাইজেশন</b>: "সবচেয়ে সস্তা ট্যুর বের করো" — NP-হার্ড, NP-তে নয় (হ্যাঁ/না সমস্যা নয়)। ন্যাপস্যাক, ক্লিক, ভার্টেক্স কভারেও একই। অপটিমাইজেশন রূপ সমাধান করলে ডিসিশন রূপও হয়, তাই তা অন্তত সমান কঠিন।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সার্টিফিকেট দেখতে কেমন ✍</span> <b>SAT:</b> একটি ট্রুথ অ্যাসাইনমেন্ট — বসিয়ে দেখো, O(সূত্রের দৈর্ঘ্য)। <b>হ্যামিল্টনিয়ান সাইকেল:</b> nটি ভার্টেক্সের একটি ক্রম — nটি এজ আছে কিনা ও কেউ পুনরাবৃত্ত নয় কিনা দেখো। <b>সাবসেট সাম:</b> উপসেটটি — যোগ করে দেখো। খুঁজে পাওয়া কঠিন; <b>যাচাই</b> সহজ।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>P: দ্রুত সমাধান। NP: দ্রুত যাচাই। NP-হার্ড: পুরো NP-র সমান কঠিন বা বেশি। NP-কমপ্লিট: কঠিন <u>এবং</u> যাচাইযোগ্য।</b>" আর <b>NP = Nondeterministic Polynomial</b>, কখনো "Non-Polynomial" নয় — প্রতিটি P সমস্যাই NP-তে।</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">বিখ্যাত সমস্যাগুলো কোথায়</span> <b>P ⊆ NP ∩ co-NP।</b> <b>প্রাইমালিটি</b> P-তে (AKS, ২০০২) — পরীক্ষা সহজ, অথচ <b>ফ্যাক্টরিং</b> NP ∩ co-NP-তে, কিন্তু P-তে বা NP-কমপ্লিট বলে জানা নেই। <b>গ্রাফ আইসোমরফিজম</b>: NP-তে, NP-কমপ্লিট বলে জানা নেই (কোয়াসি-পলিনোমিয়াল, ২০১৫)। P ≠ NP হলে ল্যাডনারের উপপাদ্য বলে এমন মাঝামাঝি সমস্যা থাকতেই হবে।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: reductions ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>রিডাকশন ও কুক–লেভিন</span></div>
+  <h2><span class="no">৮</span>রিডাকশন ও কুক–লেভিন উপপাদ্য</h2><span class="tag">দিক গুরুত্বপূর্ণ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">রিডাকশন A ≤p B</span> বহুপদী সময়ে নির্ণেয় একটি ফাংশন f, যাতে প্রতিটি ইনস্ট্যান্স x-এর জন্য <span class="hl"><code>x ∈ A ⇔ f(x) ∈ B</code></span>। পড়ো "<b>A, B-র চেয়ে কঠিন নয়</b>": B-র দ্রুত অ্যালগরিদম A-র জন্যও দ্রুত অ্যালগরিদম দেয়। দুটি ফল: <b>B ∈ P ⇒ A ∈ P</b>, এবং <b>A NP-হার্ড ⇒ B NP-হার্ড</b>। রিডাকশন ট্রানজিটিভ: A ≤p B ও B ≤p C ⇒ A ≤p C।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">কুক–লেভিন উপপাদ্য</span> <span class="circ">SAT NP-কমপ্লিট</span> — স্টিফেন <b>কুক (১৯৭১)</b>, লিওনিড <b>লেভিন</b> স্বাধীনভাবে (১৯৭৩)। এটিই <b>প্রথম</b> সমস্যা যা সরাসরি সংজ্ঞা থেকে NP-কমপ্লিট প্রমাণিত: যেকোনো বহুপদী-সময়ের ননডিটারমিনিস্টিক মেশিনের চলনকে একটি বুলিয়ান সূত্রে লেখা যায়। এরপর <b>কার্প (১৯৭২)</b> SAT থেকে <b>২১</b>টি ক্লাসিক সমস্যায় রিডাকশন দেখান।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">X NP-কমপ্লিট প্রমাণ ✍ ৪ ধাপ</span> <b>১.</b> X ∈ NP: একটি সার্টিফিকেট ও বহুপদী-সময়ের যাচাইকারী দাও। <b>২.</b> একটি <b>জানা</b> NP-কমপ্লিট A বাছো। <b>৩.</b> A-ইনস্ট্যান্স থেকে X-ইনস্ট্যান্সে f বহুপদী সময়ে বানাও। <b>৪.</b> প্রমাণ করো <code>x ∈ A ⇔ f(x) ∈ X</code> (দুই দিকেই)। কেবল ২–৪ ধাপ X-কে <b>NP-হার্ড</b> প্রমাণ করে।</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 196" width="560">
+    <g class="w">
+      <rect x="215" y="4" width="190" height="26" rx="8" class="ink-r fill-r"/>
+      <rect x="260" y="52" width="100" height="26" rx="8" class="ink-r fill-r"/>
+      <rect x="40" y="104" width="100" height="26" rx="8" class="ink fill-b"/>
+      <rect x="200" y="104" width="120" height="26" rx="8" class="ink fill-b"/>
+      <rect x="360" y="104" width="110" height="26" rx="8" class="ink fill-b"/>
+      <rect x="500" y="104" width="110" height="26" rx="8" class="ink fill-b"/>
+      <rect x="10" y="160" width="110" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="140" y="160" width="110" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="270" y="160" width="90" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="380" y="160" width="100" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="500" y="160" width="100" height="26" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M310,30 V48" marker-end="url(#ahb)"/>
+      <path class="ink" d="M280,78 L104,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M300,78 L262,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M320,78 L410,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M340,78 L548,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M80,130 L68,156" marker-end="url(#ahb)"/>
+      <path class="ink" d="M260,130 L310,156" marker-end="url(#ahb)"/>
+      <path class="ink" d="M405,130 L428,156" marker-end="url(#ahb)"/>
+      <path class="ink" d="M440,130 L540,158" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M122,173 H136" marker-end="url(#ahp)" marker-start="url(#ahp)"/>
+    </g>
+    <text x="310" y="22" text-anchor="middle" class="bn r w6" style="font-size:13px">SAT (কুক–লেভিন, ১৯৭১)</text>
+    <text x="310" y="70" text-anchor="middle" class="r w6" style="font-size:13px">3-SAT</text>
+    <text x="90" y="122" text-anchor="middle" class="bn k w6" style="font-size:13px">ক্লিক</text>
+    <text x="260" y="122" text-anchor="middle" class="bn k w6" style="font-size:13px">হ্যামিল্টন সাইকেল</text>
+    <text x="415" y="122" text-anchor="middle" class="bn k w6" style="font-size:13px">সাবসেট সাম</text>
+    <text x="555" y="122" text-anchor="middle" class="bn k w6" style="font-size:13px">3-কালারিং</text>
+    <text x="65" y="178" text-anchor="middle" class="bn g w6" style="font-size:13px">ভার্টেক্স কভার</text>
+    <text x="195" y="178" text-anchor="middle" class="bn g w6" style="font-size:13px">ইনডিপেন্ডেন্ট সেট</text>
+    <text x="315" y="178" text-anchor="middle" class="g w6" style="font-size:13px">TSP</text>
+    <text x="430" y="178" text-anchor="middle" class="bn g w6" style="font-size:13px">0/1 ন্যাপস্যাক</text>
+    <text x="550" y="178" text-anchor="middle" class="bn g w6" style="font-size:13px">পার্টিশন</text>
+    <text x="510" y="44" text-anchor="middle" class="bn p s" style="font-size:12px">তীর A → B মানে A ≤p B</text>
+  </svg><figcaption>পাঠ্যবইয়ের মানক রিডাকশন ট্রি: কাঠিন্য তীরের দিকে নিচে নামে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">উদাহরণ ✍ ক্লিক ≤p ভার্টেক্স কভার</span> S যদি G-র <b>ইনডিপেন্ডেন্ট সেট</b> হয় ⇔ V − S হলো G-র <b>ভার্টেক্স কভার</b>; আর S যদি G-র <b>ক্লিক</b> হয় ⇔ S পরিপূরক Ḡ-তে ইনডিপেন্ডেন্ট। তাই <code>(G, k) ↦ (Ḡ, |V| − k)</code>। উদাহরণ: V = {1,2,3,4}, এজ 12, 13, 23, 34; ক্লিক {1,2,3} (k = 3)। Ḡ-এর এজ 14, 24 — কভার করে <span class="hl">{4}</span>, আকার 4 − 3 = 1 ✓।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">উদাহরণ ✍ হ্যামিল্টন সাইকেল ≤p TSP</span> nটি ভার্টেক্সের G থেকে একটি কমপ্লিট গ্রাফ বানাও: G-র এজে ওজন <b>1</b>, অন্যগুলোতে <b>2</b>। G-তে হ্যামিল্টনিয়ান সাইকেল আছে ⇔ খরচ <b>≤ n</b> এমন ট্যুর আছে। n² ওজন বানানো বহুপদী, তাই TSP-ডিসিশন NP-হার্ড; ট্যুর যাচাইযোগ্য, তাই NP-কমপ্লিট।</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ দিক</span> X কঠিন দেখাতে একটি <b>জানা</b> NP-কমপ্লিট সমস্যাকে <b>X-এ</b> রিডিউস করো: <span class="circ">A ≤p X</span>। X-কে SAT-এ রিডিউস করা (X ≤p SAT) কেবল দেখায় X, SAT-এর চেয়ে <b>কঠিন নয়</b> (তাই X ∈ NP) — কাঠিন্য নিয়ে কিছুই নয়। "কঠিন সমস্যা → নতুন সমস্যা", কখনো উল্টো নয়।</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">2-SAT বনাম 3-SAT</span> প্রতি ক্লজে <b>দুটি</b> লিটারাল: <b>ইমপ্লিকেশন গ্রাফ</b> বানাও (a ∨ b থেকে a′ → b ও b′ → a); স্যাটিসফায়েবল ⇔ কোনো চলক তার নেগেশনের সঙ্গে একই স্ট্রংলি কানেক্টেড কম্পোনেন্টে নেই ⇒ <span class="hl">2-SAT ∈ P, লিনিয়ার সময়ে</span>। প্রতি ক্লজে <b>তিনটি</b> লিটারাল হলে সমস্যাটি NP-কমপ্লিট। একটি বাড়তি লিটারালেই সীমা পার।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: twins, coping ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>সহজ/কঠিন জোড়া · মোকাবিলা</span></div>
+  <h2><span class="no">৯</span>সহজ/কঠিন জোড়া, P বনাম NP, মোকাবিলা</h2><span class="tag">MCQ-র প্রিয় ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">P-তে (বহুপদী)</th><th class="l">দেখতে একই, কিন্তু NP-কমপ্লিট</th><th class="l">পার্থক্য</th></tr>
+    <tr><td class="l">2-SAT, হর্ন-SAT</td><td class="l"><b>3-SAT</b>, SAT</td><td class="l">প্রতি ক্লজে ৩ লিটারাল</td></tr>
+    <tr><td class="l">অয়লার সার্কিট (প্রতি <b>এজ</b> একবার)</td><td class="l"><b>হ্যামিল্টনিয়ান সাইকেল</b> (প্রতি <b>ভার্টেক্স</b>)</td><td class="l">এজ বনাম ভার্টেক্স</td></tr>
+    <tr><td class="l">শর্টেস্ট সিম্পল পাথ</td><td class="l"><b>লংগেস্ট</b> সিম্পল পাথ</td><td class="l">মিন বনাম ম্যাক্স</td></tr>
+    <tr><td class="l">মিনিমাম স্প্যানিং ট্রি</td><td class="l">TSP; স্টাইনার ট্রি</td><td class="l">ট্রি বনাম ট্যুর</td></tr>
+    <tr><td class="l">2-কালারিং (বাইপার্টাইট)</td><td class="l"><b>3-কালারিং</b></td><td class="l">২ বনাম ৩ রং</td></tr>
+    <tr><td class="l">এজ কভার, ম্যাচিং</td><td class="l">ভার্টেক্স কভার, 3-D ম্যাচিং</td><td class="l">ভার্টেক্স, ৩টি সেট</td></tr>
+    <tr><td class="l">লিনিয়ার প্রোগ্রামিং</td><td class="l">0-1 ইন্টিজার প্রোগ্রামিং</td><td class="l">বাস্তব বনাম পূর্ণসংখ্যা</td></tr>
+    <tr><td class="l">ফ্র্যাকশনাল ন্যাপস্যাক</td><td class="l">0/1 ন্যাপস্যাক (ডিসিশন)</td><td class="l">ভাঙা বনাম আস্ত</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">P বনাম NP</span> <b>যেকোনো একটি</b> NP-কমপ্লিট সমস্যার বহুপদী অ্যালগরিদম পাওয়া গেলে <span class="hl">P = NP</span>, এবং সব NP সমস্যারই তা থাকবে। P ≠ NP হলে কোনো NP-কমপ্লিট সমস্যা P-তে নেই (আর ল্যাডনারের উপপাদ্য অনুযায়ী কিছু NP সমস্যা P-তেও নয়, NP-কমপ্লিটও নয় — ফ্যাক্টরিং ও গ্রাফ আইসোমরফিজম সন্দেহভাজন)। প্রশ্নটি সাতটি <b>ক্লে মিলেনিয়াম প্রাইজ প্রবলেমের</b> একটি (২০০০, ১০ লক্ষ মার্কিন ডলার); বেশিরভাগ গবেষক মনে করেন P ≠ NP।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">আইটি সংযোগ</span> পাবলিক-কি ক্রিপ্টোগ্রাফি কঠিন বলে বিশ্বাস করা সমস্যার উপর দাঁড়িয়ে (<b>RSA</b>-র জন্য ফ্যাক্টরিং, ডিফি–হেলম্যানের জন্য ডিসক্রিট লগ)। এগুলো NP-তে, তাই ব্যবহারিক অ্যালগরিদমসহ P = NP প্রমাণ হলে এরা ভেঙে পড়বে। টাইমটেবিলিং, ভেহিকল রাউটিং, রেজিস্টার অ্যালোকেশন (গ্রাফ কালারিং) ও চিপ লেআউট — NP-হার্ড সমস্যা যা প্রতিদিন নিচের পদ্ধতিগুলোতে সমাধান হয়।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">মোকাবিলার কৌশল</th><th class="l">যা ছাড়তে হয়</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>বুদ্ধিদীপ্ত এক্সপোনেনশিয়াল</b></td><td class="l">বড় n-এ গতি</td><td class="l">ব্যাকট্র্যাকিং, ব্রাঞ্চ-অ্যান্ড-বাউন্ড; হেল্ড–কার্প TSP <b>O(n²2ⁿ)</b> বনাম O(n!)</td></tr>
+    <tr><td class="l"><b>সিউডো-পলিনোমিয়াল DP</b></td><td class="l">বড় সংখ্যা</td><td class="l">0/1 ন্যাপস্যাক <span class="circ">O(nW)</span>; সাবসেট সাম O(nS)</td></tr>
+    <tr><td class="l"><b>অ্যাপ্রক্সিমেশন</b></td><td class="l">অপটিমালিটি (অনুপাত প্রমাণিত)</td><td class="l">ভার্টেক্স কভার 2×; মেট্রিক TSP 2× (MST), ক্রিস্টোফাইডস 1.5×</td></tr>
+    <tr><td class="l"><b>হিউরিস্টিক</b></td><td class="l">যেকোনো নিশ্চয়তা</td><td class="l">গ্রিডি, সিমুলেটেড অ্যানিলিং, জেনেটিক, ট্যাবু সার্চ</td></tr>
+    <tr><td class="l"><b>বিশেষ ক্ষেত্র</b></td><td class="l">সাধারণতা</td><td class="l">2-SAT; ট্রিতে ভার্টেক্স কভার; ছোট k: O(2ᵏ·n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ সিউডো-পলিনোমিয়াল</span> ন্যাপস্যাকের DP <b>O(nW)</b>, তবু ন্যাপস্যাক NP-কমপ্লিট — বিরোধ নেই। W লেখা হয় <b>log₂ W বিটে</b>, তাই nW <b>ইনপুটের দৈর্ঘ্যের সাপেক্ষে এক্সপোনেনশিয়াল</b>। W-এর বিট দ্বিগুণ করলে W বর্গ হয়ে যায়। এমন সমস্যাকে <b>দুর্বলভাবে (weakly)</b> NP-কমপ্লিট বলে।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>অয়লার এজে, হ্যামিল্টন মাথায়।</b>" প্রতিটি এজ একবার — সহজ (ডিগ্রি দেখলেই হয়); প্রতিটি ভার্টেক্স ("মাথা") একবার — NP-কমপ্লিট। একই ছাঁচ: <b>শর্টেস্ট সহজ, লংগেস্ট কঠিন; ২ সহজ, ৩ কঠিন</b>। অনুপাত-নিশ্চিত পদ্ধতিগুলো অ্যাপ্রক্সিমেশন অ্যালগরিদম লেসনে।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small">
+      <p>হর্নার: n গুণ + n যোগ, অপটিমাল</p><p>হর্নার = সিনথেটিক ডিভিশন, শেষটি = p(x₀)</p>
+      <p>দ্রুত ঘাত: ≤ 2⌊log₂ n⌋ গুণ, O(log n)</p><p>x¹³: ৫টি গুণ</p>
+      <p>কারাতসুবা: 3T(n/2)+O(n) = <span class="hl">n^1.585</span></p><p>ad+bc = (a+b)(c+d) − ac − bd</p>
+      <p>স্ট্রাসেন: ৭টি গুণফল, n^log₂7 ≈ n^2.81</p><p>FFT বহুপদী গুণ: O(n log n)</p>
+      <p>A + BC = (A+B)(A+C)</p><p>AB + AB′ = A, A + A′B = A + B</p>
+      <p>O আপার · Ω লোয়ার · Θ টাইট (ফাংশন)</p><p>Ω ≠ বেস্ট কেস</p>
+      <p>সর্ট: h ≥ log₂ n! = Ω(n log n)</p><p>৩টি কি: ৬টি লিফ, ৩টি তুলনা</p>
+      <p>ম্যাক্স: n − 1 · ম্যাক্স+মিন: ⌈3n/2⌉ − 2</p><p>দ্বিতীয় বৃহত্তম: n + ⌈log₂ n⌉ − 2</p>
+      <p>সাজানো সার্চ: ⌈log₂(n+1)⌉</p><p>মার্জ n + n: 2n − 1</p>
+      <p>NP: বহুপদী সময়ে যাচাই</p><p>NPC = NP ∩ NP-হার্ড</p>
+      <p>কুক ১৯৭১ · লেভিন ১৯৭৩ · কার্প ১৯৭২ (২১)</p><p>A ≤p X, A জানা NPC ⇒ X NP-হার্ড</p>
+      <p>2-SAT ∈ P · 3-SAT NPC</p><p>ন্যাপস্যাক O(nW): সিউডো-পলিনোমিয়াল</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>প্রিসর্টিং = ইনস্ট্যান্স সরলীকরণ</li>
+      <li>বাইনারি → দশমিক = x = 2-এ হর্নার</li>
+      <li>স্ট্রাসেনের ঘাতাঙ্ক 2.81, 2.37 নয়</li>
+      <li>ম্যাট্রিক্স গুণ: তুচ্ছ বাউন্ড Ω(n²)</li>
+      <li>কাউন্টিং / র‍্যাডিক্স সর্ট n log n ভাঙে</li>
+      <li>n = 100: ম্যাক্স + মিন = 148</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>NP = Nondeterministic Polynomial</li>
+      <li>P ⊆ NP প্রমাণিত; P = NP খোলা</li>
+      <li>হল্টিং: NP-হার্ড, NP-কমপ্লিট নয়</li>
+      <li>TSP-opt NP-হার্ড; TSP-ডিসিশন NPC</li>
+      <li>অয়লার সার্কিট P · হ্যামিল্টনিয়ান NPC</li>
+      <li>ক্লে মিলেনিয়াম প্রাইজ: ১০ লক্ষ ডলার</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">শীর্ষ ফাঁদ</span> হর্নারে "n + 1" বা "2n" গুণ · Ω-কে বেস্ট কেস পড়া · কাউন্টিং সর্টে তুলনার বাউন্ড খাটানো · ম্যাক্স + মিন "2n − 2" · স্তরে স্তরে P ⊂ NP ⊂ NPC ⊂ NP-হার্ড ছবি · X-কে SAT-এ রিডিউস করে X কঠিন "প্রমাণ" · O(nW)-কে বহুপদী ধরা · NP-কে "non-polynomial" পড়া।</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">সব কৌশল একসঙ্গে</span> হর্নার = বন্ধনীর ভেতরে বন্ধনী = n আর n · একটি গুণ বাঁচাও, ঘাতাঙ্ক নামাও · P দ্রুত সমাধান, NP দ্রুত যাচাই, NPC কঠিন ও যাচাইযোগ্য · অয়লার এজে, হ্যামিল্টন মাথায় · শর্টেস্ট সহজ, লংগেস্ট কঠিন; ২ সহজ, ৩ কঠিন · কঠিন সমস্যা → নতুন সমস্যা।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <circle cx="66" cy="46" r="32" class="ink-g fill-g"/>
+        <circle cx="150" cy="46" r="32" class="ink fill-b"/>
+        <circle cx="234" cy="46" r="32" class="ink-r fill-r"/>
+        <path class="ink" d="M98,46 H116 M182,46 H200" marker-end="url(#ahb)"/>
+        <rect x="40" y="112" width="220" height="30" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="44" text-anchor="middle" class="bn g w6" style="font-size:11px">রূপান্তর</text><text x="66" y="58" text-anchor="middle" class="bn g s" style="font-size:10px">বীজগণিত</text>
+      <text x="150" y="44" text-anchor="middle" class="bn k w6" style="font-size:11px">সীমা</text><text x="150" y="58" text-anchor="middle" class="bn s" style="font-size:10px">Ω প্রমাণ</text>
+      <text x="234" y="44" text-anchor="middle" class="bn r w6" style="font-size:11px">শ্রেণিবিভাগ</text><text x="234" y="58" text-anchor="middle" class="r s" style="font-size:10px">P / NPC</text>
+      <text x="150" y="98" text-anchor="middle" class="bn p s" style="font-size:10px">দ্রুততর → এর চেয়ে দ্রুত অসম্ভব → সম্ভবত কঠিন</text>
+      <text x="150" y="132" text-anchor="middle" class="bn k w6" style="font-size:11px">আপার · লোয়ার · দুঃসাধ্য</text>
+    </svg><figcaption>তিন চালে পুরো লেসন</figcaption></figure>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · লোয়ার বাউন্ড ও NP</span><span>রিভিশন ২: অনুশীলনী</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মিলাও</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">১.</span>হর্নারের নিয়মে n ঘাতের একটি বহুপদীর মান বের করতে কতটি গুণ লাগে?<ol class="opts"><li>n(n + 1)/2</li><li>2n − 1</li><li>n</li><li>log₂ n</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">২.</span>কারাতসুবা অ্যালগরিদম দুটি n-অঙ্কের পূর্ণসংখ্যা গুণ করে:<ol class="opts"><li>Θ(n²)</li><li>Θ(n^1.585)</li><li>Θ(n log n)</li><li>Θ(n^2.81)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৩.</span>স্ট্রাসেনের পদ্ধতিতে 2 × 2 ব্লক ম্যাট্রিক্স গুণে কতটি ব্লক-গুণ লাগে?<ol class="opts"><li>7</li><li>8</li><li>6</li><li>18</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৪.</span>nটি উপাদানের যেকোনো তুলনাভিত্তিক সর্টের ওয়ার্স্ট-কেস লোয়ার বাউন্ড:<ol class="opts"><li>Ω(n)</li><li>Ω(log n)</li><li>Ω(n²)</li><li>Ω(n log n)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৫.</span>১০০টি ভিন্ন সংখ্যার ম্যাক্স ও মিন দুটোই বের করতে ওয়ার্স্ট কেসে ন্যূনতম তুলনা:<ol class="opts"><li>198</li><li>150</li><li>148</li><li>99</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৬.</span>৪টি ভিন্ন কি সাজানোর ডিসিশন ট্রির উচ্চতা অন্তত:<ol class="opts"><li>4</li><li>5</li><li>6</li><li>24</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৭.</span>নিচের কোন সমস্যাটি NP-কমপ্লিট?<ol class="opts"><li>2-SAT</li><li>3-SAT</li><li>মিনিমাম স্প্যানিং ট্রি</li><li>অঋণাত্মক ওজনে শর্টেস্ট পাথ</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৮.</span>নতুন সমস্যা X-কে NP-হার্ড প্রমাণ করতে হলে:<ol class="opts"><li>X-কে SAT-এ রিডিউস করতে হবে</li><li>X-এর সার্টিফিকেট যাচাইযোগ্য দেখাতে হবে</li><li>X-এর এক্সপোনেনশিয়াল অ্যালগরিদম দিতে হবে</li><li>একটি জানা NP-কমপ্লিট সমস্যাকে X-এ রিডিউস করতে হবে</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৯.</span>হল্টিং সমস্যা হলো:<ol class="opts"><li>NP-কমপ্লিট</li><li>P-তে</li><li>NP-হার্ড, কিন্তু NP-তে নয়</li><li>NP-তে, কিন্তু NP-হার্ড নয়</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">১০.</span>0/1 ন্যাপস্যাকের O(nW) ডায়নামিক প্রোগ্রাম হলো:<ol class="opts"><li>সিউডো-পলিনোমিয়াল</li><li>ইনপুট দৈর্ঘ্যে বহুপদী</li><li>P = NP-এর প্রমাণ</li><li>একটি অ্যাপ্রক্সিমেশন অ্যালগরিদম</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-খ · ৩-ক · ৪-ঘ · ৫-গ · ৬-খ · ৭-খ · ৮-ঘ · ৯-গ · ১০-ক</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> (ক) তিনটি কি-র ডিসিশন ট্রি ব্যবহার করে প্রমাণ করো যে প্রতিটি তুলনাভিত্তিক সর্টের ওয়ার্স্ট কেসে Ω(n log n) তুলনা লাগে। (খ) nটি সংখ্যার ম্যাক্সিমাম ও মিনিমাম দুটোই ⌈3n/2⌉ − 2টি তুলনায় কীভাবে বের করা যায় দেখাও, এবং n = 100-এর জন্য মান বের করো। (গ) P, NP, NP-হার্ড ও NP-কমপ্লিটের সংজ্ঞা দাও, তাদের সম্পর্ক আঁকো, এবং কোনো সমস্যাকে NP-কমপ্লিট প্রমাণের ধাপগুলো লেখো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>(ক) ডিসিশন ট্রি (৪)</b> — প্রতিটি তুলনা একটি নোড, n!টি ক্রমের প্রতিটির নিজস্ব লিফ চাই; উচ্চতা h ⇒ ≤ 2ʰ লিফ ⇒ h ≥ log₂ n! ≥ (n/2) log₂(n/2) = Ω(n log n)। ৩টি কি-তে: ৬টি লিফ, ওয়ার্স্ট কেস ⌈log₂ 6⌉ = 3। <i class="mk">৪</i></li>
+    <li><b>(খ) জোড়া পদ্ধতি (৩)</b> — জোড়ায় তুলনা (n/2), বিজয়ীদের ম্যাক্স (n/2 − 1), পরাজিতদের মিন (n/2 − 1) ⇒ 3n/2 − 2; n = 100: 50 + 49 + 49 = 148 (আলাদাভাবে 198)। <i class="mk">৩</i></li>
+    <li><b>(গ) শ্রেণি (৩)</b> — P: বহুপদী সময়ে সমাধানযোগ্য; NP: বহুপদী সময়ে যাচাইযোগ্য; NP-হার্ড: প্রতিটি NP সমস্যা ≤p এটি; NPC = NP ∩ NP-হার্ড; আঁকো P ⊆ NP, NPC ছেদ হিসেবে, NP-হার্ড বাইরে ছড়ানো। ধাপ: X ∈ NP, জানা NPC A বাছাই, বহুপদী সময়ে f, প্রমাণ x ∈ A ⇔ f(x) ∈ X। <i class="mk">৩</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>হর্নার / সিনথেটিক ডিভিশন চালাতে পারি</li>
+      <li>কারাতসুবা ও স্ট্রাসেনের ঘাতাঙ্ক বলতে পারি</li>
+      <li>৩-কি ডিসিশন ট্রি আঁকতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>⌈3n/2⌉ − 2 নির্ণয় করতে পারি</li>
+      <li>সঠিক P / NP / NPC ছবি আঁকতে পারি</li>
+      <li>রিডাকশন কোন দিকে যায় জানি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

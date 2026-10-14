@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ট্রি, স্প্যানিং ট্রি, দূরত্ব ও সংযোজনীয়তা: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি ও সংযোজনীয়তা</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ট্রি ও গ্রাফ সংযোজনীয়তা</span></h1>
+  <p class="subtitle">ট্রি · স্প্যানিং ট্রি · দূরত্ব · কমপ্লিমেন্ট · কাট-ভার্টেক্স · ব্রিজ · k-সংযুক্ত: ১০ পাতায় পরীক্ষার প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="152" text-anchor="middle" class="bn k l">ট্রি</text><text x="320" y="176" text-anchor="middle" class="bn r s">টপিকের মাইন্ড-ম্যাপ</text>
+      <text x="142" y="58" text-anchor="middle" class="bn s" style="font-size:11px">n শীর্ষ → n−1 এজ</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">স্প্যানিং ট্রি ★</text>
+      <text x="498" y="66" text-anchor="middle" class="bn s" style="font-size:11px">কমপ্লিমেন্ট G̅</text>
+      <text x="96" y="156" text-anchor="middle" class="bn g w6" style="font-size:12px">ট্রি = অ্যাসাইক্লিক</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:12px">কাট-ভার্টেক্স ★</text><text x="544" y="166" text-anchor="middle" class="bn r w6" style="font-size:12px">★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s" style="font-size:11px">দূরত্ব · ডায়ামিটার</text>
+      <text x="320" y="270" text-anchor="middle" class="bn r w6" style="font-size:13px">ব্রিজ · ব্লক ★</text>
+      <text x="498" y="248" text-anchor="middle" class="bn s" style="font-size:11px">k-সংযুক্ত κ(G)</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেসি আসে, সবুজ = যে এক সংজ্ঞা থেকে প্রশ্ন আঁকা হয়</figcaption>
+  </figure>
+  <div class="sticky" style="width:74mm"><b>হাই-ইল্ড তালিকা</b><br>① ট্রি: সংযুক্ত + অ্যাসাইক্লিক<br>② n শীর্ষবিন্দু → n−1 এজ<br>③ যেকোনো দুই শীর্ষবিন্দুর মধ্যেক্ষে অনন্য পথ<br>④ স্প্যানিং ট্রি = |V|−1 এজ<br>⑤ dist(u,v) = ছোট্টম পথ<br>⑥ G ∪ G̅ = Kₙ<br>⑦ কাট-ভার্টেক্স: বাদ দিলে কম্পোনেন্ট বাড়ে<br>⑮ ব্রিজ: যেকোনো চক্রমে নাই<br>⑨ κ ≤ λ ≤ δ (হুইটনি)<br>⑩ κ(Kₙ) = n−1</div>
+  <h3>সিলেবাসের য়ে অংশ</h3>
+  <p class="small">সিলেবাস লাইনে আছে "<span class="hl">Graph theory: basic definitions — simple graph, directed graph, subgraph, degree, walk, path, cycle, special graphs (Kₙ, Cₙ, Kₘ,ₙ), representations (adjacency matrix, adjacency list)</span>"। এই লেসনটি Trees, Spanning Trees, Distance, Complementary Graphs, Cut-Vertex, Bridges, k-Connected কভার করে, যা গ্রাফের মৌলিক ধারণার উপর ভিত্তি করে。</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধাণকৃত উদাহরণ</div>
+  <h3>সূচিপত্ৰ</h3>
+  <div class="cols small">
+    <ul class="tick"><li>ট্রির সংজ্ঞা ও বৈশিষ্ট্য … পৃ. ২</li><li>স্প্যানিং ট্রি ও কেইলির সূত্র … পৃ. ৩</li><li>দূরত্ব, eccentricity, ডায়ামিটার … পৃ. ৪</li><li>কমপ্লিমেন্টারি গ্রাফ … পৃ. ৫</li><li>কাট-ভার্টেক্স (আর্টিকুলেশন পয়েন্ত) … পৃ. ৬</li></ul>
+    <ul class="tick"><li>ব্রিজ (কাট-এজ) ও DFS … পৃ. ৭</li><li>ব্লক ও k-সংযুক্ত গ্রাফ … পৃ. ৮</li><li>রাতের পাতা পৃ. ৯ · অনুশীলন পৃ. ১০</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: trees ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>সংজ্ঞা ও বৈশিষ্ট্য</span></div>
+  <h2><span class="no">১</span>ট্রি</h2><span class="tag">সংজ্ঞা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একট <span class="hl">ট্রি</span> হলো একট <b>সংযুক্ত, অ্যাসাইক্লিক</b> আনডিরেক্টেড গ্রাফ। সমমানভাবে: একট গ্রাফ যাততে চক্ৰ নাই এবং যেকোনো দুই শীর্ষবিন্দুর মধ্যেক্ষে ঠিক একট পথ আছເ。একট <span class="hl">বন (forest)</span> হলো ট্রির বিচ্ছিন্ন ইউনিয়ন (একট অ্যাসাইক্লিক গ্রাফ যার কম্পোনেন্টগুল ট্রি)。</div>
+  <div class="cols" style="grid-template-columns:minmax(0,286px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 220" width="282">
+      <g class="w">
+        <circle cx="150" cy="30" r="18" class="ink fill-y"/>
+        <circle cx="60" cy="120" r="18" class="ink fill-y"/>
+        <circle cx="150" cy="120" r="18" class="ink fill-y"/>
+        <circle cx="240" cy="120" r="18" class="ink fill-y"/>
+        <circle cx="110" cy="200" r="18" class="ink fill-y"/>
+        <circle cx="190" cy="200" r="18" class="ink fill-y"/>
+        <path class="ink" d="M140,45 L70,110 M150,48 V102 M160,45 L230,110 M140,120 L100,185 M160,120 L200,185"/>
+        <circle cx="60" cy="120" r="26" class="ink-r" fill="none" style="stroke-dasharray:4 3"/>
+        <circle cx="110" cy="200" r="26" class="ink-r" fill="none" style="stroke-dasharray:4 3"/>
+        <circle cx="190" cy="200" r="26" class="ink-r" fill="none" style="stroke-dasharray:4 3"/>
+      </g>
+      <text x="150" y="36" text-anchor="middle" class="k w6">A</text>
+      <text x="60" y="126" text-anchor="middle" class="k w6">B</text>
+      <text x="150" y="126" text-anchor="middle" class="k w6">C</text>
+      <text x="240" y="126" text-anchor="middle" class="k w6">D</text>
+      <text x="110" y="206" text-anchor="middle" class="k w6">E</text>
+      <text x="190" y="206" text-anchor="middle" class="k w6">F</text>
+      <text x="150" y="215" text-anchor="middle" class="bn s" style="font-size:11px">দশন বৃত্ত = লিভ (ডিগ্রি 1)</text>
+    </svg><figcaption>৬ টা শীর্ষবিন্দু ও ৫ টা এজ থাকা একট ট্রি; B, E, F হলো লিভ</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">বৈশিষ্ট্য</th><th class="l">বর্ণনা</th></tr>
+        <tr><td class="l"><b>এজ</b></td><td class="l">যদি একট ট্রিত n টা শীর্ষবিন্দু থাকে, তাত আছе <span class="hl">n − 1</span> টা এজ</td></tr>
+        <tr><td class="l"><b>অনন্য পথ</b></td><td class="l">যেকোনো দুই শীর্ষবিন্দুর মধ্যেক্ষে ঠিক একট পথ</td></tr>
+        <tr><td class="l"><b>এজ যোগ করলе</b></td><td class="l">যেকোনো একট এজ যোগ করলে <span class="circ">ঠিক একট চক্ৰ</span> তৈরি হয</td></tr>
+        <tr><td class="l"><b>এজ বাদ দিলে</b></td><td class="l">যেকোনো একট এজ বাদ দিলе <span class="circ">গ্রাফ বিচ্ছিন্ন</span> হয</td></tr>
+        <tr><td class="l"><b>লিভ</b></td><td class="l">n ≥ 2 হলе অন্তত <span class="circ">2 টা লিভ</span> (ডিগ্রি 1) থাকা আবশ্যক</td></tr>
+        <tr><td class="l"><b>বন (Forest)</b></td><td class="l">n শীর্ষ, k টা ট্রি → <span class="hl">n − k</span> এজ</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ট্রি কখনো লুপ করে না — শুধু শাখা ছড়ায়।</b>" কোনো চক্ৰ নাই, কোনো শর্টকাট নাই, যেকোনো দুই নোডের মধ্যেক্ষে একমাত্র পথ। তাই ট্রি হলো প্রতিটি নেটওয়ারের হাড়—<span class="circ">সর্বোচ্চ পৌঁছানোর জন্য ন্যূনতম এজ।</span></div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) একট ট্রি মানে শুধু "অ্যাসাইক্লিক" নই — এট<b>সংযুক্ত</b>ও হতে হবে。৪ টা শীর্ষবিন্দু ও ২ টা এজ থাকা একট অ্যাসাইক্লিক গ্রাফ হলো ফরেস্ট, ট্রি নো۔ (ii) একট মাত্র শীর্ষবিন্দু (n = 1) হলো একট ট্রি — 0 এজসহ, n − 1 সূত্রে মান বেধে । (iii) "লিভ = ডিগ্রি 1" — রুট থাকা ট্রিতেও রুটের ডিগ্রি 1 হলো সে লিভ হিসেবে গণ্য হবে。</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ট্রির বৈশিষ্ট্য যাচাই</span> একট গ্রেফতে ৮ টা শীর্ষবিন্দু ও ৭ টা এজ আছে。এট কি অবশ্যই একট ট্রি? <b>না</b> — এট বিচ্ছিন্নও হতে পারে (যেমন একট Triangl + ৫ টা বিচ্ছিন্ন শীর্ষের এজ সংখ্যা ৩, ৭ নো)。সংযুক্ত গ্রেফ যেখান n শীর্ষ ও n−1 এজ, সেট অবশ্যই ট্রি。এখানে: সংযোজনীয়তা নিশ্চিত করলে, হ্যাঁ — ৮ শীর্ষ, ৭ এজ, সংযুক্ত ⟹ ট্রি。</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: spanning trees ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>স্প্যানিং ট্রি</span></div>
+  <h2><span class="no">২</span>স্প্যানিং ট্রি</h2><span class="tag">প্রয়োগ ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একট সংযুক্ত গ্রেফ G = (V, E)-র একট <span class="hl">স্প্যানিং ট্রি</span> হলো একট সাবগ্রেফ T = (V, E') যা: (i) G-র <b>সব শীর্ষবিন্দু</b> অন্তর্ভুক্ত করে, এবং (ii) একট <span class="hl">ট্রি</span> (সংযুক্ত ও অ্যাসাইক্লিক)। যেকোনো স্প্যানিং ট্রিতে ঠিক <span class="circ">|V| − 1</span> টা এজ থাকে。</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">মূল তথ্য</span>
+        <ul class="tick" style="margin-top:0">
+          <li>প্রতিটি সংযুক্ত গ্রেফের অন্তত একট <span class="hl">স্প্যানিং ট্রি</span> আছে</li>
+          <li>চক্রযুক্ত গ্রেফের একাধিক স্প্যানিং ট্রি থাকতে পারে</li>
+          <li>যেকোনো স্প্যানিং ট্রিতে এজ সংখ্যা = |V| − 1</li>
+          <li>G-তে প্রতিটি চক্রে একট এজ বাদ দিলে একট স্প্যানিং ট্রি মেলে</li>
+        </ul>
+      </div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">কেইলির সূত্রে</span> সম্পূর্ণ গ্রেফ Kₙ-র অন্ততন <b>লেবেলযুক্ত</b> স্প্যানিং ট্রির সংখ্যא <span class="hl">nⁿ⁻²</span>。K₄-এর জন্য এটা দেয় 4² = <span class="circ">16</span> টা স্প্যানিং ট্রি。K₅-এর জন্য দেয় 5³ = <span class="circ">125</span>。C₄-র 4 টা স্প্যানিং ট্রি থাকায় — প্রতিট চক্রের একট এজ বাদ দিলে মিলে。</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 220" width="266">
+      <g class="w">
+        <circle cx="60" cy="50" r="16" class="ink fill-y"/>
+        <circle cx="240" cy="50" r="16" class="ink fill-y"/>
+        <circle cx="60" cy="170" r="16" class="ink fill-y"/>
+        <circle cx="240" cy="170" r="16" class="ink fill-y"/>
+        <path class="ink" d="M74,50 H226 M60,66 V154 M240,66 V154 M74,170 H226"/>
+        <path class="ink-r" d="M74,50 L226,170" style="stroke-dasharray:5 3"/>
+        <text x="60" y="56" text-anchor="middle" class="k w6">A</text>
+        <text x="240" y="56" text-anchor="middle" class="k w6">B</text>
+        <text x="60" y="176" text-anchor="middle" class="k w6">D</text>
+        <text x="240" y="176" text-anchor="middle" class="k w6">C</text>
+        <text x="150" y="210" text-anchor="middle" class="bn r s" style="font-size:11px">দশন = সম্ভাব্য একট বাদ</text>
+      </g>
+    </svg><figcaption>C₄: 4 টা এজের মধ্যে যেকোনো একট বাদ দিলে স্প্যানিং ট্রি; মোট 4 টা</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ C₄-র স্প্যানিং ট্রি</span> একট চক্রে C₄-তে 4 টা শীর্ষ ও 4 টা এজ。যেকোনো একট এজ বাদ দিলে চক্রে ভঙ হয় কিন্তু গ্রেফ সংযুক্ত থাকে, একট স্প্যানিং ট্রি পায。৪ টা এজ তাই C₄-র <b>4 টা</b> স্প্যানিং ট্রি。K₄-এর জন্য কেইলির সূত্রে 4² = <span class="hl">16</span> টা স্প্যানিং ট্রি。</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) G-র একট স্প্যানিং ট্রি মানে এট <b>G-র</b> একট স্প্যানিং ট্রি — এট প্রতিটি স্প্যানিং ট্রির সাবগ্রেফ নো。ভিন্ন স্প্যানিং ট্রিগুল শীর্ষ ভাগ করে নয কিন্তু এজে ভিন্ন হতে পারে。 (ii) বিচ্ছিন্ন গ্রেফর <b>কোনো</b> স্প্যানিং ট্রি নো — শুধু একট <span class="circ">স্প্যানিং ফরেষ্ট</span> থাকে。 (iii) K₄-র 4⁴⁻² = <span class="circ">16</span> টা স্প্যানিং ট্রি, 6 নো。K₅-র 5³ = 125 টা。</div>
+  </div> (iv) C_n-র স্প্যানিং ট্রির সংখ্যা = n, কারণ n টি এজের মধ্যেক্ষে যেকোনো একট বাদ দিলে স্প্যানিং ট্রি মেলে।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>স্প্যানিং ট্রি = হাড়।</b>" এট সব শীর্ষবিন্দু স্পর্শ করে (স্প্যান) আর সংযুক্ত রাখতে সবচেয়ে কম এজ ব্যবহার করে (ট্রি)। নেটওযর্কে সব কম্পিউটার সংযোগের জন্য ন্যূনতম ক্যাবলের মতো。</div>
+    <div class="tipbox tiny"><span class="lbl">আইটি লিংক</span> মিনিমাম-স্প্যানিং-ট্রি অ্যালগরিদম (ক্রুস্কাল, প্রিম) নেটওযর্ক ডিজাইন, ক্লাস্টার বিশ্লেষণ, আর Traveling Salesman Problem-র আসন্নমান বের করতে ব্যবহৃত হয়。</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: distance ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>দূরত্ব, eccentricity, ডায়ামিটার</span></div>
+  <h2><span class="no">৩</span>গ্রাফে দূরত্ব</h2><span class="tag">মিট্রিক্স ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> দুই শীর্ষবিন্দু u ও v-র মধ্যেক্ষের <span class="hl">দূরত্ব</span> d(u, v) হলো তাদের সংযোজনকারী <b>সর্বনিম্ন দৈর্ঘ্যের পথের</b> এজ সংখ্যা。পথ না থাকলে d(u, v) = ∞。</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">বৈশিষ্ট্য</th><th class="l">বর্ণনা</th></tr>
+    <tr><td class="l">d(u, v) = 0</td><td class="l">যদি এবং শুধুমাত্র যদি u = v</td></tr>
+    <tr><td class="l">d(u, v) = d(v, u)</td><td class="l">আনডিরেক্টেড গ্রাফে প্রতিসাম্য</td></tr>
+    <tr><td class="l">ত্রিভুজ অসমতা</td><td class="l">d(u, w) ≤ d(u, v) + d(v, w)</td></tr>
+    <tr><td class="l">অসীম দূরত্ব</td><td class="l">যদি u ও v ভিন্ন কম্পোনেন্টে থাকে</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">ব্যুৎপন্ন মিট্রিক্স</span>
+        <ul class="tick" style="margin-top:0">
+          <li><b>ইক্সেন্ট্রিসিটি:</b> ecc(v) = max{d(v, u) | u ∈ V}</li>
+          <li><b>ডায়ামিটার:</b> <span class="hl">diam(G)</span> = max{ecc(v) | v ∈ V}</li>
+          <li><b>রেডিয়াস:</b> <span class="hl">rad(G)</span> = min{ecc(v) | v ∈ V}</li>
+          <li><b>সেন্টার:</b> {v | ecc(v) = rad(G)}</li>
+          <li><b>পেরিফেরি:</b> {v | ecc(v) = diam(G)}</li>
+        </ul>
+      </div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="266">
+      <g class="w">
+        <circle cx="40" cy="85" r="14" class="ink fill-y"/>
+        <circle cx="100" cy="85" r="14" class="ink fill-y"/>
+        <circle cx="160" cy="85" r="14" class="ink fill-y"/>
+        <circle cx="220" cy="85" r="14" class="ink fill-y"/>
+        <circle cx="280" cy="85" r="14" class="ink fill-y"/>
+        <path class="ink" d="M52,85 H88 M112,85 H148 M172,85 H208 M232,85 H268"/>
+        <path class="ink-r" d="M52,85 L268,85" style="stroke-dasharray:3 3"/>
+        <circle cx="160" cy="85" r="20" class="ink-g" fill="none"/>
+        <text x="40" y="91" text-anchor="middle" class="k w6">A</text>
+        <text x="100" y="91" text-anchor="middle" class="k w6">B</text>
+        <text x="160" y="91" text-anchor="middle" class="k w6">C</text>
+        <text x="220" y="91" text-anchor="middle" class="k w6">D</text>
+        <text x="280" y="91" text-anchor="middle" class="k w6">E</text>
+        <text x="160" y="155" text-anchor="middle" class="bn g s" style="font-size:11px">সবুজ বৃত্ত = সেন্টার শীর্ষ C</text>
+      </g>
+    </svg><figcaption>P₅: ecc(A)=4, ecc(B)=3, ecc(C)=2, ecc(D)=3, ecc(E)=4; diam=4, rad=2</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ P₅ পাথ গ্রাফ</span> শীর্ষ A–B–C–D–E একট লাইনে। A থেকে দূরত্ব: d(A,B)=1, d(A,C)=2, d(A,D)=3, d(A,E)=4, তাই ecc(A)=4。একিভাবে ecc(B)=3, ecc(C)=2, ecc(D)=3, ecc(E)=4。<span class="hl">ডায়ামিটারে</span> = সর্বোচ্চ ecc = <span class="circ">4</span>。<span class="hl">রেডিয়াস</span> = সর্বনিম্ন ecc = <span class="circ">2</span>。<span class="hl">সেন্টারে</span> = {C}。<span class="hl">পেরিফেরিতে</span> = {A, E}。</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীকষার ফাঁদ</span> (i) ডায়ামিটার হলো <b>সর্বোচ্চ</b> ইক্সেন্ট্রিসিটি, সর্বোচ্চ ডিগ্রি নো। (ii) সেন্টারে <b>এক বং দুই সংলগ্ন</b> শীর্ষ থাকতে পারে — যেমন P₄-র সেন্টারে {B, C}。 (iii) বিচ্ছিন্ন গ্রাফে দূরত্ব অসীম, তাই ডায়ামিটার সাধারণত সংযুক্ত গ্রাফের জন্যই সংজ্ঞায়িত。</div>
+  </div>
+  <div class="ex small"><span class="lbl">সম্পাদিত উদাহরণ ✍ S₄ স্টার গ্রাফ</span> কেন্দ্রীয় শীর্ষ c, লিভ a, b, d। দূরত্ব: d(c,a)=d(c,b)=d(c,d)=1, d(a,b)=d(a,d)=d(b,d)=2。eccentricity: ecc(c)=1, ecc(a)=ecc(b)=ecc(d)=2。<span class="hl">ডায়ামিটর</span> = 2, <span class="hl">রেডিয়াস</span> = 1, <span class="hl">সেন্টার</span> = {c}, <span class="hl">পেরিফেরি</span> = {a, b, d}। মনো র‍্যাখো: স্টার গ্রাফে rad ≠ diam。</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: complementary graphs ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>কমপ্লিমেন্টারি গ্রাফ</span></div>
+  <h2><span class="no">৪</span>কমপ্লিমেন্টারি গ্রাফ</h2><span class="tag">রচনা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একট গ্রাফ G = (V, E)-র <span class="hl">কমপ্লিমেন্ট</span>, G̅ দ্বারা চিহ্নিত, এর <b>একই শীর্ষবিন্দুর সেট</b> V রাখে, এবং {u, v} এজটি G̅-তে থাকবে <b>যদি এবং শুধুমাত্র যদি</b> {u, v} এজটি G-তে <b>না</b> থাকে। তাই G ও G̅ Kₙ-র এজ বিভাজন করে。</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">বৈশিষ্ট্য</th><th class="l">বর্ণনা</th></tr>
+        <tr><td class="l">G ∪ G̅</td><td class="l">সম্পূর্ণ গ্রাফ <span class="hl">Kₙ</span> (এজ-বিচ্ছিন্ন যোগফল)</td></tr>
+        <tr><td class="l">G̿</td><td class="l">G (কমপ্লিমেন্টের কমপ্লিমেন্ট মূল গ্রাফ)</td></tr>
+        <tr><td class="l">এজ সংখ্যা</td><td class="l">|E(G̅)| = <span class="hl">n(n−1)/2 − |E(G)|</span></td></tr>
+        <tr><td class="l">সেলফ-কমপ্লি。</td><td class="l">G ≅ G̅; প্রয়োজন n ≡ 0 বং 1 (mod 4)</td></tr>
+      </table>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">সেলফ-কমপ্লিমেন্টারি</span> যে গ্রাফ তার কমপ্লিমেন্টের সমআকৃতি (isomorphic)。উদাহরণ: P₄ (4 শীর্ষের পাথ) সেলফ-কমপ্লিমেন্টারি। n শীর্ষবিন্দুর সেলফ-কমপ্লিমেন্টারি গ্রাফে, |E| = <span class="circ">n(n−1)/4</span>。8 টা শীর্ষবিন্দুর সেলফ-কমপ্লিমেন্টারি গ্রাফে 8·7/4 = <span class="hl">14</span> টা এজ。</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="266">
+      <g class="w">
+        <circle cx="60" cy="50" r="14" class="ink fill-y"/>
+        <circle cx="120" cy="50" r="14" class="ink fill-y"/>
+        <circle cx="60" cy="150" r="14" class="ink fill-y"/>
+        <circle cx="120" cy="150" r="14" class="ink fill-y"/>
+        <path class="ink" d="M72,50 H108 M60,64 V136"/>
+        <text x="90" y="20" text-anchor="middle" class="bn k s" style="font-size:11px">G: এজ AB, AC</text>
+        <circle cx="200" cy="50" r="14" class="ink fill-y"/>
+        <circle cx="260" cy="50" r="14" class="ink fill-y"/>
+        <circle cx="200" cy="150" r="14" class="ink fill-y"/>
+        <circle cx="260" cy="150" r="14" class="ink fill-y"/>
+        <path class="ink-r" d="M212,50 H248 M200,64 V136 M212,150 H248 M260,64 V136"/>
+        <text x="230" y="20" text-anchor="middle" class="bn r s" style="font-size:11px">G̅: এজ BD, BC, CD, AD</text>
+        <text x="150" y="195" text-anchor="middle" class="bn s k" style="font-size:11px">G ∪ G̅ = K₄ (মোট 6 এজ)</text>
+      </g>
+    </svg><figcaption>G-তে 2 টা এজ, G̅-তে 4 টা; একসাথে K₄ গঠন করে 6 এজ = 4·3/2</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীকষার ফাঁদ</span> (i) G ও G̅ <b>কখনো</b> একট এজ শেয়ার করে না — তাদের এজ সেট Kₙ-তে পূরক। (ii) n ≥ 2 হল G ও G̅ দুইটাই বিচ্ছিন্ন হতে পারে না — অন্তত একট সংযুক্ত থাকবে। (iii) সেলফ-কমপ্লিমেন্টারি গ্রাফে |E| = n(n−1)/4, তাই n(n−1) কে 4 দ্বারা বিভাজ্য হতে হবে — এট মানে n ≡ 0 বং 1 (mod 4)。</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কমপ্লিমেন্ট = বাকিটা।</b>" Kₙ নাও, G-র এজ বাদ দেও, বাকিটা হলো G̅。সেলফ-কমপ্লিমেন্টারি গ্রাফের জন্য G ও G̅ এজ স্পেসে প্রতিবিম্ব — Kₙ-র এজের ঠিক অর্ধেক পায় প্রতিট。</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধাণকৃত উদাহরণ ✍ সেলফ-কমপ্লিমেন্টারি গ্রাফ খোঁজা</span> P₄ (A–B–C–D) সেলফ-কমপ্লিমেন্টারি: এর এজ {A,B},{B,C},{C,D} (3 টা); K₄-তে মোট 6 এজ, তাই G̅-তেও 3 টা এজ থাকবে — সেগুলো হলো {A,C},{A,D},{B,D}। P₄ ≅ G̅ (উভয়েই 3 এজযুক্ত পাথ)। 8 টা শীর্ষবিন্দুর সেলফ-কমপ্লিমেন্টারি গ্রাফে |E| = 8·7/4 = <span class="hl">14</span> টা এজ。</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: cut-vertices ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>কাট-ভার্টেক্স</span></div>
+  <h2><span class="no">৫</span>কাট-ভার্টেক্স (আর্টিকুলেশন পয਼েন্ট)</h2><span class="tag">দুর্বল বিন্দু ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একট শীর্ষবিন্দু v একট <span class="hl">কাট-ভার্টেক্স</span> (আর্টিকুলেশন পয়েন্ট) যদি v (এবং এর সংযুক্ত এজ) বাদ দিলে <b>সংযুক্ত কম্পোনেন্টের সংখ্যা বৃদ্ধি</b> পায়。কোনো কাট-ভার্টেক্সবিন গ্রেফকে <span class="hl">২-সংযুক্ত</span> (বা non-separable) বলা হয়。</div>
+  <div class="cols" style="grid-template-columns:minmax(0,270px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="266">
+      <g class="w">
+        <circle cx="60" cy="100" r="16" class="ink fill-y"/>
+        <circle cx="150" cy="60" r="16" class="ink fill-y"/>
+        <circle cx="150" cy="140" r="16" class="ink fill-y"/>
+        <circle cx="240" cy="100" r="16" class="ink fill-y"/>
+        <path class="ink" d="M74,100 H136 M150,76 V124 M164,100 H226"/>
+        <circle cx="150" cy="100" r="24" class="ink-r" fill="none"/>
+        <text x="60" y="106" text-anchor="middle" class="k w6">A</text>
+        <text x="150" y="66" text-anchor="middle" class="k w6">B</text>
+        <text x="150" y="146" text-anchor="middle" class="k w6">D</text>
+        <text x="240" y="106" text-anchor="middle" class="k w6">C</text>
+        <text x="150" y="188" text-anchor="middle" class="bn r s" style="font-size:11px">B একট কাট-ভার্টেক্স (লাল বৃত্ত)</text>
+      </g>
+    </svg><figcaption>B বাদ দিলে {A} ও {C, D} বিচ্ছিন্ন হয়; B একট কাট-ভার্টেক্স</figcaption></figure>
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">মূল বৈশিষ্ট্য</span>
+        <ul class="tick" style="margin-top:0">
+          <li>ব্রিজ ও কাট-ভার্টেক্স নেটওযর্কের <span class="hl">দুর্বল বিন্দু</span></li>
+          <li>লিভ কাট-ভার্টেক্স নো (K₂ বাদে)</li>
+          <li>প্রতিট চক্রে কোনো কাট-ভার্টেক্স নো</li>
+          <li>ব্লক হলো সর্বোচ্চ <span class="circ">বিনা</span> কাট-ভার্টেক্স সাবগ্রাফ</li>
+          <li>n ≥ 3 থাকা একট ট্রিতে n − 2 টা কাট-ভার্টেক্স (সব非লিভ শীর্ষ)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীকষার ফাঁদ</span> n ≥ 3 থাকা একট ট্রিতে লিভ (ডিগ্রি-1 শীর্ষ) <b>কখনো</b> কাট-ভার্টেক্স нό — বাদ দিলে বাকিটুকু এখনও সংযুক্ত থাকে। K₂-তে মাত্র একট এজের প্রান্তবিন্দু কাট-ভার্টেক্স হিসেবে গণ্য হয়。একট কাট-ভার্টেক্সযুক্ত গ্রাফের κ(G) = 1, তাই এট <b>২-সংযুক্ত нό</b>。</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কাট-ভার্টেক্স হলো সংকীর্ণ প্রান্ত।</b>" এট বাদ দিলে নেটওযর্ক আরও খণ্ডে বিভক্ত হয়ে পড়ে। নদীর উপর সেতুবদ্ধ শহরের মতো — সেতু বন্ধ করলে দুই কিনারা আলাদা。</div>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কাট-ভার্টেক্স খুঁজে বার করো</span> গ্রাফ: A—B—C, D কে B-তে লাগানো (B কেন্দ্রে)。B বাদ দিলে হয় {A}, {C}, {D} — <b>৩ টা কম্পোনেন্ট</b> (আগে ১ ছিল)。তাই B কাট-ভার্টেক্স।A, C, D লিভ — এদের বাদ দিলে ২ টা শীর্ষ এখনও সংযুক্ত, তাই এরা কাট-ভার্টেক্স нो।P₅ পাথে (A–B–C–D–E), কাট-ভার্টেক্সগুলো হলো B, C, D (৩ টা); A ও E লিভ, কাট-ভার্টেক্স нো。</div>
+    <div class="tipbox tiny"><span class="lbl">আইটি লিংক</span> কাট-ভার্টেক্স যোগাযোগ নেটওযর্ক, বিদ্যুৎ গ্রিড, আর সড়ক ব্যবস্থায় একক ব্যর্থতার বিন্দু চিহ্নিত করে — একটা আউটেজ-এ গোটা অঞ্চল বিচ্ছিন্ন হয়ে পড়ে。</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: bridges ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>ব্রিজ (কাট-এজ)</span></div>
+  <h2><span class="no">৬</span>ব্রিজ (কাট-এজ)</h2><span class="tag">গুরুত্বপূর্ণ এজ ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একট এজ e একট <span class="hl">ব্রিজ</span> (কাট-এজ) যদি এট বাদ দিলে <b>সংযুক্ত কম্পোনেন্টের সংখ্যা বৃদ্ধি</b> পায়。সমমানভাবে: e একট ব্রিজ <span class="circ">যদি এবং শুধুমাত্র যদি</span> এট G-র <b>কোনো চক্রে</b> нো。</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">মূল তথ্য</span>
+        <ul class="tick" style="margin-top:0">
+          <li>ট্রির <b>প্রতিট</b> এজ একট ব্রিজ</li>
+          <li>একট এজ ব্রিজ ⟺ এট যেকোনো চক্রে нো</li>
+          <li>ব্রিজ বাদ দিলে <span class="circ">গ্রাফ বিচ্ছিন্ন</span> হয়</li>
+          <li>ব্রিজ হলো কাট-ভার্টেক্সের এজ-সমমান</li>
+          <li>কোনো ব্রিজবিন গ্রেফক <b>২-এজ-সংযুক্ত</b> বলা হয়</li>
+        </ul>
+      </div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">DFS দিয়ে ব্রিজ খোঁজার অ্যালগরিদম</span> <b>ডিসকভারি সময়</b> disc[u] এবং <b>লো-লিংক</b> মান low[u] বের করো = min(ডিসকভার সময়, ব্যাক-এজ দিয়ে reachable পূর্বপুরুষের সময়)। এজ (u, v) (u = v-র পিতা) একট <span class="hl">ব্রিজ</span> যদি <span class="circ">low[v] &gt; disc[u]</span>。</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="266">
+      <g class="w">
+        <circle cx="60" cy="100" r="16" class="ink fill-y"/>
+        <circle cx="150" cy="60" r="16" class="ink fill-y"/>
+        <circle cx="150" cy="140" r="16" class="ink fill-y"/>
+        <circle cx="240" cy="100" r="16" class="ink fill-y"/>
+        <path class="ink" d="M74,100 H136 M150,76 V124 M164,100 H226"/>
+        <path class="ink-r" d="M74,100 H136" style="stroke-width:3"/>
+        <text x="105" y="92" text-anchor="middle" class="bn r w6" style="font-size:10px">ব্রিজ</text>
+        <text x="60" y="106" text-anchor="middle" class="k w6">A</text>
+        <text x="150" y="66" text-anchor="middle" class="k w6">B</text>
+        <text x="150" y="146" text-anchor="middle" class="k w6">D</text>
+        <text x="240" y="106" text-anchor="middle" class="k w6">C</text>
+        <text x="150" y="188" text-anchor="middle" class="bn s k" style="font-size:11px">A—B হলো একমাত্র ব্রিজ</text>
+      </g>
+    </svg><figcaption>A—B এজ একট ব্রিজ: বাদ দিলে A বিচ্ছিন্ন হয়</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীকষার ফাঁদ</span> (i) <b>চক্রে</b> থাকা একট এজ <b>কখনো</b> ব্রিজ нো — চক্রে একট এজ বাদ দিলে পথ থেকে যায়, এখনও সংযুক্ত。 (ii) <span class="circ">প্রতিট ট্রির এজ ব্রিজ</span>, কিন্তু প্রতিট ব্রিজ ট্রিতে нো — চক্রেযুক্ত গ্রাফেও ব্রিজ থাকতে পারে。 (iii) low[v] &gt; disc[u] (কঠোরভাবে বড়); low[v] = disc[u] মানে ব্যাক-এজ আছে, তাই (u,v) <b>ব্রিজ нো</b>。</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>চক্রে নাই = ব্রিজ।</b>" যদি v থেকে (u,v) এজ ছাড়া u-তে ফিরে যাওয়া যায়, তাহলে (u,v) নিরাপদ — ব্রিজ нো। না গেলে ব্রিজ。</div>
+  </div>
+  <div class="ex small"><span class="lbl">সম্পাদিত উদাহরণ ✍ ত্রিভুজ + লেজ গ্রাফে ব্রিজ খোঁজা</span> G: A—B, B—C, C—A (ত্রিভুজ), C—D (লেজ)। এজ C—D একট‍্া ব্রিজ (বাদ দিলে D বিচ্ছিন্ন হয়)। এজ A—B, B—C, C—A <b>ব্রিজ নয়</b> — প্রতিটি চক্রের অংশ, যেকোনো একট‍্া বাদ দিলে পথ ABC থেকে যায় (সংযুক্ত)। তাই এই গ্রাফে ঠিক <span class="circ">1 টা ব্রিজ</span> আছে: C—D। আরেকট‍্া উদাহরণ: P₄ (A—B—C—D) পথে সব এজই ব্রিজ — 3 টা ব্রিজ, 0 টা চক্র。</div>
+  <div class="tipbox tiny"><span class="lbl">আইটি লিংক</span> একটি ২-এজ-সংযুক্ত (2-edge-connected) গ্রাফে কোনো ব্রিজ নেই — দুইটি স্বতন্ত্র পথ থাকে প্রতিটি শীর্ষবিন্দুর জোড়ার মধ্যে। নেটওয়ার্কের ফল্ট-টলারেন্স ডিজাইনে এই ধারণা ব্যবহৃত হয়।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: blocks & k-connected ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>ব্লক ও k-সংযুক্ত গ্রাফ</span></div>
+  <h2><span class="no">৭</span>ব্লক ও k-সংযুক্ত গ্রাফ</h2><span class="tag">সংযোজনীয়তা ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">ব্লক</span> একট <span class="hl">ব্লক</span> হলো একট সর্বোচ্চ সংযুক্ত সাবগ্রাফ যাতে <b>কোনো কাট-ভার্টেক্স</b> নো。ব্লকগুল হলো: (i) একট সর্বোচ্চ ২-সংযুক্ত সাবগ্রাফ, (ii) একট ব্রিজ (একট মাত্র এজ যা নিজেকে ব্লক), বং (iii) একট বিচ্ছিন্ন শীর্ষবিন্দু。একট <span class="hl">ব্লক ট্রি</span> (BC-ট্রি) তে ব্লক ও কাট-ভার্টেক্সের নোড থাকে, এজে কাট-ভার্টেক্সকে তার অন্তর্গত ব্লকের সাথে সংযুক্ত করে。</div>
+      <div class="def small" style="margin-top:0"><span class="lbl">k-সংযুক্ত</span> একট গ্রাফ <span class="hl">k-সংযুক্ত</span> যদি |V| &gt; k এবং যেকোনো k−1 টা শীর্ষবিন্দু বাদ দিলেও গ্রাফ সংযুক্ত থাকে。<span class="hl">ভার্টেক্স কানেক্টিভিটি</span> κ(G) হলো সেই ন্যূনতম সংখ্যা শীর্ষবিন্দু যাদের বাদ দিলে গ্রাফ বিচ্ছিন্ন হয় (বা তুচ্ছ হয়ে যায়)。</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="266">
+      <g class="w">
+        <circle cx="60" cy="50" r="14" class="ink fill-y"/>
+        <circle cx="150" cy="50" r="14" class="ink fill-y"/>
+        <circle cx="150" cy="150" r="14" class="ink fill-y"/>
+        <circle cx="250" cy="50" r="14" class="ink fill-y"/>
+        <circle cx="250" cy="150" r="14" class="ink fill-y"/>
+        <path class="ink" d="M72,50 H138 M150,64 V136 M164,50 H236 M250,64 V136"/>
+        <circle cx="150" cy="100" r="30" class="ink-r" fill="none" style="stroke-dasharray:4 3"/>
+        <text x="60" y="56" text-anchor="middle" class="k w6">A</text>
+        <text x="150" y="56" text-anchor="middle" class="k w6">B</text>
+        <text x="250" y="56" text-anchor="middle" class="k w6">D</text>
+        <text x="150" y="156" text-anchor="middle" class="k w6">C</text>
+        <text x="250" y="156" text-anchor="middle" class="k w6">E</text>
+        <text x="150" y="192" text-anchor="middle" class="bn r s" style="font-size:11px">B কাট-ভার্টেক্স; ব্লক: {A,B}, {B,C,D}, {D,E}</text>
+      </g>
+    </svg><figcaption>ব্লক বিভাজন: B ও D কাট-ভার্টেক্স দিয়ে তিনট ব্লক সংযুক্ত</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">এজ কানেক্টিভিটি</span> <span class="hl">এজ কানেক্টিভিটি</span> λ(G) হলো সেই ন্যূনতম সংখ্যা এজ যাদের বাদ দিলে গ্রাফ বিচ্ছিন্ন হয়。<b>হুইটনির উপপাদ্য:</b> <span class="hl">κ(G) ≤ λ(G) ≤ δ(G)</span>, যেখানে δ(G) হলো ন্যূনতম ডিগ্রে。</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীকষার ফাঁদ</span> (i) κ(Kₙ) = n − 1, <b>নো</b> n। Kₙ-কে বিচ্ছিন্ন করতে n−1 টা শীর্ষ বাদ দিতে হবে。 (ii) কাট-ভার্টেক্সযুক্ত গ্রাফের κ = 1 — এট <b>২-সংযুক্ত нো</b>。 (iii) κ ≤ λ ≤ δ সবদা সত্য; উভয় পাশে সমতা Kₙ ও Cₙ-তে থাকে কিন্তু সাধারণত নো。</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>κ হলো সবচেয়ে দুর্বল লিংক, δ হলো সবচেয়ে উঁচু ছাদ।</b>" ভার্টেক্স কানেক্টিভিটি (κ) ≤ এজ কানেক্টিভিটি (λ) ≤ ন্যূনতম ডিগ্রে (δ)。ন্যূনতম ডিগ্রে হলো উপরিসীমা — মিনিমাম-ডিগ্রে শীর্ষের সব প্রতিবেশী বাদ দিলে বিচ্ছিন্ন করা যায়, কিন্তু কমও কাজ করতে পারে。</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কানেক্টিভিটি মান</span> (ক) n ≥ 2 থাকা ট্রি: κ = 1 (কাট-ভার্টেক্স আছে), λ = 1 (ব্রিজ আছে)。(খ) Cₙ, n ≥ 3: κ = 2, λ = 2 — যেকোনো 1 টা শীর্ষ বা এজ বাদ দিলে পথ থাকে (সংযুক্ত)。(গ) K₆: κ = 5, λ = 5 — একট শীর্ষকে বিচ্ছিন্ন করতে 5 টা শীর্ষ/এজ বাদ দিতে হবে。(ঘ) K₃,₃: κ = 3, λ = 3 (৩-নিয়মিত, প্রতিট শীর্ষের ডিগ্রে 3)。</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>রিভিশন I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীকষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্যপত্রে</span>
+    <div class="fgrid small">
+      <p>ট্রি: সংযুক্ত + অ্যাসাইক্লিক</p><p>n শীর্ষ → n − 1 এজ</p>
+      <p>যেকোনো 2 শীর্ষের মধ্যে অনন্য পথ</p><p>এজ যোগ করলে → ঠিক একট চক্রে</p>
+      <p>এজ বাদ দিলে → বিচ্ছিন্ন হয়</p><p>লিভ: n ≥ 2 হলে অন্তত 2 টা</p>
+      <p>ফরেষ্ট: n শীর্ষ, k টা ট্রি → n − k এজ</p><p>স্প্যানিং ট্রি: |V| − 1 এজ</p>
+      <p>কেইলি: Kₙ-তে nⁿ⁻² স্প্যানিং ট্রি</p><p>দূরত্ব: ছোট্টম পথের দৈর্ঘ্য</p>
+      <p>ডায়ামিটর = সর্বোচ্চ ecc</p><p>রেডিয়াস = সর্বনিম্ন ecc</p>
+      <p>সেন্টার: ecc = rad থাকা শীর্ষ</p><p>পেরিফেরি: ecc = diam থাকা শীর্ষ</p>
+      <p>G ∪ G̅ = Kₙ (এজ-বিচ্ছিন্ন)</p><p>|E(G̅)| = n(n−1)/2 − |E(G)|</p>
+      <p>সেলফ-কমপ্লি: n ≡ 0,1 (mod 4)</p><p>কাট-ভার্টেক্স: বাদ দিলে কম্পোনেন্ট বাড়ে</p>
+      <p>ব্রিজ: যেকোনো চক্রে নাই</p><p>ব্রিজ পরীকষা: low[v] &gt; disc[u]</p>
+      <p>ব্লক: কাট-ভার্টেক্সবিন সর্বোচ্চ সাবগ্রাফ</p><p>κ(G) ≤ λ(G) ≤ δ(G) (হুইটনি)</p>
+      <p>κ(Kₙ) = n − 1; κ(Cₙ) = 2</p><p>k-সংযুক্ত: k−1 শীর্ষ বাদেও সংযুক্ত</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য 12 টা ওয়ান-লাইনারে</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>ট্রি: n শীর্ষ, n − 1 এজ</li>
+      <li>ফরেষ্ট: n শীর্ষ, k টা ট্রি → n − k এজ</li>
+      <li>G-র স্প্যানিং ট্রিতে |V| − 1 এজ</li>
+      <li>কেইলি: Kₙ-তে nⁿ⁻² স্প্যানিং ট্রি</li>
+      <li>d(u,v) = ছোট্টম পথের দৈর্ঘ্য</li>
+      <li>diam(G) = সর্বোচ্চ ecc; rad(G) = সর্বনিম্ন ecc</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>|E(G̅)| = n(n−1)/2 − |E(G)|</li>
+      <li>কাট-ভার্টেক্স: বাদ দিলে কম্পোনেন্ট বাড়ে</li>
+      <li>ব্রিজ: যেকোনো চক্রে নাই</li>
+      <li>ব্রিজ পরীকষা: low[v] &gt; disc[u]</li>
+      <li>ব্লক: কাট-ভার্টেক্সবিন সর্বোচ্চ সাবগ্রাফ</li>
+      <li>হুইটনি: κ ≤ λ ≤ δ</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">শীর্ষ ফাঁদ</span> "ট্রি" মানে সংযুক্ত AND অ্যাসাইক্লিক — শুধু অ্যাসাইক্লিক মানে ফরেষ্ট · লিভ কখনো কাট-ভার্টেক্স нো n ≥ 3 তে · low[v] &gt; disc[u] কঠোর — সমান মানে ব্যাক-এজ আছে · সেলফ-কমপ্লিমেন্টারে n(n−1)/4 এজ দরকার, তাই n ≡ 0 বং 1 (mod 4) · κ(K₆) = 5, 6 нো · ডায়ামিটর হলো সর্বোচ্চ ইক্সেন্ট্রিসিটি, সর্বোচ্চ ডিগ্রে нো · P₄-র সেন্টার {B,C}, একক শীর্ষ нো</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> "ট্রি কখনো লুপ করে না — শুধু শাখা ছড়ায়" · "স্প্যানিং ট্রি = হাড়" · "কমপ্লিমেন্ট = বাকিটা" · "কাট-ভার্টেক্স হলো সংকীর্ণ প্রান্ত" · "চক্রে নাই = ব্রিজ" · "κ হলো সবচেয়ে দুর্বল লিংক, δ হলো সবচেয়ে উঁচু ছাদ"。</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>গ্রাফ · ট্রি</span><span>রিভিশন II: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীকষার ধাঁচ, 10 নমবর)</h2><span class="tag g">প্রথমে চেষ্টা করো, তারপর চেক</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>20 টা শীর্ষবিন্দু থাকা একট ট্রিতে কতট এজ থাকবে?<ol class="opts"><li>ক) 20</li><li>খ) 21</li><li>গ) 18</li><li>ঘ) 19</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>নিচের কোনটা গ্রাফের ব্রিজ (কাট-এজ)?<ol class="opts"><li>ক) একট শীর্ষ থেকে নিজের দিকের এজ</li><li>খ) সর্বোচ্চ ডিগ্রেযুক্ত দুই শীর্ষের মধ্যেক্ষের এজ</li><li>গ) প্রতিট চক্রে থাকা এজ</li><li>ঘ) বাদ দিলে কম্পোনেন্ট বাড়ে এমন এজ</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>একট সরল গ্রাফ G-তে 8 টা শীর্ষ ও 10 টা এজ আছে。G̅-তে কতট এজ?<ol class="opts"><li>ক) 10</li><li>খ) 28</li><li>গ) 38</li><li>ঘ) 18</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>একট ফরেষ্টে 15 টা শীর্ষ ও 4 টা ট্রি আছে。এজ সংখ্যা কত?<ol class="opts"><li>ক) 14</li><li>খ) 11</li><li>গ) 15</li><li>ঘ) 19</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>K₄-র কতট ভিন্ন লেবেলযুক্ত স্প্যানিং ট্রি আছে?<ol class="opts"><li>ক) 4</li><li>খ) 12</li><li>গ) 16</li><li>ঘ) 64</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>2 বং তাত্তর শীর্ষ থাকা প্রতিট ট্রির জন্য কোনট সত্য?<ol class="opts"><li>ক) এতে কমপক্ষে একট চক্রে আছে</li><li>খ) প্রতিট শীর্ষ কাট-ভার্টেক্স</li><li>গ) এতে ঠিক n এজ আছে</li><li>ঘ) প্রতিট এজ একট ব্রিজ</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>6 টা শীর্ষবিন্দুযুক্ত সম্পূর্ণ গ্রাফ K₆-র vertex connectivity κ(K₆) কত?<ol class="opts"><li>ক) 6</li><li>খ) 5</li><li>গ) 4</li><li>ঘ) 15</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>7 টা শীর্ষবিন্দুযুক্ত পাথ গ্রাফ P₇-র রেডিয়াস ও ডায়ামিটার কত?<ol class="opts"><li>ক) 3 ও 6</li><li>খ) 6 ও 3</li><li>গ) 3.5 ও 7</li><li>ঘ) 4 ও 6</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>যেকোনো গ্রাফ G-র জন্য হুইটনের অসমতা কোনট?<ol class="opts"><li>ক) λ ≤ κ ≤ δ</li><li>খ) δ ≤ κ ≤ λ</li><li>গ) κ ≤ λ ≤ δ</li><li>ঘ) κ ≤ δ ≤ λ</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>8 টা শীর্ষবিন্দুযুক্ত একট সেলফ-কমপ্লিমেন্টারি গ্রাফে কতট এজ থাকবে?<ol class="opts"><li>ক) 14</li><li>খ) 28</li><li>গ) 7</li><li>ঘ) 16</li></ol></div>
+  </div>
+  <div class="anskey">উত্তর কী → 1-ঘ · 2-ঘ · 3-ঘ · 4-খ · 5-গ · 6-ঘ · 7-খ · 8-ক · 9-গ · 10-ক</div>
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> প্রমাণ করো যে প্রতিট ট্রিতে n টা শীর্ষবিন্দু থাকলে ঠিক n − 1 টা এজ থাকে。<i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>ভিত্তি ক্ষেত্র (n = 1)。</b> একট মাত্র শীর্ষবিন্দু থাকা ট্রিতে 0 টা এজ。সূত্রে: 1 − 1 = 0。✓ <i class="mk">2</i></li>
+    <li><b>আগমন অনুমান。</b> ধরি k টা শীর্ষবিন্দু থাকা প্রতিট ট্রিতে k − 1 টা এজ আছে。</li>
+    <li><b>আগমন ধাপ。</b> k + 1 টা শীর্ষবিন্দু থাকা একট ট্রি T নাও。T-তে অন্তত দুইট লিভ আছে (ডিগ্রে 1 শীর্ষ)। একট লিভ v এবং তার সংযুক্ত এজ e বাদ দিলে বাকি T'-তে k টা শীর্ষ থাকে, এট এখনও ট্রি (লিভ বাদ দিলে সংযোজনীয়তা ও অ্যাসাইক্লিকতা অক্ষুণ্ণ থাকে)। ধারণা মতে, T'-তে k − 1 টা এজ。তাই T-তে (k − 1) + 1 = <span class="hl">k</span> = (k + 1) − 1 টা এज。✓ <i class="mk">5</i></li>
+    <li><b>উপসংহার。</b> গাণিতিক আগমন দ্বারা, প্রতিট n ≥ 1 টা শীর্ষবিন্দু থাকা ট্রিতে ঠিক n − 1 টা এজ আছে। <i class="mk">2</i></li>
+    <li><b>বিপরীত (বোনাস)。</b> n শীর্ষ ও n − 1 এজ থাকা একট সংযুক্ত গ্রাফ হলো ট্রি।প্রমাণ: এতে চক্রে нো (থাকলে একট এজ বাদ দিলে এখনও সংযুক্ত থাকতো, n − 2 এজে, সর্বনিম্ততা বিরোধী)। <i class="mk">1</i></li>
+  </ol>
+  <div class="pg-no">১0</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ফাইল অর্গানাইজেশন, ইনডেক্সিং ও কোয়েরি অপটিমাইজেশন: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" height="4000" width="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>তারিখ: ১৩.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ফাইল অর্গানাইজেশন, ইনডেক্সিং ও কোয়েরি অপটিমাইজেশন</span></h1>
+  <p class="subtitle">হিপ · সিকোয়েনশিয়াল · হ্যাশড · ইনডেক্সড · বি প্লাস ট্রি · হ্যাশ · কস্ট-বেজড অপটিমাইজার</p>
+  <p class="tiny center" style="margin:0 0 1mm"><b>এগারো পাতা:</b> ফাইলের ভৌত সাজানো, বাইটগুলো কোথায় থাকে, ইনডেক্স কীভাবে সারি খুঁজে পায়, দুটি অ্যাক্সেস কাঠামো, অপটিমাইজার কীভাবে সস্তা প্ল্যান বাছে, এবং একটি সম্পূর্ণ হিসাব-কর্মের উদাহরণ।</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="300">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">অ্যাক্সেস পাথ</text><text x="320" y="172" text-anchor="middle" class="bn r s">ফাইল · ইনডেক্স · প্ল্যান</text>
+      <text x="142" y="58" text-anchor="middle" class="bn s" style="font-size:10px">হিপ ফাইল</text><text x="142" y="72" text-anchor="middle" class="bn s" style="font-size:10px">ইনসার্ট দ্রুত</text>
+      <text x="320" y="40" text-anchor="middle" class="bn r w6" style="font-size:11px">B+ ট্রি ★</text>
+      <text x="498" y="58" text-anchor="middle" class="bn s" style="font-size:10px">সিকোয়েনশিয়াল</text><text x="498" y="72" text-anchor="middle" class="bn s" style="font-size:10px">কি-ক্রমে সাজানো</text>
+      <text x="96" y="148" text-anchor="middle" class="bn g w6" style="font-size:10px">হ্যাশ টেবিল</text><text x="96" y="163" text-anchor="middle" class="bn g w6" style="font-size:10px">O(1) সমতা সার্চ</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:10px">কস্ট মডেল</text><text x="544" y="163" text-anchor="middle" class="bn r w6" style="font-size:10px">I/O · CPU ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s" style="font-size:10px">ক্লাস্টার্ড</text><text x="142" y="252" text-anchor="middle" class="bn s" style="font-size:10px">নন-ক্লাস্টার্ড</text>
+      <text x="320" y="270" text-anchor="middle" class="bn r w6" style="font-size:10px">SQL → সস্তা প্ল্যান</text>
+      <text x="498" y="238" text-anchor="middle" class="bn r w6" style="font-size:10px">স্টোরেজ স্তর</text><text x="498" y="252" text-anchor="middle" class="bn r w6" style="font-size:10px">র‍্যাম · ডিস্ক ★</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = অপর অ্যাক্সেস কাঠামো</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>হাই-ইল্ড তালিকা</b><br>① হিপ: ক্রমহীন, ইনসার্ট দ্রুত<br>② সিকোয়েনশিয়াল: সাজানো, সার্চ দ্রুত<br>③ হ্যাশড: <code>h(k)=k mod N</code><br>④ ইনডেক্সড: বাড়তি জায়গা, খুব দ্রুত<br>⑤ প্রাইমারি স্টোর = র‍্যাম, ভোলাপূর্ণ<br>⑥ বিট → বাইট → ব্লক → ফাইল → ডিবি<br>⑦ প্রাইমারি ইনডেক্স = সার্চ কি-তে<br>⑧ <span class="circ">মাত্র একটি ক্লাস্টার্ড ইনডেক্স</span> ★<br>⑨ ডেন্স = প্রতি রেকর্ডে, স্পার্স = প্রতি ব্লকে<br>⑩ B+ ট্রি: সব কি লিভে ★<br>⑧ হ্যাশ: <code>=</code>-এ O(1), রেঞ্জ নয়<br>⑫ প্ল্যান: SQL→পার্সার→অপটিমাইজার</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">সিলেবাস এই লেসনের প্রতিটি অংশ নাম করে: "<span class="hl">File organization and data storage; Indexing: primary and secondary indexes, B+ trees, hash tables; BCS Query optimization;</span>" <b>তিনটি অংশই এখানে পূর্ণ করা হয়েছে।</b> db1-এ সম্পর্কগুলো বানানো হয়েছিল, db2-এ তার বীজগণিতা ও SQL, db3-এ রিডান্ড্যান্সি সরানো হয়েছিল, আর db5-এ ট্রানজেকশন ও কনকারেন্সি। এই সবের মাঝখানে এই লেসনের একটিমাত্র প্রশ্ন: <span class="hl">টেবিলগুলো সুন্দর ও পরিষ্কার — তবে তাদের বাইটগুলো কোথায়, আর কোটি সারির মধ্যে একটি সারিতে ডিবিএমএস কীভাবে পৌঁছায়?</span></p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>ফাইল অর্গানাইজেশন, চার প্রকার … পৃ. ২</li><li>স্টোরেজের ধরন ও ইউনিটের সিঁড়ি … পৃ. ৩</li><li>ইনডেক্স: চার প্রকার … পৃ. ৪</li><li>ইনডেক্সের ভেতরে: ডেন্স, স্পার্স … পৃ. ৫</li><li>B+ ট্রি ও লিভ চেইন … পৃ. ৬</li></ul>
+    <ul class="tick"><li>হ্যাশ টেবিল ও কলিশন … পৃ. ৭</li><li>কোয়েরি অপটিমাইজেশন, ধাপে ধাপে … পৃ. ৮</li><li>কস্ট মডেল ও ইনডেক্স ডিজাইন … পৃ. ৯</li><li>রাতের পরীক্ষার পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: file organization ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>ফাইল অর্গানাইজেশন</span></div>
+  <h2><span class="no">১</span>ফাইল অর্গানাইজেশন: রেকর্ড আসলে ডিস্কে কীভাবে থাকে</h2><span class="tag">চার প্রকার ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ফাইল অর্গানাইজেশন (File Organization)</b> হলো ডেটা ফাইলের ভেতরে <span class="hl">রেকর্ডগুলো শারীরিকভাবে কীভাবে সংরক্ষিত হয়</span> — ডিস্কে তাদের ক্রম এবং একটি রেকর্ডে পৌঁছাতে ডিবিএমএস যে পথ অনুসরণ করে। এটি একটি <i>ভৌত</i> সিদ্ধান্ত: একই টেবিল চার রকমে রাখা যায়, আর চার রকমের insert, delete ও search খরচ সম্পূর্ণ ভিন্ন।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অর্গানাইজেশন</th><th class="l">বর্ণনা ও বৈশিষ্ট্য</th></tr>
+    <tr><td class="l"><b>হিপ (আনঅর্ডার্ড)</b></td><td class="l">রেকর্ড <span class="hl">একেবারে কোনো ক্রমে নয়</span>। ইনসার্ট দ্রুত — শুধু পিছনে যোগ করা। সার্চ ধীন, <b>O(n)</b>: প্রতিটি ব্লক পড়তে হয়।</td></tr>
+    <tr><td class="l"><b>সিকোয়েনশিয়াল</b></td><td class="l">রেকর্ড <span class="hl">একটি কি ফিল্ড অনুযায়ী সাজানো</span>। ওই কিতে সার্চ দ্রুত, কিন্তু ইনসার্ট ধীন — পরের সব রেকর্ড সরাতে হয়।</td></tr>
+    <tr><td class="l"><b>হ্যাশড</b></td><td class="l">হ্যাশ ফাংশন স্টোরেজ অবস্থান বের করে, ফলে <span class="hl">ডাইরেক্ট অ্যাক্সেস</span>। সমতা সার্চ দ্রুত; <b>কলিশন সম্ভব</b>।</td></tr>
+    <tr><td class="l"><b>ক্লাস্টার্ড / ইনডেক্সড</b></td><td class="l">ডেটা <span class="hl">ইনডেক্স পয়েন্টারের সঙ্গে</span> রাখা। সার্চ খুব দ্রুত; ইনডেক্সের জন্য <b>বাড়তি জায়গা</b> লাগে।</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 168" width="470">
+    <g class="w">
+      <rect x="8" y="10" width="286" height="26" rx="12" class="ink fill-b"/>
+      <rect x="8" y="42" width="66" height="30" rx="6" class="ink fill-y"/>
+      <rect x="82" y="42" width="66" height="30" rx="6" class="ink fill-y"/>
+      <rect x="156" y="42" width="66" height="30" rx="6" class="ink fill-y"/>
+      <rect x="230" y="42" width="64" height="30" rx="6" class="ink fill-y"/>
+      <rect x="8" y="88" width="286" height="26" rx="12" class="ink fill-b"/>
+      <rect x="8" y="120" width="66" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="82" y="120" width="66" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="156" y="120" width="66" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="230" y="120" width="64" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="326" y="10" width="286" height="26" rx="12" class="ink-r fill-r"/>
+      <rect x="326" y="42" width="286" height="40" rx="6" class="ink fill-b"/>
+      <path class="ink" d="M326,62 H612 M356,42 V82 M410,42 V82 M466,42 V82 M522,42 V82 M578,42 V82 M356,62 H612"/>
+      <rect x="326" y="104" width="286" height="46" rx="6" class="ink fill-b"/>
+      <path class="ink" d="M326,127 H612 M470,104 V150"/>
+      <path class="ink-r" d="M470,92 V102" marker-end="url(#ah)"/>
+    </g>
+    <text x="151" y="28" text-anchor="middle" class="bn k w6" style="font-size:12px">হিপ (আনঅর্ডার্ড ফাইল)</text>
+    <text x="41" y="62" text-anchor="middle" class="bn s" style="font-size:10px">77</text>
+    <text x="115" y="62" text-anchor="middle" class="bn s" style="font-size:10px">31</text>
+    <text x="189" y="62" text-anchor="middle" class="bn s" style="font-size:10px">90</text>
+    <text x="262" y="62" text-anchor="middle" class="bn s" style="font-size:10px">08</text>
+    <text x="151" y="106" text-anchor="middle" class="bn g w6" style="font-size:12px">সিকোয়েনশিয়াল (কি-ক্রমে সাজানো)</text>
+    <text x="41" y="140" text-anchor="middle" class="bn g w6" style="font-size:10px">08</text>
+    <text x="115" y="140" text-anchor="middle" class="bn g w6" style="font-size:10px">31</text>
+    <text x="189" y="140" text-anchor="middle" class="bn g w6" style="font-size:10px">77</text>
+    <text x="262" y="140" text-anchor="middle" class="bn g w6" style="font-size:10px">90</text>
+    <text x="469" y="28" text-anchor="middle" class="bn r w6" style="font-size:12px">হ্যাশড: h(key) → বাকেট</text>
+    <text x="341" y="68" text-anchor="middle" class="bn s" style="font-size:10px">10</text>
+    <text x="395" y="68" text-anchor="middle" class="bn s" style="font-size:10px">20</text>
+    <text x="451" y="68" text-anchor="middle" class="bn s" style="font-size:10px">25</text>
+    <text x="507" y="68" text-anchor="middle" class="bn s" style="font-size:10px">30</text>
+    <text x="563" y="68" text-anchor="middle" class="bn s" style="font-size:10px">35</text>
+    <text x="469" y="132" text-anchor="middle" class="bn s" style="font-size:10px">বাকেট ০ ← 10,20,30</text>
+    <text x="469" y="146" text-anchor="middle" class="bn s" style="font-size:10px">বাকেট ১ ← 25,35</text>
+    <text x="151" y="82" text-anchor="middle" class="bn r s" style="font-size:10px">সার্চ = সব ব্লক পড়া</text>
+    <text x="151" y="160" text-anchor="middle" class="bn g s" style="font-size:10px">বাইনারি সার্চ: log₂ ব্লক</text>
+    <text x="616" y="86" text-anchor="end" class="bn p s" style="font-size:10px">h(k)=k mod 2</text>
+  </svg><figcaption>একই পাঁচটি রেকর্ড তিন রকমে রাখা — ডিস্কের ক্রমই আসল পার্থক্য</figcaption></figure>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">অর্গানাইজেশন</th><th>Insert</th><th>Delete</th><th>Search</th><th>Space</th></tr>
+    <tr><td class="l"><b>হিপ</b></td><td><b>Fast</b></td><td>Moderate</td><td><span class="red">Slow</span></td><td>Minimal</td></tr>
+    <tr><td class="l"><b>সিকোয়েনশিয়াল</b></td><td><span class="red">Slow</span></td><td><span class="red">Slow</span></td><td><b>Fast</b></td><td>Minimal</td></tr>
+    <tr><td class="l"><b>হ্যাশড</b></td><td>Moderate</td><td>Moderate</td><td><b>Fast</b></td><td>Moderate</td></tr>
+    <tr><td class="l"><b>ইনডেক্সড</b></td><td>Moderate</td><td>Moderate</td><td><span class="hl">Very Fast</span></td><td><span class="red">Extra</span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ডিস্কের ক্রম সার্চ কেনে আর insert বিক্রি করে।</b>" হিপ কোনো ক্রম রাখে না, তাই কিছুই সরাতে হয় না — তাই তার insert Fast। সিকোয়েনশিয়াল ফাইল ক্রম ধরে রাখে, তাই নতুন কি এলে অর্ধেক ফাইল সরে যেতে পারে — তাই তার insert Slow। ফাঁকা ভাত নেই: ওই চার-কলামের টেবিলটিই এই বাণিজ্য, আর এটি টেবিল হিসেবেই <b>বারবার আসে</b>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> "সিকোয়েনশিয়াল ইনসার্ট ধীন" মানে ধীন <b>কারণ রেকর্ড সরাতে হয়</b>। <b>২.</b> হ্যাশড সার্চ শুধু <b>সমতার জন্য</b> Fast — রেঞ্জের জন্য ক্রম ধরে কোনো সুবিধা নেই। <b>৩.</b> "ইনডেক্সড ফাইলে বাড়তি জায়গা লাগে না" এটি <b>মিথ্যা</b>; ইনডেক্স একটি আলাদা কাঠামো, তাই শুধু Indexed সারিতেই Extra লেখা।</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">অধ্যায়ের অন্যান্য কাজ</span> db1-এ সম্পর্ক বানানো, db2-এ বীজগণিতা ও SQL, db3-এ রিডান্ড্যান্সি সরানো। এই লেসন অন্য প্রশ্ন করে: <span class="hl">বাইটগুলো কোথায়, আর একটি সারিতে কীভাবে পৌঁছাব ডিবিএমএস?</span></div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: storage types ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>স্টোরেজের ধরন</span></div>
+  <h2><span class="no">২</span>ডেটা স্টোরেজের ধরন ও স্টোরেজ ইউনিটের সিঁড়ি</h2><span class="tag">তিন স্তর, পাঁচ ইউনিট ★</span>
+  <p class="tiny" style="margin-top:0">বাইটগুলো শারীরিকভাবে কোথায় আছে, আর ফাইলের ভেতরে কীভাবে সাজানো — এই দুটি আলাদা প্রশ্ন। ডিবিএমএস কাজের ডেটা <b>তিন স্তরে</b> রাখে, আর প্রতিটি স্তরের ভেতরে ডেটাকে <b>পাঁচটি ইউনিটে</b> চিহ্নিত করে।</p>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">স্টোরেজের ধরন</th><th class="l">বর্ণনা</th><th class="l">মনে রাখুন</th></tr>
+    <tr><td class="l"><b>প্রাইমারি</b> (র‍্যাম)</td><td class="l">সবচেয়ে দ্রুত — সিপিইউ সরাসরি পড়ে। <span class="red"><b>ভোলাপূর্ণ:</b> বিদ্যুৎ চলে গেলে ডেটা হারিয়ে যায়।</span></td><td class="l">বাফার পুল, টেম্প টেবিল</td></tr>
+    <tr><td class="l"><b>সেকেন্ডারি</b> (HDD / SSD)</td><td class="l"><span class="hl">স্থায়ী (Persistent)</span> — বিদ্যুৎ চলে গেলেও থাকে। র‍্যামের চেয়ে ধীন; ডেটা ফাইল, লগ ফাইল ও ইনডেক্স এখানেই।</td><td class="l">ডেটাবেসের নিজের ঠিকানা</td></tr>
+    <tr><td class="l"><b>টার্শিয়ারি</b> (টেপ / CD)</td><td class="l">খুব ধীন, প্রায় কেবল ধারাবাহিক অ্যাক্সেস। <b>আর্কাইভিং</b> ও ব্যাকআপে ব্যবহৃত।</td><td class="l">অফলাইন ঠান্ডা কপি</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">সেকেন্ডারি ডিস্ক</th><th class="l">HDD</th><th class="l">SSD</th></tr>
+    <tr><td class="l"><b>মূল অংশ</b></td><td class="l">চলমান ডিস্ক ও রিডিং হেড</td><td class="l">ফ্ল্যাশ মেমোরি কোষ (Flash cell)</td></tr>
+    <tr><td class="l"><b>অ্যাক্সেস</b></td><td class="l"><span class="hl">সিক + রোটেশন লেটেন্সি</span> — ডিস্ক ড়ালার রোটেখন্ড সময় লাগে</td><td class="l">সিক নেই, সরাসরি র‍্যান্ডম অ্যাক্সেস</td></tr>
+    <tr><td class="l"><b>দ্রুততা</b></td><td class="l">ধীন, তবু স্পষ্ট ধীন</td><td class="l"><span class="hl">অনেক বেশি</span> — ডিস্ক I/O নির্ভরতা নূন্য</td></tr>
+    <tr><td class="l"><b>দুর্বলতা</b></td><td class="l">মেকানিক্যাল ক্লান্তি, ঘরোয়া বাসস্থাপন</td><td class="l">সীমিত রাইট লাইফ — বারবার লেখা ধীর হয়</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 330px;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="320">
+      <g class="w">
+        <rect x="15" y="8" width="300" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="55" y="46" width="220" height="30" rx="12" class="ink fill-b"/>
+        <rect x="95" y="84" width="140" height="30" rx="12" class="ink fill-b"/>
+        <rect x="135" y="122" width="60" height="30" rx="12" class="ink fill-b"/>
+        <rect x="150" y="156" width="30" height="26" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M165,38 V44 M165,76 V82 M165,114 V120 M165,152 V154"/>
+      </g>
+      <text x="165" y="29" text-anchor="middle" class="bn r w6" style="font-size:12px">ডেটাবেস — সব ফাইল একসঙ্গে</text>
+      <text x="165" y="67" text-anchor="middle" class="bn k w6" style="font-size:12px">ফাইল — একটি ডেটা বা লগ ফাইল</text>
+      <text x="165" y="105" text-anchor="middle" class="bn k w6" style="font-size:12px">ব্লক / পেজ — I/O-র একক</text>
+      <text x="165" y="143" text-anchor="middle" class="bn k w6" style="font-size:12px">বাইট — ৮ বিট</text>
+      <text x="165" y="175" text-anchor="middle" class="bn g w6" style="font-size:12px">বিট</text>
+      <text x="330" y="143" text-anchor="end" class="bn p s" style="font-size:10px">← সবচেয়ে বড়</text>
+    </svg><figcaption>যে সিঁড়িতে প্রতিটি I/O খরচ গোনা হয়</figcaption></figure>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">সিঁড়িটি কথায়</span> <b>বিট → বাইট → ব্লক/পেজ → ফাইল → ডেটাবেস।</b> বাইট = ৮ বিট; <span class="hl">ব্লক (পেজ)</span> হলো ডিস্ক থেকে ডিবিএমএস আসলে যে নির্দিষ্ট আকারের এককে পড়ে — সাধারণত 4KB বা 8KB; ফাইল হলো ডিস্কে ব্লকের নামযুক্ত ধারা; আর ডেটাবেস হলো সব ফাইল একসঙ্গে। <b>প্রতিটি ডিস্ক I/O গোনা হয় ব্লকে, বাইটে নয়</b> — তাই ব্লকিং ফ্যাক্টর এত গুরুত্বপূর্ণ।</div>
+      <div class="def tiny" style="margin-top:1mm"><span class="lbl">ব্লকিং ফ্যাক্টর ✍ যে সংখ্যাটা হিসাব করতে হবে</span> একটি ব্লকে কতগুলো রেকর্ড ঢোকে, তাকেই বলে <b>blocking factor</b>:<br><code>bfr = ⌊ ব্লকের আকার ÷ রেকর্ডের আকার ⌋</code><br>ফাইল জুড়ে ব্লক সংখ্যা <code>⌈ রেকর্ড ÷ bfr ⌉</code>। <b>Unspanned</b> মানে কোনো রেকর্ড দুটি ব্লকের মাঝে ভাঙা নয়। ব্লকিং ফ্যাক্টরে <b>ফ্লোর</b>, ব্লক সংখ্যায় <span class="circ">সিলিং</span> নিতে হবে।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ চারটি</span> <b>১.</b> "<b>প্রাইমারি</b> স্টোরেজ" মানে র‍্যাম — না প্রাইমারি কি, না প্রথম স্তর — আর র‍্যাম <span class="red">ভোলাপূর্ণ</span>। <b>২.</b> SSD হলো <b>সেকেন্ডারি</b> স্টোরেজ: যত দ্রুতই হোক, স্থায়ী। <b>৩.</b> টার্শিয়ারি মানে <b>আর্কাইভিং</b>, আর তা প্রায় ধারাবাহিক — টেপের ভেতরে গিয়ে খুঁজে বের করা যায় না। <b>৪.</b> নামতে নামতে গতি ও স্থায়িত্ব দুটোই কমে: প্রাইমারি দ্রুততম ও বিস্মৃতিশীল, টার্শিয়ারি সবচেয়ে ধীন ও স্থায়ী।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>প্রাইমারি দ্রুত কিন্তু বিস্মৃতিশীল; সেকেন্ডারি ডেটাবেসের নিজের ঠিকানা; টার্শিয়ারি আটলার।</b>" আর সিঁড়ির জন্য: "<b>অনেক বিট মিলে বাইট, অনেক বাইট মিলে ব্লক, অনেক ব্লক মিলে ফাইল, অনেক ফাইল মিলে ডেটাবেস।</b>" প্রতিটি ধাপ হলো "নিচেরটার অনেকগুলো", আর ব্লকই একমাত্র একক যা হার্ডওয়্যার একবারে সরায় — তাই কস্ট মডেল অক্ষর গোনে, পাতা গোনে নয়।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: indexing types ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>ইনডেক্সের প্রকার</span></div>
+  <h2><span class="no">৩</span>ইনডেক্স: সংজ্ঞা ও চার প্রকার</h2><span class="tag">একটি ক্লাস্টার্ড, অনেক সেকেন্ডারি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ইনডেক্স (Index)</b> হলো এমন একটি <span class="hl">ডেটা স্ট্রাকচার যা পুনরুদ্ধার দ্রুত করে</span> — এটি সার্চ কি থেকে সারির অবস্থান পর্যন্ত একটি অতিরিক্ত সাজানো মানচিত্র রাখে। এটি ডেটা ধরে না — এটি ডেটার <b>পথ</b> ধরে, ফলে একটি সার্চ সব ব্লক নয়, খুব অল্প কিছু ব্লক স্পর্শ করে।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ইনডেক্সের ধরন</th><th class="l">বর্ণনা</th></tr>
+    <tr><td class="l"><b>প্রাইমারি ইনডেক্স</b></td><td class="l"><b>প্রাইমারি (সার্চ) কি</b>-র উপর বানানো। কি টি অদ্বিতীয় ও অপরিবর্তিত হওয়ায় ইনডেক্সটি <span class="hl">ডেটা ফাইলকে শারীরিকভাবে ক্রমে সাজায়</span> — রেকর্ডগুলো ডিস্কেই কি-ক্রমে থাকে।</td></tr>
+    <tr><td class="l"><b>সেকেন্ডারি ইনডেক্স</b></td><td class="l"><b>নন-কি কলামের</b> উপর বানানো (ফরেন কি, বা যে কলামে প্রায়ই ফিল্টার করেন)। এটি একটি <b>বিকল্প পথ</b> দেয়; ডেটা নিজে সাজানো হয় না, তাই কি-র মান পুনরাবৃত্ত হতে পারে।</td></tr>
+    <tr><td class="l"><b>ক্লাস্টার্ড ইনডেক্স</b></td><td class="l"><span class="hl">ডেটা ইনডেক্স কি-র উপর শারীরিকভাবে সাজানো</span>। কি-ক্রমে কোনো রেঞ্জ পড়া তখন একটি সরল ধারাবাহিক স্ক্যান।</td></tr>
+    <tr><td class="l"><b>নন-ক্লাস্টার্ড ইনডেক্স</b></td><td class="l">ডেটার দিকে একটি <span class="hl">লজিক্যাল পয়েন্টার</span>, যা আলাদা কাঠামোয় থাকে; সারি যেখানে ছিল সেখানেই থাকে, ইনডেক্স শুধু তার দিকে তাকায়।</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কোথায় ইনডেক্স দেব</th><th class="l">কেন তা বলা হয়</th></tr>
+    <tr><td class="l"><code>WHERE</code>, <code>JOIN</code>, <code>ORDER BY</code>-এর কলাম</td><td class="l">সাধারণত ফিল্টার ও সাজানো হয় যেখানেই</td></tr>
+    <tr><td class="l">সবচেয়ে <b>সিলেক্টিভ</b> কলাম <span class="hl">আগে</span></td><td class="l">বেশি ভিন্ন মান = ছোট ইনডেক্স, তুলনীয় রেচ, বাস্তব সিলেক্ট</td></tr>
+    <tr><td class="l">যা কারুক্ষ্য পরীক্ষায় নয় কলাম</td><td class="l">স্থান ঝবে, বা ব্যবহার না হলে বেসস</td></tr>
+  </table>
+<div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ ইনডেক্স বিনামূল্যে নয়</span> ইনডেক্স বাড়ার সাথে <b>মূল্য বাড়ে</b>। প্রতিটি <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>-এ ইন্ডেক্সটিও বদলাতে হয়, <span class="hl">ইন্ডেক্স রক্ষাকে ব্যবহার করে</span>, কাজের লেখা-প্রধান টেবিলে বেশি ইন্ডেক্স ডেটাবেজকে ধীন করে।</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ যেটা অবশ্যই মুখস্থ</span> <b>একটি টেবিলে সর্বোচ্চ একটিই ক্লাস্টার্ড ইনডেক্স (Clustered Index) থাকতে পারে।</b> ক্লাস্টার্ড ইনডেক্স ঠিক করে দেয় <i>সারিগুলো কোন শারীরিক ক্রমে জমা থাকবে</i>, আর একই সারি-সমূহ একসঙ্গে একাধিক ক্রমে জমা রাখা যায় না — তাই দ্বিতীয় ক্লাস্টার্ড ইনডেক্ষের ঠিক করার কিছুই অবশিষ্ট থাকে না। তবে একটি টেবিলে <span class="hl">যত খুশি নন-ক্লাস্টার্ড (সেকেন্ডারি) ইনডেক্স</span> থাকতে পারে, প্রতিটি ফিল্টার করা কলামের জন্য একটি। "দুটি", "প্রতিটি কলামে একটি" ও "যেকোনো সংখ্যক" — ক্লাস্টার্ডের ক্ষেত্রে সবগুলোই ভুল।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">প্রাইমারি বনাম ক্লাস্টার্ড — গুলিয়ে ফেলবেন না</span> দুটি শব্দ একসঙ্গে চলে, কিন্তু পাঠ্যপ্রশ্নে সমার্থক নয়। <b>প্রাইমারি ইনডেক্স</b> কোন <i>কি-র</i> কথা বলে (সার্চ কি, আর ফাইল সেই ক্রমে সাজানো)। <b>ক্লাস্টার্ড ইনডেক্স</b> কোনটি <i>শারীরিকভাবে সত্য</i> তা বলে (সারি সেই ক্রমেই বসে)। <b>সেকেন্ডারি</b> ইনডেক্স কখনো ফাইল সাজায় না, তাই শুধু সেকেন্ডারি ইনডেক্স থাকা টেবিল ডিস্কে আসলে একটি হিপ।</div>
+      <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">নন-ক্লাস্টার্ড লিভ এন্ট্রিতে থাকে কী</span> <code>&lt;কি-র মান, রো লোকেটর&gt;</code>। লোকেটর হলো সারির <b>প্রাইমারি কি</b>, যদি থাকে; আর প্রাইমারি কি যদি সার্ভোয়েট (স্বয়ংক্রিয়ভাবে বানানো আইডি) হয়, তবে লোকেটর হলো <b>RID</b> — রেকর্ড আইডেন্টিফায়ার, মোটামুটি তার শারীরিক ঠিকানা। লোকেটর অনুসরণ করার পরেই টেবিল স্পর্শ হয়।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 210" width="290">
+      <g class="w">
+        <rect x="10" y="6" width="280" height="24" rx="12" class="ink-r fill-r"/>
+        <rect x="10" y="36" width="280" height="20" rx="5" class="ink fill-b"/>
+        <rect x="10" y="56" width="280" height="20" rx="5" class="ink fill-b"/>
+        <rect x="10" y="76" width="280" height="20" rx="5" class="ink fill-b"/>
+        <text x="150" y="5" class="bn k w6" style="font-size:9px">হিপ: সারি ইনসার্টের ক্রমে</text>
+        <rect x="10" y="122" width="280" height="24" rx="12" class="ink-g fill-g"/>
+        <rect x="10" y="152" width="66" height="20" rx="5" class="ink fill-g"/>
+        <rect x="82" y="152" width="66" height="20" rx="5" class="ink fill-g"/>
+        <rect x="154" y="152" width="66" height="20" rx="5" class="ink fill-g"/>
+        <rect x="226" y="152" width="64" height="20" rx="5" class="ink fill-g"/>
+        <path class="ink-g" d="M40,146 V134 M112,146 V134 M184,146 V134 M256,146 V134" marker-end="url(#ahg)"/>
+      </g>
+      <text x="150" y="22" text-anchor="middle" class="bn s" style="font-size:10px">77</text>
+      <text x="150" y="50" text-anchor="middle" class="bn s" style="font-size:10px">31</text>
+      <text x="150" y="70" text-anchor="middle" class="bn s" style="font-size:10px">90</text>
+      <text x="150" y="90" text-anchor="middle" class="bn s" style="font-size:10px">08</text>
+      <text x="150" y="140" text-anchor="middle" class="bn g w6" style="font-size:11px">ক্লাস্টার্ড: সারি কি-ক্রমে সাজানো</text>
+      <text x="43" y="166" text-anchor="middle" class="bn s" style="font-size:10px">08</text>
+      <text x="115" y="166" text-anchor="middle" class="bn s" style="font-size:10px">31</text>
+      <text x="187" y="166" text-anchor="middle" class="bn s" style="font-size:10px">77</text>
+      <text x="258" y="166" text-anchor="middle" class="bn s" style="font-size:10px">90</text>
+      <text x="150" y="184" text-anchor="middle" class="bn g s" style="font-size:10px">একটিই শারীরিক ক্রমের দিকে পয়েন্টার</text>
+      <text x="150" y="204" text-anchor="middle" class="bn r w6" style="font-size:11px">টেবিলে মাত্র একটিই সম্ভব</text>
+    </svg><figcaption>ক্লাস্টার্ড ইনডেক্স সারি নাড়ে; নন-ক্লাস্টার্ড শুধু পয়েন্টার</figcaption></figure>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: inside an index ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>ডেন্স, স্পার্স, মাল্টিলেভেল</span></div>
+  <h2><span class="no">৪</span>ইনডেক্সের ভেতরে: ডেন্স, স্পার্স, মাল্টিলেভেল — ও এর দাম</h2><span class="tag">জায়গা বনাম গতি ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ধরন</th><th class="l">এন্ট্রি একটির জন্য…</th><th class="l">আকার</th><th class="l">সার্চ খরচ</th></tr>
+    <tr><td class="l"><b>ডেন্স ইনডেক্স</b></td><td class="l">প্রতি <span class="hl">রেকর্ডের</span> জন্য একটি</td><td class="l">বড় — ফাইলের সঙ্গে বাড়ে</td><td class="l">ছোট ইনডেক্স, দ্রুততম লুকআপ</td></tr>
+    <tr><td class="l"><b>স্পার্স ইনডেক্স</b></td><td class="l">প্রতি <span class="hl">ডেটা ব্লকের</span> জন্য একটি — ঐ ব্লকের প্রথম কি-র দিকে</td><td class="l">ছোট — শুধু ব্লকের সঙ্গে বাড়ে</td><td class="l">বড় ইনডেক্স, তবে সার্চের ব্লক অনেক কম</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 310px;align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">মাল্টিলেভেল ইনডেক্স — ইনডেক্সের উপর ইনডেক্স</span> স্পার্স ইনডেক্সকেও খুঁজতে হয়, আর সেটি মেমোরিতে না থাকলে তার <i>নিজের</i> ব্লক পড়তে হয়। তাই ডিবিএমএস ইনডেক্সের <span class="hl">উপরে দ্বিতীয় স্তর</span> বানায়, তারপর তৃতীয়, যতক্ষণ না সর্বোচ্চ স্তর একটিমাত্র ব্লক হয়ে যায় যা সবসময় মেমোরিতে থাকে। একটি <b>মাল্টিলেভেল (B-tree / B+ tree) ইনডেক্স</b> আসলে এটিই: সর্বোচ্চ স্তর মেমোরিতে, আর প্রতিটি নিচের স্তর ফ্যান-আউট অনুযায়ী ছোট হতে হতে যায়। তাই ১০ কোটি রেকর্ডের সার্চেও মাত্র কয়েকটি ডিস্ক পড়া লাগে।</div>
+    <figure class="doodle"><svg viewBox="0 0 320 190" width="300">
+      <g class="w">
+        <rect x="80" y="6" width="160" height="30" rx="8" class="ink-r fill-r"/>
+        <rect x="20" y="60" width="80" height="28" rx="8" class="ink fill-b"/>
+        <rect x="120" y="60" width="80" height="28" rx="8" class="ink fill-b"/>
+        <rect x="220" y="60" width="80" height="28" rx="8" class="ink fill-b"/>
+        <rect x="8" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="70" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="132" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="194" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="256" y="122" width="56" height="26" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M120,36 L60,58 M160,36 L160,58 M200,36 L260,58"/>
+        <path class="ink" d="M40,88 L37,120 M80,88 L99,120 M140,88 L161,120 M240,88 L223,120 M280,88 L284,120"/>
+      </g>
+      <text x="160" y="26" text-anchor="middle" class="bn r w6" style="font-size:11px">রুট — একটি ব্লক, মেমোরিতে</text>
+      <text x="60" y="79" text-anchor="middle" class="bn s" style="font-size:10px">L1 ব্লক</text>
+      <text x="160" y="79" text-anchor="middle" class="bn s" style="font-size:10px">L1 ব্লক</text>
+      <text x="260" y="79" text-anchor="middle" class="bn s" style="font-size:10px">L1 ব্লক</text>
+      <text x="37" y="140" text-anchor="middle" class="bn s" style="font-size:10px">ডেটা</text>
+      <text x="99" y="140" text-anchor="middle" class="bn s" style="font-size:10px">ডেটা</text>
+      <text x="161" y="140" text-anchor="middle" class="bn s" style="font-size:10px">ডেটা</text>
+      <text x="223" y="140" text-anchor="middle" class="bn s" style="font-size:10px">ডেটা</text>
+      <text x="284" y="140" text-anchor="middle" class="bn s" style="font-size:10px">ডেটা</text>
+      <text x="160" y="166" text-anchor="middle" class="bn k w6" style="font-size:11px">প্রতিটি স্তর নিচেরটার অনেকগুণ ছোট</text>
+      <text x="160" y="182" text-anchor="middle" class="bn p s" style="font-size:10px">সর্বোচ্চ স্তর মেমোরিতে ঢুকলেই থামো</text>
+    </svg><figcaption>মাল্টিলেভেল: ইনডেক্স নিজেই একটি খোঁজার উপযোগী ট্রি</figcaption></figure>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ স্পার্সের জন্য সাজানো ফাইল লাগে</span> <b>স্পার্স</b> ইনডেক্স প্রতি ব্লকে একটি এন্ট্রি রাখে, তাই তার এন্ট্রি বলতে হবে "এই ব্লকের <i>প্রথম</i> কি এটা" — কথাটি কেবল তখনই অর্থপূর্ণ যখন ব্লকগুলো <b>কি-ক্রমে</b> সাজানো। তাই স্পার্স ইনডেক্স <span class="hl">সাজানো (সিকোয়েনশিয়াল) ফাইলের</span> উপর বানানো হয়। <b>ডেন্স</b> ইনডেক্সে প্রতি রেকর্ডে একটি এন্ট্রি থাকে, তাই সেটি <b>আনঅর্ডার্ড হিপ</b>-এর উপরও বানানো যায়। বাণিজ্য একেবারে সরল: ডেন্স বেশি জায়গা নেয় ও কম পড়া লাগায়; স্পার্স কম জায়গা নেয় ও বেশি পড়া লাগায়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">প্রতিটি ইনডেক্সের যে দাম</span> <b>১.</b> <span class="red">বাড়তি জায়গা</span> — ইনডেক্স হলো কি-এর দ্বিতীয় অনুলিপি। <b>২.</b> <span class="red">প্রতিটি INSERT ও DELETE-কেও ইনডেক্স আপডেট করতে হয়</span>, তাই লেখা ধীর হয়। <b>৩.</b> প্ল্যান বাছার সময় অপটিমাইজার প্রতিটিকে বিবেচনা করে। <b>৪.</b> অব্যবহৃত ইনডেক্স নিছক খরচ। <b>অতি-ইনডেক্সিং</b> — প্রতিটি কলামে ইনডেক্স — একটি সত্যিকারের ফাঁদ: লেখা ধীর হয়, জায়গা নষ্ট হয়, অপটিমাইজারও বিভ্রান্ত হয়, কোনো লাভ ছাড়াই।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ইনডেক্স হলো দামের ট্যাগ, ডেটার অনুলিপি নয়।</b>" এতে কি আছে আর লোকেটর আছে, ডেটা নয়। আর "<b>ডেন্স লম্বা ও চওড়া, স্পার্স সরু ও লম্বা</b>" — ডেন্সে কম ব্লকে অনেক এন্ট্রি; স্পার্সে কম এন্ট্রি, কিন্তু বেশি লম্বা ট্রি, তবে মাল্টিলেভেল স্পার্স ইনডেক্সে ফারাকটা অনেকটাই কমে যায়। শুধু কলাম থাকার কারণে ইনডেক্স কখনো বানাবেন না: <b>যেটাতে ফিল্টার, জয়েন বা সর্ট করেন।</b></div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">ইনডেক্স শারীরিকভাবে থাকে কোথায়</span> ইনডেক্স ডেটা ফাইলের <b>ভেতরে</b> নয়: এটি একই ডিস্কে আলাদা ব্লকের একটি সেট, আর ডিবিএমএস সবচেয়ে গরম স্তরগুলো বাফার পুলে RAM-এ রাখতে পারে। মাল্টিলেভেল ইনডেক্স দ্রুত হওয়ার পুরো কারণ এটাই — ট্রির সর্বোচ্চাংশ কখনো ডিস্কে যায় না। তাই সার্চের খরচ কয়েকটি RAM পড়া আর সর্বোচ্চ এক-দুটি ডিস্ক পড়া, টেবিল যত বড় হোক।</div>
+  <div class="pg-no">৫</div>
+</section>
+<!-- ============ SHEET 6: B+ trees ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>বি প্লাস ট্রি</span></div>
+  <h2><span class="no">৫</span>বি প্লাস ট্রি (B+ Tree): কাজের ইনডেক্স, আর রেঞ্জ দ্রুত করা লিভ চেইন</h2><span class="tag">সবচেয়ে বেশি পরীক্ষিত ছবি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>বি প্লাস ট্রি (B+ Tree)</b> হলো ডেটাবেসের সবচেয়ে সাধারণ ইনডেক্স কাঠামো: একটি <span class="hl">ব্যালান্সড ট্রি</span>, যেখানে <b>প্রতিটি লিভ একই স্তরে</b> বসে। ইন্টারনাল নোডে থাকে শুধু <b>কি + চাইল্ড পয়েন্টার</b>, আর সেটি কেবল সার্চের পথ দেখায়; লিভ নোডে থাকে <b>কি + রেকর্ড পয়েন্টার</b>। ট্রিটি ব্যালান্সড এবং তার <span class="hl">ফ্যান-আউট বেশি</span> — একটি নোডে শত শত কি — তাই ট্রি মাত্র কয়েক স্তর গভীর, ফলে search, insert ও delete তিনটিই <b>O(log n)</b> এবং খরচ ক্ষুদ্র।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 240" width="600">
+    <g class="w">
+      <rect x="230" y="6" width="160" height="34" rx="8" class="ink-k fill-y"/>
+      <rect x="30" y="64" width="170" height="30" rx="8" class="ink fill-b"/>
+      <rect x="420" y="64" width="170" height="30" rx="8" class="ink fill-b"/>
+      <rect x="20" y="126" width="170" height="42" rx="8" class="ink-g fill-g"/>
+      <rect x="230" y="126" width="170" height="42" rx="8" class="ink-g fill-g"/>
+      <rect x="440" y="126" width="170" height="42" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M270,40 L115,62 M350,40 L505,62"/>
+      <path class="ink" d="M70,94 L105,124 M160,94 L315,124 M460,94 L525,124"/>
+      <path class="ink-r" d="M192,147 H226" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M402,147 H436" marker-end="url(#ah)"/>
+    </g>
+    <text x="310" y="20" text-anchor="middle" class="bn k w6" style="font-size:12px">রুট</text>
+    <text x="310" y="35" text-anchor="middle" class="k w6" style="font-size:12px">40 | 70</text>
+    <text x="115" y="78" text-anchor="middle" class="s" style="font-size:11px">10 | 20 | 30</text>
+    <text x="115" y="91" text-anchor="middle" class="bn s" style="font-size:10px">কি + চাইল্ড পয়েন্টার</text>
+    <text x="505" y="78" text-anchor="middle" class="s" style="font-size:11px">50 | 60 | 80 | 90</text>
+    <text x="505" y="91" text-anchor="middle" class="bn s" style="font-size:10px">কি + চাইল্ড পয়েন্টার</text>
+    <text x="105" y="144" text-anchor="middle" class="g w6" style="font-size:12px">10 | 20 | 30</text>
+    <text x="105" y="161" text-anchor="middle" class="bn g s" style="font-size:10px">&#8594; রেকর্ড পয়েন্টার</text>
+    <text x="315" y="144" text-anchor="middle" class="g w6" style="font-size:12px">40 | 50 | 60</text>
+    <text x="315" y="161" text-anchor="middle" class="bn g s" style="font-size:10px">&#8594; রেকর্ড পয়েন্টার</text>
+    <text x="525" y="144" text-anchor="middle" class="g w6" style="font-size:12px">70 | 80 | 90</text>
+    <text x="525" y="161" text-anchor="middle" class="bn g s" style="font-size:10px">&#8594; রেকর্ড পয়েন্টার</text>
+    <text x="209" y="116" text-anchor="middle" class="bn r w6" style="font-size:11px">শৃঙ্খল</text>
+    <text x="419" y="116" text-anchor="middle" class="bn r w6" style="font-size:11px">শৃঙ্খল</text>
+    <text x="310" y="192" text-anchor="middle" class="bn r w6" style="font-size:12px">ইন্টারনাল নোড শুধু কি পুনরাবৃত্ত করে — ডেটা স্পর্শ করে না</text>
+    <text x="310" y="212" text-anchor="middle" class="bn g w6" style="font-size:12px">প্রতিটি কি লিভেই থাকে, আর লিভগুলো কি-ক্রমে শৃঙ্খলবদ্ধ</text>
+    <text x="310" y="232" text-anchor="middle" class="bn p s" style="font-size:11px">সব লিভ এক স্তরে = ব্যালান্সড · ফ্যান-আউট বড় = স্তর কম</text>
+  </svg><figcaption>সঠিক বি প্লাস ট্রি: সব লিভ এক স্তরে, সব কি লিভে, লিভ বাম থেকে ডানে শৃঙ্খলবদ্ধ</figcaption></figure>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">রেঞ্জ কোয়েরিতে কেন জেতে ✍ প্রমিত উত্তর</span> বি প্লাস ট্রিতে <b>প্রতিটি কি তার রেকর্ড পয়েন্টারসহ লিভেই সংরক্ষিত</b>, আর <b>লিভগুলো কি-ক্রমে শৃঙ্খলে সাজানো</b>। তাই <code>WHERE salary BETWEEN 20000 AND 30000</code>-এর ক্ষেত্রে ইনডেক্স প্রথমে 20000-এর <b>প্রথম লিভ খুঁজে বের করে</b> — একটি সাধারণ ট্রি-ডিসসেন্ট — <b>O(log n)</b> খরচে, তারপর সহজেই <b>লিভ চেইন ধরে পরের লিভ ধরে ধরে</b> এগিয়ে যায় যতক্ষণ না 30000 পেরিয়ে যায়। ইন্টারনাল নোড ওই প্রথম ডিসসেন্ট ছাড়া আর কোনো কাজ করে না। <span class="circ">তাই বি প্লাস ইনডেক্সে রেঞ্জ কোয়েরির খরচ O(log n) + k</span>, যেখানে k হলো মিলে যাওয়া এন্ট্রির সংখ্যা।</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ বি-ট্রি বনাম বি প্লাস ট্রি — মেরে ফেলার মতো তিনটি ভুল উত্তর</span> "এর <b>কোনো ইন্টারনাল নোড নেই</b>" — মিথ্যা, ইন্টারনাল নোড আছে ও ডিসসেন্ট দিকনির্দেশ করে। "<b>সব রেকর্ড রুটে রাখে</b>" — মিথ্যা, রুটে শুধু কি ও চাইল্ড পয়েন্টার। "<b>এটি সবসময় বাইনারি ট্রি</b>" — মিথ্যা, ফ্যান-আউট বেশি বলে একটি নোডে শত শত কি ও হাজার হাজার চাইল্ড থাকে। একমাত্র সঠিক বাক্য হলো <span class="hl">লিভে প্রতিটি কি থাকে এবং লিভগুলো কি-ক্রমে শৃঙ্খলবদ্ধ</span>। সাধারণ <b>বি-ট্রিতে</b> রেকর্ড <i>সব</i> নোডে বসে, তাই রেঞ্জ স্ক্যানে স্তর বদলাতে হয়; <b>বি প্লাস ট্রিতে</b> শুধু লিভে রেকর্ড থাকে, তাই রেঞ্জ স্ক্যান একটানা একটি হাঁটা।</div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বিষয়</th><th class="l">বি-ট্রি</th><th class="l">বি প্লাস ট্রি</th></tr>
+    <tr><td class="l">ডেটা কোথায় বসে</td><td class="l"><b>প্রতিটি</b> নোডে, ইন্টারনালসহ</td><td class="l"><span class="hl">শুধু লিভে</span></td></tr>
+    <tr><td class="l">রেঞ্জ কোয়েরি</td><td class="l">স্তর বদলাতে হয়</td><td class="l"><span class="hl">লিভ চেইন ধরে এক হাঁটা</span></td></tr>
+    <tr><td class="l">বাস্তবে কোথায়</td><td class="l">ফাইল সিস্টেমে বেশি</td><td class="l"><span class="hl">ডেটাবেস ইনডেক্সে প্রায় সবসময়</span></td></tr>
+  </table>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: hash tables ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>হ্যাশ টেবিল</span></div>
+  <h2><span class="no">৬</span>হ্যাশ টেবিল (Hash Table): সমতায় O(1) — আর রেঞ্জ কেন তাকে মেরে ফেলে</h2><span class="tag">N = 2 অবশ্যই বলো ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>হ্যাশ টেবিল</b> স্টোরেজ অবস্থান <i>সরাসরি</i> বের করে: একটি <b>হ্যাশ ফাংশন</b> কি-কে একটি বাকেটে ম্যাপ করে, তাই কোনো তুলনা বা ট্রাভার্সাল লাগে না। <code>h(key) = key mod N</code>, যেখানে <b>N হলো বাকেটের সংখ্যা</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধান-কৃত উদাহরণ ✍ N = 2 বলা আছে</span> এখানে <b>N = 2</b>, তাই মোট দুটি বাকেট এবং <code>h(key) = key mod 2</code>:<br>
+      <code>10 → 0</code> &nbsp;·&nbsp; <code>20 → 0</code> &nbsp;·&nbsp; <code>25 → 1</code> &nbsp;·&nbsp; <code>30 → 0</code> &nbsp;·&nbsp; <code>35 → 1</code><br>
+      তাই <b>বাকেট ০ = [10, 20, 30]</b> এবং <b>বাকেট ১ = [25, 35]</b>। ১০, ২০ ও ৩০ তিনটিই ০-তে হ্যাশ হয় — এটিই একটি <span class="circ">কলিশন</span>: ভিন্ন কি একই স্লটের জন্য স্পর্ধা করছে। এই সব মান <b>কেবল</b> N = 2 হলে ঠিক; N = 10 হলে উত্তর একেবারে বদলে যেত, তাই <b>গণনার আগে অবশ্যই N বলে দাও।</b></div>
+    <figure class="doodle"><svg viewBox="0 0 330 250" width="300">
+      <g class="w">
+        <rect x="90" y="8" width="150" height="30" rx="10" class="ink-k fill-y"/>
+        <rect x="16" y="86" width="140" height="34" rx="8" class="ink fill-b"/>
+        <rect x="174" y="86" width="140" height="34" rx="8" class="ink fill-b"/>
+        <rect x="16" y="172" width="140" height="44" rx="8" class="ink fill-b"/>
+        <rect x="174" y="172" width="140" height="44" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M130,38 L86,84 M200,38 L244,84 M130,38 L86,170 M200,38 L244,170"/>
+      </g>
+      <text x="165" y="28" text-anchor="middle" class="k w6" style="font-size:12px">h(key) = key mod N,  N = 2</text>
+      <text x="86" y="58" text-anchor="middle" class="s" style="font-size:10px">10, 20, 30</text>
+      <text x="244" y="58" text-anchor="middle" class="s" style="font-size:10px">25, 35</text>
+      <text x="86" y="108" text-anchor="middle" class="bn g w6" style="font-size:11px">বাকেট ০</text>
+      <text x="244" y="108" text-anchor="middle" class="bn g w6" style="font-size:11px">বাকেট ১</text>
+      <text x="86" y="152" text-anchor="middle" class="bn r s" style="font-size:10px">৩টি কি, ১টি স্লট</text>
+      <text x="244" y="152" text-anchor="middle" class="bn r s" style="font-size:10px">২টি কি, ১টি স্লট</text>
+      <text x="86" y="192" text-anchor="middle" class="bn k w6" style="font-size:11px">চেইনিং</text>
+      <text x="86" y="208" text-anchor="middle" class="bn s" style="font-size:10px">লিঙ্কড লিস্ট</text>
+      <text x="244" y="192" text-anchor="middle" class="bn k w6" style="font-size:10px">ওপেন অ্যাড্রেসিং</text>
+      <text x="244" y="208" text-anchor="middle" class="bn s" style="font-size:10px">পরের খালি স্লট</text>
+      <text x="165" y="238" text-anchor="middle" class="bn p w6" style="font-size:11px">দুটিই কলিশন — দুটিই সামলাতে হবে</text>
+    </svg><figcaption>মাত্র দুটি বাকেট — কি হয়তো কলিশন করে, নয়তো করে না</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কলিশন সামলানোর পদ্ধতি</th><th class="l">কীভাবে কাজ করে</th></tr>
+    <tr><td class="l"><b>চেইনিং (Chaining)</b></td><td class="l">প্রতিটি বাকেটে একটি <span class="hl">লিঙ্কড লিস্ট</span>; কলিশন করা রেকর্ডটি ঐ বাকেটের তালিকায় যোগ হয়, আর সার্চে ছোট তালিকাটি হেঁটে যায়। উপরের বাকেট ০ হলো চেইন 10 → 20 → 30।</td></tr>
+    <tr><td class="l"><b>ওপেন অ্যাড্রেসিং (Open Addressing)</b></td><td class="l">কোনো তালিকা নেই। গণনা করা স্লট ভর্তি থাকলে <span class="hl">পরের খালি স্লটের দিকে প্রোব</span> করে রেকর্ডটি রাখা হয়। টেবিল ভরে গেলে আরও বড় করে রিহ্যাশ করতে হয়।</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">হ্যাশ বনাম বি প্লাস ট্রি</span> <b>হ্যাশ:</b> সমতা লুকআপ <b>গড়ে O(1)</b> — এর চেয়ে ভালো আর কিছু নেই। কিন্তু হ্যাশ ফাংশন <span class="red">ক্রম ধ্বংস করে</span>, তাই <b>রেঞ্জ কোয়েরি, ORDER BY ও MIN/MAX নিরপেক্ষ।</b> <b>বি প্লাস ট্রি:</b> একক সমতা হিটে একটু ধীর, কিন্তু কি-গুলো ক্রমে থাকে, তাই রেঞ্জ, সর্টিং ও "পরের রেকর্ড" সবই স্বাভাবিক। <b>বড় ও স্থিতিশীল কি-তে exact match</b>-এর জন্য হ্যাশ বাছো; কোয়েরিতে রেঞ্জ বা ক্রম লাগলেই বি প্লাস ট্রি।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> হ্যাশ ইনডেক্স "salary = 25000" এক ধাপে উত্তর দেয়, কিন্তু "salary BETWEEN 20000 AND 30000" সব পড়া ছাড়া উত্তর দিতে <b>পারে না</b> — তাই বেশি আসা জোড়া হলো <span class="circ">BETWEEN-এ বি প্লাস ট্রি, =-এ হ্যাশ</span>। <b>২.</b> "হ্যাশ টেবিলে কলিশন হয় না" — দুটি কি একই জায়গায় গেলেই মিথ্যা। <b>৩.</b> কলিশন কমাতে N বেশি হওয়া উচিত, কিন্তু বড় N জায়গা নষ্ট করে — বাস্তবায়ন N হিসাব করে নেয় এবং ফাইল বড় হলে রিহ্যাশ করে।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: query optimization ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>কোয়েরি অপটিমাইজেশন</span></div>
+  <h2><span class="no">৭</span>কোয়েরি অপটিমাইজেশন: SQL লেখা থেকে এক্সিকিউশন প্ল্যান পর্যন্ত</h2><span class="tag">পাঁচ ধাপ, একটি বাছাই ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>কোয়েরি অপটিমাইজেশন (Query Optimization)</b> হলো SQL কোয়েরির জন্য <span class="hl">সবচেয়ে কার্যকর এক্সিকিউশন প্ল্যান বাছার</span> প্রক্রিয়া। SQL বলে <i>কী</i> চাও, কিন্তু একই সঠিক সারি দেখানোর প্ল্যান অনেকগুলো থাকতে পারে, আর অপটিমাইজার সবচেয়ে কম খরচেরটি বেছে নেয়।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="560">
+    <g class="w">
+      <rect x="4" y="24" width="104" height="44" rx="10" class="ink-k fill-b"/>
+      <rect x="132" y="24" width="104" height="44" rx="10" class="ink fill-b"/>
+      <rect x="260" y="24" width="104" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="388" y="24" width="104" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="516" y="24" width="104" height="44" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M108,46 H130 M236,46 H258 M364,46 H386 M492,46 H514" marker-end="url(#ahb)"/>
+    </g>
+    <text x="56" y="42" text-anchor="middle" class="k w6" style="font-size:11px">SQL</text>
+    <text x="56" y="58" text-anchor="middle" class="bn s" style="font-size:10px">কোয়েরি লেখা</text>
+    <text x="184" y="42" text-anchor="middle" class="k w6" style="font-size:11px">Parser</text>
+    <text x="184" y="58" text-anchor="middle" class="bn s" style="font-size:10px">সিনট্যাক্স দেখে,</text>
+    <text x="184" y="72" text-anchor="middle" class="bn s" style="font-size:10px">ট্রি বানায়</text>
+    <text x="312" y="42" text-anchor="middle" class="bn r w6" style="font-size:11px">অপটিমাইজার ★</text>
+    <text x="312" y="58" text-anchor="middle" class="bn r s" style="font-size:10px">সবচেয়ে সস্তা</text>
+    <text x="312" y="72" text-anchor="middle" class="bn r s" style="font-size:10px">প্ল্যান বাছে</text>
+    <text x="440" y="42" text-anchor="middle" class="k w6" style="font-size:10px">Execution plan</text>
+    <text x="440" y="58" text-anchor="middle" class="bn s" style="font-size:10px">জয়েনের ক্রম,</text>
+    <text x="440" y="72" text-anchor="middle" class="bn s" style="font-size:10px">অ্যাক্সেস পাথ</text>
+    <text x="568" y="42" text-anchor="middle" class="k w6" style="font-size:11px">Result</text>
+    <text x="568" y="58" text-anchor="middle" class="bn s" style="font-size:10px">সারি</text>
+  </svg><figcaption>প্রতিটি ডিবিএমএস এই পাঁচটি ধাপই অনুসরণ করে</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কৌশল</th><th class="l">বর্ণনা</th></tr>
+    <tr><td class="l"><b>ইনডেক্স ব্যবহার</b></td><td class="l"><span class="hl">WHERE, JOIN ও ORDER BY</span>-তে ব্যবহৃত প্রতিটি কলামে ইনডেক্স রাখো — ইনডেক্স কেবল এই তিনটি জায়গাতেই কোনোদিন ব্যবহৃত হতে পারে।</td></tr>
+    <tr><td class="l"><b>SELECT * এড়িয়ে চলো</b></td><td class="l">শুধু দরকারি কলাম বেছে নাও। অপ্রয়োজনীয় কলামে বাড়তি <b>I/O</b> লাগে <i>আর</i> কোয়েরি কেবল কভারিং ইনডেক্স দিয়েই সমাধান হওয়া বন্ধ হয়ে যায়।</td></tr>
+    <tr><td class="l"><b>কার্যকর জয়েন</b></td><td class="l">বড় অসাজানো ইনপুটে <b>হ্যাশ জয়েন</b> · দুই পাশই সাজানো থাকলে <b>মার্জ জয়েন</b> · এক পাশ খুব ছোট হলে <b>নেস্টেড লুপ</b>।</td></tr>
+    <tr><td class="l"><b>সাবকোয়েরি এড়াও</b></td><td class="l"><code>IN (SELECT …)</code> কে <span class="hl">JOIN</span> বা <code>EXISTS</code>-এ লেখো; তাহলে অপটিমাইজার জয়েনের কৌশল বাছতে পারে, আর প্রতিবার ভেতরের কোয়েরি চালাতে হয় না।</td></tr>
+    <tr><td class="l"><b>কোয়েরি হিন্ট</b></td><td class="l">DBMS-নির্দিষ্ট নির্দেশনা, কোয়েরির ভেতরেই লেখা, যাতে পরিসংখ্যানভিত্তিক অনুমান ভুল হলে অপটিমাইজারকে দিকনির্দেশ দেওয়া যায়।</td></tr>
+    <tr><td class="l"><b>পার্টিশনিং</b></td><td class="l">একটি বড় টেবিলকে ভাগে ভাগ করা, যাতে কোয়েরি শুধু দরকারি ভাগই স্পর্শ করে।</td></tr>
+    <tr><td class="l"><b>ক্যাশিং</b></td><td class="l"><b>ম্যাটেরিয়ালাইজড ভিউ</b> কোয়েরির ফলাফল সংরক্ষণ করে যাতে সরাসরি পড়া যায়; কোয়েরি ক্যাশ প্ল্যান ও তার ফলাফল পুনর্ব্যবহার করে।</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ দুটি</span> <b>১.</b> অপটিমাইজার কোয়েরি <b>কী দেয়</b> তা বদলায় না — সে বদলায় উত্তর <b>কীভাবে</b> তৈরি হয়। একই সারি দেখানো দুটি প্ল্যানই সঠিক; একটি সস্তা। <b>২.</b> "অপটিমাইজার ধীর কোয়েরি বেছে নিয়েছে" সাধারণত মানে <b>পরিসংখ্যান পুরনো</b> বা <b>একটি দরকারি ইনডেক্স নেই</b> — অপটিমাইজার নিজে ভাঙা নয়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>যেটাতে ফিল্টার, জয়েন বা সর্ট করো — এই তিনটি শব্দই পুরো তালিকা।</b>" অন্য কোনো কলামের ইনডেক্স ওই কোয়েরিতে কোনোদিন ব্যবহৃত হয় না, যত সুন্দরই হোক। আর "<b>SELECT * বাদ দিও</b>" শুধু পরিষ্কার-রাখার জন্য নয়: এটি অপ্রয়োজনীয় I/O এবং কভারিং-ইনডেক্স-একমাত্র প্ল্যান হারানো — দুটোই।</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">প্ল্যান পড়া ✍</span> বাস্তবের প্রতিটি ডিবিএমএS নিজের বেছে নেওয়া প্ল্যান দেখায় — বেশিরভাগ ক্ষেত্রে <code>EXPLAIN</code> — আর প্ল্যান কোনো গোপন জিনিস নয়। সেখানে ক্রমানুসারে থাকে কোন টেবিল স্ক্যান বা ইনডেক্স হবে, <b>জয়েনের ক্রম</b>, এবং প্রতিটি ধাপে ব্যবহৃত <b>জয়েন অ্যালগরিদম</b>। লিখিত প্রশ্নে "প্ল্যানটি প্রথমে Employee টেবিলের পূর্ণ টেবিল স্ক্যান করে, তারপর Department-কে তার প্রাইমারি কি-তে ইনডেক্স করে" — এটাই সম্পূর্ণ সঠিক উত্তর; নম্বর আসে শারীরিক কাঠামোর নাম বলা থেকে, SQL আবার লেখা থেকে নয়।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: cost model and index design ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>কস্ট মডেল ও ইনডেক্স ডিজাইন</span></div>
+  <h2><span class="no">৮</span>কস্ট-বেজড বনাম হিউরিস্টিক অপটিমাইজেশন — ও প্ল্যান ভালো করার উপায়</h2><span class="tag">লিখিত উত্তরের পাতা ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0;line-height:4.8mm"><span class="lbl">কস্ট মডেল ✍ তিনটি বিষয়</span> প্রতিটি প্রার্থী প্ল্যানের জন্য অপটিমাইজার হিসাব করে:<br>
+      <b>১. I/O খরচ</b> — <span class="hl">ডিস্ক পেজ কতবার পড়া ও লেখা হবে</span>। এটিই আধিপত্য করে, কারণ একটি ডিস্ক রিড সিপিইউ অপারেশনের কোটি গুণ ধীন।<br>
+      <b>২. CPU খরচ</b> — কতগুলো তুলনা, টিউপল অপারেশন ও এক্সপ্রেশন হিসাব হবে।<br>
+      <b>৩. কমিউনিকেশন খরচ</b> — সাইটগুলোর মধ্যে কত ডেটা যাবে; কেবল <b>ডিস্ট্রিবিউটেড</b> ডেটাবেসে গোনা হয়।</div>
+    <div class="def tiny" style="margin-top:0;line-height:4.8mm"><span class="lbl">কস্ট-বেজড (স্ট্যাটিস্টিক্স) অপটিমাইজার</span> <span class="hl">পরিসংখ্যান</span> — প্রতি টেবিলে কত সারি, কত ভিন্ন মান, ডেটার বণ্টন — থেকে প্রতিটি প্রার্থী প্ল্যানের I/O ও CPU খরচ অনুমান করে এবং <b>সবচেয়ে সস্তাটি</b> বাছে। শক্তিশালী, কিন্তু সম্পূর্ণ নির্ভরশীল — পরিসংখ্যান হালনাগাদ থাকলেই কাজ করে।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:1mm;line-height:4.8mm"><span class="lbl">হিউরিস্টিক (রুল-বেজড) অপটিমাইজার</span> ডেটা মেপে না দেখেই <span class="hl">নির্দিষ্ট রূপান্তর নিয়ম</span> প্রয়োগ করে: যত তাড়াতাড়ি সারি কমাতে <b>SELECT আগে</b>; যত তাড়াতাড়ি কলাম কমাতে <b>projection আগে</b>; <b>সবচেয়ে সীমাবদ্ধ জয়েনটি আগে</b>। এটি মাপতে পারে না, শুধু রূপান্তর করতে পারে — আধুনিক সিস্টেমে এই নিয়মগুলো কস্ট-বেজড অপটিমাইজেশনের উপরে বসানো থাকে।</div>
+    <div class="def tiny" style="margin-top:1mm;line-height:4.8mm"><span class="lbl">ইনডেক্স সিলেক্টিভিটি ও কলামের ক্রম</span> <b>সিলেক্টিভিটি</b> হলো কোনো শর্ত কত ভাগ সারি টিকিয়ে রাখে। যে শর্ত <b>অত্যন্ত সিলেক্টিভ</b> — অল্প সারি বেঁচে থাকে — তার জন্যই ইনডেক্স লুকআপ লাভজনক। <b>কম্পোজিট ইনডেক্সে</b> <span class="hl">বেশি সিলেক্টিভ কলামটি প্রথমে</span> রাখো, কারণ সেটিই সার্চ সংকুচিত করে।</div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm;line-height:4.8mm"><span class="lbl">ব্লকিং ফ্যাক্টরের সম্পূর্ণ উদাহরণ ✍ প্রতিটি ধাপ সহ</span> ডেটা ফাইলে <b>100 বাইটের 30,000টি রেকর্ড</b>, <b>1024 বাইটের ব্লকে</b> unspanned (কোনো রেকর্ড দুই ব্লকের মাঝে ভাঙা নয়), কি-র উপর সাজানো।<br>
+    <b>১.</b> ডেটা ব্লকিং ফ্যাক্টর = <code>⌊1024 ÷ 100⌋ = 10</code> রেকর্ড/ব্লক ⇒ ডেটা ব্লক = <code>30000 ÷ 10 = 3000</code><br>
+    <b>২.</b> <b>স্পার্স</b> প্রাইমারি ইনডেক্সে প্রতি ডেটা ব্লকে একটি এন্ট্রি ⇒ মোট <b>3000</b> এন্ট্রি; প্রতিটি এন্ট্রি <b>15 বাইট</b> (9 বাইট কি + 6 বাইট ব্লক পয়েন্টার)<br>
+    <b>৩.</b> ইনডেক্স ব্লকিং ফ্যাক্টর = <code>⌊1024 ÷ 15⌋ = 68</code> এন্ট্রি/ব্লক<br>
+    <b>৪.</b> ইনডেক্স ব্লক = <code>⌈3000 ÷ 68⌉ = ⌈44.1⌉ = 45</code> — <span class="circ">সিলিং</span> লাগে কারণ শেষ ব্লক আংশিক ভর্তি।<br>
+    <b>৫.</b> বিপরীতে <b>ডেন্স</b> ইনডেক্সে 30,000 এন্ট্রি ⇒ <code>⌈30000 ÷ 68⌉ = ⌈441.2⌉ = 442</code> ব্লক — প্রায় দশগুণ বেশি।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:4.8mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ বাম-ডান প্রিফিক্স নিয়ম</span> কম্পোজিট ইনডেক্স <code>(a, b)</code> <code>WHERE a = ?</code> এবং <code>WHERE a = ? AND b = ?</code> — দুটোতেই কাজ করে, কিন্তু <span class="red">শুধু <code>WHERE b = ?</code> একা কাজ করে না</span> — ইনডেক্সটি নিজে থেকে <code>b</code>-এর উপর সাজানো নয়, তাই <code>b</code>-এর প্রতিটি মান পুরো ট্রিতে ছড়িয়ে আছে। এটিই <b>বাম-ডান প্রিফিক্স নিয়ম</b>, আর এটি <b>বারবার আসে</b>। একই নিয়ম বলায় <code>ORDER BY a, b</code> এই ইনডেক্সে ফ্রি, কিন্তু <code>ORDER BY b</code> ফ্রি নয়।</div>
+    <div class="tipbox tiny" style="margin-top:1mm;line-height:4.8mm"><span class="lbl">কভারিং ইনডেক্স — SELECT * বাদ দেওয়ার সবচেয়ে বড় কারণ</span> যদি <b>কোয়েরির দরকারি প্রতিটি কলামই ইনডেক্সে থাকে</b>, অপটিমাইজার টেবিল <span class="circ">একেবারে না ছুঁয়েই</span> উত্তর দেয়; এটাই ইনডেক্স-অনলি স্ক্যান। না-চাওয়া একটি কলাম যোগ করা — <code>SELECT *</code>-এর অভ্যাস — <span class="red">কভারিং ইনডেক্স ধ্বংস করে</span>। তাই কভারিং ইনডেক্স অল্প লেখার বিনিময়ে বড় পড়ার সাশ্রয় দেয়।</div>
+  </div>
+  <div class="sumbox tiny" style="margin-top:1mm;line-height:4.8mm"><span class="lbl">আগের পাতার সূত্রগুলো এক নজরে</span> <b>১.</b> <span class="hl">একটি টেবিলে সর্বোচ্চ একটিই ক্লাস্টার্ড ইনডেক্স</span> — একই সারি একাধিক শারীরিক ক্রমে জমা রাখা যায় না, তবে নন-ক্লাস্টার্ড ইনডেক্স যত খুশি। <b>২.</b> <b>ডেন্স</b> = প্রতি রেকর্ডে এন্ট্রি; <b>স্পার্স</b> = প্রতি ব্লকে এন্ট্রি, আর স্পার্সের জন্য অবশ্যই <b>সাজানো ফাইল</b> লাগে (এন্ট্রি বলে "ঐ ব্লকের প্রথম কি")। <b>৩.</b> <b>মাল্টিলেভেল</b> ইনডেক্স = ইনডেক্সের উপর ইনডেক্স, সর্বোচ্চ স্তর সবসময় RAM-এ। <b>৪.</b> নন-ক্লাস্টার্ড লিভ এন্ট্রি = <code>&lt;কি-র মান, রো লোকেটর&gt;</code> — লোকেটর প্রাইমারি কি, না হলে RID। <b>৫.</b> ইনডেক্সের দাম: <span class="red">বাড়তি জায়গা</span>, এবং <span class="red">প্রতিটি INSERT ও DELETE-কেও তা আপডেট করতে হয়</span>; অব্যবহৃত ইনডেক্স নিছক খরচ, আর কম্পোজিট ইনডেক্স <b>বাম-ডান প্রিফিক্স নিয়ম</b> মানে — <code>a</code> ও <code>a, b</code> দেয়, <code>b</code> একা নয়।</div>
+  <div class="pg-no">৯</div>
+</section>
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের শীট</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small">
+      <p>হিপ: ক্রমহীন, ইনসার্ট Fast</p><p>হিপ সার্চ O(n), জায়গা Minimal</p>
+      <p>সিকোয়েনশিয়াল: সার্চ Fast</p><p>সিকোয়েনশিয়াল ইনসার্ট Slow</p>
+      <p>হ্যাশড: <code>h(k) = k mod N</code></p><p>ইনডেক্সড: বাড়তি জায়গা, খুব দ্রুত</p>
+      <p>প্রাইমারি স্টোর = RAM, ভোলাপূর্ণ</p><p>সেকেন্ডারি = ডিস্ক, স্থায়ী</p>
+      <p>টার্শিয়ারি = টেপ, আর্কাইভ</p><p>বিট → বাইট → ব্লক → ফাইল → ডিবি</p>
+      <p><code>bfr = ⌊আকার ÷ রেকর্ডআকার⌋</code></p><p>ব্লক = <code>⌈রেকর্ড ÷ bfr⌉</code></p>
+      <p>প্রাইমারি ইনডেক্স: সার্চ কি</p><p>সেকেন্ডারি ইনডেক্স: নন-কি কলাম</p>
+      <p>ক্লাস্টার্ড: ডেটা সাজানো</p><p>নন-ক্লাস্টার্ড: শুধু পয়েন্টার</p>
+      <p><span class="hl">মাত্র একটিই ক্লাস্টার্ড ইনডেক্স</span></p><p>ডেন্স = প্রতি রেকর্ডে এন্ট্রি</p>
+      <p>স্পার্স = প্রতি ব্লকে এন্ট্রি</p><p>মাল্টিলেভেল = ইনডেক্সের উপর ইনডেক্স</p>
+      <p>B+ ট্রি: সব কি লিভে</p><p>B+ লিভ কি-ক্রমে শৃঙ্খলবদ্ধ</p>
+      <p>B+ সার্চ / ইনসার্ট = O(log n)</p><p>B+ রেঞ্জ = O(log n) + k</p>
+      <p>হ্যাশ সমতা গড়ে O(1)</p><p>হ্যাশ: <span class="circ">রেঞ্জ কোয়েরি নেই</span></p>
+      <p>SQL → পার্সার → অপটিমাইজার</p><p>→ এক্সিকিউশন প্ল্যান → ফলাফল</p>
+      <p>কস্ট = I/O + CPU + কমিউনিকেশন</p><p>হ্যাশ জয়েন: বড় · মার্জ: সাজানো</p>
+      <p>বাম-ডান প্রিফিক্স নিয়ম</p><p>কভারিং ইনডেক্স: টেবিল অপ্পর্শই নয়</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>হিপ = কোনো ক্রম নয় ⇒ ইনসার্ট দ্রুত, সার্চ O(n)</li>
+      <li>সিকোয়েনশিয়াল = সাজানো ⇒ সার্চ দ্রুত, লেখা ধীন</li>
+      <li>প্রাইমারি স্টোর (RAM) ভোলাপূর্ণ; ডিস্ক নয়</li>
+      <li>ব্লকিং ফ্যাক্টরে ফ্লোর, ব্লক সংখ্যায় সিলিং</li>
+      <li>একটি টেবিলে সর্বোচ্চ <b>একটি</b> ক্লাস্টার্ড ইনডেক্স</li>
+      <li>স্পার্স ইনডেক্স ⇒ প্রতি ব্লকে এন্ট্রি, সাজানো ফাইল</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>বি প্লাস ট্রিতে প্রতিটি কি <b>লিভে</b> বসে</li>
+      <li>লিভগুলো <b>শৃঙ্খলবদ্ধ</b> — তাই BETWEEN দ্রুত</li>
+      <li>বি প্লাস ট্রি <b>বাইনারি ট্রি নয়</b></li>
+      <li>হ্যাশ <code>=</code>-এ O(1), BETWEEN-এ অচল</li>
+      <li>অপটিমাইজারের কস্ট = I/O + CPU + কমিউনিকেশন</li>
+      <li>কম্পোজিট ইনডেক্স <code>a</code> ও <code>a,b</code> দেয়, <code>b</code> একা নয়</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> রেঞ্জ দিয়ে <b>হ্যাশ ইনডেক্স</b> · একাধিক <b>ক্লাস্টার্ড ইনডেক্স</b> · বি প্লাস ট্রিতে কি <b>শুধু ইন্টারনাল নোডে</b> · বি প্লাস ট্রিকে বাইনারি ট্রি বলা · <code>h(key)=key mod N</code> <b>N ছাড়া</b> · <b>সিলিং</b> ভুলে ফ্লোর করা · অব্যবহৃত কলামে ইনডেক্স।</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">সব কৌশল একসঙ্গে</span> ডিস্কের ক্রম সার্চ কেনে আর insert বিক্রি করে · প্রাইমারি দ্রুত কিন্তু বিস্মৃতিশীল, ডিস্ক নিজের ঠিকানা, টেপ আটলার · ইনডেক্ষ হলো দামের ট্যাগ · ডেন্স লম্বা ও চওড়া, স্পার্স সরু ও লম্বা · শৃঙ্খলবদ্ধ লিভই রেঞ্জের উত্তর · <code>=</code>-এর জন্য হ্যাশ, BETWEEN-এর জন্য ট্রি।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <circle cx="66" cy="46" r="30" class="ink-r fill-r"/>
+        <circle cx="150" cy="46" r="30" class="ink fill-b"/>
+        <circle cx="234" cy="46" r="30" class="ink-g fill-g"/>
+        <path class="ink" d="M96,46 H118 M180,46 H202" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M234,78 C190,116 70,116 66,78" marker-end="url(#ahp)"/>
+        <rect x="60" y="118" width="180" height="26" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="51" text-anchor="middle" class="bn r w6" style="font-size:12px">হিপ</text>
+      <text x="150" y="51" text-anchor="middle" class="bn k w6" style="font-size:12px">বি প্লাস ট্রি</text>
+      <text x="234" y="51" text-anchor="middle" class="bn g w6" style="font-size:12px">হ্যাশ</text>
+      <text x="150" y="11" text-anchor="middle" class="bn p s" style="font-size:10px">উপরে ইনডেক্স</text>
+      <text x="150" y="136" text-anchor="middle" class="bn k w6" style="font-size:11px">প্ল্যান = সবচেয়ে সস্তাটি বাছা</text>
+    </svg><figcaption>তিন কাঠামো, একটি প্ল্যান</figcaption></figure>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ফাইল অর্গানাইজেশন ও ইনডেক্সিং</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১.</span>একটি <b>হিপ</b> (আনঅর্ডার্ড) ফাইল কেন বেছে নেওয়া হয়?<ol class="opts"><li>যেকোনো অ্যাট্রিবিউটে সার্চ দ্রুত</li><li>ইনসার্ট দ্রুত, কোনো ক্রম ধরে রাখার দরকার নেই</li><li>এতে বাড়তি জায়গা লাগে না</li><li>রেঞ্জ কোয়েরি সমর্থন করে</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">২.</span>নিচের কোন স্টোরেজটি <b>ভোলাপূর্ণ</b>?<ol class="opts"><li>সেকেন্ডারি (HDD/SSD)</li><li>টার্শিয়ারি (টেপ)</li><li>প্রাইমারি (র‍্যাম)</li><li>কোনোটিই নয় — সবগুলোই স্থায়ী</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৩.</span>একটি টেবিলে সর্বোচ্চ কতটি <b>ক্লাস্টার্ড</b> ইনডেক্স থাকতে পারে?<ol class="opts"><li>দুটি</li><li>প্রতিটি কলামে একটি</li><li>কেবল একটি</li><li>যেকোনো সংখ্যক</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৪.</span>একটি <b>স্পার্স</b> প্রাইমারি ইনডেক্সে এন্ট্রি থাকে:<ol class="opts"><li>প্রতি রেকর্ডে</li><li>প্রতি ডেটা ব্লকে</li><li>প্রতি অ্যাট্রিবিউটে</li><li>প্রতি সেকেন্ডারি কি-তে</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৫.</span>বি প্লাস ট্রি <code>salary BETWEEN 20000 AND 30000</code>-এ কেন দক্ষ?<ol class="opts"><li>সব কি লিভে থাকে এবং লিভগুলো কি-ক্রমে শৃঙ্খলবদ্ধ</li><li>এর কোনো ইন্টারনাল নোড নেই</li><li>এটি সব রেকর্ড রুটে রাখে</li><li>এটি সবসময় বাইনারি ট্রি</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৬.</span>100 বাইটের 30,000টি রেকর্ড, 1024 বাইটের ব্লকে unspanned, কি-র উপর সাজানো। <b>স্পার্স</b> ইনডেক্সে প্রতি ডেটা ব্লকে একটি 15 বাইটের এন্ট্রি। কত ব্লক লাগবে?<ol class="opts"><li>44</li><li>45</li><li>442</li><li>30</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৭.</span><code>h(key) = key mod N</code>, যেখানে <b>N = 2</b>। কি 10, 20, 25 এর মান হবে:<ol class="opts"><li>1, 1, 0</li><li>0, 1, 0</li><li>2, 2, 1</li><li>0, 0, 1</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৮.</span>হ্যাশ ইনডেক্স কোন কোয়েরির উত্তর সবচেয়ে ভালো দেয়?<ol class="opts"><li><code>salary BETWEEN 20000 AND 30000</code></li><li><code>ORDER BY salary</code></li><li><code>WHERE empid = 4471</code></li><li><code>SELECT MIN(salary)</code></li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৯.</span><code>(a, b)</code>-এর উপর কম্পোজিট ইনডেক্স কী করতে পারে?<ol class="opts"><li>শুধু <code>WHERE b = ?</code></li><li><code>WHERE a = ?</code> এবং <code>WHERE a=? AND b=?</code></li><li>শুধু <code>ORDER BY b</code></li><li>কিছুই নয় — কম্পোজিট অব্যবহার্য</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১০.</span>কস্ট-বেজড অপটিমাইজার কী অনুমান করে?<ol class="opts"><li>I/O, CPU ও কমিউনিকেশন খরচ</li><li>শুধু ফেরত দেওয়া সারির সংখ্যা</li><li>টেবিলের আকার ও কলাম সংখ্যা</li><li>টেবিলগুলোর বর্ণানুক্রম</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-গ · ৪-খ · ৫-ক · ৬-খ · ৭-ঘ · ৮-গ · ৯-খ · ১০-ক</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> ফাইল অর্গানাইজেশনের সংজ্ঞা দাও এবং চার প্রকারের Insert / Delete / Search / Space-এর প্রোফাইল দাও। একটি ডেটা ফাইলে <b>100 বাইটের 30,000টি রেকর্ড</b>, <b>1024 বাইটের ব্লকে</b> unspanned, কি-র উপর সাজানো। <b>স্পার্স</b> প্রাইমারি ইনডেক্সে প্রতি ডেটা ব্লকে একটি <b>15 বাইটের</b> এন্ট্রি। কত ব্লক লাগবে? প্রতিটি ধাপ দেখাও, ডেন্স ইনডেক্সের সঙ্গে তুলনা করো, এবং <code>BETWEEN</code>-এ কেন বি প্লাস ট্রি হ্যাশের চেয়ে ভালো তা বলো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.6mm">
+    <li><b>চারটি অর্গানাইজেশন (২)</b> — <b>হিপ</b>: কোনো ক্রম নেই, insert Fast, delete Moderate, search Slow O(n), জায়গা Minimal। <b>সিকোয়েনশিয়াল</b>: সাজানো, insert Slow (রেকর্ড সরে), delete Slow, search Fast, Minimal। <b>হ্যাশড</b>: শুধু search Fast, বাকি Moderate। <b>ইনডেক্সড</b>: search Very Fast, জায়গা Extra। <i class="mk">২</i></li>
+    <li><b>ডেটা ব্লকিং ফ্যাক্টর (২)</b> — unspanned মানে কোনো রেকর্ড ব্লক পেরিয়ে যায় না: <code>bfr = ⌊1024 ÷ 100⌋ = 10</code>, তাই ফাইলে <code>30000 ÷ 10 = 3000</code> ব্লক। <i class="mk">২</i></li>
+    <li><b>ইনডেক্স ব্লক (২)</b> — স্পার্স ⇒ <b>3000</b> এন্ট্রি; <code>bfr = ⌊1024 ÷ 15⌋ = 68</code> প্রতি ব্লকে; ব্লক = <code>⌈3000 ÷ 68⌉ = ⌈44.1⌉ = 45</code> — সিলিং লাগে কারণ শেষ ব্লক আংশিক ভর্তি। <b>ডেন্স</b> ইনডেক্স ⇒ <code>⌈30000 ÷ 68⌉ = 442</code> ব্লক। <i class="mk">২</i></li>
+    <li><b>রেঞ্জে বি প্লাস ট্রি বনাম হ্যাশ (৩)</b> — প্রতিটি কি তার রেকর্ড পয়েন্টারসহ <b>লিভে</b> বসে এবং লিভগুলো <b>কি-ক্রমে শৃঙ্খলবদ্ধ</b>: 20000-এর প্রথম লিভে <b>O(log n)</b> খরচে নামো, তারপর চেইন ধরে এগিয়ে যাও যতক্ষণ না 30000 পেরোয় — খরচ O(log n) + k। ইন্টারনাল নোডে শুধু কি ও পয়েন্টার; ফ্যান-আউট বড় বলে এটি বাইনারি ট্রি নয়। হ্যাশ ইনডেক্স সরাসরি <code>h(salary)</code>-এ লাফায়: <code>=</code>-এ O(1), কিন্তু কি কোনো <b>ক্রমে</b> থাকে না, তাই BETWEEN-এ প্রতিটি বাকেট পড়তে হয় — <span class="hl">রেঞ্জে ট্রি, সমতায় হ্যাশ</span>। <i class="mk">৩</i></li>
+    <li><b>নিয়মগুলো যোগ করো (১)</b> — একটি টেবিলে সর্বোচ্চ <b>একটি</b> ক্লাস্টার্ড ইনডেক্স; স্পার্স ইনডেক্সের জন্য <b>সাজানো</b> ফাইল লাগে; কম্পোজিট ইনডেক্স <b>বাম-ডান প্রিফিক্স</b> নিয়ম মানে। <i class="mk">১</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.6mm;margin-top:0">
+    <ul class="tick">
+      <li>চারটি ফাইল অর্গানাইজেশনের নাম বলতে পারি</li>
+      <li>চার-কলামের টেবিলটি হুবহু বলতে পারি</li>
+      <li>ব্লকিং ফ্যাক্টর হিসাব করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>লিভ চেইনসহ বি প্লাস ট্রি আঁকতে পারি</li>
+      <li>ডেন্স আর স্পার্স আলাদা করতে পারি</li>
+      <li>কোয়েরির পাঁচটি ধাপ বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

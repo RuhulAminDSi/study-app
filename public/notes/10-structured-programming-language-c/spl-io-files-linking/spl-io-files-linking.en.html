@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>C I/O, Files, Errors &amp; Linking: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">I/O, Files, Errors &amp; Linking in C</span></h1>
+  <p class="subtitle">printf/scanf · fopen · fseek · stdarg · argc/argv · errno · linking · exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 250" width="580">
+      <g class="w">
+        <ellipse cx="320" cy="116" rx="94" ry="34" class="ink-k fill-y"/>
+        <path class="ink" d="M246,102 L180,62 M246,130 L180,172 M320,82 L320,46 M394,102 L460,62 M394,130 L460,172 M320,150 L320,186 M226,116 L186,116 M414,116 L454,116"/>
+        <rect x="68" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="241" y="14" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="412" y="32" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="22" y="100" width="152" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="462" y="100" width="154" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="68" y="176" width="158" height="40" rx="12" class="ink-r fill-r"/>
+        <rect x="241" y="194" width="158" height="28" rx="12" class="ink fill-b"/>
+        <rect x="412" y="176" width="158" height="40" rx="12" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="115" text-anchor="middle" class="k l">C I/O + LINKING</text><text x="320" y="134" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="147" y="46" text-anchor="middle" class="s" style="font-size:11px">stdin · stdout · stderr</text><text x="147" y="59" text-anchor="middle" class="s" style="font-size:11px">buffering · redirection</text>
+      <text x="320" y="35" text-anchor="middle" class="r w6">printf / scanf ★</text>
+      <text x="491" y="46" text-anchor="middle" class="r w6" style="font-size:12px">fopen modes ★</text><text x="491" y="59" text-anchor="middle" class="r s" style="font-size:11px">text vs binary</text>
+      <text x="98" y="112" text-anchor="middle" class="g w6">the FILE stream</text><text x="98" y="126" text-anchor="middle" class="g s" style="font-size:11px">open · use · close</text>
+      <text x="539" y="112" text-anchor="middle" class="r w6">argc / argv ★</text><text x="539" y="126" text-anchor="middle" class="r s" style="font-size:11px">variadic ...</text>
+      <text x="147" y="197" text-anchor="middle" class="r w6">errno · perror ★</text><text x="147" y="210" text-anchor="middle" class="s" style="font-size:11px">assert · exit status</text>
+      <text x="320" y="211" text-anchor="middle" class="w6" style="font-size:13px">graphics.h (BGI)</text>
+      <text x="491" y="197" text-anchor="middle" class="r w6">linking ★</text><text x="491" y="210" text-anchor="middle" class="r s" style="font-size:11px">static vs dynamic · -lm</text>
+      <text x="320" y="238" text-anchor="middle" class="s" style="font-size:10.5px">· fseek / ftell / rewind · the feof() trap · va_start / va_arg / va_end · library headers</text>
+      <text x="320" y="248" text-anchor="middle" class="s" style="font-size:10.5px">· preprocessor → compiler → assembler → linker → loader · extern and multi-file programs</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = the idea everything else is built on</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm;font-size:11pt"><b>High-yield list</b><br>① scanf: <b>%f</b> = float, <b>%lf</b> = double<br>② size_t (strlen, sizeof) → <b>%zu</b><br>③ fopen fails ⇒ returns <b>NULL</b><br>④ "w" truncates · "a" always writes at the end<br>⑤ <b>./prog one two</b> ⇒ argc = 3, argv[3] = NULL<br>⑥ never va_arg(ap, float) — use double<br>⑦ perror writes to <b>stderr</b><br>⑧ static link copies only the <b>needed modules</b>; -lm = libm</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The structured-programming syllabus line reads "<span class="hl">Input and Output: standard input and output, formatted input and output, file access; Variable length argument list; Command line parameters; Error Handling; Graphics; Linking; Library functions</span>". Data types, functions, pointers and structures have their own lessons.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>Streams &amp; printf … p. 2</li><li>scanf &amp; character I/O … p. 3</li><li>File access &amp; modes … p. 4</li><li>Random access &amp; EOF … p. 5</li></ul>
+    <ul class="tick"><li>Variadic functions &amp; argc/argv … p. 6</li><li>Error handling … p. 7</li><li>Graphics &amp; library functions … p. 8</li><li>Compiling &amp; linking … p. 9 · Night p. 10 · Practice p. 11</li></ul>
+  </div>
+  <div class="def tiny"><span class="lbl">What the whole lesson is for</span> A C program talks to the outside world only through <b>streams</b> and the <b>return values</b> of library calls, and becomes runnable only after the <b>linker</b> joins it to those libraries — so the whole lesson is <span class="circ">streams in, checks on, linker last</span>.</div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: streams and printf ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Streams &amp; formatted output</span></div>
+  <h2><span class="no">1</span>Standard Streams &amp; Formatted Output (printf)</h2><span class="tag">basics ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>stream</b> is C's uniform view of any source or destination of bytes — keyboard, screen, file, pipe — reached through a <code>FILE *</code>. Every hosted C program starts with <span class="hl">three streams already open</span>, declared in <b>&lt;stdio.h&gt;</b>: <b>stdin</b> (keyboard), <b>stdout</b> (screen; line-buffered on a terminal, fully buffered into a file) and <b>stderr</b> (screen, <span class="circ">unbuffered</span> — shows at once).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,214px) minmax(0,1fr);align-items:center">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 150" width="214">
+      <g class="w">
+        <rect x="6" y="52" width="74" height="34" rx="6" class="ink fill-b"/>
+        <rect x="104" y="48" width="74" height="42" rx="6" class="ink-k fill-y"/>
+        <rect x="204" y="12" width="70" height="32" rx="6" class="ink-g fill-g"/>
+        <rect x="204" y="92" width="70" height="32" rx="6" class="ink-r fill-r"/>
+        <path class="ink" d="M80,69 L102,69" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M178,60 L202,34" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M178,80 L202,104" marker-end="url(#ah)"/>
+      </g>
+      <text x="43" y="74" text-anchor="middle" class="w6 s">keyboard</text>
+      <text x="43" y="102" text-anchor="middle" class="s" style="font-size:11px">stdin · fd 0</text>
+      <text x="141" y="67" text-anchor="middle" class="k w6 s">program</text><text x="141" y="81" text-anchor="middle" class="s" style="font-size:10px">printf · scanf</text>
+      <text x="239" y="33" text-anchor="middle" class="g w6 s">screen</text>
+      <text x="239" y="60" text-anchor="middle" class="g s" style="font-size:11px">stdout · fd 1</text>
+      <text x="239" y="113" text-anchor="middle" class="r w6 s">screen</text>
+      <text x="239" y="140" text-anchor="middle" class="r s" style="font-size:11px">stderr · fd 2</text>
+      <text x="76" y="140" text-anchor="middle" class="p s" style="font-size:10px">"&gt; out.txt" moves stdout only</text>
+    </svg><figcaption>two outputs that look the same on screen — but they are <b>separate streams</b></figcaption></figure>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>stderr</b> is not a log file: it goes to the screen too, but <code>prog &gt; out.txt</code> redirects only stdout, so errors still show. (ii) Text left in the stdout buffer is <b>lost if the program crashes</b> — <code>fflush(stdout)</code> forces it out.</div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Spec.</th><th class="l">Argument</th><th class="l">Prints</th></tr>
+      <tr><td class="l"><b>%d %i</b></td><td class="l">int</td><td class="l">-42</td></tr>
+      <tr><td class="l"><b>%u</b></td><td class="l">unsigned int</td><td class="l">42</td></tr>
+      <tr><td class="l"><b>%ld %lld</b></td><td class="l">long, long long</td><td class="l">123456789</td></tr>
+      <tr><td class="l"><b>%f</b></td><td class="l"><span class="hl">double (float is promoted)</span></td><td class="l">3.140000</td></tr>
+      <tr><td class="l"><b>%Lf</b></td><td class="l">long double</td><td class="l">3.140000</td></tr>
+      <tr><td class="l"><b>%e %g</b></td><td class="l">double: exponent / shorter</td><td class="l">3.14e+00 · 3.14</td></tr>
+    </table>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Spec.</th><th class="l">Argument</th><th class="l">Prints</th></tr>
+      <tr><td class="l"><b>%c</b></td><td class="l">char (as int)</td><td class="l">A</td></tr>
+      <tr><td class="l"><b>%s</b></td><td class="l">char * string</td><td class="l">Dhaka</td></tr>
+      <tr><td class="l"><b>%p</b></td><td class="l">void * pointer</td><td class="l">0x7ffd…</td></tr>
+      <tr><td class="l"><b>%x %X %o</b></td><td class="l">unsigned: hex / octal</td><td class="l">ff · FF · 377</td></tr>
+      <tr><td class="l"><b>%zu</b></td><td class="l"><span class="circ">size_t</span></td><td class="l">5</td></tr>
+      <tr><td class="l"><b>%%</b></td><td class="l">nothing</td><td class="l">a literal %</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Anatomy: % [flags] [width] [.precision] [length] letter</span>
+    <div class="fgrid tiny">
+      <p><b>-</b> left-justify · <b>+</b> show the sign · <b>0</b> pad with zeros · <b>#</b> 0x for %x, 0 for %o</p>
+      <p><b>width</b> = a <span class="hl">minimum</span>, never truncates; <b>*</b> takes it from an argument</p>
+      <p><b>.precision</b>: digits after the point (%f) · max chars (%s)</p>
+      <p><b>length</b>: hh, h, l, ll, L, z — the argument's size</p>
+    </div>
+    <p class="tiny"><b>printf returns</b> the number of characters printed (negative on error): <code>printf("%d", printf("Hello"))</code> prints <span class="circ">Hello5</span>.</p></div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ predict the output (_ = a space)</span> <code>"%5d|"</code>, 42 → <b>___42|</b> · <code>"%-5d|"</code>, 42 → <b>42___|</b> · <code>"%05d"</code>, 42 → <b>00042</b> · <code>"%+d"</code>, 42 → <b>+42</b> · <code>"%.2f"</code>, 3.14159 → <b>3.14</b> · <code>"%8.3f|"</code>, 3.14159 → <b>___3.142|</b> · <code>"%#x %X %o"</code>, 255 ×3 → <b>0xff FF 377</b> · <code>"%.3s"</code>, "Bangladesh" → <b>Ban</b> · <code>"%2d"</code>, 12345 → <b>12345</b>.</div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) In <b>printf</b>, %f serves float <i>and</i> double — a float is promoted to double; the split matters only in scanf. (ii) <code>printf("%d", 3.5)</code> is <b>undefined</b>. (iii) <code>strlen</code> returns <b>size_t</b>: print it with <b>%zu</b>, not %d or %lu.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Flags, Width, Dot, Length, Letter</b>" — always in that order. "<b>Minus moves left, zero fills, plus shows.</b>"</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: scanf and character I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Formatted input &amp; character I/O</span></div>
+  <h2><span class="no">2</span>Formatted Input (scanf) &amp; Character / Line I/O</h2><span class="tag">trap-heavy ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>scanf</b> reads characters from stdin, converts them according to the format and <span class="hl">stores each result through a pointer</span> — so every non-array argument needs <b>&amp;</b>. It returns the <b>number of items assigned</b>, or <b>EOF</b> if input fails before the first conversion. %d, %f and %s skip leading white space; <b>%c does not</b>.</div>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">Type</th><th class="l">printf</th><th class="l">scanf</th><th class="l">Why they differ</th></tr>
+    <tr><td class="l"><b>float</b></td><td class="l">%f</td><td class="l">%f</td><td class="l">gets a <b>float *</b> — 4 bytes</td></tr>
+    <tr><td class="l"><b>double</b></td><td class="l">%f (also %lf since C99)</td><td class="l"><span class="circ">%lf</span></td><td class="l">a <b>double *</b>: 8 bytes; %f fills only 4</td></tr>
+    <tr><td class="l"><b>long double</b></td><td class="l">%Lf</td><td class="l">%Lf</td><td class="l">capital L, never lowercase</td></tr>
+    <tr><td class="l"><b>short</b> / <b>long</b></td><td class="l">%hd / %ld</td><td class="l">%hd / %ld</td><td class="l">size must match the pointer</td></tr>
+    <tr><td class="l"><b>char</b></td><td class="l">%c</td><td class="l">%c, or <b>" %c"</b></td><td class="l">the space skips the leftover '\n'</td></tr>
+    <tr><td class="l"><b>string</b></td><td class="l">%s</td><td class="l">%s with <b>no &amp;</b></td><td class="l">an array name is an address; stops at a space</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,224px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 124" width="224">
+      <g class="w">
+        <rect x="8" y="28" width="34" height="30" rx="3" class="ink-g fill-g"/>
+        <rect x="44" y="28" width="34" height="30" rx="3" class="ink-g fill-g"/>
+        <rect x="80" y="28" width="34" height="30" rx="3" class="ink fill-b"/>
+        <rect x="116" y="28" width="34" height="30" rx="3" class="ink fill-y"/>
+        <rect x="152" y="28" width="34" height="30" rx="3" class="ink fill-y"/>
+        <rect x="188" y="28" width="34" height="30" rx="3" class="ink fill-y"/>
+        <rect x="224" y="28" width="46" height="30" rx="3" class="ink-r fill-r"/>
+        <path class="ink-g" d="M10,66 L76,66"/>
+        <path class="ink" d="M118,66 L220,66"/>
+        <path class="ink-r" d="M247,100 L247,62" marker-end="url(#ah)"/>
+      </g>
+      <text x="140" y="16" text-anchor="middle" class="k w6 s">keyboard buffer after typing  42 3.5 ⏎</text>
+      <text x="25" y="48" text-anchor="middle" class="w6">4</text><text x="61" y="48" text-anchor="middle" class="w6">2</text>
+      <text x="97" y="48" text-anchor="middle" class="s">space</text>
+      <text x="133" y="48" text-anchor="middle" class="w6">3</text><text x="169" y="48" text-anchor="middle" class="w6">.</text><text x="205" y="48" text-anchor="middle" class="w6">5</text>
+      <text x="247" y="48" text-anchor="middle" class="r w6">\n</text>
+      <text x="43" y="82" text-anchor="middle" class="g s" style="font-size:11px">%d → 42</text>
+      <text x="169" y="82" text-anchor="middle" class="s" style="font-size:11px">%f skips space → 3.5</text>
+      <text x="196" y="114" text-anchor="end" class="r s" style="font-size:11px">left behind: next %c reads it</text>
+    </svg><figcaption><code>scanf("%d %f", &amp;n, &amp;x)</code> stops before the Enter key</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Function</th><th class="l">Does</th></tr>
+      <tr><td class="l"><b>getchar()</b> / <b>putchar(c)</b></td><td class="l">one character in / out; getchar returns an <b>int</b> so EOF fits</td></tr>
+      <tr><td class="l"><b>gets(s)</b></td><td class="l"><span class="red">removed in C11</span> — no size limit, buffer overflow</td></tr>
+      <tr><td class="l"><b>fgets(s, n, stdin)</b></td><td class="l">at most <b>n − 1</b> chars, <span class="hl">keeps the '\n'</span>, adds '\0'</td></tr>
+      <tr><td class="l"><b>puts(s)</b> / <b>fputs(s, fp)</b></td><td class="l">puts adds a '\n'; fputs adds nothing</td></tr>
+      <tr><td class="l"><b>getch()</b> / <b>getche()</b></td><td class="l">a key without Enter — <b>conio.h</b>, DOS/Turbo C only, not standard</td></tr>
+    </table>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ what does scanf return?</span> <code>int a = 0, b = 0, r = scanf("%d %d", &amp;a, &amp;b);</code> <b>(a)</b> input <b>10 20</b> → r = <span class="circ">2</span>, a = 10, b = 20. <b>(b)</b> input <b>10 abc</b> → r = <b>1</b>, b stays 0 and "abc" <b>stays in the buffer</b> for the next read. <b>(c)</b> input <b>abc</b> → r = <b>0</b>. <b>(d)</b> end of input (Ctrl+Z / Ctrl+D) → r = <b>EOF</b>. Safe loop: <code>while (scanf("%d", &amp;x) == 1) sum += x;</code></div>
+  <div class="sumbox tiny"><span class="lbl">Three scanf tools worth knowing</span>
+    <div class="fgrid three tiny">
+      <p><b>%9s</b> — width limit: at most 9 chars into <code>char s[10]</code></p>
+      <p><b>%[^\n]</b> — scanset: a whole line, spaces included</p>
+      <p><b>%*d</b> — read and <b>discard</b>; not counted in the return</p>
+    </div></div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <code>scanf("%d", x)</code> without &amp; passes a value as an address — undefined behaviour, usually a crash. (ii) <code>char c = getchar();</code> can never equal EOF where char is unsigned — keep it <b>int</b>. (iii) <code>fflush(stdin)</code> is undefined in standard C. (iv) %s reads <b>one word</b> only.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>printf takes values, scanf takes addresses.</b>" And "<b>lf = long float = double</b>": in scanf the <b>l</b> is the only thing standing between a float and a double.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: file access ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>File access &amp; modes</span></div>
+  <h2><span class="no">3</span>File Access: FILE *, fopen Modes, Text vs Binary</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A file is used through a <b>pointer to a FILE</b> structure (declared in &lt;stdio.h&gt;) that holds the <b>buffer</b>, the <b>current position</b> and the <b>end-of-file and error flags</b>. Every file job has three steps: <b>open</b> with <code>fopen(name, mode)</code>, which <span class="circ">returns NULL on failure</span>; <b>process</b>; <b>close</b> with <code>fclose(fp)</code>, which flushes the buffer and returns 0 (or EOF on failure).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,204px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 270 150" width="204">
+      <g class="w">
+        <rect x="6" y="40" width="64" height="36" rx="6" class="ink fill-b"/>
+        <rect x="94" y="10" width="92" height="96" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M100,40 L180,40 M100,64 L180,64"/>
+        <ellipse cx="236" cy="30" rx="28" ry="9" class="ink-g fill-g"/>
+        <path class="ink-g" d="M208,30 L208,86 M264,30 L264,86"/>
+        <path class="ink-g" d="M208,86 Q236,100 264,86"/>
+        <path class="ink" d="M70,58 L92,58" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M186,58 L206,58" marker-end="url(#ahg)"/>
+      </g>
+      <text x="38" y="56" text-anchor="middle" class="w6 s">program</text><text x="38" y="70" text-anchor="middle" class="s" style="font-size:10px">holds fp</text>
+      <text x="140" y="30" text-anchor="middle" class="k w6 s">FILE</text>
+      <text x="140" y="56" text-anchor="middle" class="s" style="font-size:11px">buffer</text>
+      <text x="140" y="80" text-anchor="middle" class="s" style="font-size:11px">position · flags</text>
+      <text x="140" y="98" text-anchor="middle" class="s" style="font-size:10px">EOF · error</text>
+      <text x="236" y="66" text-anchor="middle" class="g w6 s">disk file</text>
+      <text x="135" y="128" text-anchor="middle" class="r s" style="font-size:11px">fp = fopen(...) — check it for NULL</text>
+      <text x="135" y="144" text-anchor="middle" class="s" style="font-size:10.5px">fclose(fp) flushes the buffer to disk</text>
+    </svg><figcaption>the program holds only a pointer; the FILE does the bookkeeping</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Mode</th><th class="l">If the file exists</th><th class="l">If it is missing</th><th class="l">Allows</th></tr>
+      <tr><td class="l"><b>"r"</b></td><td class="l">opened at the start</td><td class="l"><b>NULL</b></td><td class="l">read</td></tr>
+      <tr><td class="l"><b>"w"</b></td><td class="l"><span class="circ">truncated to 0</span></td><td class="l">created</td><td class="l">write</td></tr>
+      <tr><td class="l"><b>"a"</b></td><td class="l">kept; <b>every</b> write goes to the end</td><td class="l">created</td><td class="l">append</td></tr>
+      <tr><td class="l"><b>"r+"</b></td><td class="l">opened, <b>not</b> truncated</td><td class="l"><b>NULL</b></td><td class="l">read + write</td></tr>
+      <tr><td class="l"><b>"w+"</b></td><td class="l">truncated</td><td class="l">created</td><td class="l">write + read</td></tr>
+      <tr><td class="l"><b>"a+"</b></td><td class="l">kept; reads anywhere, writes at end</td><td class="l">created</td><td class="l">read + append</td></tr>
+    </table>
+  </div>
+  <p class="tiny">Add <b>b</b> for <span class="hl">binary</span>: "rb", "wb", "ab", "r+b" (= "rb+"), "w+b", "a+b". C11 adds <b>x</b> ("wx"): fail instead of overwriting. Note <code>printf(…)</code> ≡ <code>fprintf(stdout, …)</code>.</p>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">Level</th><th class="l">Read</th><th class="l">Write</th><th class="l">Signal at end / error</th></tr>
+    <tr><td class="l"><b>character</b></td><td class="l">fgetc(fp), getc(fp)</td><td class="l">fputc(c, fp), putc(c, fp)</td><td class="l">EOF</td></tr>
+    <tr><td class="l"><b>line / string</b></td><td class="l">fgets(s, n, fp)</td><td class="l">fputs(s, fp)</td><td class="l">NULL · EOF</td></tr>
+    <tr><td class="l"><b>formatted</b></td><td class="l">fscanf(fp, fmt, …)</td><td class="l">fprintf(fp, fmt, …)</td><td class="l">count or EOF · negative</td></tr>
+    <tr><td class="l"><b>block (binary)</b> ★</td><td class="l">fread(ptr, size, n, fp)</td><td class="l">fwrite(ptr, size, n, fp)</td><td class="l">items done, <b>&lt; n</b> on end or error</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">/* copy in.txt to out.txt */
+FILE *in  = fopen("in.txt", "r");
+FILE *out = fopen("out.txt", "w");
+if (in == NULL || out == NULL) {
+    perror("fopen");
+    return 1;
+}
+int c;              /* int, not char */
+while ((c = fgetc(in)) != EOF)
+    fputc(c, out);
+fclose(in);
+fclose(out);</div>
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">Text vs binary</span> In <b>text mode</b> the library may translate line ends — on Windows '\n' is written as "\r\n" and read back as '\n'. <b>Binary mode</b> moves bytes exactly. On Linux/UNIX the two modes are identical. <code>fprintf(fp, "%d", 12345)</code> writes <b>5 characters</b>; <code>fwrite(&amp;n, sizeof n, 1, fp)</code> writes <span class="circ">sizeof(int) bytes</span> (4 on most systems).</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>"w" destroys</b> the old contents; use "a" to keep them. (ii) <b>"r+"</b> never creates a file. (iii) fopen signals failure with <b>NULL</b>, not EOF or −1. (iv) Forgetting fclose can <b>lose buffered data</b>. (v) In "a"/"a+" a write lands at the end even after fseek.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>r reads, w wipes, a adds — and + gives the other half.</b>" "<b>b means bytes.</b>" Only the two r-modes fail on a missing file; every w- and a-mode creates it.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: random access and EOF ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Random access, EOF &amp; stream status</span></div>
+  <h2><span class="no">4</span>Random Access: fseek, ftell, rewind &amp; the EOF Rules</h2><span class="tag">arithmetic ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> Every open stream has a <span class="hl">file position indicator</span> — the byte offset where the next read or write happens. Sequential I/O moves it forward by itself; <b>random access</b> moves it directly with <code>fseek(fp, offset, whence)</code>, so record <i>k</i> of a binary file can be read without reading the <i>k</i> − 1 before it.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,232px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 130" width="232">
+      <g class="w">
+        <rect x="10" y="44" width="280" height="28" rx="3" class="ink fill-b"/>
+        <path class="ink" d="M66,44 L66,72 M122,44 L122,72 M178,44 L178,72 M234,44 L234,72"/>
+        <rect x="122" y="44" width="56" height="28" rx="3" class="ink-k fill-y"/>
+        <path class="ink-g" d="M12,30 L118,30" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M288,96 L240,96" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M150,108 L176,108" marker-end="url(#ahp)"/>
+      </g>
+      <text x="12" y="20" class="g s" style="font-size:11px">SEEK_SET (0) · from byte 0</text>
+      <text x="38" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 0</text><text x="94" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 1</text>
+      <text x="150" y="63" text-anchor="middle" class="k w6 s" style="font-size:11px">rec 2</text>
+      <text x="206" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 3</text><text x="262" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 4</text>
+      <text x="288" y="90" text-anchor="end" class="r s" style="font-size:11px">SEEK_END (2) · offset ≤ 0</text>
+      <text x="146" y="112" text-anchor="end" class="p s" style="font-size:11px">SEEK_CUR (1) · from here</text>
+      <text x="150" y="127" text-anchor="middle" class="s" style="font-size:10.5px">record k starts at byte k × sizeof(record)</text>
+    </svg><figcaption>three origins, one offset — the whole of random access</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Call</th><th class="l">Effect · return</th></tr>
+      <tr><td class="l"><b>fseek(fp, off, whence)</b></td><td class="l">move to origin + off · <b>0</b> on success</td></tr>
+      <tr><td class="l"><b>ftell(fp)</b></td><td class="l">current offset as <b>long</b> · −1L on error</td></tr>
+      <tr><td class="l"><b>rewind(fp)</b></td><td class="l">back to 0 <b>and</b> clears the error flag · void</td></tr>
+      <tr><td class="l"><b>feof(fp)</b></td><td class="l">non-zero once a read has <span class="circ">already hit</span> the end</td></tr>
+      <tr><td class="l"><b>ferror(fp)</b> / <b>clearerr(fp)</b></td><td class="l">error flag set? / reset both flags</td></tr>
+      <tr><td class="l"><b>fflush(fp)</b></td><td class="l">write an output buffer out now</td></tr>
+      <tr><td class="l"><b>remove(n)</b> / <b>rename(o, n)</b></td><td class="l">delete / rename a file · 0 on success</td></tr>
+    </table>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ a binary file of student records</span> <code>struct student { int roll; char name[16]; float cgpa; };</code> — 4 + 16 + 4 = <b>24 bytes</b> (no padding needed here; padding rules are in the structures lesson). <b>(a)</b> File size: <code>fseek(fp, 0, SEEK_END); long n = ftell(fp);</code> → n = 240 ⇒ 240 ÷ 24 = <span class="circ">10 records</span>. <b>(b)</b> Read the <b>5th</b> record (k = 4): <code>fseek(fp, 4 * sizeof(struct student), SEEK_SET)</code> → byte <b>96</b>, then <code>fread(&amp;s, sizeof s, 1, fp)</code> returns 1. <b>(c)</b> Now <code>ftell(fp)</code> = 96 + 24 = <b>120</b>. <b>(d)</b> Update it in place: open with <b>"rb+"</b>, <code>fseek(fp, -24L, SEEK_CUR)</code>, then <code>fwrite(&amp;s, sizeof s, 1, fp)</code>. <b>(e)</b> The last record: <code>fseek(fp, -24L, SEEK_END)</code> → byte 216.</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">/* WRONG: the last line prints twice */
+while (!feof(fp)) {
+    fgets(line, 80, fp);
+    fputs(line, stdout);
+}
+/* RIGHT: test the read itself */
+while (fgets(line, sizeof line, fp) != NULL)
+    fputs(line, stdout);</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">EOF is a value, not a byte</span> <b>EOF</b> is a macro in &lt;stdio.h&gt; for a <b>negative int</b> (usually −1) that input functions return when nothing is left. No EOF character is stored in the file; a file simply ends. That is why <span class="hl">fgetc returns int</span>: it must fit all 256 byte values <i>and</i> EOF.</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>feof() does not look ahead</b>: it turns true only after a read has failed, so a <code>while (!feof(fp))</code> loop runs once too often. (ii) Byte arithmetic with ftell needs <b>binary</b> mode. (iii) Between a write and a read, call fseek or fflush.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>SET, CUR, END = 0, 1, 2 — start, here, end.</b>" And "<b>read first, then ask</b>": test the value fgetc/fgets/fread returned; ask feof() only to learn <i>why</i> it stopped.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: variadic functions and command line ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Variable arguments &amp; command line</span></div>
+  <h2><span class="no">5</span>Variable-Length Argument Lists (stdarg.h)</h2><span class="tag">written favourite ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>variadic function</b> takes a variable number of arguments, declared with an ellipsis <b>...</b> after <span class="hl">at least one named parameter</span>: <code>int printf(const char *fmt, ...);</code>. The macros of <b>&lt;stdarg.h&gt;</b> walk the unnamed arguments one by one; the function itself has <b>no way to know how many</b> arrived.</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">#include &lt;stdarg.h&gt;
+int sum(int count, ...) {
+    va_list ap;
+    int total = 0;
+    va_start(ap, count);
+    for (int i = 0; i &lt; count; i++)
+        total += va_arg(ap, int);
+    va_end(ap);
+    return total;
+}
+sum(4, 10, 20, 30, 40)   → 100
+sum(2, 5, 15)            → 20</div>
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">Macro / type</th><th class="l">Job</th></tr>
+      <tr><td class="l"><b>va_list ap</b></td><td class="l">the cursor over the arguments</td></tr>
+      <tr><td class="l"><b>va_start(ap, last)</b></td><td class="l">start after the <b>last named</b> parameter</td></tr>
+      <tr><td class="l"><b>va_arg(ap, T)</b></td><td class="l">fetch the next one as type T</td></tr>
+      <tr><td class="l"><b>va_copy(d, s)</b></td><td class="l">duplicate the cursor (C99)</td></tr>
+      <tr><td class="l"><b>va_end(ap)</b></td><td class="l">clean up — one per va_start</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Unnamed arguments undergo the <b>default promotions</b>: char, short → <b>int</b>; float → <b>double</b>. So <span class="circ">va_arg(ap, float)</span> and va_arg(ap, char) are undefined — ask for double / int. Reading past the last argument is also undefined.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">How the callee learns the count</span> a <b>count</b> argument (sum above) · a <b>sentinel</b> at the end (NULL, −1) · a <b>format string</b> — printf counts the % signs. Get the count wrong and va_arg reads garbage.</div>
+  </div>
+  <h2 style="margin-top:2mm"><span class="no">6</span>Command-Line Parameters (argc, argv)</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <code>int main(int argc, char *argv[])</code> (or <code>char **argv</code>) receives the words typed after the command. <b>argc</b> = how many words, <span class="hl">the program name included</span>; <b>argv[0]</b> = the program name; argv[1] … argv[argc − 1] = the arguments, <b>always as strings</b>; and <span class="circ">argv[argc] = NULL</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,220px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 260 132" width="214">
+      <g class="w">
+        <rect x="8" y="22" width="70" height="24" rx="3" class="ink fill-b"/>
+        <rect x="8" y="48" width="70" height="24" rx="3" class="ink fill-b"/>
+        <rect x="8" y="74" width="70" height="24" rx="3" class="ink fill-b"/>
+        <rect x="8" y="100" width="70" height="24" rx="3" class="ink-r fill-r"/>
+        <rect x="128" y="22" width="92" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="128" y="48" width="60" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="128" y="74" width="60" height="24" rx="3" class="ink-g fill-g"/>
+        <path class="ink" d="M78,34 L126,34 M78,60 L126,60 M78,86 L126,86" marker-end="url(#ahb)"/>
+      </g>
+      <text x="130" y="14" text-anchor="middle" class="k w6 s">$ ./prog one two   ⇒ argc = 3</text>
+      <text x="43" y="39" text-anchor="middle" class="s" style="font-size:11px">argv[0]</text>
+      <text x="43" y="65" text-anchor="middle" class="s" style="font-size:11px">argv[1]</text>
+      <text x="43" y="91" text-anchor="middle" class="s" style="font-size:11px">argv[2]</text>
+      <text x="43" y="117" text-anchor="middle" class="r w6 s" style="font-size:11px">argv[3]</text>
+      <text x="174" y="39" text-anchor="middle" class="g s" style="font-size:11px">"./prog\0"</text>
+      <text x="158" y="65" text-anchor="middle" class="g s" style="font-size:11px">"one\0"</text>
+      <text x="158" y="91" text-anchor="middle" class="g s" style="font-size:11px">"two\0"</text>
+      <text x="90" y="117" class="r s" style="font-size:11px">NULL — ends the list</text>
+    </svg><figcaption>argv is an array of pointers to strings</figcaption></figure>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ <code>$ ./sum 10 20 30</code></span> argc = <b>4</b>; argv[1] is the <b>string</b> "10", so the sum needs a conversion: <code>for (i = 1; i &lt; argc; i++) s += atoi(argv[i]);</code> → <span class="circ">60</span>. <b>(b)</b> <code>$ ./prog "hello world"</code> → argc = <b>2</b>: the shell's quotes make one argument. <b>(c)</b> <code>$ ./prog</code> alone → argc = 1, argv[1] = NULL: test <code>argc &lt; 2</code> first. <b>(d)</b> atoi("12ab") silently gives 12 — <b>strtol</b> can report errors.</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) argc is never 0 in practice — the name counts. (ii) <code>argv[1] + argv[2]</code> adds <b>pointers</b>, not numbers. (iii) The names argc/argv are only convention; the <b>types</b> are what the standard fixes.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>argc counts the name; argv ends in NULL.</b>" For stdarg: "<b>start, arg, arg, …, end</b>" — and "<b>small things grow</b>": char → int, float → double.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: error handling ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Error handling</span></div>
+  <h2><span class="no">7</span>Error Handling: Return Values, errno, perror, assert, exit</h2><span class="tag">high-yield ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> C has <b>no exceptions</b>. A library function reports failure through its <span class="hl">return value</span> and, for many, by storing a code in <b>errno</b>; the program must <b>check</b>, report on <b>stderr</b>, and end with a <b>failure exit status</b>. Nothing happens automatically if the check is skipped.</div>
+  <div class="cols" style="align-items:start">
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Call</th><th class="l">Failure looks like</th></tr>
+      <tr><td class="l">fopen, malloc, calloc, fgets</td><td class="l"><b>NULL</b></td></tr>
+      <tr><td class="l">scanf, fscanf</td><td class="l">fewer items than asked, or <b>EOF</b></td></tr>
+      <tr><td class="l">fgetc, getchar, fclose, fputs</td><td class="l"><b>EOF</b></td></tr>
+      <tr><td class="l">printf, fprintf</td><td class="l">a <b>negative</b> value</td></tr>
+      <tr><td class="l">fseek / ftell</td><td class="l">non-zero / <b>−1L</b></td></tr>
+      <tr><td class="l">fread, fwrite</td><td class="l">fewer than <b>n</b> items</td></tr>
+      <tr><td class="l">sqrt(−1) · strtol overflow</td><td class="l">errno = <b>EDOM</b> · <b>ERANGE</b></td></tr>
+    </table>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 270 160" width="226">
+      <g class="w">
+        <rect x="70" y="4" width="130" height="26" rx="6" class="ink fill-b"/>
+        <path class="ink-k fill-y" d="M135,40 L190,62 L135,84 L80,62 Z"/>
+        <rect x="4" y="100" width="118" height="26" rx="6" class="ink-r fill-r"/>
+        <rect x="150" y="100" width="116" height="26" rx="6" class="ink-g fill-g"/>
+        <rect x="4" y="132" width="118" height="24" rx="6" class="ink-r fill-r"/>
+        <path class="ink" d="M135,30 L135,38" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M80,62 L63,62 L63,98" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M190,62 L208,62 L208,98" marker-end="url(#ahg)"/>
+      </g>
+      <text x="135" y="21" text-anchor="middle" class="w6 s">fp = fopen(...)</text>
+      <text x="135" y="66" text-anchor="middle" class="k w6 s" style="font-size:11px">fp == NULL ?</text>
+      <text x="56" y="56" text-anchor="middle" class="r s" style="font-size:11px">yes</text>
+      <text x="216" y="56" text-anchor="middle" class="g s" style="font-size:11px">no</text>
+      <text x="63" y="117" text-anchor="middle" class="r s" style="font-size:11px">perror → stderr</text>
+      <text x="208" y="117" text-anchor="middle" class="g s" style="font-size:11px">use, then fclose</text>
+      <text x="63" y="148" text-anchor="middle" class="r s" style="font-size:10.5px">exit(EXIT_FAILURE)</text>
+      <text x="208" y="148" text-anchor="middle" class="g s" style="font-size:11px">return 0</text>
+    </svg><figcaption>check, tell, leave — every library call</figcaption></figure>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+FILE *fp = fopen("data.txt", "r");
+if (fp == NULL) {
+    perror("data.txt");
+    fprintf(stderr, "code %d: %s\n",
+            errno, strerror(errno));
+    exit(EXIT_FAILURE);
+}</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">errno · perror · strerror</span> <b>errno</b> (&lt;errno.h&gt;) is set to a positive code by a failing call and <b>never reset to 0</b> by the library. ISO C defines only <b>EDOM, ERANGE, EILSEQ</b>; ENOENT etc. are POSIX. <b>perror("data.txt")</b> prints <span class="circ">data.txt: No such file or directory</span> to stderr; <b>strerror(errno)</b> (&lt;string.h&gt;) returns that text.</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">assert, exit, abort — how a program ends</span>
+    <div class="fgrid tiny">
+      <p><b>assert(expr)</b>: if false, prints expression, file, line to stderr, then <b>abort()</b></p>
+      <p><b>#define NDEBUG</b> before &lt;assert.h&gt; ⇒ every assert <span class="hl">disappears</span></p>
+      <p><b>exit(status)</b>: flushes and closes streams, runs atexit() handlers</p>
+      <p><b>return n;</b> in main ≡ <b>exit(n)</b> · EXIT_SUCCESS 0 · EXIT_FAILURE ≠ 0</p>
+    </div>
+    <p class="tiny"><b>abort()</b>: abnormal end, no atexit handlers. The shell reads the status as <b>$?</b> / <b>%ERRORLEVEL%</b>.</p></div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ division by zero</span> Integer <code>a / b</code> with b = 0 is <b>undefined behaviour</b> — no return code, no errno, usually a crash — so <b>test first</b>: <code>if (b == 0) { fputs("divide by zero\n", stderr); return EXIT_FAILURE; }</code>. (IEEE 754 floats give 1.0 / 0.0 = <b>inf</b>.)</div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) errno is meaningful only <b>right after</b> a call that failed. (ii) <b>assert</b> is not input validation — it vanishes in a release build. (iii) Report errors on <b>stderr</b>, not stdout. (iv) <b>0 = success</b>, non-zero = failure — not the reverse.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Check, tell, leave.</b>" Check the return value, tell stderr (perror), leave with EXIT_FAILURE. "<b>Assert for bugs, if for users.</b>"</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: graphics and library functions ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Graphics &amp; library functions</span></div>
+  <h2><span class="no">8</span>Graphics in C (graphics.h, Turbo C)</h2><span class="tag">MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>graphics.h</b> is Borland's <b>BGI</b> (Borland Graphics Interface) for Turbo C/C++ under DOS — <span class="hl">not part of ISO C</span> (gcc has no such header). The screen is a pixel grid with the <b>origin (0, 0) at the top-left</b> and <b>y growing downward</b>; in VGA high mode (640 × 480, 16 colours) <code>getmaxx()</code> = 639 and <code>getmaxy()</code> = 479.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,200px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 250 160" width="200">
+      <g class="w">
+        <rect x="20" y="20" width="200" height="124" rx="2" class="ink-k fill-b"/>
+        <path class="ink-g" d="M20,20 L236,20" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M20,20 L20,156" marker-end="url(#ah)"/>
+        <rect x="60" y="52" width="60" height="60" rx="1" class="ink-r"/>
+        <ellipse cx="90" cy="82" rx="30" ry="30" class="ink"/>
+        <path class="ink" d="M150,60 L205,120"/>
+      </g>
+      <text x="6" y="14" class="k s" style="font-size:11px">(0,0)</text>
+      <text x="236" y="34" text-anchor="end" class="g s" style="font-size:11px">x →</text>
+      <text x="26" y="154" class="r s" style="font-size:11px">y ↓</text>
+      <text x="218" y="138" text-anchor="end" class="s" style="font-size:10.5px">(639, 479)</text>
+      <text x="90" y="128" text-anchor="middle" class="r s" style="font-size:10px">rectangle(60,52,120,112)</text>
+      <text x="178" y="56" text-anchor="middle" class="s" style="font-size:10px">line()</text>
+    </svg><figcaption>screen coordinates: y points <b>down</b></figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Function</th><th class="l">Does</th></tr>
+      <tr><td class="l"><b>initgraph(&amp;gd, &amp;gm, path)</b></td><td class="l">graphics mode; <b>gd = DETECT</b></td></tr>
+      <tr><td class="l"><b>graphresult()</b> · <b>closegraph()</b></td><td class="l"><b>grOk</b> (0) · back to text</td></tr>
+      <tr><td class="l"><b>putpixel(x,y,c)</b> · <b>line(x1,y1,x2,y2)</b></td><td class="l">a pixel · a line</td></tr>
+      <tr><td class="l"><b>circle(x,y,r)</b> · <b>rectangle(l,t,r,b)</b></td><td class="l">radius · <span class="circ">two corners</span></td></tr>
+      <tr><td class="l"><b>setcolor(c)</b> · <b>setbkcolor(c)</b></td><td class="l">BLACK 0 · RED 4 · WHITE 15</td></tr>
+      <tr><td class="l"><b>setfillstyle</b> + <b>floodfill(x,y,b)</b></td><td class="l">fill up to border b</td></tr>
+      <tr><td class="l"><b>outtextxy(x,y,s)</b> · <b>cleardevice()</b></td><td class="l">text · clear screen</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;    /* getch() */
+int main(void) {
+  int gd = DETECT, gm;
+  initgraph(&amp;gd, &amp;gm, "C:\\TC\\BGI");
+  if (graphresult() != grOk) return 1;
+  setcolor(RED);  rectangle(100,100,200,200);
+  setcolor(BLUE); circle(150, 150, 50);
+  outtextxy(110, 220, "Graphics Example");
+  getch(); closegraph(); return 0;
+}</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>getch()</b> is in <b>conio.h</b>, not graphics.h — it just holds the picture until a key is pressed. (ii) rectangle takes <b>two corners</b>, not width and height. (iii) A larger y is <b>lower</b>.</div>
+  </div>
+  <h2 style="margin-top:2mm"><span class="no">9</span>Standard Library Functions &amp; Headers</h2><span class="tag">MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> The <b>C standard library</b> is precompiled code shipped with the compiler. A <b>header declares</b> (prototypes, macros, types); the <b>library archive defines</b> (the machine code the linker adds). C89 had <b>15</b> standard headers, C99 <b>24</b>, C11 <b>29</b>.</div>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">Header</th><th class="l">High-yield members</th></tr>
+    <tr><td class="l"><b>&lt;stdio.h&gt;</b></td><td class="l">printf, scanf, fopen, fgets, fread, perror, EOF, FILE, NULL</td></tr>
+    <tr><td class="l"><b>&lt;stdlib.h&gt;</b></td><td class="l">malloc, calloc, realloc, free, atoi, strtol, <span class="hl">rand, srand, exit, abs</span>, qsort, system</td></tr>
+    <tr><td class="l"><b>&lt;string.h&gt;</b></td><td class="l">strlen, strcpy, strcat, strcmp, strchr, strstr, memcpy, memset, strerror</td></tr>
+    <tr><td class="l"><b>&lt;math.h&gt;</b></td><td class="l">sqrt, pow, fabs, ceil, floor, sin, cos, log, log10, exp — all return <b>double</b></td></tr>
+    <tr><td class="l"><b>&lt;ctype.h&gt;</b> · <b>&lt;time.h&gt;</b></td><td class="l">isalpha, isdigit, toupper, tolower · time, clock, difftime</td></tr>
+    <tr><td class="l"><b>&lt;limits.h&gt;</b> · <b>&lt;stddef.h&gt;</b></td><td class="l">INT_MAX, CHAR_BIT · size_t, NULL, offsetof</td></tr>
+      </table>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ outputs</span> strlen("Dhaka") = <b>5</b>, sizeof("Dhaka") = <b>6</b> · pow(2, 10) = <b>1024.000000</b> · floor(−2.1) = <b>−3.0</b> · <code>rand() % 6 + 1</code> = a die roll after <code>srand(time(NULL))</code>.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>abs in stdlib, fabs in math.</b>" "<b>Header declares, library defines</b>" — only the linker brings the code.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: compiling and linking ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Compiling &amp; linking</span></div>
+  <h2><span class="no">10</span>From Source to Executable: Compiling &amp; Linking</h2><span class="tag">written favourite ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> Building a C program takes four stages, and the <b>linker</b> is the last: it combines object files and libraries into one executable by <span class="hl">resolving symbols</span> — matching every use of an external name with exactly one definition — and <b>relocating</b> addresses. The <b>loader</b> then places the executable in memory and starts it.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="600">
+    <g class="w">
+      <rect x="4" y="30" width="62" height="30" rx="5" class="ink fill-b"/>
+      <rect x="92" y="24" width="96" height="42" rx="6" class="ink-k fill-y"/>
+      <rect x="214" y="24" width="88" height="42" rx="6" class="ink-k fill-y"/>
+      <rect x="328" y="24" width="88" height="42" rx="6" class="ink-k fill-y"/>
+      <rect x="442" y="20" width="84" height="50" rx="6" class="ink-r fill-r"/>
+      <rect x="554" y="30" width="82" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="430" y="84" width="108" height="24" rx="5" class="ink-p fill-p"/>
+      <path class="ink" d="M66,45 L90,45 M188,45 L212,45 M302,45 L326,45 M416,45 L440,45" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M526,45 L552,45" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M484,84 L484,72" marker-end="url(#ahp)"/>
+    </g>
+    <text x="35" y="50" text-anchor="middle" class="w6 s">hello.c</text>
+    <text x="140" y="42" text-anchor="middle" class="k w6 s">preprocessor</text><text x="140" y="58" text-anchor="middle" class="s" style="font-size:11px">-E → hello.i</text>
+    <text x="258" y="42" text-anchor="middle" class="k w6 s">compiler</text><text x="258" y="58" text-anchor="middle" class="s" style="font-size:11px">-S → hello.s</text>
+    <text x="372" y="42" text-anchor="middle" class="k w6 s">assembler</text><text x="372" y="58" text-anchor="middle" class="s" style="font-size:11px">-c → hello.o</text>
+    <text x="484" y="42" text-anchor="middle" class="r w6 s">linker ★</text><text x="484" y="58" text-anchor="middle" class="r s" style="font-size:11px">resolves names</text>
+    <text x="595" y="50" text-anchor="middle" class="g w6 s">a.out / .exe</text>
+    <text x="484" y="100" text-anchor="middle" class="p s" style="font-size:11px">libc · libm · .a / .so</text>
+    <text x="200" y="100" text-anchor="middle" class="s" style="font-size:11px">then the loader puts the program in memory and calls main</text>
+    <text x="320" y="12" text-anchor="middle" class="s" style="font-size:11px">gcc runs all four by default: gcc hello.c -o hello</text>
+  </svg><figcaption>stop after any stage with its flag: -E, -S or -c</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">Stage</th><th class="l">In → out</th><th class="l">What it does · typical error</th></tr>
+    <tr><td class="l"><b>Preprocessor</b></td><td class="l">.c → .i</td><td class="l">#include, #define, #if; strips comments (preprocessor lesson) · missing header file</td></tr>
+    <tr><td class="l"><b>Compiler</b></td><td class="l">.i → .s</td><td class="l">syntax and type checks, assembly code · missing semicolon, type mismatch</td></tr>
+    <tr><td class="l"><b>Assembler</b></td><td class="l">.s → .o / .obj</td><td class="l">machine code with <b>unresolved</b> external symbols</td></tr>
+    <tr><td class="l"><b>Linker</b> ★</td><td class="l">.o + libs → exe</td><td class="l">resolves and relocates · <span class="circ">undefined reference</span>, multiple definition</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">Aspect</th><th class="l">Static linking</th><th class="l">Dynamic (shared) linking</th></tr>
+    <tr><td class="l"><b>Library file</b></td><td class="l">.a (Linux) · .lib (Windows)</td><td class="l">.so (Linux) · .dll (Windows)</td></tr>
+    <tr><td class="l"><b>When bound</b></td><td class="l">at link time: <span class="hl">only the needed object modules</span> are copied in</td><td class="l">at load time by the dynamic linker (or run time: dlopen, LoadLibrary)</td></tr>
+    <tr><td class="l"><b>Size · memory</b></td><td class="l">larger file; each program has its own copy</td><td class="l">smaller file; <b>one copy shared</b> in memory</td></tr>
+    <tr><td class="l"><b>Updating the library</b></td><td class="l">relink every program</td><td class="l">replace the .so/.dll once</td></tr>
+    <tr><td class="l"><b>Risk</b></td><td class="l">none at run time — self-contained</td><td class="l">missing or wrong version ("DLL hell")</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">/* util.h */ extern int counter;
+              int add(int a, int b);
+/* util.c */ int counter = 0;
+              int add(int a, int b)
+              { counter++; return a + b; }
+/* main.c */ #include "util.h"
+gcc -c main.c      → main.o
+gcc -c util.c      → util.o
+gcc main.o util.o -o prog
+gcc prog.c -o prog -lm   (libm)</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">extern &amp; linkage</span> <b>extern</b> declares a name defined <b>elsewhere</b>; the definition must appear in exactly <b>one</b> file. <b>static</b> at file scope gives <b>internal linkage</b>: the name is invisible to the linker and to other files (storage classes lesson). <b>-lm</b> links libm, the maths library; put it <b>after</b> the source files.</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) &lt;math.h&gt; gives only prototypes; "<b>undefined reference to sqrt</b>" is a <b>linker</b> error cured by -lm. (ii) Static linking does <b>not</b> copy the whole library.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Please Compile And Link</b>" — Preprocess, Compile, Assemble, Link; the flags <b>-E -S -c</b> stop after the first three. "<b>Static = suitcase, dynamic = borrow on arrival.</b>"</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid tiny">
+      <p>stdin 0 · stdout 1 · stderr 2</p><p>stderr is <b>unbuffered</b></p>
+      <p>%d int · %u unsigned · %ld long</p><p>%c char · %s string · %p void *</p>
+      <p>%x hex · %o octal · %e exponent</p><p><b>size_t → %zu</b></p>
+      <p>printf %f = float <i>and</i> double</p><p><b>scanf: %f float, %lf double</b></p>
+      <p>% flags width .prec length letter</p><p>width is a minimum, never cuts</p>
+      <p>printf returns chars printed</p><p>scanf returns items assigned / EOF</p>
+      <p>scanf needs &amp;, but not for arrays</p><p>gets removed in C11 → fgets</p>
+      <p>fgets keeps '\n', reads n − 1</p><p>getchar returns <b>int</b></p>
+      <p>fopen fails ⇒ <b>NULL</b></p><p>"w" truncates · "a" appends</p>
+      <p>"r", "r+" never create a file</p><p>b = binary · x = exclusive (C11)</p>
+      <p>fread/fwrite return items done</p><p>SEEK_SET 0 · CUR 1 · END 2</p>
+      <p>size = fseek END + ftell</p><p>rewind = seek 0 + clear error</p>
+      <p>feof true only <b>after</b> a failed read</p><p>EOF = negative int, usually −1</p>
+      <p>va_start · va_arg · va_end</p><p>float → double, char → int</p>
+      <p>argc counts the program name</p><p>argv[argc] = NULL</p>
+      <p>perror → stderr</p><p>errno: EDOM · ERANGE · EILSEQ</p>
+      <p>assert off with NDEBUG</p><p>EXIT_SUCCESS 0 · EXIT_FAILURE</p>
+      <p>getch() is conio.h</p><p>BGI: (0,0) top-left, y down</p>
+      <p>-E · -S · -c · link</p><p>static .a/.lib · dynamic .so/.dll</p>
+      <p>-lm links the maths library</p><p>abs stdlib · fabs math</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>printf and scanf are declared in <b>&lt;stdio.h&gt;</b></li>
+      <li><code>printf("%d", printf("Hello"))</code> ⇒ <b>Hello5</b></li>
+      <li><code>"%8.3f"</code> of 3.14159 ⇒ <b>___3.142</b></li>
+      <li>Read a double: <b>scanf("%lf", &amp;d)</b></li>
+      <li>fopen on a missing file in "r" ⇒ <b>NULL</b></li>
+      <li>Record 5 of 24-byte records starts at byte <b>96</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li><code>./prog one two</code> ⇒ argc = <b>3</b></li>
+      <li>Variadic macros live in <b>&lt;stdarg.h&gt;</b></li>
+      <li>perror("x") ⇒ "x: &lt;reason&gt;" on <b>stderr</b></li>
+      <li>assert false ⇒ message + <b>abort()</b></li>
+      <li>undefined reference to sqrt ⇒ add <b>-lm</b></li>
+      <li>Shared library is bound at <b>load time</b></li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> %f for a double in scanf · %lu or %d for size_t · &amp; forgotten in scanf · <code>char c = getchar()</code> · <b>while (!feof(fp))</b> · "w" when the data had to be kept · fopen checked against EOF · va_arg(ap, float) · argc said to exclude the program name · errors on stdout · assert to validate input · getch() put in graphics.h · <b>static linking said to copy the whole library</b>.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "Flags, Width, Dot, Length, Letter" · "printf takes values, scanf takes addresses" · "lf = long float = double" · "r reads, w wipes, a adds; + gives the other half; b means bytes" · "SET, CUR, END = 0, 1, 2" · "read first, then ask" · "start, arg, arg, …, end; small things grow" · "argc counts the name; argv ends in NULL" · "Check, tell, leave" · "Assert for bugs, if for users" · "abs in stdlib, fabs in math" · "Please Compile And Link" · "Static = suitcase, dynamic = borrow on arrival".</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, Files &amp; Linking</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set" style="font-size:9.6pt;line-height:4.7mm">
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">1.</span>Which conversion reads a <b>double</b> with scanf?<ol class="opts"><li>%f</li><li>%d</li><li>%lf</li><li>%Lf</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">2.</span>What does fopen() return when it cannot open the file?<ol class="opts"><li>a NULL pointer</li><li>EOF</li><li>−1</li><li>an empty FILE</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">3.</span>A program with <code>int main(int argc, char *argv[])</code> is run as <code>./prog one two</code>. argc is:<ol class="opts"><li>1</li><li>2</li><li>4</li><li>3</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">4.</span>Which mode opens a file for writing and <b>erases</b> any existing contents?<ol class="opts"><li>"a"</li><li>"w"</li><li>"r+"</li><li>"a+"</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">5.</span><code>printf("%5.2f|", 3.14159);</code> prints (_ = a space):<ol class="opts"><li>3.14|</li><li>_3.14|</li><li>3.14159|</li><li>00003.14|</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">6.</span>va_start, va_arg and va_end are defined in:<ol class="opts"><li>&lt;stdio.h&gt;</li><li>&lt;stdlib.h&gt;</li><li>&lt;stdarg.h&gt;</li><li>&lt;conio.h&gt;</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">7.</span>gcc reports "undefined reference to sqrt". The fix is to:<ol class="opts"><li>add -lm when linking</li><li>add #include &lt;math.h&gt;</li><li>compile with -c</li><li>compile with -E</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">8.</span>Which is true of <b>feof(fp)</b>?<ol class="opts"><li>it predicts the next read will fail</li><li>it returns the EOF character</li><li>it is declared in conio.h</li><li>it is true only after a read has hit the end</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">9.</span>perror() writes its message to:<ol class="opts"><li>stdout</li><li>a log file</li><li>stderr</li><li>stdin</li></ol></div>
+    <div class="mcq" style="line-height:4.7mm"><span class="qn">10.</span>In <b>static</b> linking the linker:<ol class="opts"><li>loads the library at run time</li><li>copies only the needed object modules</li><li>makes the executable smaller</li><li>needs the .dll at run time</li></ol></div>
+  </div>
+  <div class="anskey tiny">Answer key → 1-c · 2-a · 3-d · 4-b · 5-b · 6-c · 7-a · 8-d · 9-c · 10-b</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Write a C program that takes a file name on the command line, reads the integers in that file and prints their sum, handling every error properly. Explain argc/argv and each check you make. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5mm">
+    <li><b>Arguments</b> — <code>int main(int argc, char *argv[])</code>; argc counts the program name, so one file name means <b>argc == 2</b>, and argv[1] is the name. If <code>argc != 2</code>, print a usage line to stderr and <code>return EXIT_FAILURE;</code>. <i class="mk">2</i></li>
+    <li><b>Open</b> — <code>FILE *fp = fopen(argv[1], "r");</code> and <code>if (fp == NULL) { perror(argv[1]); return EXIT_FAILURE; }</code> — perror adds the reason from errno, on stderr. <i class="mk">2</i></li>
+    <li><b>Read</b> — <code>long sum = 0; int x; while (fscanf(fp, "%d", &amp;x) == 1) sum += x;</code> — the loop tests the <b>return value</b> (not feof), so it stops on end of file and on bad data; then <code>if (ferror(fp))</code> report a read error. <i class="mk">3</i></li>
+    <li><b>Finish</b> — <code>fclose(fp); printf("Sum = %ld\n", sum); return EXIT_SUCCESS;</code> — status 0 tells the shell it worked. <i class="mk">1</i></li>
+    <li><b>Explain</b> — argv holds strings, argv[argc] is NULL; every library call is checked because C has no exceptions: NULL from fopen, the item count from fscanf, the flag from ferror. <i class="mk">2</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>Can predict printf output for any width, precision and flag</li>
+      <li>Can state all six fopen modes and what each does to an existing file</li>
+    </ul>
+    <ul class="tick">
+      <li>Can compute fseek offsets for record k</li>
+      <li>Can name the four build stages and contrast static with dynamic linking</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

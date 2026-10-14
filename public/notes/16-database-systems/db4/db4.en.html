@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>File Organization, Indexing &amp; Query Optimization: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">File Organization, Indexing &amp; Query Optimization</span></h1>
+  <p class="subtitle">Heap · Sequential · Hashed · Indexed · B+ tree · hash · cost-based optimizer</p>
+  <p class="tiny center" style="margin:0 0 1mm"><b>Eleven sheets:</b> the physical layout of a file, where the bytes live, how an index finds a row, the two access structures, how the optimizer picks a plan, and a full worked sum-up.</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="300">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">ACCESS PATHS</text><text x="320" y="172" text-anchor="middle" class="r s">files · indexes · plans</text>
+      <text x="142" y="58" text-anchor="middle" class="s" style="font-size:10px">Heap file</text><text x="142" y="72" text-anchor="middle" class="s" style="font-size:10px">insert fast</text>
+      <text x="320" y="40" text-anchor="middle" class="r w6" style="font-size:11px">B+ tree ★</text>
+      <text x="498" y="58" text-anchor="middle" class="s" style="font-size:10px">Sequential</text><text x="498" y="72" text-anchor="middle" class="s" style="font-size:10px">sorted by key</text>
+      <text x="96" y="148" text-anchor="middle" class="g w6" style="font-size:10px">Hash table</text><text x="96" y="163" text-anchor="middle" class="g w6" style="font-size:10px">O(1) equality</text>
+      <text x="544" y="148" text-anchor="middle" class="r w6" style="font-size:10px">Cost model</text><text x="544" y="163" text-anchor="middle" class="r w6" style="font-size:10px">I/O · CPU ★</text>
+      <text x="142" y="238" text-anchor="middle" class="s" style="font-size:10px">Clustered</text><text x="142" y="252" text-anchor="middle" class="s" style="font-size:10px">non-clustered</text>
+      <text x="320" y="270" text-anchor="middle" class="r w6" style="font-size:10px">SQL → cheapest plan</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6" style="font-size:10px">Storage tiers</text><text x="498" y="252" text-anchor="middle" class="r w6" style="font-size:10px">RAM · disk ★</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the other access structure</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>High-yield list</b><br>① Heap: unordered, insert fast<br>② Sequential: sorted, search fast<br>③ Hashed: <code>h(k)=k mod N</code><br>④ Indexed: extra space, very fast<br>⑤ Primary store = RAM, volatile<br>⑥ Bit → Byte → Block → File → DB<br>⑦ Primary index = on the search key<br>⑧ <span class="circ">Only ONE clustered index</span> ★<br>⑨ Dense = per record, sparse = per block<br>⑩ B+ tree: all keys in the leaves ★<br>⑪ Hash: O(1) for <code>=</code>, no range<br>⑫ Plan: SQL→Parser→Optimizer→Plan</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The syllabus names this lesson clause by clause: "<span class="hl">File organization and data storage; Indexing: primary and secondary indexes, B+ trees, hash tables; BCS Query optimization;</span>" <b>All three clauses are taken in full here.</b> db1 designed the relations, db2 gave the algebra and SQL that read them, db3 removed the redundancy in them, and db5 moves on to transactions, concurrency and recovery. What sits between all of those is this lesson's one question: <span class="hl">the tables are designed and clean — but where are their bytes, and how does the DBMS reach one row among millions?</span></p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>File organization, four kinds … p. 2</li><li>Storage types &amp; the unit ladder … p. 3</li><li>Indexes: the four types … p. 4</li><li>Inside an index: dense, sparse … p. 5</li><li>B+ trees and the leaf chain … p. 6</li></ul>
+    <ul class="tick"><li>Hash tables &amp; collisions … p. 7</li><li>Query optimization, stage by stage … p. 8</li><li>Cost model &amp; index design … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: file organization ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>File organization</span></div>
+  <h2><span class="no">1</span>File Organization: How Records Actually Live on Disk</h2><span class="tag">the four kinds ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>File organization</b> is the way <span class="hl">records are stored physically</span> inside the data file — their order on disk and the path the DBMS follows to reach one. It is a <i>physical</i> decision: the same table can be stored four different ways, and the four ways have very different costs for insert, delete and search.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Organization</th><th class="l">Description and characteristics</th></tr>
+    <tr><td class="l"><b>Heap (unordered)</b></td><td class="l">Records sit in <span class="hl">no order at all</span>. Insertion is fast — just append. Search is slow, <b>O(n)</b>: every block must be read.</td></tr>
+    <tr><td class="l"><b>Sequential</b></td><td class="l">Records are <span class="hl">sorted by a key field</span>. Search on that key is fast, but insertion is slow — every later record must be shifted.</td></tr>
+    <tr><td class="l"><b>Hashed</b></td><td class="l">A hash function computes the storage location, giving <span class="hl">direct access</span>. Equality search is fast; <b>collisions are possible</b>.</td></tr>
+    <tr><td class="l"><b>Clustered / Indexed</b></td><td class="l">Data is stored <span class="hl">with index pointers</span> beside it. Search is very fast; the index costs <b>extra space</b>.</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 168" width="470">
+    <g class="w">
+      <rect x="8" y="10" width="286" height="26" rx="12" class="ink fill-b"/>
+      <rect x="8" y="42" width="66" height="30" rx="6" class="ink fill-y"/>
+      <rect x="82" y="42" width="66" height="30" rx="6" class="ink fill-y"/>
+      <rect x="156" y="42" width="66" height="30" rx="6" class="ink fill-y"/>
+      <rect x="230" y="42" width="64" height="30" rx="6" class="ink fill-y"/>
+      <rect x="8" y="88" width="286" height="26" rx="12" class="ink fill-b"/>
+      <rect x="8" y="120" width="66" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="82" y="120" width="66" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="156" y="120" width="66" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="230" y="120" width="64" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="326" y="10" width="286" height="26" rx="12" class="ink-r fill-r"/>
+      <rect x="326" y="42" width="286" height="40" rx="6" class="ink fill-b"/>
+      <path class="ink" d="M326,62 H612 M356,42 V82 M410,42 V82 M466,42 V82 M522,42 V82 M578,42 V82 M356,62 H612"/>
+      <rect x="326" y="104" width="286" height="46" rx="6" class="ink fill-b"/>
+      <path class="ink" d="M326,127 H612 M470,104 V150"/>
+      <path class="ink-r" d="M470,92 V102" marker-end="url(#ah)"/>
+    </g>
+    <text x="151" y="28" text-anchor="middle" class="k w6" style="font-size:12px">HEAP (unordered file)</text>
+    <text x="41" y="62" text-anchor="middle" class="s" style="font-size:10px">77</text>
+    <text x="115" y="62" text-anchor="middle" class="s" style="font-size:10px">31</text>
+    <text x="189" y="62" text-anchor="middle" class="s" style="font-size:10px">90</text>
+    <text x="262" y="62" text-anchor="middle" class="s" style="font-size:10px">08</text>
+    <text x="151" y="106" text-anchor="middle" class="g w6" style="font-size:12px">SEQUENTIAL (sorted on the key)</text>
+    <text x="41" y="140" text-anchor="middle" class="g w6" style="font-size:10px">08</text>
+    <text x="115" y="140" text-anchor="middle" class="g w6" style="font-size:10px">31</text>
+    <text x="189" y="140" text-anchor="middle" class="g w6" style="font-size:10px">77</text>
+    <text x="262" y="140" text-anchor="middle" class="g w6" style="font-size:10px">90</text>
+    <text x="469" y="28" text-anchor="middle" class="r w6" style="font-size:12px">HASHED: h(key) → bucket</text>
+    <text x="341" y="68" text-anchor="middle" class="s" style="font-size:10px">10</text>
+    <text x="395" y="68" text-anchor="middle" class="s" style="font-size:10px">20</text>
+    <text x="451" y="68" text-anchor="middle" class="s" style="font-size:10px">25</text>
+    <text x="507" y="68" text-anchor="middle" class="s" style="font-size:10px">30</text>
+    <text x="563" y="68" text-anchor="middle" class="s" style="font-size:10px">35</text>
+    <text x="469" y="132" text-anchor="middle" class="s" style="font-size:10px">bucket 0 ← 10,20,30</text>
+    <text x="469" y="146" text-anchor="middle" class="s" style="font-size:10px">bucket 1 ← 25,35</text>
+    <text x="151" y="82" text-anchor="middle" class="r s" style="font-size:10px">search = read every block</text>
+    <text x="151" y="160" text-anchor="middle" class="g s" style="font-size:10px">binary search: log₂ blocks</text>
+    <text x="626" y="86" text-anchor="end" class="p s" style="font-size:10px">h(k)=k mod 2</text>
+  </svg><figcaption>the same five records stored three ways — the order on disk is the whole difference</figcaption></figure>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Organization</th><th>Insert</th><th>Delete</th><th>Search</th><th>Space</th></tr>
+    <tr><td class="l"><b>Heap</b></td><td><b>Fast</b></td><td>Moderate</td><td><span class="red">Slow</span></td><td>Minimal</td></tr>
+    <tr><td class="l"><b>Sequential</b></td><td><span class="red">Slow</span></td><td><span class="red">Slow</span></td><td><b>Fast</b></td><td>Minimal</td></tr>
+    <tr><td class="l"><b>Hashed</b></td><td>Moderate</td><td>Moderate</td><td><b>Fast</b></td><td>Moderate</td></tr>
+    <tr><td class="l"><b>Indexed</b></td><td>Moderate</td><td>Moderate</td><td><span class="hl">Very Fast</span></td><td><span class="red">Extra</span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Order on disk buys search and sells insert.</b>" The heap keeps no order, so nothing is ever moved — that is why its insert is Fast. The sequential file keeps an order, so every new key may shove half the file along — that is why its insert is Slow. The four-column table <i>is</i> the trade, and it is <b>frequently tested</b> as a table.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> "Sequential insert is slow" means slow <b>because records must be shifted</b>. <b>2.</b> Hashed search is Fast for <b>equality only</b> — there is no order to exploit for a range. <b>3.</b> "An indexed file costs no extra space" is <b>false</b>; the index is a second structure, which is why Indexed is the only row marked Extra.</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">Where the chapter lives</span> db1 designed the relations, db2 gave the algebra and SQL, db3 removed the redundancy. This lesson asks a different question: <span class="hl">where do the bytes sit, and how does the DBMS reach a row?</span></div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: storage types ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Storage types</span></div>
+  <h2><span class="no">2</span>Data Storage Types and the Storage-Unit Ladder</h2><span class="tag">three tiers, five units ★</span>
+  <p class="tiny" style="margin-top:0">Where the bytes physically live is a different question from how they are arranged inside a file. The DBMS keeps working data in three <b>tiers</b>, and inside each tier it addresses data in five <b>units</b>.</p>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Storage type</th><th class="l">Description</th><th class="l">Remember</th></tr>
+    <tr><td class="l"><b>Primary</b> (RAM)</td><td class="l">Fastest access — the CPU reads it directly. <span class="red"><b>Volatile:</b> data is lost when power fails.</span></td><td class="l">buffer pool, temp tables</td></tr>
+    <tr><td class="l"><b>Secondary</b> (HDD / SSD)</td><td class="l"><span class="hl">Persistent</span> — survives power failure. Slower than RAM; this is where the data files, the log files and the indexes live.</td><td class="l">the database itself</td></tr>
+    <tr><td class="l"><b>Tertiary</b> (Tape / CD)</td><td class="l">Very slow, sequential access only. Used for <b>archiving</b> and backups.</td><td class="l">offline, cold copies</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 330px;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="320">
+      <g class="w">
+        <rect x="15" y="8" width="300" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="55" y="46" width="220" height="30" rx="12" class="ink fill-b"/>
+        <rect x="95" y="84" width="140" height="30" rx="12" class="ink fill-b"/>
+        <rect x="135" y="122" width="60" height="30" rx="12" class="ink fill-b"/>
+        <rect x="150" y="156" width="30" height="26" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M165,38 V44 M165,76 V82 M165,114 V120 M165,152 V154"/>
+      </g>
+      <text x="165" y="29" text-anchor="middle" class="r w6" style="font-size:12px">DATABASE — every file together</text>
+      <text x="165" y="67" text-anchor="middle" class="k w6" style="font-size:12px">FILE — one data or log file</text>
+      <text x="165" y="105" text-anchor="middle" class="k w6" style="font-size:12px">BLOCK / PAGE — the I/O unit</text>
+      <text x="165" y="143" text-anchor="middle" class="k w6" style="font-size:12px">BYTE — 8 bits</text>
+      <text x="165" y="175" text-anchor="middle" class="g w6" style="font-size:12px">BIT</text>
+      <text x="330" y="143" text-anchor="end" class="p s" style="font-size:10px">← biggest</text>
+    </svg><figcaption>the ladder every I/O cost is counted in</figcaption></figure>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The ladder, in words</span> <b>Bit → Byte → Block/Page → File → Database.</b> A byte is 8 bits; a <span class="hl">block (page)</span> is the fixed-size unit the DBMS actually reads from disk — typically 4 KB or 8 KB; a file is a named sequence of blocks; the database is all the files together. <b>Every disk I/O counts blocks, never bytes</b> — which is exactly why the blocking factor matters.</div>
+      <div class="def tiny" style="margin-top:1mm"><span class="lbl">Blocking factor ✍ the number you will compute</span> The <b>blocking factor</b> is how many records fit in one block: <code>bfr = ⌊ block size ÷ record size ⌋</code>. The file occupies <code>⌈ records ÷ bfr ⌉</code> blocks. <b>Unspanned</b> means no record is split across two blocks. Take the <b>floor</b> for the blocking factor and the <span class="circ">ceiling</span> for the block count.</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ four</span> <b>1.</b> "<b>Primary</b> storage" means RAM — not "primary key", not "the first level" — and RAM is <span class="red">volatile</span>. <b>2.</b> An SSD is <b>secondary</b> storage: persistent, however fast it is. <b>3.</b> Tertiary storage is <b>archiving</b> and is essentially sequential — you cannot seek into a tape. <b>4.</b> Speed and volatility both fall as you go down: primary is fastest and forgetful, tertiary is slowest and permanent.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Primary is quick but forgetful; secondary is the database's own home; tertiary is the attic.</b>" And for the ladder: "<b>many bits make a byte, many bytes make a block, many blocks make a file, many files make a database</b>." Every step is "many of the thing below", and the block is the only one the hardware moves in one operation — which is why a cost model counts pages, not characters.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: indexing types ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Index types</span></div>
+  <h2><span class="no">3</span>Indexes: The Definition and the Four Types</h2><span class="tag">one clustered, many secondary ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> An <b>index</b> is a <span class="hl">data structure that speeds up retrieval</span> by keeping an extra sorted map from a search key to the location of the row. It does not hold the data — it holds the <b>path</b> to the data, so a search touches a tiny fraction of the blocks instead of all of them.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Index type</th><th class="l">Description</th></tr>
+    <tr><td class="l"><b>Primary index</b></td><td class="l">Built on the <b>primary (search) key</b>. Because that key is unique and never changes, the index <span class="hl">physically orders the data file</span> — the records sit in key order on disk.</td></tr>
+    <tr><td class="l"><b>Secondary index</b></td><td class="l">Built on a <b>non-key column</b> (a foreign key, or any attribute you often filter on). It provides an <b>alternate path</b>; the data itself is not reordered, so the key may repeat.</td></tr>
+    <tr><td class="l"><b>Clustered index</b></td><td class="l">The <span class="hl">data is physically ordered by the index key</span>. Reading a range in key order is then a single sequential sweep of the file.</td></tr>
+    <tr><td class="l"><b>Non-clustered index</b></td><td class="l">A <span class="hl">logical pointer</span> to the data held in a separate structure; the rows stay where they are and the index points at them.</td></tr>
+  </table>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ the one to memorise</span> <b>At most ONE clustered index per table.</b> A clustered index fixes <i>the physical order in which rows are stored</i>, and a set of rows can be stored in only one order at a time — so a second clustered index would have nothing left to decide. A table may have <span class="hl">any number of non-clustered (secondary) indexes</span>, one per column you filter on. "Two", "one per column" and "any number" are all wrong for the clustered case.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">Primary vs clustered — do not confuse</span> These two travel together but are not synonyms in a textbook question. <b>Primary index</b> is about <i>which key</i> (the search key, and the file is ordered by it). <b>Clustered index</b> is about <i>what is physically true</i> (the rows sit in that order). A <b>secondary</b> index never reorders the file, so a table carrying only secondary indexes is still a heap on disk.</div>
+      <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">What a non-clustered leaf entry holds</span> <code>&lt;key value, row locator&gt;</code>. The locator is the <b>primary key</b> of the row if one exists; if the primary key is a surrogate — an auto-generated id the user never sees — the locator is the <b>RID</b>, the record identifier, effectively its physical address. Only after the locator is followed is the table itself touched at all.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 210" width="290">
+      <g class="w">
+        <rect x="10" y="6" width="280" height="24" rx="12" class="ink-r fill-r"/>
+        <rect x="10" y="36" width="280" height="20" rx="5" class="ink fill-b"/>
+        <rect x="10" y="56" width="280" height="20" rx="5" class="ink fill-b"/>
+        <rect x="10" y="76" width="280" height="20" rx="5" class="ink fill-b"/>
+        <text x="150" y="0" class="k w6" style="font-size:11px">heap: rows in insertion order</text>
+        <rect x="10" y="122" width="280" height="24" rx="12" class="ink-g fill-g"/>
+        <rect x="10" y="152" width="66" height="20" rx="5" class="ink fill-g"/>
+        <rect x="82" y="152" width="66" height="20" rx="5" class="ink fill-g"/>
+        <rect x="154" y="152" width="66" height="20" rx="5" class="ink fill-g"/>
+        <rect x="226" y="152" width="64" height="20" rx="5" class="ink fill-g"/>
+        <path class="ink-g" d="M40,146 V134 M112,146 V134 M184,146 V134 M256,146 V134" marker-end="url(#ahg)"/>
+      </g>
+      <text x="150" y="22" text-anchor="middle" class="s" style="font-size:10px">77</text>
+      <text x="150" y="50" text-anchor="middle" class="s" style="font-size:10px">31</text>
+      <text x="150" y="70" text-anchor="middle" class="s" style="font-size:10px">90</text>
+      <text x="150" y="90" text-anchor="middle" class="s" style="font-size:10px">08</text>
+      <text x="150" y="140" text-anchor="middle" class="g w6" style="font-size:11px">clustered: rows reordered by key</text>
+      <text x="43" y="166" text-anchor="middle" class="s" style="font-size:10px">08</text>
+      <text x="115" y="166" text-anchor="middle" class="s" style="font-size:10px">31</text>
+      <text x="187" y="166" text-anchor="middle" class="s" style="font-size:10px">77</text>
+      <text x="258" y="166" text-anchor="middle" class="s" style="font-size:10px">90</text>
+      <text x="150" y="184" text-anchor="middle" class="g s" style="font-size:10px">pointer into one physical order</text>
+      <text x="150" y="204" text-anchor="middle" class="r w6" style="font-size:11px">only one of these per table</text>
+    </svg><figcaption>a clustered index moves the rows; a non-clustered one moves only the pointers</figcaption></figure>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: inside an index ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Dense, sparse, multilevel</span></div>
+  <h2><span class="no">4</span>Inside an Index: Dense, Sparse, Multilevel — and What an Index Costs</h2><span class="tag">space against speed ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Kind</th><th class="l">One entry for…</th><th class="l">Size</th><th class="l">Search cost</th></tr>
+    <tr><td class="l"><b>Dense index</b></td><td class="l">every <span class="hl">record</span></td><td class="l">large — grows with the file</td><td class="l">small index, fastest lookup</td></tr>
+    <tr><td class="l"><b>Sparse index</b></td><td class="l">every <span class="hl">data block</span> — pointing to the first key in that block</td><td class="l">small — grows with blocks only</td><td class="l">bigger index, but far fewer blocks to search</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 310px;align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Multilevel index — an index on the index</span> A sparse index still has to be searched, and if it does not fit in memory, searching it means reading <i>its</i> blocks. So the DBMS builds a <span class="hl">second level on the index</span>, and a third, until the top level is one block that always stays in RAM. A <b>multilevel (B-tree / B+ tree) index</b> is exactly this: the top level is in memory and each further level shrinks by the fan-out factor. That is why a search over 100 million records still costs only a handful of disk reads.</div>
+    <figure class="doodle"><svg viewBox="0 0 320 190" width="300">
+      <g class="w">
+        <rect x="80" y="6" width="160" height="30" rx="8" class="ink-r fill-r"/>
+        <rect x="20" y="60" width="80" height="28" rx="8" class="ink fill-b"/>
+        <rect x="120" y="60" width="80" height="28" rx="8" class="ink fill-b"/>
+        <rect x="220" y="60" width="80" height="28" rx="8" class="ink fill-b"/>
+        <rect x="8" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="70" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="132" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="194" y="122" width="58" height="26" rx="6" class="ink fill-b"/>
+        <rect x="256" y="122" width="56" height="26" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M120,36 L60,58 M160,36 L160,58 M200,36 L260,58"/>
+        <path class="ink" d="M40,88 L37,120 M80,88 L99,120 M140,88 L161,120 M240,88 L223,120 M280,88 L284,120"/>
+      </g>
+      <text x="160" y="26" text-anchor="middle" class="r w6" style="font-size:11px">root — one block, in RAM</text>
+      <text x="60" y="79" text-anchor="middle" class="s" style="font-size:10px">L1 blocks</text>
+      <text x="160" y="79" text-anchor="middle" class="s" style="font-size:10px">L1 blocks</text>
+      <text x="260" y="79" text-anchor="middle" class="s" style="font-size:10px">L1 blocks</text>
+      <text x="37" y="140" text-anchor="middle" class="s" style="font-size:10px">data</text>
+      <text x="99" y="140" text-anchor="middle" class="s" style="font-size:10px">data</text>
+      <text x="161" y="140" text-anchor="middle" class="s" style="font-size:10px">data</text>
+      <text x="223" y="140" text-anchor="middle" class="s" style="font-size:10px">data</text>
+      <text x="284" y="140" text-anchor="middle" class="s" style="font-size:10px">data</text>
+      <text x="160" y="166" text-anchor="middle" class="k w6" style="font-size:11px">each level is many times the one below</text>
+      <text x="160" y="182" text-anchor="middle" class="p s" style="font-size:10px">stop when the top fits in memory</text>
+    </svg><figcaption>multilevel: the index itself becomes a searchable tree</figcaption></figure>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ sparse needs a sorted file</span> A <b>sparse</b> index stores one entry per block, so its entry must say "this is the <i>first</i> key in that block" — a statement that is only meaningful if the blocks are in <b>key order</b>. That is why a sparse index is built over a <span class="hl">sorted (sequential)</span> file. A <b>dense</b> index has an entry per record, so it can be built over an <b>unordered heap</b> as well. The trade is pure: dense uses more space and fewer reads; sparse uses less space and more reads.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">What every index costs you</span> <b>1.</b> <span class="red">Extra space</span> — the index is a second copy of the keys. <b>2.</b> <span class="red">Every INSERT and DELETE must also update the index</span>, so writes get slower. <b>3.</b> The optimizer must consider each one when it picks a plan. <b>4.</b> An unused index is pure cost. <b>Over-indexing</b> — an index on every column — is a real trap: it makes writes slow, wastes space and confuses the optimizer, all for no benefit.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>An index is a price tag, not a copy.</b>" It carries the key and the locator, never the payload. And "<b>dense is short and fat, sparse is thin and tall</b>" — dense has many entries in few blocks; sparse has few entries in a taller tree, though a multilevel sparse index closes most of the gap anyway. Never index a column just because it exists: <b>index what you filter, join or sort on.</b></div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">Where the index physically lives</span> The index is <b>not</b> inside the data file: it is a separate set of blocks on the same disk, and the DBMS is free to keep the hottest levels in the buffer pool in RAM. That is the whole reason a multilevel index is fast — the top of the tree never touches the disk. A search therefore costs a few RAM reads plus, at worst, one or two disk reads, whatever the size of the table.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: B+ trees ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>B+ tree</span></div>
+  <h2><span class="no">5</span>B+ Trees: the Workhorse Index, and the Leaf Chain That Makes Ranges Fast</h2><span class="tag">the most tested picture ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>B+ tree</b> is the most common indexing structure in databases: a <span class="hl">balanced tree</span> in which <b>every leaf sits at the same level</b>. Internal nodes hold only <b>keys + child pointers</b> and exist purely to guide the search; leaf nodes hold <b>keys + record pointers</b>. Because the tree is balanced and its <span class="hl">fan-out is high</span> — hundreds of keys in one node — the tree is only a few levels deep, so search, insert and delete are all <b>O(log n)</b> with a tiny constant.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 240" width="600">
+    <g class="w">
+      <rect x="230" y="6" width="160" height="34" rx="8" class="ink-k fill-y"/>
+      <rect x="30" y="64" width="170" height="30" rx="8" class="ink fill-b"/>
+      <rect x="420" y="64" width="170" height="30" rx="8" class="ink fill-b"/>
+      <rect x="20" y="126" width="170" height="42" rx="8" class="ink-g fill-g"/>
+      <rect x="230" y="126" width="170" height="42" rx="8" class="ink-g fill-g"/>
+      <rect x="440" y="126" width="170" height="42" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M270,40 L115,62 M350,40 L505,62"/>
+      <path class="ink" d="M70,94 L105,124 M160,94 L315,124 M460,94 L525,124"/>
+      <path class="ink-r" d="M192,147 H226" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M402,147 H436" marker-end="url(#ah)"/>
+    </g>
+    <text x="310" y="20" text-anchor="middle" class="k w6" style="font-size:12px">root</text>
+    <text x="310" y="35" text-anchor="middle" class="k w6" style="font-size:12px">40 | 70</text>
+    <text x="115" y="78" text-anchor="middle" class="s" style="font-size:11px">10 | 20 | 30</text>
+    <text x="115" y="91" text-anchor="middle" class="s" style="font-size:10px">keys + child pointers</text>
+    <text x="505" y="78" text-anchor="middle" class="s" style="font-size:11px">50 | 60 | 80 | 90</text>
+    <text x="505" y="91" text-anchor="middle" class="s" style="font-size:10px">keys + child pointers</text>
+    <text x="105" y="144" text-anchor="middle" class="g w6" style="font-size:12px">10 | 20 | 30</text>
+    <text x="105" y="161" text-anchor="middle" class="g s" style="font-size:10px">&#8594; record pointers</text>
+    <text x="315" y="144" text-anchor="middle" class="g w6" style="font-size:12px">40 | 50 | 60</text>
+    <text x="315" y="161" text-anchor="middle" class="g s" style="font-size:10px">&#8594; record pointers</text>
+    <text x="525" y="144" text-anchor="middle" class="g w6" style="font-size:12px">70 | 80 | 90</text>
+    <text x="525" y="161" text-anchor="middle" class="g s" style="font-size:10px">&#8594; record pointers</text>
+    <text x="209" y="116" text-anchor="middle" class="r w6" style="font-size:11px">linked</text>
+    <text x="419" y="116" text-anchor="middle" class="r w6" style="font-size:11px">linked</text>
+    <text x="310" y="192" text-anchor="middle" class="r w6" style="font-size:12px">internal nodes repeat keys only &#8212; they never touch data</text>
+    <text x="310" y="212" text-anchor="middle" class="g w6" style="font-size:12px">every key lives in the leaves, and the leaves are chained in key order</text>
+    <text x="310" y="232" text-anchor="middle" class="p s" style="font-size:11px">one level for all leaves = balanced &#183; high fan-out = very few levels</text>
+  </svg><figcaption>a correct B+ tree: all leaves at one level, all keys in the leaves, leaves linked left to right</figcaption></figure>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Why it wins on range queries ✍ the standard answer</span> In a B+ tree <b>every key, with its record pointer, is stored in the leaves</b>, and <b>the leaves are chained together in key order</b>. So for <code>WHERE salary BETWEEN 20000 AND 30000</code> the index first finds the <b>first leaf for 20000</b> in <b>O(log n)</b> — an ordinary tree descent — and then simply <b>follows the leaf chain</b>, reading leaf after leaf, until it passes 30000. Internal nodes do no work beyond that first descent. <span class="circ">That is why a range query on a B+ tree index costs O(log n) + k</span>, where k is the number of matching entries.</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ B-tree vs B+ tree — three wrong answers to kill</span> "It has <b>no internal nodes</b>" is false — internal nodes exist and guide the descent. "It stores <b>all records in the root</b>" is false — the root holds only keys and child pointers. "It is <b>always a binary tree</b>" is false — its fan-out is high, so a node holds hundreds of keys and thousands of children. The only correct statement is the one about <span class="hl">leaves holding every key and being linked in key order</span>. In a plain <b>B-tree</b> records sit in <i>all</i> nodes, so a range scan must jump around; in a <b>B+ tree</b> only the leaves carry records, so a range scan is one continuous walk.</div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Point</th><th class="l">B-tree</th><th class="l">B+ tree</th></tr>
+    <tr><td class="l">Where the data sits</td><td class="l">in <b>every</b> node, internal included</td><td class="l"><span class="hl">only in the leaves</span></td></tr>
+    <tr><td class="l">Range query</td><td class="l">must jump between levels</td><td class="l"><span class="hl">one walk down the leaf chain</span></td></tr>
+    <tr><td class="l">Used in practice</td><td class="l">file systems, mostly</td><td class="l"><span class="hl">database indexes, almost always</span></td></tr>
+  </table>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: hash tables ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Hash tables</span></div>
+  <h2><span class="no">6</span>Hash Tables: O(1) Equality — and Why Ranges Kill Them</h2><span class="tag">always state N = 2 ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>hash table</b> computes the storage location <i>directly</i>: a <b>hash function</b> maps the key onto a bucket, so no comparison and no traversal is needed. <code>h(key) = key mod N</code>, where <b>N is the number of buckets</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ with N = 2 stated</span> Here <b>N = 2</b>, so there are exactly two buckets and <code>h(key) = key mod 2</code>:<br>
+      <code>10 → 0</code> &nbsp;·&nbsp; <code>20 → 0</code> &nbsp;·&nbsp; <code>25 → 1</code> &nbsp;·&nbsp; <code>30 → 0</code> &nbsp;·&nbsp; <code>35 → 1</code><br>
+      So <b>bucket 0 = [10, 20, 30]</b> and <b>bucket 1 = [25, 35]</b>. The keys 10, 20 and 30 all hash to 0 — that is a <span class="circ">collision</span>: different keys competing for one slot. Every one of these values is consistent <b>only</b> with N = 2; with N = 10 the answers would all differ, so <b>always state N before computing.</b></div>
+    <figure class="doodle"><svg viewBox="0 0 330 250" width="300">
+      <g class="w">
+        <rect x="90" y="8" width="150" height="30" rx="10" class="ink-k fill-y"/>
+        <rect x="16" y="86" width="140" height="34" rx="8" class="ink fill-b"/>
+        <rect x="174" y="86" width="140" height="34" rx="8" class="ink fill-b"/>
+        <rect x="16" y="172" width="140" height="44" rx="8" class="ink fill-b"/>
+        <rect x="174" y="172" width="140" height="44" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M130,38 L86,84 M200,38 L244,84 M130,38 L86,170 M200,38 L244,170"/>
+      </g>
+      <text x="165" y="28" text-anchor="middle" class="k w6" style="font-size:12px">h(key) = key mod N,  N = 2</text>
+      <text x="86" y="58" text-anchor="middle" class="s" style="font-size:10px">10, 20, 30</text>
+      <text x="244" y="58" text-anchor="middle" class="s" style="font-size:10px">25, 35</text>
+      <text x="86" y="108" text-anchor="middle" class="g w6" style="font-size:11px">bucket 0</text>
+      <text x="244" y="108" text-anchor="middle" class="g w6" style="font-size:11px">bucket 1</text>
+      <text x="86" y="152" text-anchor="middle" class="r s" style="font-size:10px">3 keys, 1 slot</text>
+      <text x="244" y="152" text-anchor="middle" class="r s" style="font-size:10px">2 keys, 1 slot</text>
+      <text x="86" y="192" text-anchor="middle" class="k w6" style="font-size:11px">chaining</text>
+      <text x="86" y="208" text-anchor="middle" class="s" style="font-size:10px">linked list</text>
+      <text x="244" y="192" text-anchor="middle" class="k w6" style="font-size:11px">open addressing</text>
+      <text x="244" y="208" text-anchor="middle" class="s" style="font-size:10px">next empty slot</text>
+      <text x="165" y="238" text-anchor="middle" class="p w6" style="font-size:11px">both are collisions &#8212; both must be handled</text>
+    </svg><figcaption>two buckets only — a key either collides or it does not</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Collision handling</th><th class="l">How it works</th></tr>
+    <tr><td class="l"><b>Chaining</b></td><td class="l">Each bucket holds a <span class="hl">linked list</span>; a colliding record is appended to that bucket's list and a search walks the short list. Bucket 0 above is the chain 10 → 20 → 30.</td></tr>
+    <tr><td class="l"><b>Open addressing</b></td><td class="l">No list. If the computed slot is taken, <span class="hl">probe forward to the next empty slot</span> and put the record there. When the table fills up it must be rehashed larger.</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Hash vs B+ tree</span> <b>Hash:</b> equality lookup <b>O(1) average</b> — nothing better exists. But a hash function <span class="red">destroys order</span>, so <b>range queries, ORDER BY and MIN/MAX are hopeless</b>. <b>B+ tree:</b> slightly slower for a single equality hit, but it keeps the keys in order, so ranges, sorting and "next record" are all natural. Choose a hash for <b>exact-match on a huge, stable key</b>; choose a B+ tree the moment the query needs a range or an order.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> A hash index answers "salary = 25000" in one step but <b>cannot</b> answer "salary BETWEEN 20000 AND 30000" without reading everything — so the high-yield pairing is <span class="circ">B+ tree for BETWEEN, hash for =</span>. <b>2.</b> "A hash table has no collisions" is false the moment two keys hash alike. <b>3.</b> N should be larger than the number of distinct keys if collisions are to be rare, but a huge N wastes space — real implementations pick N as a fraction of the expected record count and rehash as the file grows.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: query optimization ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Query optimization</span></div>
+  <h2><span class="no">7</span>Query Optimization: From SQL Text to an Execution Plan</h2><span class="tag">five stages, one choice ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Query optimization</b> is the process of <span class="hl">choosing the most efficient execution plan</span> for a SQL query. SQL says <i>what</i> you want; several plans may return the right rows, and the optimizer picks the one that costs least to run.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="560">
+    <g class="w">
+      <rect x="4" y="24" width="104" height="44" rx="10" class="ink-k fill-b"/>
+      <rect x="132" y="24" width="104" height="44" rx="10" class="ink fill-b"/>
+      <rect x="260" y="24" width="104" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="388" y="24" width="104" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="516" y="24" width="104" height="44" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M108,46 H130 M236,46 H258 M364,46 H386 M492,46 H514" marker-end="url(#ahb)"/>
+    </g>
+    <text x="56" y="42" text-anchor="middle" class="k w6" style="font-size:11px">SQL</text>
+    <text x="56" y="58" text-anchor="middle" class="s" style="font-size:10px">query text</text>
+    <text x="184" y="42" text-anchor="middle" class="k w6" style="font-size:11px">Parser</text>
+    <text x="184" y="58" text-anchor="middle" class="s" style="font-size:10px">checks syntax,</text>
+    <text x="184" y="72" text-anchor="middle" class="s" style="font-size:10px">builds a tree</text>
+    <text x="312" y="42" text-anchor="middle" class="r w6" style="font-size:11px">Optimizer ★</text>
+    <text x="312" y="58" text-anchor="middle" class="r s" style="font-size:10px">picks the</text>
+    <text x="312" y="72" text-anchor="middle" class="r s" style="font-size:10px">cheapest plan</text>
+    <text x="440" y="42" text-anchor="middle" class="r w6" style="font-size:11px">Execution plan</text>
+    <text x="440" y="58" text-anchor="middle" class="s" style="font-size:10px">join order,</text>
+    <text x="440" y="72" text-anchor="middle" class="s" style="font-size:10px">access paths</text>
+    <text x="568" y="42" text-anchor="middle" class="g w6" style="font-size:11px">Result</text>
+    <text x="568" y="58" text-anchor="middle" class="s" style="font-size:10px">rows</text>
+  </svg><figcaption>the same five stages every DBMS follows</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Technique</th><th class="l">Description</th></tr>
+    <tr><td class="l"><b>Use indexes</b></td><td class="l">Put an index on every column used in <span class="hl">WHERE, JOIN and ORDER BY</span> — those are the only three places an index can ever be used.</td></tr>
+    <tr><td class="l"><b>Avoid SELECT *</b></td><td class="l">Select only the columns needed. Unused columns cost extra <b>I/O</b> <i>and</i> stop the query from being answered by a covering index alone.</td></tr>
+    <tr><td class="l"><b>Efficient joins</b></td><td class="l"><b>Hash join</b> for large unsorted inputs · <b>Merge join</b> when both inputs are already sorted · <b>Nested loop</b> when one side is tiny.</td></tr>
+    <tr><td class="l"><b>Avoid subqueries</b></td><td class="l">Rewrite an <code>IN (SELECT …)</code> as a <span class="hl">JOIN</span> or an <code>EXISTS</code>; the optimizer can then choose a join strategy instead of running the inner query repeatedly.</td></tr>
+    <tr><td class="l"><b>Query hints</b></td><td class="l">DB-specific directives written into the query to steer the optimizer when its statistics-based guess is wrong.</td></tr>
+    <tr><td class="l"><b>Partitioning</b></td><td class="l">Split one large table into partitions so a query touches only the partition it needs.</td></tr>
+    <tr><td class="l"><b>Caching</b></td><td class="l"><b>Materialized views</b> store the result of a query so it can be read directly; the query cache reuses a plan and its result.</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ two</span> <b>1.</b> The optimizer does <b>not</b> change what the query returns — it changes <b>how</b> the answer is produced. Two different plans returning the same rows are both correct; one is cheaper. <b>2.</b> "The optimizer chose a slow query" usually means the <b>statistics are stale</b> or a <b>useful index is missing</b> — not that the optimizer is broken.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Index what you filter, join or sort on — those three words are the whole list.</b>" An index on any other column is never used by that query, however beautiful it looks. And "<b>avoid SELECT *</b>" is not tidiness: it is wasted I/O plus the loss of a covering-index-only plan.</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">Reading a plan ✍</span> Every real DBMS will show you the plan it chose — <code>EXPLAIN</code> in most of them — and the plan is not a secret. It lists, in order, the tables to scan or index, the <b>join order</b>, and the <b>join algorithm</b> used at each step. For a written question, "the plan scans Employee first with a full table scan, then indexes Department by its primary key" is a complete and correct answer; naming the physical structure is what earns the marks, not naming the SQL again.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: cost model and index design ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Cost model &amp; index design</span></div>
+  <h2><span class="no">8</span>Cost-Based vs Heuristic Optimization — and How to Make the Plan Good</h2><span class="tag">the written-answer sheet ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The cost model ✍ three factors</span> For every candidate plan the optimizer estimates:<br>
+      <b>1. I/O cost</b> — the number of <span class="hl">disk page reads and writes</span>. This dominates, because a disk read is millions of times slower than a CPU operation.<br>
+      <b>2. CPU cost</b> — the number of comparisons, tuple operations and expressions evaluated.<br>
+      <b>3. Communication cost</b> — the data shipped between sites; it counts only in a <b>distributed</b> database.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Cost-based (statistics) optimizer</span> Uses <span class="hl">statistics</span> — rows per table, distinct values, data distribution — to estimate the I/O and CPU cost of every candidate plan and pick the <b>least-cost</b> one. Powerful, but wholly dependent on the statistics being current.</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Heuristic (rule-based) optimizer</span> Applies <span class="hl">fixed transformation rules</span> regardless of the data: perform <b>SELECT early</b> to reduce the number of rows as soon as possible; perform <b>projections early</b> to reduce the number of columns as soon as possible; perform the <b>most restrictive join first</b>. It cannot measure, only transform — modern systems run cost-based optimization with these heuristic rules layered on top.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Index selectivity and column order</span> <b>Selectivity</b> is the fraction of rows a predicate keeps. A <b>highly selective</b> condition — few rows surviving — is what makes an index lookup worthwhile; a predicate that keeps most rows is not. In a <b>composite index</b> put the <span class="hl">more selective column first</span>, because that is the one that narrows the search.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ the leftmost-prefix rule</span> A composite index <code>(a, b)</code> can serve <code>WHERE a = ?</code> <b>and</b> <code>WHERE a = ? AND b = ?</code>, but it <span class="red">cannot serve <code>WHERE b = ?</code> alone</span> — the index is not sorted by <code>b</code> on its own, so every value of <code>b</code> is scattered across the whole tree. This is the <b>leftmost-prefix rule</b>, and it is <b>frequently tested</b>. The same rule explains why <code>ORDER BY a, b</code> is free with that index while <code>ORDER BY b</code> is not.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Covering index — the strongest reason to drop SELECT *</span> If <b>every column the query needs is already in the index</b>, the optimizer answers the query <span class="circ">without touching the table at all</span>; this is an index-only scan. Adding a column the query does not need — the habit behind <code>SELECT *</code> — <span class="red">destroys the covering index</span> and forces a trip to the data rows, in addition to the extra I/O of reading those columns. A covering index therefore trades a little write time for a large read saving.</div>
+    <figure class="doodle"><svg viewBox="0 0 350 250" width="300">
+      <g class="w">
+        <rect x="10" y="8" width="330" height="30" rx="10" class="ink-k fill-y"/>
+        <rect x="10" y="52" width="330" height="24" rx="6" class="ink fill-b"/>
+        <rect x="10" y="80" width="330" height="24" rx="6" class="ink fill-b"/>
+        <rect x="10" y="108" width="330" height="24" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M175,42 V50 M175,76 V78 M175,104 V106 M175,132 V134"/>
+        <rect x="10" y="152" width="160" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="180" y="152" width="160" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="10" y="204" width="160" height="34" rx="8" class="ink-r fill-r"/>
+      </g>
+      <text x="175" y="28" text-anchor="middle" class="k w6" style="font-size:11px">composite index (DeptID, Salary)</text>
+      <text x="175" y="69" text-anchor="middle" class="s" style="font-size:10px">DeptID 10 · Salary 20000</text>
+      <text x="175" y="97" text-anchor="middle" class="s" style="font-size:10px">DeptID 10 · Salary 30000</text>
+      <text x="175" y="125" text-anchor="middle" class="s" style="font-size:10px">DeptID 20 · Salary 25000</text>
+      <text x="90" y="175" text-anchor="middle" class="g w6" style="font-size:11px">WHERE a = ?</text>
+      <text x="260" y="175" text-anchor="middle" class="g w6" style="font-size:11px">WHERE a=? AND b=?</text>
+      <text x="90" y="227" text-anchor="middle" class="r w6" style="font-size:11px">WHERE b = ?</text>
+      <text x="175" y="247" text-anchor="middle" class="r s" style="font-size:10px">b alone is not sorted</text>
+    </svg><figcaption>leftmost-prefix: a, then a+b — never b on its own</figcaption></figure>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Heap: unordered, insert Fast</p><p>Heap search O(n), space Minimal</p>
+      <p>Sequential: search Fast</p><p>Sequential insert Slow (shifting)</p>
+      <p>Hashed: <code>h(k) = k mod N</code></p><p>Indexed: Extra space, very fast</p>
+      <p>Primary store = RAM, volatile</p><p>Secondary = disk, persistent</p>
+      <p>Tertiary = tape, archiving</p><p>Bit → Byte → Block → File → DB</p>
+      <p><code>bfr = ⌊size ÷ recsize⌋</code></p><p>blocks = ⌈records ÷ bfr⌉</p>
+      <p>Primary index: search key</p><p>Secondary index: non-key column</p>
+      <p>Clustered: data physically ordered</p><p>Non-clustered: pointer only</p>
+      <p><span class="hl">Only ONE clustered index</span></p><p>Dense = entry per record</p>
+      <p>Sparse = entry per block</p><p>Multilevel = index on the index</p>
+      <p>B+ tree: all keys in leaves</p><p>B+ leaves chained in key order</p>
+      <p>B+ search / insert = O(log n)</p><p>B+ range = O(log n) + k</p>
+      <p>Hash equality O(1) average</p><p>Hash: <span class="circ">no range query</span></p>
+      <p>SQL → Parser → Optimizer</p><p>→ Execution plan → Result</p>
+      <p>Cost = I/O + CPU + comms</p><p>Hash join: large · Merge: sorted</p>
+      <p>Leftmost-prefix rule</p><p>Covering index: no table touch</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>Heap = no order ⇒ fast insert, O(n) search</li>
+      <li>Sequential = sorted ⇒ fast search, slow write</li>
+      <li>Primary storage (RAM) is volatile; disk is not</li>
+      <li>Blocking factor floors, block count ceilings</li>
+      <li>A table has at most <b>one</b> clustered index</li>
+      <li>Sparse index ⇒ one per block, sorted file</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>In a B+ tree every key sits in the <b>leaves</b></li>
+      <li>B+ leaves are <b>chained</b> — that is why BETWEEN is fast</li>
+      <li>A B+ tree is <b>not</b> a binary tree</li>
+      <li>Hash is O(1) for <code>=</code>, useless for BETWEEN</li>
+      <li>Optimizer cost = I/O + CPU + communication</li>
+      <li>Composite index serves <code>a</code> and <code>a,b</code>, never <code>b</code> alone</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">Top traps</span> a <b>hash index</b> serving a range · several <b>clustered indexes</b> · keys <b>only in internal nodes</b> of a B+ tree · calling the B+ tree a binary tree · <code>h(key)=key mod N</code> <b>without giving N</b> · forgetting the <b>ceiling</b> · indexing an unused column.</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">All tricks together</span> Order on disk buys search and sells insert · primary is quick but forgetful, disk is home, tape is the attic · an index is a price tag · dense is short and fat, sparse thin and tall · linked leaves are the range answer · hash for <code>=</code>, tree for BETWEEN.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <circle cx="66" cy="46" r="30" class="ink-r fill-r"/>
+        <circle cx="150" cy="46" r="30" class="ink fill-b"/>
+        <circle cx="234" cy="46" r="30" class="ink-g fill-g"/>
+        <path class="ink" d="M96,46 H118 M180,46 H202" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M234,78 C190,116 70,116 66,78" marker-end="url(#ahp)"/>
+        <rect x="60" y="118" width="180" height="26" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="51" text-anchor="middle" class="r w6" style="font-size:12px">heap</text>
+      <text x="150" y="51" text-anchor="middle" class="k w6" style="font-size:12px">B+ tree</text>
+      <text x="234" y="51" text-anchor="middle" class="g w6" style="font-size:12px">hash</text>
+      <text x="108" y="36" text-anchor="middle" class="p s" style="font-size:10px">index on top</text>
+      <text x="150" y="136" text-anchor="middle" class="k w6" style="font-size:11px">plan = pick the cheapest</text>
+    </svg><figcaption>three structures, one plan</figcaption></figure>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · File Organization &amp; Indexing</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">1.</span>A <b>heap</b> (unordered) file is chosen because:<ol class="opts"><li>Search on any attribute is fast</li><li>Insertion is fast, no order to keep</li><li>It needs no extra space</li><li>It supports range queries</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">2.</span>Which storage type is <b>volatile</b>?<ol class="opts"><li>Secondary (HDD/SSD)</li><li>Tertiary (tape)</li><li>Primary (RAM)</li><li>None — all are persistent</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">3.</span>At most how many <b>clustered</b> indexes can one table have?<ol class="opts"><li>Two</li><li>One per column</li><li>Only one</li><li>Any number</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">4.</span>A <b>sparse</b> primary index has one entry for:<ol class="opts"><li>Every record</li><li>Every data block</li><li>Every attribute</li><li>Every secondary key</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">5.</span>Why is a B+ tree efficient for <code>salary BETWEEN 20000 AND 30000</code>?<ol class="opts"><li>All keys are in the leaves, which are linked in key order</li><li>It has no internal nodes</li><li>It keeps all records in the root</li><li>It is always a binary tree</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">6.</span>30,000 records of 100 bytes, unspanned in 1024-byte blocks, sorted on the key. A <b>sparse</b> index has one 15-byte entry per data block. How many index blocks?<ol class="opts"><li>44</li><li>45</li><li>442</li><li>30</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">7.</span>With <code>h(key) = key mod N</code> and <b>N = 2</b>, keys 10, 20, 25 hash to:<ol class="opts"><li>0, 0, 1</li><li>1, 1, 0</li><li>0, 1, 0</li><li>2, 2, 1</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">8.</span>A hash index answers which query best?<ol class="opts"><li><code>salary BETWEEN 20000 AND 30000</code></li><li><code>ORDER BY salary</code></li><li><code>WHERE empid = 4471</code></li><li><code>SELECT MIN(salary)</code></li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">9.</span>A composite index on <code>(a, b)</code> can serve:<ol class="opts"><li><code>WHERE b = ?</code> alone</li><li><code>WHERE a=?</code> and <code>WHERE a=? AND b=?</code></li><li><code>ORDER BY b</code> alone</li><li>Nothing — composites are unusable</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">10.</span>A cost-based optimizer estimates:<ol class="opts"><li>I/O, CPU and communication cost</li><li>Only the rows returned</li><li>Table size and column count</li><li>The alphabetical order of tables</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-c · 4-b · 5-a · 6-b · 7-a · 8-c · 9-b · 10-a</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Define file organization and give the Insert / Delete / Search / Space profile of all four types. A data file has <b>30,000 records of 100 bytes</b>, unspanned in <b>1024-byte blocks</b>, sorted on the key. A <b>sparse</b> primary index has one <b>15-byte</b> entry per data block. How many index blocks? Show every step, compare with a dense index, and say why a B+ tree beats a hash on <code>BETWEEN</code>. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>Four organizations (2)</b> — <b>Heap</b>: no order, insert Fast, delete Moderate, search Slow O(n), space Minimal. <b>Sequential</b>: sorted, insert Slow (records shift), delete Slow, search Fast, Minimal. <b>Hashed</b>: Moderate except search Fast. <b>Indexed</b>: search Very Fast, space Extra. <i class="mk">2</i></li>
+    <li><b>Data blocking factor (2)</b> — unspanned means no record crosses a block: <code>bfr = ⌊1024 ÷ 100⌋ = 10</code>, so the file is <code>30000 ÷ 10 = 3000</code> blocks. <i class="mk">2</i></li>
+    <li><b>Index blocks (2)</b> — sparse ⇒ <b>3000</b> entries; <code>bfr = ⌊1024 ÷ 15⌋ = 68</code> per block; blocks = <code>⌈3000 ÷ 68⌉ = ⌈44.1⌉ = 45</code> — the ceiling is needed because the last block is partly full. A <b>dense</b> index ⇒ <code>⌈30000 ÷ 68⌉ = 442</code> blocks. <i class="mk">2</i></li>
+    <li><b>B+ tree vs hash for the range (3)</b> — every key with its record pointer sits in the <b>leaves</b>, and the leaves are <b>chained in key order</b>: descend to the first leaf holding 20000 in <b>O(log n)</b>, then follow the chain until the entries pass 30000 — cost O(log n) + k. Internal nodes hold only keys and pointers; the fan-out is high, so it is not a binary tree. A hash index jumps to <code>h(salary)</code>: O(1) for <code>=</code>, but keys are stored in <b>no order</b>, so BETWEEN needs every bucket read — <span class="hl">tree for ranges, hash for equality</span>. <i class="mk">3</i></li>
+    <li><b>Add the rules (1)</b> — at most <b>one clustered index</b> per table; a sparse index needs a <b>sorted</b> file; a composite index follows the <b>leftmost-prefix rule</b>. <i class="mk">1</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>Can name the four file organizations</li>
+      <li>Can reproduce the four-column table</li>
+      <li>Can compute a blocking factor</li>
+    </ul>
+    <ul class="tick">
+      <li>Can draw a B+ tree with its leaf chain</li>
+      <li>Can separate dense from sparse</li>
+      <li>Can list the five query stages</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

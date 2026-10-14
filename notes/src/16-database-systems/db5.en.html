@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Transactions, Concurrency, Recovery &amp; Security: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Transactions, Concurrency, Recovery &amp; Security</span></h1>
+  <p class="subtitle">ACID · 2PL · MVCC · isolation levels · WAL · GRANT · XML/JSON · OODB/ORDB</p>
+  <p class="tiny center" style="margin:0 0 1mm;line-height:5.2mm"><b>Eleven sheets:</b> the transaction and its four properties, the problems concurrency creates, four ways of stopping them, the four isolation levels, how the log rebuilds a crashed database, who may see what — and the semi-structured and object worlds after that.</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="250">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="106" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">ACID</text><text x="320" y="172" text-anchor="middle" class="r s">commit or nothing</text>
+      <text x="142" y="65" text-anchor="middle" class="s" style="font-size:10px">serial schedule</text>
+      <text x="320" y="40" text-anchor="middle" class="r w6" style="font-size:11px">2PL / MVCC ★</text>
+      <text x="498" y="65" text-anchor="middle" class="s" style="font-size:10px">dirty read · phantom</text>
+      <text x="96" y="155" text-anchor="middle" class="g w6" style="font-size:10px">WAL: log first</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6" style="font-size:10px">Undo · Redo</text>
+      <text x="142" y="245" text-anchor="middle" class="s" style="font-size:10px">checkpoint + backup</text>
+      <text x="320" y="270" text-anchor="middle" class="r w6" style="font-size:10px">GRANT / REVOKE</text>
+      <text x="498" y="245" text-anchor="middle" class="r w6" style="font-size:10px">XML · JSON · OODB</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the recovery engine</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;line-height:5.2mm"><b>High-yield list</b><br>① ACID = Atomicity, Consistency, Isolation, Durability<br>② All or nothing: COMMIT or ROLLBACK<br>③ Active → Partially committed → Committed<br>④ Anomaly loop ends at Failed → Aborted<br>⑤ Serialisable = <i>as if</i> one at a time<br>⑥ Dirty · lost update · non-repeatable · phantom<br>⑦ S+S yes · S+X no · X+X <span class="circ">never</span><br>⑧ 2PL: grow then shrink, still deadlocks<br>⑨ RU &lt; RC &lt; RR &lt; Serializable = safer, slower<br>⑩ <span class="circ">WAL</span>: log record first, data page second<br>⑪ UNDO uncommitted, REDO committed<br>⑫ Checkpoint + full / incremental backup</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny" style="line-height:5.2mm">The syllabus names this lesson clause by clause: "<span class="hl">Transaction processing; DBMS concurrency control; database recovery; database security and access control; XML, XPath and XQuery; object-oriented and object-relational databases.</span>" <b>Every clause is taken in full here.</b> Earlier lessons designed the relations, gave the SQL that reads them and put their bytes on disk; this one must make all of that survive <span class="hl">many users, a failure and an intruder</span> at once — <span class="hl">can ten students log in, one crash mid-update and one try to read a colleague's salary, and the database still be correct?</span></p>
+  <div class="tipbox blk tiny" style="line-height:5.2mm"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ul class="tick"><li>Transactions &amp; the ACID properties … p. 2</li><li>Schedules &amp; concurrency problems … p. 3</li><li>Locks: S/X, 2PL &amp; deadlock … p. 4</li><li>Timestamp, optimistic, MVCC … p. 5</li><li>Isolation levels, standard vs real … p. 6</li></ul>
+    <ul class="tick"><li>Recovery: log, WAL, checkpoint … p. 7</li><li>Access control &amp; security … p. 8</li><li>XML, JSON, OODB/ORDB … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: transactions and ACID ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Transactions &amp; ACID</span></div>
+  <h2><span class="no">1</span>Transactions: One Logical Unit of Work, and Its Four Properties</h2><span class="tag">all or nothing ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Definition</span> A <b>transaction</b> is a <span class="hl">sequence of operations treated as a single logical unit of work</span>, delimited by <code>BEGIN</code> / <code>COMMIT</code> on one side and <code>COMMIT</code> / <code>ROLLBACK</code> on the other: either <b>every</b> operation takes effect or <b>none</b> does. Transferring Tk 1000 is two writes — take from account A, add to account B — and if only the first ever reaches disk the money is destroyed, which is why the two writes must be <b>one</b> transaction.</div>
+  <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">BEGIN TRANSACTION;
+  UPDATE account SET balance = balance - 1000 WHERE accno = 'A-101';   -- 1
+UPDATE account SET balance = balance + 1000 WHERE accno = 'B-207';   -- 2
+COMMIT;   -- both or neither</div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Property</th><th class="l">What it promises</th><th class="l">Who enforces it</th></tr>
+    <tr><td class="l"><b>Atomicity</b></td><td class="l"><span class="hl">All or nothing.</span> A failure anywhere rolls the whole unit back; a partly applied transfer is never visible.</td><td class="l">recovery manager (UNDO)</td></tr>
+    <tr><td class="l"><b>Consistency</b></td><td class="l">All <span class="hl">declared integrity constraints</span> hold before and after. <b>They are written by the user</b> — the DBMS invents none.</td><td class="l">constraints, the user's SQL</td></tr>
+    <tr><td class="l"><b>Isolation</b></td><td class="l">Each transaction appears to <span class="hl">run alone</span>. This is the property concurrency control exists to deliver.</td><td class="l">concurrency control</td></tr>
+    <tr><td class="l"><b>Durability</b></td><td class="l">Once committed, a change <span class="hl">survives any crash</span> — power loss, reboot, media failure.</td><td class="l">recovery manager (REDO, WAL)</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 250" width="540">
+    <g class="w">
+      <rect x="235" y="6" width="150" height="34" rx="10" class="ink-k fill-y"/>
+      <rect x="8" y="94" width="164" height="48" rx="10" class="ink fill-b"/>
+      <rect x="228" y="94" width="164" height="48" rx="10" class="ink-g fill-g"/>
+      <rect x="444" y="94" width="164" height="48" rx="10" class="ink-k fill-y"/>
+      <rect x="120" y="200" width="150" height="34" rx="10" class="ink-r fill-r"/>
+      <rect x="350" y="200" width="150" height="34" rx="10" class="ink-r fill-r"/>
+      <path class="ink" d="M235,22 L168,92" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M310,40 V92" marker-end="url(#ahg)"/>
+      <path class="ink" d="M172,118 H226" marker-end="url(#ahb)"/>
+      <path class="ink" d="M392,118 H442" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M235,24 L200,64 V170 H195 V198" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M270,217 H348" marker-end="url(#ah)"/>
+      <path class="ink" d="M380,210 C460,196 540,170 552,148" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M500,222 H616 V60 H388 V42" marker-end="url(#ahp)"/>
+    </g>
+    <text x="310" y="28" text-anchor="middle" class="k w6" style="font-size:12px">ACTIVE</text>
+    <text x="90" y="110" text-anchor="middle" class="k w6" style="font-size:11px">PARTIALLY COMMITTED</text>
+    <text x="90" y="126" text-anchor="middle" class="s" style="font-size:10px">last statement executed,</text>
+    <text x="90" y="138" text-anchor="middle" class="s" style="font-size:10px">output not yet in stable storage</text>
+    <text x="310" y="110" text-anchor="middle" class="g w6" style="font-size:11px">COMMITTED</text>
+    <text x="310" y="126" text-anchor="middle" class="g s" style="font-size:10px">log record flushed,</text>
+    <text x="310" y="138" text-anchor="middle" class="g s" style="font-size:10px">value will never be lost</text>
+    <text x="526" y="110" text-anchor="middle" class="k w6" style="font-size:11px">TERMINATED</text>
+    <text x="526" y="126" text-anchor="middle" class="s" style="font-size:10px">the unit of work is</text>
+    <text x="526" y="138" text-anchor="middle" class="s" style="font-size:10px">completely finished</text>
+    <text x="195" y="222" text-anchor="middle" class="r w6" style="font-size:11px">FAILED</text>
+    <text x="425" y="222" text-anchor="middle" class="r w6" style="font-size:11px">ABORTED</text>
+    <text x="425" y="246" text-anchor="middle" class="p s" style="font-size:10px">rolled back &#8212; and may restart</text>
+    <text x="196" y="192" text-anchor="middle" class="r s" style="font-size:10px">error, deadlock, crash</text>
+    <text x="250" y="86" text-anchor="middle" class="g s" style="font-size:10px">commit record &#8594; disk</text>
+    <text x="466" y="86" text-anchor="middle" class="p s" style="font-size:10px">restart from the beginning</text>
+  </svg><figcaption>the full transaction-state diagram — five states, and the loop back from ABORTED</figcaption></figure>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ five things drawn wrong</span> <b>1.</b> <b>FAILED</b> is reached from <b>ACTIVE</b> — not from <i>Partially committed</i>; the partial state exists only so a failure detected at output can still undo. <b>2.</b> <b>ABORTED follows FAILED</b>, never the reverse. <b>3.</b> <b>TERMINATED</b> is the real end state, reached from <b>COMMITTED</b> <i>and</i> from <b>ABORTED</b> — "Committed is the last state" is wrong. <b>4.</b> An <b>ABORTED</b> transaction may be <span class="hl">restarted from the beginning</span>. <b>5.</b> <b>Commit</b> means the <i>log record</i> is on stable storage — not that every dirty page is flushed.</div>
+  <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Act like a committee: Atomic never splits, Consistent obeys the rules, Isolated keeps its own counsel, Durable survives the walk out.</b>" And for the diagram: "<b>Active starts, Partial is the doorway, Committed is the promise, Terminated is the door closing; only failure opens the side exit to Aborted.</b>"</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: schedules and concurrency problems ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Schedules &amp; anomalies</span></div>
+  <h2><span class="no">2</span>Schedules, Serialisability, and the Five Anomalies</h2><span class="tag">as if one at a time ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Definitions</span> A <b>schedule</b> is the time order in which the operations of several transactions interleave. A <b>serial schedule</b> runs <span class="hl">one transaction to completion, then the next</span> — always correct, useless in practice. A <b>concurrent</b> schedule mixes them for <b>throughput</b> and is <b>serialisable</b> if it is <span class="circ">equivalent to some serial schedule</span>. That one word is the whole objective.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 200" width="430">
+    <g class="w">
+      <rect x="4" y="14" width="612" height="26" rx="12" class="ink fill-b"/>
+      <rect x="4" y="94" width="612" height="26" rx="12" class="ink fill-b"/>
+      <rect x="4" y="174" width="612" height="26" rx="12" class="ink fill-b"/>
+      <path class="ink-r" d="M250,48 V86" marker-end="url(#ah)"/>
+      <path class="ink" d="M300,128 V166" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M150,48 V86" marker-end="url(#ahg)"/>
+      <path class="ink" d="M470,128 V166" marker-end="url(#ahb)"/>
+    </g>
+    <text x="20" y="32" class="k w6" style="font-size:12px">T1</text>
+    <text x="70" y="32" class="s" style="font-size:11px">r1(A)=100</text>
+    <text x="290" y="32" class="r w6" style="font-size:11px">w1(A)=90</text>
+    <text x="20" y="112" class="k w6" style="font-size:12px">T2</text>
+    <text x="70" y="112" class="s" style="font-size:11px">r2(A)=100</text>
+    <text x="330" y="112" class="r w6" style="font-size:11px">w2(A)=110</text>
+    <text x="20" y="192" class="k w6" style="font-size:12px">A</text>
+    <text x="60" y="192" class="s" style="font-size:11px">100</text>
+    <text x="290" y="192" class="r w6" style="font-size:11px">90</text>
+    <text x="500" y="192" class="g w6" style="font-size:11px">110</text>
+  </svg><figcaption>two defects in one schedule: a dirty read at r2(A), then a lost update at w2(A)</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Anomaly</th><th class="l">Exactly what goes wrong</th><th class="l">Fixed by</th></tr>
+    <tr><td class="l"><b>Dirty read</b></td><td class="l">T2 reads an item <span class="hl">T1 wrote but did not commit</span>; T1 then rolls back, so T2's answer rests on a value that never existed.</td><td class="l">S→X conflict · RR+</td></tr>
+    <tr><td class="l"><b>Lost update</b></td><td class="l">Both read A=100 then both write; the second write <span class="hl">overwrites the first unseen</span>. The wrong value survives even though both committed.</td><td class="l">X held to commit · delayed write</td></tr>
+    <tr><td class="l"><b>Non-repeatable read</b></td><td class="l">The <i>same</i> read query returns <span class="hl">different values</span> twice in one transaction because a row was updated in between.</td><td class="l">S held to commit · RR+</td></tr>
+    <tr><td class="l"><b>Phantom read</b></td><td class="l">A <span class="hl">new or deleted row</span> shows up in a repeated range query. No value changed — the row's <i>existence</i> did.</td><td class="l">range locks · Serializable</td></tr>
+    <tr><td class="l"><b>Inconsistent (incorrect summary) analysis</b></td><td class="l">An aggregate reads part of the table before an update and the rest after it, so the total <span class="hl">never existed at any instant</span>.</td><td class="l">S lock on every row read</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ four</span> <b>1.</b> <b>Lost update is the dangerous one, because both transactions commit</b> — no rollback can undo it. <b>2.</b> <b>Lost update is not removed by the standard isolation-level table</b>, which lists read anomalies only. <b>3.</b> <b>Phantom is about rows arriving, not values changing</b> — a value change is non-repeatable read. <b>4.</b> "Concurrency control is only about dirty reads" is far too narrow; an MCQ listing <b>all four plus inconsistent analysis</b> wants the standard set of five.</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Dirty = too early, Lost = too late, Non-repeatable = the value changed, Phantom = the row arrived.</b>" Two are about <i>reading</i>, two about <i>writing</i>; "phantom happens when the value changes" describes nothing at all.</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">The other half of the answer</span> <b>Serialisability is a property of the schedule, not of the program.</b> So the DBMS does not stop interleaving; it <span class="hl">accepts any interleaving whose effect is indistinguishable from a serial one</span>.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: locks, 2PL, deadlock ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Locks, 2PL &amp; deadlock</span></div>
+  <h2><span class="no">3</span>Lock-Based Control: the Compatibility Matrix, 2PL, and Deadlock</h2><span class="tag">the most tested table here ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">The two locks</span> A <b>shared lock S</b> is taken to <i>read</i> an item — many transactions may hold it together. An <b>exclusive lock X</b> is taken to <i>write</i> it — only one may hold it. The item is labelled <b>X</b> because a lock is <span class="circ">upgraded by adding, never by replacing</span>.</div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:4.8mm">
+    <tr><th class="l">Held \ Requested</th><th>S(A)</th><th>X(A)</th></tr>
+    <tr><td class="l"><b>S(A) held</b></td><td><span class="green"><b>compatible ✓</b></span></td><td><span class="red"><b>conflict ✗</b></span></td></tr>
+    <tr><td class="l"><b>X(A) held</b></td><td><span class="red"><b>conflict ✗</b></span></td><td><span class="red"><b>conflict ✗</b></span></td></tr>
+  </table>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ three conclusions everyone gets wrong</span> <b>1.</b> Only <b>one</b> cell is compatible — <span class="circ">S with S</span>. "S with X is compatible for reading" is false: the X holder may be changing the value. <b>2.</b> Two transactions wanting <b>X</b> never meet, so <span class="hl">no read–write anomaly survives 2PL</span>. <b>3.</b> A transaction holding S and asking for X must <b>release S first</b>, which may already have closed the shrinking phase.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Two-Phase Locking (2PL) ✍ the definition</span> Every transaction runs in <b>two phases</b>: the <span class="hl">growing phase</span>, which may <b>acquire</b> locks but release none, and the <span class="hl">shrinking phase</span>, which may <b>release</b> locks but acquire none. It commits at the end of the shrinking phase.</div>
+      <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ what 2PL guarantees</span> <b>Guarantees:</b> <span class="hl">conflict-serialisable</span> schedules (no cycle forms in the precedence graph) and, since no lock is dropped before commit, <b>strict</b> and so <b>recoverable</b> ones. <b>Does not guarantee:</b> <span class="red">freedom from deadlock</span> or from starvation — two transactions locking in opposite order deadlock under 2PL, the commonest wrong claim here.</div>
+      <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Grow then shrink: first only open doors, then only close them.</b>" <b>Rigorous 2PL</b> holds every <b>X</b> lock until commit, so the shrinking phase goes to the end — strict schedules, <b>no cascading rollback</b>. <b>Conservative 2PL</b> declares every needed lock <b>before the transaction starts</b>, so a missing lock means it never starts: <span class="circ">deadlock-free</span>, at a large cost in concurrency.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 200" width="212">
+      <g class="w">
+        <rect x="6" y="8" width="200" height="26" rx="12" class="ink-r fill-r"/>
+        <rect x="6" y="86" width="200" height="26" rx="12" class="ink fill-b"/>
+        <rect x="6" y="164" width="200" height="26" rx="12" class="ink-g fill-g"/>
+        <circle cx="26" cy="21" r="6" class="ink-r fill-r"/><circle cx="26" cy="99" r="6" class="ink fill-b"/><circle cx="26" cy="177" r="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M26,27 V97" marker-end="url(#ah)"/>
+        <path class="ink" d="M26,105 V175" marker-end="url(#ahb)"/>
+        <path class="ink" d="M206,177 H272 V21 H208" marker-end="url(#ah)"/>
+      </g>
+      <text x="46" y="26" class="r w6" style="font-size:10px">T1 holds X(account A)</text>
+      <text x="46" y="104" class="k w6" style="font-size:10px">T2 holds X(account B)</text>
+      <text x="46" y="182" class="g w6" style="font-size:10px">T1 wants B &#183; T2 wants A</text>
+      <text x="272" y="105" text-anchor="middle" class="r s" style="font-size:10px">cycle = deadlock</text>
+      <text x="106" y="140" text-anchor="middle" class="p s" style="font-size:10px">no cycle &#8658; no deadlock</text>
+    </svg><figcaption>wait-for graph: a cycle is a deadlock, and 2PL does not rule one out</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:4.8mm">
+    <tr><th class="l">Dealing with deadlock</th><th class="l">Method</th></tr>
+    <tr><td class="l"><b>Prevention</b> (before it happens)</td><td class="l">Impose a <b>fixed global order</b> on which item may be locked first, and a cycle becomes impossible; the data-engineering alternatives are <b>wait–die</b> and <b>wound–wait</b>, driven by <span class="hl">timestamps</span>.</td></tr>
+    <tr><td class="l"><b>Detection</b> (after it happens)</td><td class="l">Maintain a <b>wait-for graph</b>: an edge Ti→Tj means Ti waits for Tj. Search it for a <span class="circ">cycle</span>; on finding one, <b>abort one transaction</b> in it — usually the one with the least work — release its locks and let it restart.</td></tr>
+  </table>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: timestamp, optimistic, MVCC ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Non-lock control</span></div>
+  <h2><span class="no">4</span>Beyond 2PL: Timestamp Ordering, Optimistic Control, and MVCC</h2><span class="tag">no locks, still serialisable ★</span>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Technique</th><th class="l">How it works</th><th class="l">The catch</th></tr>
+    <tr><td class="l"><b>Timestamp Ordering (TO)</b></td><td class="l">Every transaction is stamped <code>TS(T) = (time, counter)</code> so <b>TS is unique and comparable</b>. An operation is allowed only if it respects the item's last write; otherwise the transaction is <span class="hl">aborted and retried</span>.</td><td class="l">Deadlock-free, but <b>work can be thrown away</b> and starvation is possible.</td></tr>
+    <tr><td class="l"><b>Optimistic (validation)</b></td><td class="l">Assume conflicts are <b>rare</b>: run with <span class="hl">no locks at all</span>, record the items read and written, and at commit time <b>validate</b> that nothing read has changed.</td><td class="l">Poor fit for <b>write-heavy</b> work — the answer to validation is often "abort".</td></tr>
+    <tr><td class="l"><b>MVCC</b> (multi-version)</td><td class="l">Keep <span class="hl">several versions of each row</span> stamped with their writer. A reader takes a <b>snapshot</b> and reads the version it should see, so <span class="circ">no reader blocks</span>; only two writers to one row conflict.</td><td class="l">Old versions must be reclaimed, and <b>write-skew</b> must still be rejected at commit.</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 190" width="540">
+    <g class="w">
+      <rect x="6" y="10" width="200" height="28" rx="8" class="ink fill-b"/>
+      <rect x="6" y="44" width="200" height="28" rx="8" class="ink fill-b"/>
+      <rect x="6" y="78" width="200" height="28" rx="8" class="ink-r fill-r"/>
+      <rect x="6" y="112" width="200" height="28" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M206,24 H250 M206,58 H250 M206,92 H250 M206,126 H250"/>
+      <path class="ink-g" d="M306,24 V58 M306,58 V92 M306,92 V126" marker-end="url(#ahg)"/>
+      <rect x="404" y="24" width="210" height="32" rx="8" class="ink-k fill-y"/>
+      <path class="ink" d="M509,56 V86" marker-end="url(#ahb)"/>
+      <rect x="404" y="88" width="210" height="54" rx="8" class="ink-g fill-g"/>
+    </g>
+    <text x="106" y="29" text-anchor="middle" class="s" style="font-size:11px">version 1 · TS = 10</text>
+    <text x="106" y="63" text-anchor="middle" class="s" style="font-size:11px">version 2 · TS = 22</text>
+    <text x="106" y="97" text-anchor="middle" class="r w6" style="font-size:11px">version 3 · TS = 41 (uncommitted)</text>
+    <text x="106" y="131" text-anchor="middle" class="s" style="font-size:11px">version 4 · TS = 57</text>
+    <text x="228" y="20" class="p s" style="font-size:10px">kept until</text>
+    <text x="228" y="32" class="p s" style="font-size:10px">no snapshot</text>
+    <text x="509" y="44" text-anchor="middle" class="k w6" style="font-size:11px">snapshot taken at TS = 35</text>
+    <text x="509" y="110" text-anchor="middle" class="g w6" style="font-size:11px">this reader sees version 2</text>
+    <text x="509" y="126" text-anchor="middle" class="g s" style="font-size:10px">the uncommitted version 3 is</text>
+    <text x="509" y="138" text-anchor="middle" class="g s" style="font-size:10px">invisible &#8212; that is the whole fix</text>
+    <text x="320" y="172" text-anchor="middle" class="r w6" style="font-size:11px">one row, four live versions — the reader's snapshot timestamp picks which one</text>
+  </svg><figcaption>MVCC: the row keeps several versions; the reader's snapshot timestamp decides which one it sees</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ MVCC is not "no locking" ✍ three</span> <b>1.</b> "MVCC uses no locks at all" is false — <span class="red">readers</span> take none, but two transactions <b>writing</b> the same row still conflict. <b>2.</b> Its selling point is stated wrongly very often: it removes <b>reader–writer</b> blocking, not write–write conflicts. <b>3.</b> "MVCC prevents every anomaly" is false — snapshot isolation still admits <b>write-skew</b>, so real engines detect it and <span class="hl">abort with a serialisation failure the client retries</span>.</div>
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Where each one is used</span> <b>PostgreSQL</b> keeps old tuple versions and reclaims them with <code>VACUUM</code>; <b>Oracle</b> keeps undo in a rollback segment and uses it to reconstruct a read-consistent snapshot; <b>MySQL InnoDB</b> keeps undo logs and hides uncommitted versions; <b>SQL Server</b> keeps row versions in tempdb for <code>READ_COMMITTED_SNAPSHOT</code>. <span class="hl">Locking and versioning are not rivals</span> — every one of these systems uses both.</div>
+  </div>
+  <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Locks queue, timestamps judge, optimism hopes, versions cheat.</b>" — 2PL makes transactions <i>wait</i> for each other, timestamp ordering makes a late transaction <i>restart</i>, optimistic control makes it <i>hope</i> nothing changed, and MVCC shows everyone an old copy so nobody waits at all.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: isolation levels ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Isolation levels</span></div>
+  <h2><span class="no">5</span>Isolation Levels: SQL Standard, and What Real Engines Actually Do</h2><span class="tag">one knob, four positions ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Definition</span> The <b>isolation level</b> is the degree to which one transaction's work is hidden from another — the <span class="hl">consistency against throughput</span> dial. Turn it right for the strongest guarantee and the slowest execution; turn it left for speed and accept the anomalies. Every level below the top one is defined precisely by <b>which anomalies it permits</b>.</div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:5.2mm">
+    <tr><th class="l">Isolation level</th><th>Dirty read</th><th>Non-repeatable</th><th>Phantom</th><th>Speed</th></tr>
+    <tr><td class="l"><b>Read Uncommitted</b></td><td><span class="red">allowed</span></td><td><span class="red">allowed</span></td><td><span class="red">allowed</span></td><td>fastest</td></tr>
+    <tr><td class="l"><b>Read Committed</b></td><td><span class="green">no</span></td><td><span class="red">allowed</span></td><td><span class="red">allowed</span></td><td>fast</td></tr>
+    <tr><td class="l"><b>Repeatable Read</b></td><td><span class="green">no</span></td><td><span class="green">no</span></td><td><span class="red">allowed</span></td><td>slower</td></tr>
+    <tr><td class="l"><b>Serializable</b></td><td><span class="green">no</span></td><td><span class="green">no</span></td><td><span class="green">no</span></td><td>slowest</td></tr>
+  </table>
+  <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN TRANSACTION;
+  SELECT balance FROM account WHERE accno = 'A-101';
+  -- a second identical SELECT here must return the same value
+COMMIT;</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ the standard table is not what the product does ✍ four</span> <b>1.</b> The table above is the <b>SQL standard's</b> definition, where <span class="red">Repeatable Read still permits phantoms</span> — it stops a row's <i>value</i> changing, not a row <i>arriving</i>. <b>2.</b> <b>MySQL InnoDB</b> goes further: <span class="hl">next-key (gap + record) locking</span> blocks phantoms at Repeatable Read. <b>3.</b> <b>PostgreSQL</b> implements Repeatable Read as <span class="hl">snapshot isolation</span>, which also blocks phantoms, and adds a true Serializable level with the write-skew check. <b>4.</b> <b>SQL Server</b> stays closest to the standard, and phantoms remain possible at Read Repeatable. "Repeatable Read forbids phantoms" is therefore <b>engine-dependent</b> — a favourite of ambiguous MCQs.</div>
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Lost update, the one the table cannot show</span> The three columns are about <i>reading</i>. A <b>lost update</b> is a <i>write</i> conflict, and the standard does not remove it by raising the level: in many engines the same level still loses an update unless the row is locked, or the application does a <span class="hl">delayed (optimistic) write</span> — read the value, then write with <code>WHERE balance = &lt;the value you read&gt;</code> and retry if it matches nothing.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Read Uncommitted is the gossip, Read Committed is the news, Repeatable Read is the record of that day, Serializable is the court transcript.</b>" The ladder in one line: <span class="circ">more isolation = more waiting</span>. For a written answer the strongest sentence is: "raising the level replaces <i>logical</i> errors with <i>physical</i> waiting, so the choice is between correctness and throughput."</div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="270">
+      <g class="w">
+        <rect x="10" y="10" width="120" height="32" rx="9" class="ink-r fill-r"/>
+        <rect x="170" y="10" width="120" height="32" rx="9" class="ink-g fill-g"/>
+        <path class="ink" d="M60,42 V70 M240,42 V70" marker-end="url(#ahb)"/>
+        <rect x="10" y="72" width="120" height="32" rx="9" class="ink fill-b"/>
+        <rect x="170" y="72" width="120" height="32" rx="9" class="ink fill-b"/>
+        <path class="ink" d="M60,104 V132 M240,104 V132" marker-end="url(#ahb)"/>
+      </g>
+      <text x="70" y="31" text-anchor="middle" class="r w6" style="font-size:11px">dirty read OK</text>
+      <text x="230" y="31" text-anchor="middle" class="g w6" style="font-size:11px">serialisable</text>
+      <text x="70" y="93" text-anchor="middle" class="k w6" style="font-size:11px">no dirty read</text>
+      <text x="230" y="93" text-anchor="middle" class="k w6" style="font-size:11px">no phantom</text>
+      <text x="150" y="146" text-anchor="middle" class="r w6" style="font-size:11px">one dial: turn for safety, pay in time</text>
+    </svg><figcaption>the ladder runs from a dirty read to a serial schedule</figcaption></figure>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: recovery ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Recovery</span></div>
+  <h2><span class="no">6</span>Recovery: the Log, the WAL Rule, UNDO/REDO, Checkpoints and Backups</h2><span class="tag">the crash sheet ★</span>
+  <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+    <tr><th class="l">Failure</th><th class="l">What happened</th><th class="l">Handled by</th></tr>
+    <tr><td class="l"><b>Transaction failure</b></td><td class="l">Logic error, constraint violation, deadlock victim, or the user pressing abort.</td><td class="l"><b>UNDO</b> in place — the DBMS does not restart</td></tr>
+    <tr><td class="l"><b>System crash</b></td><td class="l">Power loss, OS kill, hardware fault. RAM is gone; <b>what was already on disk survived</b>.</td><td class="l"><b>REDO</b> from the log</td></tr>
+    <tr><td class="l"><b>Media / disk failure</b></td><td class="l">Bad sectors, head crash, a lost volume. The database itself is damaged or gone.</td><td class="l">restore from <b>backup</b> + <b>REDO</b> the log</td></tr>
+  </table>
+  <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">What a log record holds</span> Each record carries a <b>transaction id</b>, a <b>previous-log-record address</b> (so the log is a <span class="hl">linked list in both directions</span> — back for rollback, forward for redo), the <b>data item</b>, its <b>old</b> and <b>new value</b> (before- and after-image), plus the <code>&lt;T_i, X, V_old, V_new&gt;</code> commit/abort marker. A <b>checkpoint</b> is a log record, not a copy of the database.</div>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ the WAL rule ✍ three</span> <span class="circ">Write-Ahead Logging rule:</span> <b>the log record for an update must reach stable storage before the updated data page is allowed to.</b> <b>1.</b> "Log after writing to the database" inverts the rule and is the wrong option in any MCQ. <b>2.</b> WAL makes <b>durability</b> and <b>atomicity</b> cheap; it is <b>not</b> a backup. <b>3.</b> "A checkpoint copies the whole database" is a misconception — a <b>fuzzy checkpoint</b> only writes a record naming the dirty pages, so <span class="hl">nothing is blocked</span>.</div>
+  <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+    <tr><th class="l">Update policy</th><th class="l">When the data page is written</th><th class="l">After a crash we must…</th></tr>
+    <tr><td class="l"><b>Deferred update</b></td><td class="l">Only <b>after commit</b>.</td><td class="l"><b>REDO</b> only — nothing uncommitted is on disk.</td></tr>
+    <tr><td class="l"><b>Immediate update</b></td><td class="l">As soon as the buffer is flushed, <b>before commit</b>.</td><td class="l"><b>UNDO</b> uncommitted, <b>REDO</b> committed.</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 180" width="380">
+    <g class="w">
+      <rect x="4" y="12" width="120" height="30" rx="8" class="ink-k fill-y"/>
+      <rect x="132" y="12" width="120" height="30" rx="8" class="ink fill-b"/>
+      <rect x="260" y="12" width="120" height="30" rx="8" class="ink-r fill-r"/>
+      <rect x="388" y="12" width="120" height="30" rx="8" class="ink-g fill-g"/>
+      <rect x="516" y="12" width="100" height="30" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M124,27 H130 M252,27 H258 M380,27 H386 M508,27 H514" marker-end="url(#ahb)"/>
+      <rect x="4" y="68" width="612" height="48" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M4,92 H616 M160,68 V116 M320,68 V116 M480,68 V116"/>
+      <rect x="388" y="140" width="228" height="32" rx="8" class="ink-g fill-g"/>
+      <path class="ink-g" d="M500,116 V138" marker-end="url(#ahg)"/>
+    </g>
+    <text x="64" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T1,A,100,90&gt;</text>
+    <text x="192" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T1,A,90,80&gt;</text>
+    <text x="320" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T1 commit&gt;</text>
+    <text x="448" y="32" text-anchor="middle" class="k w6" style="font-size:10px">CHECKPOINT</text>
+    <text x="566" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T2,A,…&gt;</text>
+    <text x="310" y="84" text-anchor="middle" class="k w6" style="font-size:11px">LOG: every update, in the order it happened</text>
+    <text x="82" y="110" text-anchor="middle" class="s" style="font-size:10px">T1 work</text>
+    <text x="240" y="110" text-anchor="middle" class="g s" style="font-size:10px">T1 committed &#8212; keep</text>
+    <text x="400" y="110" text-anchor="middle" class="p s" style="font-size:10px">&#8594; everything before here</text>
+    <text x="548" y="110" text-anchor="middle" class="r s" style="font-size:10px">T2 — undo if open</text>
+    <text x="502" y="161" text-anchor="middle" class="g w6" style="font-size:11px">on restart read only the log from the LAST checkpoint</text>
+    
+  </svg><figcaption>one log, one checkpoint: recovery replays only what follows the last checkpoint</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Backups and the rest ✍</span> <b>Full</b> — copy everything; slow, restores fast. <b>Differential</b> — what changed <b>since the last full</b>; grows with time. <b>Incremental</b> — what changed <b>since the last backup of any kind</b>; smallest, but a restore needs the whole chain in order. <b>Shadow paging</b> keeps a shadow copy of every page and switches to it atomically at commit — <span class="hl">no logging needed for rollback</span> — but the old page chains become garbage. <b>ARIES</b>, what real systems use, runs three passes: <b>analysis</b> from the last checkpoint, <b>redo</b> (repeat history), <b>undo</b> (roll back the losers).</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Log first, data second</b>" is the WAL rule in three words and the whole reason a log exists. "<b>Undo the uncommitted, redo the committed</b>" covers every crash case: a transaction that neither committed nor aborted before the crash is <i>treated as aborted</i>, which is why <span class="circ">there is never any doubt after a power failure</span>.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: security ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Access control &amp; security</span></div>
+  <h2><span class="no">7</span>Access Control and Security: Who May See What</h2><span class="tag">DAC · MAC · RBAC ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">The two halves</span> <b>Authentication</b> answers <span class="hl">"who are you?"</span> — password, biometric, one-time code, a second factor. <b>Authorisation</b> answers <span class="hl">"what may you do?"</span> — read, insert, update, delete, or just some columns of some rows. A database is <b>secure</b> only when both halves are present: a perfect authorisation scheme behind an open door is worthless.</div>
+  <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+    <tr><th class="l">Model</th><th class="l">Who decides access</th><th class="l">Its point, and its weakness</th></tr>
+    <tr><td class="l"><b>DAC</b> — Discretionary</td><td class="l">The <b>owner</b> of each object. Each user may grant their own rights onward.</td><td class="l">Flexible and cheap, but a user can <span class="red">give away the very right they hold</span> — the classic trojan-horse route.</td></tr>
+    <tr><td class="l"><b>MAC</b> — Mandatory</td><td class="l"><b>The system</b>, from a security label: classification × compartment (Top Secret, Secret, Confidential, Unclassified).</td><td class="l">Nobody may <b>reduce</b> a classification, not even the owner — military and government data.</td></tr>
+    <tr><td class="l"><b>RBAC</b> — Role-Based</td><td class="l"><b>Roles</b>: permissions attach to a job function, and users are assigned to roles.</td><td class="l">Kills the <span class="hl">"who may do this?" explosion</span> — change the job, change the role, touch no privilege list.</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start">
+    <div>
+      <div class="code tiny" style="font-size:9.5pt;line-height:5.2mm">CREATE ROLE Auditor;
+GRANT SELECT ON Employees TO Auditor;
+GRANT UPDATE (salary) ON Employees TO Auditor;
+REVOKE SELECT ON Payslips FROM intern;</div>
+      <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ five</span> <b>1.</b> <b>GRANT</b> gives a privilege, <b>REVOKE</b> takes it away — not interchangeable, and <code>REVOKE</code> names the grantee. <b>2.</b> In <b>MAC</b> rights are decided by the <b>system</b>, so a user <span class="red">cannot grant anything</span>; in <b>DAC</b> rights travel with ownership. <b>3.</b> <b>RBAC is about roles, not rows</b> — row-level access is a different feature. <b>4.</b> A <b>view</b> is a cheap second line of defence: expose only the columns and rows the user needs and <span class="hl">grant on the view, not the table</span>. <b>5.</b> <b>Encryption</b> is confidentiality, <b>auditing</b> is accountability, <b>integrity constraints</b> are correctness — three different jobs, and the exam likes them confused.</div>
+    </div>
+    <div class="sumbox tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Threats and their answers</span> <b>At rest</b> — disk or backup theft: <b>encryption</b>. <b>In transit</b> — a network tap: <b>TLS</b>. <b>A careless user</b>: views, roles, least privilege. <b>A careless developer</b>: SQL injection — so queries are <b>parameterised</b>, never built by concatenating user input. <b>An insider</b>: an <b>audit trail</b>, so accountability exists after the fact. <b>A careless admin</b>: the DBA is all-powerful by design, so duties are <span class="hl">separated</span> — recovery administration is often split from ordinary DDL.</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Least privilege, in practice ✍</span> Grant the <b>minimum</b> privilege that lets the job be done, and no more: read-only for a viewer, one table for an operator, <code>GRANT UPDATE(column)</code> rather than the whole table when only one field changes, and never <code>SELECT *</code> rights on a payroll table. A privilege once granted is <span class="hl">inherited by every backup, every replica and every audit log</span> the moment you make it.</div>
+  <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>DAC is the owner, MAC is the label, RBAC is the job-title.</b>" Say it in that order and all three are fixed. And "<b>least privilege is the whole policy</b>" — every grant you do not need is a hole you did not have to fix.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: semi-structured and object worlds ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>XML, JSON, OODB &amp; ORDB</span></div>
+  <h2><span class="no">8</span>Semi-Structured Data: XML, XPath, XQuery, JSON — and OODB vs ORDB</h2><span class="tag">the last two clauses ★</span>
+<figure class="doodle"><svg viewBox="0 0 620 180" width="380">
+    <g class="w">
+      <rect x="236" y="6" width="150" height="28" rx="9" class="ink-k fill-y"/>
+      <rect x="18" y="62" width="140" height="28" rx="9" class="ink fill-b"/>
+      <rect x="238" y="62" width="140" height="28" rx="9" class="ink fill-b"/>
+      <rect x="458" y="62" width="146" height="28" rx="9" class="ink fill-b"/>
+      <rect x="18" y="122" width="140" height="28" rx="9" class="ink-r fill-r"/>
+      <rect x="238" y="122" width="140" height="28" rx="9" class="ink-r fill-r"/>
+      <rect x="458" y="122" width="146" height="28" rx="9" class="ink-r fill-r"/>
+      <path class="ink" d="M300,34 L90,60 M310,34 L308,60 M320,34 L528,60"/>
+      <path class="ink" d="M88,90 V120 M308,90 V120 M528,90 V120"/>
+    </g>
+    <text x="311" y="24" text-anchor="middle" class="k w6" style="font-size:12px">&lt;library&gt;</text>
+    <text x="88" y="80" text-anchor="middle" class="k w6" style="font-size:11px">&lt;book id="1"&gt;</text>
+    <text x="308" y="80" text-anchor="middle" class="k w6" style="font-size:11px">&lt;book id="2"&gt;</text>
+    <text x="531" y="80" text-anchor="middle" class="k w6" style="font-size:11px">&lt;book id="3"&gt;</text>
+    <text x="88" y="141" text-anchor="middle" class="r s" style="font-size:10px">title · author</text>
+    <text x="308" y="141" text-anchor="middle" class="r s" style="font-size:10px">title · author</text>
+    <text x="531" y="141" text-anchor="middle" class="r s" style="font-size:10px">title · author</text>
+    <text x="150" y="170" text-anchor="middle" class="p s" style="font-size:10px">depth grows with nesting</text>
+    <text x="380" y="170" text-anchor="middle" class="p s" style="font-size:10px">the shape lives in the data, not in a declaration</text>
+  </svg><figcaption>XML is self-describing: the shape is part of the data</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">The two query languages — do not confuse</span> <b>XPath</b> is a small <span class="hl">path-and-predicate language over one document</span>: <code>/library/book/title</code>, <code>/library/book[@id="2"]/author</code>, <code>//author[text()="CLRS"]</code>. <b>XQuery</b> is a <span class="hl">full query language with FLWOR</span> — <code>for</code>, <code>where</code>, <code>order by</code>, <code>return</code> — over one or many documents, and it can compute and join. "XPath joins two documents" is simply wrong.</div>
+      <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">for $b in /library/book
+where $b/author = "CLRS"
+order by $b/title
+return $b/title/text()</div>
+      <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> In XPath an <b>attribute is text</b>: <code>[@id="2"]</code> matches the <i>string</i> "2", so <code>[@id=2]</code> is the wrong spelling. <b>2.</b> <code>//</code> means "anywhere below", not "the second level". <b>3.</b> JSON has <span class="hl">no comments and no schema by default</span>, and JSONPath is far thinner than XPath: it navigates and filters but has no FLWOR and no joins.</div>
+    </div>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Relational, XML, JSON side by side</span> <b>Relational</b>: <i>structured</i>, schema declared first, rows of values, joins and set operations for free, but a shape change means a schema change. <b>XML</b>: <i>semi-structured</i>, self-describing, nesting and heterogeneous records, validated by a <b>DTD</b> or an <b>XSD</b>. <b>JSON</b>: semi-structured too, lighter than XML, native to the web, used by nearly every API. <span class="hl">The DBMS answer to all three is the same:</span> store the document whole, or shred it into relations — which is what "XML to relational mapping" means.</div>
+      <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">{"library":{"books":[
+  {"id":1,"title":"Database Systems","author":"Navathe"},
+  {"id":2,"title":"Intro to Algorithms","author":"CLRS"}]}}
+$.library.books[*].title</div>
+      <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+        <tr><th class="l">Point</th><th class="l">OODB</th><th class="l">ORDB</th></tr>
+        <tr><td class="l">Data model</td><td class="l"><b>pure objects</b> with identity</td><td class="l"><span class="hl">tables + types</span></td></tr>
+        <tr><td class="l">Language</td><td class="l">OQL / ODL</td><td class="l">SQL + extensions</td></tr>
+        <tr><td class="l">Examples</td><td class="l">ObjectStore, db4o, ObjectDB</td><td class="l">PostgreSQL, Oracle, DB2</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ the last three</span> <b>1.</b> An <b>OODB keeps object identity</b> — two objects equal in value are still different objects — exactly what a relational key throws away. <b>2.</b> An <b>ORDB is not "a relational database with a picture attached"</b>: it adds <b>user-defined types</b>, <b>nested tables</b>, <b>object identity</b> and <b>inheritance</b> while keeping the relational core. <b>3.</b> "Object databases are faster" only means anything for <span class="circ">deep, complex object graphs</span>; for ordinary business rows with joins, a mature relational or object-relational engine still wins on tooling and cost.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny" style="line-height:5.2mm"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small" style="line-height:5.5mm">
+      <p>ACID = Atomicity …</p><p>… Consistency, Isolation, Durability</p>
+      <p>Commit = all, Rollback = none</p><p>Active → Partially committed</p>
+      <p>→ Committed → Terminated</p><p>Active → Failed → Aborted</p>
+      <p>Serial = one at a time</p><p>Serialisable = as if serial</p>
+      <p>Dirty: too early</p><p>Lost update: too late</p>
+      <p>Non-repeatable: value changed</p><p>Phantom: row arrived</p>
+      <p>S + S = compatible</p><p>S + X, X + X = conflict</p>
+      <p>2PL: grow, then shrink</p><p>2PL ≠ deadlock-free</p>
+      <p>Rigorous 2PL ⇒ strict</p><p>Conservative ⇒ no deadlock</p>
+      <p>Wait-for cycle = deadlock</p><p>Abort one; or fix order</p>
+      <p>Timestamps: may abort</p><p>OCC: validate at commit</p>
+      <p>MVCC: snapshot readers</p><p>RU &lt; RC &lt; RR &lt; Serial</p>
+      <p>RR standard: phantom OK</p><p>InnoDB / PG: no phantom</p>
+      <p><span class="hl">WAL: log first, data 2nd</span></p><p>UNDO open, REDO committed</p>
+      <p>Deferred ⇒ REDO only</p><p>Immediate ⇒ UNDO + REDO</p>
+      <p>Checkpoint ⇒ replay past it</p><p>Full / differential / incremental</p>
+      <p>DAC owner · MAC label</p><p>RBAC job-title</p>
+      <p>GRANT gives, REVOKE takes</p><p>Least privilege is the policy</p>
+      <p>XPath = paths · XQuery = FLWOR</p><p>OODB: objects + OQL</p>
+      <p>ORDB: tables + UDT</p><p>Constraints give consistency</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ol class="num">
+      <li>A transaction is all-or-nothing</li>
+      <li><b>Committed is not the last state</b> — Terminated is</li>
+      <li><b>Failed from Active</b>; Aborted from Failed</li>
+      <li>Serialisable = as some serial schedule</li>
+      <li>Only <b>S with S</b> is compatible</li>
+      <li>2PL is serialisable, <b>not deadlock-free</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>RR stops a value changing, <b>not a row arriving</b></li>
+      <li>MVCC stops reader–writer blocking only</li>
+      <li><span class="circ">WAL: log first</span></li>
+      <li>Deferred ⇒ <b>REDO only</b>; immediate ⇒ both</li>
+      <li><b>DAC owner, MAC label, RBAC job-title</b></li>
+      <li>Only <b>XQuery</b> has FLWOR</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Top traps</span> claiming <b>2PL prevents deadlock</b> · drawing <b>Failed after Partially committed</b> · calling <b>phantom</b> a changed value · saying <b>Repeatable Read forbids phantoms</b> with no engine named · <b>logging after</b> the data write · <b>UNDO for committed</b> work · <b>checkpoint = full copy</b> · <b>MAC with DAC</b> · <b>FLWOR on XPath</b>.</div>
+      <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">All tricks together</span> Act like a committee · Active starts, Terminated ends · Dirty too early, Lost too late · Grow then shrink · Locks queue, timestamps judge, optimism hopes, versions cheat · More isolation = more waiting · Log first, data second · Undo the uncommitted, redo the committed · DAC the owner, MAC the label, RBAC the job-title.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 130" width="270">
+      <g class="w">
+        <circle cx="66" cy="40" r="28" class="ink-r fill-r"/>
+        <circle cx="150" cy="40" r="28" class="ink fill-b"/>
+        <circle cx="234" cy="40" r="28" class="ink-g fill-g"/>
+        <path class="ink" d="M96,40 H118 M180,40 H202" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M234,70 C190,106 70,106 66,70" marker-end="url(#ahp)"/>
+        <rect x="46" y="106" width="208" height="22" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="45" text-anchor="middle" class="r w6" style="font-size:12px">2PL</text>
+      <text x="150" y="45" text-anchor="middle" class="k w6" style="font-size:12px">MVCC</text>
+      <text x="234" y="45" text-anchor="middle" class="g w6" style="font-size:12px">WAL</text>
+      <text x="150" y="122" text-anchor="middle" class="k w6" style="font-size:11px">concurrency + recovery = correct</text>
+    </svg><figcaption>three tools, one promise</figcaption></figure>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Transactions &amp; Recovery</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">1.</span>A transaction reaches <b>Committed</b> state when:<ol class="opts"><li>Its last statement has executed</li><li>All updates are flushed to the pages</li><li>Its commit log record is on stable storage</li><li>All locks it holds are released</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">2.</span>Which lock pair is <b>compatible</b>?<ol class="opts"><li>S(A) with X(A)</li><li>X(A) with S(A)</li><li>S(A) with S(A)</li><li>X(A) with X(A)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">3.</span>Two-Phase Locking guarantees:<ol class="opts"><li>Freedom from deadlock</li><li>Conflict-serialisable and recoverable schedules</li><li>Freedom from cascading rollback only</li><li>That no transaction is ever aborted</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">4.</span>A <b>phantom</b> occurs when:<ol class="opts"><li>A row's value is updated twice</li><li>An uncommitted value is read</li><li>Two updates overwrite each other</li><li>New rows appear in a repeated range query</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">5.</span>Under the SQL standard, <b>Repeatable Read</b> still permits:<ol class="opts"><li>Dirty reads</li><li>Lost updates</li><li>Phantom reads</li><li>Nothing — it is fully serialisable</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">6.</span>The Write-Ahead Logging rule requires:<ol class="opts"><li>The data page is written before the log record</li><li>The log record reaches stable storage before the updated page</li><li>Both are written in the same disk block</li><li>A checkpoint after every commit</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">7.</span>With <b>immediate update</b>, a crash requires recovery to:<ol class="opts"><li>REDO only</li><li>UNDO only</li><li>UNDO the uncommitted and REDO the committed</li><li>Restore the last full backup only</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">8.</span><b>Write-skew</b> is possible under:<ol class="opts"><li>Serialisable</li><li>Snapshot isolation</li><li>Two-phase locking</li><li>Conservative 2PL</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">9.</span>Which statement about <b>MAC</b> is correct?<ol class="opts"><li>The owner may grant rights to anyone</li><li>Rights are fixed by a system security label</li><li>Rights are attached to job roles</li><li>A user may always lower a classification</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">10.</span>Which language has <b>for / where / return</b>?<ol class="opts"><li>XPath</li><li>XQuery</li><li>SQL</li><li>JSONPath</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-c · 3-b · 4-d · 5-c · 6-b · 7-c · 8-b · 9-b · 10-b</div>
+  <div class="wq tiny" style="line-height:5.2mm"><span class="lbl">Written question</span> Define a transaction and state the four ACID properties with <b>who enforces each</b>. Give the <b>lock compatibility matrix</b> and explain <b>two-phase locking</b>, then say what 2PL does <b>not</b> guarantee and how a deadlock is detected. State the <b>WAL rule</b> and the difference between <b>deferred</b> and <b>immediate</b> update on crash. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>Transaction and ACID (3)</b> — a <b>sequence of operations treated as one logical unit of work</b>, ended by <code>COMMIT</code> or <code>ROLLBACK</code>. <b>Atomicity</b> all or nothing, enforced by the recovery manager's UNDO. <b>Consistency</b> all declared integrity constraints hold before and after — the constraints are the user's, not the DBMS's. <b>Isolation</b> each transaction appears to run alone, enforced by concurrency control. <b>Durability</b> a committed change survives a crash, enforced by the recovery manager through the log and the WAL rule. <i class="mk">3</i></li>
+    <li><b>Lock matrix (2)</b> — <code>S(A)</code> with <code>S(A)</code> is the <b>only</b> compatible pair; <code>S</code> with <code>X</code>, <code>X</code> with <code>S</code> and <code>X</code> with <code>X</code> all conflict. Many readers, one writer, never two writers. <i class="mk">2</i></li>
+    <li><b>2PL, and its limits (2)</b> — <b>growing phase</b> acquires and releases nothing, <b>shrinking phase</b> releases and acquires nothing; the transaction commits at the end of the shrinking phase. Because no lock is dropped before commit, the schedule is <b>conflict-serialisable and strict (hence recoverable)</b>. It does <b>not</b> guarantee <b>freedom from deadlock</b> or from starvation. <i class="mk">2</i></li>
+    <li><b>Deadlock (1)</b> — build a <b>wait-for graph</b> with an edge Ti→Tj when Ti waits for Tj; a <b>cycle</b> means deadlock, detected by a periodic search, broken by <b>aborting one transaction</b> and restarting it. Prevention uses a fixed lock order or the wait–die / wound–wait timestamp schemes. <i class="mk">1</i></li>
+    <li><b>WAL and the two update policies (2)</b> — <span class="hl">the log record of an update must be on stable storage before the updated data page is</span>. Under <b>deferred update</b> no page is written before commit, so recovery does <b>REDO only</b>; under <b>immediate update</b> pages are flushed early, so recovery does <b>UNDO the uncommitted and REDO the committed</b>. A checkpoint marks the point from which the log must be replayed. <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>Can draw the five-state transaction diagram</li>
+      <li>Can name all five concurrency anomalies</li>
+      <li>Can reproduce the lock compatibility matrix</li>
+    </ul>
+    <ul class="tick">
+      <li>Can state what 2PL does <i>not</i> guarantee</li>
+      <li>Can state the WAL rule word for word</li>
+      <li>Can separate XPath from XQuery, and OODB from ORDB</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

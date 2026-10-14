@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Algorithm Design Methods &amp; Graph Algorithms: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Algorithm Design Methods &amp; Graph Algorithms</span></h1>
+  <p class="subtitle">Divide &amp; conquer · greedy · DP · backtracking · branch &amp; bound · BFS/DFS · topological sort · SCC · MST · shortest paths: exam-ready in eleven sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="390">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">ALGORITHMS</text><text x="320" y="172" text-anchor="middle" class="r s">design · graphs</text>
+      <text x="142" y="57" text-anchor="middle" class="s" style="font-size:15px">Divide &amp; conquer</text><text x="142" y="72" text-anchor="middle" class="s" style="font-size:15px">aT(n/b)+f(n)</text>
+      <text x="320" y="33" text-anchor="middle" class="r w6" style="font-size:16px">Greedy vs DP ★</text><text x="320" y="49" text-anchor="middle" class="r s" style="font-size:15px">fractional vs 0/1</text>
+      <text x="498" y="57" text-anchor="middle" class="r w6" style="font-size:15px">Backtrack · B&amp;B ★</text><text x="498" y="72" text-anchor="middle" class="r s" style="font-size:15px">prune LB ≥ best</text>
+      <text x="96" y="147" text-anchor="middle" class="s" style="font-size:15px">BFS queue</text><text x="96" y="162" text-anchor="middle" class="s" style="font-size:15px">DFS stack · O(V+E)</text>
+      <text x="544" y="147" text-anchor="middle" class="r w6" style="font-size:15px">Shortest paths ★</text><text x="544" y="162" text-anchor="middle" class="r s" style="font-size:15px">Dijkstra · BF · FW</text>
+      <text x="142" y="237" text-anchor="middle" class="s" style="font-size:15px">Topological sort</text><text x="142" y="252" text-anchor="middle" class="s" style="font-size:15px">DAG only</text>
+      <text x="320" y="263" text-anchor="middle" class="r w6" style="font-size:16px">MST: Prim · Kruskal ★</text><text x="320" y="279" text-anchor="middle" class="r s" style="font-size:15px">V − 1 edges</text>
+      <text x="498" y="237" text-anchor="middle" class="g w6" style="font-size:15px">SCC: Kosaraju</text><text x="498" y="252" text-anchor="middle" class="g s" style="font-size:15px">Tarjan · bridges</text>
+    </svg>
+    <figcaption>↑ at a glance: red = high-yield, green = DFS family</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm;line-height:5.3mm"><b>High-yield list</b><br>① Merge sort 2T(n/2)+n = Θ(n log n)<br>② Strassen O(n<sup>log₂7</sup>) ≈ O(n<sup>2.81</sup>)<br>③ Greedy by v/w: <span class="circ">fractional</span> knapsack only<br>④ DP = overlapping + optimal substructure<br>⑤ Floyd-Warshall &amp; Bellman-Ford are DP<br>⑥ Backtracking = DFS of state space<br>⑦ B&amp;B (min): prune when LB ≥ best<br>⑧ BFS/DFS: O(V+E) list, O(V²) matrix<br>⑨ Topological order ⇔ DAG<br>⑩ MST has exactly V − 1 edges<br>⑪ Dijkstra: no negative edges<br>⑫ Bellman-Ford O(VE), finds neg. cycle</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The Data Structures and Algorithms line reads: "…<span class="hl">Methods for the design of efficient algorithms: divide and conquer, greedy method, dynamic programming, back tracking, branch and bound; Basic search and traversal techniques; Topological sorting; Connected components, spanning trees, shortest paths;</span> Flow algorithms; …" This set takes everything from the design methods to shortest paths. The <b>master theorem</b> and sorting details sit in the recursion &amp; sorting lesson, the <b>heap</b> behind Dijkstra/Prim in the heaps lesson, <b>flow</b> in the flow &amp; approximation lesson and <b>NP-completeness</b> in the last lesson; graph-theory basics are chapter 13.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>Divide &amp; conquer … p. 2</li><li>Greedy method … p. 3</li><li>DP: Fibonacci, LCS … p. 4</li><li>DP: knapsack, matrix chain … p. 5</li><li>Backtracking, branch &amp; bound … p. 6</li></ul>
+    <ul class="tick"><li>BFS, DFS, topological sort … p. 7</li><li>Components, SCC, MST … p. 8</li><li>Shortest paths … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: divide and conquer ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Divide &amp; conquer</span></div>
+  <h2><span class="no">1</span>Divide and Conquer: Split, Solve, Combine</h2><span class="tag">recurrences ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Divide and conquer</span> solves a problem by (1) <b>Divide</b>: splitting it into a smaller instances of the <b>same</b> problem, (2) <b>Conquer</b>: solving each one recursively (tiny instances directly), (3) <b>Combine</b>: merging the sub-answers. The sub-problems are <b>independent</b> (they do not overlap), which is what separates it from dynamic programming. Its cost is the recurrence <span class="circ">T(n) = aT(n/b) + f(n)</span>: a sub-problems of size n/b, f(n) = divide + combine work.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 200" width="246">
+      <g class="w">
+        <rect x="70" y="6" width="160" height="26" rx="6" class="ink fill-y"/>
+        <rect x="16" y="62" width="120" height="26" rx="6" class="ink fill-b"/>
+        <rect x="164" y="62" width="120" height="26" rx="6" class="ink fill-b"/>
+        <rect x="4" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <rect x="84" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <rect x="152" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <rect x="232" y="118" width="64" height="26" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M130,32 L80,62 M170,32 L220,62 M60,88 L36,118 M92,88 L116,118 M208,88 L184,118 M240,88 L264,118"/>
+      </g>
+      <text x="150" y="24" text-anchor="middle" class="k">38 27 43 3 9 82 10 4</text>
+      <text x="76" y="80" text-anchor="middle" class="k" style="font-size:12px">38 27 43 3</text>
+      <text x="224" y="80" text-anchor="middle" class="k" style="font-size:12px">9 82 10 4</text>
+      <text x="36" y="136" text-anchor="middle" class="k" style="font-size:12px">27 38</text>
+      <text x="116" y="136" text-anchor="middle" class="k" style="font-size:12px">3 43</text>
+      <text x="184" y="136" text-anchor="middle" class="k" style="font-size:12px">9 82</text>
+      <text x="264" y="136" text-anchor="middle" class="k" style="font-size:12px">4 10</text>
+      <text x="150" y="168" text-anchor="middle" class="r w6" style="font-size:12px">merge ↑ : 3 27 38 43 | 4 9 10 82</text>
+      <text x="150" y="190" text-anchor="middle" class="g w6" style="font-size:12px">3 4 9 10 27 38 43 82</text>
+    </svg><figcaption>merge sort: log₂n levels × n work per level = n log n</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;white-space:nowrap;line-height:5.6mm">
+      <tr><th class="l">Algorithm</th><th class="l">Recurrence</th><th class="l">Result</th></tr>
+      <tr><td class="l">Binary search</td><td class="l">T(n/2) + 1</td><td class="l">Θ(log n)</td></tr>
+      <tr><td class="l">Merge sort</td><td class="l">2T(n/2) + n</td><td class="l"><b>Θ(n log n)</b></td></tr>
+      <tr><td class="l">Quick sort best/avg</td><td class="l">2T(n/2) + n</td><td class="l">Θ(n log n)</td></tr>
+      <tr><td class="l">Quick sort worst</td><td class="l">T(n−1) + n</td><td class="l">Θ(n²)</td></tr>
+      <tr><td class="l">Max–min (n items)</td><td class="l">2T(n/2) + 2</td><td class="l">3n/2 − 2 comps</td></tr>
+      <tr><td class="l">Karatsuba</td><td class="l">3T(n/2) + n</td><td class="l">n<sup>1.585</sup></td></tr>
+      <tr><td class="l">Strassen</td><td class="l">7T(n/2) + n²</td><td class="l"><b>n<sup>2.81</sup></b></td></tr>
+      <tr><td class="l">Closest pair</td><td class="l">2T(n/2) + n</td><td class="l">Θ(n log n)</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ Strassen</span> Ordinary block multiplication of n×n matrices splits each into four n/2 blocks and needs <b>8</b> block products: T(n) = 8T(n/2) + n² = Θ(n³). Strassen rearranges the work into <b>7</b> products (and 18 additions): T(n) = 7T(n/2) + Θ(n²). Since log₂7 ≈ 2.807 &gt; 2, the leaves dominate: <span class="circ">Θ(n<sup>log₂7</sup>) ≈ O(n<sup>2.81</sup>)</span>.</div>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Solving it fast</span> Compare f(n) with n<sup>log<sub>b</sub>a</sup>. Leaves heavier → Θ(n<sup>log<sub>b</sub>a</sup>); equal → Θ(n<sup>log<sub>b</sub>a</sup> · log n); root heavier → Θ(f(n)). Full master theorem with its regularity condition: recursion &amp; sorting lesson.</div>
+      <div class="exam tiny"><span class="lbl">Exam trap</span> (i) Quick sort is D&amp;C even though its <b>combine</b> step is empty — the work is in the <b>partition</b>. Merge sort is the opposite: trivial divide, real combine. (ii) Binary search keeps <b>one</b> half (a = 1), so it is sometimes called "decrease and conquer".</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>D-C-C: Divide, Conquer, Combine.</b>" Strassen: "<b>seven, not eight</b>" → log₂7 ≈ 2.81. Karatsuba: "<b>three, not four</b>" → log₂3 ≈ 1.585.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">When D&amp;C fits</span> sub-problems are of the same kind, independent and roughly equal in size. If the same sub-problem keeps reappearing (naive Fibonacci), switch to <b>DP</b>.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ binary search</span> A = [3, 9, 14, 21, 27, 35, 42], key 27. mid = A[3] = 21 &lt; 27 → right half [27, 35, 42]; mid = 35 &gt; 27 → left half [27]; found. <b>3 comparisons</b> = ⌊log₂7⌋ + 1, the worst case for n = 7. Needs a <b>sorted</b> array with random access.</div>
+    <div class="code" style="font-size:10.5pt;line-height:5.4mm;margin-top:0">MergeSort(A, l, r):
+  if l &lt; r:
+    m = (l + r) / 2
+    MergeSort(A, l, m)      // conquer
+    MergeSort(A, m + 1, r)  // conquer
+    Merge(A, l, m, r)       // combine, O(n)</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: greedy ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Greedy method</span></div>
+  <h2><span class="no">2</span>The Greedy Method: Best Choice Now, Never Undo It</h2><span class="tag">fractional knapsack ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">greedy algorithm</span> builds a solution one piece at a time, always taking the choice that looks best <b>right now</b> (the local optimum) and never reconsidering it. It gives the global optimum only when the problem has both the <span class="hl">greedy-choice property</span> (some optimal solution starts with the greedy choice) and <span class="hl">optimal substructure</span> (after that choice, the rest is an optimal solution of the smaller problem). Otherwise it gives a fast but possibly wrong answer.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,290px);align-items:start">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ fractional knapsack, W = 50</span> Items (value, weight): I₁ (60, 10), I₂ (100, 20), I₃ (120, 30). Ratios v/w = <b>6, 5, 4</b>. Sort by ratio and fill: take all of I₁ (w 10, v 60), all of I₂ (w 30, v 160), then 20/30 of I₃ → 120 × 2/3 = 80. <span class="circ">Total = 240</span>, optimal. Cost: O(n log n) for the sort.</div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 170" width="270">
+      <g class="w">
+        <rect x="20" y="10" width="70" height="140" rx="4" class="ink-k" fill="none"/>
+        <rect x="24" y="122" width="62" height="24" class="ink fill-y"/>
+        <rect x="24" y="74" width="62" height="46" class="ink fill-b"/>
+        <rect x="24" y="16" width="62" height="56" class="ink-r fill-r"/>
+        <rect x="170" y="40" width="70" height="110" rx="4" class="ink-k" fill="none"/>
+        <rect x="174" y="98" width="62" height="48" class="ink fill-b"/>
+        <rect x="174" y="44" width="62" height="52" class="ink-r fill-r"/>
+      </g>
+      <text x="55" y="139" text-anchor="middle" class="k" style="font-size:11px">I₁ 60</text>
+      <text x="55" y="101" text-anchor="middle" class="k" style="font-size:11px">I₂ 100</text>
+      <text x="55" y="48" text-anchor="middle" class="r" style="font-size:11px">⅔ I₃ 80</text>
+      <text x="55" y="166" text-anchor="middle" class="g w6" style="font-size:12px">fractional 240</text>
+      <text x="205" y="126" text-anchor="middle" class="k" style="font-size:11px">I₂ 100</text>
+      <text x="205" y="74" text-anchor="middle" class="r" style="font-size:11px">I₃ 120</text>
+      <text x="205" y="166" text-anchor="middle" class="g w6" style="font-size:12px">0/1 best 220</text>
+      <text x="205" y="28" text-anchor="middle" class="r s" style="font-size:11px">greedy 0/1 → 160 ✗</text>
+    </svg><figcaption>same items, two problems, two answers</figcaption></figure>
+  </div>
+  <div class="exam tiny"><span class="lbl">Exam trap: greedy fails here</span> (i) <b>0/1 knapsack</b> (items cannot be split): by ratio, greedy takes I₁ + I₂ = 160, but the optimum is I₂ + I₃ = <span class="circ">220</span>. Use DP. (ii) <b>Coin change</b> with coins {1, 3, 4}, amount 6: greedy gives 4 + 1 + 1 (3 coins), optimum is 3 + 3 (2 coins). Greedy is optimal only for "canonical" systems like 1, 2, 5, 10.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Greedy algorithm</th><th class="l">Greedy rule</th><th class="l">Time</th></tr>
+    <tr><td class="l">Fractional knapsack</td><td class="l">highest value/weight first</td><td class="l">O(n log n)</td></tr>
+    <tr><td class="l">Activity selection</td><td class="l">earliest <b>finish</b> time first, skip clashes</td><td class="l">O(n log n)</td></tr>
+    <tr><td class="l">Huffman coding</td><td class="l">merge the two least-frequent nodes (min-heap)</td><td class="l">O(n log n)</td></tr>
+    <tr><td class="l">Job sequencing with deadlines</td><td class="l">highest profit first, latest free slot ≤ deadline</td><td class="l">O(n²)</td></tr>
+    <tr><td class="l">Prim / Kruskal (MST)</td><td class="l">cheapest safe edge</td><td class="l">p. 8</td></tr>
+    <tr><td class="l">Dijkstra</td><td class="l">settle the closest unsettled vertex</td><td class="l">p. 9</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ activity selection</span> (start, finish): A(1,4) B(3,5) C(0,6) D(5,7) E(3,9) F(5,9) G(6,10) H(8,11) I(8,12) J(2,14) K(12,16). Sorted by finish: pick A (ends 4) → first start ≥ 4 is D (ends 7) → H (ends 11) → K. <b>4 activities</b> {A, D, H, K}. Sorting by <i>start</i> or by <i>shortest</i> duration does not always work.</div>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l"></th><th class="l">Greedy</th><th class="l">DP</th></tr>
+        <tr><td class="l">Choices</td><td class="l">one, never undone</td><td class="l">all, best kept</td></tr>
+        <tr><td class="l">Needs</td><td class="l">greedy-choice + opt. substr.</td><td class="l">overlap + opt. substr.</td></tr>
+        <tr><td class="l">Speed</td><td class="l">faster</td><td class="l">slower, table</td></tr>
+        <tr><td class="l">Knapsack</td><td class="l">fractional ✓</td><td class="l">0/1 ✓</td></tr>
+      </table>
+      <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Greedy grabs, DP deliberates.</b>" Divisible goods (gold dust) → greedy; indivisible goods (gold bars) → DP.</div>
+    </div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: DP I ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Dynamic programming I</span></div>
+  <h2><span class="no">3</span>Dynamic Programming: Solve Each Sub-problem Once</h2><span class="tag">two properties ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Dynamic programming</span> (DP) breaks a problem into sub-problems that <b>overlap</b>, solves each one only once and stores the answer in a table. It needs two properties: <span class="hl">overlapping sub-problems</span> (the same sub-problem recurs many times) and <span class="hl">optimal substructure</span> (an optimal solution is built from optimal sub-solutions). Steps: define the sub-problem → write the recurrence → fix the base cases → fill the table in a safe order → trace back the answer.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,290px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 290 160" width="280">
+      <g class="w">
+        <ellipse cx="145" cy="18" rx="24" ry="13" class="ink fill-y"/>
+        <ellipse cx="75" cy="62" rx="24" ry="13" class="ink fill-y"/>
+        <ellipse cx="215" cy="62" rx="24" ry="13" class="ink-r fill-r"/>
+        <ellipse cx="38" cy="106" rx="22" ry="13" class="ink-r fill-r"/>
+        <ellipse cx="112" cy="106" rx="22" ry="13" class="ink-g fill-g"/>
+        <ellipse cx="190" cy="106" rx="22" ry="13" class="ink-g fill-g"/>
+        <ellipse cx="250" cy="106" rx="22" ry="13" class="ink fill-b"/>
+        <path class="ink" d="M130,28 L90,52 M160,28 L200,52 M64,74 L46,94 M86,74 L104,94 M205,74 L194,94 M225,74 L244,94"/>
+      </g>
+      <text x="145" y="23" text-anchor="middle" class="k" style="font-size:12px">F(5)</text>
+      <text x="75" y="67" text-anchor="middle" class="k" style="font-size:12px">F(4)</text>
+      <text x="215" y="67" text-anchor="middle" class="r w6" style="font-size:12px">F(3)</text>
+      <text x="38" y="111" text-anchor="middle" class="r w6" style="font-size:12px">F(3)</text>
+      <text x="112" y="111" text-anchor="middle" class="g w6" style="font-size:12px">F(2)</text>
+      <text x="190" y="111" text-anchor="middle" class="g w6" style="font-size:12px">F(2)</text>
+      <text x="250" y="111" text-anchor="middle" class="k" style="font-size:12px">F(1)</text>
+      <text x="145" y="140" text-anchor="middle" class="r s" style="font-size:12px">F(3) twice, F(2) three times …</text>
+      <text x="145" y="156" text-anchor="middle" class="r s" style="font-size:12px">naive calls grow like φⁿ ≈ 1.618ⁿ</text>
+    </svg><figcaption>same colour = same sub-problem solved again</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l"></th><th class="l">Memoization</th><th class="l">Tabulation</th></tr>
+        <tr><td class="l">Direction</td><td class="l"><b>top-down</b>: recursion + cache</td><td class="l"><b>bottom-up</b>: loops</td></tr>
+        <tr><td class="l">Solves</td><td class="l">only sub-problems needed</td><td class="l">every table cell</td></tr>
+        <tr><td class="l">Overhead</td><td class="l">call stack</td><td class="l">none; space can shrink</td></tr>
+      </table>
+      <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Fibonacci table</span> F[i] = F[i−1] + F[i−2], F[0] = 0, F[1] = 1.
+        <table class="hand tiny" style="margin:1mm 0 0"><tr><th>i</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><th>F</th><td>0</td><td>1</td><td>1</td><td>2</td><td>3</td><td>5</td><td>8</td></tr></table>
+        Naive recursion: exponential; DP: <span class="circ">O(n) time</span>, O(1) space with two variables.</div>
+    </div>
+  </div>
+  <h3>Longest common subsequence (LCS)</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">Recurrence</span> c[i][j] = 0 if i = 0 or j = 0; <b>c[i−1][j−1] + 1</b> if xᵢ = yⱼ; else <b>max(c[i−1][j], c[i][j−1])</b>. Time and space <span class="circ">O(mn)</span>. A subsequence keeps order but need not be contiguous (a substring must be).</div>
+      <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Match → diagonal + 1; mismatch → max of up and left.</b>" Trace back from the bottom-right: diagonal moves on matches spell the LCS.</div>
+    </div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ X = ABCB, Y = BDCAB</span>
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th></th><th>∅</th><th>B</th><th>D</th><th>C</th><th>A</th><th>B</th></tr>
+        <tr><th>A</th><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><th>B</th><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><th>C</th><td>0</td><td>1</td><td>1</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><th>B</th><td>0</td><td>1</td><td>1</td><td>2</td><td>2</td><td class="red"><b>3</b></td></tr>
+      </table>
+      LCS length <b>3</b> = "BCB" (B…C…B in both).</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> (i) DP is not "recursion with a table" for every problem: without <b>overlapping</b> sub-problems (merge sort), a table saves nothing — that is plain D&amp;C. (ii) LCS of lengths m, n costs O(mn), not O(m + n). (iii) Memoization and tabulation have the <b>same</b> asymptotic time; they differ in order and overhead.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: DP II ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Dynamic programming II</span></div>
+  <h2><span class="no">4</span>DP Classics: Knapsack and Matrix Chain</h2><span class="tag">worked tables ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">0/1 knapsack recurrence</span> K[i][w] = best value using items 1..i with capacity w.<br>K[i][w] = K[i−1][w] if wᵢ &gt; w; else <b>max(K[i−1][w], vᵢ + K[i−1][w − wᵢ])</b>.<br>Time <span class="circ">O(nW)</span> — <span class="hl">pseudo-polynomial</span> (polynomial in the <i>value</i> W, exponential in its bit length).</div>
+      <div class="exam tiny"><span class="lbl">Exam trap: the 1-D version</span> With one array, K[w] = max(K[w], vᵢ + K[w − wᵢ]) is correct only if w runs <b>downward from W to wᵢ</b>. Running w upward reuses item i in the same pass, which solves the <b>unbounded</b> knapsack (unlimited copies) instead.</div>
+    </div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ W = 5</span> (w, v): 1 (2, 3) · 2 (3, 4) · 3 (4, 5) · 4 (5, 6)
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th>i \ w</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+        <tr><th>0</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><th>1</th><td>0</td><td>0</td><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+        <tr><th>2</th><td>0</td><td>0</td><td>3</td><td>4</td><td>4</td><td>7</td></tr>
+        <tr><th>3</th><td>0</td><td>0</td><td>3</td><td>4</td><td>5</td><td>7</td></tr>
+        <tr><th>4</th><td>0</td><td>0</td><td>3</td><td>4</td><td>5</td><td class="red"><b>7</b></td></tr>
+      </table>
+      K[2][5] = max(3, 4 + K[1][2]) = 7. Answer <b>7</b> = items 1 + 2 (weight 5).</div>
+  </div>
+  <h3>Matrix-chain multiplication (MCM)</h3>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Problem</span> Matrix Aᵢ is p<sub>i−1</sub> × pᵢ. Choose the parenthesisation of A₁A₂…Aₙ with the fewest scalar multiplications (a p×q times q×r product costs <b>pqr</b>). The order changes the cost, never the result. Recurrence: <span class="hl">m[i][j] = min over i ≤ k &lt; j of m[i][k] + m[k+1][j] + p<sub>i−1</sub>p<sub>k</sub>p<sub>j</sub></span>, m[i][i] = 0. Time <span class="circ">O(n³)</span>, space O(n²). The number of parenthesisations is the Catalan number C<sub>n−1</sub>, so brute force is exponential.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ 3 matrices</span> A₁ 10×30, A₂ 30×5, A₃ 5×60.<br>(A₁A₂)A₃ = 10·30·5 + 10·5·60 = 1500 + 3000 = <b>4500</b><br>A₁(A₂A₃) = 30·5·60 + 10·30·60 = 9000 + 18000 = 27000<br>Same product, <b>6× the work</b> with the wrong order.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ p = (5, 4, 6, 2, 7)</span>
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th>m</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+        <tr><th>1</th><td>0</td><td>120</td><td>88</td><td class="red"><b>158</b></td></tr>
+        <tr><th>2</th><td></td><td>0</td><td>48</td><td>104</td></tr>
+        <tr><th>3</th><td></td><td></td><td>0</td><td>84</td></tr>
+      </table>
+      Best: <b>((A₁(A₂A₃))A₄)</b> = 48 + 40 + 70 = 158.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">DP problem</th><th class="l">Sub-problem</th><th class="l">Time</th></tr>
+    <tr><td class="l">Floyd-Warshall (all-pairs)</td><td class="l">d<sub>k</sub>[i][j]: paths using only vertices 1..k inside</td><td class="l">O(V³)</td></tr>
+    <tr><td class="l">Bellman-Ford (single source)</td><td class="l">shortest path using ≤ k edges</td><td class="l">O(VE)</td></tr>
+    <tr><td class="l">Edit distance</td><td class="l">prefixes of both strings</td><td class="l">O(mn)</td></tr>
+    <tr><td class="l">Longest increasing subsequence</td><td class="l">LIS ending at i</td><td class="l">O(n²) / O(n log n)</td></tr>
+    <tr><td class="l">TSP (Held-Karp)</td><td class="l">(set visited, last city)</td><td class="l">O(n²·2ⁿ)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Floyd floats through every k</b>" — the outer loop is the intermediate vertex k, so Floyd-Warshall is DP, not greedy.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> <b>diff</b>, Git and DNA alignment run LCS / edit distance; SQL optimisers choose a join order the way MCM chooses brackets.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: backtracking and B&B ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Backtracking · branch &amp; bound</span></div>
+  <h2><span class="no">5</span>Backtracking: DFS of the State Space</h2><span class="tag">N-Queens ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Backtracking</span> builds a solution one component at a time along a <span class="hl">state-space tree</span>, exploring it <b>depth-first</b>. At each node a <b>bounding (feasibility) function</b> checks the partial solution; if it can no longer lead to a valid answer, the whole subtree is pruned and the algorithm steps back to the previous choice. Uses: N-Queens, sum of subsets, graph m-colouring, Hamiltonian cycle, Sudoku. Worst case stays exponential.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 240 150" width="240">
+      <g class="w">
+        <rect x="10" y="6" width="120" height="120" class="ink-k" fill="none"/>
+        <path class="ink" d="M40,6 V126 M70,6 V126 M100,6 V126 M10,36 H130 M10,66 H130 M10,96 H130"/>
+        <circle cx="85" cy="21" r="10" class="ink-r fill-r"/>
+        <circle cx="25" cy="51" r="10" class="ink-r fill-r"/>
+        <circle cx="115" cy="81" r="10" class="ink-r fill-r"/>
+        <circle cx="55" cy="111" r="10" class="ink-r fill-r"/>
+      </g>
+      <text x="185" y="30" text-anchor="middle" class="k s" style="font-size:12px">row 1 → col 3</text>
+      <text x="185" y="56" text-anchor="middle" class="k s" style="font-size:12px">row 2 → col 1</text>
+      <text x="185" y="86" text-anchor="middle" class="k s" style="font-size:12px">row 3 → col 4</text>
+      <text x="185" y="116" text-anchor="middle" class="k s" style="font-size:12px">row 4 → col 2</text>
+      <text x="120" y="146" text-anchor="middle" class="r w6" style="font-size:12px">(3, 1, 4, 2) — mirror (2, 4, 1, 3)</text>
+    </svg><figcaption>4-Queens has exactly 2 solutions</figcaption></figure>
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ 4-Queens</span> One queen per row. Queens (r₁, c₁), (r₂, c₂) clash if c₁ = c₂ or <b>|r₁ − r₂| = |c₁ − c₂|</b> (diagonal). Try row 1 col 1 → row 2 col 3 → row 3 has no safe column → back to row 2 col 4 → row 3 col 2 → row 4 dead → back up to row 1 col 2 → (2, 4, 1, 3) ✓. 8-Queens: <span class="circ">92 solutions</span> (12 distinct).</div>
+      <div class="ex tiny"><span class="lbl">Sum of subsets</span> S = {3, 5, 6, 7}, target 15: include/exclude each item, prune when the sum passes 15 or cannot reach it. Only solution <b>{3, 5, 7}</b>.</div>
+    </div>
+  </div>
+  <h2><span class="no">6</span>Branch and Bound: Bounds Prune the Tree</h2><span class="tag">LB ≥ best ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Branch and bound</span> (B&amp;B) also searches a state-space tree, but for <b>optimisation</b>. Each live node gets a <b>bound</b> on the best answer reachable through it; if the bound cannot beat the <b>best complete solution so far</b>, the node is killed. Order: <b>FIFO</b> (BFS-like), <b>LIFO</b> or <span class="hl">LC (least-cost)</span> search with a priority queue. Uses: TSP (reduced cost matrix), 0/1 knapsack (fractional bound), job assignment.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,250px);align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap: the prune rule</span> For <b>minimisation</b> (TSP, assignment): LB(node) = least cost any completion can have; UB / best = cost of the best full solution found. Prune when <span class="circ">LB ≥ best</span> — a node with LB equal to best can only tie, so it is pruned too ("LB &gt; UB" misses ties). For <b>maximisation</b> (0/1 knapsack): prune when the node's upper bound ≤ best value found.</div>
+      <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Backtracking asks 'is it legal?', B&amp;B asks 'can it still win?'</b>" Backtracking = DFS + feasibility; B&amp;B = any order (usually BFS / LC) + bound.</div>
+    </div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 250 140" width="246">
+      <g class="w">
+        <ellipse cx="125" cy="18" rx="34" ry="14" class="ink fill-y"/>
+        <ellipse cx="45" cy="70" rx="36" ry="14" class="ink fill-b"/>
+        <ellipse cx="125" cy="70" rx="36" ry="14" class="ink-r fill-r"/>
+        <ellipse cx="205" cy="70" rx="36" ry="14" class="ink fill-b"/>
+        <ellipse cx="45" cy="120" rx="36" ry="14" class="ink-g fill-g"/>
+        <path class="ink" d="M108,30 L62,58 M125,32 V56 M142,30 L188,58 M45,84 V106"/>
+        <path class="ink-r" d="M106,62 L144,78 M144,62 L106,78"/>
+      </g>
+      <text x="125" y="23" text-anchor="middle" class="k" style="font-size:11px">LB 20</text>
+      <text x="45" y="75" text-anchor="middle" class="k" style="font-size:11px">LB 22</text>
+      <text x="125" y="96" text-anchor="middle" class="r w6" style="font-size:11px">LB 28 ≥ 26 ✗</text>
+      <text x="205" y="75" text-anchor="middle" class="k" style="font-size:11px">LB 24</text>
+      <text x="45" y="125" text-anchor="middle" class="g w6" style="font-size:11px">tour 26</text>
+      <text x="200" y="120" text-anchor="middle" class="g s" style="font-size:11px">best = 26</text>
+    </svg><figcaption>minimisation: killed once LB ≥ 26</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">Method</th><th class="l">Idea</th><th class="l">Sub-problems</th><th class="l">Typical examples</th></tr>
+    <tr><td class="l">Divide &amp; conquer</td><td class="l">split, recurse, combine</td><td class="l">independent</td><td class="l">merge sort, binary search, Strassen</td></tr>
+    <tr><td class="l">Greedy</td><td class="l">local best, never undo</td><td class="l">one chosen</td><td class="l">fractional knapsack, Huffman, MST</td></tr>
+    <tr><td class="l">Dynamic prog.</td><td class="l">store sub-answers</td><td class="l"><b>overlapping</b></td><td class="l">LCS, 0/1 knapsack, MCM, Floyd</td></tr>
+    <tr><td class="l">Backtracking</td><td class="l">DFS + feasibility</td><td class="l">state-space tree</td><td class="l">N-Queens, subset sum, colouring</td></tr>
+    <tr><td class="l">Branch &amp; bound</td><td class="l">BFS / LC + bound</td><td class="l">state-space tree</td><td class="l">TSP, 0/1 knapsack, assignment</td></tr>
+  </table>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: BFS DFS topo ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>BFS · DFS · topological sort</span></div>
+  <h2><span class="no">7</span>Graph Traversal: BFS and DFS</h2><span class="tag">O(V+E) ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,250px);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">BFS</span> <span class="hl">Breadth-first search</span> uses a <b>queue</b>: visit the source, then all vertices at distance 1, then 2, … It finds <b>shortest paths in unweighted graphs</b> (fewest edges), tests bipartiteness, and drives Edmonds-Karp and web crawlers.</div>
+      <div class="def tiny"><span class="lbl">DFS</span> <span class="hl">Depth-first search</span> uses a <b>stack</b> (or recursion): go as deep as possible, then back up. It records discovery/finish times and powers cycle detection, topological sort, SCC, articulation points and maze solving.</div>
+    </div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 250 150" width="246">
+      <g class="w">
+        <circle cx="30" cy="75" r="15" class="ink-r fill-r"/>
+        <circle cx="95" cy="30" r="15" class="ink fill-y"/>
+        <circle cx="95" cy="120" r="15" class="ink fill-y"/>
+        <circle cx="160" cy="75" r="15" class="ink fill-b"/>
+        <circle cx="160" cy="135" r="13" class="ink fill-b"/>
+        <circle cx="225" cy="75" r="15" class="ink-g fill-g"/>
+        <path class="ink" d="M43,66 L81,38" marker-end="url(#ahb)"/><path class="ink" d="M43,84 L81,112" marker-end="url(#ahb)"/><path class="ink" d="M108,38 L146,66" marker-end="url(#ahb)"/><path class="ink" d="M108,112 L146,82" marker-end="url(#ahb)"/><path class="ink" d="M110,124 L146,132" marker-end="url(#ahb)"/><path class="ink" d="M175,75 L208,75" marker-end="url(#ahb)"/><path class="ink" d="M172,128 L213,86" marker-end="url(#ahb)"/>
+      </g>
+      <text x="30" y="80" text-anchor="middle" class="k w6">A</text>
+      <text x="95" y="35" text-anchor="middle" class="k w6">B</text>
+      <text x="95" y="125" text-anchor="middle" class="k w6">C</text>
+      <text x="160" y="80" text-anchor="middle" class="k w6">D</text>
+      <text x="160" y="140" text-anchor="middle" class="k w6">E</text>
+      <text x="225" y="80" text-anchor="middle" class="k w6">F</text>
+    </svg><figcaption>A→B, A→C, B→D, C→D, C→E, D→F, E→F</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l"></th><th class="l">BFS</th><th class="l">DFS</th></tr>
+    <tr><td class="l">Structure</td><td class="l">queue (FIFO)</td><td class="l">stack (LIFO) / recursion</td></tr>
+    <tr><td class="l">Order from A (alphabetical)</td><td class="l"><b>A B C D E F</b></td><td class="l"><b>A B D F C E</b></td></tr>
+    <tr><td class="l">Time</td><td class="l" colspan="2"><span class="circ">O(V + E)</span> with adjacency list · O(V²) with adjacency matrix</td></tr>
+    <tr><td class="l">On a tree it gives</td><td class="l">level-order traversal</td><td class="l">pre-, in-, post-order traversals</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">DFS edge classes (directed)</span> <b>Tree</b>: to a new vertex · <b>Back</b>: to an ancestor still open · <b>Forward</b>: to a finished descendant · <b>Cross</b>: to a vertex in another finished branch. Undirected DFS has only tree and back edges. <span class="hl">A back edge exists ⇔ the graph has a cycle.</span></div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> "DFS = pre/in/post-order, BFS = level order" is true for <b>trees</b> only; a general graph has no "in-order". BFS finds fewest-<b>edge</b> paths, not least-<b>weight</b> paths. A disconnected graph needs a fresh BFS/DFS from every unvisited vertex.</div>
+  </div>
+  <h2><span class="no">8</span>Topological Sorting</h2><span class="tag">DAG only ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">topological order</span> of a directed graph lists the vertices so that for every edge u → v, u comes before v. One exists <span class="circ">if and only if the graph is a DAG</span> (directed acyclic graph), and it is usually <b>not unique</b>. Uses: task scheduling, course prerequisites, build systems (make), spreadsheet recalculation, package installers.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Kahn's algorithm (BFS) ✍</span> In-degrees A0 B1 C1 D2 E1 F2. Queue the 0s: A. Pop A → B, C drop to 0. Pop B → D = 1. Pop C → D = 0, E = 0. Pop D → F = 1. Pop E → F = 0. Pop F. Order <b>A B C D E F</b>. If fewer than V vertices come out, the graph has a cycle.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">DFS method ✍</span> Run DFS; when a vertex <b>finishes</b>, push it on a list. Finish order F, D, B, E, C, A → reversed: <b>A C E B D F</b>. Different from Kahn's, and equally valid. Both run in <b>O(V + E)</b>.</div>
+  </div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Kahn counts in-degrees, DFS reverses finish times.</b>" Prerequisite example: Math → Data Structures → Algorithms, Physics → Robotics gives Math, Physics, Data Structures, Algorithms, Robotics.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: components and MST ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Components · SCC · MST</span></div>
+  <h2><span class="no">9</span>Connected and Strongly Connected Components</h2><span class="tag">Kosaraju ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,230px);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">Undirected</span> A <span class="hl">connected component</span> is a maximal connected subgraph. Start a BFS/DFS from every unvisited vertex: number of starts = number of components, O(V + E).</div>
+      <div class="def tiny"><span class="lbl">Directed</span> A <span class="hl">strongly connected component</span> (SCC) is a maximal set where every vertex reaches every other. <b>Kosaraju</b>: (1) DFS on G, note finish order; (2) build the transpose Gᵀ (reverse all edges); (3) DFS on Gᵀ in decreasing finish time — each tree is one SCC. <b>Tarjan</b>: one DFS with a stack and low-link values; v is an SCC root when low[v] = disc[v]. Both <span class="circ">O(V + E)</span>.</div>
+    </div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 240 130" width="230">
+      <g class="w">
+        <rect x="4" y="6" width="120" height="118" rx="20" class="ink-r" fill="none" style="stroke-dasharray:5 4"/>
+        <rect x="136" y="30" width="100" height="72" rx="18" class="ink-g" fill="none" style="stroke-dasharray:5 4"/>
+        <circle cx="34" cy="34" r="13" class="ink fill-y"/>
+        <circle cx="94" cy="34" r="13" class="ink fill-y"/>
+        <circle cx="64" cy="96" r="13" class="ink fill-y"/>
+        <circle cx="158" cy="66" r="13" class="ink fill-b"/>
+        <circle cx="214" cy="66" r="13" class="ink fill-b"/>
+        <path class="ink" d="M48,34 H78" marker-end="url(#ahb)"/><path class="ink" d="M90,47 L72,82" marker-end="url(#ahb)"/><path class="ink" d="M56,84 L40,48" marker-end="url(#ahb)"/><path class="ink" d="M106,40 L145,59" marker-end="url(#ahb)"/><path class="ink" d="M170,59 Q186,46 201,59" marker-end="url(#ahb)"/><path class="ink" d="M202,74 Q186,86 171,74" marker-end="url(#ahb)"/>
+      </g>
+      <text x="34" y="39" text-anchor="middle" class="k w6">1</text>
+      <text x="94" y="39" text-anchor="middle" class="k w6">2</text>
+      <text x="64" y="101" text-anchor="middle" class="k w6">3</text>
+      <text x="158" y="71" text-anchor="middle" class="k w6">4</text>
+      <text x="214" y="71" text-anchor="middle" class="k w6">5</text>
+    </svg><figcaption>SCCs {1,2,3} and {4,5}</figcaption></figure>
+  </div>
+  <div class="exam tiny"><span class="lbl">Exam trap</span> Shrinking every SCC to one node gives the <b>condensation</b>, which is always a DAG. An <span class="hl">articulation point</span> (cut vertex) is a vertex whose removal disconnects the graph; a <b>bridge</b> is such an edge. With DFS low values: the root is a cut vertex iff it has ≥ 2 DFS children; another vertex u is one iff some child v has low[v] ≥ disc[u]; edge (u, v) is a bridge iff low[v] &gt; disc[u].</div>
+  <h2><span class="no">10</span>Minimum Spanning Tree: Prim and Kruskal</h2><span class="tag">greedy ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">spanning tree</span> of a connected undirected graph contains all V vertices and exactly <span class="circ">V − 1 edges</span>, no cycle. A <b>minimum spanning tree</b> (MST) has the least total weight. <b>Cut property</b>: the lightest edge crossing any cut belongs to some MST — the reason both greedy algorithms are correct. Distinct weights ⇒ the MST is unique.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,240px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 260 160" width="246">
+      <g class="w">
+        <path class="ink-k" d="M40,30 L130,30" style="stroke-dasharray:5 4"/>
+        <path class="ink-g" d="M40,30 L40,130" style="stroke-width:3.5"/>
+        <path class="ink-g" d="M130,30 L40,130" style="stroke-width:3.5"/>
+        <path class="ink-g" d="M130,30 L220,30" style="stroke-width:3.5"/>
+        <path class="ink-k" d="M40,130 L220,30" style="stroke-dasharray:5 4"/>
+        <path class="ink-g" d="M220,30 L220,130" style="stroke-width:3.5"/>
+        <path class="ink-k" d="M40,130 L220,130" style="stroke-dasharray:5 4"/>
+        <circle cx="40" cy="30" r="13" class="ink fill-y"/>
+        <circle cx="130" cy="30" r="13" class="ink fill-y"/>
+        <circle cx="220" cy="30" r="13" class="ink fill-y"/>
+        <circle cx="40" cy="130" r="13" class="ink fill-y"/>
+        <circle cx="220" cy="130" r="13" class="ink fill-y"/>
+      </g>
+      <text x="40" y="35" text-anchor="middle" class="k w6">A</text>
+      <text x="130" y="35" text-anchor="middle" class="k w6">B</text>
+      <text x="220" y="35" text-anchor="middle" class="k w6">D</text>
+      <text x="40" y="135" text-anchor="middle" class="k w6">C</text>
+      <text x="220" y="135" text-anchor="middle" class="k w6">E</text>
+      <text x="85" y="22" text-anchor="middle" class="k" style="font-size:12px">4</text>
+      <text x="28" y="84" text-anchor="middle" class="g w6" style="font-size:12px">1</text>
+      <text x="74" y="74" text-anchor="middle" class="g w6" style="font-size:12px">2</text>
+      <text x="175" y="22" text-anchor="middle" class="g w6" style="font-size:12px">5</text>
+      <text x="142" y="94" text-anchor="middle" class="k" style="font-size:12px">8</text>
+      <text x="234" y="84" text-anchor="middle" class="g w6" style="font-size:12px">3</text>
+      <text x="130" y="148" text-anchor="middle" class="k" style="font-size:12px">9</text>
+    </svg><figcaption>green = MST, weight 11</figcaption></figure>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ same graph, two algorithms</span> Edges AB 4, AC 1, BC 2, BD 5, CD 8, DE 3, CE 9.<br><b>Kruskal</b> (sort, add if no cycle): AC 1 ✓, BC 2 ✓, DE 3 ✓, AB 4 ✗ (cycle A-B-C), BD 5 ✓ → 4 edges, stop.<br><b>Prim</b> from A (grow one tree): AC 1 → CB 2 → BD 5 → DE 3.<br>Both: <span class="circ">weight 1 + 2 + 3 + 5 = 11</span>, 4 = V − 1 edges.</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l"></th><th class="l" style="width:52%">Prim</th><th class="l">Kruskal</th></tr>
+    <tr><td class="l">How</td><td class="l">grows one tree; priority queue of fringe vertices</td><td class="l">sorted edges + <b>union-find</b> forest</td></tr>
+    <tr><td class="l">Time</td><td class="l"><b>O(V²)</b> matrix · O(E log V) binary heap · O(E + V log V) Fib. heap</td><td class="l">O(E log E) = <b>O(E log V)</b></td></tr>
+    <tr><td class="l">Best for</td><td class="l"><b>dense</b> graphs (O(V²) version)</td><td class="l"><b>sparse</b> graphs</td></tr>
+  </table>
+  <div class="exam tiny"><span class="lbl">Exam trap</span> Dense graph (E ≈ V²): heap Prim costs O(V² log V), so the plain <span class="hl">O(V²) matrix Prim</span> wins. log E = O(log V) since E ≤ V². MST ≠ shortest-path tree.</div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Prim = Proximity (grow from the tree), Kruskal = Kheapest edge anywhere.</b>"</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: shortest paths ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Shortest paths</span></div>
+  <h2><span class="no">11</span>Shortest Paths: Relax Until Stable</h2><span class="tag">relaxation ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Relaxation</span> Keep d[s] = 0, others ∞, and <span class="hl">relax</span> edges: if d[u] + w(u, v) &lt; d[v] then d[v] ← d[u] + w(u, v), parent[v] ← u. The algorithms differ only in <b>which</b> edges they relax and <b>in what order</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,220px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 220 150" width="216">
+      <g class="w">
+        <circle cx="30" cy="75" r="15" class="ink-r fill-r"/>
+        <circle cx="110" cy="25" r="15" class="ink fill-y"/>
+        <circle cx="110" cy="125" r="15" class="ink fill-y"/>
+        <circle cx="190" cy="75" r="15" class="ink-g fill-g"/>
+        <path class="ink" d="M44,66 L94,34" marker-end="url(#ahb)"/><path class="ink" d="M44,84 L94,116" marker-end="url(#ahb)"/><path class="ink" d="M110,108 L110,42" marker-end="url(#ahb)"/><path class="ink" d="M124,34 L174,66" marker-end="url(#ahb)"/><path class="ink" d="M124,116 L174,84" marker-end="url(#ahb)"/>
+      </g>
+      <text x="30" y="80" text-anchor="middle" class="k w6">A</text>
+      <text x="110" y="30" text-anchor="middle" class="k w6">B</text>
+      <text x="110" y="130" text-anchor="middle" class="k w6">C</text>
+      <text x="190" y="80" text-anchor="middle" class="k w6">D</text>
+      <text x="60" y="40" text-anchor="middle" class="k" style="font-size:12px">4</text>
+      <text x="60" y="118" text-anchor="middle" class="k" style="font-size:12px">1</text>
+      <text x="122" y="80" text-anchor="middle" class="r w6" style="font-size:12px">2</text>
+      <text x="160" y="40" text-anchor="middle" class="r w6" style="font-size:12px">1</text>
+      <text x="160" y="118" text-anchor="middle" class="k" style="font-size:12px">5</text>
+    </svg><figcaption>directed, weights as drawn</figcaption></figure>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ Dijkstra from A</span>
+      <table class="hand tiny" style="margin:1mm auto 0">
+        <tr><th class="l">Settle</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td class="l">start</td><td>0</td><td>∞</td><td>∞</td><td>∞</td></tr>
+        <tr><td class="l">A (0)</td><td>0</td><td>4</td><td>1</td><td>∞</td></tr>
+        <tr><td class="l">C (1)</td><td>0</td><td>3</td><td>1</td><td>6</td></tr>
+        <tr><td class="l">B (3)</td><td>0</td><td>3</td><td>1</td><td>4</td></tr>
+        <tr><td class="l">D (4)</td><td>0</td><td><b>3</b></td><td><b>1</b></td><td class="red"><b>4</b></td></tr>
+      </table>
+      Final: <b>A 0, C 1, B 3, D 4</b>; path to D = A → C → B → D.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Dijkstra (greedy)</span> Repeatedly <b>settle</b> the unsettled vertex with the smallest d and relax its out-edges; a settled distance is final. Needs <span class="circ">non-negative weights</span>. Time: O(V²) array · O((V+E) log V) binary heap · O(E + V log V) Fibonacci heap.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap: negative edge</span> A→B 2, A→C 3, C→B −2. Dijkstra settles B at 2 and never revisits it, but A→C→B = <b>1</b>. One negative edge is enough to break it; use Bellman-Ford.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Bellman-Ford (DP)</span> Relax <b>every</b> edge V − 1 times (a shortest path has ≤ V − 1 edges). One more pass: if any edge still relaxes, a <span class="hl">negative-weight cycle</span> is reachable from the source. Handles negative edges. Time <span class="circ">O(VE)</span>.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Floyd-Warshall (DP)</span> All pairs: for k = 1..V, for i, for j: d[i][j] = min(d[i][j], d[i][k] + d[k][j]). Time <span class="circ">O(V³)</span>, space O(V²). Negative edges are fine; a negative cycle shows as d[i][i] &lt; 0, and then shortest paths are undefined.</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">Algorithm</th><th class="l">Scope</th><th class="l">Method</th><th class="l">Time</th><th class="l">Negative edges?</th></tr>
+    <tr><td class="l">BFS</td><td class="l">1 source, unweighted</td><td class="l">queue</td><td class="l">O(V + E)</td><td class="l">n/a</td></tr>
+    <tr><td class="l">DAG shortest path</td><td class="l">1 source, DAG</td><td class="l">topo order</td><td class="l">O(V + E)</td><td class="l">yes</td></tr>
+    <tr><td class="l">Dijkstra</td><td class="l">1 source</td><td class="l">greedy</td><td class="l">O((V+E) log V)</td><td class="l"><b>no</b></td></tr>
+    <tr><td class="l">Bellman-Ford</td><td class="l">1 source</td><td class="l">DP</td><td class="l">O(VE)</td><td class="l">yes; <b>detects</b> neg. cycle</td></tr>
+    <tr><td class="l">Floyd-Warshall</td><td class="l">all pairs</td><td class="l">DP</td><td class="l">O(V³)</td><td class="l">yes; <b>no</b> neg. cycle</td></tr>
+  </table>
+  <div class="exam tiny"><span class="lbl">Exam trap</span> Bellman-Ford detects only <b>negative-weight</b> cycles (general cycle detection is DFS's job). Floyd-Warshall can reveal a negative cycle but not solve around it. Warshall (same loops, AND/OR) gives the <b>transitive closure</b>.</div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>BFS for no weights, Dijkstra for positive, Bellman for negative, Floyd for all pairs.</b>" Complexities rise in the same order: V+E → E log V → VE → V³.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Formulas &amp; complexities</span>
+    <div class="fgrid small">
+      <p>D&amp;C: T(n) = aT(n/b) + f(n)</p><p>Merge sort 2T(n/2)+n → Θ(n log n)</p>
+      <p>Binary search T(n/2)+1 → Θ(log n)</p><p>Quick sort worst Θ(n²)</p>
+      <p>Strassen 7T(n/2)+n² → n<sup>2.81</sup></p><p>Karatsuba 3T(n/2)+n → n<sup>1.585</sup></p>
+      <p>LCS O(mn) · edit distance O(mn)</p><p>0/1 knapsack O(nW) pseudo-poly</p>
+      <p>MCM O(n³), cost pqr per product</p><p>Fibonacci DP O(n), naive exponential</p>
+      <p>BFS/DFS O(V+E) list, O(V²) matrix</p><p>Topological sort O(V+E), DAG only</p>
+      <p>SCC (Kosaraju/Tarjan) O(V+E)</p><p>MST: V − 1 edges</p>
+      <p>Prim O(V²) / O(E log V) / O(E+V log V)</p><p>Kruskal O(E log E) = O(E log V)</p>
+      <p>Dijkstra O((V+E) log V), w ≥ 0</p><p>Bellman-Ford O(VE)</p>
+      <p>Floyd-Warshall O(V³), DP</p><p>DAG shortest path O(V+E)</p>
+    </div>
+  </div>
+  <h3>Top 14 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>D&amp;C sub-problems independent; DP ones overlap</li>
+      <li>Greedy needs greedy-choice + optimal substructure</li>
+      <li>Fractional knapsack → greedy by v/w</li>
+      <li>0/1 knapsack → DP (greedy fails)</li>
+      <li>Huffman, Prim, Kruskal, Dijkstra = greedy</li>
+      <li>Floyd-Warshall, Bellman-Ford, LCS, MCM = DP</li>
+      <li>Backtracking = DFS of state-space tree</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>B&amp;B: FIFO / LIFO / LC search</li>
+      <li>BFS = queue, DFS = stack</li>
+      <li>Back edge ⇔ cycle (directed DFS)</li>
+      <li>Topological order exists ⇔ DAG</li>
+      <li>Kosaraju: DFS, transpose, DFS</li>
+      <li>4-Queens: 2 solutions; 8-Queens: 92</li>
+      <li>Bellman-Ford V − 1 passes + 1 check</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> greedy by ratio is optimal for fractional, not 0/1 knapsack · coin set {1,3,4} breaks greedy · B&amp;B minimisation prunes at LB ≥ best · 1-D knapsack loops w downward · "pre/in/post-order vs level order" is for trees only · Dijkstra fails with a negative edge · Bellman-Ford detects only negative-weight cycles · Floyd-Warshall cannot handle a negative cycle · dense graph → O(V²) Prim · MST ≠ shortest-path tree · topological order is not unique</div>
+  <div class="trick"><span class="lbl">All tricks together</span> "D-C-C: Divide, Conquer, Combine" · "seven, not eight" (Strassen) · "Greedy grabs, DP deliberates" (gold dust vs gold bars) · "Match → diagonal + 1" (LCS) · "Floyd floats through every k" · "Backtracking asks 'is it legal?', B&amp;B asks 'can it still win?'" · "Kahn counts in-degrees, DFS reverses finish times" · "Prim = Proximity, Kruskal = Kheapest edge" · "BFS no weights, Dijkstra positive, Bellman negative, Floyd all pairs".</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Design Methods &amp; Graph Algorithms</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Strassen's matrix multiplication runs in:<ol class="opts"><li>O(n³)</li><li>O(n<sup>2.81</sup>)</li><li>O(n² log n)</li><li>O(n²)</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>The Floyd-Warshall algorithm uses:<ol class="opts"><li>greedy</li><li>divide &amp; conquer</li><li>dynamic prog.</li><li>backtracking</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Greedy by highest value/weight is always optimal for the ___ knapsack:<ol class="opts"><li>0/1</li><li>fractional</li><li>bounded</li><li>multi-constraint</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Time complexity of Bellman-Ford:<ol class="opts"><li>O(V + E)</li><li>O(E log V)</li><li>O(V³)</li><li>O(VE)</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Which detects a negative-weight cycle reachable from the source?<ol class="opts"><li>Dijkstra</li><li>Prim</li><li>Bellman-Ford</li><li>Kruskal</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>A topological ordering exists if and only if the graph is:<ol class="opts"><li>a DAG</li><li>complete</li><li>bipartite</li><li>cyclic</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>T(n) = 2T(n/2) + n solves to:<ol class="opts"><li>Θ(n)</li><li>Θ(n log n)</li><li>Θ(n²)</li><li>Θ(log n)</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Edges A→B 4, A→C 1, C→B 2, B→D 1, C→D 5. Shortest distance A to D:<ol class="opts"><li>6</li><li>5</li><li>4</li><li>3</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>An MST of a connected graph with 10 vertices has how many edges?<ol class="opts"><li>10</li><li>45</li><li>11</li><li>9</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>In branch and bound for a minimisation problem, a node is pruned when:<ol class="opts"><li>LB ≥ best</li><li>LB &lt; best</li><li>it is a leaf</li><li>it is the root</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-b · 4-d · 5-c · 6-a · 7-b · 8-c · 9-d · 10-a</div>
+  <div class="wq"><span class="lbl">Written question</span> Four matrices A₁…A₄ have dimensions p = (5, 4, 6, 2, 7). Write the dynamic-programming recurrence for matrix-chain multiplication, fill the cost table, give the optimal parenthesisation and state the time complexity. <i class="mk">10</i></div>
+  <ol class="steps small" style="margin-top:1mm">
+    <li><b>Recurrence</b> — m[i][i] = 0; m[i][j] = min<sub>i≤k&lt;j</sub> { m[i][k] + m[k+1][j] + p<sub>i−1</sub>p<sub>k</sub>p<sub>j</sub> }. <i class="mk">2</i></li>
+    <li><b>Chains of 2</b> — m[1][2] = 5·4·6 = 120; m[2][3] = 4·6·2 = 48; m[3][4] = 6·2·7 = 84. <i class="mk">2</i></li>
+    <li><b>Chains of 3</b> — m[1][3] = min(0 + 48 + 5·4·2 = 88, 120 + 0 + 5·6·2 = 180) = 88 (k = 1); m[2][4] = min(0 + 84 + 4·6·7 = 252, 48 + 0 + 4·2·7 = 104) = 104 (k = 3). <i class="mk">2</i></li>
+    <li><b>Full chain</b> — m[1][4] = min(k=1: 0 + 104 + 140 = 244; k=2: 120 + 84 + 210 = 414; k=3: 88 + 0 + 70 = 158) = <b>158</b>, split k = 3. <i class="mk">2</i></li>
+    <li><b>Answer</b> — ((A₁(A₂A₃))A₄) with 158 multiplications; time O(n³), space O(n²). <i class="mk">2</i></li>
+  </ol>
+  <div class="sumbox tiny"><span class="lbl">Before the exam ✓</span> ☐ recurrences of merge sort, binary search, Strassen · ☐ fractional vs 0/1 knapsack worked once · ☐ LCS and knapsack tables by hand · ☐ 4-Queens backtrack trace · ☐ B&amp;B prune rule both ways · ☐ BFS/DFS order and edge classes · ☐ Kahn's algorithm on a small DAG · ☐ Kruskal and Prim on one graph · ☐ Dijkstra table · ☐ the shortest-path comparison table</div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

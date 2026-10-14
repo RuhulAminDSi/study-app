@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>C-এর ডেটা টাইপ, অপারেটর, এক্সপ্রেশন ও কন্ট্রোল স্ট্রাকচার: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">C-এর ডেটা টাইপ ও অপারেটর</span></h1>
+  <p class="subtitle">সাইজ · রূপান্তর · অগ্রাধিকার · if, switch, লুপ · ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="600">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="150" text-anchor="middle" class="bn k l">C-এর ভিত্তি</text><text x="320" y="174" text-anchor="middle" class="bn r s">টপিকের মাইন্ড-ম্যাপ</text>
+      <text x="142" y="58" text-anchor="middle" class="bn s" style="font-size:11px">টোকেন · ৩২টি কিওয়ার্ড</text><text x="142" y="74" text-anchor="middle" class="bn s" style="font-size:11px">আইডেন্টিফায়ারের নিয়ম</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6" style="font-size:13px">সাইজ ও রেঞ্জ ★</text>
+      <text x="498" y="66" text-anchor="middle" class="bn r w6" style="font-size:13px">টাইপ রূপান্তর ★</text>
+      <text x="96" y="156" text-anchor="middle" class="bn g w6" style="font-size:13px">অপারেটর</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:12px">অগ্রাধিকার</text><text x="544" y="164" text-anchor="middle" class="bn r w6" style="font-size:12px">PUMA'S REBL TAC ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s" style="font-size:11px">++ / -- · sizeof</text><text x="142" y="254" text-anchor="middle" class="bn s" style="font-size:11px">অনির্ধারিত আচরণ</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6" style="font-size:13px">আউটপুট ট্রেসিং ★</text>
+      <text x="498" y="238" text-anchor="middle" class="bn s" style="font-size:11px">if · switch ফল-থ্রু</text><text x="498" y="254" text-anchor="middle" class="bn s" style="font-size:11px">for · while · do-while</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = যে পরিবার থেকে প্রায় সব প্রশ্ন আসে</figcaption>
+  </figure>
+  <div class="sticky" style="width:72mm"><b>হাই-ইল্ড তালিকা</b><br>① ৩২টি কিওয়ার্ড (C89)<br>② int 4 B · char 1 B<br>③ −7/2 = −3 · −7%2 = −1<br>④ float f = 7/2 → 3.0<br>⑤ −1 &lt; 1u মিথ্যা (0)<br>⑥ b = a++ পুরোনো a নেয়<br>⑦ &amp;&amp; ও || শর্ট-সার্কিট করে<br>⑧ sizeof অপারেন্ড চালায় না<br>⑨ switch: break নেই ⇒ ফল-থ্রু<br>⑩ do-while অন্তত একবার চলে</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">সিলেবাসের লাইন "<span class="hl">Structured programming language: data types, operators, expressions, control structures</span>"। ফাংশন, স্কোপ, স্টোরেজ ক্লাস ও রিকারশন; প্রিপ্রসেসর, পয়েন্টার, অ্যারে ও স্ট্রিং; স্ট্রাকচার, ইউনিয়ন ও enum; এবং I/O ও ফাইল: এই অধ্যায়ে প্রতিটির আলাদা লেসন আছে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>প্রোগ্রামের গঠন ও টোকেন … পৃ. ২</li><li>ডেটা টাইপ, সাইজ ও রেঞ্জ … পৃ. ৩</li><li>টাইপ রূপান্তর ও ওভারফ্লো … পৃ. ৪</li><li>অপারেটর ১: গাণিতিক থেকে ++ … পৃ. ৫</li><li>অপারেটর ২: বিটওয়াইজ, ?:, sizeof … পৃ. ৬</li></ul>
+    <ul class="tick"><li>অগ্রাধিকার ও এক্সপ্রেশন … পৃ. ৭</li><li>সিদ্ধান্ত: if ও switch … পৃ. ৮</li><li>লুপ ও জাম্প স্টেটমেন্ট … পৃ. ৯</li><li>রাতের পাতা পৃ. ১০ · অনুশীলন পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: program structure & tokens ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>প্রোগ্রামের গঠন ও টোকেন</span></div>
+  <h2><span class="no">১</span>C প্রোগ্রামের গঠন ও টোকেন</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> C একটি <span class="hl">স্ট্রাকচার্ড (প্রসিডিউরাল) ভাষা</span>: প্রোগ্রাম হলো কতগুলো ফাংশনের সমষ্টি, এক্সিকিউশন সবসময় <b>main()</b> থেকে শুরু হয়, আর নিয়ন্ত্রণ চলে কেবল <b>ক্রম (sequence), নির্বাচন (selection) ও পুনরাবৃত্তি (iteration)</b> দিয়ে — স্ট্রাকচার্ড প্রোগ্রামিংয়ের তিন কাঠামো (Böhm–Jacopini)। কম্পাইলার প্রথমে সোর্সকে <span class="hl">টোকেনে (Token)</span> ভাগ করে — অর্থবহ ক্ষুদ্রতম একক।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 236" width="232">
+      <g class="w">
+        <rect x="10" y="6" width="230" height="30" rx="5" class="ink fill-b"/>
+        <rect x="10" y="44" width="230" height="30" rx="5" class="ink-p fill-p"/>
+        <rect x="10" y="82" width="230" height="30" rx="5" class="ink fill-b"/>
+        <rect x="10" y="120" width="230" height="58" rx="5" class="ink-r fill-r"/>
+        <rect x="10" y="186" width="230" height="30" rx="5" class="ink-g fill-g"/>
+      </g>
+      <text x="125" y="26" text-anchor="middle" class="bn s k">/* ডকুমেন্টেশন কমেন্ট */</text>
+      <text x="125" y="64" text-anchor="middle" class="bn s p w6">#include · #define (প্রিপ্রসেসর)</text>
+      <text x="125" y="102" text-anchor="middle" class="bn s k">গ্লোবাল ডিক্লারেশন</text>
+      <text x="125" y="142" text-anchor="middle" class="r w6">int main(void) { … }</text>
+      <text x="125" y="164" text-anchor="middle" class="bn s r">আগে ডিক্লারেশন, পরে স্টেটমেন্ট</text>
+      <text x="125" y="206" text-anchor="middle" class="bn s g">ইউজার-ডিফাইন্ড ফাংশন</text>
+      <text x="125" y="232" text-anchor="middle" class="bn s k">ওপর → নিচ = সাধারণ বিন্যাস</text>
+    </svg><figcaption>পাঁচ অংশ; কেবল <b>main()</b> বাধ্যতামূলক</figcaption></figure>
+    <div>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">#include &lt;stdio.h&gt;   /* header file    */
+int global = 100;    /* global variable */
+int main(void) {     /* starts here     */
+    int local = 10;  /* local variable  */
+    printf("Sum: %d\n", global + local);
+    return 0;        /* 0 = success     */
+}</div>
+      <p class="small" style="margin-top:1mm">আউটপুট: <b>Sum: 110</b>। স্ট্রিংয়ের ভেতরের <code>\n</code> একটি <span class="hl">এস্কেপ সিকোয়েন্স (Escape sequence)</span> — একটিমাত্র অক্ষর, নতুন লাইন। <code>return 0;</code> অপারেটিং সিস্টেমকে সফলতার খবর দেয়।</p>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">টোকেনের ধরন</th><th class="l">এটি কী</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>কিওয়ার্ড (Keyword)</b></td><td class="l">নির্দিষ্ট অর্থের সংরক্ষিত শব্দ, সব <b>ছোট হাতের</b></td><td class="l">int, while, sizeof, return</td></tr>
+    <tr><td class="l"><b>আইডেন্টিফায়ার</b></td><td class="l">ভেরিয়েবল, ফাংশন বা লেবেলের জন্য তোমার দেওয়া নাম</td><td class="l">sum, _total, area2</td></tr>
+    <tr><td class="l"><b>কনস্ট্যান্ট</b></td><td class="l">সোর্সে লেখা স্থির মান</td><td class="l">25, 031, 0x19, 3.14f, 'A'</td></tr>
+    <tr><td class="l"><b>স্ট্রিং লিটারেল</b></td><td class="l">ডাবল কোটে অক্ষর, শেষে '\0' যোগ হয়</td><td class="l">"Dhaka" (6 bytes)</td></tr>
+    <tr><td class="l"><b>অপারেটর</b> / <b>পাংচুয়েটর</b></td><td class="l">অপারেন্ডে কাজ করে / আলাদা করে</td><td class="l">+ ++ &amp;&amp; ?: · ; , { } ( )</td></tr>
+  </table>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">কিওয়ার্ড</span> <span class="circ">C89/C90: ৩২টি</span> · C99 যোগ করে ৫টি (inline, restrict, _Bool, _Complex, _Imaginary) = ৩৭ · C11 আরও ৭টি = ৪৪। কিওয়ার্ড <b>নয়</b>: <code>main</code>, <code>printf</code>, <code>include</code>, <code>define</code>, <code>NULL</code>, <code>string</code>, <code>boolean</code>; <code>bool</code>/<code>true</code> আসে &lt;stdbool.h&gt; থেকে (C23-এর আগে কিওয়ার্ড নয়)।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">আইডেন্টিফায়ারের নিয়ম</span> কেবল অক্ষর, অঙ্ক ও <b>_</b>; প্রথমে <b>অঙ্ক চলবে না</b>; স্পেস বা চিহ্ন নয় (<code>my-var</code>, <code>$x</code> ✗); কিওয়ার্ড নয়; <span class="hl">কেস-সেনসিটিভ</span> (Sum ≠ sum)। অন্তত ৩১টি অক্ষর অর্থবহ (C89), C99-এ ৬৩টি।</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> কনস্ট্যান্টের উপসর্গ: "<b>0 = অক্টাল, 0x = হেক্স</b>"। 25 = <b>031</b> = <b>0x19</b>। প্রত্যয়: <b>U</b> unsigned, <b>L</b> long, <b>LL</b> long long, <b>f</b> float। শুধু <b>3.14</b> লিখলে তা <span class="hl">double</span>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>int x = 010;</code> ছাপে <span class="circ">8</span>, 10 নয় (অক্টাল)। C-তে <code>'A'</code> হলো <b>int</b> টাইপের ক্যারেক্টার কনস্ট্যান্ট, তাই <b>sizeof('A') = 4</b> (C++-এ 1); <code>"A"</code> স্ট্রিং: <b>sizeof("A") = 2</b>। <code>089</code> ভুল — 8, 9 অক্টাল অঙ্ক নয়।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: data types ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>ডেটা টাইপ, সাইজ ও রেঞ্জ</span></div>
+  <h2><span class="no">২</span>ডেটা টাইপ, সাইজ ও রেঞ্জ</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ডেটা টাইপ (Data type)</span> একটি ভেরিয়েবলের তিনটি বিষয় ঠিক করে: কত বাইট জায়গা নেবে, কোন <b>রেঞ্জের</b> মান রাখতে পারবে, আর তার ওপর কোন <b>অপারেশন</b> বৈধ। স্ট্যান্ডার্ড কেবল <b>ন্যূনতম</b> সাইজ বেঁধে দেয়; আসল সাইজ কম্পাইলার ও প্ল্যাটফর্মভেদে আলাদা — সবসময় <code>sizeof</code> দিয়ে যাচাই করো।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 132" width="560">
+    <g class="w">
+      <rect x="250" y="4" width="140" height="30" rx="8" class="ink-k fill-y"/>
+      <path class="ink" d="M286,34 L110,58 M320,34 L320,58 M354,34 L530,58"/>
+      <rect x="10" y="58" width="200" height="66" rx="8" class="ink-r fill-r"/>
+      <rect x="220" y="58" width="200" height="66" rx="8" class="ink fill-b"/>
+      <rect x="430" y="58" width="200" height="66" rx="8" class="ink-g fill-g"/>
+    </g>
+    <text x="320" y="24" text-anchor="middle" class="bn k w6">C-এর ডেটা টাইপ</text>
+    <text x="110" y="78" text-anchor="middle" class="bn r w6">মৌলিক (প্রাইমারি)</text>
+    <text x="110" y="96" text-anchor="middle" class="s">char · int · float · double</text>
+    <text x="110" y="114" text-anchor="middle" class="bn s">+ void (কোনো মান নেই)</text>
+    <text x="320" y="78" text-anchor="middle" class="bn k w6">ডিরাইভড</text>
+    <text x="320" y="96" text-anchor="middle" class="bn s">অ্যারে · পয়েন্টার · ফাংশন</text>
+    <text x="320" y="114" text-anchor="middle" class="bn s">(স্ট্যান্ডার্ডে struct, union-ও)</text>
+    <text x="530" y="78" text-anchor="middle" class="bn g w6">ইউজার-ডিফাইন্ড</text>
+    <text x="530" y="96" text-anchor="middle" class="s">struct · union · enum</text>
+    <text x="530" y="114" text-anchor="middle" class="bn s">typedef নাম</text>
+  </svg><figcaption>মডিফায়ার <b>short, long, signed, unsigned</b> মৌলিক টাইপকে বদলায়; struct ও union-কে ডিরাইভড <i>অথবা</i> ইউজার-ডিফাইন্ড বলা হয় — পরীক্ষায় দুটোই দেখা যায়</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">টাইপ</th><th>সাধারণ সাইজ</th><th class="l">রেঞ্জ (two's complement)</th><th class="l">printf</th></tr>
+    <tr><td class="l">char / signed char</td><td>1 B</td><td class="l">−128 … 127</td><td class="l">%c, %d</td></tr>
+    <tr><td class="l">unsigned char</td><td>1 B</td><td class="l">0 … 255</td><td class="l">%c, %u</td></tr>
+    <tr><td class="l">short</td><td>2 B</td><td class="l">−32,768 … 32,767</td><td class="l">%hd</td></tr>
+    <tr><td class="l">int</td><td><span class="circ">4 B</span></td><td class="l">−2,147,483,648 … 2,147,483,647</td><td class="l">%d, %i</td></tr>
+    <tr><td class="l">unsigned int</td><td>4 B</td><td class="l">0 … 4,294,967,295</td><td class="l">%u, %x, %o</td></tr>
+    <tr><td class="l">long</td><td>4 বা 8 B</td><td class="l">অন্তত ±2,147,483,647</td><td class="l">%ld</td></tr>
+    <tr><td class="l">long long</td><td>8 B</td><td class="l">≈ ±9.22 × 10<sup>18</sup></td><td class="l">%lld</td></tr>
+    <tr><td class="l">float</td><td>4 B</td><td class="l">≈ ±3.4 × 10<sup>38</sup>, <b>6–7</b> অঙ্ক</td><td class="l">%f, %e, %g</td></tr>
+    <tr><td class="l">double</td><td>8 B</td><td class="l">≈ ±1.7 × 10<sup>308</sup>, <b>15–16</b> অঙ্ক</td><td class="l">%f (scanf %lf)</td></tr>
+    <tr><td class="l">long double</td><td>8–16 B</td><td class="l">≥ double</td><td class="l">%Lf</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">ডেটা মডেল</th><th>int</th><th>long</th><th>pointer</th></tr>
+      <tr><td class="l">16-bit (Turbo C)</td><td>2</td><td>4</td><td>2</td></tr>
+      <tr><td class="l">ILP32 (32-bit)</td><td>4</td><td>4</td><td>4</td></tr>
+      <tr><td class="l"><b>LP64</b> Linux/macOS</td><td>4</td><td><b>8</b></td><td>8</td></tr>
+      <tr><td class="l"><b>LLP64</b> Windows</td><td>4</td><td><b>4</b></td><td>8</td></tr>
+    </table>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">স্ট্যান্ডার্ডের নিশ্চয়তা</span> <span class="circ">sizeof(char) = 1</span> সবসময় · 1 ≤ short ≤ int ≤ long ≤ long long · short, int ≥ 16 bit, long ≥ 32, long long ≥ 64 · n বিটের রেঞ্জ: signed <b>−2<sup>n−1</sup> … 2<sup>n−1</sup> − 1</b>, unsigned <b>0 … 2<sup>n</sup> − 1</b> · সীমা &lt;limits.h&gt; (INT_MAX) ও &lt;float.h&gt;-এ (FLT_DIG = 6)।</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ char আসলে পূর্ণসংখ্যা</span> <code>char c = 'A';</code> <code>printf("%d %c", c, c + 2);</code> → <b>65 C</b>: c + 2 হলো int 67, যা অক্ষর হিসেবে ছাপা হয়। '0' = 48 এবং 'a' − 'A' = 32।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>float f = 0.1;</code> এরপর <code>f == 0.1</code> <b>মিথ্যা</b>: 0.1 একটি double, float কপিটি কম বিটে রাউন্ড হয় (0.5 বাইনারিতে নিখুঁত, তাই সত্য)। তুলনা করো <code>fabs(a − b) &lt; 1e-6</code> দিয়ে।</div>
+  </div>
+  <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>1-2-4-8, 4-8</b>": char, short, int, long long; float, double। 16-বিট Turbo C-তে int ছোট হয়ে 2 B, তাই "16-বিট কম্পাইলারে int-এর রেঞ্জ" = <span class="hl">−32,768 … 32,767</span>।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: type conversion ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>টাইপ রূপান্তর ও ওভারফ্লো</span></div>
+  <h2><span class="no">৩</span>টাইপ রূপান্তর, কাস্টিং ও ওভারফ্লো</h2><span class="tag">আউটপুট প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ইমপ্লিসিট রূপান্তর (Implicit conversion)</span> কম্পাইলার নিজে করে: মিশ্র এক্সপ্রেশনে, অ্যাসাইনমেন্টে ও আর্গুমেন্ট পাঠানোর সময়। <span class="hl">এক্সপ্লিসিট রূপান্তর</span> হলো <b>কাস্ট (Cast)</b>, লেখা হয় <code>(type) expression</code>। কোনো অপারেশনের টাইপ ঠিক হয় তার <b>অপারেন্ড</b> দিয়ে, ফল যে ভেরিয়েবলে যাবে তা দিয়ে কখনো নয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,212px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 220 270" width="206">
+      <g class="w">
+        <rect x="40" y="6" width="140" height="26" rx="5" class="ink-r fill-r"/>
+        <rect x="40" y="40" width="140" height="26" rx="5" class="ink-r fill-r"/>
+        <rect x="40" y="74" width="140" height="26" rx="5" class="ink-r fill-r"/>
+        <rect x="40" y="108" width="140" height="26" rx="5" class="ink fill-b"/>
+        <rect x="40" y="142" width="140" height="26" rx="5" class="ink fill-b"/>
+        <rect x="40" y="176" width="140" height="26" rx="5" class="ink fill-b"/>
+        <rect x="40" y="210" width="140" height="26" rx="5" class="ink-g fill-g"/>
+        <path class="ink-p" d="M196,226 L196,18" marker-end="url(#ahp)"/>
+      </g>
+      <text x="110" y="24" text-anchor="middle" class="r w6 s">long double</text>
+      <text x="110" y="58" text-anchor="middle" class="r w6 s">double</text>
+      <text x="110" y="92" text-anchor="middle" class="r w6 s">float</text>
+      <text x="110" y="126" text-anchor="middle" class="s">(unsigned) long long</text>
+      <text x="110" y="160" text-anchor="middle" class="s">(unsigned) long</text>
+      <text x="110" y="194" text-anchor="middle" class="s">unsigned int</text>
+      <text x="110" y="228" text-anchor="middle" class="g w6 s">int ← char, short</text>
+      <text x="110" y="262" text-anchor="middle" class="bn s p">নিচের অপারেন্ড ওপরে ওঠে</text>
+    </svg><figcaption>সাধারণ গাণিতিক রূপান্তর</figcaption></figure>
+    <div>
+      <ol class="steps small" style="margin-top:0">
+        <li>প্রথমে <b>ইন্টিজার প্রমোশন (Integer promotion)</b>: যেকোনো গাণিতিক কাজের আগে char, short (signed বা unsigned) ও _Bool হয়ে যায় <span class="hl">int</span>। তাই <code>'A' + 1</code> একটি int।</li>
+        <li>কোনো অপারেন্ড <b>long double / double / float</b> হলে অন্যটিও সেই টাইপে রূপান্তরিত হয়।</li>
+        <li>নাহলে নিচু <b>র‍্যাঙ্কের</b> অপারেন্ড উঁচুটিতে ওঠে; সমান র‍্যাঙ্কে <span class="circ">unsigned জেতে</span>।</li>
+        <li><b>অ্যাসাইনমেন্ট</b> মানটিকে বাম পাশের টাইপে বদলায়: float → int <b>শূন্যের দিকে কাটে</b> (3.99 → 3, −3.99 → −3)।</li>
+      </ol>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">এক্সপ্রেশন</th><th class="l">মান</th><th class="l">কারণ</th></tr>
+        <tr><td class="l"><code>float f = 7 / 2;</code></td><td class="l"><span class="circ">3.0</span></td><td class="l">int ÷ int = 3, পরে float</td></tr>
+        <tr><td class="l"><code>(float)7 / 2</code></td><td class="l"><b>3.5</b></td><td class="l">আগে কাস্ট, 2 → float</td></tr>
+        <tr><td class="l"><code>(float)(7 / 2)</code></td><td class="l"><b>3.0</b></td><td class="l">int ভাগের পরে কাস্ট</td></tr>
+        <tr><td class="l"><code>5 / 2 * 2.0</code></td><td class="l"><b>4.0</b></td><td class="l">আগে 5/2 = 2 (বাম থেকে ডান)</td></tr>
+        <tr><td class="l"><code>int i = 3.99;</code></td><td class="l"><b>3</b></td><td class="l">ভগ্নাংশ বাদ</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">ওভারফ্লো (Overflow)</span> <b>Unsigned</b> গণিত কখনো ওভারফ্লো করে না — এটি <span class="hl">2<sup>n</sup> মডুলোতে ঘুরে আসে</span>: <code>unsigned char u = 255; u++;</code> → 0; <code>unsigned x = 0; x--;</code> → 4,294,967,295। <b>Signed</b> ওভারফ্লো (INT_MAX + 1) <span class="circ">অনির্ধারিত আচরণ</span>; বেশিরভাগ মেশিনে ঘটনাচক্রে INT_MIN-এ ঘুরে যায়। signed char-এ রেঞ্জের বাইরের মান রাখা ইমপ্লিমেন্টেশন-নির্ভর: <code>char c = 200;</code> সাধারণত <b>−56</b> (200 − 256)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ: signed বনাম unsigned</span>
+      <div class="code" style="font-size:9pt;line-height:4.5mm;margin:0.5mm 0">int i = -1;  unsigned u = 1;
+if (i &lt; u) printf("less");
+else       printf("greater");</div>
+      ছাপে <b>greater</b>: −1 unsigned-এ রূপান্তরিত হয়ে 4,294,967,295। একই কারণে <code>sizeof(int) &gt; -1</code> <b>মিথ্যা</b> (sizeof দেয় unsigned size_t)। তবে <code>unsigned char</code> ও <code>unsigned short</code> আগে int-এ প্রমোট হয়, তাই −1 &lt; (unsigned char)1 সত্য।</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>অপারেশন হয় অপারেন্ডের টাইপে; ফল রূপান্তরিত হয় কেবল নামার সময়।</b>" আগে ডান পাশ দেখো: দুটোই int ⇒ পূর্ণসংখ্যার ভাগ, বামে যে টাইপই অপেক্ষা করুক।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>printf("%f", 5 / 2);</code> %f-এ একটি <b>int</b> পাঠায় — অনির্ধারিত আচরণ (প্রায়ই 0.000000 ছাপে), 2.5 নয়। <code>printf("%d", 2.5);</code>-ও সমান ভুল। স্পেসিফায়ার টাইপের সঙ্গে মেলাও।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: operators I ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>অপারেটর ১</span></div>
+  <h2><span class="no">৪</span>অপারেটর ১: গাণিতিক থেকে ++/−−</h2><span class="tag">মূল ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">শ্রেণি</th><th class="l">অপারেটর</th><th class="l">ফল / মন্তব্য</th></tr>
+    <tr><td class="l"><b>গাণিতিক (Arithmetic)</b></td><td class="l">+ − * / %</td><td class="l">% শুধু <b>পূর্ণসংখ্যায়</b> (float-এ fmod())</td></tr>
+    <tr><td class="l"><b>সম্পর্কসূচক (Relational)</b></td><td class="l">&lt; &lt;= &gt; &gt;= == !=</td><td class="l">int <b>1</b> (সত্য) বা <b>0</b> (মিথ্যা)</td></tr>
+    <tr><td class="l"><b>যৌক্তিক (Logical)</b></td><td class="l">&amp;&amp; || !</td><td class="l">1 বা 0; যেকোনো অশূন্য মান সত্য</td></tr>
+    <tr><td class="l"><b>অ্যাসাইনমেন্ট</b></td><td class="l">= += −= *= /= %= &amp;= |= ^= &lt;&lt;= &gt;&gt;=</td><td class="l"><code>a *= b + 1</code> মানে a = a * (b + 1)</td></tr>
+    <tr><td class="l"><b>ইনক্রিমেন্ট/ডিক্রিমেন্ট</b></td><td class="l">++ −− (প্রিফিক্স ও পোস্টফিক্স)</td><td class="l">কেবল পরিবর্তনযোগ্য ভেরিয়েবলে (lvalue)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def small" style="margin-top:0"><span class="lbl">পূর্ণসংখ্যার / ও % (C99 নিয়ম)</span> ভাগফল <span class="hl">শূন্যের দিকে কাটা হয়</span>; ভাগশেষ পায় <b>ভাজ্যের চিহ্ন</b>, যাতে (a / b) * b + a % b == a সবসময় সত্য থাকে।
+      <table class="hand tiny" style="width:100%;margin-top:1mm">
+        <tr><th class="l">a, b</th><th>a / b</th><th>a % b</th></tr>
+        <tr><td class="l">17, 5</td><td>3</td><td>2</td></tr>
+        <tr><td class="l">−7, 2</td><td><span class="circ">−3</span></td><td><span class="circ">−1</span></td></tr>
+        <tr><td class="l">7, −2</td><td>−3</td><td>1</td></tr>
+        <tr><td class="l">−7, −2</td><td>3</td><td>−1</td></tr>
+      </table>
+      শূন্য দিয়ে পূর্ণসংখ্যার ভাগ অনির্ধারিত (সাধারণত ক্র্যাশ)।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ শর্ট-সার্কিট</span>
+      <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin:0.5mm 0">int a = 0, b = 5;
+if (a &amp;&amp; ++b) ;   /* ++b skipped  */
+if (a || ++b) ;   /* ++b runs     */
+printf("%d", b);  /* 6            */</div>
+      <b>&amp;&amp;</b> প্রথম মিথ্যা অপারেন্ডে থামে, <b>||</b> প্রথম সত্যটিতে। চিরায়ত প্রশ্ন: <code>i = 1, j = 0; k = i++ || j++;</code> → i = 2, <span class="circ">j = 0</span>, k = 1, কারণ i++ দিয়েছে 1 (সত্য), তাই j++ চলেইনি।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 260 150" width="246">
+      <g class="w">
+        <rect x="8" y="10" width="244" height="58" rx="8" class="ink-g fill-g"/>
+        <rect x="8" y="82" width="244" height="58" rx="8" class="ink-r fill-r"/>
+        <path class="ink-g" d="M88,48 L118,48" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M88,120 L118,120" marker-end="url(#ah)"/>
+      </g>
+      <text x="130" y="30" text-anchor="middle" class="bn g w6">++a  (প্রিফিক্স)</text>
+      <text x="18" y="53" class="s">a = a+1</text>
+      <text x="126" y="53" class="bn s">তারপর নতুন a</text>
+      <text x="130" y="102" text-anchor="middle" class="bn r w6">a++  (পোস্টফিক্স)</text>
+      <text x="18" y="125" class="bn s">পুরোনো a দাও</text>
+      <text x="126" y="125" class="bn s">তারপর a = a+1</text>
+    </svg><figcaption>দুই ক্ষেত্রেই a এক বাড়ে; শুধু এক্সপ্রেশনকে দেওয়া মানটি আলাদা</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ প্রি বনাম পোস্ট</span>
+      <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin:0.5mm 0">int a = 5, b, c;
+b = a++;    /* b = 5, then a = 6 */
+c = ++a;    /* a = 7, then c = 7 */
+printf("%d %d %d", a, b, c);</div>
+      আউটপুট: <span class="circ">7 5 7</span>। আলাদা স্টেটমেন্ট হিসেবে <code>a++;</code> ও <code>++a;</code> একই কাজ করে।</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <code>10 &gt; 5 &gt; 2</code>-এর মান <b>0</b>: (10 &gt; 5) = 1, তারপর 1 &gt; 2 = 0। (ii) <code>!5</code> = 0, <code>!!7</code> = 1। (iii) <code>5++</code>, <code>(a + b)++</code> কম্পাইল এরর — এরা lvalue নয়। (iv) <code>x = x++;</code> অনির্ধারিত, পাতা ৭ দেখো।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> অবস্থান পড়ো: "<b>++ আগে = আগে বদল; ++ পরে = পরে বদল</b>।" যুক্তির জন্য: "<b>AND থামে একটি শূন্যে, OR থামে একটি অশূন্যে</b>" — তার পরের অংশ আর মূল্যায়িত হয় না।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: operators II ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>অপারেটর ২</span></div>
+  <h2><span class="no">৫</span>অপারেটর ২: বিটওয়াইজ, শিফট, ?:, কমা, sizeof</h2><span class="tag">বিট কৌশল ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">বিটওয়াইজ অপারেটর (Bitwise operator)</span> <b>পূর্ণসংখ্যা</b> অপারেন্ডের প্রতিটি বিটে কাজ করে: &amp; (AND), | (OR), ^ (XOR), ~ (ওয়ান'স কমপ্লিমেন্ট, ইউনারি), &lt;&lt; (বাম শিফট), &gt;&gt; (ডান শিফট)। float বা double-এ এগুলো চলে না।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,300px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 196" width="290">
+      <g class="w">
+        <rect x="96" y="8" width="132" height="24" rx="3" class="ink fill-b"/>
+        <rect x="96" y="38" width="132" height="24" rx="3" class="ink fill-b"/>
+        <path class="ink-k" d="M90,70 H236"/>
+        <rect x="96" y="78" width="132" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="96" y="106" width="132" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="96" y="134" width="132" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="96" y="162" width="132" height="24" rx="3" class="ink-r fill-r"/>
+      </g>
+      <text x="10" y="26" class="k w6">a = 12</text><text x="162" y="26" text-anchor="middle" class="k w6">1 1 0 0</text>
+      <text x="10" y="56" class="k w6">b = 10</text><text x="162" y="56" text-anchor="middle" class="k w6">1 0 1 0</text>
+      <text x="10" y="96" class="g w6">a &amp; b</text><text x="162" y="96" text-anchor="middle" class="g w6">1 0 0 0</text><text x="246" y="96" class="g w6">= 8</text>
+      <text x="10" y="124" class="g w6">a | b</text><text x="162" y="124" text-anchor="middle" class="g w6">1 1 1 0</text><text x="246" y="124" class="g w6">= 14</text>
+      <text x="10" y="152" class="g w6">a ^ b</text><text x="162" y="152" text-anchor="middle" class="g w6">0 1 1 0</text><text x="246" y="152" class="g w6">= 6</text>
+      <text x="10" y="180" class="r w6">a &gt;&gt; 2</text><text x="162" y="180" text-anchor="middle" class="r w6">0 0 1 1</text><text x="246" y="180" class="r w6">= 3</text>
+    </svg><figcaption>12 ও 10 বিট ধরে ধরে; a &lt;&lt; 2 = 48, ~a = −13</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">নিয়ম</th><th class="l">তথ্য</th></tr>
+        <tr><td class="l">x &lt;&lt; n</td><td class="l">x × 2<sup>n</sup> (ওভারফ্লো না হলে)</td></tr>
+        <tr><td class="l">x &gt;&gt; n</td><td class="l">x ÷ 2<sup>n</sup>, ফ্লোর, x ≥ 0 হলে</td></tr>
+        <tr><td class="l">~x (int)</td><td class="l"><span class="circ">−x − 1</span>: ~5 = −6, ~0 = −1</td></tr>
+        <tr><td class="l">ঋণাত্মক &gt;&gt;</td><td class="l">ইমপ্লিমেন্টেশন-নির্ভর</td></tr>
+        <tr><td class="l">শিফট ≥ প্রস্থ</td><td class="l">অনির্ধারিত আচরণ</td></tr>
+      </table>
+      <div class="trick small"><span class="lbl">বিট কৌশল</span> <b>x &amp; 1</b> → বিজোড় যাচাই · <b>x &amp; (x − 1)</b> == 0 → 2-এর ঘাত (x &gt; 0) · k-তম বিট সেট: <b>x | (1 &lt;&lt; k)</b> · ক্লিয়ার: <b>x &amp; ~(1 &lt;&lt; k)</b> · টগল: <b>x ^ (1 &lt;&lt; k)</b> · অদলবদল: a ^= b; b ^= a; a ^= b।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">শর্তসাপেক্ষ (Ternary) ?:</span> <code>c ? e1 : e2</code> — তিন অপারেন্ডের একমাত্র অপারেটর; e1, e2-এর <b>কেবল একটি</b> মূল্যায়িত হয়। ডান থেকে বামে যুক্ত হয়: <code>a &gt; b ? (a &gt; c ? a : c) : (b &gt; c ? b : c)</code> তিনটির বৃহত্তম দেয়। <code>printf("%s", 7 % 2 ? "odd" : "even");</code> → odd।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">কমা অপারেটর (Comma)</span> বাম থেকে ডানে মূল্যায়ন করে; মান হয় <span class="hl">সবচেয়ে ডানের অপারেন্ড</span>; এর অগ্রাধিকার <b>সর্বনিম্ন</b>। <code>x = (1, 2, 3);</code> → x = 3, কিন্তু <code>x = 1, 2, 3;</code> → x = 1 (= আগে যুক্ত হয়)। ফাংশন আর্গুমেন্ট বা ডিক্লারেশনের কমা বিভাজক, এই অপারেটর নয়।</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ sizeof মূল্যায়ন করে না</span>
+      <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin:0.5mm 0">int i = 5;
+int s = sizeof(i++);
+printf("%d %d", i, s);   /* 5 4 */</div>
+      <span class="hl">sizeof</span> একটি <b>কম্পাইল-টাইম ইউনারি অপারেটর</b> (এবং কিওয়ার্ড): এর শুধু টাইপ লাগে, তাই i++ চলে না। ফলের টাইপ size_t, ছাপো <b>%zu</b> দিয়ে। বন্ধনী লাগে কেবল টাইপের নামে: <code>sizeof x</code>, <code>sizeof(int)</code>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) যৌক্তিক বনাম বিটওয়াইজ: <code>2 &amp;&amp; 1</code> = <b>1</b> কিন্তু <code>2 &amp; 1</code> = <span class="circ">0</span>। (ii) ^ হলো XOR, ঘাত <b>নয়</b> — 2 ^ 3 = 1; ঘাতের জন্য pow()। (iii) sizeof(3.14) = 8 (double), sizeof(3.14f) = 4। (iv) পয়েন্টার অপারেটর &amp; ও *, এবং মেম্বার অপারেটর . ও −&gt; পয়েন্টার ও স্ট্রাকচার লেসনে আছে।</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ 1-বিট গোনা</span>
+    <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);margin-top:0.5mm;align-items:start">
+      <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin:0">int n = 13, c = 0;   /* 1101 */
+while (n) {
+    n &amp;= n - 1;      /* drop lowest 1 */
+    c++;
+}
+printf("%d", c);     /* 3 */</div>
+      <p class="tiny" style="margin:0">13 = 1101 → 1100 → 1000 → 0000: প্রতিটি সেট বিটে লুপ একবার চলে, তাই ছাপে <b>3</b>। একই <b>n &amp; (n − 1)</b> ধারণায় 2-এর ঘাত যাচাই হয়। ঋণাত্মক সংখ্যা রাখা হয় <span class="hl">টু'স কমপ্লিমেন্টে (Two's complement)</span>: <b>−x = ~x + 1</b>, তাই 8 বিটে −13 = 1111 0011।</p>
+    </div></div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: precedence & expressions ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>অগ্রাধিকার ও এক্সপ্রেশন</span></div>
+  <h2><span class="no">৬</span>অগ্রাধিকার, অ্যাসোসিয়েটিভিটি ও এক্সপ্রেশন</h2><span class="tag">MCQ-এর প্রিয় ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th>#</th><th class="l">অপারেটর (উঁচু → নিচু)</th><th>দিক</th></tr>
+      <tr><td>1</td><td class="l">() [] −&gt; . &nbsp;postfix ++ −−</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td>2</td><td class="l">unary + − ! ~ prefix ++ −− * &amp; sizeof (type)</td><td style="white-space:nowrap"><span class="circ">R → L</span></td></tr>
+      <tr><td>3</td><td class="l">* / %</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td>4</td><td class="l">+ −</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td>5</td><td class="l">&lt;&lt; &gt;&gt;</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td>6</td><td class="l">&lt; &lt;= &gt; &gt;=</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td>7</td><td class="l">== !=</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td style="white-space:nowrap">8–10</td><td class="l">&amp;, তারপর ^, তারপর |</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td style="white-space:nowrap">11–12</td><td class="l">&amp;&amp;, তারপর ||</td><td style="white-space:nowrap">L → R</td></tr>
+      <tr><td>13</td><td class="l">?:</td><td style="white-space:nowrap"><b>R → L</b></td></tr>
+      <tr><td>14</td><td class="l">= += −= *= /= %= &amp;= ^= |= &lt;&lt;= &gt;&gt;=</td><td style="white-space:nowrap"><b>R → L</b></td></tr>
+      <tr><td>15</td><td class="l">, (কমা)</td><td style="white-space:nowrap">L → R</td></tr>
+    </table>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<span class="hl">PUMA'S REBL TAC</span>": <b>P</b>ostfix, <b>U</b>nary, <b>M</b>ultiplicative, <b>A</b>dditive, <b>S</b>hift, <b>R</b>elational, <b>E</b>quality, <b>B</b>itwise (&amp; ^ |), <b>L</b>ogical (&amp;&amp; ||), <b>T</b>ernary, <b>A</b>ssignment, <b>C</b>omma। কেবল <b>ইউনারি, টারনারি, অ্যাসাইনমেন্ট</b> ডান থেকে বামে যুক্ত হয়।</div>
+      <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ মান বের করো</span>
+        <b>(ক)</b> <code>2 + 3 * 4 % 5 - 6 / 4</code> → 12 % 5 = 2, 6 / 4 = 1 → <b>3</b>।
+        <b>(খ)</b> a = 10, b = 20, c = 30: <code>a + b * c / 10 % 7</code> → 600 / 10 = 60, 60 % 7 = 4 → <b>14</b>।
+        <b>(গ)</b> <code>1 &lt;&lt; 2 + 1</code> → আগে + → 1 &lt;&lt; 3 = <b>8</b>।
+        <b>(ঘ)</b> <code>5 &amp; 3 | 4</code> → (1) | 4 = <b>5</b>।
+        <b>(ঙ)</b> <code>a = b = c = 5</code> → ডান থেকে বামে, সবাই <b>5</b>।</div>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>if (x &amp; 1 == 0)</code> পার্স হয় <b>x &amp; (1 == 0)</b> = x &amp; 0 = <span class="circ">সবসময় 0</span> — বিটওয়াইজ অপারেটর == এর <b>নিচে</b>, তাই লেখো <code>(x &amp; 1) == 0</code>। একইভাবে <code>*p++</code> মানে <b>*(p++)</b>, আর <code>!a + b</code> মানে (!a) + b।</div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">এক্সপ্রেশন · lvalue · rvalue</span> <span class="hl">এক্সপ্রেশন (Expression)</span> হলো অপারেটর দিয়ে জোড়া অপারেন্ড, যা একটি মান দেয় (গাণিতিক, সম্পর্কসূচক, যৌক্তিক, শর্তসাপেক্ষ, অ্যাসাইনমেন্ট)। <b>lvalue</b> একটি মেমোরি অবস্থান নির্দেশ করে, = এর বামে বসতে পারে; <b>rvalue</b> কেবল একটি মান। <code>5 = x</code>, <code>a + b = c</code>, <code>x++ = 3</code> এরর। অ্যাসাইনমেন্ট নিজেও এক্সপ্রেশন: <code>while ((ch = getchar()) != EOF)</code>।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">সিকোয়েন্স পয়েন্ট ও অনির্ধারিত আচরণ</span> মাঝে কোনো <span class="hl">সিকোয়েন্স পয়েন্ট (Sequence point)</span> ছাড়া একটি ভেরিয়েবল <b>দুবার</b> বদলানো, বা বদলানোর সঙ্গে পড়াও, <span class="circ">অনির্ধারিত</span>: <code>i = i++;</code> · <code>i = ++i + i++;</code> · <code>a[i] = i++;</code> · <code>printf("%d %d", i, i++);</code>। সিকোয়েন্স পয়েন্ট: পূর্ণ এক্সপ্রেশনের শেষ (;), <b>&amp;&amp;, ||, ?:</b> ও কমা অপারেটরের বাম অপারেন্ডের পরে, এবং ফাংশন কলের ঠিক আগে।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>অগ্রাধিকার মানে মূল্যায়নের ক্রম নয়।</b> <code>f() + g() * h()</code>-এ গুণটি আগে গ্রুপ হয়, কিন্তু কম্পাইলার f, g, h যেকোনো ক্রমে <b>কল</b> করতে পারে; ফাংশন আর্গুমেন্টের মূল্যায়ন-ক্রমও অনির্দিষ্ট। <code>i = i++ + ++i</code>-এর MCQ উত্তর "অনির্ধারিত / কম্পাইলার-নির্ভর"। <b>gcc -Wall</b> সতর্ক করে "operation on 'i' may be undefined"।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: if & switch ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>সিদ্ধান্ত: if ও switch</span></div>
+  <h2><span class="no">৭</span>সিদ্ধান্ত গ্রহণ: if, else-if ল্যাডার, switch</h2><span class="tag">নির্বাচন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">সিলেকশন স্টেটমেন্ট (Selection statement)</span> কয়েকটি পথ থেকে একটি বেছে নেয়। শর্ত যেকোনো স্কেলার এক্সপ্রেশন: <b>শূন্য = মিথ্যা, যেকোনো অশূন্য মান (এমনকি −1) = সত্য</b>। রূপ: <b>if</b>, <b>if-else</b>, <b>else-if ল্যাডার</b>, <b>নেস্টেড if</b>, এবং একটি পূর্ণসংখ্যার মানে অনেক সমতা-যাচাইয়ের জন্য <b>switch</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,220px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 230 214" width="214">
+      <g class="w">
+        <path class="ink-k fill-y" d="M115,8 L185,48 L115,88 L45,48 Z"/>
+        <rect x="4" y="126" width="96" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="130" y="126" width="96" height="34" rx="6" class="ink-r fill-r"/>
+        <rect x="70" y="182" width="90" height="26" rx="12" class="ink fill-b"/>
+        <path class="ink-g" d="M45,48 L52,48 L52,124" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M185,48 L178,48 L178,124" marker-end="url(#ah)"/>
+        <path class="ink" d="M52,160 L52,170 L112,170 L112,180 M178,160 L178,170 L118,170" marker-end="url(#ahb)"/>
+      </g>
+      <text x="115" y="53" text-anchor="middle" class="k w6">marks ≥ 40 ?</text>
+      <text x="46" y="102" text-anchor="end" class="bn g s">সত্য</text><text x="46" y="116" text-anchor="end" class="g s">(≠ 0)</text>
+      <text x="184" y="102" class="bn r s">মিথ্যা</text><text x="184" y="116" class="r s">(0)</text>
+      <text x="52" y="148" text-anchor="middle" class="g w6 s">"Pass"</text>
+      <text x="178" y="148" text-anchor="middle" class="r w6 s">"Fail"</text>
+      <text x="115" y="200" text-anchor="middle" class="bn s k">পরের স্টেটমেন্ট</text>
+    </svg><figcaption>if-else: ঠিক একটি শাখা চলে</figcaption></figure>
+    <div>
+      <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">if (marks &gt;= 80)      printf("A");
+else if (marks &gt;= 60) printf("B");
+else if (marks &gt;= 40) printf("C");
+else                  printf("F");</div>
+      <p class="small" style="margin-top:1mm"><b>else-if ল্যাডার</b> ওপর থেকে নিচে যাচাই হয় এবং <b>প্রথম সত্য</b> শর্তে থেমে যায়, তাই শর্তগুলো কঠোরতম থেকে নিচের দিকে সাজাও: marks = 85 হলে কেবল <b>A</b> ছাপে।</p>
+      <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ড্যাংলিং else</span>
+        <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin:0.5mm 0">int a = 5, b = 10;
+if (a &gt; 10)
+    if (b &gt; 5) printf("X");
+else printf("Y");</div>
+        <span class="circ">কিছুই ছাপে না</span>: else যুক্ত হয় <b>সবচেয়ে কাছের জোড়াহীন if-এর</b> সঙ্গে, ইনডেন্টেশন যা-ই বলুক। ব্রেস ব্যবহার করো।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <code>if (x = 0)</code> 0 <b>অ্যাসাইন</b> করে → সবসময় মিথ্যা; <code>if (x = 10)</code> → সবসময় সত্য, আর x হয় 10। (ii) <code>if (x == 5);</code> — বাড়তি সেমিকোলনটি ফাঁকা বডি, তাই পরের লাইন সবসময় চলে। (iii) <code>5 == x</code> লিখলে টাইপো <code>5 = x</code> কম্পাইল এরর দেয়।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">switch-এর নিয়ম</span> এক্সপ্রেশনটি হতে হবে <span class="hl">পূর্ণসংখ্যা টাইপ</span> (int, char, enum) — float বা স্ট্রিং নয়। case লেবেল <b>পূর্ণসংখ্যার কনস্ট্যান্ট এক্সপ্রেশন</b>, অনন্য, রেঞ্জ নয়। <b>default</b> ঐচ্ছিক, যেকোনো জায়গায় বসতে পারে। <b>break</b> না থাকলে নিয়ন্ত্রণ পরের case-এ <span class="circ">ফল-থ্রু করে</span>।</div>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ফল-থ্রু</span>
+      <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin:0.5mm 0">int n = 2;
+switch (n) {
+  case 1: printf("A");
+  case 2: printf("B");
+  case 3: printf("C"); break;
+  default: printf("D");
+}</div>
+      case 2-এ লাফ দেয়, B ছাপে, case 3-এ গড়িয়ে C ছাপে, তারপর break → <b>BC</b>।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ প্রথমে default</span>
+      <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin:0.5mm 0">int n = 5;
+switch (n) {
+  default: printf("D");
+  case 1:  printf("A"); break;
+  case 2:  printf("B");
+}</div>
+      কোনো case মেলে না, তাই নিয়ন্ত্রণ যায় default-এ, <b>সেটি যেখানেই থাকুক</b>: D, তারপর case 1-এ গড়িয়ে A, break → <b>DA</b>।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>switch হলো লিফট, সিঁড়ি নয়</b>": সরাসরি মিলে যাওয়া তলায় যায়, তারপর <b>break</b> না থামানো পর্যন্ত নিচে নামতেই থাকে। একটি পূর্ণসংখ্যাকে কনস্ট্যান্টের সঙ্গে তুলনায় <b>switch</b> (প্রায়ই দ্রুত জাম্প টেবিলে কম্পাইল হয়); রেঞ্জ, float, স্ট্রিং বা মিশ্র শর্তে <b>if ল্যাডার</b>।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: loops & jumps ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>লুপ ও জাম্প স্টেটমেন্ট</span></div>
+  <h2><span class="no">৮</span>লুপ (পুনরাবৃত্তি) ও জাম্প স্টেটমেন্ট</h2><span class="tag">আউটপুট ট্রেসিং ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,250px);align-items:start">
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">লুপ</th><th class="l">যাচাই</th><th class="l">বডি চলে</th></tr>
+      <tr><td class="l" style="white-space:nowrap"><code>while (c) S</code></td><td class="l">শুরুতে</td><td class="l">০ বা তার বেশি বার</td></tr>
+      <tr><td class="l" style="white-space:nowrap"><code>for (i; c; u) S</code></td><td class="l">শুরুতে</td><td class="l">০ বা বেশি; অংশগুলো ঐচ্ছিক, ফাঁকা c = সত্য</td></tr>
+      <tr><td class="l" style="white-space:nowrap"><code>do S while (c);</code></td><td class="l">শেষে</td><td class="l"><span class="circ">অন্তত একবার</span></td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="240">
+      <g class="w">
+        <path class="ink-k fill-y" d="M60,14 L104,36 L60,58 L16,36 Z"/>
+        <rect x="18" y="84" width="84" height="28" rx="5" class="ink-g fill-g"/>
+        <path class="ink-g" d="M60,58 L60,82" marker-end="url(#ahg)"/>
+        <path class="ink" d="M18,98 L6,98 L6,36 L14,36" marker-end="url(#ahb)"/>
+        <rect x="148" y="14" width="84" height="28" rx="5" class="ink-g fill-g"/>
+        <path class="ink-k fill-y" d="M190,62 L234,84 L190,106 L146,84 Z"/>
+        <path class="ink-g" d="M190,42 L190,60" marker-end="url(#ahg)"/>
+        <path class="ink" d="M146,84 L136,84 L136,28 L146,28" marker-end="url(#ahb)"/>
+      </g>
+      <text x="60" y="41" text-anchor="middle" class="bn s k">যাচাই?</text>
+      <text x="60" y="103" text-anchor="middle" class="bn s g w6">বডি</text>
+      <text x="190" y="33" text-anchor="middle" class="bn s g w6">বডি</text>
+      <text x="190" y="89" text-anchor="middle" class="bn s k">যাচাই?</text>
+      <text x="60" y="138" text-anchor="middle" class="bn s r w6">while: আগে যাচাই</text>
+      <text x="190" y="138" text-anchor="middle" class="bn s r w6">do-while: আগে বডি</text>
+    </svg><figcaption>এন্ট্রি বনাম এক্সিট নিয়ন্ত্রণ</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট ট্রেস করো</span>
+    <div class="cols" style="margin-top:0.5mm">
+      <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">/* (a) */ for (i = 0; i &lt; 5; i++);
+          printf("%d", i);        /* 5    */
+/* (b) */ for (i = 1; i &lt;= 100; i *= 2)
+              count++;            /* 7    */
+/* (c) */ i = 10;
+          do printf("%d", i);
+          while (i &lt; 5);          /* 10   */
+/* (d) */ n = 3;
+          while (n--) printf("%d", n);
+                                  /* 210  */</div>
+      <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">/* (e) */ i = 0;
+while (i &lt; 5) {
+    if (i == 2) { i++; continue; }
+    printf("%d", i);  i++;
+}                        /* 0134 */
+/* (f) */
+for (i = 1; i &lt;= 3; i++)
+  for (j = 1; j &lt;= 3; j++) {
+    if (j == 2) break;
+    printf("%d%d ", i, j);
+  }                      /* 11 21 31 */</div>
+    </div>
+    (a) for-এর পরের <b>;</b> একটি ফাঁকা বডি, তাই শুধু শেষ i = 5 ছাপা হয়। (b) i = 1, 2, 4, 8, 16, 32, 64 → <span class="circ">৭ বার চলে</span>। (c) 10 &lt; 5 মিথ্যা হলেও do-while একবার ছাপে। (d) যাচাই হয় পুরোনো n দিয়ে, বডি দেখে নতুনটি; শেষে n = −1। (f) <b>break</b> কেবল <b>সবচেয়ে ভেতরের</b> লুপ ছাড়ে।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">জাম্প</th><th class="l">প্রভাব</th><th class="l">সাবধান</th></tr>
+    <tr><td class="l"><b>break</b></td><td class="l">সবচেয়ে ভেতরের লুপ বা switch থেকে বের হয়</td><td class="l">শুধু if-এর ভেতরে (লুপ ছাড়া) চলে না</td></tr>
+    <tr><td class="l"><b>continue</b></td><td class="l">পরের পুনরাবৃত্তিতে যায় (শুধু লুপে)</td><td class="l">for-এ যায় <b>আপডেটে</b>; while-এ <b>যাচাইয়ে</b></td></tr>
+    <tr><td class="l"><b>goto</b> label</td><td class="l">একই ফাংশনের ভেতরে শর্তহীন লাফ</td><td class="l">বৈধ ব্যবহার: নেস্টেড লুপ থেকে বের হওয়া, ক্লিনআপ</td></tr>
+    <tr><td class="l"><b>return</b></td><td class="l">ফাংশন ছেড়ে যায় (ফাংশন লেসন)</td><td class="l"><code>exit()</code> লাইব্রেরি ফাংশন, জাম্প স্টেটমেন্ট নয়</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ: অসীম লুপ</span> (i) <code>while (i &lt; 5) { if (i == 2) continue; i++; }</code> — continue i++ এড়িয়ে যায়, তাই i চিরকাল 2। (ii) <code>for (unsigned u = 10; u &gt;= 0; u--)</code> কখনো শেষ হয় না: unsigned মান <b>সবসময় ≥ 0</b>। (iii) <code>for (;;)</code> ও <code>while (1)</code> ইচ্ছাকৃত অসীম লুপ।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>do-while হলো সেই ওয়েটার, যে আগে পরিবেশন করে, পরে জিজ্ঞেস করে</b>।" যোগভিত্তিক লুপে পুনরাবৃত্তি = <b>(শেষ − শুরু) / ধাপ + 1</b>: for (i = 0; i &lt; 10; i += 3) → 0, 3, 6, 9 → ৪ বার। <code>for (int i = 0; …)</code> লাগে <b>C99</b>; পুরোনো C89 কম্পাইলার মানে না।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পাতা</span>
+    <div class="fgrid small">
+      <p>কিওয়ার্ড: ৩২ (C89), ৩৭ (C99)</p><p>আইডেন্টিফায়ার: প্রথমে অঙ্ক নয়</p>
+      <p>010 = 8 · 0x1F = 31</p><p>C-তে sizeof('A') = 4</p>
+      <p>char 1 · short 2 · int 4 · long long 8</p><p>float 4 (6–7 অঙ্ক) · double 8 (15–16)</p>
+      <p>long: LP64-এ 8, Windows-এ 4</p><p>16-bit int: −32,768 … 32,767</p>
+      <p>char, short → আগে int</p><p>সমান র‍্যাঙ্ক: unsigned জেতে</p>
+      <p>float → int শূন্যের দিকে কাটে</p><p>unsigned ঘোরে mod 2<sup>n</sup></p>
+      <p>−7 / 2 = −3 · −7 % 2 = −1</p><p>% এর চিহ্ন = ভাজ্যের চিহ্ন</p>
+      <p>~x = −x − 1</p><p>x &lt;&lt; n = x × 2<sup>n</sup></p>
+      <p>কমা: ডানেরটির মান</p><p>sizeof: মূল্যায়ন হয় না</p>
+      <p>else → নিকটতম if</p><p>switch: শুধু পূর্ণসংখ্যা</p>
+    </div>
+  </div>
+  <h3>MCQ-এর সেরা ১২ এক-লাইন</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li><code>float f = 7/2;</code> → <b>3.0</b></li>
+      <li><code>-1 &lt; 1u</code> → <b>0</b> (মিথ্যা)</li>
+      <li><code>b = a++</code> নেয় <b>পুরোনো</b> a</li>
+      <li><code>k = i++ || j++</code> → j++ চলে না</li>
+      <li><code>x &amp; 1 == 0</code> → x &amp; 0</li>
+      <li><code>i = i++</code> → <b>অনির্ধারিত</b></li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>কেবল unary, ?:, = ডান → বাম</li>
+      <li>সর্বনিম্ন অগ্রাধিকার: <b>কমা</b></li>
+      <li>break নেই ⇒ <b>ফল-থ্রু</b></li>
+      <li>default যেকোনো জায়গায় বসে</li>
+      <li>do-while: <b>অন্তত একবার</b></li>
+      <li>break ছাড়ে <b>ভেতরের</b> লুপটি</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> বাম পাশের টাইপ অপারেশন বদলায় না (7/2 তবুও 3) · ^ হলো XOR, ঘাত নয় · 2 &amp;&amp; 1 = 1 কিন্তু 2 &amp; 1 = 0 · float == float অনির্ভরযোগ্য · unsigned u &gt;= 0 সবসময় সত্য · <code>if (x = 0)</code> অ্যাসাইন করে · for/if/while-এর পরে বাড়তি <b>;</b> বডি ফাঁকা করে · অগ্রাধিকার ≠ মূল্যায়নের ক্রম · <code>printf("%f", 5/2)</code> অনির্ধারিত।</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> "0 = অক্টাল, 0x = হেক্স" · "1-2-4-8, 4-8" · "অপারেশন অপারেন্ডের টাইপে; ফল বদলায় নামার সময়" · "++ আগে = আগে বদল" · "AND থামে শূন্যে, OR থামে অশূন্যে" · PUMA'S REBL TAC · "switch লিফট, সিঁড়ি নয়" · "do-while আগে পরিবেশন করে, পরে জিজ্ঞেস করে"।</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="486">
+    <g class="w">
+      <rect x="8" y="10" width="240" height="74" rx="10" class="ink-g fill-g"/>
+      <rect x="272" y="10" width="240" height="74" rx="10" class="ink-r fill-r"/>
+    </g>
+    <text x="128" y="36" text-anchor="middle" class="bn g w6 l">নির্ধারিত</text>
+    <text x="128" y="56" text-anchor="middle" class="bn g s">unsigned ঘোরা · একা i++ · a &amp;&amp; b++</text>
+    <text x="128" y="74" text-anchor="middle" class="bn g s">সঠিক আউটপুট লেখো</text>
+    <text x="392" y="36" text-anchor="middle" class="bn r w6 l">অনির্ধারিত</text>
+    <text x="392" y="56" text-anchor="middle" class="r s">i = i++ · INT_MAX + 1 · x / 0</text>
+    <text x="392" y="74" text-anchor="middle" class="bn r s">উত্তর "কম্পাইলার-নির্ভর"</text>
+    <text x="260" y="102" text-anchor="middle" class="bn p s">আগে বাক্স ঠিক করো, তারপর ট্রেস করো</text>
+  </svg><figcaption>প্রতিটি "আউটপুট কী হবে" প্রশ্নে প্রথম যা জিজ্ঞেস করতে হয়</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · ডেটা টাইপ ও অপারেটর</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>gcc, 64-bit Linux-এ sizeof(int):<ol class="opts"><li>2</li><li>4</li><li>8</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>printf("%d", -7 / 2) ছাপে:<ol class="opts"><li>−4</li><li>3</li><li>−3</li><li>−3.5</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>C-তে কোনটি কিওয়ার্ড <b>নয়</b>:<ol class="opts"><li>sizeof</li><li>volatile</li><li>goto</li><li>string</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>a = 5; b = a++ + 2; b কত:<ol class="opts"><li>7</li><li>8</li><li>6</li><li>অনির্ধারিত</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>-1 &lt; 1u-এর মান:<ol class="opts"><li>1</li><li>0</li><li>এরর</li><li>−1</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>বডি অন্তত একবার চলে:<ol class="opts"><li>do-while</li><li>for</li><li>while</li><li>কোনোটিই নয়</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>সর্বনিম্ন অগ্রাধিকার:<ol class="opts"><li>=</li><li>?:</li><li>, (কমা)</li><li>||</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>C-তে sizeof('A') (int = 4 B):<ol class="opts"><li>4</li><li>1</li><li>2</li><li>8</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>5 &amp; 3 | 4-এর মান:<ol class="opts"><li>7</li><li>1</li><li>4</li><li>5</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>int x = 010; printf("%d", x);<ol class="opts"><li>10</li><li>8</li><li>2</li><li>16</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ঘ · ৪-ক · ৫-খ · ৬-ক · ৭-গ · ৮-ক · ৯-ঘ · ১০-খ</div>
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> (ক) ফ্লোচার্টসহ <b>while</b> ও <b>do-while</b>-এর পার্থক্য লেখো। (খ) নিচের প্রোগ্রামের আউটপুট ট্রেস করো। (গ) একটি পূর্ণসংখ্যা পড়ে তার অঙ্কগুলোর যোগফল ছাপে এমন C প্রোগ্রাম লেখো। <i class="mk">১০</i>
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0.5mm 0">int i, s = 0;
+for (i = 1; i &lt;= 5; i++)
+    switch (i % 3) {
+        case 0:  s += 10; break;
+        case 1:  s += 1;
+        default: s += 2;
+    }
+printf("%d", s);</div></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>(ক)</b> while <b>এন্ট্রি-নিয়ন্ত্রিত</b>: আগে যাচাই, পরে বডি, তাই ০ বারও চলতে পারে। do-while <b>এক্সিট-নিয়ন্ত্রিত</b>: আগে বডি, পরে যাচাই, তাই অন্তত একবার চলে এবং শেষ হয় <code>while (c);</code> দিয়ে। ফ্লোচার্ট পাতা ৯-এর মতো। <i class="mk">৩</i></li>
+    <li><b>(খ)</b> i = 1: case 1 → +1, default-এ গড়িয়ে → +2, s = 3 · i = 2: default → 5 · i = 3: case 0 → 15 · i = 4: +1 +2 → 18 · i = 5: +2 → <b>20</b>। আউটপুট <b>20</b>। <i class="mk">৩</i></li>
+    <li><b>(গ)</b> <code>int n, sum = 0; scanf("%d", &amp;n); if (n &lt; 0) n = -n; while (n &gt; 0) { sum += n % 10; n /= 10; } printf("%d", sum);</code> — n % 10 শেষ অঙ্কটি নেয়, n /= 10 সেটি বাদ দেয়; 4731 → 1 + 3 + 7 + 4 = 15। <i class="mk">৪</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>প্রতিটি মৌলিক টাইপের সাইজ ও রেঞ্জ বলতে পারি</li>
+      <li>সাধারণ গাণিতিক রূপান্তর প্রয়োগ করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>PUMA'S REBL TAC দিয়ে যেকোনো এক্সপ্রেশন পার্স করতে পারি</li>
+      <li>switch ফল-থ্রু ও লুপ ট্রেস করতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>
