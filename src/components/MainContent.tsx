@@ -1,11 +1,29 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useApp } from '../context/AppContext'
 import { recordLessonOpened } from '../context/progress'
 import { translations } from '../data/translations'
 import { renderContent } from './ContentRenderer'
 import { navigateToLesson } from '../router'
 import ContentStatus from './ContentStatus'
+import ExamKit from './ExamKit'
 import Icon from './portal/icons'
+import { fetchExamKitIndex } from '../public/publicApi'
+
+type LessonTab = 'note' | 'kit'
+const TAB_KEY = 'studyhub_lesson_tab'
+
+/** Lesson slugs that have a published Exam Kit; fetched once per page load. */
+let kitIndex: Promise<Set<string>> | null = null
+function loadKitIndex(): Promise<Set<string>> {
+  kitIndex ??= fetchExamKitIndex()
+    .then(list => new Set(list.map(k => k.slug)))
+    .catch(() => { kitIndex = null; return new Set<string>() })
+  return kitIndex
+}
+
+function savedTab(): LessonTab {
+  try { return localStorage.getItem(TAB_KEY) === 'kit' ? 'kit' : 'note' } catch { return 'note' }
+}
 
 export default function MainContent() {
   const state = useApp()
@@ -46,6 +64,22 @@ export default function MainContent() {
     if (!state.loading && current) recordLessonOpened(current.chapterId, current.lesson.id)
   }, [state.loading, current])
 
+  // The note marker names the lesson's slug (data-notes="…"); that slug keys its Exam Kit.
+  const slug = current?.lesson.content_en.match(/data-notes="([a-z0-9-]+)"/)?.[1] ?? null
+  const [kitSlugs, setKitSlugs] = useState<Set<string>>(new Set())
+  const [tab, setTab] = useState<LessonTab>(savedTab)
+  useEffect(() => {
+    let live = true
+    loadKitIndex().then(s => { if (live) setKitSlugs(s) })
+    return () => { live = false }
+  }, [])
+  const hasKit = !!slug && kitSlugs.has(slug)
+  const showKit = hasKit && tab === 'kit'
+  const chooseTab = (next: LessonTab) => {
+    setTab(next)
+    try { localStorage.setItem(TAB_KEY, next) } catch { /* private window: keep it for this page only */ }
+  }
+
   if (state.loading || state.loadFailed || !current) return <ContentStatus />
 
   const lesson = current.lesson
@@ -83,11 +117,22 @@ export default function MainContent() {
           <h1 className="lesson-title">{lessonTitle}</h1>
         </div>
 
+        {hasKit && (
+          <div className="lesson-tabs" role="tablist" aria-label={lessonTitle}>
+            <button type="button" role="tab" aria-selected={!showKit} className={`lesson-tab${!showKit ? ' active' : ''}`} onClick={() => chooseTab('note')}>{t.tabNote}</button>
+            <button type="button" role="tab" aria-selected={showKit} className={`lesson-tab${showKit ? ' active' : ''}`} onClick={() => chooseTab('kit')}>{t.tabExamKit}</button>
+          </div>
+        )}
+
+        {showKit && slug ? (
+          <ExamKit key={slug} slug={slug} language={state.language} t={t} />
+        ) : (
         <div className="content-rendered" ref={contentRef}>
           {renderContent(lessonContent)}
         </div>
+        )}
 
-        {!isNotesLesson && takeaways.length > 0 && (
+        {!showKit && !isNotesLesson && takeaways.length > 0 && (
           <div className="takeaways-card">
             <h3 className="takeaways-title">{t.keyTakeaways}</h3>
             <ul className="bullet-list">
@@ -98,7 +143,7 @@ export default function MainContent() {
           </div>
         )}
 
-        {lesson.code_en && (
+        {!showKit && lesson.code_en && (
           <div className="code-block">
             <div className="code-header">
               <span className="code-label">{t.keyFormula}</span>

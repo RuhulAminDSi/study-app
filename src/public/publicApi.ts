@@ -98,3 +98,53 @@ export interface PublicAnnouncement {
 export function fetchAnnouncements(): Promise<PublicAnnouncement[]> {
   return publicFetch<PublicAnnouncement[]>('/announcements')
 }
+
+/** Text in both languages. */
+export interface Bi {
+  en: string
+  bn: string
+}
+
+/** One lesson's Exam Kit (server/src/services/examKitShape.ts). */
+export interface ExamKitData {
+  slug: string
+  chapter: number
+  subject: string
+  lessonTitleEn: string
+  status: 'draft' | 'published'
+  updatedOn: string
+  heat?: { asked: number; recent: number; repeats: number; byBody: Record<string, number>; topClusters: { name: string; asked: number }[] }
+  asked?: { group: string; cluster: string; question: string; kind: string; askedIn: string[]; sources: string[]; repeat: boolean }[]
+  mustKnow: Bi[]
+  formulas: { title: Bi; formula: string; example: { question: Bi; working: Bi; answer: string } }[]
+  traps: Bi[]
+  writtenPlan: { question: Bi; askedIn: string[]; skeleton: { en: string[]; bn: string[] }; marks: Partial<Record<'5' | '10' | '20', Bi>> }[]
+  viva: { q: Bi; a: Bi }[]
+  facts: string[]
+  factsResolved?: { id: string; en: string; bn: string; asOf: string; status: string; sources: string[] }[]
+  sources: { url: string; title: string; accessed: string }[]
+}
+
+export interface ExamKitResponse {
+  slug: string
+  chapter_number: number
+  lesson_title_en: string
+  data: ExamKitData
+  is_published: boolean
+}
+
+export interface ExamKitIndexEntry {
+  slug: string
+  chapter_number: number
+  lesson_title_en: string
+  asked: number | null
+}
+
+/** Published kits; the reader shows the Exam Kit tab only for lessons listed here. */
+export function fetchExamKitIndex(): Promise<ExamKitIndexEntry[]> {
+  return publicFetch<ExamKitIndexEntry[]>('/exam-kits')
+}
+
+export function fetchExamKit(slug: string): Promise<ExamKitResponse> {
+  return publicFetch<ExamKitResponse>(`/exam-kits/${encodeURIComponent(slug)}`)
+}

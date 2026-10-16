@@ -391,6 +391,43 @@ export interface Translations {
   errForbidden: string
   errLanguageInvalid: string
   errEmailInUse: string
+  tabNote: string
+  tabExamKit: string
+  ekLead: string
+  ekAskedCount: string
+  ekRecent: string
+  ekRepeats: string
+  ekByBody: string
+  ekTopTopics: string
+  ekMustKnow: string
+  ekFormulas: string
+  ekWorking: string
+  ekAnswer: string
+  ekTraps: string
+  ekWrittenPlan: string
+  ekMarksVersion: string
+  ekAsked: string
+  ekAskedIn: string
+  ekSource: string
+  ekRepeat: string
+  ekShowMore: string
+  ekShowLess: string
+  ekViva: string
+  ekReveal: string
+  ekFacts: string
+  ekAsOf: string
+  ekSources: string
+  ekQuizSoon: string
+  ekDraft: string
+  ekLoadFailed: string
+  ekBodyBpsc: string
+  ekBodyBcs: string
+  ekBodyNtrca: string
+  ekBodyBank: string
+  ekBodyPsu: string
+  ekBodyBuet: string
+  ekBodyPrivate: string
+  ekBodyOther: string
 }
 
 export type Language = 'en' | 'bn'
