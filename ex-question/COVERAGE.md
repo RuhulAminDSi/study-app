@@ -44,7 +44,7 @@ Unmapped clusters: Other (14)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `net-ip-firewalls` | 238 | 201 | 94 | 10 | IP addressing & subnetting (147); IPv4 vs IPv6 (26); Firewall, IDS/IPS & DMZ (23) | 6 / 1 / 0 | ✓ |
+| `net-ip-firewalls` | 238 | 201 | 94 | 10 | IP addressing & subnetting (147); IPv4 vs IPv6 (26); Firewall, IDS/IPS & DMZ (23) | 37 / 14 / 0 | ✓ |
 | `net-application-osi` | 191 | 158 | 77 | 13 | Application & support protocols (DNS, DHCP, NAT, HTTP…) (72); OSI & TCP/IP models (61); Network types & Internet (25) | 4 / 1 / 0 | — |
 | `net-protocols-datalink` | 180 | 115 | 57 | 7 | Network devices (42); Network topology (22); Transmission media & Ethernet (14) | 5 / 0 / 0 | — |
 | `net-transport-crypto` | 130 | 94 | 50 | 3 | Cryptography & digital signature (58); TCP, UDP & congestion control (36) | 4 / 1 / 0 | — |
