@@ -4,7 +4,7 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 - **Distinct questions:** 87 (from 105 records: Written 75, MCQ 26, Viva 4)
 - **Exams it appears in:** 46
-- **Corrections to printed answers:** 3
+- **Corrections to printed answers:** 4
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -964,6 +964,7 @@ In a Memory-mapped I/O system, which one is not present? (options not given; pri
 - **Asked in (1):** BTRC SAD 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ28 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
+- **Correction:** in memory-mapped I/O the devices are reached with ordinary memory instructions (LDA, STA, MOV); the instructions that are **not used** are the dedicated I/O instructions **IN/OUT**. The options are not given, so the printed key cannot be checked against them, but LDA is used, not absent.
 
 <a id="g2817"></a>
 

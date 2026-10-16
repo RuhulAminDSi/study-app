@@ -4,7 +4,7 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 - **Distinct questions:** 424 (from 492 records: Written 424, MCQ 56, Viva 12)
 - **Exams it appears in:** 161
-- **Corrections to printed answers:** 6
+- **Corrections to printed answers:** 12
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -696,6 +696,7 @@ What will be the output of the following C code? #include<stdio.h> int mul(int a
 - **Asked in (1):** BUET IICT April 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q24 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+- **Correction:** assigning `mul` (three parameters) to a two-parameter function pointer is an incompatible-pointer assignment, and calling it is undefined behaviour; the printed number is one run's garbage. The defensible choice is (b) The code is incorrect.
 
 <a id="g3915"></a>
 
@@ -806,6 +807,7 @@ Write the output of the following program #define MAX(A,B) ((A)>(B)) ? A:B void 
 - **Asked in (1):** DESCO AE(CSE) 2016
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q3 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
+- **Correction:** as recalled it does not compile (`max` is not the macro `MAX`). With `MAX`, the expansion is `((++i)>(++j)) ? ++i:++j`: i becomes 2, j becomes 3, the test is false, and `++j` makes it 4, so it prints **4**, not 3.
 
 <a id="g4415"></a>
 
@@ -1069,6 +1071,7 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Asked in (1):** BTCL JAM 2024
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q2 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
+- **Correction:** with i=i+2 and the test i<100 the chart prints only the odd numbers 1–99; it needs i=i+1 and the test i<=100.
 
 <a id="g2150"></a>
 
@@ -1262,6 +1265,7 @@ Which of the following is a high-level programming language? A) Machine code B) 
 - **Asked in (1):** BB AD(General) 2026
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT section (Q91–100) — 17 July 2026 — Exam taker: not stated — 100 MCQ × 1 mark, 1 hour, MCQ97 — [bank-written-web/2026-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2026-ict.md](../bank-written-web/2026-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2026-ict.md)
+- **Correction:** C (option D) is also a high-level language; the item has two correct options.
 
 <a id="g2850"></a>
 
@@ -2534,6 +2538,7 @@ C কী ধরনের প্রোগ্রামিং ভাষা- Low Lev
 - **Asked in (1):** DoICT AP 2020
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 12 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
+- **Correction:** Bangladeshi exam keys usually expect "Mid Level Language" for C; strictly C is a high-level language with low-level features. The site's key and the common coaching key differ.
 
 <a id="g4535"></a>
 
@@ -2969,6 +2974,7 @@ Write the code for second highest maximum from given three number (83, 40, 3) in
 - **Asked in (1):** BOF AE(CSE) 2021
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 2. বাংলাদেশ সমরাস্ত্র কারখানা: (BOF)-2021, Assistant Engineer; (EEE/ME/CSE), 06-03-2021; exam taker not printed; Full Mark: 100 [Non-40, Department-60]; pp. 2-4 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
+- **Correction:** the printed code finds the **largest** (83), not the second highest (40); it also has `Int`, `pirintf` and curly quotes, so it does not compile.
 
 <a id="g2976"></a>
 

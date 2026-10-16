@@ -4,7 +4,7 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 - **Distinct questions:** 1021 (from 1241 records: Written 889, MCQ 139, Study note 21, Worked example 3, Viva 189)
 - **Exams it appears in:** 217
-- **Corrections to printed answers:** 31
+- **Corrections to printed answers:** 39
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -13,16 +13,16 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 |---|---|---|---|---|
 | 1 | [IP addressing & subnetting](#ip-addressing--subnetting) | 104 | 158 | 3 |
 | 2 | [Cyber attacks & malware](#cyber-attacks--malware) | 53 | 107 | 17 |
-| 3 | [Application & support protocols (DNS, DHCP, NAT, HTTP…)](#application--support-protocols-dns-dhcp-nat-http) | 46 | 81 | 15 |
+| 3 | [Application & support protocols (DNS, DHCP, NAT, HTTP…)](#application--support-protocols-dns-dhcp-nat-http) | 49 | 89 | 16 |
 | 4 | [OSI & TCP/IP models](#osi--tcpip-models) | 45 | 72 | 12 |
 | 5 | [Cryptography & digital signature](#cryptography--digital-signature) | 44 | 97 | 8 |
-| 6 | [Other](#other) | 40 | 115 | 39 |
-| 7 | [Network devices](#network-devices) | 38 | 64 | 17 |
-| 8 | [Network types & Internet](#network-types--internet) | 24 | 30 | 8 |
-| 9 | [IPv4 vs IPv6](#ipv4-vs-ipv6) | 23 | 26 | 2 |
-| 10 | [TCP, UDP & congestion control](#tcp-udp--congestion-control) | 21 | 27 | 0 |
+| 6 | [Network devices](#network-devices) | 38 | 64 | 17 |
+| 7 | [TCP, UDP & congestion control](#tcp-udp--congestion-control) | 27 | 33 | 0 |
+| 8 | [Security concepts & authentication](#security-concepts--authentication) | 26 | 45 | 9 |
+| 9 | [Network types & Internet](#network-types--internet) | 24 | 30 | 8 |
+| 10 | [IPv4 vs IPv6](#ipv4-vs-ipv6) | 23 | 26 | 2 |
 | 11 | [Firewall, IDS/IPS & DMZ](#firewall-idsips--dmz) | 20 | 40 | 13 |
-| 12 | [Security concepts & authentication](#security-concepts--authentication) | 16 | 30 | 9 |
+| 12 | [Other](#other) | 17 | 75 | 35 |
 | 13 | [Network topology](#network-topology) | 16 | 23 | 8 |
 | 14 | [Transmission media & Ethernet](#transmission-media--ethernet) | 14 | 25 | 6 |
 | 15 | [Routing & routing protocols](#routing--routing-protocols) | 12 | 23 | 2 |
@@ -31,9 +31,12 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | 18 | [Data communication basics](#data-communication-basics) | 9 | 12 | 1 |
 | 19 | [Wireless & medium access](#wireless--medium-access) | 9 | 10 | 0 |
 | 20 | [Error detection & data-link functions](#error-detection--data-link-functions) | 7 | 15 | 2 |
-| 21 | [Addressing, casting & troubleshooting](#addressing-casting--troubleshooting) | 4 | 13 | 7 |
-| 22 | [Bank / enterprise network design](#bank--enterprise-network-design) | 2 | 12 | 6 |
-| 23 | [Blockchain](#blockchain) | 1 | 2 | 1 |
+| 21 | [Topology](#topology) | 5 | 8 | 3 |
+| 22 | [Addressing, casting & troubleshooting](#addressing-casting--troubleshooting) | 4 | 13 | 7 |
+| 23 | [Bank / enterprise network design](#bank--enterprise-network-design) | 2 | 12 | 6 |
+| 24 | [Routing](#routing) | 2 | 2 | 0 |
+| 25 | [Blockchain](#blockchain) | 1 | 2 | 1 |
+| 26 | [Firewall, IDS & DMZ](#firewall-ids--dmz) | 1 | 1 | 0 |
 
 ## Most-asked questions
 
@@ -1654,6 +1657,7 @@ You are working with 3 networks that have the network IDs 192.168.5.0,192.168.6.
 - **Asked in (1):** BUET IICT April 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q40 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+- **Correction:** a /30 mask cannot hold three class-C networks; the supernet 192.168.4.0/22 covers .5, .6 and .7, so the answer is (a) 255.255.252.0.
 
 <a id="g3930"></a>
 
@@ -1956,6 +1960,7 @@ Find subnet and host number of 255.255.240.0
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q10 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — Dutch Bangla Bank — Assistant Network/Hardware Engineer — 05/03/19 — Exam Taker: BUET — Time 1:30 Hours — Marks distribution: 20 (non_dept) + 65 (dept.) = 85 — pages 1–2, Q6 — [duranta/1707373769-dbbl-2019-written/1707373769.md](../duranta/1707373769-dbbl-2019-written/1707373769.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -05 (suggestion), Set-05 Q6 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
+- **Correction:** 255.255.240.0 is a /20 mask, which subnets a **class B** network (default /16): 2^4 = 16 subnets of 2^12 − 2 = 4094 hosts each. On a class C network the third octet is not available for subnetting.
 
 <a id="g1761"></a>
 
@@ -2019,6 +2024,7 @@ Write down the following blanks a) Ip address converted into physical address AR
 - **Also asked in (not counted):** DBBL ANE/AHE 2019
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Dutch Bangla Bank — Assistant Network/Hardware Engineer — 05/03/19 — Exam Taker: BUET — Time 1:30 Hours — Marks distribution: 20 (non_dept) + 65 (dept.) = 85 — pages 1–2, Q9 — [duranta/1707373769-dbbl-2019-written/1707373769.md](../duranta/1707373769-dbbl-2019-written/1707373769.md)
+- **Correction:** (c) should read SMTP. In (b), DNS converts domain names into IP addresses.
 
 <a id="g2517"></a>
 
@@ -3725,6 +3731,18 @@ HTTP এবং DNS এর সংজ্ঞা দিন। ধরুন যে my
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৭। (ক) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
+<a id="g2034"></a>
+
+### ই-মেইল কী? ই-মেইল অ্যাড্রেসের গঠন সম্পর্কে লিখুন। <sub>G2034</sub>
+
+*Written*
+
+ই-মেইল কী? ই-মেইল অ্যাড্রেসের গঠন সম্পর্কে লিখুন।
+
+- **Asked in (1):** 17th NTRCA School (2023)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৮ অথবা — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
+
 <a id="g2136"></a>
 
 ### What is the DHCP and NAT in computer networking? <sub>G2136</sub>
@@ -3787,6 +3805,30 @@ DNS port number is: ক) 63 খ) 21 গ) 53 ঘ) 24
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Computer Network Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
+<a id="g2557"></a>
+
+### Who is controlling "Domain" in the world? ক) CCNA খ) WWW3 গ) ICANN ঘ) ISDN <sub>G2557</sub>
+
+*MCQ*
+
+Who is controlling "Domain" in the world? ক) CCNA খ) WWW3 গ) ICANN ঘ) ISDN
+
+- **Asked in (1):** BPSC AP 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Computer Network Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
+
+<a id="g3049"></a>
+
+### Suppose, company A in Dhaka wants to communicate with a video conference to company B in … <sub>G3049</sub>
+
+*Written*
+
+Suppose, company A in Dhaka wants to communicate with a video conference to company B in Chittagong. So admin in company A set an IP on end-device to 202.50.14.3 and request to the company B and get a response of IP is 192.168.40.3. Is it possible or not to communicate video conference on this line? Explain your answer.
+
+- **Asked in (1):** JBL ANA 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
 <a id="g3055"></a>
 
 ### Write done the commands based on the properties – (i) Check the local host for connectivi… <sub>G3055</sub>
@@ -3811,6 +3853,18 @@ How HTTP works? How many HTTP requests would be needed for a given situation?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
+<a id="g3065"></a>
+
+### What is web-caching? Is it available for every user request? Why or why not? <sub>G3065</sub>
+
+*Written*
+
+What is web-caching? Is it available for every user request? Why or why not?
+
+- **Asked in (1):** Combined Bank SO(IT) 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
 <a id="g3127"></a>
 
 ### What is SMTP, SNMP, HTTP, and HTTPS? <sub>G3127</sub>
@@ -3834,6 +3888,18 @@ Which protocol is used for a user to connect remote host login to local host? (a
 - **Asked in (1):** NWPGCL JAM(ICT) 2022
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager (ICT) 26.08.2022, 12(5) — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
+
+<a id="g3443"></a>
+
+### (a) How do you define packet fragmentation ? Explain briefly the transparent and non tran… <sub>G3443</sub>
+
+*Written*
+
+(a) How do you define packet fragmentation ? Explain briefly the transparent and non transparent fragmentation with necessary diagram. 6
+
+- **Asked in (1):** BPSC AP 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q2(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
 <a id="g3457"></a>
 
@@ -3895,6 +3961,18 @@ Http full form
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 9 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
+<a id="g3626"></a>
+
+### Which protocol is used to receive emails? <sub>G3626</sub>
+
+*MCQ*
+
+Which protocol is used to receive emails?
+
+- **Asked in (1):** Combined Bank Officer(IT) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 15 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
+
 <a id="g3645"></a>
 
 ### Describe any two key differences between the HTTP GET and HTTP POST methods used for comm… <sub>G3645</sub>
@@ -3918,6 +3996,18 @@ Which protocol is used to send an email over the Internet? (ক) FTP (খ) SMTP 
 - **Asked in (1):** 49th BCS CSE (2025)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q134 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
+
+<a id="g4300"></a>
+
+### What is the meaning of ‘BCC’ in an email? ক. Blind Carbon Copy খ. Blind Close Copy গ. Bea… <sub>G4300</sub>
+
+*MCQ*
+
+What is the meaning of ‘BCC’ in an email? ক. Blind Carbon Copy খ. Blind Close Copy গ. Bearer Carbon Copy ঘ. Blind Close Contact
+
+- **Asked in (1):** BB AD(General) 2023
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Basic computer knowledge" section (Q91–100) — 20 October 2023 — Exam taker: not stated — 100 MCQ, 1 hour, 100 marks, MCQ97 — [bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md](../bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md)
 
 <a id="g4342"></a>
 
@@ -4306,6 +4396,20 @@ What is DHCP Lease Time?
 - **Source:**
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p6 Q4 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p6)
 - **Printed answer:** DHCP Lease Time is the duration for which a device can use an assigned IP address. After it expires, the device renews or receives a new IP
+
+<a id="g0522"></a>
+
+### What is Domain Controller? <sub>G0522</sub>
+
+*Viva*
+
+What is Domain Controller?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p6 Q6 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p6)
+- **Printed answer:** A Domain Controller (DC) is a server that runs Active Directory services. It authenticates users, manages security policies, and controls access to network resources
 
 <a id="g0557"></a>
 
@@ -4907,6 +5011,7 @@ Synthia wants to send an email to her friend. He sends the email through the app
 - **Asked in (1):** BB AD(ICT) 2025
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — Written — 07.02.2025 — Exam taker: not stated (coaching labels FBS / DU; unverified) — marks not printed — recollection, R5 — [bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md](../bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md)
+- **Correction:** the printed answer introduces an `Acc_no` attribute that is not in the given schema; with Branch_name → Branch_city, Assets as the only dependency removed, the decomposition is also in 3NF/BCNF.
 
 <a id="g4518"></a>
 
@@ -4919,6 +5024,7 @@ Which of the following pairs is an example of transport layer protocols of the O
 - **Asked in (1):** BPSC AME 2022
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 15 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
+- **Correction:** IP is a network-layer protocol, so no option is a pair of transport-layer protocols; the intended answer was presumably "TCP, UDP", which is not offered.
 
 <a id="g4900"></a>
 
@@ -6639,1438 +6745,6 @@ What is Encryption? Distinguish between AES and RSA.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A5 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-## Other
-
-<a id="g0302"></a>
-
-### 4,500 bytes sent over TCP in 500-byte packets, initial sequence 3,100, 2 of every 5 packe… <sub>G0302</sub>
-
-*Written*
-
-4,500 bytes sent over TCP in 500-byte packets, initial sequence 3,100, 2 of every 5 packets lost: fill a table of sender sequence, stored sequence and ACK numbers, showing retransmissions.
-
-- **Asked in (1):** BSCL AE(CSE) 2026
-- **Source:**
-  - Bangladesh Satellite Company PLC Assistant Engineer (CSE) (2026-08-21), Q10 — [BUET JOB/22_vm-containers-and-network-questions.md](../BUET%20JOB/22_vm-containers-and-network-questions.md) · [image](../BUET%20JOB/22_vm-containers-and-network-questions.jpg); [BUET JOB/34_bscll-ae-and-bba-questions.md](../BUET%20JOB/34_bscll-ae-and-bba-questions.md) · [image](../BUET%20JOB/34_bscll-ae-and-bba-questions.jpg)
-
-<a id="g2034"></a>
-
-### ই-মেইল কী? ই-মেইল অ্যাড্রেসের গঠন সম্পর্কে লিখুন। <sub>G2034</sub>
-
-*Written*
-
-ই-মেইল কী? ই-মেইল অ্যাড্রেসের গঠন সম্পর্কে লিখুন।
-
-- **Asked in (1):** 17th NTRCA School (2023)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৮ অথবা — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
-
-<a id="g2083"></a>
-
-### ডেটার গোপনীয়তা রক্ষায় ডেটা এনক্রিপশনের ভূমিকা আলোচনা করুন। <sub>G2083</sub>
-
-*Written*
-
-ডেটার গোপনীয়তা রক্ষায় ডেটা এনক্রিপশনের ভূমিকা আলোচনা করুন।
-
-- **Asked in (1):** 17th NTRCA CSE (2023)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৯ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
-
-<a id="g2087"></a>
-
-### নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন। <sub>G2087</sub>
-
-*Written*
-
-নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন।
-
-- **Asked in (1):** 17th NTRCA CSE (2023)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১১ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
-
-<a id="g2144"></a>
-
-### Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ? <sub>G2144</sub>
-
-*Written*
-
-Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ?
-
-- **Asked in (1):** BTCL JAM 2024
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q6 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
-
-<a id="g2414"></a>
-
-### TCP/IP মডেলের লেয়ারগুলোর কাজ লিখুন? <sub>G2414</sub>
-
-*Written*
-
-TCP/IP মডেলের লেয়ারগুলোর কাজ লিখুন?
-
-- **Asked in (1):** DESCO SAE 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ৯ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
-
-<a id="g2557"></a>
-
-### Who is controlling "Domain" in the world? ক) CCNA খ) WWW3 গ) ICANN ঘ) ISDN <sub>G2557</sub>
-
-*MCQ*
-
-Who is controlling "Domain" in the world? ক) CCNA খ) WWW3 গ) ICANN ঘ) ISDN
-
-- **Asked in (1):** BPSC AP 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Computer Network Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
-
-<a id="g2652"></a>
-
-### স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ? <sub>G2652</sub>
-
-*Written*
-
-স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ?
-
-- **Asked in (1):** WZPDCL SAE 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১০ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
-
-<a id="g2654"></a>
-
-### একটা পাসওয়ার্ড নির্বাচনের ক্ষেত্রে কি কি বিষয় খেয়াল রাখা উচিত? <sub>G2654</sub>
-
-*Written*
-
-একটা পাসওয়ার্ড নির্বাচনের ক্ষেত্রে কি কি বিষয় খেয়াল রাখা উচিত?
-
-- **Asked in (1):** WZPDCL SAE 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১২ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
-
-<a id="g3049"></a>
-
-### Suppose, company A in Dhaka wants to communicate with a video conference to company B in … <sub>G3049</sub>
-
-*Written*
-
-Suppose, company A in Dhaka wants to communicate with a video conference to company B in Chittagong. So admin in company A set an IP on end-device to 202.50.14.3 and request to the company B and get a response of IP is 192.168.40.3. Is it possible or not to communicate video conference on this line? Explain your answer.
-
-- **Asked in (1):** JBL ANA 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3052"></a>
-
-### In network security define these terms- Confidentiality, Non-repudiation, Authenticity, i… <sub>G3052</sub>
-
-*Written*
-
-In network security define these terms- Confidentiality, Non-repudiation, Authenticity, integrity, available.
-
-- **Asked in (1):** JBL ANA 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3065"></a>
-
-### What is web-caching? Is it available for every user request? Why or why not? <sub>G3065</sub>
-
-*Written*
-
-What is web-caching? Is it available for every user request? Why or why not?
-
-- **Asked in (1):** Combined Bank SO(IT) 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3072"></a>
-
-### How stop and wait ARQ is used for reliable data transfer? <sub>G3072</sub>
-
-*Written*
-
-How stop and wait ARQ is used for reliable data transfer?
-
-- **Asked in (1):** Combined Bank SO(IT) 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3094"></a>
-
-### Suppose A&B are two frames in a browser loaded from different origins. Why is it a reason… <sub>G3094</sub>
-
-*Written*
-
-Suppose A&B are two frames in a browser loaded from different origins. Why is it a reasonable security policy to allow A to navigate B to another origin based only on whether the display area of A contains of B and A has the control over rea? Consider pages reference string 12342341211314, three frames using LRU- find page faults.
-
-- **Asked in (1):** Combined Bank 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 1 — Combined 5 Bank — 03.02.2023 — post not printed — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 26–28, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3165"></a>
-
-### How ensure secure communication between a client application and the database server. [Co… <sub>G3165</sub>
-
-*Written*
-
-How ensure secure communication between a client application and the database server. [Combined Bank ADA 2024]
-
-- **Asked in (1):** Combined Bank ADA 2024
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3183"></a>
-
-### Your bank has an online banking system and this process is performed by sending OTP in mo… <sub>G3183</sub>
-
-*Written*
-
-Your bank has an online banking system and this process is performed by sending OTP in mobile or OTP in mail when a customer transfers money from mobile banking app or online. This is a secured policy. Without this biometric policy how you can more secure your online banking. Explain your strategy.
-
-- **Asked in (1):** Combined Bank AME/AE(IT) 2024
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 11 — Combined 3 Bank (10199) — Assistant Maintenance engineer/Assistant Engineer IT 2024 — 24.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 42–44, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3214"></a>
-
-### Describe how the principles of Confidentiality, Integrity, and Availability work together… <sub>G3214</sub>
-
-*Written*
-
-Describe how the principles of Confidentiality, Integrity, and Availability work together to protect organizational data, and provide one real-world example of a security breach where one or more of these principles were compromised. [Combined Bank Officer (IT) 25] (10 Marks)
-
-- **Asked in (1):** Combined Bank Officer(IT) 2025
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q22 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3225"></a>
-
-### A new employee joins the bank Describe the process of creating a new user account for the… <sub>G3225</sub>
-
-*Written*
-
-A new employee joins the bank Describe the process of creating a new user account for them, focusing on security best practices (e.g., password policies) [BSCS AP (SB & Janata Bank) 26] 10
-
-- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3226"></a>
-
-### A new employee joins the bank. Describe je, password policies). [BSCS AP (SB & Janata Ban… <sub>G3226</sub>
-
-*Written*
-
-A new employee joins the bank. Describe je, password policies). [BSCS AP (SB & Janata Bank) 26] 10
-
-- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3414"></a>
-
-### A server suddenly starts sending abnormal traffic to external systems. Analyze the possib… <sub>G3414</sub>
-
-*Written*
-
-A server suddenly starts sending abnormal traffic to external systems. Analyze the possible cause and suggest immediate actions.
-
-- **Asked in (1):** Combined Bank AME 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS), Assistant Maintenance Engineer/Assistant Engineer (IT) — Exam Date 08/05/2026 — exam taker not printed — time not printed — 15 questions, total marks 200 (Q1–Q6: 15 marks each) — pages 1–10, Q6 — [duranta/1783405234-bscs-ame-ae-it/1783405234.md](../duranta/1783405234-bscs-ame-ae-it/1783405234.md)
-
-<a id="g3443"></a>
-
-### (a) How do you define packet fragmentation ? Explain briefly the transparent and non tran… <sub>G3443</sub>
-
-*Written*
-
-(a) How do you define packet fragmentation ? Explain briefly the transparent and non transparent fragmentation with necessary diagram. 6
-
-- **Asked in (1):** BPSC AP 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q2(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-
-<a id="g3469"></a>
-
-### c. What are the roles and responsibilities of a maintenance engineer in network security?… <sub>G3469</sub>
-
-*Written*
-
-c. What are the roles and responsibilities of a maintenance engineer in network security? 2
-
-- **Asked in (1):** Parliament Secretariat SAE 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q1(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-
-<a id="g3532"></a>
-
-### Explain access, security and privacy issues in information technology <sub>G3532</sub>
-
-*Written*
-
-Explain access, security and privacy issues in information technology
-
-- **Asked in (1):** Intl Crimes Tribunal Hardware Technician 2024
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q16 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-
-<a id="g3626"></a>
-
-### Which protocol is used to receive emails? <sub>G3626</sub>
-
-*MCQ*
-
-Which protocol is used to receive emails?
-
-- **Asked in (1):** Combined Bank Officer(IT) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 15 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
-
-<a id="g4289"></a>
-
-### Which device is mainly related to provide security of a network? <sub>G4289</sub>
-
-*MCQ*
-
-Which device is mainly related to provide security of a network?
-
-- **Asked in (1):** BB AD(General) 2022
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ96 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)
-
-<a id="g4290"></a>
-
-### Which one is the Strongest Password? <sub>G4290</sub>
-
-*MCQ*
-
-Which one is the Strongest Password?
-
-- **Asked in (1):** BB AD(General) 2022
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ97 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)
-
-<a id="g4300"></a>
-
-### What is the meaning of ‘BCC’ in an email? ক. Blind Carbon Copy খ. Blind Close Copy গ. Bea… <sub>G4300</sub>
-
-*MCQ*
-
-What is the meaning of ‘BCC’ in an email? ক. Blind Carbon Copy খ. Blind Close Copy গ. Bearer Carbon Copy ঘ. Blind Close Contact
-
-- **Asked in (1):** BB AD(General) 2023
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Basic computer knowledge" section (Q91–100) — 20 October 2023 — Exam taker: not stated — 100 MCQ, 1 hour, 100 marks, MCQ97 — [bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md](../bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md)
-
-<a id="g4405"></a>
-
-### A corporate network pool experience IP exhaustion due to a high volume of transient guest… <sub>G4405</sub>
-
-*Written*
-
-A corporate network pool experience IP exhaustion due to a high volume of transient guest devices. What lease duration parameter adjustment resolves this?
-
-- **Asked in (1):** RAKUB ANSE 2026
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Rajshahi Krishi Unnayan Bank (RAKUB) — Assistant Network System Engineer (Job ID 10230) — 05-Jun-2026 — Exam taker: not stated — marks not printed — recollection (13 items), Q11 — [bank-written-web/2026-rakub-anse-itjobqns/rakub-anse-2026.md](../bank-written-web/2026-rakub-anse-itjobqns/rakub-anse-2026.md)
-
-<a id="g4622"></a>
-
-### What is MAC flooding? How to prevent MAC flooding? <sub>G4622</sub>
-
-*Written*
-
-What is MAC flooding? How to prevent MAC flooding?
-
-- **Asked in (1):** Teletalk AM(IT) 2023
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023, Q4 — [telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md](../telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md)
-
-<a id="g2207"></a>
-
-### Write the full form of the given technology ICX, IGW and IIG. Write the function of these… <sub>G2207</sub>
-
-*Written*
-
-Write the full form of the given technology ICX, IGW and IIG. Write the function of these terminologies?
-
-- **Asked in (1):** BTRC AD 2021
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director 19/02/2021, Q5.1 — [duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md](../duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md)
-
-<a id="g2210"></a>
-
-### The primary function of the transmission control protocol (TCP) is the term of unreliable… <sub>G2210</sub>
-
-*Written*
-
-The primary function of the transmission control protocol (TCP) is the term of unreliable network to make a network more reliable. TCP performs six basic function. What is the basic function performed by TCP?
-
-- **Asked in (1):** BTRC AD 2021
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director 19/02/2021, Q5.4 — [duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md](../duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md)
-
-<a id="g2223"></a>
-
-### Possible threads to a computer system and how to provide security. <sub>G2223</sub>
-
-*Written*
-
-Possible threads to a computer system and how to provide security.
-
-- **Asked in (1):** BTRC AD(Technical) 2019
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q3 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
-  - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W3 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-
-<a id="g2225"></a>
-
-### What is an access network? briefly describe the available access network. <sub>G2225</sub>
-
-*Written*
-
-What is an access network? briefly describe the available access network.
-
-- **Asked in (1):** BTRC AD(Technical) 2019
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q5 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
-  - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W5 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-
-<a id="g2831"></a>
-
-### Describe different typed of computer network. <sub>G2831</sub>
-
-*Written*
-
-Describe different typed of computer network.
-
-- **Asked in (1):** SPARRSO 2020
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 1. বাংলাদেশ মহাকাশ গবেষণা ও দূর অনুধাবন প্রতিষ্ঠান (SPARRSO), Assistant Engineer, 13-03-2020; exam taker not printed; time not printed; Exam Pattern: [Non-Dept =30, Dept. 5*8=40]; pp. 1-2 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
-
-<a id="g2848"></a>
-
-### কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন। <sub>G2848</sub>
-
-*Written*
-
-কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন।
-
-- **Asked in (1):** BOF SAE(Computer) 2021
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 3. Bangladesh Ordnance Factory (BOF), Sub Assistant Engineer (Computer), 20-03-2021; exam taker not printed; Total Marks: 100 [Non-technical: 40: Technical: 60]; Department: 5 × 10 = 50; pp. 4-6, Q7 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
-
-<a id="g2919"></a>
-
-### The primary function of the Transmission control Protocol (TCP) is to turn an unreliable … <sub>G2919</sub>
-
-*Written*
-
-The primary function of the Transmission control Protocol (TCP) is to turn an unreliable network into a reliable network that is free from lost and duplicate packets. What are the functions performed by TCP to make a network more reliable?
-
-- **Asked in (1):** Combined Bank Officer(IT) 2020
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(O) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g2921"></a>
-
-### What is the difference between packet sniffing (Snooping) and Packet spoofing? <sub>G2921</sub>
-
-*Written*
-
-What is the difference between packet sniffing (Snooping) and Packet spoofing?
-
-- **Asked in (1):** Combined Bank SO(IT) 2020
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3747"></a>
-
-### Connection diagram given, assign IP adresses to each device. <sub>G3747</sub>
-
-*Written*
-
-Connection diagram given, assign IP adresses to each device.
-
-- **Asked in (1):** BUET M.Sc. October 2018
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q14 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
-
-<a id="g3893"></a>
-
-### An organization is granted block 130.34.12.64 / 26. Find the no. of addresses for the who… <sub>G3893</sub>
-
-*MCQ*
-
-An organization is granted block 130.34.12.64 / 26. Find the no. of addresses for the whole network. (a) 128 (b) 32 (c) 256 (d) None
-
-- **Asked in (1):** BUET IICT April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q6 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
-
-<a id="g3928"></a>
-
-### In an IP packet, what is the maximum size of an IP header? (a) 20B, (b) 4B, (c) 14B, (d) … <sub>G3928</sub>
-
-*MCQ*
-
-In an IP packet, what is the maximum size of an IP header? (a) 20B, (b) 4B, (c) 14B, (d) 60B
-
-- **Asked in (1):** BUET IICT April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q41 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
-
-<a id="g4095"></a>
-
-### কম্পিউটার ভাইরাস কী? কম্পিউটার ভাইরাস আক্রান্ত হওয়ার লক্ষণসমূহ লিখুন। <sub>G4095</sub>
-
-*Written*
-
-কম্পিউটার ভাইরাস কী? কম্পিউটার ভাইরাস আক্রান্ত হওয়ার লক্ষণসমূহ লিখুন।
-
-- **Asked in (1):** 15th NTRCA Computer Operation (2019)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৪(গ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
-
-<a id="g4111"></a>
-
-### Wi Max কী? Wi Max-এর সুবিধা ও অসুবিধা লিখুন। <sub>G4111</sub>
-
-*Written*
-
-Wi Max কী? Wi Max-এর সুবিধা ও অসুবিধা লিখুন।
-
-- **Asked in (1):** 15th NTRCA Computer Operation (2019)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৯ — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
-
-<a id="g4116"></a>
-
-### বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন? <sub>G4116</sub>
-
-*Written*
-
-বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন?
-
-- **Asked in (1):** 16th NTRCA CSE (2019)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
-
-<a id="g4120"></a>
-
-### পে-ইন [প্লেইন] টেক্সট (Plain Text) ও সাইফার টেক্সট এর মধ্যে মূল পার্থক্য কী? লিখুন। <sub>G4120</sub>
-
-*Written*
-
-পে-ইন [প্লেইন] টেক্সট (Plain Text) ও সাইফার টেক্সট এর মধ্যে মূল পার্থক্য কী? লিখুন।
-
-- **Asked in (1):** 16th NTRCA CSE (2019)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১ অথবা (গ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
-
-<a id="g4131"></a>
-
-### পাবলিক ও প্রাইভেট নেটওয়ার্ক এর মধ্যে পার্থক্য লিখুন? আইপি এড্রেস ক? <sub>G4131</sub>
-
-*Written*
-
-পাবলিক ও প্রাইভেট নেটওয়ার্ক এর মধ্যে পার্থক্য লিখুন? আইপি এড্রেস ক?
-
-- **Asked in (1):** 16th NTRCA CSE (2019)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৪(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
-
-<a id="g4177"></a>
-
-### The protocol that provides infotainment is <sub>G4177</sub>
-
-*MCQ*
-
-The protocol that provides infotainment is
-
-- **Asked in (1):** BB AD(General) 2018
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ70 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
-
-<a id="g4184"></a>
-
-### Office LANs which……by use of the corporate <sub>G4184</sub>
-
-*MCQ*
-
-Office LANs which……by use of the corporate
-
-- **Asked in (1):** BB AD(General) 2018
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ77 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
-
-<a id="g4235"></a>
-
-### Which one is the part of software vulnerability <sub>G4235</sub>
-
-*MCQ*
-
-Which one is the part of software vulnerability
-
-- **Asked in (1):** Combined Bank Officer(IT) 2020
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ49 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
-
-<a id="g4250"></a>
-
-### Which one of the following protocol is used for receiving e mails <sub>G4250</sub>
-
-*MCQ*
-
-Which one of the following protocol is used for receiving e mails
-
-- **Asked in (1):** Combined Bank Officer(IT) 2020
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ64 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
-
-<a id="g4505"></a>
-
-### ACL ( Access Control List) এর দুটি প্রধান ধরন হল- Standard and Extended / Standard and Sp… <sub>G4505</sub>
-
-*MCQ*
-
-ACL ( Access Control List) এর দুটি প্রধান ধরন হল- Standard and Extended / Standard and Specialized / Standard and Specialized / Extended and EEE Printed answer: Standard and Extended
-
-- **Asked in (1):** DoICT AP 2020
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 10 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
-
-<a id="g1993"></a>
-
-### নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন। <sub>G1993</sub>
-
-*Written*
-
-নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন।
-
-- **Asked in (1):** 15th NTRCA CSE
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
-
-<a id="g2111"></a>
-
-### Cross-site Scripting বলতে কী বোঝায়? এর হাত থেকে রক্ষা পাওয়ার পদ্ধতিগুলো লিখুন। <sub>G2111</sub>
-
-*Written*
-
-Cross-site Scripting বলতে কী বোঝায়? এর হাত থেকে রক্ষা পাওয়ার পদ্ধতিগুলো লিখুন।
-
-- **Asked in (1):** 16th NTRCA ICT
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৬ (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
-
-<a id="g2120"></a>
-
-### ডেটা এনক্রিপশন বলতে কী বোঝায়? বহুল ব্যবহৃত কয়েকটি এনক্রিপশন পদ্ধতির নাম লিখুন। <sub>G2120</sub>
-
-*Written*
-
-ডেটা এনক্রিপশন বলতে কী বোঝায়? বহুল ব্যবহৃত কয়েকটি এনক্রিপশন পদ্ধতির নাম লিখুন।
-
-- **Asked in (1):** 16th NTRCA ICT
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
-
-<a id="g2127"></a>
-
-### TCP/IP প্রোটোকল কী কাজ করে তা বর্ণনা করুন। <sub>G2127</sub>
-
-*Written*
-
-TCP/IP প্রোটোকল কী কাজ করে তা বর্ণনা করুন।
-
-- **Asked in (1):** 16th NTRCA ICT
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ১০ (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
-
-<a id="g2780"></a>
-
-### What is Ethernet? Briefly describe teclinical specifications of 100 Base-T and Gigabit Et… <sub>G2780</sub>
-
-*Written*
-
-What is Ethernet? Briefly describe teclinical specifications of 100 Base-T and Gigabit Ethemet standards
-
-- **Asked in (1):** 47th BCS CSE
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 2 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
-
-<a id="g4065"></a>
-
-### কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন। <sub>G4065</sub>
-
-*Written*
-
-কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন।
-
-- **Asked in (1):** 13th NTRCA CSE (2016)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৪(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
-
-<a id="g4421"></a>
-
-### IP related questions <sub>G4421</sub>
-
-*Written*
-
-IP related questions
-
-- **Asked in (1):** DESCO AE(CSE) 2016
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q9 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
-
-<a id="g0384"></a>
-
-### 4-5 networking questions (not recorded). <sub>G0384</sub>
-
-*Viva*
-
-4-5 networking questions (not recorded).
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - NTRCA 15th registration viva (2019) (2019) (viva), Viva (VIVA-45, candidate 1) — [VIVA/03_ntrca-post-lecturer-ict-viva.md](../VIVA/03_ntrca-post-lecturer-ict-viva.md) · [image](../VIVA/03_ntrca-post-lecturer-ict-viva.jpg)
-- **Printed answer:** Could not answer
-
-<a id="g0522"></a>
-
-### What is Domain Controller? <sub>G0522</sub>
-
-*Viva*
-
-What is Domain Controller?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p6 Q6 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p6)
-- **Printed answer:** A Domain Controller (DC) is a server that runs Active Directory services. It authenticates users, manages security policies, and controls access to network resources
-
-<a id="g0567"></a>
-
-### What is IPv4? <sub>G0567</sub>
-
-*Viva*
-
-What is IPv4?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p12 Q19 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p12); [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p13)
-- **Printed answer:** IPv4 (Internet Protocol Version 4) is a 32-bit addressing protocol used to identify devices on a network. Example: 192.168.1.1
-
-<a id="g2493"></a>
-
-### ডাটা সিকিউরিটি নিয়ে, কিভাবে নিশ্চিত করবেন। <sub>G2493</sub>
-
-*Viva*
-
-ডাটা সিকিউরিটি নিয়ে, কিভাবে নিশ্চিত করবেন।
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V4 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
-
-<a id="g2496"></a>
-
-### খাদ্যের ওয়েবসাইট এর সিকিউরি কিভাবে আরও উন্নত করা যায় <sub>G2496</sub>
-
-*Viva*
-
-খাদ্যের ওয়েবসাইট এর সিকিউরি কিভাবে আরও উন্নত করা যায়
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V-websec — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
-
-<a id="g4646"></a>
-
-### টেকনিক্যাল ম্যামঃ বাংলাদেশ ব্যাংক সম্পূর্ণ ভাবে একটা নেটওয়ার্ক এর আন্ডারে আনতে দিলে তুমি … <sub>G4646</sub>
-
-*Viva*
-
-টেকনিক্যাল ম্যামঃ বাংলাদেশ ব্যাংক সম্পূর্ণ ভাবে একটা নেটওয়ার্ক এর আন্ডারে আনতে দিলে তুমি কিভাবে কাজটা করবে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V1 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
-
-<a id="g4647"></a>
-
-### টেকনিক্যাল ম্যামঃ কোনটা নিবে? কেন নিবে? <sub>G4647</sub>
-
-*Viva*
-
-টেকনিক্যাল ম্যামঃ কোনটা নিবে? কেন নিবে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V2 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
-
-<a id="g4648"></a>
-
-### টেকনিক্যাল ম্যামঃ এটার advantage and disadvantage বল। disadvantage কিভাবে overcome করবে? <sub>G4648</sub>
-
-*Viva*
-
-টেকনিক্যাল ম্যামঃ এটার advantage and disadvantage বল। disadvantage কিভাবে overcome করবে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V3 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
-
-<a id="g4649"></a>
-
-### টেকনিক্যাল ম্যামঃ তার পরে আর কি কি করবে? <sub>G4649</sub>
-
-*Viva*
-
-টেকনিক্যাল ম্যামঃ তার পরে আর কি কি করবে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V4 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
-
-<a id="g4658"></a>
-
-### ১১. Cabling কিভাবে করে? নিজে কখনো cabling করেছি কিনা? <sub>G4658</sub>
-
-*Viva*
-
-১১. Cabling কিভাবে করে? নিজে কখনো cabling করেছি কিনা?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V9 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
-
-<a id="g4661"></a>
-
-### ৩. সুইচিং কি? কয় ধরনের বিদ্যমান? এদের পার্থক্য বলো। <sub>G4661</sub>
-
-*Viva*
-
-৩. সুইচিং কি? কয় ধরনের বিদ্যমান? এদের পার্থক্য বলো।
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V1 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
-
-<a id="g4662"></a>
-
-### ৪. কোনটার কি সুবিধা? <sub>G4662</sub>
-
-*Viva*
-
-৪. কোনটার কি সুবিধা?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V2 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
-
-<a id="g4663"></a>
-
-### ৫. সিকিউরিটি কি কি ইউজ করবা? <sub>G4663</sub>
-
-*Viva*
-
-৫. সিকিউরিটি কি কি ইউজ করবা?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V3 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
-
-<a id="g4664"></a>
-
-### ৬. নেটওয়ার্ক লেয়ারের কাজ আর ডিভাইস গুলা বলো। <sub>G4664</sub>
-
-*Viva*
-
-৬. নেটওয়ার্ক লেয়ারের কাজ আর ডিভাইস গুলা বলো।
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V4 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
-
-<a id="g4665"></a>
-
-### ৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে? <sub>G4665</sub>
-
-*Viva*
-
-৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V5 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
-
-<a id="g4666"></a>
-
-### ৮. একটা রুমে বিভিন্ন ডিভাইসে নেটওয়ার্ক কানেক্টিভিটি দিতে পারবা? <sub>G4666</sub>
-
-*Viva*
-
-৮. একটা রুমে বিভিন্ন ডিভাইসে নেটওয়ার্ক কানেক্টিভিটি দিতে পারবা?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V6 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
-
-<a id="g4676"></a>
-
-### 10.Ethernet নিয়ে বলতে বলেছিল, আরো কিছু ধরেছিল মনে নেই. <sub>G4676</sub>
-
-*Viva*
-
-10.Ethernet নিয়ে বলতে বলেছিল, আরো কিছু ধরেছিল মনে নেই.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J2 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A2-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4677"></a>
-
-### 10.কম্পিউটার কে প্রটেকশন করার জন্যে কি ব্যবহার করা হয়? <sub>G4677</sub>
-
-*Viva*
-
-10.কম্পিউটার কে প্রটেকশন করার জন্যে কি ব্যবহার করা হয়?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J3 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A3-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4680"></a>
-
-### 7. সুইজ & হাবের পার্থক্য কি? <sub>G4680</sub>
-
-*Viva*
-
-7. সুইজ & হাবের পার্থক্য কি?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V3 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4681"></a>
-
-### ৪. হ্যাকিং বলতে কি বোঝেন? <sub>G4681</sub>
-
-*Viva*
-
-৪. হ্যাকিং বলতে কি বোঝেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4682"></a>
-
-### 9. গ্রে হ্যাকার কারা? <sub>G4682</sub>
-
-*Viva*
-
-9. গ্রে হ্যাকার কারা?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4695"></a>
-
-### 9. নেটওয়ার্ক এর কী কী জানেন? <sub>G4695</sub>
-
-*Viva*
-
-9. নেটওয়ার্ক এর কী কী জানেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4698"></a>
-
-### 12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন? <sub>G4698</sub>
-
-*Viva*
-
-12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4715"></a>
-
-### 4. আচ্ছা বলেনতো প্রোটোকল কি? <sub>G4715</sub>
-
-*Viva*
-
-4. আচ্ছা বলেনতো প্রোটোকল কি?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4716"></a>
-
-### 5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে? <sub>G4716</sub>
-
-*Viva*
-
-5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4717"></a>
-
-### 6. মেশ ও রিং এর মধ্যে পার্থক্য কি? <sub>G4717</sub>
-
-*Viva*
-
-6. মেশ ও রিং এর মধ্যে পার্থক্য কি?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V3 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4718"></a>
-
-### 7. এই দুইটার মধ্যে কোনটার অসুবিধা কি? <sub>G4718</sub>
-
-*Viva*
-
-7. এই দুইটার মধ্যে কোনটার অসুবিধা কি?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4719"></a>
-
-### 8. গুড! আচ্ছা এবার বলেনতো, নেটওয়ার্কে কয় ধরনের সুইচিং পড়ছেন? <sub>G4719</sub>
-
-*Viva*
-
-8. গুড! আচ্ছা এবার বলেনতো, নেটওয়ার্কে কয় ধরনের সুইচিং পড়ছেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4720"></a>
-
-### 9. আরেক স্যার: সার্কিট সুইচিং ও প্যাকেট সুইচিং এর পার্থক্য কি? <sub>G4720</sub>
-
-*Viva*
-
-9. আরেক স্যার: সার্কিট সুইচিং ও প্যাকেট সুইচিং এর পার্থক্য কি?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4721"></a>
-
-### 10. আচ্ছা কোনটা বেটার? <sub>G4721</sub>
-
-*Viva*
-
-10. আচ্ছা কোনটা বেটার?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4723"></a>
-
-### 12. এটা কোথায় ব্যবহার করা হয়? <sub>G4723</sub>
-
-*Viva*
-
-12. এটা কোথায় ব্যবহার করা হয়?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V9 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4730"></a>
-
-### বোর্ড: সিকিউরিটি তে কি কি কাজ করে? <sub>G4730</sub>
-
-*Viva*
-
-বোর্ড: সিকিউরিটি তে কি কি কাজ করে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4731"></a>
-
-### বোর্ড: কয়েকটি এন্টিভাইরাস এর নাম বলেন? <sub>G4731</sub>
-
-*Viva*
-
-বোর্ড: কয়েকটি এন্টিভাইরাস এর নাম বলেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V8 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4737"></a>
-
-### ৮।বাংলাদেশ ব্যাংকের স্ক্যাম কোন সালে হয়েছিল? <sub>G4737</sub>
-
-*Viva*
-
-৮।বাংলাদেশ ব্যাংকের স্ক্যাম কোন সালে হয়েছিল?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J13 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" A (viva), A13-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4738"></a>
-
-### ৯।এটা কী ধরনের স্ক্যাম / Cyber crime ছিল কিনা? <sub>G4738</sub>
-
-*Viva*
-
-৯।এটা কী ধরনের স্ক্যাম / Cyber crime ছিল কিনা?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J13 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" A (viva), A13-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4739"></a>
-
-### ১০.এই স্ক্যাম নিয়ে কি জানেন? <sub>G4739</sub>
-
-*Viva*
-
-১০.এই স্ক্যাম নিয়ে কি জানেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J13 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" A (viva), A13-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4753"></a>
-
-### PIN ki? <sub>G4753</sub>
-
-*Viva*
-
-PIN ki?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — 34th BCS account (45), 22/04/15, board Kamrunnessa Khanam (viva), A2-V3 — [viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md](../viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md)
-
-<a id="g4757"></a>
-
-### সাইবার ক্রাইম বলতে কী বুঝেন? <sub>G4757</sub>
-
-*Viva*
-
-সাইবার ক্রাইম বলতে কী বুঝেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — 37th BCS candidate C (first choice police) (viva), A3-V1 — [viva-web/bcs-2017-ekushey-37th-viva/ekushey-37th-bcs-viva.md](../viva-web/bcs-2017-ekushey-37th-viva/ekushey-37th-bcs-viva.md)
-
-<a id="g4759"></a>
-
-### 2. Web application security বলতে কি বুঝো? <sub>G4759</sub>
-
-*Viva*
-
-2. Web application security বলতে কি বুঝো?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — WZPDCL Assistant Engineer viva, 29/06/2026 (viva), V2 — [viva-web/power-2026-jobqns-wzpdcl-ae/jobqns-wzpdcl-ae.md](../viva-web/power-2026-jobqns-wzpdcl-ae/jobqns-wzpdcl-ae.md)
-
-<a id="g2278"></a>
-
-### What are the differences between message confidentiality and integrity? Can you have with… <sub>G2278</sub>
-
-*Written*
-
-What are the differences between message confidentiality and integrity? Can you have without the other?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2281"></a>
-
-### Define information security with its components. <sub>G2281</sub>
-
-*Written*
-
-Define information security with its components.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2287"></a>
-
-### Short note: Fire walls, COCOMO 2, Microcontroller, Query optimization, Genetic algorithm,… <sub>G2287</sub>
-
-*Written*
-
-Short note: Fire walls, COCOMO 2, Microcontroller, Query optimization, Genetic algorithm, UML
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2289"></a>
-
-### What is cyber vandalism? Describe briefly. <sub>G2289</sub>
-
-*Written*
-
-What is cyber vandalism? Describe briefly.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2291"></a>
-
-### What is biometric security ? Write down some real life applications of it. <sub>G2291</sub>
-
-*Written*
-
-What is biometric security ? Write down some real life applications of it.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2293"></a>
-
-### What are the properties of weak password? <sub>G2293</sub>
-
-*Written*
-
-What are the properties of weak password?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2526"></a>
-
-### What is QR code ? What is rootkit and bootkit ? <sub>G2526</sub>
-
-*Written*
-
-What is QR code ? What is rootkit and bootkit ?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -03 (suggestion), Set-03 Q5 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
-
-<a id="g3283"></a>
-
-### Hashing কী? <sub>G3283</sub>
-
-*MCQ*
-
-Hashing কী?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10, Q16 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
-
-<a id="g3284"></a>
-
-### Incident Response এর ধাপগুলো কী? <sub>G3284</sub>
-
-*MCQ*
-
-Incident Response এর ধাপগুলো কী?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10, Q20 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
-
-<a id="g3299"></a>
-
-### Why is MFA important? <sub>G3299</sub>
-
-*Written*
-
-Why is MFA important?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
-
-<a id="g3323"></a>
-
-### Server security best practices. <sub>G3323</sub>
-
-*MCQ*
-
-Server security best practices.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q20 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
-
-<a id="g4767"></a>
-
-### Explain redundancy and fault tolerance in metro telecom network <sub>G4767</sub>
-
-*Written*
-
-Explain redundancy and fault tolerance in metro telecom network
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — DMTCL 2025 Written Exam Suggestion, Engineering & Telecommunication (suggestion), B-4 — [model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md](../model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md)
-
-<a id="g4799"></a>
-
-### What is OAuth (one-line)? <sub>G4799</sub>
-
-*Written*
-
-What is OAuth (one-line)?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A5 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g4801"></a>
-
-### What is a Load Balancer? (one-line) <sub>G4801</sub>
-
-*Written*
-
-What is a Load Balancer? (one-line)
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A7 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g4803"></a>
-
-### What is a CAPTCHA and why is it used? <sub>G4803</sub>
-
-*Written*
-
-What is a CAPTCHA and why is it used?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A9 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g4810"></a>
-
-### Explain the concept of Session Management in web applications and common vulnerabilities. <sub>G4810</sub>
-
-*Written*
-
-Explain the concept of Session Management in web applications and common vulnerabilities.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B4 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g4811"></a>
-
-### What is a Proxy Server? Describe forward and reverse proxy use-cases. <sub>G4811</sub>
-
-*Written*
-
-What is a Proxy Server? Describe forward and reverse proxy use-cases.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B5 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g4812"></a>
-
-### Explain the principle of 'Least Privilege' and its importance in bank IT environments. <sub>G4812</sub>
-
-*Written*
-
-Explain the principle of 'Least Privilege' and its importance in bank IT environments.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B6 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g4847"></a>
-
-### Alternate Task: Write how a Load Balancer works. Compare L4 vs L7 load balancing. Give an… <sub>G4847</sub>
-
-*Written*
-
-Alternate Task: Write how a Load Balancer works. Compare L4 vs L7 load balancing. Give an example relevant to banking applications.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), D3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
 ## Network devices
 
 <a id="g1459"></a>
@@ -8352,6 +7026,7 @@ Suppose Bangladesh bank is designing a nation of communication network for offic
 - **Asked in (1):** BB AD(ICT) 2025
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — Written — 07.02.2025 — Exam taker: not stated (coaching labels FBS / DU; unverified) — marks not printed — recollection, R7 — [bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md](../bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md)
+- **Correction:** the number of routers/switches is not given; the "2 devices" is the solver's assumption. Propagation + transmission alone = 0.27 ms.
 
 <a id="g4389"></a>
 
@@ -8877,6 +7552,988 @@ Which one of the following is the source of data communication? ক. Modem খ. 
 - **Asked in (0):** no dated exam tag on the source
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q71 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
+
+## TCP, UDP & congestion control
+
+<a id="g1451"></a>
+
+### 3-way handshake protocol for TCP connection using diagram. <sub>G1451</sub>
+
+*Written*
+
+3-way handshake protocol for TCP connection using diagram.
+
+- **Asked in (4):** BCIC AP 2022; BGDCL AE(CSE) 2021; BRICM AME 2024; Sonali Bank Officer(IT) 2021
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q48 — [bit to exabyte/66_bte-g2-p52-networking-q48-65-devices-firewall.md](../bit%20to%20exabyte/66_bte-g2-p52-networking-q48-65-devices-firewall.md) · [image](../bit%20to%20exabyte/66_bte-g2-p52-networking-q48-65-devices-firewall.jpg)
+
+<a id="g1474"></a>
+
+### Differentiate between TCP and UDP. <sub>G1474</sub>
+
+*Written*
+
+Differentiate between TCP and UDP.
+
+- **Asked in (4):** 37th BCS; 45th BCS CSE (2024); BPSC AP 2021; Combined Bank SO(IT) 2024
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q71 — [bit to exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md) · [image](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.jpg)
+  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q9 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper I) (suggestion), A7 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g0020"></a>
+
+### TCP and UDP are examples of transport layer protocols. What are the differences between t… <sub>G0020</sub>
+
+*Written*
+
+TCP and UDP are examples of transport layer protocols. What are the differences between these two protocols?
+
+- **Asked in (1):** 45th BCS CSE (2024)
+- **Source:**
+  - 45th BCS Written (CSE-971) (2024-01-31), (b) (question number not shown) — [BCS/07_dns-tcp-udp-differences.md](../BCS/07_dns-tcp-udp-differences.md) · [image](../BCS/07_dns-tcp-udp-differences.jpg)
+- **Printed answer:** TCP: connection-oriented, extensive error checking, 20-byte header, heavyweight (HTTP, FTP, SMTP). UDP: connectionless, checksum only, 8-byte header, lightweight (DNS, DHCP, TFTP, SNMP, VoIP).
+
+<a id="g0302"></a>
+
+### 4,500 bytes sent over TCP in 500-byte packets, initial sequence 3,100, 2 of every 5 packe… <sub>G0302</sub>
+
+*Written*
+
+4,500 bytes sent over TCP in 500-byte packets, initial sequence 3,100, 2 of every 5 packets lost: fill a table of sender sequence, stored sequence and ACK numbers, showing retransmissions.
+
+- **Asked in (1):** BSCL AE(CSE) 2026
+- **Source:**
+  - Bangladesh Satellite Company PLC Assistant Engineer (CSE) (2026-08-21), Q10 — [BUET JOB/22_vm-containers-and-network-questions.md](../BUET%20JOB/22_vm-containers-and-network-questions.md) · [image](../BUET%20JOB/22_vm-containers-and-network-questions.jpg); [BUET JOB/34_bscll-ae-and-bba-questions.md](../BUET%20JOB/34_bscll-ae-and-bba-questions.md) · [image](../BUET%20JOB/34_bscll-ae-and-bba-questions.jpg)
+
+<a id="g0304"></a>
+
+### Bandwidth 10 Mbps, average packet 1500 bytes: maximum packet arrival rate without congest… <sub>G0304</sub>
+
+*Written*
+
+Bandwidth 10 Mbps, average packet 1500 bytes: maximum packet arrival rate without congestion?
+
+- **Asked in (1):** BSCL AE(CSE) 2025
+- **Source:**
+  - Bangladesh Satellite Company PLC Assistant Engineer (CSE) (2025-08-23), Q2 — [BUET JOB/34_bscll-ae-and-bba-questions.md](../BUET%20JOB/34_bscll-ae-and-bba-questions.md) · [image](../BUET%20JOB/34_bscll-ae-and-bba-questions.jpg)
+- **Correction:** No answer printed. 10×10^6 / (1500×8) ≈ 833 packets/s.
+
+<a id="g1441"></a>
+
+### Difference between TCP and UDP. Distinguish between Cat5 and Cat6. <sub>G1441</sub>
+
+*Written*
+
+Difference between TCP and UDP. Distinguish between Cat5 and Cat6.
+
+- **Asked in (1):** Combined Bank Officer(IT) 2023
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q36 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
+
+<a id="g1473"></a>
+
+### Using an explanation of the difference between flow-control and congestion control, discu… <sub>G1473</sub>
+
+*Written*
+
+Using an explanation of the difference between flow-control and congestion control, discuss the impact of a stable end-to-end latency.
+
+- **Asked in (1):** Combined Bank Officer(IT) 2024
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q70 — [bit to exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md) · [image](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q10 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g1478"></a>
+
+### Congestion ? Network-এ কিভাবে Congestion নিরাসন করা যায়? আলোচনা করুন <sub>G1478</sub>
+
+*Written*
+
+Congestion ? Network-এ কিভাবে Congestion নিরাসন করা যায়? আলোচনা করুন
+
+- **Asked in (1):** 18th NTRCA College ICT (2024)
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication & Computer Networking, Q1 — [bit to exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md) · [image](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.jpg)
+
+<a id="g1752"></a>
+
+### Congestion কী? Network-এ কীভাবে Congestion নিয়ন্ত্রণ করা যায়? আলোচনা করুন। <sub>G1752</sub>
+
+*Written*
+
+Congestion কী? Network-এ কীভাবে Congestion নিয়ন্ত্রণ করা যায়? আলোচনা করুন।
+
+- **Asked in (1):** 18th NTRCA College ICT (2024)
+- **Source:**
+  - Question paper, Q10(খ) — [18th NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md) · [image](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.jpg)
+
+<a id="g1922"></a>
+
+### TCP ও UDP হলো Transport layer protocol এর উদাহরণ। এই protocol দুটির পার্থক্যগুলো লিখুন। <sub>G1922</sub>
+
+*Written*
+
+TCP ও UDP হলো Transport layer protocol এর উদাহরণ। এই protocol দুটির পার্থক্যগুলো লিখুন।
+
+- **Asked in (1):** 45th BCS CSE (2024)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৭ (খ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2414"></a>
+
+### TCP/IP মডেলের লেয়ারগুলোর কাজ লিখুন? <sub>G2414</sub>
+
+*Written*
+
+TCP/IP মডেলের লেয়ারগুলোর কাজ লিখুন?
+
+- **Asked in (1):** DESCO SAE 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ৯ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
+
+<a id="g3025"></a>
+
+### Difference between TCP and UDP, HTTP and HTTPS. <sub>G3025</sub>
+
+*Written*
+
+Difference between TCP and UDP, HTTP and HTTPS.
+
+- **Asked in (1):** SPCBL SAME 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 12 — The Security Printing Corporation (Bangladesh) Ltd. -2022 — Post: Sub – Assistant Maintenance Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours; Technical Marks: 150 Marks [MCQ:25, Written: 125] Non-Technical: 50 — pages 18–19, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3041"></a>
+
+### Explain these terms and also mention the layer: Framing, Flow control, Error control, Rel… <sub>G3041</sub>
+
+*Written*
+
+Explain these terms and also mention the layer: Framing, Flow control, Error control, Reliability?
+
+- **Asked in (1):** JBL ANE 2022
+- **Source:**
+  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q31 — [suggestion based on previous yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.md](../suggestion%20based%20on%20previous%20yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.md) · [image](../suggestion%20based%20on%20previous%20yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3058"></a>
+
+### Explain the additive increase and multiplicative decrease methods used in TCP for congest… <sub>G3058</sub>
+
+*Written*
+
+Explain the additive increase and multiplicative decrease methods used in TCP for congestion control.
+
+- **Asked in (1):** JBL ANA 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q(unnumbered 4) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3072"></a>
+
+### How stop and wait ARQ is used for reliable data transfer? <sub>G3072</sub>
+
+*Written*
+
+How stop and wait ARQ is used for reliable data transfer?
+
+- **Asked in (1):** Combined Bank SO(IT) 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3103"></a>
+
+### Difference between TCP and UDP, (CAT5 and CAT6) (FAT32 and NTFS)? <sub>G3103</sub>
+
+*Written*
+
+Difference between TCP and UDP, (CAT5 and CAT6) (FAT32 and NTFS)?
+
+- **Asked in (1):** Combined Bank Officer(IT) 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 04 — Officer IT- Combined Bank — 14.10.2023 — Job ID: 10152 — Exam taker: BIBM — IT: 150 marks + Non IT: 40 marks + GK: 10 marks = 200 marks — pages 32–33, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3197"></a>
+
+### How many types of modes are used in data transferring through networks? Briefly explain t… <sub>G3197</sub>
+
+*Written*
+
+How many types of modes are used in data transferring through networks? Briefly explain those modes. Differentiate between TCP vs UDP. [Combined 3 Bank SO(IT) 24]
+
+- **Asked in (1):** Combined Bank SO(IT) 2024
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q5 — [bit to exabyte/62_bte-g2-p48-ip-q75-79-networking-q01-06.md](../bit%20to%20exabyte/62_bte-g2-p48-ip-q75-79-networking-q01-06.md) · [image](../bit%20to%20exabyte/62_bte-g2-p48-ip-q75-79-networking-q01-06.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q(unnumbered 6) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3204"></a>
+
+### Why does the Domain Name System (DNS) primarily use UDP as its transport layer protocol i… <sub>G3204</sub>
+
+*Written*
+
+Why does the Domain Name System (DNS) primarily use UDP as its transport layer protocol instead of TCP? Describe the sequence of events that take place during the DNS name resolution process when a user enters www.companybd.com into a web browser and presses Enter. [Combined Bank Officer (IT) 25] (10 Marks)
+
+- **Asked in (1):** Combined Bank Officer(IT) 2025
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3217"></a>
+
+### Compare TCP and UDP protocols with examples. [BSCS AP (SB & Janata Bank) 26] 10 <sub>G3217</sub>
+
+*Written*
+
+Compare TCP and UDP protocols with examples. [BSCS AP (SB & Janata Bank) 26] 10
+
+- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g1489"></a>
+
+### How congestion control works in the TCP? <sub>G1489</sub>
+
+*Written*
+
+How congestion control works in the TCP?
+
+- **Asked in (1):** BPSC AP 2021
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication & Computer Networking, Q13 — [bit to exabyte/68_bte-g2-p54-networking-q10-30-osi-crc-protocols.md](../bit%20to%20exabyte/68_bte-g2-p54-networking-q10-30-osi-crc-protocols.md) · [image](../bit%20to%20exabyte/68_bte-g2-p54-networking-q10-30-osi-crc-protocols.jpg)
+
+<a id="g2210"></a>
+
+### The primary function of the transmission control protocol (TCP) is the term of unreliable… <sub>G2210</sub>
+
+*Written*
+
+The primary function of the transmission control protocol (TCP) is the term of unreliable network to make a network more reliable. TCP performs six basic function. What is the basic function performed by TCP?
+
+- **Asked in (1):** BTRC AD 2021
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director 19/02/2021, Q5.4 — [duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md](../duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md)
+
+<a id="g2919"></a>
+
+### The primary function of the Transmission control Protocol (TCP) is to turn an unreliable … <sub>G2919</sub>
+
+*Written*
+
+The primary function of the Transmission control Protocol (TCP) is to turn an unreliable network into a reliable network that is free from lost and duplicate packets. What are the functions performed by TCP to make a network more reliable?
+
+- **Asked in (1):** Combined Bank Officer(IT) 2020
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(O) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3823"></a>
+
+### DNS (Domain Name System) is a kind of phonebook of the Internet, which connects web brows… <sub>G3823</sub>
+
+*MCQ*
+
+DNS (Domain Name System) is a kind of phonebook of the Internet, which connects web browsers with websites. In case of DNS, which of the following is false? (a) Using TCP for DNS could involve several TCP connections to be established, as several name servers may need to be contacted to translate a name. This results in a high overhead in delay that is not acceptable for DNS queries and responses. (b) UDP involves a smaller packet size imposing a smaller load on name servers due to its simplicity. Therefore, UDP is used for DNS. (c) Both of the above (d) None of the above
+
+- **Asked in (1):** BUET M.Sc. April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q11 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
+
+<a id="g3884"></a>
+
+### Which of the following takes advantage of the TCP congestion control algorithm? (a) TCP b… <sub>G3884</sub>
+
+*MCQ*
+
+Which of the following takes advantage of the TCP congestion control algorithm? (a) TCP blind injection attack (b) Optimistic ACK attack (c) TCP Syn flood attack (d) DDoS attack using TCP reset flag
+
+- **Asked in (1):** BUET M.Sc. April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q22 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
+
+<a id="g3885"></a>
+
+### How can you guess that some machine is probably sniffing the packets in a LAN? (a) Intern… <sub>G3885</sub>
+
+*MCQ*
+
+How can you guess that some machine is probably sniffing the packets in a LAN? (a) Internet traffic will be blocked by the sniffer machine causing timeouts (b) A ping response from the suspected machine will be slower than that of others (c) The suspected machine will launch a lot of ARP requests (d) There will be huge UDP streaming traffic in the LAN which will disrupt the network
+
+- **Asked in (1):** BUET M.Sc. April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q23 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
+
+<a id="g4475"></a>
+
+### TCP Vs UDP. <sub>G4475</sub>
+
+*Written*
+
+TCP Vs UDP.
+
+- **Asked in (1):** NHA AP 2019
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — National Housing Authority (Ministry of Housing and Public Works), Assistant Programmer — Written, 29.11.2019 — Exam taker: not printed — marks/time not printed, Q3 — [ministry-ap-web/2019-nha-ap-written-bdquestionbank/nha-ap-2019-written.md](../ministry-ap-web/2019-nha-ap-written-bdquestionbank/nha-ap-2019-written.md)
+
+<a id="g4483"></a>
+
+### Congestion Control কী? কী কী ভাবে Congestion Control করা যায়? <sub>G4483</sub>
+
+*Written*
+
+Congestion Control কী? কী কী ভাবে Congestion Control করা যায়?
+
+- **Asked in (1):** BPSC ANE 2020
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BPSC — non-cadre Assistant Network Engineer (ANE) — Written, 2020 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q1(i) — [ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md](../ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md)
+
+<a id="g4506"></a>
+
+### FTP প্রোটোকল নিচের কোনটি ব্যবহার করে? IP / TCP / UDP / SMTP Printed answer: TCP <sub>G4506</sub>
+
+*MCQ*
+
+FTP প্রোটোকল নিচের কোনটি ব্যবহার করে? IP / TCP / UDP / SMTP Printed answer: TCP
+
+- **Asked in (1):** DoICT AP 2020
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 11 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
+
+<a id="g1867"></a>
+
+### Distinguish between TCP and UDP . <sub>G1867</sub>
+
+*Written*
+
+Distinguish between TCP and UDP .
+
+- **Asked in (1):** 37th BCS
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 1.(a) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
+
+<a id="g2127"></a>
+
+### TCP/IP প্রোটোকল কী কাজ করে তা বর্ণনা করুন। <sub>G2127</sub>
+
+*Written*
+
+TCP/IP প্রোটোকল কী কাজ করে তা বর্ণনা করুন।
+
+- **Asked in (1):** 16th NTRCA ICT
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ১০ (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
+
+<a id="g1935"></a>
+
+### Difference between TCP and UDP <sub>G1935</sub>
+
+*Written*
+
+Difference between TCP and UDP
+
+- **Asked in (0):** no dated exam tag on the source
+- **Also asked in (not counted):** DBBL ANE/AHE 2019
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — Dutch Bangla Bank — Assistant Network/Hardware Engineer — 05/03/19 — Exam Taker: BUET — Time 1:30 Hours — Marks distribution: 20 (non_dept) + 65 (dept.) = 85 — pages 1–2, Q5 — [duranta/1707373769-dbbl-2019-written/1707373769.md](../duranta/1707373769-dbbl-2019-written/1707373769.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -05 (suggestion), Set-05 Q5 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
+
+<a id="g2372"></a>
+
+### Distinguish between TCP and UDP. [BCS – 37th(ICT)] <sub>G2372</sub>
+
+*Written*
+
+Distinguish between TCP and UDP. [BCS – 37th(ICT)]
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g4836"></a>
+
+### Describe how HTTPS works. Include SSL handshake steps. <sub>G4836</sub>
+
+*Written*
+
+Describe how HTTPS works. Include SSL handshake steps.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), B2 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+## Security concepts & authentication
+
+<a id="g0612"></a>
+
+### What is CIA Triad? <sub>G0612</sub>
+
+*Written · marked important in the Bit to Exabyte book*
+
+What is CIA Triad?
+
+- **Asked in (2):** EGCB SAE(ICT) 2023; Teletalk AM(IT) 2023
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p19 Q39 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p19)
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q2 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10, Q1 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+  - Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023, Q3 — [telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md](../telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md)
+- **Printed answer:** The CIA Triad is the foundation of information security:; Confidentiality: Protects data from unauthorized access; Integrity: Ensures data accuracy and prevents unauthorized modification; Availability: Ensures systems and data ...
+
+<a id="g1103"></a>
+
+### What is Cyber security? <sub>G1103</sub>
+
+*Written*
+
+What is Cyber security?
+
+- **Asked in (2):** Combined Bank AME/AHE 2023; Combined Bank SO(IT) 2023
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q1 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+
+<a id="g1129"></a>
+
+### (a) What is 2-factor authentication? Describe it with an example. <sub>G1129</sub>
+
+*Written*
+
+(a) What is 2-factor authentication? Describe it with an example.
+
+- **Asked in (2):** BPSC AP 2023; Hydrocarbon Unit AD(ICT) 2025
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q33 — [bit to exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md) · [image](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q7(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q8(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+
+<a id="g1130"></a>
+
+### অথেনটিকেশন বলতে কী বোঝায়? টু-ফ্যাক্টর অথেনটিকেশনের বর্ণনা দিন। <sub>G1130</sub>
+
+*Written*
+
+অথেনটিকেশন বলতে কী বোঝায়? টু-ফ্যাক্টর অথেনটিকেশনের বর্ণনা দিন।
+
+- **Asked in (1):** 45th BCS General (Sci & Tech) (2024)
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q34 — [bit to exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md) · [image](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.jpg)
+
+<a id="g2083"></a>
+
+### ডেটার গোপনীয়তা রক্ষায় ডেটা এনক্রিপশনের ভূমিকা আলোচনা করুন। <sub>G2083</sub>
+
+*Written*
+
+ডেটার গোপনীয়তা রক্ষায় ডেটা এনক্রিপশনের ভূমিকা আলোচনা করুন।
+
+- **Asked in (1):** 17th NTRCA CSE (2023)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৯ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
+
+<a id="g2654"></a>
+
+### একটা পাসওয়ার্ড নির্বাচনের ক্ষেত্রে কি কি বিষয় খেয়াল রাখা উচিত? <sub>G2654</sub>
+
+*Written*
+
+একটা পাসওয়ার্ড নির্বাচনের ক্ষেত্রে কি কি বিষয় খেয়াল রাখা উচিত?
+
+- **Asked in (1):** WZPDCL SAE 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১২ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
+
+<a id="g3011"></a>
+
+### What is Blacklist and Whitelist? Write down the Difference between Black list and white l… <sub>G3011</sub>
+
+*Written*
+
+What is Blacklist and Whitelist? Write down the Difference between Black list and white list.
+
+- **Asked in (1):** SPCBL SAE 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3052"></a>
+
+### In network security define these terms- Confidentiality, Non-repudiation, Authenticity, i… <sub>G3052</sub>
+
+*Written*
+
+In network security define these terms- Confidentiality, Non-repudiation, Authenticity, integrity, available.
+
+- **Asked in (1):** JBL ANA 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3094"></a>
+
+### Suppose A&B are two frames in a browser loaded from different origins. Why is it a reason… <sub>G3094</sub>
+
+*Written*
+
+Suppose A&B are two frames in a browser loaded from different origins. Why is it a reasonable security policy to allow A to navigate B to another origin based only on whether the display area of A contains of B and A has the control over rea? Consider pages reference string 12342341211314, three frames using LRU- find page faults.
+
+- **Asked in (1):** Combined Bank 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 1 — Combined 5 Bank — 03.02.2023 — post not printed — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 26–28, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3183"></a>
+
+### Your bank has an online banking system and this process is performed by sending OTP in mo… <sub>G3183</sub>
+
+*Written*
+
+Your bank has an online banking system and this process is performed by sending OTP in mobile or OTP in mail when a customer transfers money from mobile banking app or online. This is a secured policy. Without this biometric policy how you can more secure your online banking. Explain your strategy.
+
+- **Asked in (1):** Combined Bank AME/AE(IT) 2024
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 11 — Combined 3 Bank (10199) — Assistant Maintenance engineer/Assistant Engineer IT 2024 — 24.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 42–44, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3214"></a>
+
+### Describe how the principles of Confidentiality, Integrity, and Availability work together… <sub>G3214</sub>
+
+*Written*
+
+Describe how the principles of Confidentiality, Integrity, and Availability work together to protect organizational data, and provide one real-world example of a security breach where one or more of these principles were compromised. [Combined Bank Officer (IT) 25] (10 Marks)
+
+- **Asked in (1):** Combined Bank Officer(IT) 2025
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q22 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3221"></a>
+
+### What is authentication and authorization? What is the CIA triad in cyber security? [BSCS … <sub>G3221</sub>
+
+*Written*
+
+What is authentication and authorization? What is the CIA triad in cyber security? [BSCS AP (SB & Janata Bank) 26] 10
+
+- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3225"></a>
+
+### A new employee joins the bank Describe the process of creating a new user account for the… <sub>G3225</sub>
+
+*Written*
+
+A new employee joins the bank Describe the process of creating a new user account for them, focusing on security best practices (e.g., password policies) [BSCS AP (SB & Janata Bank) 26] 10
+
+- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3226"></a>
+
+### A new employee joins the bank. Describe je, password policies). [BSCS AP (SB & Janata Ban… <sub>G3226</sub>
+
+*Written*
+
+A new employee joins the bank. Describe je, password policies). [BSCS AP (SB & Janata Bank) 26] 10
+
+- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3414"></a>
+
+### A server suddenly starts sending abnormal traffic to external systems. Analyze the possib… <sub>G3414</sub>
+
+*Written*
+
+A server suddenly starts sending abnormal traffic to external systems. Analyze the possible cause and suggest immediate actions.
+
+- **Asked in (1):** Combined Bank AME 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS), Assistant Maintenance Engineer/Assistant Engineer (IT) — Exam Date 08/05/2026 — exam taker not printed — time not printed — 15 questions, total marks 200 (Q1–Q6: 15 marks each) — pages 1–10, Q6 — [duranta/1783405234-bscs-ame-ae-it/1783405234.md](../duranta/1783405234-bscs-ame-ae-it/1783405234.md)
+
+<a id="g3524"></a>
+
+### Explain the importance of cyber security law. <sub>G3524</sub>
+
+*Written*
+
+Explain the importance of cyber security law.
+
+- **Asked in (1):** Intl Crimes Tribunal Hardware Technician 2024
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q8 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+
+<a id="g3532"></a>
+
+### Explain access, security and privacy issues in information technology <sub>G3532</sub>
+
+*Written*
+
+Explain access, security and privacy issues in information technology
+
+- **Asked in (1):** Intl Crimes Tribunal Hardware Technician 2024
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q16 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+
+<a id="g3585"></a>
+
+### What is the CIA Triad? Explain its three components. <sub>G3585</sub>
+
+*Written*
+
+What is the CIA Triad? Explain its three components.
+
+- **Asked in (1):** NPCBL Engineer(Cyber Security) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — NPCBL Engineer (Cyber Security Analyst) 11.07.2026, 1 — [duranta/1783762106-npcbl-sae-csa/1783762106.md](../duranta/1783762106-npcbl-sae-csa/1783762106.md)
+
+<a id="g3597"></a>
+
+### What is the Cyber Security Act of Bangladesh? State its main objectives. <sub>G3597</sub>
+
+*Written*
+
+What is the Cyber Security Act of Bangladesh? State its main objectives.
+
+- **Asked in (1):** NPCBL Engineer(Cyber Security) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — NPCBL Engineer (Cyber Security Analyst) 11.07.2026, 14 — [duranta/1783762106-npcbl-sae-csa/1783762106.md](../duranta/1783762106-npcbl-sae-csa/1783762106.md)
+
+<a id="g3631"></a>
+
+### What does CIA stand for in Cyber Security? <sub>G3631</sub>
+
+*MCQ*
+
+What does CIA stand for in Cyber Security?
+
+- **Asked in (1):** Combined Bank Officer(IT) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 20 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
+
+<a id="g4290"></a>
+
+### Which one is the Strongest Password? <sub>G4290</sub>
+
+*MCQ*
+
+Which one is the Strongest Password?
+
+- **Asked in (1):** BB AD(General) 2022
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ97 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)
+
+<a id="g0175"></a>
+
+### Differentiate blacklisting and whitelisting. Which is more secure and why? <sub>G0175</sub>
+
+*Written*
+
+Differentiate blacklisting and whitelisting. Which is more secure and why?
+
+- **Asked in (1):** PGCB AE(CSE) 2021
+- **Source:**
+  - PGCB Assistant Engineer (CSE) (BUET) (2021-09-30), Q6 — [BUET JOB/13_pattern-processor-widths-blacklist.md](../BUET%20JOB/13_pattern-processor-widths-blacklist.md) · [image](../BUET%20JOB/13_pattern-processor-widths-blacklist.jpg); [BUET JOB/04_heap-insert-and-delete-7.md](../BUET%20JOB/04_heap-insert-and-delete-7.md) · [image](../BUET%20JOB/04_heap-insert-and-delete-7.jpg)
+- **Printed answer:** Defines both; concludes 'Blacklist is more secure'.
+- **Correction:** Whitelisting is more secure: it is default-deny (only pre-approved items run), while a blacklist only blocks known-bad items and misses new or unknown threats.
+
+<a id="g1122"></a>
+
+### Write down the difference between Authentication and Authorization. <sub>G1122</sub>
+
+*Written*
+
+Write down the difference between Authentication and Authorization.
+
+- **Asked in (1):** 40th BCS (2020)
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q25 — [bit to exabyte/25_bte-g2-p11-cyber-security-q07-26.md](../bit%20to%20exabyte/25_bte-g2-p11-cyber-security-q07-26.md) · [image](../bit%20to%20exabyte/25_bte-g2-p11-cyber-security-q07-26.jpg)
+
+<a id="g2226"></a>
+
+### What do you mean by two factor authentication. Explain with example. <sub>G2226</sub>
+
+*Written*
+
+What do you mean by two factor authentication. Explain with example.
+
+- **Asked in (1):** BTRC AD(Technical) 2019
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q6 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W6 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+
+<a id="g4495"></a>
+
+### Authentication বলতে কি বুঝায়? Two Factor Authentication কি? উদাহরণসহ ব্যাখ্যা করুন। <sub>G4495</sub>
+
+*Written*
+
+Authentication বলতে কি বুঝায়? Two Factor Authentication কি? উদাহরণসহ ব্যাখ্যা করুন।
+
+- **Asked in (1):** ICT Ministry AP 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BPSC — ICT Division (ICT Ministry), Assistant Programmer (59 posts) — Written, 2021 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q6(খ) — [ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md](../ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md)
+
+<a id="g4505"></a>
+
+### ACL ( Access Control List) এর দুটি প্রধান ধরন হল- Standard and Extended / Standard and Sp… <sub>G4505</sub>
+
+*MCQ*
+
+ACL ( Access Control List) এর দুটি প্রধান ধরন হল- Standard and Extended / Standard and Specialized / Standard and Specialized / Extended and EEE Printed answer: Standard and Extended
+
+- **Asked in (1):** DoICT AP 2020
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 10 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
+
+<a id="g2120"></a>
+
+### ডেটা এনক্রিপশন বলতে কী বোঝায়? বহুল ব্যবহৃত কয়েকটি এনক্রিপশন পদ্ধতির নাম লিখুন। <sub>G2120</sub>
+
+*Written*
+
+ডেটা এনক্রিপশন বলতে কী বোঝায়? বহুল ব্যবহৃত কয়েকটি এনক্রিপশন পদ্ধতির নাম লিখুন।
+
+- **Asked in (1):** 16th NTRCA ICT
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
+
+<a id="g0586"></a>
+
+### What is WAF? <sub>G0586</sub>
+
+*Viva*
+
+What is WAF?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p16 Q11 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p16)
+- **Printed answer:** WAF (Web Application Firewall) protects web applications by filtering and monitoring HTTP/HTTPS traffic to prevent attacks like SQL injection and XSS
+
+<a id="g0599"></a>
+
+### What is Two-Factor Authentication (2FA)? <sub>G0599</sub>
+
+*Viva*
+
+What is Two-Factor Authentication (2FA)?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p17 Q26 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p17)
+- **Printed answer:** 2FA adds an extra security layer by requiring two verification methods, such as a password and OTP
+
+<a id="g0600"></a>
+
+### What is Multi-Factor Authentication (MFA)? <sub>G0600</sub>
+
+*Viva*
+
+What is Multi-Factor Authentication (MFA)?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p17 Q27 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p17)
+- **Printed answer:** MFA requires two or more authentication factors, such as password, OTP, fingerprint, or security token
+
+<a id="g0604"></a>
+
+### What is Penetration Testing? <sub>G0604</sub>
+
+*Viva*
+
+What is Penetration Testing?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q31 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
+- **Printed answer:** Penetration Testing is an authorized security test where ethical hackers simulate attacks to find vulnerabilities
+
+<a id="g0605"></a>
+
+### Difference between Hacking and Ethical Hacking. <sub>G0605</sub>
+
+*Viva*
+
+Difference between Hacking and Ethical Hacking.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q32 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
+- **Printed answer:** Hacking: Unauthorized access to systems; Ethical Hacking: Authorized testing to improve security
+
+<a id="g0608"></a>
+
+### What is Host Security? <sub>G0608</sub>
+
+*Viva*
+
+What is Host Security?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q35 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
+- **Printed answer:** Host Security protects individual computers, servers, and devices from unauthorized access and malware
+
+<a id="g0609"></a>
+
+### What is Data Security? <sub>G0609</sub>
+
+*Viva*
+
+What is Data Security?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q36 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
+- **Printed answer:** Data Security protects information from unauthorized access, modification, disclosure, or destruction
+
+<a id="g0611"></a>
+
+### What are the basic principles of Security? <sub>G0611</sub>
+
+*Viva*
+
+What are the basic principles of Security?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p19 Q38 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p19)
+- **Printed answer:** The main principles are; Confidentiality, Integrity, Availability, Authentication, Authorization, and Non-repudiation
+
+<a id="g0410"></a>
+
+### This post involves security work; how can data be exchanged securely in Android? <sub>G0410</sub>
+
+*Viva*
+
+This post involves security work; how can data be exchanged securely in Android?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Paper not shown on the source sheet, Viva — [VIVA/05_jdk-android-and-java-viva.md](../VIVA/05_jdk-android-and-java-viva.md) · [image](../VIVA/05_jdk-android-and-java-viva.jpg)
+- **Printed answer:** Authentication checks on API calls, verifying each data pull, encrypting data; runtime permissions since Android 6.0 stop background data access
+
+<a id="g0411"></a>
+
+### What did developers gain from this? Only users benefit. <sub>G0411</sub>
+
+*Viva*
+
+What did developers gain from this? Only users benefit.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Paper not shown on the source sheet, Viva — [VIVA/05_jdk-android-and-java-viva.md](../VIVA/05_jdk-android-and-java-viva.md) · [image](../VIVA/05_jdk-android-and-java-viva.jpg)
+- **Printed answer:** Developers write more code, but users' data security has improved
+
+<a id="g1764"></a>
+
+### Security of Key Storage: Secure storage prevents unauthorized key access. <sub>G1764</sub>
+
+*Written*
+
+Security of Key Storage: Secure storage prevents unauthorized key access.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q17 — [suggestion based on previous yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.md](../suggestion%20based%20on%20previous%20yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.md) · [image](../suggestion%20based%20on%20previous%20yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.jpg)
+
+<a id="g2278"></a>
+
+### What are the differences between message confidentiality and integrity? Can you have with… <sub>G2278</sub>
+
+*Written*
+
+What are the differences between message confidentiality and integrity? Can you have without the other?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2293"></a>
+
+### What are the properties of weak password? <sub>G2293</sub>
+
+*Written*
+
+What are the properties of weak password?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2453"></a>
+
+### (b) How do you define 2-factor authentication? Give example. 5 বিভিন্ন মন্ত্রণালয়, বিভাগ… <sub>G2453</sub>
+
+*Written*
+
+(b) How do you define 2-factor authentication? Give example. 5 বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার ২০২৩
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29, (b) — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
+
+<a id="g3257"></a>
+
+### CIA Triad ব্যাখ্যা কর। <sub>G3257</sub>
+
+*Written*
+
+CIA Triad ব্যাখ্যা কর।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+
+<a id="g3258"></a>
+
+### Authentication ও Authorization এর মধ্যে পার্থক্য লিখ। <sub>G3258</sub>
+
+*Written*
+
+Authentication ও Authorization এর মধ্যে পার্থক্য লিখ।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+
+<a id="g4813"></a>
+
+### Describe how two-factor authentication (2FA) enhances security; give two 2FA methods. <sub>G4813</sub>
+
+*Written*
+
+Describe how two-factor authentication (2FA) enhances security; give two 2FA methods.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B7 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4850"></a>
+
+### Discuss Cybersecurity Operation Center (SOC) activities and why a bank needs SOC monitori… <sub>G4850</sub>
+
+*Written*
+
+Discuss Cybersecurity Operation Center (SOC) activities and why a bank needs SOC monitoring 24/7.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), E3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
 ## Network types & Internet
 
@@ -9583,343 +9240,6 @@ How long is an IPV6 Address? ক. 32-bit খ. 128-byts গ. 64 bits ঘ. 128-bit
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q69 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
-## TCP, UDP & congestion control
-
-<a id="g1451"></a>
-
-### 3-way handshake protocol for TCP connection using diagram. <sub>G1451</sub>
-
-*Written*
-
-3-way handshake protocol for TCP connection using diagram.
-
-- **Asked in (4):** BCIC AP 2022; BGDCL AE(CSE) 2021; BRICM AME 2024; Sonali Bank Officer(IT) 2021
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q48 — [bit to exabyte/66_bte-g2-p52-networking-q48-65-devices-firewall.md](../bit%20to%20exabyte/66_bte-g2-p52-networking-q48-65-devices-firewall.md) · [image](../bit%20to%20exabyte/66_bte-g2-p52-networking-q48-65-devices-firewall.jpg)
-
-<a id="g1474"></a>
-
-### Differentiate between TCP and UDP. <sub>G1474</sub>
-
-*Written*
-
-Differentiate between TCP and UDP.
-
-- **Asked in (4):** 37th BCS; 45th BCS CSE (2024); BPSC AP 2021; Combined Bank SO(IT) 2024
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q71 — [bit to exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md) · [image](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.jpg)
-  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q9 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper I) (suggestion), A7 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g0020"></a>
-
-### TCP and UDP are examples of transport layer protocols. What are the differences between t… <sub>G0020</sub>
-
-*Written*
-
-TCP and UDP are examples of transport layer protocols. What are the differences between these two protocols?
-
-- **Asked in (1):** 45th BCS CSE (2024)
-- **Source:**
-  - 45th BCS Written (CSE-971) (2024-01-31), (b) (question number not shown) — [BCS/07_dns-tcp-udp-differences.md](../BCS/07_dns-tcp-udp-differences.md) · [image](../BCS/07_dns-tcp-udp-differences.jpg)
-- **Printed answer:** TCP: connection-oriented, extensive error checking, 20-byte header, heavyweight (HTTP, FTP, SMTP). UDP: connectionless, checksum only, 8-byte header, lightweight (DNS, DHCP, TFTP, SNMP, VoIP).
-
-<a id="g0304"></a>
-
-### Bandwidth 10 Mbps, average packet 1500 bytes: maximum packet arrival rate without congest… <sub>G0304</sub>
-
-*Written*
-
-Bandwidth 10 Mbps, average packet 1500 bytes: maximum packet arrival rate without congestion?
-
-- **Asked in (1):** BSCL AE(CSE) 2025
-- **Source:**
-  - Bangladesh Satellite Company PLC Assistant Engineer (CSE) (2025-08-23), Q2 — [BUET JOB/34_bscll-ae-and-bba-questions.md](../BUET%20JOB/34_bscll-ae-and-bba-questions.md) · [image](../BUET%20JOB/34_bscll-ae-and-bba-questions.jpg)
-- **Correction:** No answer printed. 10×10^6 / (1500×8) ≈ 833 packets/s.
-
-<a id="g1441"></a>
-
-### Difference between TCP and UDP. Distinguish between Cat5 and Cat6. <sub>G1441</sub>
-
-*Written*
-
-Difference between TCP and UDP. Distinguish between Cat5 and Cat6.
-
-- **Asked in (1):** Combined Bank Officer(IT) 2023
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q36 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
-
-<a id="g1473"></a>
-
-### Using an explanation of the difference between flow-control and congestion control, discu… <sub>G1473</sub>
-
-*Written*
-
-Using an explanation of the difference between flow-control and congestion control, discuss the impact of a stable end-to-end latency.
-
-- **Asked in (1):** Combined Bank Officer(IT) 2024
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q70 — [bit to exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md) · [image](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.jpg)
-  - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q10 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
-  - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g1478"></a>
-
-### Congestion ? Network-এ কিভাবে Congestion নিরাসন করা যায়? আলোচনা করুন <sub>G1478</sub>
-
-*Written*
-
-Congestion ? Network-এ কিভাবে Congestion নিরাসন করা যায়? আলোচনা করুন
-
-- **Asked in (1):** 18th NTRCA College ICT (2024)
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication & Computer Networking, Q1 — [bit to exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.md) · [image](../bit%20to%20exabyte/67_bte-g2-p53-networking-q66-74-osi-q01-09.jpg)
-
-<a id="g1752"></a>
-
-### Congestion কী? Network-এ কীভাবে Congestion নিয়ন্ত্রণ করা যায়? আলোচনা করুন। <sub>G1752</sub>
-
-*Written*
-
-Congestion কী? Network-এ কীভাবে Congestion নিয়ন্ত্রণ করা যায়? আলোচনা করুন।
-
-- **Asked in (1):** 18th NTRCA College ICT (2024)
-- **Source:**
-  - Question paper, Q10(খ) — [18th NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md) · [image](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.jpg)
-
-<a id="g1922"></a>
-
-### TCP ও UDP হলো Transport layer protocol এর উদাহরণ। এই protocol দুটির পার্থক্যগুলো লিখুন। <sub>G1922</sub>
-
-*Written*
-
-TCP ও UDP হলো Transport layer protocol এর উদাহরণ। এই protocol দুটির পার্থক্যগুলো লিখুন।
-
-- **Asked in (1):** 45th BCS CSE (2024)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৭ (খ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g3025"></a>
-
-### Difference between TCP and UDP, HTTP and HTTPS. <sub>G3025</sub>
-
-*Written*
-
-Difference between TCP and UDP, HTTP and HTTPS.
-
-- **Asked in (1):** SPCBL SAME 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 12 — The Security Printing Corporation (Bangladesh) Ltd. -2022 — Post: Sub – Assistant Maintenance Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours; Technical Marks: 150 Marks [MCQ:25, Written: 125] Non-Technical: 50 — pages 18–19, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3041"></a>
-
-### Explain these terms and also mention the layer: Framing, Flow control, Error control, Rel… <sub>G3041</sub>
-
-*Written*
-
-Explain these terms and also mention the layer: Framing, Flow control, Error control, Reliability?
-
-- **Asked in (1):** JBL ANE 2022
-- **Source:**
-  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q31 — [suggestion based on previous yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.md](../suggestion%20based%20on%20previous%20yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.md) · [image](../suggestion%20based%20on%20previous%20yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.jpg)
-  - duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3058"></a>
-
-### Explain the additive increase and multiplicative decrease methods used in TCP for congest… <sub>G3058</sub>
-
-*Written*
-
-Explain the additive increase and multiplicative decrease methods used in TCP for congestion control.
-
-- **Asked in (1):** JBL ANA 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q(unnumbered 4) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3103"></a>
-
-### Difference between TCP and UDP, (CAT5 and CAT6) (FAT32 and NTFS)? <sub>G3103</sub>
-
-*Written*
-
-Difference between TCP and UDP, (CAT5 and CAT6) (FAT32 and NTFS)?
-
-- **Asked in (1):** Combined Bank Officer(IT) 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 04 — Officer IT- Combined Bank — 14.10.2023 — Job ID: 10152 — Exam taker: BIBM — IT: 150 marks + Non IT: 40 marks + GK: 10 marks = 200 marks — pages 32–33, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3197"></a>
-
-### How many types of modes are used in data transferring through networks? Briefly explain t… <sub>G3197</sub>
-
-*Written*
-
-How many types of modes are used in data transferring through networks? Briefly explain those modes. Differentiate between TCP vs UDP. [Combined 3 Bank SO(IT) 24]
-
-- **Asked in (1):** Combined Bank SO(IT) 2024
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q5 — [bit to exabyte/62_bte-g2-p48-ip-q75-79-networking-q01-06.md](../bit%20to%20exabyte/62_bte-g2-p48-ip-q75-79-networking-q01-06.md) · [image](../bit%20to%20exabyte/62_bte-g2-p48-ip-q75-79-networking-q01-06.jpg)
-  - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q(unnumbered 6) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3204"></a>
-
-### Why does the Domain Name System (DNS) primarily use UDP as its transport layer protocol i… <sub>G3204</sub>
-
-*Written*
-
-Why does the Domain Name System (DNS) primarily use UDP as its transport layer protocol instead of TCP? Describe the sequence of events that take place during the DNS name resolution process when a user enters www.companybd.com into a web browser and presses Enter. [Combined Bank Officer (IT) 25] (10 Marks)
-
-- **Asked in (1):** Combined Bank Officer(IT) 2025
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3217"></a>
-
-### Compare TCP and UDP protocols with examples. [BSCS AP (SB & Janata Bank) 26] 10 <sub>G3217</sub>
-
-*Written*
-
-Compare TCP and UDP protocols with examples. [BSCS AP (SB & Janata Bank) 26] 10
-
-- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g1489"></a>
-
-### How congestion control works in the TCP? <sub>G1489</sub>
-
-*Written*
-
-How congestion control works in the TCP?
-
-- **Asked in (1):** BPSC AP 2021
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication & Computer Networking, Q13 — [bit to exabyte/68_bte-g2-p54-networking-q10-30-osi-crc-protocols.md](../bit%20to%20exabyte/68_bte-g2-p54-networking-q10-30-osi-crc-protocols.md) · [image](../bit%20to%20exabyte/68_bte-g2-p54-networking-q10-30-osi-crc-protocols.jpg)
-
-<a id="g3823"></a>
-
-### DNS (Domain Name System) is a kind of phonebook of the Internet, which connects web brows… <sub>G3823</sub>
-
-*MCQ*
-
-DNS (Domain Name System) is a kind of phonebook of the Internet, which connects web browsers with websites. In case of DNS, which of the following is false? (a) Using TCP for DNS could involve several TCP connections to be established, as several name servers may need to be contacted to translate a name. This results in a high overhead in delay that is not acceptable for DNS queries and responses. (b) UDP involves a smaller packet size imposing a smaller load on name servers due to its simplicity. Therefore, UDP is used for DNS. (c) Both of the above (d) None of the above
-
-- **Asked in (1):** BUET M.Sc. April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q11 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
-
-<a id="g3884"></a>
-
-### Which of the following takes advantage of the TCP congestion control algorithm? (a) TCP b… <sub>G3884</sub>
-
-*MCQ*
-
-Which of the following takes advantage of the TCP congestion control algorithm? (a) TCP blind injection attack (b) Optimistic ACK attack (c) TCP Syn flood attack (d) DDoS attack using TCP reset flag
-
-- **Asked in (1):** BUET M.Sc. April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q22 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
-
-<a id="g3885"></a>
-
-### How can you guess that some machine is probably sniffing the packets in a LAN? (a) Intern… <sub>G3885</sub>
-
-*MCQ*
-
-How can you guess that some machine is probably sniffing the packets in a LAN? (a) Internet traffic will be blocked by the sniffer machine causing timeouts (b) A ping response from the suspected machine will be slower than that of others (c) The suspected machine will launch a lot of ARP requests (d) There will be huge UDP streaming traffic in the LAN which will disrupt the network
-
-- **Asked in (1):** BUET M.Sc. April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q23 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
-
-<a id="g4475"></a>
-
-### TCP Vs UDP. <sub>G4475</sub>
-
-*Written*
-
-TCP Vs UDP.
-
-- **Asked in (1):** NHA AP 2019
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — National Housing Authority (Ministry of Housing and Public Works), Assistant Programmer — Written, 29.11.2019 — Exam taker: not printed — marks/time not printed, Q3 — [ministry-ap-web/2019-nha-ap-written-bdquestionbank/nha-ap-2019-written.md](../ministry-ap-web/2019-nha-ap-written-bdquestionbank/nha-ap-2019-written.md)
-
-<a id="g4483"></a>
-
-### Congestion Control কী? কী কী ভাবে Congestion Control করা যায়? <sub>G4483</sub>
-
-*Written*
-
-Congestion Control কী? কী কী ভাবে Congestion Control করা যায়?
-
-- **Asked in (1):** BPSC ANE 2020
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BPSC — non-cadre Assistant Network Engineer (ANE) — Written, 2020 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q1(i) — [ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md](../ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md)
-
-<a id="g4506"></a>
-
-### FTP প্রোটোকল নিচের কোনটি ব্যবহার করে? IP / TCP / UDP / SMTP Printed answer: TCP <sub>G4506</sub>
-
-*MCQ*
-
-FTP প্রোটোকল নিচের কোনটি ব্যবহার করে? IP / TCP / UDP / SMTP Printed answer: TCP
-
-- **Asked in (1):** DoICT AP 2020
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 11 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
-
-<a id="g1867"></a>
-
-### Distinguish between TCP and UDP . <sub>G1867</sub>
-
-*Written*
-
-Distinguish between TCP and UDP .
-
-- **Asked in (1):** 37th BCS
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 1.(a) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
-
-<a id="g1935"></a>
-
-### Difference between TCP and UDP <sub>G1935</sub>
-
-*Written*
-
-Difference between TCP and UDP
-
-- **Asked in (0):** no dated exam tag on the source
-- **Also asked in (not counted):** DBBL ANE/AHE 2019
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — Dutch Bangla Bank — Assistant Network/Hardware Engineer — 05/03/19 — Exam Taker: BUET — Time 1:30 Hours — Marks distribution: 20 (non_dept) + 65 (dept.) = 85 — pages 1–2, Q5 — [duranta/1707373769-dbbl-2019-written/1707373769.md](../duranta/1707373769-dbbl-2019-written/1707373769.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -05 (suggestion), Set-05 Q5 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
-
-<a id="g2372"></a>
-
-### Distinguish between TCP and UDP. [BCS – 37th(ICT)] <sub>G2372</sub>
-
-*Written*
-
-Distinguish between TCP and UDP. [BCS – 37th(ICT)]
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g4836"></a>
-
-### Describe how HTTPS works. Include SSL handshake steps. <sub>G4836</sub>
-
-*Written*
-
-Describe how HTTPS works. Include SSL handshake steps.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), B2 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
 ## Firewall, IDS/IPS & DMZ
 
 <a id="g1461"></a>
@@ -10437,396 +9757,951 @@ To prevent __ we use firewall. ক. Data-driven attack খ. Virus attack গ. Un
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q19 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
-## Security concepts & authentication
+## Other
 
-<a id="g0612"></a>
+<a id="g3165"></a>
 
-### What is CIA Triad? <sub>G0612</sub>
-
-*Written · marked important in the Bit to Exabyte book*
-
-What is CIA Triad?
-
-- **Asked in (2):** EGCB SAE(ICT) 2023; Teletalk AM(IT) 2023
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p19 Q39 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p19)
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q2 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10, Q1 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
-  - Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023, Q3 — [telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md](../telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md)
-- **Printed answer:** The CIA Triad is the foundation of information security:; Confidentiality: Protects data from unauthorized access; Integrity: Ensures data accuracy and prevents unauthorized modification; Availability: Ensures systems and data ...
-
-<a id="g1103"></a>
-
-### What is Cyber security? <sub>G1103</sub>
+### How ensure secure communication between a client application and the database server. [Co… <sub>G3165</sub>
 
 *Written*
 
-What is Cyber security?
+How ensure secure communication between a client application and the database server. [Combined Bank ADA 2024]
 
-- **Asked in (2):** Combined Bank AME/AHE 2023; Combined Bank SO(IT) 2023
+- **Asked in (1):** Combined Bank ADA 2024
 - **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q1 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g1129"></a>
+<a id="g3469"></a>
 
-### (a) What is 2-factor authentication? Describe it with an example. <sub>G1129</sub>
+### c. What are the roles and responsibilities of a maintenance engineer in network security?… <sub>G3469</sub>
 
 *Written*
 
-(a) What is 2-factor authentication? Describe it with an example.
+c. What are the roles and responsibilities of a maintenance engineer in network security? 2
 
-- **Asked in (2):** BPSC AP 2023; Hydrocarbon Unit AD(ICT) 2025
+- **Asked in (1):** Parliament Secretariat SAE 2023
 - **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q33 — [bit to exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md) · [image](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.jpg)
-  - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q7(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-  - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q8(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q1(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g1130"></a>
+<a id="g4405"></a>
 
-### অথেনটিকেশন বলতে কী বোঝায়? টু-ফ্যাক্টর অথেনটিকেশনের বর্ণনা দিন। <sub>G1130</sub>
+### A corporate network pool experience IP exhaustion due to a high volume of transient guest… <sub>G4405</sub>
 
 *Written*
 
-অথেনটিকেশন বলতে কী বোঝায়? টু-ফ্যাক্টর অথেনটিকেশনের বর্ণনা দিন।
+A corporate network pool experience IP exhaustion due to a high volume of transient guest devices. What lease duration parameter adjustment resolves this?
 
-- **Asked in (1):** 45th BCS General (Sci & Tech) (2024)
+- **Asked in (1):** RAKUB ANSE 2026
 - **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q34 — [bit to exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md) · [image](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.jpg)
+  - Question paper found on the web (see the folder README for the URL) — Rajshahi Krishi Unnayan Bank (RAKUB) — Assistant Network System Engineer (Job ID 10230) — 05-Jun-2026 — Exam taker: not stated — marks not printed — recollection (13 items), Q11 — [bank-written-web/2026-rakub-anse-itjobqns/rakub-anse-2026.md](../bank-written-web/2026-rakub-anse-itjobqns/rakub-anse-2026.md)
 
-<a id="g3011"></a>
+<a id="g4622"></a>
 
-### What is Blacklist and Whitelist? Write down the Difference between Black list and white l… <sub>G3011</sub>
+### What is MAC flooding? How to prevent MAC flooding? <sub>G4622</sub>
 
 *Written*
 
-What is Blacklist and Whitelist? Write down the Difference between Black list and white list.
+What is MAC flooding? How to prevent MAC flooding?
 
-- **Asked in (1):** SPCBL SAE 2022
+- **Asked in (1):** Teletalk AM(IT) 2023
 - **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+  - Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023, Q4 — [telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md](../telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md)
 
-<a id="g3221"></a>
+<a id="g2207"></a>
 
-### What is authentication and authorization? What is the CIA triad in cyber security? [BSCS … <sub>G3221</sub>
+### Write the full form of the given technology ICX, IGW and IIG. Write the function of these… <sub>G2207</sub>
 
 *Written*
 
-What is authentication and authorization? What is the CIA triad in cyber security? [BSCS AP (SB & Janata Bank) 26] 10
+Write the full form of the given technology ICX, IGW and IIG. Write the function of these terminologies?
 
-- **Asked in (1):** Combined Bank AP(SB & Janata) 2026
+- **Asked in (1):** BTRC AD 2021
 - **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director 19/02/2021, Q5.1 — [duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md](../duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md)
 
-<a id="g3524"></a>
+<a id="g2223"></a>
 
-### Explain the importance of cyber security law. <sub>G3524</sub>
+### Possible threads to a computer system and how to provide security. <sub>G2223</sub>
 
 *Written*
 
-Explain the importance of cyber security law.
-
-- **Asked in (1):** Intl Crimes Tribunal Hardware Technician 2024
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q8 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-
-<a id="g3585"></a>
-
-### What is the CIA Triad? Explain its three components. <sub>G3585</sub>
-
-*Written*
-
-What is the CIA Triad? Explain its three components.
-
-- **Asked in (1):** NPCBL Engineer(Cyber Security) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — NPCBL Engineer (Cyber Security Analyst) 11.07.2026, 1 — [duranta/1783762106-npcbl-sae-csa/1783762106.md](../duranta/1783762106-npcbl-sae-csa/1783762106.md)
-
-<a id="g3597"></a>
-
-### What is the Cyber Security Act of Bangladesh? State its main objectives. <sub>G3597</sub>
-
-*Written*
-
-What is the Cyber Security Act of Bangladesh? State its main objectives.
-
-- **Asked in (1):** NPCBL Engineer(Cyber Security) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — NPCBL Engineer (Cyber Security Analyst) 11.07.2026, 14 — [duranta/1783762106-npcbl-sae-csa/1783762106.md](../duranta/1783762106-npcbl-sae-csa/1783762106.md)
-
-<a id="g3631"></a>
-
-### What does CIA stand for in Cyber Security? <sub>G3631</sub>
-
-*MCQ*
-
-What does CIA stand for in Cyber Security?
-
-- **Asked in (1):** Combined Bank Officer(IT) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 20 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
-
-<a id="g0175"></a>
-
-### Differentiate blacklisting and whitelisting. Which is more secure and why? <sub>G0175</sub>
-
-*Written*
-
-Differentiate blacklisting and whitelisting. Which is more secure and why?
-
-- **Asked in (1):** PGCB AE(CSE) 2021
-- **Source:**
-  - PGCB Assistant Engineer (CSE) (BUET) (2021-09-30), Q6 — [BUET JOB/13_pattern-processor-widths-blacklist.md](../BUET%20JOB/13_pattern-processor-widths-blacklist.md) · [image](../BUET%20JOB/13_pattern-processor-widths-blacklist.jpg); [BUET JOB/04_heap-insert-and-delete-7.md](../BUET%20JOB/04_heap-insert-and-delete-7.md) · [image](../BUET%20JOB/04_heap-insert-and-delete-7.jpg)
-- **Printed answer:** Defines both; concludes 'Blacklist is more secure'.
-- **Correction:** Whitelisting is more secure: it is default-deny (only pre-approved items run), while a blacklist only blocks known-bad items and misses new or unknown threats.
-
-<a id="g1122"></a>
-
-### Write down the difference between Authentication and Authorization. <sub>G1122</sub>
-
-*Written*
-
-Write down the difference between Authentication and Authorization.
-
-- **Asked in (1):** 40th BCS (2020)
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q25 — [bit to exabyte/25_bte-g2-p11-cyber-security-q07-26.md](../bit%20to%20exabyte/25_bte-g2-p11-cyber-security-q07-26.md) · [image](../bit%20to%20exabyte/25_bte-g2-p11-cyber-security-q07-26.jpg)
-
-<a id="g2226"></a>
-
-### What do you mean by two factor authentication. Explain with example. <sub>G2226</sub>
-
-*Written*
-
-What do you mean by two factor authentication. Explain with example.
+Possible threads to a computer system and how to provide security.
 
 - **Asked in (1):** BTRC AD(Technical) 2019
 - **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q6 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
-  - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W6 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q3 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W3 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4495"></a>
+<a id="g2225"></a>
 
-### Authentication বলতে কি বুঝায়? Two Factor Authentication কি? উদাহরণসহ ব্যাখ্যা করুন। <sub>G4495</sub>
-
-*Written*
-
-Authentication বলতে কি বুঝায়? Two Factor Authentication কি? উদাহরণসহ ব্যাখ্যা করুন।
-
-- **Asked in (1):** ICT Ministry AP 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BPSC — ICT Division (ICT Ministry), Assistant Programmer (59 posts) — Written, 2021 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q6(খ) — [ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md](../ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md)
-
-<a id="g0586"></a>
-
-### What is WAF? <sub>G0586</sub>
-
-*Viva*
-
-What is WAF?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p16 Q11 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p16)
-- **Printed answer:** WAF (Web Application Firewall) protects web applications by filtering and monitoring HTTP/HTTPS traffic to prevent attacks like SQL injection and XSS
-
-<a id="g0599"></a>
-
-### What is Two-Factor Authentication (2FA)? <sub>G0599</sub>
-
-*Viva*
-
-What is Two-Factor Authentication (2FA)?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p17 Q26 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p17)
-- **Printed answer:** 2FA adds an extra security layer by requiring two verification methods, such as a password and OTP
-
-<a id="g0600"></a>
-
-### What is Multi-Factor Authentication (MFA)? <sub>G0600</sub>
-
-*Viva*
-
-What is Multi-Factor Authentication (MFA)?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p17 Q27 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p17)
-- **Printed answer:** MFA requires two or more authentication factors, such as password, OTP, fingerprint, or security token
-
-<a id="g0604"></a>
-
-### What is Penetration Testing? <sub>G0604</sub>
-
-*Viva*
-
-What is Penetration Testing?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q31 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
-- **Printed answer:** Penetration Testing is an authorized security test where ethical hackers simulate attacks to find vulnerabilities
-
-<a id="g0605"></a>
-
-### Difference between Hacking and Ethical Hacking. <sub>G0605</sub>
-
-*Viva*
-
-Difference between Hacking and Ethical Hacking.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q32 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
-- **Printed answer:** Hacking: Unauthorized access to systems; Ethical Hacking: Authorized testing to improve security
-
-<a id="g0608"></a>
-
-### What is Host Security? <sub>G0608</sub>
-
-*Viva*
-
-What is Host Security?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q35 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
-- **Printed answer:** Host Security protects individual computers, servers, and devices from unauthorized access and malware
-
-<a id="g0609"></a>
-
-### What is Data Security? <sub>G0609</sub>
-
-*Viva*
-
-What is Data Security?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p18 Q36 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p18)
-- **Printed answer:** Data Security protects information from unauthorized access, modification, disclosure, or destruction
-
-<a id="g0611"></a>
-
-### What are the basic principles of Security? <sub>G0611</sub>
-
-*Viva*
-
-What are the basic principles of Security?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p19 Q38 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p19)
-- **Printed answer:** The main principles are; Confidentiality, Integrity, Availability, Authentication, Authorization, and Non-repudiation
-
-<a id="g0410"></a>
-
-### This post involves security work; how can data be exchanged securely in Android? <sub>G0410</sub>
-
-*Viva*
-
-This post involves security work; how can data be exchanged securely in Android?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Paper not shown on the source sheet, Viva — [VIVA/05_jdk-android-and-java-viva.md](../VIVA/05_jdk-android-and-java-viva.md) · [image](../VIVA/05_jdk-android-and-java-viva.jpg)
-- **Printed answer:** Authentication checks on API calls, verifying each data pull, encrypting data; runtime permissions since Android 6.0 stop background data access
-
-<a id="g0411"></a>
-
-### What did developers gain from this? Only users benefit. <sub>G0411</sub>
-
-*Viva*
-
-What did developers gain from this? Only users benefit.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Paper not shown on the source sheet, Viva — [VIVA/05_jdk-android-and-java-viva.md](../VIVA/05_jdk-android-and-java-viva.md) · [image](../VIVA/05_jdk-android-and-java-viva.jpg)
-- **Printed answer:** Developers write more code, but users' data security has improved
-
-<a id="g1764"></a>
-
-### Security of Key Storage: Secure storage prevents unauthorized key access. <sub>G1764</sub>
+### What is an access network? briefly describe the available access network. <sub>G2225</sub>
 
 *Written*
 
-Security of Key Storage: Secure storage prevents unauthorized key access.
+What is an access network? briefly describe the available access network.
 
-- **Asked in (0):** no dated exam tag on the source
+- **Asked in (1):** BTRC AD(Technical) 2019
 - **Source:**
-  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q17 — [suggestion based on previous yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.md](../suggestion%20based%20on%20previous%20yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.md) · [image](../suggestion%20based%20on%20previous%20yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q5 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W5 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g2453"></a>
+<a id="g2831"></a>
 
-### (b) How do you define 2-factor authentication? Give example. 5 বিভিন্ন মন্ত্রণালয়, বিভাগ… <sub>G2453</sub>
+### Describe different typed of computer network. <sub>G2831</sub>
 
 *Written*
 
-(b) How do you define 2-factor authentication? Give example. 5 বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার ২০২৩
+Describe different typed of computer network.
 
-- **Asked in (0):** no dated exam tag on the source
+- **Asked in (1):** SPARRSO 2020
 - **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29, (b) — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
+  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 1. বাংলাদেশ মহাকাশ গবেষণা ও দূর অনুধাবন প্রতিষ্ঠান (SPARRSO), Assistant Engineer, 13-03-2020; exam taker not printed; time not printed; Exam Pattern: [Non-Dept =30, Dept. 5*8=40]; pp. 1-2 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3257"></a>
+<a id="g2921"></a>
 
-### CIA Triad ব্যাখ্যা কর। <sub>G3257</sub>
+### What is the difference between packet sniffing (Snooping) and Packet spoofing? <sub>G2921</sub>
 
 *Written*
 
-CIA Triad ব্যাখ্যা কর।
+What is the difference between packet sniffing (Snooping) and Packet spoofing?
 
-- **Asked in (0):** no dated exam tag on the source
+- **Asked in (1):** Combined Bank SO(IT) 2020
 - **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+  - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3258"></a>
+<a id="g3747"></a>
 
-### Authentication ও Authorization এর মধ্যে পার্থক্য লিখ। <sub>G3258</sub>
+### Connection diagram given, assign IP adresses to each device. <sub>G3747</sub>
 
 *Written*
 
-Authentication ও Authorization এর মধ্যে পার্থক্য লিখ।
+Connection diagram given, assign IP adresses to each device.
 
-- **Asked in (0):** no dated exam tag on the source
+- **Asked in (1):** BUET M.Sc. October 2018
 - **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q14 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g4813"></a>
+<a id="g3893"></a>
 
-### Describe how two-factor authentication (2FA) enhances security; give two 2FA methods. <sub>G4813</sub>
+### An organization is granted block 130.34.12.64 / 26. Find the no. of addresses for the who… <sub>G3893</sub>
+
+*MCQ*
+
+An organization is granted block 130.34.12.64 / 26. Find the no. of addresses for the whole network. (a) 128 (b) 32 (c) 256 (d) None
+
+- **Asked in (1):** BUET IICT April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q6 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+- **Correction:** a /26 block has 2^(32-26) = 64 addresses, so the answer is (d) None.
+
+<a id="g3928"></a>
+
+### In an IP packet, what is the maximum size of an IP header? (a) 20B, (b) 4B, (c) 14B, (d) … <sub>G3928</sub>
+
+*MCQ*
+
+In an IP packet, what is the maximum size of an IP header? (a) 20B, (b) 4B, (c) 14B, (d) 60B
+
+- **Asked in (1):** BUET IICT April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q41 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+
+<a id="g4095"></a>
+
+### কম্পিউটার ভাইরাস কী? কম্পিউটার ভাইরাস আক্রান্ত হওয়ার লক্ষণসমূহ লিখুন। <sub>G4095</sub>
 
 *Written*
 
-Describe how two-factor authentication (2FA) enhances security; give two 2FA methods.
+কম্পিউটার ভাইরাস কী? কম্পিউটার ভাইরাস আক্রান্ত হওয়ার লক্ষণসমূহ লিখুন।
 
-- **Asked in (0):** no dated exam tag on the source
+- **Asked in (1):** 15th NTRCA Computer Operation (2019)
 - **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B7 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+  - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৪(গ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4850"></a>
+<a id="g4111"></a>
 
-### Discuss Cybersecurity Operation Center (SOC) activities and why a bank needs SOC monitori… <sub>G4850</sub>
+### Wi Max কী? Wi Max-এর সুবিধা ও অসুবিধা লিখুন। <sub>G4111</sub>
 
 *Written*
 
-Discuss Cybersecurity Operation Center (SOC) activities and why a bank needs SOC monitoring 24/7.
+Wi Max কী? Wi Max-এর সুবিধা ও অসুবিধা লিখুন।
+
+- **Asked in (1):** 15th NTRCA Computer Operation (2019)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৯ — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
+
+<a id="g4120"></a>
+
+### পে-ইন [প্লেইন] টেক্সট (Plain Text) ও সাইফার টেক্সট এর মধ্যে মূল পার্থক্য কী? লিখুন। <sub>G4120</sub>
+
+*Written*
+
+পে-ইন [প্লেইন] টেক্সট (Plain Text) ও সাইফার টেক্সট এর মধ্যে মূল পার্থক্য কী? লিখুন।
+
+- **Asked in (1):** 16th NTRCA CSE (2019)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১ অথবা (গ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
+
+<a id="g4131"></a>
+
+### পাবলিক ও প্রাইভেট নেটওয়ার্ক এর মধ্যে পার্থক্য লিখুন? আইপি এড্রেস ক? <sub>G4131</sub>
+
+*Written*
+
+পাবলিক ও প্রাইভেট নেটওয়ার্ক এর মধ্যে পার্থক্য লিখুন? আইপি এড্রেস ক?
+
+- **Asked in (1):** 16th NTRCA CSE (2019)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৪(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
+
+<a id="g4177"></a>
+
+### The protocol that provides infotainment is <sub>G4177</sub>
+
+*MCQ*
+
+The protocol that provides infotainment is
+
+- **Asked in (1):** BB AD(General) 2018
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ70 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
+
+<a id="g4184"></a>
+
+### Office LANs which……by use of the corporate <sub>G4184</sub>
+
+*MCQ*
+
+Office LANs which……by use of the corporate
+
+- **Asked in (1):** BB AD(General) 2018
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ77 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
+
+<a id="g4235"></a>
+
+### Which one is the part of software vulnerability <sub>G4235</sub>
+
+*MCQ*
+
+Which one is the part of software vulnerability
+
+- **Asked in (1):** Combined Bank Officer(IT) 2020
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ49 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
+
+<a id="g4250"></a>
+
+### Which one of the following protocol is used for receiving e mails <sub>G4250</sub>
+
+*MCQ*
+
+Which one of the following protocol is used for receiving e mails
+
+- **Asked in (1):** Combined Bank Officer(IT) 2020
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ64 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
+
+<a id="g2111"></a>
+
+### Cross-site Scripting বলতে কী বোঝায়? এর হাত থেকে রক্ষা পাওয়ার পদ্ধতিগুলো লিখুন। <sub>G2111</sub>
+
+*Written*
+
+Cross-site Scripting বলতে কী বোঝায়? এর হাত থেকে রক্ষা পাওয়ার পদ্ধতিগুলো লিখুন।
+
+- **Asked in (1):** 16th NTRCA ICT
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৬ (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
+
+<a id="g2780"></a>
+
+### What is Ethernet? Briefly describe teclinical specifications of 100 Base-T and Gigabit Et… <sub>G2780</sub>
+
+*Written*
+
+What is Ethernet? Briefly describe teclinical specifications of 100 Base-T and Gigabit Ethemet standards
+
+- **Asked in (1):** 47th BCS CSE
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 2 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
+
+<a id="g4421"></a>
+
+### IP related questions <sub>G4421</sub>
+
+*Written*
+
+IP related questions
+
+- **Asked in (1):** DESCO AE(CSE) 2016
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q9 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
+
+<a id="g0384"></a>
+
+### 4-5 networking questions (not recorded). <sub>G0384</sub>
+
+*Viva*
+
+4-5 networking questions (not recorded).
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - NTRCA 15th registration viva (2019) (2019) (viva), Viva (VIVA-45, candidate 1) — [VIVA/03_ntrca-post-lecturer-ict-viva.md](../VIVA/03_ntrca-post-lecturer-ict-viva.md) · [image](../VIVA/03_ntrca-post-lecturer-ict-viva.jpg)
+- **Printed answer:** Could not answer
+
+<a id="g0567"></a>
+
+### What is IPv4? <sub>G0567</sub>
+
+*Viva*
+
+What is IPv4?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p12 Q19 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p12); [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p13)
+- **Printed answer:** IPv4 (Internet Protocol Version 4) is a 32-bit addressing protocol used to identify devices on a network. Example: 192.168.1.1
+
+<a id="g2493"></a>
+
+### ডাটা সিকিউরিটি নিয়ে, কিভাবে নিশ্চিত করবেন। <sub>G2493</sub>
+
+*Viva*
+
+ডাটা সিকিউরিটি নিয়ে, কিভাবে নিশ্চিত করবেন।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V4 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
+
+<a id="g2496"></a>
+
+### খাদ্যের ওয়েবসাইট এর সিকিউরি কিভাবে আরও উন্নত করা যায় <sub>G2496</sub>
+
+*Viva*
+
+খাদ্যের ওয়েবসাইট এর সিকিউরি কিভাবে আরও উন্নত করা যায়
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V-websec — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
+
+<a id="g4646"></a>
+
+### টেকনিক্যাল ম্যামঃ বাংলাদেশ ব্যাংক সম্পূর্ণ ভাবে একটা নেটওয়ার্ক এর আন্ডারে আনতে দিলে তুমি … <sub>G4646</sub>
+
+*Viva*
+
+টেকনিক্যাল ম্যামঃ বাংলাদেশ ব্যাংক সম্পূর্ণ ভাবে একটা নেটওয়ার্ক এর আন্ডারে আনতে দিলে তুমি কিভাবে কাজটা করবে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V1 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
+
+<a id="g4647"></a>
+
+### টেকনিক্যাল ম্যামঃ কোনটা নিবে? কেন নিবে? <sub>G4647</sub>
+
+*Viva*
+
+টেকনিক্যাল ম্যামঃ কোনটা নিবে? কেন নিবে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V2 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
+
+<a id="g4648"></a>
+
+### টেকনিক্যাল ম্যামঃ এটার advantage and disadvantage বল। disadvantage কিভাবে overcome করবে? <sub>G4648</sub>
+
+*Viva*
+
+টেকনিক্যাল ম্যামঃ এটার advantage and disadvantage বল। disadvantage কিভাবে overcome করবে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V3 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
+
+<a id="g4649"></a>
+
+### টেকনিক্যাল ম্যামঃ তার পরে আর কি কি করবে? <sub>G4649</sub>
+
+*Viva*
+
+টেকনিক্যাল ম্যামঃ তার পরে আর কি কি করবে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — 4-bank Senior Officer (IT/ICT) viva (viva), V4 — [viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md](../viva-web/bank-2019-optimal-so-it-4banks/optimal-so-it-4banks.md)
+
+<a id="g4658"></a>
+
+### ১১. Cabling কিভাবে করে? নিজে কখনো cabling করেছি কিনা? <sub>G4658</sub>
+
+*Viva*
+
+১১. Cabling কিভাবে করে? নিজে কখনো cabling করেছি কিনা?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V9 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
+
+<a id="g4661"></a>
+
+### ৩. সুইচিং কি? কয় ধরনের বিদ্যমান? এদের পার্থক্য বলো। <sub>G4661</sub>
+
+*Viva*
+
+৩. সুইচিং কি? কয় ধরনের বিদ্যমান? এদের পার্থক্য বলো।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V1 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
+
+<a id="g4662"></a>
+
+### ৪. কোনটার কি সুবিধা? <sub>G4662</sub>
+
+*Viva*
+
+৪. কোনটার কি সুবিধা?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V2 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
+
+<a id="g4663"></a>
+
+### ৫. সিকিউরিটি কি কি ইউজ করবা? <sub>G4663</sub>
+
+*Viva*
+
+৫. সিকিউরিটি কি কি ইউজ করবা?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V3 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
+
+<a id="g4664"></a>
+
+### ৬. নেটওয়ার্ক লেয়ারের কাজ আর ডিভাইস গুলা বলো। <sub>G4664</sub>
+
+*Viva*
+
+৬. নেটওয়ার্ক লেয়ারের কাজ আর ডিভাইস গুলা বলো।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V4 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
+
+<a id="g4666"></a>
+
+### ৮. একটা রুমে বিভিন্ন ডিভাইসে নেটওয়ার্ক কানেক্টিভিটি দিতে পারবা? <sub>G4666</sub>
+
+*Viva*
+
+৮. একটা রুমে বিভিন্ন ডিভাইসে নেটওয়ার্ক কানেক্টিভিটি দিতে পারবা?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V6 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
+
+<a id="g4676"></a>
+
+### 10.Ethernet নিয়ে বলতে বলেছিল, আরো কিছু ধরেছিল মনে নেই. <sub>G4676</sub>
+
+*Viva*
+
+10.Ethernet নিয়ে বলতে বলেছিল, আরো কিছু ধরেছিল মনে নেই.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J2 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A2-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4677"></a>
+
+### 10.কম্পিউটার কে প্রটেকশন করার জন্যে কি ব্যবহার করা হয়? <sub>G4677</sub>
+
+*Viva*
+
+10.কম্পিউটার কে প্রটেকশন করার জন্যে কি ব্যবহার করা হয়?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J3 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A3-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4680"></a>
+
+### 7. সুইজ & হাবের পার্থক্য কি? <sub>G4680</sub>
+
+*Viva*
+
+7. সুইজ & হাবের পার্থক্য কি?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V3 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4681"></a>
+
+### ৪. হ্যাকিং বলতে কি বোঝেন? <sub>G4681</sub>
+
+*Viva*
+
+৪. হ্যাকিং বলতে কি বোঝেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4682"></a>
+
+### 9. গ্রে হ্যাকার কারা? <sub>G4682</sub>
+
+*Viva*
+
+9. গ্রে হ্যাকার কারা?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4695"></a>
+
+### 9. নেটওয়ার্ক এর কী কী জানেন? <sub>G4695</sub>
+
+*Viva*
+
+9. নেটওয়ার্ক এর কী কী জানেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4715"></a>
+
+### 4. আচ্ছা বলেনতো প্রোটোকল কি? <sub>G4715</sub>
+
+*Viva*
+
+4. আচ্ছা বলেনতো প্রোটোকল কি?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4717"></a>
+
+### 6. মেশ ও রিং এর মধ্যে পার্থক্য কি? <sub>G4717</sub>
+
+*Viva*
+
+6. মেশ ও রিং এর মধ্যে পার্থক্য কি?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V3 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4718"></a>
+
+### 7. এই দুইটার মধ্যে কোনটার অসুবিধা কি? <sub>G4718</sub>
+
+*Viva*
+
+7. এই দুইটার মধ্যে কোনটার অসুবিধা কি?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4719"></a>
+
+### 8. গুড! আচ্ছা এবার বলেনতো, নেটওয়ার্কে কয় ধরনের সুইচিং পড়ছেন? <sub>G4719</sub>
+
+*Viva*
+
+8. গুড! আচ্ছা এবার বলেনতো, নেটওয়ার্কে কয় ধরনের সুইচিং পড়ছেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4720"></a>
+
+### 9. আরেক স্যার: সার্কিট সুইচিং ও প্যাকেট সুইচিং এর পার্থক্য কি? <sub>G4720</sub>
+
+*Viva*
+
+9. আরেক স্যার: সার্কিট সুইচিং ও প্যাকেট সুইচিং এর পার্থক্য কি?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4721"></a>
+
+### 10. আচ্ছা কোনটা বেটার? <sub>G4721</sub>
+
+*Viva*
+
+10. আচ্ছা কোনটা বেটার?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4723"></a>
+
+### 12. এটা কোথায় ব্যবহার করা হয়? <sub>G4723</sub>
+
+*Viva*
+
+12. এটা কোথায় ব্যবহার করা হয়?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V9 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4730"></a>
+
+### বোর্ড: সিকিউরিটি তে কি কি কাজ করে? <sub>G4730</sub>
+
+*Viva*
+
+বোর্ড: সিকিউরিটি তে কি কি কাজ করে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4731"></a>
+
+### বোর্ড: কয়েকটি এন্টিভাইরাস এর নাম বলেন? <sub>G4731</sub>
+
+*Viva*
+
+বোর্ড: কয়েকটি এন্টিভাইরাস এর নাম বলেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V8 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4737"></a>
+
+### ৮।বাংলাদেশ ব্যাংকের স্ক্যাম কোন সালে হয়েছিল? <sub>G4737</sub>
+
+*Viva*
+
+৮।বাংলাদেশ ব্যাংকের স্ক্যাম কোন সালে হয়েছিল?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J13 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" A (viva), A13-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4738"></a>
+
+### ৯।এটা কী ধরনের স্ক্যাম / Cyber crime ছিল কিনা? <sub>G4738</sub>
+
+*Viva*
+
+৯।এটা কী ধরনের স্ক্যাম / Cyber crime ছিল কিনা?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J13 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" A (viva), A13-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4739"></a>
+
+### ১০.এই স্ক্যাম নিয়ে কি জানেন? <sub>G4739</sub>
+
+*Viva*
+
+১০.এই স্ক্যাম নিয়ে কি জানেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J13 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" A (viva), A13-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4753"></a>
+
+### PIN ki? <sub>G4753</sub>
+
+*Viva*
+
+PIN ki?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — 34th BCS account (45), 22/04/15, board Kamrunnessa Khanam (viva), A2-V3 — [viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md](../viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md)
+
+<a id="g4757"></a>
+
+### সাইবার ক্রাইম বলতে কী বুঝেন? <sub>G4757</sub>
+
+*Viva*
+
+সাইবার ক্রাইম বলতে কী বুঝেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — 37th BCS candidate C (first choice police) (viva), A3-V1 — [viva-web/bcs-2017-ekushey-37th-viva/ekushey-37th-bcs-viva.md](../viva-web/bcs-2017-ekushey-37th-viva/ekushey-37th-bcs-viva.md)
+
+<a id="g4759"></a>
+
+### 2. Web application security বলতে কি বুঝো? <sub>G4759</sub>
+
+*Viva*
+
+2. Web application security বলতে কি বুঝো?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — WZPDCL Assistant Engineer viva, 29/06/2026 (viva), V2 — [viva-web/power-2026-jobqns-wzpdcl-ae/jobqns-wzpdcl-ae.md](../viva-web/power-2026-jobqns-wzpdcl-ae/jobqns-wzpdcl-ae.md)
+
+<a id="g2281"></a>
+
+### Define information security with its components. <sub>G2281</sub>
+
+*Written*
+
+Define information security with its components.
 
 - **Asked in (0):** no dated exam tag on the source
 - **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), E3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2287"></a>
+
+### Short note: Fire walls, COCOMO 2, Microcontroller, Query optimization, Genetic algorithm,… <sub>G2287</sub>
+
+*Written*
+
+Short note: Fire walls, COCOMO 2, Microcontroller, Query optimization, Genetic algorithm, UML
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2289"></a>
+
+### What is cyber vandalism? Describe briefly. <sub>G2289</sub>
+
+*Written*
+
+What is cyber vandalism? Describe briefly.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2291"></a>
+
+### What is biometric security ? Write down some real life applications of it. <sub>G2291</sub>
+
+*Written*
+
+What is biometric security ? Write down some real life applications of it.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2526"></a>
+
+### What is QR code ? What is rootkit and bootkit ? <sub>G2526</sub>
+
+*Written*
+
+What is QR code ? What is rootkit and bootkit ?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -03 (suggestion), Set-03 Q5 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
+
+<a id="g3283"></a>
+
+### Hashing কী? <sub>G3283</sub>
+
+*MCQ*
+
+Hashing কী?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10, Q16 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+
+<a id="g3284"></a>
+
+### Incident Response এর ধাপগুলো কী? <sub>G3284</sub>
+
+*MCQ*
+
+Incident Response এর ধাপগুলো কী?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Cyber Security), Cyber Security Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 8-10, Q20 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+
+<a id="g3299"></a>
+
+### Why is MFA important? <sub>G3299</sub>
+
+*Written*
+
+Why is MFA important?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+
+<a id="g3323"></a>
+
+### Server security best practices. <sub>G3323</sub>
+
+*MCQ*
+
+Server security best practices.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q20 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
+
+<a id="g4767"></a>
+
+### Explain redundancy and fault tolerance in metro telecom network <sub>G4767</sub>
+
+*Written*
+
+Explain redundancy and fault tolerance in metro telecom network
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — DMTCL 2025 Written Exam Suggestion, Engineering & Telecommunication (suggestion), B-4 — [model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md](../model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md)
+
+<a id="g4799"></a>
+
+### What is OAuth (one-line)? <sub>G4799</sub>
+
+*Written*
+
+What is OAuth (one-line)?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A5 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4801"></a>
+
+### What is a Load Balancer? (one-line) <sub>G4801</sub>
+
+*Written*
+
+What is a Load Balancer? (one-line)
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A7 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4803"></a>
+
+### What is a CAPTCHA and why is it used? <sub>G4803</sub>
+
+*Written*
+
+What is a CAPTCHA and why is it used?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A9 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4810"></a>
+
+### Explain the concept of Session Management in web applications and common vulnerabilities. <sub>G4810</sub>
+
+*Written*
+
+Explain the concept of Session Management in web applications and common vulnerabilities.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B4 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4811"></a>
+
+### What is a Proxy Server? Describe forward and reverse proxy use-cases. <sub>G4811</sub>
+
+*Written*
+
+What is a Proxy Server? Describe forward and reverse proxy use-cases.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B5 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4812"></a>
+
+### Explain the principle of 'Least Privilege' and its importance in bank IT environments. <sub>G4812</sub>
+
+*Written*
+
+Explain the principle of 'Least Privilege' and its importance in bank IT environments.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), B6 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4847"></a>
+
+### Alternate Task: Write how a Load Balancer works. Compare L4 vs L7 load balancing. Give an… <sub>G4847</sub>
+
+*Written*
+
+Alternate Task: Write how a Load Balancer works. Compare L4 vs L7 load balancing. Give an example relevant to banking applications.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), D3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
 ## Network topology
 
@@ -12689,6 +12564,107 @@ Explain the term “Checksum” and its use in networking.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A2 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
+## Topology
+
+<a id="g2087"></a>
+
+### নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন। <sub>G2087</sub>
+
+*Written*
+
+নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন।
+
+- **Asked in (1):** 17th NTRCA CSE (2023)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১১ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
+
+<a id="g2848"></a>
+
+### কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন। <sub>G2848</sub>
+
+*Written*
+
+কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন।
+
+- **Asked in (1):** BOF SAE(Computer) 2021
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 3. Bangladesh Ordnance Factory (BOF), Sub Assistant Engineer (Computer), 20-03-2021; exam taker not printed; Total Marks: 100 [Non-technical: 40: Technical: 60]; Department: 5 × 10 = 50; pp. 4-6, Q7 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
+
+<a id="g4116"></a>
+
+### বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন? <sub>G4116</sub>
+
+*Written*
+
+বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন?
+
+- **Asked in (1):** 16th NTRCA CSE (2019)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
+
+<a id="g1993"></a>
+
+### নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন। <sub>G1993</sub>
+
+*Written*
+
+নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন।
+
+- **Asked in (1):** 15th NTRCA CSE
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
+
+<a id="g4065"></a>
+
+### কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন। <sub>G4065</sub>
+
+*Written*
+
+কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন।
+
+- **Asked in (1):** 13th NTRCA CSE (2016)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৪(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
+
+<a id="g4665"></a>
+
+### ৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে? <sub>G4665</sub>
+
+*Viva*
+
+৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V5 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
+
+<a id="g4698"></a>
+
+### 12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন? <sub>G4698</sub>
+
+*Viva*
+
+12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4716"></a>
+
+### 5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে? <sub>G4716</sub>
+
+*Viva*
+
+5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
 ## Addressing, casting & troubleshooting
 
 <a id="g3030"></a>
@@ -13018,6 +12994,33 @@ Which one of the following is a private network based on public network? ক. Lo
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q86 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
+## Routing
+
+<a id="g2144"></a>
+
+### Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ? <sub>G2144</sub>
+
+*Written*
+
+Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ?
+
+- **Asked in (1):** BTCL JAM 2024
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q6 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
+- **Correction:** the test command is `ping 127.0.0.1` (or `ping localhost`); 127.0.0.0 is the network address of the block.
+
+<a id="g2652"></a>
+
+### স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ? <sub>G2652</sub>
+
+*Written*
+
+স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ?
+
+- **Asked in (1):** WZPDCL SAE 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১০ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
+
 ## Blockchain
 
 <a id="g0068"></a>
@@ -13046,3 +13049,17 @@ What is blockchain?
 - **Source:**
   - BPSC viva (viva), Q6 — [VIVA/02_bpsc-oop-and-dbms-viva.md](../VIVA/02_bpsc-oop-and-dbms-viva.md) · [image](../VIVA/02_bpsc-oop-and-dbms-viva.jpg)
 - **Printed answer:** A distributed ledger technology that stores data and processes transactions securely and transparently across network nodes
+
+## Firewall, IDS & DMZ
+
+<a id="g4289"></a>
+
+### Which device is mainly related to provide security of a network? <sub>G4289</sub>
+
+*MCQ*
+
+Which device is mainly related to provide security of a network?
+
+- **Asked in (1):** BB AD(General) 2022
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ96 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)

@@ -64,6 +64,7 @@ for (const r of neu) {
     marks: r.marks ?? null, label: r.label, pages: r.pages, origin: r.source, exams: keys,
     printed_exam: r.raw_tags.join('; ') || null, chapter: r.chapter, highlight: r.highlight ?? null,
     suggested_for: r.suggested_for, source: SOURCE_NOTE[r.source] + (r.chapter && r.source !== 'paper' ? ` — ${r.chapter}` : ''),
+    answer_issue: r.answer_issue ?? null, answer_ok: r.answer_issue ? false : undefined,
   });
 }
 

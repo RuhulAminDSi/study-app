@@ -4,18 +4,16 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 - **Distinct questions:** 27 (from 27 records: Written 10, MCQ 17)
 - **Exams it appears in:** 11
-- **Corrections to printed answers:** 1
+- **Corrections to printed answers:** 3
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
 
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
-| 1 | [Other](#other) | 10 | 23 | 0 |
-| 2 | [Electric vs magnetic field; Coulomb's law](#electric-vs-magnetic-field-coulombs-law) | 1 | 1 | 0 |
-| 3 | [Gauss's law; Maxwell's equations](#gausss-law-maxwells-equations) | 1 | 1 | 0 |
-| 4 | [Quantum mechanics (Schrödinger equation)](#quantum-mechanics-schrödinger-equation) | 1 | 1 | 0 |
-| 5 | [Waves (v = fλ)](#waves-v--fλ) | 1 | 1 | 0 |
+| 1 | [Other](#other) | 8 | 19 | 0 |
+| 2 | [Electricity & magnetism](#electricity--magnetism) | 4 | 5 | 0 |
+| 3 | [Waves & modern physics](#waves--modern-physics) | 2 | 3 | 0 |
 
 ## Most-asked questions
 
@@ -85,18 +83,6 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 ## All questions by topic
 
 ## Other
-
-<a id="g2615"></a>
-
-### Which of the following statement holds true for the divergence of electric and magnetic f… <sub>G2615</sub>
-
-*MCQ*
-
-Which of the following statement holds true for the divergence of electric and magnetic flux densities? ক) Both are zero খ) These are zero for static flux densities but non-zero for time varying flux densities গ) It is zero for electric flux densities ঘ) It is zero for magnetic flux densities
-
-- **Asked in (1):** BPSC AME 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Basic Electronics Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
 <a id="g2677"></a>
 
@@ -313,42 +299,7 @@ The measured equivalent DC Resistance between two line for the HT winding of a 1
 - **Asked in (1):** BTRC SAD 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ25 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
-
-<a id="g2740"></a>
-
-### Explain the photoelectric effect and its significance in quantum theory <sub>G2740</sub>
-
-*Written*
-
-Explain the photoelectric effect and its significance in quantum theory
-
-- **Asked in (1):** 46th BCS ICT
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 1) (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
-
-<a id="g2741"></a>
-
-### Derive the equation for the de Broglie wavelength of a particle <sub>G2741</sub>
-
-*Written*
-
-Derive the equation for the de Broglie wavelength of a particle
-
-- **Asked in (1):** 46th BCS ICT
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 1 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
-
-<a id="g2808"></a>
-
-### Write down the Maxwell’s equations in integral form and explain their physical interpreta… <sub>G2808</sub>
-
-*Written*
-
-Write down the Maxwell’s equations in integral form and explain their physical interpretations in electromagnetics.
-
-- **Asked in (1):** 47th BCS ICT
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 1 (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
+- **Correction:** 75% decayed leaves 25% = (1/2)², i.e. two half-lives = **400 years**.
 
 <a id="g2809"></a>
 
@@ -362,7 +313,7 @@ Define phase velocity ang group velocity. Explain the relationship between phase
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 1 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-## Electric vs magnetic field; Coulomb's law
+## Electricity & magnetism
 
 <a id="g0025"></a>
 
@@ -378,8 +329,6 @@ Mention the differences between electric field and magnetic field. Two charges Q
 - **Printed answer:** Only the qualitative differences are given (electric field around charges, magnetic field around poles; changing E produces B and vice versa).
 - **Correction:** The numerical part is missing. F = kQ1Q2/r² = 9×10^9 × 5×10^-9 × 12×10^-9 / (7×10^-6)² ≈ 1.10×10^4 N, repulsive.
 
-## Gauss's law; Maxwell's equations
-
 <a id="g0026"></a>
 
 ### State and explain Gauss's law. Write Maxwell's equations in differential and integral for… <sub>G0026</sub>
@@ -392,7 +341,44 @@ State and explain Gauss's law. Write Maxwell's equations in differential and int
 - **Source:**
   - 45th BCS Written Technical Cadre (ICT-281) (2024-01-31), Q27(b) — [BCS/06_45th-bcs-physics-logic-questions.md](../BCS/06_45th-bcs-physics-logic-questions.md) · [image](../BCS/06_45th-bcs-physics-logic-questions.jpg)
 
-## Quantum mechanics (Schrödinger equation)
+<a id="g2615"></a>
+
+### Which of the following statement holds true for the divergence of electric and magnetic f… <sub>G2615</sub>
+
+*MCQ*
+
+Which of the following statement holds true for the divergence of electric and magnetic flux densities? ক) Both are zero খ) These are zero for static flux densities but non-zero for time varying flux densities গ) It is zero for electric flux densities ঘ) It is zero for magnetic flux densities
+
+- **Asked in (1):** BPSC AME 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Basic Electronics Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
+- **Correction:** ঘ) It is zero for magnetic flux densities — div B = 0 always, while div D = ρv; the printed খ is wrong.
+
+<a id="g2740"></a>
+
+### Explain the photoelectric effect and its significance in quantum theory <sub>G2740</sub>
+
+*Written*
+
+Explain the photoelectric effect and its significance in quantum theory
+
+- **Asked in (1):** 46th BCS ICT
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 1) (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
+
+<a id="g2808"></a>
+
+### Write down the Maxwell’s equations in integral form and explain their physical interpreta… <sub>G2808</sub>
+
+*Written*
+
+Write down the Maxwell’s equations in integral form and explain their physical interpretations in electromagnetics.
+
+- **Asked in (1):** 47th BCS ICT
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 1 (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
+
+## Waves & modern physics
 
 <a id="g0119"></a>
 
@@ -407,8 +393,6 @@ Which equation describes the wave nature of particles? (Schrödinger / Maxwell's
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q73 — [BCS/38_user-centered-design-schrodinger-hash-bitmap.md](../BCS/38_user-centered-design-schrodinger-hash-bitmap.md) · [image](../BCS/38_user-centered-design-schrodinger-hash-bitmap.jpg)
 - **Printed answer:** (ক) Schrödinger
 
-## Waves (v = fλ)
-
 <a id="g0126"></a>
 
 ### Relation between velocity v, frequency f and wavelength λ: (v = f/λ / v = λ/f / v = fλ / … <sub>G0126</sub>
@@ -421,3 +405,15 @@ Relation between velocity v, frequency f and wavelength λ: (v = f/λ / v = λ/f
 - **Source:**
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q80 — [BCS/57_write-ahead-logging-random-search.md](../BCS/57_write-ahead-logging-random-search.md) · [image](../BCS/57_write-ahead-logging-random-search.jpg)
 - **Printed answer:** (গ) v = fλ
+
+<a id="g2741"></a>
+
+### Derive the equation for the de Broglie wavelength of a particle <sub>G2741</sub>
+
+*Written*
+
+Derive the equation for the de Broglie wavelength of a particle
+
+- **Asked in (1):** 46th BCS ICT
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 1 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)

@@ -4,7 +4,7 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 - **Distinct questions:** 204 (from 228 records: Written 176, MCQ 26, Viva 26)
 - **Exams it appears in:** 86
-- **Corrections to printed answers:** 7
+- **Corrections to printed answers:** 9
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -217,6 +217,7 @@ Determine overloading method, overridden method and hide super class method? pub
 - **Asked in (1):** BB AP 2023
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Programmer 2023 — Exam date 3.2.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour — marks as printed: 80 MCQ (1 Hour); Written: 9 Subjective Question (150) + Math 4 (20) + Focus (10) + B/E (20) — pages 1–5, Q6 — [duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md](../duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md)
+- **Correction:** no answer is printed. As written (Java), `B.m2` and `B.m3` override `A`'s methods; `static m1` and `static m4` in `B` with the same signature as instance methods in `A` are compile errors (a static method cannot hide an instance method), so the intended "hidden" methods only work if `A.m1`/`A.m4` are static. No method here is overloaded.
 
 <a id="g2539"></a>
 
@@ -2280,6 +2281,7 @@ You have three access specifiers in java object oriented language. You have to f
 - **Asked in (1):** Petrobangla AM(CSE) 2024
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q1(b) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
+- **Correction:** a postorder alone does not fix a unique binary tree (the HUO copy says so). For the tree the coaching drew, the level-order array is [i, h, g, f, c, d, e, a, b], not [a, b, c, …, i].
 
 <a id="g3579"></a>
 

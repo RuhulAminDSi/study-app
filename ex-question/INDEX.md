@@ -2,31 +2,31 @@
 
 Photographed question and solution sheets (BCS, NTRCA, BPSC, bank, BUET-run recruitment exams, BUET M.Sc. admission tests, vivas), the Bit to Exabyte question books and suggestion sheets, with a Markdown transcription next to every image (original image names in `image-rename-log.csv`). Text extracted from the PDFs is in `PDF-TEXT/`. `by-subject/` regroups every question by syllabus subject and topic, ranks topics and questions by how many exams asked them, and shows for every question **which exams asked it and which source it was taken from**. Data: `by-subject/questions.json` (every record), `by-subject/frequency.json` (one entry per distinct question), `exam-tags.json` (exam-name normalisation), `by-subject/pattern-topics.json` (coaching topic index). Rebuild with `node tools/parse-new.mjs && node tools/build-exam-tags.mjs && node tools/merge.mjs && node tools/render.mjs`. The handwritten revision notebooks built from these questions are catalogued in [HANDWRITTEN-NOTES.md](HANDWRITTEN-NOTES.md).
 
-Total: 5771 records → 4976 distinct questions, 299 exams, 148 printed answers corrected.
+Total: 5771 records → 4976 distinct questions, 299 exams, 202 printed answers corrected.
 
 ## By subject
 
 | # | Subject | Distinct questions | Records | Written | MCQ | Viva | Exams | Most-asked topic | Corrections |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | [Basic Physics](by-subject/01_PHY.md) | 27 | 27 | 10 | 17 | 0 | 11 | Other | 1 |
-| 2 | [Introduction to Computer Systems](by-subject/02_ICS.md) | 470 | 520 | 307 | 98 | 115 | 114 | Other | 6 |
-| 3 | [Electrical Circuits](by-subject/03_EC.md) | 51 | 51 | 20 | 31 | 0 | 20 | Other | 1 |
-| 4 | [Digital Logic Design](by-subject/04_DLD.md) | 297 | 337 | 282 | 45 | 5 | 110 | Logic gates & universal gates | 12 |
-| 5 | [Basic Electronics](by-subject/05_ELN.md) | 94 | 97 | 45 | 50 | 2 | 29 | Other | 1 |
-| 6 | [Microprocessor and Interfacing](by-subject/06_MPI.md) | 87 | 105 | 75 | 26 | 4 | 46 | 8086 architecture & segmentation | 3 |
-| 7 | [Computer Architecture](by-subject/07_CA.md) | 173 | 193 | 149 | 41 | 2 | 98 | Cache memory | 1 |
+| 1 | [Basic Physics](by-subject/01_PHY.md) | 27 | 27 | 10 | 17 | 0 | 11 | Other | 3 |
+| 2 | [Introduction to Computer Systems](by-subject/02_ICS.md) | 470 | 520 | 307 | 98 | 115 | 114 | Cloud, data centre & servers | 9 |
+| 3 | [Electrical Circuits](by-subject/03_EC.md) | 51 | 51 | 20 | 31 | 0 | 20 | Other | 4 |
+| 4 | [Digital Logic Design](by-subject/04_DLD.md) | 297 | 337 | 282 | 45 | 5 | 110 | Logic gates & universal gates | 16 |
+| 5 | [Basic Electronics](by-subject/05_ELN.md) | 94 | 97 | 45 | 50 | 2 | 29 | Other | 4 |
+| 6 | [Microprocessor and Interfacing](by-subject/06_MPI.md) | 87 | 105 | 75 | 26 | 4 | 46 | 8086 architecture & segmentation | 4 |
+| 7 | [Computer Architecture](by-subject/07_CA.md) | 173 | 193 | 149 | 41 | 2 | 98 | Cache memory | 5 |
 | 8 | [Communication Theory](by-subject/08_COM.md) | 195 | 209 | 147 | 39 | 14 | 74 | Multiplexing (TDM, FDM, WDM) | 10 |
-| 9 | [Computer Networking and Security](by-subject/09_NET.md) | 1021 | 1241 | 889 | 139 | 189 | 217 | IP addressing & subnetting | 31 |
-| 10 | [Structured Programming (C)](by-subject/10_SPL.md) | 424 | 492 | 424 | 56 | 12 | 161 | Output tracing | 6 |
-| 11 | [Object Oriented Programming](by-subject/11_OOP.md) | 204 | 228 | 176 | 26 | 26 | 86 | Polymorphism, overloading & overriding | 7 |
+| 9 | [Computer Networking and Security](by-subject/09_NET.md) | 1021 | 1241 | 889 | 139 | 189 | 217 | IP addressing & subnetting | 39 |
+| 10 | [Structured Programming (C)](by-subject/10_SPL.md) | 424 | 492 | 424 | 56 | 12 | 161 | Output tracing | 12 |
+| 11 | [Object Oriented Programming](by-subject/11_OOP.md) | 204 | 228 | 176 | 26 | 26 | 86 | Polymorphism, overloading & overriding | 9 |
 | 12 | [Discrete Mathematics](by-subject/12_DM.md) | 63 | 68 | 54 | 14 | 0 | 32 | Other | 1 |
-| 13 | [Graph Theory](by-subject/13_GRAPH.md) | 49 | 51 | 40 | 11 | 0 | 32 | Other | 3 |
-| 14 | [Theory of Computation](by-subject/14_TOC.md) | 48 | 48 | 29 | 18 | 0 | 25 | Other | 1 |
-| 15 | [Data Structures and Algorithms](by-subject/15_DSA.md) | 386 | 446 | 355 | 75 | 15 | 131 | Trees & traversals | 12 |
-| 16 | [Database Systems](by-subject/16_DBMS.md) | 458 | 541 | 449 | 44 | 48 | 157 | SQL queries | 16 |
-| 17 | [Software Engineering](by-subject/17_SE.md) | 302 | 402 | 338 | 31 | 33 | 104 | Testing & quality assurance | 3 |
-| 18 | [Operating System](by-subject/18_OS.md) | 367 | 449 | 385 | 54 | 2 | 131 | Memory management & paging | 17 |
-| 19 | [Artificial Intelligence](by-subject/19_AI.md) | 126 | 131 | 80 | 33 | 18 | 43 | Other | 1 |
+| 13 | [Graph Theory](by-subject/13_GRAPH.md) | 49 | 51 | 40 | 11 | 0 | 32 | Graph types & properties | 3 |
+| 14 | [Theory of Computation](by-subject/14_TOC.md) | 48 | 48 | 29 | 18 | 0 | 25 | Other | 2 |
+| 15 | [Data Structures and Algorithms](by-subject/15_DSA.md) | 386 | 446 | 355 | 75 | 15 | 131 | Trees & traversals | 17 |
+| 16 | [Database Systems](by-subject/16_DBMS.md) | 458 | 541 | 449 | 44 | 48 | 157 | SQL queries | 21 |
+| 17 | [Software Engineering](by-subject/17_SE.md) | 302 | 402 | 338 | 31 | 33 | 104 | Testing & quality assurance | 7 |
+| 18 | [Operating System](by-subject/18_OS.md) | 367 | 449 | 385 | 54 | 2 | 131 | Memory management & paging | 19 |
+| 19 | [Artificial Intelligence](by-subject/19_AI.md) | 126 | 131 | 80 | 33 | 18 | 43 | Machine learning | 2 |
 | 20 | [Bangla](by-subject/20_BAN.md) | 4 | 4 | 1 | 3 | 0 | 2 | সমাস, বানান, প্রতিশব্দ, কারক-বিভক্তি, বিদেশি শব্দ, সাহিত্য, যুক্তবর্ণ, বাক্য | 1 |
 | 21 | [English](by-subject/21_ENG.md) | 13 | 13 | 8 | 5 | 0 | 6 | Idioms, narration, spelling, articles, prepositions | 2 |
 | 22 | [Mathematics](by-subject/22_MATH.md) | 11 | 11 | 8 | 3 | 0 | 5 | Logarithms, indices, vectors, trigonometry, mensuration, probability, combinations | 3 |

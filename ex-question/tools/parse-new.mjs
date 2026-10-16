@@ -242,6 +242,24 @@ for (const dir of ['duranta', 'buet-msc-web', 'bcs-written-web', 'ntrca-written-
     const md = file.replace(/\.records\.json$/, '.md');
     let recs;
     try { recs = JSON.parse(read(join(dir, folder, file))); } catch (e) { console.warn(`bad JSON ${dir}/${folder}/${file}: ${e.message}`); continue; }
+    // "> Answer issue: …" notes in the .md follow the question they correct; attach each to the record whose
+    // text matches the nearest question line above it
+    const issues = new Map();
+    try {
+      const norm = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+      const lines = read(join(dir, folder, md)).split('\n');
+      lines.forEach((l, i) => {
+        const m = l.match(/^\s*>\s*\**Answer issue:?\**:?\s*(.*)$/i);
+        if (!m) return;
+        for (let j = i - 1; j >= 0 && j >= i - 12; j--) {
+          const q = norm(lines[j].replace(/^\s*(\*\*)?(Q?\d+[.)]?|\([a-zক-ঙ]\)|[a-z][.)])\s*/i, ''));
+          if (q.length < 12 || /^>/.test(lines[j].trim())) continue;
+          const key = q.slice(0, 30);
+          const hit = recs.find((r) => r.question && norm(r.question).includes(key));
+          if (hit) { issues.set(hit, m[1].trim()); break; }
+        }
+      });
+    } catch { /* no .md beside the sidecar */ }
     for (const r of recs) {
       if (!r.question || !SUBJECTS.has(r.subject)) { console.warn(`skip ${folder} ${r.label}: subject ${r.subject}`); continue; }
       // an exam question whose paper name was not printed stays an exam record, just without a tag
@@ -252,7 +270,7 @@ for (const dir of ['duranta', 'buet-msc-web', 'bcs-written-web', 'ntrca-written-
       add({ source: isViva ? 'viva-compilation' : isExam ? origin : `${origin}-suggestion`, pages: [`${dir}/${folder}/${md}`], label: r.label,
         chapter: r.md_anchor ?? folder, subject: override(r.question, r.subject), question: r.question,
         raw_tags: isExam && !isViva && r.exam ? [r.exam] : [], marks: r.marks ?? null, kind: ['mcq', 'viva'].includes(r.kind) ? r.kind : 'written',
-        exam_taker: r.exam_taker ?? null });
+        exam_taker: r.exam_taker ?? null, answer_issue: issues.get(r) ?? null });
     }
     }
   }

@@ -4,7 +4,7 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 - **Distinct questions:** 386 (from 446 records: Study note 1, Written 355, MCQ 75, Viva 15)
 - **Exams it appears in:** 131
-- **Corrections to printed answers:** 12
+- **Corrections to printed answers:** 17
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -413,6 +413,7 @@ a) Insert the data into BST from given Nodes b) Print the tree in post order tra
 - **Asked in (1):** PGCB AE(CSE) 2024
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — PGCB Assistant Engineer (CSE) 17.05.2024, Q1 — [duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md](../duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md)
+- **Correction:** inserting 10, 100, 30, 20, 500, 40 in that order gives root 10 → right 100 → (left 30 → left 20, right 40; right 500); its post order is 20 40 30 500 100 10. The printed post order only matches the printed (wrongly built) tree.
 
 <a id="g2185"></a>
 
@@ -1930,6 +1931,7 @@ For which data structure operations, Linked List is better than Array? (Insert, 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q9 — [bit to exabyte/47_bte-g2-p33-data-structure-q01-14.md](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.md) · [image](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.jpg)
   - Question paper found on the web (see the folder README for the URL) — NESCO Assistant Manager (ICT) 31.12.2021, Q4(b)(i) — [power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md](../power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md)
+- **Correction:** a binary tree of height 7 needs at least **8** nodes (a chain of 8); 1 node has height 0. The maximum, 255, is correct.
 
 <a id="g2384"></a>
 
@@ -2279,6 +2281,7 @@ Suppose a circular array QUEUE has 6 memory locations.what are the values of fro
 - **Asked in (1):** 38th BCS (2018)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 10. — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
+- **Correction:** the printed snapshots delete from the rear (A C D F → A C), which is stack behaviour. For a circular queue of 6 cells (1-based), deletions remove A, C then D, F: FRONT = 1, REAR = 3 → REAR = 4 → FRONT = 3 → K, L, M go to cells 5, 6, 1 so REAR = 1 → FRONT = 5 → R goes to cell 2. Final FRONT = 5, REAR = 2 (queue holds K, L, M, R).
 
 <a id="g2381"></a>
 
@@ -3817,6 +3820,7 @@ You want to search a specific number x in an array A. A containing 220 numbers s
 - **Asked in (1):** APSCL AM(MIS) 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — APSCL Assistant Manager (MIS/IICT) 12.11.2021, Q(b) — [power-sector-web/2021-apscl-am-mis-carrierbd/apscl-am-mis-2021.md](../power-sector-web/2021-apscl-am-mis-carrierbd/apscl-am-mis-2021.md)
+- **Correction:** the printed loop is "Repeat until low>=high", which stops before checking the last remaining element; it should repeat while low <= high.
 
 <a id="g2105"></a>
 
@@ -3930,6 +3934,7 @@ Write a program to findout an expression is ended correctly or not. Input: ((a+b
 - **Asked in (1):** Titas Gas AE(CSE) 2024
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024, Q5(b) — [duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md](../duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md)
+- **Correction:** as printed, "((a+b)+(a-b)" has an unclosed "(", so it is **Not matched** (the printed program itself prints "Not matched" for it); the intended sample was probably "((a+b)+(a-b))".
 
 <a id="g2472"></a>
 

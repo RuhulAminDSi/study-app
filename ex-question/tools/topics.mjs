@@ -216,7 +216,86 @@ export const EXTRA = {
     R(/অপারেটিং|মাল্টিপ্রোগ্রামিং|সুপারভাইজার|রিয়েল টাইম|ডিস্ট্রিবিউটেড/i, 'OS concepts & types'),
     R(/directory|passwd|useradd|scp|rsync|alias|permission/i, 'Linux commands'),
   ],
+  // Added 2026-10-16 for the duranta.app and web collections (Bangla wording, newer topics).
+  AI: [
+    R(/generative|\bllm|large language|chatbot|gpt|prompt|transformer|hallucinat|\brag\b/i, 'Generative AI & LLMs'),
+    R(/supervised|unsupervised|reinforcement|machine learning|মেশিন লার্নিং|overfit|decision tree|regression|classification|clustering|model.*(validat|reliab)|data mining|federated|deep learning/i, 'Machine learning'),
+    R(/neural|\bann\b|\bbnn\b|perceptron|backprop|\brnn\b|\bcnn\b|lstm/i, 'Neural networks'),
+    R(/search|heuristic|a\*|a"|minimax|ম্যাক্সিমাম|adversarial|hill climbing|bfs|dfs|depth-first/i, 'Search techniques'),
+    R(/agent|এজেন্ট/i, 'Types of intelligent agents'),
+    R(/nlp|natural language|word embedding|ambigu/i, 'NLP'),
+    R(/expert system|knowledge|logic|fuzzy|bayes|probabil/i, 'Knowledge, logic & reasoning'),
+    R(/turing|কৃত্রিম বুদ্ধিমত্তা|artificial intelligence|\bai\b|domain|robot|autonomous/i, 'AI concepts & applications'),
+  ],
+  CA: [
+    R(/bios|cmos|uefi/i, 'BIOS, CMOS & firmware'),
+    R(/core i\d|i3|i5|i7|i9|32-bit|64-bit|hyper.?thread|multicore|heterogeneous|cpu|gpu|alu|clock speed|ghz|speed of cpu|amdahl|parallel|মাল্টি প্রসেসিং|প্যারালাল|অ্যারে প্রসেসর|array processor/i, 'CPU design & performance'),
+    R(/ssd|sata|hdd|disk|storage/i, 'Storage devices'),
+    R(/স্মৃতি|মেমোরি|র‍্যাম|রম|register|রেজিস্টার/i, 'Memory organisation'),
+    R(/latency|throughput|availability|floating|epsilon|ব্লক/i, 'Registers, instructions & addressing'),
+  ],
+  GRAPH: [
+    R(/tree|spanning|kruskal|prim/i, 'Trees & spanning trees'),
+    R(/euler|hamilton|path|circuit|cycle/i, 'Paths, Euler & Hamilton'),
+    R(/bipartite|complete|planar|colou?r|chromatic|isomorph|degree|vertices|vertex|edges|graph/i, 'Graph types & properties'),
+  ],
+  TOC: [
+    R(/dfa|nfa|automat|finite/i, 'Finite automata'),
+    R(/regular|grammar|context.free|cfg|language/i, 'Grammars & languages'),
+    R(/token|lexical|compiler|parse|parsing/i, 'Compiler phases'),
+    R(/turing|decidab|np|halting|complexity/i, 'Computability & complexity'),
+  ],
+  DM: [
+    R(/set|union|intersection|venn|সেট/i, 'Sets'),
+    R(/relation|function|injective|surjective|bijective/i, 'Relations & functions'),
+    R(/proposition|predicate|tautolog|logic|truth table|implication/i, 'Logic & proofs'),
+    R(/permutation|combination|pigeonhole|inclusion|probability|recurrence|induction/i, 'Counting, probability & recurrences'),
+  ],
+  ELN: [
+    R(/diode|rectifier|zener|led|ডায়োড/i, 'Diodes & rectifiers'),
+    R(/transistor|bjt|jfet|mosfet|fet\b|alpha|beta|ট্রানজিস্টর/i, 'Transistors (BJT, FET)'),
+    R(/amplifier|op-?amp|feedback|oscillator/i, 'Amplifiers & op-amps'),
+    R(/semiconductor|p-type|n-type|doping|active|passive|component/i, 'Semiconductors & components'),
+  ],
+  EC: [
+    R(/thevenin|norton|superposition|maximum power|kirchhoff|kvl|kcl|ohm/i, 'Circuit laws & theorems'),
+    R(/rlc|ac\b|phasor|power factor|impedance|reactance|resonan/i, 'AC circuits'),
+    R(/resistor|capacitor|inductor|voltage|current|series|parallel/i, 'Basic circuit quantities'),
+  ],
+  PHY: [
+    R(/coulomb|electric|magnetic|field|charge/i, 'Electricity & magnetism'),
+    R(/wave|frequency|light|optics|quantum|relativity|schr/i, 'Waves & modern physics'),
+  ],
 };
+// Further second-pass rules for subjects that already have an EXTRA list (appended, so earlier rules still win).
+EXTRA.ICS.push(
+  R(/hypervisor|kubernetes|docker|container|scaling|auto ?scal|saas|paas|iaas|deployment architecture|microservice/i, 'Cloud, data centre & servers'),
+  R(/http status|soap|rest(ful)?\b|api\b|web service|web application/i, 'Web technology (HTML, CSS, JS)'),
+  R(/digital banking|online banking|e-?banking|information system audit|core banking|\bcbs\b|swift|rtgs|beftn|npsb|mobile financial/i, 'Banking IT & digital finance'),
+  R(/ন্যানো|nanotech|ইন্টারনেট|internet/i, 'Emerging technology'),
+  R(/সুপার কম্পিউটার|মেইনফ্রেম|অ্যানালগ|ডিজিটাল কম্পিউটার|কম্পিউটার কী|কীভাবে কাজ করে|কম্পিউটার শব্দ/i, 'Computer generations & types'),
+  R(/সিস্টেম সফটওয়্যার|সফটওয়্যার/i, 'Software types'),
+  R(/স্টোরেজ|storage|ডেটা প্রসেসিং|data processing|data and information|mb ও mbps|mbps/i, 'Data representation & units'),
+  R(/ict|তথ্য ও যোগাযোগ|freelanc|ফ্রিল্যান্স|smart bangladesh|digital bangladesh|4ir/i, 'ICT, policy & society'),
+);
+EXTRA.NET.push(
+  R(/tcp|sequence number|arq|stop and wait|sliding window/i, 'TCP, UDP & congestion control'),
+  R(/e-?mail|ই-মেইল|smtp|pop3?|imap|receive emails/i, 'Application & support protocols (DNS, DHCP, NAT, HTTP…)'),
+  R(/encrypt|এনক্রিপশন|password|পাসওয়ার্ড|otp|confidentiality|integrity|non-repudiation|cia|security policy|same.origin|abnormal traffic|user account|access, security/i, 'Security concepts & authentication'),
+  R(/টপোলজি|topology/i, 'Topology'),
+  R(/loopback|রাউটিং|routing/i, 'Routing'),
+  R(/domain|icann|web-?caching|video conference|fragmentation/i, 'Application & support protocols (DNS, DHCP, NAT, HTTP…)'),
+  R(/device.*security|firewall|ফায়ারওয়াল/i, 'Firewall, IDS & DMZ'),
+);
+EXTRA.DLD.push(
+  R(/সত্যক সারণী|truth table|গেইট|gate|ttl|cmos|digital ic|logic family/i, 'Logic gates & universal gates'),
+  R(/সরল কর|simplif|প্রমাণ|প্রমান|prove|বুলিয়ান|boolean|\\overline|F = |Q = /i, 'Boolean algebra & simplification'),
+  R(/রূপান্তর|convert|কমপ্লিমেন্ট|complement|অক্টাল|হেক্সা|ডেসিম্যাল|দশমিক|বাইনারি|বাইনারী|binary|octal|hexa|\(\w+\)\d+|1\+1/i, 'Number systems & codes'),
+  R(/অ্যাডার|adder|combinational|sequential|traffic light|counter|flip/i, 'Combinational circuits'),
+);
+EXTRA.COM.push(
+  R(/attenuation|noise|signal|analog|digital/i, 'Signals & information theory'),
+);
 
 export function cluster(subject, text, oldTopic) {
   const rules = CLUSTERS[subject];

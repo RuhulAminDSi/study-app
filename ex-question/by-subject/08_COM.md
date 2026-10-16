@@ -12,10 +12,10 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
 | 1 | [Multiplexing (TDM, FDM, WDM)](#multiplexing-tdm-fdm-wdm) | 30 | 50 | 0 |
-| 2 | [Other](#other) | 27 | 51 | 5 |
+| 2 | [Other](#other) | 25 | 47 | 4 |
 | 3 | [Modulation & PCM](#modulation--pcm) | 13 | 25 | 0 |
 | 4 | [Sampling & channel capacity](#sampling--channel-capacity) | 13 | 25 | 0 |
-| 5 | [Signals & information theory](#signals--information-theory) | 10 | 16 | 2 |
+| 5 | [Signals & information theory](#signals--information-theory) | 11 | 20 | 3 |
 | 6 | [Optical, satellite & wireless links](#optical-satellite--wireless-links) | 9 | 21 | 7 |
 | 7 | [Line coding](#line-coding) | 3 | 4 | 0 |
 | 8 | [Hamming code & distance](#hamming-code--distance) | 0 | 3 | 0 |
@@ -766,18 +766,6 @@ a. Identify the differences between 1G, 2G, 3G, and 5G, and networks? 5
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 35 — মৎস্য ও প্রাণীসম্পদ অধিদপ্তরের ইন্সট্রাক্টর কম্পিউটার সায়েন্স — তারিখঃ ২০.০৬.২০২৩ — exam taker not printed — time and total not printed — pages 10–13, Q5(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3629"></a>
-
-### Which cable is commonly used to connect an analog CCTV camera? <sub>G3629</sub>
-
-*MCQ*
-
-Which cable is commonly used to connect an analog CCTV camera?
-
-- **Asked in (1):** Combined Bank Officer(IT) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 18 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
-
 <a id="g3975"></a>
 
 ### Which of the following is a guided transmission medium? (ক) Radiowave (খ) Microwave (গ) C… <sub>G3975</sub>
@@ -1079,18 +1067,6 @@ What is 3dB? How can you tom a converter into an inverter.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W1 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3817"></a>
-
-### In the mobile phones we are using today, users from both sides in a live call can talk si… <sub>G3817</sub>
-
-*MCQ*
-
-In the mobile phones we are using today, users from both sides in a live call can talk simultaneously. Sometimes the simultaneous talking causes noise in conversation. Therefore, let, a new mobile phone is designed where a user cannot talk while another user is talking, i.e., a user cannot transmit own speech while listening the other user talking. This simple one-way data transmission can though be initiated from any of the sides of the two users in a call. How can we term this mode of data transmission in the newly designed mobile phone? (a) Simplex (b) Half-duplex (c) Full-duplex (d) None of the above
-
-- **Asked in (1):** BUET M.Sc. April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q5 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
-
 <a id="g4089"></a>
 
 ### জিপিআরএস (GPRS) কী? GPRS-এর বৈশিষ্ট্য ও সুবিধাসমূহ লিখুন। <sub>G4089</sub>
@@ -1235,19 +1211,6 @@ Draw the GSM architecture
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive (Technical) 2015, W1 — [telecom-web/2015-teletalk-executive-technical-scribd-427357146/teletalk-executive-technical-2015.md](../telecom-web/2015-teletalk-executive-technical-scribd-427357146/teletalk-executive-technical-2015.md)
 
-<a id="g4660"></a>
-
-### ১৩. Ethernet এ কিভাবে data যায়? কিভাবে data send করা হয়? Data কি analog না digital? <sub>G4660</sub>
-
-*Viva*
-
-১৩. Ethernet এ কিভাবে data যায়? কিভাবে data send করা হয়? Data কি analog না digital?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V11 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
-
 <a id="g4673"></a>
 
 ### 5. কয়েকটি কেবল এর নাম বলুন? <sub>G4673</sub>
@@ -1299,18 +1262,6 @@ SIM ki?
 - **Viva mentions:** 1
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — 34th BCS account (45), 22/04/15, board Kamrunnessa Khanam (viva), A2-V2 — [viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md](../viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md)
-
-<a id="g4764"></a>
-
-### Draw and explain signaling logic used in Metro stations (CBTC) <sub>G4764</sub>
-
-*Written*
-
-Draw and explain signaling logic used in Metro stations (CBTC)
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — DMTCL 2025 Written Exam Suggestion, Engineering & Telecommunication (suggestion), B-1 — [model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md](../model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md)
 
 <a id="g4937"></a>
 
@@ -2017,6 +1968,18 @@ What is the main benefit of broadband transmission system compared to baseband?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
+<a id="g3629"></a>
+
+### Which cable is commonly used to connect an analog CCTV camera? <sub>G3629</sub>
+
+*MCQ*
+
+Which cable is commonly used to connect an analog CCTV camera?
+
+- **Asked in (1):** Combined Bank Officer(IT) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 18 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
+
 <a id="g0194"></a>
 
 ### Which communication mode uses serial communication? (duplex/half duplex/simplex/all) <sub>G0194</sub>
@@ -2053,6 +2016,18 @@ What is channel hardening and what implications does it have on the frequency al
 - **Asked in (1):** BTRC DAD(Technical) 2019
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Deputy Assistant Director (Technical) April 05, 2019, Q6(a) — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
+
+<a id="g3817"></a>
+
+### In the mobile phones we are using today, users from both sides in a live call can talk si… <sub>G3817</sub>
+
+*MCQ*
+
+In the mobile phones we are using today, users from both sides in a live call can talk simultaneously. Sometimes the simultaneous talking causes noise in conversation. Therefore, let, a new mobile phone is designed where a user cannot talk while another user is talking, i.e., a user cannot transmit own speech while listening the other user talking. This simple one-way data transmission can though be initiated from any of the sides of the two users in a call. How can we term this mode of data transmission in the newly designed mobile phone? (a) Simplex (b) Half-duplex (c) Full-duplex (d) None of the above
+
+- **Asked in (1):** BUET M.Sc. April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q5 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
 <a id="g3870"></a>
 
@@ -2153,6 +2128,31 @@ What is Polarization?
 - **Source:**
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p12 Q16 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p12)
 - **Printed answer:** Polarization is the orientation of an electromagnetic wave's electric field. It is important in wireless, microwave, and satellite communication to improve signal quality
+
+<a id="g4660"></a>
+
+### ১৩. Ethernet এ কিভাবে data যায়? কিভাবে data send করা হয়? Data কি analog না digital? <sub>G4660</sub>
+
+*Viva*
+
+১৩. Ethernet এ কিভাবে data যায়? কিভাবে data send করা হয়? Data কি analog না digital?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V11 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
+
+<a id="g4764"></a>
+
+### Draw and explain signaling logic used in Metro stations (CBTC) <sub>G4764</sub>
+
+*Written*
+
+Draw and explain signaling logic used in Metro stations (CBTC)
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — DMTCL 2025 Written Exam Suggestion, Engineering & Telecommunication (suggestion), B-1 — [model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md](../model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md)
 
 ## Optical, satellite & wireless links
 

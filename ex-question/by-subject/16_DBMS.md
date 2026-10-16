@@ -4,7 +4,7 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 - **Distinct questions:** 458 (from 541 records: Written 449, MCQ 44, Viva 48)
 - **Exams it appears in:** 157
-- **Corrections to printed answers:** 16
+- **Corrections to printed answers:** 21
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -1471,6 +1471,7 @@ How to copy from Parent table to Child Table with 1 column dividing into 3 diffe
 - **Asked in (1):** RAKUB ADBA 2020
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q11 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
+- **Correction:** the printed query repeats the alias `Name1` (the second column should be `Name2`), and grouping by `rn % 2` with `FLOOR(rn/2)` only fills three columns when the table has exactly six rows; the general form groups by `rn / 3` and picks `CASE WHEN rn % 3 = 0/1/2`.
 
 <a id="g4226"></a>
 
@@ -2182,6 +2183,7 @@ SQL query to find avg salary of all is greater than the salary of each departmen
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Dutch Bangla Bank — Assistant Network/Hardware Engineer — 05/03/19 — Exam Taker: BUET — Time 1:30 Hours — Marks distribution: 20 (non_dept) + 65 (dept.) = 85 — pages 1–2, Q10 — [duranta/1707373769-dbbl-2019-written/1707373769.md](../duranta/1707373769-dbbl-2019-written/1707373769.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -05 (suggestion), Set-05 Q10 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
+- **Correction:** the printed query is invalid SQL — an aggregate cannot appear in WHERE. A per-department condition on an average goes in HAVING, e.g. `SELECT dept_name, AVG(salary) FROM Employee GROUP BY dept_name HAVING AVG(salary) > (SELECT AVG(salary) FROM Employee);`.
 
 <a id="g3329"></a>
 
@@ -2370,6 +2372,7 @@ Given DB table with Employee (NID, Company_id, Name, Mobile Number), Assume ever
 - **Asked in (1):** PGCB AE(CSE) 2024
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — PGCB Assistant Engineer (CSE) 17.05.2024, Q6 — [duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md](../duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md)
+- **Correction:** there are 12 super keys (all 16 attribute subsets minus the 4 that contain neither NID nor Mobile Number); the printed count drops {NID, Mobile Number}.
 
 <a id="g2575"></a>
 
@@ -2873,6 +2876,7 @@ Given four table Customer, Product, Employee and Order table Customer(customerID
 - **Asked in (1):** BRPL AM(ICT) 2024
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024, Q4(i) — [duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md](../duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md)
+- **Correction:** (i) the `NOT EXISTS` tests products *outside* category B, so it does not check "all products of category B" (relational division needs: no category-B product that the customer did not order on that date); (ii) uses `OrderProducts`, `Quantity` and `Price`, which are not in the given schema — it should be `SUM(TotalOder)` from `Order` with `OrderDate BETWEEN '2024-03-15' AND '2024-03-29'`.
 
 <a id="g3044"></a>
 
@@ -3410,6 +3414,7 @@ What is the degree of relation in DBMS?
 - **Asked in (1):** NWPGCL AM(ICT) 2024
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Assistant Manager (ICT) 12/01/2024, Q2(b) — [duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md](../duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md)
+- **Correction:** (a) joins the product name to the *seller* (a person) and tests `category` for "American", which is a `Company.country` value; the product bought is the Purchase column `stock`, so the query should join `Purchase.stock = Product.pname` and `Product.maker = Company.cname` with `Company.country = 'American'` (or 'USA'). (b) uses `Purchase.price`, a column that does not exist in the given schema.
 
 <a id="g2059"></a>
 
