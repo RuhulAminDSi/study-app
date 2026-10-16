@@ -17,7 +17,14 @@ beforeEach(resetDb);
 describe("002_exam_prep schema", () => {
   it("is recorded after 001_core (and 003 follows)", async () => {
     const { rows } = await pool.query("SELECT version FROM schema_migrations ORDER BY version");
-    expect(rows.map((r) => r.version)).toEqual([1, 2, 3, 4]);
+    expect(rows.map((r) => r.version)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+  });
+
+  it("defaults a new candidate's language to English (005), matching the site", async () => {
+    const { rows } = await pool.query(
+      "INSERT INTO candidates (full_name, email, password_hash) VALUES ('A', 'a@example.com', 'x') RETURNING preferred_language",
+    );
+    expect(rows[0].preferred_language).toBe("en");
   });
 
   it("allows only one correct option per question", async () => {
