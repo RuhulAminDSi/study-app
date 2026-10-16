@@ -7,9 +7,9 @@ export interface SortState {
   dir: SortDir
 }
 
-export function useDataTable<T extends Record<string, any>>(
+export function useDataTable<T extends object>(
   data: T[],
-  { defaultSort, pageSize = 10 }: { defaultSort?: string; pageSize?: number } = {},
+  { defaultSort, pageSize = 10, searchKeys }: { defaultSort?: string; pageSize?: number; searchKeys?: (keyof T)[] } = {},
 ) {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortState>({ key: defaultSort || '', dir: 'asc' })
@@ -18,21 +18,19 @@ export function useDataTable<T extends Record<string, any>>(
   const searched = useMemo(() => {
     if (!search.trim()) return data
     const q = search.toLowerCase()
-    return data.filter(item =>
-      Object.values(item).some(v =>
-        v != null && String(v).toLowerCase().includes(q),
-      ),
-    )
-  }, [data, search])
+    // Without searchKeys every field is searched, which for lessons would match words inside the whole body.
+    const values = (item: T) => (searchKeys ? searchKeys.map(k => item[k]) : Object.values(item))
+    return data.filter(item => values(item).some(v => v != null && String(v).toLowerCase().includes(q)))
+  }, [data, search, searchKeys])
 
   const sorted = useMemo(() => {
     if (!sort.key) return searched
     return [...searched].sort((a, b) => {
-      const av = a[sort.key]
-      const bv = b[sort.key]
+      const av = (a as Record<string, unknown>)[sort.key]
+      const bv = (b as Record<string, unknown>)[sort.key]
       if (av == null) return 1
       if (bv == null) return -1
-      const cmp = typeof av === 'number'
+      const cmp = typeof av === 'number' && typeof bv === 'number'
         ? av - bv
         : String(av).localeCompare(String(bv))
       return sort.dir === 'asc' ? cmp : -cmp

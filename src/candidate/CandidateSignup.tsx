@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useApp } from '../context/AppContext'
 import { translations } from '../data/translations'
 import { navigate } from '../router'
@@ -15,6 +15,11 @@ export default function CandidateSignup({ next }: { next?: string }) {
   const { language } = useApp()
   const t = translations[language]
   const auth = useCandidateAuth()
+
+  // Already signed in (e.g. a bookmarked login link): go straight to Study Hub.
+  useEffect(() => {
+    if (auth.isSignedIn) navigate(next ?? '')
+  }, [auth.isSignedIn, next])
   const [form, setForm] = useState<FormState>(EMPTY)
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
@@ -38,6 +43,7 @@ export default function CandidateSignup({ next }: { next?: string }) {
         email: form.email,
         password: form.password,
         phone: form.phone || undefined,
+        preferredLanguage: language,
       })
       auth.signIn(token, candidate)
       navigate(next ?? '')
@@ -59,7 +65,7 @@ export default function CandidateSignup({ next }: { next?: string }) {
   return (
     <main className="cand-auth">
       <form className="cand-auth-card" onSubmit={handleSubmit} noValidate>
-        <a className="cand-back" href="#/">{t.backToLessons}</a>
+        <a className="cand-back" href="/">← {t.navHome}</a>
         <h1 className="cand-auth-title">{t.candidateSignupTitle}</h1>
         <p className="cand-auth-desc">{t.candidateSignupDesc}</p>
         {error && <div className="cand-form-error" role="alert">{error}</div>}

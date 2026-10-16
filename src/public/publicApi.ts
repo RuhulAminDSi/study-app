@@ -1,3 +1,5 @@
+import { CANDIDATE_TOKEN_KEY, CANDIDATE_UNAUTHORIZED_EVENT } from '../candidate/candidateApi'
+
 export interface PublicChapter {
   id: string
   chapter_number: number
@@ -36,8 +38,18 @@ export interface PublicLesson {
   is_published: boolean
 }
 
+/** Study content needs a signed-in reader: a candidate, or an admin previewing the portal. */
+function readerToken(): string | null {
+  return localStorage.getItem(CANDIDATE_TOKEN_KEY) || localStorage.getItem('admin_token')
+}
+
 async function publicFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`/api/public${path}`)
+  const token = readerToken()
+  const res = await fetch(`/api/public${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+  if (res.status === 401 && localStorage.getItem(CANDIDATE_TOKEN_KEY)) {
+    // Expired or revoked session: sign out, which sends the reader back to the login screen.
+    window.dispatchEvent(new Event(CANDIDATE_UNAUTHORIZED_EVENT))
+  }
   if (!res.ok) throw new Error(`Public API error: ${res.statusText}`)
   return res.json()
 }
@@ -65,4 +77,24 @@ export function fetchLessonsByMenu(menuId: string): Promise<PublicLesson[]> {
 
 export function fetchLessonById(id: string): Promise<PublicLesson> {
   return publicFetch<PublicLesson>(`/lessons/${id}`)
+}
+
+/** A dashboard notice that is published and inside its schedule (see LIVE_ANNOUNCEMENTS_SQL on the server). */
+export interface PublicAnnouncement {
+  id: string
+  title_en: string
+  title_bn: string | null
+  body_en: string | null
+  body_bn: string | null
+  tone: 'info' | 'exam' | 'important'
+  link_url: string | null
+  link_label_en: string | null
+  link_label_bn: string | null
+  starts_at: string | null
+  ends_at: string | null
+  is_pinned: boolean
+}
+
+export function fetchAnnouncements(): Promise<PublicAnnouncement[]> {
+  return publicFetch<PublicAnnouncement[]>('/announcements')
 }

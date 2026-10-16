@@ -33,33 +33,17 @@ export interface Translations {
   search: string
   darkMode: string
   lightMode: string
-  noResults: string
   studyHub: string
-  previousModule: string
-  nextModule: string
   lessons: string
   goToBottom: string
   goToTop: string
   adminDashboard: string
   adminChapters: string
   adminLessons: string
-  adminContent: string
-  adminFiles: string
   adminBack: string
-  adminLogout: string
-  adminStatistics: string
   adminTotalChapters: string
-  adminSideMenus: string
   adminTotalLessons: string
   adminPublished: string
-  adminLoginTitle: string
-  adminLoginDesc: string
-  adminUsername: string
-  adminPassword: string
-  adminSignIn: string
-  adminSigningIn: string
-  adminLoginFailed: string
-  adminServerError: string
   adminAdd: string
   adminEdit: string
   adminDelete: string
@@ -67,16 +51,12 @@ export interface Translations {
   adminCancel: string
   adminCreate: string
   adminView: string
-  adminSource: string
   adminPub: string
   adminUnpub: string
   adminActions: string
   adminSearch: string
   adminConfirmDelete: string
   adminLoading: string
-  adminBeginner: string
-  adminIntermediate: string
-  adminAdvanced: string
   adminTitle: string
   adminNumber: string
   adminLevel: string
@@ -85,23 +65,189 @@ export interface Translations {
   adminContentBn: string
   adminCode: string
   adminChapter: string
-  adminMenu: string
   adminAll: string
   adminAllMenus: string
   adminAllChapters: string
   adminNewChapter: string
   adminEditChapter: string
   adminNewLesson: string
-  adminEditLesson: string
   adminEditTitle: string
   adminTitleEn: string
   adminTitleBn: string
   adminBengali: string
   adminTakeawaysBn: string
-  adminSeeMore: string
-  adminBackEditor: string
+  adminConsole: string
+  adminNavContent: string
+  adminNavPeople: string
+  adminWelcome: string
+  adminWelcomeSub: string
+  adminSubChapters: string
+  adminSubLessons: string
+  adminSubCandidates: string
+  adminStatus: string
+  adminStatusPublished: string
+  adminStatusDraft: string
+  adminPublishedPct: string
+  adminContentByChapter: string
+  adminDraftLessons: string
+  adminAllPublished: string
+  adminViewAll: string
+  adminNoResults: string
+  adminEmpty: string
+  adminSaved: string
+  adminCreated: string
+  adminDeleted: string
+  adminPublishedToast: string
+  adminUnpublishedToast: string
+  adminDeleteBody: string
+  adminMoveUp: string
+  adminMoveDown: string
+  adminType: string
+  adminTypeNote: string
+  adminTypePyq: string
+  adminTypeLesson: string
+  adminRoleSuperAdmin: string
+  adminRoleAdmin: string
+  adminRoleEditor: string
+  adminOpenMenu: string
+  adminClose: string
+  adminRange: string
+  adminErrTitleChapter: string
+  adminErrNoMenu: string
+  adminAnnouncements: string
+  adminMedia: string
+  adminSubAnnouncements: string
+  adminSubMedia: string
+  adminSubEditor: string
+  edBack: string
+  edEditLesson: string
+  edEnglish: string
+  edBangla: string
+  edBody: string
+  edBodyPlaceholder: string
+  edTakeaways: string
+  edTakeawaysHint: string
+  edFormula: string
+  edFormulaHint: string
+  edSettings: string
+  edSection: string
+  edPreview: string
+  edWrite: string
+  edHistory: string
+  edSaving: string
+  edUnsaved: string
+  edAllSaved: string
+  edLeaveTitle: string
+  edLeaveBody: string
+  edDiscard: string
+  edConverted: string
+  edNotesLocked: string
+  edNoBangla: string
+  edCopyFromEn: string
+  edHistoryEmpty: string
+  edOriginal: string
+  edRestoredTag: string
+  edCurrent: string
+  edRestore: string
+  edRestoreTitle: string
+  edRestoreBody: string
+  edRestoredToast: string
+  edBySystem: string
+  edWords: string
+  edViewAsCandidate: string
+  edViewVersion: string
+  edParagraph: string
+  edHeading: string
+  edSubheading: string
+  edBold: string
+  edItalic: string
+  edUnderline: string
+  edStrike: string
+  edHighlight: string
+  edInlineCode: string
+  edBulletList: string
+  edOrderedList: string
+  edQuote: string
+  edCodeBlock: string
+  edTable: string
+  edImage: string
+  edLink: string
+  edRule: string
+  edUndo: string
+  edRedo: string
+  edAddRow: string
+  edAddCol: string
+  edDelRow: string
+  edDelCol: string
+  edDelTable: string
+  edLinkTitle: string
+  edLinkUrl: string
+  edRemoveLink: string
+  edOpenNewTab: string
+  edErrNotes: string
+  mdUpload: string
+  mdUploading: string
+  mdDrop: string
+  mdCopy: string
+  mdCopied: string
+  mdEmpty: string
+  mdUploaded: string
+  mdChoose: string
+  mdInsert: string
+  mdAlt: string
+  mdFiles: string
+  mdOpen: string
+  mdErrType: string
+  mdErrSize: string
+  mdDeleteBody: string
+  anNew: string
+  anEdit: string
+  anMessageEn: string
+  anMessageBn: string
+  anTone: string
+  anToneInfo: string
+  anToneExam: string
+  anToneImportant: string
+  anLink: string
+  anLinkHint: string
+  anLinkLabelEn: string
+  anLinkLabelBn: string
+  anStarts: string
+  anEnds: string
+  anScheduleHint: string
+  anPinned: string
+  anPinnedBadge: string
+  anVisible: string
+  anStateLive: string
+  anStateScheduled: string
+  anStateExpired: string
+  anSchedule: string
+  anAlways: string
+  anFrom: string
+  anUntil: string
+  anEmpty: string
+  anPreviewLabel: string
+  anErrLink: string
+  anErrEnds: string
+  anErrDate: string
+  secManage: string
+  secTitle: string
+  secHint: string
+  secAdd: string
+  secLabelEn: string
+  secLabelBn: string
+  secHidden: string
+  secVisible: string
+  secHide: string
+  secShow: string
+  secLessons: string
+  secErrNotEmpty: string
+  errTooLong: string
+  errListInvalid: string
+  errLevelInvalid: string
+  dashNotices: string
+  dashDismiss: string
   signIn: string
-  signUp: string
   signOut: string
   signingIn: string
   candidateLoginTitle: string
@@ -138,148 +284,113 @@ export interface Translations {
   retry: string
   noLessonsTitle: string
   noLessonsDesc: string
-  backToLessons: string
   showPassword: string
   hidePassword: string
   passwordHint: string
-  adminQuestions: string
-  adminImport: string
-  adminTaxonomy: string
-  qNew: string
-  qEdit: string
-  qSubject: string
-  qTopic: string
-  qNoTopic: string
-  qType: string
-  qTypeMcq: string
-  qTypeWritten: string
-  qTypeProgramming: string
-  qDifficulty: string
-  qEasy: string
-  qMedium: string
-  qHard: string
-  qStemEn: string
-  qStemBn: string
-  qCode: string
-  qCodeLanguage: string
-  qOptions: string
-  qOptionEn: string
-  qOptionBn: string
-  qCorrect: string
-  qAddOption: string
-  qRemove: string
-  qExplanationEn: string
-  qExplanationBn: string
-  qModelAnswerEn: string
-  qModelAnswerBn: string
-  qExamTags: string
-  qStatus: string
-  qPublished: string
-  qDraft: string
-  qPreview: string
-  qAllSubjects: string
-  qAllTypes: string
-  qAnyStatus: string
-  qSearchPlaceholder: string
-  qPublishSelected: string
-  qUnpublishSelected: string
-  qSelected: string
-  qNoQuestions: string
-  qSourceOriginal: string
-  qSourcePastPaper: string
-  qSourceImported: string
-  qSaved: string
-  qCorrectAnswer: string
-  qExplanation: string
-  qModelAnswer: string
-  qPublishOnSave: string
-  impHelp: string
-  impChooseFile: string
-  impTemplate: string
-  impCheck: string
-  impChecking: string
-  impTotal: string
-  impReady: string
-  impDuplicates: string
-  impProblems: string
-  impRow: string
-  impField: string
-  impProblem: string
-  impCommit: string
-  impImporting: string
-  impDone: string
-  impNoFile: string
-  taxSubjects: string
-  taxExamTags: string
-  taxJobPosts: string
-  taxCode: string
-  taxNameEn: string
-  taxNameBn: string
-  taxCategory: string
-  taxTechnical: string
-  taxGeneral: string
-  taxChapter: string
-  taxTopics: string
-  taxQuestions: string
-  taxOrganization: string
-  taxPostEn: string
-  taxPostBn: string
-  taxYear: string
-  taxWeights: string
-  taxWeightTotal: string
-  taxAddWeight: string
-  taxSaveWeights: string
-  taxPlaceholderNote: string
-  taxExamPatternEn: string
-  taxExamPatternBn: string
-  taxAddTopic: string
-  errSubjectUnknown: string
-  errTopicUnknown: string
-  errTypeInvalid: string
-  errDifficultyInvalid: string
-  errOptionsCount: string
-  errCorrectChoice: string
-  errOptionsNotAllowed: string
-  errMarksInvalid: string
-  errExamTagUnknown: string
-  errExamTagIncomplete: string
-  errYearInvalid: string
-  errCodeInvalid: string
-  errCodeTaken: string
-  errCategoryInvalid: string
-  errWeightsSum: string
-  errWeightInvalid: string
-  errDuplicateQuestion: string
-  errInUse: string
-  errInMockTest: string
-  errHasAttempts: string
-  errFileUnreadable: string
-  errEncoding: string
-  errChapterUnknown: string
   notesBadge: string
   notesTabNotes: string
+  notesTabWeb: string
+  webNewTab: string
+  notesOnThisPage: string
+  notesShowAnswers: string
+  notesWebLoading: string
+  notesWebFailed: string
   notesTabPdf: string
   notesViewsLabel: string
-  notesOpenFull: string
-  notesPagesA4: string
-  pdfDownload: string
   pdfDetails: string
   pdfOpenNewTab: string
   pdfPreviewTitle: string
   pdfNoPreview: string
-  pdfTitle: string
   pdfLanguage: string
   pdfPages: string
   pdfFileSize: string
   pdfFormat: string
-  pdfFormatValue: string
   pdfUpdated: string
   pdfContents: string
-  pdfGoToPage: string
   pdfPageShort: string
   noteNewTab: string
   handwrittenNewTab: string
   noteDownload: string
+  navMenu: string
+  navDashboard: string
+  navNotes: string
+  navPyq: string
+  navSubjects: string
+  navHome: string
+  dashWelcome: string
+  dashWelcomeName: string
+  dashSubtitle: string
+  dashContinue: string
+  dashStart: string
+  dashStartHint: string
+  dashLastRead: string
+  dashStatSubjects: string
+  dashStatLessons: string
+  dashStatNotes: string
+  dashStatPyq: string
+  dashProgress: string
+  dashProgressOf: string
+  dashProgressNote: string
+  dashLessonsCount: string
+  dashNotesCount: string
+  dashOpen: string
+  dashResume: string
+  dashReview: string
+  dashRecent: string
+  dashRecentEmpty: string
+  dashPyqTitle: string
+  dashViewAll: string
+  libNotesIntro: string
+  libPyqIntro: string
+  libFilter: string
+  libEmpty: string
+  libCount: string
+  libOpened: string
+  readerHome: string
+  readerNav: string
+  emailOrUsername: string
+  adminCandidates: string
+  candTotal: string
+  candActive: string
+  candInactive: string
+  candNew7: string
+  candSignedIn7: string
+  candSearch: string
+  candAllStatuses: string
+  candSortNewest: string
+  candSortLastLogin: string
+  candSortName: string
+  candName: string
+  candTargetPost: string
+  candLastLogin: string
+  candJoined: string
+  candStatus: string
+  candNever: string
+  candNone: string
+  candDetails: string
+  candEmail: string
+  candPhone: string
+  candLanguage: string
+  candLangEn: string
+  candLangBn: string
+  candNoPost: string
+  candAttempts: string
+  candAccountActive: string
+  candSaveChanges: string
+  candSaved: string
+  candDeactivate: string
+  candActivate: string
+  candResetPassword: string
+  candNewPassword: string
+  candPasswordUpdated: string
+  candDelete: string
+  candConfirmDelete: string
+  candConfirmDeactivate: string
+  candAccountActions: string
+  candTotalCount: string
+  errForbidden: string
+  errLanguageInvalid: string
+  errEmailInUse: string
 }
 
 export type Language = 'en' | 'bn'

@@ -17,12 +17,25 @@ export interface AuthResponse {
   candidate: PublicCandidate
 }
 
+export interface AdminSessionUser {
+  id: string
+  username: string
+  email: string
+  role: string
+}
+
+/** POST /api/auth/sign-in: the one sign-in for candidates and admins. */
+export type SignInResponse =
+  | { kind: 'candidate'; token: string; candidate: PublicCandidate }
+  | { kind: 'admin'; token: string; user: AdminSessionUser }
+
 export interface RegisterInput {
   fullName: string
   email: string
   password: string
   phone?: string
   targetPostId?: string
+  preferredLanguage?: 'bn' | 'en'
 }
 
 interface ErrorBody {
@@ -66,7 +79,7 @@ export async function candidateFetch<T>(path: string, init: RequestInit = {}, wi
 export const candidateApi = {
   register: (input: RegisterInput) =>
     candidateFetch<AuthResponse>('/candidate/auth/register', { method: 'POST', body: JSON.stringify(input) }, false),
-  login: (email: string, password: string) =>
-    candidateFetch<AuthResponse>('/candidate/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }, false),
+  signIn: (identifier: string, password: string) =>
+    candidateFetch<SignInResponse>('/auth/sign-in', { method: 'POST', body: JSON.stringify({ identifier, password }) }, false),
   me: () => candidateFetch<{ candidate: PublicCandidate }>('/candidate/me'),
 }

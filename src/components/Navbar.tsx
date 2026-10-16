@@ -1,8 +1,8 @@
 import { useApp, useAppDispatch } from '../context/AppContext'
 import { translations } from '../data/translations'
-import { navigate, navigateToLesson } from '../router'
-import { useEffect } from 'react'
+import { navigateToLesson } from '../router'
 import { useCandidateAuth } from '../candidate/CandidateAuthContext'
+import { useAuth } from '../context/AuthContext'
 import '../candidate/candidate.css'
 
 interface NavbarProps {
@@ -14,10 +14,7 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
   const dispatch = useAppDispatch()
   const t = translations[state.language]
   const candidateAuth = useCandidateAuth()
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('light-theme', state.theme === 'light')
-  }, [state.theme])
+  const adminAuth = useAuth()
 
   return (
     <nav className="navbar">
@@ -27,7 +24,7 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <h1 className="navbar-brand">{t.studyHub}</h1>
+        <a className="navbar-brand" href="/">{t.studyHub}</a>
 
         <div className="navbar-search-mobile">
           <input
@@ -61,14 +58,27 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
         {candidateAuth.candidate ? (
           <>
             <span className="navbar-user" title={candidateAuth.candidate.email}>{candidateAuth.candidate.fullName}</span>
-            <button className="language-toggle" onClick={candidateAuth.signOut}>{t.signOut}</button>
+            <button className="language-toggle" onClick={() => {
+              candidateAuth.signOut()
+              window.location.href = '/'
+            }}>{t.signOut}</button>
           </>
-        ) : (
-          <button className="language-toggle" onClick={() => navigate('login')}>{t.signIn}</button>
+        ) : adminAuth.user ? (
+          // An admin previewing the portal (Study Hub needs an account, so nobody else gets here).
+          <>
+            <span className="navbar-user" title={adminAuth.user.email}>{adminAuth.user.username}</span>
+            <button className="language-toggle" onClick={() => {
+              adminAuth.logout()
+              window.location.href = '/'
+            }}>{t.signOut}</button>
+          </>
+        ) : null}
+        {/* Only a signed-in admin sees the way into the admin panel. */}
+        {adminAuth.isAuthenticated && (
+          <button className="language-toggle navbar-admin-btn" onClick={onAdminClick} title="Admin">
+            Admin
+          </button>
         )}
-        <button className="language-toggle navbar-admin-btn" onClick={onAdminClick} title="Admin">
-          Admin
-        </button>
       </div>
     </nav>
   )

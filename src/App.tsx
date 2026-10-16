@@ -1,24 +1,35 @@
+import { Suspense, lazy, useEffect, useState, type ReactNode } from 'react'
 import { AppProvider, useApp } from './context/AppContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import { CandidateAuthProvider } from './candidate/CandidateAuthContext'
+import { CandidateAuthProvider, useCandidateAuth } from './candidate/CandidateAuthContext'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import MainContent from './components/MainContent'
-import AdminDashboard from './admin/AdminDashboard'
-import AdminLogin from './admin/AdminLogin'
+import Dashboard from './components/portal/Dashboard'
+import NotesLibrary from './components/portal/NotesLibrary'
 import CandidateLogin from './candidate/CandidateLogin'
 import CandidateSignup from './candidate/CandidateSignup'
-import { useRoute, navigate } from './router'
+import { useRoute, navigate, type PublicView as View } from './router'
 import './index.css'
 
-function PublicView() {
+// The admin panel (and its rich-text editor) loads only when an admin opens it, not for every reader.
+const AdminDashboard = lazy(() => import('./admin/AdminDashboard'))
+
+function PublicView({ view }: { view: View }) {
   const state = useApp()
+
+  // Switching pages (dashboard, libraries, reader) starts at the top.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [view])
 
   return (
     <div className={`app-bg ${state.theme}`}>
       <Navbar onAdminClick={() => navigate('admin')} />
-      <Sidebar />
-      <MainContent />
+      <Sidebar view={view} />
+      {view === 'dashboard' && <Dashboard />}
+      {(view === 'notes' || view === 'pyq') && <NotesLibrary key={view} kind={view} />}
+      {view === 'lesson' && <MainContent />}
     </div>
   )
 }
@@ -26,20 +37,52 @@ function PublicView() {
 function AdminRoute() {
   const auth = useAuth()
 
-  if (!auth.isAuthenticated) {
-    navigate('admin/login')
-    return null
-  }
+  useEffect(() => {
+    if (!auth.isAuthenticated) navigate('login?next=admin')
+  }, [auth.isAuthenticated])
+  if (!auth.isAuthenticated) return null
 
   return (
-    <AdminDashboard onBack={() => navigate('')} />
+    <Suspense fallback={null}>
+      <AdminDashboard onBack={() => navigate('')} />
+    </Suspense>
   )
 }
 
+/** The old admin sign-in URL (`#/admin/login`) now opens the one sign-in page, heading for the admin panel. */
 function LoginRoute() {
-  return (
-    <AdminLogin onLogin={() => navigate('admin')} />
-  )
+  useEffect(() => {
+    navigate('login?next=admin')
+  }, [])
+  return null
+}
+
+/** Who is reading: a candidate, or an admin previewing the portal. Null when signed out. */
+function useReaderId(): string | null {
+  const candidate = useCandidateAuth()
+  const admin = useAuth()
+  if (candidate.token) return `c:${candidate.candidate?.id ?? candidate.token.slice(-16)}`
+  if (admin.isAuthenticated) return `a:${admin.user?.id ?? 'admin'}`
+  return null
+}
+
+/** Remounts the content store when the reader changes, so a new sign-in loads fresh and a sign-out drops it. */
+function ReaderAppProvider({ children }: { children: ReactNode }) {
+  const readerId = useReaderId()
+  return <AppProvider key={readerId ?? 'signed-out'} enabled={readerId !== null}>{children}</AppProvider>
+}
+
+/** Study Hub is for signed-in readers: anyone else goes to the login screen and comes back afterwards. */
+function SignInRequired({ children }: { children: ReactNode }) {
+  const readerId = useReaderId()
+  // The page asked for, captured on first render: by the time the effect re-runs (React dev mode runs
+  // it twice) the hash already points at the login screen.
+  const [requested] = useState(() => window.location.hash.replace(/^#\//, '').split('?')[0])
+  useEffect(() => {
+    if (readerId) return
+    navigate(requested ? `login?next=${encodeURIComponent(requested)}` : 'login')
+  }, [readerId, requested])
+  return readerId ? <>{children}</> : null
 }
 
 function AppShell() {
@@ -48,13 +91,17 @@ function AppShell() {
   return (
     <AuthProvider>
       <CandidateAuthProvider>
-        <AppProvider>
-          {route.type === 'public' && <PublicView />}
+        <ReaderAppProvider>
+          {route.type === 'public' && (
+            <SignInRequired>
+              <PublicView view={route.view ?? 'dashboard'} />
+            </SignInRequired>
+          )}
           {route.type === 'admin' && <AdminRoute />}
           {route.type === 'login' && <LoginRoute />}
           {route.type === 'candidate-login' && <CandidateLogin next={route.next} />}
           {route.type === 'candidate-signup' && <CandidateSignup next={route.next} />}
-        </AppProvider>
+        </ReaderAppProvider>
       </CandidateAuthProvider>
     </AuthProvider>
   )

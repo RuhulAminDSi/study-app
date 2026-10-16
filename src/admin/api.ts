@@ -72,6 +72,8 @@ export interface ApiUploadedFile {
   file_size: number
   uploaded_by: string | null
   created_at: string
+  /** Where the file is served, e.g. `/uploads/<uuid>.png`. */
+  url: string
 }
 
 export interface ApiLesson {
@@ -89,6 +91,47 @@ export interface ApiLesson {
   level: string
   is_published: boolean
 }
+
+/** One saved version of a lesson's text (see lesson_revisions). `note` is 'original' or 'restored'. */
+export interface ApiLessonRevision {
+  id: string
+  lesson_id: string
+  title_en: string
+  title_bn: string | null
+  content_en: string
+  content_bn: string | null
+  code_en: string | null
+  code_bn: string | null
+  takeaways_en: string[] | null
+  takeaways_bn: string[] | null
+  note: 'original' | 'restored' | null
+  edited_by_name: string | null
+  created_at: string
+}
+
+export type AnnouncementTone = 'info' | 'exam' | 'important'
+
+export interface ApiAnnouncement {
+  id: string
+  title_en: string
+  title_bn: string | null
+  body_en: string | null
+  body_bn: string | null
+  tone: AnnouncementTone
+  link_url: string | null
+  link_label_en: string | null
+  link_label_bn: string | null
+  starts_at: string | null
+  ends_at: string | null
+  is_pinned: boolean
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type AnnouncementInput = Omit<ApiAnnouncement, 'id' | 'created_at' | 'updated_at'>
+
+const json = (method: string, body: unknown): RequestInit => ({ method, body: JSON.stringify(body) })
 
 export const api = {
   chapters: {
@@ -128,6 +171,15 @@ export const api = {
       apiFetch<ApiLesson>(`/lessons/${id}/toggle-publish`, { method: 'PATCH' }),
     swapOrder: (id1: string, id2: string) =>
       apiFetch<ApiLesson[]>('/lessons/swap-order', { method: 'POST', body: JSON.stringify({ id1, id2 }) }),
+    revisions: (id: string) => apiFetch<ApiLessonRevision[]>(`/lessons/${id}/revisions`),
+    restore: (id: string, revisionId: string) =>
+      apiFetch<ApiLesson>(`/lessons/${id}/revisions/${revisionId}/restore`, { method: 'POST' }),
+  },
+  announcements: {
+    list: () => apiFetch<ApiAnnouncement[]>('/announcements'),
+    create: (data: AnnouncementInput) => apiFetch<ApiAnnouncement>('/announcements', json('POST', data)),
+    update: (id: string, data: AnnouncementInput) => apiFetch<ApiAnnouncement>(`/announcements/${id}`, json('PUT', data)),
+    delete: (id: string) => apiFetch<{ deleted: boolean }>(`/announcements/${id}`, { method: 'DELETE' }),
   },
   files: {
     list: () => apiFetch<ApiUploadedFile[]>('/files'),
@@ -141,7 +193,7 @@ export const api = {
       })
       if (!res.ok) {
         notifyIfUnauthorized(res)
-        throw new Error((await res.json()).error || 'Upload failed')
+        throw new AdminApiError(res.status, await res.json().catch(() => ({ error: res.statusText })))
       }
       return res.json() as Promise<ApiUploadedFile>
     },

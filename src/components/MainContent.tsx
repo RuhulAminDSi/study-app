@@ -1,9 +1,11 @@
 import { useRef, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
+import { recordLessonOpened } from '../context/progress'
 import { translations } from '../data/translations'
 import { renderContent } from './ContentRenderer'
 import { navigateToLesson } from '../router'
 import ContentStatus from './ContentStatus'
+import Icon from './portal/icons'
 
 export default function MainContent() {
   const state = useApp()
@@ -40,6 +42,10 @@ export default function MainContent() {
   })
 
   const current = state.orderedLessons[state.currentIndex]
+  useEffect(() => {
+    if (!state.loading && current) recordLessonOpened(current.chapterId, current.lesson.id)
+  }, [state.loading, current])
+
   if (state.loading || state.loadFailed || !current) return <ContentStatus />
 
   const lesson = current.lesson
@@ -50,23 +56,20 @@ export default function MainContent() {
   const takeaways = (state.language === 'bn' && lesson.takeaways_bn ? lesson.takeaways_bn : lesson.takeaways_en) || []
   const isFirst = state.currentIndex === 0
   const isLast = state.currentIndex === state.orderedLessons.length - 1
+  const prev = isFirst ? undefined : state.orderedLessons[state.currentIndex - 1]
+  const next = isLast ? undefined : state.orderedLessons[state.currentIndex + 1]
+  const titleOf = (l: typeof lesson) => (state.language === 'bn' && l.title_bn ? l.title_bn : l.title_en)
 
   const handlePrev = () => {
-    if (state.currentIndex > 0) {
-      const prev = state.orderedLessons[state.currentIndex - 1]
-      if (prev) navigateToLesson(prev.chapterId, prev.lesson.id)
-    }
+    if (prev) navigateToLesson(prev.chapterId, prev.lesson.id)
   }
 
   const handleNext = () => {
-    if (state.currentIndex < state.orderedLessons.length - 1) {
-      const next = state.orderedLessons[state.currentIndex + 1]
-      if (next) navigateToLesson(next.chapterId, next.lesson.id)
-    }
+    if (next) navigateToLesson(next.chapterId, next.lesson.id)
   }
 
   return (
-    <main className="main-content">
+    <main className="main-content has-reader-bar">
       <>
         <div className="lesson-header">
           <div className="lesson-meta">
@@ -106,23 +109,25 @@ export default function MainContent() {
         )}
       </>
 
-      <div className="nav-buttons">
-        <button className="nav-btn nav-btn-secondary" onClick={handlePrev} disabled={isFirst}>
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          {t.previous}
+      {/* Sticky lesson bar: previous / next, pinned to the bottom of the screen. */}
+      <nav className="reader-bar" aria-label={t.readerNav}>
+        <button type="button" className="reader-btn reader-prev" onClick={handlePrev} disabled={isFirst}>
+          <Icon name="chevronLeft" />
+          <span className="reader-btn-text">
+            <span className="reader-btn-label">{t.previous}</span>
+            {prev && <span className="reader-btn-title">{titleOf(prev.lesson)}</span>}
+          </span>
         </button>
-
-        <button className="nav-btn nav-btn-primary" onClick={handleNext} disabled={isLast}>
-          {t.next}
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7-7" />
-          </svg>
+        <button type="button" className="reader-btn reader-next" onClick={handleNext} disabled={isLast}>
+          <span className="reader-btn-text">
+            <span className="reader-btn-label">{t.next}</span>
+            {next && <span className="reader-btn-title">{titleOf(next.lesson)}</span>}
+          </span>
+          <Icon name="chevron" />
         </button>
-      </div>
+      </nav>
 
-      <div className="scroll-buttons">
+      <div className="scroll-buttons with-reader-bar">
         <button className="scroll-btn scroll-btn-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} title={t.goToTop}>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />

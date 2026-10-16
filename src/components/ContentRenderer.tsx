@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import type { ReactNode } from 'react'
 import NotesViewer from './NotesViewer'
+import { sanitizeHtml } from '../utils/sanitizeHtml'
 
 function parseTable(lines: string[]): ReactNode | null {
   const rows: string[][] = []
@@ -33,7 +34,7 @@ function parseTable(lines: string[]): ReactNode | null {
         <thead>
           <tr>
             {rows[0].map((cell, idx) => (
-              <th key={idx} dangerouslySetInnerHTML={{ __html: cell }} />
+              <th key={idx} dangerouslySetInnerHTML={{ __html: sanitizeHtml(cell) }} />
             ))}
           </tr>
         </thead>
@@ -41,7 +42,7 @@ function parseTable(lines: string[]): ReactNode | null {
           {rows.slice(1).map((row, rowIdx) => (
             <tr key={rowIdx}>
               {row.map((cell, cellIdx) => (
-                <td key={cellIdx} dangerouslySetInnerHTML={{ __html: cell }} />
+                <td key={cellIdx} dangerouslySetInnerHTML={{ __html: sanitizeHtml(cell) }} />
               ))}
             </tr>
           ))}
@@ -68,12 +69,16 @@ function notesViewerFor(content: string): ReactNode | null {
   return <NotesViewer key={`${slug}.${lang}`} slug={slug} dir={el.dataset.notesDir} lang={lang} title={title} />
 }
 
+/** True when a lesson body is HTML (the rich-text editor's output) rather than the legacy line format. */
+export const isHtmlContent = (content: string) => HTML_START.test(content.trim())
+const HTML_START = /^\s*<(?:div|table|p|h[1-6]|pre|ul|ol|li|blockquote|hr|img|br|section|article|header|footer|main|figure|figcaption|span|a)\b/i
+
 export function renderContent(content: string): ReactNode[] {
   const notes = notesViewerFor(content)
   if (notes) return [notes]
 
-  if (/^\s*<(?:div|table|p|h[1-6]|pre|ul|ol|li|blockquote|hr|img|br|section|article|header|footer|main|figure|figcaption|span|a)\b/i.test(content.trim())) {
-    return [<div key="html" className="html-content" dangerouslySetInnerHTML={{ __html: content }} />]
+  if (isHtmlContent(content)) {
+    return [<div key="html" className="html-content" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />]
   }
 
   const allLines = content.split('\n')
@@ -105,7 +110,7 @@ export function renderContent(content: string): ReactNode[] {
     if (trimmed.startsWith('<table>')) {
       const tableMatch = trimmed.match(/<table>.*?<\/table>/s)
       if (tableMatch) {
-        result.push(<div key={i} className="lesson-table-container" dangerouslySetInnerHTML={{ __html: tableMatch[0] }} />)
+        result.push(<div key={i} className="lesson-table-container" dangerouslySetInnerHTML={{ __html: sanitizeHtml(tableMatch[0]) }} />)
       }
     } else if (trimmed.match(/^[🔬⚡🌊📐🧲🌐✅⚠️]$/)) {
       result.push(<div key={i} className="section-emoji">{trimmed}</div>)

@@ -51,6 +51,15 @@ function serveNotes(): Plugin {
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), serveNotes()],
+  // Two pages: "/" is the static landing page, "/study-hub/" is the Study Hub app.
+  build: {
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        studyHub: fileURLToPath(new URL('./study-hub/index.html', import.meta.url)),
+      },
+    },
+  },
   server: {
     watch: {
       ignored: ['**/public/notes/**', '**/notes/pdf/**', '**/notes/snap/**'],
