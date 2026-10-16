@@ -21,22 +21,19 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | 8 | [Security concepts & authentication](#security-concepts--authentication) | 26 | 45 | 9 |
 | 9 | [Network types & Internet](#network-types--internet) | 24 | 30 | 8 |
 | 10 | [IPv4 vs IPv6](#ipv4-vs-ipv6) | 23 | 26 | 2 |
-| 11 | [Firewall, IDS/IPS & DMZ](#firewall-idsips--dmz) | 20 | 40 | 13 |
-| 12 | [Other](#other) | 17 | 75 | 35 |
-| 13 | [Network topology](#network-topology) | 16 | 23 | 8 |
-| 14 | [Transmission media & Ethernet](#transmission-media--ethernet) | 14 | 25 | 6 |
-| 15 | [Routing & routing protocols](#routing--routing-protocols) | 12 | 23 | 2 |
+| 11 | [Firewall, IDS/IPS & DMZ](#firewall-idsips--dmz) | 21 | 41 | 13 |
+| 12 | [Network topology](#network-topology) | 21 | 31 | 11 |
+| 13 | [Other](#other) | 17 | 75 | 35 |
+| 14 | [Routing & routing protocols](#routing--routing-protocols) | 14 | 25 | 2 |
+| 15 | [Transmission media & Ethernet](#transmission-media--ethernet) | 14 | 25 | 6 |
 | 16 | [Delay, bandwidth & throughput numericals](#delay-bandwidth--throughput-numericals) | 12 | 16 | 2 |
 | 17 | [VLAN, VPN & domains](#vlan-vpn--domains) | 10 | 23 | 9 |
 | 18 | [Data communication basics](#data-communication-basics) | 9 | 12 | 1 |
 | 19 | [Wireless & medium access](#wireless--medium-access) | 9 | 10 | 0 |
 | 20 | [Error detection & data-link functions](#error-detection--data-link-functions) | 7 | 15 | 2 |
-| 21 | [Topology](#topology) | 5 | 8 | 3 |
-| 22 | [Addressing, casting & troubleshooting](#addressing-casting--troubleshooting) | 4 | 13 | 7 |
-| 23 | [Bank / enterprise network design](#bank--enterprise-network-design) | 2 | 12 | 6 |
-| 24 | [Routing](#routing) | 2 | 2 | 0 |
-| 25 | [Blockchain](#blockchain) | 1 | 2 | 1 |
-| 26 | [Firewall, IDS & DMZ](#firewall-ids--dmz) | 1 | 1 | 0 |
+| 21 | [Addressing, casting & troubleshooting](#addressing-casting--troubleshooting) | 4 | 13 | 7 |
+| 22 | [Bank / enterprise network design](#bank--enterprise-network-design) | 2 | 12 | 6 |
+| 23 | [Blockchain](#blockchain) | 1 | 2 | 1 |
 
 ## Most-asked questions
 
@@ -9426,6 +9423,18 @@ How do you use Intrusion Detection System (IDS) in NPCBL Cybersecurity?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NPCBL Engineer (Cyber Security Analyst) 11.07.2026, 6 — [duranta/1783762106-npcbl-sae-csa/1783762106.md](../duranta/1783762106-npcbl-sae-csa/1783762106.md)
 
+<a id="g4289"></a>
+
+### Which device is mainly related to provide security of a network? <sub>G4289</sub>
+
+*MCQ*
+
+Which device is mainly related to provide security of a network?
+
+- **Asked in (1):** BB AD(General) 2022
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ96 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)
+
 <a id="g1469"></a>
 
 ### What is firewall? How you can ensure IT security in the computer system? <sub>G1469</sub>
@@ -9756,6 +9765,401 @@ To prevent __ we use firewall. ক. Data-driven attack খ. Virus attack গ. Un
 - **Asked in (0):** no dated exam tag on the source
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q19 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
+
+## Network topology
+
+<a id="g1791"></a>
+
+### What is Network Topology? Distinguish between Bus, Ring, Tree and Star topology. Discuss … <sub>G1791</sub>
+
+*Written*
+
+What is Network Topology? Distinguish between Bus, Ring, Tree and Star topology. Discuss how the Bus topology works.
+
+- **Asked in (2):** Rupali Bank ANA 2023; Rupali Bank ANE 2023
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q43 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
+  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q57 — [suggestion based on previous yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.md](../suggestion%20based%20on%20previous%20yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g1967"></a>
+
+### একটি নেটওয়ার্কে n সংখ্যক ডিভাইসের জন্যে কোন mesh, bus এবং টোপোলজিতে তারের লিংকগুলোর সংখ্… <sub>G1967</sub>
+
+*Written*
+
+একটি নেটওয়ার্কে n সংখ্যক ডিভাইসের জন্যে কোন mesh, bus এবং টোপোলজিতে তারের লিংকগুলোর সংখ্যা কত?
+
+- **Asked in (2):** 15th NTRCA ICT; 17th NTRCA ICT (2023)
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q44 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
+  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — Data Communications & Networking (continued), Q178 — [18th NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md) · [image](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ১০ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
+
+<a id="g1449"></a>
+
+### Name and draw different type of network Topologies. <sub>G1449</sub>
+
+*Written*
+
+Name and draw different type of network Topologies.
+
+- **Asked in (2):** BB IT 2020; BBL AM(ICT) 2019
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q46 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
+
+<a id="g1447"></a>
+
+### What is Topology in data communication? What are differences between Bus, Ring, Tree and … <sub>G1447</sub>
+
+*Written*
+
+What is Topology in data communication? What are differences between Bus, Ring, Tree and Star topology?
+
+- **Asked in (1):** Combined Bank SO(IT) 2023
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q42 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
+
+<a id="g1448"></a>
+
+### What is network topology? Write the name all different topology used in computer networki… <sub>G1448</sub>
+
+*Written*
+
+What is network topology? Write the name all different topology used in computer networking with example, diagram and their activities.
+
+- **Asked in (1):** BPSC ADA 2022
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q45 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
+
+<a id="g1924"></a>
+
+### Network এর topology এর সংজ্ঞা দিন। একটি কম্পিউটার ল্যাব স্থাপনের জন্য BUS topology দ্বারা… <sub>G1924</sub>
+
+*Written*
+
+Network এর topology এর সংজ্ঞা দিন। একটি কম্পিউটার ল্যাব স্থাপনের জন্য BUS topology দ্বারা LAN এর চিত্র অঙ্কন করুন।
+
+- **Asked in (1):** 45th BCS CSE (2024)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৭ (ঘ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2087"></a>
+
+### নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন। <sub>G2087</sub>
+
+*Written*
+
+নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন।
+
+- **Asked in (1):** 17th NTRCA CSE (2023)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১১ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
+
+<a id="g2899"></a>
+
+### Define network topology and classifying it. <sub>G2899</sub>
+
+*Written*
+
+Define network topology and classifying it.
+
+- **Asked in (1):** Cadet College Lecturer(ICT) 2025
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
+
+<a id="g3109"></a>
+
+### What is topology in data communication? What are the differences between bus, ring, tree … <sub>G3109</sub>
+
+*Written*
+
+What is topology in data communication? What are the differences between bus, ring, tree & star topology? How IEEE 802 work?
+
+- **Asked in (1):** Combined Bank SO(IT) 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3474"></a>
+
+### b. Describe the different types of topologies use in Local Area Networks (LAN). What type… <sub>G3474</sub>
+
+*Written*
+
+b. Describe the different types of topologies use in Local Area Networks (LAN). What type of topology is used in a generic computer lab in a university? 5
+
+- **Asked in (1):** Parliament Secretariat SAE 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q3(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
+
+<a id="g4896"></a>
+
+### Draw diagrams of Bus, Star, and Mesh network topologies. <sub>G4896</sub>
+
+*Written*
+
+Draw diagrams of Bus, Star, and Mesh network topologies.
+
+- **Asked in (1):** Jamuna Oil JO(IT & MIS) 2025
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Jamuna Oil Company Limited — Junior Officer (IT & MIS), 23/05/2025 (BUET) (suggestion), Q4 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
+
+<a id="g1450"></a>
+
+### Define network topologies with features. <sub>G1450</sub>
+
+*Written*
+
+Define network topologies with features.
+
+- **Asked in (1):** NU AP 2020
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q47 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
+
+<a id="g2403"></a>
+
+### Topology কাকে বলে? যে কোন একটি টপোলজি এর চিত্র অংকন কর ? <sub>G2403</sub>
+
+*Written*
+
+Topology কাকে বলে? যে কোন একটি টপোলজি এর চিত্র অংকন কর ?
+
+- **Asked in (1):** BCPCL JI 2019
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 13 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
+
+<a id="g2848"></a>
+
+### কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন। <sub>G2848</sub>
+
+*Written*
+
+কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন।
+
+- **Asked in (1):** BOF SAE(Computer) 2021
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 3. Bangladesh Ordnance Factory (BOF), Sub Assistant Engineer (Computer), 20-03-2021; exam taker not printed; Total Marks: 100 [Non-technical: 40: Technical: 60]; Department: 5 × 10 = 50; pp. 4-6, Q7 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
+
+<a id="g3782"></a>
+
+### 5 short questions of 1 mark each from networking.[1) which topology will be if each devic… <sub>G3782</sub>
+
+*Written*
+
+5 short questions of 1 mark each from networking.[1) which topology will be if each devices connected with each other 2) ]
+
+- **Asked in (1):** BUET M.Sc. May 2019
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q22 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
+
+<a id="g3837"></a>
+
+### Assume 5 computer devices are connected in a mesh network topology. How many cables are n… <sub>G3837</sub>
+
+*MCQ*
+
+Assume 5 computer devices are connected in a mesh network topology. How many cables are needed in the topology? How many ports are needed for each device in the topology? (a) 6 cables and 3 ports (b) 10 cables and 4 ports (c) 15 cables and 5 ports (d) 5 cables and 5 ports
+
+- **Asked in (1):** BUET M.Sc. April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q25 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
+
+<a id="g4116"></a>
+
+### বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন? <sub>G4116</sub>
+
+*Written*
+
+বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন?
+
+- **Asked in (1):** 16th NTRCA CSE (2019)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
+
+<a id="g1993"></a>
+
+### নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন। <sub>G1993</sub>
+
+*Written*
+
+নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন।
+
+- **Asked in (1):** 15th NTRCA CSE
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
+
+<a id="g4065"></a>
+
+### কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন। <sub>G4065</sub>
+
+*Written*
+
+কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন।
+
+- **Asked in (1):** 13th NTRCA CSE (2016)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৪(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
+
+<a id="g0414"></a>
+
+### What is network topology? <sub>G0414</sub>
+
+*Viva*
+
+What is network topology?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - NTRCA 17th registration viva 2023 (2023) (viva), Q3 — [VIVA/06_ntrca-topology-url-and-osi.md](../VIVA/06_ntrca-topology-url-and-osi.md) · [image](../VIVA/06_ntrca-topology-url-and-osi.jpg)
+- **Printed answer:** The way the computers of a network are interconnected
+
+<a id="g0415"></a>
+
+### Describe bus topology and star topology. <sub>G0415</sub>
+
+*Viva*
+
+Describe bus topology and star topology.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - NTRCA 17th registration viva 2023 (2023) (viva), Q4 — [VIVA/06_ntrca-topology-url-and-osi.md](../VIVA/06_ntrca-topology-url-and-osi.md) · [image](../VIVA/06_ntrca-topology-url-and-osi.jpg)
+- **Printed answer:** Bus: all computers on one line (bus), data reaches all but only the addressee accepts; star: all connect to a central hub/switch which forwards data to the receiver
+
+<a id="g0527"></a>
+
+### What is Topology? <sub>G0527</sub>
+
+*Viva*
+
+What is Topology?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p7 Q18 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p7)
+- **Printed answer:** Network Topology is the physical or logical arrangement of devices and communication links in a network
+
+<a id="g0528"></a>
+
+### Types of Network Topology. <sub>G0528</sub>
+
+*Viva*
+
+Types of Network Topology.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p7 Q19 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p7)
+- **Printed answer:** The main types are Bus, Star, Ring, Mesh, Tree, and Hybrid Topology
+
+<a id="g0529"></a>
+
+### Which topology is commonly used in offices? <sub>G0529</sub>
+
+*Viva*
+
+Which topology is commonly used in offices?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p7 Q20 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p7)
+- **Printed answer:** Star Topology is most commonly used in offices because it is easy to manage, reliable, and simple to troubleshoot
+
+<a id="g4655"></a>
+
+### ৮. Star topology কি? এই topology এর সুবিধা ও অসুবিধা গুলো কি কি? <sub>G4655</sub>
+
+*Viva*
+
+৮. Star topology কি? এই topology এর সুবিধা ও অসুবিধা গুলো কি কি?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V6 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
+
+<a id="g4656"></a>
+
+### ৯. একটা রুমে ৫ টা PC কে নিয়ে কোন topology এর মাধ্যমে connect করবে? কেনো এই topology ব্যবহ… <sub>G4656</sub>
+
+*Viva*
+
+৯. একটা রুমে ৫ টা PC কে নিয়ে কোন topology এর মাধ্যমে connect করবে? কেনো এই topology ব্যবহার করবে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V7 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
+
+<a id="g4657"></a>
+
+### ১০. Topology এর device গুলোর connectivity করতে হলে কিভাবে করবে? কি কি জিনিস দরকার? যা যা … <sub>G4657</sub>
+
+*Viva*
+
+১০. Topology এর device গুলোর connectivity করতে হলে কিভাবে করবে? কি কি জিনিস দরকার? যা যা দরকার সম্পূর্ণ জিনিসগুলো বলো?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V8 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
+
+<a id="g4665"></a>
+
+### ৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে? <sub>G4665</sub>
+
+*Viva*
+
+৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V5 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
+
+<a id="g4698"></a>
+
+### 12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন? <sub>G4698</sub>
+
+*Viva*
+
+12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g4716"></a>
+
+### 5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে? <sub>G4716</sub>
+
+*Viva*
+
+5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
+
+<a id="g1702"></a>
+
+### নেটওয়ার্ক টপোলজি কী? Bus, Star, Ring, Mesh এবং Tree টপোলজির চিত্রসহ বর্ণনা, সুবিধা ও অসু… <sub>G1702</sub>
+
+*Written*
+
+নেটওয়ার্ক টপোলজি কী? Bus, Star, Ring, Mesh এবং Tree টপোলজির চিত্রসহ বর্ণনা, সুবিধা ও অসুবিধা লিখুন।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা কমিউনিকেশন ও নেটওয়ার্কিং (Data Communications & Networking), Q177 — [18th NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.md](../18th%20NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.md) · [image](../18th%20NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.jpg)
 
 ## Other
 
@@ -10703,301 +11107,315 @@ Alternate Task: Write how a Load Balancer works. Compare L4 vs L7 load balancing
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), D3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-## Network topology
+## Routing & routing protocols
 
-<a id="g1791"></a>
+<a id="g1532"></a>
 
-### What is Network Topology? Distinguish between Bus, Ring, Tree and Star topology. Discuss … <sub>G1791</sub>
-
-*Written*
-
-What is Network Topology? Distinguish between Bus, Ring, Tree and Star topology. Discuss how the Bus topology works.
-
-- **Asked in (2):** Rupali Bank ANA 2023; Rupali Bank ANE 2023
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q43 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
-  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q57 — [suggestion based on previous yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.md](../suggestion%20based%20on%20previous%20yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.jpg)
-  - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g1967"></a>
-
-### একটি নেটওয়ার্কে n সংখ্যক ডিভাইসের জন্যে কোন mesh, bus এবং টোপোলজিতে তারের লিংকগুলোর সংখ্… <sub>G1967</sub>
+### What is Autonomous system? What is the difference between Link state routing protocol and… <sub>G1532</sub>
 
 *Written*
 
-একটি নেটওয়ার্কে n সংখ্যক ডিভাইসের জন্যে কোন mesh, bus এবং টোপোলজিতে তারের লিংকগুলোর সংখ্যা কত?
+What is Autonomous system? What is the difference between Link state routing protocol and Distance vector routing protocol?
 
-- **Asked in (2):** 15th NTRCA ICT; 17th NTRCA ICT (2023)
+- **Asked in (2):** RAKUB NSE 2021; Sonali Bank Officer(IT) 2021
 - **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q44 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
-  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — Data Communications & Networking (continued), Q178 — [18th NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md) · [image](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.jpg)
-  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ১০ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q59 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
 
-<a id="g1449"></a>
+<a id="g0073"></a>
 
-### Name and draw different type of network Topologies. <sub>G1449</sub>
-
-*Written*
-
-Name and draw different type of network Topologies.
-
-- **Asked in (2):** BB IT 2020; BBL AM(ICT) 2019
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q46 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
-
-<a id="g1447"></a>
-
-### What is Topology in data communication? What are differences between Bus, Ring, Tree and … <sub>G1447</sub>
-
-*Written*
-
-What is Topology in data communication? What are differences between Bus, Ring, Tree and Star topology?
-
-- **Asked in (1):** Combined Bank SO(IT) 2023
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q42 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
-
-<a id="g1448"></a>
-
-### What is network topology? Write the name all different topology used in computer networki… <sub>G1448</sub>
-
-*Written*
-
-What is network topology? Write the name all different topology used in computer networking with example, diagram and their activities.
-
-- **Asked in (1):** BPSC ADA 2022
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q45 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
-
-<a id="g1924"></a>
-
-### Network এর topology এর সংজ্ঞা দিন। একটি কম্পিউটার ল্যাব স্থাপনের জন্য BUS topology দ্বারা… <sub>G1924</sub>
-
-*Written*
-
-Network এর topology এর সংজ্ঞা দিন। একটি কম্পিউটার ল্যাব স্থাপনের জন্য BUS topology দ্বারা LAN এর চিত্র অঙ্কন করুন।
-
-- **Asked in (1):** 45th BCS CSE (2024)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৭ (ঘ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2899"></a>
-
-### Define network topology and classifying it. <sub>G2899</sub>
-
-*Written*
-
-Define network topology and classifying it.
-
-- **Asked in (1):** Cadet College Lecturer(ICT) 2025
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
-
-<a id="g3109"></a>
-
-### What is topology in data communication? What are the differences between bus, ring, tree … <sub>G3109</sub>
-
-*Written*
-
-What is topology in data communication? What are the differences between bus, ring, tree & star topology? How IEEE 802 work?
-
-- **Asked in (1):** Combined Bank SO(IT) 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3474"></a>
-
-### b. Describe the different types of topologies use in Local Area Networks (LAN). What type… <sub>G3474</sub>
-
-*Written*
-
-b. Describe the different types of topologies use in Local Area Networks (LAN). What type of topology is used in a generic computer lab in a university? 5
-
-- **Asked in (1):** Parliament Secretariat SAE 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q3(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
-
-<a id="g4896"></a>
-
-### Draw diagrams of Bus, Star, and Mesh network topologies. <sub>G4896</sub>
-
-*Written*
-
-Draw diagrams of Bus, Star, and Mesh network topologies.
-
-- **Asked in (1):** Jamuna Oil JO(IT & MIS) 2025
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Jamuna Oil Company Limited — Junior Officer (IT & MIS), 23/05/2025 (BUET) (suggestion), Q4 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
-
-<a id="g1450"></a>
-
-### Define network topologies with features. <sub>G1450</sub>
-
-*Written*
-
-Define network topologies with features.
-
-- **Asked in (1):** NU AP 2020
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Communication And Computer Networking, Q47 — [bit to exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.md) · [image](../bit%20to%20exabyte/65_bte-g2-p51-networking-q32-47-media-topology.jpg)
-
-<a id="g2403"></a>
-
-### Topology কাকে বলে? যে কোন একটি টপোলজি এর চিত্র অংকন কর ? <sub>G2403</sub>
-
-*Written*
-
-Topology কাকে বলে? যে কোন একটি টপোলজি এর চিত্র অংকন কর ?
-
-- **Asked in (1):** BCPCL JI 2019
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 13 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
-
-<a id="g3782"></a>
-
-### 5 short questions of 1 mark each from networking.[1) which topology will be if each devic… <sub>G3782</sub>
-
-*Written*
-
-5 short questions of 1 mark each from networking.[1) which topology will be if each devices connected with each other 2) ]
-
-- **Asked in (1):** BUET M.Sc. May 2019
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q22 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
-
-<a id="g3837"></a>
-
-### Assume 5 computer devices are connected in a mesh network topology. How many cables are n… <sub>G3837</sub>
+### Which one retrieves emails from a server? (SMTP / SNMP / RIP / POP3) <sub>G0073</sub>
 
 *MCQ*
 
-Assume 5 computer devices are connected in a mesh network topology. How many cables are needed in the topology? How many ports are needed for each device in the topology? (a) 6 cables and 3 ports (b) 10 cables and 4 ports (c) 15 cables and 5 ports (d) 5 cables and 5 ports
+Which one retrieves emails from a server? (SMTP / SNMP / RIP / POP3)
 
-- **Asked in (1):** BUET M.Sc. April 2021
+- **Asked in (1):** 49th BCS ICT (2025)
 - **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q25 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
+  - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q22 — [BCS/47_white-box-testing-and-pop3.md](../BCS/47_white-box-testing-and-pop3.md) · [image](../BCS/47_white-box-testing-and-pop3.jpg)
+- **Printed answer:** (ঘ) POP3
 
-<a id="g0414"></a>
+<a id="g1527"></a>
 
-### What is network topology? <sub>G0414</sub>
-
-*Viva*
-
-What is network topology?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - NTRCA 17th registration viva 2023 (2023) (viva), Q3 — [VIVA/06_ntrca-topology-url-and-osi.md](../VIVA/06_ntrca-topology-url-and-osi.md) · [image](../VIVA/06_ntrca-topology-url-and-osi.jpg)
-- **Printed answer:** The way the computers of a network are interconnected
-
-<a id="g0415"></a>
-
-### Describe bus topology and star topology. <sub>G0415</sub>
-
-*Viva*
-
-Describe bus topology and star topology.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - NTRCA 17th registration viva 2023 (2023) (viva), Q4 — [VIVA/06_ntrca-topology-url-and-osi.md](../VIVA/06_ntrca-topology-url-and-osi.md) · [image](../VIVA/06_ntrca-topology-url-and-osi.jpg)
-- **Printed answer:** Bus: all computers on one line (bus), data reaches all but only the addressee accepts; star: all connect to a central hub/switch which forwards data to the receiver
-
-<a id="g0527"></a>
-
-### What is Topology? <sub>G0527</sub>
-
-*Viva*
-
-What is Topology?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p7 Q18 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p7)
-- **Printed answer:** Network Topology is the physical or logical arrangement of devices and communication links in a network
-
-<a id="g0528"></a>
-
-### Types of Network Topology. <sub>G0528</sub>
-
-*Viva*
-
-Types of Network Topology.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p7 Q19 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p7)
-- **Printed answer:** The main types are Bus, Star, Ring, Mesh, Tree, and Hybrid Topology
-
-<a id="g0529"></a>
-
-### Which topology is commonly used in offices? <sub>G0529</sub>
-
-*Viva*
-
-Which topology is commonly used in offices?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p7 Q20 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p7)
-- **Printed answer:** Star Topology is most commonly used in offices because it is easy to manage, reliable, and simple to troubleshoot
-
-<a id="g4655"></a>
-
-### ৮. Star topology কি? এই topology এর সুবিধা ও অসুবিধা গুলো কি কি? <sub>G4655</sub>
-
-*Viva*
-
-৮. Star topology কি? এই topology এর সুবিধা ও অসুবিধা গুলো কি কি?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V6 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
-
-<a id="g4656"></a>
-
-### ৯. একটা রুমে ৫ টা PC কে নিয়ে কোন topology এর মাধ্যমে connect করবে? কেনো এই topology ব্যবহ… <sub>G4656</sub>
-
-*Viva*
-
-৯. একটা রুমে ৫ টা PC কে নিয়ে কোন topology এর মাধ্যমে connect করবে? কেনো এই topology ব্যবহার করবে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V7 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
-
-<a id="g4657"></a>
-
-### ১০. Topology এর device গুলোর connectivity করতে হলে কিভাবে করবে? কি কি জিনিস দরকার? যা যা … <sub>G4657</sub>
-
-*Viva*
-
-১০. Topology এর device গুলোর connectivity করতে হলে কিভাবে করবে? কি কি জিনিস দরকার? যা যা দরকার সম্পূর্ণ জিনিসগুলো বলো?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 1 (viva), V8 — [viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md](../viva-web/bank-2021-optimal-rbl-ane-part1/optimal-rbl-ane-1.md)
-
-<a id="g1702"></a>
-
-### নেটওয়ার্ক টপোলজি কী? Bus, Star, Ring, Mesh এবং Tree টপোলজির চিত্রসহ বর্ণনা, সুবিধা ও অসু… <sub>G1702</sub>
+### What is Routing? Explain different types of Routing? Why using benefit of an Adhoc routin… <sub>G1527</sub>
 
 *Written*
 
-নেটওয়ার্ক টপোলজি কী? Bus, Star, Ring, Mesh এবং Tree টপোলজির চিত্রসহ বর্ণনা, সুবিধা ও অসুবিধা লিখুন।
+What is Routing? Explain different types of Routing? Why using benefit of an Adhoc routing? Which routing algorithm is used in shortest path algorithm?
+
+- **Asked in (1):** Combined Bank Officer(IT) 2023
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q54 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
+
+<a id="g1528"></a>
+
+### What are static and dynamic routing? Given their relative advantages. <sub>G1528</sub>
+
+*Written*
+
+What are static and dynamic routing? Given their relative advantages.
+
+- **Asked in (1):** BPSC AE 2022
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q55 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
+
+<a id="g1529"></a>
+
+### Define distance Vector and Link state routing protocols. <sub>G1529</sub>
+
+*Written*
+
+Define distance Vector and Link state routing protocols.
+
+- **Asked in (1):** BPSC AE 2022
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q56 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
+
+<a id="g2144"></a>
+
+### Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ? <sub>G2144</sub>
+
+*Written*
+
+Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ?
+
+- **Asked in (1):** BTCL JAM 2024
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q6 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
+- **Correction:** the test command is `ping 127.0.0.1` (or `ping localhost`); 127.0.0.0 is the network address of the block.
+
+<a id="g2558"></a>
+
+### Count-to-infinity problem occurs in ........ ক) Distance vector routing খ) shortest path … <sub>G2558</sub>
+
+*MCQ*
+
+Count-to-infinity problem occurs in ........ ক) Distance vector routing খ) shortest path first গ) Link state routing ঘ) Hierarchical routing
+
+- **Asked in (1):** BPSC AP 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Computer Network Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
+
+<a id="g2652"></a>
+
+### স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ? <sub>G2652</sub>
+
+*Written*
+
+স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ?
+
+- **Asked in (1):** WZPDCL SAE 2023
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১০ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
+
+<a id="g3056"></a>
+
+### Difference between link-state and distance vector using this terms: message complexity, C… <sub>G3056</sub>
+
+*Written*
+
+Difference between link-state and distance vector using this terms: message complexity, Convergence, Robustness.
+
+- **Asked in (1):** JBL ANA 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q(unnumbered 2) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3367"></a>
+
+### NAT, DSSS, RIP, EIGRP, DHCP, IoT এর পূর্ণরূপ লিখ। <sub>G3367</sub>
+
+*Written*
+
+NAT, DSSS, RIP, EIGRP, DHCP, IoT এর পূর্ণরূপ লিখ।
+
+- **Asked in (1):** DESCO SAE(Computer) 2026
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer (Computer) 15/05/2026, 1 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
+
+<a id="g3978"></a>
+
+### _______ is used to store web addresses for future use? (ক) Routing (খ) DNS resolution (গ)… <sub>G3978</sub>
+
+*MCQ*
+
+_______ is used to store web addresses for future use? (ক) Routing (খ) DNS resolution (গ) Caching (ঘ) ARP resolution
+
+- **Asked in (1):** 49th BCS CSE (2025)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q105 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
+
+<a id="g4517"></a>
+
+### Which of the following pairs is an example of intra-domain routing protocols? RIP, FTP / … <sub>G4517</sub>
+
+*MCQ*
+
+Which of the following pairs is an example of intra-domain routing protocols? RIP, FTP / BGP, SMTP / ALOHA, RIP / OSPF, RIP Printed answer: OSPF, RIP
+
+- **Asked in (1):** BPSC AME 2022
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 4 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
+  - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 12 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
+
+<a id="g1530"></a>
+
+### What is Routing? Write down the difference between static routing and dynamic routing. <sub>G1530</sub>
+
+*Written*
+
+What is Routing? Write down the difference between static routing and dynamic routing.
+
+- **Asked in (1):** RAKUB NSE 2021
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q57 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
+
+<a id="g1531"></a>
+
+### Name of the Algorithm RIP, OSPF and EIGRP routing protocol. <sub>G1531</sub>
+
+*Written*
+
+Name of the Algorithm RIP, OSPF and EIGRP routing protocol.
+
+- **Asked in (1):** RAKUB NSE 2021
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q58 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
+
+<a id="g2560"></a>
+
+### Routing is clearly the major issue for: A. Transport layer B. Network layer C. Data-link … <sub>G2560</sub>
+
+*MCQ*
+
+Routing is clearly the major issue for: A. Transport layer B. Network layer C. Data-link layer D. Physical layer
+
+- **Asked in (1):** BPSC AME 2019
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Computer Network Q5 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
+
+<a id="g2987"></a>
+
+### Difference between distance vector with link algorithm. <sub>G2987</sub>
+
+*Written*
+
+Difference between distance vector with link algorithm.
+
+- **Asked in (1):** Sonali Bank Officer(IT) 2021
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3903"></a>
+
+### ………………. is a group of networks and routers under the authority of a single administration… <sub>G3903</sub>
+
+*MCQ*
+
+………………. is a group of networks and routers under the authority of a single administration. (a) An autonomous system (b) An Area (c) A System (d) Both an autonomous system and an area
+
+- **Asked in (1):** BUET IICT April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q16 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+
+<a id="g3937"></a>
+
+### Which one is an example of routed protocol? (a) IP (b) RIP (c) IGRP (d) OSPF <sub>G3937</sub>
+
+*MCQ*
+
+Which one is an example of routed protocol? (a) IP (b) RIP (c) IGRP (d) OSPF
+
+- **Asked in (1):** BUET IICT April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q50 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+
+<a id="g3939"></a>
+
+### Which routing protocol does not consume the bandwidth of the network? (a) A default routi… <sub>G3939</sub>
+
+*MCQ*
+
+Which routing protocol does not consume the bandwidth of the network? (a) A default routing (b) Dynamic routing (c) Static routing (d) None of the above
+
+- **Asked in (1):** BUET IICT April 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q52 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+
+<a id="g0541"></a>
+
+### What is a Routing Protocol? <sub>G0541</sub>
+
+*Viva*
+
+What is a Routing Protocol?
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p9 Q8 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p9)
+- **Printed answer:** A Routing Protocol is a set of rules that enables routers to exchange routing information and determine the best path for data
+
+<a id="g0542"></a>
+
+### Name some Routing Protocols. <sub>G0542</sub>
+
+*Viva*
+
+Name some Routing Protocols.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Viva mentions:** 1
+- **Source:**
+  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p9 Q9 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p9)
+- **Printed answer:** Common routing protocols are RIP, OSPF, EIGRP, BGP, and IS-IS
+
+<a id="g0263"></a>
+
+### Configure a static route on R0 to reach PC1 (any vendor). <sub>G0263</sub>
+
+*Written*
+
+Configure a static route on R0 to reach PC1 (any vendor).
+
+- **Asked in (0):** no dated exam tag on the source
+- **Also asked in (not counted):** IBBL SO(Network) 2025
+- **Source:**
+  - Islamic Bank PLC SQA, Senior Officer (Network) (2025-03-14), Q3 — [BUET JOB/27_islamic-bank-network-questions-1-6.md](../BUET%20JOB/27_islamic-bank-network-questions-1-6.md) · [image](../BUET%20JOB/27_islamic-bank-network-questions-1-6.jpg)
+
+<a id="g1755"></a>
+
+### Write the definition: TDM, FDM, Static, RIP, OSPF, Gate way protocol Which one is serial … <sub>G1755</sub>
+
+*Written*
+
+Write the definition: TDM, FDM, Static, RIP, OSPF, Gate way protocol Which one is serial communication ?
 
 - **Asked in (0):** no dated exam tag on the source
 - **Source:**
-  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা কমিউনিকেশন ও নেটওয়ার্কিং (Data Communications & Networking), Q177 — [18th NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.md](../18th%20NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.md) · [image](../18th%20NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.jpg)
+  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q4 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
+
+<a id="g4831"></a>
+
+### Write the difference between Static and Dynamic Routing. <sub>G4831</sub>
+
+*Written*
+
+Write the difference between Static and Dynamic Routing.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A9 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
+
+<a id="g4939"></a>
+
+### Routing is clearly the major issue for: ক. Transport layer খ. Network layer গ. Data-link … <sub>G4939</sub>
+
+*MCQ*
+
+Routing is clearly the major issue for: ক. Transport layer খ. Network layer গ. Data-link layer ঘ. Physical layer
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q18 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
 ## Transmission media & Ethernet
 
@@ -11314,291 +11732,6 @@ Complete the following table Cable Type | Speed | Bandwidth | Distance Fiber opt
 - **Asked in (0):** no dated exam tag on the source
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -02 (suggestion), Set-02 Q6 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
-
-## Routing & routing protocols
-
-<a id="g1532"></a>
-
-### What is Autonomous system? What is the difference between Link state routing protocol and… <sub>G1532</sub>
-
-*Written*
-
-What is Autonomous system? What is the difference between Link state routing protocol and Distance vector routing protocol?
-
-- **Asked in (2):** RAKUB NSE 2021; Sonali Bank Officer(IT) 2021
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q59 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
-
-<a id="g0073"></a>
-
-### Which one retrieves emails from a server? (SMTP / SNMP / RIP / POP3) <sub>G0073</sub>
-
-*MCQ*
-
-Which one retrieves emails from a server? (SMTP / SNMP / RIP / POP3)
-
-- **Asked in (1):** 49th BCS ICT (2025)
-- **Source:**
-  - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q22 — [BCS/47_white-box-testing-and-pop3.md](../BCS/47_white-box-testing-and-pop3.md) · [image](../BCS/47_white-box-testing-and-pop3.jpg)
-- **Printed answer:** (ঘ) POP3
-
-<a id="g1527"></a>
-
-### What is Routing? Explain different types of Routing? Why using benefit of an Adhoc routin… <sub>G1527</sub>
-
-*Written*
-
-What is Routing? Explain different types of Routing? Why using benefit of an Adhoc routing? Which routing algorithm is used in shortest path algorithm?
-
-- **Asked in (1):** Combined Bank Officer(IT) 2023
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q54 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
-
-<a id="g1528"></a>
-
-### What are static and dynamic routing? Given their relative advantages. <sub>G1528</sub>
-
-*Written*
-
-What are static and dynamic routing? Given their relative advantages.
-
-- **Asked in (1):** BPSC AE 2022
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q55 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
-
-<a id="g1529"></a>
-
-### Define distance Vector and Link state routing protocols. <sub>G1529</sub>
-
-*Written*
-
-Define distance Vector and Link state routing protocols.
-
-- **Asked in (1):** BPSC AE 2022
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q56 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
-
-<a id="g2558"></a>
-
-### Count-to-infinity problem occurs in ........ ক) Distance vector routing খ) shortest path … <sub>G2558</sub>
-
-*MCQ*
-
-Count-to-infinity problem occurs in ........ ক) Distance vector routing খ) shortest path first গ) Link state routing ঘ) Hierarchical routing
-
-- **Asked in (1):** BPSC AP 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Computer Network Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
-
-<a id="g3056"></a>
-
-### Difference between link-state and distance vector using this terms: message complexity, C… <sub>G3056</sub>
-
-*Written*
-
-Difference between link-state and distance vector using this terms: message complexity, Convergence, Robustness.
-
-- **Asked in (1):** JBL ANA 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q(unnumbered 2) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3367"></a>
-
-### NAT, DSSS, RIP, EIGRP, DHCP, IoT এর পূর্ণরূপ লিখ। <sub>G3367</sub>
-
-*Written*
-
-NAT, DSSS, RIP, EIGRP, DHCP, IoT এর পূর্ণরূপ লিখ।
-
-- **Asked in (1):** DESCO SAE(Computer) 2026
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer (Computer) 15/05/2026, 1 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
-
-<a id="g3978"></a>
-
-### _______ is used to store web addresses for future use? (ক) Routing (খ) DNS resolution (গ)… <sub>G3978</sub>
-
-*MCQ*
-
-_______ is used to store web addresses for future use? (ক) Routing (খ) DNS resolution (গ) Caching (ঘ) ARP resolution
-
-- **Asked in (1):** 49th BCS CSE (2025)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q105 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
-
-<a id="g4517"></a>
-
-### Which of the following pairs is an example of intra-domain routing protocols? RIP, FTP / … <sub>G4517</sub>
-
-*MCQ*
-
-Which of the following pairs is an example of intra-domain routing protocols? RIP, FTP / BGP, SMTP / ALOHA, RIP / OSPF, RIP Printed answer: OSPF, RIP
-
-- **Asked in (1):** BPSC AME 2022
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 4 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
-  - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 12 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
-
-<a id="g1530"></a>
-
-### What is Routing? Write down the difference between static routing and dynamic routing. <sub>G1530</sub>
-
-*Written*
-
-What is Routing? Write down the difference between static routing and dynamic routing.
-
-- **Asked in (1):** RAKUB NSE 2021
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q57 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
-
-<a id="g1531"></a>
-
-### Name of the Algorithm RIP, OSPF and EIGRP routing protocol. <sub>G1531</sub>
-
-*Written*
-
-Name of the Algorithm RIP, OSPF and EIGRP routing protocol.
-
-- **Asked in (1):** RAKUB NSE 2021
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Advanced Networking & Routing, Q58 — [bit to exabyte/70_bte-g2-p56-networking-q51-59-routing.md](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) · [image](../bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.jpg)
-
-<a id="g2560"></a>
-
-### Routing is clearly the major issue for: A. Transport layer B. Network layer C. Data-link … <sub>G2560</sub>
-
-*MCQ*
-
-Routing is clearly the major issue for: A. Transport layer B. Network layer C. Data-link layer D. Physical layer
-
-- **Asked in (1):** BPSC AME 2019
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Computer Network Q5 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
-
-<a id="g2987"></a>
-
-### Difference between distance vector with link algorithm. <sub>G2987</sub>
-
-*Written*
-
-Difference between distance vector with link algorithm.
-
-- **Asked in (1):** Sonali Bank Officer(IT) 2021
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3903"></a>
-
-### ………………. is a group of networks and routers under the authority of a single administration… <sub>G3903</sub>
-
-*MCQ*
-
-………………. is a group of networks and routers under the authority of a single administration. (a) An autonomous system (b) An Area (c) A System (d) Both an autonomous system and an area
-
-- **Asked in (1):** BUET IICT April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q16 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
-
-<a id="g3937"></a>
-
-### Which one is an example of routed protocol? (a) IP (b) RIP (c) IGRP (d) OSPF <sub>G3937</sub>
-
-*MCQ*
-
-Which one is an example of routed protocol? (a) IP (b) RIP (c) IGRP (d) OSPF
-
-- **Asked in (1):** BUET IICT April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q50 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
-
-<a id="g3939"></a>
-
-### Which routing protocol does not consume the bandwidth of the network? (a) A default routi… <sub>G3939</sub>
-
-*MCQ*
-
-Which routing protocol does not consume the bandwidth of the network? (a) A default routing (b) Dynamic routing (c) Static routing (d) None of the above
-
-- **Asked in (1):** BUET IICT April 2021
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q52 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
-
-<a id="g0541"></a>
-
-### What is a Routing Protocol? <sub>G0541</sub>
-
-*Viva*
-
-What is a Routing Protocol?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p9 Q8 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p9)
-- **Printed answer:** A Routing Protocol is a set of rules that enables routers to exchange routing information and determine the best path for data
-
-<a id="g0542"></a>
-
-### Name some Routing Protocols. <sub>G0542</sub>
-
-*Viva*
-
-Name some Routing Protocols.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p9 Q9 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p9)
-- **Printed answer:** Common routing protocols are RIP, OSPF, EIGRP, BGP, and IS-IS
-
-<a id="g0263"></a>
-
-### Configure a static route on R0 to reach PC1 (any vendor). <sub>G0263</sub>
-
-*Written*
-
-Configure a static route on R0 to reach PC1 (any vendor).
-
-- **Asked in (0):** no dated exam tag on the source
-- **Also asked in (not counted):** IBBL SO(Network) 2025
-- **Source:**
-  - Islamic Bank PLC SQA, Senior Officer (Network) (2025-03-14), Q3 — [BUET JOB/27_islamic-bank-network-questions-1-6.md](../BUET%20JOB/27_islamic-bank-network-questions-1-6.md) · [image](../BUET%20JOB/27_islamic-bank-network-questions-1-6.jpg)
-
-<a id="g1755"></a>
-
-### Write the definition: TDM, FDM, Static, RIP, OSPF, Gate way protocol Which one is serial … <sub>G1755</sub>
-
-*Written*
-
-Write the definition: TDM, FDM, Static, RIP, OSPF, Gate way protocol Which one is serial communication ?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q4 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
-
-<a id="g4831"></a>
-
-### Write the difference between Static and Dynamic Routing. <sub>G4831</sub>
-
-*Written*
-
-Write the difference between Static and Dynamic Routing.
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A9 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
-
-<a id="g4939"></a>
-
-### Routing is clearly the major issue for: ক. Transport layer খ. Network layer গ. Data-link … <sub>G4939</sub>
-
-*MCQ*
-
-Routing is clearly the major issue for: ক. Transport layer খ. Network layer গ. Data-link layer ঘ. Physical layer
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q18 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
 ## Delay, bandwidth & throughput numericals
 
@@ -12564,107 +12697,6 @@ Explain the term “Checksum” and its use in networking.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A2 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-## Topology
-
-<a id="g2087"></a>
-
-### নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন। <sub>G2087</sub>
-
-*Written*
-
-নেটওয়ার্ক টপোলজি কী? স্টার ও বাস টপোলজি আলোচনা করুন।
-
-- **Asked in (1):** 17th NTRCA CSE (2023)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১১ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
-
-<a id="g2848"></a>
-
-### কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন। <sub>G2848</sub>
-
-*Written*
-
-কম্পিউটার নেটওয়ার্ক টপোলজির ক্ষেত্রে স্টার ও রিং টপোলজির পার্থক্য সমূহ লিখুন।
-
-- **Asked in (1):** BOF SAE(Computer) 2021
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — exam paper — 3. Bangladesh Ordnance Factory (BOF), Sub Assistant Engineer (Computer), 20-03-2021; exam taker not printed; Total Marks: 100 [Non-technical: 40: Technical: 60]; Department: 5 × 10 = 50; pp. 4-6, Q7 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
-
-<a id="g4116"></a>
-
-### বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন? <sub>G4116</sub>
-
-*Written*
-
-বাস ও রিং টপোলজির মধ্যে কোনটি ভালো এবং কেন?
-
-- **Asked in (1):** 16th NTRCA CSE (2019)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
-
-<a id="g1993"></a>
-
-### নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন। <sub>G1993</sub>
-
-*Written*
-
-নেটওয়ার্ক টপোলজি কি? বিভিন্ন প্রকার নেটওয়ার্ক টপোলজির চিত্রসহ বর্ণনা লিখুন।
-
-- **Asked in (1):** 15th NTRCA CSE
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
-
-<a id="g4065"></a>
-
-### কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন। <sub>G4065</sub>
-
-*Written*
-
-কম্পিউটার নেটওয়ার্ক কী? চিত্রসহ বিভিন্ন নেটওয়ার্ক টপোলজি বর্ণনা করুন।
-
-- **Asked in (1):** 13th NTRCA CSE (2016)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৪(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
-
-<a id="g4665"></a>
-
-### ৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে? <sub>G4665</sub>
-
-*Viva*
-
-৭. কোন টপোলজির অসুবিধা বেশি? আমরা যে এখানে বসে আছি এখানে কোন টপোলজি বিদ্যমান থাকতে পারে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — Rupali Bank ANE viva, account 2 (viva), V5 — [viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md](../viva-web/bank-2021-optimal-rbl-ane-part2/optimal-rbl-ane-2.md)
-
-<a id="g4698"></a>
-
-### 12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন? <sub>G4698</sub>
-
-*Viva*
-
-12. রিং টপোলজি আর মেশ টপোলজি সম্পর্কে কি জানেন? কোনটি ব্যবহার করা ভালো এবং কেন?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
-<a id="g4716"></a>
-
-### 5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে? <sub>G4716</sub>
-
-*Viva*
-
-5. টপোলজি বলতে কি বুঝেন? আর কি কি টপোলজি আছে?
-
-- **Asked in (0):** no dated exam tag on the source
-- **Viva mentions:** 1
-- **Source:**
-  - Viva questions recalled by candidates (counted apart from written exams) — J10 Sonali Bank Officer (IT) 2019 (viva), A10-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
-
 ## Addressing, casting & troubleshooting
 
 <a id="g3030"></a>
@@ -12994,33 +13026,6 @@ Which one of the following is a private network based on public network? ক. Lo
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q86 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
-## Routing
-
-<a id="g2144"></a>
-
-### Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ? <sub>G2144</sub>
-
-*Written*
-
-Local loopback address কি? কোন কমান্ড ব্যবহার করে কানেক্টিভিটি টেস্ট করা হয় ?
-
-- **Asked in (1):** BTCL JAM 2024
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q6 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
-- **Correction:** the test command is `ping 127.0.0.1` (or `ping localhost`); 127.0.0.0 is the network address of the block.
-
-<a id="g2652"></a>
-
-### স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ? <sub>G2652</sub>
-
-*Written*
-
-স্ট্যাটিক রাউটিং কি? ইহার দুইটি অসুবিধা লিখ ?
-
-- **Asked in (1):** WZPDCL SAE 2023
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১০ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
-
 ## Blockchain
 
 <a id="g0068"></a>
@@ -13049,17 +13054,3 @@ What is blockchain?
 - **Source:**
   - BPSC viva (viva), Q6 — [VIVA/02_bpsc-oop-and-dbms-viva.md](../VIVA/02_bpsc-oop-and-dbms-viva.md) · [image](../VIVA/02_bpsc-oop-and-dbms-viva.jpg)
 - **Printed answer:** A distributed ledger technology that stores data and processes transactions securely and transparently across network nodes
-
-## Firewall, IDS & DMZ
-
-<a id="g4289"></a>
-
-### Which device is mainly related to provide security of a network? <sub>G4289</sub>
-
-*MCQ*
-
-Which device is mainly related to provide security of a network?
-
-- **Asked in (1):** BB AD(General) 2022
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ96 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)

@@ -282,10 +282,10 @@ EXTRA.NET.push(
   R(/tcp|sequence number|arq|stop and wait|sliding window/i, 'TCP, UDP & congestion control'),
   R(/e-?mail|ই-মেইল|smtp|pop3?|imap|receive emails/i, 'Application & support protocols (DNS, DHCP, NAT, HTTP…)'),
   R(/encrypt|এনক্রিপশন|password|পাসওয়ার্ড|otp|confidentiality|integrity|non-repudiation|cia|security policy|same.origin|abnormal traffic|user account|access, security/i, 'Security concepts & authentication'),
-  R(/টপোলজি|topology/i, 'Topology'),
-  R(/loopback|রাউটিং|routing/i, 'Routing'),
+  R(/টপোলজি|topology/i, 'Network topology'),
+  R(/loopback|রাউটিং|routing/i, 'Routing & routing protocols'),
   R(/domain|icann|web-?caching|video conference|fragmentation/i, 'Application & support protocols (DNS, DHCP, NAT, HTTP…)'),
-  R(/device.*security|firewall|ফায়ারওয়াল/i, 'Firewall, IDS & DMZ'),
+  R(/device.*security|firewall|ফায়ারওয়াল/i, 'Firewall, IDS/IPS & DMZ'),
 );
 EXTRA.DLD.push(
   R(/সত্যক সারণী|truth table|গেইট|gate|ttl|cmos|digital ic|logic family/i, 'Logic gates & universal gates'),

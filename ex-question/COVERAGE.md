@@ -44,12 +44,12 @@ Unmapped clusters: Other (14)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `net-ip-firewalls` | 238 | 201 | 94 | 10 | IP addressing & subnetting (147); IPv4 vs IPv6 (26); Firewall, IDS/IPS & DMZ (22) | 6 / 1 / 0 | — |
+| `net-ip-firewalls` | 238 | 201 | 94 | 10 | IP addressing & subnetting (147); IPv4 vs IPv6 (26); Firewall, IDS/IPS & DMZ (23) | 6 / 1 / 0 | ✓ |
 | `net-application-osi` | 191 | 158 | 77 | 13 | Application & support protocols (DNS, DHCP, NAT, HTTP…) (72); OSI & TCP/IP models (61); Network types & Internet (25) | 4 / 1 / 0 | — |
-| `net-protocols-datalink` | 180 | 115 | 57 | 7 | Network devices (42); Network topology (17); Transmission media & Ethernet (14) | 5 / 0 / 0 | — |
+| `net-protocols-datalink` | 180 | 115 | 57 | 7 | Network devices (42); Network topology (22); Transmission media & Ethernet (14) | 5 / 0 / 0 | — |
 | `net-transport-crypto` | 130 | 94 | 50 | 3 | Cryptography & digital signature (58); TCP, UDP & congestion control (36) | 4 / 1 / 0 | — |
 | `net-cyber-attacks` *(new)* | 107 | 69 | 37 | 3 | Cyber attacks & malware (69) | 0 / 0 / 0 | — |
-| `net-routing-congestion` | 53 | 35 | 16 | 2 | Routing & routing protocols (18); Delay, bandwidth & throughput numericals (13); Routing (2) | 3 / 0 / 0 | — |
+| `net-routing-congestion` | 53 | 35 | 16 | 2 | Routing & routing protocols (20); Delay, bandwidth & throughput numericals (13); Bank / enterprise network design (2) | 3 / 0 / 0 | — |
 | `net-auth-dns-email` | 47 | 31 | 22 | 3 | Security concepts & authentication (30); Blockchain (1) | 3 / 0 / 0 | — |
 
 Unmapped clusters: Other (75)
