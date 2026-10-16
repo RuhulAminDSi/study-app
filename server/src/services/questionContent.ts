@@ -29,6 +29,41 @@ export interface QuestionWrite {
   options: OptionInput[];
   exam_tag_ids: string[];
   is_published: boolean;
+  /** Exam Edge tags (migration 007). Optional: writers that don't send them leave stored values alone on update. */
+  lesson_slug?: string | null;
+  styles?: string[];
+  source_url?: string | null;
+  source_licence?: SourceLicence | null;
+  as_of?: string | null;
+}
+
+/** Question styles (spec §4.4); the DB check constraint holds the same list. */
+export const QUESTION_STYLES = [
+  "definition", "difference", "numerical", "output_trace", "code_write", "sql_write", "diagram",
+  "short_note", "short_answer", "scenario", "fact",
+] as const;
+/** own = written by us; official = a published paper; fact_only = question reused as a fact; cc_by / cc_nc = Creative Commons. */
+export const SOURCE_LICENCES = ["own", "official", "fact_only", "cc_by", "cc_nc"] as const;
+export type SourceLicence = (typeof SOURCE_LICENCES)[number];
+/** Who conducted an exam (exam_tags.conducted_by). */
+export const EXAM_CONDUCTORS = [
+  "bpsc", "buet", "duet", "kuet", "mist", "bibm", "cti", "bcc", "bscs_bank", "bb", "iba", "aust", "du", "ntrca", "self", "other",
+] as const;
+
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Checks the Exam Edge tags; returns field → error code. */
+export function checkQuestionMeta(
+  q: Pick<QuestionWrite, "lesson_slug" | "styles" | "source_licence" | "as_of" | "marks">,
+): Record<string, string> {
+  const fields: Record<string, string> = {};
+  if (q.lesson_slug && (q.lesson_slug.length > 80 || !SLUG.test(q.lesson_slug))) fields.lesson_slug = "slug_invalid";
+  if (q.styles?.some((s) => !(QUESTION_STYLES as readonly string[]).includes(s))) fields.styles = "style_invalid";
+  if (q.source_licence && !(SOURCE_LICENCES as readonly string[]).includes(q.source_licence)) fields.source_licence = "licence_invalid";
+  if (q.as_of && (!ISO_DATE.test(q.as_of) || Number.isNaN(Date.parse(q.as_of)))) fields.as_of = "date_invalid";
+  if (!(q.marks > 0 && q.marks < 1000)) fields.marks = "marks_invalid";
+  return fields;
 }
 
 /** Trimmed single-field text; numbers become strings; empty or non-text becomes null. */

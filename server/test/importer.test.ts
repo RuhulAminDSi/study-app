@@ -2,7 +2,7 @@ import request from "supertest";
 import { describe, it, expect, beforeEach } from "vitest";
 import { createApp } from "../src/app";
 import { pool } from "../src/db/pool";
-import { parseImportText, rowToDraft } from "../src/services/importer";
+import { commitImport, parseImportText, rowToDraft, validateImport } from "../src/services/importer";
 import { resetDb, insertSubject } from "./helpers/db";
 import { createAdmin } from "./helpers/auth";
 
@@ -120,5 +120,51 @@ describe("POST /api/questions/import", () => {
     const rows = Array.from({ length: 300 }, (_, i) => `DBMS,Bulk,mcq,2,Bulk question ${i}?,,Yes,,No,,,,A,,,,,`);
     const res = await post({ format: "csv", content: [HEADER, ...rows].join("\n"), dryRun: false });
     expect(res.body).toMatchObject({ total: 300, imported: 300 });
+  });
+});
+
+describe("Exam Edge fields (007)", () => {
+  const subjects = new Map([["NET", "22222222-2222-2222-2222-222222222222"]]);
+  const base = { subject_code: "NET", type: "mcq", stem_en: "How many hosts in a /30?", option_a_en: "2", option_b_en: "4", correct: "A" };
+
+  it("reads lesson, styles (array or |-list), source, licence, as_of and marks", () => {
+    const fromArray = rowToDraft({ ...base, lesson_slug: "net-ip-firewalls", styles: ["numerical", "short_answer"], source_url: "https://example.org", source_licence: "official", as_of: "2026-10-16", marks: "2" }, 1, subjects);
+    expect(fromArray.problems).toEqual([]);
+    expect(fromArray.draft?.question).toMatchObject({ lesson_slug: "net-ip-firewalls", styles: ["numerical", "short_answer"], source_url: "https://example.org", source_licence: "official", as_of: "2026-10-16", marks: 2 });
+    const fromCsv = rowToDraft({ ...base, styles: "numerical| fact" }, 1, subjects);
+    expect(fromCsv.draft?.question.styles).toEqual(["numerical", "fact"]);
+  });
+
+  it("leaves the new fields empty when they are absent", () => {
+    expect(rowToDraft(base, 1, subjects).draft?.question).toMatchObject({ lesson_slug: null, styles: [], source_licence: null, as_of: null, marks: 1 });
+  });
+
+  it("reports unknown styles, licences, conductors and malformed values", () => {
+    const { problems } = rowToDraft({ ...base, styles: "essay", source_licence: "scraped", as_of: "16/10/2026", lesson_slug: "Bad Slug", marks: "0", exam_org: "PGCB", exam_post: "AE", exam_year: "2024", exam_conductor: "somebody" }, 3, subjects);
+    expect(problems.map((p) => `${p.field}:${p.code}`).sort()).toEqual([
+      "as_of:date_invalid", "exam_conductor:conductor_invalid", "lesson_slug:slug_invalid", "marks:marks_invalid", "source_licence:licence_invalid", "styles:style_invalid",
+    ]);
+  });
+
+  it("stores the fields and the exam conductor when committed", async () => {
+    await resetDb();
+    await insertSubject("NET");
+    const rows = [{ ...base, lesson_slug: "net-ip-firewalls", styles: "numerical", source_licence: "official", exam_org: "PGCB", exam_post: "AE(CSE)", exam_year: "2024", exam_conductor: "buet" }];
+    const report = await validateImport(pool, rows);
+    expect(report.problems).toEqual([]);
+    await commitImport(pool, report.drafts, { source: "imported", publish: false, createdBy: null });
+    const q = (await pool.query("SELECT lesson_slug, styles, source_licence, source FROM questions")).rows[0];
+    expect(q).toEqual({ lesson_slug: "net-ip-firewalls", styles: ["numerical"], source_licence: "official", source: "past_paper" });
+    const t = (await pool.query("SELECT conducted_by FROM exam_tags")).rows[0];
+    expect(t.conducted_by).toBe("buet");
+  });
+
+  it("does not overwrite a conductor already recorded for an exam", async () => {
+    await resetDb();
+    await insertSubject("NET");
+    const tag = { exam_org: "PGCB", exam_post: "AE(CSE)", exam_year: "2024" };
+    await commitImport(pool, (await validateImport(pool, [{ ...base, ...tag, exam_conductor: "buet" }])).drafts, { source: "imported", publish: false, createdBy: null });
+    await commitImport(pool, (await validateImport(pool, [{ ...base, stem_en: "Other?", ...tag, exam_conductor: "duet" }])).drafts, { source: "imported", publish: false, createdBy: null });
+    expect((await pool.query("SELECT conducted_by FROM exam_tags")).rows[0].conducted_by).toBe("buet");
   });
 });

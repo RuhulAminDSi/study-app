@@ -16,7 +16,7 @@ const problems = [];
 for (const file of files) {
   let b;
   try {
-    b = JSON.parse(fs.readFileSync(file, "utf8").replace(/^﻿/, ""));
+    b = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
   } catch (err) {
     problems.push(`${file}: not valid JSON (${err.message})`);
     continue;

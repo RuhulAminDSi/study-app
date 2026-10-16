@@ -66,14 +66,14 @@ export function apportion(weights: number[], total: number): number[] {
   return parts;
 }
 
-type SeedKind = "subject" | "topic" | "job_post" | "question";
+export type SeedKind = "subject" | "topic" | "job_post" | "question" | "exam_kit" | "blueprint";
 
 /** True when the seed created (or adopted) this row on an earlier run — never create it again. */
-async function seededBefore(db: Db, kind: SeedKind, key: string): Promise<boolean> {
+export async function seededBefore(db: Db, kind: SeedKind, key: string): Promise<boolean> {
   return ((await db.query("SELECT 1 FROM seed_ledger WHERE kind = $1 AND key = $2", [kind, key])).rowCount ?? 0) > 0;
 }
 
-async function remember(db: Db, kind: SeedKind, key: string) {
+export async function remember(db: Db, kind: SeedKind, key: string) {
   await db.query("INSERT INTO seed_ledger (kind, key) VALUES ($1, $2) ON CONFLICT DO NOTHING", [kind, key]);
 }
 

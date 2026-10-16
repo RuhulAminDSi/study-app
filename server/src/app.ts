@@ -3,7 +3,7 @@ import cors from "cors";
 import path from "path";
 import { config, type AppConfig } from "./config.js";
 import { pool } from "./db/pool.js";
-import { adminRequired, candidateRequired } from "./middleware/auth.js";
+import { adminRequired, adminRoleRequired, candidateRequired, readerRequired } from "./middleware/auth.js";
 import { createAuthLimiter } from "./middleware/rateLimit.js";
 import { asyncHandler } from "./http/asyncHandler.js";
 import authRoutes from "./routes/auth.js";
@@ -13,9 +13,13 @@ import lessonsRoutes from "./routes/lessons.js";
 import filesRoutes from "./routes/files.js";
 import dashboardRoutes from "./routes/dashboard.js";
 import { candidateAuthRouter, candidateMeRouter } from "./routes/candidateAuth.js";
+import { signInRouter } from "./routes/signIn.js";
+import { adminCandidatesRouter } from "./routes/adminCandidates.js";
 import { examTagsRouter, jobPostsRouter, subjectsRouter, topicsRouter, SUBJECT_SELECT, JOB_POST_SELECT } from "./routes/adminTaxonomy.js";
 import { UUID_RE } from "./validation/taxonomy.js";
 import { adminQuestionsRouter } from "./routes/adminQuestions.js";
+import { announcementsRouter, LIVE_ANNOUNCEMENTS_SQL } from "./routes/announcements.js";
+import { adminExamKitsRouter, publicExamKitsRouter } from "./routes/examKits.js";
 
 export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "authRateLimitMax">> = {}) {
   const settings = { ...config, ...overrides };
@@ -30,6 +34,7 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   if (isProduction) app.use(express.static(frontendDist));
 
   app.use("/api/auth/login", createAuthLimiter(settings.authRateLimitMax));
+  app.use("/api/auth/sign-in", createAuthLimiter(settings.authRateLimitMax), signInRouter);
   app.use("/api/auth", authRoutes);
   app.use("/api/chapters", adminRequired, chaptersRoutes);
   app.use("/api/menus", adminRequired, menusRoutes);
@@ -43,6 +48,9 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   app.use("/api/exam-tags", adminRequired, examTagsRouter);
   app.use("/api/job-posts", adminRequired, jobPostsRouter);
   app.use("/api/questions", adminRequired, adminQuestionsRouter);
+  app.use("/api/announcements", adminRequired, announcementsRouter);
+  app.use("/api/exam-kits", adminRequired, adminExamKitsRouter);
+  app.use("/api/candidates", adminRequired, adminRoleRequired("super_admin", "admin"), adminCandidatesRouter);
 
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -51,6 +59,10 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   app.use("/api/public", createPublicRouter());
 
   if (isProduction) {
+    // "/" is the landing page; the Study Hub SPA lives under /study-hub/.
+    app.get(["/study-hub", "/study-hub/*"], (_req, res) => {
+      res.sendFile(path.join(frontendDist, "study-hub", "index.html"));
+    });
     app.get("*", (_req, res) => {
       res.sendFile(path.join(frontendDist, "index.html"));
     });
@@ -71,9 +83,14 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   return app;
 }
 
-/** Read-only endpoints for the public site (no auth). */
+/**
+ * Read-only endpoints for the public site. Study content (chapters, menus, lessons) needs a signed-in
+ * candidate or admin; the subject and job-post lists stay open for the landing and sign-up pages.
+ */
 function createPublicRouter() {
   const router = Router();
+  router.use(["/chapters", "/menus", "/lessons", "/announcements", "/exam-kits"], readerRequired);
+  router.use("/exam-kits", publicExamKitsRouter);
   router.get("/chapters/published", asyncHandler(async (_req, res) => {
     const result = await pool.query("SELECT * FROM chapters WHERE is_published = true ORDER BY sort_order");
     res.json(result.rows);
@@ -102,6 +119,9 @@ function createPublicRouter() {
     const result = await pool.query("SELECT * FROM lessons WHERE id = $1", [req.params.id]);
     if (!result.rows[0]) { res.status(404).json({ error: "Not found" }); return; }
     res.json(result.rows[0]);
+  }));
+  router.get("/announcements", asyncHandler(async (_req, res) => {
+    res.json((await pool.query(LIVE_ANNOUNCEMENTS_SQL)).rows);
   }));
   router.get("/subjects", asyncHandler(async (_req, res) => {
     const result = await pool.query(`${SUBJECT_SELECT} ORDER BY s.sort_order, s.code`);

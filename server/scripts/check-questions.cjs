@@ -1,14 +1,20 @@
 #!/usr/bin/env node
 // Structural check for starter-question files (server/data/questions/<CODE>.json).
-// Usage: node scripts/check-questions.cjs data/questions/DBMS.json [more files...]
+// Usage: node scripts/check-questions.cjs [data/questions/DBMS.json ...]   (no arguments: every file in data/questions)
 // Exits 1 and lists every problem if any file is invalid.
 const fs = require("fs");
 
 const LETTERS = ["a", "b", "c", "d", "e"];
 const TYPES = ["mcq", "written", "programming"];
+const STYLES = ["definition", "difference", "numerical", "output_trace", "code_write", "sql_write", "diagram", "short_note", "short_answer", "scenario", "fact"];
+const LICENCES = ["own", "official", "fact_only", "cc_by", "cc_nc"];
+const CONDUCTORS = ["bpsc", "buet", "duet", "kuet", "mist", "bibm", "cti", "bcc", "bscs_bank", "bb", "iba", "aust", "du", "ntrca", "self", "other"];
 const problems = [];
 
-for (const file of process.argv.slice(2)) {
+// no arguments: every starter file in data/questions (a *.json glob does not expand under Windows cmd)
+const QDIR = require("path").join(__dirname, "..", "data", "questions");
+const FILES = process.argv.slice(2).length ? process.argv.slice(2) : fs.readdirSync(QDIR).filter((f) => f.endsWith(".json")).map((f) => require("path").join("data", "questions", f));
+for (const file of FILES) {
   let rows;
   try {
     rows = JSON.parse(fs.readFileSync(file, "utf8").replace(/^﻿/, ""));
@@ -42,6 +48,15 @@ for (const file of process.argv.slice(2)) {
       need("model_answer_en"); need("model_answer_bn");
       if (r.correct) problems.push(`${at}: written/programming questions have no "correct"`);
     }
+    // Exam Edge fields (optional; same rules as checkQuestionMeta in src/services/questionContent.ts)
+    const styles = Array.isArray(r.styles) ? r.styles : typeof r.styles === "string" && r.styles ? r.styles.split("|").map((s) => s.trim()) : [];
+    styles.forEach((s) => { if (!STYLES.includes(s)) problems.push(`${at}: unknown style "${s}"`); });
+    if (r.lesson_slug != null && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(r.lesson_slug)) problems.push(`${at}: lesson_slug must be a lower-case slug`);
+    if (r.source_licence != null && !LICENCES.includes(r.source_licence)) problems.push(`${at}: source_licence must be ${LICENCES.join(" | ")}`);
+    if (r.as_of != null && !/^\d{4}-\d{2}-\d{2}$/.test(r.as_of)) problems.push(`${at}: as_of must be YYYY-MM-DD`);
+    if (r.marks != null && !(Number(r.marks) > 0)) problems.push(`${at}: marks must be a positive number`);
+    if (r.exam_conductor != null && !CONDUCTORS.includes(String(r.exam_conductor).toLowerCase())) problems.push(`${at}: unknown exam_conductor "${r.exam_conductor}"`);
+    if (r.source_licence === "fact_only" && !r.source_url) problems.push(`${at}: a fact_only question needs its source_url`);
   });
   if (mcq < 20) problems.push(`${file}: only ${mcq} MCQs (need at least 20)`);
   console.log(`${file}: ${rows.length} rows (${mcq} MCQ, ${rows.length - mcq} written/programming)`);

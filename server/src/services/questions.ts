@@ -24,12 +24,19 @@ export async function resolveTopic(db: Db, subjectId: string, name: string): Pro
   return created.rows[0].id;
 }
 
-/** Finds or creates the past-exam tag for (organization, post, year). */
-export async function resolveExamTag(db: Db, tag: { organization: string; post_en: string; year: number }): Promise<string> {
+/**
+ * Finds or creates the past-exam tag for (organization, post, year). A conductor is recorded only when the tag
+ * has none yet, so a later row can't overwrite one that was entered or verified earlier.
+ */
+export async function resolveExamTag(
+  db: Db,
+  tag: { organization: string; post_en: string; year: number; conducted_by?: string | null },
+): Promise<string> {
   const { rows } = await db.query(
-    `INSERT INTO exam_tags (organization, post_en, year) VALUES ($1, $2, $3)
-     ON CONFLICT (organization, post_en, year) DO UPDATE SET organization = EXCLUDED.organization RETURNING id`,
-    [tag.organization, tag.post_en, tag.year],
+    `INSERT INTO exam_tags (organization, post_en, year, conducted_by) VALUES ($1, $2, $3, $4)
+     ON CONFLICT (organization, post_en, year)
+       DO UPDATE SET conducted_by = COALESCE(exam_tags.conducted_by, EXCLUDED.conducted_by) RETURNING id`,
+    [tag.organization, tag.post_en, tag.year, tag.conducted_by ?? null],
   );
   return rows[0].id;
 }
@@ -79,9 +86,11 @@ export async function insertQuestion(db: Db, q: QuestionWrite, opts: { source: Q
   let id: string;
   try {
     const { rows } = await db.query(
-      `INSERT INTO questions (${COLUMNS}, source, content_hash, is_published, created_by)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING id`,
-      [...values(q), source, hashOf(q), q.is_published, opts.createdBy],
+      `INSERT INTO questions (${COLUMNS}, source, content_hash, is_published, created_by,
+         lesson_slug, styles, source_url, source_licence, as_of)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22) RETURNING id`,
+      [...values(q), source, hashOf(q), q.is_published, opts.createdBy,
+        q.lesson_slug ?? null, q.styles ?? [], q.source_url ?? null, q.source_licence ?? null, q.as_of ?? null],
     );
     id = rows[0].id;
   } catch (err) {

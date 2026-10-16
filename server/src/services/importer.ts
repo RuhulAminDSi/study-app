@@ -1,8 +1,8 @@
 import type { Pool, PoolClient } from "pg";
 import { parse } from "csv-parse/sync";
 import {
-  block, checkQuestionShape, contentHash, OPTION_LETTERS, text, type OptionInput, type QuestionSource, type QuestionType,
-  type QuestionWrite,
+  block, checkQuestionMeta, checkQuestionShape, contentHash, EXAM_CONDUCTORS, OPTION_LETTERS, text, type OptionInput,
+  type QuestionSource, type QuestionType, type QuestionWrite, type SourceLicence,
 } from "./questionContent.js";
 import { insertQuestion, resolveExamTag, resolveTopic } from "./questions.js";
 
@@ -21,7 +21,7 @@ export interface ImportProblem { row: number; field: string; code: string }
 export interface ImportDraft {
   row: number;
   topicName: string | null;
-  examTag: { organization: string; post_en: string; year: number } | null;
+  examTag: { organization: string; post_en: string; year: number; conducted_by: string | null } | null;
   question: Omit<QuestionWrite, "topic_id" | "exam_tag_ids" | "is_published">;
   hash: string;
 }
@@ -109,12 +109,20 @@ export function rowToDraft(raw: Record<string, unknown>, row: number, subjectsBy
   const org = text(raw.exam_org);
   const post = text(raw.exam_post);
   const yearText = text(raw.exam_year);
+  const conductor = text(raw.exam_conductor)?.toLowerCase() ?? null;
+  if (conductor && !(EXAM_CONDUCTORS as readonly string[]).includes(conductor)) bad("exam_conductor", "conductor_invalid");
   if (org || post || yearText) {
     const year = Number(yearText);
     if (!org || !post || !yearText) bad("exam_org", "exam_tag_incomplete");
     else if (!Number.isInteger(year) || year < 1990 || year > 2100) bad("exam_year", "year_invalid");
-    else examTag = { organization: org, post_en: post, year };
+    else examTag = { organization: org, post_en: post, year, conducted_by: conductor };
   }
+
+  // styles: a JSON array, or "a|b" in a CSV cell
+  const styles = Array.isArray(raw.styles)
+    ? raw.styles.map((s) => text(s)).filter((s): s is string => !!s)
+    : (text(raw.styles) ?? "").split("|").map((s) => s.trim()).filter(Boolean);
+  const marksText = text(raw.marks);
 
   const question: ImportDraft["question"] = {
     subject_id: subjectId ?? "",
@@ -128,10 +136,15 @@ export function rowToDraft(raw: Record<string, unknown>, row: number, subjectsBy
     explanation_bn: text(raw.explanation_bn),
     model_answer_en: block(raw.model_answer_en),
     model_answer_bn: block(raw.model_answer_bn),
-    marks: 1,
+    marks: marksText === null ? 1 : Number(marksText),
     options,
+    lesson_slug: text(raw.lesson_slug),
+    styles,
+    source_url: text(raw.source_url),
+    source_licence: (text(raw.source_licence)?.toLowerCase() ?? null) as SourceLicence | null,
+    as_of: text(raw.as_of),
   };
-  for (const [field, problem] of Object.entries(checkQuestionShape(question))) {
+  for (const [field, problem] of Object.entries({ ...checkQuestionShape(question), ...checkQuestionMeta(question) })) {
     if (!problems.some((p) => p.field === field)) bad(field, problem);
   }
   if (problems.length) return { problems };
