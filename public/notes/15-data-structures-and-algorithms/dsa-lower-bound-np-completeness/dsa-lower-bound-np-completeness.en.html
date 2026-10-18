@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Algebraic Simplification, Lower Bound &amp; NP-Completeness: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Algebraic Simplification, Lower Bound &amp; NP-Completeness</span></h1>
+  <p class="subtitle">Horner · fast power · Karatsuba · Strassen · FFT · decision trees · adversaries · P, NP, NP-hard, NP-complete: exam-ready in eleven sheets</p>
+  <p class="tiny center" style="margin:0 0 1mm"><b>Eleven sheets:</b> how rewriting an algebraic problem makes it cheaper, a compact Boolean-law recap, what a <b>lower bound</b> really is and the three ways to prove one, the table of proven bounds, and then the complexity classes, reductions and what to do when a problem is NP-complete.</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink fill-b"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">HOW FAST CAN</text><text x="320" y="172" text-anchor="middle" class="r s">it possibly be?</text>
+      <text x="142" y="58" text-anchor="middle" class="r w6" style="font-size:15px">Horner's rule ★</text><text x="142" y="72" text-anchor="middle" class="r s" style="font-size:15px">n mult + n add</text>
+      <text x="320" y="32" text-anchor="middle" class="s" style="font-size:15px">Karatsuba n^1.585</text><text x="320" y="47" text-anchor="middle" class="s" style="font-size:15px">Strassen n^2.81</text>
+      <text x="498" y="58" text-anchor="middle" class="s" style="font-size:15px">FFT · fast power</text><text x="498" y="72" text-anchor="middle" class="s" style="font-size:15px">n log n · log n</text>
+      <text x="96" y="148" text-anchor="middle" class="g w6" style="font-size:15px">Boolean laws</text><text x="96" y="163" text-anchor="middle" class="g s" style="font-size:15px">recap (DLD)</text>
+      <text x="544" y="148" text-anchor="middle" class="r w6" style="font-size:15px">Decision tree ★</text><text x="544" y="163" text-anchor="middle" class="r s" style="font-size:15px">h ≥ log₂ n!</text>
+      <text x="142" y="238" text-anchor="middle" class="r w6" style="font-size:15px">Adversary ★</text><text x="142" y="252" text-anchor="middle" class="r s" style="font-size:15px">max+min ⌈3n/2⌉−2</text>
+      <text x="320" y="262" text-anchor="middle" class="r w6" style="font-size:15px">NPC = NP ∩ NP-hard ★</text><text x="320" y="277" text-anchor="middle" class="r s" style="font-size:15px">P ⊆ NP</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6" style="font-size:15px">Reduction ★</text><text x="498" y="252" text-anchor="middle" class="r s" style="font-size:15px">known NPC ≤p X</text>
+    </svg>
+    <figcaption>↑ the whole lesson: red = high-yield, green = recap from another chapter</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>High-yield list</b><br>① Horner: n mult + n add<br>② Karatsuba n^1.585 · Strassen n^2.81<br>③ Fast power: O(log n) multiplications<br>④ Ω = lower bound, not "best case"<br>⑤ <span class="circ">Comparison sort Ω(n log n)</span> ★<br>⑥ Max: n−1 · max+min: ⌈3n/2⌉−2<br>⑦ 2nd largest: n + ⌈log₂ n⌉ − 2<br>⑧ NP = verifiable in poly time<br>⑨ NPC = NP ∩ NP-hard ★<br>⑩ Cook–Levin 1971: SAT first NPC<br>⑪ Prove X hard: known NPC ≤p X ★<br>⑫ 2-SAT ∈ P, 3-SAT NP-complete</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The syllabus line for Data Structures and Algorithms ends: "<span class="hl">Algebraic simplification and transformations; Lower bound theory; NP-completeness, NP-hard and NP-complete problems.</span>" All three clauses are covered here. In an algorithms syllabus "algebraic simplification" means <b>algebraic algorithms</b> — rewriting polynomials, powers and products so they cost fewer operations — so that is the main thread; Boolean simplification gets a one-sheet recap, as K-maps belong to the Digital Logic chapter. <b>Approximation algorithms</b> are in the flow / approximation / parallel lesson of this chapter.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>Transform-and-conquer, Horner … p. 2</li><li>Fast power, Karatsuba, Strassen, FFT … p. 3</li><li>Boolean recap · O, Ω, Θ … p. 4</li><li>Lower bounds &amp; the decision tree … p. 5</li><li>Adversaries &amp; the bounds table … p. 6</li></ul>
+    <ul class="tick"><li>P, NP, co-NP, NP-hard, NPC … p. 7</li><li>Reductions &amp; Cook–Levin … p. 8</li><li>Easy/hard twins, coping … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: transform and conquer, Horner ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Algebraic transformations</span></div>
+  <h2><span class="no">1</span>Transform-and-Conquer and Horner's Rule</h2><span class="tag">rewrite, then solve ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Algebraic simplification / transformation</b> means <span class="hl">rewriting a problem or its formula into an equivalent form that is cheaper to compute</span>: same answer, fewer operations. The strategy is called <b>transform-and-conquer</b>; it has three flavours.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Flavour</th><th class="l">Idea</th><th class="l">Classic examples</th></tr>
+    <tr><td class="l"><b>Instance simplification</b></td><td class="l">simpler instance of the <b>same</b> problem</td><td class="l"><b>presorting</b>: element uniqueness O(n²) → sort + scan O(n log n); Gaussian elimination</td></tr>
+    <tr><td class="l"><b>Representation change</b></td><td class="l">same instance, <b>new representation</b></td><td class="l"><span class="hl">Horner's form</span>; binary exponentiation; point-value form; heaps, AVL trees</td></tr>
+    <tr><td class="l"><b>Problem reduction</b></td><td class="l">a <b>different</b> problem with a known algorithm</td><td class="l"><code>lcm(m,n) = m·n / gcd(m,n)</code>; <code>max f = −min(−f)</code>; k-step paths = <code>A^k</code></td></tr>
+  </table>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Horner's rule</span> Factor x out again and again: <code>p(x) = aₙxⁿ + … + a₁x + a₀ = (…((aₙx + aₙ₋₁)x + aₙ₋₂)x + … )x + a₀</code>. One pass from the leading coefficient: <span class="circ">n multiplications + n additions</span> for degree n, with no powers computed at all.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 150" width="440">
+    <g class="w">
+      <rect x="20" y="22" width="70" height="34" rx="8" class="ink-r fill-r"/>
+      <path class="ink-k" d="M110,92 H500"/>
+      <path class="ink-k" d="M110,10 V130"/>
+      <circle cx="450" cy="116" r="16" class="ink-r"/>
+      <path class="ink-p" d="M160,110 L234,80" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M260,110 L334,80" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M360,110 L434,80" marker-end="url(#ahp)"/>
+    </g>
+    <text x="55" y="44" text-anchor="middle" class="r w6" style="font-size:15px">x = 3</text>
+    <text x="150" y="36" text-anchor="middle" class="k w6" style="font-size:15px">2</text>
+    <text x="250" y="36" text-anchor="middle" class="k w6" style="font-size:15px">−6</text>
+    <text x="350" y="36" text-anchor="middle" class="k w6" style="font-size:15px">2</text>
+    <text x="450" y="36" text-anchor="middle" class="k w6" style="font-size:15px">−1</text>
+    <text x="250" y="76" text-anchor="middle" class="s" style="font-size:13px">6</text>
+    <text x="350" y="76" text-anchor="middle" class="s" style="font-size:13px">0</text>
+    <text x="450" y="76" text-anchor="middle" class="s" style="font-size:13px">6</text>
+    <text x="150" y="121" text-anchor="middle" class="g w6" style="font-size:15px">2</text>
+    <text x="250" y="121" text-anchor="middle" class="g w6" style="font-size:15px">0</text>
+    <text x="350" y="121" text-anchor="middle" class="g w6" style="font-size:15px">2</text>
+    <text x="450" y="121" text-anchor="middle" class="r w6" style="font-size:15px">5</text>
+    <text x="55" y="80" text-anchor="middle" class="p s" style="font-size:12px">× x, then add</text>
+    <text x="560" y="36" text-anchor="middle" class="s" style="font-size:12px">coefficients</text>
+    <text x="560" y="76" text-anchor="middle" class="s" style="font-size:12px">products</text>
+    <text x="560" y="114" text-anchor="middle" class="r w6" style="font-size:13px">p(3) = 5</text>
+    <text x="560" y="130" text-anchor="middle" class="g s" style="font-size:12px">q(x) = 2x² + 2</text>
+    <text x="300" y="146" text-anchor="middle" class="p s" style="font-size:12px">3 multiplications + 3 additions for degree 3</text>
+  </svg><figcaption>Horner = synthetic division: p(x) = 2x³ − 6x² + 2x − 1 at x = 3 (check: 54 − 54 + 6 − 1 = 5)</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code tiny" style="margin-top:0">HORNER(a[0..n], x):
+  p = a[n]
+  for i = n − 1 downto 0:
+      p = p · x + a[i]     // 1 mult, 1 add
+  return p                 // Θ(n)</div>
+    <table class="hand tiny" style="width:100%;margin-top:0">
+      <tr><th class="l">Method (degree n)</th><th>Mult.</th><th>Add.</th></tr>
+      <tr><td class="l">each term aᵢxⁱ from scratch</td><td>n(n+1)/2</td><td>n</td></tr>
+      <tr><td class="l">keep a running power xⁱ</td><td>2n − 1</td><td>n</td></tr>
+      <tr><td class="l"><b>Horner</b></td><td><span class="hl">n</span></td><td>n</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> Degree n has <b>n + 1</b> coefficients, but Horner does <b>n</b> multiplications, not n + 1 or 2n. <b>2.</b> Horner is proved <b>optimal</b>: no general method uses fewer than n multiplications. <b>3.</b> The last value is <b>p(x₀)</b> (remainder theorem); the rest are the quotient.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Evaluation ↔ interpolation</span> A degree-n polynomial is fixed by its <b>n + 1 coefficients</b> or by its values at <b>n + 1 distinct points</b>. <b>Evaluation</b> at n + 1 points by Horner: O(n²). <b>Interpolation</b> (Lagrange / Newton): <b>O(n²)</b>. Products are <b>O(n)</b> in point-value form — the FFT idea.</div>
+  </div>
+  <div class="trick tiny" style="margin-top:1mm"><span class="lbl">Memory trick</span> "<b>Horner = nested brackets = n and n.</b>" Binary 1101 → <code>((1·2 + 1)·2 + 0)·2 + 1 = 13</code> is Horner with x = 2.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: fast algebra ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Fast algebraic algorithms</span></div>
+  <h2><span class="no">2</span>Fast Power, Karatsuba, Strassen and the FFT</h2><span class="tag">save one multiplication ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Fast (binary) exponentiation</span> <code>xⁿ = (x^(n/2))²</code> (n even) or <code>x·(x^((n−1)/2))²</code> (n odd): one squaring per bit, at most <span class="hl">2⌊log₂ n⌋ multiplications</span> instead of n − 1 ⇒ <b>O(log n)</b>. x¹³ (13 = 1101₂): x → x² → x³ → x⁶ → x¹² → x¹³ = <b>5</b> multiplications, not 12.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked: modular power ✍</span> <b>3¹³ mod 7:</b> 3¹ = 3, 3² = 9 ≡ 2, 3⁴ ≡ 4, 3⁸ ≡ 16 ≡ 2. 13 = 8 + 4 + 1 ⇒ 3¹³ ≡ 2·4·3 = 24 ≡ <span class="hl">3</span> (mod 7). Reducing after every step keeps numbers small — this is how <b>RSA</b> and Diffie–Hellman compute huge powers.</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Karatsuba multiplication (1960)</span> Split two n-digit numbers: <code>x = a·10^m + b</code>, <code>y = c·10^m + d</code>. Schoolbook needs four products ac, ad, bc, bd. The algebraic trick <span class="hl"><code>ad + bc = (a + b)(c + d) − ac − bd</code></span> needs only <b>three</b>. <code>T(n) = 3T(n/2) + O(n)</code> ⇒ <span class="circ">Θ(n^log₂3) ≈ Θ(n^1.585)</span>: the recursion tree has 3ᵏ calls at depth k, so the n^log₂3 leaves dominate.</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked example ✍ 1234 × 5678</span> a = 12, b = 34, c = 56, d = 78 (m = 2). ac = 672, bd = 2652, (a + b)(c + d) = 46 × 134 = 6164 ⇒ ad + bc = 6164 − 672 − 2652 = 2840. Result = 672·10⁴ + 2840·10² + 2652 = <span class="hl">7,006,652</span> ✓ with three products.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Strassen (1969)</span> Split n × n matrices into four n/2 blocks. Block multiplication needs 8 products; Strassen's identities need <span class="circ">7 products</span> (plus 18 block additions). <code>T(n) = 7T(n/2) + Θ(n²)</code> ⇒ <b>Θ(n^log₂7) ≈ Θ(n^2.81)</b> vs Θ(n³). Worth it only for large n; less numerically stable.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">FFT polynomial multiplication</span> Coefficient form: <b>Θ(n²)</b>. Instead <b>evaluate</b> both at 2n complex roots of unity (FFT), <b>multiply pointwise</b> (O(n)), <b>interpolate</b> back (inverse FFT) ⇒ <span class="hl">O(n log n)</span>. FFT: <code>T(n) = 2T(n/2) + O(n)</code> (Cooley–Tukey, 1965).</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Problem</th><th>Classical</th><th class="l">Method</th><th>Recurrence</th><th>Result</th></tr>
+    <tr><td class="l">evaluate degree-n poly</td><td>Θ(n²)</td><td class="l">Horner</td><td>one loop</td><td>Θ(n)</td></tr>
+    <tr><td class="l">power xⁿ</td><td>n − 1</td><td class="l">squaring</td><td>T(n/2) + O(1)</td><td>O(log n)</td></tr>
+    <tr><td class="l">n-digit × n-digit</td><td>Θ(n²)</td><td class="l">Karatsuba</td><td>3T(n/2) + O(n)</td><td><span class="hl">Θ(n^1.585)</span></td></tr>
+    <tr><td class="l">n × n matrices</td><td>Θ(n³)</td><td class="l">Strassen</td><td>7T(n/2) + O(n²)</td><td>Θ(n^2.81)</td></tr>
+    <tr><td class="l">poly × poly (degree n)</td><td>Θ(n²)</td><td class="l">FFT</td><td>2T(n/2) + O(n)</td><td>Θ(n log n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍</span> Strassen's exponent is <b>log₂ 7 ≈ 2.807</b>, not 2.376 (that is the impractical Coppersmith–Winograd line). With 4 and 8 half-size products the exponent stays 2 and 3 — the saving is the <b>one</b> product dropped. Matrix product's trivial lower bound is <b>Ω(n²)</b>.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Save one multiplication, lower the exponent.</b>" a half-size subproblems with cheap combining ⇒ <b>n^log₂ a</b> (master theorem): 4 → 3 gives log₂ 3 ≈ 1.585; 8 → 7 gives log₂ 7 ≈ 2.807.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: Boolean recap + asymptotic notation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Boolean recap · O, Ω, Θ</span></div>
+  <h2><span class="no">3</span>Boolean Simplification: a Compact Recap</h2><span class="tag">full K-maps: DLD chapter</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Law</th><th class="l">OR form</th><th class="l">AND form (dual)</th></tr>
+    <tr><td class="l">Identity</td><td class="l">A + 0 = A</td><td class="l">A · 1 = A</td></tr>
+    <tr><td class="l">Null (dominance)</td><td class="l">A + 1 = 1</td><td class="l">A · 0 = 0</td></tr>
+    <tr><td class="l">Idempotent</td><td class="l">A + A = A</td><td class="l">A · A = A</td></tr>
+    <tr><td class="l">Complement</td><td class="l">A + A′ = 1</td><td class="l">A · A′ = 0</td></tr>
+    <tr><td class="l">Distributive</td><td class="l">A(B + C) = AB + AC</td><td class="l"><span class="hl">A + BC = (A + B)(A + C)</span></td></tr>
+    <tr><td class="l">Absorption</td><td class="l">A + AB = A</td><td class="l">A(A + B) = A</td></tr>
+    <tr><td class="l">De Morgan</td><td class="l">(A + B)′ = A′B′</td><td class="l">(AB)′ = A′ + B′</td></tr>
+    <tr><td class="l">Consensus</td><td class="l">AB + A′C + BC = AB + A′C</td><td class="l">(A+B)(A′+C)(B+C) = (A+B)(A′+C)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked ✍ two classics</span> <b>F = AB + AB′</b> = A(B + B′) [distributive] = A·1 [complement] = <span class="hl">A</span> [identity].<br><b>G = A + A′B</b> = (A + A′)(A + B) [OR-distributive] = 1·(A + B) = <b>A + B</b>.<br>Consensus proof: BC = BC(A + A′) = ABC + A′BC, absorbed by AB and A′C.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">The IT link: compilers</span> Optimising compilers do <b>algebraic simplification</b> on code: <code>x*1 → x</code>, <code>x+0 → x</code>, constant folding <code>2*3.14 → 6.28</code>, and <b>strength reduction</b> <code>x*2 → x&lt;&lt;1</code>, <code>x*x</code> instead of <code>pow(x,2)</code>. Minterms, K-maps and Quine–McCluskey: Digital Logic chapter.</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> <b>A + 1 = 1</b>, not A. <b>A + BC = (A + B)(A + C)</b> holds in Boolean algebra but not in ordinary algebra. <b>Duality:</b> swap + ↔ · and 0 ↔ 1 (variables untouched) and a law stays true.</div>
+  <h2><span class="no">4</span>Asymptotic Bounds: O, Ω, Θ Stated Correctly</h2><span class="tag">Ω ≠ best case ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Definitions</span> <b>f = O(g)</b>: ∃ c &gt; 0, n₀ with <code>f(n) ≤ c·g(n)</code> for all n ≥ n₀ (upper bound).<br><b>f = Ω(g)</b>: ∃ c &gt; 0, n₀ with <code>f(n) ≥ c·g(n)</code> for all n ≥ n₀ (<span class="hl">lower bound</span>).<br><b>f = Θ(g)</b>: both — <code>c₁g(n) ≤ f(n) ≤ c₂g(n)</code> (tight). Strict versions: o and ω.</div>
+    <figure class="doodle" style="margin:0"><svg viewBox="0 0 300 150" width="280">
+      <g class="w">
+        <path class="ink-k" d="M20,135 H290 M20,135 V8"/>
+        <path class="ink-r" d="M20,110 C90,95 180,50 280,14"/>
+        <path class="ink" d="M20,122 C70,112 110,104 140,90 C180,80 220,62 280,46"/>
+        <path class="ink-g" d="M20,128 C100,120 190,100 280,76"/>
+        <path class="ink-p" d="M110,135 V20" stroke-dasharray="4 4"/>
+      </g>
+      <text x="240" y="16" class="r s" style="font-size:10px">c₂·g(n)</text>
+      <text x="250" y="42" class="s" style="font-size:10px">f(n)</text>
+      <text x="240" y="92" class="g s" style="font-size:10px">c₁·g(n)</text>
+      <text x="110" y="148" text-anchor="middle" class="p s" style="font-size:10px">n₀</text>
+      <text x="62" y="30" text-anchor="middle" class="k s" style="font-size:10px">Θ: sandwiched</text>
+      <text x="62" y="44" text-anchor="middle" class="k s" style="font-size:10px">for n ≥ n₀</text>
+    </svg><figcaption>f = Θ(g) beyond n₀</figcaption></figure>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Common misconception ✍</span> "Ω means best case, O means worst case" is <b>wrong</b>. O, Ω and Θ bound <b>functions</b>; the best, average and worst case are three different functions, and each can be given an O, Ω or Θ. Insertion sort: worst case <b>Θ(n²)</b> (so it is also Ω(n²)), best case <b>Θ(n)</b>. A <b>lower bound of a problem</b> is an Ω on the <b>worst case of every algorithm</b> — next sheet.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: lower bounds, decision tree ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Lower bound theory</span></div>
+  <h2><span class="no">5</span>Lower Bound Theory and the Decision-Tree Argument</h2><span class="tag">a fact about the problem ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>lower bound</b> L(n) of a problem is a cost that <span class="hl">every algorithm must pay in the worst case</span>, in a stated model (e.g. "comparisons only"). It is a statement about the <b>problem</b>, not one algorithm. The <b>upper bound</b> is the cost of the best known algorithm. When they meet, that algorithm is <span class="hl">optimal</span> (merge sort, heapsort: Θ(n log n) comparisons). A gap is an open problem: matrix product has Ω(n²) vs O(n^2.37…).</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Technique</th><th class="l">Idea</th><th class="l">Classic result</th></tr>
+    <tr><td class="l"><b>Trivial (I/O size)</b></td><td class="l">read every input, write every output</td><td class="l">matrix product Ω(n²); all permutations Ω(n!)</td></tr>
+    <tr><td class="l"><b>Decision tree</b></td><td class="l">k answers need ≥ <code>⌈log₂ k⌉</code> yes/no tests</td><td class="l">sorting <span class="circ">Ω(n log n)</span>; search ⌈log₂(n+1)⌉</td></tr>
+    <tr><td class="l"><b>Adversary</b></td><td class="l">answers each test to force most work</td><td class="l">max n − 1; max + min ⌈3n/2⌉ − 2</td></tr>
+    <tr><td class="l"><b>Problem reduction</b></td><td class="l">hard P reduces cheaply to Q ⇒ Q as hard</td><td class="l">sorting ≤ convex hull ⇒ Ω(n log n)</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 222" width="560">
+    <g class="w">
+      <ellipse cx="310" cy="22" rx="26" ry="15" class="ink-r fill-r"/>
+      <ellipse cx="160" cy="76" rx="26" ry="15" class="ink fill-b"/>
+      <ellipse cx="460" cy="76" rx="26" ry="15" class="ink fill-b"/>
+      <ellipse cx="230" cy="136" rx="26" ry="15" class="ink fill-b"/>
+      <ellipse cx="530" cy="136" rx="26" ry="15" class="ink fill-b"/>
+      <rect x="55" y="124" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="355" y="124" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="145" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="245" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="445" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <rect x="545" y="186" width="70" height="24" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M290,32 L178,64 M330,32 L442,64 M146,89 L98,124 M174,89 L216,122 M446,89 L398,124 M474,89 L516,122 M218,149 L188,186 M242,149 L272,186 M518,149 L488,186 M542,149 L572,186"/>
+    </g>
+    <text x="310" y="26" text-anchor="middle" class="k w6" style="font-size:13px">a:b</text>
+    <text x="160" y="80" text-anchor="middle" class="k w6" style="font-size:13px">b:c</text>
+    <text x="460" y="80" text-anchor="middle" class="k w6" style="font-size:13px">a:c</text>
+    <text x="230" y="140" text-anchor="middle" class="k w6" style="font-size:13px">a:c</text>
+    <text x="530" y="140" text-anchor="middle" class="k w6" style="font-size:13px">b:c</text>
+    <text x="222" y="44" class="p s" style="font-size:12px">a&lt;b</text><text x="382" y="44" class="p s" style="font-size:12px">a&gt;b</text>
+    <text x="104" y="106" class="p s" style="font-size:12px">b&lt;c</text><text x="200" y="106" class="p s" style="font-size:12px">b&gt;c</text>
+    <text x="404" y="106" class="p s" style="font-size:12px">a&lt;c</text><text x="500" y="106" class="p s" style="font-size:12px">a&gt;c</text>
+    <text x="90" y="140" text-anchor="middle" class="g w6" style="font-size:12px">a &lt; b &lt; c</text>
+    <text x="390" y="140" text-anchor="middle" class="g w6" style="font-size:12px">b &lt; a &lt; c</text>
+    <text x="180" y="202" text-anchor="middle" class="g w6" style="font-size:12px">a &lt; c &lt; b</text>
+    <text x="280" y="202" text-anchor="middle" class="g w6" style="font-size:12px">c &lt; a &lt; b</text>
+    <text x="480" y="202" text-anchor="middle" class="g w6" style="font-size:12px">b &lt; c &lt; a</text>
+    <text x="580" y="202" text-anchor="middle" class="g w6" style="font-size:12px">c &lt; b &lt; a</text>
+    <text x="60" y="22" text-anchor="middle" class="r w6" style="font-size:13px">6 leaves = 3!</text>
+    <text x="545" y="22" text-anchor="middle" class="r w6" style="font-size:13px">worst = 3 = ⌈log₂ 6⌉</text>
+    <text x="70" y="196" text-anchor="middle" class="p s" style="font-size:12px">best path: 2</text>
+  </svg><figcaption>a correct decision tree for sorting a, b, c: every internal node is one comparison, every leaf one ordering</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The proof ✍ 4 marks</span> Any comparison sort on n distinct keys is a <b>binary decision tree</b>. It must reach a different leaf for each of the <b>n!</b> orderings ⇒ ≥ n! leaves. A binary tree of height h has ≤ 2ʰ leaves ⇒ <code>2ʰ ≥ n!</code> ⇒ <span class="circ">h ≥ log₂(n!)</span>. Since <code>n! ≥ (n/2)^(n/2)</code>, <code>log₂ n! ≥ (n/2)·log₂(n/2) = Ω(n log n)</code>. (Stirling: log₂ n! ≈ n log₂ n − 1.44n.)</div>
+    <table class="hand tiny" style="width:100%;margin-top:0">
+      <tr><th>n</th><th>n!</th><th>⌈log₂ n!⌉ = min. worst-case comparisons</th></tr>
+      <tr><td>3</td><td>6</td><td><span class="hl">3</span></td></tr>
+      <tr><td>4</td><td>24</td><td>5</td></tr>
+      <tr><td>5</td><td>120</td><td>7 (achieved by merge-insertion)</td></tr>
+      <tr><td>10</td><td>3,628,800</td><td>22</td></tr>
+    </table>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍</span> The bound covers <b>comparison</b> sorts only. <b>Counting sort O(n + k)</b>, <b>radix sort O(d(n + k))</b> and bucket sort (O(n) average) use key values as array indices, so they are not limited by it. It also holds for the <b>average</b> case: the average leaf depth is ≥ log₂ n!.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: adversary, bounds table ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Adversary arguments</span></div>
+  <h2><span class="no">6</span>Adversary Arguments and Proven Lower Bounds</h2><span class="tag">⌈3n/2⌉ − 2 ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Adversary argument</span> Picture the algorithm asking questions ("is aᵢ &lt; aⱼ?") and a malicious <b>adversary</b> answering them — always <b>consistently</b> with some input, but choosing the answer that tells the algorithm least. If the adversary can keep two different answers possible for k − 1 questions, every algorithm needs <b>k</b>. <b>Max of n:</b> each of the <span class="hl">n − 1 non-maximum elements must lose at least one comparison</span>, and one comparison makes only one loser ⇒ <b>n − 1</b>, which a linear scan achieves.</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Max and min together: the pairwise method</span> Doing them separately costs <code>(n − 1) + (n − 1) = 2n − 2</code>. Better: <b>compare the elements in pairs</b> (n/2 comparisons); the max is among the <b>winners</b> (n/2 − 1 more), the min among the <b>losers</b> (n/2 − 1 more). Total <code>3n/2 − 2</code> for even n; for odd n start max = min = first element and pair the rest ⇒ in general <span class="circ">⌈3n/2⌉ − 2</span>, and an adversary argument proves no algorithm does better.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 160" width="540">
+    <g class="w">
+      <rect x="40" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="100" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <rect x="180" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="240" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <rect x="320" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="380" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <rect x="460" y="58" width="50" height="28" rx="6" class="ink fill-b"/><rect x="520" y="58" width="50" height="28" rx="6" class="ink fill-b"/>
+      <path class="ink-p" d="M65,56 C70,44 120,44 125,56 M205,56 C210,44 260,44 265,56 M345,56 C350,44 400,44 405,56 M485,56 C490,44 540,44 545,56"/>
+      <rect x="60" y="6" width="500" height="24" rx="10" class="ink-r fill-r"/>
+      <rect x="60" y="112" width="500" height="24" rx="10" class="ink-g fill-g"/>
+    </g>
+    <text x="65" y="77" text-anchor="middle" class="k w6" style="font-size:15px">3</text><text x="125" y="77" text-anchor="middle" class="k w6" style="font-size:15px">9</text>
+    <text x="205" y="77" text-anchor="middle" class="k w6" style="font-size:15px">2</text><text x="265" y="77" text-anchor="middle" class="k w6" style="font-size:15px">7</text>
+    <text x="345" y="77" text-anchor="middle" class="k w6" style="font-size:15px">5</text><text x="405" y="77" text-anchor="middle" class="k w6" style="font-size:15px">1</text>
+    <text x="485" y="77" text-anchor="middle" class="k w6" style="font-size:15px">8</text><text x="545" y="77" text-anchor="middle" class="k w6" style="font-size:15px">4</text>
+    <text x="310" y="23" text-anchor="middle" class="r w6" style="font-size:13px">winners 9 · 7 · 5 · 8 → max = 9 in 3 comparisons</text>
+    <text x="310" y="129" text-anchor="middle" class="g w6" style="font-size:13px">losers 3 · 2 · 1 · 4 → min = 1 in 3 comparisons</text>
+    <text x="596" y="48" text-anchor="middle" class="p s" style="font-size:12px">4 pairs</text>
+    <text x="310" y="154" text-anchor="middle" class="p s" style="font-size:12px">4 + 3 + 3 = 10 = 3·8/2 − 2 (separately: 7 + 7 = 14)</text>
+  </svg><figcaption>the pairwise method on 8 numbers: each pair comparison sends one number up and one down</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Problem (comparisons, n items)</th><th>Lower bound</th><th class="l">Optimal algorithm</th></tr>
+    <tr><td class="l">Maximum (or minimum)</td><td>n − 1</td><td class="l">linear scan</td></tr>
+    <tr><td class="l"><b>Maximum and minimum</b></td><td><span class="hl">⌈3n/2⌉ − 2</span></td><td class="l">pairwise method</td></tr>
+    <tr><td class="l">Second largest</td><td><span class="circ">n + ⌈log₂ n⌉ − 2</span></td><td class="l">tournament + max's victims</td></tr>
+    <tr><td class="l">Search a sorted array</td><td>⌈log₂(n + 1)⌉</td><td class="l">binary search</td></tr>
+    <tr><td class="l">Search an unsorted array</td><td>n</td><td class="l">linear search</td></tr>
+    <tr><td class="l">Merge two sorted lists of n</td><td>2n − 1</td><td class="l">standard merge</td></tr>
+    <tr><td class="l">Comparison sorting</td><td>⌈log₂ n!⌉</td><td class="l">merge sort, heapsort</td></tr>
+    <tr><td class="l">Element uniqueness</td><td>Ω(n log n)</td><td class="l">sort, then scan</td></tr>
+    <tr><td class="l">Connectivity (adj. lists)</td><td>Ω(V + E)</td><td class="l">BFS / DFS</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked ✍ n = 100</span> Max + min: <code>⌈300/2⌉ − 2 = 148</code> (50 pairs + 49 + 49), not 198. Second largest: <code>100 + ⌈log₂ 100⌉ − 2 = 100 + 7 − 2 = 105</code>. With n = 8: <b>7</b> games find the champion, who beat <b>3</b> players; the best of those 3 needs <b>2</b> more ⇒ 9 = 8 + 3 − 2.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>2n − 2</b> (or 2n − 3) for max + min is the naive count, not the bound. Do not confuse <b>⌈3n/2⌉ − 2</b> (max + min) with <b>n + ⌈log₂ n⌉ − 2</b> (second largest). "Minimum comparisons in the worst case" means the <b>lower bound</b>, not the lucky best case.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: complexity classes ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>P, NP, NP-hard, NPC</span></div>
+  <h2><span class="no">7</span>P, NP, co-NP, NP-Hard and NP-Complete</h2><span class="tag">draw the right picture ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Class</th><th class="l">Definition (yes/no decision problems)</th><th class="l">Examples</th></tr>
+    <tr><td class="l"><b>P</b></td><td class="l">solved deterministically in <span class="hl">polynomial time O(nᵏ)</span></td><td class="l">sorting, MST, shortest path, 2-SAT, LP, primality</td></tr>
+    <tr><td class="l"><b>NP</b></td><td class="l">a "yes" has a <b>certificate</b> <span class="hl">verifiable in polynomial time</span> (= nondeterministic poly time)</td><td class="l">all of P; SAT, Ham. cycle, subset sum, factoring</td></tr>
+    <tr><td class="l"><b>co-NP</b></td><td class="l">complements: "no" answers have short certificates</td><td class="l">TAUTOLOGY, UNSAT</td></tr>
+    <tr><td class="l"><b>NP-hard</b></td><td class="l"><b>every</b> NP problem ≤p it; need not be in NP or decidable</td><td class="l">Halting problem, TSP-optimisation</td></tr>
+    <tr><td class="l"><b>NP-complete</b></td><td class="l"><span class="circ">in NP and NP-hard</span> — the hardest of NP</td><td class="l">SAT, 3-SAT, clique, vertex cover, TSP-decision</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 214" width="560">
+    <g class="w">
+      <ellipse cx="245" cy="122" rx="85" ry="82" class="ink-r fill-r"/>
+      <ellipse cx="112" cy="122" rx="100" ry="66" class="ink fill-b"/>
+      <ellipse cx="72" cy="122" rx="44" ry="34" class="ink-g fill-g"/>
+      <ellipse cx="500" cy="122" rx="112" ry="84" class="ink-r fill-r"/>
+      <ellipse cx="468" cy="128" rx="72" ry="48" class="ink-g fill-g"/>
+      <path class="ink-k" d="M338,30 V206" stroke-dasharray="5 5"/>
+    </g>
+    <text x="165" y="18" text-anchor="middle" class="k w6" style="font-size:14px">if P ≠ NP (believed)</text>
+    <text x="480" y="18" text-anchor="middle" class="k w6" style="font-size:14px">if P = NP</text>
+    <text x="72" y="120" text-anchor="middle" class="g w6" style="font-size:15px">P</text>
+    <text x="72" y="136" text-anchor="middle" class="g s" style="font-size:11px">sorting · MST</text>
+    <text x="118" y="76" text-anchor="middle" class="k w6" style="font-size:15px">NP</text>
+    <text x="186" y="126" text-anchor="middle" class="r w6" style="font-size:13px">NPC</text>
+    <text x="275" y="74" text-anchor="middle" class="r w6" style="font-size:14px">NP-hard</text>
+    <text x="280" y="148" text-anchor="middle" class="r s" style="font-size:12px">Halting</text>
+    <text x="280" y="163" text-anchor="middle" class="r s" style="font-size:12px">TSP-opt</text>
+    <text x="468" y="124" text-anchor="middle" class="g w6" style="font-size:14px">P = NP</text>
+    <text x="468" y="140" text-anchor="middle" class="g w6" style="font-size:13px">= NP-complete</text>
+    <text x="568" y="70" text-anchor="middle" class="r w6" style="font-size:14px">NP-hard</text>
+    <text x="574" y="160" text-anchor="middle" class="r s" style="font-size:12px">Halting</text>
+  </svg><figcaption>NP-complete is the overlap of NP and NP-hard; NP-hard reaches outside NP in both worlds</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Common misconception ✍</span> A nested picture with <b>P inside NP inside NP-complete inside NP-hard</b> is wrong. NP-complete is <b>not</b> a superset of NP: it is the part of NP that is also NP-hard, and NP-hard spills <b>outside</b> NP. <b>P ⊆ NP</b> is proven (a solver is its own verifier); whether <b>P = NP</b> is open.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Decision vs optimisation</span> <b>TSP-decision</b>: "is there a tour of cost ≤ k?" — in NP, NP-complete. <b>TSP-optimisation</b>: "find the cheapest tour" — NP-hard, not in NP (not a yes/no problem). Same for knapsack, clique, vertex cover. Solving the optimisation version solves the decision version, so it is at least as hard.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">What a certificate looks like ✍</span> <b>SAT:</b> a truth assignment — plug it in, O(formula length). <b>Hamiltonian cycle:</b> an ordering of the n vertices — check n edges exist and nobody repeats. <b>Subset sum:</b> the subset — add it up. Finding is hard; <b>checking</b> is easy.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>P: solve fast. NP: check fast. NP-hard: at least as hard as all of NP. NP-complete: hard <u>and</u> checkable.</b>" And <b>NP = Nondeterministic Polynomial</b>, never "Non-Polynomial" — every P problem is in NP.</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">Where famous problems sit</span> <b>P ⊆ NP ∩ co-NP.</b> <b>Primality</b> is in P (AKS, 2002) — testing is easy, while <b>factoring</b> is in NP ∩ co-NP but not known to be in P or NP-complete. <b>Graph isomorphism</b>: in NP, not known NP-complete (quasi-polynomial, 2015). If P ≠ NP, Ladner's theorem says such in-between problems must exist.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: reductions ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Reductions &amp; Cook–Levin</span></div>
+  <h2><span class="no">8</span>Reductions and the Cook–Levin Theorem</h2><span class="tag">direction matters ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Reduction A ≤p B</span> A polynomial-time computable function f with <span class="hl"><code>x ∈ A ⇔ f(x) ∈ B</code></span> for every instance x. Read it as "<b>A is no harder than B</b>": a fast algorithm for B gives one for A. Two consequences: <b>B ∈ P ⇒ A ∈ P</b>, and <b>A NP-hard ⇒ B NP-hard</b>. Reductions compose: A ≤p B and B ≤p C ⇒ A ≤p C.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Cook–Levin theorem</span> <span class="circ">SAT is NP-complete</span> — Stephen <b>Cook (1971)</b>, Leonid <b>Levin</b> independently (1973). It was the <b>first</b> problem proved NP-complete, directly from the definition: any polynomial-time nondeterministic machine's run is encoded as a Boolean formula. <b>Karp (1972)</b> then reduced SAT to <b>21</b> classic problems.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Proving X NP-complete ✍ 4 steps</span> <b>1.</b> X ∈ NP: give a certificate and a polynomial-time verifier. <b>2.</b> Pick a <b>known</b> NP-complete A. <b>3.</b> Build f from A-instances to X-instances in polynomial time. <b>4.</b> Prove <code>x ∈ A ⇔ f(x) ∈ X</code> (both directions). Steps 2–4 alone prove X <b>NP-hard</b>.</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 196" width="560">
+    <g class="w">
+      <rect x="215" y="4" width="190" height="26" rx="8" class="ink-r fill-r"/>
+      <rect x="260" y="52" width="100" height="26" rx="8" class="ink-r fill-r"/>
+      <rect x="40" y="104" width="100" height="26" rx="8" class="ink fill-b"/>
+      <rect x="200" y="104" width="120" height="26" rx="8" class="ink fill-b"/>
+      <rect x="360" y="104" width="110" height="26" rx="8" class="ink fill-b"/>
+      <rect x="500" y="104" width="110" height="26" rx="8" class="ink fill-b"/>
+      <rect x="10" y="160" width="110" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="140" y="160" width="110" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="270" y="160" width="90" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="380" y="160" width="100" height="26" rx="8" class="ink-g fill-g"/>
+      <rect x="500" y="160" width="100" height="26" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M310,30 V48" marker-end="url(#ahb)"/>
+      <path class="ink" d="M280,78 L104,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M300,78 L262,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M320,78 L410,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M340,78 L548,102" marker-end="url(#ahb)"/>
+      <path class="ink" d="M80,130 L68,156" marker-end="url(#ahb)"/>
+      <path class="ink" d="M260,130 L310,156" marker-end="url(#ahb)"/>
+      <path class="ink" d="M405,130 L428,156" marker-end="url(#ahb)"/>
+      <path class="ink" d="M440,130 L540,158" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M122,173 H136" marker-end="url(#ahp)" marker-start="url(#ahp)"/>
+    </g>
+    <text x="310" y="22" text-anchor="middle" class="r w6" style="font-size:13px">SAT (Cook–Levin, 1971)</text>
+    <text x="310" y="70" text-anchor="middle" class="r w6" style="font-size:13px">3-SAT</text>
+    <text x="90" y="122" text-anchor="middle" class="k w6" style="font-size:13px">Clique</text>
+    <text x="260" y="122" text-anchor="middle" class="k w6" style="font-size:13px">Ham. cycle</text>
+    <text x="415" y="122" text-anchor="middle" class="k w6" style="font-size:13px">Subset sum</text>
+    <text x="555" y="122" text-anchor="middle" class="k w6" style="font-size:13px">3-colouring</text>
+    <text x="65" y="178" text-anchor="middle" class="g w6" style="font-size:13px">Vertex cover</text>
+    <text x="195" y="178" text-anchor="middle" class="g w6" style="font-size:13px">Indep. set</text>
+    <text x="315" y="178" text-anchor="middle" class="g w6" style="font-size:13px">TSP</text>
+    <text x="430" y="178" text-anchor="middle" class="g w6" style="font-size:13px">0/1 knapsack</text>
+    <text x="550" y="178" text-anchor="middle" class="g w6" style="font-size:13px">Partition</text>
+    <text x="510" y="44" text-anchor="middle" class="p s" style="font-size:12px">arrow A → B means A ≤p B</text>
+  </svg><figcaption>the standard textbook reduction tree: hardness flows down the arrows</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked ✍ Clique ≤p Vertex cover</span> S is an <b>independent set</b> of G ⇔ V − S is a <b>vertex cover</b> of G, and S is a <b>clique</b> of G ⇔ S is independent in the complement Ḡ. So <code>(G, k) ↦ (Ḡ, |V| − k)</code>. Example: V = {1,2,3,4}, edges 12, 13, 23, 34; clique {1,2,3} (k = 3). Ḡ has edges 14, 24 — covered by <span class="hl">{4}</span>, size 4 − 3 = 1 ✓.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked ✍ Ham. cycle ≤p TSP</span> From G with n vertices build a complete graph: weight <b>1</b> on G's edges, <b>2</b> on non-edges. G has a Hamiltonian cycle ⇔ there is a tour of cost <b>≤ n</b>. Building the n² weights is polynomial, so TSP-decision is NP-hard; a tour is checkable, so it is NP-complete.</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ the direction</span> To show X is hard, reduce a <b>known</b> NP-complete problem <b>to X</b>: <span class="circ">A ≤p X</span>. Reducing X to SAT (X ≤p SAT) only shows X is <b>no harder</b> than SAT (so X ∈ NP) — nothing about hardness. "Hard problem → new problem", never the reverse.</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">2-SAT vs 3-SAT</span> Clauses of <b>two</b> literals: build the <b>implication graph</b> (a ∨ b gives a′ → b and b′ → a); satisfiable ⇔ no variable shares a strongly connected component with its negation ⇒ <span class="hl">2-SAT ∈ P, linear time</span>. With <b>three</b> literals per clause the problem is NP-complete. One extra literal crosses the line.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: twins, coping ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Easy/hard twins · coping</span></div>
+  <h2><span class="no">9</span>Easy/Hard Twins, P vs NP, Coping</h2><span class="tag">MCQ favourites ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">In P (polynomial)</th><th class="l">Looks similar, but NP-complete</th><th class="l">The difference</th></tr>
+    <tr><td class="l">2-SAT, Horn-SAT</td><td class="l"><b>3-SAT</b>, SAT</td><td class="l">3 literals per clause</td></tr>
+    <tr><td class="l">Euler circuit (each <b>edge</b> once)</td><td class="l"><b>Hamiltonian cycle</b> (each <b>vertex</b>)</td><td class="l">edges vs vertices</td></tr>
+    <tr><td class="l">Shortest simple path</td><td class="l"><b>Longest</b> simple path</td><td class="l">min vs max</td></tr>
+    <tr><td class="l">Minimum spanning tree</td><td class="l">TSP; Steiner tree</td><td class="l">tree vs tour</td></tr>
+    <tr><td class="l">2-colouring (bipartite)</td><td class="l"><b>3-colouring</b></td><td class="l">2 vs 3 colours</td></tr>
+    <tr><td class="l">Edge cover, matching</td><td class="l">Vertex cover, 3-D matching</td><td class="l">vertices, 3 sets</td></tr>
+    <tr><td class="l">Linear programming</td><td class="l">0-1 integer programming</td><td class="l">real vs integer</td></tr>
+    <tr><td class="l">Fractional knapsack</td><td class="l">0/1 knapsack (decision)</td><td class="l">split vs whole</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">P vs NP</span> If <b>any one</b> NP-complete problem has a polynomial algorithm, then <span class="hl">P = NP</span> and every NP problem does. If P ≠ NP, no NP-complete problem is in P (and, by Ladner's theorem, some NP problems are neither in P nor NP-complete — factoring and graph isomorphism are suspects). The question is one of the seven <b>Clay Millennium Prize Problems</b> (2000, US$1 million); most researchers believe P ≠ NP.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">The IT link</span> Public-key cryptography relies on problems believed hard (factoring for <b>RSA</b>, discrete log for Diffie–Hellman). They lie in NP, so a proof of P = NP with a practical algorithm would break them. Timetabling, vehicle routing, register allocation (graph colouring) and chip layout are NP-hard problems solved daily by the methods below.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Coping strategy</th><th class="l">You give up</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Smart exponential</b></td><td class="l">speed on large n</td><td class="l">backtracking, branch-and-bound; Held–Karp TSP <b>O(n²2ⁿ)</b> vs O(n!)</td></tr>
+    <tr><td class="l"><b>Pseudo-polynomial DP</b></td><td class="l">big numbers</td><td class="l">0/1 knapsack <span class="circ">O(nW)</span>; subset sum O(nS)</td></tr>
+    <tr><td class="l"><b>Approximation</b></td><td class="l">optimality (ratio proven)</td><td class="l">vertex cover 2×; metric TSP 2× (MST), Christofides 1.5×</td></tr>
+    <tr><td class="l"><b>Heuristics</b></td><td class="l">any guarantee</td><td class="l">greedy, simulated annealing, genetic, tabu search</td></tr>
+    <tr><td class="l"><b>Special cases</b></td><td class="l">generality</td><td class="l">2-SAT; vertex cover on trees; small k: O(2ᵏ·n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ pseudo-polynomial</span> Knapsack's DP is <b>O(nW)</b>, yet knapsack is NP-complete — no contradiction. W is written in <b>log₂ W bits</b>, so nW is <b>exponential in the input length</b>. Doubling the bits of W squares W. Such problems are called <b>weakly</b> NP-complete.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Euler edges, Hamilton heads.</b>" Every edge once is easy (degree check), every vertex once (the "heads") is NP-complete. Same pattern: <b>shortest easy, longest hard; 2 easy, 3 hard</b>. Ratio-guaranteed methods are taught in the approximation-algorithms lesson.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Horner: n mult + n add, optimal</p><p>Horner = synthetic division, last = p(x₀)</p>
+      <p>Fast power: ≤ 2⌊log₂ n⌋ mult, O(log n)</p><p>x¹³: 5 multiplications</p>
+      <p>Karatsuba: 3T(n/2)+O(n) = <span class="hl">n^1.585</span></p><p>ad+bc = (a+b)(c+d) − ac − bd</p>
+      <p>Strassen: 7 products, n^log₂7 ≈ n^2.81</p><p>FFT poly multiply: O(n log n)</p>
+      <p>A + BC = (A+B)(A+C)</p><p>AB + AB′ = A, A + A′B = A + B</p>
+      <p>O upper · Ω lower · Θ tight (functions)</p><p>Ω ≠ best case</p>
+      <p>Sort: h ≥ log₂ n! = Ω(n log n)</p><p>3 keys: 6 leaves, 3 comparisons</p>
+      <p>Max: n − 1 · max+min: ⌈3n/2⌉ − 2</p><p>2nd largest: n + ⌈log₂ n⌉ − 2</p>
+      <p>Sorted search: ⌈log₂(n+1)⌉</p><p>Merge n + n: 2n − 1</p>
+      <p>NP: verify in poly time</p><p>NPC = NP ∩ NP-hard</p>
+      <p>Cook 1971 · Levin 1973 · Karp 1972 (21)</p><p>A ≤p X, A known NPC ⇒ X NP-hard</p>
+      <p>2-SAT ∈ P · 3-SAT NPC</p><p>Knapsack O(nW): pseudo-polynomial</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>Presorting = instance simplification</li>
+      <li>Binary → decimal is Horner with x = 2</li>
+      <li>Strassen exponent 2.81, not 2.37</li>
+      <li>Matrix product: trivial bound Ω(n²)</li>
+      <li>Counting / radix sort beat n log n</li>
+      <li>n = 100: max + min = 148</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>NP = Nondeterministic Polynomial</li>
+      <li>P ⊆ NP proven; P = NP open</li>
+      <li>Halting: NP-hard, not NP-complete</li>
+      <li>TSP-opt NP-hard; TSP-decision NPC</li>
+      <li>Euler circuit P · Hamiltonian NPC</li>
+      <li>Clay Millennium Prize: US$1 million</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">Top traps</span> Horner "n + 1" or "2n" multiplications · Ω read as best case · comparison bound applied to counting sort · max + min "2n − 2" · nested P ⊂ NP ⊂ NPC ⊂ NP-hard picture · reducing X to SAT to "prove" X hard · O(nW) taken as polynomial · NP read as "non-polynomial".</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">All tricks together</span> Horner = nested brackets = n and n · save one multiplication, lower the exponent · P solve fast, NP check fast, NPC hard and checkable · Euler edges, Hamilton heads · shortest easy, longest hard; 2 easy, 3 hard · hard problem → new problem.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <circle cx="66" cy="46" r="32" class="ink-g fill-g"/>
+        <circle cx="150" cy="46" r="32" class="ink fill-b"/>
+        <circle cx="234" cy="46" r="32" class="ink-r fill-r"/>
+        <path class="ink" d="M98,46 H116 M182,46 H200" marker-end="url(#ahb)"/>
+        <rect x="40" y="112" width="220" height="30" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="44" text-anchor="middle" class="g w6" style="font-size:11px">rewrite</text><text x="66" y="58" text-anchor="middle" class="g s" style="font-size:10px">algebra</text>
+      <text x="150" y="44" text-anchor="middle" class="k w6" style="font-size:11px">bound</text><text x="150" y="58" text-anchor="middle" class="s" style="font-size:10px">Ω proof</text>
+      <text x="234" y="44" text-anchor="middle" class="r w6" style="font-size:11px">classify</text><text x="234" y="58" text-anchor="middle" class="r s" style="font-size:10px">P / NPC</text>
+      <text x="150" y="98" text-anchor="middle" class="p s" style="font-size:10px">faster → can't be faster → probably hard</text>
+      <text x="150" y="132" text-anchor="middle" class="k w6" style="font-size:11px">upper · lower · intractable</text>
+    </svg><figcaption>the lesson in three moves</figcaption></figure>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Lower Bounds &amp; NP</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">1.</span>Horner's rule evaluates a polynomial of degree n using how many multiplications?<ol class="opts"><li>n(n + 1)/2</li><li>2n − 1</li><li>n</li><li>log₂ n</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">2.</span>Karatsuba's algorithm multiplies two n-digit integers in:<ol class="opts"><li>Θ(n²)</li><li>Θ(n^1.585)</li><li>Θ(n log n)</li><li>Θ(n^2.81)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">3.</span>Strassen's method multiplies 2 × 2 block matrices with how many block multiplications?<ol class="opts"><li>7</li><li>8</li><li>6</li><li>18</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">4.</span>Worst-case lower bound for any comparison-based sort of n elements:<ol class="opts"><li>Ω(n)</li><li>Ω(log n)</li><li>Ω(n²)</li><li>Ω(n log n)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">5.</span>Minimum worst-case comparisons to find both max and min of 100 distinct numbers:<ol class="opts"><li>198</li><li>150</li><li>148</li><li>99</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">6.</span>A decision tree that sorts 4 distinct keys must have height at least:<ol class="opts"><li>4</li><li>5</li><li>6</li><li>24</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">7.</span>Which of these problems is NP-complete?<ol class="opts"><li>2-SAT</li><li>3-SAT</li><li>Minimum spanning tree</li><li>Shortest path, non-negative weights</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">8.</span>To prove a new problem X is NP-hard, you must:<ol class="opts"><li>Reduce X to SAT</li><li>Show a certificate for X is checkable</li><li>Give an exponential algorithm for X</li><li>Reduce a known NP-complete problem to X</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">9.</span>The Halting problem is:<ol class="opts"><li>NP-complete</li><li>In P</li><li>NP-hard but not in NP</li><li>In NP but not NP-hard</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">10.</span>The O(nW) dynamic program for 0/1 knapsack is:<ol class="opts"><li>Pseudo-polynomial</li><li>Polynomial in the input length</li><li>A proof that P = NP</li><li>An approximation algorithm</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-b · 3-a · 4-d · 5-c · 6-b · 7-b · 8-d · 9-c · 10-a</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> (a) Prove that every comparison sort needs Ω(n log n) comparisons in the worst case, using the decision tree for three keys. (b) Show how to find both the maximum and the minimum of n numbers in ⌈3n/2⌉ − 2 comparisons and evaluate it for n = 100. (c) Define P, NP, NP-hard and NP-complete, draw their relationship, and list the steps to prove a problem NP-complete. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>(a) Decision tree (4)</b> — each comparison is a node, each of the n! orderings needs its own leaf; height h ⇒ ≤ 2ʰ leaves ⇒ h ≥ log₂ n! ≥ (n/2) log₂(n/2) = Ω(n log n). For 3 keys: 6 leaves, worst case ⌈log₂ 6⌉ = 3. <i class="mk">4</i></li>
+    <li><b>(b) Pairwise method (3)</b> — compare in pairs (n/2), max of winners (n/2 − 1), min of losers (n/2 − 1) ⇒ 3n/2 − 2; n = 100: 50 + 49 + 49 = 148 (vs 198 separately). <i class="mk">3</i></li>
+    <li><b>(c) Classes (3)</b> — P: solvable in poly time; NP: verifiable in poly time; NP-hard: every NP problem ≤p it; NPC = NP ∩ NP-hard; draw P ⊆ NP, NPC as the overlap, NP-hard outside. Steps: X ∈ NP, pick known NPC A, build f in poly time, prove x ∈ A ⇔ f(x) ∈ X. <i class="mk">3</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>Can run Horner / synthetic division</li>
+      <li>Can state Karatsuba and Strassen exponents</li>
+      <li>Can draw the 3-key decision tree</li>
+    </ul>
+    <ul class="tick">
+      <li>Can derive ⌈3n/2⌉ − 2</li>
+      <li>Can draw the correct P / NP / NPC picture</li>
+      <li>Know which way a reduction goes</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>C: স্ট্রাকচার, ইউনিয়ন ও এনুমারেশন: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">C-তে ইউজার ডিফাইনড ডেটা টাইপ</span></h1>
+  <p class="subtitle">struct · . বনাম -&gt; · প্যাডিং · বিট-ফিল্ড · union · enum · typedef: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L172,145 M424,145 L468,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="bn k w6">ইউজার ডিফাইনড টাইপ</text><text x="320" y="166" text-anchor="middle" class="r s">struct · union · enum · typedef</text>
+      <text x="142" y="62" text-anchor="middle" class="bn s">ডিক্লেয়ার · ইনিশিয়ালাইজ</text>
+      <text x="320" y="38" text-anchor="middle" class="bn r w6">. বনাম -&gt; ★</text>
+      <text x="498" y="62" text-anchor="middle" class="bn r w6" style="font-size:13px">sizeof + প্যাডিং ★</text>
+      <text x="96" y="150" text-anchor="middle" class="bn g w6" style="font-size:13px">struct = রেকর্ড</text>
+      <text x="544" y="150" text-anchor="middle" class="bn r w6" style="font-size:13px">union: শেয়ার্ড ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s">নেস্টেড · লিংকড নোড</text>
+      <text x="320" y="264" text-anchor="middle" class="bn r w6" style="font-size:13px">enum-এর মান ★</text>
+      <text x="498" y="238" text-anchor="middle" class="bn s">বিট-ফিল্ড · typedef</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = ভিত্তি</figcaption>
+  </figure>
+  <div class="sticky" style="width:76mm"><b>হাই-ইল্ড তালিকা</b><br>① struct: প্রতিটি মেম্বারের নিজস্ব মেমোরি<br>② union: সব মেম্বার অফসেট 0-তে<br>③ sizeof(union) = সবচেয়ে বড়টি, রাউন্ড আপ<br>④ sizeof(struct) ≥ যোগফল (প্যাডিং)<br>⑤ p-&gt;x ≡ (*p).x; *p.x ≡ *(p.x)<br>⑥ s1 = s2 চলে; s1 == s2 এরর<br>⑦ enum শুরু 0; পরেরটি = আগের + 1<br>⑧ enum কনস্ট্যান্ট <code>int</code><br>⑨ বিট-ফিল্ডের অ্যাড্রেস নেই<br>⑩ <code>typedef char *P; P a, b;</code> → দুটিই পয়েন্টার</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">C সিলেবাসের লাইন: "<span class="hl">User defined data types: structures, unions, enumerations</span>"। পয়েন্টারের আলাদা লেসন আছে; ফাইলে স্ট্রাকচার লেখা-পড়া ফাইল I/O লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>স্ট্রাকচার: ডিক্লেয়ার ও ইনিশিয়ালাইজ … পৃ. ২</li><li>অ্যাক্সেস: . বনাম -&gt;, ফাংশন … পৃ. ৩</li><li>অ্যারে, নেস্টেড ও সেলফ-রেফারেন্সিয়াল … পৃ. ৪</li><li>sizeof, প্যাডিং ও অ্যালাইনমেন্ট … পৃ. ৫</li><li>বিট-ফিল্ড … পৃ. ৬</li></ul>
+    <ul class="tick"><li>ইউনিয়ন … পৃ. ৭</li><li>এনুমারেশন … পৃ. ৮</li><li>typedef + struct বনাম union বনাম enum … পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: structures basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>স্ট্রাকচার</span></div>
+  <h2><span class="no">১</span>স্ট্রাকচার: ডিক্লারেশন, ডেফিনিশন, ইনিশিয়ালাইজেশন</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">স্ট্রাকচার</span> (Structure, <code>struct</code>) হলো একটি ইউজার ডিফাইনড টাইপ, যা সাধারণত <b>ভিন্ন ভিন্ন</b> টাইপের সম্পর্কিত ভেরিয়েবলকে এক নামে একত্র করে। ভেতরের প্রতিটি ভেরিয়েবল একটি <b>মেম্বার</b> (Member, ফিল্ড)। মেম্বারগুলো <b>ডিক্লেয়ার করার ক্রমে</b> সাজানো থাকে এবং <span class="hl">প্রতিটি মেম্বারের নিজস্ব মেমোরি</span> থাকে। স্ট্রাকচার <b>টাইপ</b> (টেমপ্লেট) ডিক্লেয়ার করলে কোনো মেমোরি লাগে না; ওই টাইপের <b>ভেরিয়েবল</b> ডিফাইন করলে মেমোরি বরাদ্দ হয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+struct Student {          /* tag */
+    int   id;
+    char  name[50];
+    float marks;
+};                        /* ; needed */
+int main(void) {
+    struct Student s1;
+    s1.id = 101;
+    strcpy(s1.name, "Ruhul");
+    s1.marks = 85.5f;
+    printf("%d %s %.2f\n",
+        s1.id, s1.name, s1.marks);
+    return 0;  /* 101 Ruhul 85.50 */
+}</div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="300">
+      <g class="w">
+        <rect x="10" y="40" width="40" height="44" class="ink fill-b"/>
+        <rect x="50" y="40" width="170" height="44" class="ink-g fill-g"/>
+        <rect x="220" y="40" width="20" height="44" class="ink-r"/>
+        <rect x="240" y="40" width="44" height="44" class="ink-k fill-y"/>
+        <path class="ink-r" d="M230,110 V90" marker-end="url(#ah)"/>
+      </g>
+      <text x="30" y="66" text-anchor="middle" class="s">id</text>
+      <text x="135" y="66" text-anchor="middle" class="s g">name[50]</text>
+      <text x="262" y="66" text-anchor="middle" class="s">marks</text>
+      <text x="10" y="30" class="s k">0</text><text x="50" y="30" class="s k">4</text><text x="212" y="30" class="s k">54</text><text x="240" y="30" class="s k">56</text><text x="278" y="30" class="s k">60</text>
+      <text x="230" y="128" text-anchor="middle" class="bn s r">২ বাইট প্যাডিং</text>
+      <text x="150" y="160" text-anchor="middle" class="bn s k">4 + 50 + (2) + 4 = 60 বাইট</text>
+      <text x="150" y="184" text-anchor="middle" class="bn s g">float শুরু হবে 4-এর গুণিতকে</text>
+    </svg><figcaption>মেমোরিতে একটি <i>struct Student</i></figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ভেরিয়েবল তৈরির উপায়</th><th class="l">কোড</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l">টাইপের পরে</td><td class="l"><code>struct Student s1, s2;</code></td><td class="l">C-তে <code>struct</code> কিওয়ার্ড লাগবেই</td></tr>
+    <tr><td class="l">ডিক্লারেশনের সাথেই</td><td class="l"><code>struct Student { … } s1, s2;</code></td><td class="l">টাইপ ও ভেরিয়েবল একসাথে</td></tr>
+    <tr><td class="l">নামহীন (anonymous) struct</td><td class="l"><code>struct { int x, y; } pt;</code></td><td class="l">ট্যাগ নেই: পরে আর ভেরিয়েবল নয়</td></tr>
+    <tr><td class="l">পজিশনাল ইনিশিয়ালাইজার</td><td class="l"><code>= {101, "Ruhul", 85.5f}</code></td><td class="l">মেম্বারের ক্রমে</td></tr>
+    <tr><td class="l">ডেজিগনেটেড ইনিশিয়ালাইজার (C99)</td><td class="l"><code>= {.marks = 85.5f, .id = 101}</code></td><td class="l">যেকোনো ক্রমে; name[] হয় ""</td></tr>
+    <tr><td class="l">আংশিক / শূন্য</td><td class="l"><code>= {101}</code> · <code>= {0}</code></td><td class="l">যে মেম্বার দেওয়া নেই সেটি <span class="circ">শূন্য</span></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>struct হলো ফাঁকা ফর্ম; ভেরিয়েবল হলো পূরণ করা কপি।</b>" ফাঁকা ফর্মের নকশায় কাগজ লাগে না (মেমোরি নেই); প্রতিটি পূরণ করা কপিতে লাগে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>s1.name = "Ruhul";</code> <b>কম্পাইল এরর</b>: অ্যারেতে অ্যাসাইন করা যায় না। <code>strcpy()</code> ব্যবহার করো, বা ডেফিনিশনের সময় ইনিশিয়ালাইজ করো। <code>}</code>-এর পরে <b>;</b> ভুলে গেলেও এরর।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ sizeof</span> 4-বাইট <code>int</code>/<code>float</code> ধরে: 4 + 50 = 54, <i>marks</i>-এর জন্য 56 পর্যন্ত প্যাড, + 4 → <code>sizeof(struct Student)</code> = <span class="circ">60</span>, 58 নয়।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: access, pointers, functions ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>মেম্বার অ্যাক্সেস</span></div>
+  <h2><span class="no">২</span>মেম্বার অ্যাক্সেস: <code>.</code> বনাম <code>-&gt;</code>; স্ট্রাকচার ও ফাংশন</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ডট অপারেটর</span> (Dot operator) <code>.</code> স্ট্রাকচার <b>ভেরিয়েবল</b> থেকে মেম্বার নেয়। <span class="hl">অ্যারো অপারেটর</span> (Arrow operator) <code>-&gt;</code> স্ট্রাকচারের <b>পয়েন্টার</b>-এর মাধ্যমে মেম্বার নেয়: <code>p-&gt;x</code> হুবহু <code>(*p).x</code>। ব্র্যাকেট জরুরি: ইউনারি <code>*</code>-এর চেয়ে <code>.</code>-এর প্রায়োরিটি বেশি, তাই <code>*p.x</code> মানে <span class="circ">*(p.x)</span>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="300">
+      <g class="w">
+        <rect x="14" y="60" width="70" height="44" rx="8" class="ink-r fill-r"/>
+        <rect x="150" y="30" width="136" height="104" rx="10" class="ink-k fill-y"/>
+        <rect x="164" y="52" width="108" height="30" rx="6" class="ink fill-b"/>
+        <rect x="164" y="90" width="108" height="30" rx="6" class="ink fill-b"/>
+        <path class="ink-r" d="M86,82 H146" marker-end="url(#ah)"/>
+      </g>
+      <text x="49" y="80" text-anchor="middle" class="s r w6">q</text>
+      <text x="49" y="97" text-anchor="middle" class="s r">&amp;p</text>
+      <text x="218" y="22" text-anchor="middle" class="s k w6">struct point p</text>
+      <text x="218" y="72" text-anchor="middle" class="s">x : 3 → 8</text>
+      <text x="218" y="110" text-anchor="middle" class="s">y : 4</text>
+      <text x="116" y="72" text-anchor="middle" class="s r">-&gt;</text>
+      <text x="150" y="158" text-anchor="middle" class="s g">p.x  ==  q-&gt;x  ==  (*q).x</text>
+    </svg><figcaption>বাক্সে ডট, পয়েন্টার দিয়ে অ্যারো</figcaption></figure>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">struct point { int x, y; };
+struct point p = {3, 4};
+struct point *q = &amp;p;
+q-&gt;x = q-&gt;y * 2;
+printf("%d %d", p.x, p.y);
+/* Output: 8 4 */
+
+void byVal(struct point a) { a.x = 0; }
+void byPtr(struct point *a) { a-&gt;x = 0; }
+/* byVal(p): p unchanged (copy)
+   byPtr(&amp;p): p.x becomes 0     */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">এক্সপ্রেশন</th><th class="l">অর্থ</th><th class="l">এক্সপ্রেশন</th><th class="l">অর্থ</th></tr>
+    <tr><td class="l"><code>p-&gt;x</code></td><td class="l"><code>(*p).x</code></td><td class="l"><code>++p-&gt;x</code></td><td class="l"><code>++(p-&gt;x)</code>: মেম্বার বাড়ে</td></tr>
+    <tr><td class="l"><code>*p.x</code></td><td class="l"><code>*(p.x)</code>: x-কে পয়েন্টার হতে হবে</td><td class="l"><code>p++-&gt;x</code></td><td class="l">x পড়ে, তারপর p এগোয়</td></tr>
+    <tr><td class="l"><code>&amp;s.x</code></td><td class="l"><code>&amp;(s.x)</code>: মেম্বারের অ্যাড্রেস</td><td class="l"><code>*p-&gt;name</code></td><td class="l">নামের প্রথম অক্ষর</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">পুরো স্ট্রাকচারে অপারেশন</th><th class="l">চলে?</th><th class="l">কেন / কীভাবে</th></tr>
+    <tr><td class="l">অ্যাসাইনমেন্ট <code>s2 = s1;</code></td><td class="l"><span class="circ">হ্যাঁ</span></td><td class="l">মেম্বার-বাই-মেম্বার কপি, ভেতরের অ্যারেসহ (একই টাইপ হলে)</td></tr>
+    <tr><td class="l">তুলনা <code>s1 == s2</code></td><td class="l"><span class="red"><b>না</b></span>: কম্পাইল এরর</td><td class="l">মেম্বার ধরে ধরে তুলনা; <code>memcmp</code> প্যাডিংও তুলনা করতে পারে</td></tr>
+    <tr><td class="l">ফাংশনে পাঠানো / ফেরত দেওয়া</td><td class="l">হ্যাঁ</td><td class="l">বাই ভ্যালু পুরো struct কপি করে; বড় struct-এ পয়েন্টার পাঠাও</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বাক্স হাতে থাকলে ডট, বাক্সের দিকে আঙুল তুললে অ্যারো।</b>" ভেরিয়েবলের নাম → <code>.</code>; পয়েন্টার → <code>-&gt;</code>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> পাস-বাই-ভ্যালু কাজ করে <b>কপির</b> ওপর: <code>byVal(p)</code>-এর পর p অপরিবর্তিত। আর <code>::</code> কেবল C++-এর; C-তে মেম্বারের জন্য স্কোপ অপারেটর নেই।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ struct ফেরত</span> <code>struct point mid(struct point a, struct point b) { struct point m = {(a.x+b.x)/2, (a.y+b.y)/2}; return m; }</code> mid({2,4},{6,8}) → <span class="circ">{4, 6}</span>।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: arrays, nested, self-referential ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>অ্যারে ও নেস্টিং</span></div>
+  <h2><span class="no">৩</span>স্ট্রাকচারের অ্যারে; নেস্টেড ও সেলফ-রেফারেন্সিয়াল স্ট্রাকচার</h2><span class="tag">আউটপুট প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">স্ট্রাকচারের অ্যারে</span> (Array of structures) একই টাইপের অনেক রেকর্ড পাশাপাশি রাখে: <code>struct Student st[3];</code> → <code>st[0].id</code>, <code>st[2].name</code>। অ্যারের পয়েন্টার প্রতি <code>p++</code>-এ একটি <b>পুরো স্ট্রাকচার</b> এগোয় (struct-এর sizeof, ১ বাইট নয়)। <span class="hl">নেস্টেড স্ট্রাকচার</span>-এর একটি মেম্বার নিজেই struct; <span class="hl">সেলফ-রেফারেন্সিয়াল স্ট্রাকচার</span>-এর একটি মেম্বার <b>নিজের টাইপের পয়েন্টার</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">struct pt { int x, y; };   /* 8 B */
+struct pt a[3] = {{1,2},{3,4},{5,6}};
+struct pt *p = a;      /* &amp;a[0] */
+p += 2;                /* a[2]   */
+printf("%d %d", p-&gt;x,
+       (p-1)-&gt;y + a[0].x);
+/* 5 5;  a at 1000 -&gt; p = 1016 */
+struct Date { int d, m, y; };
+struct Emp {
+    char name[20];
+    struct Date dob;   /* nested */
+} e, *pe = &amp;e;
+e.dob.y = 1995;  pe-&gt;dob.m = 6;</div>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">struct node {
+    int data;
+    struct node *next;  /* OK */
+ /* struct node n;  -&gt; error */
+};
+struct node c = {30, NULL};
+struct node b = {20, &amp;c};
+struct node a1 = {10, &amp;b};
+printf("%d", a1.next-&gt;next-&gt;data);
+/* Output: 30 */</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 96" width="400">
+    <g class="w">
+      <rect x="20" y="20" width="70" height="40" rx="6" class="ink-k fill-y"/><rect x="90" y="20" width="44" height="40" rx="6" class="ink fill-b"/>
+      <rect x="200" y="20" width="70" height="40" rx="6" class="ink-k fill-y"/><rect x="270" y="20" width="44" height="40" rx="6" class="ink fill-b"/>
+      <rect x="380" y="20" width="70" height="40" rx="6" class="ink-k fill-y"/><rect x="450" y="20" width="44" height="40" rx="6" class="ink fill-b"/>
+      <path class="ink" d="M112,40 H196" marker-end="url(#ahb)"/>
+      <path class="ink" d="M292,40 H376" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M472,40 H540" marker-end="url(#ah)"/>
+    </g>
+    <text x="55" y="46" text-anchor="middle" class="s">10</text><text x="235" y="46" text-anchor="middle" class="s">20</text><text x="415" y="46" text-anchor="middle" class="s">30</text>
+    <text x="580" y="46" text-anchor="middle" class="s r w6">NULL</text>
+    <text x="55" y="84" text-anchor="middle" class="s k">a1</text><text x="235" y="84" text-anchor="middle" class="s k">b</text><text x="415" y="84" text-anchor="middle" class="s k">c</text>
+    <text x="300" y="84" text-anchor="middle" class="s g">data | next</text>
+  </svg><figcaption>তিনটি সেলফ-রেফারেন্সিয়াল নোড = একটি লিংকড লিস্ট</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ধরন</th><th class="l">মেম্বার</th><th class="l">সাইজ (4-বাইট int, 8-বাইট পয়েন্টার)</th><th class="l">অ্যাক্সেস</th></tr>
+    <tr><td class="l">স্ট্রাকচারের অ্যারে</td><td class="l"><code>struct pt a[3]</code></td><td class="l">3 × 8 = 24</td><td class="l"><code>a[i].x</code>, <code>(p+i)-&gt;x</code></td></tr>
+    <tr><td class="l">নেস্টেড</td><td class="l">Emp-এ <code>struct Date dob</code></td><td class="l">20 + 12 = 32</td><td class="l"><code>e.dob.y</code>, <code>pe-&gt;dob.y</code></td></tr>
+    <tr><td class="l">সেলফ-রেফারেন্সিয়াল</td><td class="l"><code>struct node *next</code></td><td class="l">4 + 4 প্যাড + 8 = <span class="circ">16</span> (32-বিটে 8)</td><td class="l"><code>n-&gt;next-&gt;data</code></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বাক্স নিজের মতো বাক্সের ঠিকানা রাখতে পারে, নিজেকে নয়।</b>" নিজেকে ধারণ করা struct অসীম বড় হতো।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>struct pt *</code>-এ <code>p++</code> যোগ করে <b>8</b> বাইট (sizeof), ১ নয়। <code>e.dob.y</code>-তে দুটি ডটই লাগবে; <code>pe-&gt;dob-&gt;y</code> ভুল, কারণ <i>dob</i> পয়েন্টার নয়।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ হাঁটা</span> <code>for (p = a; p &lt; a + 3; p++) sum += p-&gt;y;</code> → 2 + 4 + 6 = <span class="circ">12</span>। (আসল লিস্টে নোড আসে <code>malloc</code> থেকে: পয়েন্টার লেসন।)</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: sizeof, padding ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>প্যাডিং</span></div>
+  <h2><span class="no">৪</span>sizeof, প্যাডিং ও অ্যালাইনমেন্ট</h2><span class="tag">গাণিতিক MCQ ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> CPU <b>অ্যালাইনড</b> (Aligned) অ্যাড্রেস থেকে সবচেয়ে দ্রুত পড়ে, তাই কম্পাইলার প্রতিটি মেম্বারকে তার <b>অ্যালাইনমেন্টের গুণিতক</b> অফসেটে বসায় এবং প্রয়োজনে অব্যবহৃত <span class="hl">প্যাডিং বাইট</span> (Padding) ঢোকায়। তারপর পুরো struct-কে তার <b>সবচেয়ে বড় মেম্বার-অ্যালাইনমেন্টের</b> গুণিতকে রাউন্ড আপ করে, যাতে এর অ্যারেও অ্যালাইনড থাকে। তাই <span class="circ">sizeof(struct) ≥ মেম্বারের যোগফল</span>।</div>
+  <p class="tiny" style="margin:0"><b>ধরে নেওয়া (সাধারণ 64-বিট GCC/Clang/MSVC):</b> char 1 · short 2 · int, float 4 · double, long long, পয়েন্টার 8 — প্রত্যেকে নিজের সাইজে অ্যালাইনড।</p>
+  <figure class="doodle"><svg viewBox="0 0 560 150" width="480">
+    <g class="w">
+      <rect x="40" y="26" width="40" height="32" class="ink-k fill-y"/>
+      <rect x="80" y="26" width="120" height="32" class="ink-r" style="stroke-dasharray:5 4"/>
+      <rect x="200" y="26" width="160" height="32" class="ink fill-b"/>
+      <rect x="360" y="26" width="40" height="32" class="ink-g fill-g"/>
+      <rect x="400" y="26" width="120" height="32" class="ink-r" style="stroke-dasharray:5 4"/>
+      <rect x="40" y="96" width="160" height="32" class="ink fill-b"/>
+      <rect x="200" y="96" width="40" height="32" class="ink-k fill-y"/>
+      <rect x="240" y="96" width="40" height="32" class="ink-g fill-g"/>
+      <rect x="280" y="96" width="80" height="32" class="ink-r" style="stroke-dasharray:5 4"/>
+    </g>
+    <text x="40" y="20" class="s k">0</text><text x="200" y="20" class="s k">4</text><text x="360" y="20" class="s k">8</text><text x="508" y="20" class="s k">12</text>
+    <text x="60" y="47" text-anchor="middle" class="s">c</text><text x="140" y="47" text-anchor="middle" class="bn s r">প্যাড 3</text><text x="280" y="47" text-anchor="middle" class="s">int i</text><text x="380" y="47" text-anchor="middle" class="s">d</text><text x="460" y="47" text-anchor="middle" class="bn s r">প্যাড 3</text>
+    <text x="120" y="117" text-anchor="middle" class="s">int i</text><text x="220" y="117" text-anchor="middle" class="s">c</text><text x="260" y="117" text-anchor="middle" class="s">d</text><text x="320" y="117" text-anchor="middle" class="bn s r">প্যাড 2</text>
+    <text x="450" y="117" text-anchor="middle" class="bn s g w6">= 8 বাইট</text>
+    <text x="280" y="146" text-anchor="middle" class="bn s k">একই তিন মেম্বার, ক্রম বদলে 4 বাইট সাশ্রয়</text>
+  </svg><figcaption>ওপরে: {char c; int i; char d;} = 12 · নিচে: {int i; char c; char d;} = 8</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">struct-এর মেম্বার (ক্রমানুসারে)</th><th class="l">বিন্যাস (অফসেট)</th><th>sizeof</th></tr>
+    <tr><td class="l"><code>char c; int i; char d;</code></td><td class="l">c@0, প্যাড 3, i@4, d@8, প্যাড 3</td><td><span class="circ">12</span></td></tr>
+    <tr><td class="l"><code>int i; char c; char d;</code></td><td class="l">i@0, c@4, d@5, প্যাড 2</td><td><span class="circ">8</span></td></tr>
+    <tr><td class="l"><code>char c; double d;</code></td><td class="l">c@0, প্যাড 7, d@8</td><td>16</td></tr>
+    <tr><td class="l"><code>char c; short s; int i;</code></td><td class="l">c@0, প্যাড 1, s@2, i@4</td><td>8</td></tr>
+    <tr><td class="l"><code>char a; double b; int c;</code></td><td class="l">a@0, প্যাড 7, b@8, c@16, শেষে প্যাড 4</td><td>24</td></tr>
+    <tr><td class="l"><code>double b; int c; char a;</code></td><td class="l">b@0, c@8, a@12, শেষে প্যাড 3</td><td>16</td></tr>
+    <tr><td class="l"><code>int a; char b[5];</code></td><td class="l">a@0, b@4..8, শেষে প্যাড 3</td><td>12</td></tr>
+    <tr><td class="l"><code>char c; int *p;</code></td><td class="l">c@0, প্যাড 7, p@8 (32-বিটে: প্যাড 3, p@4)</td><td>16 (8)</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বড় পাথর আগে।</b>" মেম্বারগুলো বড় থেকে ছোট অ্যালাইনমেন্টে (double → int → short → char) সাজালে প্যাডিং প্রায় থাকে না।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> প্যাডিং <b>ইমপ্লিমেন্টেশন-ডিফাইনড</b>। 32-বিট Linux-এ (i386) struct-এর ভেতরে double 4-অ্যালাইনড, তাই সেখানে <code>{char; double}</code> = 12। অপশনে প্যাডসহ মান না থাকলে প্রশ্নকর্তা <b>প্যাডিং ছাড়া</b> (সরল যোগফল) ধরেছেন।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ধাপে ধাপে</span> <code>{char a; double b; int c;}</code>: 1 → 8 পর্যন্ত প্যাড → +8 = 16 → +4 = 20 → 8-এর গুণিতকে = <span class="circ">24</span>।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">প্যাকিং</span> <code>#pragma pack(1)</code> (বা GCC <code>__attribute__((packed))</code>) প্যাডিং সরায়: <code>{char c; int i; char d;}</code> হয় <b>6</b> বাইট, তবে আনঅ্যালাইনড অ্যাক্সেস ধীর। ফাইল ফরম্যাট ও নেটওয়ার্ক হেডারে ব্যবহৃত।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: bit-fields ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>বিট-ফিল্ড</span></div>
+  <h2><span class="no">৫</span>বিট-ফিল্ড</h2><span class="tag">প্রায়ই আসে</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">বিট-ফিল্ড</span> (Bit-field) হলো এমন struct মেম্বার যার প্রস্থ বিটে নির্দিষ্ট করা: <code>type name : width;</code>। টাইপ হতে হবে <code>int</code>, <code>signed int</code>, <code>unsigned int</code> বা <code>_Bool</code> (কম্পাইলার অন্যগুলোও দিতে পারে)। পাশাপাশি বিট-ফিল্ডগুলো একটি স্টোরেজ ইউনিটে (সাধারণত একটি <code>int</code>) ঠাসা হয়, ফলে ফ্ল্যাগ, ছোট কাউন্টার ও হার্ডওয়্যার রেজিস্টারে মেমোরি বাঁচে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">struct Date {
+    unsigned day   : 5;  /* 0-31   */
+    unsigned month : 4;  /* 0-15   */
+    unsigned year  : 12; /* 0-4095 */
+};          /* 21 bits -&gt; 4 bytes */
+struct Date d = {14, 10, 2026};
+printf("%u/%u/%u", d.day,
+       d.month, d.year);
+/* 14/10/2026; 3 ints: 12 B */
+struct { unsigned x : 3; } s;
+s.x = 9;   /* 9 = 1001b, keeps 001 */
+printf("%u", s.x);   /* 1 */</div>
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="300">
+      <g class="w">
+        <rect x="10" y="40" width="50" height="40" class="ink-r" style="stroke-dasharray:5 4"/>
+        <rect x="60" y="40" width="120" height="40" class="ink fill-b"/>
+        <rect x="180" y="40" width="44" height="40" class="ink-g fill-g"/>
+        <rect x="224" y="40" width="64" height="40" class="ink-k fill-y"/>
+      </g>
+      <text x="35" y="64" text-anchor="middle" class="bn s r">অব্যবহৃত</text>
+      <text x="120" y="64" text-anchor="middle" class="s">year : 12</text>
+      <text x="202" y="64" text-anchor="middle" class="s g">mon 4</text>
+      <text x="256" y="64" text-anchor="middle" class="s">day : 5</text>
+      <text x="14" y="30" class="bn s k">বিট 31</text><text x="286" y="30" text-anchor="end" class="bn s k">বিট 0</text>
+      <text x="150" y="112" text-anchor="middle" class="bn s k">একটি 32-বিট unsigned int</text>
+      <text x="150" y="136" text-anchor="middle" class="bn s g">5 + 4 + 12 = 21 বিট ব্যবহৃত</text>
+      <text x="150" y="160" text-anchor="middle" class="bn s r">ক্রম ইমপ্লিমেন্টেশন-ডিফাইনড</text>
+    </svg><figcaption>তিন ফিল্ড এক ওয়ার্ডে ভাড়াটে</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">নিয়ম</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>অ্যাড্রেস নেই</b>: <code>&amp;</code> প্রয়োগ করা যায় না, তাই পয়েন্টার নেই, <code>scanf</code>-এ সরাসরি পড়াও নেই</td><td class="l"><code>&amp;d.day</code> → <span class="circ">কম্পাইল এরর</span></td></tr>
+    <tr><td class="l">বিট-ফিল্ডের অ্যারে হয় না; বিট-ফিল্ড <code>static</code> হতে পারে না</td><td class="l"><code>unsigned f[4] : 2;</code> → এরর</td></tr>
+    <tr><td class="l">প্রস্থ ≤ টাইপের বিট-সংখ্যা; প্রস্থ 0 কেবল নামহীন ফিল্ডে</td><td class="l"><code>int a : 33;</code> (32-বিট int) → এরর</td></tr>
+    <tr><td class="l">নামহীন <code>: 0</code> পরের ফিল্ডকে নতুন ইউনিটে ঠেলে দেয়</td><td class="l"><code>{unsigned a:4; unsigned :0; unsigned b:4;}</code> = 8</td></tr>
+    <tr><td class="l">ইউনিটের বাকি অংশে না ধরলে ফিল্ড নতুন ইউনিটে যায় (GCC)</td><td class="l"><code>{unsigned a:30; unsigned b:4;}</code> = 8</td></tr>
+    <tr><td class="l">একসাথে ধরলে সব ফিল্ড এক ইউনিটে</td><td class="l"><code>{unsigned a:3, b:5, c:8;}</code> = 4</td></tr>
+    <tr><td class="l">সাধারণ <code>int</code> ফিল্ড signed না unsigned, তা ইমপ্লিমেন্টেশন-ডিফাইনড</td><td class="l"><code>int f:1</code> কেবল 0 ও −1 রাখতে পারে</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বিটরা এক ওয়ার্ডে ঘর ভাড়া নেয়।</b>" int ভরা না হওয়া পর্যন্ত ফিল্ডরা একই ঘরে ওঠে; <code>:0</code> ভাড়াটে বলে "পরের ফিল্ড, নতুন বাড়ি"।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>unsigned</b> ফিল্ডে বড় মান রাখলে কেবল নিচের বিটগুলো থাকে (মান mod 2<sup>width</sup>): 3 বিটে 9 → 1। <b>signed</b> ফিল্ডে ফল ইমপ্লিমেন্টেশন-ডিফাইনড (GCC: <code>int a:2; a = 3;</code> → −1)।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ রেঞ্জ</span> <code>unsigned m : 4</code> রাখে 0 থেকে 2<sup>4</sup> − 1 = <span class="circ">15</span>; ১২ মাসের জন্য যথেষ্ট। দিনের ফিল্ডে লাগে 5 বিট (31 ≤ 31)।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: unions ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>ইউনিয়ন</span></div>
+  <h2><span class="no">৬</span>ইউনিয়ন: এক মেমোরি, অনেক দৃষ্টিভঙ্গি</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ইউনিয়ন</span> (Union) স্ট্রাকচারের মতোই ডিক্লেয়ার করা হয়, কিন্তু <b>সব মেম্বার একই অ্যাড্রেস থেকে শুরু হয়</b> (অফসেট 0) এবং একে অপরের ওপর পড়ে। এর সাইজ <span class="hl">সবচেয়ে বড় মেম্বার, রাউন্ড আপ করা</span> — কঠোরতম মেম্বার-অ্যালাইনমেন্টের গুণিতকে। একটি মেম্বারে লিখলে অন্যগুলো মুছে যায়, তাই কেবল <b>সর্বশেষ লেখা</b> মেম্বারের মানই অর্থবহ। উদ্দেশ্য: কয়েকটি টাইপের মধ্যে একসাথে একটিই লাগলে মেমোরি বাঁচানো।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">union Data {
+    int   i;
+    float f;
+    char  str[20];
+};                  /* sizeof = 20 */
+union Data d;
+d.i = 10;    printf("%d\n", d.i);
+d.f = 3.14f; printf("%.2f\n", d.f);
+strcpy(d.str, "Hello");
+printf("%s\n", d.str);
+/* 10 / 3.14 / Hello: each read
+   comes right after its write */
+d.f = 3.14f;
+printf("%d", d.i); /* 1078523331 */</div>
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="300">
+      <g class="w">
+        <rect x="20" y="24" width="260" height="30" class="ink-k fill-y"/>
+        <rect x="20" y="66" width="52" height="30" class="ink fill-b"/>
+        <rect x="20" y="108" width="52" height="30" class="ink-g fill-g"/>
+        <path class="ink-r" d="M20,10 V160"/>
+      </g>
+      <text x="150" y="44" text-anchor="middle" class="s">char str[20]</text>
+      <text x="46" y="86" text-anchor="middle" class="s">int i</text>
+      <text x="46" y="128" text-anchor="middle" class="s g">float f</text>
+      <text x="80" y="86" class="bn s k">বাইট 0-3</text>
+      <text x="80" y="128" class="bn s k">একই বাইট 0-3</text>
+      <text x="26" y="172" class="bn s r">সবাই অফসেট 0 থেকে</text>
+      <text x="210" y="172" text-anchor="middle" class="bn s k w6">সাইজ = 20</text>
+    </svg><figcaption>তিন মেম্বার, এক খণ্ড মেমোরি</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ডিক্লারেশন (4-বাইট int/float, 8-বাইট double)</th><th class="l">বড় মেম্বার</th><th class="l">অ্যালাইনমেন্ট</th><th>sizeof</th></tr>
+    <tr><td class="l"><code>union { int i; float f; char str[20]; }</code></td><td class="l">20</td><td class="l">4</td><td><span class="circ">20</span></td></tr>
+    <tr><td class="l"><code>union { char c[5]; int i; }</code></td><td class="l">5</td><td class="l">4 → 5 রাউন্ড আপ</td><td><span class="circ">8</span></td></tr>
+    <tr><td class="l"><code>union { double d; char c[9]; }</code></td><td class="l">9</td><td class="l">8</td><td>16</td></tr>
+    <tr><td class="l"><code>struct { int i; float f; char str[20]; }</code></td><td class="l">— (যোগফল)</td><td class="l">4</td><td>28</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">/* endianness check */
+union { int i; char c[4]; } u;
+u.i = 1;
+puts(u.c[0] == 1 ? "little-endian"
+                 : "big-endian");
+/* x86 / ARM default: little */</div>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">/* tagged union */
+struct Value {
+    enum { INT, FLT } tag;
+    union { int i; float f; } v;
+};  /* read v.i only if tag == INT */</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>struct = দালানের আলাদা ফ্ল্যাট; union = এক ঘর, অনেক ভাড়াটে।</b>" কেবল সর্বশেষ ওঠা ভাড়াটেই আসলে সেখানে থাকে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>union Data d = {10};</code> কেবল <b>প্রথম মেম্বার</b> (i) ইনিশিয়ালাইজ করে। অন্যটির জন্য <code>{.f = 2.5f}</code> (C99)। ইউনিয়নের সাইজ যোগফল <b>নয়</b>। 1078523331 = 0x4048F5C3, অর্থাৎ 3.14f-এর বিট প্যাটার্ন।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ বাইট</span> লিটল-এন্ডিয়ান PC-তে <code>u.i = 0x41424344;</code> হলে <code>u.c[0]</code> সবচেয়ে নিচের বাইট 0x44 → <code>printf("%c", u.c[0])</code> ছাপে <span class="circ">D</span>।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: enums ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>এনুমারেশন</span></div>
+  <h2><span class="no">৭</span>এনুমারেশন (enum)</h2><span class="tag">আউটপুট প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">এনুমারেশন</span> (Enumeration) হলো <b>নামযুক্ত ইন্টিজার কনস্ট্যান্ট</b> (এনুমারেটর) দিয়ে গঠিত ইউজার ডিফাইনড টাইপ। মান না দিলে প্রথম এনুমারেটর <span class="circ">0</span> এবং পরের প্রতিটি <span class="hl">আগেরটি + 1</span>। এনুমারেটর <code>int</code> টাইপের কনস্ট্যান্ট; এতে কোড পড়া সহজ হয় (<code>if (day == 5)</code>-এর বদলে <code>if (day == Friday)</code>)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">enum Week { Sunday, Monday, Tuesday,
+   Wednesday, Thursday, Friday,
+   Saturday };
+enum Week today = Wednesday;
+printf("%d", today);       /* 3 */
+enum Month { Jan = 1, Feb, Mar, Apr };
+                    /* 1 2 3 4 */
+enum color { RED, GREEN = 5, BLUE };
+printf("%d %d", RED, BLUE); /* 0 6 */
+enum { A, B = 5, C, D = 2, E };
+       /* 0, 5, 6, 2, 3 */</div>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="300">
+      <g class="w">
+        <path class="ink" d="M10,70 H290" marker-end="url(#ahb)"/>
+        <circle cx="30" cy="70" r="8" class="ink-r fill-r"/>
+        <circle cx="190" cy="70" r="8" class="ink-k fill-y"/>
+        <circle cx="222" cy="70" r="8" class="ink fill-b"/>
+        <circle cx="94" cy="70" r="8" class="ink-k fill-y"/>
+        <circle cx="126" cy="70" r="8" class="ink fill-b"/>
+        <path class="ink-g" d="M190,108 Q158,140 128,110" marker-end="url(#ahg)"/>
+      </g>
+      <text x="30" y="50" text-anchor="middle" class="s r w6">A</text><text x="30" y="98" text-anchor="middle" class="s">0</text>
+      <text x="94" y="50" text-anchor="middle" class="s w6">D</text><text x="94" y="98" text-anchor="middle" class="s">2</text>
+      <text x="126" y="50" text-anchor="middle" class="s w6">E</text><text x="126" y="98" text-anchor="middle" class="s">3</text>
+      <text x="190" y="50" text-anchor="middle" class="s w6">B</text><text x="190" y="98" text-anchor="middle" class="s">5</text>
+      <text x="222" y="50" text-anchor="middle" class="s w6">C</text><text x="222" y="98" text-anchor="middle" class="s">6</text>
+      <text x="160" y="160" text-anchor="middle" class="bn s g">দেওয়া মান থেকে গোনা নতুন করে শুরু</text>
+    </svg><figcaption>enum { A, B = 5, C, D = 2, E }</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">নিয়ম</th><th class="l">উদাহরণ / ফল</th></tr>
+    <tr><td class="l">একই মান একাধিকবার চলে</td><td class="l"><code>enum { LOW = 1, MIN = 1 };</code> ✓</td></tr>
+    <tr><td class="l">ঋণাত্মক মান চলে</td><td class="l"><code>enum { N = -2, M };</code> → M = −1</td></tr>
+    <tr><td class="l">মান হতে হবে ইন্টিজার কনস্ট্যান্ট এক্সপ্রেশন</td><td class="l"><code>enum { X = 2.5 };</code> → এরর; <code>C = B + 3</code> ✓</td></tr>
+    <tr><td class="l">এনুমারেটর সাধারণ আইডেন্টিফায়ারের নেমস্পেস ভাগ করে</td><td class="l">একই স্কোপে <code>enum A {X}; enum B {X};</code> → <span class="circ">এরর</span></td></tr>
+    <tr><td class="l">এনুমারেটর কনস্ট্যান্ট, ভেরিয়েবল নয়</td><td class="l"><code>RED++;</code> বা <code>RED = 3;</code> → এরর</td></tr>
+    <tr><td class="l">enum ভেরিয়েবল ভেতরে ইন্টিজারই (C)</td><td class="l"><code>enum Week d = 10; d++;</code> C-তে কম্পাইল হয় (C++-এ নয়)</td></tr>
+    <tr><td class="l">enum ভেরিয়েবলের <code>sizeof</code></td><td class="l">ইমপ্লিমেন্টেশন-ডিফাইনড, সাধারণত <b>4</b> (int-এর সমান)</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l"><code>enum</code></th><th class="l"><code>#define</code></th></tr>
+    <tr><td class="l">কে সামলায়</td><td class="l">কম্পাইলার (আসল টাইপ, ডিবাগারে নাম দেখায়)</td><td class="l">প্রিপ্রসেসর: অন্ধ টেক্সট প্রতিস্থাপন</td></tr>
+    <tr><td class="l">মান</td><td class="l">কেবল ইন্টিজার; স্বয়ংক্রিয় নম্বর</td><td class="l">যেকোনো কিছু (float, string); প্রতিটি হাতে লেখা</td></tr>
+    <tr><td class="l">স্কোপ</td><td class="l">ব্লক স্কোপ মানে</td><td class="l"><code>#define</code> থেকে ফাইলের শেষ (বা <code>#undef</code>) পর্যন্ত</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>শূন্যে শুরু, পরে এক এক করে বাড়ে, দেওয়া মান গোনা নতুন করে শুরু করায়।</b>"</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> নির্দিষ্ট মানের পর গোনা চলে <b>সেই মান</b> থেকে, অবস্থান থেকে নয়: <code>{RED, GREEN = 5, BLUE}</code>-এ BLUE হলো 6, 2 নয়।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> <code>enum { P = -1, Q, R = Q + 3, S };</code> → Q = 0, R = 3, S = <span class="circ">4</span>।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: typedef + comparison ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>typedef ও তুলনা</span></div>
+  <h2><span class="no">৮</span>typedef; struct বনাম union বনাম enum</h2><span class="tag">লিখিত প্রশ্নের প্রিয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">typedef</span> বিদ্যমান টাইপকে একটি নতুন <b>নাম</b> (অ্যালিয়াস) দেয়; নতুন টাইপ বা মেমোরি তৈরি করে না। স্ট্রাকচারের সাথে ব্যবহার করলে প্রতিবার <code>struct</code> লিখতে হয় না। struct <b>ট্যাগ</b> (<code>struct Student</code>) আর typedef নাম (<code>Student</code>) আলাদা নেমস্পেসে থাকে, তাই একই শব্দ দুটোতেই চলে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">typedef struct Student {
+    int id;  char name[50];
+} Student;          /* tag = alias */
+Student s1;         /* no 'struct' */
+
+typedef unsigned char BYTE;
+typedef int (*Cmp)(const void *,
+                   const void *);
+Cmp f = compareInts; /* for qsort */</div>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">typedef char *PTR;
+PTR a, b;      /* a, b: char *  */
+
+#define PTR2 char *
+PTR2 c, d;     /* char *c, d;
+                  d is a char!  */
+/* 64-bit: sizeof(b) = 8,
+           sizeof(d) = 1        */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l"><code>typedef</code></th><th class="l"><code>#define</code></th></tr>
+    <tr><td class="l">কে প্রসেস করে</td><td class="l">কম্পাইলার; স্কোপের নিয়ম মানে</td><td class="l">প্রিপ্রসেসর; সরল টেক্সট প্রতিস্থাপন</td></tr>
+    <tr><td class="l">পয়েন্টার অ্যালিয়াস, দুটি ভেরিয়েবল</td><td class="l"><span class="circ">দুটিই পয়েন্টার</span></td><td class="l">কেবল প্রথমটি পয়েন্টার</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বৈশিষ্ট্য</th><th class="l"><code>struct</code></th><th class="l"><code>union</code></th><th class="l"><code>enum</code></th></tr>
+    <tr><td class="l">কী রাখে</td><td class="l">একসাথে অনেক মেম্বার</td><td class="l">একবারে একটি মেম্বার</td><td class="l">নামযুক্ত int কনস্ট্যান্ট</td></tr>
+    <tr><td class="l">মেমোরি</td><td class="l">প্রতিটি মেম্বারের আলাদা</td><td class="l">শেয়ার্ড, সবাই অফসেট 0-তে</td><td class="l">ভেরিয়েবল = একটি int</td></tr>
+    <tr><td class="l">sizeof</td><td class="l">যোগফল + প্যাডিং</td><td class="l">সবচেয়ে বড়টি, রাউন্ড আপ</td><td class="l">সাধারণত 4</td></tr>
+    <tr><td class="l">ইনিশিয়ালাইজার</td><td class="l">সব মেম্বার ক্রমানুসারে</td><td class="l">কেবল প্রথম মেম্বার (বা ডেজিগনেটেড)</td><td class="l">একটি এনুমারেটর / int</td></tr>
+    <tr><td class="l">অ্যাক্সেস</td><td class="l"><code>.</code> ও <code>-&gt;</code></td><td class="l"><code>.</code> ও <code>-&gt;</code></td><td class="l">নাম সরাসরি</td></tr>
+    <tr><td class="l">সাধারণ ব্যবহার</td><td class="l">রেকর্ড, লিস্ট নোড</td><td class="l">ভ্যারিয়েন্ট, টাইপ পানিং, মেমোরি সাশ্রয়</td><td class="l">স্টেট, মেনু, দিন</td></tr>
+  </table>
+  <h3 style="margin-top:1mm">আউটপুট কী? (64-বিট, লিটল-এন্ডিয়ান)</h3>
+  <div class="cols" style="align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">① কপি, অ্যালিয়াস নয়</span> <code>typedef struct { int x; } T; T a = {5}, b; b = a; b.x++; printf("%d %d", a.x, b.x);</code> → <span class="circ">5 6</span> (একটি কপি)।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">② struct-এর সাইজ</span> <code>struct S { int a; char b; };</code> <code>sizeof(struct S)</code> → <b>8</b> (4 + 1 + শেষে 3 প্যাড)।</div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>typedef নাম বদলায়, #define লেখা বদলায়।</b>" typedef কম্পাইলার বোঝে; প্রিপ্রসেসর কেবল টেক্সট বসিয়ে দেয়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> typedef ছাড়া C-তে লিখতে হয় <code>struct Student s;</code> — শুধু <code>Student s;</code> C-তে এরর (C++-এ চলে)। <code>fwrite</code> দিয়ে পুরো রেকর্ড লেখা: ফাইল I/O লেসন।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য পাতা</span>
+    <div class="fgrid small">
+      <p>struct: প্রতি মেম্বারের নিজস্ব মেমোরি</p><p>union: সব মেম্বার অফসেট 0-তে</p>
+      <p>sizeof(struct) = মেম্বার + প্যাডিং</p><p>sizeof(union) = সবচেয়ে বড়টি, রাউন্ড আপ</p>
+      <p><code>p-&gt;x</code> ≡ <code>(*p).x</code></p><p><code>*p.x</code> ≡ <code>*(p.x)</code></p>
+      <p><code>s2 = s1</code> ✓ · <code>s1 == s2</code> ✗</p><p>union ইনিশিয়ালাইজ → কেবল প্রথম মেম্বার</p>
+      <p>enum: 0, তারপর আগের + 1</p><p>enum কনস্ট্যান্টের টাইপ = <code>int</code></p>
+      <p>বিট-ফিল্ড: <code>&amp;</code> নেই, অ্যারে নেই</p><p>unsigned n-বিট ফিল্ড: 0 … 2<sup>n</sup> − 1</p>
+      <p>struct নিজের পয়েন্টার রাখতে পারে</p><p><code>p++</code> সরে sizeof(struct) বাইট</p>
+    </div>
+  </div>
+  <h3>যে সাইজগুলো জানতেই হবে (4-বাইট int, 8-বাইট double/পয়েন্টার)</h3>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">টাইপ</th><th>সাইজ</th><th class="l">টাইপ</th><th>সাইজ</th></tr>
+    <tr><td class="l"><code>{char; int; char}</code></td><td>12</td><td class="l"><code>{int; char; char}</code></td><td>8</td></tr>
+    <tr><td class="l"><code>{char; double}</code></td><td>16</td><td class="l"><code>{int id; char name[50]; float m;}</code></td><td>60</td></tr>
+    <tr><td class="l"><code>union {int; float; char[20]}</code></td><td>20</td><td class="l"><code>union {char[5]; int}</code></td><td>8</td></tr>
+    <tr><td class="l"><code>{int data; struct node *next;}</code></td><td>16</td><td class="l"><code>{unsigned a:3, b:5, c:8;}</code></td><td>4</td></tr>
+  </table>
+  <h3>MCQ-র জন্য সেরা ১০টি এক-লাইনের কথা</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>struct মেম্বার ডিক্লারেশনের ক্রমে থাকে</li>
+      <li>struct টাইপ ডিক্লেয়ারে মেমোরি লাগে না</li>
+      <li>struct-এর ভেতরের অ্যারেতে <code>strcpy</code>, <code>=</code> নয়</li>
+      <li>ডেজিগনেটেড ইনিশিয়ালাইজার: <code>{.id = 1}</code> (C99)</li>
+      <li>পাস বাই ভ্যালু → ফাংশন কপি বদলায়</li>
+    </ol>
+    <ol class="num" start="6">
+      <li>union একবারে একটি বৈধ মেম্বার রাখে</li>
+      <li>এন্ডিয়াননেস পরীক্ষা: <code>union {int; char[4]}</code></li>
+      <li>enum-এ একই মান ও ঋণাত্মক মান বৈধ</li>
+      <li>দুই enum-এ একই এনুমারেটর → এরর</li>
+      <li><code>typedef char *P; P a, b;</code> → দুটি পয়েন্টার</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 150px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">সেরা ফাঁদ</span> sizeof ≠ মেম্বারের যোগফল · GREEN = 5-এর পর BLUE হলো 6 · <code>*p.x</code>-এ ব্র্যাকেট লাগে · struct-এ <code>==</code> নেই · <code>&amp;bitfield</code> অবৈধ · C-তে শুধু <code>Student s;</code> লিখতে typedef লাগে · <code>#define</code> পয়েন্টার অ্যালিয়াসে একটিই পয়েন্টার।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">সব কৌশল একসঙ্গে</span> ফাঁকা ফর্ম বনাম পূরণ করা কপি · হাতে থাকলে ডট, আঙুল তুললে অ্যারো · বাক্স রাখে বাক্সের ঠিকানা, নিজেকে নয় · বড় পাথর আগে · বিটরা ঘর ভাড়া নেয় · এক ঘর, অনেক ভাড়াটে · শূন্যে শুরু, পরে এক এক করে · typedef নাম বদলায়, #define লেখা বদলায়।</div>
+    <figure class="doodle"><svg viewBox="0 0 200 150" width="146">
+      <g class="w">
+        <rect x="10" y="10" width="180" height="36" rx="8" class="ink fill-b"/>
+        <rect x="10" y="56" width="180" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="102" width="180" height="36" rx="8" class="ink-g fill-g"/>
+      </g>
+      <text x="100" y="34" text-anchor="middle" class="bn s">struct: যোগফল</text>
+      <text x="100" y="80" text-anchor="middle" class="bn s r">union: সর্বোচ্চ</text>
+      <text x="100" y="126" text-anchor="middle" class="s g">enum: int</text>
+    </svg><figcaption>তিন সাইজ</figcaption></figure>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · স্ট্রাকচার, ইউনিয়ন, এনাম</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১.</span>4-বাইট int ও 8-বাইট double হলে <code>union { int i; double d; char c[10]; }</code>-এর সাইজ:<ol class="opts"><li>22</li><li>10</li><li>16</li><li>8</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">২.</span>পয়েন্টারের মাধ্যমে স্ট্রাকচার মেম্বারে পৌঁছায় কোন অপারেটর?<ol class="opts"><li><code>.</code></li><li><code>-&gt;</code></li><li><code>*</code></li><li><code>&amp;</code></li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৩.</span><code>enum { X, Y = 4, Z };</code>-এ Z-এর মান:<ol class="opts"><li>2</li><li>4</li><li>6</li><li>5</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৪.</span>C-তে পুরো স্ট্রাকচারে কোন অপারেশন চলে না?<ol class="opts"><li><code>==</code> দিয়ে তুলনা</li><li>অ্যাসাইনমেন্ট</li><li>ফাংশনে পাঠানো</li><li>ফাংশন থেকে ফেরত</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৫.</span>সাধারণ 32/64-বিট কম্পাইলারে <code>sizeof(struct { char c; int i; char d; })</code>:<ol class="opts"><li>6</li><li>8</li><li>12</li><li>16</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৬.</span>বিট-ফিল্ড মেম্বারের অ্যাড্রেস:<ol class="opts"><li>নেওয়া যায় না</li><li>সবসময় জোড়</li><li>struct-এর অ্যাড্রেস</li><li>কাস্ট লাগে</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৭.</span><code>typedef char *P; P a, b;</code>-এর পর <i>b</i>-এর টাইপ:<ol class="opts"><li>char</li><li>int</li><li>char **</li><li>char *</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৮.</span>C-তে একটি স্ট্রাকচার ধারণ করতে পারে:<ol class="opts"><li>নিজ টাইপের মেম্বার</li><li>নিজ টাইপের পয়েন্টার</li><li>ফাংশনের বডি</li><li>কেবল int মেম্বার</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৯.</span>ইউনিয়নের মেম্বাররা:<ol class="opts"><li>একই অ্যাড্রেস শেয়ার করে</li><li>আলাদা মেমোরি পায়</li><li>লিংকড লিস্ট বানায়</li><li>সবই পয়েন্টার হয়</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১০.</span><code>*p.x</code> এক্সপ্রেশনটি পার্স হয়:<ol class="opts"><li><code>(*p).x</code></li><li><code>p-&gt;x</code></li><li><code>&amp;p.x</code></li><li><code>*(p.x)</code></li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-খ · ৩-ঘ · ৪-ক · ৫-গ · ৬-ক · ৭-ঘ · ৮-খ · ৯-ক · ১০-ঘ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> উদাহরণসহ স্ট্রাকচার ও ইউনিয়নের পার্থক্য লেখো। <code>{int i; float f; char s[10];}</code> একবার struct ও একবার union হিসেবে ডিক্লেয়ার করলে দুটির সাইজ বের করো (4-বাইট int/float)। ট্রাফিক লাইটের অবস্থার জন্য একটি enum লেখো ও এর মানগুলো দেখাও। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>পার্থক্য (৪)</b> — struct: প্রতিটি মেম্বারের নিজস্ব মেমোরি, সবাই একসাথে বৈধ, সাইজ = যোগফল + প্যাডিং; union: মেম্বাররা অফসেট 0-তে একে অপরের ওপর, কেবল সর্বশেষ লেখাটি বৈধ, সাইজ = সবচেয়ে বড়টি রাউন্ড আপ; দুটিতেই <code>.</code>/<code>-&gt;</code>। <i class="mk">৪</i></li>
+    <li><b>সাইজ (৩)</b> — struct: 4 + 4 + 10 = 18 → 4-এর গুণিতকে = <b>20</b>; union: সবচেয়ে বড় 10 → 4-এর গুণিতকে = <b>12</b>। <i class="mk">৩</i></li>
+    <li><b>enum (৩)</b> — <code>enum Light { RED, YELLOW, GREEN };</code> → 0, 1, 2; <code>enum Light s = GREEN; printf("%d", s);</code> ছাপে 2; এনুমারেটর int কনস্ট্যান্ট। <i class="mk">৩</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>প্যাডিংসহ sizeof বের করতে পারি</li>
+      <li>ঠিকভাবে <code>.</code> বা <code>-&gt;</code> বাছতে পারি</li>
+      <li>enum-এর মান ট্রেস করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>union-এর সাইজ ও ইনিশিয়ালাইজের নিয়ম জানি</li>
+      <li>বিট-ফিল্ডের সীমাবদ্ধতা জানি</li>
+      <li>typedef/#define ফাঁদ ধরতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

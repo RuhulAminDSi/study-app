@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OOP: Constructors, Destructors, Arrays, Pointers &amp; Inheritance: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Object Life &amp; Inheritance</span></h1>
+  <p class="subtitle">Constructors · Copy · Destructors · Arrays · Pointers · Inheritance: exam-ready in 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L176,145 M424,145 L464,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="k l">Object life</text><text x="320" y="164" text-anchor="middle" class="r s">born · copied · destroyed · inherited</text>
+      <text x="142" y="62" text-anchor="middle" class="r w6">Constructors ★</text>
+      <text x="320" y="38" text-anchor="middle" class="r w6">Copy: shallow/deep ★</text>
+      <text x="498" y="62" text-anchor="middle" class="s">init list · this() · super()</text>
+      <text x="96" y="150" text-anchor="middle" class="g w6">base → derived</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6">Destructors ★</text>
+      <text x="142" y="238" text-anchor="middle" class="s">arrays of objects</text>
+      <text x="320" y="264" text-anchor="middle" class="r w6">5 inheritance types ★</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6">diamond · virtual ★</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = the rule everything else hangs on</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm"><b>High-yield list</b><br>① Ctor: class name, <b>no</b> return type<br>② Free default ctor only if none written<br>③ Copy ctor: <code>A(const A&amp;)</code><br>④ Default copy = shallow<br>⑤ <code>~A()</code>: no args, no overload<br>⑥ Build base → derived; destroy reverse<br>⑦ Java <code>new A[3]</code> → 3 nulls<br>⑧ <code>new</code> calls ctor; <code>malloc</code> does not<br>⑨ Java: 1 extends, many implements<br>⑩ Diamond → virtual base class</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The OOP syllabus continues: "<span class="hl">Constructors, destructors and copy constructors; Array of objects, object pointers, and object references; Inheritance: single and multiple inheritance</span>". Classes, access specifiers and <code>static</code> were the previous lesson; virtual functions, overriding and abstract classes are the next.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>Constructors: rules &amp; types … p. 2</li><li>Copy constructor; shallow vs deep … p. 3</li><li>Initializer list &amp; chaining … p. 4</li><li>Destructors &amp; object lifetime … p. 5</li><li>Arrays of objects … p. 6</li><li>Pointers, <code>this</code>, new/delete … p. 7</li></ul>
+    <ul class="tick"><li>Inheritance: is-a &amp; five types … p. 8</li><li>Access modes &amp; build order … p. 9</li><li>Diamond problem; Java interfaces … p. 10</li><li>Night-before sheet … p. 11</li><li>Practice MCQs + written … p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: constructors ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Constructors</span></div>
+  <h2><span class="no">1</span>Constructors: Rules and Types</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">constructor</span> is a special member function that runs <b>automatically</b> when an object is created and puts it in a valid initial state. It has the <span class="circ">same name as the class</span> and <b>no return type — not even <code>void</code></b>. It can be overloaded, can be <code>private</code> (singleton), but cannot be <code>virtual</code> or <code>static</code> in C++, and cannot be <code>final</code>, <code>static</code> or <code>abstract</code> in Java. It is <b>not inherited</b>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 96" width="520">
+    <g class="w">
+      <rect x="6" y="20" width="112" height="46" rx="10" class="ink fill-b"/>
+      <rect x="136" y="20" width="112" height="46" rx="10" class="ink-r fill-r"/>
+      <rect x="266" y="20" width="112" height="46" rx="10" class="ink-g fill-g"/>
+      <rect x="396" y="20" width="112" height="46" rx="10" class="ink-r fill-r"/>
+      <rect x="526" y="20" width="108" height="46" rx="10" class="ink fill-b"/>
+      <path class="ink" d="M118,43 H132" marker-end="url(#ahb)"/>
+      <path class="ink" d="M248,43 H262" marker-end="url(#ahb)"/>
+      <path class="ink" d="M378,43 H392" marker-end="url(#ahb)"/>
+      <path class="ink" d="M508,43 H522" marker-end="url(#ahb)"/>
+    </g>
+    <text x="62" y="40" text-anchor="middle" class="s k">① memory</text><text x="62" y="58" text-anchor="middle" class="s">allocated</text>
+    <text x="192" y="40" text-anchor="middle" class="s r w6">② constructor</text><text x="192" y="58" text-anchor="middle" class="s r">initialises</text>
+    <text x="322" y="40" text-anchor="middle" class="s g">③ object</text><text x="322" y="58" text-anchor="middle" class="s g">used</text>
+    <text x="452" y="40" text-anchor="middle" class="s r w6">④ destructor</text><text x="452" y="58" text-anchor="middle" class="s r">cleans up</text>
+    <text x="580" y="40" text-anchor="middle" class="s k">⑤ memory</text><text x="580" y="58" text-anchor="middle" class="s">released</text>
+    <text x="320" y="88" text-anchor="middle" class="s k">constructor = first call of an object's life; destructor = last</text>
+  </svg><figcaption>the life of every object in five steps</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.92fr) minmax(0,1.08fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class Student {          // C++
+    string name;  int age;
+public:
+    Student() {          // default
+        name = "Unknown"; age = 0;
+    }
+    Student(string n, int a) {  // param.
+        name = n; age = a;
+    }
+    Student(const Student&amp; s) { // copy
+        name = s.name; age = s.age;
+    }
+};
+Student s1;              // default
+Student s2("Alice", 20); // parameterized
+Student s3 = s2;         // copy</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Type</th><th class="l">Signature</th><th class="l">Runs for</th></tr>
+      <tr><td class="l"><b>Default</b></td><td class="l"><code>A()</code></td><td class="l"><code>A a;</code></td></tr>
+      <tr><td class="l"><b>Parameterized</b></td><td class="l"><code>A(int x)</code></td><td class="l"><code>A a(5);</code></td></tr>
+      <tr><td class="l"><b>Copy</b></td><td class="l"><code>A(const A&amp;)</code></td><td class="l"><code>A b = a;</code></td></tr>
+      <tr><td class="l"><b>Implicit</b></td><td class="l">compiler's</td><td class="l">if you write <span class="circ">none</span></td></tr>
+      <tr><td class="l"><b>Overloaded</b></td><td class="l">many lists</td><td class="l">picked at compile time</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Rule</th><th class="l">C++</th><th class="l">Java</th></tr>
+    <tr><td class="l">Free default ctor</td><td class="l">only if <b>no</b> ctor declared</td><td class="l">only if none written; calls <code>super()</code></td></tr>
+    <tr><td class="l">Copy constructor</td><td class="l">implicit, member-wise (shallow)</td><td class="l"><b>none</b>: write one or use <code>clone()</code></td></tr>
+    <tr><td class="l">Add a return type</td><td class="l">compile error</td><td class="l"><code>void A(){}</code> = a plain <b>method</b></td></tr>
+    <tr><td class="l">Object without <code>new</code></td><td class="l"><code>A a;</code> creates it (stack)</td><td class="l"><code>A a;</code> is only a null reference</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>A constructor is a birth certificate</b>: it carries the baby's name, is issued once at birth, and returns nothing."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Write only <code>A(int)</code> and <code>A a;</code> / <code>new A()</code> <b>stop compiling</b>. C++ <code>A a();</code> declares a <b>function</b>, not an object.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ which one runs?</span> <code>A a; A b(3); A c = b; A d = 7;</code> → default, parameterized, <span class="circ">copy</span>, parameterized (implicit conversion, blocked by <code>explicit</code>).</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: copy constructor, shallow vs deep ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Copy constructor</span></div>
+  <h2><span class="no">2</span>Copy Constructor; Shallow vs Deep Copy</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">copy constructor</span> creates a <b>new</b> object as a copy of an existing object of the same class. C++ form: <code>ClassName(const ClassName&amp; other)</code>. It runs when an object is <b>initialised</b> from another (<code>A b = a;</code>, <code>A b(a);</code>), when an object is <b>passed by value</b>, and when one is <b>returned by value</b> (often elided). The compiler's version copies member by member — a <span class="hl">shallow copy</span>.</div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 230" width="246">
+      <g class="w">
+        <rect x="10" y="26" width="62" height="34" rx="6" class="ink fill-b"/>
+        <rect x="10" y="74" width="62" height="34" rx="6" class="ink fill-b"/>
+        <rect x="170" y="48" width="110" height="36" rx="8" class="ink-r fill-r"/>
+        <path class="ink-r" d="M72,43 L166,62" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M72,91 L166,72" marker-end="url(#ah)"/>
+        <rect x="10" y="146" width="62" height="34" rx="6" class="ink fill-b"/>
+        <rect x="10" y="190" width="62" height="34" rx="6" class="ink fill-b"/>
+        <rect x="170" y="140" width="110" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="170" y="186" width="110" height="34" rx="8" class="ink-g fill-g"/>
+        <path class="ink-g" d="M72,163 L166,158" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M72,207 L166,203" marker-end="url(#ahg)"/>
+      </g>
+      <text x="150" y="16" text-anchor="middle" class="s r w6">SHALLOW: pointer copied</text>
+      <text x="41" y="48" text-anchor="middle" class="s k">a.p</text>
+      <text x="41" y="96" text-anchor="middle" class="s k">b.p</text>
+      <text x="225" y="71" text-anchor="middle" class="s r">"Dhaka"</text>
+      <text x="225" y="104" text-anchor="middle" class="s r">one buffer, two owners</text>
+      <text x="150" y="132" text-anchor="middle" class="s g w6">DEEP: data copied</text>
+      <text x="41" y="168" text-anchor="middle" class="s k">a.p</text>
+      <text x="41" y="212" text-anchor="middle" class="s k">b.p</text>
+      <text x="225" y="162" text-anchor="middle" class="s g">"Dhaka"</text>
+      <text x="225" y="208" text-anchor="middle" class="s g">"Dhaka" (own)</text>
+    </svg><figcaption>shared vs own buffer</figcaption></figure>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class Str {
+    char* p;
+public:
+    Str(const char* s) {
+        p = new char[strlen(s) + 1];
+        strcpy(p, s);
+    }
+    Str(const Str&amp; o) {     // deep copy
+        p = new char[strlen(o.p) + 1];
+        strcpy(p, o.p);
+    }
+    ~Str() { delete[] p; }
+};
+Str a("Dhaka");
+Str b = a;   // copy ctor: own buffer</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Shallow copy</th><th class="l">Deep copy</th></tr>
+    <tr><td class="l">Copies</td><td class="l">the pointer (address)</td><td class="l">the data the pointer points to</td></tr>
+    <tr><td class="l">Made by</td><td class="l">compiler's copy ctor / <code>Object.clone()</code></td><td class="l">your own copy ctor / overridden <code>clone()</code></td></tr>
+    <tr><td class="l">After copy</td><td class="l">change via <i>b</i> shows in <i>a</i></td><td class="l">objects independent</td></tr>
+    <tr><td class="l">Danger</td><td class="l"><span class="circ">double delete</span>, dangling pointer</td><td class="l">slower, more memory</td></tr>
+    <tr><td class="l">Fine when</td><td class="l">no pointer/handle members</td><td class="l">class owns heap memory, file, socket</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Why <code>const A&amp;</code>?</span> <b>By reference</b>: a by-value parameter would need a copy to make the copy → endless recursion, so C++ rejects <code>A(A a)</code>. <b>const</b>: lets you copy <code>const</code> objects and temporaries, and promises not to change the source. <span class="hl">Rule of three</span>: a class that needs its own destructor also needs its own copy constructor and copy assignment.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Java has no copy constructor by default</span> Write one yourself: <code>Student(Student s) { name = s.name; age = s.age; }</code>, or override <code>clone()</code>. <code>Object.clone()</code> is <b>shallow</b>, is <code>protected</code>, and throws <code>CloneNotSupportedException</code> unless the class <code>implements Cloneable</code>.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Shallow copies the address; deep copies the house.</b>" Two people with one house key fight over the furniture.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <code>b = a;</code> when <i>b</i> already exists calls the <b>assignment operator</b>, not the copy constructor. <code>A b = a;</code> is initialisation → copy constructor.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ count copies</span> <code>void f(A x){}</code>; <code>A a; A b = a; A c(a); f(a); b = c;</code> → copy ctor: <span class="circ">3</span> calls; last is assignment.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: initializer list & chaining ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Init list &amp; chaining</span></div>
+  <h2><span class="no">3</span>Initializer List and Constructor Chaining</h2><span class="tag">output questions ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> C++'s <span class="hl">member initializer list</span> (<code>A(int v) : x(v), Base(v) {}</code>) initialises bases and members <b>before</b> the body runs. It is <b>mandatory</b> for <code>const</code> members, reference members, members whose class has no default constructor, and a base class that needs arguments. <span class="hl">Constructor chaining</span> is one constructor calling another: Java <code>this(…)</code> (same class) and <code>super(…)</code> (parent), C++ <code>: Base(…)</code> and, since C++11, delegating <code>A() : A(0) {}</code>.</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class Point {               // C++
+    const int x;  int&amp; r;
+public:
+    Point(int a, int&amp; b)
+        : x(a), r(b) {}  // must
+};
+class P3 : public Point {
+    int z;
+public:
+    P3(int a, int&amp; b, int c)
+        : Point(a, b), z(c) {}
+    P3(int&amp; b) : P3(0, b, 0) {}
+};          // C++11 delegating ctor</div>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class A {                   // Java
+    A() { System.out.print("A"); }
+    A(int x) {
+        this();          // 1st line
+        System.out.print(x);
+    }
+}
+class B extends A {
+    B() {
+        super(5);        // 1st line
+        System.out.print("B");
+    }
+}
+new B();   // prints A5B</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="520">
+    <g class="w">
+      <rect x="6" y="14" width="112" height="40" rx="10" class="ink fill-b"/>
+      <rect x="160" y="14" width="112" height="40" rx="10" class="ink fill-b"/>
+      <rect x="314" y="14" width="140" height="40" rx="10" class="ink-p fill-p"/>
+      <rect x="496" y="14" width="138" height="40" rx="10" class="ink-r fill-r"/>
+      <path class="ink" d="M118,34 H156" marker-end="url(#ahb)"/>
+      <path class="ink" d="M272,34 H310" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M454,34 H492" marker-end="url(#ahp)"/>
+      <path class="ink-g" d="M565,58 C565,96 70,96 62,60" marker-end="url(#ahg)"/>
+    </g>
+    <text x="62" y="39" text-anchor="middle" class="s k">new B()</text>
+    <text x="216" y="39" text-anchor="middle" class="s k">B() → super(5)</text>
+    <text x="384" y="39" text-anchor="middle" class="s p">A(int) → this()</text>
+    <text x="565" y="39" text-anchor="middle" class="s r w6">A() prints A</text>
+    <text x="320" y="106" text-anchor="middle" class="s g">unwind: A(int) prints 5, then B() prints B → A5B</text>
+  </svg><figcaption>calls go up the chain first; bodies print on the way back</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Job</th><th class="l">C++</th><th class="l">Java</th></tr>
+    <tr><td class="l">Call parent ctor</td><td class="l"><code>: Base(args)</code> in the list</td><td class="l"><code>super(args)</code>, <b>first line</b></td></tr>
+    <tr><td class="l">Call own other ctor</td><td class="l"><code>: A(args)</code> (C++11)</td><td class="l"><code>this(args)</code>, first line</td></tr>
+    <tr><td class="l">Write neither</td><td class="l">base default ctor runs</td><td class="l">compiler adds <code>super();</code></td></tr>
+    <tr><td class="l">Both together?</td><td class="l">delegating: nothing else</td><td class="l"><span class="circ">no</span>, only one</td></tr>
+    <tr><td class="l">Init order</td><td colspan="2" class="l">bases, then members in <b>declaration order</b>, not list order</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Parents are built before children</b>": <code>super</code> goes first, the body last. Calls travel up, prints come back down.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Parent has only <code>A(int)</code>; <code>class B extends A { B(){} }</code> → <b>compile error</b>: the hidden <code>super()</code> finds no <code>A()</code>. Fix: <code>super(0);</code>.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ list order</span> <code>int a, b;</code> then <code>T() : b(1), a(b) {}</code> → <i>a</i> is set <b>first</b>, from unset <i>b</i>: <span class="circ">garbage</span>.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: destructors ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Destructors</span></div>
+  <h2><span class="no">4</span>Destructors and Object Lifetime</h2><span class="tag">MCQ + output ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">destructor</span> (<code>~ClassName()</code>) runs automatically when an object's lifetime ends, to release what it holds — heap memory, files, sockets, locks. Rules: tilde + class name; <b>no parameters, no return type</b>; therefore <span class="circ">cannot be overloaded</span> — exactly one per class; not inherited; may be <code>virtual</code> (a constructor never can). Objects are destroyed in the <span class="hl">reverse order</span> of construction.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 236px;align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Object kind</th><th class="l">Destructor runs</th></tr>
+      <tr><td class="l">local (automatic)</td><td class="l">at the closing <code>}</code> of its scope, reverse order</td></tr>
+      <tr><td class="l">global / <code>static</code></td><td class="l">at program exit (after <code>main</code> returns)</td></tr>
+      <tr><td class="l">heap (<code>new</code>)</td><td class="l">only on <code>delete</code> — forget it = <b>memory leak</b></td></tr>
+      <tr><td class="l">temporary</td><td class="l">end of the full expression</td></tr>
+      <tr><td class="l">member object</td><td class="l">after the owner's destructor body</td></tr>
+      <tr><td class="l">array element</td><td class="l">highest index first</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 260 180" width="230">
+      <g class="w">
+        <rect x="70" y="20" width="120" height="34" rx="6" class="ink-r fill-r"/>
+        <rect x="70" y="60" width="120" height="34" rx="6" class="ink fill-b"/>
+        <rect x="70" y="100" width="120" height="34" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M60,20 V140 H200 V20"/>
+        <path class="ink-g" d="M30,140 V30" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M230,30 V140" marker-end="url(#ah)"/>
+      </g>
+      <text x="130" y="42" text-anchor="middle" class="s r w6">a3 (last built)</text>
+      <text x="130" y="82" text-anchor="middle" class="s">a2</text>
+      <text x="130" y="122" text-anchor="middle" class="s">a1 (first built)</text>
+      <text x="22" y="164" text-anchor="middle" class="s g">build 1 2 3</text>
+      <text x="236" y="164" text-anchor="middle" class="s r">destroy 3 2 1</text>
+    </svg><figcaption>locals live on a stack: LIFO</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Constructor</th><th class="l">Destructor</th></tr>
+    <tr><td class="l">Name</td><td class="l"><code>A()</code></td><td class="l"><code>~A()</code></td></tr>
+    <tr><td class="l">Parameters / overloading</td><td class="l">any / yes</td><td class="l"><b>none / no</b></td></tr>
+    <tr><td class="l">How many per class</td><td class="l">many</td><td class="l"><span class="circ">one</span></td></tr>
+    <tr><td class="l">Can be <code>virtual</code></td><td class="l">no</td><td class="l">yes — needed in a polymorphic base</td></tr>
+    <tr><td class="l">Order in inheritance</td><td class="l">base → derived</td><td class="l">derived → base</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Virtual destructor (C++)</span> <code>Base* p = new Derived; delete p;</code> — if <code>~Base()</code> is not <code>virtual</code>, only <code>~Base</code> runs (undefined behaviour; the Derived part leaks). Declare <code>virtual ~Base()</code> in any class meant to be a base. How virtual dispatch works: next lesson.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Java: no destructors</span> The <span class="hl">garbage collector</span> frees unreachable objects at a time you cannot predict; <code>System.gc()</code> is only a request. <code>finalize()</code> ran at most once, maybe never, and is <b>deprecated</b> (Java 9; for removal since 18). Close files with <code>try</code>-with-resources (<code>AutoCloseable</code>).</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Plates on a stack</b>: the last plate put on is the first taken off." Tilde <b>~</b> = the wave goodbye.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Garbage collection is <b>not</b> a destructor: it reclaims memory only, at no fixed time. <code>finalize()</code> is not guaranteed to run.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ trace</span> <code>{ A a(1); A b(2); A* p = new A(3); }</code> → built 1 2 3; at <code>}</code>: <span class="circ">~2 ~1</span>; object 3 is never destroyed (leak).</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: arrays of objects ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Arrays of objects</span></div>
+  <h2><span class="no">5</span>Arrays of Objects</h2><span class="tag">C++ vs Java trap ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> An <span class="hl">array of objects</span> is an array whose elements are objects of a class. In <b>C++</b>, <code>Student s[3];</code> creates <b>three objects</b> and calls the default constructor three times, so the class needs an accessible default constructor (or every element must be initialised). In <b>Java</b>, <code>new Student[3]</code> creates one array of <span class="circ">three null references</span> — no Student object, no constructor call — until you <code>new</code> each element.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="520">
+    <g class="w">
+      <rect x="10" y="40" width="88" height="54" rx="6" class="ink-g fill-g"/>
+      <rect x="98" y="40" width="88" height="54" rx="6" class="ink-g fill-g"/>
+      <rect x="186" y="40" width="88" height="54" rx="6" class="ink-g fill-g"/>
+      <rect x="350" y="40" width="54" height="40" rx="4" class="ink fill-b"/>
+      <rect x="404" y="40" width="54" height="40" rx="4" class="ink fill-b"/>
+      <rect x="458" y="40" width="54" height="40" rx="4" class="ink fill-b"/>
+      <rect x="540" y="96" width="94" height="40" rx="10" class="ink-r fill-r"/>
+      <path class="ink-r" d="M377,62 C377,120 520,120 536,116" marker-end="url(#ah)"/>
+    </g>
+    <text x="142" y="26" text-anchor="middle" class="s k w6">C++: Student s[3];</text>
+    <text x="54" y="64" text-anchor="middle" class="s g">s[0]</text><text x="54" y="82" text-anchor="middle" class="s">object</text>
+    <text x="142" y="64" text-anchor="middle" class="s g">s[1]</text><text x="142" y="82" text-anchor="middle" class="s">object</text>
+    <text x="230" y="64" text-anchor="middle" class="s g">s[2]</text><text x="230" y="82" text-anchor="middle" class="s">object</text>
+    <text x="142" y="120" text-anchor="middle" class="s g">3 objects side by side, 3 ctor calls</text>
+    <text x="490" y="26" text-anchor="middle" class="s k w6">Java: new Student[3]</text>
+    <text x="377" y="56" text-anchor="middle" class="s">s[0]</text>
+    <text x="431" y="65" text-anchor="middle" class="s r">null</text>
+    <text x="485" y="65" text-anchor="middle" class="s r">null</text>
+    <text x="587" y="121" text-anchor="middle" class="s r">new Student()</text>
+    <text x="440" y="144" text-anchor="middle" class="s r">only after you new each one</text>
+  </svg><figcaption>left: real objects · right: an array of references</figcaption></figure>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">// C++
+Student s[3];              // 3 x Student()
+Student t[2] = { Student("A", 20),
+                 Student("B", 22) };
+Student* p = new Student[n];
+p[0].display();
+delete[] p;    // [] required</div>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">// Java
+Student[] s = new Student[3]; // nulls
+s[0].display();     // NullPointerException
+for (int i = 0; i &lt; s.length; i++)
+    s[i] = new Student();
+s[0].name = "Alice";
+s[0].display();     // now fine</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">C++ <code>A arr[3];</code></th><th class="l">Java <code>A[] arr = new A[3];</code></th></tr>
+    <tr><td class="l">Creates</td><td class="l">3 objects</td><td class="l">1 array object + 3 references</td></tr>
+    <tr><td class="l">Constructor calls</td><td class="l">3 (default ctor)</td><td class="l"><span class="circ">0</span></td></tr>
+    <tr><td class="l">Initial elements</td><td class="l">constructed objects</td><td class="l"><code>null</code> (numbers 0, boolean false)</td></tr>
+    <tr><td class="l">No default ctor in class</td><td class="l">compile error unless all initialised</td><td class="l">no problem</td></tr>
+    <tr><td class="l">Freed</td><td class="l">scope end, or <code>delete[]</code> for <code>new A[n]</code></td><td class="l">garbage collector</td></tr>
+    <tr><td class="l">Length</td><td class="l">not stored (<code>sizeof</code> trick for fixed arrays)</td><td class="l"><code>arr.length</code> (a field, no brackets)</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>C++ builds a row of houses; Java prints a row of empty address slips.</b>" No house until you <code>new</code> one.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <code>new A[n]</code> must be freed with <code>delete[]</code>; plain <code>delete</code> is undefined behaviour. C++ <code>A* q[3];</code> is an array of pointers: <b>no</b> objects.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ output</span> <code>A(){cout&lt;&lt;"A";} ~A(){cout&lt;&lt;"~";}</code> and <code>{ A arr[3]; }</code> → <span class="circ">AAA~~~</span>. Java <code>new A[3]</code> with the same print: nothing.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: pointers, this, new/delete ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Pointers &amp; references</span></div>
+  <h2><span class="no">6</span>Object Pointers, <code>this</code>, new/delete, References</h2><span class="tag">MCQ facts ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> An <span class="hl">object pointer</span> holds an object's address: <code>Student* p = &amp;s;</code>. Members are reached with the arrow: <code>p-&gt;display()</code> ≡ <code>(*p).display()</code>. <code>new</code> creates an object on the heap and returns its address; <code>delete</code> destroys it. Every non-static member function gets a hidden pointer <span class="hl"><code>this</code></span> to the object it was called on. Java has no explicit pointers: every object variable is a <span class="hl">reference</span>.</div>
+  <div class="cols" style="grid-template-columns:240px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 290 190" width="236">
+      <g class="w">
+        <rect x="8" y="30" width="96" height="120" rx="8" class="ink-k" style="stroke-dasharray:5 4"/>
+        <rect x="20" y="60" width="72" height="32" rx="6" class="ink fill-b"/>
+        <rect x="160" y="40" width="120" height="76" rx="10" class="ink-g fill-g"/>
+        <path class="ink-r" d="M92,76 L156,76" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M220,150 L220,120" marker-end="url(#ahp)"/>
+      </g>
+      <text x="56" y="22" text-anchor="middle" class="s k">stack</text>
+      <text x="56" y="81" text-anchor="middle" class="s">p</text>
+      <text x="220" y="30" text-anchor="middle" class="s k">heap</text>
+      <text x="220" y="70" text-anchor="middle" class="s g w6">Student</text>
+      <text x="220" y="90" text-anchor="middle" class="s g">Rahim, 22</text>
+      <text x="124" y="68" text-anchor="middle" class="s r">-&gt;</text>
+      <text x="220" y="168" text-anchor="middle" class="s p">this (inside a</text>
+      <text x="220" y="184" text-anchor="middle" class="s p">member function)</text>
+    </svg><figcaption>p on the stack, object on the heap</figcaption></figure>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class Counter {
+    int n = 0;
+public:
+    Counter&amp; inc() {
+        ++this-&gt;n;       // this-&gt;n == n
+        return *this;    // allows chaining
+    }
+    int get() const { return n; }
+};
+Counter* c = new Counter;
+c-&gt;inc().inc().inc();
+cout &lt;&lt; c-&gt;get();  // 3
+delete c;  c = nullptr;</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l"><code>new</code> / <code>delete</code> (C++)</th><th class="l"><code>malloc</code> / <code>free</code> (C)</th></tr>
+    <tr><td class="l">What it is</td><td class="l">operator (can be overloaded)</td><td class="l">library function</td></tr>
+    <tr><td class="l">Constructor / destructor</td><td class="l"><span class="circ">called</span></td><td class="l">not called</td></tr>
+    <tr><td class="l">Size and type</td><td class="l">computed; returns <code>A*</code></td><td class="l">bytes by hand; returns <code>void*</code></td></tr>
+    <tr><td class="l">On failure</td><td class="l">throws <code>std::bad_alloc</code></td><td class="l">returns <code>NULL</code></td></tr>
+    <tr><td class="l">Arrays</td><td class="l"><code>new A[n]</code> … <code>delete[]</code></td><td class="l"><code>malloc(n*sizeof(A))</code> … <code>free</code></td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">C++ pointer <code>A* p</code></th><th class="l">C++ reference <code>A&amp; r = a</code></th><th class="l">Java reference</th></tr>
+    <tr><td class="l">Can be null</td><td class="l">yes</td><td class="l">no; must be initialised</td><td class="l">yes (<code>null</code>)</td></tr>
+    <tr><td class="l">Re-point later</td><td class="l">yes</td><td class="l">no (an alias)</td><td class="l">yes</td></tr>
+    <tr><td class="l">Arithmetic / access</td><td class="l"><code>p++</code>; <code>-&gt;</code> and <code>*</code></td><td class="l">none; <code>.</code></td><td class="l">none; <code>.</code></td></tr>
+    <tr><td class="l">Freeing the object</td><td class="l"><code>delete</code> by hand</td><td class="l">owner's lifetime</td><td class="l">garbage collector</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Arrow for an address, dot for the thing itself.</b>" <code>this</code> = "the object that answered the call".</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <code>this</code> does not exist in <code>static</code> or <code>friend</code> functions. You cannot assign to <code>this</code>. Mixing <code>new</code> with <code>free</code> (or <code>malloc</code> with <code>delete</code>) is undefined.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ Java alias</span> <code>Student s = new Student(); s.age = 20; Student r = s; r.age = 21;</code> → <code>s.age</code> is <span class="circ">21</span>: one object, two references.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: inheritance types ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Inheritance types</span></div>
+  <h2><span class="no">7</span>Inheritance: is-a and the Five Types</h2><span class="tag">highest-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Inheritance</span> lets a new <b>derived</b> (child, sub) class acquire the members of an existing <b>base</b> (parent, super) class, then add or redefine its own. It models an <span class="circ">is-a</span> relationship (Car is-a Vehicle) and gives code reuse and the basis for run-time polymorphism. Syntax: C++ <code>class Car : public Vehicle {…};</code> · Java <code>class Car extends Vehicle {…}</code>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="540">
+    <g class="w">
+      <circle cx="44" cy="30" r="16" class="ink fill-b"/><circle cx="44" cy="98" r="16" class="ink-g fill-g"/>
+      <path class="ink" d="M44,82 V48" marker-end="url(#ahb)"/>
+      <circle cx="148" cy="22" r="14" class="ink fill-b"/><circle cx="148" cy="64" r="14" class="ink fill-b"/><circle cx="148" cy="106" r="14" class="ink-g fill-g"/>
+      <path class="ink" d="M148,92 V80 M148,50 V38"/>
+      <circle cx="256" cy="30" r="16" class="ink fill-b"/><circle cx="222" cy="98" r="16" class="ink-g fill-g"/><circle cx="290" cy="98" r="16" class="ink-g fill-g"/>
+      <path class="ink" d="M228,82 L248,46 M284,82 L264,46"/>
+      <circle cx="372" cy="30" r="16" class="ink-r fill-r"/><circle cx="440" cy="30" r="16" class="ink-r fill-r"/><circle cx="406" cy="98" r="16" class="ink-g fill-g"/>
+      <path class="ink-r" d="M398,82 L378,46 M414,82 L434,46"/>
+      <circle cx="560" cy="18" r="13" class="ink fill-b"/><circle cx="526" cy="64" r="13" class="ink fill-b"/><circle cx="594" cy="64" r="13" class="ink fill-b"/><circle cx="560" cy="110" r="13" class="ink-r fill-r"/>
+      <path class="ink" d="M532,52 L552,28 M588,52 L568,28 M552,100 L532,76 M568,100 L588,76"/>
+    </g>
+    <text x="44" y="35" text-anchor="middle" class="s">A</text><text x="44" y="103" text-anchor="middle" class="s">B</text>
+    <text x="148" y="27" text-anchor="middle" class="s">A</text><text x="148" y="69" text-anchor="middle" class="s">B</text><text x="148" y="111" text-anchor="middle" class="s">C</text>
+    <text x="256" y="35" text-anchor="middle" class="s">A</text><text x="222" y="103" text-anchor="middle" class="s">B</text><text x="290" y="103" text-anchor="middle" class="s">C</text>
+    <text x="372" y="35" text-anchor="middle" class="s">A</text><text x="440" y="35" text-anchor="middle" class="s">B</text><text x="406" y="103" text-anchor="middle" class="s">C</text>
+    <text x="560" y="23" text-anchor="middle" class="s">A</text><text x="526" y="69" text-anchor="middle" class="s">B</text><text x="594" y="69" text-anchor="middle" class="s">C</text><text x="560" y="115" text-anchor="middle" class="s">D</text>
+    <text x="44" y="140" text-anchor="middle" class="s k w6">Single</text>
+    <text x="148" y="140" text-anchor="middle" class="s k w6">Multilevel</text>
+    <text x="256" y="140" text-anchor="middle" class="s k w6">Hierarchical</text>
+    <text x="406" y="140" text-anchor="middle" class="s r w6">Multiple</text>
+    <text x="560" y="140" text-anchor="middle" class="s r w6">Hybrid</text>
+  </svg><figcaption>children at the bottom; red = not allowed with Java classes</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Type</th><th class="l">Shape</th><th class="l">C++ example</th><th class="l">C++ / Java classes</th></tr>
+    <tr><td class="l"><b>Single</b></td><td class="l">A → B</td><td class="l"><code>class B : public A</code></td><td class="l">✓ / ✓ <code>extends</code></td></tr>
+    <tr><td class="l"><b>Multilevel</b></td><td class="l">chain A → B → C</td><td class="l"><code>B : A</code>, <code>C : B</code></td><td class="l">✓ / ✓</td></tr>
+    <tr><td class="l"><b>Hierarchical</b></td><td class="l">A → B, A → C</td><td class="l"><code>B : A</code>, <code>C : A</code></td><td class="l">✓ / ✓</td></tr>
+    <tr><td class="l"><b>Multiple</b></td><td class="l">A, B → C</td><td class="l"><code>C : public A, public B</code></td><td class="l">✓ / <span class="red"><b>✗</b></span> (interfaces ✓)</td></tr>
+    <tr><td class="l"><b>Hybrid</b></td><td class="l">mix, e.g. diamond</td><td class="l">A; B, C : A; D : B, C</td><td class="l">✓ / interfaces only</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Not inherited</span> <b>Constructors</b> and the <b>destructor</b> (C++11 can opt in with <code>using Base::Base;</code>) · the copy <b>assignment operator</b> (hidden by the derived one) · <b>friend</b> functions — friendship is not inherited · <b>private</b> members: in C++ they sit inside the derived object but cannot be named; Java says they are not inherited. A <code>final</code> class (e.g. <code>String</code>) cannot be extended.</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Point</th><th class="l">is-a</th><th class="l">has-a</th></tr>
+      <tr><td class="l">Mechanism</td><td class="l">inheritance</td><td class="l">composition</td></tr>
+      <tr><td class="l">Example</td><td class="l">Car is-a Vehicle</td><td class="l">Car has-a Engine</td></tr>
+      <tr><td class="l">Coupling</td><td class="l">tight</td><td class="l">loose</td></tr>
+      <tr><td class="l">Code</td><td class="l"><code>extends</code></td><td class="l">a field</td></tr>
+    </table>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Five types: "<b>Some Mice Make Huge Holes</b>" = Single, Multilevel, Multiple, Hierarchical, Hybrid.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Multilevel ≠ multiple.</b> Multilevel = a chain of single steps (Java allows it); multiple = two parents at once (Java classes do not).</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ classify</span> <code>C : A, B</code> → multiple. <code>B : A; C : B</code> → <span class="circ">multilevel</span>. <code>B : A; C : A</code> → hierarchical.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: access modes & construction order ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Access modes &amp; order</span></div>
+  <h2><span class="no">8</span>Inheritance Access Modes and Build Order</h2><span class="tag">table + output ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> In C++ the <span class="hl">inheritance mode</span> — <code>public</code>, <code>protected</code> or <code>private</code> — is a <b>ceiling</b>: an inherited member can become less visible, never more. Base <code>private</code> members are <span class="circ">never accessible</span> in the derived class, whatever the mode. Default mode: <code>class</code> → private, <code>struct</code> → public. Java has one mode only: <code>extends</code> keeps every access level as it is.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">In base ↓</th><th><code>public</code> inheritance</th><th><code>protected</code> inheritance</th><th><code>private</code> inheritance</th></tr>
+    <tr><td class="l"><code>public</code></td><td><b>public</b></td><td>protected</td><td>private</td></tr>
+    <tr><td class="l"><code>protected</code></td><td>protected</td><td>protected</td><td>private</td></tr>
+    <tr><td class="l"><code>private</code></td><td><span class="red"><b>not accessible</b></span></td><td><span class="red"><b>not accessible</b></span></td><td><span class="red"><b>not accessible</b></span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 250px;align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class X { public:
+    X()  { cout &lt;&lt; "X"; }
+    ~X() { cout &lt;&lt; "~X"; } };
+class Y { public:
+    Y()  { cout &lt;&lt; "Y"; }
+    ~Y() { cout &lt;&lt; "~Y"; } };
+class Z : public X {
+    Y y;                    // member
+public:
+    Z()  { cout &lt;&lt; "Z"; }
+    ~Z() { cout &lt;&lt; "~Z"; } };
+int main() { Z z; } // XYZ~Z~Y~X</div>
+    <figure class="doodle"><svg viewBox="0 0 290 200" width="246">
+      <g class="w">
+        <rect x="20" y="20" width="110" height="34" rx="6" class="ink fill-b"/>
+        <rect x="20" y="70" width="110" height="34" rx="6" class="ink-p fill-p"/>
+        <rect x="20" y="120" width="110" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="160" y="20" width="110" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="160" y="70" width="110" height="34" rx="6" class="ink-p fill-p"/>
+        <rect x="160" y="120" width="110" height="34" rx="6" class="ink fill-b"/>
+        <path class="ink-g" d="M8,24 V156" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M282,24 V156" marker-end="url(#ah)"/>
+      </g>
+      <text x="75" y="42" text-anchor="middle" class="s">① base X()</text>
+      <text x="75" y="92" text-anchor="middle" class="s p">② member Y()</text>
+      <text x="75" y="142" text-anchor="middle" class="s g">③ body Z()</text>
+      <text x="215" y="42" text-anchor="middle" class="s g">① ~Z() body</text>
+      <text x="215" y="92" text-anchor="middle" class="s p">② member ~Y()</text>
+      <text x="215" y="142" text-anchor="middle" class="s">③ base ~X()</text>
+      <text x="75" y="182" text-anchor="middle" class="s g w6">BUILD</text>
+      <text x="215" y="182" text-anchor="middle" class="s r w6">DESTROY</text>
+    </svg><figcaption>destroy = build read backwards</figcaption></figure>
+  </div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>Virtual base classes</b> first (once each), then <b>direct bases</b> in the order of the base list — <code>class C : public B, public A</code> builds B before A, whatever the initializer list says.</li>
+    <li><b>Member objects</b> in declaration order, then the <b>constructor body</b>. Destruction runs the exact reverse.</li>
+    <li><b>Java:</b> static blocks once at class load (parent first); per <code>new</code>: the <code>super()</code> chain up to <code>Object</code>, then field initialisers and body, parent first.</li>
+  </ol>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class A { int a;            // private
+  protected: int b;  public: int c; };
+class B : private A {
+  void f() { a = 1;   // ✗ base-private
+             b = 2;   // ✓ now private in B
+             c = 3; } };  // ✓ private in B
+class C : public B {
+  void g() { c = 4; } };  // ✗ private in B
+B obj;  obj.c = 5;    // ✗ in main</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ read the table</span> <code>B : private A</code> makes A's <i>b</i> and <i>c</i> <b>private in B</b>: B's methods may use them; B's child <i>C</i> and <code>main</code> may not; A's <i>a</i> is unreachable even in B. With <code>B : public A</code>, <code>obj.c</code> and <code>c = 4</code> compile; <i>a</i> is <span class="circ">still locked</span>.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>The mode is a ceiling.</b>" public keeps, protected lowers public to protected, private lowers everything to private; base-private stays locked.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <code>class B : protected A</code>, <i>A</i> has public <code>f()</code>: <code>B b; b.f();</code> in <code>main</code> → <b>compile error</b>; inside B's own methods <code>f()</code> is fine.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ output</span> <code>A(){cout&lt;&lt;"A";} ~A(){cout&lt;&lt;"a";}</code>, same for <i>B</i> with "B"/"b", <code>class B : public A</code>, <code>B obj;</code> → <span class="circ">ABba</span>.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: diamond & java interfaces ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Diamond problem</span></div>
+  <h2><span class="no">9</span>Diamond Problem and Virtual Base Class</h2><span class="tag">frequently tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The <span class="hl">diamond problem</span>: <i>B</i> and <i>C</i> both inherit <i>A</i>, and <i>D</i> inherits <i>B</i> and <i>C</i>. A plain <i>D</i> object then holds <b>two copies</b> of <i>A</i>, so <code>d.x</code> is <b>ambiguous</b> (compile error). C++ fixes it with a <span class="hl">virtual base class</span>: <code>class B : virtual public A</code> and <code>class C : virtual public A</code> share <span class="circ">one A</span>. Java avoids it for state by allowing only one parent class.</div>
+  <div class="cols" style="grid-template-columns:260px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 220" width="256">
+      <g class="w">
+        <rect x="110" y="10" width="80" height="34" rx="8" class="ink-r fill-r"/>
+        <rect x="20" y="88" width="80" height="34" rx="8" class="ink fill-b"/>
+        <rect x="200" y="88" width="80" height="34" rx="8" class="ink fill-b"/>
+        <rect x="110" y="166" width="80" height="34" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M76,86 L130,48" marker-end="url(#ahb)"/>
+        <path class="ink" d="M224,86 L170,48" marker-end="url(#ahb)"/>
+        <path class="ink" d="M136,164 L80,126" marker-end="url(#ahb)"/>
+        <path class="ink" d="M164,164 L220,126" marker-end="url(#ahb)"/>
+      </g>
+      <text x="150" y="32" text-anchor="middle" class="r w6">A (int x)</text>
+      <text x="60" y="110" text-anchor="middle" class="w6">B</text>
+      <text x="240" y="110" text-anchor="middle" class="w6">C</text>
+      <text x="150" y="188" text-anchor="middle" class="g w6">D</text>
+      <text x="62" y="66" text-anchor="middle" class="s p">virtual</text>
+      <text x="238" y="66" text-anchor="middle" class="s p">virtual</text>
+      <text x="150" y="216" text-anchor="middle" class="s k">without virtual: 2 copies of A</text>
+    </svg><figcaption>the diamond: one grandparent, two paths</figcaption></figure>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">class A { public: int x;
+    A() { cout &lt;&lt; "A"; } };
+class B : virtual public A {
+public: B() { cout &lt;&lt; "B"; } };
+class C : virtual public A {
+public: C() { cout &lt;&lt; "C"; } };
+class D : public B, public C {
+public: D() { cout &lt;&lt; "D"; } };
+
+D d;          // prints ABCD
+d.x = 5;      // OK: one shared A
+// without virtual: ABACD, and
+// d.x is ambiguous (use d.B::x)</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Plain multiple inheritance</th><th class="l">With <code>virtual</code> base</th></tr>
+    <tr><td class="l">Copies of A inside D</td><td class="l">two (one via B, one via C)</td><td class="l"><span class="circ">one</span>, shared</td></tr>
+    <tr><td class="l"><code>d.x</code></td><td class="l">ambiguous → <code>d.B::x</code> or <code>d.C::x</code></td><td class="l">fine</td></tr>
+    <tr><td class="l">Who constructs A</td><td class="l">B and C, each its own A</td><td class="l">the most-derived class D, <b>first</b></td></tr>
+    <tr><td class="l">Constructor output</td><td class="l">A B A C D</td><td class="l">A B C D</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">interface Fly  { default void go()
+                    { System.out.print("fly"); } }
+interface Swim { default void go()
+                    { System.out.print("swim"); } }
+class Duck implements Fly, Swim {
+    public void go() {        // must override
+        Fly.super.go();       // pick one
+    }
+}</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Java: interfaces instead</span> One <code>extends</code>, many <code>implements</code>: <code>class Car extends Vehicle implements Horn, Gps</code>. Since Java 8 interfaces may carry <code>default</code> methods, so a method-level diamond is possible: two defaults with the same signature → <b>compile error</b> until the class overrides, optionally calling <code>Fly.super.go()</code>. A class method beats an interface default.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Virtual base = one shared grandparent.</b>" Two parents, one grandmother at the family dinner, not two.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <code>virtual</code> goes on the <b>middle</b> classes (B and C), not on D. A <b>virtual base class</b> is not a <b>virtual function</b>; the latter is next lesson.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ size view</span> With 4-byte <code>int x</code>, a plain diamond <i>D</i> carries <span class="circ">2</span> copies of x; the virtual version carries 1 (plus hidden base pointers).</div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Constructor: class name, no return type</p><p>Destructor: <code>~A()</code>, no args, one per class</p>
+      <p>Default ctor supplied only if none written</p><p>Copy ctor: <code>A(const A&amp;)</code></p>
+      <p>Default copy = shallow, member-wise</p><p>Rule of three: dtor + copy ctor + operator=</p>
+      <p>Build: virtual bases → bases → members → body</p><p>Destroy: exact reverse</p>
+      <p>Java <code>super()</code>/<code>this()</code>: first statement</p><p>Java: no destructor; GC; finalize deprecated</p>
+      <p><code>new</code> → ctor + <code>bad_alloc</code>; <code>malloc</code> → NULL</p><p><code>new[]</code> pairs with <code>delete[]</code></p>
+      <p><code>p-&gt;f()</code> ≡ <code>(*p).f()</code></p><p>No <code>this</code> in static / friend functions</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Constructors can be overloaded; destructors cannot</li>
+      <li>Constructor cannot be virtual; destructor can</li>
+      <li>Constructors are not inherited</li>
+      <li><code>A b = a;</code> → copy ctor; <code>b = a;</code> → operator=</li>
+      <li>C++ <code>A arr[3]</code> → 3 default-ctor calls</li>
+      <li>Java <code>new A[3]</code> → 0 ctor calls, 3 nulls</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Inheritance = is-a; composition = has-a</li>
+      <li>Multilevel = chain; multiple = two parents</li>
+      <li>Java: multiple inheritance via interfaces only</li>
+      <li>Base private: never accessible in derived</li>
+      <li>C++ <code>class</code> inherits privately by default</li>
+      <li>Diamond → <code>virtual</code> base class</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 168px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Top traps</span> <code>A a();</code> is a function · writing <code>A(int)</code> removes the free default ctor · copy ctor by value is illegal · GC ≠ destructor · <code>delete</code> on <code>new[]</code> is UB · init-list order = declaration order · <code>virtual</code> on B and C, not D.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">All tricks together</span> birth certificate · shallow copies the address, deep the house · parents before children · plates on a stack · houses vs address slips · arrow for address, dot for thing · Some Mice Make Huge Holes · mode is a ceiling · one shared grandparent.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="164">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="s">constructor</text>
+      <text x="75" y="64" text-anchor="middle" class="r s">destructor</text>
+      <text x="75" y="100" text-anchor="middle" class="g s">inheritance</text>
+      <text x="215" y="28" text-anchor="middle" class="s">base first</text>
+      <text x="215" y="64" text-anchor="middle" class="s">derived first</text>
+      <text x="215" y="100" text-anchor="middle" class="k s">is-a, 5 types</text>
+    </svg><figcaption>three ideas, three lines</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ one keyword changes the output</span> In the diamond <code>B : virtual public A</code>, <code>C : virtual public A</code>, <code>D : public B, public C</code> prints "<span class="circ">ABCD</span>". Drop both <code>virtual</code>s and the same <code>D d;</code> prints "ABACD" — and <code>d.x</code> stops compiling.</div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Constructors &amp; Inheritance</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">1.</span>The return type of a constructor is:<ol class="opts"><li>void</li><li>int</li><li>none</li><li>the class type</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">2.</span>Which is a valid C++ copy constructor of class A?<ol class="opts"><li><code>A(A a)</code></li><li><code>A(const A&amp; a)</code></li><li><code>A(A* a)</code></li><li><code>void A(A&amp; a)</code></li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">3.</span>A C++ destructor can:<ol class="opts"><li>be overloaded</li><li>take arguments</li><li>return int</li><li>be virtual</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">4.</span>Java <code>Student[] s = new Student[3];</code> creates:<ol class="opts"><li>3 null references, no Student</li><li>3 Student objects</li><li>a compile error</li><li>3 objects with default values</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">5.</span>A prints "A"/"a" in ctor/dtor, B likewise "B"/"b"; <code>class B : public A</code>; <code>B obj;</code> prints:<ol class="opts"><li>ABab</li><li>ABba</li><li>BAba</li><li>BAab</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">6.</span>C inherits B, and B inherits A. This is:<ol class="opts"><li>multiple</li><li>hierarchical</li><li>multilevel</li><li>hybrid</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">7.</span>The diamond problem in C++ is solved by:<ol class="opts"><li>a friend function</li><li>a virtual function</li><li>a static member</li><li>a virtual base class</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">8.</span>Under <code>protected</code> inheritance a base <code>public</code> member becomes:<ol class="opts"><li>protected</li><li>public</li><li>private</li><li>inaccessible</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">9.</span>Which is true of <code>new</code> but not <code>malloc</code>?<ol class="opts"><li>returns <code>void*</code></li><li>needs size in bytes</li><li>calls the constructor</li><li>returns NULL on failure</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">10.</span>Which Java keyword calls the parent-class constructor?<ol class="opts"><li>this</li><li>super</li><li>extends</li><li>parent</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-b · 3-d · 4-a · 5-b · 6-c · 7-d · 8-a · 9-c · 10-b</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> What is a copy constructor? When is it called? Explain shallow and deep copy with a C++ class that owns heap memory, and state the order of constructor and destructor calls in multilevel inheritance. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>Definition (2)</b> — a constructor <code>A(const A&amp; o)</code> that builds a new object from an existing one; by reference (by value would recurse), <code>const</code> to accept const objects and temporaries. <i class="mk">2</i></li>
+    <li><b>When called (2)</b> — <code>A b = a;</code> / <code>A b(a);</code>, pass by value, return by value; not for <code>b = a;</code> (assignment operator). <i class="mk">2</i></li>
+    <li><b>Shallow vs deep (4)</b> — default copy copies the pointer → shared buffer, double delete; deep copy allocates a new buffer and copies the data (the <i>Str</i> class with <code>new char[]</code>, <code>strcpy</code>, <code>delete[]</code>); rule of three. <i class="mk">4</i></li>
+    <li><b>Order (2)</b> — for A → B → C: constructors A, B, C; destructors ~C, ~B, ~A. <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">Before the exam ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>Can list constructor and destructor rules</li>
+      <li>Can write a deep-copy constructor</li>
+      <li>Can trace build/destroy order</li>
+    </ul>
+    <ul class="tick">
+      <li>Can fill the access-mode table</li>
+      <li>Can draw the five inheritance types</li>
+      <li>Can fix a diamond with <code>virtual</code></li>
+    </ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

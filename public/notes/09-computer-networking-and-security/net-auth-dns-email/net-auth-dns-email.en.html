@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Authentication, Signatures, DNS &amp; Email: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Authentication, DNS &amp; Email</span></h1>
+  <p class="subtitle">Kerberos · hashes · signatures · X.509 · Gigabit · DNS · mail: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">WHO SENT IT? WHERE?</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Factors · passwords</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">KDC · Kerberos ★</text>
+      <text x="500" y="65" text-anchor="middle">Challenge–response</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Hash · MD5/SHA ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Signature · X.509 ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Gigabit / 10G Ethernet</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">DNS: records, port 53 ★</text>
+      <text x="500" y="245" text-anchor="middle" class="r w6">SMTP·POP·IMAP·PGP ★</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, blue = concept, green = LAN technology</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① sign private, verify public<br>② Kerberos: AS, TGS, TGT<br>③ MD5 128 · SHA-1 160<br>④ 802.3z · 802.3ab<br>⑤ DNS 53 · SMTP 25<br>⑥ POP3 110 · IMAP 143</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Network security: Cryptography, DES, IDEA, public key algorithm; <span class="hl">Authentication</span>; <span class="hl">Digital signatures</span>; <span class="hl">Gigabit Ethernet</span>; <span class="hl">Domain Name System: Name servers</span>; <span class="hl">Email and its privacy</span>". DES, IDEA, RSA and Diffie–Hellman are in the Transport &amp; Cryptography notes; classic and Fast Ethernet in Data Link &amp; LANs.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Authentication, challenge–response … p. 2</li><li>KDC, Needham–Schroeder, Kerberos … p. 3</li><li>Hash functions &amp; MACs ……… p. 4</li><li>Digital signatures ……… p. 5</li><li>Certificates, PKI, X.509 ……… p. 6</li></ul>
+    <ul class="tick"><li>Gigabit &amp; 10 Gigabit Ethernet ……… p. 7</li><li>DNS: name servers &amp; records ……… p. 8</li><li>Email: SMTP, POP3, IMAP, MIME … p. 9</li><li>PGP, S/MIME, night-before … p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: authentication basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Authentication</span></div>
+  <h2><span class="no">1</span>What Authentication Means</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> <span class="hl">Authentication</span> proves that a user, device or process <b>is who it claims to be</b>; <b>authorization</b> decides what it may do; <b>accounting</b> logs it. Together: <span class="circ">AAA</span>.</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Factor</th><th class="l">Examples</th></tr>
+      <tr><td class="l" style="white-space:nowrap">Something you <b>know</b></td><td class="l">password, PIN, security question</td></tr>
+      <tr><td class="l" style="white-space:nowrap">Something you <b>have</b></td><td class="l">OTP token, phone (SMS/app), smart card</td></tr>
+      <tr><td class="l" style="white-space:nowrap">Something you <b>are</b></td><td class="l">fingerprint, iris, face, voice</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="240">
+      <g class="w">
+        <circle cx="80" cy="56" r="44" class="ink fill-b"/>
+        <circle cx="170" cy="56" r="44" class="ink-g fill-g"/>
+        <circle cx="125" cy="100" r="44" class="ink-p fill-p"/>
+      </g>
+      <text x="62" y="46" text-anchor="middle" class="w6">know</text>
+      <text x="190" y="46" text-anchor="middle" class="g w6">have</text>
+      <text x="125" y="126" text-anchor="middle" class="p w6">are</text>
+      <text x="125" y="80" text-anchor="middle" class="r s w6">MFA</text>
+    </svg><figcaption>MFA = factors from different circles</figcaption></figure>
+  </div>
+  <div class="exam"><span class="lbl">Exam trap</span> <b>Password + PIN is not two-factor</b>: both are "something you know". MFA needs factors of <b>different types</b> (password + OTP from a phone).</div>
+  <h2><span class="no">2</span>Passwords &amp; One-Time Passwords</h2>
+  <ul class="dash small">
+    <li>Store a <span class="hl">salted hash</span> H(salt ∥ password), never the password; a per-user salt defeats <b>rainbow tables</b>. Slow hashes (bcrypt, PBKDF2, Argon2) slow down dictionary attacks.</li>
+    <li><b>OTP</b>: HOTP (counter) and <b>TOTP</b> (a new code every <span class="circ">30 s</span>); a captured OTP is useless later, so OTPs defeat <b>replay</b>.</li>
+  </ul>
+  <h2><span class="no">3</span>Challenge–Response (Shared Secret Key)</h2>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 270 190" width="265">
+      <g class="w">
+        <rect x="20" y="4" width="50" height="24" rx="6" class="ink fill-b"/><rect x="200" y="4" width="50" height="24" rx="6" class="ink fill-b"/>
+        <path class="ink-k" d="M45,28 V186 M225,28 V186" stroke-dasharray="4 4" style="stroke-width:1.3"/>
+        <path class="ink" d="M47,48 H220" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M223,78 H50" marker-end="url(#ah)"/>
+        <path class="ink" d="M47,108 H220" marker-end="url(#ahb)"/>
+        <path class="ink" d="M47,138 H220" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M223,168 H50" marker-end="url(#ahg)"/>
+      </g>
+      <text x="45" y="21" text-anchor="middle" class="w6">Alice</text><text x="225" y="21" text-anchor="middle" class="w6">Bob</text>
+      <text x="135" y="34" text-anchor="middle" class="s">① A (I am Alice)</text>
+      <text x="135" y="64" text-anchor="middle" class="r s">② R<tspan baseline-shift="sub" font-size="9">B</tspan> (random nonce)</text>
+      <text x="135" y="94" text-anchor="middle" class="s">③ K<tspan baseline-shift="sub" font-size="9">AB</tspan>(R<tspan baseline-shift="sub" font-size="9">B</tspan>)</text>
+      <text x="135" y="124" text-anchor="middle" class="s">④ R<tspan baseline-shift="sub" font-size="9">A</tspan></text>
+      <text x="135" y="154" text-anchor="middle" class="g s">⑤ K<tspan baseline-shift="sub" font-size="9">AB</tspan>(R<tspan baseline-shift="sub" font-size="9">A</tspan>)</text>
+    </svg><figcaption>5-message mutual authentication</figcaption></figure>
+    <div>
+      <p class="small">Bob sends a fresh random <span class="hl">nonce</span> ("number used once"); only a holder of K<sub>AB</sub> can return it encrypted. ④–⑤ repeat it the other way: <span class="hl">mutual authentication</span>. The key <b>never crosses the network</b>.</p>
+      <div class="exam small"><span class="lbl">Exam trap: reflection attack</span> The 3-message shortcut lets Trudy open a <b>second session</b> and make Bob encrypt his own challenge for her. Fix: the <b>initiator proves itself first</b>; separate keys per direction.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"Fresh question, secret answer"</b>: nonce = no replay, key = proof.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">AAA servers</span> <b>RADIUS</b> UDP <span class="circ">1812</span> · <b>TACACS+</b> TCP 49 · <b>EAP/802.1X</b> Wi-Fi</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: KDC, Needham–Schroeder, Kerberos ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>KDC &amp; Kerberos</span></div>
+  <h2><span class="no">4</span>Key Distribution Centre &amp; Needham–Schroeder</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">KDC</span> A trusted server that shares one secret key with <b>every</b> user (K<sub>A</sub>, K<sub>B</sub> …). With N users, N keys are enough instead of <span class="circ">N(N − 1)/2</span> pairwise keys. The KDC hands out a fresh <span class="hl">session key</span> K<sub>S</sub> for each conversation.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 196" width="295">
+      <g class="w">
+        <rect x="6" y="4" width="44" height="24" rx="6" class="ink fill-b"/><rect x="132" y="4" width="56" height="24" rx="6" class="ink-r fill-r"/><rect x="252" y="4" width="44" height="24" rx="6" class="ink fill-b"/>
+        <path class="ink-k" d="M28,28 V192 M160,28 V192 M274,28 V192" stroke-dasharray="4 4" style="stroke-width:1.3"/>
+        <path class="ink" d="M30,56 H156" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M158,90 H33" marker-end="url(#ah)"/>
+        <path class="ink" d="M30,124 H270" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M272,156 H33" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M30,186 H270" marker-end="url(#ahg)"/>
+      </g>
+      <text x="28" y="21" text-anchor="middle" class="w6">A</text><text x="160" y="21" text-anchor="middle" class="r w6">KDC</text><text x="274" y="21" text-anchor="middle" class="w6">B</text>
+      <text x="94" y="42" text-anchor="middle" class="s">① A, B, R<tspan baseline-shift="sub" font-size="9">A</tspan></text>
+      <text x="94" y="75" text-anchor="middle" class="r s">② K<tspan baseline-shift="sub" font-size="9">A</tspan>(R<tspan baseline-shift="sub" font-size="9">A</tspan>, B, K<tspan baseline-shift="sub" font-size="9">S</tspan>, T)</text>
+      <text x="150" y="109" text-anchor="middle" class="s">③ T = K<tspan baseline-shift="sub" font-size="9">B</tspan>(A, K<tspan baseline-shift="sub" font-size="9">S</tspan>)</text>
+      <text x="150" y="141" text-anchor="middle" class="g s">④ K<tspan baseline-shift="sub" font-size="9">S</tspan>(R<tspan baseline-shift="sub" font-size="9">B</tspan>)</text>
+      <text x="150" y="171" text-anchor="middle" class="g s">⑤ K<tspan baseline-shift="sub" font-size="9">S</tspan>(R<tspan baseline-shift="sub" font-size="9">B</tspan> − 1)</text>
+    </svg><figcaption>Needham–Schroeder (1978); T = ticket</figcaption></figure>
+    <div class="small">
+      <p>② proves the reply is fresh (it holds R<sub>A</sub>) and gives A the <b>ticket</b>, which only B can open. ④–⑤ convince each side that the other holds K<sub>S</sub>.</p>
+      <div class="exam small"><span class="lbl">Exam trap: the flaw</span> Message ③ has <b>no freshness</b>. If an old K<sub>S</sub> ever leaks, Trudy can <b>replay</b> the old ticket and pose as A (Denning–Sacco, 1981). Fixes: <b>timestamps</b> (Kerberos) or the <b>Otway–Rees</b> protocol.</div>
+    </div>
+  </div>
+  <h2><span class="no">5</span>Kerberos</h2><span class="tag">written favourite</span>
+  <p class="small">From MIT Project Athena; <b>v5</b> (RFC 4120) is the login of <span class="hl">Windows Active Directory</span>. Symmetric keys, <span class="circ">port 88</span>, <b>single sign-on</b>: one password, tickets for every service.</p>
+  <div class="cols" style="grid-template-columns:310px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 310 200" width="305">
+      <g class="w">
+        <rect x="8" y="80" width="70" height="40" rx="10" class="ink fill-y"/>
+        <rect x="190" y="6" width="112" height="36" rx="10" class="ink-r fill-r"/>
+        <rect x="190" y="82" width="112" height="36" rx="10" class="ink-r fill-r"/>
+        <rect x="190" y="158" width="112" height="36" rx="10" class="ink-g fill-g"/>
+        <path class="ink-k" d="M182,2 V124 H310" stroke-dasharray="5 4" style="stroke-width:1.2"/>
+        <path class="ink" d="M78,86 L186,26" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M190,36 L82,96" marker-end="url(#ah)"/>
+        <path class="ink" d="M78,100 L186,96" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M190,108 L82,110" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M78,114 L186,166" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M190,184 L72,122" marker-end="url(#ahg)"/>
+      </g>
+      <text x="43" y="105" text-anchor="middle" class="w6">Client</text>
+      <text x="246" y="29" text-anchor="middle" class="r w6">AS</text>
+      <text x="246" y="105" text-anchor="middle" class="r w6">TGS</text>
+      <text x="246" y="181" text-anchor="middle" class="g w6">Server V</text>
+      <text x="116" y="46" class="s">①</text><text x="160" y="74" class="r s">②</text>
+      <text x="122" y="92" class="s">③</text><text x="150" y="126" class="r s">④</text>
+      <text x="104" y="146" class="g s">⑤</text><text x="146" y="174" class="g s">⑥</text>
+      <text x="300" y="138" text-anchor="end" class="r s">KDC = AS + TGS</text>
+    </svg><figcaption>three servers, six messages</figcaption></figure>
+    <ol class="steps small">
+      <li><b>C → AS</b>: user name (no password sent)</li>
+      <li><b>AS → C</b>: K<sub>C</sub>(K<sub>S</sub>, <span class="hl">TGT</span>); K<sub>C</sub> is derived from the password, so only the real user can open it</li>
+      <li><b>C → TGS</b>: TGT + K<sub>S</sub>(timestamp) + "I want V"</li>
+      <li><b>TGS → C</b>: K<sub>S</sub>(K<sub>CV</sub>) + <b>service ticket</b> K<sub>V</sub>(C, K<sub>CV</sub>)</li>
+      <li><b>C → V</b>: service ticket + K<sub>CV</sub>(timestamp)</li>
+      <li><b>V → C</b>: K<sub>CV</sub>(timestamp + 1): <b>mutual authentication</b></li>
+    </ol>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"AS lets you in, TGS gives tickets."</b> TGT = a cinema wristband; each service ticket = a seat for one film. The wristband (TGT) lasts the day (≈ 10 h).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Kerberos needs <b>synchronised clocks</b> (default skew ≤ 5 min) because it uses timestamps against replay. The KDC is a <b>single point of failure</b>; it does not use public-key cryptography in its basic form.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: hash functions & MACs ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Hashes &amp; MACs</span></div>
+  <h2><span class="no">6</span>Cryptographic Hash Functions (Message Digests)</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A hash function H maps a message of <b>any length</b> to a <span class="hl">fixed-length digest</span>. It uses <b>no key</b>, is fast to compute, and changing one input bit changes about half the output bits (<b>avalanche effect</b>).</div>
+  <div class="cols" style="grid-template-columns:1fr 280px;align-items:center">
+    <ol class="num small">
+      <li><b>Pre-image resistance</b> (one-way): from H(m), finding m is infeasible</li>
+      <li><b>Second pre-image resistance</b>: given m, finding m′ ≠ m with H(m′) = H(m) is infeasible</li>
+      <li><b>Collision resistance</b>: finding <i>any</i> pair m ≠ m′ with equal hashes is infeasible</li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 280 120" width="275">
+      <g class="w">
+        <rect x="6" y="14" width="80" height="28" rx="6" class="ink fill-b"/>
+        <rect x="6" y="50" width="56" height="28" rx="6" class="ink fill-b"/>
+        <rect x="6" y="86" width="96" height="28" rx="6" class="ink fill-b"/>
+        <path class="ink-k" d="M90,28 L140,58 M66,64 L140,64 M106,100 L140,70"/>
+        <rect x="140" y="44" width="40" height="40" rx="8" class="ink-r fill-y"/>
+        <path class="ink-g" d="M182,64 H208" marker-end="url(#ahg)"/>
+        <rect x="212" y="50" width="62" height="28" rx="6" class="ink-g fill-g"/>
+      </g>
+      <text x="46" y="33" text-anchor="middle" class="s">short msg</text><text x="34" y="69" text-anchor="middle" class="s">"hi"</text><text x="54" y="105" text-anchor="middle" class="s">4 GB file</text>
+      <text x="160" y="70" text-anchor="middle" class="r w6">H</text>
+      <text x="243" y="69" text-anchor="middle" class="g s w6">256 bits</text>
+    </svg><figcaption>any length in, fixed length out</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Algorithm</th><th>Year</th><th>Digest</th><th>Block</th><th>Rounds</th><th class="l">Status</th></tr>
+    <tr><td class="l"><b>MD5</b> (Rivest)</td><td>1991</td><td class="red"><b>128</b></td><td>512</td><td>64</td><td class="l">broken (2004): checksums only</td></tr>
+    <tr><td class="l"><b>SHA-1</b> (NSA/NIST)</td><td>1995</td><td class="red"><b>160</b></td><td>512</td><td>80</td><td class="l">broken (2017, SHAttered)</td></tr>
+    <tr><td class="l"><b>SHA-256</b> (SHA-2)</td><td>2001</td><td class="red"><b>256</b></td><td>512</td><td>64</td><td class="l">current standard: TLS, Bitcoin</td></tr>
+    <tr><td class="l">SHA-512 (SHA-2)</td><td>2001</td><td>512</td><td>1024</td><td>80</td><td class="l">secure, fast on 64-bit CPUs</td></tr>
+    <tr><td class="l">SHA-3 (Keccak)</td><td>2015</td><td>224–512</td><td>sponge</td><td>24</td><td class="l">new design, backup for SHA-2</td></tr>
+  </table>
+  <p class="small">Sizes in bits. <b>Birthday attack:</b> an n-bit digest collides after about <span class="circ">2<sup>n/2</sup></span> tries → MD5 2<sup>64</sup>, SHA-1 2<sup>80</sup>, SHA-256 2<sup>128</sup>.</p>
+  <h2><span class="no">7</span>Message Authentication Code (MAC) &amp; HMAC</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">MAC</span> tag = C(K, M) from the message <b>and a shared key</b>; the receiver recomputes it. Proves <span class="hl">integrity + origin</span>: without K no valid tag.</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">HMAC (RFC 2104)</span> H((K ⊕ opad) ∥ H((K ⊕ ipad) ∥ M))<br>ipad = 0x36…, opad = 0x5C… · HMAC-SHA256 in TLS, IPsec</div>
+  </div>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">Tool</th><th>Key</th><th>Integrity</th><th>Auth.</th><th>Non-repud.</th><th>Secrecy</th></tr>
+    <tr><td class="l">Hash alone</td><td>none</td><td>errors only</td><td>✗</td><td>✗</td><td>✗</td></tr>
+    <tr><td class="l">MAC / HMAC</td><td>shared secret</td><td>✓</td><td>✓</td><td class="red"><b>✗</b></td><td>✗</td></tr>
+    <tr><td class="l">Digital signature</td><td>private / public</td><td>✓</td><td>✓</td><td class="green"><b>✓</b></td><td>✗</td></tr>
+    <tr><td class="l">Encryption</td><td>any</td><td>✗</td><td>✗</td><td>✗</td><td>✓</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> SHA-<b>1</b> ↔ <b>1</b>60; MD5 is smaller (128). In SHA-2 the name <b>is</b> the length: SHA-256 → 256.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A MAC gives <b>no non-repudiation</b>: Bob knows K too, so he could have made the tag. A hash is <b>not encryption</b>: no key, no reversing.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: digital signatures ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Digital signatures</span></div>
+  <h2><span class="no">8</span>Digital Signatures</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A digital signature is a value computed from a message with the <b>signer's private key</b> that anyone can check with the <b>signer's public key</b>. It gives <span class="hl">authentication</span>, <span class="hl">integrity</span> and <span class="hl">non-repudiation</span>, but <b>not confidentiality</b>.</div>
+  <p class="small"><b>Requirements:</b> ① the receiver can verify the sender's identity; ② the sender cannot deny it later; ③ the receiver cannot forge or alter it.</p>
+  <figure class="doodle"><svg viewBox="0 0 640 176" width="640">
+    <g class="w">
+      <rect x="4" y="14" width="84" height="34" rx="8" class="ink fill-b"/>
+      <rect x="112" y="14" width="54" height="34" rx="8" class="ink fill-y"/>
+      <rect x="190" y="14" width="62" height="34" rx="8" class="ink fill-y"/>
+      <rect x="276" y="10" width="150" height="42" rx="8" class="ink-r fill-r"/>
+      <rect x="474" y="14" width="96" height="34" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M88,31 H108 M166,31 H186 M252,31 H272 M426,31 H470" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M522,48 V97 H414 M522,97 V143 H444" marker-end="url(#ahg)"/>
+      <rect x="300" y="82" width="110" height="30" rx="8" class="ink fill-y"/>
+      <rect x="270" y="128" width="170" height="30" rx="8" class="ink-g fill-g"/>
+      <path class="ink-r" d="M300,97 L215,114 M270,143 L215,126"/>
+      <circle cx="200" cy="120" r="16" class="ink-r fill-y"/>
+    </g>
+    <text x="46" y="36" text-anchor="middle" class="w6">Message</text>
+    <text x="139" y="36" text-anchor="middle" class="s w6">H</text>
+    <text x="221" y="36" text-anchor="middle" class="s w6">digest h</text>
+    <text x="351" y="28" text-anchor="middle" class="r s w6">sign h with</text><text x="351" y="44" text-anchor="middle" class="r s w6">Alice's private key</text>
+    <text x="522" y="36" text-anchor="middle" class="s w6">M + sig</text><text x="448" y="22" text-anchor="middle" class="s">send</text>
+    <text x="355" y="102" text-anchor="middle" class="s w6">H(M) = h₁</text>
+    <text x="355" y="148" text-anchor="middle" class="g s w6">sig + Alice's public → h₂</text>
+    <text x="200" y="125" text-anchor="middle" class="r w6">=?</text>
+    <text x="176" y="112" text-anchor="end" class="g s w6">h₁ = h₂ → genuine ✓</text><text x="176" y="136" text-anchor="end" class="r s">h₁ ≠ h₂ → forged / altered</text>
+    <text x="4" y="70" class="r s">SENDER (Alice)</text><text x="636" y="170" text-anchor="end" class="g s">RECEIVER (Bob)</text>
+  </svg><figcaption>hash-then-sign: the receiver recomputes the hash and checks it against the signature</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <h3>Why sign the hash?</h3>
+      <ul class="dash small">
+        <li>Public-key operations are slow; a 256-bit digest is tiny</li>
+        <li>The signature size stays fixed whatever the message length</li>
+        <li>The message can stay readable (plain text + signature)</li>
+      </ul>
+    </div>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Algorithm</th><th class="l">Based on</th></tr>
+      <tr><td class="l"><b>RSA</b></td><td class="l">factoring; most widely used</td></tr>
+      <tr><td class="l"><b>DSA</b> (DSS, FIPS 186, 1994)</td><td class="l">discrete log; NIST, signing only</td></tr>
+      <tr><td class="l"><b>ECDSA</b>, EdDSA</td><td class="l">elliptic curves: smaller keys</td></tr>
+    </table>
+  </div>
+  <div class="ex"><span class="lbl">Worked example: RSA signature ✍</span> Keys n = 33, e = 3 (public), d = 7 (private), since 3 × 7 = 21 ≡ 1 (mod φ = 20). Digest h = 4.
+    <ol class="steps small"><li>Sign: s = h<sup>d</sup> mod n = 4<sup>7</sup> mod 33 = 16384 mod 33 = <span class="circ">16</span> &nbsp;<span class="tiny green">33 × 496 = 16368</span></li><li>Verify: s<sup>e</sup> mod n = 16<sup>3</sup> mod 33 = 4096 mod 33 = <b>4</b> = h ✓ &nbsp;<span class="tiny green">33 × 124 = 4092</span></li></ol></div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Sign</b> with the <b>sender's private</b> key, verify with the <b>sender's public</b> key. <b>Encrypt</b> for secrecy with the <b>receiver's public</b> key. For both: sign first, then encrypt.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"Private signs, public checks."</b> Only you hold your pen (private key); everyone can compare it with your specimen signature (public key).</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">Without public keys</span> a trusted arbiter ("Big Brother", BB) signs for users who share keys with it, keeping K<sub>BB</sub>(A, t, P) as proof. Uses: code signing, TLS certificates, S/MIME, PGP, blockchain.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: certificates, PKI, X.509 ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>PKI &amp; X.509</span></div>
+  <h2><span class="no">9</span>Why Certificates?</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">The problem</span> A public key on its own says nothing about its owner. Trudy can publish <i>her</i> key under Bob's name (<b>man-in-the-middle</b>). A <span class="hl">certificate</span> is a document that binds a <b>name to a public key</b>, digitally signed by a trusted <span class="hl">Certification Authority (CA)</span>.</div>
+  <div class="cols" style="grid-template-columns:260px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 260 220" width="255">
+      <g class="w">
+        <rect x="70" y="6" width="120" height="38" rx="10" class="ink-r fill-r"/>
+        <rect x="70" y="88" width="120" height="38" rx="10" class="ink fill-b"/>
+        <rect x="14" y="170" width="104" height="38" rx="10" class="ink-g fill-g"/>
+        <rect x="142" y="170" width="104" height="38" rx="10" class="ink-g fill-g"/>
+        <path class="ink-r" d="M130,44 V84" marker-end="url(#ah)"/>
+        <path class="ink" d="M112,126 L72,166 M148,126 L190,166" marker-end="url(#ahb)"/>
+      </g>
+      <text x="130" y="24" text-anchor="middle" class="r w6">Root CA</text><text x="130" y="38" text-anchor="middle" class="r s">self-signed</text>
+      <text x="130" y="112" text-anchor="middle" class="w6">Intermediate CA</text>
+      <text x="66" y="194" text-anchor="middle" class="g s w6">www.bank.bd</text>
+      <text x="194" y="194" text-anchor="middle" class="g s w6">mail.gov.bd</text>
+      <text x="138" y="68" class="s">signs</text>
+    </svg><figcaption>chain of trust up to a trusted root</figcaption></figure>
+    <div class="small">
+      <p><b>PKI</b> = CAs + <b>RA</b>s (check identity) + certificates + directories + revocation. The root CA's certificate is <b>self-signed</b> and pre-installed in browsers and OSs.</p>
+      <p><b>Revocation</b> (stolen key): a <span class="hl">CRL</span> (revocation list) or a live <b>OCSP</b> check.</p>
+      <p><b>PGP</b> uses a <b>web of trust</b> instead: users sign each other's keys.</p>
+      <div class="tipbox small" style="margin-top:2mm"><span class="lbl">Bangladesh link</span> <b>ICT Act 2006</b>: digital signatures are legal; the <b>CCA</b> (Controller of Certifying Authorities) licenses CAs.</div>
+    </div>
+  </div>
+  <h2><span class="no">10</span>X.509 Certificate Format</h2><span class="tag">high-yield</span>
+  <p class="small">ITU-T standard (v1 1988), used by TLS/HTTPS, S/MIME, IPsec and code signing. Current <span class="circ">version 3</span> (1996) added <b>extensions</b>. Encoded in ASN.1 (DER); files .cer, .crt, .pem.</p>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Field</th><th class="l">Meaning</th></tr>
+      <tr><td class="l">Version · serial no.</td><td class="l">v1/2/3 · unique per CA</td></tr>
+      <tr><td class="l">Signature algorithm</td><td class="l">e.g. SHA-256 with RSA</td></tr>
+      <tr><td class="l"><b>Issuer</b></td><td class="l">the CA's X.500 name</td></tr>
+      <tr><td class="l"><b>Validity</b></td><td class="l">not before / not after</td></tr>
+      <tr><td class="l"><b>Subject</b></td><td class="l">owner (CN = www.bank.bd)</td></tr>
+      <tr><td class="l"><b>Subject public key</b></td><td class="l">the certified key</td></tr>
+      <tr><td class="l">Extensions (v3)</td><td class="l">key usage, alt. names</td></tr>
+      <tr><td class="l red"><b>CA's signature</b></td><td class="l">over all fields above</td></tr>
+    </table>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">How a browser checks www.bank.bd ✍</span>
+        <ol class="steps"><li>Server sends its certificate + the intermediate's</li><li>Check its signature with the intermediate CA's public key, then the intermediate with the root</li><li>Check dates, name match, not revoked</li><li>Then trust the subject's public key</li></ol></div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Certificate = <b>passport</b>: subject = holder, key = photo, issuer = government, CA signature = stamp.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> It holds the subject's <b>public</b> key only, and is signed with the <b>CA's</b> private key.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: Gigabit Ethernet ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Gigabit Ethernet</span></div>
+  <h2><span class="no">11</span>Gigabit Ethernet (1000 Mbps)</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> Ethernet at <span class="hl">1 Gbps</span> (10 × Fast Ethernet) with the <b>same frame format</b> (64–1518 bytes), so it works with older Ethernet. Standards: <span class="circ">802.3z</span> (1998, fibre + short copper) and <span class="circ">802.3ab</span> (1999, 1000BASE-T).</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Name</th><th>Standard</th><th class="l">Medium</th><th>Max length</th><th>Coding</th></tr>
+    <tr><td class="l"><b>1000BASE-SX</b></td><td>802.3z</td><td class="l">multimode fibre, 850 nm</td><td>220–550 m</td><td>8B/10B</td></tr>
+    <tr><td class="l"><b>1000BASE-LX</b></td><td>802.3z</td><td class="l">single-mode fibre, 1310 nm</td><td class="red"><b>5 km</b></td><td>8B/10B</td></tr>
+    <tr><td class="l">1000BASE-CX</td><td>802.3z</td><td class="l">shielded twinax copper</td><td>25 m</td><td>8B/10B</td></tr>
+    <tr><td class="l"><b>1000BASE-T</b></td><td>802.3ab</td><td class="l">Cat 5e UTP, <b>all 4 pairs</b></td><td class="red"><b>100 m</b></td><td>PAM-5</td></tr>
+  </table>
+  <p class="small">8B/10B → line rate <b>1.25 Gbaud</b>. 1000BASE-T: 4 pairs × 250 Mbps, each pair both ways (echo cancellation). LX also runs 550 m on multimode.</p>
+  <h3>Half duplex: carrier extension &amp; frame bursting</h3>
+  <p class="small">At 1 Gbps a 64-byte frame lasts 0.512 µs, so CSMA/CD would limit the network to about <b>25 m</b>. Two fixes, <b>half-duplex only</b>:</p>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">Carrier extension</span> pad every short frame so it fills at least <span class="circ">512 bytes</span> (4096 bit times) → about <b>200 m</b>. Cost: a 64-byte frame is only 1/8 useful.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Frame bursting</span> after one extended frame, send <b>several short frames back to back</b> without releasing the line, up to 8192 bytes.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 280 120" width="280">
+      <g class="w">
+        <rect x="8" y="20" width="34" height="26" class="ink fill-b"/>
+        <rect x="42" y="20" width="230" height="26" class="ink-r" style="fill:rgba(211,47,47,.12)" stroke-dasharray="5 4"/>
+        <rect x="8" y="76" width="34" height="26" class="ink fill-b"/>
+        <rect x="42" y="76" width="40" height="26" class="ink-r" style="fill:rgba(211,47,47,.12)" stroke-dasharray="5 4"/>
+        <rect x="88" y="76" width="34" height="26" class="ink-g fill-g"/>
+        <rect x="128" y="76" width="34" height="26" class="ink-g fill-g"/>
+        <rect x="168" y="76" width="50" height="26" class="ink-g fill-g"/>
+        <rect x="224" y="76" width="34" height="26" class="ink-g fill-g"/>
+      </g>
+      <text x="8" y="13" class="s w6">carrier extension</text>
+      <text x="25" y="38" text-anchor="middle" class="s">64 B</text><text x="157" y="38" text-anchor="middle" class="r s">extension → 512 B</text>
+      <text x="8" y="69" class="s w6">frame bursting</text>
+      <text x="25" y="94" text-anchor="middle" class="s">F1</text><text x="62" y="94" text-anchor="middle" class="r s">ext</text>
+      <text x="105" y="94" text-anchor="middle" class="g s">F2</text><text x="145" y="94" text-anchor="middle" class="g s">F3</text><text x="193" y="94" text-anchor="middle" class="g s">F4</text><text x="241" y="94" text-anchor="middle" class="g s">F5</text>
+      <text x="140" y="116" text-anchor="middle" class="g s">≤ 8192 B per burst</text>
+    </svg></figure>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Real Gigabit links are <b>full duplex</b> through switches: no collisions, no extension. The minimum <i>frame</i> stays 64 bytes; only the minimum <i>slot</i> grows to 512 bytes.</div>
+  </div>
+  <h2><span class="no">12</span>10 Gigabit Ethernet and Beyond</h2>
+  <div class="cols" style="grid-template-columns:1.25fr 1fr;align-items:start">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Name</th><th>Standard</th><th class="l">Reach</th></tr>
+      <tr><td class="l">10GBASE-SR/LR/ER</td><td>802.3ae (2002)</td><td class="l">fibre 300 m/10/40 km</td></tr>
+      <tr><td class="l"><b>10GBASE-T</b></td><td>802.3an (2006)</td><td class="l">Cat 6a · 100 m</td></tr>
+      <tr><td class="l">40G / 100G</td><td>802.3ba (2010)</td><td class="l">data centres</td></tr>
+    </table>
+    <div>
+      <p class="small">10G is <span class="hl">full duplex only</span>: no CSMA/CD. Fibre uses <b>64B/66B</b> coding.</p>
+      <div class="trick small"><span class="lbl">Memory trick</span> <b>"z = glass, ab = copper."</b> S = short λ (850 nm), L = long (1310 nm).</div>
+    </div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: DNS ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>DNS</span></div>
+  <h2><span class="no">13</span>Domain Name System (DNS)</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A <span class="hl">hierarchical, distributed database</span> mapping names to IP addresses, mail servers and aliases (Mockapetris; RFC 1034/1035, 1987). <span class="circ">Port 53</span>: <b>UDP</b> for queries, <b>TCP</b> for zone transfers and replies over 512 bytes.</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="325">
+      <g class="w">
+        <circle cx="165" cy="22" r="16" class="ink-r fill-r"/>
+        <path class="ink-k" d="M155,36 L52,74 M160,38 L128,74 M170,38 L204,74 M176,36 L282,74"/>
+        <rect x="26" y="74" width="52" height="26" rx="6" class="ink fill-b"/>
+        <rect x="102" y="74" width="52" height="26" rx="6" class="ink fill-b"/>
+        <rect x="178" y="74" width="52" height="26" rx="6" class="ink fill-b"/>
+        <rect x="256" y="74" width="52" height="26" rx="6" class="ink-g fill-g"/>
+        <path class="ink-k" d="M282,100 L240,132 M282,100 L322,132"/>
+        <rect x="206" y="132" width="64" height="24" rx="6" class="ink fill-y"/>
+        <rect x="282" y="132" width="44" height="24" rx="6" class="ink fill-y"/>
+        <path class="ink-k" d="M238,156 L238,170"/>
+      </g>
+      <text x="165" y="27" text-anchor="middle" class="r w6">.</text><text x="190" y="18" class="r s">root (13 named: a–m)</text>
+      <text x="52" y="92" text-anchor="middle" class="s w6">com</text><text x="128" y="92" text-anchor="middle" class="s w6">org</text><text x="204" y="92" text-anchor="middle" class="s w6">net</text><text x="282" y="92" text-anchor="middle" class="g s w6">bd</text>
+      <text x="238" y="149" text-anchor="middle" class="s">gov.bd</text><text x="304" y="149" text-anchor="middle" class="s">ac.bd</text>
+      <text x="238" y="184" text-anchor="middle" class="s">www.bb.gov.bd</text>
+      <text x="90" y="118" text-anchor="middle" class="s">gTLDs</text><text x="300" y="66" text-anchor="middle" class="g s">ccTLD</text>
+    </svg><figcaption>the name tree, read right to left: www . bb . gov . bd .</figcaption></figure>
+    <div class="small">
+      <p><b>Zone</b> = the part of the tree one organisation runs: a <b>primary</b> server plus <b>secondaries</b> that copy it by <span class="hl">zone transfer</span> (AXFR, TCP). Label ≤ <b>63</b> chars, name ≤ <b>255</b> bytes.</p>
+      <table class="hand small" style="margin-top:2mm;white-space:nowrap">
+        <tr><th class="l">Server</th><th class="l">Job</th></tr>
+        <tr><td class="l">Root</td><td class="l">refers to TLD servers</td></tr>
+        <tr><td class="l">TLD</td><td class="l">refers to the domain</td></tr>
+        <tr><td class="l">Authoritative</td><td class="l">final answer</td></tr>
+        <tr><td class="l">Local resolver</td><td class="l">asks, caches (TTL)</td></tr>
+      </table>
+    </div>
+  </div>
+  <h3>Resource records: (name, TTL, class, type, value)</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>Type</th><th class="l">Value</th><th class="l">Example</th></tr>
+    <tr><td><b>A</b></td><td class="l">IPv4 address (32 bit)</td><td class="l">www 3600 IN A 203.0.113.10</td></tr>
+    <tr><td><b>AAAA</b></td><td class="l">IPv6 address (128 bit)</td><td class="l">www … IN AAAA 2001:db8::10</td></tr>
+    <tr><td><b>MX</b></td><td class="l">mail server + priority (low = first)</td><td class="l">IN MX 10 mail.bb.gov.bd.</td></tr>
+    <tr><td><b>CNAME</b></td><td class="l">alias → canonical name</td><td class="l">ftp IN CNAME www</td></tr>
+    <tr><td><b>NS</b></td><td class="l">a name server for the zone</td><td class="l">IN NS ns1.bb.gov.bd.</td></tr>
+    <tr><td><b>PTR</b></td><td class="l">IP → name (reverse)</td><td class="l">10.113.0.203.in-addr.arpa</td></tr>
+    <tr><td><b>SOA</b></td><td class="l">zone data: serial, refresh, expire</td><td class="l">one per zone, first</td></tr>
+  </table>
+  <h3>Recursive vs iterative resolution</h3>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p><span class="hl">Recursive</span>: the server does the whole job and returns the final answer (host → resolver). <span class="hl">Iterative</span>: the server returns a <b>referral</b> and the asker continues (resolver → root → TLD → authoritative). Caching by TTL means most lookups never reach the root.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 140" width="295">
+      <g class="w">
+        <rect x="4" y="56" width="50" height="28" rx="6" class="ink fill-y"/>
+        <rect x="96" y="56" width="66" height="28" rx="6" class="ink-r fill-r"/>
+        <rect x="216" y="4" width="78" height="26" rx="6" class="ink fill-b"/>
+        <rect x="216" y="57" width="78" height="26" rx="6" class="ink fill-b"/>
+        <rect x="216" y="110" width="78" height="26" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M54,64 H92 M96,76 H58" marker-end="url(#ah)"/>
+        <path class="ink" d="M162,60 L212,20 M212,30 L166,64" marker-end="url(#ahb)"/>
+        <path class="ink" d="M162,68 H212 M212,76 H166" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M162,78 L212,118 M212,128 L162,84" marker-end="url(#ahg)"/>
+      </g>
+      <text x="29" y="75" text-anchor="middle" class="s w6">host</text><text x="129" y="75" text-anchor="middle" class="r s w6">resolver</text>
+      <text x="255" y="22" text-anchor="middle" class="s">root</text><text x="255" y="75" text-anchor="middle" class="s">TLD .bd</text><text x="255" y="128" text-anchor="middle" class="g s">authoritative</text>
+      <text x="74" y="52" text-anchor="middle" class="r s">recursive</text><text x="190" y="104" class="s" style="font-size:10px">iterative</text>
+    </svg></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"Quad-A = four times the A"</b>: AAAA holds 128 bits, four times A's 32. <b>MX = Mail eXchange</b>; <b>PTR = poin-T-er back</b>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> DNS is <b>not</b> UDP-only: TCP 53 for zone transfers. <b>Cache poisoning</b> plants false records; <b>DNSSEC</b> signs records (integrity), it does not encrypt them.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: email protocols ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Email</span></div>
+  <h2><span class="no">14</span>How Email Travels</h2><span class="tag">high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="4" y="52" width="80" height="40" rx="10" class="ink fill-y"/>
+      <rect x="138" y="52" width="96" height="40" rx="10" class="ink fill-b"/>
+      <rect x="300" y="52" width="96" height="40" rx="10" class="ink fill-b"/>
+      <rect x="430" y="52" width="74" height="40" rx="10" class="ink-p fill-p"/>
+      <rect x="556" y="52" width="80" height="40" rx="10" class="ink fill-y"/>
+      <path class="ink-r" d="M84,72 H134 M234,72 H296" marker-end="url(#ah)"/>
+      <path class="ink-k" d="M396,72 H426"/>
+      <path class="ink-g" d="M552,72 H508" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M508,80 H552" marker-end="url(#ahg)"/>
+    </g>
+    <text x="44" y="70" text-anchor="middle" class="w6">Alice</text><text x="44" y="85" text-anchor="middle" class="s">MUA</text>
+    <text x="186" y="70" text-anchor="middle" class="w6">her server</text><text x="186" y="85" text-anchor="middle" class="s">MTA</text>
+    <text x="348" y="70" text-anchor="middle" class="w6">his server</text><text x="348" y="85" text-anchor="middle" class="s">MTA</text>
+    <text x="467" y="70" text-anchor="middle" class="p w6">mailbox</text><text x="467" y="85" text-anchor="middle" class="p s">MDA</text>
+    <text x="596" y="70" text-anchor="middle" class="w6">Bob</text><text x="596" y="85" text-anchor="middle" class="s">MUA</text>
+    <text x="109" y="44" text-anchor="middle" class="r s">SMTP 587</text><text x="265" y="44" text-anchor="middle" class="r s">SMTP 25</text>
+    <text x="265" y="116" text-anchor="middle" class="s">MX lookup in DNS</text>
+    <text x="530" y="44" text-anchor="middle" class="g s">POP3 / IMAP</text>
+    <text x="200" y="140" text-anchor="middle" class="r s">PUSH (SMTP)</text><text x="530" y="140" text-anchor="middle" class="g s">PULL (POP3 / IMAP / HTTPS webmail)</text>
+  </svg><figcaption>MUA = user agent (Outlook) · MTA = transfer agent (Postfix, Sendmail) · MDA = delivery agent</figcaption></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Protocol</th><th>Port (TLS)</th><th class="l">Job</th><th class="l">Key points</th></tr>
+    <tr><td class="l"><b>SMTP</b></td><td><span class="circ">25</span> · 587 · (465)</td><td class="l">send / relay, push</td><td class="l">25 relay, 587 submission</td></tr>
+    <tr><td class="l"><b>POP3</b></td><td><span class="circ">110</span> · (995)</td><td class="l">download to one device</td><td class="l">usually deletes from server</td></tr>
+    <tr><td class="l"><b>IMAP4</b></td><td><span class="circ">143</span> · (993)</td><td class="l">mail stays on server</td><td class="l">folders, sync on all devices</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="code small" style="margin-top:0">S: 220 mail.bb.gov.bd ESMTP
+C: EHLO pc.example.org   S: 250
+C: MAIL FROM:&lt;alice@example.org&gt;
+C: RCPT TO:&lt;bob@bb.gov.bd&gt;
+C: DATA     S: 354 end with "."
+C: Subject: Hi ... .  S: 250
+C: QUIT     S: 221 bye</div>
+    <div>
+      <p class="small"><b>SMTP replies:</b> 2xx OK, 3xx send more, 4xx temporary, 5xx permanent error. <b>POP3:</b> USER, PASS, LIST, RETR, DELE, QUIT.</p>
+      <div class="exam small"><span class="lbl">Exam trap</span> SMTP <b>sends</b>; POP3/IMAP <b>retrieve</b>. Webmail uses <b>HTTPS</b> to the browser, but SMTP still moves mail between servers.</div>
+    </div>
+  </div>
+  <h2><span class="no">15</span>MIME: Beyond 7-bit ASCII</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="small">
+      <p>RFC 822 mail was <b>7-bit ASCII</b> only. <span class="hl">MIME</span> (RFC 2045–2049) adds headers for Bangla (UTF-8), images, PDFs and multi-part mail:</p>
+      <ul class="dash"><li><b>MIME-Version</b>: 1.0</li><li><b>Content-Type</b>: text/plain, image/jpeg, application/pdf, <b>multipart/mixed</b></li><li><b>Content-Transfer-Encoding</b>: 7bit, 8bit, <b>base64</b>, quoted-printable</li></ul>
+    </div>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">Worked example: base64 ✍</span> "Man" = 77, 97, 110 = 01001101 01100001 01101110<br>6-bit groups: 010011 · 010110 · 000101 · 101110 = 19, 22, 5, 46 → <span class="circ">TWFu</span><br>3 bytes → 4 characters: a 3 MB attachment grows to about <b>4 MB</b> (+33%).</div>
+      <div class="trick small"><span class="lbl">Memory trick</span> Ports in order of the mail's journey: <b>25 → 110 → 143</b> (send, pop it down, keep it on the server). TLS twins: <b>465, 995, 993</b>.</div>
+    </div>
+  </div>
+  <div class="tipbox small"><span class="lbl">Anti-spoofing (DNS TXT records)</span> <b>SPF</b> lists the servers allowed to send for a domain · <b>DKIM</b> signs headers with a key published in DNS · <b>DMARC</b> says what to do when they fail.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: email privacy + night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Email privacy · Revision I</span></div>
+  <h2><span class="no">16</span>Email Privacy: PGP &amp; S/MIME</h2><span class="tag">high-yield</span>
+  <p class="small">Threats: <b>eavesdropping</b>, <b>tampering</b>, <b>spoofing</b> (forged From:). TLS/STARTTLS protects each hop only; <span class="hl">end-to-end</span> privacy needs PGP or S/MIME.</p>
+  <div class="cols" style="grid-template-columns:1fr 310px;align-items:center">
+    <div class="small">
+      <p><b>PGP</b> (Phil Zimmermann, <span class="circ">1991</span>; OpenPGP RFC 4880). Originally <b>IDEA</b> (128-bit) for the text, <b>RSA</b> for keys, <b>MD5</b> digest; today AES, SHA-256, RSA/ECC.</p>
+      <ol class="steps"><li><b>Sign</b> the digest with Alice's private key</li><li><b>Compress</b> (ZIP)</li><li><b>Encrypt</b> with a one-time <span class="hl">session key</span>, which goes encrypted with Bob's public key</li><li><b>Radix-64</b> (base64) for SMTP</li></ol>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 310 170" width="305">
+      <g class="w">
+        <rect x="4" y="8" width="66" height="30" rx="6" class="ink fill-b"/>
+        <rect x="84" y="8" width="66" height="30" rx="6" class="ink-r fill-r"/>
+        <rect x="164" y="8" width="66" height="30" rx="6" class="ink fill-y"/>
+        <rect x="244" y="8" width="62" height="30" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M70,23 H80 M150,23 H160 M230,23 H240" marker-end="url(#ahb)"/>
+        <rect x="64" y="84" width="74" height="30" rx="6" class="ink-p fill-p"/>
+        <rect x="186" y="84" width="112" height="30" rx="6" class="ink-r fill-r"/>
+        <path class="ink-p" d="M118,84 L180,40" marker-end="url(#ahp)"/>
+        <path class="ink-r" d="M138,99 H182" marker-end="url(#ah)"/>
+      </g>
+      <text x="37" y="28" text-anchor="middle" class="s w6">M + sig</text><text x="117" y="28" text-anchor="middle" class="r s w6">ZIP</text><text x="197" y="28" text-anchor="middle" class="s w6">IDEA/AES</text><text x="275" y="28" text-anchor="middle" class="g s w6">base64</text>
+      <text x="101" y="104" text-anchor="middle" class="p s w6">session key</text><text x="242" y="104" text-anchor="middle" class="r s w6">E(Bob's public)</text>
+      <text x="155" y="146" text-anchor="middle" class="s">fast cipher for the bulk, public key</text><text x="155" y="162" text-anchor="middle" class="s">only for the short session key</text>
+    </svg><figcaption>PGP is hybrid: symmetric + public key</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">PGP / OpenPGP</th><th class="l">S/MIME</th></tr>
+    <tr><td class="l">Trust model</td><td class="l"><b>web of trust</b> (users sign keys)</td><td class="l"><b>X.509 certificates</b> from a CA hierarchy</td></tr>
+    <tr><td class="l">Typical use</td><td class="l">individuals, open-source software</td><td class="l">organisations, Outlook, government</td></tr>
+  </table>
+  <div class="sumbox"><span class="lbl">Night-before fact sheet</span>
+    <div class="fgrid small">
+      <p>MFA = factors of different types</p><p>KDC: N keys, not N(N − 1)/2</p>
+      <p>Needham–Schroeder flaw: old-key replay</p><p>Kerberos: AS → TGT, TGS → ticket, port 88</p>
+      <p>MD5 128 · SHA-1 160 · SHA-256 256 bits</p><p>Birthday attack ≈ 2<sup>n/2</sup></p>
+      <p>MAC: no non-repudiation; signature: yes</p><p>Sign: sender private · verify: sender public</p>
+      <p>X.509 v3: issuer, subject, public key, CA sig</p><p>Revocation: CRL / OCSP</p>
+      <p>802.3z fibre · 802.3ab 1000BASE-T 100 m</p><p>Carrier extension: slot 512 B · burst 8192 B</p>
+      <p>10G: 802.3ae, full duplex only</p><p>DNS 53: UDP query · TCP zone transfer</p>
+      <p>A · AAAA · MX · CNAME · NS · PTR · SOA</p><p>SMTP 25/587 · POP3 110 · IMAP 143</p>
+      <p>MIME: Content-Type, base64 (+33%)</p><p>PGP: sign → ZIP → encrypt → radix-64</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> password + PIN ≠ MFA · a hash has no key · MAC ≠ non-repudiation · certificates hold the public key only · Gigabit min frame still 64 B · DNS uses TCP too · POP3/IMAP never send · TLS ≠ end-to-end</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> Fresh question, secret answer · AS lets you in, TGS gives tickets · SHA-1 ↔ 160 · private signs, public checks · certificate = passport · z = glass, ab = copper · quad-A = 4 × A · 25 → 110 → 143</div>
+  <div class="sticky pink" style="float:none;width:auto;margin:3mm 0 0 0"><b>Also practise (written):</b> ① sign and verify with RSA, n = 33 · ② Needham–Schroeder and its flaw · ③ recursive vs iterative DNS (diagram) · ④ how PGP gives secrecy + authentication</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Auth, DNS &amp; Email</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A digital signature is verified with the:<ol class="opts"><li>receiver's private key</li><li>sender's public key</li><li>sender's private key</li><li>shared DES key</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>The digest length of SHA-1 is:<ol class="opts"><li>128 bits</li><li>256 bits</li><li>160 bits</li><li>512 bits</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>DNS record for an IPv6 address:<ol class="opts"><li>A</li><li>MX</li><li>PTR</li><li>AAAA</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>The Kerberos TGT is issued by the:<ol class="opts"><li>AS</li><li>TGS</li><li>file server</li><li>CA</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>1000BASE-T (Cat 5e UTP) is defined in:<ol class="opts"><li>802.3u</li><li>802.3z</li><li>802.3ab</li><li>802.3ae</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Which service does a MAC NOT give?<ol class="opts"><li>non-repudiation</li><li>integrity</li><li>origin check</li><li>tamper detection</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Default IMAP port (no TLS):<ol class="opts"><li>110</li><li>143</li><li>25</li><li>993</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Carrier extension makes the minimum slot:<ol class="opts"><li>64 bytes</li><li>1518 bytes</li><li>8192 bytes</li><li>512 bytes</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>An X.509 certificate is signed with the:<ol class="opts"><li>CA's private key</li><li>owner's private key</li><li>CA's public key</li><li>owner's public key</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>DNS uses TCP port 53 mainly for:<ol class="opts"><li>A-record queries</li><li>reverse lookups</li><li>zone transfers</li><li>root hints</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-d · 4-a · 5-c · 6-a · 7-b · 8-d · 9-a · 10-c</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Explain with a diagram how Kerberos authenticates a client to a server. How does it give mutual authentication, and why does it need synchronised clocks? <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>AS + TGS = the KDC, which shares a secret key with every user and server; diagram as on sheet 3 <i class="mk">1</i></li>
+    <li>C → AS: user name. AS → C: K<sub>C</sub>(K<sub>S</sub>, TGT); K<sub>C</sub> comes from the password, which never crosses the network <i class="mk">2</i></li>
+    <li>C → TGS: TGT + K<sub>S</sub>(timestamp) + server name. TGS → C: K<sub>S</sub>(K<sub>CV</sub>) + ticket K<sub>V</sub>(C, K<sub>CV</sub>) <i class="mk">2</i></li>
+    <li>C → V: ticket + K<sub>CV</sub>(timestamp); V → C: K<sub>CV</sub>(timestamp + 1). Only the real V can open the ticket: <span class="hl">mutual authentication</span> <i class="mk">2</i></li>
+    <li>Timestamps stop replay, so clocks must agree within ≈ 5 min <i class="mk">1</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols">
+    <ul class="tick small" style="margin-top:0">
+      <li>Draw challenge–response, spot reflection</li>
+      <li>Write the 6 Kerberos messages</li>
+    </ul>
+    <ul class="tick small" style="margin-top:0">
+      <li>Hash sizes, MAC vs signature, X.509</li>
+      <li>Gigabit media, DNS records, mail ports</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>এমপ্লিফায়ার ও FET: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrow markers, circuit symbols (inline attributes!)
+     r-h: horizontal resistor, pins (0,0) (50,0) · r-v: vertical resistor, pins (0,0) (0,50)
+     c-h: horizontal capacitor, pins (0,0) (24,0) · c-v: vertical capacitor, pins (0,0) (0,24) · gnd: ground at (0,0)
+     q-npn: base (0,0), collector (26,-30), emitter (26,30)
+     q-jn / q-jp: n / p-channel JFET, gate (0,0), drain (28,-30), source (28,30)
+     q-md / q-me: n-channel D- / E-MOSFET, gate (0,0), drain (28,-30), source (28,30)
+     i-dn: current source pointing down, pins (0,-28) (0,28) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d3f8f"/></marker>
+    <g id="r-h"><path d="M0,0H10l3,-8l6,16l6,-16l6,16l6,-16l3,8H50" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="r-v"><path d="M0,0V10l8,3l-16,6l16,6l-16,6l16,6l-8,3V50" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="c-h"><path d="M0,0H9M15,0H24" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M9,-10V10M15,-10V10" fill="none" stroke="#1d3f8f" stroke-width="2.8" stroke-linecap="round"/></g>
+    <g id="c-v"><path d="M0,0V9M0,15V24" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M-10,9H10M-10,15H10" fill="none" stroke="#1d3f8f" stroke-width="2.8" stroke-linecap="round"/></g>
+    <g id="gnd"><path d="M0,0V6M-10,6H10M-6,11H6M-2,16H2" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="q-npn"><circle cx="18" cy="0" r="20" fill="rgba(135,190,255,.18)" stroke="#1d3f8f" stroke-width="1.6"/><path d="M0,0H12M12,-12V12M12,-5L26,-16V-30M12,5L26,16V30" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M12,5L24,14.4" fill="none" stroke="#1d3f8f" stroke-width="2.2" marker-end="url(#ahs)"/></g>
+    <g id="q-jn"><path d="M14,-16V16" fill="none" stroke="#1d3f8f" stroke-width="3.2" stroke-linecap="round"/><path d="M14,-10H28V-30M14,10H28V30" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M0,0H13" fill="none" stroke="#1d3f8f" stroke-width="2.2" marker-end="url(#ahs)"/></g>
+    <g id="q-jp"><path d="M14,-16V16" fill="none" stroke="#1d3f8f" stroke-width="3.2" stroke-linecap="round"/><path d="M14,-10H28V-30M14,10H28V30" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M14,0H2" fill="none" stroke="#1d3f8f" stroke-width="2.2" marker-end="url(#ahs)"/><path d="M0,0H3" fill="none" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="q-md"><path d="M0,0H8M8,-14V14" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linecap="round"/><path d="M14,-16V16" fill="none" stroke="#1d3f8f" stroke-width="3" stroke-linecap="round"/><path d="M14,-12H28V-30M14,12H28V30M28,0V12" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M28,0H15" fill="none" stroke="#1d3f8f" stroke-width="2" marker-end="url(#ahs)"/></g>
+    <g id="q-me"><path d="M0,0H8M8,-14V14" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linecap="round"/><path d="M14,-16V-8M14,-4V4M14,8V16" fill="none" stroke="#1d3f8f" stroke-width="3" stroke-linecap="round"/><path d="M14,-12H28V-30M14,12H28V30M28,0V12" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M28,0H15" fill="none" stroke="#1d3f8f" stroke-width="2" marker-end="url(#ahs)"/></g>
+    <g id="i-dn"><path d="M0,-28V-14M0,14V28" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><circle r="14" fill="rgba(120,255,120,.25)" stroke="#1d3f8f" stroke-width="2.2"/><path d="M0,-8V8M-5,3L0,9L5,3" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">সিঙ্গেল-স্টেজ এমপ্লিফায়ার ও FET</span></h1>
+  <p class="subtitle">CE · CB · CC · re ও h-মডেল · dB ও ব্যান্ডউইডথ · JFET · MOSFET · FET বায়াস ও এমপ্লিফায়ার: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">এমপ্লিফায়ার ও FET</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">গেইন · dB · কাপলিং C</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">CE / CB / CC সারণি ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">re · h-প্যারামিটার</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">−3 dB · ব্যান্ডউইডথ ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">শকলি · gm ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">FET বায়াস · CS/CD/CG</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">D- বনাম E-MOSFET ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">BJT বনাম FET · CMOS</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = প্রয়োগ / তুলনা</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① CE 180°, CB/CC 0°<br>② CC: বাফার, A<sub>v</sub> ≈ 1<br>③ r<sub>e</sub> = 26 mV/I<sub>E</sub><br>④ −3 dB = অর্ধেক পাওয়ার<br>⑤ শকলি ও g<sub>m</sub><br>⑥ E-MOS: 0 V-এ OFF</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"<span class="hl">Single stage amplifier</span>: voltage and current gain, input and output impedance of a common base, common emitter and common collector, h-parameter; <span class="hl">Field effect transistor (FET)</span>: JFET structure, operation and characteristics. <span class="hl">MOSFET construction, operation and characteristics</span>."। BJT-এর গঠন, বায়াসিং ও সুইচ আছে BJT নোটে (লেসন ২); ডায়োড লেসন ১-এ।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>এমপ্লিফায়ারের মূল কথা, dB, ক্যাপাসিটর … পৃ. ২</li><li>r<sub>e</sub> মডেল ও CE বিশ্লেষণ ……… পৃ. ৩</li><li>CB, CC ও তুলনামূলক সারণি ……… পৃ. ৪</li><li>h-প্যারামিটার, ফ্রিকোয়েন্সি রেসপন্স … পৃ. ৫</li><li>FET পরিবার ও JFET ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>শকলি সমীকরণ, g<sub>m</sub> ……… পৃ. ৭</li><li>MOSFET (D ও E), CMOS ……… পৃ. ৮</li><li>FET বায়াসিং ও CS/CD/CG ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: amplifier basics, dB, capacitors ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>এমপ্লিফায়ারের মূল কথা</span></div>
+  <h2><span class="no">১</span>সিঙ্গেল-স্টেজ এমপ্লিফায়ার</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> সিঙ্গেল-স্টেজ এমপ্লিফায়ারে <b>একটি</b> ট্রানজিস্টর (BJT বা FET) থাকে, যা <span class="hl">অ্যাকটিভ অঞ্চলে</span> (BJT) বা <span class="hl">স্যাচুরেশন / পিঞ্চ-অফ অঞ্চলে</span> (FET) বায়াস করা থাকে এবং দুর্বল AC সংকেতকে বড় করে। DC বায়াস Q-পয়েন্ট ঠিক করে; AC সংকেত তার ওপর চড়ে চলে। বাড়তি শক্তি আসে DC সাপ্লাই থেকে, ট্রানজিস্টর থেকে নয়।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">গেইন</th><th class="l">সংজ্ঞা</th></tr>
+      <tr><td class="l">ভোল্টেজ A<sub>v</sub></td><td class="l">v<sub>o</sub> / v<sub>i</sub></td></tr>
+      <tr><td class="l">কারেন্ট A<sub>i</sub></td><td class="l">i<sub>o</sub> / i<sub>i</sub> = −A<sub>v</sub>·Z<sub>i</sub>/R<sub>L</sub></td></tr>
+      <tr><td class="l">পাওয়ার A<sub>p</sub></td><td class="l"><span class="circ">A<sub>v</sub> × A<sub>i</sub></span></td></tr>
+      <tr><td class="l">ইনপুট Z<sub>i</sub></td><td class="l">v<sub>i</sub> / i<sub>i</sub> (ভেতরে তাকিয়ে)</td></tr>
+      <tr><td class="l">আউটপুট Z<sub>o</sub></td><td class="l">v<sub>s</sub> = 0 রেখে v<sub>o</sub>/i<sub>o</sub></td></tr>
+    </table>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">ডেসিবেল (dB)</span><br>পাওয়ার: <span class="hl">G = 10 log(P<sub>o</sub>/P<sub>i</sub>)</span><br>ভোল্টেজ: <span class="hl">G = 20 log(V<sub>o</sub>/V<sub>i</sub>)</span><br>ক্যাসকেড: <b>dB যোগ হয়</b> (গেইন গুণ হয়)</div>
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>ভোল্টেজ অনুপাত</th><th>dB</th><th>পাওয়ার অনুপাত</th></tr>
+        <tr><td>0.707</td><td class="red"><b>−3</b></td><td>½</td></tr>
+        <tr><td>2</td><td>+6</td><td>4</td></tr>
+        <tr><td>10 / 100 / 1000</td><td>20 / 40 / 60</td><td>10² … 10⁶</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> পাওয়ার অনুপাত 1000 = <b>30 dB</b> (10 log), কিন্তু ভোল্টেজ অনুপাত 1000 = <b>60 dB</b> (20 log)। বেল (bel) নামটি A. G. Bell-এর সম্মানে; 1 B = 10 dB।</div>
+
+  <h2><span class="no">২</span>কাপলিং ও বাইপাস ক্যাপাসিটর · DC বনাম AC বিশ্লেষণ</h2>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 270 222" width="268">
+      <g class="w">
+        <path class="ink-k" d="M60,20 H230"/>
+        <use href="#r-v" x="80" y="20"/><use href="#r-v" x="126" y="20"/>
+        <path class="ink" d="M80,70 V130 M14,110 H40 M64,110 H100 M126,70 V80 M126,76 H160 M184,76 H210 M126,140 V146 M126,146 H166 V160"/>
+        <use href="#r-v" x="80" y="130"/><use href="#gnd" x="80" y="180"/>
+        <use href="#c-h" x="40" y="110"/><use href="#c-h" x="160" y="76"/>
+        <use href="#q-npn" x="100" y="110"/>
+        <use href="#r-v" x="126" y="146"/><use href="#gnd" x="126" y="196"/>
+        <use href="#c-v" x="166" y="160"/><use href="#gnd" x="166" y="184"/>
+        <use href="#r-v" x="210" y="76"/><use href="#gnd" x="210" y="126"/>
+      </g>
+      <text x="236" y="25" class="s w6">+VCC</text>
+      <text x="56" y="50" class="s">R1</text><text x="56" y="160" class="s">R2</text><text x="138" y="50" class="s">RC</text>
+      <text x="100" y="178" class="s">RE</text><text x="180" y="178" class="s r w6">CE</text>
+      <text x="44" y="96" class="s r w6">C1</text><text x="164" y="62" class="s r w6">C2</text><text x="222" y="104" class="s">RL</text>
+      <text x="2" y="104" class="s g">vi</text><text x="214" y="68" class="s g">vo</text><text x="148" y="116" class="s">Q</text>
+    </svg><figcaption>ভোল্টেজ-ডিভাইডার CE এমপ্লিফায়ার: C1, C2 কাপলিং · CE বাইপাস করে RE</figcaption></figure>
+    <div>
+      <ul class="dash small">
+        <li><b>কাপলিং C (C1, C2):</b> <span class="hl">AC পার করে, DC আটকায়</span>, ফলে সোর্স ও লোড Q-পয়েন্ট নষ্ট করে না। নিয়ম: সর্বনিম্ন সংকেত ফ্রিকোয়েন্সিতে X<sub>C</sub> ≤ R/10।</li>
+        <li><b>বাইপাস C (C<sub>E</sub>):</b> শুধু AC-র জন্য R<sub>E</sub>-কে শর্ট করে। <b>DC</b> স্থিতিশীলতা R<sub>E</sub> রাখে, অথচ AC গেইন ≈ −R<sub>C</sub>/R<sub>E</sub> থেকে বেড়ে হয় <span class="circ">−R<sub>C</sub>/r<sub>e</sub></span>।</li>
+      </ul>
+      <ol class="steps small">
+        <li><b>DC বিশ্লেষণ:</b> ক্যাপাসিটর = <b>ওপেন</b>; I<sub>E</sub>, V<sub>CE</sub> বের করো (বায়াস, লেসন ২)</li>
+        <li>r<sub>e</sub> = 26 mV / I<sub>E</sub></li>
+        <li><b>AC বিশ্লেষণ:</b> ক্যাপাসিটর = <b>শর্ট</b>, DC সাপ্লাই = <b>AC গ্রাউন্ড</b></li>
+        <li>ট্রানজিস্টরের জায়গায় মডেল বসাও; Z<sub>i</sub>, Z<sub>o</sub>, A<sub>v</sub>, A<sub>i</sub> বের করো</li>
+      </ol>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>DC-তে ক্যাপ বাদ, AC-তে ক্যাপ শর্ট, V<sub>CC</sub> মাটিতে</b>"। AC-তে R1 ও R2 দুটোই গ্রাউন্ডে শেষ হয়, তাই তারা <b>সমান্তরাল</b>: R′ = R1 ∥ R2।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: re model & CE analysis ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>CE বিশ্লেষণ</span></div>
+  <h2><span class="no">৩</span>r<sub>e</sub> মডেল ও কমন-এমিটার স্টেজ</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">r<sub>e</sub> মডেল</span> ফরোয়ার্ড-বায়াসড BE জাংশনের AC রেজিস্ট্যান্স <span class="circ">r<sub>e</sub> = 26 mV / I<sub>E</sub></span> (কক্ষ তাপমাত্রায় V<sub>T</sub> ≈ 26 mV)। বেস থেকে দেখলে তা <b>β গুণ বড়</b>: Z<sub>b</sub> = <span class="hl">βr<sub>e</sub></span> (= h<sub>ie</sub>, একে r<sub>π</sub>-ও বলে)। আউটপুটে একটি কারেন্ট সোর্স βI<sub>b</sub> (= I<sub>c</sub>), সমান্তরালে r<sub>o</sub> = 1/h<sub>oe</sub>।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 140" width="296">
+      <g class="w">
+        <path class="ink" d="M20,30 H80 M80,80 V112 M180,42 V30 H240 V45 M240,95 V112 M240,30 H284 M180,98 V112 M14,112 H284"/>
+        <use href="#r-v" x="80" y="30"/><use href="#i-dn" x="180" y="70"/><use href="#r-v" x="240" y="45"/>
+        <path class="ink-r" d="M30,22 H64" marker-end="url(#ah)"/>
+      </g>
+      <text x="4" y="34" class="s w6">b</text><text x="34" y="16" class="s r">Ib</text>
+      <text x="94" y="60" class="s w6">βre</text><text x="200" y="74" class="s r">βIb</text><text x="252" y="74" class="s">RC</text>
+      <text x="284" y="24" class="s g">vo</text><text x="186" y="24" class="s w6">c</text><text x="124" y="130" class="bn s w6">e (কমন)</text>
+    </svg><figcaption>r<sub>e</sub> মডেলে CE (r<sub>o</sub> উপেক্ষিত, C<sub>E</sub> বাইপাস করছে)</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 280 130" width="276">
+      <g class="w">
+        <path class="ink-k" d="M10,65 H270" stroke-dasharray="4 4"/>
+        <path class="ink-g" d="M10,65 C25,50 35,50 50,65 S75,80 90,65"/>
+        <path class="ink-r" d="M130,65 C150,10 170,10 190,65 S230,120 250,65"/>
+        <path class="ink-k" d="M96,65 H124" marker-end="url(#ahb)"/>
+      </g>
+      <text x="22" y="40" class="bn s g">vi (ছোট)</text><text x="134" y="118" class="bn s r">vo: ×178, উল্টানো</text>
+      <text x="196" y="24" class="s r w6">180°</text>
+    </svg><figcaption>CE আউটপুট উল্টে যায়: বেস ↑ → I<sub>C</sub> ↑ → R<sub>C</sub>-তে ড্রপ ↑ → V<sub>C</sub> ↓</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">CE (ডিভাইডার বায়াস)</th><th class="l">Z<sub>i</sub></th><th class="l">Z<sub>o</sub></th><th class="l">A<sub>v</sub></th></tr>
+    <tr><td class="l">R<sub>E</sub> বাইপাসড</td><td class="l">R1 ∥ R2 ∥ βr<sub>e</sub></td><td class="l">R<sub>C</sub> (∥ r<sub>o</sub>)</td><td class="l red"><b>−R<sub>C</sub>/r<sub>e</sub></b></td></tr>
+    <tr><td class="l">R<sub>E</sub> আনবাইপাসড</td><td class="l">R1 ∥ R2 ∥ β(r<sub>e</sub> + R<sub>E</sub>)</td><td class="l">R<sub>C</sub></td><td class="l">−R<sub>C</sub>/(r<sub>e</sub> + R<sub>E</sub>) ≈ −R<sub>C</sub>/R<sub>E</sub></td></tr>
+    <tr><td class="l">লোড R<sub>L</sub> সহ</td><td class="l">একই</td><td class="l">R<sub>C</sub></td><td class="l">R<sub>C</sub>-এর জায়গায় R<sub>C</sub> ∥ R<sub>L</sub></td></tr>
+  </table>
+  <div class="ex"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> V<sub>CC</sub> = 12 V, R1 = 47 kΩ, R2 = 10 kΩ, R<sub>C</sub> = 3.3 kΩ, R<sub>E</sub> = 1 kΩ, β = 100, লোড নেই।
+    <ol class="steps small">
+      <li>βR<sub>E</sub> = 100 kΩ ≥ 10R2 ✓ → V<sub>B</sub> = 12 × 10/57 = 2.11 V, V<sub>E</sub> = 1.41 V, I<sub>E</sub> = <b>1.41 mA</b></li>
+      <li>r<sub>e</sub> = 26/1.41 = <b>18.5 Ω</b>; βr<sub>e</sub> = 1.85 kΩ; R1 ∥ R2 = 8.25 kΩ</li>
+      <li>বাইপাসড: Z<sub>i</sub> = 8.25k ∥ 1.85k = <b>1.51 kΩ</b>, Z<sub>o</sub> = 3.3 kΩ, A<sub>v</sub> = −3300/18.5 = <span class="circ">−178</span> (45 dB)</li>
+      <li>C<sub>E</sub> সরালে: Z<sub>b</sub> = 100 × 1018.5 Ω = 101.9 kΩ → Z<sub>i</sub> = <b>7.63 kΩ</b>, A<sub>v</sub> = −3300/1018.5 = <b>−3.24</b></li>
+    </ol></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> CE গেইন = "<b>কালেক্টরে যা আছে ÷ এমিটারে যা আছে</b>", সামনে মাইনাস। বাইপাস করলে এমিটারে থাকে শুধু r<sub>e</sub>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> C<sub>E</sub> সরালে গেইন <b>কমে</b> (এখানে −178 → −3.24), কিন্তু Z<sub>i</sub> <b>বাড়ে</b> এবং গেইন স্থির ও প্রায় β-নিরপেক্ষ হয় (নেগেটিভ ফিডব্যাক)।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: CB, CC, comparison ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>CB · CC · তুলনা</span></div>
+  <h2><span class="no">৪</span>কমন বেস ও কমন কালেক্টর</h2>
+  <figure class="doodle"><svg viewBox="0 0 640 116" width="640">
+    <g class="w">
+      <use href="#q-npn" x="60" y="56"/><use href="#q-npn" x="300" y="56"/><use href="#q-npn" x="530" y="56"/>
+      <path class="ink-g" d="M14,56 H56" marker-end="url(#ahg)"/><path class="ink-r" d="M86,26 H130" marker-end="url(#ah)"/>
+      <path class="ink-k" d="M86,86 V92"/><use href="#gnd" x="86" y="92"/>
+      <path class="ink-k" d="M300,56 H286 V70"/><use href="#gnd" x="286" y="70"/>
+      <path class="ink-g" d="M326,112 V90" marker-end="url(#ahg)"/><path class="ink-r" d="M326,26 H370" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M484,56 H526" marker-end="url(#ahg)"/><path class="ink-k" d="M556,26 V12"/><path class="ink-r" d="M556,86 H600" marker-end="url(#ah)"/>
+    </g>
+    <text x="14" y="48" class="bn s g">ইন: B</text><text x="96" y="18" class="bn s r">আউট: C</text><text x="100" y="104" class="bn s">E কমন</text>
+    <text x="336" y="108" class="bn s g">ইন: E</text><text x="336" y="18" class="bn s r">আউট: C</text><text x="214" y="104" class="bn s">B কমন</text>
+    <text x="484" y="48" class="bn s g">ইন: B</text><text x="566" y="106" class="bn s r">আউট: E</text><text x="566" y="16" class="s">C → V<tspan>CC</tspan></text>
+    <text x="150" y="62" class="w6 k">CE</text><text x="390" y="62" class="w6 k">CB</text><text x="600" y="62" class="w6 k">CC</text>
+  </svg><figcaption>কমন টার্মিনাল ইনপুট ও আউটপুট দুদিকেই থাকে (এটি AC গ্রাউন্ড; V<sub>CC</sub>-ও AC গ্রাউন্ড)</figcaption></figure>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">কমন বেস (CB)</span> ইনপুট E-তে, আউটপুট C-তে।<br>Z<sub>i</sub> = R<sub>E</sub> ∥ r<sub>e</sub> ≈ <span class="hl">r<sub>e</sub> (খুব কম, ~10–50 Ω)</span><br>Z<sub>o</sub> ≈ R<sub>C</sub> · A<sub>v</sub> = <b>+R<sub>C</sub>/r<sub>e</sub></b> (উল্টায় না)<br>A<sub>i</sub> = α ≈ <span class="circ">0.98–0.99 (&lt; 1)</span><br>ব্যবহার: RF / উচ্চ ফ্রিকোয়েন্সি স্টেজ (মিলার প্রভাব নেই), কম-Z সোর্স।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">কমন কালেক্টর (CC) = এমিটার ফলোয়ার</span> ইনপুট B-তে, আউটপুট E-তে।<br>Z<sub>i</sub> = R<sub>B</sub> ∥ β(r<sub>e</sub> + R<sub>E</sub>) → <span class="hl">উচ্চ</span><br>Z<sub>o</sub> = R<sub>E</sub> ∥ r<sub>e</sub> ≈ r<sub>e</sub> → <span class="hl">খুব কম</span><br>A<sub>v</sub> = R<sub>E</sub>/(R<sub>E</sub> + r<sub>e</sub>) <span class="circ">≈ 1 (একটু &lt; 1)</span><br>A<sub>i</sub> ≈ β + 1। ব্যবহার: <b>বাফার</b>, ইম্পিডেন্স ম্যাচিং।</div>
+  </div>
+  <h3>মাস্টার তুলনামূলক সারণি (মুখস্থ করো)</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বৈশিষ্ট্য</th><th>CE</th><th>CB</th><th>CC (এমিটার ফলোয়ার)</th></tr>
+    <tr><td class="l">Z<sub>i</sub></td><td>মাঝারি (βr<sub>e</sub>, ~1 kΩ)</td><td class="red"><b>সবচেয়ে কম</b> (≈ r<sub>e</sub>)</td><td class="red"><b>সবচেয়ে বেশি</b> (~100 kΩ)</td></tr>
+    <tr><td class="l">Z<sub>o</sub></td><td>মাঝারি (≈ R<sub>C</sub>)</td><td><b>সবচেয়ে বেশি</b> (ডিভাইস ~MΩ)</td><td><b>সবচেয়ে কম</b> (≈ r<sub>e</sub>)</td></tr>
+    <tr><td class="l">A<sub>v</sub></td><td>উচ্চ, −R<sub>C</sub>/r<sub>e</sub></td><td>উচ্চ, +R<sub>C</sub>/r<sub>e</sub></td><td>≈ 1</td></tr>
+    <tr><td class="l">A<sub>i</sub></td><td>উচ্চ (β)</td><td>α &lt; 1</td><td>উচ্চ (β + 1)</td></tr>
+    <tr><td class="l">A<sub>p</sub></td><td class="red"><b>সবচেয়ে বেশি</b></td><td>মাঝারি</td><td>মাঝারি (≈ A<sub>i</sub>)</td></tr>
+    <tr><td class="l">ফেজ</td><td class="red"><b>180°</b></td><td>0°</td><td>0°</td></tr>
+    <tr><td class="l">ব্যবহার</td><td>ভোল্টেজ এমপ্লিফায়ার</td><td>RF, কারেন্ট বাফার</td><td>বাফার, ম্যাচিং</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> এমিটার ফলোয়ার, I<sub>E</sub> = 2 mA, R<sub>E</sub> = 2.2 kΩ: r<sub>e</sub> = 26/2 = 13 Ω; A<sub>v</sub> = 2200/2213 = <b>0.994</b>; Z<sub>o</sub> = 2.2k ∥ 13 = <b>12.9 Ω</b>। দুর্বল সোর্স এখন উচ্চ Z<sub>i</sub> দেখে, আর লোড দেখে ~13 Ω-এর সোর্স।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>CB: Big output, Baby input</b>" (আউটপুট Z বড়, ইনপুট Z শিশু) · "<b>CC: Copy Cat</b>": এমিটার বেসের ভোল্টেজ নকল করে (0.7 V কম), তাই A<sub>v</sub> ≈ 1।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> CB-তে A<sub>i</sub> &lt; 1 কিন্তু A<sub>v</sub> <b>উচ্চ</b>; CC-তে A<sub>v</sub> &lt; 1 কিন্তু A<sub>i</sub> <b>উচ্চ</b>। শুধু CE উল্টায়। ডার্লিংটন = দুটি CC স্টেজ: β<sub>D</sub> ≈ β₁β₂।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: h-parameters, frequency response ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>h-প্যারামিটার · ব্যান্ডউইডথ</span></div>
+  <h2><span class="no">৫</span>এমপ্লিফায়ার বিশ্লেষণে h-প্যারামিটার (হাইব্রিড মডেল)</h2>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr">
+    <div>
+      <p class="small" style="margin:0"><b>টু-পোর্ট সমীকরণ</b> (ইনপুট i₁, v₂):</p>
+      <p style="margin:0"><span class="circ">v₁ = h₁₁i₁ + h₁₂v₂</span><br><span class="circ">i₂ = h₂₁i₁ + h₂₂v₂</span></p>
+      <p class="small" style="margin:0">"হাইব্রিড": <span class="hl">মিশ্র একক</span> (Ω, –, –, S)। শেষ অক্ষর = কনফিগারেশন (e, b, c)।</p>
+    </div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>h</th><th class="l">নাম</th><th>একক</th><th>CE-তে সাধারণ মান</th></tr>
+      <tr><td>h<sub>ie</sub></td><td class="l">ইনপুট ইম্পিডেন্স</td><td>Ω</td><td>~1 kΩ</td></tr>
+      <tr><td>h<sub>re</sub></td><td class="l">রিভার্স ভোল্টেজ অনুপাত</td><td>–</td><td>~10⁻⁴</td></tr>
+      <tr><td>h<sub>fe</sub></td><td class="l">ফরোয়ার্ড কারেন্ট গেইন</td><td>–</td><td>50–200</td></tr>
+      <tr><td>h<sub>oe</sub></td><td class="l">আউটপুট অ্যাডমিট্যান্স</td><td>S</td><td>~25 μS</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">আসন্ন CE (h<sub>re</sub>, h<sub>oe</sub> ≈ 0)</span><br>Z<sub>i</sub> = h<sub>ie</sub> · A<sub>i</sub> = h<sub>fe</sub> · Z<sub>o</sub> = 1/h<sub>oe</sub><br><span class="hl">A<sub>v</sub> = −h<sub>fe</sub>R<sub>L</sub>/h<sub>ie</sub></span><br>h<sub>fe</sub> = 50, h<sub>ie</sub> = 1.1 kΩ, R<sub>L</sub> = 2.2 kΩ → <b>A<sub>v</sub> = −100</b></div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">r<sub>e</sub> মডেলের সাথে সম্পর্ক</span><br><span class="circ">h<sub>ie</sub> = βr<sub>e</sub></span> · h<sub>fe</sub> = β<br>h<sub>ib</sub> = r<sub>e</sub> · h<sub>fb</sub> = −α<br>h<sub>fc</sub> = −(1 + β) · h<sub>oe</sub> = 1/r<sub>o</sub></div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> h<sub>fe</sub> (AC) ≈ h<sub>FE</sub> (= β<sub>DC</sub>), কিন্তু হুবহু এক নয়। h<sub>fb</sub> <b>ঋণাত্মক</b> (≈ −0.99)।</div>
+
+  <h2><span class="no">৬</span>ফ্রিকোয়েন্সি রেসপন্স, −3 dB বিন্দু ও ব্যান্ডউইডথ</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 160" width="640">
+    <g class="w">
+      <path class="ink-k" d="M60,142 V10 M60,142 H620" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M74,138 C110,80 140,40 200,34 H470 C530,40 560,80 596,138" style="stroke-width:2.6"/>
+      <path class="ink-r" d="M60,34 H600" stroke-dasharray="3 5"/><path class="ink-r" d="M60,54 H600" stroke-dasharray="7 5"/>
+      <path class="ink-r" d="M158,54 V142 M512,54 V142" stroke-dasharray="5 4"/>
+      <path class="ink-p" d="M164,84 H506" marker-end="url(#ahp)" marker-start="url(#ahp)"/>
+    </g>
+    <text x="16" y="38" class="s">Amid</text><text x="0" y="58" class="s r">0.707 A</text>
+    <text x="150" y="158" class="r w6">fL</text><text x="504" y="158" class="r w6">fH</text><text x="590" y="158" class="s">f (log)</text>
+    <text x="280" y="78" class="p w6">BW = fH − fL</text><text x="210" y="26" class="bn g s">মিড-ব্যান্ড: ক্যাপ শর্ট, গেইন সমতল</text>
+    <text x="168" y="116" class="bn s">← কাপলিং ও বাইপাস C</text><text x="504" y="116" text-anchor="end" class="bn s">জাংশন C, মিলার →</text>
+    <text x="230" y="70" class="r s">−3 dB</text>
+  </svg><figcaption>RC-কাপলড স্টেজ: দুই প্রান্তে গেইন কমে; প্রতিটি RC প্রান্তে পতন 20 dB/ডিকেড (6 dB/অক্টেভ)</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr">
+    <ul class="dash small" style="margin-top:0">
+      <li><b>নিম্ন প্রান্ত f<sub>L</sub>:</b> C1, C2, C<sub>E</sub>-এর X<sub>C</sub> বাড়ে; f<sub>L</sub> = 1/[2π(R<sub>s</sub> + Z<sub>i</sub>)C1]। সাধারণত C<sub>E</sub>-ই সর্বোচ্চ (প্রধান) f<sub>L</sub> ঠিক করে।</li>
+      <li><b>উচ্চ প্রান্ত f<sub>H</sub>:</b> C<sub>be</sub>, C<sub>bc</sub>, স্ট্রে C। <span class="hl">মিলার প্রভাব</span>: C<sub>Mi</sub> = (1 + |A<sub>v</sub>|)C<sub>bc</sub>।</li>
+      <li>f<sub>L</sub>, f<sub>H</sub>-এ: গেইন = <span class="circ">0.707 A<sub>mid</sub></span> (−3 dB), পাওয়ার = ½।</li>
+    </ul>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span><br>① পৃ. ৩-এর স্টেজ, C1 = 10 μF, R<sub>s</sub> ≈ 0: f<sub>L</sub> = 1/(2π × 1511 × 10⁻⁵) = <b>10.5 Hz</b><br>② C<sub>bc</sub> = 4 pF, A<sub>v</sub> = −178: C<sub>Mi</sub> = 179 × 4 = <b>716 pF</b><br>③ f<sub>L</sub> = 50 Hz, f<sub>H</sub> = 20 kHz → BW = <b>19.95 kHz</b></div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>বড় ক্যাপ বেস কাটে, ছোট ক্যাপ ট্রেবল কাটে</b>": বাইরের μF ক্যাপাসিটর f<sub>L</sub> ঠিক করে, ভেতরের pF ক্যাপাসিট্যান্স f<sub>H</sub>। গেইন × ব্যান্ডউইডথ ≈ ধ্রুবক।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: FET family, JFET ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>FET ও JFET</span></div>
+  <h2><span class="no">৭</span>ফিল্ড-ইফেক্ট ট্রানজিস্টর (FET) পরিবার</h2><span class="tag">MCQ-প্রিয়</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> FET একটি <span class="hl">ভোল্টেজ-নিয়ন্ত্রিত</span>, <span class="hl">ইউনিপোলার</span> ডিভাইস: V<sub>GS</sub> ড্রেন ও সোর্সের মাঝের পরিবাহী <b>চ্যানেলের</b> প্রস্থ (বা অস্তিত্ব) ঠিক করে; শুধু মেজরিটি ক্যারিয়ার চলে (n-চ্যানেলে ইলেকট্রন)। গেট প্রায় কোনো কারেন্ট নেয় না: <span class="circ">I<sub>G</sub> ≈ 0, Z<sub>i</sub> অতি উচ্চ</span>।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 116" width="296">
+      <g class="w">
+        <rect x="110" y="4" width="80" height="26" rx="10" class="ink-k fill-y"/>
+        <path class="ink" d="M150,30 V40 M70,40 H230 M70,40 V48 M230,40 V48 M70,74 V80 M30,80 H110 M30,80 V86 M110,80 V86 M230,74 V86"/>
+        <rect x="30" y="48" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="190" y="48" width="80" height="26" rx="10" class="ink-r fill-r"/>
+        <rect x="2" y="86" width="56" height="26" rx="8" class="ink-g fill-g"/><rect x="82" y="86" width="56" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="180" y="86" width="100" height="26" rx="8" class="ink-r fill-r"/>
+      </g>
+      <text x="150" y="22" text-anchor="middle" class="k w6">FET</text>
+      <text x="70" y="66" text-anchor="middle" class="w6">JFET</text><text x="230" y="66" text-anchor="middle" class="r w6">MOSFET</text>
+      <text x="30" y="104" text-anchor="middle" class="s g">n-ch</text><text x="110" y="104" text-anchor="middle" class="s g">p-ch</text>
+      <text x="230" y="104" text-anchor="middle" class="bn s r">D- / E-টাইপ</text>
+    </svg><figcaption>MOSFET = IGFET; প্রতিটি ধরন n- বা p-চ্যানেল হতে পারে</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">FET</th><th class="l">BJT-তে সমতুল্য</th></tr>
+      <tr><td class="l">গেট G · ড্রেন D · সোর্স S</td><td class="l">বেস · কালেক্টর · এমিটার</td></tr>
+      <tr><td class="l">V<sub>GS</sub> নিয়ন্ত্রণ করে I<sub>D</sub></td><td class="l">I<sub>B</sub> নিয়ন্ত্রণ করে I<sub>C</sub></td></tr>
+    </table>
+  </div>
+  <h2><span class="no">৮</span>JFET: গঠন ও কার্যপ্রণালী</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 330 196" width="328">
+      <g class="w">
+        <rect x="50" y="56" width="230" height="70" class="ink fill-b"/>
+        <rect x="120" y="36" width="90" height="22" rx="4" class="ink-r fill-r"/><rect x="120" y="124" width="90" height="22" rx="4" class="ink-r fill-r"/>
+        <path d="M112,58 L220,58 L220,80 Q170,72 112,62 Z" class="ink-k" style="fill:rgba(160,160,160,.45);stroke-width:1.2"/>
+        <path d="M112,124 L220,124 L220,102 Q170,110 112,120 Z" class="ink-k" style="fill:rgba(160,160,160,.45);stroke-width:1.2"/>
+        <path class="ink" d="M50,91 H22 M280,91 H306 M165,36 V20 H240 M165,146 V160 H240 V20"/>
+      </g>
+      <text x="4" y="96" class="w6">S</text><text x="310" y="96" class="w6">D</text><text x="246" y="16" class="w6">G</text>
+      <text x="128" y="96" class="bn s w6">n-চ্যানেল</text><text x="138" y="52" class="s r">p⁺</text><text x="138" y="142" class="s r">p⁺</text>
+      <text x="4" y="24" class="bn s k">ধূসর = ডিপ্লিশন,</text><text x="4" y="40" class="bn s k">D-এর কাছে চওড়া</text>
+      <text x="30" y="186" class="bn s g">ইলেকট্রন S → D · প্রচলিত I<tspan>D</tspan> D → S</text>
+    </svg><figcaption>n-চ্যানেল JFET: p⁺ গেট দুটি যুক্ত; গেট–চ্যানেল জাংশন <b>রিভার্স-বায়াসড</b></figcaption></figure>
+    <ol class="steps small">
+      <li>V<sub>GS</sub> = 0, ছোট V<sub>DS</sub>: চ্যানেল খোলা, I<sub>D</sub> রৈখিকভাবে বাড়ে (<b>ওহমিক</b> অঞ্চল: ভোল্টেজ-নিয়ন্ত্রিত রেজিস্টর)</li>
+      <li>V<sub>DS</sub> বাড়লে ড্রেনের কাছে ডিপ্লিশন স্তর মিলে যায় = <span class="hl">পিঞ্চ-অফ</span>; I<sub>D</sub> স্থির হয় <span class="circ">I<sub>DSS</sub></span>-এ (সর্বোচ্চ, V<sub>GS</sub> = 0)</li>
+      <li>V<sub>GS</sub> আরও ঋণাত্মক: চ্যানেল সরু, I<sub>D</sub> কম</li>
+      <li>V<sub>GS</sub> = <b>V<sub>P</sub></b> (= V<sub>GS(off)</sub>): চ্যানেল বন্ধ, I<sub>D</sub> ≈ 0 (<b>কাট-অফ</b>)</li>
+    </ol>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">অঞ্চল (n-চ্যানেল, V<sub>P</sub> &lt; 0)</th><th class="l">শর্ত</th><th class="l">I<sub>D</sub></th></tr>
+    <tr><td class="l">কাট-অফ</td><td class="l">V<sub>GS</sub> ≤ V<sub>P</sub></td><td class="l">≈ 0</td></tr>
+    <tr><td class="l">ওহমিক (ট্রায়োড)</td><td class="l">V<sub>DS</sub> &lt; V<sub>GS</sub> − V<sub>P</sub></td><td class="l">∝ V<sub>DS</sub>; r<sub>d</sub> ঠিক করে V<sub>GS</sub></td></tr>
+    <tr><td class="l">স্যাচুরেশন (পিঞ্চ-অফ) ← এমপ্লিফায়ার</td><td class="l">V<sub>DS</sub> ≥ V<sub>GS</sub> − V<sub>P</sub></td><td class="l">শকলি, V<sub>DS</sub>-এ প্রায় সমতল</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> JFET = <b>বাগানের পানির পাইপ</b>: গেট পাইপ চেপে ধরে; পুরো চাপলে (V<sub>GS</sub> = V<sub>P</sub>) প্রবাহ বন্ধ। বিশ্রামে খোলা → <b>নরমালি ON</b>, শুধু ডিপ্লিশন মোড।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> n-চ্যানেল: V<sub>GS</sub> ≤ 0; p-চ্যানেল: V<sub>GS</sub> ≥ 0। গেট ফরোয়ার্ড বায়াস হলে উচ্চ Z<sub>i</sub> হারায়। ক্যারিয়ার ঢোকে <b>সোর্স</b> দিয়ে, বের হয় <b>ড্রেন</b> দিয়ে।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: characteristics, Shockley, gm ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>শকলি · g<sub>m</sub></span></div>
+  <h2><span class="no">৯</span>JFET বৈশিষ্ট্য রেখা ও শকলি সমীকরণ</h2><span class="tag">লিখিত-প্রিয়</span>
+  <figure class="doodle"><svg viewBox="0 0 640 200" width="640">
+    <g class="w">
+      <path class="ink-k" d="M250,180 V12 M30,180 H250 M250,180 H620" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M50,180 L75,177.7 L100,170.6 L125,158.9 L150,142.5 L175,121.4 L200,95.6 L225,65.2 L250,30" style="stroke-width:2.6"/>
+      <path class="ink-k" d="M250,30 H600 M250,95.6 H600 M250,142.5 H600" stroke-dasharray="3 6" style="stroke-width:1"/>
+      <path class="ink" d="M250,180 Q330,30 410,30 H600"/>
+      <path class="ink" d="M250,180 Q310,95.6 370,95.6 H600"/>
+      <path class="ink" d="M250,180 Q290,142.5 330,142.5 H600"/>
+      <path class="ink-g" d="M250,180 L270,177.7 L290,170.6 L310,158.9 L330,142.5 L350,121.4 L370,95.6 L390,65.2 L410,30" stroke-dasharray="5 4"/>
+      <path class="ink-k" d="M150,142.5 H250 M150,142.5 V180 M200,95.6 H250 M200,95.6 V180" stroke-dasharray="4 4" style="stroke-width:1"/>
+    </g>
+    <text x="256" y="22" class="s w6">ID</text><text x="200" y="26" class="r s w6">IDSS</text><text x="40" y="196" class="r s w6">VP</text>
+    <text x="134" y="196" class="s">−2</text><text x="190" y="196" class="s">−1</text><text x="146" y="138" text-anchor="end" class="s">2.5 mA</text><text x="196" y="90" text-anchor="end" class="s">5.6 mA</text>
+    <text x="590" y="196" class="s">VDS</text><text x="4" y="196" class="s">VGS</text>
+    <text x="530" y="24" class="s">VGS = 0</text><text x="530" y="90" class="s">−1 V</text><text x="530" y="137" class="s">−2 V</text><text x="530" y="174" class="s">−4 V = VP</text>
+    <text x="420" y="62" class="bn g s">পিঞ্চ-অফ রেখা: VDS = VGS − VP</text><text x="266" y="196" class="bn s">ওহমিক</text><text x="420" y="196" class="bn s">স্যাচুরেশন (ID সমতল)</text>
+    <text x="56" y="70" class="bn r s w6">ট্রান্সফার রেখা</text><text x="56" y="86" class="bn r s">(একটি প্যারাবোলা)</text>
+  </svg><figcaption>বামে: ট্রান্সফার রেখা I<sub>D</sub> বনাম V<sub>GS</sub> · ডানে: ড্রেন রেখা · I<sub>DSS</sub> = 10 mA, V<sub>P</sub> = −4 V (স্কেল অনুযায়ী আঁকা)</figcaption></figure>
+  <div class="sumbox"><span class="lbl">শকলি সমীকরণ (স্যাচুরেশন)</span> <span class="circ">I<sub>D</sub> = I<sub>DSS</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>)²</span> · বিপরীত: <b>V<sub>GS</sub> = V<sub>P</sub>(1 − √(I<sub>D</sub>/I<sub>DSS</sub>))</b> · বর্গ নিয়ম → <span class="hl">প্যারাবোলিক</span> ট্রান্সফার রেখা</div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span><br>① I<sub>DSS</sub> = 10 mA, V<sub>P</sub> = −4 V, V<sub>GS</sub> = −2 V: I<sub>D</sub> = 10(1 − 0.5)² = <b>2.5 mA</b><br>② I<sub>DSS</sub> = 8 mA, V<sub>P</sub> = −4 V, V<sub>GS</sub> = −1 V: I<sub>D</sub> = 8(0.75)² = <b>4.5 mA</b><br>③ একই FET, I<sub>D</sub> = 4.5 mA → V<sub>GS</sub> = −4(1 − 0.75) = <b>−1 V</b> ✓</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল: ৪ বিন্দুতে আঁকো</span> V<sub>GS</sub> = 0 → I<sub>DSS</sub> · <b>0.3V<sub>P</sub> → I<sub>DSS</sub>/2</b> · <b>V<sub>P</sub>/2 → I<sub>DSS</sub>/4</b> · V<sub>P</sub> → 0। V<sub>GS</sub> = 0 হলে স্যাচুরেশন শুরু V<sub>DS</sub> = |V<sub>P</sub>|-এ।</div>
+  </div>
+  <h2><span class="no">১০</span>ট্রান্সকন্ডাকট্যান্স (Transconductance) g<sub>m</sub></h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">g<sub>m</sub> = ΔI<sub>D</sub>/ΔV<sub>GS</sub></span> (V<sub>DS</sub> স্থির): ট্রান্সফার রেখার <b>ঢাল</b>, একক সিমেন্স (mS)।<br><span class="circ">g<sub>m0</sub> = 2I<sub>DSS</sub>/|V<sub>P</sub>|</span><br>g<sub>m</sub> = g<sub>m0</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>) = g<sub>m0</sub>√(I<sub>D</sub>/I<sub>DSS</sub>)<br>অ্যামপ্লিফিকেশন ফ্যাক্টর μ = g<sub>m</sub>r<sub>d</sub></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> I<sub>DSS</sub> = 10 mA, V<sub>P</sub> = −4 V: g<sub>m0</sub> = 20/4 = <b>5 mS</b>; V<sub>GS</sub> = −2 V-এ: g<sub>m</sub> = 5(1 − 0.5) = <b>2.5 mS</b>। g<sub>m</sub> সর্বোচ্চ V<sub>GS</sub> = 0-এ, শূন্য V<sub>P</sub>-তে।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> g<sub>m</sub> হলো <b>ঢাল</b> ΔI<sub>D</sub>/ΔV<sub>GS</sub>, I<sub>D</sub>/V<sub>GS</sub> নয়। 1 mA-তে BJT-এর g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> ≈ 38 mS, FET-এর কয়েক mS-এর চেয়ে অনেক বেশি: <b>FET স্টেজের ভোল্টেজ গেইন কম</b>।</div>
+  <div class="tipbox small"><span class="lbl">ব্যবহারিক সংযোগ</span> ওহমিক অঞ্চলে JFET একটি <span class="hl">ভোল্টেজ-নিয়ন্ত্রিত রেজিস্টর</span> (AGC সার্কিট, অ্যানালগ সুইচ, চপার)। গেট কারেন্ট নগণ্য বলে JFET-ইনপুট অপ-অ্যাম্প (যেমন TL071) এবং pH-মিটার / ইলেকট্রোমিটার প্রোবের ইনপুট স্টেজে এটি ব্যবহৃত হয়।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: MOSFET ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>MOSFET</span></div>
+  <h2><span class="no">১১</span>MOSFET: গঠন ও দুই প্রকার</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> মেটাল-অক্সাইড-সেমিকন্ডাক্টর FET: গেট ও চ্যানেলের মাঝে পাতলা <span class="hl">SiO₂ অন্তরক স্তর</span>, তাই গেট যেন ক্যাপাসিটরের একটি প্লেট: <span class="circ">Z<sub>i</sub> ≈ 10¹⁰–10¹⁵ Ω</span> (JFET ~10⁸–10¹⁰ Ω)। চারটি টার্মিনাল: G, D, S ও <b>সাবস্ট্রেট (বডি)</b>, সাধারণত S-এর সাথে যুক্ত। অপর নাম <b>IGFET</b>।</div>
+  <div class="cols" style="align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="300">
+      <g class="w">
+        <rect x="20" y="70" width="290" height="96" class="ink-k" style="fill:rgba(255,105,180,.12)"/>
+        <rect x="36" y="70" width="70" height="34" rx="6" class="ink fill-b"/><rect x="224" y="70" width="70" height="34" rx="6" class="ink fill-b"/>
+        <rect x="96" y="56" width="138" height="12" class="ink-k" style="fill:rgba(200,200,200,.6)"/>
+        <rect x="104" y="38" width="122" height="16" class="ink-k" style="fill:rgba(120,120,140,.55)"/>
+        <path class="ink-g" d="M106,76 H224" stroke-dasharray="6 4" style="stroke-width:3"/>
+        <path class="ink" d="M70,70 V24 M260,70 V24 M165,38 V18 M165,166 V182"/>
+      </g>
+      <text x="62" y="18" class="w6">S</text><text x="252" y="18" class="w6">D</text><text x="172" y="16" class="w6">G</text><text x="172" y="186" class="bn s">বডি (B)</text>
+      <text x="60" y="94" class="s">n⁺</text><text x="250" y="94" class="s">n⁺</text><text x="240" y="52" class="s k">SiO₂</text>
+      <text x="124" y="140" class="bn s r w6">p-সাবস্ট্রেট</text><text x="112" y="98" class="bn s g">প্রবর্তিত n-চ্যানেল</text>
+    </svg><figcaption>n-E-MOSFET: V<sub>GS</sub> &gt; V<sub>T</sub> হলে চ্যানেল তৈরি হয়</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 320 190" width="300">
+      <g class="w"><use href="#q-jn" x="40" y="50"/><use href="#q-jp" x="190" y="50"/><use href="#q-md" x="40" y="148"/><use href="#q-me" x="190" y="148"/></g>
+      <text x="74" y="28" class="s">D</text><text x="74" y="80" class="s">S</text><text x="20" y="44" class="s">G</text><text x="84" y="56" class="s g w6">n-JFET</text>
+      <text x="224" y="28" class="s">D</text><text x="224" y="80" class="s">S</text><text x="170" y="44" class="s">G</text><text x="234" y="56" class="s g w6">p-JFET</text>
+      <text x="74" y="126" class="s">D</text><text x="74" y="178" class="s">S</text><text x="20" y="142" class="s">G</text><text x="84" y="154" class="s r w6">n D-MOS</text>
+      <text x="224" y="126" class="s">D</text><text x="224" y="178" class="s">S</text><text x="170" y="142" class="s">G</text><text x="234" y="154" class="s r w6">n E-MOS</text>
+    </svg><figcaption>তীর <b>ভেতরমুখী</b> = n-চ্যানেল · ভাঙা রেখা = এনহান্সমেন্ট</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l"></th><th class="l">D-MOSFET</th><th class="l">E-MOSFET</th></tr>
+    <tr><td class="l">চ্যানেল</td><td class="l">আগে থেকেই তৈরি (diffused)</td><td class="l">V<sub>GS</sub> &gt; V<sub>T</sub> হলে <b>প্রবর্তিত</b></td></tr>
+    <tr><td class="l">V<sub>GS</sub> = 0-এ</td><td class="l">ON, I<sub>D</sub> = I<sub>DSS</sub></td><td class="l red"><b>OFF</b></td></tr>
+    <tr><td class="l">মোড (n-ch)</td><td class="l">ডিপ্লিশন (−) <b>ও</b> এনহান্সমেন্ট (+)</td><td class="l">শুধু এনহান্সমেন্ট</td></tr>
+    <tr><td class="l">সমীকরণ</td><td class="l">শকলি (V<sub>GS</sub> + হতে পারে)</td><td class="l">I<sub>D</sub> = k(V<sub>GS</sub> − V<sub>T</sub>)²</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">E-MOSFET (n-চ্যানেল)</span><br>কাট-অফ: V<sub>GS</sub> &lt; <span class="hl">V<sub>T</sub> (থ্রেশহোল্ড, V<sub>GS(th)</sub>)</span><br>ট্রায়োড (V<sub>DS</sub> &lt; V<sub>GS</sub> − V<sub>T</sub>):<br>I<sub>D</sub> = k[2(V<sub>GS</sub> − V<sub>T</sub>)V<sub>DS</sub> − V<sub>DS</sub>²]<br>স্যাচুরেশন: <span class="circ">I<sub>D</sub> = k(V<sub>GS</sub> − V<sub>T</sub>)²</span><br>g<sub>m</sub> = 2k(V<sub>GS</sub> − V<sub>T</sub>)</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> I<sub>D(on)</sub> = 10 mA, V<sub>GS(on)</sub> = 8 V-এ, V<sub>T</sub> = 3 V।<br>k = 10/(8 − 3)² = <b>0.4 mA/V²</b><br>V<sub>GS</sub> = 6 V: I<sub>D</sub> = 0.4 × 3² = <b>3.6 mA</b>; g<sub>m</sub> = 2 × 0.4 × 3 = <b>2.4 mS</b><br>V<sub>GS</sub> = 2 V (&lt; V<sub>T</sub>): I<sub>D</sub> = <b>0</b></div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> JFET: শুধু ডিপ্লিশন; <b>D-MOSFET: দুই মোডেই</b>; E-MOSFET: শুধু এনহান্সমেন্ট। পাতলা অক্সাইড: <b>স্থির বিদ্যুৎ (ESD)</b> সহজেই নষ্ট করে।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>E = Empty</b>" (খালি): V<sub>T</sub> পেরিয়ে <b>E</b>nhance না করা পর্যন্ত চ্যানেল নেই; ভাঙা রেখা = খালি চ্যানেল। "<b>D = Done</b>": চ্যানেল তৈরি, তাই নরমালি ON।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">আইটি সংযোগ: CMOS</span> <span class="hl">CMOS ইনভার্টার</span> = p-চ্যানেল E-MOSFET (V<sub>DD</sub>-র দিকে) ও তার নিচে n-চ্যানেল E-MOSFET, গেট ও ড্রেন যুক্ত: ইন 0 → আউট 1, ইন 1 → আউট 0। একটি সবসময় OFF, তাই <b>স্থির পাওয়ার ≈ 0</b> (ডায়নামিক ≈ CV<sub>DD</sub>²f): CPU ও মেমরি CMOS-এ তৈরি।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: FET biasing, CS/CD/CG ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>FET বায়াস ও এমপ্লিফায়ার</span></div>
+  <h2><span class="no">১২</span>FET বায়াসিং</h2>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">পদ্ধতি</th><th class="l">বায়াস সমীকরণ</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l">ফিক্সড বায়াস</td><td class="l">V<sub>GS</sub> = −V<sub>GG</sub> (I<sub>G</sub> = 0)</td><td class="l">দ্বিতীয় সাপ্লাই; Q ডিভাইসভেদে বদলায়</td></tr>
+    <tr><td class="l">সেলফ বায়াস</td><td class="l"><span class="hl">V<sub>GS</sub> = −I<sub>D</sub>R<sub>S</sub></span></td><td class="l">একটি সাপ্লাই; JFET, D-MOSFET</td></tr>
+    <tr><td class="l">ভোল্টেজ ডিভাইডার</td><td class="l">V<sub>GS</sub> = V<sub>DD</sub>R2/(R1 + R2) − I<sub>D</sub>R<sub>S</sub></td><td class="l"><b>সবচেয়ে স্থিতিশীল</b>; সব FET</td></tr>
+    <tr><td class="l">ড্রেন ফিডব্যাক</td><td class="l">V<sub>GS</sub> = V<sub>DS</sub> (R<sub>G</sub> D থেকে G)</td><td class="l">E-MOSFET</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="298">
+      <g class="w">
+        <path class="ink-k" d="M150,182 V14 M10,182 H290" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M30,182 L45,179.6 L60,172.5 L75,160.6 L90,144 L105,122.6 L120,96.5 L135,65.6 L150,30" style="stroke-width:2.6"/>
+        <path class="ink-g" d="M150,182 L24,102" style="stroke-width:2.2"/>
+        <path class="ink-k" d="M90,144 H150 M90,144 V182" stroke-dasharray="4 4" style="stroke-width:1"/>
+        <circle cx="90" cy="144" r="6" class="ink-k" style="fill:#d32f2f"/>
+        <use href="#q-jn" x="210" y="70"/><use href="#r-v" x="238" y="100"/><use href="#gnd" x="238" y="150"/>
+        <path class="ink" d="M210,70 H200 V80 M238,40 V24"/><use href="#r-v" x="200" y="80"/><use href="#gnd" x="200" y="130"/>
+      </g>
+      <text x="156" y="26" class="s w6">ID</text><text x="156" y="44" class="s r">IDSS</text><text x="18" y="196" class="s r">VP</text><text x="262" y="196" class="s">VGS</text>
+      <text x="8" y="90" class="s g">VGS = −ID·RS</text><text x="98" y="174" class="s w6">Q</text><text x="156" y="140" class="s">2 mA</text><text x="76" y="196" class="s">−2 V</text>
+      <text x="252" y="130" class="s">RS</text><text x="172" y="112" class="s">RG</text><text x="244" y="30" class="bn s">RD-তে</text>
+    </svg><figcaption>সেলফ বায়াসের গ্রাফিক সমাধান: মূলবিন্দুগামী বায়াস রেখা প্যারাবোলাকে Q-তে ছেদ করে</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ: সেলফ বায়াস ✍</span> I<sub>DSS</sub> = 8 mA, V<sub>P</sub> = −4 V, R<sub>S</sub> = 1 kΩ, R<sub>D</sub> = 3.3 kΩ, V<sub>DD</sub> = 16 V।
+      <ol class="steps"><li>V<sub>GS</sub> = −I<sub>D</sub> (I<sub>D</sub> mA-তে) → I<sub>D</sub> = 8(1 − I<sub>D</sub>/4)²</li><li>I<sub>D</sub>² − 10I<sub>D</sub> + 16 = 0 → I<sub>D</sub> = 2 বা 8 mA</li><li>8 mA দিলে V<sub>GS</sub> = −8 V, V<sub>P</sub>-র বাইরে: বাদ → <span class="circ">I<sub>D</sub> = 2 mA, V<sub>GS</sub> = −2 V</span></li><li>V<sub>DS</sub> = 16 − 2(3.3 + 1) = <b>7.4 V</b> ≥ V<sub>GS</sub> − V<sub>P</sub> = 2 V ✓</li></ol></div>
+  </div>
+  <h2><span class="no">১৩</span>FET এমপ্লিফায়ার: CS, CD, CG</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">কনফিগারেশন (BJT জোড়া)</th><th class="l">Z<sub>i</sub></th><th class="l">Z<sub>o</sub></th><th class="l">A<sub>v</sub> (r<sub>d</sub> উপেক্ষিত)</th><th>ফেজ</th></tr>
+    <tr><td class="l">কমন সোর্স (CE)</td><td class="l">R<sub>G</sub> (MΩ)</td><td class="l">R<sub>D</sub></td><td class="l red"><b>−g<sub>m</sub>R<sub>D</sub></b></td><td>180°</td></tr>
+    <tr><td class="l">… R<sub>S</sub> আনবাইপাসড</td><td class="l">R<sub>G</sub></td><td class="l">≈ R<sub>D</sub></td><td class="l">−g<sub>m</sub>R<sub>D</sub>/(1 + g<sub>m</sub>R<sub>S</sub>)</td><td>180°</td></tr>
+    <tr><td class="l">কমন ড্রেন, সোর্স ফলোয়ার (CC)</td><td class="l">R<sub>G</sub></td><td class="l">R<sub>S</sub> ∥ 1/g<sub>m</sub></td><td class="l">g<sub>m</sub>R<sub>S</sub>/(1 + g<sub>m</sub>R<sub>S</sub>) &lt; 1</td><td>0°</td></tr>
+    <tr><td class="l">কমন গেট (CB)</td><td class="l">R<sub>S</sub> ∥ 1/g<sub>m</sub></td><td class="l">R<sub>D</sub></td><td class="l">+g<sub>m</sub>R<sub>D</sub></td><td>0°</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> একই JFET, I<sub>D</sub> = 2 mA: g<sub>m</sub> = (16/4)(1 − 2/4) = <b>2 mS</b>। C<sub>S</sub> বাইপাসড: A<sub>v</sub> = −2 × 3.3 = <span class="circ">−6.6</span>; আনবাইপাসড: −6.6/3 = <b>−2.2</b>; সোর্স ফলোয়ার (R<sub>S</sub> = 1 kΩ): A<sub>v</sub> = 2/3 = 0.67, Z<sub>o</sub> = 1k ∥ 500 = 333 Ω।</div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> BJT সারণিই আবার ব্যবহার করো: <b>S↔E, D↔C, G↔B</b> এবং 1/r<sub>e</sub> → g<sub>m</sub>। CS = CE (উল্টানো গেইন স্টেজ), CD = CC (বাফার), CG = CB (কম Z<sub>i</sub>, RF)।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <h3>BJT বনাম FET (৫ নম্বরের প্রিয় লিখিত প্রশ্ন)</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বৈশিষ্ট্য</th><th class="l">BJT</th><th class="l">FET</th></tr>
+    <tr><td class="l">নিয়ন্ত্রণ · ক্যারিয়ার</td><td class="l">কারেন্ট (I<sub>B</sub>) · বাইপোলার</td><td class="l"><b>ভোল্টেজ</b> (V<sub>GS</sub>) · <b>ইউনিপোলার</b></td></tr>
+    <tr><td class="l">ইনপুট ইম্পিডেন্স</td><td class="l">কম–মাঝারি (kΩ)</td><td class="l"><b>অতি উচ্চ</b> (10⁸–10¹⁵ Ω)</td></tr>
+    <tr><td class="l">গেইন প্যারামিটার</td><td class="l">β; g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> (~38 mS/mA)</td><td class="l">g<sub>m</sub> = ΔI<sub>D</sub>/ΔV<sub>GS</sub> (কয়েক mS)</td></tr>
+    <tr><td class="l">ভোল্টেজ গেইন, GBW</td><td class="l"><b>বেশি</b></td><td class="l">কম</td></tr>
+    <tr><td class="l">নয়েজ · তাপ</td><td class="l">বেশি নয়েজ · থার্মাল রানঅ্যাওয়ে</td><td class="l">কম নয়েজ · T বাড়লে I<sub>D</sub> কমে</td></tr>
+    <tr><td class="l">আকার · স্থির পাওয়ার</td><td class="l">বড় · বেশি</td><td class="l">ছোট · CMOS ≈ 0 · ESD-সংবেদনশীল</td></tr>
+  </table>
+  <div class="sumbox"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small">
+      <p>r<sub>e</sub> = 26 mV/I<sub>E</sub> · h<sub>ie</sub> = βr<sub>e</sub></p><p>CE: A<sub>v</sub> = −R<sub>C</sub>/r<sub>e</sub> (বাইপাসড)</p>
+      <p>CB: Z<sub>i</sub> ≈ r<sub>e</sub>, A<sub>i</sub> = α</p><p>CC: A<sub>v</sub> ≈ 1, Z<sub>o</sub> ≈ r<sub>e</sub></p>
+      <p>A<sub>p</sub> = A<sub>v</sub>A<sub>i</sub> · 20 log V, 10 log P</p><p>−3 dB = 0.707 V = ½ P</p>
+      <p>C<sub>Mi</sub> = (1 + |A<sub>v</sub>|)C<sub>bc</sub></p><p>I<sub>D</sub> = I<sub>DSS</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>)²</p>
+      <p>g<sub>m0</sub> = 2I<sub>DSS</sub>/|V<sub>P</sub>|</p><p>E-MOS: I<sub>D</sub> = k(V<sub>GS</sub> − V<sub>T</sub>)²</p>
+      <p>সেলফ বায়াস: V<sub>GS</sub> = −I<sub>D</sub>R<sub>S</sub></p><p>CS: A<sub>v</sub> = −g<sub>m</sub>R<sub>D</sub></p>
+    </div>
+  </div>
+  <div class="cols small">
+    <ol class="num">
+      <li>শুধু CE (ও CS) উল্টায়: 180°</li>
+      <li>সর্বোচ্চ পাওয়ার গেইন: CE</li>
+      <li>সর্বোচ্চ Z<sub>i</sub>, সর্বনিম্ন Z<sub>o</sub>: CC</li>
+      <li>সর্বনিম্ন Z<sub>i</sub>, A<sub>i</sub> &lt; 1: CB</li>
+      <li>বাইপাস C A<sub>v</sub> বাড়ায়</li>
+    </ol>
+    <ol class="num" start="6">
+      <li>0 V-এ JFET ON, E-MOSFET OFF</li>
+      <li>D-MOSFET: দুই মোডেই</li>
+      <li>V<sub>GS</sub> = V<sub>P</sub> → I<sub>D</sub> = 0</li>
+      <li>V<sub>P</sub>/2 → I<sub>DSS</sub>/4</li>
+      <li>ভাঙা রেখা = E-MOSFET</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> পাওয়ার ×1000 = 30 dB, ভোল্টেজ ×1000 = 60 dB · C<sub>E</sub> সরালে A<sub>v</sub> কমে · CB: A<sub>i</sub> &lt; 1, A<sub>v</sub> উচ্চ · h<sub>fb</sub> = −α · g<sub>m</sub> একটি ঢাল · E-MOSFET-এ সেলফ বায়াস চলে না · |V<sub>GS</sub>| &gt; |V<sub>P</sub>| দেওয়া মূল বাদ</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> DC-তে ক্যাপ বাদ, AC-তে শর্ট · কালেক্টর ÷ এমিটার · Big output, Baby input · Copy Cat · বড় ক্যাপ বেস কাটে · বাগানের পাইপ · ৪ বিন্দুর প্যারাবোলা · E = Empty, D = Done · S↔E, D↔C, G↔B</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ELN · এমপ্লিফায়ার ও FET</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>CE এমপ্লিফায়ারের ফেজ শিফট:<ol class="opts"><li>0°</li><li>90°</li><li>180°</li><li>270°</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>সর্বোচ্চ ইনপুট ইম্পিডেন্স:<ol class="opts"><li>CB</li><li>CC</li><li>CE</li><li>সবগুলো সমান</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>I<sub>E</sub> = 2 mA হলে r<sub>e</sub> ≈<ol class="opts"><li>13 Ω</li><li>26 Ω</li><li>52 Ω</li><li>1.3 kΩ</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>f<sub>H</sub>-এ আউটপুট পাওয়ার নেমে আসে:<ol class="opts"><li>70.7%</li><li>25%</li><li>0%</li><li>50%</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>কোনটি ইউনিপোলার ডিভাইস?<ol class="opts"><li>FET</li><li>BJT</li><li>SCR</li><li>UJT</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>I<sub>DSS</sub> = 12 mA, V<sub>P</sub> = −6 V; V<sub>GS</sub> = −3 V-এ I<sub>D</sub>:<ol class="opts"><li>6 mA</li><li>4 mA</li><li>1.5 mA</li><li>3 mA</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>V<sub>GS</sub> = 0-এ কোনটি OFF?<ol class="opts"><li>n-JFET</li><li>D-MOSFET</li><li>E-MOSFET</li><li>p-JFET</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>I<sub>DSS</sub> = 12 mA, V<sub>P</sub> = −6 V হলে g<sub>m0</sub>:<ol class="opts"><li>2 mS</li><li>4 mS</li><li>6 mS</li><li>72 mS</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>ভোল্টেজ গেইন 100-কে dB-তে:<ol class="opts"><li>20 dB</li><li>100 dB</li><li>10 dB</li><li>40 dB</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>এমিটার ফলোয়ারের FET-জোড়া:<ol class="opts"><li>CS</li><li>CD</li><li>CG</li><li>ক্যাসকোড</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-খ · ৩-ক · ৪-ঘ · ৫-ক · ৬-ঘ · ৭-গ · ৮-খ · ৯-ঘ · ১০-খ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> ট্রান্সফার বৈশিষ্ট্য রেখার সাহায্যে JFET, D-MOSFET ও E-MOSFET-এর পার্থক্য দেখাও। একটি JFET-এর I<sub>DSS</sub> = 8 mA, V<sub>P</sub> = −4 V: V<sub>GS</sub> = −1 V-এ I<sub>D</sub> ও g<sub>m</sub> নির্ণয় করো, এবং R<sub>D</sub> = 2.2 kΩ (R<sub>S</sub> বাইপাসড) সহ CS স্টেজের গেইন বের করো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps small">
+    <li>JFET: V<sub>P</sub> ≤ V<sub>GS</sub> ≤ 0, I<sub>D</sub> ≤ I<sub>DSS</sub>; D-MOSFET: একই প্যারাবোলা V<sub>GS</sub> &gt; 0 পর্যন্ত বিস্তৃত; E-MOSFET: V<sub>T</sub> পর্যন্ত I<sub>D</sub> = 0, তারপর k(V<sub>GS</sub> − V<sub>T</sub>)²। তিনটিই আঁকো। <i class="mk">৪</i></li>
+    <li>I<sub>D</sub> = 8(1 − 1/4)² = 8 × 0.5625 = <b>4.5 mA</b> <i class="mk">২</i></li>
+    <li>g<sub>m0</sub> = 2 × 8/4 = 4 mS; g<sub>m</sub> = 4(1 − 0.25) = <b>3 mS</b> <i class="mk">২</i></li>
+    <li>A<sub>v</sub> = −g<sub>m</sub>R<sub>D</sub> = −3 × 2.2 = <b>−6.6</b> (180° ফেজ শিফট) <i class="mk">২</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>CE/CB/CC সারণি মুখস্থ লিখতে পারি</li>
+        <li>r<sub>e</sub> দিয়ে Z<sub>i</sub>, Z<sub>o</sub>, A<sub>v</sub> বের করতে পারি</li>
+        <li>গেইনকে dB-তে নিতে ও −3 dB বুঝতে পারি</li>
+        <li>শকলি ও g<sub>m</sub> দুই দিকেই ব্যবহার করতে পারি</li>
+        <li>চারটি FET প্রতীক আঁকতে পারি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① C<sub>E</sub> ছাড়া CE স্টেজ<br>② এমিটার ফলোয়ারের Z<sub>o</sub><br>③ দ্বিঘাত সমীকরণে সেলফ বায়াস<br>④ CMOS ইনভার্টারের কার্যপ্রণালী</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

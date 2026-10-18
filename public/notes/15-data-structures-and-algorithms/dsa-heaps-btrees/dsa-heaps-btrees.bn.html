@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>উন্নত ডেটা স্ট্রাকচার: হিপ, ফিবোনাচ্চি হিপ, বি-ট্রি: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">উন্নত ডেটা স্ট্রাকচার: হিপ, ফিবোনাচ্চি হিপ, বি-ট্রি</span></h1>
+  <p class="subtitle">বাইনারি হিপ · প্রায়োরিটি কিউ · d-ary ও বাইনোমিয়াল হিপ · ফিবোনাচ্চি হিপ · বি-ট্রি · বি+ ট্রি: এগারো পাতায় পরীক্ষার প্রস্তুতি</p>
+  <p class="tiny center" style="margin:0 0 1mm"><b>এগারো পাতা:</b> অ্যারেতে রাখা হিপ ও তার ইনডেক্স সূত্র, প্রতিটি হিপ অপারেশন ও তার খরচ, বিল্ড-হিপ কেন লিনিয়ার, ফিবোনাচ্চি হিপ পর্যন্ত হিপ পরিবার, তারপর ডিস্ক-বান্ধব বি-ট্রি, তার ইনসার্ট/ডিলিটের নিয়ম এবং প্রতিটি ডেটাবেস ইনডেক্সে ব্যবহৃত বি+ ট্রি।</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-g fill-g"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">হিপ ও বি-ট্রি</text><text x="320" y="172" text-anchor="middle" class="bn r s">প্রায়োরিটি · ডিস্ক ইনডেক্স</text>
+      <text x="142" y="55" text-anchor="middle" class="bn r w6" style="font-size:13px">অ্যারে হিপ ★</text><text x="142" y="74" text-anchor="middle" class="r s" style="font-size:13px">2i, 2i+1, ⌊i/2⌋</text>
+      <text x="320" y="40" text-anchor="middle" class="bn r w6" style="font-size:14px">বিল্ড-হিপ O(n) ★</text>
+      <text x="498" y="55" text-anchor="middle" class="bn s" style="font-size:13px">d-ary হিপ</text><text x="498" y="74" text-anchor="middle" class="bn s" style="font-size:13px">log_d n স্তর</text>
+      <text x="96" y="146" text-anchor="middle" class="bn s" style="font-size:13px">বাইনোমিয়াল হিপ</text><text x="96" y="166" text-anchor="middle" class="bn s" style="font-size:13px">n বাইনারিতে</text>
+      <text x="544" y="146" text-anchor="middle" class="bn r w6" style="font-size:13px">ফিবোনাচ্চি হিপ</text><text x="544" y="166" text-anchor="middle" class="bn r w6" style="font-size:13px">O(1) ডিক্রিজ ★</text>
+      <text x="142" y="235" text-anchor="middle" class="bn r w6" style="font-size:13px">বি-ট্রি অর্ডার m</text><text x="142" y="255" text-anchor="middle" class="bn r w6" style="font-size:13px">সর্বোচ্চ m−1 কি ★</text>
+      <text x="320" y="270" text-anchor="middle" class="bn g w6" style="font-size:13px">বি+ ট্রি: লিংকড লিফ</text>
+      <text x="498" y="235" text-anchor="middle" class="bn r w6" style="font-size:13px">স্প্লিট · ধার</text><text x="498" y="255" text-anchor="middle" class="bn r w6" style="font-size:13px">মার্জ ★</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক নজরে: লাল = বেশি আসে, সবুজ = ডেটাবেসের সংযোগ</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>হাই-ইল্ড তালিকা</b><br>① হিপ = সম্পূর্ণ ট্রি + হিপ ক্রম<br>② ১-ভিত্তিক: 2i, 2i+1, প্যারেন্ট ⌊i/2⌋<br>③ ০-ভিত্তিক: 2i+1, 2i+2, ⌊(i−1)/2⌋<br>④ ইনসার্ট / এক্সট্র্যাক্ট: O(log n)<br>⑤ <span class="circ">বিল্ড-হিপ: O(n)</span> ★<br>⑥ হিপে সার্চ: O(n)<br>⑦ ফিবো হিপ ডিক্রিজ-কি O(1) অ্যামর্টা.<br>⑧ ডাইকস্ট্রা + ফিবো: O(E + V log V)<br>⑨ অর্ডার m: ≤ m−1 কি, ≤ m চাইল্ড<br>⑩ নন-রুট ≥ ⌈m/2⌉ চাইল্ড ★<br>⑪ বি-ট্রি বাড়ে রুটে<br>⑫ বি+ ট্রি: ডেটা লিংকড লিফে</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">ডেটা স্ট্রাকচার ও অ্যালগরিদমের সিলেবাস লাইন: "<span class="hl">Internal data representation; Abstract data types; Elementary data structures: arrays, lists, stacks, queues, trees, graphs; Advanced data Structures: heaps, Fibonacci heaps, B-trees;</span>" এই সেটে <b>অ্যাডভান্সড</b> অংশটি পুরোপুরি নেওয়া হয়েছে, সঙ্গে বি+ ট্রি — যা প্রতিটি পরীক্ষায় এর সাথে জোড়া হিসেবে আসে। ADT ও প্রাথমিক স্ট্রাকচার এই অধ্যায়ের প্রথম লেসনে; <b>হিপসর্ট</b>, সার্চিং ও হ্যাশিং সর্টিং লেসনে, আর <b>ডাইকস্ট্রা / প্রিম</b> গ্রাফ-অ্যালগরিদম লেসনে — এখানে সেগুলো এসেছে কেবল যেখানে হিপই তাদের রানিং টাইমের কারণ।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>বাইনারি হিপ, অ্যারে সূত্র, d-ary … পৃ. ২</li><li>হিপ অপারেশন, সিফট-আপ/ডাউন … পৃ. ৩</li><li>বিল্ড-হিপ O(n), হিপসর্ট, PQ … পৃ. ৪</li><li>বাইনোমিয়াল ও ফিবোনাচ্চি হিপ … পৃ. ৫</li><li>হিপের খরচের তুলনা, ডাইকস্ট্রা … পৃ. ৬</li></ul>
+    <ul class="tick"><li>বি-ট্রি: অর্ডার m বনাম ডিগ্রি t … পৃ. ৭</li><li>বি-ট্রি ইনসার্ট ও ডিলিট … পৃ. ৮</li><li>বি+ ট্রি ও বড় তুলনা … পৃ. ৯</li><li>রাতের পরীক্ষার পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: binary heap ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>বাইনারি হিপ</span></div>
+  <h2><span class="no">১</span>বাইনারি হিপ: অ্যারেতে রাখা একটি সম্পূর্ণ ট্রি</h2><span class="tag">আকার + ক্রম ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>বাইনারি হিপ (Binary Heap)</b> এমন একটি বাইনারি ট্রি যা একসাথে <b>দুটি</b> শর্ত পূরণ করে। <b>আকার:</b> এটি একটি <span class="hl">সম্পূর্ণ বাইনারি ট্রি (Complete Binary Tree)</span> — শেষটি ছাড়া প্রতিটি স্তর পূর্ণ, আর শেষ স্তর ভরা হয় <b>বাম দিক থেকে</b>। <b>ক্রম (হিপ বৈশিষ্ট্য):</b> <b>ম্যাক্স-হিপে (Max-Heap)</b> প্রতিটি প্যারেন্ট ≥ তার চাইল্ড, তাই <span class="hl">সর্বোচ্চ মান রুটে</span>; <b>মিন-হিপে (Min-Heap)</b> প্রতিটি প্যারেন্ট ≤ তার চাইল্ড, তাই সর্বনিম্ন মান রুটে। বাম আর ডান চাইল্ডের মধ্যে কোনো ক্রমের কথা নেই — হিপ <b>বাইনারি সার্চ ট্রি নয়</b>।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 200" width="560">
+    <g class="w">
+      <circle cx="150" cy="28" r="18" class="ink-r fill-r"/>
+      <circle cx="80" cy="88" r="18" class="ink fill-b"/>
+      <circle cx="220" cy="88" r="18" class="ink fill-b"/>
+      <circle cx="40" cy="150" r="18" class="ink-g fill-g"/>
+      <circle cx="120" cy="150" r="18" class="ink-g fill-g"/>
+      <circle cx="190" cy="150" r="18" class="ink-g fill-g"/>
+      <path class="ink" d="M137,41 L93,75 M163,41 L207,75 M70,104 L48,134 M90,104 L112,134 M214,105 L196,134"/>
+      <rect x="330" y="62" width="270" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M375,62 V98 M420,62 V98 M465,62 V98 M510,62 V98 M555,62 V98"/>
+      <path class="ink-r" d="M397,100 C410,140 480,140 487,100" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M397,100 C420,170 520,170 532,100" marker-end="url(#ah)"/>
+    </g>
+    <text x="150" y="33" text-anchor="middle" class="k w6" style="font-size:12px">50</text>
+    <text x="80" y="93" text-anchor="middle" class="k w6" style="font-size:12px">30</text>
+    <text x="220" y="93" text-anchor="middle" class="k w6" style="font-size:12px">40</text>
+    <text x="40" y="155" text-anchor="middle" class="k w6" style="font-size:12px">10</text>
+    <text x="120" y="155" text-anchor="middle" class="k w6" style="font-size:12px">20</text>
+    <text x="190" y="155" text-anchor="middle" class="k w6" style="font-size:12px">35</text>
+    <text x="178" y="20" class="p s" style="font-size:10px">i=1</text>
+    <text x="50" y="72" class="p s" style="font-size:10px">2</text><text x="244" y="80" class="p s" style="font-size:10px">3</text>
+    <text x="10" y="182" class="p s" style="font-size:10px">4</text><text x="116" y="184" class="p s" style="font-size:10px">5</text><text x="186" y="184" class="p s" style="font-size:10px">6</text>
+    <text x="150" y="196" text-anchor="middle" class="bn g s" style="font-size:10px">লিফ = ⌊n/2⌋+1 … n</text>
+    <text x="352" y="85" text-anchor="middle" class="k w6" style="font-size:12px">50</text>
+    <text x="397" y="85" text-anchor="middle" class="k w6" style="font-size:12px">30</text>
+    <text x="442" y="85" text-anchor="middle" class="k w6" style="font-size:12px">40</text>
+    <text x="487" y="85" text-anchor="middle" class="k w6" style="font-size:12px">10</text>
+    <text x="532" y="85" text-anchor="middle" class="k w6" style="font-size:12px">20</text>
+    <text x="577" y="85" text-anchor="middle" class="k w6" style="font-size:12px">35</text>
+    <text x="465" y="40" text-anchor="middle" class="bn p s" style="font-size:10px">১-ভিত্তিক: 1 · 2 · 3 · 4 · 5 · 6</text>
+    <text x="465" y="54" text-anchor="middle" class="bn s" style="font-size:10px">০-ভিত্তিক: 0 · 1 · 2 · 3 · 4 · 5</text>
+    <text x="465" y="186" text-anchor="middle" class="bn r w6" style="font-size:11px">নোড 2 → চাইল্ড 4 ও 5</text>
+  </svg><figcaption>একই ম্যাক্স-হিপ, ট্রি হিসেবে ও লেভেল-অর্ডার অ্যারে হিসেবে — কোনো পয়েন্টার রাখা হয় না</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">রাশি</th><th class="l">রুট ইনডেক্স 1-এ (CLRS)</th><th class="l">রুট ইনডেক্স 0-তে (C / Java অ্যারে)</th></tr>
+    <tr><td class="l"><b>i-এর বাম চাইল্ড</b></td><td class="l"><span class="hl"><code>2i</code></span></td><td class="l"><code>2i + 1</code></td></tr>
+    <tr><td class="l"><b>i-এর ডান চাইল্ড</b></td><td class="l"><code>2i + 1</code></td><td class="l"><code>2i + 2</code></td></tr>
+    <tr><td class="l"><b>i-এর প্যারেন্ট</b></td><td class="l"><code>⌊i / 2⌋</code></td><td class="l"><code>⌊(i − 1) / 2⌋</code></td></tr>
+    <tr><td class="l"><b>লিফ</b></td><td class="l">ইনডেক্স <code>⌊n/2⌋ + 1 … n</code></td><td class="l">ইনডেক্স <code>⌊n/2⌋ … n − 1</code></td></tr>
+    <tr><td class="l"><b>শেষ ইন্টারনাল নোড</b></td><td class="l"><code>⌊n/2⌋</code></td><td class="l"><code>⌊n/2⌋ − 1</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">আকারের তথ্য ✍ সংখ্যাগুলো</span> n-নোডের হিপের উচ্চতা = <span class="circ">⌊log₂ n⌋</span>। h উচ্চতার হিপে নোড থাকে <code>2^h</code> থেকে <code>2^(h+1) − 1</code>-টি। লিফ <code>⌈n/2⌉</code>-টি, আর h উচ্চতার নোড সর্বোচ্চ <code>⌈n / 2^(h+1)⌉</code>-টি। ট্রি সম্পূর্ণ বলে অ্যারেতে <b>কোনো ফাঁক নেই</b> — ইনডেক্সের হিসাব কাজ করার একমাত্র কারণ এটিই।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>নিচে নামতে দ্বিগুণ, উপরে উঠতে অর্ধেক।</b>" রুট ১-এ থাকলে বাম চাইল্ড = প্যারেন্টের দ্বিগুণ, ডান চাইল্ড তার এক বেশি; প্যারেন্ট = চাইল্ডের অর্ধেক (ফ্লোর)। ০-ভিত্তিক অ্যারেতে "<b>এক ঘর সরাও</b>": দ্বিগুণ করার আগে ১ যোগ, অর্ধেক করার আগে ১ বিয়োগ।</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> আগে প্রশ্নের ইনডেক্সিং দেখুন: <code>2i, 2i+1</code> উত্তর <b>কেবল</b> রুট ১-এ থাকলে; রুট ০-তে হলে <code>2i+1, 2i+2</code>। <b>২.</b> ম্যাক্স-হিপে <b>সর্বনিম্ন</b> মান কোনো একটি <b>লিফে</b> থাকে (অবস্থান ⌊n/2⌋+1 … n), অবশ্যই শেষ ঘরে নয়। <b>৩.</b> <b>অবরোহী (descending)</b> ক্রমে সাজানো অ্যারে সবসময় বৈধ ম্যাক্স-হিপ, কিন্তু বৈধ ম্যাক্স-হিপ সাধারণত সাজানো <b>নয়</b>।</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">সাধারণীকরণ: d-ary হিপ</span> একই সম্পূর্ণ-ট্রি-অ্যারের ধারণা, কিন্তু প্রতিটি নোডের <b>d</b>-টি চাইল্ড। ০-ভিত্তিক: i-এর চাইল্ড <code>d·i + 1 … d·i + d</code>, প্যারেন্ট <code>⌊(i − 1)/d⌋</code>। উচ্চতা ≈ <span class="hl">log_d n</span>, তাই <b>ইনসার্ট / ডিক্রিজ-কি = O(log_d n)</b> (ওঠার স্তর কম) কিন্তু <b>এক্সট্র্যাক্ট-মিন = O(d · log_d n)</b> (প্রতি স্তরে d-টি চাইল্ডের তুলনা)। ডিক্রিজ-কি বেশি আর এক্সট্র্যাক্ট কম হলে বড় d উপযোগী — যেমন ঘন গ্রাফে ডাইকস্ট্রা।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: heap operations ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>হিপ অপারেশন</span></div>
+  <h2><span class="no">২</span>হিপ অপারেশন: সিফট-আপ, সিফট-ডাউন ও প্রতিটির খরচ</h2><span class="tag">সবই O(log n) ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def small" style="margin-top:0"><span class="lbl">ইনসার্ট = সিফট-আপ (Sift-up)</span> নতুন কি-কে <b>পরবর্তী খালি ঘরে</b> (ইনডেক্স n+1) রাখুন যাতে ট্রি সম্পূর্ণ থাকে, তারপর <span class="hl">যতক্ষণ প্যারেন্টের চেয়ে বড়, ততক্ষণ প্যারেন্টের সাথে অদলবদল</span> (ম্যাক্স-হিপ)। প্রতি স্তরে সর্বোচ্চ একটি অদলবদল ⇒ <b>O(log n)</b>। ম্যাক্স-হিপে <b>ইনক্রিজ-কি</b> (মিন-হিপে ডিক্রিজ-কি) একই সিফট-আপ।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">এক্সট্র্যাক্ট-ম্যাক্স = সিফট-ডাউন (Heapify)</span> রুট সরিয়ে রাখুন, <b>শেষ উপাদানটি রুটে আনুন</b>, n এক কমান, তারপর <span class="hl">বড় চাইল্ডের সাথে অদলবদল</span> করুন যতক্ষণ না দুই চাইল্ডই ছোট হয়। প্রতি স্তরে দুটি তুলনা ⇒ <b>O(log n)</b>। এই সিফট-ডাউনের নাম <b>MAX-HEAPIFY</b>।</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 150" width="560">
+    <g class="w">
+      <rect x="10" y="20" width="270" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M55,20 V50 M100,20 V50 M145,20 V50 M190,20 V50 M235,20 V50"/>
+      <rect x="235" y="20" width="45" height="30" rx="4" class="ink-r fill-r"/>
+      <path class="ink-r" d="M257,52 C250,80 130,80 123,52" marker-end="url(#ah)"/>
+      <rect x="330" y="20" width="270" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M375,20 V50 M420,20 V50 M465,20 V50 M510,20 V50 M555,20 V50"/>
+      <rect x="420" y="20" width="45" height="30" rx="4" class="ink-g fill-g"/>
+      <rect x="10" y="100" width="225" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M55,100 V130 M100,100 V130 M145,100 V130 M190,100 V130"/>
+      <rect x="330" y="100" width="225" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M375,100 V130 M420,100 V130 M465,100 V130 M510,100 V130"/>
+      <path class="ink" d="M290,35 H322" marker-end="url(#ahb)"/>
+      <path class="ink" d="M290,115 H322" marker-end="url(#ahb)"/>
+    </g>
+    <text x="145" y="12" text-anchor="middle" class="bn k w6" style="font-size:11px">45 ইনসার্ট, ঘর 6-এ</text>
+    <text x="32" y="41" text-anchor="middle" class="s" style="font-size:11px">50</text><text x="77" y="41" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="122" y="41" text-anchor="middle" class="s" style="font-size:11px">40</text><text x="167" y="41" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="212" y="41" text-anchor="middle" class="s" style="font-size:11px">20</text><text x="257" y="41" text-anchor="middle" class="r w6" style="font-size:11px">45</text>
+    <text x="190" y="88" text-anchor="middle" class="bn r s" style="font-size:10px">45 &gt; প্যারেন্ট 40 ⇒ অদলবদল; 45 &lt; 50 ⇒ থামো</text>
+    <text x="465" y="12" text-anchor="middle" class="bn g w6" style="font-size:11px">সিফট-আপের পরে</text>
+    <text x="352" y="41" text-anchor="middle" class="s" style="font-size:11px">50</text><text x="397" y="41" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="442" y="41" text-anchor="middle" class="g w6" style="font-size:11px">45</text><text x="487" y="41" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="532" y="41" text-anchor="middle" class="s" style="font-size:11px">20</text><text x="577" y="41" text-anchor="middle" class="s" style="font-size:11px">40</text>
+    <text x="122" y="146" text-anchor="middle" class="bn k w6" style="font-size:10px">50 এক্সট্র্যাক্ট: 40 রুটে → [40,30,45,10,20]</text>
+    <text x="32" y="121" text-anchor="middle" class="s" style="font-size:11px">40</text><text x="77" y="121" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="122" y="121" text-anchor="middle" class="s" style="font-size:11px">45</text><text x="167" y="121" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="212" y="121" text-anchor="middle" class="s" style="font-size:11px">20</text>
+    <text x="352" y="121" text-anchor="middle" class="g w6" style="font-size:11px">45</text><text x="397" y="121" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="442" y="121" text-anchor="middle" class="s" style="font-size:11px">40</text><text x="487" y="121" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="532" y="121" text-anchor="middle" class="s" style="font-size:11px">20</text>
+    <text x="442" y="146" text-anchor="middle" class="bn g s" style="font-size:10px">40 বড় চাইল্ড 45-এর সাথে অদলবদল</text>
+  </svg><figcaption>একই অ্যারেতে একটি ইনসার্ট (উপরে) ও একটি এক্সট্র্যাক্ট-ম্যাক্স (নিচে), হাতে-কলমে</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অপারেশন (ম্যাক্স-হিপ, n-টি কি)</th><th>সময়</th><th class="l">কীভাবে</th></tr>
+    <tr><td class="l"><b>ফাইন্ড-ম্যাক্স / পিক</b></td><td><span class="hl">O(1)</span></td><td class="l"><code>A[1]</code> পড়া</td></tr>
+    <tr><td class="l"><b>ইনসার্ট</b></td><td>O(log n)</td><td class="l">শেষে যোগ, সিফট-আপ</td></tr>
+    <tr><td class="l"><b>এক্সট্র্যাক্ট-ম্যাক্স</b></td><td>O(log n)</td><td class="l">শেষটি → রুট, সিফট-ডাউন</td></tr>
+    <tr><td class="l"><b>ইনক্রিজ-কি</b> (মিন-হিপে ডিক্রিজ-কি)</td><td>O(log n)</td><td class="l">মান বদল, সিফট-আপ</td></tr>
+    <tr><td class="l"><b>জানা ইনডেক্সে ডিলিট</b></td><td>O(log n)</td><td class="l">শেষটির সাথে অদলবদল, সিফট আপ <i>বা</i> ডাউন</td></tr>
+    <tr><td class="l"><b>একটি নোডে MAX-HEAPIFY</b></td><td style="white-space:nowrap"><span class="circ">O(log n)</span></td><td class="l">একটি সিফট-ডাউন (h উচ্চতার নোডে O(h))</td></tr>
+    <tr><td class="l"><b>n-টি কি-র BUILD-HEAP</b></td><td><span class="circ">O(n)</span></td><td class="l">⌊n/2⌋ … 1 হিপিফাই (পরের পাতা)</td></tr>
+    <tr><td class="l"><b>যেকোনো কি সার্চ</b></td><td><span class="red">O(n)</span></td><td class="l">সিবলিংদের মধ্যে কোনো ক্রম নেই</td></tr>
+    <tr><td class="l"><b>দুটি হিপ মার্জ</b></td><td>O(n)</td><td class="l">অ্যারে জোড়া দিয়ে বিল্ড-হিপ</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code tiny" style="margin-top:0">MAX-HEAPIFY(A, i, n):   // 1-based
+  l = 2i ; r = 2i + 1 ; big = i
+  if l ≤ n and A[l] &gt; A[big]: big = l
+  if r ≤ n and A[r] &gt; A[big]: big = r
+  if big ≠ i:
+      swap A[i], A[big]
+      MAX-HEAPIFY(A, big, n)</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ হিপিফাই বনাম বিল্ড-হিপ</span> "হিপিফাই O(n) সময় নেয়" — এক পরিচিত গোলমাল। <b>HEAPIFY</b> (একটি নোড থেকে একটি সিফট-ডাউন) <b>O(log n)</b>। <b>BUILD-HEAP</b> (নিচ থেকে উপরে প্রতিটি ইন্টারনাল নোড হিপিফাই) <b>O(n)</b>। প্রশ্ন কোনটি বোঝাচ্ছে পড়ে নিন। আরও: হিপ ম্যাক্স দেয় O(1)-এ, কিন্তু অন্য যেকোনো কি <b>সার্চ</b> করতে O(n)।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: build-heap, heapsort, priority queue ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>বিল্ড-হিপ, হিপসর্ট, PQ</span></div>
+  <h2><span class="no">৩</span>O(n)-এ বিল্ড-হিপ, হিপসর্ট ও প্রায়োরিটি কিউ</h2><span class="tag">যে প্রমাণটি চাওয়া হয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">BUILD-MAX-HEAP</span> n-টি কি যেমন আছে তেমনি অ্যারেতে রাখুন, তারপর <span class="hl">i = ⌊n/2⌋ থেকে 1 পর্যন্ত</span> <code>MAX-HEAPIFY(A, i)</code> ডাকুন। লিফগুলো (⌊n/2⌋+1 … n) আগে থেকেই এক-নোডের হিপ, তাই বাদ; নিচ থেকে উপরে যাওয়ায় i-কে হিপিফাই করার সময় তার দুই সাবট্রিই হিপ থাকে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">কেন O(n), O(n log n) নয় ✍ ৪ নম্বর</span> h উচ্চতার নোডে হিপিফাইয়ের খরচ <b>O(h)</b>, আর এমন নোড সর্বোচ্চ <code>⌈n / 2^(h+1)⌉</code>-টি। তাই<br><code>T(n) = Σ_(h=0..⌊log n⌋) ⌈n/2^(h+1)⌉ · O(h) = O(n · Σ h/2^h)</code>।<br>যেহেতু <code>Σ_(h≥0) h/2^h = 2</code>, <span class="circ">T(n) = O(2n) = O(n)</span>। অন্তর্দৃষ্টি: <b>অর্ধেক নোডই লিফ</b>, তাদের কোনো কাজ নেই; এক-চতুর্থাংশ সর্বোচ্চ এক স্তর নামে, এক-অষ্টমাংশ সর্বোচ্চ দুই — দামি নোড বিরল।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> <code>[3, 9, 2, 1, 4, 5]</code> থেকে ম্যাক্স-হিপ বানান, n = ৬, তাই শুরু <code>⌊6/2⌋ = 3</code> থেকে।<br><b>i = 3:</b> 2 বনাম চাইল্ড 5 → অদলবদল → <code>[3, 9, 5, 1, 4, 2]</code><br><b>i = 2:</b> 9 বনাম 1, 4 → অদলবদল নেই<br><b>i = 1:</b> 3 বনাম 9, 5 → 9-এর সাথে অদলবদল → <code>[9, 3, 5, 1, 4, 2]</code>; 3 এখন ঘর 2-এ, বনাম 1, 4 → 4-এর সাথে অদলবদল → <span class="hl"><code>[9, 4, 5, 1, 3, 2]</code></span><br>যাচাই: 9 ≥ 4, 5 · 4 ≥ 1, 3 · 5 ≥ 2 ✓ — <b>৩টি অদলবদল</b>।</div>
+  </div>
+  <div class="exam small" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ বানানোর দুই পথ</span> n-টি কি <b>একটি একটি করে</b> ইনসার্ট করলে (উপর থেকে, প্রতিবার সিফট-আপ) সবচেয়ে খারাপ ক্ষেত্রে <b>O(n log n)</b> — যেমন ম্যাক্স-হিপে ঊর্ধ্বক্রমে কি আসলে প্রত্যেকটি রুট পর্যন্ত ওঠে। নিচ-থেকে-উপরের <b>BUILD-HEAP হলো O(n)</b>। দুটিই বৈধ হিপ দেয়, কিন্তু <b>অবশ্যই একই অ্যারে নয়</b>; "বিল্ড করার পরের হিপ" চাইলে নিচ-থেকে-উপরের পদ্ধতি বোঝায়, যদি না প্রশ্নে "একটি একটি করে ইনসার্ট" বলা থাকে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">হিপসর্ট — সর্টিংয়ের সাথে যোগসূত্র</span> ম্যাক্স-হিপ বানান, তারপর n − 1 বার: <code>A[1] ↔ A[k]</code> অদলবদল, হিপ এক ঘর ছোট, <code>MAX-HEAPIFY(A, 1)</code>। অ্যারের বাঁ দিকে হিপ, ডান দিকে ক্রমশ বাড়তে থাকা সাজানো অংশ। বিল্ড-হিপ O(n) + (n − 1)-টি এক্সট্র্যাক্ট-ম্যাক্স, প্রতিটি O(log n) ⇒ <span class="hl">বেস্ট, অ্যাভারেজ ও ওয়ার্স্ট — সব ক্ষেত্রে O(n log n)</span>। <b>ইন-প্লেস</b> (O(1) বাড়তি জায়গা) কিন্তু <b>স্টেবল নয়</b>। ম্যাক্স-হিপ ঊর্ধ্বক্রমে সাজায়। কুইকসর্ট ও মার্জ সর্টের সাথে পূর্ণ তুলনা এই অধ্যায়ের সর্টিং লেসনে।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">প্রায়োরিটি কিউ (ADT)</span> এমন সংগ্রহ যেখানে প্রতিটি উপাদানের একটি <b>অগ্রাধিকার (priority)</b> আছে এবং অপারেশন <code>insert</code>, <code>find-max</code>, <code>extract-max</code>, <code>increase-key</code> (ম্যাক্স-PQ) বা এদের মিন সংস্করণ। হিপই এর <span class="hl">আদর্শ বাস্তবায়ন</span>: অসাজানো অ্যারেতে ইনসার্ট O(1) কিন্তু এক্সট্র্যাক্ট O(n); সাজানো অ্যারেতে উল্টো; হিপে দুটিই O(log n)।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">হিপ / প্রায়োরিটি কিউ কোথায় ব্যবহৃত</th><th class="l">যে হিপ অপারেশন গুরুত্বপূর্ণ</th></tr>
+    <tr><td class="l">CPU / জব শিডিউলিং, ইভেন্ট-চালিত সিমুলেশন</td><td class="l">পরবর্তী ডেডলাইন বা ইভেন্ট সময়ের এক্সট্র্যাক্ট-মিন</td></tr>
+    <tr><td class="l">ডাইকস্ট্রা, প্রিম (গ্রাফ-অ্যালগরিদম লেসন)</td><td class="l">প্রতি ভার্টেক্সে একবার এক্সট্র্যাক্ট-মিন, প্রতি এজে একবার <b>ডিক্রিজ-কি</b></td></tr>
+    <tr><td class="l">হাফম্যান কোডিং, k-ওয়ে মার্জ, n-এর মধ্যে টপ-k</td><td class="l">বারবার এক্সট্র্যাক্ট-মিন; k আকারের হিপে টপ-k <b>O(n log k)</b></td></tr>
+  </table>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: binomial and Fibonacci heap structure ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>বাইনোমিয়াল ও ফিবোনাচ্চি হিপ</span></div>
+  <h2><span class="no">৪</span>মার্জযোগ্য হিপ: বাইনোমিয়াল হিপ ও ফিবোনাচ্চি হিপ</h2><span class="tag">মূল কথা ইউনিয়ন ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">বাইনোমিয়াল হিপ (Binomial Heap)</span> <b>B<sub>0</sub></b> একটি নোড; <span class="hl">B<sub>k</sub> = দুটি B<sub>k−1</sub>, একটির রুট অন্যটির নিচে ঝোলানো</span>। B<sub>k</sub>-তে <b>2<sup>k</sup>-টি নোড</b>, <b>উচ্চতা k</b>, গভীরতা i-তে <b>C(k, i)</b>-টি নোড, এবং রুটের <b>ডিগ্রি k</b>। বাইনোমিয়াল হিপ হলো হিপ-ক্রমের বাইনোমিয়াল ট্রির তালিকা, <b>প্রতিটি k-এর জন্য সর্বোচ্চ একটি B<sub>k</sub></b> — ট্রিগুলো n-এর ১-বিটের সাথে মেলে: 13 = 1101₂ ⇒ B<sub>3</sub>, B<sub>2</sub>, B<sub>0</sub>, তাই সর্বোচ্চ <span class="circ">⌊log₂ n⌋ + 1-টি ট্রি</span>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বাইনোমিয়াল হিপ মানে n-কে বাইনারিতে লেখা; ইউনিয়ন মানে বাইনারি যোগ।</b>" দুটি B<sub>k</sub> যেন একই কলামে দুটি ১-বিট: জুড়ে একটি B<sub>k+1</sub> বানাও আর <b>হাতে রাখো (carry)</b> — ইউনিয়ন O(log n)। ইনসার্ট মানে "১ যোগ": লম্বা ক্যারি-চেইনে সবচেয়ে খারাপ ক্ষেত্রে O(log n), কিন্তু বাইনারি কাউন্টারের মতো <b>অ্যামর্টাইজড O(1)</b>।</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">ফিবোনাচ্চি হিপ (Fibonacci Heap)</span> (ফ্রেডম্যান ও টারজান, ১৯৮৪) <span class="hl">হিপ-ক্রমের ট্রির</span> এমন সংগ্রহ যাদের রুটগুলো একটি <b>বৃত্তাকার, দ্বিমুখী লিংকড রুট লিস্টে</b> থাকে, আর একটি পয়েন্টার <b>H.min</b> সবচেয়ে ছোট রুটকে নির্দেশ করে। ট্রিগুলো বাইনোমিয়াল হতে হবে <b>না</b>, একাধিক ট্রির একই ডিগ্রি থাকতে পারে — কাঠামোটি <span class="hl">অলস (lazy)</span>: এক্সট্র্যাক্ট-মিন বাধ্য না করা পর্যন্ত গোছানো স্থগিত রাখে। প্রতিটি নোডে থাকে <b>কি, ডিগ্রি, প্যারেন্ট, একটি চাইল্ড পয়েন্টার, বাম/ডান সিবলিং পয়েন্টার</b> (চাইল্ডরাও নিজস্ব বৃত্তাকার লিস্ট, তাই যেকোনো জোড়া বা লিস্ট সংযোজন O(1)) এবং একটি বুলিয়ান <b>মার্ক</b> = "শেষবার অন্য নোডের চাইল্ড হওয়ার পর থেকে একটি চাইল্ড হারিয়েছে"।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 170" width="540">
+    <g class="w">
+      <path class="ink" d="M76,40 H144 M176,40 H244 M276,40 H364 M396,40 H484"/>
+      <path class="ink-p" d="M516,36 C590,-2 -10,-2 44,36" marker-end="url(#ahp)"/>
+      <circle cx="60" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="160" cy="40" r="16" class="ink-r fill-r"/>
+      <circle cx="260" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="380" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="500" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="130" cy="100" r="14" class="ink fill-b"/><circle cx="190" cy="100" r="14" class="ink-k fill-y"/>
+      <circle cx="190" cy="150" r="13" class="ink fill-b"/>
+      <circle cx="380" cy="100" r="14" class="ink-k fill-y"/>
+      <circle cx="350" cy="150" r="13" class="ink fill-b"/><circle cx="410" cy="150" r="13" class="ink fill-b"/>
+      <path class="ink" d="M151,54 L137,88 M169,54 L183,88 M190,114 V136 M380,56 V86 M372,112 L356,138 M388,112 L404,138"/>
+      <path class="ink-r" d="M96,74 L146,54" marker-end="url(#ah)"/>
+    </g>
+    <text x="60" y="45" text-anchor="middle" class="k w6" style="font-size:11px">23</text>
+    <text x="160" y="45" text-anchor="middle" class="k w6" style="font-size:11px">3</text>
+    <text x="260" y="45" text-anchor="middle" class="k w6" style="font-size:11px">17</text>
+    <text x="380" y="45" text-anchor="middle" class="k w6" style="font-size:11px">7</text>
+    <text x="500" y="45" text-anchor="middle" class="k w6" style="font-size:11px">21</text>
+    <text x="130" y="104" text-anchor="middle" class="s" style="font-size:10px">52</text><text x="190" y="104" text-anchor="middle" class="s" style="font-size:10px">18</text>
+    <text x="190" y="154" text-anchor="middle" class="s" style="font-size:10px">39</text>
+    <text x="380" y="104" text-anchor="middle" class="s" style="font-size:10px">24</text>
+    <text x="350" y="154" text-anchor="middle" class="s" style="font-size:10px">26</text><text x="410" y="154" text-anchor="middle" class="s" style="font-size:10px">46</text>
+    <text x="88" y="86" text-anchor="middle" class="r w6" style="font-size:10px">H.min</text>
+    <text x="520" y="110" text-anchor="middle" class="bn p s" style="font-size:10px">হলুদ = মার্কড</text>
+    <text x="520" y="126" text-anchor="middle" class="bn p s" style="font-size:10px">(একটি চাইল্ড হারিয়েছে)</text>
+    <text x="270" y="110" text-anchor="middle" class="bn g s" style="font-size:10px">রুটগুলো যেকোনো ক্রমে</text>
+  </svg><figcaption>রুট লিস্টে পাঁচটি ট্রি; 23, 17 ও 21 — তিনটিরই ডিগ্রি 0 — একই ডিগ্রি থাকা চলে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">সস্তা অপারেশনগুলো</span> <b>ইনসার্ট:</b> এক-নোডের ট্রি বানিয়ে রুট লিস্টে জুড়ে দিন, H.min হালনাগাদ — <b>O(1)</b>, কোনো গোছানো নেই। <b>ইউনিয়ন:</b> দুই রুট লিস্ট জোড়া দিন, ছোট মিন রাখুন — <b>O(1)</b>। <b>ফাইন্ড-মিন:</b> H.min পড়ুন — <b>O(1)</b>।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">এক্সট্র্যাক্ট-মিন = পরিষ্কারের কাজ</span> H.min সরান, তার চাইল্ডদের রুট লিস্টে আনুন, তারপর <span class="hl">কনসলিডেট (consolidate)</span>: <b>সমান ডিগ্রির দুটি রুট জুড়ুন</b> (বড় কি ছোটটির নিচে) যতক্ষণ না সব ডিগ্রি আলাদা হয়, ডিগ্রি-ইনডেক্সড অ্যারে দিয়ে; তারপর রুটগুলো দেখে নতুন মিন খুঁজুন।</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">ডিক্রিজ-কি = কাট + ক্যাসকেডিং কাট</span> x-এর কি কমান। এখন যদি তা প্যারেন্ট y-এর চেয়ে ছোট হয়, x-কে <b>কাট</b> করুন: সাবট্রিসহ রুট লিস্টে সরিয়ে আনমার্ক করুন। তারপর: y <b>আনমার্কড</b> হলে মার্ক করে থামুন; y <b>আগে থেকেই মার্কড</b> হলে y-কেও কাট করুন এবং y-এর প্যারেন্টে একই কাজ করুন — এটাই <span class="circ">ক্যাসকেডিং কাট</span> — আনমার্কড নোড বা রুটে পৌঁছানো পর্যন্ত। এক লাইনে: <b>নন-রুট নোড একটি চাইল্ড হারাতে পারে; দ্বিতীয়টি হারালে নিজেই কাট হয়।</b></div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍</span> এই হিপগুলো কেন আছে: বাইনারি হিপ O(n)-এর চেয়ে দ্রুত <b>মার্জ</b> করতে পারে না। বাইনোমিয়াল ও ফিবোনাচ্চি হিপ পয়েন্টার-ভিত্তিক <b>মার্জযোগ্য হিপ (mergeable heap)</b> (লেফটিস্ট ও স্কিউ হিপও তাই)।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: Fibonacci heap costs and Dijkstra ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>ফিবোনাচ্চি হিপ: খরচ</span></div>
+  <h2><span class="no">৫</span>হিপের খরচের তুলনা, আর ডাইকস্ট্রা কেন ফিবোনাচ্চি হিপ চায়</h2><span class="tag">অ্যামর্টাইজড ≠ ওয়ার্স্ট কেস ★</span>
+  <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি ক্যাসকেডিং কাট</span> আগের পাতার ট্রিতে 24 ও 18 মার্কড। <b>46 → 15 ডিক্রিজ:</b> 15 &lt; প্যারেন্ট 24 ⇒ 15-কে রুট লিস্টে কাট; 24 মার্কড ⇒ 24-কেও (26 সহ) কাট; তার প্যারেন্ট 7 একটি রুট ⇒ থামো। <b>39 → 1 ডিক্রিজ:</b> 1 &lt; 18 ⇒ 1-কে কাট; 18 মার্কড ⇒ 18-কে কাট; তার প্যারেন্ট 3 রুট ⇒ থামো; <span class="hl">H.min = 1</span>। প্রতিটি কাট O(1); ক্যাসকেডের খরচ মেটে সে যেসব মার্ক মুছে দেয় তা দিয়ে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">পোটেনশিয়াল ফাংশন</span> <code>Φ(H) = t(H) + 2·m(H)</code>: t = রুট লিস্টে ট্রির সংখ্যা, m = মার্কড নোডের সংখ্যা। কনসলিডেশনের খরচ মেটে সে যত ট্রি কমায় তা দিয়ে; প্রতিটি ক্যাসকেডিং কাট একটি নোড <b>আনমার্ক</b> করে (−2) ও একটি ট্রি যোগ করে (+1), তাই নিজের খরচ নিজেই মেটায় ⇒ ডিক্রিজ-কি <b>অ্যামর্টাইজড O(1)</b>।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">"ফিবোনাচ্চি" নাম কোথা থেকে</span> কাট হওয়ার আগে একটি নোড সর্বোচ্চ একটি চাইল্ড হারায়, তাই ডিগ্রি k-এর নোডের সাবট্রিতে অন্তত <span class="hl">F<sub>k+2</sub> ≥ φ<sup>k</sup></span>-টি নোড (φ ≈ 1.618)। ফলে সর্বোচ্চ ডিগ্রি <span class="circ">D(n) ≤ ⌊log<sub>φ</sub> n⌋ ≈ 1.44 log₂ n</span> — যা এক্সট্র্যাক্ট-মিনকে অ্যামর্টাইজড O(log n) করে।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অপারেশন</th><th>বাইনারি হিপ (ওয়ার্স্ট)</th><th>বাইনোমিয়াল হিপ (ওয়ার্স্ট)</th><th>ফিবোনাচ্চি হিপ (অ্যামর্টাইজড)</th></tr>
+    <tr><td class="l">ইনসার্ট</td><td>O(log n)</td><td>O(log n); অ্যামর্টাইজড O(1)</td><td><span class="hl">O(1)</span></td></tr>
+    <tr><td class="l">ফাইন্ড-মিন</td><td>O(1)</td><td>O(log n); মিন পয়েন্টারে O(1)</td><td>O(1)</td></tr>
+    <tr><td class="l">এক্সট্র্যাক্ট-মিন</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+    <tr><td class="l">ইউনিয়ন / মার্জ</td><td><span class="red">O(n)</span></td><td><b>O(log n)</b></td><td><span class="hl">O(1)</span></td></tr>
+    <tr><td class="l">ডিক্রিজ-কি</td><td>O(log n)</td><td>O(log n)</td><td><span class="circ">O(1)</span></td></tr>
+    <tr><td class="l">ডিলিট (−∞ পর্যন্ত কমিয়ে এক্সট্র্যাক্ট)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+  </table>
+  <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">ডাইকস্ট্রা / প্রিম: হিপ কল গুনুন ✍</span> V-টি ভার্টেক্স ও E-টি এজের গ্রাফে দুটি অ্যালগরিদমই করে <b>V-টি ইনসার্ট</b>, <b>V-টি এক্সট্র্যাক্ট-মিন</b> এবং সর্বোচ্চ <b>E-টি ডিক্রিজ-কি</b>। <b>অ্যারে (হিপ ছাড়া):</b> V × O(V) ⇒ <b>O(V²)</b> — ঘন গ্রাফে সেরা। <b>বাইনারি হিপ:</b> (V + E) × O(log V) ⇒ <b>O((V + E) log V)</b>। <b>ফিবোনাচ্চি হিপ:</b> V × O(log V) + E × O(1) ⇒ <span class="circ">O(E + V log V)</span>। লাভটা <b>E-টি ডিক্রিজ-কি</b>-তে: O(log V) → O(1)। (অ্যালগরিদম: গ্রাফ-অ্যালগরিদম লেসন।)</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ দুটি</span> <b>১.</b> ফিবোনাচ্চি হিপের সীমাগুলো <b>অ্যামর্টাইজড</b>: একটি এক্সট্র্যাক্ট-মিনের প্রকৃত খরচ <b>O(n)</b> হতে পারে (n-টি ইনসার্টের পর n-টি রুট), একটি ডিক্রিজ-কি O(log n)। <b>২.</b> এখানে কোনো হিপেই এক্সট্র্যাক্ট-মিন O(1) <b>নয়</b>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ফিবোনাচ্চি অলস: মিনিমাম বের করা ছাড়া সবই O(1)।</b>" ইনসার্ট, ইউনিয়ন, ফাইন্ড-মিন, ডিক্রিজ-কি — O(1); এক্সট্র্যাক্ট-মিন ও ডিলিট — O(log n), কারণ তখনই অলস হিপ রুট লিস্ট গোছায়। আর "<b>এক চাইল্ড হারালে মার্ক, দুই হারালে কাট।</b>" বাস্তবে বাইনারি হিপ প্রায়ই দ্রুততর।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: B-tree definitions ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>বি-ট্রির সংজ্ঞা</span></div>
+  <h2><span class="no">৬</span>বি-ট্রি: অর্ডার m, মিনিমাম ডিগ্রি t ও উচ্চতার সীমা</h2><span class="tag">দুই রীতি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>বি-ট্রি (B-Tree)</b> (বায়ার ও ম্যাকক্রেইট, ১৯৭২) ডিস্কের জন্য নকশা করা একটি <span class="hl">সুষম বহুমুখী সার্চ ট্রি (balanced multiway search tree)</span>: এক নোড = এক ডিস্ক ব্লক, যাতে অনেকগুলো সাজানো কি থাকে। <b>k-টি কি-যুক্ত নোডের k + 1-টি চাইল্ড</b>, আর কিগুলো চাইল্ডদের কি-পরিসর আলাদা করে। <span class="hl">সব লিফ একই স্তরে</span>, তাই প্রতিটি সার্চ সমান সংখ্যক ব্লক পড়ে। ফ্যান-আউট বড় বলে উচ্চতা খুব কম, এবং সার্চ, ইনসার্ট ও ডিলিট সবই <b>O(log n)</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">অর্ডার m (নুথ) — পরীক্ষার রীতি</span> <b>১.</b> প্রতিটি নোডে <b>সর্বোচ্চ m-টি চাইল্ড</b> ⇒ সর্বোচ্চ <b>m − 1-টি কি</b>।<br><b>২.</b> রুট ছাড়া প্রতিটি ইন্টারনাল নোডে <b>অন্তত ⌈m/2⌉-টি চাইল্ড</b> ⇒ অন্তত <b>⌈m/2⌉ − 1-টি কি</b> (নন-রুট লিফেও একই ন্যূনতম কি)।<br><b>৩.</b> রুট লিফ না হলে তার <b>অন্তত ২টি চাইল্ড</b> ⇒ অন্তত ১টি কি।<br><b>৪.</b> সব লিফ একই স্তরে।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">মিনিমাম ডিগ্রি t (CLRS)</span> t ≥ 2। প্রতিটি নন-রুট নোডে <b>t − 1 থেকে 2t − 1-টি কি</b>, অর্থাৎ ইন্টারনাল হলে <b>t থেকে 2t-টি চাইল্ড</b>। রুটে অন্তত ১টি কি। 2t − 1-টি কি-যুক্ত নোড <b>পূর্ণ (full)</b>।<br><span class="hl">অনুবাদ: অর্ডার m = 2t</span>, তাই CLRS-এর ট্রির অর্ডার সবসময় জোড়। t = 2 ⇒ অর্ডার 4 ⇒ <b>2-3-4 ট্রি</b>।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th>অর্ডার m</th><th>সর্বোচ্চ চাইল্ড</th><th>সর্বোচ্চ কি</th><th>ন্যূনতম চাইল্ড (নন-রুট)</th><th>ন্যূনতম কি (নন-রুট)</th><th class="l">অন্য নাম</th></tr>
+    <tr><td>3</td><td>3</td><td>2</td><td>2</td><td>1</td><td class="l">2-3 ট্রি</td></tr>
+    <tr><td>4</td><td>4</td><td>3</td><td>2</td><td>1</td><td class="l">2-3-4 ট্রি (CLRS t = 2)</td></tr>
+    <tr><td><b>5</b></td><td><b>5</b></td><td><span class="circ">4</span></td><td><b>3</b></td><td><span class="circ">2</span></td><td class="l">পরীক্ষার পরিচিত উদাহরণ (পরের পাতা)</td></tr>
+    <tr><td>m</td><td>m</td><td>m − 1</td><td>⌈m/2⌉</td><td>⌈m/2⌉ − 1</td><td class="l">সাধারণ নিয়ম</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def small" style="margin-top:0"><span class="lbl">উচ্চতার সীমা ✍ প্রতিপাদন</span> h উচ্চতায় সবচেয়ে কম কি (CLRS): রুটে ১টি কি, তারপর 2, 2t, 2t², … , 2t<sup>h−1</sup>-টি নোড, প্রতিটিতে t − 1-টি কি:<br><code>n ≥ 1 + (t−1)·Σ 2t^(i−1) = 2t^h − 1</code><br>⇒ <span class="circ">h ≤ log_t((n + 1)/2)</span>। অর্ডার-m রূপে: <code>h ≤ log_⌈m/2⌉((n+1)/2)</code>। h উচ্চতায় সর্বাধিক কি: সব নোড পূর্ণ ⇒ <code>m^(h+1) − 1</code>।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">একটি সার্চের খরচ</span> রুট থেকে নামুন, লক্ষ্য কি যে দুই কি-র মাঝে পড়ে সেই চাইল্ডে যান। <b>ডিস্ক রিড = O(h) = O(log_t n)</b>। প্রতি নোডে CPU কাজ লিনিয়ার স্ক্যানে O(t) (বাইনারি সার্চে O(log t)) ⇒ মোট <b>O(t log_t n)</b> CPU। ডিস্ক রিডই প্রধান, তাই t এমনভাবে বাছা হয় যাতে এক নোড এক ব্লক ভরে।</div>
+  </div>
+  <div class="exam small" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ কোন "অর্ডার"?</span> MCQ-তে "অর্ডার" প্রায় সবসময় <b>নুথের সর্বোচ্চ চাইল্ড সংখ্যা</b>: অর্ডার 5 ⇒ সর্বোচ্চ <b>4</b>-টি কি, নন-রুট নোডে ন্যূনতম <b>2</b>-টি কি। "5-টি কি" উত্তর দেবেন না। প্রশ্নে <b>মিনিমাম ডিগ্রি t</b> দিলে t − 1 … 2t − 1-টি কি ধরুন। আর ন্যূনতম হলো ⌈m/2⌉-টি চাইল্ড — অর্থাৎ ⌈m/2⌉ − 1-টি <b>কি</b>।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: B-tree insert and delete ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>বি-ট্রি ইনসার্ট ও ডিলিট</span></div>
+  <h2><span class="no">৭</span>বি-ট্রিতে ইনসার্ট (স্প্লিট) ও ডিলিট (ধার / মার্জ)</h2><span class="tag">হাতে-কলমে উদাহরণ ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def small" style="margin-top:0"><span class="lbl">ইনসার্ট</span> সঠিক <b>লিফ</b> পর্যন্ত নেমে কি-টি সাজানো অবস্থানে বসান। লিফে এখন <b>m-টি কি</b> হলে (ওভারফ্লো) <span class="hl">স্প্লিট (split) করুন</span>: <b>মধ্যমা কি উপরে</b> প্যারেন্টে যায়, তার বাঁয়ের কিগুলো একটি নোড, ডানেরগুলো আরেকটি। প্যারেন্ট ওভারফ্লো হলে সেটিও স্প্লিট। রুট স্প্লিট হলে <b>নতুন রুট</b> তৈরি হয় — <span class="circ">ট্রি কেবল রুটে বাড়ে</span>, তাই সব লিফ এক স্তরে থাকে।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">ডিলিট</span> <b>১.</b> ন্যূনতমের বেশি কি-যুক্ত লিফে কি থাকলে ⇒ শুধু সরিয়ে দিন। <b>২.</b> ইন্টারনাল নোডে কি থাকলে ⇒ তার <b>ইন-অর্ডার প্রিডিসেসর</b> (বাম সাবট্রির সবচেয়ে বড় কি) বা সাকসেসর দিয়ে প্রতিস্থাপন করে সেই কি লিফ থেকে মুছুন। <b>৩.</b> লিফ <b>আন্ডারফ্লো</b> হলে (⌈m/2⌉ − 1-এর কম কি) ⇒ বাড়তি কি-যুক্ত পাশের সিবলিং থেকে <b>ধার (borrow)</b> করুন (প্যারেন্টের মধ্য দিয়ে ঘুরিয়ে), নইলে সিবলিং ও প্যারেন্টের বিভাজক কি নিয়ে <b>মার্জ (merge)</b>। মার্জে প্যারেন্ট আন্ডারফ্লো হতে পারে; রুট খালি হলে ট্রি <b>এক স্তর কমে</b>।</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 230" width="580">
+    <g class="w">
+      <rect x="10" y="22" width="180" height="28" rx="6" class="ink-r fill-r"/>
+      <path class="ink" d="M200,36 H232" marker-end="url(#ahb)"/>
+      <rect x="292" y="8" width="56" height="26" rx="6" class="ink fill-b"/>
+      <rect x="240" y="50" width="76" height="26" rx="6" class="ink fill-b"/>
+      <rect x="326" y="50" width="76" height="26" rx="6" class="ink fill-b"/>
+      <path class="ink" d="M308,34 L282,48 M332,34 L360,48"/>
+      <rect x="430" y="22" width="180" height="28" rx="6" class="ink-r fill-r"/>
+      <path class="ink" d="M412,36 H426" marker-end="url(#ahb)"/>
+      <rect x="230" y="110" width="160" height="26" rx="6" class="ink-g fill-g"/>
+      <rect x="140" y="160" width="100" height="26" rx="6" class="ink-g fill-g"/>
+      <rect x="260" y="160" width="100" height="26" rx="6" class="ink-g fill-g"/>
+      <rect x="380" y="160" width="120" height="26" rx="6" class="ink-g fill-g"/>
+      <path class="ink" d="M250,136 L190,158 M310,136 L310,158 M370,136 L440,158"/>
+    </g>
+    <text x="100" y="14" text-anchor="middle" class="bn k w6" style="font-size:10px">10, 20, 30, 40, তারপর 50 ইনসার্ট</text>
+    <text x="100" y="41" text-anchor="middle" class="r w6" style="font-size:11px">10 20 30 40 50 ✗</text>
+    <text x="320" y="26" text-anchor="middle" class="k w6" style="font-size:11px">30</text>
+    <text x="278" y="68" text-anchor="middle" class="s" style="font-size:11px">10 20</text>
+    <text x="364" y="68" text-anchor="middle" class="s" style="font-size:11px">40 50</text>
+    <text x="520" y="14" text-anchor="middle" class="bn k w6" style="font-size:10px">60, 70, তারপর 80 যোগ</text>
+    <text x="520" y="41" text-anchor="middle" class="r w6" style="font-size:11px">40 50 60 70 80 ✗</text>
+    <text x="520" y="70" text-anchor="middle" class="bn r s" style="font-size:10px">মধ্যমা 60 উপরে যায়</text>
+    <text x="310" y="102" text-anchor="middle" class="bn g w6" style="font-size:10px">90 ইনসার্টের পর চূড়ান্ত ট্রি</text>
+    <text x="310" y="128" text-anchor="middle" class="g w6" style="font-size:12px">30 · 60</text>
+    <text x="190" y="178" text-anchor="middle" class="s" style="font-size:11px">10 · 20</text>
+    <text x="310" y="178" text-anchor="middle" class="s" style="font-size:11px">40 · 50</text>
+    <text x="440" y="178" text-anchor="middle" class="s" style="font-size:11px">70 · 80 · 90</text>
+    <text x="310" y="210" text-anchor="middle" class="bn p s" style="font-size:10px">অর্ডার 5: 5-টি কি-তে ওভারফ্লো, মধ্যমা (৩য়) উপরে, দুটি নোডে 2-টি করে কি</text>
+    <text x="310" y="226" text-anchor="middle" class="bn r s" style="font-size:10px">২টি স্প্লিট, ১টি নতুন রুট — উচ্চতা 0 থেকে 1, বেড়েছে উপরে</text>
+  </svg><figcaption>অর্ডার-5 বি-ট্রিতে 10, 20, …, 90 ইনসার্ট, ধাপে ধাপে</figcaption></figure>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">সেই ট্রিতে ডিলিট ✍ অর্ডার 5, ন্যূনতম 2-টি কি</span> <b>40 ডিলিট (ধার):</b> লিফ [40, 50] → [50] আন্ডারফ্লো। বাম সিবলিং [10, 20]-তে কেবল ন্যূনতম, ডান সিবলিং [70, 80, 90]-তে বাড়তি আছে ⇒ <b>ঘোরান</b>: বিভাজক 60 নিচে নামে, 70 উপরে ওঠে। ফল: রুট [30 | 70], লিফ [10, 20] [50, 60] [80, 90]। <br><b>মূল ট্রি থেকে 20 ডিলিট (মার্জ):</b> [10, 20] → [10] আন্ডারফ্লো; একমাত্র সিবলিং [40, 50]-এ বাড়তি নেই ⇒ <b>মার্জ</b> [10] + বিভাজক 30 + [40, 50] = [10, 30, 40, 50]। রুট হয় [60], লিফ [10, 30, 40, 50] ও [70, 80, 90] — তবুও বৈধ (রুটে ≥ ১টি কি)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বেশি ভরা? স্প্লিট করে মাঝেরটা উপরে ঠেলো। বেশি খালি? ধনী সিবলিং থেকে ধার, নইলে মার্জ করে বিভাজক নিচে টানো।</b>" ইনসার্ট কি <b>উপরে</b> ঠেলে; ডিলিট কি <b>নিচে</b> টানে। উচ্চতা বদলায় কেবল রুটে, দুই দিকেই।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍</span> <b>১.</b> বি-ট্রি কখনো লিফে বাড়ে না — নতুন স্তর আসে পুরোনো রুটের <b>উপরে</b>। <b>২.</b> <b>জোড়</b> অর্ডারে ওভারফ্লো নোডে জোড় সংখ্যক কি, তাই দুটি মাঝের কি; বইভেদে বাম- বা ডান-ঝোঁকা — আপনার পছন্দ উল্লেখ করুন। <b>৩.</b> CLRS ইনসার্ট করে <b>এক পাসে</b>, নামার পথে প্রতিটি পূর্ণ নোড স্প্লিট করে, তাই আর পিছু ফিরতে হয় না।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: B+ tree ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>বি+ ট্রি ও তুলনা</span></div>
+  <h2><span class="no">৮</span>বি+ ট্রি, ডেটাবেস ইনডেক্স ও বড় তুলনা</h2><span class="tag">লিংকড লিফ ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>বি+ ট্রি (B+ Tree)</b> বি-ট্রির একটি রূপ যেখানে <span class="hl">সব রেকর্ড (বা রেকর্ড পয়েন্টার) কেবল লিফে থাকে</span>; ইন্টারনাল নোডে থাকে শুধু পথনির্দেশক হিসেবে <b>কি-র কপি</b>, আর লিফগুলো <b>কি-ক্রমে লিংক করা</b> (সিকোয়েন্স সেট)।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 150" width="500">
+    <g class="w">
+      <rect x="250" y="8" width="120" height="30" rx="6" class="ink-k fill-y"/>
+      <path class="ink" d="M310,8 V38"/>
+      <rect x="20" y="88" width="130" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="210" y="88" width="160" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="430" y="88" width="180" height="30" rx="6" class="ink-g fill-g"/>
+      <path class="ink" d="M262,38 L90,86 M310,38 L290,86 M358,38 L510,86"/>
+      <path class="ink-r" d="M152,103 H206" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M372,103 H426" marker-end="url(#ah)"/>
+    </g>
+    <text x="280" y="28" text-anchor="middle" class="k w6" style="font-size:12px">30</text><text x="340" y="28" text-anchor="middle" class="k w6" style="font-size:12px">60</text>
+    <text x="85" y="108" text-anchor="middle" class="g w6" style="font-size:12px">10 · 20</text>
+    <text x="290" y="108" text-anchor="middle" class="g w6" style="font-size:12px">30 · 40 · 50</text>
+    <text x="520" y="108" text-anchor="middle" class="g w6" style="font-size:12px">60 · 70 · 80 · 90</text>
+    <text x="179" y="96" text-anchor="middle" class="bn r s" style="font-size:10px">পরের</text><text x="399" y="96" text-anchor="middle" class="bn r s" style="font-size:10px">পরের</text>
+    <text x="310" y="138" text-anchor="middle" class="bn p s" style="font-size:10px">30 ও 60 দুবার আছে: রুটে পথনির্দেশক, লিফে আসল কি</text>
+    <text x="500" y="30" text-anchor="middle" class="bn s" style="font-size:10px">অর্ডার 5: লিফে ≤ 4-টি কি</text>
+  </svg><figcaption>একই নয়টি কি, একটি সঠিক দুই-স্তরের বি+ ট্রি: এক রুট, তিনটি লিংকড লিফ</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">বি-ট্রি</th><th class="l">বি+ ট্রি</th></tr>
+    <tr><td class="l">ডেটা / রেকর্ড পয়েন্টার কোথায়</td><td class="l"><b>প্রতিটি</b> নোডে</td><td class="l"><span class="hl">কেবল লিফে</span></td></tr>
+    <tr><td class="l">কি সংরক্ষণ</td><td class="l">প্রতিটি কি ঠিক একবার</td><td class="l">বিভাজক কি ইন্টারনাল নোডে পুনরাবৃত্ত</td></tr>
+    <tr><td class="l">সার্চ</td><td class="l">ইন্টারনাল নোডেই থামতে পারে</td><td class="l">সবসময় লিফে শেষ; বেশি ফ্যান-আউট ⇒ খাটো ট্রি</td></tr>
+    <tr><td class="l">রেঞ্জ কোয়েরি / পূর্ণ স্ক্যান</td><td class="l">স্তর পেরিয়ে ইন-অর্ডার ট্রাভার্সাল</td><td class="l">লিফ চেইন ধরে <span class="circ">O(log n + k)</span></td></tr>
+    <tr><td class="l">লিফ স্প্লিট</td><td class="l">মধ্যমা উপরে <b>সরে যায়</b></td><td class="l">মধ্যমা উপরে <b>কপি</b> হয় (লিফেও থাকে); ইন্টারনাল স্প্লিটে সরে</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">ফ্যান-আউটের হিসাব ✍</span> 4 KB পেজ, 8-বাইট কি + 8-বাইট চাইল্ড পয়েন্টার ⇒ প্রতি নোডে প্রায় <b>4096 ÷ 16 = 256</b>-টি চাইল্ড। তিন স্তরে <code>256³ = 16,777,216</code>-টি লিফ। রুট RAM-এ থাকলে ⇒ প্রায় ১.৬৮ কোটি কি-র যেকোনোটি <span class="hl">২–৩টি ডিস্ক রিডে</span>।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">কোথায় ব্যবহৃত</span> <b>ডেটাবেস:</b> MySQL InnoDB, PostgreSQL, Oracle ও SQL Server সাধারণ ইনডেক্সে বি+ ট্রি ব্যবহার করে। <b>ফাইল সিস্টেম:</b> NTFS ডিরেক্টরি ইনডেক্স (বি+ ট্রি), ext4 ডিরেক্টরি (HTree, হ্যাশড বি-ট্রি), XFS ও Btrfs (বি-ট্রি)। বি+ ট্রি বনাম হ্যাশ ইনডেক্স: ডেটাবেস অধ্যায় দেখুন।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">স্ট্রাকচার</th><th>ফাইন্ড-মিন / ম্যাক্স</th><th>যেকোনো কি সার্চ</th><th>ইনসার্ট</th><th class="l">যার জন্য সেরা</th></tr>
+    <tr><td class="l">বাইনারি হিপ</td><td>O(1)</td><td><span class="red">O(n)</span></td><td>O(log n)</td><td class="l">প্রায়োরিটি কিউ, হিপসর্ট</td></tr>
+    <tr><td class="l">ফিবোনাচ্চি হিপ</td><td>O(1)</td><td><span class="red">O(n)</span></td><td>অ্যামর্টাইজড O(1)</td><td class="l">অনেক ডিক্রিজ-কি (ডাইকস্ট্রা, প্রিম)</td></tr>
+    <tr><td class="l">বি-ট্রি</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td class="l">ডিস্কভিত্তিক সাজানো সংরক্ষণ</td></tr>
+    <tr><td class="l">বি+ ট্রি</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td class="l">DB ইনডেক্স, রেঞ্জ কোয়েরি</td></tr>
+  </table>
+  <p class="tiny red" style="margin:1mm 0 0"><b>ফাঁদ:</b> হিপ সার্চ স্ট্রাকচার নয় — কেবল ফাইন্ড-<b>মিন</b> O(1); "ফিবোনাচ্চি হিপে O(1) সার্চ" ভুল।</p>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্য-পাতা</span>
+    <div class="fgrid small">
+      <p>হিপ = সম্পূর্ণ ট্রি + হিপ ক্রম</p><p>ম্যাক্স-হিপ: ম্যাক্স রুটে, মিন লিফে</p>
+      <p>১-ভিত্তিক: 2i, 2i+1, ⌊i/2⌋</p><p>০-ভিত্তিক: 2i+1, 2i+2, ⌊(i−1)/2⌋</p>
+      <p>উচ্চতা = ⌊log₂ n⌋</p><p>লিফ: ⌊n/2⌋+1 … n (মোট ⌈n/2⌉)</p>
+      <p>ইনসার্ট / এক্সট্র্যাক্ট / হিপিফাই: O(log n)</p><p><span class="hl">বিল্ড-হিপ: O(n)</span></p>
+      <p>হিপে সার্চ: O(n)</p><p>হিপসর্ট: O(n log n), ইন-প্লেস, আনস্টেবল</p>
+      <p>d-ary: ইনসার্ট O(log_d n)</p><p>d-ary: এক্সট্র্যাক্ট O(d log_d n)</p>
+      <p>B<sub>k</sub>: 2<sup>k</sup> নোড, উচ্চতা k, C(k,i)</p><p>বাইনোমিয়াল হিপ ↔ n বাইনারিতে</p>
+      <p>বাইনোমিয়াল ইউনিয়ন: O(log n)</p><p>বাইনারি-হিপ ইউনিয়ন: O(n)</p>
+      <p>ফিবো: ইনসার্ট/ইউনিয়ন/ফাইন্ড/ডিক্রিজ O(1)</p><p>ফিবো: এক্সট্র্যাক্ট-মিন/ডিলিট O(log n)</p>
+      <p>Φ = ট্রি + 2 × মার্কড</p><p>D(n) ≤ log<sub>φ</sub> n</p>
+      <p>ডাইকস্ট্রা + ফিবো: O(E + V log V)</p><p>ডাইকস্ট্রা + বাইনারি: O((V+E) log V)</p>
+      <p>অর্ডার m: ≤ m চাইল্ড, ≤ m−1 কি</p><p>নন-রুট ≥ ⌈m/2⌉ চাইল্ড</p>
+      <p>CLRS t: t−1 … 2t−1 কি</p><p>h ≤ log<sub>t</sub>((n+1)/2)</p>
+      <p>বি+: লিফ লিংকড, ডেটা লিফে</p><p>বি+ রেঞ্জ: O(log n + k)</p>
+    </div>
+  </div>
+  <h3>MCQ-র সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>হিপ ক্রম বাম-ডান নিয়ে কিছু বলে না</li>
+      <li>বিল্ড-হিপ ⌊n/2⌋ থেকে শুরু, নামে ১ পর্যন্ত</li>
+      <li>Σ h/2<sup>h</sup> = 2 ⇒ বিল্ড-হিপ লিনিয়ার</li>
+      <li>k আকারের হিপে টপ-k: O(n log k)</li>
+      <li>মার্জযোগ্য হিপ আছে <b>ইউনিয়নের</b> জন্য</li>
+      <li>ক্যাসকেডিং কাট: দ্বিতীয় চাইল্ড হারালে কাট</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>ফিবোনাচ্চির সীমা <b>অ্যামর্টাইজড</b></li>
+      <li>অর্ডার 5: কি 2…4, চাইল্ড 3…5</li>
+      <li>অর্ডার 3 = 2-3 ট্রি; অর্ডার 4 = 2-3-4 ট্রি</li>
+      <li>বি-ট্রি বাড়ে ও কমে <b>রুটে</b></li>
+      <li>ওভারফ্লো ⇒ স্প্লিট; আন্ডারফ্লো ⇒ ধার / মার্জ</li>
+      <li>বি+ লিফ স্প্লিটে কি উপরে কপি হয়</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">প্রধান ফাঁদ</span> 2i+1 বনাম 2i (ইনডেক্সিং দেখুন) · হিপিফাই O(log n) বনাম বিল্ড-হিপ O(n) · যেকোনো হিপে "O(1) সার্চ" · ফিবোনাচ্চি এক্সট্র্যাক্ট-মিন "O(1)" · অ্যামর্টাইজডকে ওয়ার্স্ট কেস ধরা · অর্ডার m-এ "m-টি কি" · ন্যূনতম কি = ⌈m/2⌉ − 1, ⌈m/2⌉ নয় · বি-ট্রি "লিফে বাড়ে"।</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">সব কৌশল একসাথে</span> নিচে নামতে দ্বিগুণ, উপরে উঠতে অর্ধেক · বাইনোমিয়াল হিপ মানে n বাইনারিতে, ইউনিয়ন মানে যোগ · ফিবোনাচ্চি অলস: মিন বের করা ছাড়া সব O(1) · এক চাইল্ড হারালে মার্ক, দুই হারালে কাট · বেশি ভরা: স্প্লিট করে উপরে ঠেলো; বেশি খালি: ধার, নইলে মার্জ।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <circle cx="66" cy="46" r="32" class="ink-r fill-r"/>
+        <circle cx="150" cy="46" r="32" class="ink fill-b"/>
+        <circle cx="234" cy="46" r="32" class="ink-g fill-g"/>
+        <path class="ink" d="M98,46 H116 M182,46 H200" marker-end="url(#ahb)"/>
+        <rect x="40" y="112" width="220" height="30" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="44" text-anchor="middle" class="bn r w6" style="font-size:11px">বাইনারি</text><text x="66" y="58" text-anchor="middle" class="bn r s" style="font-size:10px">হিপ</text>
+      <text x="150" y="44" text-anchor="middle" class="bn k w6" style="font-size:11px">ফিবোনাচ্চি</text><text x="150" y="58" text-anchor="middle" class="bn s" style="font-size:10px">হিপ</text>
+      <text x="234" y="44" text-anchor="middle" class="bn g w6" style="font-size:11px">বি / বি+</text><text x="234" y="58" text-anchor="middle" class="bn g s" style="font-size:10px">ট্রি</text>
+      <text x="150" y="98" text-anchor="middle" class="bn p s" style="font-size:10px">RAM-এ অগ্রাধিকার → ডিস্কে সার্চ</text>
+      <text x="150" y="132" text-anchor="middle" class="bn k w6" style="font-size:11px">দ্রুত মিন · ডিস্কে ক্রম</text>
+    </svg><figcaption>দুটি কাজ: দ্রুত মিনিমাম, কম ডিস্ক রিড</figcaption></figure>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · হিপ ও বি-ট্রি</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মিলিয়ে নিন</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১.</span>ম্যাক্স-হিপে <b>সবচেয়ে বড়</b> উপাদান থাকে:<ol class="opts"><li>সবচেয়ে বামের লিফে</li><li>অ্যারের শেষ ঘরে</li><li>যেকোনো একটি লিফে</li><li>রুটে</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">২.</span>রুট ইনডেক্স 1-এ হলে নোড i-এর চাইল্ড কোথায়?<ol class="opts"><li>2i ও 2i + 1</li><li>2i + 1 ও 2i + 2</li><li>i + 1 ও i + 2</li><li>i/2 ও i/2 + 1</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৩.</span>ম্যাক্স-হিপ <code>[50, 30, 40, 10, 20]</code>-এ সিফট-আপে 45 ইনসার্ট করলে অ্যারে হয়:<ol class="opts"><li>[50,45,30,10,20,40]</li><li>[50,30,45,10,20,40]</li><li>[45,30,50,10,20,40]</li><li>[50,30,40,10,20,45]</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৪.</span>n-টি অসাজানো কি থেকে নিচ-থেকে-উপরে বাইনারি হিপ বানাতে সময়:<ol class="opts"><li>O(log n)</li><li>O(n log n)</li><li>O(n)</li><li>O(n²)</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৫.</span>ফিবোনাচ্চি হিপে <b>ডিক্রিজ-কি</b>-র অ্যামর্টাইজড খরচ:<ol class="opts"><li>O(log n)</li><li>O(n)</li><li>O(1)</li><li>O(log log n)</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৬.</span>ফিবোনাচ্চি হিপসহ ডাইকস্ট্রার অ্যালগরিদমের সময়:<ol class="opts"><li>O(V²)</li><li>O(E + V log V)</li><li>O((V + E) log V)</li><li>O(E log E)</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৭.</span>অর্ডার m = 5-এর বি-ট্রিতে নোডে সর্বোচ্চ কি ও নন-রুট নোডে ন্যূনতম কি:<ol class="opts"><li>5 ও 3</li><li>4 ও 3</li><li>5 ও 2</li><li>4 ও 2</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৮.</span>বি-ট্রির উচ্চতা কখন বাড়ে?<ol class="opts"><li>রুট স্প্লিট হলে</li><li>লিফ স্প্লিট হলে</li><li>দুটি লিফ মার্জ হলে</li><li>কি ধার করা হলে</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৯.</span>১৩ নোডের বাইনোমিয়াল হিপে কোন ট্রিগুলো থাকে?<ol class="opts"><li>B<sub>3</sub>, B<sub>1</sub>, B<sub>0</sub></li><li>B<sub>2</sub>, B<sub>1</sub>, B<sub>0</sub></li><li>B<sub>3</sub>, B<sub>2</sub>, B<sub>1</sub></li><li>B<sub>3</sub>, B<sub>2</sub>, B<sub>0</sub></li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১০.</span>ডেটাবেসের রেঞ্জ কোয়েরিতে বি-ট্রির চেয়ে বি+ ট্রি কেন পছন্দ?<ol class="opts"><li>এটি বাইনারি ট্রি</li><li>সব কি লিংকড লিফে</li><li>ইন্টারনাল নোড লাগে না</li><li>ডেটা রুটে রাখে</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ঘ · ২-ক · ৩-খ · ৪-গ · ৫-গ · ৬-খ · ৭-ঘ · ৮-ক · ৯-ঘ · ১০-খ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> (ক) দেখান যে BUILD-MAX-HEAP O(n) সময়ে চলে। (খ) একটি খালি <b>অর্ডার 5</b> বি-ট্রিতে 10, 20, 30, 40, 50, 60, 70, 80, 90 ইনসার্ট করুন, প্রতিটি স্প্লিট দেখান, তারপর 40 ডিলিট করুন। (গ) ফিবোনাচ্চি হিপের অ্যামর্টাইজড খরচগুলো লিখুন এবং ব্যাখ্যা করুন কেন তখন ডাইকস্ট্রা O(E + V log V)-এ চলে। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>(ক) বিল্ড-হিপ (৩)</b> — i = ⌊n/2⌋ … 1 হিপিফাই; h উচ্চতার নোডে খরচ O(h), এমন নোড ≤ ⌈n/2^(h+1)⌉-টি; <code>Σ ⌈n/2^(h+1)⌉·O(h) = O(n Σ h/2^h) = O(2n) = O(n)</code>। <i class="mk">৩</i></li>
+    <li><b>(খ) স্প্লিট (৩)</b> — অর্ডার 5 ⇒ সর্বোচ্চ 4, ন্যূনতম 2-টি কি। 10–40 এক লিফ ভরে; 50-এ ওভারফ্লো ⇒ মধ্যমা 30 উপরে: [30] / [10 20] [40 50]। 60, 70 ⇒ [40 50 60 70]; 80-তে ওভারফ্লো ⇒ 60 উপরে: [30 60] / [10 20] [40 50] [70 80]; 90 ⇒ [70 80 90]। <i class="mk">৩</i></li>
+    <li><b>(খ) 40 ডিলিট (২)</b> — [50] আন্ডারফ্লো; বাম সিবলিং ন্যূনতমে, ডান সিবলিং [70 80 90]-এ বাড়তি ⇒ ধার: 60 নিচে, 70 উপরে ⇒ [30 70] / [10 20] [50 60] [80 90]। <i class="mk">২</i></li>
+    <li><b>(গ) ফিবোনাচ্চি হিপ (২)</b> — ইনসার্ট, ইউনিয়ন, ফাইন্ড-মিন, ডিক্রিজ-কি O(1); এক্সট্র্যাক্ট-মিন, ডিলিট অ্যামর্টাইজড O(log n)। ডাইকস্ট্রা = V-টি এক্সট্র্যাক্ট-মিন + E-টি ডিক্রিজ-কি = O(V log V + E)। <i class="mk">২</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>দুই সেট ইনডেক্স সূত্র লিখতে পারি</li>
+      <li>হাতে অ্যারেতে সিফট-আপ / ডাউন করতে পারি</li>
+      <li>বিল্ড-হিপ O(n) প্রমাণ করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>তিন হিপের খরচের টেবিল পূরণ করতে পারি</li>
+      <li>অর্ডার-m-এর ন্যূনতম/সর্বোচ্চ কি বলতে পারি</li>
+      <li>বি-ট্রিতে স্প্লিট, ধার ও মার্জ করতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

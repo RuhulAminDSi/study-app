@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Probabilistic Reasoning &amp; NLP: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Probabilistic Reasoning &amp; NLP</span></h1>
+  <p class="subtitle">Bayes · naive Bayes · BN DAG · HMM &amp; Viterbi · stemming · embeddings: 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="570">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="106" ry="46" class="ink-k fill-y"/>
+        <path class="ink" d="M236,132 L166,74 M236,168 L166,226 M320,104 L320,56 M404,132 L474,74 M404,168 L474,226 M320,196 L320,244 M214,150 L168,150 M426,150 L472,150"/>
+        <rect x="58" y="40" width="166" height="40" rx="14" class="ink fill-b"/>
+        <rect x="237" y="14" width="166" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="166" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="58" y="220" width="166" height="40" rx="14" class="ink fill-b"/>
+        <rect x="237" y="244" width="166" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="166" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="l">PROBABILISTIC</text>
+      <text x="320" y="170" text-anchor="middle" class="r s">REASONING &amp; NLP</text>
+      <text x="141" y="65" text-anchor="middle">Rules of probability</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Bayes' theorem ★</text>
+      <text x="499" y="65" text-anchor="middle">Naive Bayes</text>
+      <text x="96" y="155" text-anchor="middle" class="g w6">random variable</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">BN + HMM ★</text>
+      <text x="141" y="245" text-anchor="middle">Variable elimination</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Stem / lemma ★</text>
+      <text x="499" y="245" text-anchor="middle">Embeddings</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the one idea everything hangs on</figcaption>
+  </figure>
+  <div class="sticky" style="width:68mm"><b>High-yield list</b><br>① P(A|B) = P(A∧B)/P(B)<br>② P(H|E) = P(E|H)P(H)/P(E)<br>③ P(C|x₁…xₙ) ∝ P(C)∏ᵢP(xᵢ|C)<br>④ BN: ∏ᵢP(xᵢ|Pa(xᵢ))<br>⑤ noisy-OR: 1 − ∏ᵢ(1−pᵢ)<br>⑥ αₜ(j) = bⱼ(oₜ)Σᵢaᵢⱼαₜ₋₁(i)<br>⑦ Stemming chops, lemmatisation looks up<br>⑧ perplexity = exp(NLL)</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">Artificial Intelligence lists ten lines. This notebook covers exactly two: "<span class="hl">Probabilistic reasoning</span>" and "<span class="hl">Natural language processing</span>". Knowledge representation, logic, search, expert systems and machine learning have their own notes in this chapter.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Uncertainty &amp; the rules of probability … p. 2</li><li>Conditional probability &amp; Bayes' theorem … p. 2</li><li>Naive Bayes classification … p. 3</li><li>Bayesian networks: DAG and CPT … p. 4</li></ul>
+    <ul class="tick"><li>Variable elimination, noisy-OR, D-S … p. 5</li><li>Markov chains &amp; hidden Markov models … p. 6</li><li>Forward, backward &amp; Viterbi … p. 7</li><li>NLP I–III … p. 8–10 · Night-before p. 11 · Practice p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: uncertainty, rules of probability, Bayes ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Uncertainty</span></div>
+  <h2><span class="no">1</span>Uncertainty, the Rules of Probability &amp; Bayes</h2><span class="tag">foundation ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Probabilistic reasoning</span> draws conclusions under uncertainty, using probability to say how far to believe each alternative. A <span class="hl">random variable</span> is a quantity not known until observed — <b>discrete</b> (Rain = yes/no) or <b>continuous</b> (a whole range). AI needs it because data are noisy and evidence partial.</div>
+  <div class="cols" style="grid-template-columns:258px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 146" width="216">
+      <g class="w">
+        <ellipse cx="112" cy="60" rx="70" ry="48" class="ink fill-b"/>
+        <ellipse cx="190" cy="60" rx="70" ry="48" class="ink-g fill-g"/>
+      </g>
+      <text x="94" y="28" text-anchor="middle" class="k w6">A</text>
+      <text x="210" y="28" text-anchor="middle" class="k w6">B</text>
+      <text x="151" y="64" text-anchor="middle" class="s r">A∧B</text>
+      <text x="151" y="122" text-anchor="middle" class="s">P(A∪B)=P(A)+P(B)−P(A∧B)</text>
+      <text x="151" y="142" text-anchor="middle" class="s g">P(A|B)=P(A∧B)/P(B)</text>
+    </svg><figcaption>all of probability fits in two sets</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Concept</th><th class="l">Definition</th></tr>
+      <tr><td class="l">Random variable</td><td class="l">Rain = yes or no</td></tr>
+      <tr><td class="l">Probability</td><td class="l">P(A) ∈ [0, 1]</td></tr>
+      <tr><td class="l">Joint</td><td class="l">P(A∧B), both together</td></tr>
+      <tr><td class="l">Conditional</td><td class="l"><span class="hl">P(A|B)=P(A∧B)/P(B)</span></td></tr>
+      <tr><td class="l">Marginal</td><td class="l">P(A) = Σ<sub>B</sub> P(A∧B)</td></tr>
+      <tr><td class="l">Independence</td><td class="l">P(A∧B) = P(A)P(B)</td></tr>
+    </table>
+  </div>
+  <div class="sumbox small"><span class="lbl">The rules you must have on your fingertips</span>
+    <b>Axioms (Kolmogorov 1933)</b>: 0 ≤ P(A) ≤ 1, P(Ω) = 1, P(A∪B) = P(A)+P(B) for <b>disjoint</b> A, B. <b>Complement</b>: P(A′) = 1 − P(A). <b>Chain rule</b>: P(A∧B) = P(A)P(B|A). <b>Total probability</b>: P(B) = Σᵢ P(B|hᵢ)P(hᵢ).</div>
+  <div class="cols" style="grid-template-columns:1fr 200px;align-items:start">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Bayes' theorem (1763)</span>
+      <span class="circ">P(H|E) = P(E|H)·P(H)/P(E)</span><br>
+      equivalently <b>P(E|H)P(H) = P(H|E)P(E)</b>.<br>
+      In <b>odds</b> form: <span class="hl">posterior odds = prior odds × likelihood ratio</span>. Bayes' essay appeared posthumously in 1763; Laplace (1813) gave it the first systematic use.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 186" width="188">
+      <g class="w">
+        <circle cx="26" cy="93" r="14" class="ink-k fill-y"/>
+        <path class="ink-k" d="M40,93 L96,48" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M40,93 L96,138" marker-end="url(#ahb)"/>
+        <circle cx="112" cy="48" r="15" class="ink fill-b"/><circle cx="112" cy="138" r="15" class="ink fill-b"/>
+        <path class="ink" d="M127,48 L196,18" marker-end="url(#ah)"/>
+        <path class="ink" d="M127,48 L196,78" marker-end="url(#ah)"/>
+        <path class="ink" d="M127,138 L196,108" marker-end="url(#ah)"/>
+        <path class="ink" d="M127,138 L196,168" marker-end="url(#ah)"/>
+        <circle cx="210" cy="18" r="13" class="ink-g fill-g"/><circle cx="210" cy="78" r="13" class="ink-g fill-g"/>
+        <circle cx="210" cy="108" r="13" class="ink-g fill-g"/><circle cx="210" cy="168" r="13" class="ink-g fill-g"/>
+      </g>
+      <text x="26" y="98" text-anchor="middle" class="s k">pop</text>
+      <text x="66" y="63" text-anchor="middle" class="s k">0.01</text>
+      <text x="66" y="136" text-anchor="middle" class="s k">0.99</text>
+      <text x="112" y="53" text-anchor="middle" class="s k">D</text>
+      <text x="112" y="143" text-anchor="middle" class="s k">no D</text>
+      <text x="164" y="28" text-anchor="middle" class="s r">0.90</text>
+      <text x="164" y="88" text-anchor="middle" class="s r">0.10</text>
+      <text x="164" y="102" text-anchor="middle" class="s r">0.10</text>
+      <text x="164" y="164" text-anchor="middle" class="s r">0.90</text>
+      <text x="210" y="23" text-anchor="middle" class="s k">+</text>
+      <text x="210" y="83" text-anchor="middle" class="s k">−</text>
+      <text x="210" y="113" text-anchor="middle" class="s k">+</text>
+      <text x="210" y="173" text-anchor="middle" class="s k">−</text>
+      <text x="288" y="23" text-anchor="end" class="s r">0.009</text>
+      <text x="288" y="173" text-anchor="end" class="s r">0.099</text>
+    </svg><figcaption>P(branch) = parent × edge label</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> The names are fixed: <b>prior</b> P(H) = before the evidence; <b>likelihood</b> P(E|H) = the evidence assuming H; <b>evidence</b> P(E) = the normaliser; <b>posterior</b> P(H|E) = after it.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Prior in, posterior out.</b>" Multiply the prior by the likelihood, then divide by the evidence; in odds form there is <b>no division at all</b>.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example 1 ✍ the base-rate trap</span>
+    A disease hits <b>1 %</b> of people; the test is <b>90 %</b> sensitive and gives <b>10 %</b> false positives.
+    P(D|+) = (0.9 × 0.01)/[(0.9 × 0.01) + (0.1 × 0.99)] = 0.009/0.108 = <span class="circ">0.083</span>. A very good test still leaves a small posterior when the prior is tiny — you must always divide by the evidence.</div>
+  <div class="ex tiny"><span class="lbl">Worked example 2 ✍ the odds form</span>
+    Prior odds = 0.01/0.99 = 1/99; likelihood ratio = 0.9/0.1 = 9; posterior odds = 9/99 = 1/11, so P = (1/11)/(1 + 1/11) = <span class="circ">1/12 = 0.083</span> ✓ — the same answer with no division. Reach for odds whenever the fractions get ugly.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: naive Bayes ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Naive Bayes</span></div>
+  <h2><span class="no">2</span>Naive Bayes Classification</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">naive Bayes classifier</span> picks the class C that maximises the posterior, using one conditional probability per feature. The normaliser P(x) is the same for every class, so it drops out:
+    <span class="circ">Ĉ = argmax<sub>C</sub> P(C)·P(x₁|C)·P(x₂|C)···P(xₙ|C)</span></div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 186" width="188">
+      <g class="w">
+        <rect x="10" y="12" width="82" height="28" rx="10" class="ink fill-b"/>
+        <rect x="110" y="12" width="82" height="28" rx="10" class="ink fill-b"/>
+        <rect x="210" y="12" width="82" height="28" rx="10" class="ink fill-b"/>
+        <path class="ink-r" d="M51,42 L51,64" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M151,42 L151,64" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M251,42 L251,64" marker-end="url(#ah)"/>
+        <rect x="18" y="70" width="264" height="32" rx="12" class="ink-g fill-g"/>
+        <rect x="18" y="112" width="52" height="32" rx="12" class="ink fill-b"/>
+      </g>
+      <text x="51" y="32" text-anchor="middle" class="s k">offer</text>
+      <text x="151" y="32" text-anchor="middle" class="s k">free</text>
+      <text x="251" y="32" text-anchor="middle" class="s k">money</text>
+      <text x="150" y="91" text-anchor="middle" class="s g">spam score 3.0e-6</text>
+      <text x="80" y="133" class="s k">ham</text>
+      <text x="78" y="164" class="s">ham score 1.54e-7</text>
+      <text x="150" y="181" text-anchor="middle" class="s r">ratio 19.4 : 1 → 95.1 % spam</text>
+    </svg><figcaption>one score per class, then compare</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Piece</th><th class="l">Meaning</th></tr>
+      <tr><td class="l">P(C)</td><td class="l">prior — class frequency</td></tr>
+      <tr><td class="l">P(xᵢ|C)</td><td class="l">likelihood of xᵢ inside C</td></tr>
+      <tr><td class="l">∏ᵢ P(xᵢ|C)</td><td class="l">the <b>naive step</b></td></tr>
+      <tr><td class="l">argmax</td><td class="l">highest-scoring class</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Three flavours</span>
+      <b>Multinomial</b> (word counts): P(w|C) = count(w,C)/Σ count(·,C)<br>
+      <b>Bernoulli</b> (word present / absent)<br>
+      <b>Gaussian</b> (real features): P(xᵢ|C) = 𝒩(xᵢ; μ, σ²)</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> "Naive" does <b>not</b> mean equal priors, uniform features or linear separability — only that <span class="circ">P(x₁,…,xₙ|C) = ∏ᵢ P(xᵢ|C)</span>. Score in <b>log space</b>: thousands of small numbers underflow to zero.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ scoring one mail</span>
+    100 spam and 200 ham mails. Spam holds 2 000 words (offer 40, free 60, money 30); ham holds 1 200 words (offer 5, free 10, money 8).
+    <b>spam</b> = (1/3)(40/2000)(60/2000)(30/2000) = <span class="circ">3.0 × 10⁻⁶</span> · <b>ham</b> = (2/3)(5/1200)(10/1200)(8/1200) = <span class="circ">1.54 × 10⁻⁷</span> · ratio 19.4, so P(spam) = <span class="circ">95.1 %</span>.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "Multiply the <b>per-feature</b> probabilities, then add the <b>prior</b> once." Log space is what stops 10 000 features from underflowing.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">The zero-frequency problem</span> A word never seen in class C gets P(w|C) = 0, and one zero kills the product. Fix it with <b>add-one smoothing</b>: (count+1)/(total+|V|) — 0 hits in 1 200 words with |V| = 5 000 gives <span class="circ">1/6200</span>.</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Laplace's rule of succession</span> After 10 heads the next is predicted with (10+1)/(10+2) = <span class="circ">11/12 = 0.917</span> — never let a count of zero become a probability of zero.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Over-smoothing, and where NB is used</span> Flattening the model destroys rare-word signal too. For imbalanced text use <span class="hl">complement naive Bayes</span> or <b>Bernoulli</b>. MNB is linear in the features, so it trains in one pass — which is why it survives in spam filters.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">Everyday jobs</span> Spam filtering · sentiment analysis · named-entity recognition · news categorisation · e-mail triage · review rating · medical coding from text. "Naive" only ever means <b>conditional independence given the class</b> — never equal priors, never uniform features.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: Bayesian networks ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Bayesian networks</span></div>
+  <h2><span class="no">3</span>Bayesian Networks: DAG, CPT, Factorisation</h2><span class="tag">high-yield ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">Bayesian network</span> (belief network) is a directed acyclic graph whose nodes are random variables and whose arcs X → Y say "X is a <b>direct cause</b> of Y". Each node carries a <span class="hl">CPT</span> (conditional probability table) <b>P(node | its parents)</b>, and a parentless node holds a marginal. The whole joint is written
+    <span class="circ">P(x₁,…,xₙ) = ∏ᵢ P(xᵢ | Pa(xᵢ))</span> — <b>n</b> small tables instead of one with 2ⁿ cells.</div>
+  <div class="cols" style="grid-template-columns:288px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 380 196" width="276">
+      <g class="w">
+        <circle cx="58" cy="34" r="26" class="ink-k fill-b"/>
+        <circle cx="58" cy="110" r="26" class="ink fill-b"/>
+        <circle cx="182" cy="190" r="30" class="ink fill-b"/>
+        <circle cx="212" cy="46" r="32" class="ink-g fill-g"/>
+        <path class="ink-k" d="M58,60 L58,84" marker-end="url(#ahb)"/>
+        <path class="ink" d="M80,98 L172,62" marker-end="url(#ahb)"/>
+        <path class="ink" d="M196,162 L204,78" marker-end="url(#ahb)"/>
+      </g>
+      <text x="58" y="30" text-anchor="middle" class="s k">Storm</text>
+      <text x="58" y="115" text-anchor="middle" class="s k">Rain</text>
+      <text x="212" y="42" text-anchor="middle" class="s k">WetGrass</text>
+      <text x="182" y="186" text-anchor="middle" class="s k">Sprinkler</text>
+      <text x="64" y="70" class="s r">P(R|S)</text>
+      <text x="126" y="56" text-anchor="middle" class="s">P(W|R,S)</text>
+      <text x="376" y="108" text-anchor="end" class="s r">no cycles ⇒ DAG</text>
+      <text x="376" y="126" text-anchor="end" class="s r">d-separation ⇒ indep.</text>
+    </svg><figcaption>two independent causes, one effect</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">The graph says</th><th class="l">Rule</th></tr>
+      <tr><td class="l">Root node</td><td class="l">stores the marginal P(X)</td></tr>
+      <tr><td class="l">Child node</td><td class="l">stores P(child | parents)</td></tr>
+      <tr><td class="l">Local Markov</td><td class="l">indep. of non-descendants <b>given parents</b></td></tr>
+      <tr><td class="l">d-separation</td><td class="l">blocked path ⇒ independent</td></tr>
+      <tr><td class="l">Why a DAG</td><td class="l">a cycle has no topological order</td></tr>
+    </table>
+  </div>
+  <table class="hand small" style="width:100%;margin-top:0">
+    <tr><th class="l">CPT of WetGrass — one row per parent assignment</th><th class="l">P(W = yes | Rain, Sprinkler on)</th><th class="l">P(W = yes | Rain, off)</th><th class="l">P(W = yes | no Rain, on)</th><th class="l">P(W = yes | no Rain, off)</th></tr>
+    <tr><td class="l">probability</td><td>0.90</td><td>0.80</td><td>0.40</td><td>0.10</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ marginalise, then condition</span>
+    With P(Rain) = 0.30, P(S=on|Rain) = 0.10 and P(S=on|¬Rain) = 0.50: P(W=yes) = Σ<sub>r,s</sub> P(r)P(s|r)P(W|r,s) = 0.30[0.10(0.90)+0.90(0.80)] + 0.70[0.50(0.40)+0.50(0.10)] = 0.30(0.86) + 0.70(0.25) = <span class="circ">0.418</span>. ·
+    P(Rain|yes) = 0.243/0.418 = <span class="circ">0.581</span> — wet grass nearly triples the prior. P(Sprinkler|yes) = 0.167/0.418 = 0.399.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "A BN stores <b>one row per parent assignment</b>, never the whole table." The factorisation is the chain rule plus a Markov assumption at every node: <b>multiply the factors, then Σ over whatever you have not fixed</b>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) A BN is a <b>DAG</b>: a cycle makes a variable its own ancestor, so no topological order and no valid CPT exist. (ii) Arcs mean direct dependence, <b>not</b> proven causation. (iii) Two <b>colliders</b> A → C ← B are marginally independent but become dependent once C is observed.</div>
+  </div>
+  <div class="cols">
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Learning the parameters</span> <span class="hl">MLE</span>: choose θ maximising P(data | θ) — for a Bernoulli, p̂ = 7/20 = 0.35. <span class="hl">EM</span>: alternate an <b>E</b>-step (expected hidden labels) with an <b>M</b>-step (re-fit θ); the likelihood never decreases. EM trains mixture models and HMMs.</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Three ways to answer a query</span>
+      <b>Enumeration</b> — multiply the CPTs, then Σ over every hidden variable; fine up to about ten variables.<br>
+      <b>Variable elimination</b> — the same sum, one variable at a time (next sheet).<br>
+      <b>Sampling</b> — importance sampling or MCMC when the treewidth is hopeless.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: variable elimination, noisy-OR, Dempster-Shafer ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Inference &amp; evidence</span></div>
+  <h2><span class="no">4</span>Inference: Variable Elimination, noisy-OR, D-S</h2><span class="tag">written ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Exact inference in a BN sums over every assignment of the hidden variables — fine for three variables, hopeless for three hundred. <span class="hl">Variable elimination</span> does the same sum <b>one variable at a time</b>: multiply the factors that contain a variable, then Σ it out. The cost is the size of the largest intermediate factor, roughly the <span class="circ">treewidth + 1</span> variables, so the elimination order is the thing you actually choose.</div>
+  <div class="cols" style="grid-template-columns:1fr 200px;align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ eliminate Rain first</span> f₁ = P(R), f₂ = P(S|R), f₃ = P(W|R,S). Multiply f₁ and f₂ (both contain R), then Σ<sub>R</sub> P(R)P(S|R) = P(S) = 0.30(0.10) + 0.70(0.50) = <span class="circ">0.38</span>. The factor now mentions only S, so the next product is tiny. Eliminate Rain <b>last</b> instead and you keep a factor on (R, S, W) — same answer, far more work.</div>
+      <div class="sumbox small"><span class="lbl">noisy-OR — the compact cause model</span>
+        For a symptom with several independent causes, any one of them is enough:
+        <span class="circ">P(Y|X₁…Xₙ) = 1 − ∏ᵢ (1 − P(Y|Xᵢ = 1, others 0))</span>.<br>
+        0.4 and 0.3 and 0.2 give 1 − 0.6·0.7·0.8 = <b>0.664</b>, never the naive sum 0.9. It needs only <b>n</b> parameters instead of 2ⁿ.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 152" width="188">
+      <g class="w">
+        <rect x="10" y="14" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="110" y="14" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="210" y="14" width="80" height="26" rx="10" class="ink fill-b"/>
+        <path class="ink-g" d="M90,27 L106,27" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M190,27 L206,27" marker-end="url(#ahg)"/>
+        <circle cx="50" cy="90" r="24" class="ink-p fill-p"/>
+        <circle cx="150" cy="90" r="24" class="ink-p fill-p"/>
+        <circle cx="250" cy="90" r="24" class="ink-p fill-p"/>
+        <path class="ink-p" d="M50,44 L50,62" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M150,44 L150,62" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M250,44 L250,62" marker-end="url(#ahp)"/>
+      </g>
+      <text x="50" y="32" text-anchor="middle" class="s">f₁</text>
+      <text x="150" y="32" text-anchor="middle" class="s">f₂</text>
+      <text x="250" y="32" text-anchor="middle" class="s">f₃</text>
+      <text x="50" y="96" text-anchor="middle" class="s p">Σ</text>
+      <text x="150" y="96" text-anchor="middle" class="s p">Σ</text>
+      <text x="250" y="96" text-anchor="middle" class="s p">Σ</text>
+      <text x="150" y="58" text-anchor="middle" class="s">f₁·f₂·f₃</text>
+      <text x="150" y="134" text-anchor="middle" class="s g">Σ over R, then S, then W</text>
+      <text x="150" y="149" text-anchor="middle" class="s r">size ≈ treewidth + 1</text>
+    </svg><figcaption>multiply first, then sum out</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 200px;align-items:start">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Dempster–Shafer — evidence that admits ignorance</span>
+        Mass m(A) is belief assigned to a <span class="hl">focal element</span>, a set rather than a point. Under the <b>closed-world</b> assumption <span class="circ">m(∅) = 0</span>, and every probability is bracketed: <span class="circ">Bel(A) = Σ<sub>B⊆A</sub> m(B) ≤ P(A) ≤ Σ<sub>B∩A≠∅</sub> m(B) = Pl(A)</span>. Dempster's rule combines two sources and normalises by the conflict k = Σ<sub>B∩C=∅</sub> m₁(B)m₂(C).</div>
+      <div class="exam tiny"><span class="lbl">Exam trap</span> Bayes assumes <b>one true value</b> whose probabilities sum to 1; D-S admits <b>ignorance</b>, so it can only <b>bracket</b> a probability. Bel ≤ Pl, never the reverse. Two sensors both giving 0.6 on {s} and 0.4 on {s, f} combine to Bel(s) = <span class="circ">0.84</span> and Pl(s) = <span class="circ">1.00</span>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 148" width="188">
+      <g class="w">
+        <circle cx="30" cy="24" r="16" class="ink fill-b"/>
+        <circle cx="30" cy="72" r="16" class="ink fill-b"/>
+        <circle cx="30" cy="120" r="16" class="ink fill-b"/>
+        <path class="ink-g" d="M46,24 L128,66" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M46,72 L128,72" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M46,120 L128,78" marker-end="url(#ahg)"/>
+        <circle cx="158" cy="72" r="32" class="ink-r fill-r"/>
+        <path class="ink-r" d="M190,72 L234,72" marker-end="url(#ah)"/>
+      </g>
+      <text x="30" y="29" text-anchor="middle" class="s">X₁</text>
+      <text x="30" y="77" text-anchor="middle" class="s">X₂</text>
+      <text x="30" y="125" text-anchor="middle" class="s">X₃</text>
+      <text x="158" y="77" text-anchor="middle" class="s k">OR</text>
+      <text x="236" y="77" text-anchor="end" class="s k">Y</text>
+      <text x="84" y="20" text-anchor="middle" class="s g">0.4</text>
+      <text x="84" y="104" text-anchor="middle" class="s g">0.2</text>
+      <text x="240" y="144" text-anchor="end" class="s r">Y = 1 − 0.6·0.7·0.8 = 0.664</text>
+    </svg><figcaption>any one cause is enough to fire Y</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> Three ways to combine evidence, three shapes: <b>Σ</b> = sum a variable out (elimination), <b>∏(1−p)</b> = noisy-OR, <b>m(∅) = 0 plus a bracket</b> = Dempster–Shafer. In every case: <b>multiply first, normalise afterwards</b>.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> Variable elimination is literally a join order in a database: a chain of <b>β-joins</b>. Multiplying factors = joining relations; summing a variable = projecting a column away. "Smallest scope first" is exactly the rule a query planner uses.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: Markov chains and HMMs ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Markov &amp; HMM</span></div>
+  <h2><span class="no">5</span>Markov Chains &amp; Hidden Markov Models</h2><span class="tag">classic ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">Markov chain</span> is a discrete-time process in which the next state depends on the present state alone: <span class="circ">P(X<sub>t+1</sub>|X<sub>t</sub>,…,X₀) = P(X<sub>t+1</sub>|X<sub>t</sub>)</span>. The probabilities sit in a <b>transition matrix A</b> whose <span class="hl">rows all sum to 1</span>; after k steps the distribution is πA<sup>k</sup>. An <span class="hl">HMM</span> adds an unobservable state — you see only noisy <b>observations</b> emitted by the states.</div>
+  <div class="cols" style="grid-template-columns:1fr 276px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">The HMM 5-tuple</th><th class="l">What it is</th></tr>
+        <tr><td class="l">S = {s₁…s<sub>N</sub>}</td><td class="l">hidden states</td></tr>
+        <tr><td class="l">O = {o₁…o<sub>M</sub>}</td><td class="l">observation symbols</td></tr>
+        <tr><td class="l">A = [a<sub>ij</sub>]</td><td class="l">transition matrix</td></tr>
+        <tr><td class="l">B = [b<sub>j</sub>(o)]</td><td class="l">emission probs</td></tr>
+        <tr><td class="l">π</td><td class="l">initial distribution</td></tr>
+      </table>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Weather</th><th class="l">Sun</th><th class="l">Cloud</th><th class="l">Rain</th></tr>
+        <tr><td class="l">Sun</td><td>0.5</td><td>0.3</td><td>0.2</td></tr>
+        <tr><td class="l">Cloud</td><td>0.2</td><td>0.4</td><td>0.4</td></tr>
+        <tr><td class="l">Rain</td><td>0.4</td><td>0.4</td><td>0.2</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 162" width="264">
+      <g class="w">
+        <circle cx="44" cy="42" r="20" class="ink-k fill-b"/>
+        <circle cx="130" cy="42" r="20" class="ink-k fill-b"/>
+        <circle cx="216" cy="42" r="20" class="ink-k fill-b"/>
+        <circle cx="300" cy="42" r="20" class="ink-k fill-b"/>
+        <path class="ink" d="M65,42 L107,42" marker-end="url(#ahb)"/>
+        <path class="ink" d="M151,42 L193,42" marker-end="url(#ahb)"/>
+        <path class="ink" d="M237,42 L277,42" marker-end="url(#ahb)"/>
+        <rect x="22" y="104" width="44" height="26" rx="9" class="ink-g fill-g"/>
+        <rect x="108" y="104" width="44" height="26" rx="9" class="ink-g fill-g"/>
+        <rect x="194" y="104" width="44" height="26" rx="9" class="ink-g fill-g"/>
+        <rect x="278" y="104" width="44" height="26" rx="9" class="ink-g fill-g"/>
+        <path class="ink-g" d="M44,64 L44,102" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M130,64 L130,102" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M216,64 L216,102" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M300,64 L300,102" marker-end="url(#ahg)"/>
+      </g>
+      <text x="172" y="14" text-anchor="middle" class="s k">hidden states q₁ … qₜ</text>
+      <text x="44" y="48" text-anchor="middle" class="s k">q₁</text>
+      <text x="130" y="48" text-anchor="middle" class="s k">q₂</text>
+      <text x="216" y="48" text-anchor="middle" class="s k">q₃</text>
+      <text x="300" y="48" text-anchor="middle" class="s k">q₄</text>
+      <text x="44" y="123" text-anchor="middle" class="s g">o₁</text>
+      <text x="130" y="123" text-anchor="middle" class="s g">o₂</text>
+      <text x="216" y="123" text-anchor="middle" class="s g">o₃</text>
+      <text x="300" y="123" text-anchor="middle" class="s g">o₄</text>
+      <text x="172" y="156" text-anchor="middle" class="s r">the observed word sequence</text>
+    </svg><figcaption>the states march on; only emissions are seen</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Three classical problems</span>
+      <b>Evaluation</b> — how likely is this string? P(O) = Σ over all paths.<br>
+      <b>Decoding</b> — which hidden path explains it? argmax.<br>
+      <b>Learning</b> — fit A, B, π from data: <b>Baum–Welch</b> (EM).</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Where HMMs earn their keep</span> Speech recognition · POS tagging · spelling correction · gene finding (DNA is a four-letter observation alphabet) · handwriting · anomaly detection. The future depends only on the present state, the observation only on the current one.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ a two-step weather chain</span>
+    Day 1: (0.5, 0.3, 0.2). Day 2 = πA = (0.39, 0.35, <span class="circ">0.26</span>). Day 3 = (0.369, 0.361, <span class="circ">0.27</span>). The rows always sum to 1 — the quickest check that your arithmetic is still alive.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Markov = memoryless. Hidden Markov = the states are hidden, the observations are visible.</b>" Rows of A sum to 1; the 5-tuple is <b>S, O, A, B, π</b>; a symmetric k-state chain has stationary distribution 1/k.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A plain Markov chain is <b>fully observed</b> — there is nothing to decode. The <b>MDP</b> (states, actions, transition probabilities, rewards) and reinforcement learning belong to the expert-system and machine-learning notes.</div>
+  </div>
+  <div class="exam tiny"><span class="lbl">Common misconception</span> "Hidden" does not mean hidden from the algorithm — it means hidden from the <b>observer</b>. The algorithms on the next sheet recover the most likely path from exactly the same five quantities. PageRank is a Markov chain over web pages with damping d = 0.85.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: forward, backward, Viterbi ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Forward &amp; Viterbi</span></div>
+  <h2><span class="no">6</span>Forward, Backward &amp; Viterbi Decoding</h2><span class="tag">written favourite ★</span>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Forward — sum every path</span>
+      α<sub>t</sub>(j) = P(o₁…o<sub>t</sub>, q<sub>t</sub>=s<sub>j</sub>) = <span class="circ">b<sub>j</sub>(o<sub>t</sub>)·Σ<sub>i</sub> a<sub>ij</sub> α<sub>t−1</sub>(i)</span><br>
+      α₁(j) = π<sub>j</sub>b<sub>j</sub>(o₁) · P(O) = Σ<sub>j</sub> α<sub>T</sub>(j) · cost O(TN²).</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Backward — what is still possible</span>
+      β<sub>t</sub>(j) = P(o<sub>t+1</sub>…o<sub>T</sub> | q<sub>t</sub>=s<sub>j</sub>) = <span class="circ">Σ<sub>i</sub> a<sub>ji</sub> b<sub>i</sub>(o<sub>t+1</sub>) β<sub>t+1</sub>(i)</span><br>
+      β<sub>T</sub>(j) = 1 · smoothing: P(q<sub>t</sub>=s<sub>j</sub>|O) = <span class="circ">α<sub>t</sub>(j)β<sub>t</sub>(j)/P(O)</span></div>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Viterbi — the single best path</span>
+      δ<sub>t</sub>(j) = max<sub>i</sub> [δ<sub>t−1</sub>(i)·a<sub>ij</sub>] · b<sub>j</sub>(o<sub>t</sub>), with ψ storing the argmax, then backtrack along ψ. The whole difference from forward: <span class="circ">max, not Σ</span>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Forward gives <b>P(O)</b>, Viterbi gives the <b>best path</b>, and the best path is <b>not</b> the most probable state at every instant. Long sequences underflow: divide by c<sub>t</sub> = Σ<sub>j</sub> α<sub>t</sub>(j) each step and multiply it back at the end.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example 1 ✍ three states, observations (dry, dry, wet)</span>
+    π = (0.5, 0.3, 0.2); A as on the previous sheet; b(dry) = (0.9, 0.6, 0.1), b(wet) = (0.1, 0.4, 0.9). ·
+    α₁ = (0.45, 0.18, 0.02) · α₂ = (0.1998, 0.1926, 0.0107) · α₃ = (0.0122, 0.0798, 0.0738) ·
+    <span class="circ">P(O) = 0.1658</span> · δ₃ = (0.0065, 0.0324, 0.0365) ⇒ best path <span class="circ">S₁ → S₂ → S₃</span>.</div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 2 ✍ marginals differ from the best path</span> γ<sub>3</sub> = α₃(j)β₃(j)/P(O) = (0.073, 0.481, 0.445): the most likely state at t = 3 is S₂, yet the most likely <b>path</b> ends in S₃. Marginal ≠ path.</div>
+    <figure class="doodle"><svg viewBox="0 0 300 152" width="236">
+      <g class="w">
+        <rect x="8" y="24" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="110" y="24" width="80" height="26" rx="10" class="ink fill-b"/>
+        <rect x="212" y="24" width="80" height="26" rx="10" class="ink fill-b"/>
+        <path class="ink-g" d="M88,37 L106,37" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M190,37 L208,37" marker-end="url(#ahg)"/>
+        <circle cx="48" cy="96" r="24" class="ink-p fill-p"/>
+        <circle cx="150" cy="96" r="24" class="ink-p fill-p"/>
+        <circle cx="252" cy="96" r="24" class="ink-p fill-p"/>
+        <path class="ink-p" d="M48,54 L48,70" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M150,54 L150,70" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M252,54 L252,70" marker-end="url(#ahp)"/>
+      </g>
+      <text x="48" y="42" text-anchor="middle" class="s">f₁</text>
+      <text x="150" y="42" text-anchor="middle" class="s">f₂</text>
+      <text x="252" y="42" text-anchor="middle" class="s">f₃</text>
+      <text x="150" y="82" text-anchor="middle" class="s r">all paths together</text>
+      <text x="48" y="102" text-anchor="middle" class="s p">Σ</text>
+      <text x="150" y="102" text-anchor="middle" class="s p">Σ</text>
+      <text x="252" y="102" text-anchor="middle" class="s p">Σ</text>
+      <text x="150" y="136" text-anchor="middle" class="s g">forward: add · Viterbi: take max</text>
+      <text x="150" y="150" text-anchor="middle" class="s r">same recursion, one word apart</text>
+    </svg><figcaption>forward sums over paths; Viterbi maximises</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Algorithm</th><th class="l">Question it answers</th><th class="l">Combines with</th></tr>
+    <tr><td class="l">Forward</td><td class="l">P(O) — how surprised are we?</td><td class="l">Σ over all states</td></tr>
+    <tr><td class="l">Backward</td><td class="l">the "future" weight of state j</td><td class="l">Σ over all states</td></tr>
+    <tr><td class="l">Forward–backward</td><td class="l">P(state<sub>t</sub>|O) — <b>posterior smoothing</b></td><td class="l">α(j)β(j)/P(O)</td></tr>
+    <tr><td class="l">Viterbi</td><td class="l">the best single path</td><td class="l">max over states</td></tr>
+    <tr><td class="l">Baum–Welch</td><td class="l">learns A, B and π (EM)</td><td class="l">E-step, M-step</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Forward adds, Viterbi takes the max, backward looks back.</b>" Write forward once; then <b>max</b> replaces the Σ, ψ replaces the α, and you have Viterbi.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> These recursions are a <b>dynamic-programming shortest path over a lattice</b> — the same shape as shortest path in a weighted DAG, and the same shape as the beam search inside a speech recogniser.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: NLP I ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>NLP I: text to tokens</span></div>
+  <h2><span class="no">7</span>NLP I: Pipeline, Morphology, Tokenisation</h2><span class="tag">half the syllabus ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Natural language processing</span> (NLP) is the branch of AI that lets a computer <b>understand, interpret, generate and respond</b> to human language, closing the gap between human communication and computer understanding. It is a <b>pipeline</b>: every stage consumes the tokens the previous stage produced, so a mistake at the bottom is never repairable at the top.</div>
+  <figure class="doodle" style="margin-top:1mm"><svg viewBox="0 0 520 108" width="468">
+    <g class="w">
+      <rect x="4" y="24" width="76" height="34" rx="10" class="ink fill-b"/>
+      <rect x="92" y="24" width="76" height="34" rx="10" class="ink fill-b"/>
+      <rect x="180" y="24" width="76" height="34" rx="10" class="ink fill-b"/>
+      <rect x="268" y="24" width="76" height="34" rx="10" class="ink fill-b"/>
+      <rect x="356" y="24" width="76" height="34" rx="10" class="ink fill-b"/>
+      <rect x="440" y="24" width="76" height="34" rx="10" class="ink-r fill-r"/>
+      <path class="ink" d="M80,41 L90,41" marker-end="url(#ahb)"/>
+      <path class="ink" d="M168,41 L178,41" marker-end="url(#ahb)"/>
+      <path class="ink" d="M256,41 L266,41" marker-end="url(#ahb)"/>
+      <path class="ink" d="M344,41 L354,41" marker-end="url(#ahb)"/>
+      <path class="ink" d="M432,41 L438,41" marker-end="url(#ahb)"/>
+    </g>
+    <text x="42" y="46" text-anchor="middle" class="s k">raw text</text>
+    <text x="130" y="46" text-anchor="middle" class="s k">tokens</text>
+    <text x="218" y="46" text-anchor="middle" class="s k">stop words</text>
+    <text x="306" y="46" text-anchor="middle" class="s k">stem/lemma</text>
+    <text x="394" y="46" text-anchor="middle" class="s k">POS + chunk</text>
+    <text x="478" y="46" text-anchor="middle" class="s k">parse</text>
+    <text x="260" y="88" text-anchor="middle" class="s g">morphological → lexical → syntactic → semantic → pragmatic → discourse</text>
+  </svg><figcaption>every arrow is a place where a wrong decision becomes permanent</figcaption></figure>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Levels of analysis</span>
+      <b>Morphological</b> — words are built from a root plus affixes.<br>
+      <b>Lexical</b> — split into tokens, look each one up.<br>
+      <b>Syntactic</b> — POS tags, chunks, parse trees.<br>
+      <b>Semantic</b> — meaning of words and sentences.<br>
+      <b>Pragmatic / discourse</b> — intent, sarcasm, cohesion.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Morphology ✍</span> A <b>lexeme</b> is one word-form family — go, goes, went, gone are four forms of <b>one</b> lexeme. A <b>morpheme</b> is the smallest unit carrying meaning or grammatical function.</div>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Affixes</span> The <b>root</b> carries the core meaning; affixes modify it — <span class="hl">prefix</span> (un-), <span class="hl">suffix</span> (-ing), <span class="hl">infix</span> (un<b>bel</b>ievable), <span class="hl">circumfix</span> (German <i>ge…t</i>).</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Stop words</span> Frequent function words carrying little content — <i>the, of, and, a, is</i> in English, the equivalents in Bangla. Removing them shrinks the index, but <span class="circ">they carry negation and emphasis</span> — "not good" is not "good".</div>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "Morphology builds words, tokenisation cuts them, stop words go out, stems come back." Six levels in one order: <b>M L S S P D</b> = morphological, lexical, syntactic, semantic, pragmatic, discourse.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> The pipeline is a real ETL: tokenisation is the <b>split</b>, stop-word removal the <b>filter</b>, stemming the <b>projection</b>, and the chain ends in an <b>inverted index</b> — the structure behind every search engine.</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Tokenisation ✍</span> Splitting raw text into <b>tokens</b>: word-level, sentence-level, and <span class="hl">subword</span> — <b>BPE</b>, <b>WordPiece</b>, <b>Unigram LM</b> — which cut rare words into seen pieces. "The Bank of Dhaka didn't approve my loan!" gives ten tokens.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Why it is hard ✍</span> Bangla has no clear word boundary and drops most case endings, so whitespace tokenisation fails. Sentence segmentation is the same problem one level up: the full stop after "Ltd." does not end a sentence.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: NLP II ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>NLP II: tags &amp; parses</span></div>
+  <h2><span class="no">8</span>NLP II: Stemming, POS, Chunking, Parsing</h2><span class="tag">high-yield ★</span>
+  <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Stemming vs lemmatisation</span>
+      <b>Stemming</b> chops suffixes with heuristic rules (Porter, <b>1980</b>): relational → relat, connected → connect — the output is <b>not a real word</b>. <b>Lemmatisation</b> uses a vocabulary plus the part of speech: better → good, teeth → tooth.</div>
+  <div class="cols" style="grid-template-columns:1fr 268px;align-items:start">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Word</th><th class="l">Stem</th><th class="l">Lemma</th><th class="l">Tag</th></tr>
+      <tr><td class="l">playing</td><td>play</td><td>play</td><td>VBG</td></tr>
+      <tr><td class="l">played</td><td>play</td><td>play</td><td>VBD</td></tr>
+      <tr><td class="l">better</td><td>better</td><td><b>good</b></td><td>JJR</td></tr>
+      <tr><td class="l">flies</td><td>fli</td><td><b>fly</b></td><td>NNS</td></tr>
+      <tr><td class="l">mice</td><td>mice</td><td><b>mouse</b></td><td>NNS</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 380 196" width="256">
+      <g class="w">
+        <rect x="168" y="6" width="30" height="22" rx="6" class="ink-k fill-y"/>
+        <rect x="78" y="52" width="34" height="22" rx="6" class="ink fill-b"/>
+        <rect x="248" y="52" width="34" height="22" rx="6" class="ink fill-b"/>
+        <rect x="22" y="102" width="48" height="22" rx="6" class="ink fill-b"/>
+        <rect x="106" y="102" width="48" height="22" rx="6" class="ink fill-b"/>
+        <rect x="188" y="102" width="48" height="22" rx="6" class="ink-g fill-g"/>
+        <rect x="258" y="102" width="34" height="22" rx="6" class="ink fill-b"/>
+        <rect x="216" y="150" width="44" height="22" rx="6" class="ink fill-b"/>
+        <rect x="300" y="150" width="48" height="22" rx="6" class="ink fill-b"/>
+        <path class="ink-k" d="M183,28 L95,50"/><path class="ink-k" d="M183,28 L265,50"/>
+        <path class="ink" d="M95,74 L46,100"/><path class="ink" d="M95,74 L130,100"/>
+        <path class="ink" d="M265,74 L212,100"/><path class="ink" d="M265,74 L275,100"/>
+        <path class="ink" d="M275,124 L238,148"/><path class="ink" d="M275,124 L324,148"/>
+      </g>
+      <text x="183" y="22" text-anchor="middle" class="s k">S</text>
+      <text x="95" y="68" text-anchor="middle" class="s k">NP</text>
+      <text x="265" y="68" text-anchor="middle" class="s k">VP</text>
+      <text x="46" y="118" text-anchor="middle" class="s">The</text>
+      <text x="130" y="118" text-anchor="middle" class="s">boy</text>
+      <text x="212" y="118" text-anchor="middle" class="s g">hit</text>
+      <text x="238" y="166" text-anchor="middle" class="s">the</text>
+      <text x="324" y="166" text-anchor="middle" class="s">ball</text>
+      <text x="46" y="138" text-anchor="middle" class="s r">DT</text>
+      <text x="130" y="138" text-anchor="middle" class="s r">NN</text>
+      <text x="212" y="138" text-anchor="middle" class="s r">VBD</text>
+      <text x="238" y="186" text-anchor="middle" class="s r">DT</text>
+      <text x="324" y="186" text-anchor="middle" class="s r">NN</text>
+    </svg><figcaption>constituency parse, POS tag under each leaf</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">POS tagging &amp; chunking</span>
+      <b>POS tagging</b> labels every token's part of speech. <span class="circ">Penn Treebank: 45 tags</span> (a 36-tag reduced set is also quoted); the <b>Universal POS</b> set has <span class="circ">17 tags</span>. <b>Chunking</b> (shallow parsing) groups tags into flat phrases — NP, VP, PP.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 1 ✍ tag the sentence</span> "The <i>flies</i> hit the wall" → The/DT flies/NNS hit/VBD the/DT wall/NN. But "The flies <i>hit</i> the wall" is a complete grammatical sentence too, and only context decides.</div>
+  </div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Parsing</span> <b>Constituency parsing</b> uses a context-free grammar and produces nested phrases like the tree on the right. <b>Dependency parsing</b> links every word to its grammatical <b>head</b>; Universal Dependencies defines <span class="circ">16 universal relations</span> — nsubj, obj, det, amod, ROOT, case, nmod.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "Stemming is the <b>scissors</b>, lemmatisation is the <b>dictionary</b>." A POS tag says what kind of word it is, chunking adds one level of phrase, parsing adds all of them. Counts: <b>45</b> Penn tags · <b>17</b> Universal POS · <b>16</b> UD relations.</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>POS tagging is not parsing</b> — a tagger answers "what kind of word is this?", a parser "how do the words hang together?". Stemming is <b>not</b> lemmatisation. And "flies" alone carries <b>three</b> readings: plural noun, third-person verb, or acrobats.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Ambiguity — four types, all tested</span> <b>Lexical</b> (bank: river / money) · <b>Syntactic</b> ("I saw the man with the telescope") · <b>Semantic</b> ("He kicked the bucket") · <b>Pragmatic / scope</b> ("He saw her with the dog").</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 2 ✍ chunk the sentence</span> "The boy hit the ball in the park" → [<b>NP</b> The boy] [<b>VP</b> hit the ball] [<b>PP</b> in the park]. Chunking stops there — it never says which noun phrase attaches to which verb.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> An <b>inverted index</b> stores, for every term, the sorted list of documents containing it; chunks and dependency arcs sit beside it. A ranker then scores each (document, term) pair — the same shape as a naive Bayes document score with TF-IDF weights.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: NLP III ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>NLP III: words as vectors</span></div>
+  <h2><span class="no">9</span>NLP III: Embeddings &amp; n-gram Language Models</h2><span class="tag">modern ★</span>
+  <div class="cols" style="grid-template-columns:1fr 226px;align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">word embedding</span> maps every word to a short dense vector so that words used in similar contexts end up near each other — Firth's distributional hypothesis, <i>"you shall know a word by the company it keeps"</i>. One-hot vectors are the opposite: sparse, all distances equal, no semantics.</div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Model</th><th class="l">Idea</th></tr>
+        <tr><td class="l">Word2Vec (2013)</td><td class="l">CBOW from context; skip-gram from centre word</td></tr>
+        <tr><td class="l">GloVe (2014)</td><td class="l">factorises <b>global</b> co-occurrence counts</td></tr>
+        <tr><td class="l">FastText (2016)</td><td class="l">embeds <b>subwords</b>, so rare words get vectors</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 348 160" width="230">
+      <g class="w">
+        <rect x="6" y="28" width="58" height="26" rx="8" class="ink fill-b"/>
+        <rect x="77" y="28" width="58" height="26" rx="8" class="ink fill-b"/>
+        <rect x="148" y="28" width="58" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="219" y="28" width="58" height="26" rx="8" class="ink fill-b"/>
+        <rect x="290" y="28" width="58" height="26" rx="8" class="ink fill-b"/>
+        <path class="ink-p" d="M146,41 L137,41" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M208,41 L217,41" marker-end="url(#ahp)"/>
+        <rect x="6" y="96" width="58" height="26" rx="8" class="ink fill-b"/>
+        <rect x="77" y="96" width="58" height="26" rx="8" class="ink fill-b"/>
+        <rect x="148" y="96" width="58" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="219" y="96" width="58" height="26" rx="8" class="ink fill-b"/>
+        <rect x="290" y="96" width="58" height="26" rx="8" class="ink fill-b"/>
+        <path class="ink-p" d="M66,109 L136,109" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M288,109 L218,109" marker-end="url(#ahp)"/>
+      </g>
+      <text x="177" y="14" text-anchor="middle" class="s p">skip-gram: centre → neighbours</text>
+      <text x="35" y="46" text-anchor="middle" class="s">river</text>
+      <text x="106" y="46" text-anchor="middle" class="s">money</text>
+      <text x="177" y="46" text-anchor="middle" class="s r">bank</text>
+      <text x="248" y="46" text-anchor="middle" class="s">river</text>
+      <text x="319" y="46" text-anchor="middle" class="s">money</text>
+      <text x="177" y="84" text-anchor="middle" class="s g">CBOW: neighbours → centre</text>
+      <text x="35" y="114" text-anchor="middle" class="s">river</text>
+      <text x="106" y="114" text-anchor="middle" class="s">money</text>
+      <text x="177" y="114" text-anchor="middle" class="s r">bank</text>
+      <text x="248" y="114" text-anchor="middle" class="s">river</text>
+      <text x="319" y="114" text-anchor="middle" class="s">money</text>
+      <text x="177" y="150" text-anchor="middle" class="s r">window = 5 · one corpus, two objectives</text>
+    </svg><figcaption>two objectives, one set of vectors</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">n-gram language model</span>
+      The chain rule P(w₁…w<sub>T</sub>) = ∏<sub>t</sub> P(w<sub>t</sub>|w₁…w<sub>t−1</sub>) is exact but needs the whole history. Markov's approximation keeps only n−1 words: <span class="circ">P(w<sub>t</sub>|w<sub>t−2:t−1</sub>)</span> is a <b>bigram</b>, <span class="circ">P(w<sub>t</sub>|w<sub>t−3:t−1</sub>)</span> a <b>trigram</b>. Longer n-gram = better model, far more sparsity.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> The <span class="circ">zero-frequency problem</span> is the whole reason smoothing exists. <b>Add-one</b>: P(wᵢ|w<sub>i−1</sub>) = (c+1)/(c<sub>·</sub>+|V|). <b>Interpolation</b> blends unigram and bigram. <b>Kneser–Ney</b> uses <b>continuation</b> counts. <b>Perplexity</b> = exp(per-token NLL): lower is better.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example 1 ✍ a bigram</span>
+    N = 19 words, |V| = 6 (+1 for &lt;unk&gt;). P(I) = 5/19; P(am|I) = 2/5 = 0.4; P(a|am) = 2/2 = <span class="circ">1.0</span>; P(student|a) = 3/4 = 0.75. So P("I am a student") = 0.2632 × 0.4 × 1 × 0.75 = <span class="circ">0.0789</span>. That 1.0, built from two observations, is overfitting in miniature.</div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 2 ✍ add-one smoothing</span> With |V| = 7: P(I) = 6/26 = 0.2308, P(am|I) = 3/12 = 0.25, P(a|am) = 3/9 = <span class="circ">0.333</span>, P(student|a) = 4/11 = 0.3636, so the same sentence drops to <span class="circ">0.0070</span>. Smoothing costs accuracy on frequent words and buys you no zeros.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 3 ✍ perplexity picks the model</span> Two models predict three tokens with probabilities (0.4, 0.4, 0.2) or (0.2, 0.2, 0.6). Mean NLL is <b>1.147</b> against <b>1.243</b>, so the perplexities are e^1.147 = <span class="circ">3.15</span> and e^1.243 = <span class="circ">3.47</span>. The first model wins — <b>lower perplexity is better</b>.</div>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Longer n-gram, better model, more zeros.</b>" Embeddings answer "which words are alike?" as <b>points in space</b>; language models answer "what comes next?" as a <b>probability</b>. <b>king − man + woman ≈ queen</b> is a property of the geometry, not a programmed rule.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Exam trap + timeline</span> A word embedding is <b>not</b> a language model, and Word2Vec is <b>not</b> trained from labels. Four eras of NLP: <b>rule-based</b> → <b>statistical</b> (HMM, n-grams) → <b>machine learning</b> → <b>deep learning</b> (RNN, LSTM, then the Transformer of 2017, BERT 2018, GPT).</div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Formula sheet</span>
+    <div class="fgrid small">
+      <p>P(A|B) = P(A∧B)/P(B)</p><p>P(A∪B) = P(A)+P(B) − P(A∧B)</p>
+      <p>P(A∧B) = P(A)P(B|A) — chain rule</p><p>P(B) = Σ<sub>i</sub> P(B|hᵢ)P(hᵢ)</p>
+      <p>P(H|E) = P(E|H)P(H)/P(E)</p><p>post. odds = prior odds × LR</p>
+      <p>P(C|x₁…xₙ) ∝ P(C)∏ᵢP(xᵢ|C)</p><p>smooth: (c+1)/(c<sub>·</sub>+|V|)</p>
+      <p>P(x₁…xₙ) = ∏ᵢ P(xᵢ|Pa(xᵢ))</p><p>noisy-OR: 1 − ∏ᵢ(1−pᵢ)</p>
+      <p>Bel(A) ≤ P(A) ≤ Pl(A)</p><p>ppl = exp(NLL)</p>
+      <p>α<sub>t</sub>(j) = b<sub>j</sub>(o<sub>t</sub>)Σ<sub>i</sub>a<sub>ij</sub>α<sub>t−1</sub>(i)</p><p>γ<sub>t</sub>(j) = α<sub>t</sub>β<sub>t</sub>/P(O)</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Kolmogorov's three axioms: <b>1933</b></li>
+      <li>Bayes' theorem <b>1763</b>; Laplace's use <b>1813</b></li>
+      <li>Naive = independence <b>given the class</b></li>
+      <li>Add-one: <span class="circ">(c+1)/(c<sub>·</sub>+|V|)</span></li>
+      <li>BN = <b>DAG</b>, one CPT row per parent set</li>
+      <li>noisy-OR: 0.4, 0.3, 0.2 → <b>0.664</b>, not 0.9</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Markov = memoryless; HMM = <b>S, O, A, B, π</b></li>
+      <li>Forward sums, Viterbi takes the <b>max</b></li>
+      <li>Best path ≠ most likely state each step</li>
+      <li>Penn <b>45</b> · Universal POS <b>17</b> · UD <b>16</b></li>
+      <li>Porter stemmer <b>1980</b>; stop words kill negation</li>
+      <li>Perplexity = <b>exp</b>(NLL) — lower is better</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> Belief function is <b>not</b> likelihood and posterior is <b>not</b> prior · "naive" is conditional independence, not equal priors · a BN is a <b>DAG</b>, never a cyclic graph · noisy-OR is <b>1 − ∏(1−p)</b>, not a sum · hidden means hidden from the <b>observer</b>, not from the algorithm · Viterbi maximises one path while forward sums them all · stemming ≠ lemmatisation · POS tagging ≠ parsing · an embedding is not a language model · perplexity is an exponential, not a probability.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "Prior in, posterior out" (Bayes) · "Multiply per-feature probabilities, then add the prior once; work in log space" (naive Bayes) · "One row per parent assignment" (BN) · "Multiply first, sum out after; smallest scope first" (elimination, noisy-OR, D-S) · "Markov = memoryless; hidden = hidden from the observer" (HMM) · "Stemming is the scissors, lemmatisation is the dictionary" (NLP) · "Longer n-gram, better model, more zeros" (language models).</div>
+  <figure class="doodle"><svg viewBox="0 0 580 106" width="470">
+    <g class="w">
+      <circle cx="62" cy="40" r="40" class="ink fill-b"/>
+      <circle cx="178" cy="40" r="40" class="ink-g fill-g"/>
+      <circle cx="294" cy="40" r="40" class="ink-r fill-r"/>
+      <circle cx="410" cy="40" r="40" class="ink-r fill-r"/>
+      <circle cx="520" cy="40" r="40" class="ink-r fill-r"/>
+      <path class="ink-g" d="M102,40 H138 M218,40 H254 M334,40 H370 M450,40 H480" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M520,80 C410,98 150,98 62,80" marker-end="url(#ahp)"/>
+    </g>
+    <text x="62" y="36" text-anchor="middle" class="s k">P(A|B)</text>
+    <text x="62" y="54" text-anchor="middle" class="s">basics</text>
+    <text x="178" y="47" text-anchor="middle" class="w6 l">Σ</text>
+    <text x="294" y="36" text-anchor="middle" class="r s w6">naive Bayes</text>
+    <text x="294" y="54" text-anchor="middle" class="r s">log-space</text>
+    <text x="410" y="36" text-anchor="middle" class="r s w6">BN + HMM</text>
+    <text x="410" y="54" text-anchor="middle" class="r s">DAG, CPT</text>
+    <text x="520" y="36" text-anchor="middle" class="r s w6">NLP</text>
+    <text x="520" y="54" text-anchor="middle" class="r s">tokens</text>
+    <text x="120" y="30" text-anchor="middle" class="g s">feeds</text>
+    <text x="236" y="30" text-anchor="middle" class="g s">feeds</text>
+    <text x="352" y="30" text-anchor="middle" class="g s">feeds</text>
+    <text x="468" y="30" text-anchor="middle" class="g s">feeds</text>
+    <text x="294" y="102" text-anchor="middle" class="p s">one habit: never multiply probabilities without normalising</text>
+  </svg><figcaption>four ideas in, one habit out — quantify the doubt instead of hiding it</figcaption></figure>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Probabilistic Reasoning &amp; NLP</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>P(A|B) = 0.4, P(A) = 0.3 ⇒:<ol class="opts"><li>0.7</li><li>P(A∧B) = 0.12</li><li>1.33</li><li>0.24</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Prevalence 1 %, test 99 % sensitive, 99 % specific:<ol class="opts"><li>0.99</li><li>0.10</li><li>≈ 0.50</li><li>0.01</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>"Naive" in naive Bayes means:<ol class="opts"><li>indep. given class</li><li>equal priors</li><li>linear separ.</li><li>uniform features</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>A Bayesian network factorises:<ol class="opts"><li>∏ᵢ P(xᵢ)</li><li>max over all</li><li>Σᵢ P(xᵢ | Pa)</li><li>∏ᵢ P(xᵢ | Pa(xᵢ))</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>A Bayesian network must be a DAG:<ol class="opts"><li>arrows point down</li><li>cycle = own ancestor</li><li>CPT needs 2 parents</li><li>joint is uniform</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>noisy-OR, two causes of 0.4:<ol class="opts"><li>0.80</li><li>0.16</li><li>0.64</li><li>0.36</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>True of Dempster–Shafer:<ol class="opts"><li>Bel ≤ P ≤ Pl</li><li>Pl ≤ Bel always</li><li>one prob per event</li><li>= naive Bayes</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Forward and Viterbi differ:<ol class="opts"><li>forward ignores data</li><li>Viterbi is exact</li><li>different HMMs</li><li>sum vs max one path</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>"flies" → "fly" with a dictionary:<ol class="opts"><li>stemming</li><li>lemmatisation</li><li>tokenisation</li><li>chunking</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>True of word embeddings:<ol class="opts"><li>one-hot = semantics</li><li>GloVe = parallel pairs</li><li>king &amp; queen near</li><li>trigram = embedding</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-a · 4-d · 5-b · 6-c · 7-a · 8-d · 9-b · 10-c</div>
+
+  <div class="wq"><span class="lbl">Written question</span> State Bayes' theorem with its four terms. A test detects a disease in 90 % of cases, the disease affects 1 % of the population and the test is positive for 10 % of healthy people — find P(disease | positive), then write the naive Bayes rule and say why it is called naive. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>Theorem (3)</b> — P(H|E) = P(E|H)P(H)/P(E). Prior P(H): before the evidence. Likelihood P(E|H): the evidence if H is true. Evidence P(E): the normaliser. Posterior P(H|E): after. <i class="mk">3</i></li>
+    <li>Numerator 0.9 × 0.01 = 0.009; denominator 0.009 + 0.1 × 0.99 = 0.108. <i class="mk">2</i></li>
+    <li>P(D|+) = 0.009/0.108 = <b>0.083</b> — a good test, a tiny prior, a small posterior. <i class="mk">2</i></li>
+    <li><b>Rule (2)</b> — Ĉ = argmax<sub>C</sub> P(C)P(x₁|C)···P(xₙ|C); the normaliser P(x) cancels. <i class="mk">2</i></li>
+    <li><b>Why naive (1)</b> — it assumes P(x₁,…,xₙ|C) = ∏ᵢP(xᵢ|C): features independent given the class. <i class="mk">1</i></li>
+  </ol>
+  <h3 style="margin-top:2mm">Before the exam ✓</h3>
+  <div class="cols3 tiny">
+    <ul class="tick"><li>P(A|B), chain rule</li><li>Bayes in odds form</li></ul>
+    <ul class="tick"><li>score a document</li><li>sketch a BN, enumerate</li></ul>
+    <ul class="tick"><li>forward, backward, Viterbi</li><li>name 45 / 17 / 16</li></ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

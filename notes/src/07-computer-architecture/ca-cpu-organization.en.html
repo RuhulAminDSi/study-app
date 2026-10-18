@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CPU Organization: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">CPU Organization</span></h1>
+  <p class="subtitle">Registers · RTL · addressing · RISC/CISC · pipelining · performance: exam-ready in 14 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">CPU ORGANIZATION</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">von Neumann · Harvard</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Registers · RTL ★</text>
+      <text x="500" y="65" text-anchor="middle" class="r w6">Addressing modes ★</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">0/1/2/3-address ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">RISC vs CISC ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Hardwired · μ-program</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Pipeline &amp; hazards ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">CPI · MIPS · Amdahl</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / numerical</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① PC · IR · MAR · MDR<br>② fetch cycle in RTL<br>③ EA for each mode<br>④ k + n − 1 cycles<br>⑤ RAW · forwarding<br>⑥ IC × CPI / f · Amdahl</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Computer Architecture: … <span class="hl">Measuring performance</span>; … representing instruction, <span class="hl">addressing styles</span>; ALU operations, floating point operations, designing ALU; Processor design: datapaths &amp; single cycle and multicycle implementations; <span class="hl">Control Unit design</span>: hardwired and microprogrammed; Hazards; Exceptions; <span class="hl">Pipeline</span> …, superscalar and dynamic pipelining; … channels." Cache and virtual memory are in the Memory Hierarchy lesson.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>von Neumann, Harvard, CPU ……… p. 2</li><li>Buses, registers, flags ……… p. 3</li><li>Instruction cycle &amp; RTL ……… p. 4</li><li>Instruction formats ……… p. 5</li><li>Addressing modes ……… p. 6</li><li>RISC/CISC, control unit ……… p. 7</li><li>Pipelining &amp; speedup ……… p. 8</li></ul>
+    <ul class="tick"><li>Hazards &amp; their cures ……… p. 9</li><li>Performance &amp; Amdahl ……… p. 10</li><li>ALU, fixed &amp; floating point … p. 11</li><li>Superscalar, Flynn, I/O ……… p. 12</li><li>Night-before sheet ……… p. 13</li><li>Practice MCQs + written ……… p. 14</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: von Neumann vs Harvard, CPU parts ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Architectures</span></div>
+  <h2><span class="no">1</span>Stored Program: von Neumann vs Harvard</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Stored-program concept</span> Instructions sit in the <span class="hl">same read-write memory as data</span> and are fetched and executed in sequence under the program counter. John von Neumann, <span class="circ">1945</span>, "First Draft of a Report on the EDVAC".</div>
+  <figure class="doodle"><svg viewBox="0 0 640 176" width="640">
+    <g class="w">
+      <rect x="20" y="40" width="100" height="62" rx="10" class="ink fill-b"/>
+      <rect x="190" y="26" width="120" height="90" rx="10" class="ink-k fill-y"/>
+      <path class="ink-r" d="M124,71 H186" marker-start="url(#ah)" marker-end="url(#ah)" style="stroke-width:3"/>
+      <rect x="350" y="48" width="96" height="62" rx="10" class="ink fill-b"/>
+      <rect x="512" y="14" width="118" height="54" rx="10" class="ink-g fill-g"/>
+      <rect x="512" y="92" width="118" height="54" rx="10" class="ink-p fill-p"/>
+      <path class="ink-g" d="M450,64 L508,42" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M450,96 L508,118" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+      <path class="ink-k" d="M326,6 V170" stroke-dasharray="4 6" style="stroke-width:1.2"/>
+    </g>
+    <text x="70" y="76" text-anchor="middle" class="w6">CPU</text>
+    <text x="250" y="62" text-anchor="middle" class="k w6">Memory</text><text x="250" y="82" text-anchor="middle" class="s">instructions</text><text x="250" y="98" text-anchor="middle" class="s">+ data</text>
+    <text x="155" y="60" text-anchor="middle" class="r s">1 bus</text>
+    <text x="160" y="140" text-anchor="middle" class="r s">one path → von Neumann bottleneck</text>
+    <text x="160" y="166" text-anchor="middle" class="k w6">von Neumann (Princeton)</text>
+    <text x="398" y="84" text-anchor="middle" class="w6">CPU</text>
+    <text x="571" y="46" text-anchor="middle" class="g w6">Instr. memory</text>
+    <text x="571" y="124" text-anchor="middle" class="p w6">Data memory</text>
+    <text x="476" y="166" text-anchor="middle" class="k w6">Harvard</text>
+  </svg><figcaption>one shared memory + bus (left) vs separate instruction and data paths (right)</figcaption></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Point</th><th class="l">von Neumann</th><th class="l">Harvard</th></tr>
+    <tr><td class="l">Memory</td><td class="l">one memory for code and data</td><td class="l">separate code and data memories</td></tr>
+    <tr><td class="l">Buses</td><td class="l">one shared set</td><td class="l">two sets: fetch + data <b>in parallel</b></td></tr>
+    <tr><td class="l">Speed / cost</td><td class="l">slower (bottleneck), cheaper</td><td class="l">faster, more wiring, costlier</td></tr>
+    <tr><td class="l">Used in</td><td class="l">PCs (main memory), EDVAC, IAS</td><td class="l">DSPs, PIC/AVR MCUs, Mark I (1944)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The <b>von Neumann bottleneck</b> is the limited transfer rate between CPU and memory over the <b>single</b> path (term popularised by John Backus, 1977), not a slow ALU.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">Modern CPUs</span> = <span class="hl">modified Harvard</span>: split L1 instruction and data caches, but one unified main memory (see Memory Hierarchy).</div>
+  </div>
+
+  <h2><span class="no">2</span>Inside the CPU: ALU, CU, Registers</h2><span class="tag">MCQ</span>
+  <ul class="dash small">
+    <li><b>ALU</b>: arithmetic (add, subtract, increment, compare) and logic (AND, OR, XOR, NOT, shift); sets the flags.</li>
+    <li><b>Control unit (CU)</b>: fetches and <b>decodes</b> instructions and issues the timing and control signals that make the ALU, registers, memory and I/O act. It directs; the ALU and datapath execute.</li>
+    <li><b>Registers</b>: the fastest storage, inside the CPU (next sheet). ALU + registers + internal buses = the <span class="hl">datapath</span>.</li>
+  </ul>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: buses, registers, flags, stack ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Buses &amp; registers</span></div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">System bus</th><th class="l">Direction</th><th class="l">Width decides</th></tr>
+      <tr><td class="l">Address</td><td class="l">one-way, CPU →</td><td class="l"><span class="circ">2ⁿ</span> locations</td></tr>
+      <tr><td class="l">Data</td><td class="l">two-way</td><td class="l">word size</td></tr>
+      <tr><td class="l">Control</td><td class="l">mixed lines</td><td class="l">RD, WR, INT, clock</td></tr>
+    </table>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Bus maths ✍</span> 16-bit address bus (8085) → 2¹⁶ = <b>64 KB</b> · 20-bit (8086) → <b>1 MB</b> · 32-bit → <b>4 GB</b>. MAR width = address bus; MDR width = data bus.</div>
+  </div>
+  <h2><span class="no">3</span>The CPU Registers</h2><span class="tag">very high-yield</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>Reg.</th><th class="l">Full name</th><th class="l">What it holds / does</th></tr>
+    <tr><td><b>PC</b></td><td class="l">Program Counter (x86: IP)</td><td class="l">address of the <span class="hl">next instruction</span>; +1 per fetch</td></tr>
+    <tr><td><b>IR</b></td><td class="l">Instruction Register</td><td class="l">the instruction <b>being decoded / executed</b></td></tr>
+    <tr><td><b>MAR</b></td><td class="l">Memory Address Register</td><td class="l">address being read/written; drives address bus</td></tr>
+    <tr><td><b>MDR</b></td><td class="l">Memory Data Reg. (MBR)</td><td class="l">word just read, or about to be written</td></tr>
+    <tr><td><b>AC</b></td><td class="l">Accumulator</td><td class="l">implied operand + ALU result (1-address)</td></tr>
+    <tr><td><b>SP</b></td><td class="l">Stack Pointer</td><td class="l"><b>top of stack</b>: PUSH/POP, CALL/RET, interrupts</td></tr>
+    <tr><td><b>GPR</b></td><td class="l">R0 … Rn</td><td class="l">operands, temporaries (MIPS has 32)</td></tr>
+    <tr><td><b>PSW</b></td><td class="l">Flags / status register</td><td class="l">condition bits of the last result + control bits</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:0.85fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>Flag</th><th class="l">= 1 when</th></tr>
+      <tr><td>Z</td><td class="l">result is zero</td></tr>
+      <tr><td>S/N</td><td class="l">MSB = 1 (negative)</td></tr>
+      <tr><td>C</td><td class="l">carry out / borrow at MSB</td></tr>
+      <tr><td>V/O</td><td class="l">signed overflow</td></tr>
+      <tr><td>P</td><td class="l"><b>even</b> parity (x86)</td></tr>
+      <tr><td>AC</td><td class="l">carry bit 3 → 4 (BCD)</td></tr>
+    </table>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">8086 flag register</span> 16 bits, <span class="circ">9 flags</span>: 6 status (CF, PF, AF, ZF, SF, OF) + 3 control (TF trap, IF interrupt, DF direction).</div>
+      <div class="ex small"><span class="lbl">Worked ✍</span> 8-bit 7FH + 01H = 80H<br>Z = 0, S = 1, C = 0, <b>V = 1</b> (+127 + 1 ≠ −128), AC = 1, P = 0 (one 1-bit)</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 210px;align-items:center">
+    <div>
+      <p class="small"><b>Stack</b> (LIFO) grows towards lower addresses in most CPUs (x86):</p>
+      <p class="small mono">PUSH: SP ← SP − 1, M[SP] ← DR<br>POP: &nbsp;DR ← M[SP], SP ← SP + 1</p>
+      <div class="trick small"><span class="lbl">Memory trick</span> "<b>PC points, IR holds, MAR addresses, MDR carries</b>." Fetch always flows PC → MAR → MDR → IR.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 210 150" width="200">
+      <g class="w">
+        <rect x="70" y="10" width="90" height="130" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+        <path class="ink-k" d="M70,36 H160 M70,62 H160 M70,88 H160 M70,114 H160" style="stroke-width:1.3"/>
+        <rect x="70" y="62" width="90" height="78" class="fill-y" style="stroke:none"/>
+        <path class="ink-r" d="M10,75 H64" marker-end="url(#ah)"/>
+      </g>
+      <text x="8" y="68" class="r w6">SP</text>
+      <text x="115" y="80" text-anchor="middle" class="s">top</text><text x="115" y="106" text-anchor="middle" class="s">…</text>
+      <text x="168" y="28" class="s">low</text><text x="168" y="134" class="s">high</text>
+      <text x="115" y="54" text-anchor="middle" class="g s">next push</text>
+    </svg><figcaption>stack grows up the page = to lower addresses</figcaption></figure>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: instruction cycle & RTL ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Instruction cycle</span></div>
+  <h2><span class="no">4</span>Instruction Cycle &amp; Micro-operations (RTL)</h2><span class="tag">written favourite</span>
+  <div class="def"><span class="lbl">Instruction cycle</span> <span class="hl">Fetch → Decode → (fetch operand / indirect) → Execute → check interrupt</span>, repeated until HALT. Each phase is a sequence of <b>micro-operations</b>: elementary register transfers done in one clock pulse.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="10" y="40" width="100" height="44" rx="12" class="ink-r fill-r"/>
+      <rect x="150" y="40" width="100" height="44" rx="12" class="ink fill-b"/>
+      <rect x="290" y="40" width="110" height="44" rx="12" class="ink fill-b"/>
+      <rect x="440" y="40" width="90" height="44" rx="12" class="ink-g fill-g"/>
+      <path class="ink-p fill-p" d="M585,30 L630,62 L585,94 L540,62 Z"/>
+      <path class="ink" d="M110,62 H146" marker-end="url(#ahb)"/><path class="ink" d="M250,62 H286" marker-end="url(#ahb)"/><path class="ink" d="M400,62 H436" marker-end="url(#ahb)"/><path class="ink" d="M530,62 H538" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M585,94 C585,128 60,128 60,88" marker-end="url(#ah)"/>
+      <path class="ink-p" d="M585,30 C585,0 60,0 60,36" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="67" text-anchor="middle" class="r w6">Fetch</text>
+    <text x="200" y="67" text-anchor="middle" class="w6">Decode</text>
+    <text x="345" y="60" text-anchor="middle" class="w6">Operand</text><text x="345" y="76" text-anchor="middle" class="s">(indirect)</text>
+    <text x="485" y="67" text-anchor="middle" class="g w6">Execute</text>
+    <text x="585" y="67" text-anchor="middle" class="p s w6">INT?</text>
+    <text x="320" y="146" text-anchor="middle" class="r s">no interrupt → fetch the next instruction</text>
+    <text x="320" y="30" text-anchor="middle" class="p s">yes → interrupt cycle (save PC), then fetch</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>Phase</th><th>Step</th><th class="l">Micro-operation (RTL)</th><th class="l">Meaning</th></tr>
+    <tr><td rowspan="3" class="red"><b>Fetch</b></td><td>t1</td><td class="l"><b>MAR ← PC</b></td><td class="l">address out</td></tr>
+    <tr><td>t2</td><td class="l"><b>MDR ← M[MAR], PC ← PC + 1</b></td><td class="l">read, PC + 1</td></tr>
+    <tr><td>t3</td><td class="l"><b>IR ← MDR</b></td><td class="l">load IR</td></tr>
+    <tr><td rowspan="3">ADD X</td><td>t1</td><td class="l">MAR ← IR(address)</td><td class="l">operand addr.</td></tr>
+    <tr><td>t2</td><td class="l">MDR ← M[MAR]</td><td class="l">read operand</td></tr>
+    <tr><td>t3</td><td class="l">AC ← AC + MDR</td><td class="l">ALU adds</td></tr>
+    <tr><td>STORE X</td><td>t1–t2</td><td class="l">MAR ← IR(addr), MDR ← AC;<br>M[MAR] ← MDR</td><td class="l">write AC</td></tr>
+    <tr><td>JMP X</td><td>t1</td><td class="l">PC ← IR(address)</td><td class="l">no memory</td></tr>
+    <tr><td class="p"><b>Interrupt</b></td><td>t1–t3</td><td class="l">MDR ← PC; MAR ← save, PC ← ISR;<br>M[MAR] ← MDR</td><td class="l">save PC</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p><b>RTL notation:</b> <span class="mono">←</span> transfer · comma = same clock pulse · <span class="mono">P: R2 ← R1</span> = only when control function P = 1 · <span class="mono">M[AR]</span> = memory word at address AR.</p>
+      <p><b>Four kinds of micro-operation:</b> register transfer (R1 ← R2), arithmetic (R3 ← R1 + R2′ + 1), logic (R1 ← R1 ⊕ R2), shift (R1 ← shl R1).</p>
+    </div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Instruction type</th><th class="l">Examples</th></tr>
+      <tr><td class="l">Data transfer</td><td class="l">MOV, LOAD, STORE</td></tr>
+      <tr><td class="l">Data processing</td><td class="l">ADD, SUB, AND, SHL</td></tr>
+      <tr><td class="l">Program control</td><td class="l">JMP, JZ, CALL, RET</td></tr>
+      <tr><td class="l">I/O</td><td class="l">IN, OUT</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> PC is incremented <b>during fetch</b>, so during execute it already holds the address of the <b>next</b> instruction. PC-relative addresses are counted from there.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Fetch = "<b>3 Ts</b>": address out, data in (+ PC up), into IR. Every instruction pays these 3 pulses.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: instruction formats ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Instruction formats</span></div>
+  <h2><span class="no">5</span>Instruction Formats: 3, 2, 1 and 0 Addresses</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Format</span> An instruction = <span class="hl">opcode</span> (what to do) + <span class="hl">mode</span> bits (how to find the operand) + <span class="hl">address / register fields</span>. n opcode bits → up to <span class="circ">2ⁿ</span> operations.</div>
+  <h3>Evaluate X = (A + B) × (C + D) on four machine types</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">3-address</th><th class="l">2-address</th><th class="l">1-address (accumulator)</th><th class="l">0-address (stack)</th></tr>
+    <tr><td class="l">ADD R1, A, B</td><td class="l">MOV R1, A</td><td class="l">LOAD A &nbsp;&nbsp;; AC ← A</td><td class="l">PUSH A</td></tr>
+    <tr><td class="l">ADD R2, C, D</td><td class="l">ADD R1, B</td><td class="l">ADD B</td><td class="l">PUSH B</td></tr>
+    <tr><td class="l">MUL X, R1, R2</td><td class="l">MOV R2, C</td><td class="l">STORE T &nbsp;; temp</td><td class="l">ADD</td></tr>
+    <tr><td class="l"></td><td class="l">ADD R2, D</td><td class="l">LOAD C</td><td class="l">PUSH C</td></tr>
+    <tr><td class="l"></td><td class="l">MUL R1, R2</td><td class="l">ADD D</td><td class="l">PUSH D</td></tr>
+    <tr><td class="l"></td><td class="l">MOV X, R1</td><td class="l">MUL T</td><td class="l">ADD</td></tr>
+    <tr><td class="l"></td><td class="l"></td><td class="l">STORE X</td><td class="l">MUL · POP X</td></tr>
+    <tr><td class="red"><b>3 instr.</b></td><td class="red"><b>6 instr.</b></td><td class="red"><b>7 instr.</b></td><td class="red"><b>8 instr.</b></td></tr>
+  </table>
+  <div class="mnote">fewer addresses → shorter instructions, longer programs</div>
+  <p class="small">0-address code is just the <span class="hl">postfix (RPN)</span> form AB+CD+× read left to right: operand → PUSH, operator → pop two, push the result.</p>
+  <figure class="doodle"><svg viewBox="0 0 640 116" width="640">
+    <g class="w">
+      <rect x="10" y="62" width="50" height="26" class="ink fill-b"/>
+      <rect x="80" y="62" width="50" height="26" class="ink fill-b"/><rect x="80" y="36" width="50" height="26" class="ink fill-b"/>
+      <rect x="150" y="62" width="50" height="26" class="ink-g fill-g"/>
+      <rect x="220" y="62" width="50" height="26" class="ink-g fill-g"/><rect x="220" y="36" width="50" height="26" class="ink fill-b"/>
+      <rect x="290" y="62" width="50" height="26" class="ink-g fill-g"/><rect x="290" y="36" width="50" height="26" class="ink fill-b"/><rect x="290" y="10" width="50" height="26" class="ink fill-b"/>
+      <rect x="360" y="62" width="50" height="26" class="ink-g fill-g"/><rect x="360" y="36" width="50" height="26" class="ink-g fill-g"/>
+      <rect x="430" y="62" width="50" height="26" class="ink-r fill-r"/>
+      <rect x="520" y="62" width="100" height="26" class="ink-r fill-r"/>
+    </g>
+    <text x="35" y="80" text-anchor="middle" class="s">2</text>
+    <text x="105" y="80" text-anchor="middle" class="s">2</text><text x="105" y="54" text-anchor="middle" class="s">3</text>
+    <text x="175" y="80" text-anchor="middle" class="g s w6">5</text>
+    <text x="245" y="80" text-anchor="middle" class="g s">5</text><text x="245" y="54" text-anchor="middle" class="s">4</text>
+    <text x="315" y="80" text-anchor="middle" class="g s">5</text><text x="315" y="54" text-anchor="middle" class="s">4</text><text x="315" y="28" text-anchor="middle" class="s">1</text>
+    <text x="385" y="80" text-anchor="middle" class="g s">5</text><text x="385" y="54" text-anchor="middle" class="g s w6">5</text>
+    <text x="455" y="80" text-anchor="middle" class="r s w6">25</text>
+    <text x="570" y="80" text-anchor="middle" class="r s w6">X = 25</text>
+    <text x="35" y="108" text-anchor="middle" class="s">PUSH A</text><text x="105" y="108" text-anchor="middle" class="s">PUSH B</text><text x="175" y="108" text-anchor="middle" class="s">ADD</text><text x="245" y="108" text-anchor="middle" class="s">PUSH C</text><text x="315" y="108" text-anchor="middle" class="s">PUSH D</text><text x="385" y="108" text-anchor="middle" class="s">ADD</text><text x="455" y="108" text-anchor="middle" class="s">MUL</text><text x="570" y="108" text-anchor="middle" class="s">POP X</text>
+  </svg><figcaption>stack trace with A = 2, B = 3, C = 4, D = 1 → (2 + 3)(4 + 1) = 25</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Field sizing ✍</span> 32-bit instruction, 64 registers, 64K-word memory, format opcode | reg | address.<br>reg = log₂64 = 6 bits · address = log₂65536 = 16 bits<br>opcode = 32 − 6 − 16 = <span class="circ">10 bits</span> → 1024 operations</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Expanding opcode ✍</span> 32-bit instructions, 12-bit addresses, 250 two-address instructions. How many one-address ones are possible?<br>2-addr opcode = 32 − 24 = 8 bits → 256 patterns; 6 unused<br>each frees 12 more bits: 6 × 2¹² = <span class="circ">24 576</span></div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> "0-address" machines still have <b>PUSH/POP with one address</b>; only the ALU instructions (ADD, MUL) carry no address.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> 3-2-1-0 → <b>3-6-7-8</b> instructions for this expression: fewer addresses, more instructions.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: addressing modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Addressing modes</span></div>
+  <h2><span class="no">6</span>Addressing Modes &amp; Effective Address (EA)</h2><span class="tag">very high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> The addressing mode tells the CPU how to turn the address field into the <span class="hl">effective address (EA)</span>, the actual memory address of the operand. Modes give pointers, arrays, loops and relocatable code with short instructions.</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Mode</th><th class="l">Operand / EA</th><th class="l">Example</th><th class="l">Typical use</th></tr>
+    <tr><td class="l">Implied</td><td class="l">fixed by the opcode</td><td class="l">CMA, CLC</td><td class="l">accumulator, flags</td></tr>
+    <tr><td class="l"><b>Immediate</b></td><td class="l">operand <b>in</b> the instruction</td><td class="l">MOV R1, #25</td><td class="l">constants, fastest</td></tr>
+    <tr><td class="l">Register</td><td class="l">operand in register R</td><td class="l">ADD R1, R2</td><td class="l">no memory access</td></tr>
+    <tr><td class="l">Register indirect</td><td class="l">EA = (R)</td><td class="l">MOV R1, (R2)</td><td class="l">pointers</td></tr>
+    <tr><td class="l"><b>Direct</b> (absolute)</td><td class="l">EA = address field A</td><td class="l">LOAD 500</td><td class="l">global variables</td></tr>
+    <tr><td class="l"><b>Indirect</b></td><td class="l">EA = M[A]</td><td class="l">LOAD @500</td><td class="l">pointer in memory</td></tr>
+    <tr><td class="l">Relative</td><td class="l">EA = PC + A</td><td class="l">BEQ +12</td><td class="l">branches, relocation</td></tr>
+    <tr><td class="l"><b>Indexed</b></td><td class="l">EA = A + (XR)</td><td class="l">LOAD 500(X)</td><td class="l">arrays</td></tr>
+    <tr><td class="l">Base register</td><td class="l">EA = (BR) + A</td><td class="l">[BX + 8]</td><td class="l">relocation, segments</td></tr>
+    <tr><td class="l">Auto-inc / dec</td><td class="l">EA = (R), R ± 1 after / before</td><td class="l">(R1)+, −(R1)</td><td class="l">arrays, stacks</td></tr>
+  </table>
+  <h3>Worked example (classic exam setting)</h3>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 236" width="245">
+      <g class="w">
+        <rect x="120" y="8" width="120" height="220" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+        <path class="ink-k" d="M120,32 H240 M120,56 H240 M120,80 H240 M120,104 H240 M120,128 H240 M120,152 H240 M120,176 H240 M120,200 H240" style="stroke-width:1.2"/>
+        <rect x="120" y="8" width="120" height="48" class="fill-y" style="stroke:none"/>
+        <rect x="6" y="20" width="76" height="26" rx="6" class="ink fill-b"/>
+        <rect x="6" y="62" width="76" height="26" rx="6" class="ink fill-b"/>
+        <rect x="6" y="104" width="76" height="26" rx="6" class="ink fill-b"/>
+      </g>
+      <text x="44" y="38" text-anchor="middle" class="s">PC = 200</text><text x="44" y="80" text-anchor="middle" class="s">R1 = 400</text><text x="44" y="122" text-anchor="middle" class="s">XR = 100</text>
+      <text x="114" y="26" text-anchor="end" class="s">200</text><text x="180" y="26" text-anchor="middle" class="s w6">LOAD, mode</text>
+      <text x="114" y="50" text-anchor="end" class="s">201</text><text x="180" y="50" text-anchor="middle" class="s w6">500</text>
+      <text x="114" y="74" text-anchor="end" class="s">202</text><text x="180" y="74" text-anchor="middle" class="s">next instr.</text>
+      <text x="114" y="98" text-anchor="end" class="s">399</text><text x="180" y="98" text-anchor="middle" class="s">450</text>
+      <text x="114" y="122" text-anchor="end" class="s">400</text><text x="180" y="122" text-anchor="middle" class="s">700</text>
+      <text x="114" y="146" text-anchor="end" class="s">500</text><text x="180" y="146" text-anchor="middle" class="s">800</text>
+      <text x="114" y="170" text-anchor="end" class="s">600</text><text x="180" y="170" text-anchor="middle" class="s">900</text>
+      <text x="114" y="194" text-anchor="end" class="s">702</text><text x="180" y="194" text-anchor="middle" class="s">325</text>
+      <text x="114" y="218" text-anchor="end" class="s">800</text><text x="180" y="218" text-anchor="middle" class="s">300</text>
+      <text x="44" y="160" text-anchor="middle" class="r s">2-word</text><text x="44" y="176" text-anchor="middle" class="r s">instruction</text><text x="44" y="192" text-anchor="middle" class="r s">at 200–201</text>
+    </svg></figure>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Mode</th><th>EA</th><th>AC gets</th></tr>
+      <tr><td class="l">Direct</td><td>500</td><td>800</td></tr>
+      <tr><td class="l">Immediate</td><td>201</td><td class="red"><b>500</b></td></tr>
+      <tr><td class="l">Indirect</td><td>800</td><td>300</td></tr>
+      <tr><td class="l">Relative (PC = 202)</td><td class="red"><b>702</b></td><td>325</td></tr>
+      <tr><td class="l">Indexed (XR = 100)</td><td>600</td><td>900</td></tr>
+      <tr><td class="l">Register (R1)</td><td>–</td><td>400</td></tr>
+      <tr><td class="l">Register indirect</td><td>400</td><td>700</td></tr>
+      <tr><td class="l">Autoincrement</td><td>400</td><td>700 (R1 → 401)</td></tr>
+      <tr><td class="l">Autodecrement</td><td>399</td><td>450 (R1 → 399)</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Count the "<b>hops</b>" to the operand: immediate 0, direct 1, indirect 2. Register modes trade a memory hop for a register.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Relative mode adds the <b>updated</b> PC (202 here), not 200. Immediate EA is the address of the operand field itself (201).</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: RISC vs CISC, control unit ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>RISC/CISC · control</span></div>
+  <h2><span class="no">7</span>RISC vs CISC</h2><span class="tag">written favourite</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Point</th><th class="l">RISC (reduced)</th><th class="l">CISC (complex)</th></tr>
+    <tr><td class="l">Instruction set</td><td class="l">few, simple</td><td class="l">many, some very complex</td></tr>
+    <tr><td class="l">Length</td><td class="l"><span class="hl">fixed</span> (32-bit)</td><td class="l"><span class="hl">variable</span> (x86: 1–15 bytes)</td></tr>
+    <tr><td class="l">Addressing modes</td><td class="l">few</td><td class="l">many</td></tr>
+    <tr><td class="l">Memory access</td><td class="l"><span class="circ">LOAD/STORE only</span></td><td class="l">ALU ops may use memory operands</td></tr>
+    <tr><td class="l">Cycles / instr.</td><td class="l">≈ 1, easy to pipeline</td><td class="l">many, varies; harder to pipeline</td></tr>
+    <tr><td class="l">Control unit</td><td class="l">hardwired</td><td class="l">microprogrammed</td></tr>
+    <tr><td class="l">Registers</td><td class="l">large register file</td><td class="l">fewer GPRs</td></tr>
+    <tr><td class="l">Code / compiler</td><td class="l">longer code, smart compiler</td><td class="l">compact code, work in hardware</td></tr>
+    <tr><td class="l">Examples</td><td class="l">ARM, MIPS, RISC-V, SPARC</td><td class="l">Intel x86, VAX, Motorola 68000</td></tr>
+  </table>
+  <p class="small">Modern x86 chips decode CISC instructions into RISC-like <b>micro-ops</b> internally, so the line has blurred. RISC grew from IBM 801 (1975), Berkeley RISC and Stanford MIPS (early 1980s).</p>
+  <h2><span class="no">8</span>Control Unit: Hardwired vs Microprogrammed</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <rect x="6" y="56" width="62" height="36" rx="6" class="ink fill-b"/>
+        <rect x="96" y="40" width="96" height="68" rx="6" class="ink-r fill-r"/>
+        <rect x="220" y="56" width="70" height="36" rx="6" class="ink fill-b"/>
+        <rect x="96" y="118" width="96" height="28" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M68,74 H92" marker-end="url(#ahb)"/><path class="ink" d="M192,74 H216" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M255,92 V132 H196" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M96,132 H37 V96" marker-end="url(#ahg)"/>
+        <path class="ink" d="M255,56 V20" marker-end="url(#ahb)"/>
+        <path class="ink" d="M37,20 V52" marker-end="url(#ahb)"/>
+      </g>
+      <text x="37" y="79" text-anchor="middle" class="w6">CAR</text>
+      <text x="144" y="70" text-anchor="middle" class="r w6">Control</text><text x="144" y="88" text-anchor="middle" class="r w6">memory</text>
+      <text x="255" y="79" text-anchor="middle" class="w6">CDR</text>
+      <text x="144" y="137" text-anchor="middle" class="g s w6">sequencer</text>
+      <text x="250" y="14" text-anchor="middle" class="s">control signals</text>
+      <text x="48" y="14" text-anchor="middle" class="s">IR opcode</text>
+    </svg><figcaption>microprogrammed CU (Wilkes, 1951)</figcaption></figure>
+    <div class="small">
+      <p><b>Hardwired:</b> control signals come from a fixed logic circuit: <span class="hl">sequence counter + decoders + gates</span> (or a PLA/FSM).</p>
+      <p><b>Microprogrammed:</b> each machine instruction runs a small <span class="hl">microprogram</span> of microinstructions stored in <b>control memory</b> (ROM); CAR = control address register, CDR = control data register.</p>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Point</th><th class="l">Hardwired</th><th class="l">Microprogrammed</th></tr>
+    <tr><td class="l">Speed</td><td class="l"><span class="circ">faster</span></td><td class="l">slower (control-memory read each step)</td></tr>
+    <tr><td class="l">Change / debug</td><td class="l">redesign the circuit</td><td class="l">rewrite the microcode: <b>flexible</b></td></tr>
+    <tr><td class="l">Complex ISA</td><td class="l">hard, costly</td><td class="l">easy</td></tr>
+    <tr><td class="l">Used by</td><td class="l">RISC</td><td class="l">CISC</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Microinstruction styles</span> <b>Horizontal</b>: 1 bit per control signal, wide, much parallelism, no decoding. <b>Vertical</b>: encoded fields, narrow, needs decoders, slower.</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Datapath designs</span> <b>Single-cycle</b>: CPI = 1, but clock = slowest instruction (load). <b>Multicycle</b>: short clock, CPI 3–5, units reused across steps.</div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>Hard = Hurry, Micro = Modify</b>": hardwired is fast and rigid; microprogrammed is slow and editable.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: pipelining ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Pipelining</span></div>
+  <h2><span class="no">9</span>Instruction Pipelining</h2><span class="tag">very high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> Split instruction execution into k stages and <span class="hl">overlap</span> them, like an assembly line: while one instruction executes, the next is decoded and the one after is fetched. The classic RISC pipeline has <span class="circ">5 stages</span>: <b>IF</b> fetch, <b>ID</b> decode + read registers, <b>EX</b> ALU, <b>MEM</b> memory access, <b>WB</b> write back.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 150" width="640">
+    <g class="w">
+      <rect x="60" y="22" width="62" height="24" class="ink-r fill-r"/><rect x="122" y="22" width="62" height="24" class="ink fill-b"/><rect x="184" y="22" width="62" height="24" class="ink-g fill-g"/><rect x="246" y="22" width="62" height="24" class="ink-p fill-p"/><rect x="308" y="22" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="122" y="50" width="62" height="24" class="ink-r fill-r"/><rect x="184" y="50" width="62" height="24" class="ink fill-b"/><rect x="246" y="50" width="62" height="24" class="ink-g fill-g"/><rect x="308" y="50" width="62" height="24" class="ink-p fill-p"/><rect x="370" y="50" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="184" y="78" width="62" height="24" class="ink-r fill-r"/><rect x="246" y="78" width="62" height="24" class="ink fill-b"/><rect x="308" y="78" width="62" height="24" class="ink-g fill-g"/><rect x="370" y="78" width="62" height="24" class="ink-p fill-p"/><rect x="432" y="78" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="246" y="106" width="62" height="24" class="ink-r fill-r"/><rect x="308" y="106" width="62" height="24" class="ink fill-b"/><rect x="370" y="106" width="62" height="24" class="ink-g fill-g"/><rect x="432" y="106" width="62" height="24" class="ink-p fill-p"/><rect x="494" y="106" width="62" height="24" class="ink-k fill-y"/>
+      <rect x="243" y="17" width="68" height="118" rx="6" class="ink-r" stroke-dasharray="5 4" style="stroke-width:1.4"/>
+    </g>
+    <text x="91" y="14" text-anchor="middle" class="s">1</text><text x="153" y="14" text-anchor="middle" class="s">2</text><text x="215" y="14" text-anchor="middle" class="s">3</text><text x="277" y="14" text-anchor="middle" class="s">4</text><text x="339" y="14" text-anchor="middle" class="s">5</text><text x="401" y="14" text-anchor="middle" class="s">6</text><text x="463" y="14" text-anchor="middle" class="s">7</text><text x="525" y="14" text-anchor="middle" class="s">8</text><text x="590" y="14" text-anchor="middle" class="s">cycle</text>
+    <text x="8" y="39" class="s w6">I1</text><text x="8" y="67" class="s w6">I2</text><text x="8" y="95" class="s w6">I3</text><text x="8" y="123" class="s w6">I4</text>
+    <text x="91" y="39" text-anchor="middle" class="s">IF</text><text x="153" y="39" text-anchor="middle" class="s">ID</text><text x="215" y="39" text-anchor="middle" class="s">EX</text><text x="277" y="39" text-anchor="middle" class="s">MEM</text><text x="339" y="39" text-anchor="middle" class="s">WB</text>
+    <text x="153" y="67" text-anchor="middle" class="s">IF</text><text x="215" y="67" text-anchor="middle" class="s">ID</text><text x="277" y="67" text-anchor="middle" class="s">EX</text><text x="339" y="67" text-anchor="middle" class="s">MEM</text><text x="401" y="67" text-anchor="middle" class="s">WB</text>
+    <text x="215" y="95" text-anchor="middle" class="s">IF</text><text x="277" y="95" text-anchor="middle" class="s">ID</text><text x="339" y="95" text-anchor="middle" class="s">EX</text><text x="401" y="95" text-anchor="middle" class="s">MEM</text><text x="463" y="95" text-anchor="middle" class="s">WB</text>
+    <text x="277" y="123" text-anchor="middle" class="s">IF</text><text x="339" y="123" text-anchor="middle" class="s">ID</text><text x="401" y="123" text-anchor="middle" class="s">EX</text><text x="463" y="123" text-anchor="middle" class="s">MEM</text><text x="525" y="123" text-anchor="middle" class="s">WB</text>
+    <text x="570" y="70" class="r s">cycle 4:</text><text x="570" y="86" class="r s">4 instr.</text><text x="570" y="102" class="r s">in flight</text>
+  </svg><figcaption>space-time diagram: 4 instructions finish in 5 + 3 = 8 cycles instead of 20</figcaption></figure>
+  <div class="sumbox"><span class="lbl">Formulas (k stages, n instructions, clock τ)</span>
+    <div class="fgrid small">
+      <p>Pipelined time = <span class="circ">(k + n − 1) τ</span></p><p>Non-pipelined = n · t<sub>n</sub> (t<sub>n</sub> = k τ if balanced)</p>
+      <p>Speedup S = n k / (k + n − 1) → <b>k</b></p><p>Efficiency η = n / (k + n − 1) = S / k</p>
+      <p>Throughput = n / ((k + n − 1) τ) → 1/τ</p><p>τ = slowest stage + latch delay</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Example 1 ✍</span> k = 5, n = 100, one cycle per stage, no stalls → 5 + 99 = <span class="circ">104 cycles</span>; non-pipelined 500 cycles; S = 500 / 104 ≈ <b>4.81</b>; η = 100 / 104 ≈ 96%.</div>
+  <div class="ex small"><span class="lbl">Example 2: unequal stages ✍</span> Stage delays 60, 50, 90, 80 ns; latch 10 ns; n = 1000.<br>τ = 90 + 10 = 100 ns · pipelined = (4 + 999) × 100 = 100 300 ns · non-pipelined = 1000 × (60 + 50 + 90 + 80) = 280 000 ns · S ≈ <b>2.79</b>, far below 4 because the stages are unbalanced.</div>
+  <div class="ex small"><span class="lbl">Example 3 ✍</span> IF 200, ID 100, EX 200, MEM 200, WB 100 ps. Single-cycle clock = 800 ps (a load uses all five); pipelined clock = 200 ps → ideal speedup 800 / 200 = <b>4</b>, not 5.</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Pipelining raises <b>throughput</b>; it does <b>not</b> shorten one instruction's latency (latches even lengthen it a little).</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Fill once, then one per tick</b>": k cycles for the first result, then 1 more per instruction → k + n − 1.</div>
+  </div>
+  <p class="small"><b>Pipeline registers</b> (IF/ID, ID/EX, EX/MEM, MEM/WB) between stages hold each instruction's data and control bits; control signals are generated in ID and travel down the pipe with the instruction.</p>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: hazards ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Hazards</span></div>
+  <h2><span class="no">10</span>Pipeline Hazards &amp; Their Cures</h2><span class="tag">very high-yield</span>
+  <div class="def"><span class="lbl">Hazard</span> A condition that stops the next instruction entering its stage on time, forcing a <span class="hl">stall (bubble)</span>. Real CPI = 1 + stall cycles per instruction.</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Hazard</th><th class="l">Cause</th><th class="l">Example</th><th class="l">Cures</th></tr>
+    <tr><td class="l"><b>Structural</b></td><td class="l">two instr. need one unit</td><td class="l">one memory port</td><td class="l">split I/D cache, stall</td></tr>
+    <tr><td class="l red"><b>Data</b></td><td class="l">needs an unfinished result</td><td class="l">ADD <b>R1</b>,R2,R3 → SUB R4,<b>R1</b>,R5</td><td class="l"><span class="hl">forwarding</span>, stall</td></tr>
+    <tr><td class="l"><b>Control</b></td><td class="l">next PC unknown</td><td class="l">BEQ, JMP, CALL</td><td class="l"><span class="hl">branch prediction</span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p><b>Data hazard types</b> (i before j):</p>
+      <ul class="dash">
+        <li><span class="circ">RAW</span> read after write: true dependence, the common one</li>
+        <li><b>WAR</b> write after read: anti-dependence</li>
+        <li><b>WAW</b> write after write: output dependence</li>
+      </ul>
+      <p>WAR and WAW occur only with out-of-order execution; <b>register renaming</b> removes them.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 120" width="290">
+      <g class="w">
+        <rect x="40" y="20" width="50" height="24" class="ink-r fill-r"/><rect x="90" y="20" width="50" height="24" class="ink fill-b"/><rect x="140" y="20" width="50" height="24" class="ink-g fill-g"/><rect x="190" y="20" width="50" height="24" class="ink-p fill-p"/><rect x="240" y="20" width="50" height="24" class="ink-k fill-y"/>
+        <rect x="90" y="74" width="50" height="24" class="ink-r fill-r"/><rect x="140" y="74" width="50" height="24" class="ink fill-b"/><rect x="190" y="74" width="50" height="24" class="ink-g fill-g"/><rect x="240" y="74" width="50" height="24" class="ink-p fill-p"/>
+        <path class="ink-r" d="M190,46 L206,70" marker-end="url(#ah)" style="stroke-width:2.6"/>
+      </g>
+      <text x="4" y="37" class="s w6">ADD</text><text x="4" y="91" class="s w6">SUB</text>
+      <text x="65" y="37" text-anchor="middle" class="s">IF</text><text x="115" y="37" text-anchor="middle" class="s">ID</text><text x="165" y="37" text-anchor="middle" class="s">EX</text><text x="215" y="37" text-anchor="middle" class="s">MEM</text><text x="265" y="37" text-anchor="middle" class="s">WB</text>
+      <text x="115" y="91" text-anchor="middle" class="s">IF</text><text x="165" y="91" text-anchor="middle" class="s">ID</text><text x="215" y="91" text-anchor="middle" class="s">EX</text><text x="265" y="91" text-anchor="middle" class="s">MEM</text>
+      <text x="150" y="116" text-anchor="middle" class="r s">EX/MEM result → ALU input: 0 stalls</text>
+    </svg><figcaption>forwarding (bypassing)</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap: load-use</span> LW R1, 0(R2) followed by ADD R3, <b>R1</b>, R4 still needs <span class="circ">1 stall</span> even with forwarding: the loaded value exists only after MEM. Without forwarding a RAW on the next instruction costs 2 stalls (register file written in the first half of WB, read in the second half).</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div class="small">
+      <p><b>Control hazard cures:</b> <b>static</b> prediction (always not-taken; backward-taken/forward-not-taken), <b>dynamic</b> prediction with a 1-bit or <span class="hl">2-bit saturating counter</span> per branch + a branch target buffer (BTB), <b>delayed branch</b> (compiler fills the slot after a branch with a useful instruction), resolving the branch early in ID, flushing wrongly fetched instructions.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 110" width="245">
+      <g class="w">
+        <circle cx="24" cy="48" r="19" class="ink-g fill-g"/><circle cx="92" cy="48" r="19" class="ink-g fill-g"/><circle cx="160" cy="48" r="19" class="ink-r fill-r"/><circle cx="228" cy="48" r="19" class="ink-r fill-r"/>
+        <path class="ink-k" d="M45,41 H69" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M113,41 H137" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M181,41 H205" marker-end="url(#ahb)" style="stroke-width:1.6"/>
+        <path class="ink-k" d="M207,56 H183" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M139,56 H115" marker-end="url(#ahb)" style="stroke-width:1.6"/><path class="ink-k" d="M71,56 H47" marker-end="url(#ahb)" style="stroke-width:1.6"/>
+      </g>
+      <text x="24" y="53" text-anchor="middle" class="s w6">11</text><text x="92" y="53" text-anchor="middle" class="s w6">10</text><text x="160" y="53" text-anchor="middle" class="s w6">01</text><text x="228" y="53" text-anchor="middle" class="s w6">00</text>
+      <text x="60" y="92" text-anchor="middle" class="g s">predict taken</text><text x="190" y="92" text-anchor="middle" class="r s">predict not taken</text>
+      <text x="125" y="14" text-anchor="middle" class="s">not taken → (upper arrows)</text><text x="125" y="108" text-anchor="middle" class="s">← taken (lower arrows)</text>
+    </svg><figcaption>2-bit predictor: two wrong guesses to flip</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked: CPI with stalls ✍</span> 5-stage pipeline, 20% branches with a 2-cycle penalty, 30% loads of which 25% are followed by a use (1 stall).<br>CPI = 1 + 0.2 × 2 + 0.3 × 0.25 × 1 = <span class="circ">1.475</span> → speedup over unpipelined ≈ 5 / 1.475 ≈ <b>3.39</b>.<br>With a predictor 90% right and a 3-cycle mispredict penalty: CPI = 1 + 0.2 × 0.1 × 3 = <b>1.06</b>.</div>
+  <div class="trick small"><span class="lbl">Memory trick</span> Hazards = "<b>SDC</b>": <b>S</b>hare a unit, <b>D</b>epend on data, <b>C</b>hange the PC. Cures in the same order: duplicate, forward, predict.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: performance, Amdahl ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Performance</span></div>
+  <h2><span class="no">11</span>Measuring Performance</h2><span class="tag">calculation</span>
+  <div class="sumbox"><span class="lbl">The CPU performance equation</span><br>
+    <span class="hl"><b>CPU time = IC × CPI × T = IC × CPI / f</b></span> &nbsp;(IC = instruction count, T = 1/f)<br>
+    <span class="small">Average CPI = Σ (fraction<sub>i</sub> × CPI<sub>i</sub>) · <b>MIPS = f / (CPI × 10⁶)</b> = IC / (time × 10⁶) · Performance = 1 / time · Speedup = time<sub>old</sub> / time<sub>new</sub></span></div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Factor</th><th class="l">IC</th><th class="l">CPI</th><th class="l">Clock rate f</th></tr>
+    <tr><td class="l">Set by</td><td class="l">program, compiler, ISA</td><td class="l">ISA, pipeline, cache</td><td class="l">technology, organisation</td></tr>
+  </table>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Example 1 ✍</span> Mix: 50% ALU (CPI 1), 30% load/store (CPI 2), 20% branch (CPI 3).<br>CPI = 0.5 + 0.6 + 0.6 = <span class="circ">1.7</span><br>IC = 5 × 10⁸, f = 2 GHz → time = 5×10⁸ × 1.7 / 2×10⁹ = <b>0.425 s</b>; MIPS = 2000 / 1.7 ≈ <b>1176</b></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Example 2 ✍</span> Same program. A: 2 GHz, CPI 2.0. B: 3 GHz, CPI 3.6.<br>A: IC × 2 / 2×10⁹ = 1.0 IC ns<br>B: IC × 3.6 / 3×10⁹ = 1.2 IC ns<br>A is <b>1.2× faster</b> despite the slower clock.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Example 3: MIPS ✍</span> 400 MHz, CPI 2 → MIPS = 400 × 10⁶ / (2 × 10⁶) = <span class="circ">200</span>. Clock period of 400 MHz = 1 / (4 × 10⁸) = 2.5 ns.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Neither clock rate nor MIPS alone measures performance: MIPS ignores how much work an instruction does (compare RISC and CISC). Only <b>execution time</b> of real programs (e.g. SPEC benchmarks) is fair.</div>
+  <h2><span class="no">12</span>Amdahl's Law</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div>
+      <p>If a fraction <b>f</b> of the time is sped up <b>s</b> times:</p>
+      <p class="center"><span class="hl"><b>S = 1 / ((1 − f) + f / s)</b></span> &nbsp;→ max <span class="circ">1 / (1 − f)</span></p>
+      <ul class="dash small">
+        <li>f = 0.4, s = 10 → 1 / (0.6 + 0.04) = <b>1.56</b></li>
+        <li>90% parallel on 10 cores → 1 / (0.1 + 0.09) = <b>5.26</b> (limit 10)</li>
+        <li>Overall 2× with f = 0.8: 0.2 + 0.8/s = 0.5 → s = <b>2.67</b></li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="245">
+      <g class="w">
+        <path class="ink-k" d="M30,130 V10 M30,130 H240"/>
+        <path class="ink-r" d="M30,30 H236" stroke-dasharray="5 4" style="stroke-width:1.4"/>
+        <path class="ink" d="M30,120 C60,80 90,50 130,40 C170,33 210,31 236,31"/>
+      </g>
+      <text x="26" y="34" text-anchor="end" class="r s">10</text><text x="26" y="128" text-anchor="end" class="s">1</text>
+      <text x="236" y="146" text-anchor="end" class="s">s (or cores) →</text>
+      <text x="120" y="24" class="r s">ceiling 1/(1 − f)</text>
+      <text x="140" y="76" class="s">f = 0.9</text>
+    </svg><figcaption>the serial part caps the gain</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Speed up the common case</b>": the part you do not improve (1 − f) sets the ceiling.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> f is a fraction of <b>time</b>, not of instructions. With f = 0.5, even s = ∞ gives only 2×.</div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: ALU, fixed & floating point ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>ALU &amp; numbers</span></div>
+  <h2><span class="no">13</span>ALU Design &amp; Fixed-Point Arithmetic</h2>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:center">
+    <div class="small">
+      <p>A <b>1-bit ALU slice</b> computes AND, OR and a full-adder sum in parallel; a <span class="hl">multiplexer</span> picks one by the operation-select bits. 32 slices with chained carries = a 32-bit <b>ripple-carry</b> ALU; a <b>carry-lookahead</b> adder removes the slow carry chain.</p>
+      <p>Subtract: A − B = A + B′ + 1 (invert B, carry-in = 1).</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 144" width="265">
+      <g class="w">
+        <rect x="60" y="10" width="60" height="26" rx="6" class="ink fill-b"/>
+        <rect x="60" y="50" width="60" height="26" rx="6" class="ink fill-b"/>
+        <rect x="60" y="90" width="60" height="34" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r fill-r" d="M170,14 L200,30 V110 L170,126 Z"/>
+        <path class="ink" d="M120,23 H166" marker-end="url(#ahb)"/><path class="ink" d="M120,63 H166" marker-end="url(#ahb)"/><path class="ink" d="M120,107 H166" marker-end="url(#ahb)"/><path class="ink" d="M200,70 H236" marker-end="url(#ahb)"/>
+        <path class="ink" d="M30,30 H60 M30,70 H60 M30,100 H60"/>
+        <path class="ink-p" d="M185,142 V122" marker-end="url(#ahp)"/>
+      </g>
+      <text x="90" y="28" text-anchor="middle" class="s">AND</text><text x="90" y="68" text-anchor="middle" class="s">OR</text><text x="90" y="111" text-anchor="middle" class="g s">adder</text>
+      <text x="185" y="74" text-anchor="middle" class="r s w6">MUX</text>
+      <text x="244" y="74" class="s w6">R</text><text x="14" y="34" class="s">a</text><text x="14" y="74" class="s">b</text><text x="0" y="104" class="s">Cin</text>
+      <text x="196" y="140" class="p s">op</text>
+    </svg><figcaption>1-bit ALU slice</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">n-bit two's complement</span> range −2ⁿ⁻¹ … 2ⁿ⁻¹ − 1 (8-bit: <span class="circ">−128 … +127</span>). Overflow V = C<sub>in</sub>(MSB) ⊕ C<sub>out</sub>(MSB): two same-sign operands give an opposite-sign result.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Overflow ✍</span> 0110 0100 (+100) + 0100 0000 (+64) = 1010 0100 = <b>−92</b> in 8 bits. Carry into MSB = 1, out of MSB = 0 → <b>V = 1</b>.</div>
+  </div>
+  <p class="small"><b>Multiplication</b>: shift-and-add; <b>Booth's algorithm</b> handles signed (two's complement) operands and skips runs of 1s (pairs 10 → subtract, 01 → add). <b>Division</b>: restoring / non-restoring.</p>
+  <h2><span class="no">14</span>Floating Point (IEEE 754)</h2><span class="tag">high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 640 74" width="640">
+    <g class="w">
+      <rect x="20" y="20" width="30" height="30" class="ink-r fill-r"/>
+      <rect x="50" y="20" width="160" height="30" class="ink fill-b"/>
+      <rect x="210" y="20" width="410" height="30" class="ink-g fill-g"/>
+    </g>
+    <text x="35" y="14" text-anchor="middle" class="r s">31</text><text x="56" y="14" class="s">30 … 23</text><text x="216" y="14" class="s">22 … 0</text>
+    <text x="35" y="40" text-anchor="middle" class="r s w6">S</text><text x="130" y="40" text-anchor="middle" class="s w6">exponent E (8)</text><text x="415" y="40" text-anchor="middle" class="g s w6">fraction F (23), leading 1 hidden</text>
+    <text x="320" y="68" text-anchor="middle" class="s">value = (−1)ˢ × 1.F × 2^(E − 127)</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Format</th><th>Sign</th><th>Exponent</th><th>Fraction</th><th>Bias</th><th class="l">Precision</th></tr>
+    <tr><td class="l">Single (32-bit)</td><td>1</td><td><span class="circ">8</span></td><td>23</td><td><b>127</b></td><td class="l">≈ 7 digits, max ≈ 3.4 × 10³⁸</td></tr>
+    <tr><td class="l">Double (64-bit)</td><td>1</td><td>11</td><td>52</td><td><b>1023</b></td><td class="l">≈ 15–16 digits</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked: −6.75 in single precision ✍</span> 6.75 = 110.11₂ = 1.1011 × 2² · sign = 1 · exponent = 2 + 127 = 129 = 1000 0001 · fraction = 1011 000…0<br>1 | 10000001 | 10110000000000000000000 = <span class="circ">C0D80000H</span></div>
+  <div class="cols">
+    <div class="small"><b>FP add/subtract:</b> ① align: shift the mantissa of the smaller exponent right ② add/subtract mantissas ③ normalise ④ round (guard, round, sticky bits).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Exponent all 0s = zero or denormal; all 1s = ∞ (F = 0) or NaN (F ≠ 0). The stored exponent is biased: 2² is stored as 129, not 2.</div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>1-8-23, bias 127</b>" and "<b>1-11-52, bias 1023</b>": bias = 2^(exponent bits − 1) − 1.</div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: superscalar, Flynn, I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Parallelism · I/O</span></div>
+  <h2><span class="no">15</span>Beyond the Basic Pipeline</h2>
+  <ul class="dash small">
+    <li><b>Superscalar</b>: several pipelines; issues <span class="hl">2+ instructions per cycle</span>, so CPI &lt; 1 (IPC &gt; 1). <b>Superpipelining</b>: more, shorter stages. <b>VLIW</b>: the compiler packs parallel operations into one long word.</li>
+    <li><b>Dynamic pipelining</b> = out-of-order execution: reservation stations (Tomasulo), register renaming, a reorder buffer for in-order commit.</li>
+    <li><b>Exceptions</b> (overflow, undefined opcode, page fault) arise inside the CPU; <b>interrupts</b> come from I/O. A <i>precise</i> exception saves the faulting PC (EPC), records the cause and flushes later instructions.</li>
+  </ul>
+  <h2><span class="no">16</span>Flynn's Taxonomy (1966)</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:260px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 260 170" width="255">
+      <g class="w">
+        <rect x="60" y="30" width="95" height="60" class="ink fill-b"/>
+        <rect x="155" y="30" width="95" height="60" class="ink-r fill-r"/>
+        <rect x="60" y="90" width="95" height="60" class="ink-p fill-p"/>
+        <rect x="155" y="90" width="95" height="60" class="ink-g fill-g"/>
+      </g>
+      <text x="155" y="14" text-anchor="middle" class="s">data streams: single | multiple</text>
+      <text x="6" y="64" class="s">single</text><text x="6" y="124" class="s">multi</text>
+      <text x="107" y="66" text-anchor="middle" class="w6">SISD</text><text x="202" y="66" text-anchor="middle" class="r w6">SIMD</text>
+      <text x="107" y="126" text-anchor="middle" class="p w6">MISD</text><text x="202" y="126" text-anchor="middle" class="g w6">MIMD</text>
+      <text x="130" y="166" text-anchor="middle" class="s">↑ rows: instruction streams</text>
+    </svg></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Class</th><th class="l">Examples</th></tr>
+      <tr><td class="l"><b>SISD</b></td><td class="l">classic uniprocessor (von Neumann)</td></tr>
+      <tr><td class="l"><b>SIMD</b></td><td class="l"><span class="hl">vector &amp; array processors, GPUs</span>, SSE/AVX</td></tr>
+      <tr><td class="l"><b>MISD</b></td><td class="l">rare: redundant fault-tolerant systems</td></tr>
+      <tr><td class="l"><b>MIMD</b></td><td class="l">multicore CPUs, SMPs, clusters</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">17</span>I/O Organization</h2><span class="tag">MCQ</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Method</th><th class="l">How</th><th class="l">CPU involvement</th></tr>
+    <tr><td class="l">Programmed I/O</td><td class="l">CPU polls a status flag (busy-wait)</td><td class="l">every word, wastes cycles</td></tr>
+    <tr><td class="l">Interrupt-driven</td><td class="l">device raises INT; CPU runs the ISR</td><td class="l">every word, no polling</td></tr>
+    <tr><td class="l"><b>DMA</b></td><td class="l">DMA controller moves a whole block</td><td class="l"><span class="hl">only at start and end</span></td></tr>
+    <tr><td class="l">IOP / channel</td><td class="l">I/O processor runs channel programs</td><td class="l">least</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 280px;align-items:center">
+    <ol class="steps small">
+      <li>CPU writes start address, word count, direction to the DMA controller</li>
+      <li>DMAC raises <b>BR</b> (8086: HOLD); CPU finishes the bus cycle and grants <b>BG</b> (HLDA)</li>
+      <li>DMAC moves the data memory ↔ device directly</li>
+      <li>Count = 0 → DMAC releases the bus and interrupts the CPU</li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 280 130" width="275">
+      <g class="w">
+        <rect x="10" y="10" width="70" height="40" rx="8" class="ink fill-b"/>
+        <rect x="200" y="10" width="70" height="40" rx="8" class="ink-k fill-y"/>
+        <rect x="100" y="80" width="80" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="200" y="80" width="70" height="40" rx="8" class="ink-g fill-g"/>
+        <path class="ink-k" d="M10,64 H270" style="stroke-width:3"/>
+        <path class="ink-k" d="M60,50 V64 M140,80 V64 M235,50 V64 M235,80 V64" style="stroke-width:2.4"/>
+        <path class="ink-p" d="M100,104 H26 V54" marker-start="url(#ahp)" marker-end="url(#ahp)" stroke-dasharray="4 3"/>
+      </g>
+      <text x="45" y="35" text-anchor="middle" class="w6">CPU</text><text x="235" y="35" text-anchor="middle" class="w6">Memory</text>
+      <text x="140" y="105" text-anchor="middle" class="r w6">DMAC</text><text x="235" y="105" text-anchor="middle" class="g w6">Disk</text>
+      <text x="110" y="58" class="s">system bus</text><text x="40" y="96" class="p s">BR / BG</text>
+    </svg></figure>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> DMA <b>cycle stealing</b> takes the bus for one word at a time; <b>burst mode</b> holds it for the whole block. Either way the data never pass through CPU registers. Channels: <b>selector</b> (one fast device at a time) vs <b>multiplexer</b> (many slow devices interleaved).</div>
+  <div class="pg-no">12</div>
+</section>
+
+<!-- ============ SHEET 13: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small" style="white-space:nowrap">
+      <p>Fetch: MAR←PC; MDR←M[MAR], PC+1; IR←MDR</p><p>Address bus n bits → 2ⁿ locations</p>
+      <p>PC next · IR current · MAR addr · MDR data</p><p>8086: 9 flags (6 status + 3 control)</p>
+      <p>X = (A+B)(C+D): 3/6/7/8 instructions</p><p>n opcode bits → 2ⁿ operations</p>
+      <p>Direct EA = A · Indirect EA = M[A]</p><p>Relative = new PC + A · Indexed = A + XR</p>
+      <p>Pipeline: (k + n − 1) cycles</p><p>S = nk/(k + n − 1) → k · η = S/k</p>
+      <p>τ = slowest stage + latch</p><p>CPI<sub>real</sub> = 1 + stalls per instruction</p>
+      <p>Time = IC × CPI / f</p><p>MIPS = f / (CPI × 10⁶)</p>
+      <p>Amdahl S = 1/((1 − f) + f/s)</p><p>Limit 1/(1 − f)</p>
+      <p>IEEE single 1/8/23, bias 127</p><p>Double 1/11/52, bias 1023</p>
+    </div>
+  </div>
+  <h3>Top 14 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Stored program: von Neumann, 1945</li>
+      <li>Separate I and D memories = Harvard</li>
+      <li>Next instruction address → PC</li>
+      <li>Operand in the instruction → immediate</li>
+      <li>Array access → indexed mode</li>
+      <li>Stack machine ADD = 0-address</li>
+      <li>RISC: fixed length, load/store</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>Control memory → microprogrammed</li>
+      <li>Hardwired CU: faster, less flexible</li>
+      <li>RAW = data hazard → forwarding</li>
+      <li>Branch → control hazard → prediction</li>
+      <li>Load-use: 1 stall even with forwarding</li>
+      <li>GPU / vector = SIMD; multicore = MIMD</li>
+      <li>DMA: CPU only at start and end</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> CU decodes and directs, it does not "execute" · cache is a memory level, not a CPU unit · relative mode uses the updated PC · immediate EA = address of the operand field · pipelining improves throughput, not latency · speedup &lt; k when stages are unequal · MIPS and GHz mislead · 7FH + 01H sets V, not C</div>
+  <div class="trick"><span class="lbl">All tricks together</span> PC points, IR holds, MAR addresses, MDR carries · fetch = 3 Ts · 3-2-1-0 → 3-6-7-8 · count the hops · Hard = Hurry, Micro = Modify · fill once, then one per tick · hazards SDC → duplicate, forward, predict · speed up the common case · 1-8-23 bias 127</div>
+  <figure class="doodle"><svg viewBox="0 0 600 80" width="560">
+    <g class="w">
+      <rect x="10" y="22" width="90" height="36" rx="10" class="ink-r fill-r"/>
+      <rect x="160" y="22" width="90" height="36" rx="10" class="ink fill-b"/>
+      <rect x="310" y="22" width="90" height="36" rx="10" class="ink fill-b"/>
+      <rect x="460" y="22" width="90" height="36" rx="10" class="ink-g fill-g"/>
+      <path class="ink-k" d="M100,40 H156" marker-end="url(#ahb)"/><path class="ink-k" d="M250,40 H306" marker-end="url(#ahb)"/><path class="ink-k" d="M400,40 H456" marker-end="url(#ahb)"/>
+    </g>
+    <text x="55" y="45" text-anchor="middle" class="r w6">PC</text><text x="205" y="45" text-anchor="middle" class="w6">MAR</text><text x="355" y="45" text-anchor="middle" class="w6">MDR</text><text x="505" y="45" text-anchor="middle" class="g w6">IR</text>
+    <text x="128" y="16" text-anchor="middle" class="s">t1</text><text x="278" y="16" text-anchor="middle" class="s">t2: M[MAR]</text><text x="428" y="16" text-anchor="middle" class="s">t3</text>
+    <text x="280" y="76" text-anchor="middle" class="p s">PC ← PC + 1 in t2, then decode → execute → repeat</text>
+  </svg><figcaption>the fetch path you must be able to write in RTL</figcaption></figure>
+  <div class="pg-no">13</div>
+</section>
+
+<!-- ============ SHEET 14: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>CA · CPU Organization</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A von Neumann machine keeps instructions and data in:<ol class="opts"><li>two memories</li><li>one memory</li><li>ROM only</li><li>registers</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Which register holds the instruction being decoded?<ol class="opts"><li>PC</li><li>MAR</li><li>IR</li><li>SP</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>MOV R1, #25 uses which addressing mode?<ol class="opts"><li>Direct</li><li>Indirect</li><li>Indexed</li><li>Immediate</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>5-stage pipeline, 100 instructions, no stalls. Cycles?<ol class="opts"><li>104</li><li>500</li><li>105</li><li>100</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Address fields in a stack machine's ADD:<ol class="opts"><li>1</li><li>0</li><li>2</li><li>3</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>A 2 GHz CPU with average CPI 4 gives:<ol class="opts"><li>800 MIPS</li><li>8000 MIPS</li><li>500 MIPS</li><li>200 MIPS</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Half the run time is made 2× faster. Overall speedup:<ol class="opts"><li>2</li><li>1.5</li><li>1.25</li><li>1.33</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Operand forwarding mainly reduces:<ol class="opts"><li>data hazards</li><li>structural</li><li>control hazards</li><li>cache misses</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>A GPU / vector processor is in Flynn's class:<ol class="opts"><li>SISD</li><li>SIMD</li><li>MISD</li><li>MIMD</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>In DMA the CPU is involved:<ol class="opts"><li>every word</li><li>never</li><li>at start and end</li><li>on errors only</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-d · 4-a · 5-b · 6-c · 7-d · 8-a · 9-b · 10-c</div>
+
+  <div class="wq"><span class="lbl">Written question</span> A 5-stage pipeline has stage delays 150, 120, 160, 140, 130 ps and a 20 ps latch delay. For 1000 instructions find (a) the clock period, (b) pipelined and non-pipelined times, (c) the speedup, (d) the time if 20% are branches with a 2-cycle penalty. <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>τ = slowest stage + latch = 160 + 20 = <b>180 ps</b> <i class="mk">1</i></li>
+    <li>Pipelined: (5 + 999) × 180 = <b>180 720 ps</b>; non-pipelined: 1000 × 700 = <b>700 000 ps</b> <i class="mk">3</i></li>
+    <li>Speedup = 700 000 / 180 720 ≈ <span class="circ">3.87</span> (limit 3.89, not 5: unequal stages) <i class="mk">2</i></li>
+    <li>Stalls = 1000 × 0.2 × 2 = 400 → (1004 + 400) × 180 = <b>252 720 ps</b>, S ≈ 2.77 <i class="mk">2</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Fetch, ADD, interrupt cycles in RTL</li>
+        <li>EA and operand for every mode</li>
+        <li>(A+B)(C+D) in 3/2/1/0-address code</li>
+        <li>Pipeline, CPI, MIPS, Amdahl sums</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① Hardwired vs microprogrammed<br>② RISC vs CISC, six points<br>③ Three hazards with cures<br>④ 12.375 in IEEE 754</div>
+  </div>
+  <div class="pg-no">14</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

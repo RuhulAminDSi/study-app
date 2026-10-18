@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { ADMIN_UNAUTHORIZED_EVENT } from '../admin/api'
 
 interface AuthUser {
   id: string
@@ -47,6 +48,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }
 
+  useEffect(() => {
+    const onUnauthorized = () => {
+      localStorage.removeItem('admin_token')
+      localStorage.removeItem('admin_user')
+      setToken(null)
+      setUser(null)
+    }
+    window.addEventListener(ADMIN_UNAUTHORIZED_EVENT, onUnauthorized)
+    return () => window.removeEventListener(ADMIN_UNAUTHORIZED_EVENT, onUnauthorized)
+  }, [])
+
   return (
     <AuthContext.Provider value={{ token, user, isAuthenticated: !!token, login, logout }}>
       {children}
@@ -54,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useAuth() {
+export function useAuth() { // eslint-disable-line react-refresh/only-export-components
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used within AuthProvider')
   return ctx

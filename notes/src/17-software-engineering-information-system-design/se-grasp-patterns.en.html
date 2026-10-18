@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GRASP Patterns, DCD &amp; Design-Level Testing: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+<style>.mcq-set .mcq { font-size: 10.8pt; line-height: 5.2mm; }</style>
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="1.6"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>Date: 11.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">GRASP, DCD &amp; Testing Techniques</span></h1>
+  <p class="subtitle">Responsibilities · nine guidelines · design class diagram · white/black box · cyclomatic complexity: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="556">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="106" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M244,132 L170,74 M244,168 L170,226 M320,108 L320,56 M396,132 L470,74 M396,168 L470,226 M320,192 L320,244 M232,150 L176,150 M408,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">GRASP · DCD · TESTING</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Responsibilities</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Carell &amp; Fowler, 1991 ★</text>
+      <text x="500" y="65" text-anchor="middle" class="r w6">DCD vs domain model ★</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Info Expert · Creator ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Coupling ↔ Cohesion ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Polymorphism · Controller</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">M = E − N + 2P ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">EP · BVA · V-model</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① GRASP = Carell &amp; Fowler, 1991<br>② Info Expert = the class with the data<br>③ Creator = the container<br>④ Least dependent class wins<br>⑤ DCD adds operations + navigability<br>⑥ M = conditions + 1</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"… <span class="hl">Designing Objects with responsibilities</span>. <span class="hl">GRASP patterns with General Principles in assigning responsibilities</span>: Information expert, Creator, Low Coupling and High Cohesion, <span class="hl">Creating design class diagrams and mapping design to codes</span>. Software Testing: <span class="hl">White Box and Black Box testing</span>. <span class="hl">Basis Path Testing</span>."</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>GRASP: origin &amp; the guidelines ……… p. 2</li><li>Information Expert &amp; Creator ……… p. 3</li><li>Low Coupling &amp; High Cohesion ……… p. 4</li><li>The remaining guidelines ……… p. 5</li><li>DCD: domain model vs design ……… p. 6</li></ul>
+    <ul class="tick"><li>DCD worked example + code ……… p. 7</li><li>White-box vs black-box, EP, BVA ……… p. 8</li><li>Coverage, cyclomatic, basis path ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: GRASP ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>GRASP</span></div>
+  <h2><span class="no">1</span>GRASP: the Responsibility-Assignment Problem</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> <b>GRASP</b> = <span class="circ">G</span>eneral <span class="circ">R</span>esponsibility <span class="circ">A</span>ssignment <span class="circ">S</span>oftware <span class="circ">P</span>atterns: <span class="hl">guidelines for deciding which object gets which responsibility</span>, so that the result is loosely coupled, cohesive, maintainable and reusable. Proposed by <span class="circ">James Carell and Martin Fowler, 1991</span> (<i>Toward Unified Design Methodologies</i>, <i>IEEE Computer</i>).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr)">
+    <div>
+      <h3>Two kinds of responsibility</h3>
+      <ul class="dash small">
+        <li><b>Knowing</b> — the object's own attributes and the objects linked to it.</li>
+        <li><b>Doing</b> — the actions it performs (its operations).</li>
+      </ul>
+      <p class="small">A <b>pattern</b> (Singleton, Strategy, Observer …) is a named solution <i>with structure</i>. A GRASP guideline is one sentence with no class diagram attached — <span class="hl">it tells you where to put a responsibility, not what to build</span>.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 400 190" width="300">
+      <g class="w">
+        <rect x="6" y="8" width="122" height="140" rx="10" class="ink fill-b"/>
+        <rect x="139" y="8" width="122" height="140" rx="10" class="ink-k fill-y"/>
+        <rect x="272" y="8" width="122" height="140" rx="10" class="ink-g fill-g"/>
+      </g>
+      <text x="67" y="30" text-anchor="middle" class="w6 k">Where is the</text><text x="67" y="45" text-anchor="middle" class="w6 k">data?</text>
+      <text x="200" y="30" text-anchor="middle" class="w6 k">How tangled</text><text x="200" y="45" text-anchor="middle" class="w6 k">is it?</text>
+      <text x="333" y="30" text-anchor="middle" class="w6 g">What must be</text><text x="333" y="45" text-anchor="middle" class="w6 g">able to change?</text>
+      <text x="67" y="72" text-anchor="middle" class="s">Information</text>
+      <text x="67" y="84" text-anchor="middle" class="s">Expert</text>
+      <text x="67" y="104" text-anchor="middle" class="s">Creator</text>
+      <text x="200" y="72" text-anchor="middle" class="s">Low Coupling</text>
+      <text x="200" y="92" text-anchor="middle" class="s">High Cohesion</text>
+      <text x="200" y="112" text-anchor="middle" class="s">Don't Talk to</text>
+      <text x="200" y="124" text-anchor="middle" class="s">Strangers</text>
+      <text x="200" y="142" text-anchor="middle" class="s">Indirection</text>
+      <text x="333" y="72" text-anchor="middle" class="s">Polymorphism</text>
+      <text x="333" y="92" text-anchor="middle" class="s">Protected</text>
+      <text x="333" y="104" text-anchor="middle" class="s">Variations</text>
+      <text x="333" y="124" text-anchor="middle" class="s">Known /</text>
+      <text x="333" y="136" text-anchor="middle" class="s">Unknown Deps</text>
+      <text x="200" y="178" text-anchor="middle" class="s k">the set sorted by the question each guideline answers</text>
+    </svg><figcaption>nine guidelines, three questions</figcaption></figure>
+  </div>
+  <h3>The nine guidelines, in one line each</h3>
+  <table class="hand tiny" style="width:100%">
+    <tr><th>#</th><th class="l">Guideline</th><th class="l">The principle, in one line</th></tr>
+    <tr><td>1</td><td class="l"><b>Information Expert</b></td><td class="l">Give it to the class that <b>has the information</b></td></tr>
+    <tr><td>2</td><td class="l"><b>Creator</b></td><td class="l">The class that contains, aggregates or initialises it creates it</td></tr>
+    <tr><td>3</td><td class="l"><b>Low Coupling</b></td><td class="l">Assign to the class <b>least dependent</b> on others</td></tr>
+    <tr><td>4</td><td class="l"><b>High Cohesion</b></td><td class="l">One class, <b>maximum related</b> responsibility</td></tr>
+    <tr><td>5</td><td class="l"><b>Polymorphism</b></td><td class="l">Do not re-implement superclass behaviour in a subclass</td></tr>
+    <tr><td>6</td><td class="l"><b>Pure Arbiters</b></td><td class="l">The object that <b>arbitrates between</b> two or more others</td></tr>
+    <tr><td>7</td><td class="l"><b>Don't Talk to Strangers</b></td><td class="l">Ask <b>only immediate associates</b> for information</td></tr>
+    <tr><td>8</td><td class="l"><b>Controller</b></td><td class="l">The first <b>non-UI</b> object to receive a system event</td></tr>
+    <tr><td>9</td><td class="l"><b>Intermediary</b> (Pure Fabrication)</td><td class="l">An <b>invented</b>, non-domain class breaks the dependency</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Three more often listed with GRASP</span> <b>Indirection</b> — an intermediary links objects that must not know each other. <b>Protected Variations</b> — wrap every point of <b>predicted change</b> in an interface. <b>Known / Unknown Dependencies</b> — name a <b>known</b> dependency concretely; an interface in front of a <b>changeable</b> one.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> GRASP is <b>guidelines for assigning responsibilities</b> by <b>Carell &amp; Fowler (1991)</b> — not a pattern catalogue, and not the GoF patterns. <b>Pure Arbiters</b> is sometimes printed as "Pure Arbiters / Information Expert": do not count it twice.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: Information Expert & Creator ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>Info Expert &amp; Creator</span></div>
+  <h2><span class="no">2</span>Information Expert &amp; Creator — Worked</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Information Expert</span> Assign the responsibility to the object that has the <span class="hl">information</span> needed to carry it out. <b>Example:</b> the <i>Invoice</i> should compute <span class="mono">getTotal()</span>, because the Invoice is the only class holding its list of <i>LineItem</i>s.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr)">
+    <div class="code" style="font-size:10pt;line-height:5.2mm">class LineItem {
+    Product product;
+    int quantity;
+    double getSubTotal() {
+        return product.price * quantity;
+    }
+}
+class Invoice {
+    List&lt;LineItem&gt; items;
+    double getTotal() {
+        return items.stream()
+            .mapToDouble(LineItem::getSubTotal)
+            .sum();
+    }
+}</div>
+    <div>
+      <h3>Why this is the right answer</h3>
+      <ul class="dash small">
+        <li>Only the <b>Invoice</b> holds the line items, so only it can sum them.</li>
+        <li>No parameters have to be passed in and no <i>LineItem</i> needs a back-pointer.</li>
+        <li>The knowledge stays <span class="hl">inside the class that owns the data</span>: coupling falls, cohesion rises.</li>
+      </ul>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> Information Expert is <b>not</b> "the class with the most methods". It is the class with the <span class="circ">data needed</span>. If the data lives elsewhere, the responsibility goes elsewhere.</div>
+    </div>
+  </div>
+  <h3><span class="no">2b</span> Creator — Worked</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <div class="def small"><span class="lbl">Creator</span> Assign to class <b>B</b> the job of creating instances of class <b>A</b> if <span class="hl">any one</span> of these holds: B <b>contains</b> A · B <b>aggregates</b> A · B <b>records</b> A · B <b>closely uses</b> A · B <b>holds the data</b> that would initialise A.</div>
+      <div class="code" style="font-size:10pt;line-height:5.2mm;margin-top:2mm">class Sale {
+    List&lt;SalesLineItem&gt; lines;
+    SalesLineItem addLine(Product p, int q) {
+        SalesLineItem l = new SalesLineItem(p, q);
+        lines.add(l);
+        return l;
+    }
+}</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 400 168" width="330">
+      <g class="w">
+        <rect x="140" y="8" width="120" height="40" rx="8" class="ink fill-b"/>
+        <rect x="8" y="96" width="120" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="140" y="96" width="120" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="272" y="96" width="120" height="36" rx="8" class="ink-g fill-g"/>
+        <path class="ink-k" d="M180,48 L68,90 M200,48 V90 M220,48 L332,90" marker-end="url(#ahb)"/>
+      </g>
+      <text x="200" y="34" text-anchor="middle" class="s k w6">Sale</text>
+      <text x="68" y="120" text-anchor="middle" class="s g w6">SalesLine</text>
+      <text x="200" y="120" text-anchor="middle" class="s g w6">SalesLine</text>
+      <text x="332" y="120" text-anchor="middle" class="s g w6">SalesLine</text>
+      <text x="200" y="78" text-anchor="middle" class="s r w6">creates  (1 .. *)</text>
+      <text x="200" y="152" text-anchor="middle" class="s">Sale contains the line items, so Sale is the Creator</text>
+    </svg><figcaption>Creator: the container creates what it contains</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Creator = "C for Container"</b>. Even when B does not contain A, if B can name the values that initialise every field of A, B is a natural Creator — creating A there <b>reduces</b> the arguments the caller must supply.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Creator is not "the class that uses it". In a POS, <b>Sale</b> — not <b>Register</b>, <b>ProductCatalog</b> or <b>Payment</b> — creates <b>SalesLineItem</b>, because Sale <i>contains</i> the line items.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: Low Coupling & High Cohesion ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>Coupling &amp; Cohesion</span></div>
+  <h2><span class="no">3</span>Low Coupling &amp; High Cohesion — Worked</h2><span class="tag">written favourite</span>
+<div class="def"><span class="lbl">Low Coupling</span> Assign responsibilities so that <span class="hl">unnecessary dependencies are minimised</span>. The rule to quote: <span class="circ">give the responsibility to the class least dependent on other classes</span>. Dependence is measured by how much of another object's <b>state</b> a class must know.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3>Bad — high coupling</h3>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">class Customer {
+    String name;
+    void saveToDatabase() {
+        // opens a JDBC connection,
+        // builds SQL, commits a tx
+    }
+}</div>
+      <p class="small"><b>Cost:</b> <i>Customer</i> now knows the DB, SQL, the driver and the network.</p>
+    </div>
+    <div>
+      <h3>Good — low coupling</h3>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">class CustomerRepository {
+    void save(Customer c) {
+        // all DB logic lives here
+    }
+}
+class Customer {
+    String name;  // no DB knowledge
+}</div>
+      <p class="small"><b>Gain:</b> <i>Customer</i> is reusable, the repository replaceable, the two unit-test separately.</p>
+    </div>
+  </div>
+  <h3><span class="no">3b</span> High Cohesion — Worked</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">// LOW COHESION — the "god class"
+class CustomerManager {
+    void browseShop()  { }
+    void chargeCard()  { }
+    void shipOrder()   { }
+    void sendEmail()   { }
+    void updateDatabase(){ }
+}</div>
+      <p class="small">Five unrelated jobs: <span class="hl">no single reason to change it</span>, and every change risks all five.</p>
+    </div>
+    <div>
+      <div class="code" style="font-size:9.6pt;line-height:4.9mm">// HIGH COHESION — split it
+class Customer { /* customer data */ }
+class Cart     { /* cart operations */ }
+class Payment  { /* payment logic  */ }
+class Shipping { /* delivery       */ }
+class Notifier { /* e-mail         */ }</div>
+      <p class="small">Each has <span class="hl">one clear reason to change</span> — SRP restated.</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 275px;align-items:center">
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Coupling is how many strings are tied to this balloon</b> — four strings and it cannot fly. <b>Cohesion is how tightly its own parts stick together</b>: five unrelated jobs is gravel, not rock.</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> The two are <b>different axes</b>: coupling is <i>between</i> classes, cohesion <i>within</i> one. A class can be cohesive yet coupled to three others.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 150" width="270">
+      <g class="w">
+        <circle cx="52" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="112" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="52" cy="86" r="11" class="ink-r fill-r"/>
+        <circle cx="112" cy="86" r="11" class="ink-r fill-r"/>
+        <path class="ink-r" d="M63,24 H101 M63,86 H101 M52,35 V75 M112,35 V75 M52,24 L112,86 M112,24 L52,86" stroke-width="1.4"/>
+        <circle cx="238" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="298" cy="24" r="11" class="ink-r fill-r"/>
+        <circle cx="238" cy="86" r="11" class="ink-r fill-r"/>
+        <circle cx="298" cy="86" r="11" class="ink-r fill-r"/>
+        <path class="ink-g" d="M160,55 H210 M249,24 H287 M249,86 H287" marker-end="url(#ahg)" stroke-width="1.6"/>
+      </g>
+      <text x="82" y="124" text-anchor="middle" class="s r w6">HIGH COUPLING</text>
+      <text x="82" y="142" text-anchor="middle" class="s">every node knows</text>
+      <text x="82" y="154" text-anchor="middle" class="s">every other node</text>
+      <text x="268" y="124" text-anchor="middle" class="s g w6">LOW COUPLING</text>
+      <text x="268" y="142" text-anchor="middle" class="s">one hub, several</text>
+      <text x="268" y="154" text-anchor="middle" class="s">independent spokes</text>
+    </svg><figcaption>the same four objects, two ways of connecting them</figcaption></figure>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> A bank core hides its ledger rules behind an interface: the SQL is swappable without touching the business classes.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: remaining guidelines ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>Other guidelines</span></div>
+  <h2><span class="no">4</span>Polymorphism, Controller, Intermediary &amp; the Rest</h2><span class="tag">high-yield</span>
+  <div class="cols3">
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Polymorphism</span> Do <b>not</b> assign to a subclass a behaviour its superclass already covers. Put it in the superclass or interface and let <span class="circ">polymorphism</span> choose the version at run time. <span class="tiny green">CashPayment · CardPayment · MobileBanking share <i>process()</i>.</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Pure Arbiters</span> Assign a responsibility to the object that <b>arbitrates between two or more others</b> — it holds the rules both sides need and neither owns. <span class="tiny green">A <i>TaxPolicy</i> that <i>Invoice</i> and <i>Refund</i> both consult.</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Don't Talk to Strangers</span> If a method knows too much about, or depends on, too many others, it breaks the rule. Ask <b>only immediate associates</b>. <span class="tiny green">Never reach through <i>Order</i> to touch <i>Order.getCustomer().getAddress()</i>.</span></div>
+  </div>
+  <div class="cols3">
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Controller</span> The first object <b>beyond the UI layer</b> to receive a system event such as <i>enterItem</i> and coordinate it. Two kinds: <b>facade controller</b> (the whole system) and <b>use-case / session controller</b> (one scenario). <span class="circ">Never in the UI class.</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Intermediary (Pure Fabrication)</span> A class that <b>represents no domain concept at all</b>, invented only to break an awkward dependency; normally placed in the <b>common low-level packages</b>. <span class="tiny green">A <i>ReportService</i> between the invoice and the database.</span></div>
+    <div class="def tiny" style="margin-top:0;line-height:5.3mm"><span class="lbl">Protected Variations</span> Identify the points of <b>predicted change</b> and put an interface or abstract class in front of each, so the unstable part can vary without touching the rest. <span class="tiny green">Open/Closed Principle; usually the Strategy pattern.</span></div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:center">
+    <div>
+      <h3>How the guidelines stack up against SOLID</h3>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">GRASP guideline</th><th class="l">It is really this principle</th></tr>
+        <tr><td class="l"><b>High Cohesion</b></td><td class="l">Single Responsibility Principle</td></tr>
+        <tr><td class="l"><b>Low Coupling</b></td><td class="l">Dependency Inversion · Open/Closed</td></tr>
+        <tr><td class="l"><b>Protected Variations</b></td><td class="l">Open/Closed Principle · Strategy</td></tr>
+        <tr><td class="l"><b>Polymorphism</b></td><td class="l">Liskov Substitution</td></tr>
+        <tr><td class="l"><b>Indirection / Intermediary</b></td><td class="l">Dependency Inversion Principle</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 190" width="300">
+      <g class="w">
+        <rect x="6" y="8" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="122" y="8" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="238" y="8" width="96" height="34" rx="8" class="ink-k fill-y"/>
+        <path class="ink-k" d="M102,25 H122 M218,25 H238" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M54,46 C54,70 286,70 286,46" stroke-dasharray="6 5" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M166,58 L178,72 M178,58 L166,72"/>
+        <rect x="6" y="102" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="238" y="102" width="96" height="34" rx="8" class="ink fill-b"/>
+        <rect x="122" y="102" width="96" height="34" rx="8" class="ink-p fill-p"/>
+        <path class="ink-g" d="M102,119 H122" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M218,119 H238" marker-end="url(#ahg)"/>
+      </g>
+      <text x="54" y="30" text-anchor="middle" class="s k w6">UI</text>
+      <text x="170" y="30" text-anchor="middle" class="s k w6">Controller</text>
+      <text x="286" y="30" text-anchor="middle" class="s k w6">Domain</text>
+      <text x="170" y="86" text-anchor="middle" class="s r" style="font-size:9px">the UI must not handle events itself</text>
+      <text x="54" y="125" text-anchor="middle" class="s k w6">A</text>
+      <text x="170" y="125" text-anchor="middle" class="s p w6">mediator</text>
+      <text x="286" y="125" text-anchor="middle" class="s k w6">B</text>
+      <text x="170" y="154" text-anchor="middle" class="s g" style="font-size:9px">Don't talk to strangers: A asks only its associate</text>
+      <text x="170" y="176" text-anchor="middle" class="s k" style="font-size:9px">a pure fabrication is invented, not modelled from the domain</text>
+    </svg><figcaption>Controller sits beyond the UI; a mediator kills the shortcut</figcaption></figure>
+  </div>
+  <div class="exam"><span class="lbl">Exam trap</span> The <b>Controller</b> guideline is <b>not</b> "the class the user clicks" — a UI class that receives the event is precisely what GRASP forbids. A <b>Pure Fabrication</b> differs from a <b>Domain Model</b> class: it has <span class="circ">no domain meaning</span> at all.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: DCD ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>DCD</span></div>
+  <h2><span class="no">5</span>The Design Class Diagram (DCD)</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> The <b>Design Class Diagram</b> is the UML class diagram drawn at the <span class="hl">design level</span>: the domain-model class diagram extended with everything an implementer needs — <b>operations</b> with signatures, <b>types</b>, <b>visibility</b> markers and <b>navigability</b> arrows.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.08fr) minmax(0,0.92fr)">
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">Domain / analysis model</th><th class="l">Design class diagram</th></tr>
+      <tr><td class="l"><b>Conceptual</b> view of the domain</td><td class="l"><b>Software</b> view</td></tr>
+      <tr><td class="l">Classes, attributes, associations, multiplicities</td><td class="l">those <b>plus methods</b> and return types</td></tr>
+      <tr><td class="l"><b>Plural</b> domain nouns (Sales)</td><td class="l"><b>Singular</b> nouns (Sale)</td></tr>
+      <tr><td class="l">No software-specific types</td><td class="l">Concrete: <b>String, double, List</b></td></tr>
+      <tr><td class="l">No visibility markers</td><td class="l"><b>+ public · − private · # protected</b></td></tr>
+      <tr><td class="l">Associations are undirected</td><td class="l"><b>Navigability</b> — who holds the reference</td></tr>
+      <tr><td class="l">No interface or packages</td><td class="l"><b>&lt;&lt;interface&gt;&gt;</b>, <b>&lt;&lt;abstract&gt;&gt;</b>, packages</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 210" width="225">
+      <g class="w">
+        <rect x="6" y="8" width="132" height="94" rx="7" class="ink" style="fill:rgba(255,255,255,.6)"/>
+        <path class="ink-k" d="M6,30 H138 M6,56 H138" style="stroke-width:1.3"/>
+        <rect x="162" y="8" width="132" height="94" rx="7" class="ink-r"/>
+        <path class="ink-r" d="M162,30 H294 M162,56 H294" style="stroke-width:1.3"/>
+        <path class="ink-k" d="M140,46 H158" marker-end="url(#ahb)"/>
+        <text x="149" y="40" text-anchor="middle" class="s k" style="font-size:8px">+</text>
+      </g>
+      <text x="14" y="24" class="w6 k">DOMAIN</text>
+      <text x="14" y="46" class="s k">Customer</text>
+      <text x="14" y="72" class="s k">− name</text>
+      <text x="14" y="86" class="s k">− email</text>
+      <text x="14" y="100" class="s r">no methods</text>
+      <text x="170" y="24" class="w6 r">DESIGN</text>
+      <text x="170" y="46" class="s k">Customer</text>
+      <text x="170" y="72" class="s k">− name</text>
+      <text x="170" y="86" class="s k">− email</text>
+      <text x="170" y="100" class="s g">+ register()</text>
+      <rect x="6" y="130" width="288" height="58" rx="7" class="ink-p" style="fill:rgba(106,63,160,.08)"/>
+      <text x="150" y="150" text-anchor="middle" class="s p w6">what the design level adds</text>
+      <text x="18" y="170" class="s g">methods with signatures</text>
+      <text x="170" y="170" class="s g">attribute &amp; return types</text>
+      <text x="18" y="184" class="s g">visibility markers</text>
+      <text x="170" y="184" class="s g">navigability arrows</text>
+      <text x="150" y="204" text-anchor="middle" class="s">the domain model keeps none of these</text>
+    </svg><figcaption>the same subject, drawn twice: conceptual, then designed</figcaption></figure>
+  </div>
+  <h3>Mapping design to code: the one-to-one rules</h3>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Element in the DCD</th><th class="l">Becomes in the code</th></tr>
+    <tr><td class="l">One class box</td><td class="l">One <b>class</b> — or an interface, if stereotyped &lt;&lt;interface&gt;&gt;</td></tr>
+    <tr><td class="l">An attribute <span class="mono">− price : double</span></td><td class="l">One <b>field</b> / property of that type</td></tr>
+    <tr><td class="l">An operation <span class="mono">+ total() : double</span></td><td class="l">One <b>method</b> with that return type</td></tr>
+    <tr><td class="l">An association <b>1</b> → <b>*</b> with navigability</td><td class="l">A reference field plus a <b>collection</b> (array / <i>List</i> / <i>Set</i>)</td></tr>
+    <tr><td class="l">Aggregation ◇ or composition ◆</td><td class="l">A whole–part reference owned by the whole</td></tr>
+    <tr><td class="l">A generalisation △ / realisation ▷</td><td class="l"><b>inheritance</b> / composition by delegation</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The one thing a DCD shows and a domain model does <b>not</b> is <span class="circ">methods (operations) and navigability</span>. Conceptual classes, associations and multiplicities appear in <b>both</b>.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Domain model = <b>what exists</b>. DCD = <b>what exists, plus what it does</b>. A method signature with a return type means you are looking at a DCD.</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Four steps to build a DCD</span> ① Make every concept-class name <b>singular</b> (Sales → <i>Sale</i>). ② Give attributes <b>software types</b> (age: Integer → <i>int</i>). ③ Write each class's responsibilities as operations <b>with return types</b>. ④ Mark every association that holds a reference with a <b>navigability arrow</b>.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: DCD worked example ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>DCD worked example</span></div>
+  <h2><span class="no">6</span>A DCD Worked Through, and the Code It Becomes</h2><span class="tag">written favourite</span>
+  <figure class="doodle">
+    <svg viewBox="0 0 660 246" width="620">
+      <g class="w">
+        <rect x="10" y="6" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M10,26 H190 M10,58 H190" style="stroke-width:1.3"/>
+        <rect x="240" y="6" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M240,26 H420 M240,58 H420" style="stroke-width:1.3"/>
+        <rect x="470" y="6" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M470,26 H650 M470,58 H650" style="stroke-width:1.3"/>
+        <rect x="10" y="140" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M10,160 H190 M10,192 H190" style="stroke-width:1.3"/>
+        <rect x="240" y="140" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M240,160 H420 M240,192 H420" style="stroke-width:1.3"/>
+        <rect x="470" y="140" width="180" height="86" rx="6" class="ink"/>
+        <path class="ink" d="M470,160 H650 M470,192 H650" style="stroke-width:1.3"/>
+        <path class="ink-g" d="M100,92 V136" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M330,92 V136" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M190,183 H236" marker-end="url(#ahg)"/>
+      </g>
+      <text x="100" y="21" text-anchor="middle" class="w6 k">Customer</text>
+      <text x="14" y="40" class="s k">− name : String</text>
+      <text x="14" y="52" class="s k">− email : String</text>
+      <text x="14" y="72" class="s g">+ register() : void</text>
+      <text x="14" y="84" class="s g">+ checkout() : Order</text>
+      <text x="330" y="21" text-anchor="middle" class="w6 k">Cart</text>
+      <text x="244" y="40" class="s k">− items : List&lt;Line&gt;</text>
+      <text x="244" y="52" class="s k">− customer : Customer</text>
+      <text x="244" y="72" class="s g">+ add(p : Product) : void</text>
+      <text x="244" y="84" class="s g">+ createOrder() : Order</text>
+      <text x="560" y="21" text-anchor="middle" class="w6 k">Product</text>
+      <text x="474" y="40" class="s k">− sku : String</text>
+      <text x="474" y="52" class="s k">− price : double</text>
+      <text x="474" y="72" class="s g">+ inStock() : bool</text>
+      <text x="100" y="118" text-anchor="middle" class="s g">1 .. *</text>
+      <text x="330" y="118" text-anchor="middle" class="s g">1</text>
+      <text x="100" y="154" text-anchor="middle" class="w6 k">Order</text>
+      <text x="14" y="174" class="s k">− id : int</text>
+      <text x="14" y="186" class="s k">− lines : List&lt;Line&gt;</text>
+      <text x="14" y="206" class="s g">+ confirm() : void</text>
+      <text x="14" y="218" class="s g">+ total() : double</text>
+      <text x="330" y="154" text-anchor="middle" class="w6 k">Line</text>
+      <text x="244" y="174" class="s k">− qty : int</text>
+      <text x="244" y="186" class="s k">− product : Product</text>
+      <text x="244" y="206" class="s g">+ subTotal() : double</text>
+      <text x="560" y="154" text-anchor="middle" class="w6 k">Payment</text>
+      <text x="474" y="174" class="s k">− method : String</text>
+      <text x="474" y="186" class="s k">− amount : double</text>
+      <text x="474" y="206" class="s g">+ process() : boolean</text>
+      <text x="213" y="178" text-anchor="middle" class="s g" style="font-size:9px">creates</text>
+      <text x="330" y="240" text-anchor="middle" class="s">navigable: Cart ▸ Order ▸ Line ▸ Product</text>
+    </svg>
+    <figcaption>one design class diagram — Customer 1 — * Cart — * Order — * Line — * Product, plus a Payment collaborator; every box now carries operations with return types</figcaption>
+  </figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="code" style="font-size:10pt;line-height:5.2mm">class Customer {
+    String name;
+    String email;
+    Cart cart = new Cart();
+
+    void checkout() {
+        Order o = cart.createOrder();
+        o.confirm();
+    }
+}
+class Line {
+    Product product;   // navigable ▸
+    int qty;
+    double subTotal() {
+        return product.price * qty;
+    }
+}</div>
+    <div class="code" style="font-size:10pt;line-height:5.2mm">class Cart {
+    List&lt;Line&gt; items = new ArrayList&lt;&gt;();
+
+    void add(Product p, int q) {
+        items.add(new Line(p, q));
+    }
+    double calculateTotal() {
+        return items.stream()
+            .mapToDouble(Line::subTotal)
+            .sum();
+    }
+    Order createOrder() {
+        return new Order(items);
+    }
+}</div>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Read the mapping off the picture</span> <span class="mono">Cart.items : List&lt;Line&gt;</span> → the field <span class="mono">List&lt;Line&gt; items</span>; <span class="mono">Line.product : Product</span> → the field <span class="mono">Product product</span>; <span class="mono">Line.subTotal() : double</span> → the method. <b>Nothing in the DCD has to be re-invented in the code</b> — the class names, attribute names, types and method names already are the identifiers the programmer needs.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A DCD is <b>not</b> the same artefact as the CRC card: CRC is how you <i>discover</i> responsibilities, the DCD is how you <i>record</i> them. "Design maps directly to code" means a <b>one-to-one mapping</b> — not one file per diagram element.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: white-box vs black-box, EP, BVA ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>White box &amp; black box</span></div>
+  <h2><span class="no">7</span>Structural vs Functional Testing, EP and BVA</h2><span class="tag">MCQ + Written</span>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">Aspect</th><th class="l">White-box (structural, glass-box)</th><th class="l">Black-box (functional, behavioural)</th></tr>
+    <tr><td class="l">Test cases derived from</td><td class="l">the <b>internal structure</b> of the code</td><td class="l">the <b>specification</b>, not the code</td></tr>
+    <tr><td class="l">Tester's knowledge</td><td class="l">knows the program internals</td><td class="l">does <span class="circ">not</span> know how it is written</td></tr>
+    <tr><td class="l">Also called</td><td class="l">structural, clear-box, glass-box</td><td class="l">functional, specification-based</td></tr>
+    <tr><td class="l">Main question</td><td class="l">"is every statement / branch <b>executed</b>?"</td><td class="l">"is the <b>output</b> right for every valid input?"</td></tr>
+    <tr><td class="l">Techniques</td><td class="l">basis-path testing, coverage analysis</td><td class="l">equivalence partitioning, BVA, cause-effect graphing</td></tr>
+    <tr><td class="l">Best at finding</td><td class="l">dead code, unexecuted branches, wrong loop limits</td><td class="l">missing requirements, wrong outputs</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="def small" style="margin-top:0"><span class="lbl">Test basis</span> The document a test is derived from: for a <b>white-box</b> test the <b>design model / code</b>, for a <b>black-box</b> test the <b>requirement specification</b>. Testing can show the <span class="circ">presence</span> of defects, never their absence.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Testing <b>cannot prove a program correct</b>; it only raises confidence. A test that has <b>never failed</b> is not yet known to be a good test. Unit → integration → validation → system levels, debugging, maintenance and test metrics belong to <b>Testing Strategies, Maintenance, Quality &amp; Metrics</b>.</div>
+  </div>
+  <h3><span class="no">7b</span> Equivalence Partitioning &amp; Boundary-Value Analysis</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Equivalence class (age)</th><th class="l">Kind</th><th class="l">EP pick</th></tr>
+        <tr><td class="l">age &lt; 18</td><td class="l">invalid</td><td class="l">10</td></tr>
+        <tr><td class="l">18 ≤ age ≤ 60</td><td class="l"><b>valid</b></td><td class="l">35</td></tr>
+        <tr><td class="l">age &gt; 60</td><td class="l">invalid</td><td class="l">70</td></tr>
+      </table>
+      <p class="small"><b>EP</b> splits the input domain into classes handled the same way and tests <b>one representative</b> of each — few cases, wide coverage. Valid and invalid classes are counted <b>separately</b>.</p>
+    </div>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Boundary</th><th class="l">BVA picks</th></tr>
+        <tr><td class="l">lower, 18</td><td class="l">17 · <b>18</b> · 19</td></tr>
+        <tr><td class="l">upper, 60</td><td class="l">59 · <b>60</b> · 61</td></tr>
+      </table>
+      <p class="small"><b>BVA</b> tests <b>just below, exactly at and just above</b> each boundary. Off-by-one errors live <span class="hl">at the edge</span> — exactly where EP takes one arbitrary sample.</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">When to use which ✍</span> EP alone is enough for a small input domain. With a wide domain (years, amounts, dates) EP on its own grows risky, so add <b>BVA</b>: EP keeps the <i>representative</i>, BVA keeps the <i>extreme</i>, and a fault inside a class slips past EP, which always aims at the middle.</div>
+  <figure class="doodle"><svg viewBox="0 0 470 122" width="380">
+    <g class="w">
+      <rect x="40" y="60" width="88" height="22" class="ink-r fill-r"/>
+      <rect x="128" y="60" width="205" height="22" class="ink-g fill-g"/>
+      <rect x="333" y="60" width="97" height="22" class="ink-r fill-r"/>
+      <path class="ink" d="M40,71 H430" style="stroke:#1d3f8f"/>
+      <path class="ink-k" d="M124,54 V92 M128,54 V92 M333,54 V92 M337,54 V92" stroke-width="1.4"/>
+      <circle cx="84" cy="54" r="5" class="ink-k fill-y"/><circle cx="230" cy="54" r="5" class="ink-k fill-y"/><circle cx="382" cy="54" r="5" class="ink-k fill-y"/>
+    </g>
+    <text x="126" y="30" text-anchor="middle" class="s r" style="font-size:9px">18</text>
+    <text x="335" y="30" text-anchor="middle" class="s r" style="font-size:9px">60</text>
+    <text x="84" y="46" text-anchor="middle" class="s g" style="font-size:9px">EP 10</text>
+    <text x="230" y="46" text-anchor="middle" class="s g" style="font-size:9px">EP 35</text>
+    <text x="382" y="46" text-anchor="middle" class="s g" style="font-size:9px">EP 70</text>
+    <text x="84" y="104" text-anchor="middle" class="s" style="font-size:9px">invalid</text>
+    <text x="230" y="104" text-anchor="middle" class="s" style="font-size:9px">valid  18 – 60</text>
+    <text x="382" y="104" text-anchor="middle" class="s" style="font-size:9px">invalid</text>
+    <text x="430" y="46" text-anchor="end" class="s r" style="font-size:9px">BVA adds on and either side of every edge</text>
+  </svg><figcaption>three equivalence classes; BVA adds the six values on the two edges</figcaption></figure>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: coverage, cyclomatic, basis path ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>Coverage &amp; basis path</span></div>
+  <h2><span class="no">8</span>Coverage, Cyclomatic Complexity &amp; Basis-Path Testing</h2><span class="tag">written favourite</span>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">Coverage criterion</th><th class="l">How it is measured</th><th class="l">Strength</th></tr>
+    <tr><td class="l"><b>Statement</b></td><td class="l">executed ÷ total executable statements × 100 %</td><td class="l">weakest — misses unexecuted branches</td></tr>
+    <tr><td class="l"><b>Branch / decision</b></td><td class="l">outcomes taken ÷ total outcomes × 100 %</td><td class="l"><span class="circ">the usual minimum target</span></td></tr>
+    <tr><td class="l"><b>Condition</b></td><td class="l">atomic conditions evaluated ÷ total × 100 %</td><td class="l">both ways for each part of <span class="mono">a &amp;&amp; b</span></td></tr>
+    <tr><td class="l"><b>Multiple condition</b></td><td class="l">every truth-value combination — <span class="circ">2ⁿ</span></td><td class="l">very strong, very costly</td></tr>
+    <tr><td class="l"><b>Path</b></td><td class="l">executed paths ÷ total paths × 100 %</td><td class="l">strongest, exponential effort</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">Cyclomatic complexity (McCabe, 1976)</span> &nbsp;<span class="circ">M = E − N + 2P</span> — <b>E</b> = edges of the control-flow graph, <b>N</b> = nodes, <b>P</b> = connected components. A normal module gives <b>P = 1</b>, so the familiar form is <b>M = E − N + 2</b>. <b>M</b> is exactly the number of <span class="hl">independent paths</span> — the regions of the flow graph — and for straight-line conditionals <b>M = (independent conditions) + 1</b>. No decision at all ⇒ <b>M = 1</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr)">
+    <div>
+      <div class="code" style="font-size:9pt;line-height:4.4mm">double total(int qty, double price,
+              boolean member) {
+  if (qty &gt; 0 &amp;&amp; price &gt; 0) {
+    double t = qty * price;
+    if (member &amp;&amp; t &gt; 1000)
+      t = t * 0.90;
+    return t;
+  }
+  return 0.0;
+}</div>
+      <ol class="steps tiny" style="margin-top:2mm">
+        <li>Draw the flow graph</li>
+        <li>Compute <b>M</b></li>
+        <li>Find the <b>M</b> independent paths</li>
+        <li>One test case per path</li>
+      </ol>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 470 228" width="300">
+      <g class="w">
+        <circle cx="24" cy="30" r="6" class="ink"/>
+        <circle cx="96" cy="30" r="6" class="ink-r"/>
+        <circle cx="168" cy="30" r="6" class="ink-r"/>
+        <circle cx="240" cy="30" r="6" class="ink-r"/>
+        <circle cx="312" cy="30" r="6" class="ink-r"/>
+        <circle cx="312" cy="86" r="6" class="ink-r"/>
+        <circle cx="440" cy="140" r="6" class="ink"/>
+        <rect x="222" y="126" width="62" height="28" rx="4" class="ink-g fill-g"/>
+        <rect x="76" y="66" width="62" height="28" rx="4" class="ink-p fill-p"/>
+        <path class="ink" d="M30,30 H90 M102,30 H162 M174,30 H234 M246,30 H306" marker-end="url(#aho)"/>
+        <path class="ink" d="M96,37 V54 H107 V64" marker-end="url(#aho)"/>
+        <path class="ink" d="M168,37 V64" marker-end="url(#aho)"/>
+        <path class="ink" d="M240,37 V122" marker-end="url(#aho)"/>
+        <path class="ink" d="M312,37 V80" marker-end="url(#aho)"/>
+        <path class="ink" d="M312,93 V104 H253 V124" marker-end="url(#aho)"/>
+        <path class="ink" d="M284,140 H434" marker-end="url(#aho)"/>
+        <path class="ink" d="M107,95 V170 H440 V147" marker-end="url(#aho)"/>
+      </g>
+      <text x="96" y="20" text-anchor="middle" class="s" style="font-size:9px">qty&gt;0?</text>
+      <text x="168" y="20" text-anchor="middle" class="s" style="font-size:9px">price&gt;0?</text>
+      <text x="240" y="20" text-anchor="middle" class="s" style="font-size:9px">member?</text>
+      <text x="312" y="20" text-anchor="middle" class="s" style="font-size:9px">t&gt;1000?</text>
+      <text x="107" y="85" text-anchor="middle" class="s p" style="font-size:9px">return 0</text>
+      <text x="253" y="146" text-anchor="middle" class="s g" style="font-size:9px">return t</text>
+      <text x="415" y="132" text-anchor="middle" class="s" style="font-size:9px">exit</text>
+      <text x="141" y="23" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="213" y="23" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="285" y="23" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="330" y="60" text-anchor="middle" class="s r" style="font-size:9px">T</text>
+      <text x="82" y="46" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="184" y="52" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="247" y="88" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="290" y="98" text-anchor="middle" class="s r" style="font-size:9px">F</text>
+      <text x="55" y="200" text-anchor="middle" class="s k">E = 12 edges · N = 9 nodes</text>
+      <text x="235" y="200" text-anchor="middle" class="s r w6">M = 12 − 9 + 2 = 5</text>
+      <text x="235" y="218" text-anchor="middle" class="s g">five independent paths</text>
+    </svg><figcaption>the control-flow graph: E = 12, N = 9, so five independent paths</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Four atomic conditions give <b>M = 4 + 1 = 5</b>, matching <b>E − N + 2 = 12 − 9 + 2 = 5</b>. Basis set: <span class="tiny">P1 <span class="mono">qty=0 → 0.0</span> · P2 <span class="mono">price=0 → 0.0</span> · P3 <span class="mono">2×100, not member → 200</span> · P4 <span class="mono">2×100, member, t≤1000 → 200</span> · P5 <span class="mono">20×100, member → 2000×0.9 = 1800</span>.</span></div>
+  <div class="cols3">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Independent path</span> A path introducing at least one <b>new node</b> or <b>new condition</b> no earlier path used. The count equals <span class="circ">M</span>.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Design in the V-model</span> Business req ↔ <b>acceptance</b> · system req ↔ <b>system test</b> · <span class="hl">architecture ↔ integration</span> · <span class="hl">design ↔ unit test</span>.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Nesting &amp; limits</span> statement ⊂ branch ⊂ condition ⊂ path; McCabe's traditional limit is <b>10</b>.</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Specialised test targets</span> real-time → timing, stress · distributed → latency, partial failure · web → SQL injection, XSS · mobile → devices, screens · embedded → CPU, memory. Full path coverage grows exponentially, so "100 % path coverage" is never a realistic goal.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid tiny">
+      <p>GRASP = General Responsibility Assignment Software Patterns</p><p>Carell &amp; Fowler, 1991, IEEE Computer</p>
+      <p>Guidelines, not a pattern catalogue</p><p>Knowing responsibility + doing responsibility</p>
+      <p>Info Expert = the class with the data</p><p>Creator = contains · aggregates · initialises</p>
+      <p>Low Coupling = least dependent class wins</p><p>High Cohesion = one clear reason to change</p>
+      <p>Polymorphism = do not duplicate in a subclass</p><p>Pure Arbiters = arbitrates between two or more</p>
+      <p>Don't Talk to Strangers = ask only associates</p><p>Controller = first non-UI object after the UI</p>
+      <p>Intermediary / Pure Fabrication = invented class</p><p>Protected Variations = interface over change</p>
+      <p>High Cohesion ≈ SRP · Protected Variations ≈ OCP</p><p>Polymorphism ≈ LSP · Intermediary ≈ DIP</p>
+      <p>Domain model = conceptual, no operations</p><p>DCD = adds operations, types, navigability</p>
+      <p>DCD ↔ code is one-to-one</p><p>White box = structure · black box = specification</p>
+      <p>Testing shows presence of defects, not absence</p><p>Statement · Branch · Condition · Path coverage</p>
+      <p>Multiple-condition coverage needs 2ⁿ combinations</p><p>M = E − N + 2P ; P = 1 for a normal module</p>
+      <p>M = conditions + 1 ; no decision ⇒ M = 1</p><p>M = independent paths · McCabe's limit 10</p>
+    </div>
+  </div>
+  <h3>Top 14 one-liners for MCQs</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>GRASP: <b>Carell and Fowler, 1991</b></li>
+      <li>GRASP guides <b>responsibility assignment</b></li>
+      <li>Information Expert → the class <b>holding the data</b></li>
+      <li>Creator → the class that <b>contains</b> the other</li>
+      <li>Low Coupling → the <b>least dependent</b> class</li>
+      <li>High Cohesion → <b>one</b> clear purpose</li>
+      <li>Controller → the first <b>non-UI</b> object</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>Pure Fabrication = <b>no domain meaning</b></li>
+      <li>Protected Variations → an <b>interface</b></li>
+      <li>A DCD shows <b>operations and navigability</b>, a domain model does not</li>
+      <li>DCD elements map to code <b>one-to-one</b></li>
+      <li>White box from <b>structure</b>; black box from the <b>spec</b></li>
+      <li><b>M = E − N + 2P</b> is the cyclomatic number</li>
+      <li>Basis-path needs exactly <b>M</b> test cases</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> GRASP is not the GoF catalogue · Controller is not the UI class · Creator is not "whoever uses it" · coupling is <i>between</i> classes, cohesion <i>within</i> one · a domain model has no operations · "white box proves correctness" is wrong · statement coverage is the <b>weakest</b> · M = E − N + 2 only when P = 1 · basis path gives M cases, <b>not</b> full path coverage · BVA tests the edges, EP samples the class.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "Who has the data?" = Information Expert · "C for Container" = Creator · too many strings = coupling, gravel not a rock = cohesion · a return type means a DCD · white box walks the code, black box reads the spec · M = conditions + 1, and M paths need M cases · EP samples the middle, BVA walks the edge.</div>
+  <figure class="doodle"><svg viewBox="0 0 450 70" width="360">
+    <g class="w">
+      <rect x="96" y="6" width="70" height="12" rx="5" class="ink fill-b"/>
+      <rect x="96" y="22" width="170" height="12" rx="5" class="ink fill-b"/>
+      <rect x="96" y="38" width="250" height="12" rx="5" class="ink-r fill-r"/>
+      <rect x="96" y="54" width="340" height="12" rx="5" class="ink-r fill-r"/>
+    </g>
+    <text x="88" y="16" text-anchor="end" class="s k">Statement</text>
+    <text x="88" y="32" text-anchor="end" class="s k">Branch</text>
+    <text x="88" y="48" text-anchor="end" class="s r">Condition</text>
+    <text x="88" y="64" text-anchor="end" class="s r">Path</text>
+    <text x="240" y="76" text-anchor="middle" class="s">each level subsumes the one above, and costs more to reach</text>
+  </svg><figcaption>the coverage ladder — weakest and cheapest at the top</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SE · GRASP &amp; DCD</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Uses the class that <b>has the data</b>:<ol class="opts"><li>Creator</li><li>Controller</li><li>Information Expert</li><li>Low Coupling</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>A <b>Sale</b> holds many <b>SalesLineItems</b>. Creator?<ol class="opts"><li>Sale</li><li>Register</li><li>ProductCatalog</li><li>Payment</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Handles an event beyond the UI layer:<ol class="opts"><li>Pure Fabrication</li><li>Controller</li><li>Indirection</li><li>Polymorphism</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>In a DCD but <b>not</b> a domain model:<ol class="opts"><li>Concept classes</li><li>Associations</li><li>Operations, navigability</li><li>Multiplicities</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>GRASP was developed by:<ol class="opts"><li>Booch &amp; Rumbaugh</li><li>Carell &amp; Fowler</li><li>Beck &amp; Cunningham</li><li>IEEE</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Coupling measures dependence:<ol class="opts"><li>Within one class</li><li>Between classes</li><li>Between two phases</li><li>On hardware</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Cyclomatic number, no decision:<ol class="opts"><li>0</li><li>1</li><li>2</li><li>−1</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>E = 14, N = 11, P = 1 ⇒ M =:<ol class="opts"><li>3</li><li>4</li><li>5</li><li>23</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Basis-path cases for M = 7:<ol class="opts"><li>6</li><li>7</li><li>8</li><li>14</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Black-box cases come from:<ol class="opts"><li>Source code</li><li>Flow graph</li><li>The specification</li><li>The CRC card</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-b · 4-c · 5-b · 6-b · 7-b · 8-c · 9-b · 10-c</div>
+
+  <div class="wq small"><span class="lbl">Written question 1</span> Define GRASP, name its authors and year, and explain <b>Information Expert</b> and <b>Creator</b> with one worked example each. <i class="mk">10 marks</i></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 175px;align-items:start">
+    <ol class="steps tiny">
+      <li><b>GRASP</b> = General Responsibility Assignment Software Patterns — guidelines for assigning responsibilities <i class="mk">2</i></li>
+      <li><b>Authors</b> — James Carell and Martin Fowler, 1991, <i>Toward Unified Design Methodologies</i>, IEEE Computer <i class="mk">2</i></li>
+      <li><b>Information Expert</b> — the class holding the information takes the job; <i>Invoice.getTotal()</i>, because the Invoice holds the line items <i class="mk">3</i></li>
+      <li><b>Creator</b> — the class that contains, aggregates, records, closely uses or can initialise the other creates it; <i>Sale</i> creates <i>SalesLineItem</i> <i class="mk">3</i></li>
+    </ol>
+    <figure class="doodle"><svg viewBox="0 0 175 132" width="170">
+      <g class="w">
+        <rect x="6" y="8" width="163" height="20" rx="6" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M6,28 H169" style="stroke-width:1.2"/>
+        <rect x="8" y="32" width="159" height="16" rx="4" class="ink-g fill-g"/>
+        <rect x="8" y="50" width="159" height="16" rx="4" class="ink-g fill-g"/>
+        <rect x="8" y="68" width="159" height="16" rx="4" class="ink-g fill-g"/>
+        <rect x="8" y="86" width="159" height="16" rx="4" class="ink-g fill-g"/>
+      </g>
+      <text x="12" y="22" class="s k">condition</text>
+      <text x="60" y="22" class="s">y</text><text x="73" y="22" class="s">n</text>
+      <text x="108" y="22" class="s k">action</text>
+      <text x="17" y="45" class="s k">Y</text><text x="30" y="45" class="s">Y</text><text x="102" y="45" class="s g">accept</text>
+      <text x="17" y="63" class="s k">Y</text><text x="30" y="63" class="s">N</text><text x="102" y="63" class="s r">reject</text>
+      <text x="17" y="81" class="s k">N</text><text x="30" y="81" class="s">Y</text><text x="102" y="81" class="s r">reject</text>
+      <text x="17" y="99" class="s k">N</text><text x="30" y="99" class="s">N</text><text x="102" y="99" class="s r">reject</text>
+      <text x="88" y="126" text-anchor="middle" class="s r">2 conditions → 2² = 4 rows</text>
+    </svg><figcaption>cause–effect graphing yields a decision table</figcaption></figure>
+  </div>
+
+  <div class="wq small"><span class="lbl">Written question 2</span> A method has two nested <span class="mono">if</span> statements and two <span class="mono">&amp;&amp;</span> conditions. Compute its cyclomatic number and state how many basis-path test cases are needed. <i class="mk">8 marks</i> &nbsp;<span class="tiny"><b>Answer:</b> four atomic conditions ⇒ <b>M = 4 + 1 = 5</b>; confirm with <b>M = E − N + 2P</b>, then write exactly <b>five</b> cases.</span></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick tiny">
+        <li>Name GRASP's authors and the year</li>
+        <li>Recite all nine guidelines, one line each</li>
+        <li>Tell a domain model from a DCD in one test</li>
+        <li>Compute M from E, N, P and from conditions</li>
+        <li>Distinguish EP from BVA with numbers</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:0 2mm 0 4mm"><b>Neighbours:</b> the use-case model and V-model are in <b>Waterfall &amp; UML</b>; test levels, debugging and metrics in <b>Testing Strategies</b>.</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>সার্কিট বিশ্লেষণ ও উপপাদ্য: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, circuit symbols (inline attributes!)
+     res-h: 60 long from (0,0) to (60,0) · res-v: (0,0) to (0,60) · res-s / res-sr: 50 long (blue / red)
+     vsrc, isrc, dsrc: centred on (0,0), terminals at (0,-30) and (0,30); vsrc + on top, isrc arrow up
+     vsrc-h: centred, terminals (-30,0) [+] and (30,0) · gnd: top at (0,0) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <g id="res-h"><path d="M0,0H12l3,-7l6,14l6,-14l6,14l6,-14l6,14l3,-7H60" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="res-v"><path d="M0,0V12l7,3l-14,6l14,6l-14,6l14,6l-14,6l7,3V60" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="res-s"><path d="M0,0H10l2.5,-6l5,12l5,-12l5,12l5,-12l5,12l2.5,-6H50" fill="none" stroke="#1d3f8f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="res-sr"><path d="M0,0H10l2.5,-6l5,12l5,-12l5,12l5,-12l5,12l2.5,-6H50" fill="none" stroke="#d32f2f" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></g>
+    <g id="vsrc"><path d="M0,-30V-15M0,15V30" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><circle r="15" fill="rgba(255,238,0,.30)" stroke="#1d3f8f" stroke-width="2.2"/><path d="M-4,-7H4M0,-11V-3M-4,7H4" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="vsrc-h"><path d="M-30,0H-15M15,0H30" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><circle r="15" fill="rgba(255,238,0,.30)" stroke="#1d3f8f" stroke-width="2.2"/><path d="M-11,0H-3M-7,-4V4M3,0H11" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="isrc"><path d="M0,-30V-15M0,15V30" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><circle r="15" fill="rgba(120,255,120,.25)" stroke="#1d3f8f" stroke-width="2.2"/><path d="M0,8V-8M-5,-3L0,-9L5,-3" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="dsrc"><path d="M0,-30V-16M0,16V30" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M0,-16L16,0L0,16L-16,0Z" fill="rgba(106,63,160,.15)" stroke="#1d3f8f" stroke-width="2.2"/><path d="M0,8V-8M-5,-3L0,-9L5,-3" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g id="gnd"><path d="M0,0V8M-12,8H12M-7,13H7M-2.5,18H2.5" fill="none" stroke="#1f1f24" stroke-width="2" stroke-linecap="round"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">সার্কিট বিশ্লেষণ ও উপপাদ্য</span></h1>
+  <p class="subtitle">নোডাল · মেশ · সুপারপজিশন · থেভেনিন/নর্টন · সর্বোচ্চ শক্তি · Y–Δ: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">সার্কিট বিশ্লেষণ</text><text x="320" y="168" text-anchor="middle" class="bn r s">পদ্ধতি + উপপাদ্য</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">উৎস রূপান্তর</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">নোডাল · সুপারনোড ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn r w6">সুপারপজিশন ★</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">মেশ · সুপারমেশ ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">থেভেনিন · নর্টন ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">স্টার–ডেল্টা (Y–Δ)</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">সর্বোচ্চ শক্তি স্থানান্তর ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">পারস্পরিকতা · মিলম্যান</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = প্রয়োগ / অতিরিক্ত</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① মেশ = b − n + 1<br>② V-উৎস বন্ধ → শর্ট, I-উৎস বন্ধ → ওপেন<br>③ V<sub>th</sub> = V<sub>oc</sub>, I<sub>N</sub> = I<sub>sc</sub><br>④ R<sub>L</sub> = R<sub>th</sub>, P = V<sub>th</sub>²/4R<sub>th</sub>, η = ৫০%<br>⑤ শক্তির সুপারপজিশন হয় না<br>⑥ Δ→Y: গুণফল ÷ যোগফল</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Simple resistive circuits: series and parallel circuits, voltage and current division, <span class="hl">source transformation</span>. Methods of analysis: <span class="hl">nodal and mesh analysis</span>. Circuit theorems: <span class="hl">Thevenin's, Norton's and superposition theorems</span>, <span class="hl">maximum power transfer</span> and reciprocity theorem"। ওহমের সূত্র, KCL/KVL, সিরিজ-প্যারালাল ও ডিভাইডার আছে <b>মৌলিক সূত্র</b> নোটে (লেসন ১); এসব পদ্ধতির ফেজর (AC) রূপ আছে লেসন ৩-এ।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>পরিভাষা, পদ্ধতি বাছাই ……… পৃ. ২</li><li>নোডাল বিশ্লেষণ ……… পৃ. ৩</li><li>সুপারনোড ও মেশ বিশ্লেষণ ……… পৃ. ৪</li><li>সুপারমেশ ও সুপারপজিশন ……… পৃ. ৫</li><li>রৈখিকতা ও থেভেনিন ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>নির্ভরশীল উৎস, নর্টন, রূপান্তর … পৃ. ৭</li><li>সর্বোচ্চ শক্তি, পারস্পরিকতা … পৃ. ৮</li><li>স্টার–ডেল্টা ও ব্রিজ ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা … পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: vocabulary, sources off, method choice ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>পরিভাষা</span></div>
+  <h2><span class="no">১</span>নেটওয়ার্ক বিশ্লেষণের পরিভাষা</h2><span class="tag">MCQ-র ভিত্তি</span>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">পরিভাষা</th><th class="l">অর্থ</th></tr>
+      <tr><td class="l">নোড (node)</td><td class="l">২ বা ততোধিক উপাদানের সংযোগ</td></tr>
+      <tr><td class="l"><span class="hl">অত্যাবশ্যক</span> নোড</td><td class="l">৩ বা ততোধিক উপাদানের সংযোগ</td></tr>
+      <tr><td class="l">শাখা (branch)</td><td class="l">একটি উপাদান (বা সিরিজ অংশ)</td></tr>
+      <tr><td class="l">লুপ (loop)</td><td class="l">বদ্ধ পথ, কোনো নোড দুবার নয়</td></tr>
+      <tr><td class="l"><span class="hl">মেশ</span> (mesh)</td><td class="l">যে লুপের ভেতরে লুপ নেই</td></tr>
+      <tr><td class="l">সমতলীয় (planar)</td><td class="l">ক্রস না করে সমতলে আঁকা যায়</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 330 205" width="300">
+      <g class="w">
+        <path class="ink" d="M30,70 V40 H60 M120,40 H200 M160,40 V70 M160,130 V165 M260,40 H290 V70 M30,130 V165 H290 V130"/>
+        <use href="#vsrc" x="30" y="100"/><use href="#res-h" x="60" y="40"/><use href="#res-v" x="160" y="70"/><use href="#res-h" x="200" y="40"/><use href="#vsrc" x="290" y="100"/>
+        <circle cx="30" cy="40" r="3.5" fill="#1d3f8f"/><circle cx="290" cy="40" r="3.5" fill="#1d3f8f"/><circle cx="160" cy="40" r="4" fill="#1d3f8f"/><circle cx="160" cy="165" r="4" fill="#1d3f8f"/>
+        <circle cx="160" cy="40" r="10" class="ink-r"/><circle cx="160" cy="165" r="10" class="ink-r"/>
+        <path class="ink-g" d="M95,84 A21,21 0 1 1 74,105" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M225,84 A21,21 0 1 1 204,105" marker-end="url(#ahg)"/>
+        <rect x="10" y="12" width="300" height="170" rx="16" class="ink-p" stroke-dasharray="6 5"/>
+      </g>
+      <text x="95" y="110" text-anchor="middle" class="g s w6">M1</text><text x="225" y="110" text-anchor="middle" class="g s w6">M2</text>
+      <text x="90" y="30" text-anchor="middle" class="s">R1</text><text x="230" y="30" text-anchor="middle" class="s">R2</text><text x="174" y="104" class="s">R3</text>
+      <text x="44" y="138" class="s">V1</text><text x="248" y="138" class="s">V2</text>
+      <text x="160" y="198" text-anchor="middle" class="bn p s">ড্যাশ = ৩য় লুপ (মেশ নয়)</text>
+    </svg><figcaption>লাল বৃত্ত = অত্যাবশ্যক নোড</figcaption></figure>
+  </div>
+  <div class="sumbox"><span class="lbl">সমীকরণ গণনা</span> b টি শাখা, n টি নোড:
+    নোডালে <span class="circ">n − 1</span> টি সমীকরণ · মেশে <span class="circ">b − n + 1</span> টি সমীকরণ (= জানালার সংখ্যা)।<br>
+    <span class="small">ওপরের সার্কিট: সব নোড n = 4, উপাদান b = 5 → 5 − 4 + 1 = <b>২টি মেশ</b>; অত্যাবশ্যক n = 2, অত্যাবশ্যক শাখা b = 3 → 3 − 2 + 1 = <b>২</b> ✓, নোডাল = 2 − 1 = <b>১টি</b> সমীকরণ।</span></div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> পুরো হিসাবে <b>একটিই</b> সংজ্ঞা ব্যবহার করো: সব নোডের সাথে সব উপাদান, <i>অথবা</i> অত্যাবশ্যক নোডের সাথে অত্যাবশ্যক শাখা। দুটো মেশালে মেশের সংখ্যা ভুল আসে। এখানে লুপ ৩টি, কিন্তু মেশ মাত্র ২টি।</div>
+
+  <h2><span class="no">২</span>নেটওয়ার্কের ধরন ও উৎস বন্ধ করা</h2>
+  <p class="small"><b>রৈখিক (linear)</b> (R, L, C, রৈখিক নির্ভরশীল উৎস) বনাম অরৈখিক (ডায়োড, ট্রানজিস্টর) · <b>দ্বিমুখী (bilateral)</b> (R, L, C: দুই দিকে একই আচরণ) বনাম একমুখী (ডায়োড) · <b>সক্রিয় (active)</b> (উৎস আছে) বনাম নিষ্ক্রিয় (passive)। সুপারপজিশন, থেভেনিন ও নর্টনের জন্য নেটওয়ার্ক <span class="hl">রৈখিক</span> হতে হবে; পারস্পরিকতার জন্য দ্বিমুখীও।</p>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">বন্ধ করতে …</th><th class="l">বদলে বসাও</th></tr>
+      <tr><td class="l">আদর্শ V-উৎস</td><td class="l"><span class="circ">শর্ট</span> (V = 0)</td></tr>
+      <tr><td class="l">আদর্শ I-উৎস</td><td class="l"><span class="circ">ওপেন</span> (I = 0)</td></tr>
+      <tr><td class="l">বাস্তব উৎস</td><td class="l">অভ্যন্তরীণ R থাকবে</td></tr>
+      <tr><td class="l"><b>নির্ভরশীল উৎস</b></td><td class="l"><b>কখনো বন্ধ নয়</b></td></tr>
+    </table>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "ভোল্টেজ উৎস মারো <b>তার</b> দিয়ে, কারেন্ট উৎস মারো <b>বাতাস</b> দিয়ে।" বন্ধ V-উৎসের দুই প্রান্তে 0 V (একটি তার); বন্ধ I-উৎস দিয়ে 0 A (একটি ফাঁক)।</div>
+  </div>
+  <h3>কোন পদ্ধতি? যেটিতে সমীকরণ কম</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l"></th><th class="l">নোডাল বিশ্লেষণ</th><th class="l">মেশ বিশ্লেষণ</th></tr>
+    <tr><td class="l">অজানা · সূত্র</td><td class="l">নোড ভোল্টেজ · KCL</td><td class="l">মেশ কারেন্ট · KVL</td></tr>
+    <tr><td class="l">সমীকরণ</td><td class="l">n − 1 (প্রতি V-উৎসে − 1)</td><td class="l">b − n + 1 (প্রতি I-উৎসে − 1)</td></tr>
+    <tr><td class="l">সহজ যখন</td><td class="l"><span class="hl">কারেন্ট উৎস</span> বেশি</td><td class="l"><span class="hl">ভোল্টেজ উৎস</span> বেশি</td></tr>
+    <tr><td class="l">প্রযোজ্য</td><td class="l"><b>যেকোনো</b> সার্কিট (সমতলীয় বা না)</td><td class="l">শুধু <b>সমতলীয়</b> সার্কিট</td></tr>
+  </table>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: nodal analysis ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>নোডাল বিশ্লেষণ</span></div>
+  <h2><span class="no">৩</span>নোডাল বিশ্লেষণ (নোড-ভোল্টেজ পদ্ধতি)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">মূল ভাবনা</span> অজানা রাশি হলো একটি <b>রেফারেন্স নোড</b> (গ্রাউন্ড) থেকে মাপা <span class="hl">নোড ভোল্টেজ</span>। বাকি প্রতিটি নোডে <b>KCL</b> লেখো; প্রতিটি শাখার কারেন্ট ওহমের সূত্রে (V<sub>নিজ</sub> − V<sub>পাশের</sub>)/R।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ol class="steps small">
+      <li>রেফারেন্স = সবচেয়ে বেশি শাখার নোড</li>
+      <li>বাকিগুলো V<sub>1</sub>, V<sub>2</sub> … (n − 1টি অজানা)</li>
+      <li>KCL: R দিয়ে বের হওয়া Σ = উৎসের আগত Σ</li>
+      <li>সমাধান (প্রতিস্থাপন বা ক্রেমার)</li>
+      <li>নোড ভোল্টেজ থেকে শাখা-কারেন্ট</li>
+    </ol>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>আমার নোড বিয়োগ প্রতিবেশী, ভাগ রোধ</b>": যে নোডে দাঁড়িয়ে আছ, সেখান থেকে প্রতিটি রোধের কারেন্ট বেরিয়ে যাচ্ছে ধরে লেখো; চিহ্ন নিজেই ঠিক হয়ে যাবে।</div>
+  </div>
+  <figure class="doodle"><svg viewBox="-20 0 460 190" width="440">
+    <g class="w">
+      <path class="ink" d="M40,70 V40 H70 M130,40 H190 M160,40 V70 M160,130 V160 M250,40 H380 V70 M280,40 V70 M280,130 V160 M380,130 V160 M40,130 V160 H380"/>
+      <use href="#vsrc" x="40" y="100"/><use href="#res-h" x="70" y="40"/><use href="#res-v" x="160" y="70"/><use href="#res-h" x="190" y="40"/><use href="#res-v" x="280" y="70"/><use href="#isrc" x="380" y="100"/>
+      <circle cx="160" cy="40" r="4" fill="#1d3f8f"/><circle cx="280" cy="40" r="4" fill="#1d3f8f"/>
+      <use href="#gnd" x="220" y="160"/>
+    </g>
+    <text x="20" y="104" text-anchor="end" class="w6">20 V</text><text x="100" y="28" text-anchor="middle">5 Ω</text><text x="174" y="104">10 Ω</text><text x="220" y="28" text-anchor="middle">4 Ω</text><text x="294" y="104">2 Ω</text><text x="402" y="104">2 A</text>
+    <text x="160" y="22" text-anchor="middle" class="r w6">V₁</text><text x="280" y="22" text-anchor="middle" class="r w6">V₂</text><text x="236" y="186" class="bn s">রেফারেন্স (0 V)</text>
+  </svg></figure>
+  <div class="ex"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> V<sub>1</sub>, V<sub>2</sub> ও প্রতিটি শাখার কারেন্ট নির্ণয় করো।
+    <ol class="steps small">
+      <li>V<sub>1</sub>-এ KCL: (V<sub>1</sub> − 20)/5 + V<sub>1</sub>/10 + (V<sub>1</sub> − V<sub>2</sub>)/4 = 0 → ×20: <b>11V<sub>1</sub> − 5V<sub>2</sub> = 80</b></li>
+      <li>V<sub>2</sub>-এ KCL: (V<sub>2</sub> − V<sub>1</sub>)/4 + V<sub>2</sub>/2 = 2 → ×4: <b>−V<sub>1</sub> + 3V<sub>2</sub> = 8</b></li>
+      <li>V<sub>1</sub> = 3V<sub>2</sub> − 8 → 11(3V<sub>2</sub> − 8) − 5V<sub>2</sub> = 80 → 28V<sub>2</sub> = 168 → <span class="circ">V<sub>2</sub> = 6 V</span>, <span class="circ">V<sub>1</sub> = 10 V</span></li>
+      <li>কারেন্ট: 5 Ω: (20 − 10)/5 = 2 A · 10 Ω: 1 A · 4 Ω: 1 A · 2 Ω: 3 A। V<sub>2</sub>-এ KCL যাচাই: 1 + 2 = 3 ✓</li>
+    </ol></div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">পরিদর্শন পদ্ধতি: [G][V] = [I]</span><br>G<sub>kk</sub> = নোড k-তে যুক্ত পরিবাহিতার (conductance) যোগফল; G<sub>kj</sub> = −(k ও j-এর মাঝের পরিবাহিতা); [I] = উৎসের আগত কারেন্ট (20 V/5 Ω → 4 A):<br>
+      <b>0.55V<sub>1</sub> − 0.25V<sub>2</sub> = 4 · −0.25V<sub>1</sub> + 0.75V<sub>2</sub> = 2</b></div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>কারেন্ট উৎসের সাথে সিরিজে থাকা রোধ</b> নোডাল সমীকরণে কখনো আসে না: ওই শাখার কারেন্ট উৎসই ঠিক করে দেয়। <b>নির্ভরশীল উৎস না থাকলেই</b> কেবল [G] প্রতিসম হয়।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">আইটি সংযোগ</span> সার্কিট সিমুলেটর (SPICE ও তার উত্তরসূরিরা) <span class="hl">মডিফায়েড নোডাল অ্যানালাইসিস (MNA)</span> ব্যবহার করে: হাজার হাজার নোডের জন্য ঠিক এই [G] ম্যাট্রিক্স বানিয়ে লিনিয়ার-অ্যালজেবরা লাইব্রেরির মতো সংখ্যাগতভাবে সমাধান করে।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: supernode + mesh ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>সুপারনোড · মেশ</span></div>
+  <h3>সুপারনোড: দুই নন-রেফারেন্স নোডের মাঝে ভোল্টেজ উৎস</h3>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="320">
+      <g class="w">
+        <path class="ink" d="M40,70 V40 H170 M140,40 V70 M140,130 V160 M230,40 H260 V70 M260,130 V160 M40,130 V160 H260"/>
+        <use href="#isrc" x="40" y="100"/><use href="#res-v" x="140" y="70"/><use href="#vsrc-h" x="200" y="40"/><use href="#res-v" x="260" y="70"/>
+        <circle cx="140" cy="40" r="4" fill="#1d3f8f"/><circle cx="260" cy="40" r="4" fill="#1d3f8f"/>
+        <ellipse cx="200" cy="44" rx="86" ry="28" class="ink-r" stroke-dasharray="7 5"/>
+        <use href="#gnd" x="150" y="160"/>
+      </g>
+      <text x="62" y="104">9 A</text><text x="154" y="104">2 Ω</text><text x="200" y="12" text-anchor="middle" class="w6">6 V</text><text x="274" y="104">4 Ω</text>
+      <text x="126" y="24" text-anchor="middle" class="r w6">V₁</text><text x="274" y="24" text-anchor="middle" class="r w6">V₂</text><text x="200" y="88" text-anchor="middle" class="bn r s">সুপারনোড</text>
+    </svg></figure>
+    <div class="small">
+      <p>দুই নোড <b>ও</b> উৎসটিকে একসাথে ঘিরে ফেলো। <span class="hl">পুরো সুপারনোডের জন্য একটি KCL</span> লেখো, সাথে উৎস থেকে পাওয়া <b>শর্ত (constraint)</b>।</p>
+      <p>KCL: <b>V<sub>1</sub>/2 + V<sub>2</sub>/4 = 9</b></p><p>শর্ত: <b>V<sub>1</sub> − V<sub>2</sub> = 6</b></p>
+      <p>→ V<sub>1</sub>/2 + (V<sub>1</sub> − 6)/4 = 9 → 3V<sub>1</sub> = 42 → <span class="circ">V<sub>1</sub> = 14 V</span>, V<sub>2</sub> = 8 V</p>
+      <p>যাচাই: 7 A + 2 A = 9 A ✓। V-উৎস রেফারেন্সের সাথে যুক্ত হলে ওই নোডের ভোল্টেজ সরাসরি <b>জানা</b>।</p>
+    </div>
+  </div>
+
+  <h2><span class="no">৪</span>মেশ বিশ্লেষণ (মেশ-কারেন্ট পদ্ধতি)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">মূল ভাবনা</span> প্রতিটি জানালায় (মেশ) একটি <span class="hl">মেশ কারেন্ট</span> ধরো, সবগুলো ঘড়ির কাঁটার দিকে। প্রতিটি মেশ ঘুরে <b>KVL</b> লেখো। দুই মেশের সাধারণ উপাদানে দুই মেশ কারেন্টের <b>পার্থক্য</b> প্রবাহিত হয়। শুধু <b>সমতলীয়</b> সার্কিটে চলে।</div>
+  <div class="cols" style="grid-template-columns:340px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="-12 0 392 190" width="335">
+      <g class="w">
+        <path class="ink" d="M40,70 V40 H80 M140,40 H220 M180,40 V70 M180,130 V160 M280,40 H320 V70 M320,130 V160 M40,130 V160 H320"/>
+        <use href="#vsrc" x="40" y="100"/><use href="#res-h" x="80" y="40"/><use href="#res-v" x="180" y="70"/><use href="#res-h" x="220" y="40"/><use href="#vsrc" x="320" y="100"/>
+        <path class="ink-r" d="M110,78 A24,24 0 1 1 86,102" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M250,78 A24,24 0 1 1 226,102" marker-end="url(#ah)"/>
+      </g>
+      <text x="20" y="104" text-anchor="end" class="w6">24 V</text><text x="110" y="28" text-anchor="middle">2 Ω</text><text x="168" y="122" text-anchor="end">8 Ω</text><text x="250" y="28" text-anchor="middle">5 Ω</text><text x="342" y="104" class="w6">6 V</text>
+      <text x="110" y="108" text-anchor="middle" class="r w6">I₁</text><text x="250" y="108" text-anchor="middle" class="r w6">I₂</text>
+    </svg></figure>
+    <div class="small">
+      <p><b>মেশ ১:</b> −24 + 2I<sub>1</sub> + 8(I<sub>1</sub> − I<sub>2</sub>) = 0</p><p>→ <b>10I<sub>1</sub> − 8I<sub>2</sub> = 24</b></p>
+      <p><b>মেশ ২:</b> 8(I<sub>2</sub> − I<sub>1</sub>) + 5I<sub>2</sub> + 6 = 0</p><p>→ <b>−8I<sub>1</sub> + 13I<sub>2</sub> = −6</b></p>
+      <p>ক্রেমার: Δ = 130 − 64 = 66</p><p>I<sub>1</sub> = 264/66 = <span class="circ">4 A</span> · I<sub>2</sub> = 132/66 = <span class="circ">2 A</span></p>
+      <p>8 Ω-এ I<sub>1</sub> − I<sub>2</sub> = <b>2 A</b>, নিচের দিকে।</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">যাচাই ✍</span> শক্তি: 24 V উৎস দেয় 24 × 4 = 96 W = 32 (2 Ω) + 32 (8 Ω) + 20 (5 Ω) + 12 W, যা 6 V উৎস শোষণ করে (I<sub>2</sub> ঢোকে এর + প্রান্ত দিয়ে: এটি চার্জ হচ্ছে) ✓। <b>একই সার্কিটে নোডাল:</b> অজানা একটি, V = 8 × 2 = 16 V: (16 − 24)/2 + 16/8 + (16 − 6)/5 = −4 + 2 + 2 = 0 ✓, অর্থাৎ <b>২টির বদলে ১টি সমীকরণ</b>।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">পরিদর্শন পদ্ধতি: [R][I] = [V]</span><br>R<sub>kk</sub> = মেশ k-এর মোট রোধ · R<sub>kj</sub> = −(সাধারণ রোধ)<br>V<sub>k</sub> = মেশ কারেন্টের দিকে উৎসের ভোল্টেজ বৃদ্ধি:<br><b>10I<sub>1</sub> − 8I<sub>2</sub> = 24 · −8I<sub>1</sub> + 13I<sub>2</sub> = −6</b></div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> মেশ কারেন্ট সবসময় শাখার কারেন্ট <b>নয়</b>: সাধারণ শাখায় আসল কারেন্ট I<sub>1</sub> − I<sub>2</sub>। <b>ভোল্টেজ উৎসের সাথে প্যারালালে থাকা রোধ</b> বাইরের কোনো মেশ কারেন্ট বদলায় না।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: supermesh + superposition ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>সুপারমেশ · সুপারপজিশন</span></div>
+  <h3>সুপারমেশ: দুই মেশের সাধারণ শাখায় কারেন্ট উৎস</h3>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="-24 0 344 200" width="320">
+      <g class="w">
+        <path class="ink" d="M40,70 V40 H75 M135,40 H195 M165,40 V70 M165,130 V160 M255,40 H290 V160 M40,130 V160 H290"/>
+        <use href="#vsrc" x="40" y="100"/><use href="#res-h" x="75" y="40"/><use href="#isrc" x="165" y="100"/><use href="#res-h" x="195" y="40"/>
+        <path class="ink-r" d="M14,22 H306 V176 H14 Z" stroke-dasharray="7 5"/>
+      </g>
+      <text x="4" y="104" text-anchor="end" class="w6">28 V</text><text x="105" y="28" text-anchor="middle">6 Ω</text><text x="225" y="28" text-anchor="middle">4 Ω</text><text x="186" y="104" class="w6">2 A</text>
+      <text x="100" y="106" text-anchor="middle" class="r w6">I₁ ↻</text><text x="235" y="106" text-anchor="middle" class="r w6">I₂ ↻</text><text x="160" y="196" text-anchor="middle" class="bn r s">সুপারমেশ: বাইরের পথ ধরে ঘোরো</text>
+    </svg></figure>
+    <div class="small">
+      <p><span class="hl">বাইরের পথ</span> ধরে KVL (কারেন্ট উৎস বাদ দিয়ে): <b>6I<sub>1</sub> + 4I<sub>2</sub> = 28</b></p>
+      <p>শর্ত (সাধারণ শাখায় 2 A উপরের দিকে): <b>I<sub>2</sub> − I<sub>1</sub> = 2</b></p>
+      <p>→ 10I<sub>1</sub> + 8 = 28 → <span class="circ">I<sub>1</sub> = 2 A</span>, I<sub>2</sub> = 4 A</p>
+      <p>কোনো মেশের <b>বাইরের সীমানায়</b> কারেন্ট উৎস থাকলে সেটিই ওই মেশ কারেন্ট।</p>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল: দ্বৈততা (duality)</span> নোডাল ↔ মেশ: KCL ↔ KVL · V ↔ I · G ↔ R · <b>সুপারনোড ↔ সুপারমেশ</b> · কারেন্ট উৎস সহজ ↔ ভোল্টেজ উৎস সহজ · ওপেন ↔ শর্ট · নর্টন ↔ থেভেনিন।</div>
+
+  <h2><span class="no">৫</span>সুপারপজিশন উপপাদ্য (Superposition)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">বিবৃতি</span> একাধিক স্বাধীন উৎসযুক্ত <span class="hl">রৈখিক</span> নেটওয়ার্কে যেকোনো শাখার কারেন্ট বা ভোল্টেজ = প্রতিটি স্বাধীন উৎস <b>একা</b> কাজ করলে (বাকি সব স্বাধীন উৎস বন্ধ রেখে) পাওয়া সাড়াগুলোর <b>বীজগাণিতিক যোগফল</b>।</div>
+  <figure class="doodle"><svg viewBox="0 -14 650 186" width="640">
+    <g class="w">
+      <g><path class="ink" d="M20,60 V35 H45 M105,35 H190 V60 M125,35 V55 M125,115 V140 M190,120 V140 M20,120 V140 H190"/><use href="#vsrc" x="20" y="90"/><use href="#res-h" x="45" y="35"/><use href="#res-v" x="125" y="55"/><use href="#isrc" x="190" y="90"/></g>
+      <g transform="translate(220,0)"><path class="ink" d="M20,60 V35 H45 M105,35 H190 V56 M125,35 V55 M125,115 V140 M190,124 V140 M20,120 V140 H190"/><use href="#vsrc" x="20" y="90"/><use href="#res-h" x="45" y="35"/><use href="#res-v" x="125" y="55"/><circle cx="190" cy="60" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="190" cy="120" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+      <g transform="translate(440,0)"><path class="ink" d="M20,35 V140 M20,35 H45 M105,35 H190 V60 M125,35 V55 M125,115 V140 M190,120 V140 M20,140 H190"/><use href="#res-h" x="45" y="35"/><use href="#res-v" x="125" y="55"/><use href="#isrc" x="190" y="90"/></g>
+    </g>
+    <text x="105" y="2" text-anchor="middle" class="bn k w6">মূল সার্কিট: I নির্ণয়</text><text x="325" y="2" text-anchor="middle" class="bn k w6">শুধু 18 V → I′</text><text x="545" y="2" text-anchor="middle" class="bn k w6">শুধু 3 A → I″</text>
+    <text x="40" y="94" class="s w6">18 V</text><text x="75" y="24" text-anchor="middle" class="s">6 Ω</text><text x="112" y="80" text-anchor="end" class="s">3 Ω</text><text x="156" y="94" text-anchor="middle" class="s w6">3 A</text><text x="138" y="72" class="r s">I↓</text>
+    <text x="260" y="94" class="s w6">18 V</text><text x="295" y="24" text-anchor="middle" class="s">6 Ω</text><text x="332" y="80" text-anchor="end" class="s">3 Ω</text><text x="410" y="94" text-anchor="middle" class="bn r s">ওপেন</text><text x="358" y="72" class="r s">I′↓</text>
+    <text x="466" y="94" class="bn r s">শর্ট</text><text x="515" y="24" text-anchor="middle" class="s">6 Ω</text><text x="552" y="80" text-anchor="end" class="s">3 Ω</text><text x="596" y="94" text-anchor="middle" class="s w6">3 A</text><text x="578" y="72" class="r s">I″↓</text>
+    <text x="105" y="164" text-anchor="middle" class="r w6">I = 4 A</text><text x="325" y="164" text-anchor="middle" class="g w6">I′ = 18/9 = 2 A</text><text x="545" y="164" text-anchor="middle" class="g w6">I″ = 3 × 6/9 = 2 A</text>
+  </svg><figcaption>একবারে একটি উৎস: V-উৎস → শর্ট, I-উৎস → ওপেন</figcaption></figure>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 3 Ω রোধের কারেন্ট I: শুধু 18 V → I′ = 18/(6 + 3) = 2 A; শুধু 3 A → কারেন্ট ডিভাইডার I″ = 3 × 6/(6 + 3) = 2 A; দুটিই নিচের দিকে, তাই <span class="circ">I = 4 A</span>। নোডাল যাচাই: (V − 18)/6 + V/3 = 3 → V = 12 V → I = 12/3 = 4 A ✓।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>শক্তির সুপারপজিশন হয় না:</b> P(3 Ω) = 4² × 3 = <b>48 W</b>, কিন্তু 2² × 3 + 2² × 3 = 24 W ✗। শক্তি ∝ I², রৈখিক নয়। আগে মোট কারেন্ট বের করো, তারপর শক্তি।</div>
+  <p class="small"><b>কোথায় লাগে:</b> ট্রানজিস্টর অ্যামপ্লিফায়ার দুবার বিশ্লেষণ করা হয়, DC বায়াস ও AC সিগন্যাল আলাদা করে (সুপারপজিশন); ভিন্ন কম্পাঙ্কের উৎস একবারে একটি কম্পাঙ্ক ধরে সমাধান করা হয় (লেসন ৩)। ডায়োড বা অন্য অরৈখিক উপাদানে প্রযোজ্য নয়।</p>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: linearity + Thevenin ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>থেভেনিন</span></div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">রৈখিকতা = দুটি ধর্ম</span><br><b>সমমাত্রিকতা (homogeneity):</b> k × ইনপুট → k × আউটপুট (18 V → 36 V করলে I′ = 4 A, তাই I = 6 A)<br><b>যোগাত্মকতা (additivity):</b> (x<sub>1</sub> + x<sub>2</sub>)-এর সাড়া = x<sub>1</sub>-এর সাড়া + x<sub>2</sub>-এর সাড়া</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>একটি চালু, বাকি বন্ধ, চিহ্নসহ যোগ।</b>" উপ-সার্কিটের সংখ্যা = <b>স্বাধীন</b> উৎসের সংখ্যা; নির্ভরশীল উৎস প্রতিটিতেই চালু থাকে।</div>
+  </div>
+
+  <h2><span class="no">৬</span>থেভেনিনের উপপাদ্য (Thevenin's Theorem)</h2><span class="tag">সবচেয়ে বেশি আসে</span>
+  <div class="def"><span class="lbl">বিবৃতি</span> যেকোনো <b>রৈখিক দুই-টার্মিনাল</b> নেটওয়ার্ককে a–b টার্মিনাল থেকে দেখলে একটি ভোল্টেজ উৎস <span class="hl">V<sub>th</sub>-এর সাথে সিরিজে R<sub>th</sub></span> দিয়ে প্রতিস্থাপন করা যায়। V<sub>th</sub> = a–b-এর <b>ওপেন-সার্কিট ভোল্টেজ</b>; R<sub>th</sub> = সব <b>স্বাধীন</b> উৎস বন্ধ রেখে a–b দিয়ে দেখা রোধ। (থেভেনিন, <span class="circ">১৮৮৩</span>; হেল্মহোল্টজ ১৮৫৩ সালেই এটি পেয়েছিলেন।)</div>
+  <figure class="doodle"><svg viewBox="0 0 600 165" width="600">
+    <g class="w">
+      <path class="ink" d="M30,60 V35 H55 M115,35 H165 M140,35 V60 M140,120 V145 M225,35 H246 M30,120 V145 H246"/>
+      <use href="#vsrc" x="30" y="90"/><use href="#res-h" x="55" y="35"/><use href="#res-v" x="140" y="60"/><use href="#res-h" x="165" y="35"/>
+      <circle cx="250" cy="35" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="250" cy="145" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/>
+      <path class="ink-g" d="M285,90 H345" marker-end="url(#ahg)"/>
+      <path class="ink" d="M390,60 V35 H420 M480,35 H516 M390,120 V145 H516"/>
+      <use href="#vsrc" x="390" y="90"/><use href="#res-h" x="420" y="35"/>
+      <circle cx="520" cy="35" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="520" cy="145" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/>
+      <path class="ink-k" d="M524,35 H560 V60 M560,120 V145 H524" stroke-dasharray="5 4"/><use href="#res-v" x="560" y="60"/>
+    </g>
+    <text x="52" y="94" class="w6">24 V</text><text x="85" y="25" text-anchor="middle">6 Ω</text><text x="154" y="94">3 Ω</text><text x="195" y="25" text-anchor="middle">2 Ω</text><text x="262" y="40">a</text><text x="262" y="150">b</text>
+    <text x="315" y="80" text-anchor="middle" class="bn g s w6">থেভেনিন</text>
+    <text x="412" y="94" class="r w6">8 V</text><text x="450" y="25" text-anchor="middle" class="r w6">4 Ω</text><text x="526" y="28">a</text><text x="526" y="160">b</text><text x="574" y="94" class="s">R<tspan dy="4" font-size="10">L</tspan></text>
+  </svg><figcaption>ভেতরে যা-ই থাকুক, লোড দেখে শুধু V<sub>th</sub> ও R<sub>th</sub></figcaption></figure>
+  <ol class="steps small">
+    <li>লোড সরাও; a ও b চিহ্নিত করো</li>
+    <li><b>V<sub>th</sub> = V<sub>oc</sub></b>: খোলা a–b-এর ভোল্টেজ (যেকোনো পদ্ধতি: ডিভাইডার, নোডাল, মেশ, সুপারপজিশন)</li>
+    <li><b>R<sub>th</sub></b>: স্বাধীন উৎস বন্ধ করে a–b দিয়ে দেখো; অথবা R<sub>th</sub> = V<sub>oc</sub>/I<sub>sc</sub>; অথবা টেস্ট উৎস প্রয়োগ (নির্ভরশীল উৎস থাকলে এটি লাগবে)</li>
+    <li>লোড আবার যুক্ত করো: <span class="circ">I<sub>L</sub> = V<sub>th</sub>/(R<sub>th</sub> + R<sub>L</sub>)</span></li>
+  </ol>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> a–b খোলা: 2 Ω-এ কারেন্ট নেই, তাই V<sub>th</sub> = 24 × 3/(6 + 3) = <b>8 V</b>। 24 V শর্ট করে: R<sub>th</sub> = (6 ‖ 3) + 2 = 2 + 2 = <b>4 Ω</b>।
+    <table class="hand small" style="margin:1mm 0 0">
+      <tr><th>R<sub>L</sub></th><td>2 Ω</td><td>4 Ω</td><td>12 Ω</td></tr>
+      <tr><th>I<sub>L</sub> = 8/(4 + R<sub>L</sub>)</th><td>1.33 A</td><td>1 A</td><td>0.5 A</td></tr>
+      <tr><th>P<sub>L</sub> = I<sub>L</sub>²R<sub>L</sub></th><td>3.56 W</td><td class="red"><b>4 W</b></td><td>3 W</td></tr>
+    </table>
+    একটি সমতুল্য, যত খুশি লোড: এ কারণেই পরীক্ষকেরা থেভেনিন পছন্দ করেন।</div>
+  <div class="tipbox small"><span class="lbl">আইটি সংযোগ</span> ব্যাটারি, USB পোর্ট বা ফোন চার্জার আসলে একটি থেভেনিন উৎস: EMF = V<sub>th</sub>, অভ্যন্তরীণ রোধ = R<sub>th</sub>। লোড বেশি কারেন্ট নিলে টার্মিনাল ভোল্টেজ V = V<sub>th</sub> − I·R<sub>th</sub> কমে যায়।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: dependent source, Norton, source transformation ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>নর্টন · উৎস রূপান্তর</span></div>
+  <h3>নির্ভরশীল উৎসসহ থেভেনিন (লিখিত পরীক্ষার প্রিয়)</h3>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 165" width="290">
+      <g class="w">
+        <path class="ink" d="M30,60 V35 H55 M115,35 H266 M150,35 V60 M150,120 V145 M220,35 V60 M220,120 V145 M30,120 V145 H266"/>
+        <use href="#vsrc" x="30" y="90"/><use href="#res-h" x="55" y="35"/><use href="#res-v" x="150" y="60"/><use href="#dsrc" x="220" y="90"/>
+        <circle cx="150" cy="35" r="4" fill="#1d3f8f"/>
+        <circle cx="270" cy="35" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="270" cy="145" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/>
+      </g>
+      <text x="52" y="94" class="w6">10 V</text><text x="85" y="25" text-anchor="middle">2 Ω</text><text x="85" y="58" text-anchor="middle" class="r s">iₓ →</text><text x="162" y="94">4 Ω</text><text x="241" y="78" class="p s w6">0.5iₓ</text><text x="280" y="40">a</text><text x="280" y="150">b</text>
+    </svg></figure>
+    <div class="small">
+      <p><b>V<sub>oc</sub>:</b> a-তে KCL: iₓ + 0.5iₓ = V/4, যেখানে iₓ = (10 − V)/2 → 0.75(10 − V) = 0.25V → <b>V<sub>oc</sub> = 7.5 V</b></p>
+      <p><b>I<sub>sc</sub>:</b> a–b শর্ট, V = 0 → iₓ = 5 A, 4 Ω-এ কারেন্ট 0 → I<sub>sc</sub> = 1.5 × 5 = <b>7.5 A</b></p>
+      <p>R<sub>th</sub> = V<sub>oc</sub>/I<sub>sc</sub> = <span class="circ">1 Ω</span>, 2 ‖ 4 = 1.33 Ω নয়: নির্ভরশীল উৎসটি (একটি CCCS) R<sub>th</sub> বদলে দেয়।</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> R<sub>th</sub> বের করার সময় নির্ভরশীল উৎস কখনো বন্ধ কোরো না; থাকলে R<sub>th</sub> <b>ঋণাত্মকও</b> হতে পারে। সমতুল্য সার্কিট শুধু <b>টার্মিনালে</b> সঠিক, ভেতরের শক্তি-ক্ষয়ের জন্য নয়।</div>
+
+  <h2><span class="no">৭</span>নর্টনের উপপাদ্য (Norton's Theorem)</h2>
+  <div class="def"><span class="lbl">বিবৃতি</span> একই দুই-টার্মিনাল নেটওয়ার্ককে একটি কারেন্ট উৎস <span class="hl">I<sub>N</sub>-এর সাথে প্যারালালে R<sub>N</sub></span> দিয়ে প্রতিস্থাপন করা যায়। I<sub>N</sub> = a–b দিয়ে <b>শর্ট-সার্কিট কারেন্ট</b>; <span class="circ">R<sub>N</sub> = R<sub>th</sub></span>। (ই. এল. নর্টন, বেল ল্যাবস, ১৯২৬।)</div>
+  <div class="cols" style="grid-template-columns:1fr 210px;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 470 165" width="430">
+      <g class="w">
+        <path class="ink" d="M40,60 V35 H70 M130,35 H156 M40,120 V145 H156"/>
+        <use href="#vsrc" x="40" y="90"/><use href="#res-h" x="70" y="35"/>
+        <circle cx="160" cy="35" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="160" cy="145" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/>
+        <path class="ink-g" d="M195,90 H255" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+        <path class="ink" d="M300,60 V35 H416 M360,35 V60 M360,120 V145 M300,120 V145 H416"/>
+        <use href="#isrc" x="300" y="90"/><use href="#res-v" x="360" y="60"/>
+        <circle cx="420" cy="35" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="420" cy="145" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/>
+      </g>
+      <text x="62" y="94">V<tspan dy="4" font-size="11">th</tspan></text><text x="100" y="20" text-anchor="middle">R<tspan dy="4" font-size="11">th</tspan></text><text x="170" y="40">a</text><text x="170" y="150">b</text>
+      <text x="225" y="78" text-anchor="middle" class="g s">I = V/R</text><text x="225" y="112" text-anchor="middle" class="g s">V = IR</text>
+      <text x="278" y="94" text-anchor="end">I<tspan dy="4" font-size="11">N</tspan></text><text x="374" y="94">R<tspan dy="4" font-size="11">N</tspan></text><text x="430" y="40">a</text><text x="430" y="150">b</text>
+    </svg></figure>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>TVS · NIP</b>": Thevenin = Voltage, Series; Norton = current (I), Parallel। I<sub>N</sub>-এর তীর <b>a</b>-এর দিকে, অর্থাৎ V<sub>th</sub>-এর + প্রান্তের দিকে।</div>
+  </div>
+  <p class="small">পৃ. ৬-এর একই নেটওয়ার্ক: a–b শর্ট → R = 6 + (3 ‖ 2) = 7.2 Ω, উৎস কারেন্ট 24/7.2 = 3.33 A, 2 Ω-এ ডিভাইডার: 3.33 × 3/5 = <span class="circ">I<sub>N</sub> = 2 A</span> = V<sub>th</sub>/R<sub>th</sub> = 8/4 ✓।</p>
+
+  <h2><span class="no">৮</span>হাতিয়ার হিসেবে উৎস রূপান্তর</h2>
+  <p class="small">নিয়ম (লেসন ১): V<sub>s</sub>-এর সাথে সিরিজে R ⇄ I<sub>s</sub> = V<sub>s</sub>/R-এর সাথে প্যারালালে <b>একই</b> R। বারবার প্রয়োগ করলে কোনো সমীকরণ ছাড়াই একটি ল্যাডার থেভেনিন রূপে নেমে আসে:</p>
+  <figure class="doodle"><svg viewBox="0 0 640 70" width="640">
+    <g class="w">
+      <rect x="4" y="10" width="108" height="50" rx="10" class="ink fill-b"/><rect x="136" y="10" width="108" height="50" rx="10" class="ink fill-b"/><rect x="268" y="10" width="108" height="50" rx="10" class="ink fill-b"/><rect x="400" y="10" width="108" height="50" rx="10" class="ink fill-b"/><rect x="532" y="10" width="104" height="50" rx="10" class="ink-r fill-r"/>
+      <path class="ink-g" d="M114,35 H134 M246,35 H266 M378,35 H398 M510,35 H530" marker-end="url(#ahg)"/>
+    </g>
+    <text x="58" y="31" text-anchor="middle" class="s w6">24 V + 6 Ω</text><text x="58" y="50" text-anchor="middle" class="bn s">এরপর 3 Ω, 2 Ω</text>
+    <text x="190" y="31" text-anchor="middle" class="s w6">4 A ‖ 6 Ω ‖ 3 Ω</text><text x="190" y="50" text-anchor="middle" class="s">24/6 = 4 A</text>
+    <text x="322" y="31" text-anchor="middle" class="s w6">4 A ‖ 2 Ω</text><text x="322" y="50" text-anchor="middle" class="s">6 ‖ 3 = 2 Ω</text>
+    <text x="454" y="31" text-anchor="middle" class="s w6">8 V + 2 Ω + 2 Ω</text><text x="454" y="50" text-anchor="middle" class="s">4 × 2 = 8 V</text>
+    <text x="584" y="31" text-anchor="middle" class="r s w6">8 V + 4 Ω</text><text x="584" y="50" text-anchor="middle" class="bn r s">থেভেনিন ✓</text>
+  </svg></figure>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>আদর্শ</b> V-উৎসের (সিরিজ R ছাড়া) কোনো নর্টন রূপ নেই, আদর্শ I-উৎসের (প্যারালাল R ছাড়া) কোনো থেভেনিন রূপ নেই। যে শাখার কারেন্ট চাওয়া হয়েছে, সেটি রূপান্তর কোরো না।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: max power, reciprocity, Millman ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>সর্বোচ্চ শক্তি · পারস্পরিকতা</span></div>
+  <h2><span class="no">৯</span>সর্বোচ্চ শক্তি স্থানান্তর উপপাদ্য</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">বিবৃতি</span> একটি রৈখিক DC নেটওয়ার্ক রোধী লোডে <b>সর্বোচ্চ শক্তি</b> দেয় যখন <span class="circ">R<sub>L</sub> = R<sub>th</sub></span>। তখন <span class="hl">P<sub>max</sub> = V<sub>th</sub>²/(4R<sub>th</sub>)</span> এবং দক্ষতা মাত্র <span class="circ">৫০%</span>।</div>
+  <div class="cols" style="grid-template-columns:1fr 330px;align-items:center">
+    <div class="ex small" style="margin-top:0"><span class="lbl">প্রতিপাদন ✍</span><br>P<sub>L</sub> = I²R<sub>L</sub> = V<sub>th</sub>²R<sub>L</sub>/(R<sub>th</sub> + R<sub>L</sub>)²<br>dP<sub>L</sub>/dR<sub>L</sub> = V<sub>th</sub>²[(R<sub>th</sub> + R<sub>L</sub>)² − 2R<sub>L</sub>(R<sub>th</sub> + R<sub>L</sub>)]/(R<sub>th</sub> + R<sub>L</sub>)⁴ = 0<br>→ R<sub>th</sub> + R<sub>L</sub> = 2R<sub>L</sub> → <b>R<sub>L</sub> = R<sub>th</sub></b><br>P<sub>max</sub> = V<sub>th</sub>²R<sub>th</sub>/(2R<sub>th</sub>)² = <b>V<sub>th</sub>²/4R<sub>th</sub></b><br>η = R<sub>L</sub>/(R<sub>L</sub> + R<sub>th</sub>) = 1/2</div>
+    <figure class="doodle"><svg viewBox="0 0 400 200" width="330">
+      <g class="w">
+        <path class="ink-k" d="M40,172 H392 M40,172 V24" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M40,170 L48.5,118.6 L57,86.8 L65.5,66.9 L74,54.4 L82.5,46.9 L91,42.7 L99.5,40.6 L108,40 L116.5,40.4 L125,41.6 L133.5,43.2 L142,45.2 L150.5,47.4 L159,49.7 L167.5,52 L176,54.4 L184.5,56.8 L193,59.2 L201.5,61.6 L210,63.9 L218.5,66.1 L227,68.3 L235.5,70.4 L244,72.5 L252.5,74.5 L261,76.4 L269.5,78.3 L278,80.1 L286.5,81.9 L295,83.6 L303.5,85.2 L312,86.8 L320.5,88.3 L329,89.8 L337.5,91.3 L346,92.6 L354.5,94 L363,95.3 L371.5,96.6 L380,97.8"/>
+        <path class="ink-g" stroke-dasharray="6 4" d="M40,170 L48.5,155.6 L57,144 L65.5,134.5 L74,126.7 L82.5,120 L91,114.3 L99.5,109.3 L108,105 L116.5,101.2 L125,97.8 L133.5,94.7 L142,92 L150.5,89.5 L159,87.3 L167.5,85.2 L176,83.3 L184.5,81.6 L193,80 L201.5,78.5 L210,77.1 L218.5,75.9 L227,74.7 L235.5,73.5 L244,72.5 L252.5,71.5 L261,70.6 L269.5,69.7 L278,68.9 L286.5,68.1 L295,67.4 L303.5,66.7 L312,66 L320.5,65.4 L329,64.8 L337.5,64.2 L346,63.6 L354.5,63.1 L363,62.6 L371.5,62.1 L380,61.7"/>
+        <path class="ink-k" d="M108,40 V172" stroke-dasharray="3 4" style="stroke-width:1.4"/>
+      </g>
+      <text x="34" y="44" text-anchor="end" class="s">4 W</text><text x="40" y="190" text-anchor="middle" class="s">0</text><text x="108" y="190" text-anchor="middle" class="r s w6">4 = R<tspan dy="3" font-size="9">th</tspan></text><text x="176" y="190" text-anchor="middle" class="s">8</text><text x="312" y="190" text-anchor="middle" class="s">16 Ω</text>
+      <text x="118" y="30" class="r s w6">P<tspan dy="3" font-size="9">max</tspan><tspan dy="-3"> = V²/4R</tspan></text><text x="290" y="112" class="r s">P<tspan dy="3" font-size="9">L</tspan></text><text x="300" y="56" class="g s">η → 100%</text><text x="114" y="122" class="g s">η = 50%</text>
+    </svg><figcaption>V<sub>th</sub> = 8 V, R<sub>th</sub> = 4 Ω</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>R<sub>L</sub> (Ω)</th><th>1</th><th>2</th><th>4</th><th>8</th><th>16</th></tr>
+      <tr><td>P<sub>L</sub> (W)</td><td>2.56</td><td>3.56</td><td class="red"><b>4</b></td><td>3.56</td><td>2.56</td></tr>
+      <tr><td>η (%)</td><td>20</td><td>33</td><td class="red"><b>50</b></td><td>67</td><td>80</td></tr>
+    </table>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> R<sub>L</sub> ও R<sub>th</sub>²/R<sub>L</sub> <b>একই</b> শক্তি দেয় (1 Ω ও 16 Ω, 2 Ω ও 8 Ω)। "ম্যাচ করলে সর্বোচ্চ, কিন্তু ৫০% কর।"</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> R<sub>L</sub> স্থির আর <b>উৎসের</b> রোধ বাছাই করা গেলে লোডে সর্বোচ্চ শক্তি R<sub>s</sub> = 0-তে, R<sub>s</sub> = R<sub>L</sub>-এ নয়। AC: Z<sub>L</sub> = <span class="hl">Z<sub>th</sub>* (কনজুগেট)</span>, P<sub>max</sub> = |V<sub>th</sub>|²/4R<sub>th</sub>; শুধু রোধী AC লোড হলে R<sub>L</sub> = |Z<sub>th</sub>|।</div>
+  <div class="tipbox small"><span class="lbl">আইটি সংযোগ</span> ম্যাচিং <b>সিগন্যালের</b> জন্য, পাওয়ার গ্রিডের জন্য কখনো নয় (৫০% ক্ষয়): 50 Ω RF কোএক্স ও অ্যান্টেনা, 75 Ω টিভি/CCTV কোএক্স, 100 Ω ইথারনেট টুইস্টেড পেয়ার। এতে লাইনে <b>প্রতিফলনও (reflection)</b> বন্ধ হয়।</div>
+
+  <h2><span class="no">১০</span>পারস্পরিকতা ও মিলম্যানের উপপাদ্য</h2>
+  <div class="ex small"><span class="lbl">পারস্পরিকতা (Reciprocity) ✍</span> <b>রৈখিক, দ্বিমুখী</b> নেটওয়ার্কে <b>একটিমাত্র</b> উৎস থাকলে, পোর্ট ১-এ V দিলে পোর্ট ২-এর শর্টে যে I পাওয়া যায়, একই V পোর্ট ২-এ দিলে পোর্ট ১-এ <b>একই I</b> পাওয়া যায় (নির্ভরশীল উৎস, ডায়োড, ট্রানজিস্টরে খাটে না)। ল্যাডারে যাচাই: 2 Ω (সিরিজ) – 3 Ω (শান্ট) – 6 Ω (সিরিজ)। পোর্ট ১-এ 12 V: 12/(2 + 3‖6) = 3 A, 6 Ω-এ: 3 × 3/9 = <b>1 A</b>। পোর্ট ২-এ 12 V: 12/(6 + 3‖2) = 1.67 A, 2 Ω-এ: 1.67 × 3/5 = <b>1 A</b> ✓</div>
+  <div class="ex small"><span class="lbl">মিলম্যান ✍</span> প্যারালাল শাখা (প্রতিটিতে V<sub>k</sub>-এর সাথে সিরিজে R<sub>k</sub>): <span class="circ">V = Σ(V<sub>k</sub>/R<sub>k</sub>) / Σ(1/R<sub>k</sub>)</span>। 12 V/2 Ω, 6 V/3 Ω ও শুধু একটি 6 Ω: V = (6 + 2 + 0)/(½ + ⅓ + ⅙) = <b>8 V</b>, R<sub>eq</sub> = 1 Ω।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: star-delta, bridges ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>স্টার–ডেল্টা</span></div>
+  <h2><span class="no">১১</span>স্টার–ডেল্টা (Y–Δ) রূপান্তর</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="def"><span class="lbl">মূল ভাবনা</span> রোধের একটি <b>Δ (ডেল্টা, π)</b> ও একটি <b>Y (স্টার, T)</b> সমতুল্য হয় যখন <span class="hl">প্রতিটি টার্মিনাল-জোড়ার</span> মাঝের রোধ একই। রোধগুলো সিরিজেও নেই, প্যারালালেও নেই (ব্রিজ, ল্যাটিস) এমন ক্ষেত্রে এটি ব্যবহার করো।</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 340 262" width="290">
+      <g class="w">
+        <path class="ink" d="M170,20 L116.6,100 M83.4,150 L30,230 M30,230 L140,230 M200,230 L310,230 M310,230 L256.6,150 M223.4,100 L170,20"/>
+        <use href="#res-h" transform="translate(116.6,100) rotate(123.7)"/><use href="#res-h" transform="translate(140,230) rotate(0)"/><use href="#res-h" transform="translate(256.6,150) rotate(-123.7)"/>
+        <path class="ink-r" d="M170,160 L170,115 M170,65 L170,20 M170,160 L122.4,183.8 M77.6,206.2 L30,230 M170,160 L217.6,183.8 M262.4,206.2 L310,230"/>
+        <use href="#res-sr" transform="translate(170,115) rotate(-90)"/><use href="#res-sr" transform="translate(122.4,183.8) rotate(153.4)"/><use href="#res-sr" transform="translate(217.6,183.8) rotate(26.6)"/>
+        <circle cx="170" cy="20" r="4.5" fill="#1f1f24"/><circle cx="30" cy="230" r="4.5" fill="#1f1f24"/><circle cx="310" cy="230" r="4.5" fill="#1f1f24"/><circle cx="170" cy="160" r="3.5" fill="#d32f2f"/>
+      </g>
+      <text x="170" y="12" text-anchor="middle" class="k w6">a</text><text x="18" y="244" class="k w6">b</text><text x="314" y="248" class="k w6">c</text>
+      <text x="78" y="124" text-anchor="end" class="w6">R<tspan dy="4" font-size="11">ab</tspan></text><text x="262" y="124" class="w6">R<tspan dy="4" font-size="11">ca</tspan></text><text x="170" y="256" text-anchor="middle" class="w6">R<tspan dy="4" font-size="11">bc</tspan></text>
+      <text x="182" y="94" class="r w6">R<tspan dy="4" font-size="11">a</tspan></text><text x="100" y="223" text-anchor="middle" class="r w6">R<tspan dy="4" font-size="11">b</tspan></text><text x="240" y="223" text-anchor="middle" class="r w6">R<tspan dy="4" font-size="11">c</tspan></text>
+    </svg><figcaption>নীল = Δ, লাল = Y (ভেতরে আঁকা)</figcaption></figure>
+    <div class="small">
+      <div class="sumbox" style="margin-top:0"><span class="lbl">Δ → Y</span><br>R<sub>a</sub> = R<sub>ab</sub>R<sub>ca</sub> / (R<sub>ab</sub> + R<sub>bc</sub> + R<sub>ca</sub>)<br>R<sub>b</sub> = R<sub>ab</sub>R<sub>bc</sub> / Σ<sub>Δ</sub> · R<sub>c</sub> = R<sub>bc</sub>R<sub>ca</sub> / Σ<sub>Δ</sub></div>
+      <div class="sumbox"><span class="lbl">Y → Δ</span> যেখানে S = R<sub>a</sub>R<sub>b</sub> + R<sub>b</sub>R<sub>c</sub> + R<sub>c</sub>R<sub>a</sub>:<br>R<sub>ab</sub> = S/R<sub>c</sub> · R<sub>bc</sub> = S/R<sub>a</sub> · R<sub>ca</sub> = S/R<sub>b</sub></div>
+      <p>সুষম (সব সমান): <span class="circ">R<sub>Y</sub> = R<sub>Δ</sub>/3</span>, R<sub>Δ</sub> = 3R<sub>Y</sub></p>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>Δ → Y:</b> "নোডটিকে ছোঁয়া দুই বাহুর গুণফল, ভাগ তিন বাহুর যোগফল" (প্যারালালের গুণফল/যোগফলের মতো, তাই Y <b>ছোট</b>)। <b>Y → Δ:</b> "জোড়া-গুণফলের যোগফল, ভাগ <b>বিপরীত</b> বাহু" (সবসময় বড়)।</div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 250 225" width="215">
+      <g class="w">
+        <path class="ink" d="M120,20 L92.7,47.3 M57.3,82.7 L30,110 M120,20 L147.3,47.3 M182.7,82.7 L210,110 M30,110 L57.3,137.3 M92.7,172.7 L120,200 M210,110 L182.7,137.3 M147.3,172.7 L120,200 M30,110 L95,110 M145,110 L210,110"/>
+        <use href="#res-s" transform="translate(92.7,47.3) rotate(135)"/><use href="#res-s" transform="translate(147.3,47.3) rotate(45)"/><use href="#res-s" transform="translate(57.3,137.3) rotate(45)"/><use href="#res-s" transform="translate(182.7,137.3) rotate(135)"/><use href="#res-s" transform="translate(95,110) rotate(0)"/>
+        <circle cx="120" cy="20" r="4" fill="#1f1f24"/><circle cx="30" cy="110" r="4" fill="#1f1f24"/><circle cx="210" cy="110" r="4" fill="#1f1f24"/><circle cx="120" cy="200" r="4" fill="#1f1f24"/>
+      </g>
+      <text x="120" y="10" text-anchor="middle" class="k w6">a</text><text x="120" y="220" text-anchor="middle" class="k w6">b</text><text x="18" y="114" text-anchor="end" class="k w6">c</text><text x="222" y="114" class="k w6">d</text>
+      <text x="60" y="50" text-anchor="end">5 Ω</text><text x="180" y="50">10 Ω</text><text x="60" y="180" text-anchor="end">6 Ω</text><text x="180" y="180">4 Ω</text><text x="120" y="98" text-anchor="middle" class="r">10 Ω</text>
+    </svg><figcaption>অসম ব্রিজ: 5/6 ≠ 10/4</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> R<sub>ab</sub> নির্ণয় করো।
+      <ol class="steps">
+        <li>Δ(a, c, d): 5, 10, 10 → Σ = 25</li>
+        <li>R<sub>a</sub> = 5×10/25 = 2 · R<sub>c</sub> = 5×10/25 = 2 · R<sub>d</sub> = 10×10/25 = 4 Ω</li>
+        <li>এখন সিরিজ–প্যারালাল: (2 + 6) ‖ (4 + 4) = 8 ‖ 8 = 4 Ω</li>
+        <li>R<sub>ab</sub> = 2 + 4 = <span class="circ">6 Ω</span></li>
+      </ol></div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="def small" style="margin-top:0"><span class="lbl">সুষম হুইটস্টোন ব্রিজ</span> P/Q = R/S হলে মাঝের (গ্যালভানোমিটার) বাহুতে <b>কোনো কারেন্ট নেই</b>: বাদ দাও। 10, 20 | 30, 60 → R<sub>ab</sub> = 30 ‖ 90 = <b>22.5 Ω</b>, মাঝের রোধ যা-ই হোক।</div>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">১২টি সমান R-এর কিউব</th><th>R<sub>eq</sub></th></tr>
+      <tr><td class="l">বডি-কর্ণ বরাবর</td><td><b>5R/6</b></td></tr>
+      <tr><td class="l">তলের কর্ণ বরাবর</td><td><b>3R/4</b></td></tr>
+      <tr><td class="l">একটি বাহু বরাবর</td><td><b>7R/12</b></td></tr>
+    </table>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> আগে দেখো <b>ব্রিজ সুষম কি না</b> (হলে Y–Δ লাগবে না)। প্রতিটি Y রোধ পাশের দুই Δ রোধের চেয়ে <b>ছোট</b>; বড় এলে ভাজক ভুল।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>নোডাল: n − 1টি সমীকরণ (KCL)</p><p>মেশ: b − n + 1টি সমীকরণ (KVL)</p>
+      <p>[G][V] = [I] · [R][I] = [V]</p><p>শাখা-কারেন্ট = (V<sub>নিজ</sub> − V<sub>পাশের</sub>)/R</p>
+      <p>সুপারনোড: ১টি KCL + V<sub>1</sub> − V<sub>2</sub> = V<sub>s</sub></p><p>সুপারমেশ: বাইরের KVL + I<sub>2</sub> − I<sub>1</sub> = I<sub>s</sub></p>
+      <p>বন্ধ: V-উৎস → শর্ট, I-উৎস → ওপেন</p><p>নির্ভরশীল উৎস: কখনো বন্ধ নয়</p>
+      <p>V<sub>th</sub> = V<sub>oc</sub> · I<sub>N</sub> = I<sub>sc</sub></p><p>R<sub>th</sub> = R<sub>N</sub> = V<sub>oc</sub>/I<sub>sc</sub></p>
+      <p>I<sub>L</sub> = V<sub>th</sub>/(R<sub>th</sub> + R<sub>L</sub>)</p><p>P<sub>max</sub> = V<sub>th</sub>²/4R<sub>th</sub>, R<sub>L</sub> = R<sub>th</sub>-এ, η = ৫০%</p>
+      <p>AC: সর্বোচ্চ শক্তিতে Z<sub>L</sub> = Z<sub>th</sub>*</p><p>মিলম্যান: V = Σ(V<sub>k</sub>/R<sub>k</sub>)/Σ(1/R<sub>k</sub>)</p>
+      <p>Δ→Y: R<sub>a</sub> = R<sub>ab</sub>R<sub>ca</sub>/Σ<sub>Δ</sub></p><p>Y→Δ: R<sub>ab</sub> = ΣR<sub>i</sub>R<sub>j</sub>/R<sub>c</sub></p>
+      <p>সুষম: R<sub>Y</sub> = R<sub>Δ</sub>/3</p><p>ব্রিজ সুষম: P/Q = R/S</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১৪টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>নোডাল বিশ্লেষণ KCL-ভিত্তিক; মেশ KVL-ভিত্তিক</li>
+      <li>মেশ বিশ্লেষণ: শুধু সমতলীয় সার্কিট</li>
+      <li>সুপারপজিশনে রৈখিক নেটওয়ার্ক লাগে</li>
+      <li>সুপারপজিশনে শক্তি বের হয় না</li>
+      <li>থেভেনিন: V-উৎসের সাথে সিরিজে R</li>
+      <li>নর্টন: I-উৎসের সাথে প্যারালালে R</li>
+      <li>থেভেনিন 10 V, 5 Ω = নর্টন 2 A, 5 Ω</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>R<sub>L</sub> = R<sub>th</sub>-এ সর্বোচ্চ শক্তি; দক্ষতা ৫০%</li>
+      <li>12 V, 4 Ω নেটওয়ার্ক → P<sub>max</sub> = 9 W</li>
+      <li>পারস্পরিকতা: রৈখিক + দ্বিমুখী, একটি উৎস</li>
+      <li>Δ-তে তিনটি 9 Ω = Y-তে তিনটি 3 Ω</li>
+      <li>R-এর কিউব, বডি-কর্ণ: 5R/6</li>
+      <li>আদর্শ V-উৎস: r = 0; আদর্শ I-উৎস: r = ∞</li>
+      <li>টেলেগেন: Σ v<sub>k</sub>i<sub>k</sub> = 0 (শক্তির ভারসাম্য)</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> শক্তির সুপারপজিশন হয় না · নির্ভরশীল উৎস চালু থাকে · নোডালে I-উৎসের সিরিজ রোধ বাদ · নোড ও শাখা একই সংজ্ঞায় গোনো · R<sub>L</sub> স্থির, R<sub>s</sub> পরিবর্তনশীল → সর্বোচ্চ শক্তিতে R<sub>s</sub> = 0 · Y–Δ-র আগে সুষম ব্রিজ দেখো · আদর্শ উৎসের রূপান্তর হয় না</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> আমার নোড বিয়োগ প্রতিবেশী · V মারো তারে, I মারো বাতাসে · নোডাল ↔ মেশ দ্বৈততা · একটি চালু, বাকি বন্ধ, চিহ্নসহ যোগ · TVS · NIP · ম্যাচে সর্বোচ্চ, কিন্তু ৫০% কর · R<sub>L</sub> ও R<sub>th</sub>²/R<sub>L</sub>-এ সমান শক্তি · Δ→Y গুণফল ভাগ যোগফল, Y→Δ জোড়া-গুণফল ভাগ বিপরীত বাহু</div>
+  <figure class="doodle"><svg viewBox="0 0 600 100" width="600">
+    <g class="w">
+      <rect x="10" y="20" width="150" height="56" rx="12" class="ink fill-b"/><rect x="225" y="20" width="150" height="56" rx="12" class="ink-r fill-r"/><rect x="440" y="20" width="150" height="56" rx="12" class="ink-g fill-g"/>
+      <path class="ink-g" d="M162,48 H222 M377,48 H437" marker-end="url(#ahg)"/>
+    </g>
+    <text x="85" y="44" text-anchor="middle" class="bn w6">V<tspan dy="4" font-size="11">oc</tspan><tspan dy="-4"> বের করো</tspan></text><text x="85" y="66" text-anchor="middle" class="bn s">লোড সরিয়ে</text>
+    <text x="300" y="44" text-anchor="middle" class="bn r w6">R<tspan dy="4" font-size="11">th</tspan><tspan dy="-4"> বের করো</tspan></text><text x="300" y="66" text-anchor="middle" class="bn s">উৎস বন্ধ / V<tspan dy="3" font-size="9">oc</tspan><tspan dy="-3">/I</tspan><tspan dy="3" font-size="9">sc</tspan></text>
+    <text x="515" y="44" text-anchor="middle" class="bn g w6">লোড আবার বসাও</text><text x="515" y="66" text-anchor="middle" class="s">I = V/(R<tspan dy="3" font-size="9">th</tspan><tspan dy="-3"> + R</tspan><tspan dy="3" font-size="9">L</tspan><tspan dy="-3">)</tspan></text>
+    <text x="300" y="96" text-anchor="middle" class="bn p s">থেভেনিন, নর্টন ও সর্বোচ্চ শক্তির প্রশ্নের পেছনের তিন ধাপ</text>
+  </svg></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>EC · বিশ্লেষণ ও উপপাদ্য</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>n নোডের সার্কিটে নোডাল বিশ্লেষণে সমীকরণ লাগে:<ol class="opts"><li>n টি</li><li>b − n + 1</li><li>n − 1</li><li>n + 1</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>সুপারপজিশন দিয়ে সরাসরি পাওয়া যায় না:<ol class="opts"><li>শক্তি</li><li>কারেন্ট</li><li>ভোল্টেজ</li><li>কোনোটিই নয়</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>নর্টনের I<sub>N</sub> হলো a–b-এর ___ কারেন্ট:<ol class="opts"><li>ওপেন-সার্কিট</li><li>শর্ট-সার্কিট</li><li>লোড</li><li>লিকেজ</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>সর্বোচ্চ শক্তি স্থানান্তরে দক্ষতা:<ol class="opts"><li>100%</li><li>75%</li><li>25%</li><li>50%</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>Δ-তে তিনটি 9 Ω-এর সমতুল্য Y:<ol class="opts"><li>প্রতিটি 27 Ω</li><li>প্রতিটি 3 Ω</li><li>প্রতিটি 9 Ω</li><li>প্রতিটি 4.5 Ω</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>দুই মেশের সাধারণ শাখায় কী থাকলে সুপারমেশ হয়?<ol class="opts"><li>কারেন্ট উৎস</li><li>ভোল্টেজ উৎস</li><li>রোধ</li><li>নোড</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>V<sub>th</sub> 20 V, R<sub>th</sub> 5 Ω, R<sub>L</sub> 15 Ω → I<sub>L</sub>:<ol class="opts"><li>4 A</li><li>1.33 A</li><li>1 A</li><li>2 A</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>কোন নেটওয়ার্কে পারস্পরিকতা খাটে না?<ol class="opts"><li>শুধু R</li><li>CCCS যুক্ত</li><li>L ও R</li><li>C ও R</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>2 Ω-এর সাথে প্যারালালে 10 A = 2 Ω-এর সাথে সিরিজে কত ভোল্ট?<ol class="opts"><li>5 V</li><li>10 V</li><li>20 V</li><li>40 V</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>12 V উৎস, অভ্যন্তরীণ রোধ 2 Ω: লোডে সর্বোচ্চ শক্তি?<ol class="opts"><li>72 W</li><li>36 W</li><li>9 W</li><li>18 W</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-খ · ৪-ঘ · ৫-খ · ৬-ক · ৭-গ · ৮-খ · ৯-গ · ১০-ঘ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> 6 Ω-এর সাথে সিরিজে একটি 30 V উৎস নোড a-তে যুক্ত; 3 Ω রোধ a ও b (গ্রাউন্ড) যুক্ত করেছে; একটি 2 A উৎস a-তে কারেন্ট প্রবেশ করায়। a–b-তে থেভেনিন সমতুল্য, সর্বোচ্চ শক্তির জন্য লোড এবং সেই শক্তি নির্ণয় করো। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li><b>সুপারপজিশনে V<sub>th</sub>:</b> শুধু 30 V: 30 × 3/9 = 10 V; শুধু 2 A: 2 × (6 ‖ 3) = 4 V → <b>V<sub>th</sub> = 14 V</b> <i class="mk">৩</i></li>
+    <li><b>R<sub>th</sub>:</b> 30 V → শর্ট, 2 A → ওপেন: 6 ‖ 3 = <b>2 Ω</b>। যাচাই: I<sub>sc</sub> = 30/6 + 2 = 7 A = 14/2 ✓ <i class="mk">২</i></li>
+    <li>সর্বোচ্চ শক্তি <span class="circ">R<sub>L</sub> = 2 Ω</span>-এ <i class="mk">১</i>; P<sub>max</sub> = 14²/(4 × 2) = <b>24.5 W</b> (I<sub>L</sub> = 3.5 A) <i class="mk">২</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>n − 1 ও b − n + 1 ঠিকভাবে গুনতে পারি</li>
+        <li>পরিদর্শন পদ্ধতিতে নোডাল/মেশ সমীকরণ লিখতে পারি</li>
+        <li>সুপারনোড ও সুপারমেশ সামলাতে পারি</li>
+        <li>P<sub>max</sub>, η = ৫০% ও দুই Y–Δ সূত্র জানি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① সর্বোচ্চ শক্তি উপপাদ্য প্রমাণ<br>② সুপারমেশসহ মেশ বিশ্লেষণ<br>③ পৃ. ৬-এর নেটওয়ার্কের নর্টন<br>④ অসম ব্রিজের R<sub>ab</sub></div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

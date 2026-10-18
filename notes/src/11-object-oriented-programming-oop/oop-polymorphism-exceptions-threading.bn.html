@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>OOP: পলিমরফিজম, এক্সসেপশন, টেমপ্লেট ও মাল্টি-থ্রেডিং: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>তারিখ: ১৩.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title" style="font-size:23pt"><span class="u">পলিমরফিজম, এক্সসেপশন, টেমপ্লেট ও থ্রেড</span></h1>
+  <p class="subtitle">ভার্চুয়াল · এক্সসেপশন · টেমপ্লেট · I/O · থ্রেড: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L176,145 M424,145 L464,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="bn k l">পলিমরফিজম +</text><text x="320" y="166" text-anchor="middle" class="bn r s">এক ইন্টারফেস, অনেক রূপ</text>
+      <text x="142" y="62" text-anchor="middle" class="bn r w6" style="font-size:13px">ওভারলোডিং ★</text>
+      <text x="320" y="38" text-anchor="middle" class="r w6">virtual · vtable ★</text>
+      <text x="498" y="62" text-anchor="middle" class="bn s">অ্যাবস্ট্রাক্ট ক্লাস · = 0</text>
+      <text x="96" y="150" text-anchor="middle" class="bn g w6" style="font-size:13px">আর্লি বনাম লেট</text>
+      <text x="544" y="150" text-anchor="middle" class="bn r w6" style="font-size:13px">এক্সসেপশন ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s">স্ট্রিম: &lt;&lt; &gt;&gt; fstream</text>
+      <text x="320" y="264" text-anchor="middle" class="bn r w6" style="font-size:13px">থ্রেড · সিনক ★</text>
+      <text x="498" y="238" text-anchor="middle" class="bn r w6" style="font-size:13px">টেমপ্লেট ★</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = যে ধারণার ওপর বাকি সব দাঁড়িয়ে</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm"><b>হাই-ইল্ড তালিকা</b><br>① ওভারলোড: কম্পাইল টাইম; ওভাররাইড: রান টাইম<br>② শুধু রিটার্ন টাইপে ওভারলোড হয় না<br>③ ওভারলোড নয়: <code>:: . .* ?: sizeof</code><br>④ Java-র মেথড ডিফল্টভাবে ভার্চুয়াল<br>⑤ ≥ ১টি pure virtual ⇒ অ্যাবস্ট্রাক্ট<br>⑥ পলিমরফিক বেসে virtual ডেস্ট্রাক্টর<br>⑦ <code>finally</code> এরর হোক বা না হোক চলে<br>⑧ checked = কম্পাইলার বাধ্য করে<br>⑨ টেমপ্লেট: কম্পাইল-টাইমে কপি<br>⑩ <code>start()</code> = নতুন থ্রেড; <code>run()</code> নয়</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">OOP সিলেবাসের পরের অংশ: "<span class="hl">Polymorphism: overloading, abstract classes, virtual functions and overriding; Exceptions; Object Oriented I/O; Template functions and classes; Multi-threaded Programming.</span>" ক্লাস, অ্যাক্সেস ও static মেম্বার প্রথম লেসনে; কনস্ট্রাক্টর ও ইনহেরিট্যান্স দ্বিতীয় লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>পলিমরফিজম ও ওভারলোডিং … পৃ. ২</li><li>ভার্চুয়াল ফাংশন ও ওভাররাইডিং … পৃ. ৩</li><li>অ্যাবস্ট্রাক্ট ক্লাস, ভার্চুয়াল ডেস্ট্রাক্টর … পৃ. ৪</li><li>এক্সসেপশন: C++ ও Java … পৃ. ৫</li><li>টেমপ্লেট ও জেনেরিক্স … পৃ. ৬</li></ul>
+    <ul class="tick"><li>অবজেক্ট ওরিয়েন্টেড I/O: স্ট্রিম … পৃ. ৭</li><li>থ্রেড: তৈরি ও জীবনচক্র … পৃ. ৮</li><li>সিনক্রোনাইজেশন ও ডেডলক … পৃ. ৯</li><li>রাতের পরীক্ষার পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: polymorphism + overloading ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>ওভারলোডিং</span></div>
+  <h2><span class="no">১</span>পলিমরফিজম: কম্পাইল-টাইম বনাম রান-টাইম; ওভারলোডিং</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">পলিমরফিজম (Polymorphism)</span> ("এক ইন্টারফেস, অনেক রূপ") একই নামকে জড়িত টাইপ অনুযায়ী ভিন্ন কাজ করতে দেয়। <b>বাইন্ডিং (Binding)</b> = একটি কলকে ফাংশন বডির সঙ্গে যুক্ত করা। <span class="hl">আর্লি (স্ট্যাটিক) বাইন্ডিং</span> হয় কম্পাইল টাইমে — ওভারলোডিং ও টেমপ্লেট। <span class="hl">লেট (ডাইনামিক) বাইন্ডিং</span> হয় রান টাইমে — বেস পয়েন্টার বা রেফারেন্সের মাধ্যমে ওভাররাইডিং।</div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="246">
+      <g class="w">
+        <rect x="80" y="6" width="140" height="32" rx="10" class="ink-k fill-y"/>
+        <rect x="6" y="70" width="134" height="36" rx="10" class="ink fill-b"/>
+        <rect x="160" y="70" width="134" height="36" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M130,38 L80,68 M170,38 L222,68"/>
+        <path class="ink" d="M40,106 V128 M74,106 V160 M110,106 V128"/>
+        <path class="ink-r" d="M227,106 V128"/>
+      </g>
+      <text x="150" y="27" text-anchor="middle" class="bn k w6">পলিমরফিজম</text>
+      <text x="73" y="86" text-anchor="middle" class="bn w6 s">কম্পাইল-টাইম</text>
+      <text x="73" y="101" text-anchor="middle" class="bn s">স্ট্যাটিক · আর্লি</text>
+      <text x="36" y="144" text-anchor="middle" class="bn s">ফাংশন</text>
+      <text x="36" y="158" text-anchor="middle" class="bn s">ওভারলোড</text>
+      <text x="76" y="176" text-anchor="middle" class="bn s">অপারেটর</text>
+      <text x="76" y="190" text-anchor="middle" class="bn s">ওভারলোড</text>
+      <text x="118" y="144" text-anchor="middle" class="bn s">টেমপ্লেট</text>
+      <text x="227" y="86" text-anchor="middle" class="bn r w6 s">রান-টাইম</text>
+      <text x="227" y="101" text-anchor="middle" class="bn r s">ডাইনামিক · লেট</text>
+      <text x="227" y="144" text-anchor="middle" class="bn r s">ভার্চুয়াল ফাংশন</text>
+      <text x="227" y="160" text-anchor="middle" class="bn r s">ওভাররাইডিং</text>
+    </svg><figcaption>দুই পরিবার, চার হাতিয়ার</figcaption></figure>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ফাংশন ওভারলোডিংয়ের নিয়ম</span> একই নাম, একই স্কোপ; প্যারামিটার তালিকা ভিন্ন হবে <b>সংখ্যা</b>, <b>টাইপ</b> বা <b>ক্রমে</b>। <span class="circ">শুধু রিটার্ন টাইপ</span> যথেষ্ট নয়: <code>int f(int)</code> + <code>double f(int)</code> = কম্পাইল এরর। কম্পাইলারের ক্রম: হুবহু মিল → প্রমোশন (<code>char→int</code>, <code>float→double</code>) → স্ট্যান্ডার্ড কনভার্শন → ইউজার কনভার্শন; দুটি সমান ভালো মিল = <b>অস্পষ্টতা (ambiguity) এরর</b>। Java-তে সাবক্লাসও উত্তরাধিকারসূত্রে পাওয়া মেথড ওভারলোড করতে পারে।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">কম্পাইল-টাইম পলিমরফিজম</th><th class="l">রান-টাইম পলিমরফিজম</th></tr>
+    <tr><td class="l">অন্য নাম</td><td class="l">স্ট্যাটিক, আর্লি বাইন্ডিং</td><td class="l">ডাইনামিক, লেট বাইন্ডিং</td></tr>
+    <tr><td class="l">কে ঠিক করে</td><td class="l">আর্গুমেন্ট তালিকা / টাইপ</td><td class="l">অবজেক্টের আসল টাইপ</td></tr>
+    <tr><td class="l">কৌশল</td><td class="l">ওভারলোডিং, টেমপ্লেট</td><td class="l"><code>virtual</code> + ওভাররাইডিং</td></tr>
+    <tr><td class="l">ইনহেরিট্যান্স লাগে?</td><td class="l">না</td><td class="l"><span class="circ">হ্যাঁ</span></td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Complex {
+  double re, im;
+public:
+  Complex(double r=0, double i=0)
+      : re(r), im(i) {}
+  Complex operator+(const Complex&amp; c) const {
+    return Complex(re + c.re, im + c.im);
+  }
+};
+Complex a(1,2), b(3,4);
+Complex c = a + b;  // a.operator+(b) → 4+6i</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কোন f?</span> <code>void f(int); void f(double);</code><br><code>f('a')</code> → প্রমোশন → <span class="circ">f(int)</span><br><code>f(2.5f)</code> → float প্রমোট হয় → f(double)<br><code>f(5L)</code> → long দুটোতেই কনভার্ট হয় → <b>অস্পষ্ট</b></div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:30%">C++ অপারেটর</th><th class="l">অপারেটরসমূহ</th></tr>
+    <tr><td class="l"><span class="red"><b>ওভারলোড করা যায় না</b></span></td><td class="l"><code>::</code> · <code>.</code> · <code>.*</code> · <code>?:</code> · <code>sizeof</code> · <code>typeid</code> · <code>alignof</code> · <code>_cast</code>-গুলো · <code>#</code> <code>##</code></td></tr>
+    <tr><td class="l">কেবল <b>মেম্বার</b> হিসেবে</td><td class="l"><code>=</code> · <code>()</code> · <code>[]</code> · <code>-&gt;</code> (এবং কনভার্শন অপারেটর)</td></tr>
+    <tr><td class="l">সাধারণত <b>friend</b></td><td class="l">স্ট্রিমের <code>&lt;&lt;</code> <code>&gt;&gt;</code>; প্রতিসম <code>a + 2</code> / <code>2 + a</code></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> যে পাঁচটি ছোঁয়া যায় না: "<b>Scope, Dot, Dot-star, Question, Size</b>" — <code>:: . .* ?: sizeof</code>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>Java-তে ইউজার অপারেটর ওভারলোডিং নেই</b>; String-এর <code>+</code> বিল্ট-ইন। <code>f(int, int = 0)</code> + <code>f(int)</code>: <code>f(5)</code> অস্পষ্ট।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">নিয়ম</span> প্রিসিডেন্স, অ্যাসোসিয়েটিভিটি ও অপারেন্ড-সংখ্যা বদলায় না; নতুন অপারেটর (<code>**</code>) নয়; একটি অপারেন্ড ইউজার টাইপ হতেই হবে।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: virtual functions & overriding ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>ভার্চুয়াল ও ওভাররাইডিং</span></div>
+  <h2><span class="no">২</span>ভার্চুয়াল ফাংশন, vtable ও ওভাররাইডিং</h2><span class="tag">আউটপুট প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ওভাররাইডিং (Overriding)</span> = ডিরাইভড ক্লাস উত্তরাধিকারসূত্রে পাওয়া মেথডকে <b>একই সিগনেচারে</b> নতুন করে লেখে। C++-এর <span class="hl">ভার্চুয়াল ফাংশন (Virtual function)</span> পয়েন্টারের নয়, <b>অবজেক্টের</b> টাইপ দেখে ঠিক হয়, তাই <code>Base* p = new Derived; p-&gt;f();</code> চালায় <code>Derived::f</code>। <code>virtual</code> না থাকলে পয়েন্টারের টাইপই ঠিক করে (স্ট্যাটিক বাইন্ডিং)। কম্পাইলার এটি করে প্রতি ক্লাসে একটি <b>vtable</b> ও প্রতি অবজেক্টে একটি লুকানো <b>vptr</b> দিয়ে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 262px;align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Base { public:
+  void show() { cout &lt;&lt; "Base "; }
+  virtual void print() { cout &lt;&lt; "BasePrint"; }
+};
+class Derived : public Base { public:
+  void show() { cout &lt;&lt; "Derived "; }
+  void print() override
+               { cout &lt;&lt; "DerivedPrint"; }
+};
+Base* p = new Derived;
+p-&gt;show();   // Base         (static)
+p-&gt;print();  // DerivedPrint (dynamic)
+// output: Base DerivedPrint</div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="258">
+      <g class="w">
+        <rect x="8" y="30" width="86" height="64" rx="8" class="ink-k fill-y"/>
+        <rect x="150" y="10" width="142" height="54" rx="8" class="ink fill-b"/>
+        <rect x="150" y="104" width="142" height="54" rx="8" class="ink-r fill-r"/>
+        <path class="ink-r" d="M94,58 C120,58 120,112 146,120" marker-end="url(#ah)"/>
+      </g>
+      <text x="51" y="22" text-anchor="middle" class="bn s k w6">Derived অবজেক্ট</text>
+      <text x="51" y="54" text-anchor="middle" class="s r">vptr</text>
+      <text x="51" y="78" text-anchor="middle" class="bn s">ডেটা</text>
+      <text x="221" y="30" text-anchor="middle" class="s w6">Base vtable</text>
+      <text x="221" y="50" text-anchor="middle" class="s">print → Base::print</text>
+      <text x="221" y="124" text-anchor="middle" class="s r w6">Derived vtable</text>
+      <text x="221" y="144" text-anchor="middle" class="s r">print → Derived::print</text>
+      <text x="80" y="176" text-anchor="middle" class="bn s g">p-&gt;print() আগে vptr পড়ে,</text>
+      <text x="80" y="193" text-anchor="middle" class="bn s g">তারপর vtable হয়ে লাফ দেয়</text>
+    </svg><figcaption>ক্লাসপ্রতি একটি vtable, অবজেক্টপ্রতি একটি vptr</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">ওভারলোডিং</th><th class="l">ওভাররাইডিং</th></tr>
+    <tr><td class="l">কোথায়</td><td class="l">একই ক্লাসে</td><td class="l">বেস ও ডিরাইভড ক্লাসে</td></tr>
+    <tr><td class="l">সিগনেচার</td><td class="l"><b>ভিন্ন</b> হতে হবে</td><td class="l"><b>একই</b> হতে হবে</td></tr>
+    <tr><td class="l">রিটার্ন টাইপ</td><td class="l">যেকোনো</td><td class="l">একই বা কোভেরিয়েন্ট (সাবক্লাস টাইপ)</td></tr>
+    <tr><td class="l">বাইন্ডিং</td><td class="l">কম্পাইল টাইম</td><td class="l">রান টাইম</td></tr>
+    <tr><td class="l">অ্যাক্সেস (Java)</td><td class="l">যেকোনো</td><td class="l">একই বা বেশি, কখনো কম নয়</td></tr>
+    <tr><td class="l">static / private / final</td><td class="l">ওভারলোড করা যায়</td><td class="l"><span class="circ">ওভাররাইড হয় না</span>; static <i>হাইড</i> হয়</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ভাষা</th><th class="l">ডিফল্টভাবে ভার্চুয়াল?</th><th class="l">কিওয়ার্ড</th><th class="l">ওভাররাইড বন্ধ</th></tr>
+    <tr><td class="l">C++</td><td class="l">না</td><td class="l"><code>virtual</code>, <code>override</code></td><td class="l"><code>final</code> (C++11)</td></tr>
+    <tr><td class="l">Java</td><td class="l"><b>হ্যাঁ</b> (non-static, non-private)</td><td class="l"><code>@Override</code> (ঐচ্ছিক)</td><td class="l"><code>final</code></td></tr>
+    <tr><td class="l">C#</td><td class="l">না</td><td class="l"><code>virtual</code> / <code>override</code></td><td class="l"><code>sealed</code></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>পয়েন্টার মেনু বাছে; <code>virtual</code> থাকলে অবজেক্ট পদ বাছে।</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>কনস্ট্রাক্টর ভার্চুয়াল হতে পারে না</b>; কনস্ট্রাক্টরের ভেতরে ভার্চুয়াল কল <i>বেস</i> ভার্সন চালায়। Java-তে ওভাররাইড করে <b>অ্যাক্সেস কমানো</b> বা বড় checked এক্সসেপশন ছোড়া যায় না।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ sizeof</span> ৬৪-বিট: <code>class A { int x; };</code> → 4। একটি ভার্চুয়াল ফাংশন যোগ করলে → <span class="circ">16</span> (8-বাইট vptr + 4 + প্যাডিং)। আরও ভার্চুয়াল ফাংশনেও vptr একটিই।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: abstract classes, virtual destructor, slicing ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>অ্যাবস্ট্রাক্ট ক্লাস</span></div>
+  <h2><span class="no">৩</span>অ্যাবস্ট্রাক্ট ক্লাস ও ভার্চুয়াল ডেস্ট্রাক্টর</h2><span class="tag">হাই-ইল্ড ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">পিওর ভার্চুয়াল ফাংশন (Pure virtual function)</span> ঘোষণা করা হয় <code>= 0</code> দিয়ে — <code>virtual double area() = 0;</code> — অর্থাৎ "প্রতিটি সাবক্লাসকে এটি দিতেই হবে"। <span class="circ">অন্তত একটি</span> পিওর ভার্চুয়াল ফাংশনযুক্ত ক্লাস হলো <span class="hl">অ্যাবস্ট্রাক্ট ক্লাস (Abstract class)</span>: এর অবজেক্ট তৈরি করা যায় না, তবে পয়েন্টার ও রেফারেন্স রাখা যায়। যে ডিরাইভড ক্লাস সব পিওর ভার্চুয়াল ফাংশন ওভাররাইড করে না, সেটিও অ্যাবস্ট্রাক্ট। Java ও C# ব্যবহার করে <code>abstract</code> কিওয়ার্ড।</div>
+  <div class="cols" style="grid-template-columns:236px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="232">
+      <g class="w">
+        <rect x="70" y="8" width="160" height="56" rx="10" class="ink-k fill-y" style="stroke-dasharray:6 4"/>
+        <rect x="8" y="122" width="120" height="44" rx="10" class="ink-g fill-g"/>
+        <rect x="172" y="122" width="120" height="44" rx="10" class="ink-g fill-g"/>
+        <path class="ink" d="M68,120 L120,66" marker-end="url(#ahb)"/>
+        <path class="ink" d="M232,120 L180,66" marker-end="url(#ahb)"/>
+      </g>
+      <text x="150" y="30" text-anchor="middle" class="bn k w6">Shape (অ্যাবস্ট্রাক্ট)</text>
+      <text x="150" y="50" text-anchor="middle" class="s r">area() = 0</text>
+      <text x="68" y="142" text-anchor="middle" class="s g w6">Circle</text>
+      <text x="68" y="158" text-anchor="middle" class="s">area() { πr² }</text>
+      <text x="232" y="142" text-anchor="middle" class="s g w6">Rect</text>
+      <text x="232" y="158" text-anchor="middle" class="s">area() { w·h }</text>
+      <text x="150" y="190" text-anchor="middle" class="s r">new Shape() ✗ · Shape* s ✓</text>
+    </svg><figcaption>ড্যাশ দাগ = ইনস্ট্যান্স হয় না</figcaption></figure>
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Shape { public:
+  virtual double area() = 0;  // pure
+  virtual ~Shape() {}         // virtual dtor
+};
+class Circle : public Shape { double r;
+public:
+  Circle(double r) : r(r) {}
+  double area() override { return 3.14159*r*r; }
+};
+Shape* s[2] = { new Circle(1), new Rect(2, 3) };
+double total = 0;
+for (auto x : s) total += x-&gt;area();
+// Shape t;  → error: abstract class</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অ্যাবস্ট্রাক্ট ক্লাসের কি …</th><th class="l">C++</th><th class="l">Java</th></tr>
+    <tr><td class="l">কনস্ট্রাক্টর, ডেটা, সাধারণ মেথড থাকতে পারে?</td><td class="l">হ্যাঁ (কনস্ট্রাক্টর চালায় ডিরাইভড ক্লাস)</td><td class="l">হ্যাঁ</td></tr>
+    <tr><td class="l"><b>শূন্য</b> অ্যাবস্ট্রাক্ট মেথড থাকতে পারে?</td><td class="l">না — ≥ ১টি পিওর ভার্চুয়াল হলেই অ্যাবস্ট্রাক্ট</td><td class="l"><span class="circ">হ্যাঁ</span>, <code>abstract</code> লিখলে</td></tr>
+    <tr><td class="l">অ্যাবস্ট্রাক্ট মেথডের বডি দেওয়া যায়?</td><td class="l">হ্যাঁ, বাইরে: <code>Shape::area()</code></td><td class="l">না</td></tr>
+  </table>
+  <div class="tipbox tiny"><span class="lbl">Java-তে একই</span> <code>abstract class Shape { abstract double area(); }</code> · <code>class Circle extends Shape {…}</code> · <code>Shape s = new Circle(1);</code> বৈধ — রেফারেন্সের টাইপ অ্যাবস্ট্রাক্ট হতে পারে।</div>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ভার্চুয়াল ডেস্ট্রাক্টর</span> <code>Base* p = new Derived; delete p;</code> — <code>~Base()</code> ভার্চুয়াল <b>না</b> হলে কেবল বেস ডেস্ট্রাক্টর চলে (আনুষ্ঠানিকভাবে undefined behaviour), ডিরাইভড অংশ লিক হয়। নিয়ম: <span class="hl">যে ক্লাসে কোনো ভার্চুয়াল ফাংশন আছে, তার ডেস্ট্রাক্টর ভার্চুয়াল হবে</span>। তখন ক্রম: <code>~Derived()</code> তারপর <code>~Base()</code>।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">অবজেক্ট স্লাইসিং (Object slicing)</span> <code>Derived d; Base b = d;</code> কেবল <b>Base অংশ</b> কপি করে; ডিরাইভড ফিল্ড "কেটে বাদ" যায় এবং <code>b.print()</code> ডাকে <code>Base::print</code>। পলিমরফিজম কাজ করে কেবল <b>পয়েন্টার বা রেফারেন্সে</b>, ভ্যালুতে কখনো নয়। Java-তে স্লাইসিং নেই: ভেরিয়েবল রেফারেন্স রাখে।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>= 0 মানে শূন্য অবজেক্ট।</b>" ক্লাসে কোথাও <code>= 0</code> বসালে আর অবজেক্ট বানানো যায় না।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "অ্যাবস্ট্রাক্ট ক্লাসে কেবল অ্যাবস্ট্রাক্ট মেথড থাকে" — <b>ভুল</b>। C++-এ <code>abstract</code> কিওয়ার্ড নেই। অ্যাবস্ট্রাক্ট ক্লাস বনাম ইন্টারফেস: প্রথম লেসন।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ মোট ক্ষেত্রফল</span> Circle(1) + Rect(2,3) = 3.14159 + 6 = <span class="circ">9.14</span>; প্রতিটি <code>area()</code> রান টাইমে বাছাই।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: exceptions ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>এক্সসেপশন</span></div>
+  <h2><span class="no">৪</span>এক্সসেপশন হ্যান্ডলিং: C++ ও Java</h2><span class="tag">আউটপুট প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">এক্সসেপশন (Exception)</span> হলো রান টাইমের অস্বাভাবিক ঘটনা (শূন্য দিয়ে ভাগ, ভুল ইনডেক্স, ফাইল নেই) যা স্বাভাবিক প্রবাহ ভাঙে। <code>try</code> ব্লক পাহারা দেয়, <code>throw</code> এক্সসেপশন অবজেক্ট ছোড়ে, <code>catch</code> মিলে যাওয়া টাইপ সামলায়। <code>throw</code> হলে শুরু হয় <span class="hl">স্ট্যাক আনওয়াইন্ডিং (Stack unwinding)</span>: হ্যান্ডলার না মেলা পর্যন্ত ফ্রেম সরানো হয় ও লোকাল অবজেক্ট ধ্বংস হয়; কোনো হ্যান্ডলার না পেলে → <code>std::terminate()</code> (C++) বা স্ট্যাক ট্রেসসহ থ্রেড বন্ধ (Java)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 244px;align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">double divide(int a, int b) {
+  if (b == 0) throw runtime_error("b = 0");
+  return (double)a / b;
+}
+try {
+  cout &lt;&lt; divide(10, 0);   // skipped
+} catch (const runtime_error&amp; e) {
+  cout &lt;&lt; e.what();        // b = 0
+} catch (...) {             // any type
+  cout &lt;&lt; "unknown";
+}</div>
+    <figure class="doodle"><svg viewBox="0 0 280 190" width="240">
+      <g class="w">
+        <rect x="10" y="8" width="150" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="10" y="62" width="150" height="34" rx="8" class="ink fill-b"/>
+        <rect x="10" y="116" width="150" height="34" rx="8" class="ink-r fill-r"/>
+        <path class="ink-r" d="M170,132 C220,120 220,40 166,26" marker-end="url(#ah)"/>
+        <path class="ink" d="M85,42 V58 M85,96 V112" marker-end="url(#ahb)"/>
+      </g>
+      <text x="85" y="30" text-anchor="middle" class="s g w6">main(): try / catch</text>
+      <text x="85" y="84" text-anchor="middle" class="bn s">f(): লোকাল ধ্বংস</text>
+      <text x="85" y="138" text-anchor="middle" class="s r w6">g(): throw</text>
+      <text x="238" y="84" text-anchor="middle" class="bn s r">আনওয়াইন্ড</text>
+      <text x="140" y="177" text-anchor="middle" class="bn s k">কল নামে নিচে, এক্সসেপশন ওঠে ওপরে</text>
+    </svg><figcaption>স্ট্যাক আনওয়াইন্ডিং</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:14%">কিওয়ার্ড</th><th class="l" style="width:40%">C++</th><th class="l">Java</th></tr>
+    <tr><td class="l"><code>throw</code></td><td class="l">যেকোনো টাইপ; <code>throw;</code> = পুনরায় ছোড়া</td><td class="l"><code>throw new X()</code> — একটি Throwable</td></tr>
+    <tr><td class="l"><code>throws</code></td><td class="l">নেই; <code>noexcept</code> = ছুড়বে না</td><td class="l">হেডারে checked এক্সসেপশনের তালিকা</td></tr>
+    <tr><td class="l"><code>finally</code></td><td class="l"><b>নেই</b> — ডেস্ট্রাক্টর পরিষ্কার করে (RAII)</td><td class="l">এক্সসেপশন <span class="circ">হোক বা না হোক</span> চলে</td></tr>
+    <tr><td class="l">সব ধরা</td><td class="l"><code>catch (...)</code>, সবশেষে</td><td class="l"><code>catch (Exception e)</code>; মাল্টি-ক্যাচ <code>A | B</code></td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:30%">Java ক্লাস</th><th class="l" style="width:16%">ধরন</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l">Throwable → <b>Error</b></td><td class="l">unchecked</td><td class="l">OutOfMemoryError, StackOverflowError (ধরবে না)</td></tr>
+    <tr><td class="l">Exception → <b>RuntimeException</b></td><td class="l"><span class="hl">unchecked</span></td><td class="l">Arithmetic, NullPointer, ArrayIndexOutOfBounds, ClassCast</td></tr>
+    <tr><td class="l">অন্যান্য <b>Exception</b></td><td class="l"><span class="hl">checked</span></td><td class="l">IOException, FileNotFound, SQLException, InterruptedException</td></tr>
+  </table>
+  <p class="tiny" style="margin:0"><b>Checked</b> = কম্পাইলার বাধ্য করে catch করতে বা <code>throws</code> দিয়ে ঘোষণা করতে। C++: <code>std::exception</code> → <i>logic_error</i> (out_of_range, invalid_argument), <i>runtime_error</i> (overflow_error, underflow_error), <i>bad_alloc</i>, <i>bad_cast</i>; সবার আছে <code>what()</code>।</p>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>সন্তানকে ধরো বাবার আগে।</b>" প্রথম মিলে যাওয়া হ্যান্ডলারই জেতে, তাই ডিরাইভড টাইপ আগে। "<b>Checked = Compiler-checked।</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> সাবক্লাস catch-এর ওপরে <code>catch (Exception e)</code> = Java-তে <b>কম্পাইল এরর</b>। <code>finally</code> বাদ যায় কেবল <code>System.exit()</code> বা ক্র্যাশে; finally-র <code>return</code> try-এর return বাতিল করে।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ট্রেস</span> <code>int[] a = new int[3];</code> <code>try { a[3]=10; print("X"); } catch {print("Y");} finally {print("Z");} print("W");</code> → <span class="circ">YZW</span></div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: templates & generics ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>টেমপ্লেট</span></div>
+  <h2><span class="no">৫</span>টেমপ্লেট ফাংশন ও ক্লাস; Java জেনেরিক্স</h2><span class="tag">প্রোগ্রামিং প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">টেমপ্লেট (Template)</span> হলো টাইপ প্যারামিটার <code>T</code> দিয়ে একবার লেখা ব্লুপ্রিন্ট। কোড যখন কোনো নির্দিষ্ট টাইপ দিয়ে এটি ব্যবহার করে, কম্পাইলার তখন একে <span class="hl">ইনস্ট্যান্সিয়েট (Instantiate)</span> করে — সেই টাইপের জন্য আলাদা ফাংশন বা ক্লাস তৈরি করে — <b>কম্পাইল টাইমে</b>। এটি <b>প্যারামেট্রিক (জেনেরিক) পলিমরফিজম</b>; পুরো STL (<code>vector&lt;T&gt;</code>, <code>sort</code>, <code>map&lt;K,V&gt;</code>) এর ওপর তৈরি।</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">template &lt;typename T&gt;
+T maxOf(T a, T b) { return a &gt; b ? a : b; }
+
+cout &lt;&lt; maxOf(3, 7)        // T = int
+     &lt;&lt; " " &lt;&lt; maxOf(2.5, 1.5)
+     &lt;&lt; " " &lt;&lt; maxOf('a', 'z');
+// output: 7 2.5 z
+// maxOf(3, 2.5)  → error: T int or double?
+// maxOf&lt;double&gt;(3, 2.5) → 3</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">template &lt;class T, int N = 100&gt;
+class Stack {
+  T data[N];  int top = -1;
+public:
+  void push(const T&amp; x) {
+    if (top == N - 1) throw overflow_error("full");
+    data[++top] = x;
+  }
+  T pop() {
+    if (top &lt; 0) throw underflow_error("empty");
+    return data[top--];
+  }
+};
+Stack&lt;int&gt; si;  Stack&lt;string, 10&gt; ss;</div>
+  </div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="246">
+      <g class="w">
+        <rect x="70" y="6" width="160" height="40" rx="10" class="ink-k fill-y" style="stroke-dasharray:6 4"/>
+        <rect x="6" y="104" width="88" height="40" rx="8" class="ink fill-b"/>
+        <rect x="106" y="104" width="88" height="40" rx="8" class="ink fill-b"/>
+        <rect x="206" y="104" width="88" height="40" rx="8" class="ink fill-b"/>
+        <path class="ink-r" d="M120,48 L54,100" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M150,48 V100" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M180,48 L246,100" marker-end="url(#ah)"/>
+      </g>
+      <text x="150" y="31" text-anchor="middle" class="k w6">maxOf&lt;T&gt;</text>
+      <text x="40" y="66" text-anchor="middle" class="bn s r">কম্পাইলার</text>
+      <text x="40" y="81" text-anchor="middle" class="bn s r">বানায়</text>
+      <text x="50" y="129" text-anchor="middle" class="s">maxOf&lt;int&gt;</text>
+      <text x="150" y="129" text-anchor="middle" class="s">&lt;double&gt;</text>
+      <text x="250" y="129" text-anchor="middle" class="s">&lt;char&gt;</text>
+      <text x="150" y="164" text-anchor="middle" class="bn s g">এক সোর্স, তিনটি ফাংশন</text>
+    </svg><figcaption>কম্পাইল টাইমে ইনস্ট্যান্সিয়েশন</figcaption></figure>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">স্পেশালাইজেশন (Specialization)</span> <b>ফুল স্পেশালাইজেশন</b> একটি নির্দিষ্ট টাইপের জন্য টেমপ্লেট বদলে দেয়: <code>template&lt;&gt; const char* maxOf(const char* a, const char* b)</code>, ভেতরে <code>strcmp</code> — না দিলে দুটি C স্ট্রিং তুলনা হয় <b>ঠিকানা</b> দিয়ে। ক্লাস টেমপ্লেট <b>আংশিক</b> স্পেশালাইজ করা যায় (<code>Stack&lt;T*&gt;</code>); ফাংশন টেমপ্লেট নয়। টেমপ্লেট কোড থাকে <b>হেডারে</b>: ইনস্ট্যান্সিয়েট করতে কম্পাইলারের পুরো বডি লাগে।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:20%">বিষয়</th><th class="l" style="width:36%">C++ টেমপ্লেট</th><th class="l">Java জেনেরিক্স</th></tr>
+    <tr><td class="l">নির্ধারণ</td><td class="l">কম্পাইল টাইমে, টাইপপ্রতি</td><td class="l">কম্পাইল টাইমে, তারপর <b>টাইপ ইরেজার</b></td></tr>
+    <tr><td class="l">কোডের কপি</td><td class="l">টাইপপ্রতি একটি (কোড ব্লোট)</td><td class="l">একটি ক্লাস (ভেতরে <code>Object</code>)</td></tr>
+    <tr><td class="l">প্রিমিটিভ আর্গুমেন্ট</td><td class="l">হ্যাঁ: <code>Stack&lt;int&gt;</code></td><td class="l">না: <code>List&lt;Integer&gt;</code>, কখনো <code>&lt;int&gt;</code> নয়</td></tr>
+    <tr><td class="l">বাড়তি সুবিধা</td><td class="l">নন-টাইপ প্যারাম <code>&lt;int N&gt;</code>, স্পেশালাইজেশন</td><td class="l">বাউন্ড <code>&lt;T extends Comparable&lt;T&gt;&gt;</code>, ওয়াইল্ডকার্ড <code>?</code></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>টেমপ্লেট হলো কুকি কাটার</b>": এক কাটার, প্রতিটি ময়দার (টাইপের) জন্য নতুন কুকি। Java জেনেরিক্স: একটিই কুকি, গায়ে লেবেল।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> Java জেনেরিক্স টেমপ্লেট <b>নয়</b>: ইরেজারের পর <code>List&lt;String&gt;</code> ও <code>List&lt;Integer&gt;</code> <span class="circ">একই ক্লাস</span>, তাই <code>new T()</code> অবৈধ।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ Java</span> <code>static &lt;T&gt; void show(T v)</code>: <code>show(100)</code> অটোবক্স হয়ে Integer। <code>Box&lt;String&gt; b = new Box&lt;&gt;();</code> — ডায়মন্ড String অনুমান করে।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: object-oriented I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>OO I/O</span></div>
+  <h2><span class="no">৬</span>অবজেক্ট ওরিয়েন্টেড I/O: স্ট্রিম</h2><span class="tag">MCQ তথ্য</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> OO I/O-তে ডেটা চলে <span class="hl">স্ট্রিম অবজেক্টের (Stream object)</span> মাধ্যমে: স্ট্রিম হলো বাইটের ধারা, যা উৎস (কিবোর্ড, ফাইল) থেকে আসে বা গন্তব্যে (স্ক্রিন, ফাইল) যায়। C++ ক্লাস হায়ারার্কি দেয় <code>&lt;iostream&gt;</code>, <code>&lt;fstream&gt;</code>, <code>&lt;sstream&gt;</code>-এ; <code>&lt;&lt;</code> (<b>ইনসার্শন</b>) ও <code>&gt;&gt;</code> (<b>এক্সট্র্যাকশন</b>) ওভারলোডেড অপারেটর, তাই ইউজার ক্লাসও যোগ দিতে পারে।</div>
+  <div class="cols" style="grid-template-columns:262px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 220" width="258">
+      <g class="w">
+        <rect x="100" y="4" width="100" height="28" rx="8" class="ink-k fill-y"/>
+        <rect x="20" y="58" width="100" height="28" rx="8" class="ink fill-b"/>
+        <rect x="180" y="58" width="100" height="28" rx="8" class="ink fill-b"/>
+        <rect x="100" y="114" width="100" height="28" rx="8" class="ink-r fill-r"/>
+        <rect x="4" y="170" width="92" height="28" rx="8" class="ink-g fill-g"/>
+        <rect x="104" y="170" width="92" height="28" rx="8" class="ink-g fill-g"/>
+        <rect x="204" y="170" width="92" height="28" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M70,56 L130,34 M230,56 L170,34 M70,88 L130,112 M230,88 L170,112 M50,168 L60,88 M150,168 V144 M250,168 L240,88"/>
+      </g>
+      <text x="150" y="23" text-anchor="middle" class="s k w6">ios (ios_base)</text>
+      <text x="70" y="77" text-anchor="middle" class="s w6">istream</text>
+      <text x="230" y="77" text-anchor="middle" class="s w6">ostream</text>
+      <text x="150" y="133" text-anchor="middle" class="s r w6">iostream</text>
+      <text x="50" y="189" text-anchor="middle" class="s g">ifstream</text>
+      <text x="150" y="189" text-anchor="middle" class="s g">fstream</text>
+      <text x="250" y="189" text-anchor="middle" class="s g">ofstream</text>
+      <text x="150" y="214" text-anchor="middle" class="s">cin: istream · cout: ostream</text>
+    </svg><figcaption>iostream: মাল্টিপল ইনহেরিট্যান্স</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">অবজেক্ট</th><th class="l">ক্লাস</th><th class="l">ডিভাইস</th><th class="l">বাফার</th></tr>
+        <tr><td class="l"><code>cin</code></td><td class="l">istream</td><td class="l">কিবোর্ড</td><td class="l">হ্যাঁ</td></tr>
+        <tr><td class="l"><code>cout</code></td><td class="l">ostream</td><td class="l">স্ক্রিন</td><td class="l">হ্যাঁ</td></tr>
+        <tr><td class="l"><code>cerr</code></td><td class="l">ostream</td><td class="l">এরর</td><td class="l"><span class="circ">না</span></td></tr>
+        <tr><td class="l"><code>clog</code></td><td class="l">ostream</td><td class="l">এরর লগ</td><td class="l">হ্যাঁ</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">মোড</th><th class="l">অর্থ</th></tr>
+        <tr><td class="l"><code>ios::in</code> · <code>out</code></td><td class="l">পড়া · লেখা</td></tr>
+        <tr><td class="l"><code>ios::app</code></td><td class="l">প্রতিটি লেখা শেষে যোগ</td></tr>
+        <tr><td class="l"><code>ios::ate</code></td><td class="l">খুলে একবার শেষে যাও</td></tr>
+        <tr><td class="l"><code>ios::trunc</code></td><td class="l">আগে ফাইল খালি করো</td></tr>
+        <tr><td class="l"><code>ios::binary</code></td><td class="l">টেক্সট রূপান্তর নয়</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Point { int x, y;
+ public:
+  Point(int a=0, int b=0) : x(a), y(b) {}
+  friend ostream&amp; operator&lt;&lt;(ostream&amp; os,
+                             const Point&amp; p) {
+    return os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ","
+              &lt;&lt; p.y &lt;&lt; ")";
+  }
+};
+ofstream out("pts.txt", ios::app);
+out &lt;&lt; Point(2, 3) &lt;&lt; endl;  // (2,3)
+out.close();
+ifstream in("pts.txt");  string line;
+while (getline(in, line)) cout &lt;&lt; line;</div>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">ম্যানিপুলেটর</th><th class="l">কাজ</th></tr>
+        <tr><td class="l"><code>endl</code></td><td class="l">নতুন লাইন <b>+ ফ্লাশ</b></td></tr>
+        <tr><td class="l"><code>setw(n)</code></td><td class="l">প্রস্থ, কেবল <b>পরের</b> আইটেমে</td></tr>
+        <tr><td class="l"><code>setprecision(n)</code></td><td class="l">অঙ্ক (<code>fixed</code> হলে দশমিকের পরে)</td></tr>
+        <tr><td class="l"><code>setfill(c)</code></td><td class="l">প্যাডিং অক্ষর</td></tr>
+        <tr><td class="l"><code>hex</code> <code>oct</code> <code>dec</code></td><td class="l">সংখ্যার ভিত্তি (স্থায়ী)</td></tr>
+      </table>
+      <p class="tiny" style="margin:0">ofstream ডিফল্টে খোলে <code>out | trunc</code> মোডে; ফাইল যাচাই <code>is_open()</code>, <code>eof()</code>, <code>fail()</code> দিয়ে।</p>
+    </div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Java I/O</span> <b>বাইট</b> স্ট্রিম: InputStream / OutputStream (FileInputStream)। <b>ক্যারেক্টার</b> স্ট্রিম: Reader / Writer (FileReader, FileWriter, <code>readLine()</code>-সহ BufferedReader)। <code>System.in</code> একটি InputStream, <code>System.out</code> একটি PrintStream; <code>Scanner</code> টোকেন পার্স করে (<code>nextInt()</code>, <code>nextLine()</code>)। ফাইল বন্ধ করো <b>try-with-resources</b> দিয়ে; পুরো অবজেক্ট সেভ হয় ObjectOutputStream-এ (ক্লাসকে Serializable হতে হবে)।</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>তীর দেখায় ডেটা কোথায় যায়</b>": <code>cout &lt;&lt; x</code> x-কে বাইরে ঠেলে; <code>cin &gt;&gt; x</code> x-এ টেনে আনে।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>operator&lt;&lt;</code> হবে <b>নন-মেম্বার</b> (friend), চেইনিংয়ের জন্য রিটার্ন <code>ostream&amp;</code>। <code>cin &gt;&gt; s</code> স্পেসে থেমে যায়।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> <code>cout &lt;&lt; setw(5) &lt;&lt; 42 &lt;&lt; 7;</code> → "<span class="circ">␣␣␣427</span>": setw কেবল 42-কে প্যাড করে।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: threads ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>থ্রেড</span></div>
+  <h2><span class="no">৭</span>থ্রেড: তৈরি ও জীবনচক্র</h2><span class="tag">হাই-ইল্ড ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">থ্রেড (Thread)</span> হলো CPU শিডিউলিংয়ের ক্ষুদ্রতম একক — একটি "লাইটওয়েট প্রসেস"। <span class="hl">মাল্টি-থ্রেডিং (Multi-threading)</span> এক প্রসেসের ভেতরে দুই বা ততোধিক থ্রেড চালায়; তারা কোড, ডেটা ও হিপ ভাগ করে, কিন্তু প্রত্যেকের নিজস্ব <b>স্ট্যাক, রেজিস্টার ও প্রোগ্রাম কাউন্টার</b>। এক কোরে থ্রেড চলে <b>সমকালীনভাবে (concurrent)</b>, পালা করে; বহু কোরে <b>সমান্তরালে (parallel)</b>। ব্যবহার: সাড়া-দেওয়া GUI, সার্ভার, ব্যাকগ্রাউন্ড ডাউনলোড।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:24%">বিষয়</th><th class="l">প্রসেস</th><th class="l">থ্রেড</th></tr>
+    <tr><td class="l">মেমরি</td><td class="l">নিজস্ব অ্যাড্রেস স্পেস</td><td class="l">প্রসেসের মেমরি ভাগ করে</td></tr>
+    <tr><td class="l">তৈরি / সুইচ</td><td class="l">ভারী, ধীর</td><td class="l"><span class="circ">হালকা, দ্রুত</span></td></tr>
+    <tr><td class="l">যোগাযোগ</td><td class="l">IPC: পাইপ, সকেট</td><td class="l">শেয়ার্ড ভেরিয়েবল (লক লাগে)</td></tr>
+    <tr><td class="l">একটি ক্র্যাশ করলে</td><td class="l">অন্যরা অক্ষত</td><td class="l">পুরো প্রসেস বন্ধ হতে পারে</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">// Way 1: extend Thread
+class MyThread extends Thread {
+  public void run() { System.out.println("T1"); }
+}
+// Way 2: implement Runnable (preferred)
+class Task implements Runnable {
+  public void run() { System.out.println("T2"); }
+}
+new MyThread().start();
+new Thread(new Task()).start();
+new Thread(() -&gt; System.out.println("T3"))
+    .start();               // lambda (Java 8)</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">start() বনাম run()</span> <code>start()</code> JVM-এর কাছে <b>নতুন</b> থ্রেড চায়, সেই থ্রেড পরে <code>run()</code> ডাকে। সরাসরি <code>run()</code> ডাকা <b>বর্তমান</b> থ্রেডে সাধারণ মেথড কল। দুবার <code>start()</code> → IllegalThreadStateException। <b>Runnable ভালো</b>: ক্লাসটি তখনও অন্য ক্লাস extend করতে পারে (একক ইনহেরিট্যান্স), আর একটি টাস্ক বহু থ্রেড ভাগ করতে পারে। থ্রেডগুলোর প্রিন্টের ক্রম <b>নিশ্চিত নয়</b>।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">মেথড</th><th class="l">কাজ</th></tr>
+      <tr><td class="l"><code>sleep(ms)</code></td><td class="l">থামে; লক <b>রাখে</b></td></tr>
+      <tr><td class="l"><code>join()</code></td><td class="l">ওটা শেষ হওয়া পর্যন্ত অপেক্ষা</td></tr>
+      <tr><td class="l"><code>yield()</code></td><td class="l">ইঙ্গিত: অন্যকে চলতে দাও</td></tr>
+      <tr><td class="l"><code>wait()</code></td><td class="l">লক <b>ছেড়ে দেয়</b></td></tr>
+      <tr><td class="l"><code>setPriority</code></td><td class="l">1 … <span class="circ">5</span> … 10</td></tr>
+      <tr><td class="l"><code>setDaemon</code></td><td class="l">ব্যাকগ্রাউন্ড থ্রেড</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 330 200" width="298">
+      <g class="w">
+        <rect x="4" y="80" width="56" height="34" rx="8" class="ink fill-b"/>
+        <rect x="104" y="70" width="110" height="54" rx="10" class="ink-r fill-r"/>
+        <rect x="236" y="80" width="90" height="34" rx="8" class="ink-k fill-y"/>
+        <rect x="94" y="4" width="130" height="30" rx="8" class="ink-p fill-p"/>
+        <rect x="94" y="162" width="130" height="34" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M60,97 H100" marker-end="url(#ahb)"/>
+        <path class="ink" d="M214,97 H232" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M146,68 V38 M172,36 V66" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M146,126 V158 M172,160 V128" marker-end="url(#ahg)"/>
+      </g>
+      <text x="32" y="102" text-anchor="middle" class="s w6">NEW</text>
+      <text x="159" y="93" text-anchor="middle" class="s r w6">RUNNABLE</text>
+      <text x="159" y="111" text-anchor="middle" class="bn s r">রেডি + রানিং</text>
+      <text x="281" y="102" text-anchor="middle" class="s k w6">TERMINATED</text>
+      <text x="159" y="24" text-anchor="middle" class="bn s p w6">BLOCKED (লক)</text>
+      <text x="159" y="176" text-anchor="middle" class="s g">WAITING /</text>
+      <text x="159" y="190" text-anchor="middle" class="s g">TIMED_WAITING</text>
+      <text x="80" y="72" text-anchor="middle" class="s">start()</text>
+      <text x="225" y="72" text-anchor="middle" class="bn s">শেষ</text>
+    </svg><figcaption>Java Thread.State: ছয়টি অবস্থা</figcaption></figure>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>New Runners Block, Wait, Time-wait, Terminate</b>" — enum-এর ক্রমে Java-র ছয় অবস্থা।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> Java-তে <b>আলাদা RUNNING অবস্থা নেই</b>: RUNNABLE = রেডি + রানিং। লকের অপেক্ষা = BLOCKED; <code>wait()</code>/<code>join()</code> = WAITING; <code>sleep(ms)</code> = TIMED_WAITING।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> <code>t.run(); print("M");</code> → run-এর আউটপুট সবসময় আগে (একই থ্রেড)। <code>t.start(); print("M");</code> → ক্রম <span class="circ">অনিশ্চিত</span>।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: synchronization ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>সিনক্রোনাইজেশন</span></div>
+  <h2><span class="no">৮</span>সিনক্রোনাইজেশন, রেস কন্ডিশন ও ডেডলক</h2><span class="tag">লিখিত প্রশ্নের প্রিয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">রেস কন্ডিশন (Race condition)</span> ঘটে যখন দুটি থ্রেড শেয়ার্ড ডেটা ব্যবহার করে, অন্তত একটি লেখে, আর ফল সময়ের ওপর নির্ভর করে। শেয়ার্ড ডেটা ছোঁয়া কোড হলো <span class="hl">ক্রিটিক্যাল সেকশন (Critical section)</span>; <b>সিনক্রোনাইজেশন</b> নিশ্চিত করে <b>মিউচুয়াল এক্সক্লুশন</b> — একসঙ্গে কেবল একটি থ্রেড ভেতরে। <code>count++</code> দেখতে এক ধাপ, আসলে তিন ধাপ (পড়া, যোগ, লেখা), তাই দুটি থ্রেড একটি আপডেট হারাতে পারে।</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">// Java: monitor lock on 'this'
+class Counter {
+  private int count = 0;
+  public synchronized void increment() {
+    count++;
+  }
+  public int get() { return count; }
+}
+// or: synchronized (lock) { count++; }
+// or: AtomicInteger c; c.incrementAndGet();</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">// C++11: &lt;thread&gt;, &lt;mutex&gt;
+int count = 0;  mutex m;
+void work() {
+  for (int i = 0; i &lt; 1000; i++) {
+    lock_guard&lt;mutex&gt; g(m);  // RAII lock
+    count++;
+  }
+}
+thread t1(work), t2(work);
+t1.join();  t2.join();   // wait for both
+cout &lt;&lt; count;           // always 2000</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">হাতিয়ার</th><th class="l">যা দেয়</th></tr>
+    <tr><td class="l"><b>মিউটেক্স (Mutex)</b></td><td class="l">একসময়ে এক মালিক; যে লক করে, সে-ই খোলে</td></tr>
+    <tr><td class="l"><b>সেমাফোর (Semaphore)</b></td><td class="l">কাউন্টার: সর্বোচ্চ <i>n</i> থ্রেড; বাইনারি সেমাফোর ≈ মিউটেক্স (মালিকানা ছাড়া)</td></tr>
+    <tr><td class="l"><b>মনিটর (Monitor)</b></td><td class="l">এক অবজেক্টে লক + অপেক্ষা: <code>synchronized</code> + <code>wait/notify</code></td></tr>
+    <tr><td class="l"><code>volatile</code> (Java)</td><td class="l">সর্বশেষ মান দৃশ্যমান রাখে; <span class="circ">অ্যাটমিসিটি নয়</span> — <code>count++</code> তবুও রেস করে</td></tr>
+    <tr><td class="l"><code>join</code> / <code>detach</code> (C++)</td><td class="l">অপেক্ষা করো / একা চলতে দাও; কোনোটি না করলে → <code>std::terminate</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="246">
+      <g class="w">
+        <circle cx="60" cy="50" r="34" class="ink fill-b"/>
+        <circle cx="240" cy="50" r="34" class="ink fill-b"/>
+        <rect x="20" y="126" width="80" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="200" y="126" width="80" height="36" rx="8" class="ink-r fill-r"/>
+        <path class="ink-g" d="M60,122 V88" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M240,122 V88" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M100,138 L206,74" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M200,138 L94,74" marker-end="url(#ah)"/>
+      </g>
+      <text x="60" y="55" text-anchor="middle" class="bn s w6">লক A</text>
+      <text x="240" y="55" text-anchor="middle" class="bn s w6">লক B</text>
+      <text x="60" y="149" text-anchor="middle" class="s r w6">T1</text>
+      <text x="240" y="149" text-anchor="middle" class="s r w6">T2</text>
+      <text x="28" y="108" text-anchor="middle" class="bn s g">ধরে আছে</text>
+      <text x="272" y="108" text-anchor="middle" class="bn s g">ধরে আছে</text>
+      <text x="150" y="96" text-anchor="middle" class="bn s r">চায়</text>
+      <text x="150" y="177" text-anchor="middle" class="bn s k">চক্রাকার অপেক্ষা = ডেডলক</text>
+    </svg><figcaption>প্রত্যেকে একটি ধরে, অন্যটির অপেক্ষায়</figcaption></figure>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ডেডলক: Coffman-এর ৪ শর্ত</span> ① <b>মিউচুয়াল এক্সক্লুশন</b> — রিসোর্স একটি থ্রেডের হাতে। ② <b>হোল্ড অ্যান্ড ওয়েট</b> — একটি ধরে আরেকটির অপেক্ষা। ③ <b>নো প্রিএম্পশন</b> — লক কেড়ে নেওয়া যায় না। ④ <b>সার্কুলার ওয়েট</b> — T1 → T2 → … → T1। চারটিই লাগে; একটি ভাঙলেই <span class="hl">ডেডলক (Deadlock)</span> অসম্ভব — সাধারণত <b>নির্দিষ্ট লক-ক্রম</b> (সবসময় A আগে, পরে B)। <b>স্টারভেশন</b> = কখনো পালা পায় না; <b>লাইভলক</b> = ব্যস্ত কিন্তু অগ্রগতি নেই।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> Coffman = "<b>My Hat, No Coat</b>": Mutual exclusion, Hold &amp; wait, No preemption, Circular wait।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>wait()</code>/<code>notify()</code> হলো <b>Object</b>-এর মেথড, লক হাতে রেখেই ডাকতে হয় (নইলে IllegalMonitorStateException)।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ হারানো আপডেট</span> count = 5। T1 পড়ে 5, T2 পড়ে 5, T1 লেখে 6, T2 লেখে 6 → ফল <span class="circ">6</span>, 7 নয়। লক ছাড়া দুই × ১০০০ বৃদ্ধিতে ফল ≤ 2000।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পাতা</span>
+    <div class="fgrid small">
+      <p>ওভারলোডিং → কম্পাইল টাইম, আর্লি বাইন্ডিং</p><p>ওভাররাইডিং + virtual → রান টাইম, লেট বাইন্ডিং</p>
+      <p>শুধু রিটার্ন টাইপে ওভারলোড হয় না</p><p>ওভারলোড নয়: <code>:: . .* ?: sizeof</code></p>
+      <p>কেবল মেম্বার: <code>= () [] -&gt;</code></p><p>Java: ইউজার অপারেটর ওভারলোডিং নেই</p>
+      <p>vtable ক্লাসপ্রতি, vptr অবজেক্টপ্রতি</p><p>কনস্ট্রাক্টর ভার্চুয়াল নয়; ডেস্ট্রাক্টর হওয়া উচিত</p>
+      <p><code>virtual f() = 0</code> → অ্যাবস্ট্রাক্ট ক্লাস</p><p>পলিমরফিজম পয়েন্টার/রেফারেন্সে; ভ্যালুতে = স্লাইসিং</p>
+      <p>C++-এ finally নেই (RAII); Java-র finally সবসময় (System.exit ছাড়া)</p><p>Checked: IOException, SQLException</p>
+      <p>Unchecked: RuntimeException + Error</p><p>টেমপ্লেট: কম্পাইল টাইমে টাইপপ্রতি তৈরি</p>
+      <p>Java জেনেরিক্স: টাইপ ইরেজার, প্রিমিটিভ নয়</p><p><code>endl</code> = নতুন লাইন + ফ্লাশ; <code>cerr</code> বাফারহীন</p>
+      <p>থ্রেড হিপ ভাগ করে; নিজস্ব স্ট্যাক + PC</p><p>Java: ৬টি থ্রেড অবস্থা; প্রায়োরিটি 1–10, ডিফল্ট 5</p>
+    </div>
+  </div>
+  <h3>MCQ-র সেরা ১২ এক-লাইন</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>পলিমরফিজম = এক ইন্টারফেস, অনেক রূপ</li>
+      <li>ফাংশন ওভারলোডিং = স্ট্যাটিক পলিমরফিজম</li>
+      <li>Java-র মেথড ডিফল্টভাবে ভার্চুয়াল</li>
+      <li>C#-এ লাগে <code>virtual</code> + <code>override</code>; <code>sealed</code> থামায়</li>
+      <li>ডিরাইভড এক্সসেপশন বেসের আগে catch</li>
+      <li><code>catch (...)</code> সব ধরে, থাকে শেষে</li>
+    </ol>
+    <ol class="num" start="7">
+      <li><code>throw</code> ছোড়ে; <code>throws</code> ঘোষণা করে</li>
+      <li><code>noexcept</code> ভাঙলে → <code>std::terminate</code></li>
+      <li>STL টেমপ্লেটের ওপর তৈরি</li>
+      <li><code>&lt;&lt;</code> ওভারলোড = friend, রিটার্ন <code>ostream&amp;</code></li>
+      <li><code>start()</code> নতুন থ্রেড; <code>run()</code> একই থ্রেড</li>
+      <li>ডেডলকে Coffman-এর চারটি শর্তই লাগে</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 200px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">প্রধান ফাঁদ</span> রিটার্ন টাইপ ≠ ওভারলোড · কনস্ট্রাক্টরে ভার্চুয়াল কল বেস ভার্সন চালায় · অ্যাবস্ট্রাক্ট ক্লাসে কনস্ট্রাক্টর থাকতে পারে · Java-তে RUNNING অবস্থা নেই · <code>volatile</code> ≠ অ্যাটমিক · <code>sleep()</code> লক রাখে, <code>wait()</code> ছাড়ে · সাবক্লাসের আগে catch(Exception) = কম্পাইল এরর।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">সব কৌশল একসঙ্গে</span> Scope, Dot, Dot-star, Question, Size · পয়েন্টার মেনু বাছে, অবজেক্ট পদ বাছে · = 0 মানে শূন্য অবজেক্ট · সন্তানকে ধরো বাবার আগে · কুকি কাটার · তীর দেখায় ডেটা কোথায় যায় · New Runners Block… · My Hat, No Coat।</div>
+    <figure class="doodle"><svg viewBox="0 0 200 130" width="196">
+      <g class="w">
+        <rect x="2" y="6" width="90" height="30" rx="8" class="ink fill-b"/>
+        <rect x="2" y="48" width="90" height="30" rx="8" class="ink-r fill-r"/>
+        <rect x="2" y="90" width="90" height="30" rx="8" class="ink-g fill-g"/>
+        <rect x="108" y="6" width="90" height="30" rx="8" class="ink fill-b"/>
+        <rect x="108" y="48" width="90" height="30" rx="8" class="ink fill-b"/>
+        <rect x="108" y="90" width="90" height="30" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M93,21 H104" marker-end="url(#ahb)"/>
+        <path class="ink" d="M93,63 H104" marker-end="url(#ahb)"/>
+        <path class="ink" d="M93,105 H104" marker-end="url(#ahb)"/>
+      </g>
+      <text x="47" y="26" text-anchor="middle" class="bn s">ওভারলোড</text>
+      <text x="47" y="68" text-anchor="middle" class="bn r s">ভার্চুয়াল</text>
+      <text x="47" y="110" text-anchor="middle" class="bn g s">টেমপ্লেট</text>
+      <text x="153" y="26" text-anchor="middle" class="bn s">কম্পাইল টাইম</text>
+      <text x="153" y="68" text-anchor="middle" class="bn s">রান টাইম</text>
+      <text x="153" y="110" text-anchor="middle" class="bn k s">কম্পাইল টাইম</text>
+    </svg><figcaption>কখন ঠিক হয়?</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি কিওয়ার্ডে আউটপুট বদল</span> Base/Derived প্রোগ্রামে <code>print()</code> থেকে <code>virtual</code> সরাও: <code>p-&gt;print()</code> এখন পয়েন্টারের টাইপে বাঁধা, তাই আউটপুট "Base DerivedPrint"-এর বদলে হয় "<span class="circ">Base BasePrint</span>"।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · পলিমরফিজম থেকে থ্রেড</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১.</span>ফাংশন ওভারলোডিং নির্ধারিত হয়:<ol class="opts"><li>কম্পাইল টাইমে</li><li>রান টাইমে</li><li>লিংক টাইমে</li><li>লোড টাইমে</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">২.</span>C++-এ কোন অপারেটর ওভারলোড করা যায় না?<ol class="opts"><li><code>+</code></li><li><code>[]</code></li><li><code>==</code></li><li><code>::</code></li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৩.</span>অন্তত একটি পিওর ভার্চুয়াল ফাংশনযুক্ত C++ ক্লাস হলো:<ol class="opts"><li>ফ্রেন্ড ক্লাস</li><li>টেমপ্লেট ক্লাস</li><li>অ্যাবস্ট্রাক্ট ক্লাস</li><li>স্ট্যাটিক ক্লাস</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৪.</span>Java-তে এক্সসেপশন হোক বা না হোক, কোন ব্লক চলে?<ol class="opts"><li>catch</li><li>finally</li><li>throw</li><li>throws</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৫.</span>Java-তে নতুন থ্রেড শুরু করতে ডাকতে হয়:<ol class="opts"><li><code>run()</code></li><li><code>init()</code></li><li><code>start()</code></li><li><code>execute()</code></li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৬.</span>Java-তে কোনটি unchecked এক্সসেপশন?<ol class="opts"><li>IOException</li><li>SQLException</li><li>EOFException</li><li>ArithmeticException</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৭.</span>বেস ক্লাসের ডেস্ট্রাক্টর ভার্চুয়াল করা হয় কেন?<ol class="opts"><li><code>Base*</code> দিয়ে <code>delete</code> করলে <code>~Derived</code> চলবে বলে</li><li>ক্লাসকে অ্যাবস্ট্রাক্ট করতে</li><li>কপি আটকাতে</li><li><code>delete</code> দ্রুত করতে</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৮.</span>C++ টেমপ্লেট ইনস্ট্যান্সিয়েট হয়:<ol class="opts"><li>রান টাইমে</li><li>কম্পাইল টাইমে</li><li>লোড টাইমে</li><li>কেবল লিংক টাইমে</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৯.</span>Java-র <code>Thread.State</code>-এ কয়টি অবস্থা?<ol class="opts"><li>6</li><li>4</li><li>5</li><li>7</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১০.</span>কোনটি ডেডলকের আবশ্যিক শর্ত <b>নয়</b>?<ol class="opts"><li>মিউচুয়াল এক্সক্লুশন</li><li>হোল্ড অ্যান্ড ওয়েট</li><li>সার্কুলার ওয়েট</li><li>প্রিএম্পশন</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ক · ২-ঘ · ৩-গ · ৪-খ · ৫-গ · ৬-ঘ · ৭-ক · ৮-খ · ৯-ক · ১০-ঘ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> কম্পাইল-টাইম ও রান-টাইম পলিমরফিজমের পার্থক্য লেখো। উদাহরণ ও vtable কৌশলসহ ব্যাখ্যা করো, C++-এ ভার্চুয়াল ফাংশন কীভাবে রান-টাইম পলিমরফিজম দেয়। পলিমরফিক বেস ক্লাসের ডেস্ট্রাক্টর কেন ভার্চুয়াল হওয়া উচিত? <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>পার্থক্য (৩)</b> — কম্পাইল-টাইম: ওভারলোডিং / টেমপ্লেট, আর্গুমেন্ট তালিকা দেখে বাছাই, আর্লি বাইন্ডিং, দ্রুত; রান-টাইম: বেস পয়েন্টার বা রেফারেন্সের মাধ্যমে ভার্চুয়াল ফাংশনের ওভাররাইডিং, অবজেক্টের টাইপ দেখে বাছাই, লেট বাইন্ডিং, ইনহেরিট্যান্স লাগে। <i class="mk">৩</i></li>
+    <li><b>উদাহরণ (৩)</b> — <code>virtual void print()</code>-সহ <code>Base</code>, যা <code>Derived</code> ওভাররাইড করে; <code>Base* p = new Derived; p-&gt;print();</code> ডিরাইভড ভার্সন প্রিন্ট করে; <code>virtual</code> ছাড়া বেস ভার্সন। <i class="mk">৩</i></li>
+    <li><b>কৌশল (২)</b> — ভার্চুয়াল ফাংশনযুক্ত প্রতিটি ক্লাসের ফাংশন-ঠিকানার একটি vtable; প্রতিটি অবজেক্টে নিজ ক্লাসের vtable-এর দিকে লুকানো vptr; কল vptr পড়ে, টেবিলে ইনডেক্স করে লাফ দেয়। <i class="mk">২</i></li>
+    <li><b>ভার্চুয়াল ডেস্ট্রাক্টর (২)</b> — নন-ভার্চুয়াল <code>~Base</code>-এ <code>delete p</code> কেবল বেস ডেস্ট্রাক্টর চালায় (undefined behaviour, লিক); ভার্চুয়াল হলে <code>~Derived</code> তারপর <code>~Base</code>। <i class="mk">২</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>ওভারলোড-অযোগ্য অপারেটরগুলো বলতে পারি</li>
+      <li>ভার্চুয়াল / নন-ভার্চুয়াল কল ট্রেস করতে পারি</li>
+      <li>C++ ও Java-তে অ্যাবস্ট্রাক্ট ক্লাস লিখতে পারি</li>
+      <li>catch সাজাতে ও finally ট্রেস করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>ফাংশন ও ক্লাস টেমপ্লেট লিখতে পারি</li>
+      <li>ক্লাসের জন্য <code>&lt;&lt;</code> ওভারলোড করতে পারি</li>
+      <li>Java-র ছয় থ্রেড অবস্থা আঁকতে পারি</li>
+      <li>ডেডলকের চার শর্ত বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

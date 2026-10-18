@@ -1,0 +1,587 @@
+﻿<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ব্যবহারিক ML অ্যাপ্লিকেশন ও রিগ্রেশন: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপারের নোট</span></div>
+  <h1 class="title"><span class="u">ব্যবহারিক ML অ্যাপ্লিকেশন ও রিগ্রেশন</span></h1>
+  <p class="subtitle">y = mx + c · ন্যূনতম বর্গ · MAE / MSE / RMSE / R² · L1 ও L2: ১১ পাতায়</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 280" width="620">
+      <g class="w">
+        <ellipse cx="320" cy="140" rx="106" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,122 L168,72 M238,158 L168,208 M320,98 L320,54 M402,122 L472,72 M402,158 L472,208 M320,182 L320,226 M216,140 L170,140 M424,140 L470,140"/>
+        <rect x="60" y="38" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="120" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="120" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="202" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="224" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="202" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="136" text-anchor="middle" class="bn k l">ML-এর প্রয়োগ</text><text x="320" y="158" text-anchor="middle" class="bn r s">টপিকের মাইন্ড-ম্যাপ</text>
+      <text x="142" y="63" text-anchor="middle" class="bn s">স্বাস্থ্য · অর্থ</text>
+      <text x="320" y="39" text-anchor="middle" class="bn r w6">রিগ্রেশন ★</text>
+      <text x="498" y="63" text-anchor="middle" class="bn s">ভাষা · ছবি</text>
+      <text x="96" y="145" text-anchor="middle" class="bn g w6" style="font-size:12px">লরেঞ্জ বর্গ</text>
+      <text x="544" y="145" text-anchor="middle" class="bn r w6">L1 / L2 ★</text>
+      <text x="142" y="227" text-anchor="middle" class="bn s">শিল্প · পরিবহন</text>
+      <text x="320" y="251" text-anchor="middle" class="r w6">y = mx + c ★</text>
+      <text x="498" y="227" text-anchor="middle" class="bn s">কৃষি · নিরাপত্তা</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = যে নিয়মে সব মাপা হয়</figcaption>
+  </figure>
+  <div class="sticky" style="width:70mm"><b>হাই-ইল্ড তালিকা</b><br>① রিগ্রেশন = সংখ্যা, শ্রেণিবিন্যাস = লেবেল<br>② ŷ = β₀ + β₁x, অর্থাৎ y = mx + c<br>③ OLS ন্যূনতম করে Σ(yᵢ − ŷᵢ)²<br>④ MAE = গড়|y − ŷ| · MSE = গড়(y − ŷ)²<br>⑤ RMSE = √MSE, y-এর একই এককে<br>⑥ R² = 1 − SSres / SStot; R² = r²<br>⑦ ওভারফিটিং = train ≫ test; L2 / L1<br>⑧ r ∈ [−1, 1] কারণ নয়</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">কৃত্রিম বুদ্ধিমত্তার সিলেবাসে আছে: পুরোনো ও নতুন AI কৌশল; জ্ঞান উপস্থাপন; প্রস্তাবমূলক ও প্রথম ক্রম যুক্তি; সার্চ; সম্ভাবনাভিত্তিক যুক্তিবিদ্যা; NLP; এক্সপার্ট সিস্টেম; মেশিন লার্নিং; তত্ত্বাবধান ও তত্ত্বাবিহীন শেখা; <span class="hl">মেশিন লার্নিংয়ের ব্যবহারিক প্রয়োগ</span>; <span class="hl">রিগ্রেশন</span>। এই নোটবুক ঠিক শেষ দুই লাইন নেয় — তিন প্যারাডাইগম ML-ফাউন্ডেশনস লেসনে, বেইজ ও NLP তত্ত্ব প্রোবাবিলিস্টিক রিজনিং লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>ML পাইপলাইন ও কাজ … পৃ. ২</li><li>প্রয়োগ ১: স্বাস্থ্য থেকে বাণিজ্য … পৃ. ৩</li><li>প্রয়োগ ২: ভাষা থেকে নিরাপত্তা … পৃ. ৪</li></ul>
+    <ul class="tick"><li>রিগ্রেশন ও y = mx + c … পৃ. ৫</li><li>ন্যূনতম বর্গ · মেট্রিক্স … পৃ. ৬, ৭</li><li>রাতের পাতা ১০ · অনুশীলন ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: ML in practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>ML-এর ব্যবহার</span></div>
+  <h2><span class="no">১</span>ML-এর ব্যবহার: পাইপলাইন ও কাজ</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি মেশিন লার্নিং সিস্টেম হলো ডেটা থেকে <span class="hl">ফিট করা একটি ফাংশন</span>, হাতে লেখা নিয়মের সংগ্রহ নয়। ইনপুট ফিচার <b>X</b> থেকে আউটপুট <b>y</b> — আর আউটপুটের ধরনই পদ্ধতি ঠিক করে: <span class="circ">সংখ্যা মানে রিগ্রেশন</span>, <span class="circ">লেবেল মানে শ্রেণিবিন্যাস</span>, <span class="circ">গোষ্ঠী মানে ক্লাস্টারিং</span>, <span class="circ">কাজের পর পুরস্কার মানে রিইনফোর্সমেন্ট লার্নিং</span>।</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">কাজ</th><th class="l">আউটপুট</th><th class="l">সাধারণ পদ্ধতি</th><th class="l">এক লাইনের উদাহরণ</th></tr>
+    <tr><td class="l">রিগ্রেশন</td><td class="l">বাস্তব সংখ্যা ŷ</td><td class="l">রৈখিক / বহুপদী রিগ্রেশন, SVR, GBM</td><td class="l">আগামীকালের বিক্রি</td></tr>
+    <tr><td class="l">শ্রেণিবিন্যাস</td><td class="l">লেবেল + সম্ভাবনা</td><td class="l">লজিস্টিক রিগ্রেশন, সিদ্ধান্ত গাছ, SVM, CNN</td><td class="l">স্প্যাম না না</td></tr>
+    <tr><td class="l">ক্লাস্টারিং</td><td class="l">একটি গ্রুপ নম্বর</td><td class="l">k-means, হায়ারার্কিক্যাল, DBSCAN</td><td class="l">ক্রেতাদের ভাগ</td></tr>
+    <tr><td class="l">রিইনফোর্সমেন্ট</td><td class="l">একটি পলিসি</td><td class="l">Q-learning, SARSA, DQN</td><td class="l">হাঁটতে শেখা রোবট</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 310px;align-items:start">
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> প্রশ্নে একটিই প্রশ্ন করো — <b>"উত্তর কি মাপার ফিতা, না হ্যাঁ-না?"</b> ফিতা → রিগ্রেশন। হ্যাঁ-না → শ্রেণিবিন্যাস। দুটোই নয় → গোষ্ঠীকরণ (তত্ত্বাবিহীন), বা কাজের পর পুরস্কার (RL)।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> "ML ভবিষ্যৎবাণী করে" — এটি <b>ভুল</b>: ML অতীতের <span class="hl">ডেটা</span> থেকে ফাংশন ফিট করে, তারপর বহির্কৃত করে। টেস্ট সেট অবশ্যই <b>অদেখা</b> থাকতে হবে — ট্রেনিং ডেটাতে স্কোর দিলে মুখস্থ মাপা হয়।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 310 226" width="304">
+      <g class="w">
+        <rect x="6" y="18" width="86" height="38" rx="12" class="ink fill-b"/>
+        <rect x="112" y="18" width="86" height="38" rx="12" class="ink fill-b"/>
+        <rect x="218" y="18" width="86" height="38" rx="12" class="ink-g fill-g"/>
+        <rect x="6" y="106" width="86" height="38" rx="12" class="ink-k fill-y"/>
+        <rect x="112" y="106" width="86" height="38" rx="12" class="ink fill-b"/>
+        <rect x="218" y="106" width="86" height="38" rx="12" class="ink-r fill-r"/>
+        <path class="ink" d="M92,37 H112 M198,37 H218 M92,125 H112"/>
+        <path class="ink-g" d="M261,56 V106" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M198,125 H218" marker-end="url(#ah)"/>
+        <path class="ink-k" d="M49,56 V106" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M261,144 V184 C261,202 49,202 49,184" marker-end="url(#ahp)"/>
+      </g>
+      <text x="49" y="35" text-anchor="middle" class="bn s k">ডেটা</text><text x="49" y="50" text-anchor="middle" class="bn s">ফিচার X</text>
+      <text x="155" y="35" text-anchor="middle" class="bn s k">ভাগ</text><text x="155" y="50" text-anchor="middle" class="bn s">train / test</text>
+      <text x="261" y="35" text-anchor="middle" class="bn s g">প্রশিক্ষণ</text><text x="261" y="50" text-anchor="middle" class="bn s">মডেল ফিট</text>
+      <text x="49" y="123" text-anchor="middle" class="bn s k">লেবেল?</text><text x="49" y="138" text-anchor="middle" class="bn s">sup / unsup / RL</text>
+      <text x="155" y="123" text-anchor="middle" class="bn s k">যাচাই</text><text x="155" y="138" text-anchor="middle" class="bn s">test স্কোর</text>
+      <text x="261" y="123" text-anchor="middle" class="bn s r">ব্যবহার</text><text x="261" y="138" text-anchor="middle" class="bn s r">ŷ বলা</text>
+      <text x="155" y="220" text-anchor="middle" class="bn p s" style="font-size:11px">ড্রিফট → পুনঃপ্রশিক্ষণ · ট্রেনিং ডেটায় স্কোর নয়</text>
+    </svg><figcaption>পরের দুই পাতার সব প্রয়োগের জন্য একই পাইপলাইন</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ১ ✍ কাজ চিনো</span> (i) ফ্ল্যাটের বিক্রয়মূল্য বলা → <b>রিগ্রেশন</b>; (ii) লেনদেন জাল না না → <b>শ্রেণিবিন্যাস</b>; (iii) ATM-এর ব্যবহারে ভাগ, লেবেল ছাড়া → <b>ক্লাস্টারিং</b>; (iv) এজেন্ট লেনদেন করে, লাভ বা জরিমানা পায় → <b>রিইনফোর্সমেন্ট লার্নিং</b>।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ২ ✍ একই ডেটা, দুই মডেল</span> ব্যাংকের <b>ডিফল্টের সম্ভাবনা</b> লাগে (লজিস্টিক রিগ্রেশন → 0…১-এর সংখ্যা), আর ঋণ মঞ্জুরি হলে <b>আনুমানিক ক্ষতির টাকা</b> লাগে (রৈখিক রিগ্রেশন → যেকোনো বাস্তব সংখ্যা)।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">কেন ব্যবহারিক দিকটি কঠিন</span> অফলাইনে ০.৯২ স্কোর করা মডেল উৎপাদনে ব্যর্থ হতে পারে: ইনপুটের বণ্টন বদলে গেছে, শ্রেণির ভারসাম্য বদলে গেছে, বা পুনঃপ্রশিক্ষণের দায়িত্ব কেউ নেননি। পরীক্ষায় এর নাম <b>মডেল ড্রিফট</b>।</div>
+  <div class="tipbox small"><span class="lbl">ফিচার মানে কী</span> ফিচার হলো মডেলের ইনপুট কলাম — ক্ষেত্রফল, বয়স, RMS, লেখার শব্দ। সংখ্যায় প্রকাশ করা ইনপুট ভালো; শুধু নাম বা লেখালিপি হলে সেটা শ্রেণিবিন্যাসের কাজ।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: applications I ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>প্রয়োগ ১</span></div>
+  <h2><span class="no">২</span>প্রয়োগ ১: স্বাস্থ্য, অর্থ, বাণিজ্য</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>মেশিন লার্নিংয়ের ব্যবহারিক প্রয়োগ</b> মানে ফিট করা মডেলকে একটি সত্যিকারের সিদ্ধান্তের পিছনে বসানো: একটি রোগনির্ণয়, একটি ঋণ, একটি তাক, একটি যন্ত্রাংশ। নিচের প্রতিটি সারিই একটি <span class="hl">পূর্বাভাস</span>, আর পরীক্ষায় চায় <b>কাজ</b> ও <b>মডেল পরিবার</b>।</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">প্রয়োগ</th><th class="l">মডেল যা করে</th><th class="l">কাজ</th></tr>
+    <tr><td class="l">স্বাস্থ্য · রোগনির্ণয়</td><td class="l">X-ray বা MRI-তে টিউমার চিহ্নিত করা (CNN)</td><td class="l">শ্রেণিবিন্যাস</td></tr>
+    <tr><td class="l">স্বাস্থ্য · ঔষধ আবিষ্কার</td><td class="l">যৌগের কার্যকারিতা ও বিষাক্ততা</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">স্বাস্থ্য · রোগী পর্যবেক্ষণ</td><td class="l">ICU সেন্সর থেকে অবনতি</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">স্বাস্থ্য · পুনঃভর্তির ঝুঁকি</td><td class="l">৩০ দিনের মধ্যে ফিরে আসবে?</td><td class="l">শ্রেণিবিন্যাস</td></tr>
+    <tr><td class="l">অর্থ · ক্রেডিট স্কোর</td><td class="l">ঋণগ্রহীতা ডিফল্ট করবের সম্ভাবনা</td><td class="l">শ্রেণিবিন্যাস</td></tr>
+    <tr><td class="l">অর্থ · জালিয়াতি</td><td class="l">0.01 % ভুয়া লেনদেন চিহ্নিত করা</td><td class="l">তত্ত্বাবিহীন</td></tr>
+    <tr><td class="l">অর্থ · ট্রেডিং</td><td class="l">পরবর্তী দামের চল</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">অর্থ · নগদের চাহিদা</td><td class="l">ATM-এ পরের সপ্তাহে কত লাগবে</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">বাণিজ্য · সুপারিশ</td><td class="l">"X কিনলে Y-ও কেনে"</td><td class="l">র‍্যাঙ্কিং</td></tr>
+    <tr><td class="l">বাণিজ্য · ভাগ</td><td class="l">k-means দিয়ে ক্রেতা ভাগ</td><td class="l">তত্ত্বাবিহীন</td></tr>
+    <tr><td class="l">বাণিজ্য · চাহিদা</td><td class="l">পরের মাসে কত পণ্য রাখবে</td><td class="l">রিগ্রেশন</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> প্রশ্নের <span class="hl">আউটপুট শব্দটি</span> পড়ো: দাম, চাহিদা, তাপমাত্রা, পরিমাণ, ঝুঁকি স্কোর → <b>রিগ্রেশন</b>; স্প্যাম, জাল, রোগ, ডিফল্ট, ত্রুটি → <b>শ্রেণিবিন্যাস</b>; ভাগ, গ্রুপ, ক্লাস্টার → <b>তত্ত্বাবিহীন</b>। "র‍্যাঙ্ক" বা "সুপারিশ" মানে মডেল সাজায়, সংখ্যা বলে না।</div>
+    <figure class="doodle"><svg viewBox="0 0 330 178" width="322">
+      <g class="w">
+        <rect x="6" y="10" width="98" height="36" rx="12" class="ink fill-b"/>
+        <rect x="6" y="71" width="98" height="36" rx="12" class="ink fill-b"/>
+        <rect x="6" y="132" width="98" height="36" rx="12" class="ink fill-b"/>
+        <rect x="146" y="10" width="176" height="36" rx="12" class="ink-r fill-r"/>
+        <rect x="146" y="71" width="176" height="36" rx="12" class="ink-r fill-r"/>
+        <rect x="146" y="132" width="176" height="36" rx="12" class="ink-g fill-g"/>
+        <path class="ink" d="M104,28 H146 M104,89 H146 M104,150 H146"/>
+      </g>
+      <text x="55" y="33" text-anchor="middle" class="bn s k">স্বাস্থ্য</text>
+      <text x="55" y="94" text-anchor="middle" class="bn s k">অর্থ</text>
+      <text x="55" y="155" text-anchor="middle" class="bn s k">বাণিজ্য</text>
+      <text x="234" y="26" text-anchor="middle" class="bn s r">লেবেল + সম্ভাবনা</text><text x="234" y="42" text-anchor="middle" class="bn s r">শ্রেণিবিন্যাস</text>
+      <text x="234" y="87" text-anchor="middle" class="bn s r">টাকার একটি সংখ্যা</text><text x="234" y="103" text-anchor="middle" class="bn s r">রিগ্রেশন</text>
+      <text x="234" y="148" text-anchor="middle" class="bn s g">লেবেল ছাড়া গোষ্ঠী</text><text x="234" y="164" text-anchor="middle" class="bn s g">ক্লাস্টারিং</text>
+    </svg><figcaption>একই ডেটা, তিন লক্ষ্য — আউটপুট ধরনেই পদ্ধতি</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ক্রেডিট স্কোরিং হলো <b>শ্রেণিবিন্যাস</b> (ঋণগ্রহীতা ডিফল্ট করবে?), রিগ্রেশন নয় — যদিও ব্যাংক "স্কোর" বলে। সুপারিশকারী ইউটিলিটি <b>র‍্যাঙ্কিং</b> দেয়, দাম নয়। আর <b>জালিয়াতির ডেটা ক্ষুদ্র-শ্রেণির</b>: সাধারণ লেনদেন দেখে অ্যানোমালি শনাক্তকরণই কার্যকর, আর অ্যাকুরেসি এখানে অর্থহীন।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ✍ মেট্রিক বাছাই</span> জালিয়াতির ডেটায় ৯৯ ৯০০ সাধারণ, ১০০ জালিয়াতি। "সবই সাধারণ" বলা মডেল <b>৯৯.৯ % অ্যাকুরেসি দেয়, অথচ একটিও জাল ধরে না</b>। সঠিক স্কোর হলো <span class="hl">জালিয়াতি শ্রেণির recall</span> আর প্রতিদিন পরিষ্কার করতে হবে <b>মিথ্যা ইতিবাচক</b>।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">অন্য লেসনের সঙ্গে সংযোগ</span> <b>এক্সপার্ট সিস্টেম</b> লেসনে প্রতিটি সারির পুরোনো নিয়মভিত্তিক বিকল্প আলোচিত হয়েছে; তিন প্যারাডাইগম <b>ML ফাউন্ডেশনস</b> লেসনে। এখানে শুধু <i>খাত → কাজ → মডেল পরিবার</i> মানচিত্রটি দরকার।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: applications II ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>প্রয়োগ ২</span></div>
+  <h2><span class="no">৩</span>প্রয়োগ ২: ভাষা থেকে নিরাপত্তা</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একই পাইপলাইন, কিন্তু ইনপুট টেবিলের পরিবর্তে। লেখা হয় টোকেন ও এম্বেডিং, ছবি হয় পিক্সেল, যন্ত্র হয় <span class="hl">সেন্সর টাইম সিরিজ</span>, রাস্তা হয় ডিটেক্টরের সংখ্যার ধারা। মডেল পরিবার বদলায়, কাজের ব্যাকরণ বদলায় না।</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">প্রয়োগ</th><th class="l">ইনপুট → আউটপুট</th><th class="l">কাজ</th></tr>
+    <tr><td class="l">NLP · সেন্টিমেন্ট</td><td class="l">রিভিউ → ইতিবাচক / নেতিবাচক</td><td class="l">শ্রেণিবিন্যাস</td></tr>
+    <tr><td class="l">NLP · অনুবাদ</td><td class="l">ক-ভাষার বাক্য → খ-ভাষার বাক্য</td><td class="l">ম্যাপিং</td></tr>
+    <tr><td class="l">NLP · স্প্যাম ফিল্টার</td><td class="l">ইমেল → রাখো বা আটকাও</td><td class="l">শ্রেণিবিন্যাস</td></tr>
+    <tr><td class="l">দৃশ্য · স্বয়ংচালিত গাড়ি</td><td class="l">ফ্রেম → বস্তু, লেন, দূরত্ব</td><td class="l">শনাক্তকরণ</td></tr>
+    <tr><td class="l">দৃশ্য · মান নিয়ন্ত্রণ</td><td class="l">লাইন-স্ক্যান ছবি → পাশ / বাদ</td><td class="l">শ্রেণিবিন্যাস</td></tr>
+    <tr><td class="l">শিল্প · প্রেডিক্টিভ মেইনটেন্যান্স</td><td class="l">কম্পন → ব্যর্থতার দিন</td><td class="l"><b>রিগ্রেশন</b></td></tr>
+    <tr><td class="l">শিল্প · প্রক্রিয়া নিয়ন্ত্রণ</td><td class="l">সেন্সর → সেরা সেট-পয়েন্ট</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">পরিবহন · ট্রাফিক</td><td class="l">লুপ ডিটেক্টর → গতি, প্রবাহ</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">পরিবহন · রাইড-হেইলিং</td><td class="l">ঘণ্টা + আবহাওয়া → ভ্রমণ</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">কৃষি · ফসলের ফলন</td><td class="l">মাটি + NDVI → টন/হেক্টর</td><td class="l">রিগ্রেশন</td></tr>
+    <tr><td class="l">নিরাপত্তা · অনুপ্রবেশ</td><td class="l">নেটওয়ার্ক প্রবাহ → স্বাভাবিক / আক্রমণ</td><td class="l">তত্ত্বাবিহীন</td></tr>
+    <tr><td class="l">নিরাপত্তা · ম্যালওয়্যার</td><td class="l">বাইনারি → ম্যালওয়্যার পরিবার</td><td class="l">শ্রেণিবিন্যাস</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:start">
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "ছবি বা সেন্সর ঢোকে, <b>সংখ্যা বেরোয়</b> — প্রেডিক্টিভ মেইনটেন্যান্স ও ট্রাফিকে।" প্রশ্নে <i>কত / কতদিন / কখন</i> থাকলেই রিগ্রেশন, এমনকি ইনপুট ছবি হলেও।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> প্রেডিক্টিভ মেইনটেন্যান্স হলো <b>রিগ্রেশন</b> (কত দিন বাকি), আর <b>ফল্ট ডিটেকশন</b> হলো শ্রেণিবিন্যাস (এখনই ত্রুটিপূর্ণ?) — দুটি আলাদা মডেল, পরীক্ষকারীরা বদলে দেন। "অনুপ্রবেশ শনাক্তকরণ"-এ <b>তত্ত্বাবিহীন</b> মানে সাধারণ ট্রাফিক দিয়ে প্রশিক্ষণ, তাই নতুন আক্রমণও ধরা পড়ে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 196" width="292">
+      <g class="w">
+        <rect x="6" y="12" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="108" y="12" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="210" y="12" width="84" height="34" rx="12" class="ink-g fill-g"/>
+        <rect x="6" y="98" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="108" y="98" width="84" height="34" rx="12" class="ink fill-b"/>
+        <rect x="210" y="98" width="84" height="34" rx="12" class="ink-g fill-g"/>
+        <path class="ink" d="M90,29 H108 M192,29 H210 M90,115 H108 M192,115 H210"/>
+        <path class="ink-p" d="M48,46 V98 M150,46 V98 M252,46 V98" marker-end="url(#ahp)" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="48" y="27" text-anchor="middle" class="bn s k">সেন্সর</text><text x="48" y="41" text-anchor="middle" class="bn s">কম্পন</text>
+      <text x="150" y="27" text-anchor="middle" class="bn s k">ফিচার</text><text x="150" y="41" text-anchor="middle" class="bn s">RMS, তাপমাত্রা</text>
+      <text x="252" y="27" text-anchor="middle" class="bn s g">রিগ্রেশন</text><text x="252" y="41" text-anchor="middle" class="bn s g">বাকি দিন</text>
+      <text x="48" y="113" text-anchor="middle" class="bn s k">ক্যামেরা</text><text x="48" y="127" text-anchor="middle" class="bn s">পিক্সেল</text>
+      <text x="150" y="113" text-anchor="middle" class="bn s k">ফিচার</text><text x="150" y="127" text-anchor="middle" class="bn s">প্রান্ত, গভীরতা</text>
+      <text x="252" y="113" text-anchor="middle" class="bn s g">রিগ্রেশন</text><text x="252" y="127" text-anchor="middle" class="bn s g">দূরত্ব মিটার</text>
+      <text x="150" y="168" text-anchor="middle" class="bn p s" style="font-size:11px">মাঝের বাক্স প্রতিটি খাতেই এক</text>
+      <text x="150" y="186" text-anchor="middle" class="bn s g">তৃতীয় বাক্সটিই পরীক্ষার উত্তর</text>
+    </svg><figcaption>অসংগঠিত ইনপুট, তৈরি ফিচার, সংখ্যায় আউটপুট</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">উদাহরণ ✍ মেইনটেন্যান্স, শুরু থেকে শেষ</span> বিয়ারিং-এর কম্পন RMS ব্যর্থতার আগের শেষ ৪০০ ঘণ্টায় ০.৪ থেকে ১.৮ mm/s-এ প্রায় রৈখিকভাবে বাড়ে। ফিট করুন <b>remaining life = 400 − 220 × RMS</b>। RMS = 1.2 mm/s হলে সতর্কতা <b>১৩৬ ঘণ্টা</b> আগে, 1.6 mm/s হলে <b>48 ঘণ্টা</b> আগে। ব্যর্থতা ঘটার আগেই ডাকা পড়াই এখানে ML-এর সব মূল্য।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: regression and the linear model ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>রিগ্রেশন</span></div>
+  <h2><span class="no">৪</span>রিগ্রেশন ও মডেল y = mx + c</h2><span class="tag">মূল সংজ্ঞা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>রিগ্রেশন (Regression)</b> হলো <span class="hl">ধারাবাহিক সাংখ্যিক আউটপুটের জন্য তত্ত্বাবধান শেখা</span>। একটি ফিচার হলে মডেল হয় <b>সরল রৈখিক রিগ্রেশন</b> রেখা <span class="circ">ŷ = m x + c</span>: এখানে m হলো <b>স্লোপ</b> (x এক ধাপ বাড়লে ŷ-এর পরিবর্তন), c হলো <b>ইন্টারসেপ্ট</b> (x = 0 হলে ŷ)। pটি ফিচার হলে এটি <b>বহুরৈখিক রিগ্রেশন</b>: ŷ = β₀ + β₁x₁ + … + β<sub>p</sub>x<sub>p</sub> + ε.</div>
+  <div class="mnote">c মানে শুধু x = 0-এর ŷ</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">তুলনার বিষয়</th><th class="l">রিগ্রেশন</th><th class="l">শ্রেণিবিন্যাস</th></tr>
+    <tr><td class="l">আউটপুট</td><td class="l">যেকোনো বাস্তব সংখ্যা, সীমাহীন</td><td class="l">নির্দিষ্ট লেবেলের একটি</td></tr>
+    <tr><td class="l">সাধারণ লস</td><td class="l">বর্গযুক্ত ভুল (MSE), পরম শুদ্ধ ভুল (MAE)</td><td class="l">ক্রস এন্ট্রপি, 0–1 লস</td></tr>
+    <tr><td class="l">সাধারণ স্কোর</td><td class="l"><span class="hl">MAE, MSE, RMSE, R²</span></td><td class="l">অ্যাকুরেসি, প্রিসিশন, রিকল, F1</td></tr>
+    <tr><td class="l">ছাপিয়ে যাওয়া বেসলাইন</td><td class="l">সবসময় y-এর গড় বলা</td><td class="l">সবসময় বেশির ভাগ শ্রেণি বলা</td></tr>
+    <tr><td class="l">প্রতীকী রূপ</td><td class="l">ŷ = mx + c</td><td class="l">P(Y=1|X) = 1/(1 + e<sup>−z</sup>)</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">বাড়ির দাম, তাপমাত্রা</td><td class="l">স্প্যাম না না</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 290 212" width="282">
+      <g class="w">
+        <path class="ink-k" d="M34,186 H276" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M34,186 V16" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M34,166 H276" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M46,178 L258,32" marker-end="url(#ahg)"/>
+        <circle cx="66" cy="168" r="3.5" class="ink-r"/><circle cx="86" cy="140" r="3.5" class="ink-r"/>
+        <circle cx="106" cy="142" r="3.5" class="ink-r"/><circle cx="126" cy="114" r="3.5" class="ink-r"/>
+        <circle cx="146" cy="112" r="3.5" class="ink-r"/><circle cx="166" cy="86" r="3.5" class="ink-r"/>
+        <circle cx="186" cy="84" r="3.5" class="ink-r"/><circle cx="206" cy="58" r="3.5" class="ink-r"/>
+      </g>
+      <text x="52" y="32" class="k w6">ŷ</text>
+      <text x="272" y="204" text-anchor="end" class="k w6">x</text>
+      <text x="112" y="36" text-anchor="middle" class="g w6">ŷ = mx + c</text>
+      <text x="98" y="66" text-anchor="middle" class="bn g s" style="font-size:11px">স্লোপ m</text>
+      <text x="104" y="98" text-anchor="middle" class="bn r s" style="font-size:11px">প্রশিক্ষণ ডেটা</text>
+      <text x="270" y="158" text-anchor="end" class="bn p s" style="font-size:11px">c: x = 0 হলে ŷ</text>
+      <text x="58" y="182" class="bn s k">মূলবিন্দু</text>
+    </svg><figcaption>মডেল হলে সবুজ রেখা; লাল বিন্দুগুলোকেই মানাতে হবে</figcaption></figure>
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">প্রমাণের ছায়া ✍ রেখাটি কেন (x̄, ȳ) দিয়ে যায়</span>
+        <ol class="steps">
+          <li>ন্যূনতম বর্গ লম্বভুল ত্রুটি ছোট করতে m, c বাছে</li>
+          <li>দুইটি অন্তরক শূন্য ⟹ Σŷ = Σy ⟹ c = ȳ − m x̄, তাই রেখা <b>সবসময়</b> <span class="circ">(x̄, ȳ)</span> দিয়ে যায়</li>
+        </ol></div>
+      <div class="sumbox small"><span class="lbl">যে দুটি সংখ্যা দরকার</span>
+        <b>m = Σ(xᵢ − x̄)(yᵢ − ȳ) / Σ(xᵢ − x̄)²</b> &nbsp;·&nbsp; <b>c = ȳ − m x̄</b>, আর m = r · σ<sub>y</sub>/σ<sub>x</sub> তাই r-এর চিহ্নই m-এর চিহ্ন।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>m সরায়, c ঠিক করে।</b>" m বলে <i>x এক বাড়লে ŷ কত বাড়ে?</i>; c বলে <i>x = 0 হলে ŷ কত?</i> ফিট করা রেখা সবসময় গড় বিন্দু (x̄, ȳ) ভেদ করে — কোনো উত্তর ঠিক কি না তা চোখে বোঝা যায়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) ইন্টারসেপ্ট হলো <b>x = 0-এর ŷ</b>, y-এর গড় নয়। (ii) <b>লজিস্টিক রিগ্রেশন শ্রেণিবিন্যাস</b>, নামের ভুল। (iii) সেরা-ফিট রেখাকে মূলবিন্দু দিয়ে যেতে হবে না। (iv) রিগ্রেশনে কোনো <b>সুষম</b> শ্রেণি-কাঠামো লাগে না।</div>
+  </div>
+  <div class="ex small"><span class="lbl">উদাহরণ ✍ মডেল পড়ে তারপর পূর্বাভাস</span> লক্ষ টাকায় ফ্ল্যাটের মডেল <b>ŷ = 18.5 + 3.2 × (ম²-তে ক্ষেত্রফল)</b>। 90 m² হলে ŷ = 18.5 + 288 = <span class="circ">306.5</span> লক্ষ। প্রতি বর্ধিত m²-এ <b>3.2 লক্ষ</b> যোগ (m = 3.2), আর শূন্য ক্ষেত্রফলের জমির মূল্য <b>18.5 লক্ষ</b> (c = 18.5) — বাস্তবে জমি ও নিবন্ধনের দাম।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: least squares ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>ন্যূনতম বর্গ</span></div>
+  <h2><span class="no">৫</span>ন্যূনতম বর্গ (OLS)</h2><span class="tag">প্রমাণযোগ্য ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>সাধারণ ন্যূনতম বর্গ (OLS)</b> এমন গুণাঙ্ক বাছে যা <span class="hl">বর্গাকৃত অবশিষ্টের সমষ্টি</span> ন্যূনতম করে: প্রতিটি প্রশিক্ষণ বিন্দুতে SSE = Σ(yᵢ − ŷᵢ)² ছোট করো। ভুল গোনা শ্রেণিবিন্যাসের কাজ; OLS গোনে না — এটি <b>বর্গ করে যোগ করে</b>।</div>
+  <div class="ex small"><span class="lbl">প্রমাণ ✍ নরমাল সমীকরণ</span>
+    <ol class="steps">
+      <li>উদ্দেশ্য: SSE(a, b) = Σ(yᵢ − a − b xᵢ)²</li>
+      <li>অন্তরক শূন্য: ∂SSE/∂a = −2Σ(yᵢ − a − b xᵢ) = 0 এবং ∂SSE/∂b = −2Σxᵢ(yᵢ − a − b xᵢ) = 0</li>
+      <li>দুটি <span class="hl">নরমাল সমীকরণ</span>: na + b Σx = Σy এবং a Σx + b Σx² = Σxy</li>
+      <li>সমাধান: <b>b = [nΣxy − (Σx)(Σy)] / [nΣx² − (Σx)²]</b>, <b>a = ȳ − b x̄</b></li>
+    </ol></div>
+  <div class="cols" style="grid-template-columns:1fr 286px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">x</th><th>1</th><th>2</th><th>3</th><th>Σ</th></tr>
+        <tr><td class="l">y</td><td>2</td><td>4</td><td>5</td><td>11</td></tr>
+        <tr><td class="l">xy</td><td>2</td><td>8</td><td>15</td><td>25</td></tr>
+        <tr><td class="l">x²</td><td>1</td><td>4</td><td>9</td><td>14</td></tr>
+      </table>
+      <table class="hand small" style="width:100%">
+        <tr><th class="l">x</th><th>1</th><th>2</th><th>3</th><th class="l">Σ</th></tr>
+        <tr><td class="l" style="white-space:nowrap">প্রকৃত y</td><td>2.000</td><td>4.000</td><td>5.000</td><td class="l" style="white-space:nowrap">Σy = 11</td></tr>
+        <tr><td class="l" style="white-space:nowrap">ফিট ŷ</td><td>2.167</td><td>3.667</td><td>5.167</td><td class="l" style="white-space:nowrap">Σŷ = 11</td></tr>
+        <tr><td class="l" style="white-space:nowrap">অবশিষ্ট e</td><td>−0.167</td><td>+0.333</td><td>−0.167</td><td class="l" style="white-space:nowrap">Σe = 0</td></tr>
+        <tr><td class="l">e²</td><td>0.028</td><td>0.111</td><td>0.028</td><td class="l" style="white-space:nowrap">SSE = <b>0.167</b></td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 286 200" width="278">
+      <g class="w">
+        <path class="ink-k" d="M26,180 H276" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M26,180 V14" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M56,146 L270,26" marker-end="url(#ahg)"/>
+        <circle cx="100" cy="150" r="4.5" class="ink-k"/>
+        <circle cx="160" cy="60" r="4.5" class="ink-k"/>
+        <circle cx="220" cy="88" r="4.5" class="ink-k"/>
+        <path class="ink-r" d="M100,150 L100,116" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M160,60 L160,83" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M220,88 L220,49" marker-end="url(#ah)"/>
+      </g>
+      <text x="42" y="28" class="k w6">y</text>
+      <text x="272" y="196" text-anchor="end" class="k w6">x</text>
+      <text x="146" y="26" text-anchor="middle" class="bn g w6" style="font-size:11px">ন্যূনতম-বর্গ রেখা</text>
+      <text x="108" y="138" class="r s">r₁</text>
+      <text x="168" y="72" class="r s">r₂</text>
+      <text x="228" y="70" class="r s">r₃</text>
+      <text x="146" y="176" text-anchor="middle" class="s p">min r₁² + r₂² + r₃²</text>
+    </svg><figcaption>অবশিষ্ট rᵢ = yᵢ − ŷᵢ বর্গ করে যোগ হয়, গোনা হয় না</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">(1, 2), (2, 4), (3, 5)-এর উত্তর</span> n = 3, Σx = 6, Σy = 11, Σxy = 25, Σx² = 14 ⟹
+    <b>b = [3(25) − 6(11)] / [3(14) − 6²] = (75 − 66) / (42 − 36) = 9/6 = <span class="circ">1.5</span></b> এবং
+    <b>a = 11/3 − 1.5(2) = 2/3 ≈ <span class="circ">0.67</span></b>, তাই <b>ŷ = 0.67 + 1.5x</b>।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>O</b>ne line, <b>L</b>east <b>S</b>quares" — তাই ছোট হয় <b>সমষ্টি</b>। যাচাইয়ের সুলভ চিহ্ন: সঠিক OLS ফিটে অবশিষ্টের <b>সমষ্টি শূন্য</b> আর ফিট করা মানের <b>সমষ্টি প্রকৃত মানের সমান</b>, কারণ রেখা (x̄, ȳ) ভেদ করে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> OLS-কে <b>সাধারণ</b> বলা হয় কারণ প্রতিটি বিন্দুর ওজন সমান — যারা সমান নয় তার নাম <b>ওজনযুক্ত ন্যূনতম বর্গ</b>। বর্গ করলে একটি বড় অবশিষ্ট ফিটকে <b>একাইটে নিয়ে যায়</b>, তাই আউটলায়ার থাকলে MAE-ফিটিং, হুবার লস বা কোয়ান্টাইল রিগ্রেশন ব্যবহার করো।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">IT সংযোগ ✍ একই গণিত কোডে</span>
+    <div class="code">b = (n*Sxy - Sx*Sy) / (n*Sxx - Sx^2);  a = ybar - b*xbar</div></div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: metrics ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>MAE · MSE · RMSE · R²</span></div>
+  <h2><span class="no">৬</span>MAE, MSE, RMSE ও R²</h2><span class="tag">MCQ-র চেনা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> প্রতিটি মেট্রিক তৈরি হয় অবশিষ্ট <b>eᵢ = yᵢ − ŷᵢ</b> থেকে। MAE ও MSE দুটি ভিন্নভাবে গড় করে, RMSE হলো MSE-কে y-এর এককে ফিরিয়ে আনা, আর <b>R² মডেলকে "সবসময় গড় বলা" বেসলাইনের সঙ্গে মিলিয়ে দেখায়</b>।</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">মেট্রিক</th><th class="l">সূত্র</th><th class="l">ধর্ম ও কখন ব্যবহার</th></tr>
+    <tr><td class="l"><b>MAE</b></td><td class="l">(1/n) Σ|yᵢ − ŷᵢ|</td><td class="l">গড় পরম শুদ্ধ ভুল: y-এর এককে; <b>মজবুত</b> — আউটলায়ার প্রায় কিছুই বদলায় না</td></tr>
+    <tr><td class="l"><b>MSE</b></td><td class="l">(1/n) Σ(yᵢ − ŷᵢ)²</td><td class="l">গড় বর্গযুক্ত ভুল: একক y²; <span class="red"><b>বড় ভুলকে অনেক বেশি শাস্তি</b></span>; মডেল প্রশিক্ষণে ব্যবহৃত</td></tr>
+    <tr><td class="l"><b>RMSE</b></td><td class="l">√MSE</td><td class="l">আবার y-এর এককে; "গড়ে X একক ভুল" বলা যায়</td></tr>
+    <tr><td class="l"><b>R²</b></td><td class="l">1 − SS<sub>res</sub>/SS<sub>tot</sub></td><td class="l">ব্যাপিত ভ্যারিয়েন্সের ভাগ; <b>ঋণাত্মকও হতে পারে</b>; সরল রেখায় R² = r²</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 316px;align-items:start">
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ১ ✍ পাতা ৬-এর OLS ফিট</span> অবশিষ্ট −0.167, +0.333, −0.167:
+        <b>MAE</b> = 0.667/3 = <span class="circ">0.222</span> · <b>MSE</b> = 0.167/3 = <span class="circ">0.0556</span> · <b>RMSE</b> = √0.0556 = <span class="circ">0.236</span>, y-এর এককে।
+        SS<sub>res</sub> = 0.167, SS<sub>tot</sub> = 2.778 + 0.111 + 1.778 = 4.667, তাই <b>R² = 1 − 0.167/4.667 = <span class="circ">0.964</span></b>: y-এর ভ্যারিয়েন্সের ৯৬.৪ % ব্যাখ্যা করে।</div>
+      <div class="sumbox small"><span class="lbl">মনে রাখার সম্পর্ক</span>
+        <span class="tiny"><b>MAE ≤ RMSE</b> সবসময় · <b>MSE ≥ MAE²</b> সবসময়, সমতা কেবল সব অবশিষ্ট সমান হলে · SStot = SSreg + SSres · R² = SSreg/SStot · স্থানান্তরিত R² = 1 − (1 − R²)(n − 1)/(n − p − 1)।</span></div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 316 226" width="308">
+      <g class="w">
+        <path class="ink-k" d="M40,196 H306" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M40,196 V18" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M40,196 L196,40" style="stroke-dasharray:5 4"/>
+        <circle cx="70" cy="166" r="4" class="ink-k"/>
+        <circle cx="130" cy="106" r="4" class="ink-k"/>
+        <circle cx="160" cy="76" r="4" class="ink-k"/>
+        <circle cx="190" cy="46" r="4" class="ink-k"/>
+        <circle cx="100" cy="164" r="4.5" class="ink-r"/>
+        <circle cx="160" cy="48" r="4.5" class="ink-g"/>
+        <path class="ink-r" d="M100,164 L100,136" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M160,48 L160,76" marker-end="url(#ahg)"/>
+      </g>
+      <text x="52" y="34" class="k w6">actual y</text>
+      <text x="300" y="214" text-anchor="end" class="k w6">ŷ</text>
+      <text x="248" y="52" text-anchor="middle" class="s p">y = x</text>
+      <text x="88" y="152" text-anchor="end" class="bn r s" style="font-size:11px">অতিশোচিত</text>
+      <text x="176" y="34" class="bn g s" style="font-size:11px">অল্পমাত্রা</text>
+      <text x="82" y="178" class="r w6">e = −28</text>
+      <text x="172" y="68" class="g w6">e = +28</text>
+    </svg><figcaption>প্রতিটি বিন্দু একটি পূর্বাভাস; ফারাকই অবশিষ্ট, আর SSE তার বর্গ যোগ করে</figcaption></figure>
+  </div>
+  <div class="cols3">
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ২ ✍ একটি আউটলায়ার MSE উল্টে দেয়</span> 10, 10, 10, 10 অবশিষ্টে MAE = 10, MSE = 100। শেষটি 40 করলে MAE = 17.5, MSE = 475, RMSE = 21.8 — <b>MAE বাড়ল ৭৫ %, MSE বাড়ল ৩৭৫ %</b>।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<span class="hl">বর্গ, গড়, বর্গমূল</span>"। MSE = বর্গের গড়, RMSE = তার বর্গমূল, তাই RMSE = √MSE এবং একক y-এর। R²-এ: <b>১</b> পূর্ণ, <b>০</b> গড়ের চেয়ে ভালো নয়, <b>ঋণাত্মক</b> গড়ের চেয়েও খারাপ।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> R² শতাংশ নয় এবং <b>ঋণাত্মক</b> হতে পারে। MSE-এর একক y², তাই পড়ার যায় শুধু RMSE। MAE "বেশি নির্ভুল" নয়, শুধু আলাদা আচরণ করে।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: overfitting, bias-variance, regularisation ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>ওভারফিটিং ও L1/L2</span></div>
+  <h2><span class="no">৭</span>ওভারফিটিং, বায়াস-ভ্যারিয়েন্স, L1/L2</h2><span class="tag">সবচেয়ে বেশি পরীক্ষা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ওভারফিটিং (Overfitting)</b> মানে প্রশিক্ষণ ডেটাকে — তার নয়েজসহ — এত কাছ থেকে ফিট করা যে অদেখা ডেটায় মডেল ব্যর্থ হয়। লক্ষণ <span class="hl">train–test ফারাক</span>: প্রশিক্ষণে ৯৯ %, পরীক্ষায় ৬০ %। আনুষ্ঠানিক নাম <span class="hl">উচ্চ ভ্যারিয়েন্স</span>। উল্টো ব্যর্থতা, অর্থাৎ দুই জায়গাতেই খারাপ স্কোর, হলো <b>আন্ডারফিটিং = উচ্চ বায়াস</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 288px;align-items:start">
+    <div>
+      <table class="hand small" style="width:100%;margin-top:0">
+        <tr><th class="l">লক্ষণ</th><th>train</th><th>test</th><th class="l">রোগনির্ণয়</th></tr>
+        <tr><td class="l">নয়েজ মুখস্থ</td><td>99%</td><td>60%</td><td class="l">ওভারফিটিং,<br>উচ্চ ভ্যারিয়েন্স</td></tr>
+        <tr><td class="l">মডেল খুব সরল</td><td>58%</td><td>55%</td><td class="l">আন্ডারফিটিং,<br>উচ্চ বায়াস</td></tr>
+        <tr><td class="l">সুস্থ ফিট</td><td>88%</td><td>86%</td><td class="l">সাধারণীকরণ ✓</td></tr>
+      </table>
+      <table class="hand small" style="width:100%">
+        <tr><th class="l">পদ্ধতি</th><th class="l">শাস্তি</th><th class="l">গুণাঙ্কের ওপর প্রভাব</th></tr>
+        <tr><td class="l"><b>L2</b> রিজ</td><td class="l">λ Σβ²</td><td class="l">সব কমে, <b>0 হয় না</b></td></tr>
+        <tr><td class="l"><b>L1</b> লাসো</td><td class="l">λ Σ|β|</td><td class="l">কিছু β = <b>0 → বাছাই</b></td></tr>
+        <tr><td class="l"><b>ইলাস্টিক নেট</b></td><td class="l">λ₁Σ|β|+λ₂Σβ²</td><td class="l">L1-এর বিরলতা + L2-এর স্থায়িত্ব</td></tr>
+        <tr><td class="l"><b>λ</b> খুব ছোট</td><td class="l">λ ↓</td><td class="l">কম নিয়ন্ত্রণ</td></tr>
+        <tr><td class="l"><b>λ</b> খুব বড়</td><td class="l">λ ↑</td><td class="l">বেশি নিয়ন্ত্রণ, বায়াস বাড়ে</td></tr>
+      </table>
+      <div class="sumbox small" style="margin-top:2mm"><span class="lbl">রিজ ও লাসোর উদ্দেশ্য</span>
+        <span class="tiny">ন্যূনতম করো <b>Σ(yᵢ − β₀ − Σβⱼxⱼ)² + λ Σβⱼ²</b> (L2) বা <b>+ λ Σ|βⱼ|</b> (L1)। বড় λ = ভারী সংকোচন = বেশি বায়াস, কম ভ্যারিয়েন্স। β₀ শাস্তি দেয় না।</span></div>
+    </div>
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 288 190" width="280">
+        <g class="w">
+          <path class="ink-k" d="M28,162 H280" marker-end="url(#ahb)"/>
+          <path class="ink-k" d="M28,162 V16" marker-end="url(#ahb)"/>
+          <path class="ink-r" d="M36,152 C70,104 100,58 140,44 C190,36 230,34 272,34"/>
+          <path class="ink-g" d="M36,158 C80,152 120,96 156,60 C200,50 250,58 272,72"/>
+          <path class="ink-p" d="M44,22 H272" style="stroke-dasharray:5 4"/>
+          <path class="ink-k" d="M156,22 V162" style="stroke-dasharray:4 4"/>
+          <circle cx="156" cy="60" r="4" class="ink-g"/>
+        </g>
+        <text x="34" y="18" class="k w6">error</text>
+        <text x="276" y="180" text-anchor="end" class="bn k w6" style="font-size:12px">জটিলতা →</text>
+        <text x="62" y="44" class="bn r s" style="font-size:11px">train ভুল</text>
+        <text x="192" y="88" class="bn g s" style="font-size:11px">test ভুল</text>
+        <text x="192" y="104" class="bn g s" style="font-size:11px">আবার বাড়ে</text>
+        <text x="164" y="156" class="bn s p" style="font-size:11px">ঠিক এখানে</text>
+      </svg><figcaption>train ভুল সবসময় কমে, test ভুল আবার বাড়তে শুরু করে</figcaption></figure>
+      <div class="trick small" style="margin-top:2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>লাসো শূন্য করে, রিজ ছোট করে।</b>" L1-এর পরম মানের শাস্তি শূন্যের দিকে ভাঁজ করা, তাই অপ্রয়োজনীয় গুণাঙ্ক পুরোপুরি 0 হয়ে ফিচারটি বাদ পড়ে; L2-এর বর্গ শাস্তি কেবল 0-এর দিকে টানে।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) ওভারফিটিং হলো <b>উচ্চ ভ্যারিয়েন্স</b>, আন্ডারফিটিং <b>উচ্চ বায়াস</b> — উল্টো নয়। (ii) <b>বড়</b> λ মানে <b>বেশি</b> নিয়ন্ত্রণ, তাই বেশি বায়াস ও কম ভ্যারিয়েন্স। (iii) নিয়ন্ত্রণ কোনো তথ্য যোগ করে না। (iv) ফিচার বাছাই শুধু <b>L1</b> করে।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ✍ ফারাক পড়া</span> প্রশিক্ষণে ৯৯ %, পরীক্ষায় ৬০ % ⟹ ৩৯ পয়েন্ট ফারাক ⟹ ওভারফিটিং। খরচের ক্রমে সমাধান: <b>(১)</b> আরও ডেটা, <b>(২)</b> L2 / L1 নিয়ন্ত্রণ, <b>(৩)</b> ক্রস-ভ্যালিডেশনে λ বাছা, <b>(৪)</b> সরল মডেল, <b>(৫)</b> আর্লি স্টপিং।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">শুধু প্রশিক্ষণ সেট কেন যথেষ্ট নয়</span> যথেষ্ট সক্ষমতা থাকলে যেকোনো মডেল প্রশিক্ষণ ভুল শূন্যে নামাতে পারে। ফারাক কেবল <b>আলাদা রাখা টেস্ট সেট</b> বা ক-ফোল্ড ক্রস-ভ্যালিডেশনই দেখায়।</div>
+  <div class="tipbox small"><span class="lbl">তিন ভাগে ভাগ</span> ট্রেনিং (ফিট), ভ্যালিডেশন (λ ও মডেল বাছা) ও টেস্ট (শেষ স্কোর) — সাধারণ ভাগ ৬০ / ২০ / ২০; k-ফোল্ড ক্রস-ভ্যালিডেশন ভাগটি k বার করে।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: polynomial, correlation vs causation ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>বহুপদী ও সম্পর্ক</span></div>
+  <h2><span class="no">৮</span>বহুপদী রিগ্রেশন ও সম্পর্ক ≠ কারণ</h2><span class="tag">ধারণাগত ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>বহুপদী রিগ্রেশন</b> রৈখিক ন্যূনতম-বর্গের কাঠামো রাখে, কিন্তু ফিচারের ঘাত যোগ করে: <span class="circ">ŷ = β₀ + β₁x + β₂x² + … + β<sub>n</sub>x<sup>n</sup></span>। <b>সম্পর্ক (Correlation)</b> হলো <i>রৈখিক</i> সম্পর্কের প্রমাণিত শক্তি — পিয়ারসনের r = cov(x, y)/(σ<sub>x</sub>σ<sub>y</sub>) — আর তা সবসময় <span class="circ">[−1, +1]</span>-এর মধ্যে থাকে।</div>
+  <table class="hand small" style="width:100%;margin-top:2mm">
+    <tr><th class="l">মডেল</th><th class="l">রূপ</th><th class="l">আকৃতি ও প্রধান ঝুঁকি</th></tr>
+    <tr><td class="l">রৈখিক</td><td class="l">ŷ = mx + c</td><td class="l">একটি সরলরেখা; বাঁকতে পারে না, তাই বাঁকা ডেটায় আন্ডারফিট করে</td></tr>
+    <tr><td class="l">বহুপদী, ডিগ্রি n</td><td class="l">ŷ = β₀ + β₁x + … + β<sub>n</sub>x<sup>n</sup></td><td class="l">সর্বোচ্চ n − 1 বাঁক; <b>ওভারফিট</b> করে বিন্দুর মাঝে দোলে</td></tr>
+    <tr><td class="l">লজিস্টিক</td><td class="l">1/(1 + e<sup>−z</sup>)</td><td class="l">0…১ সম্ভাবনার S-আকৃতি; কেবল শ্রেণিবিন্যাস, সীমানা রৈখিক</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ✍ রেখা আন্ডারফিট করে, বক্ররেখা ঠিক করে</span> ডেটা (0, 1), (1, 3), (2, 7), (3, 13)। দ্বিতীয় পার্থক্য 2, 2 — ধ্রুব, তাই ডেটা ঠিক বহুপদী: <b>ŷ = 1 + x + x²</b>, SSE = <span class="circ">0</span>। <b>রৈখিক</b> ফিটে b = 20/5 = 4, a = 0, তাই ŷ = 4x, অবশিষ্ট <b>+1, −1, −1, +1</b>: MAE = 1, MSE = 1, R² = 1 − 4/84 = 0.952।</div>
+      <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> রৈখিক ফিট ভুল হলেও <b>এলোমেলো না</b> হলে অবশিষ্টের ধরন থেকে বোঝা যায়: <b>+ − − +</b> মানে বক্রতা, <b>এলোমেলো চিহ্ন</b> মানে শুধু নয়েজ।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 310 206" width="302">
+      <g class="w">
+        <path class="ink-k" d="M18,178 H302" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M18,178 V14" marker-end="url(#ahb)"/>
+        <circle cx="50" cy="155" r="4.5" class="ink-k"/>
+        <circle cx="100" cy="135" r="4.5" class="ink-k"/>
+        <circle cx="150" cy="95" r="4.5" class="ink-k"/>
+        <circle cx="200" cy="35" r="4.5" class="ink-k"/>
+        <path class="ink-g" d="M50,155 C75,148 100,135 125,118 C150,95 175,68 200,35" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M46,167 L226,42" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M36,150 C52,108 66,120 100,135 C126,148 138,58 166,74 C190,88 204,24 232,38 C252,48 258,112 282,152" marker-end="url(#ahp)" style="stroke-dasharray:6 4"/>
+      </g>
+      <text x="30" y="26" class="k w6">y</text>
+      <text x="298" y="196" text-anchor="end" class="k w6">x</text>
+      <text x="110" y="32" text-anchor="middle" class="bn p s" style="font-size:12px">ডিগ্রি ৯ বিন্দু মেনে নেয়</text>
+      <text x="110" y="46" text-anchor="middle" class="bn p s" style="font-size:12px">আর মাঝে দুলে যায়</text>
+      <text x="234" y="162" class="bn r s" style="font-size:12px">ডিগ্রি ১: খুব সমতল</text>
+      <text x="150" y="172" text-anchor="end" class="bn g s" style="font-size:12px">প্রকৃত বক্ররেখা</text>
+    </svg><figcaption>ক্ষমতা বাড়লে প্রশিক্ষণ ভুল সবসময় কমে, আর মডেল নষ্ট হতে পারে</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">সম্পর্ক মানে কারণ নয়</span> আইসক্রিম বিক্রয় ও ডুবে যাওয়ার মধ্যে r = 0.98, তবু কোনোটিই অন্যটিকে ঘটায় না: দুটোই চালিত <span class="hl">একটি গোপন কারণে</span> — গরমের আবহাওয়ায়। r <b>দিক</b> বলে না, অরৈখিক সম্পর্ক বলে না, আর সমষ্টিগত ডেটায় শক্তিশালী r ব্যক্তিগতে মিলিয়ে পায় না (<b>সিম্পসনের প্যারাডক্স</b>)।</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) r = 0.9 কারণ প্রমাণ করে না। (ii) r = 0 স্বাধীনতা প্রমাণ করে না — এটি কেবল <b>রৈখিক</b> সম্পর্ক বাদ দেয়। (iii) <b>সরল</b> রেখায় R² = r² ঠিক; একাধিক ফিচারে তা নয়। (iv) ডিগ্রি-n বহুপদী সর্বোচ্চ <b>n − 1</b> বার বাঁকে।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ✍ একই ডেটা, দুটি গুণাঙ্ক</span> একই চার বিন্দুর জন্য r = 20/√(5 × 84) = <span class="circ">0.976</span> এবং রৈখিক R² = r² = 0.952। x² যোগ করলে R² = 1.000 হয় কিন্তু r অপরিবর্তিত: <b>R² মাপে ফিট, r মাপে রৈখিক সম্পর্ক</b>।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">রাতের আগের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">সূত্র পাতা</span>
+    <div class="fgrid small">
+      <p><b>মডেল</b> ŷ = mx + c (m স্লোপ, c ইন্টারসেপ্ট)</p><p><b>সাধারণ</b> ŷ = β₀ + Σβⱼxⱼ + ε</p>
+      <p><b>ফিট রেখা ভেদ করে</b> (x̄, ȳ)</p><p><b>m</b> = Σ(x−x̄)(y−ȳ) / Σ(x−x̄)²</p>
+      <p><b>m</b> = [nΣxy − ΣxΣy] / [nΣx² − (Σx)²]</p><p><b>c</b> = ȳ − m x̄</p>
+      <p><b>অবশিষ্ট</b> e = y − ŷ · OLS ন্যূনতম করে Σe²</p><p><b>MAE</b> = গড়|e| · <b>MSE</b> = গড়(e²)</p>
+      <p><b>RMSE</b> = √MSE, y-এর একক</p><p><b>R²</b> = 1 − SSres/SStot</p>
+      <p><b>স্থানান্তরিত R²</b> = 1 − (1−R²)(n−1)/(n−p−1)</p><p><b>r</b> = cov/(σxσy) ∈ [−1, 1]</p>
+      <p><b>সরল রেখায়</b> R² = r² · <b>L2</b> + λΣβ²</p><p><b>L1 লাসো</b> + λΣ|β|</p>
+      <p><b>লজিস্টিক</b> 1/(1 + e<sup>−z</sup>)</p><p><b>সবসময়</b> MAE ≤ RMSE, MSE ≥ MAE²</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক লাইনের কথা</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>রিগ্রেশন ভবিষ্যৎবাণী করে না</li>
+      <li>রিগ্রেশন <b>ধারাবাহিক সংখ্যা</b> বলে</li>
+      <li>শ্রেণিবিন্যাস <b>লেবেল</b> ও সম্ভাবনা বলে</li>
+      <li>লেবেল ছাড়া k-means = <b>তত্ত্বাবিহীন</b></li>
+      <li>কাজের পর পুরস্কার = <b>রিইনফোর্সমেন্ট</b></li>
+      <li>OLS ন্যূনতম করে <b>Σ(y − ŷ)²</b>, গোনে না</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>c মানে <b>x = 0-এর ŷ</b>, গড় নয়</li>
+      <li>RMSE = <b>√</b>MSE, y-এর এককে</li>
+      <li>MAE মজবুত; MSE বড় ভুল শাস্তি দেয়</li>
+      <li>R² <b>ঋণাত্মক</b> হতে পারে</li>
+      <li>ওভারফিটিং = <b>উচ্চ ভ্যারিয়েন্স</b></li>
+      <li>L1 শূন্য করে, L2 ছোট করে</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> লজিস্টিক রিগ্রেশন শ্রেণিবিন্যাস · ইন্টারসেপ্ট গড় নয় · MSE-এর একক y², পড়া যায় শুধু RMSE · R² শতাংশ নয় · বড় λ = বেশি সংকোচন = বেশি বায়াস · ফিচার বাছায় লাসো, রিজ নয় · ডিগ্রি-n বহুপদী n − 1 বার বাঁকে · জাল ও অনুপ্রবেশের ডেটা ক্ষুদ্র-শ্রেণির, তাই অ্যাকুরেসি অর্থহীন · টেস্ট সেট অবশ্যই অদেখা · r = 0 মানে স্বাধীনতা নয়।</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসঙ্গে</span> "ফিতা না হ্যাঁ-না" দিয়ে রিগ্রেশন বনাম শ্রেণিবিন্যাস · "m সরায়, c ঠিক করে" · ফিট (x̄, ȳ) ভেদ করে ও অবশিষ্টের সমষ্টি 0 · "বর্গ, গড়, বর্গমূল" · "লাসো শূন্য করে, রিজ ছোট করে" · অবশিষ্টের + − − + ধরন মানে মডেল বাঁকাও, দোষধার্য নয় · দুটি জিনিস একসঙ্গে নড়া মানে তৃতীয় কিছুই চালাতে পারে।</div>
+  <figure class="doodle"><svg viewBox="0 0 520 104" width="520">
+    <g class="w">
+      <circle cx="60" cy="40" r="34" class="ink fill-b"/>
+      <circle cx="168" cy="40" r="34" class="ink fill-b"/>
+      <circle cx="276" cy="40" r="34" class="ink fill-b"/>
+      <circle cx="384" cy="40" r="34" class="ink-r fill-r"/>
+      <circle cx="492" cy="40" r="34" class="ink-r fill-r"/>
+      <path class="ink" d="M96,40 H130 M204,40 H238 M312,40 H346 M420,40 H454" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M492,76 C410,90 140,90 58,76" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="37" text-anchor="middle" class="bn w6 s">ডেটা</text><text x="60" y="52" text-anchor="middle" class="s">X, y</text>
+    <text x="168" y="45" text-anchor="middle" class="w6 l">ŷ = mx + c</text>
+    <text x="276" y="45" text-anchor="middle" class="bn w6 s" style="font-size:11px">ন্যূনতম</text>
+    <text x="384" y="37" text-anchor="middle" class="bn r w6 s" style="font-size:11px">MAE · MSE</text><text x="384" y="52" text-anchor="middle" class="r s">RMSE · R²</text>
+    <text x="492" y="37" text-anchor="middle" class="r w6 s">L1 / L2</text><text x="492" y="52" text-anchor="middle" class="bn r s" style="font-size:11px">ফিট ভালো</text>
+    <text x="113" y="30" text-anchor="middle" class="bn g s" style="font-size:11px">ফিট</text>
+    <text x="221" y="30" text-anchor="middle" class="bn g s" style="font-size:11px">বাছাই</text>
+    <text x="329" y="30" text-anchor="middle" class="bn g s" style="font-size:11px">স্কোর</text>
+    <text x="437" y="30" text-anchor="middle" class="bn g s" style="font-size:11px">টিউনিং</text>
+    <text x="276" y="102" text-anchor="middle" class="bn p s" style="font-size:11px">আর কখনো মডেলকে সেই ডেটাতেই স্কোর দেওয়া হয় না যেখানে সে ফিট হয়েছে</text>
+  </svg><figcaption>ডেটা ঢোকে, চারটি সংখ্যা বেরোয়, তারপর প্রতিবার একই চারটি সিদ্ধান্ত</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · ML অ্যাপ্লিকেশন ও রিগ্রেশন</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>রিগ্রেশন কী বলে?<ol class="opts"><li>গ্রুপ নম্বর</li><li>বাস্তব সংখ্যা</li><li>হ্যাঁ/না লেবেল</li><li>সেরা চাল</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>OLS কী ন্যূনতম করে?<ol class="opts"><li>ভুল গণনা</li><li>Σ(y − ŷ)²</li><li>x-এর যোগ</li><li>সম্পর্ক r</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>একটি বড় আউটলায়ারে কম ক্ষতি:<ol class="opts"><li>MAE</li><li>MSE</li><li>RMSE</li><li>কোনোটিই নয়</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>সরল রেখায় R² কী?<ol class="opts"><li>স্লোপ</li><li>SSres/SStot</li><li>গড় ȳ</li><li>r বর্গ</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>L1 (লাসো) কী করতে পারে?<ol class="opts"><li>সমান ছোট করা</li><li>লেবেল উপেক্ষা</li><li>কিছু β শূন্য</li><li>কোনো শাস্তি নয়</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>train 99%, test 60%:<ol class="opts"><li>ওভারফিটিং</li><li>আন্ডারফিটিং</li><li>সেরা ফলাফল</li><li>রেট খুব ছোট</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>সম্পর্ক নিয়ে ঠিক কথা:<ol class="opts"><li>r কারণ প্রমাণ</li><li>শুধু রৈখিক</li><li>কারণে r = 1</li><li>p মান প্রমাণ</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>MAE = 4 হলে MSE:<ol class="opts"><li>≤ 4</li><li>= 4</li><li>&lt; 16</li><li>≥ 16</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>লজিস্টিক রিগ্রেশন কী বলে?<ol class="opts"><li>সিগময়েড লেবেল</li><li>বাস্তব দাম</li><li>ক্লাস্টার</li><li>কম ফিচার</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>বহুপদী কী যোগ করে?<ol class="opts"><li>কোনো পদ নয়</li><li>ওভারফিটের ঝুঁকি নয়</li><li>x², x³ … পদ</li><li>শুধু ছবি</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-খ · ৩-ক · ৪-ঘ · ৫-গ · ৬-ক · ৭-খ · ৮-ঘ · ৯-ক · ১০-গ</div>
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> (1, 2), (2, 4), (3, 5) বিন্দুগুলোর সাধারণ ন্যূনতম-বর্গ রেখা ফিট করো। স্লোপ, ইন্টারসেপ্ট, ফিট করা মান, MAE, MSE, RMSE ও R² দাও এবং ফিট সম্পর্কে মন্তব্য দাও। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps small" style="margin-top:2mm">
+    <li><b>সাজানো (২)</b> — n = 3; Σx = 6, Σy = 11, Σxy = 25, Σx² = 14; ন্যূনতম করো SSE = Σ(yᵢ − a − b xᵢ)²। <i class="mk">২</i></li>
+    <li><b>গুণাঙ্ক (৩)</b> — b = [nΣxy − (Σx)(Σy)]/[nΣx² − (Σx)²] = (75 − 66)/(42 − 36) = <b>1.5</b>; a = ȳ − b x̄ = 11/3 − 3 = <b>2/3 ≈ 0.67</b>, তাই <b>ŷ = 0.67 + 1.5x</b>। <i class="mk">৩</i></li>
+    <li><b>ফিট করা মান (২)</b> — ŷ = 2.167, 3.667, 5.167; অবশিষ্ট e = −0.167, +0.333, −0.167। যাচাই: Σe = 0 ও Σŷ = Σy, কারণ রেখা (x̄, ȳ) ভেদ করে। <i class="mk">২</i></li>
+    <li><b>মেট্রিক (২)</b> — MAE = 0.667/3 = <b>0.222</b>; MSE = 0.167/3 = <b>0.0556</b>; RMSE = √0.0556 = <b>0.236</b>, y-এর এককে। <i class="mk">২</i></li>
+    <li><b>R² ও মন্তব্য (১)</b> — SSres = 0.167, SStot = 4.667, R² = 1 − 0.167/4.667 = <b>0.964</b>: y-এর ভ্যারিয়েন্সের ৯৬.৪ % ব্যাখ্যা হয় এবং এই আকারে কোনো train–test ফারাক নেই। <i class="mk">১</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে যাচাই ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>যেকোনো প্রয়োগকে রিগ্রেশন / শ্রেণিবিন্যাস / ক্লাস্টারিং / RL বলতে পারি</li>
+      <li>দুই রূপেই m ও c বের করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>অবশিষ্টের তালিকা থেকে MAE, MSE, RMSE, R² বের করতে পারি</li>
+      <li>R² কেন ঋণাত্মক হতে পারে এবং r কেন কারণ নয়</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

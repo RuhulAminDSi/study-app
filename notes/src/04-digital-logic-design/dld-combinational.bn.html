@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>কম্বিনেশনাল সার্কিট: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+<style>table.hand.tight th, table.hand.tight td { padding: 0 1.6mm; } table.hand.tight { line-height: 5.9mm; }</style>
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, gate symbols (inline attributes!)
+     pins: 2-input at (0,12) and (0,28), output at (60,20) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <g id="g-and"><path d="M0,12H10M0,28H10M44,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-or"><path d="M0,12H11M0,28H11M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-xor"><path d="M0,12H6M0,28H6M50,20H60M3,4Q11,20 3,36" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(255,105,180,.25)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <!-- 4-input OR: back curve x 0..6, input pins at y 10, 23, 37, 50; output at (66,30) -->
+    <g id="g-or4"><path d="M0,0H22Q50,0 66,30Q50,60 22,60H0Q12,30 0,0Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">কম্বিনেশনাল সার্কিট</span></h1>
+  <p class="subtitle">অ্যাডার · CLA · BCD · কম্পারেটর · ডিকোডার · MUX · PLA: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M240,128 L170,80 M240,172 L170,220 M320,106 L320,56 M400,128 L470,80 M400,172 L470,220 M320,194 L320,244 M216,150 L184,150 M424,150 L456,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="215" y="14" width="210" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="8" y="130" width="176" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="456" y="130" width="176" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">কম্বিনেশনাল</text><text x="320" y="170" text-anchor="middle" class="bn r s">মেমরি নেই · Y = f(X)</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">ডিজাইন পদ্ধতি</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">অ্যাডার · সাবট্র্যাক্টর ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">BCD অ্যাডার · 7485</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">MUX / DEMUX ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">ডিকোডার / এনকোডার ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">কোড কনভার্টার · 7-seg</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">74xx IC ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">ROM · PLA · PAL</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = প্রয়োগ / প্রোগ্রামযোগ্য</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① HA / FA-এর সমীকরণ<br>② FA = ২ HA + ১ OR<br>③ CLA: G ও P পদ<br>④ n সিলেক্ট → 2ⁿ ইনপুট<br>⑤ ডিকোডার = মিনটার্ম<br>⑥ 7483 · 74138 · 74151</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Digital logic: … <span class="hl">combinational logic circuits</span>, minimization techniques; <span class="hl">Arithmetic and data handling logic circuits, decoders and encoders, multiplexers and demultiplexers</span>; <span class="hl">Combinational circuit design</span>; … <span class="hl">PLA design</span>"। এই নোটে এর সবই আছে। ফ্লিপ-ফ্লপ ও কাউন্টার সিকুয়েন্সিয়াল সার্কিট নোটে; K-ম্যাপ বুলিয়ান অ্যালজেবরা নোটে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>মূল ধারণা, ডিজাইন, হাফ অ্যাডার ……… পৃ. ২</li><li>ফুল অ্যাডার ও সাবট্র্যাক্টর ……… পৃ. ৩</li><li>রিপল-ক্যারি ও লুক-অ্যাহেড ……… পৃ. ৪</li><li>অ্যাডার-সাবট্র্যাক্টর, BCD, কম্পারেটর … পৃ. ৫</li><li>ডিকোডার ও এনকোডার ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>MUX ও DEMUX ……… পৃ. ৭</li><li>কোড কনভার্টার, প্যারিটি, 7-seg … পৃ. ৮</li><li>ROM · PLA · PAL · হ্যাজার্ড ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: basics, design procedure, half adder ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>মূল ধারণা ও ডিজাইন</span></div>
+  <h2><span class="no">১</span>কম্বিনেশনাল বনাম সিকুয়েন্সিয়াল</h2><span class="tag">MCQ-তে প্রিয়</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">কম্বিনেশনাল সার্কিট (Combinational Circuit)</span> হলো গেটের এমন নেটওয়ার্ক, যার আউটপুট <b>শুধু বর্তমান ইনপুটের</b> উপর নির্ভর করে: Y = f(X)। মেমরি, ক্লক বা ফিডব্যাক নেই। <b>সিকুয়েন্সিয়াল (Sequential)</b> সার্কিট <b>সংরক্ষিত অবস্থাও</b> (ফ্লিপ-ফ্লপ) ব্যবহার করে → সিকুয়েন্সিয়াল সার্কিট নোট।</div>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 290 190" width="285">
+      <g class="w">
+        <path class="ink" d="M10,22 H70 M10,36 H70 M10,50 H70 M200,22 H262 M200,36 H262 M200,50 H262"/>
+        <rect x="70" y="10" width="130" height="52" rx="6" class="ink-k" style="fill:rgba(255,238,0,.45)"/>
+        <path class="ink" d="M10,118 H70 M10,132 H70 M200,118 H262 M200,132 H262"/>
+        <rect x="70" y="104" width="130" height="44" rx="6" class="ink-k fill-b"/>
+        <rect x="100" y="158" width="72" height="26" rx="4" class="ink-r fill-r"/>
+        <path class="ink-r" d="M200,140 H226 V171 H176" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M100,171 H44 V142 H66" marker-end="url(#ah)"/>
+      </g>
+      <text x="135" y="33" text-anchor="middle" class="bn k w6">কম্বিনেশনাল</text><text x="135" y="52" text-anchor="middle" class="bn k s">লজিক (গেট)</text>
+      <text x="8" y="74" class="bn s">n ইনপুট</text><text x="206" y="74" class="bn s">m আউটপুট</text>
+      <text x="135" y="130" text-anchor="middle" class="bn s">গেট</text>
+      <text x="136" y="176" text-anchor="middle" class="bn r s w6">মেমরি</text>
+      <text x="8" y="98" class="bn g s w6">সিকুয়েন্সিয়াল: ফিডব্যাক + অবস্থা</text>
+    </svg><figcaption>উপরে: Y = f(X) · নিচে: Y = f(X, অবস্থা)</figcaption></figure>
+    <table class="hand small tight">
+      <tr><th class="l">বৈশিষ্ট্য</th><th>কম্বিনেশনাল</th><th>সিকুয়েন্সিয়াল</th></tr>
+      <tr><td class="l">মেমরি</td><td>নেই</td><td>ফ্লিপ-ফ্লপ</td></tr>
+      <tr><td class="l">ক্লক</td><td>লাগে না</td><td>সাধারণত লাগে</td></tr>
+      <tr><td class="l">ফিডব্যাক</td><td>নেই</td><td>আছে</td></tr>
+      <tr><td class="l">মডেল</td><td>সত্যক সারণি</td><td>স্টেট টেবিল</td></tr>
+      <tr><td class="l">উদাহরণ</td><td>অ্যাডার, MUX</td><td>কাউন্টার, রেজিস্টার</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">২</span>ডিজাইন পদ্ধতি (Design Procedure)</h2><span class="tag">লিখিতে প্রিয়</span>
+  <div class="cols" style="grid-template-columns:1.12fr 1fr">
+    <ol class="steps small">
+      <li><b>ইনপুট ও আউটপুট</b> ঠিক করো, নাম দাও</li>
+      <li><span class="hl">সত্যক সারণি</span> লেখো (2ⁿ সারি; অব্যবহৃত কোড = X)</li>
+      <li>প্রতিটি আউটপুট সরল করো (K-ম্যাপ, বুলিয়ান অ্যালজেবরা পৃ. ৭–৮)</li>
+      <li>সার্কিট আঁকো (AND-OR → NAND-NAND)</li>
+      <li>কয়েকটি সারি যাচাই করো</li>
+    </ol>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ৩-বিট <b>মৌলিক সংখ্যা শনাক্তকারী</b>: ABC (A = MSB) = 2, 3, 5 বা 7 হলে F = 1।<br>F = Σm(2, 3, 5, 7): জোড় m2, m3 = <b>A′B</b>; m5, m7 = <b>AC</b><br>F = <span class="circ">A′B + AC</span> · 001 যাচাই: 0 ✓</div>
+  </div>
+  <div class="sumbox small"><span class="lbl">শ্রেণিবিভাগ</span> <b>গাণিতিক:</b> অ্যাডার, সাবট্র্যাক্টর, কম্পারেটর, ALU · <b>ডেটা রাউটিং:</b> MUX, DEMUX, ডিকোডার, এনকোডার · <b>কোড রূপান্তর:</b> BCD↔XS-3, বাইনারি↔Gray, 7-সেগমেন্ট · <b>ত্রুটি শনাক্তকরণ:</b> প্যারিটি · <b>প্রোগ্রামযোগ্য:</b> ROM, PLA, PAL</div>
+  <h2><span class="no">৩</span>হাফ অ্যাডার (Half Adder, HA)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:150px 1fr 230px;align-items:center">
+    <table class="hand small" style="margin-top:0"><tr><th>A</th><th>B</th><th>S</th><th>C</th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr></table>
+    <div class="small"><b>দুটি</b> বিট যোগ করে; ক্যারি-ইন নেই।<br>যোগফল <span class="circ">S = A ⊕ B</span><br>ক্যারি <span class="circ">C = A · B</span><br>১টি XOR + ১টি AND (বা ৫টি NAND)</div>
+    <figure class="doodle"><svg viewBox="0 0 230 110" width="225">
+      <g class="w">
+        <path class="ink" d="M10,22 H60 M10,38 H60 M30,22 V74 H60 M45,38 V90 H60 M120,30 H160 M120,82 H160"/>
+        <circle cx="30" cy="22" r="3" fill="#1d3f8f"/><circle cx="45" cy="38" r="3" fill="#1d3f8f"/>
+        <use href="#g-xor" x="60" y="10"/><use href="#g-and" x="60" y="62"/>
+      </g>
+      <text x="6" y="26" text-anchor="end" class="s">A</text><text x="6" y="42" text-anchor="end" class="s">B</text>
+      <text x="164" y="35" class="r w6">S = A⊕B</text><text x="164" y="87" class="r w6">C = AB</text>
+    </svg></figure>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>যোগফল = XOR</b> ("ঠিক একটি 1"), <b>ক্যারি = AND</b> ("দুটোই 1"): 1 + 1 = 10₂।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: full adder, subtractors ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>ফুল অ্যাডার ও সাবট্র্যাক্টর</span></div>
+  <h2><span class="no">৪</span>ফুল অ্যাডার (Full Adder, FA)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:250px 1fr">
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th>m</th><th>A</th><th>B</th><th>C<sub>in</sub></th><th>S</th><th>C<sub>out</sub></th></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+      <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><td>3</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>4</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><td>5</td><td>1</td><td>0</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>6</td><td>1</td><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>7</td><td>1</td><td>1</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr>
+    </table>
+    <div>
+      <p class="small"><b>তিনটি</b> বিট যোগ করে: A, B এবং আগের ধাপের ক্যারি-ইন।</p>
+      <p class="small">S = Σm(1, 2, 4, 7) → 1-এর সংখ্যা <b>বিজোড়</b> হলে 1:</p>
+      <p class="center"><span class="circ">S = A ⊕ B ⊕ C<sub>in</sub></span></p>
+      <p class="small">C<sub>out</sub> = Σm(3, 5, 6, 7) → K-ম্যাপে তিনটি জোড়:</p>
+      <p class="center"><span class="circ">C<sub>out</sub> = AB + BC<sub>in</sub> + AC<sub>in</sub></span></p>
+      <p class="small">= <span class="hl">AB + C<sub>in</sub>(A ⊕ B)</span> (দুটি হাফ অ্যাডারের রূপ) = A, B, C<sub>in</sub>-এর সংখ্যাগরিষ্ঠতা (majority)</p>
+    </div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 400 114" width="400">
+    <g class="w">
+      <rect x="40" y="10" width="60" height="62" rx="5" class="ink-k fill-b"/>
+      <rect x="150" y="10" width="60" height="58" rx="5" class="ink-k fill-b"/>
+      <path class="ink" d="M8,25 H40 M8,55 H40 M100,25 H120 V45 H150 M8,4 H135 V22 H150 M210,22 H330 M210,45 H240 V82 H264 M100,55 H112 V98 H264 M326,90 H350"/>
+      <use href="#g-or" x="264" y="70"/>
+    </g>
+    <text x="70" y="46" text-anchor="middle" class="k w6">HA₁</text><text x="180" y="44" text-anchor="middle" class="k w6">HA₂</text>
+    <text x="4" y="29" text-anchor="end" class="s">A</text><text x="4" y="59" text-anchor="end" class="s">B</text><text x="4" y="8" text-anchor="end" class="s">C<tspan dy="3" font-size="9">in</tspan></text>
+    <text x="104" y="20" class="s g">A⊕B</text><text x="116" y="92" class="s g">AB</text><text x="246" y="62" class="s g">(A⊕B)C<tspan dy="3" font-size="9">in</tspan></text>
+    <text x="334" y="26" class="r w6">S</text><text x="354" y="95" class="r w6">C<tspan dy="3" font-size="10">out</tspan></text>
+  </svg><figcaption>FA = দুটি হাফ অ্যাডার + একটি OR গেট (C<sub>out</sub> = C₁ + C₂)</figcaption></figure>
+  <table class="hand small">
+    <tr><th class="l">সার্কিট</th><th class="l">মৌলিক গেট দিয়ে</th><th>শুধু NAND</th><th>শুধু NOR</th></tr>
+    <tr><td class="l">HA / HS</td><td class="l">১ XOR + ১ AND (HS-এ +১ NOT)</td><td class="red"><b>5</b></td><td class="red"><b>5</b></td></tr>
+    <tr><td class="l">FA / FS</td><td class="l">২ XOR + ২ AND + ১ OR (২টি হাফ + OR)</td><td class="red"><b>9</b></td><td class="red"><b>9</b></td></tr>
+  </table>
+  <h2><span class="no">৫</span>হাফ ও ফুল সাবট্র্যাক্টর (Subtractor)</h2>
+  <div class="cols3" style="grid-template-columns:140px 190px 1fr;align-items:start">
+    <table class="hand small tight" style="margin-top:0"><tr><th>A</th><th>B</th><th>D</th><th>B<sub>o</sub></th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td>0</td></tr></table>
+    <table class="hand small tight" style="margin-top:0"><tr><th>A</th><th>B</th><th>B<sub>in</sub></th><th>D</th><th>B<sub>out</sub></th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>0</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td class="red"><b>1</b></td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr></table>
+    <div class="small">
+      <p><b>হাফ সাবট্র্যাক্টর</b> (A − B):<br><span class="circ">D = A ⊕ B</span><br><span class="circ">B<sub>o</sub> = A′B</span><br>(ধার/borrow শুধু 0 − 1-এ)</p>
+      <p><b>ফুল সাবট্র্যাক্টর</b> (A − B − B<sub>in</sub>): A &lt; B + B<sub>in</sub> হলে ধার।</p>
+      <p>FS = দুটি হাফ সাবট্র্যাক্টর + একটি OR (B<sub>out</sub> = B₁ + B₂)।</p>
+    </div>
+  </div>
+  <p class="small">FS: D = A ⊕ B ⊕ B<sub>in</sub> = Σm(1, 2, 4, 7) · B<sub>out</sub> = Σm(1, 2, 3, 7) = <span class="hl">A′B + A′B<sub>in</sub> + BB<sub>in</sub></span> = A′B + B<sub>in</sub>(A ⊕ B)′</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> বিয়োগফল = যোগফল (একই XOR)। ধার = ক্যারির সূত্রে <b>A-এর পূরক</b>: AB → A′B, AC<sub>in</sub> → A′B<sub>in</sub>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> FA = ২ HA + <b>OR</b> (AND নয়)। C<sub>out</sub> ≠ A ⊕ B ⊕ C<sub>in</sub>: ওটা যোগফল। HA ক্যারি-ইন নিতে পারে না।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: ripple-carry & carry look-ahead ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>প্যারালাল অ্যাডার</span></div>
+  <h2><span class="no">৬</span>রিপল-ক্যারি (প্যারালাল) অ্যাডার</h2>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <b>n-বিট প্যারালাল অ্যাডারে</b> <span class="hl">n টি ফুল অ্যাডার</span> পরপর জোড়া থাকে: প্রতিটির C<sub>out</sub> পরেরটির C<sub>in</sub> (C₀ = 0)। সব বিট একসাথে দেওয়া হয়, কিন্তু ক্যারি LSB থেকে MSB-তে <b>ঢেউয়ের মতো (ripple)</b> এগোয়।</div>
+  <figure class="doodle"><svg viewBox="0 0 560 158" width="560">
+    <g class="w">
+      <rect x="50" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/><rect x="170" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/>
+      <rect x="290" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/><rect x="410" y="40" width="80" height="54" rx="6" class="ink-k fill-b"/>
+      <path class="ink" d="M75,18 V40 M105,18 V40 M195,18 V40 M225,18 V40 M315,18 V40 M345,18 V40 M435,18 V40 M465,18 V40 M90,94 V116 M210,94 V116 M330,94 V116 M450,94 V116"/>
+      <path class="ink" d="M410,67 H372" marker-end="url(#ahb)"/><path class="ink" d="M290,67 H252" marker-end="url(#ahb)"/><path class="ink" d="M170,67 H132" marker-end="url(#ahb)"/>
+      <path class="ink" d="M530,67 H492" marker-end="url(#ahb)"/><path class="ink" d="M50,67 H14" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M490,136 H60" stroke-dasharray="7 5" marker-end="url(#ah)"/>
+    </g>
+    <text x="90" y="72" text-anchor="middle" class="k w6">FA₃</text><text x="210" y="72" text-anchor="middle" class="k w6">FA₂</text><text x="330" y="72" text-anchor="middle" class="k w6">FA₁</text><text x="450" y="72" text-anchor="middle" class="k w6">FA₀</text>
+    <text x="75" y="13" text-anchor="middle" class="s">A₃</text><text x="105" y="13" text-anchor="middle" class="s">B₃</text><text x="195" y="13" text-anchor="middle" class="s">A₂</text><text x="225" y="13" text-anchor="middle" class="s">B₂</text>
+    <text x="315" y="13" text-anchor="middle" class="s">A₁</text><text x="345" y="13" text-anchor="middle" class="s">B₁</text><text x="435" y="13" text-anchor="middle" class="s">A₀</text><text x="465" y="13" text-anchor="middle" class="s">B₀</text>
+    <text x="90" y="128" text-anchor="middle" class="s g">S₃</text><text x="210" y="128" text-anchor="middle" class="s g">S₂</text><text x="330" y="128" text-anchor="middle" class="s g">S₁</text><text x="450" y="128" text-anchor="middle" class="s g">S₀</text>
+    <text x="391" y="60" text-anchor="middle" class="s">C₁</text><text x="271" y="60" text-anchor="middle" class="s">C₂</text><text x="151" y="60" text-anchor="middle" class="s">C₃</text>
+    <text x="510" y="60" text-anchor="middle" class="s">C₀</text><text x="14" y="56" class="r s w6">C₄</text>
+    <text x="275" y="155" text-anchor="middle" class="bn r s">ক্যারি LSB → MSB দিকে এগোয়</text>
+  </svg></figure>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">বিলম্ব (Delay)</span> প্রতি ধাপে ক্যারির পথ = ২ গেট-স্তর (AND → OR); সবচেয়ে খারাপ ক্ষেত্রে <b>n টি ধাপই</b> পার হয়: t ≈ <span class="circ">n × t<sub>carry</sub></span> ≈ 2n গেট-বিলম্ব। 16 বিট × 10 ns = <b>160 ns</b>।</div>
+    <div class="small">
+      <p><b>IC 7483</b> (নতুন পিন-বিন্যাস <b>74283</b>): ৪-বিট বাইনারি অ্যাডার (fast carry); ৮ বিটের জন্য দুটি জোড়ো (C₄ → পরের C₀)।</p>
+      <p>সস্তা (n টি FA) কিন্তু <b>ধীর</b>: বিলম্ব n-এর সাথে রৈখিকভাবে বাড়ে।</p>
+    </div>
+  </div>
+  <h2><span class="no">৭</span>ক্যারি লুক-অ্যাহেড অ্যাডার (CLA)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">মূল ধারণা</span> প্রতিটি ক্যারি <b>সরাসরি ইনপুট থেকে</b> হিসাব করো, ripple-এর অপেক্ষা নয়। প্রতি বিটে: <span class="circ">G<sub>i</sub> = A<sub>i</sub>B<sub>i</sub></span> (generate: নিজেই ক্যারি তৈরি করে), <span class="circ">P<sub>i</sub> = A<sub>i</sub> ⊕ B<sub>i</sub></span> (propagate: C<sub>i</sub>-কে এগিয়ে দেয়)।</div>
+  <div class="cols" style="grid-template-columns:1.75fr 1fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">সমীকরণ</span> C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub>C<sub>i</sub> · S<sub>i</sub> = P<sub>i</sub> ⊕ C<sub>i</sub><br>
+      C₁ = G₀ + P₀C₀<br>C₂ = G₁ + P₁G₀ + P₁P₀C₀<br>C₃ = G₂ + P₂G₁ + P₂P₁G₀ + P₂P₁P₀C₀<br>C₄ = G₃ + P₃G₂ + P₃P₂G₁ + P₃P₂P₁G₀ + P₃P₂P₁P₀C₀</div>
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th class="l"></th><th>রিপল</th><th>লুক-অ্যাহেড</th></tr>
+      <tr><td class="l">ক্যারি-বিলম্ব</td><td>≈ 2n</td><td class="red"><b>3 (স্থির)</b></td></tr>
+      <tr><td class="l">গেট</td><td>কম</td><td>অনেক</td></tr>
+      <tr><td class="l">ফ্যান-ইন</td><td>2–3</td><td>n + 1 পর্যন্ত</td></tr>
+      <tr><td class="l">IC</td><td>7483</td><td>74182</td></tr>
+    </table>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> A = 1011, B = 0101, C₀ = 0 → G = 0001, P = 1110 · C₁ = G₀ = 1, C₂ = P₁C₁ = 1, C₃ = 1, C₄ = 1 (একটি ক্যারি তিন ঘর এগোল, তবু চারটি ক্যারি একসাথে পাওয়া যায়) · S = P ⊕ C₃C₂C₁C₀ = 1110 ⊕ 1110 = 0000 → <b>1 0000</b> (11 + 5 = 16 ✓)</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>G</b> = "দুটোই 1, আমি ক্যারি <b>দিই</b> (Generate)" · <b>P</b> = "একটি 1, আমি <b>পার করাই</b> (Propagate)"। ৩ স্তর: P/G → AND → OR।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> CLA-র বিলম্ব শুধু তত্ত্বে স্থির: n বাড়লে ফ্যান-ইন বাড়ে, তাই বাস্তবে ৪-বিট CLA ব্লক + 74182 ব্যবহৃত হয়।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: adder-subtractor, BCD adder, comparator ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>গাণিতিক সার্কিট</span></div>
+  <h2><span class="no">৮</span>৪-বিট অ্যাডার-সাবট্র্যাক্টর (XOR কৌশল)</h2>
+  <div class="cols" style="grid-template-columns:340px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 340 196" width="335">
+      <g class="w">
+        <path class="ink" d="M320,30 H62 M320,30 V140 H300"/>
+        <path class="ink" d="M78,8 V40 M154,8 V40 M230,8 V40 M306,8 V40"/>
+        <circle cx="62" cy="30" r="3" fill="#1d3f8f"/><circle cx="138" cy="30" r="3" fill="#1d3f8f"/><circle cx="214" cy="30" r="3" fill="#1d3f8f"/><circle cx="290" cy="30" r="3" fill="#1d3f8f"/>
+        <path class="ink" d="M62,30 V40 M138,30 V40 M214,30 V40 M290,30 V40"/>
+        <use href="#g-xor" transform="translate(90,40) rotate(90)"/><use href="#g-xor" transform="translate(166,40) rotate(90)"/><use href="#g-xor" transform="translate(242,40) rotate(90)"/><use href="#g-xor" transform="translate(318,40) rotate(90)"/>
+        <path class="ink" d="M70,100 V120 M146,100 V120 M222,100 V120 M298,100 V120"/>
+        <rect x="40" y="120" width="260" height="40" rx="6" class="ink-k fill-b"/>
+        <path class="ink" d="M40,140 H12 M100,160 V182 M240,160 V182"/>
+      </g>
+      <text x="78" y="6" text-anchor="middle" class="s">B₃</text><text x="154" y="6" text-anchor="middle" class="s">B₂</text><text x="230" y="6" text-anchor="middle" class="s">B₁</text><text x="306" y="6" text-anchor="middle" class="s">B₀</text>
+      <text x="326" y="26" class="r w6">M</text><text x="304" y="134" class="s">C₀</text>
+      <text x="170" y="145" text-anchor="middle" class="bn k s w6">৪-বিট অ্যাডার (7483) + A₃…A₀</text>
+      <text x="2" y="134" class="s">C₄</text><text x="170" y="192" text-anchor="middle" class="g s">S₃ … S₀</text>
+    </svg></figure>
+    <div class="small">
+      <p>প্রতিটি B<sub>i</sub> মোড লাইন <b>M</b>-এর সাথে একটি XOR দিয়ে যায়; C₀ = M:</p>
+      <p><b>M = 0</b> → B ⊕ 0 = B, C₀ = 0 → <span class="hl">A + B</span></p>
+      <p><b>M = 1</b> → B ⊕ 1 = B′, C₀ = 1 → A + B′ + 1 = <span class="hl">A − B</span> (2's complement)</p>
+      <p>সাইনড ওভারফ্লো: <span class="circ">V = C₄ ⊕ C₃</span></p>
+      <p>আনসাইনড: C₄ = 1 → A ≥ B; C₄ = 0 → ফল ঋণাত্মক।</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 7 − 5: 0111 + 1010 + 1 = <b>1 0010</b> → 2 (C₄ বাদ) · 5 − 7: 0101 + 1000 + 1 = <b>0 1110</b> = −2 · 6 + 5 = 1011: C₃ = 1, C₄ = 0 → V = 1, <b>ওভারফ্লো</b></div>
+  <h2><span class="no">৯</span>BCD অ্যাডার</h2>
+  <div class="cols" style="grid-template-columns:1fr 330px;align-items:center">
+    <div class="small">
+      <p>দুটি BCD অঙ্ক + ক্যারি যোগ করে। ৪-বিট বাইনারি অ্যাডার দেয় K Z₈Z₄Z₂Z₁ (সর্বোচ্চ 9 + 9 + 1 = 19)।</p>
+      <p>যোগফল <b>&gt; 9</b> (বা K = 1) হলে <span class="hl">0110 (6) যোগ করো</span>, যাতে অব্যবহৃত ৬টি কোড বাদ পড়ে:</p>
+      <p class="center"><span class="circ">C = K + Z₈Z₄ + Z₈Z₂</span></p>
+      <p>দুটি ৪-বিট অ্যাডার + সংশোধন লজিক (২ AND + ১ OR); C-ই দশমিক ক্যারি আউট।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 230" width="325">
+      <g class="w">
+        <rect x="80" y="28" width="200" height="40" rx="6" class="ink-k fill-b"/>
+        <path class="ink" d="M130,4 V28 M230,4 V28 M300,48 H282"/>
+        <path class="ink" d="M80,48 H40 V122 H58" marker-end="url(#ahb)"/>
+        <path class="ink" d="M180,68 V168" marker-end="url(#ahb)"/>
+        <path class="ink" d="M180,96 H140 V104" marker-end="url(#ahb)"/><circle cx="180" cy="96" r="3" fill="#1d3f8f"/>
+        <rect x="60" y="106" width="100" height="36" rx="6" class="ink-r fill-r"/>
+        <path class="ink-r" d="M110,142 V190 H148" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M110,165 H32" marker-end="url(#ah)"/><circle cx="110" cy="165" r="3" fill="#d32f2f"/>
+        <rect x="150" y="170" width="150" height="40" rx="6" class="ink-k fill-g"/>
+        <path class="ink" d="M225,210 V228"/>
+      </g>
+      <text x="180" y="53" text-anchor="middle" class="bn k s w6">৪-বিট বাইনারি অ্যাডার</text>
+      <text x="120" y="16" text-anchor="end" class="s">A</text><text x="240" y="16" class="s">B</text><text x="304" y="52" class="s">C<tspan dy="3" font-size="9">in</tspan></text>
+      <text x="46" y="44" class="s">K</text><text x="186" y="88" class="s">Z₈Z₄Z₂Z₁</text>
+      <text x="110" y="129" text-anchor="middle" class="r s w6">&gt; 9 ?</text>
+      <text x="192" y="128" class="r s">C = K + Z₈Z₄ + Z₈Z₂</text>
+      <text x="4" y="154" class="r s w6">C<tspan dy="3" font-size="9">out</tspan></text><text x="113" y="184" class="r s" style="font-size:11px">0CC0</text>
+      <text x="225" y="195" text-anchor="middle" class="bn k s w6">৪-বিট অ্যাডার</text><text x="234" y="227" class="bn g s">BCD যোগফল</text>
+    </svg></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> 8 + 7 = 1111 → + 0110 = 1 0101 → <b>0001 0101</b> = 15 ✓ · 9 + 9 = 1 0010 (K = 1) → 0010 + 0110 = 1000 → <b>0001 1000</b> = 18 ✓ · 4 + 5 = 1001: সংশোধন লাগে না</div>
+  <h2><span class="no">১০</span>ম্যাগনিচিউড কম্পারেটর (Magnitude Comparator)</h2>
+  <div class="cols" style="grid-template-columns:230px 1fr">
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th>A</th><th>B</th><th>A &gt; B</th><th>A = B</th><th>A &lt; B</th></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+    </table>
+    <div class="small"><p><b>১-বিট:</b> (A &gt; B) = AB′ · (A &lt; B) = A′B · (A = B) = <span class="hl">A ⊙ B</span> (XNOR)</p>
+      <p><b>৪-বিট:</b> x<sub>i</sub> = A<sub>i</sub> ⊙ B<sub>i</sub> · <span class="circ">(A = B) = x₃x₂x₁x₀</span></p>
+      <p>(A &gt; B) = A₃B₃′ + x₃A₂B₂′ + x₃x₂A₁B₁′ + x₃x₂x₁A₀B₀′</p>
+      <p>(A &lt; B): একই ধাঁচ, A<sub>i</sub>′B<sub>i</sub> দিয়ে। তুলনা শুরু <b>MSB</b> থেকে।</p></div>
+  </div>
+  <p class="small"><b>IC 7485</b>: ৪-বিট ম্যাগনিচিউড কম্পারেটর, ক্যাসকেড ইনপুটসহ (&gt;, =, &lt;); একটি চিপ হলে "=" ইনপুট HIGH রাখো। উদাহরণ: A = 1011, B = 1001 → x₃ = x₂ = 1, A₁B₁′ = 1 → <b>A &gt; B</b> (11 &gt; 9 ✓)।</p>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: decoders & encoders ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>ডিকোডার ও এনকোডার</span></div>
+  <h2><span class="no">১১</span>ডিকোডার (Decoder, n → 2ⁿ)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> ডিকোডার n-বিট কোডকে <span class="hl">2ⁿ টি আউটপুট লাইনে</span> রূপান্তর করে, যার ঠিক একটি সক্রিয় (যেমন মেমরির <b>চিপ সিলেক্ট</b>)। প্রতিটি আউটপুট একটি <b>মিনটার্ম</b>, তাই ডিকোডার হলো <span class="circ">মিনটার্ম জেনারেটর</span>।</div>
+  <div class="cols" style="grid-template-columns:250px 1fr">
+    <table class="hand small tight" style="margin-top:0">
+      <tr><th>E</th><th>A</th><th>B</th><th>D₀</th><th>D₁</th><th>D₂</th><th>D₃</th></tr>
+      <tr><td>0</td><td>X</td><td>X</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+    </table>
+    <div class="small">
+      <p>এনেবলসহ ২-থেকে-৪: <b>D<sub>i</sub> = E · m<sub>i</sub></b> (D₀ = EA′B′ … D₃ = EAB)। ৩-থেকে-৮ = ৩ NOT + ৮ AND।</p>
+      <p><b>74138</b>: ৩-থেকে-৮, <span class="hl">active-LOW</span> আউটপুট, এনেবল G1 (high), G2A, G2B (low) · <b>74139</b>: দ্বৈত ২-থেকে-৪ · <b>74154</b>: ৪-থেকে-১৬ · <b>7442</b>: BCD-থেকে-দশমিক।</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:400px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 400 190" width="395">
+      <g class="w">
+        <rect x="60" y="8" width="90" height="166" rx="6" class="ink-k fill-b"/>
+        <path class="ink" d="M20,55 H60 M20,90 H60 M20,125 H60 M150,20 H160"/>
+        <path class="ink" d="M150,40 H170 V22 H264 M150,60 H180 V35 H264 M150,100 H190 V49 H264 M150,160 H200 V62 H264"/>
+        <path class="ink" d="M150,80 H245 V128 H264 M150,120 H235 V141 H264 M150,140 H225 V155 H264 M200,160 H215 V168 H264"/>
+        <circle cx="200" cy="160" r="3" fill="#1d3f8f"/>
+        <use href="#g-or4" x="260" y="12"/><use href="#g-or4" x="260" y="118"/>
+        <path class="ink" d="M326,42 H350 M326,148 H350"/>
+      </g>
+      <text x="14" y="59" text-anchor="end" class="s">A</text><text x="14" y="94" text-anchor="end" class="s">B</text><text x="14" y="129" text-anchor="end" class="s">C</text>
+      <text x="96" y="82" text-anchor="middle" class="bn k s w6">৩-থেকে-৮</text><text x="96" y="98" text-anchor="middle" class="bn k s w6">ডিকোডার</text>
+      <text x="144" y="24" text-anchor="end" class="s">0</text><text x="144" y="44" text-anchor="end" class="s">1</text><text x="144" y="64" text-anchor="end" class="s">2</text><text x="144" y="84" text-anchor="end" class="s">3</text><text x="144" y="104" text-anchor="end" class="s">4</text><text x="144" y="124" text-anchor="end" class="s">5</text><text x="144" y="144" text-anchor="end" class="s">6</text><text x="144" y="164" text-anchor="end" class="s">7</text>
+      <text x="354" y="47" class="r w6">S</text><text x="354" y="153" class="r w6">C<tspan dy="3" font-size="10">out</tspan></text>
+      <text x="268" y="102" class="g s">Σm(1,2,4,7)</text><text x="268" y="188" class="g s">Σm(3,5,6,7)</text>
+    </svg><figcaption>ফুল অ্যাডার = একটি ৩-থেকে-৮ ডিকোডার + দুটি ৪-ইনপুট OR</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">যেকোনো ফাংশন</span> n-থেকে-2ⁿ ডিকোডার + প্রতি আউটপুটে একটি OR গেট (মিনটার্মগুলোর OR)। active-LOW আউটপুট (74138) হলে OR-এর বদলে <b>NAND</b>।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ৩-থেকে-৮ দিয়ে ৪-থেকে-১৬: <b>২টি</b> ডিকোডার (A₃ এনেবল চালায়)। ২-থেকে-৪ দিয়ে ৪-থেকে-১৬: ৪ + ১ = <b>৫টি</b>।</div>
+    </div>
+  </div>
+  <h2><span class="no">১২</span>এনকোডার ও প্রায়োরিটি এনকোডার (2ⁿ → n)</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p>ডিকোডারের বিপরীত। <b>৮-থেকে-৩</b> (অক্টাল-থেকে-বাইনারি), একসময়ে একটি ইনপুট সক্রিয়; মাত্র ৩টি OR গেট:</p>
+      <p>A₂ = D₄ + D₅ + D₆ + D₇<br>A₁ = D₂ + D₃ + D₆ + D₇<br>A₀ = D₁ + D₃ + D₅ + D₇</p>
+      <p><b>দুটি ত্রুটি:</b> D₃ ও D₆ একসাথে → 111 (ভুল); "D₀ সক্রিয়" আর "কোনোটিই না" দুটোতেই 000।</p>
+    </div>
+    <div class="small">
+      <p><b>প্রায়োরিটি এনকোডার</b>: সর্বোচ্চ অগ্রাধিকারের সক্রিয় ইনপুট জেতে; কোনো ইনপুট সক্রিয় থাকলে <b>V</b> (valid) = 1। D₃ সর্বোচ্চ:</p>
+      <table class="hand small tight" style="margin:0 auto">
+        <tr><th>D₀</th><th>D₁</th><th>D₂</th><th>D₃</th><th>x</th><th>y</th><th>V</th></tr>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>X</td><td>X</td><td class="red"><b>0</b></td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>X</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>X</td><td>X</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+        <tr><td>X</td><td>X</td><td>X</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="small">x = <span class="hl">D₂ + D₃</span> · y = <span class="hl">D₃ + D₁D₂′</span> · V = D₀ + D₁ + D₂ + D₃ · <b>74148</b>: ৮-থেকে-৩ প্রায়োরিটি এনকোডার (active-LOW, ইনপুট 7 সর্বোচ্চ) · <b>74147</b>: ১০-থেকে-৪ (দশমিক-থেকে-BCD)। ব্যবহার: CPU-তে ইন্টারাপ্ট অগ্রাধিকার, কীবোর্ড এনকোডিং।</p>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>DE</b>coder = <b>DE</b>-compress, খুলে দেয়: n → 2ⁿ। <b>EN</b>coder = গুটিয়ে আনে: 2ⁿ → n। যেদিকে লাইন বেশি, সেদিকে একটিই সক্রিয় (one-hot)।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: MUX & DEMUX ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>MUX ও DEMUX</span></div>
+  <h2><span class="no">১৩</span>মাল্টিপ্লেক্সার (MUX): ডেটা সিলেক্টর</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> MUX <b>2ⁿ টি ডেটা ইনপুটের একটিকে</b> একমাত্র আউটপুটে পাঠায়; কোনটি যাবে তা ঠিক করে <span class="circ">n টি সিলেক্ট লাইন</span>। বহু-থেকে-এক, "ডেটা সিলেক্টর", <span class="hl">প্যারালাল-থেকে-সিরিয়াল</span> রূপান্তরকারী।</div>
+  <div class="cols" style="grid-template-columns:230px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 220 196" width="215">
+      <g class="w">
+        <path class="ink-k" style="fill:rgba(255,238,0,.45)" d="M60,15 L140,42 L140,128 L60,155 Z"/>
+        <path class="ink" d="M20,40 H60 M20,70 H60 M20,100 H60 M20,130 H60 M140,85 H180"/>
+        <path class="ink-r" d="M85,180 V147 M115,180 V137"/>
+      </g>
+      <text x="100" y="80" text-anchor="middle" class="k w6">4 : 1</text><text x="100" y="99" text-anchor="middle" class="k w6">MUX</text>
+      <text x="14" y="44" text-anchor="end" class="s">I₀</text><text x="14" y="74" text-anchor="end" class="s">I₁</text><text x="14" y="104" text-anchor="end" class="s">I₂</text><text x="14" y="134" text-anchor="end" class="s">I₃</text>
+      <text x="184" y="90" class="r w6">Y</text><text x="85" y="194" text-anchor="middle" class="r s">S₁</text><text x="115" y="194" text-anchor="middle" class="r s">S₀</text>
+    </svg></figure>
+    <div class="small">
+      <p><b>2:1:</b> Y = S′I₀ + SI₁</p>
+      <p><b>4:1:</b> Y = <span class="hl">S₁′S₀′I₀ + S₁′S₀I₁ + S₁S₀′I₂ + S₁S₀I₃</span></p>
+      <p>4:1-এর গেট: ২ NOT + ৪ AND + ১ OR।</p>
+      <table class="hand small" style="margin:1mm 0">
+        <tr><th>ইনপুট</th><th>2</th><th>4</th><th>8</th><th>16</th><th>32</th></tr>
+        <tr><td>সিলেক্ট লাইন</td><td>1</td><td>2</td><td>3</td><td>4</td><td class="red"><b>5</b></td></tr>
+      </table>
+      <p><b>IC:</b> <span class="circ">74151</span> 8:1 (আউটপুট Y ও Y′) · <b>74153</b> দ্বৈত 4:1 · <b>74157</b> quad 2:1 · <b>74150</b> 16:1</p>
+    </div>
+  </div>
+  <h3>MUX দিয়ে ফাংশন বাস্তবায়ন</h3>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p>n-চলকের ফাংশনে <span class="hl">2ⁿ⁻¹ : 1 MUX</span>-ই যথেষ্ট: n − 1 টি চলক সিলেক্টে যায়; প্রতিটি ডেটা ইনপুট হয় <b>0, 1, x বা x′</b> (x = শেষ চলক)।</p>
+      <p>(2ⁿ:1 MUX-এ সরাসরি: I<sub>i</sub> = সারণির আউটপুট, 0 বা 1।)</p>
+    </div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> F(A, B, C) = Σm(1, 2, 6, 7), 4:1 MUX, S₁S₀ = AB
+      <table class="hand small tight" style="margin:0 auto"><tr><th>AB</th><th>C = 0</th><th>C = 1</th><th>I</th></tr><tr><td>00</td><td>0</td><td>1</td><td class="red"><b>C</b></td></tr><tr><td>01</td><td>1</td><td>0</td><td class="red"><b>C′</b></td></tr><tr><td>10</td><td>0</td><td>0</td><td class="red"><b>0</b></td></tr><tr><td>11</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr></table>
+      I₀…I₃ = <b>C, C′, 0, 1</b></div>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">MUX ট্রি</span> 4:1 দিয়ে 16:1 → ৪ + ১ = <span class="circ">৫টি</span><br>2:1 দিয়ে 16:1 → ৮ + ৪ + ২ + ১ = <b>১৫টি</b> · 2:1 দিয়ে 8:1 → <b>৭টি</b><br>2:1 দিয়ে 2ᵏ:1 → 2ᵏ − 1 টি</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>MUX = অনেক ঢোকে, একটি বের হয়</b>: ঘূর্ণায়মান সুইচ, যার অবস্থান = সিলেক্ট নম্বর। সিলেক্ট = log₂(ইনপুট)।</div>
+  </div>
+  <h2><span class="no">১৪</span>ডিমাল্টিপ্লেক্সার (DEMUX): ডেটা ডিস্ট্রিবিউটর</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p>একটি ইনপুট D → <b>2ⁿ টি আউটপুটের একটিতে</b> (n সিলেক্ট)। এক-থেকে-বহু, <span class="hl">সিরিয়াল-থেকে-প্যারালাল</span>।</p>
+      <p>1:4 → Y₀ = S₁′S₀′D, Y₁ = S₁′S₀D, Y₂ = S₁S₀′D, Y₃ = S₁S₀D</p>
+    </div>
+    <div class="small">
+      <p><span class="hl">এনেবলসহ ডিকোডার = DEMUX</span>: ডেটা দাও E-তে, সিলেক্ট দাও কোড ইনপুটে। তাই <b>74138</b> 1:8 DEMUX হিসেবেও চলে, আর <b>74155</b> দ্বৈত ২-থেকে-৪ ডিকোডার/DEMUX।</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> MUX-এর আউটপুট <b>১টি</b>, DEMUX-এর ইনপুট <b>১টি</b>। 4:1 দিয়ে 16:1 বানাতে ৫টি লাগে, ৪টি নয়। MUX একটি <b>ইউনিভার্সাল লজিক মডিউল</b> (যেকোনো ফাংশন)।</div>
+  <div class="tipbox small"><span class="lbl">IT সংযোগ</span> CPU-তে MUX ALU-র অপারেন্ড বাছে; TDM লিংক = MUX + DEMUX।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: code converters, parity, 7-segment ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>কনভার্টার ও ডিসপ্লে</span></div>
+  <h2><span class="no">১৫</span>কোড কনভার্টার (Code Converter)</h2>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div class="small">
+      <p><b>BCD → Excess-3</b> (XS-3 = BCD + 0011; কোড 10–15 don't-care)। ইনপুট ABCD (A = MSB), আউটপুট wxyz:</p>
+      <p class="center"><span class="circ">z = D′</span> · y = CD + C′D′ = (C ⊕ D)′<br>x = B′C + B′D + BC′D′ · w = A + BC + BD</p>
+      <p>যাচাই 5 = 0101 → w = BD = 1, x = 0, y = 0, z = 0 → <b>1000</b> = 8 ✓</p>
+      <p><b>বাইনারি → Gray:</b> <span class="hl">G₃ = B₃, G<sub>i</sub> = B<sub>i+1</sub> ⊕ B<sub>i</sub></span> (n − 1 টি XOR)<br><b>Gray → বাইনারি:</b> B₃ = G₃, B<sub>i</sub> = B<sub>i+1</sub> ⊕ G<sub>i</sub> (নতুন পাওয়া B দিয়ে)</p>
+      <p>1011 → <b>1110</b> (Gray), ফেরত: 1, 1⊕1 = 0, 0⊕1 = 1, 1⊕0 = 1 → 1011 ✓</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 156" width="285">
+      <g class="w">
+        <path class="ink" d="M20,20 H250 M20,60 H150 M20,100 H150 M20,140 H150"/>
+        <path class="ink" d="M100,20 V44 H150 M110,60 V84 H150 M120,100 V124 H150"/>
+        <circle cx="100" cy="20" r="3" fill="#1d3f8f"/><circle cx="110" cy="60" r="3" fill="#1d3f8f"/><circle cx="120" cy="100" r="3" fill="#1d3f8f"/>
+        <use href="#g-xor" x="150" y="32"/><use href="#g-xor" x="150" y="72"/><use href="#g-xor" x="150" y="112"/>
+        <path class="ink" d="M210,52 H250 M210,92 H250 M210,132 H250"/>
+      </g>
+      <text x="14" y="24" text-anchor="end" class="s">B₃</text><text x="14" y="64" text-anchor="end" class="s">B₂</text><text x="14" y="104" text-anchor="end" class="s">B₁</text><text x="14" y="144" text-anchor="end" class="s">B₀</text>
+      <text x="256" y="24" class="r s w6">G₃</text><text x="256" y="56" class="r s w6">G₂</text><text x="256" y="96" class="r s w6">G₁</text><text x="256" y="136" class="r s w6">G₀</text>
+    </svg><figcaption>বাইনারি → Gray: MSB নকল, পাশাপাশি বিটে XOR</figcaption></figure>
+  </div>
+  <h2><span class="no">১৬</span>প্যারিটি জেনারেটর ও চেকার</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="small">
+      <p><b>জোড় প্যারিটি জেনারেটর</b> (৩-বিট বার্তা ABC): <span class="circ">P = A ⊕ B ⊕ C</span>, ফলে P-সহ মোট 1-এর সংখ্যা জোড়। বিজোড় প্যারিটি: P = (A ⊕ B ⊕ C)′।</p>
+      <p><b>চেকার</b> (গ্রাহক): PEC = A ⊕ B ⊕ C ⊕ P; <b>0 = ঠিক, 1 = ত্রুটি</b>।</p>
+    </div>
+    <div class="small">
+      <p>n বিট → n − 1 টি ২-ইনপুট XOR ("প্যারিটি ট্রি")। IC: <b>74180</b>, <b>74280</b> (৯-বিট জেনারেটর/চেকার)।</p>
+      <p>উদাহরণ: 101 → P = 0, পাঠাও 1010; গ্রহণ 1110 → PEC = 1 → ত্রুটি ✓</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> প্যারিটি যেকোনো <b>বিজোড়</b> সংখ্যক বিট-ত্রুটি ধরে, কিন্তু ২টি (বা জোড় সংখ্যক) ধরে <b>না</b>, আর সংশোধনও করতে পারে না (হ্যামিং কোড পারে)।</div>
+  <h2><span class="no">১৭</span>BCD-থেকে-৭-সেগমেন্ট ডিকোডার</h2>
+  <div class="cols" style="grid-template-columns:150px 1fr">
+    <figure class="doodle"><svg viewBox="0 0 140 170" width="138">
+      <g class="w">
+        <rect x="36" y="8" width="56" height="10" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="94" y="20" width="10" height="56" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="94" y="88" width="10" height="56" rx="5" class="ink-k" style="fill:rgba(31,31,36,.06)"/>
+        <rect x="36" y="146" width="56" height="10" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="24" y="88" width="10" height="56" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+        <rect x="24" y="20" width="10" height="56" rx="5" class="ink-k" style="fill:rgba(31,31,36,.06)"/>
+        <rect x="36" y="77" width="56" height="10" rx="5" class="ink-r" style="fill:rgba(211,47,47,.55)"/>
+      </g>
+      <text x="64" y="34" text-anchor="middle" class="s w6">a</text><text x="116" y="52" class="s w6">b</text><text x="116" y="120" class="s w6">c</text><text x="64" y="140" text-anchor="middle" class="s w6">d</text>
+      <text x="6" y="120" class="s w6">e</text><text x="6" y="52" class="s w6">f</text><text x="64" y="102" text-anchor="middle" class="s w6">g</text>
+    </svg><figcaption>অঙ্ক 2: a b d e g</figcaption></figure>
+    <div class="small">
+      <table class="hand small" style="margin:0 0 1mm">
+        <tr><th>অঙ্ক</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+        <tr><td>জ্বলে</td><td>6</td><td class="red"><b>2</b></td><td>5</td><td>5</td><td>4</td><td>5</td><td>6</td><td>3</td><td class="red"><b>7</b></td><td>6</td></tr>
+      </table>
+      <p>৪টি BCD ইনপুট → ৭টি আউটপুট (a–g), প্রতি সেগমেন্টে একটি ফাংশন; কোড 10–15 don't-care। সেগমেন্ট a শুধু 1 ও 4-এ নেভা: <span class="hl">a = A + C + BD + B′D′</span></p>
+      <p><span class="circ">7447</span>: active-LOW (ওপেন-কালেক্টর) আউটপুট → <b>কমন-অ্যানোড</b> ডিসপ্লে · <b>7448</b>: active-HIGH → <b>কমন-ক্যাথোড</b> · CMOS: 4511।</p>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>47 মানে LOW, অ্যানোড</b>": 7447 সেগমেন্টকে LOW করে জ্বালায়, তাই কমন পিন যায় +V-তে (অ্যানোড)। 7448 ঠিক উল্টো।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: ROM, PLA, PAL, hazards ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>প্রোগ্রামযোগ্য লজিক ও হ্যাজার্ড</span></div>
+  <h2><span class="no">১৮</span>ROM, PLA, PAL</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">মূল ধারণা</span> যেকোনো SOP = একটি <b>AND অ্যারে</b> (গুণফল পদ) যা <b>OR অ্যারেকে</b> খাওয়ায়। PLD-গুলোর পার্থক্য শুধু <span class="hl">কোন অ্যারে প্রোগ্রামযোগ্য</span> তাতে।</div>
+  <table class="hand small tight">
+    <tr><th class="l">ডিভাইস</th><th>AND অ্যারে</th><th>OR অ্যারে</th><th class="l">মূল কথা</th></tr>
+    <tr><td class="l">ROM / PROM</td><td>স্থির (ডিকোডার)</td><td class="red"><b>প্রোগ্রামযোগ্য</b></td><td class="l">সব 2ⁿ মিনটার্ম; সত্যক সারণি হুবহু রাখে</td></tr>
+    <tr><td class="l">PLA</td><td class="red"><b>প্রোগ্রামযোগ্য</b></td><td class="red"><b>প্রোগ্রামযোগ্য</b></td><td class="l">সবচেয়ে নমনীয়; গুণফল পদ <b>ভাগাভাগি</b> হয়</td></tr>
+    <tr><td class="l">PAL</td><td class="red"><b>প্রোগ্রামযোগ্য</b></td><td>স্থির</td><td class="l">সস্তা, দ্রুত; ভাগাভাগি নেই (GAL: মোছা যায়)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 200" width="325">
+      <g class="w">
+        <rect x="26" y="34" width="132" height="98" rx="4" class="ink-k" stroke-dasharray="6 4" style="fill:rgba(255,238,0,.12)"/>
+        <rect x="226" y="34" width="66" height="98" rx="4" class="ink-k" stroke-dasharray="6 4" style="fill:rgba(31,138,92,.08)"/>
+        <path class="ink" d="M40,24 V140 M60,24 V140 M80,24 V140 M100,24 V140 M120,24 V140 M140,24 V140"/>
+        <path class="ink" d="M30,52 H286 M30,82 H286 M30,112 H286"/>
+        <path class="ink-g" d="M244,40 V170 M272,40 V170" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M35,47 l10,10 m0,-10 l-10,10 M95,47 l10,10 m0,-10 l-10,10 M35,77 l10,10 m0,-10 l-10,10 M115,77 l10,10 m0,-10 l-10,10 M75,107 l10,10 m0,-10 l-10,10 M115,107 l10,10 m0,-10 l-10,10"/>
+        <path class="ink-r" d="M239,47 l10,10 m0,-10 l-10,10 M239,77 l10,10 m0,-10 l-10,10 M267,77 l10,10 m0,-10 l-10,10 M267,107 l10,10 m0,-10 l-10,10"/>
+      </g>
+      <text x="40" y="18" text-anchor="middle" class="s">A</text><text x="60" y="18" text-anchor="middle" class="s"><tspan class="ov">A</tspan></text><text x="80" y="18" text-anchor="middle" class="s">B</text><text x="100" y="18" text-anchor="middle" class="s"><tspan class="ov">B</tspan></text><text x="120" y="18" text-anchor="middle" class="s">C</text><text x="140" y="18" text-anchor="middle" class="s"><tspan class="ov">C</tspan></text>
+      <text x="192" y="47" text-anchor="middle" class="p s">A<tspan class="ov">B</tspan></text><text x="192" y="77" text-anchor="middle" class="p s">AC</text><text x="192" y="107" text-anchor="middle" class="p s">BC</text>
+      <text x="92" y="154" text-anchor="middle" class="bn k s w6">AND অ্যারে</text><text x="258" y="28" text-anchor="middle" class="bn k s w6">OR অ্যারে</text>
+      <text x="244" y="190" text-anchor="middle" class="g s w6">F₁</text><text x="276" y="190" text-anchor="middle" class="g s w6">F₂</text>
+    </svg><figcaption>PLA: × = প্রোগ্রাম করা সংযোগ; AC ভাগাভাগি</figcaption></figure>
+    <div class="small">
+      <p>F₁ = AB′ + AC, F₂ = AC + BC: PLA-তে <b>৩টি</b> গুণফল পদ লাগে (AC ভাগাভাগি); PAL-এ ৪টি।</p>
+      <p><b>ROM-এর আকার 2ⁿ × m</b>: 32 × 8 → ৫টি অ্যাড্রেস লাইন, ৮টি আউটপুট, 256 বিট। ফুল অ্যাডার = 8 × 2 ROM।</p>
+      <p><b>PLA-র আকার</b> n × k × m (ইনপুট × গুণফল পদ × আউটপুট): লিটারেল নয়, <b>ভিন্ন গুণফল পদের সংখ্যা</b> কমাও।</p>
+      <p>আধুনিক: CPLD, <b>FPGA</b> (লুক-আপ টেবিল)।</p>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>ROM</b>: AND স্থির · <b>PAL</b>: OR স্থির (P-A-L: "<b>A</b>ND প্রোগ্রামযোগ্য, <b>L</b>ast/শেষ ধাপ তালাবদ্ধ") · <b>PLA</b>: কিছুই স্থির নয়।</div>
+  <h2><span class="no">১৯</span>হ্যাজার্ড (Hazard, গ্লিচ)</h2>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="small">
+      <p><span class="hl">হ্যাজার্ড</span> হলো পথভেদে অসমান বিলম্বের কারণে আউটপুটে ক্ষণিকের ভুল মান।</p>
+      <ul class="dash">
+        <li><b>স্ট্যাটিক-1:</b> 1 থাকার কথা, ক্ষণিক 0 হয় (SOP)</li>
+        <li><b>স্ট্যাটিক-0:</b> 0 থাকার কথা, ক্ষণিক 1 হয় (POS)</li>
+        <li><b>ডাইনামিক:</b> একবারের বদলে ৩+ বার বদলায়</li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 140" width="295">
+      <g class="w">
+        <path class="ink" d="M40,16 H110 V36 H270"/>
+        <path class="ink" d="M40,76 H132 V56 H270"/>
+        <path class="ink-r" d="M40,96 H110 V118 H132 V96 H270"/>
+        <path class="ink-k" d="M110,8 V130 M132,8 V130" stroke-dasharray="3 4" style="stroke-width:1.2"/>
+        <ellipse cx="121" cy="110" rx="22" ry="16" class="ink-r"/>
+      </g>
+      <text x="10" y="30" class="w6">A</text><text x="10" y="70" class="w6"><tspan class="ov">A</tspan></text><text x="10" y="110" class="r w6">F</text>
+      <text x="150" y="128" class="bn r s">গ্লিচ (স্ট্যাটিক-1)</text><text x="136" y="50" class="bn s">NOT-এর বিলম্ব</text>
+    </svg><figcaption>B = C = 1, A পড়ে গেলে: F-এর 1 থাকার কথা</figcaption></figure>
+  </div>
+  <p class="small">F = AB + A′C, B = C = 1: A পড়লে A′C চালু হওয়ার আগেই AB বন্ধ হয়। <b>সমাধান:</b> কনসেনসাস পদ <span class="circ">BC</span> যোগ করো (বুলিয়ান অ্যালজেবরা নোট, পৃ. ৩), অর্থাৎ K-ম্যাপে পাশাপাশি প্রতিটি 1-জোড়া কোনো একটি গ্রুপে রাখো।</p>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ন্যূনতম K-ম্যাপ যে অতিরিক্ত পদটি বাদ দেয়, ঠিক সেটিই হ্যাজার্ড দূর করে। ক্লকড সিস্টেম আউটপুট স্থির হওয়ার পর নমুনা নেয়, তাই হ্যাজার্ড বেশি গুরুত্বপূর্ণ অ্যাসিনক্রোনাস সার্কিটে।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>কম্বিনেশনাল: Y = f(বর্তমান X), মেমরি নেই</p><p>n ইনপুট → 2ⁿ সারি</p>
+      <p>HA: S = A⊕B · C = AB</p><p>FA: S = A⊕B⊕C<sub>in</sub> · C<sub>out</sub> = AB + C<sub>in</sub>(A⊕B)</p>
+      <p>HS: D = A⊕B · B<sub>o</sub> = A′B</p><p>FS: B<sub>out</sub> = A′B + A′B<sub>in</sub> + BB<sub>in</sub></p>
+      <p>FA = ২ HA + OR · ৯ NAND · HA = ৫ NAND</p><p>রিপল বিলম্ব ∝ n (≈ 2n গেট-বিলম্ব)</p>
+      <p>CLA: G = AB, P = A⊕B, C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub>C<sub>i</sub></p><p>অ্যাড-সাব: B ⊕ M, C₀ = M · V = C₄ ⊕ C₃</p>
+      <p>BCD: K + Z₈Z₄ + Z₈Z₂ হলে 0110 যোগ</p><p>কম্পারেটর: A = B ⇔ সব x<sub>i</sub> = A<sub>i</sub> ⊙ B<sub>i</sub> = 1</p>
+      <p>ডিকোডার n → 2ⁿ · এনকোডার 2ⁿ → n</p><p>MUX: 2ⁿ ইনপুট, n সিলেক্ট · DEMUX উল্টো</p>
+      <p>n-চলক ফাংশন → 2ⁿ⁻¹ : 1 MUX</p><p>Gray: G<sub>i</sub> = B<sub>i+1</sub> ⊕ B<sub>i</sub> · XS-3 = BCD + 0011</p>
+      <p>জোড় প্যারিটি P = ডেটা বিটগুলোর XOR</p><p>ROM: AND স্থির · PAL: OR স্থির</p>
+    </div>
+  </div>
+  <h3>যে 74xx IC জানতেই হবে</h3>
+  <table class="hand small tight" style="white-space:nowrap">
+    <tr><th>IC</th><th class="l">কাজ</th><th>IC</th><th class="l">কাজ</th></tr>
+    <tr><td><span class="circ">7483</span></td><td class="l">৪-বিট অ্যাডার (74283-ও)</td><td><span class="circ">74151</span></td><td class="l">8:1 MUX</td></tr>
+    <tr><td>74182</td><td class="l">লুক-অ্যাহেড ক্যারি জেনারেটর</td><td>74153</td><td class="l">দ্বৈত 4:1 MUX</td></tr>
+    <tr><td>74181</td><td class="l">৪-বিট ALU</td><td>74157 · 74150</td><td class="l">quad 2:1 · 16:1 MUX</td></tr>
+    <tr><td>7485</td><td class="l">৪-বিট কম্পারেটর</td><td>74155</td><td class="l">দ্বৈত ২:৪ ডিকোডার/DEMUX</td></tr>
+    <tr><td><span class="circ">74138</span></td><td class="l">৩-থেকে-৮ ডিকোডার, active-LOW</td><td>74148</td><td class="l">৮-থেকে-৩ প্রায়োরিটি এনকোডার</td></tr>
+    <tr><td>74139 · 74154</td><td class="l">দ্বৈত ২-থেকে-৪ · ৪-থেকে-১৬</td><td>74147</td><td class="l">১০-থেকে-৪ প্রায়োরিটি এনকোডার</td></tr>
+    <tr><td>7442</td><td class="l">BCD-থেকে-দশমিক</td><td>7447 · 7448</td><td class="l">BCD-থেকে-7-seg (CA · CC)</td></tr>
+    <tr><td>74180 · 74280</td><td class="l">প্যারিটি জেনারেটর/চেকার</td><td>4511 (CMOS)</td><td class="l">BCD-থেকে-7-seg, CC</td></tr>
+  </table>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> FA = ২ HA + OR (AND নয়) · বিয়োগফল = যোগফল (A⊕B⊕C) · 4:1 দিয়ে 16:1 = ৫টি · BCD সংশোধন +6, XS-3 হলো +3 · সাধারণ এনকোডার ২টি সক্রিয় ইনপুটে ভুল করে · 74138 / 7447-এর আউটপুট active-LOW · প্যারিটি ২-বিট ত্রুটি ধরে না</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> যোগফল = XOR, ক্যারি = AND · ধার = A′ দিয়ে ক্যারি · G দেয়, P পার করায় · MUX = অনেক ঢোকে, একটি বের হয়; সিলেক্ট = log₂(ইনপুট) · DEcoder খুলে দেয় · "নয়ের বেশি? ছয় যোগ" · 47 মানে LOW, অ্যানোড · ROM-এ AND স্থির, PAL-এ OR স্থির, PLA-তে কিছুই না · Gray: MSB নকল, পাশে XOR</div>
+  <figure class="doodle"><svg viewBox="0 0 600 80" width="600">
+    <g class="w">
+      <rect x="10" y="20" width="110" height="40" rx="10" class="ink fill-b"/><rect x="170" y="20" width="110" height="40" rx="10" class="ink fill-b"/>
+      <rect x="330" y="20" width="110" height="40" rx="10" class="ink-r fill-r"/><rect x="490" y="20" width="100" height="40" rx="10" class="ink-g fill-g"/>
+      <path class="ink-g" d="M122,40 H166 M282,40 H326 M442,40 H486" marker-end="url(#ahg)"/>
+    </g>
+    <text x="65" y="45" text-anchor="middle" class="bn s w6">HA (২ বিট)</text><text x="225" y="45" text-anchor="middle" class="bn s w6">FA (৩ বিট)</text>
+    <text x="385" y="45" text-anchor="middle" class="bn r s w6">n টি FA: রিপল</text><text x="540" y="45" text-anchor="middle" class="bn g s w6">CLA: দ্রুত</text>
+    <text x="300" y="76" text-anchor="middle" class="bn s p">অ্যাডার পরিবার: প্রতিটি ধাপ আগেরটির উপর দাঁড়িয়ে</text>
+  </svg></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · কম্বিনেশনাল সার্কিট</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>হাফ অ্যাডারের ক্যারি আউটপুট:<ol class="opts"><li>A ⊕ B</li><li>A + B</li><li>A · B</li><li>(A · B)′</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>32:1 MUX-এর সিলেক্ট লাইন কয়টি?<ol class="opts"><li>5</li><li>4</li><li>32</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>ফুল অ্যাডারে ন্যূনতম কয়টি ২-ইনপুট NAND লাগে?<ol class="opts"><li>5</li><li>7</li><li>8</li><li>9</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>৪ ইনপুটের ডিকোডারের আউটপুট লাইন:<ol class="opts"><li>8</li><li>16</li><li>4</li><li>2</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>ক্যারি লুক-অ্যাহেড অ্যাডারে generate পদ G<sub>i</sub>:<ol class="opts"><li>A<sub>i</sub> ⊕ B<sub>i</sub></li><li>A<sub>i</sub> + B<sub>i</sub></li><li>A<sub>i</sub>B<sub>i</sub></li><li>(A<sub>i</sub>B<sub>i</sub>)′</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>BCD অ্যাডারে যোগফল 9-এর বেশি হলে যোগ করা হয়:<ol class="opts"><li>0011</li><li>0110</li><li>1010</li><li>1001</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>কোন IC একটি 8:1 মাল্টিপ্লেক্সার?<ol class="opts"><li>74138</li><li>7485</li><li>7447</li><li>74151</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>প্রোগ্রামযোগ্য AND + স্থির OR অ্যারে:<ol class="opts"><li>PAL</li><li>PROM</li><li>PLA</li><li>RAM</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>16:1 MUX বানাতে কয়টি 4:1 MUX লাগে?<ol class="opts"><li>4</li><li>5</li><li>8</li><li>3</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>XOR অ্যাডার-সাবট্র্যাক্টরে A − B-এর জন্য:<ol class="opts"><li>M = 0, C₀ = 0</li><li>M = 1, C₀ = 0</li><li>M = 1, C₀ = 1</li><li>M = 0, C₀ = 1</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-ঘ · ৪-খ · ৫-গ · ৬-খ · ৭-ঘ · ৮-ক · ৯-খ · ১০-গ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> F(A, B, C, D) = Σm(1, 3, 4, 11, 12, 13, 14, 15) একটি 8:1 মাল্টিপ্লেক্সার দিয়ে বাস্তবায়ন করো (সিলেক্ট লাইনে A, B, C; A = MSB)। <i class="mk">৮ নম্বর</i></div>
+  <div class="cols" style="grid-template-columns:1fr 230px;align-items:start">
+    <ol class="steps small">
+      <li>সিলেক্ট = A, B, C; প্রতিটি ডেটা ইনপুট 0, 1, D বা D′ <i class="mk">১</i></li>
+      <li>প্রতিটি ABC-র জন্য D = 0 ও D = 1-এ F লেখো (সারণি) <i class="mk">৩</i></li>
+      <li>(0, 1) → D · (1, 0) → D′ · (0, 0) → 0 · (1, 1) → 1, অতএব I₀…I₇ = <span class="circ">D, D, D′, 0, 0, D, 1, 1</span> <i class="mk">২</i></li>
+      <li>একটি 74151 + D′-এর জন্য একটি NOT; m12 যাচাই: I₆ = 1 ✓ <i class="mk">২</i></li>
+    </ol>
+    <table class="hand small tight" style="margin-top:0"><tr><th>ABC</th><th>D=0</th><th>D=1</th><th>I</th></tr><tr><td>000</td><td>0</td><td>1</td><td>D</td></tr><tr><td>001</td><td>0</td><td>1</td><td>D</td></tr><tr><td>010</td><td>1</td><td>0</td><td>D′</td></tr><tr><td>011</td><td>0</td><td>0</td><td>0</td></tr><tr><td>100</td><td>0</td><td>0</td><td>0</td></tr><tr><td>101</td><td>0</td><td>1</td><td>D</td></tr><tr><td>110</td><td>1</td><td>1</td><td>1</td></tr><tr><td>111</td><td>1</td><td>1</td><td>1</td></tr></table>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>HA, FA, HS, FS-এর সারণি ও সমীকরণ</li>
+        <li>দুটি HA ও ডিকোডার দিয়ে FA</li>
+        <li>CLA-র C₁…C₄; MUX-এর ডেটা ইনপুট</li>
+        <li>7483, 74138, 74151, 7485, 74148, 7447</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① BCD অ্যাডারের ব্লক ডায়াগ্রাম<br>② ৪-বিট কম্পারেটরের সমীকরণ<br>③ K-ম্যাপে BCD → XS-3<br>④ ৩-থেকে-৮ ডিকোডারে FA</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

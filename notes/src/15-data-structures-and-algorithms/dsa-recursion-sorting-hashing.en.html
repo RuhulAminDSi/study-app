@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Recursion, Sorting, Searching, Hashing &amp; Algorithm Analysis: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Recursion, Sorting, Searching &amp; Hashing</span></h1>
+  <p class="subtitle">Master theorem · sort table · probing · storage · exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="110" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M210,150 L176,150 M430,150 L464,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-g fill-g"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">ALGORITHMS</text><text x="320" y="170" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="142" y="58" text-anchor="middle" class="s">Recursion · Hanoi</text><text x="142" y="74" text-anchor="middle" class="s">2ⁿ − 1 moves</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Master theorem ★</text>
+      <text x="498" y="58" text-anchor="middle" class="r w6">Sort table ★</text><text x="498" y="74" text-anchor="middle" class="r s">best/avg/worst/stable</text>
+      <text x="96" y="155" text-anchor="middle" class="w6">O · Ω · Θ</text>
+      <text x="544" y="148" text-anchor="middle" class="r w6">Binary search</text><text x="544" y="164" text-anchor="middle" class="r s">⌈log₂(n+1)⌉ ★</text>
+      <text x="142" y="238" text-anchor="middle" class="s">Quick partition</text><text x="142" y="254" text-anchor="middle" class="s">pivot = trap</text>
+      <text x="320" y="264" text-anchor="middle" class="g w6">Hashing &amp; probing</text><text x="320" y="280" text-anchor="middle" class="g s">α = n / m</text>
+      <text x="498" y="238" text-anchor="middle" class="s">Storage: buddy,</text><text x="498" y="254" text-anchor="middle" class="s">fits, GC</text>
+    </svg>
+    <figcaption>↑ the lesson on one page: red = high-yield, green = the numerical</figcaption>
+  </figure>
+  <div class="sticky" style="width:72mm"><b>High-yield list</b><br>① Hanoi: 2ⁿ − 1 moves<br>② 2T(n/2) + n = Θ(n log n)<br>③ O ≠ worst, Θ ≠ average<br>④ Quick worst O(n²): bad pivot<br>⑤ Stable: merge, insertion, bubble<br>⑥ Not stable: quick, heap, selection<br>⑦ Binary search ≤ ⌈log₂(n+1)⌉<br>⑧ Comparison sort ≥ Ω(n log n)<br>⑨ Probes ≈ 1/(1 − α)<br>⑩ Ref-counting fails on cycles</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The syllabus line is "<span class="hl">Recursion, sorting, searching, hashing, storage management. Techniques for analysis of algorithms.</span>" Heap internals are in the Heaps &amp; B-Trees lesson, divide-and-conquer / greedy / DP as design methods in the Design Methods lesson, and the lower-bound proof in the NP-Completeness lesson.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Recursion &amp; the call stack … p. 2</li><li>Asymptotic notation &amp; analysis … p. 3</li><li>Recurrences &amp; Master theorem … p. 4</li><li>Simple, heap &amp; linear-time sorts … p. 5</li><li>Merge, quick &amp; the sort table … p. 6</li></ul>
+    <ul class="tick"><li>Searching … p. 7</li><li>Hashing &amp; collisions … p. 8</li><li>Storage management &amp; GC … p. 9</li><li>Night-before p. 10 · Practice p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: recursion ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Recursion</span></div>
+  <h2><span class="no">1</span>Recursion &amp; the Call Stack</h2><span class="tag">foundation ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">recursive</span> function solves a problem by calling itself on a <b>smaller</b> instance. It needs a <span class="circ">base case</span> that stops without a call and a <b>recursive case</b> that moves strictly towards it. Every call pushes an <span class="hl">activation record</span> (parameters, locals, return address) on the stack, so recursion depth d costs <b>O(d) space</b>.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Problem</th><th class="l">Recurrence</th><th class="l">Cost</th></tr>
+    <tr><td class="l">Factorial</td><td class="l">n! = n·(n−1)!, 0! = 1</td><td class="l">Θ(n) time &amp; stack</td></tr>
+    <tr><td class="l">Fibonacci, naive</td><td class="l">F(n) = F(n−1) + F(n−2); F(0)=0, F(1)=1</td><td class="l"><span class="circ">Θ(φⁿ)</span>, φ ≈ 1.618 (quoted O(2ⁿ))</td></tr>
+    <tr><td class="l">Fibonacci, memo / loop</td><td class="l">each F(i) once</td><td class="l">Θ(n)</td></tr>
+    <tr><td class="l">Tower of Hanoi</td><td class="l">M(n) = 2M(n−1) + 1, M(1) = 1</td><td class="l"><b>2ⁿ − 1</b> moves</td></tr>
+    <tr><td class="l">Fast power xⁿ</td><td class="l">xⁿ = (x^⌊n/2⌋)² (× x if n odd)</td><td class="l">Θ(log n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,274px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="270">
+      <g class="w">
+        <path class="ink" d="M138,34 L96,62 M163,34 L209,62 M74,81 L54,101 M94,81 L114,101 M215,83 L207,99 M230,82 L242,100 M37,125 L28,142 M51,125 L60,142 M194,126 L186,141 M206,126 L214,141"/>
+        <circle cx="150" cy="26" r="15" class="ink-k fill-y"/>
+        <circle cx="84" cy="70" r="15" class="ink fill-b"/>
+        <circle cx="222" cy="70" r="15" class="ink-r fill-r"/>
+        <circle cx="44" cy="112" r="15" class="ink-r fill-r"/>
+        <circle cx="124" cy="112" r="15" class="ink fill-b"/>
+        <circle cx="200" cy="112" r="15" class="ink fill-b"/>
+        <circle cx="250" cy="112" r="15" class="ink fill-b"/>
+        <circle cx="22" cy="154" r="14" class="ink fill-b"/>
+        <circle cx="66" cy="154" r="14" class="ink fill-b"/>
+        <circle cx="180" cy="154" r="14" class="ink fill-b"/>
+        <circle cx="220" cy="154" r="14" class="ink fill-b"/>
+      </g>
+      <text x="150" y="31" text-anchor="middle" class="k w6 s">F4</text>
+      <text x="84" y="75" text-anchor="middle" class="s">F3</text>
+      <text x="222" y="75" text-anchor="middle" class="r w6 s">F2</text>
+      <text x="44" y="117" text-anchor="middle" class="r w6 s">F2</text>
+      <text x="124" y="117" text-anchor="middle" class="s">F1</text>
+      <text x="200" y="117" text-anchor="middle" class="s">F1</text>
+      <text x="250" y="117" text-anchor="middle" class="s">F0</text>
+      <text x="22" y="159" text-anchor="middle" class="s">F1</text>
+      <text x="66" y="159" text-anchor="middle" class="s">F0</text>
+      <text x="180" y="159" text-anchor="middle" class="s">F1</text>
+      <text x="220" y="159" text-anchor="middle" class="s">F0</text>
+      <text x="150" y="190" text-anchor="middle" class="r s">F2 solved twice → 9 calls for F4</text>
+    </svg><figcaption>recursion tree of naive fib(4): overlapping sub-problems (red) explode exponentially</figcaption></figure>
+    <div class="code" style="margin-top:0;font-size:10pt;line-height:5.2mm">/* not tail-recursive: × after return */
+int fact(int n) {
+  if (n == 0) return 1;      /* base */
+  return n * fact(n - 1);
+}
+/* tail-recursive: call is the last act */
+int factT(int n, int acc) {
+  if (n == 0) return acc;
+  return factT(n - 1, n * acc);
+}</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Kinds of recursion</span> <b>Direct</b>: f calls f. <b>Indirect</b>: f → g → f. <b>Linear</b>: one call per activation (factorial). <b>Tree</b>: two or more (Fibonacci, Hanoi). <span class="hl">Tail</span>: the call is the final action, so a compiler can reuse the frame (<b>tail-call elimination</b>) → O(1) stack. Every recursion can be rewritten as a loop with an explicit stack.</div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ Tower of Hanoi</span> Move n − 1 discs A → B (via C), the largest A → C, then n − 1 discs B → C. So M(n) = 2M(n−1) + 1 ⇒ M(n) + 1 = 2[M(n−1) + 1] ⇒ M(n) + 1 = 2ⁿ ⇒ <span class="circ">M(n) = 2ⁿ − 1</span>. n = 3: A→C, A→B, C→B, <b>A→C</b>, B→A, B→C, A→C = <b>7</b> moves; n = 4 → 15; n = 64 → 2⁶⁴ − 1 ≈ 1.8 × 10¹⁹. The smallest disc moves on every odd step.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Base first, smaller next.</b>" Write the stop condition before the self-call, and check that the argument shrinks. Naive fib(n) makes <b>2F(n+1) − 1</b> calls: fib(4) → 9, fib(5) → 15.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A missing base case gives <b>stack overflow</b>, not an endless loop. Recursion is usually <b>slower</b> than the equivalent loop (call overhead). C and Java do <b>not</b> guarantee tail-call elimination. Recursion depth of naive fib(n) is only n, even though calls are exponential.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: asymptotic notation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Asymptotic analysis</span></div>
+  <h2><span class="no">2</span>Asymptotic Notation &amp; Analysis Techniques</h2><span class="tag">definitions ★</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l" style="white-space:nowrap">Notation</th><th class="l">Formal definition (∃ c, n₀ &gt; 0, ∀ n ≥ n₀)</th><th class="l">Meaning</th><th>Like</th></tr>
+    <tr><td class="l"><b>f = O(g)</b></td><td class="l">0 ≤ f(n) ≤ c·g(n)</td><td class="l">asymptotic <span class="hl">upper bound</span></td><td>≤</td></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>f = Ω(g)</b></td><td class="l">f(n) ≥ c·g(n) ≥ 0</td><td class="l">asymptotic <span class="hl">lower bound</span></td><td>≥</td></tr>
+    <tr><td class="l"><b>f = Θ(g)</b></td><td class="l">c₁·g(n) ≤ f(n) ≤ c₂·g(n)</td><td class="l"><span class="hl">tight bound</span>: both O and Ω</td><td>=</td></tr>
+    <tr><td class="l"><b>f = o(g)</b></td><td class="l">for <b>every</b> c &gt; 0; lim f/g = 0</td><td class="l">strictly slower growth</td><td>&lt;</td></tr>
+    <tr><td class="l"><b>f = ω(g)</b></td><td class="l">lim f/g = ∞</td><td class="l">strictly faster growth</td><td>&gt;</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 260 190" width="246">
+      <g class="w">
+        <path class="ink-k" d="M20,170 H250" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M20,170 V12" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M22,168 C90,166 130,150 150,16"/>
+        <path class="ink-p" d="M22,168 C120,160 170,110 200,16"/>
+        <path class="ink" d="M22,168 C120,150 190,90 236,40"/>
+        <path class="ink-g" d="M22,168 L236,86"/>
+        <path class="ink-k" d="M22,168 C70,140 150,128 236,120"/>
+        <path class="ink-k" d="M22,160 H236" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="152" y="30" class="r s w6">2ⁿ</text>
+      <text x="204" y="30" class="p s w6">n²</text>
+      <text x="208" y="44" class="s">n log n</text>
+      <text x="238" y="84" class="g s">n</text>
+      <text x="196" y="116" class="s">log n</text>
+      <text x="200" y="156" class="s">1</text>
+      <text x="236" y="186" text-anchor="end" class="s">input size n →</text>
+    </svg><figcaption>for large n the order never changes, whatever the constants</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Growth ladder</span> 1 &lt; log log n &lt; log n &lt; √n &lt; n &lt; <span class="circ">n log n</span> &lt; n² &lt; n³ &lt; 2ⁿ &lt; n! &lt; nⁿ. Log base does not matter (logₐn = Θ(log_b n)), but exponent base does: 2ⁿ = o(3ⁿ). log(n!) = Θ(n log n); 1 + 2 + … + n = Θ(n²); 1 + ½ + … + 1/n ≈ ln n.</div>
+      <div class="ex tiny"><span class="lbl">Worked example ✍ prove a Θ bound</span> f(n) = 3n² + 5n + 2. For n ≥ 1: 3n² ≤ f(n) ≤ 3n² + 5n² + 2n² = 10n². So c₁ = 3, c₂ = 10, n₀ = 1 ⇒ <b>f = Θ(n²)</b>. Also 2ⁿ⁺¹ = O(2ⁿ) (c = 2) but 2²ⁿ = 4ⁿ ≠ O(2ⁿ).</div>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Loop pattern</th><th class="l">Basic steps</th><th class="l">Order</th></tr>
+    <tr><td class="l">for i = 1..n: for j = 1..i</td><td class="l">n(n+1)/2</td><td class="l">Θ(n²)</td></tr>
+    <tr><td class="l">for (i = 1; i &lt; n; i *= 2)</td><td class="l">⌈log₂ n⌉</td><td class="l">Θ(log n)</td></tr>
+    <tr><td class="l">for i = 1..n: for (j = i; j ≤ n; j += i)</td><td class="l">n(1 + ½ + … + 1/n)</td><td class="l">Θ(n log n)</td></tr>
+    <tr><td class="l">while (n &gt; 2) n = √n</td><td class="l">log₂ log₂ n</td><td class="l">Θ(log log n)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Common misconception</span> <span class="circ">O ≠ worst case</span>, Ω ≠ best case, Θ ≠ average case. Notations bound a <b>function</b>; cases pick the <b>input</b>. Insertion sort: worst case Θ(n²), best case Θ(n); so its running time is O(n²) and Ω(n), but not Θ(n²) for every input.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Best · average · worst</span> <b>Worst</b> = maximum steps over all inputs of size n (a guarantee). <b>Best</b> = minimum. <b>Average</b> = expected steps under a stated input distribution, e.g. linear search: (n + 1)/2 comparisons if the key is equally likely anywhere.</div>
+  </div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Amortized analysis</span> The <span class="hl">worst-case total</span> of a sequence of n operations divided by n — no probability. Dynamic array that doubles when full: n pushes cost ≤ n + (1 + 2 + 4 + … + n) &lt; 3n ⇒ <b>O(1) amortized</b> per push, though one push costs O(n). Methods: <b>aggregate</b>, <b>accounting</b> (banker's), <b>potential</b>.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Oh = ceiling, Omega = floor, Theta = both walls.</b>" Little o / ω are the strict versions — like &lt; and &gt;. To compare two functions, take lim f/g: 0 → o, constant → Θ, ∞ → ω. Space complexity is analysed the same way, counting memory cells.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: recurrences & master theorem ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Recurrences</span></div>
+  <h2><span class="no">3</span>Recurrences &amp; the Master Theorem</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">recurrence</span> gives T(n) in terms of T on smaller inputs. Solve it by <b>substitution</b> (guess, prove by induction), <b>iteration / recursion tree</b> (add the cost of every level), or the <b>Master theorem</b> for divide-and-conquer forms T(n) = a·T(n/b) + f(n), a ≥ 1, b &gt; 1.</div>
+  <div class="sumbox small"><span class="lbl">Master theorem</span> Compare f(n) with <b>n^(log_b a)</b>, the total cost of the leaves.
+    <ol class="steps tiny">
+      <li><b>Case 1</b> — f(n) = O(n^(log_b a − ε)) for some ε &gt; 0 (leaves dominate) ⇒ <span class="circ">T(n) = Θ(n^(log_b a))</span>.</li>
+      <li><b>Case 2</b> — f(n) = Θ(n^(log_b a)) (every level equal) ⇒ <b>T(n) = Θ(n^(log_b a) · log n)</b>. Extended: f = Θ(n^(log_b a) logᵏ n) ⇒ Θ(n^(log_b a) logᵏ⁺¹ n).</li>
+      <li><b>Case 3</b> — f(n) = Ω(n^(log_b a + ε)) <b>and</b> regularity a·f(n/b) ≤ c·f(n) for some c &lt; 1 (root dominates) ⇒ <b>T(n) = Θ(f(n))</b>.</li>
+    </ol>
+    Short form for f(n) = Θ(nᵈ): log_b a &gt; d → Θ(n^(log_b a)); = d → Θ(nᵈ log n); &lt; d → Θ(nᵈ).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,220px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 196" width="216">
+      <g class="w">
+        <rect x="92" y="6" width="56" height="24" rx="5" class="ink fill-y"/>
+        <rect x="40" y="52" width="56" height="24" rx="5" class="ink fill-b"/>
+        <rect x="144" y="52" width="56" height="24" rx="5" class="ink fill-b"/>
+        <rect x="8" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <rect x="70" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <rect x="124" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <rect x="186" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <path class="ink" d="M110,30 L72,52 M130,30 L170,52 M58,76 L30,98 M78,76 L92,98 M162,76 L146,98 M182,76 L208,98"/>
+        <path class="ink-g" d="M8,150 H232"/>
+      </g>
+      <text x="120" y="23" text-anchor="middle" class="s w6">n</text>
+      <text x="68" y="69" text-anchor="middle" class="s">n/2</text>
+      <text x="172" y="69" text-anchor="middle" class="s">n/2</text>
+      <text x="30" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="92" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="146" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="208" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="120" y="140" text-anchor="middle" class="s">⋮  n leaves of cost 1</text>
+      <text x="120" y="168" text-anchor="middle" class="g s w6">each level = n, log₂ n levels</text>
+      <text x="120" y="188" text-anchor="middle" class="r s w6">total = Θ(n log n)</text>
+    </svg><figcaption>recursion tree of T(n) = 2T(n/2) + n</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">Recurrence</th><th>leaves</th><th>Case</th><th class="l">Solution</th></tr>
+      <tr><td class="l">T(n/2) + 1</td><td>1</td><td>2</td><td class="l">Θ(log n)</td></tr>
+      <tr><td class="l">2T(n/2) + 1</td><td>n</td><td>1</td><td class="l">Θ(n)</td></tr>
+      <tr><td class="l">2T(n/2) + n</td><td>n</td><td>2</td><td class="l"><b>Θ(n log n)</b></td></tr>
+      <tr><td class="l">4T(n/2) + n</td><td>n²</td><td>1</td><td class="l">Θ(n²)</td></tr>
+      <tr><td class="l">4T(n/2) + n²</td><td>n²</td><td>2</td><td class="l">Θ(n² log n)</td></tr>
+      <tr><td class="l">4T(n/2) + n³</td><td>n²</td><td>3</td><td class="l">Θ(n³)</td></tr>
+      <tr><td class="l">7T(n/2) + n²</td><td>n^2.81</td><td>1</td><td class="l">Θ(n^log₂7)</td></tr>
+      <tr><td class="l">3T(n/4) + n log n</td><td>n^0.79</td><td>3</td><td class="l">Θ(n log n)</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Not in Master form</th><th class="l">Method</th><th class="l">Solution</th></tr>
+    <tr><td class="l">T(n) = T(n−1) + 1 · T(n−1) + n</td><td class="l">iteration: 1 + 1 + … · n + (n−1) + … + 1</td><td class="l">Θ(n) · <span class="circ">Θ(n²)</span></td></tr>
+    <tr><td class="l">T(n) = 2T(n−1) + 1</td><td class="l">iteration (Hanoi)</td><td class="l">Θ(2ⁿ)</td></tr>
+    <tr><td class="l">T(n) = T(n/3) + T(2n/3) + n</td><td class="l">recursion tree: ≤ n per level, log₃/₂ n levels</td><td class="l">Θ(n log n)</td></tr>
+    <tr><td class="l">T(n) = 2T(n/2) + n log n</td><td class="l">gap between cases → extended case 2</td><td class="l">Θ(n log² n)</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ substitution</span> Guess T(n) ≤ c·n log₂ n for T(n) = 2T(n/2) + n. Then T(n) ≤ 2·c(n/2)log₂(n/2) + n = c·n log₂ n − c·n + n ≤ c·n log₂ n whenever <b>c ≥ 1</b> ✓. Hence T(n) = O(n log n).</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Leaves vs root.</b>" Work out n^(log_b a) first. Leaves bigger → case 1, answer = leaves. Tie → multiply by <b>log n</b>. Root bigger → answer = f(n).</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> The Master theorem does <b>not</b> apply to T(n−1) forms, a &lt; 1, non-constant a (e.g. 2ⁿT(n/2)), or a <b>non-polynomial gap</b> like n log n vs n. Case 3 also needs regularity.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: simple, heap & linear-time sorts ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Sorting I</span></div>
+  <h2><span class="no">4</span>Simple, Heap &amp; Linear-Time Sorts</h2><span class="tag">properties ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Vocabulary</span> <span class="hl">Stable</span>: equal keys keep their input order. <span class="hl">In-place</span>: O(1) extra memory (O(log n) stack is usually allowed). <b>Adaptive</b>: faster on nearly sorted input. <b>Online</b>: can sort as data arrives. An <b>inversion</b> is a pair i &lt; j with a[i] &gt; a[j]; at most n(n−1)/2.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Sort</th><th class="l">Idea</th><th class="l">Key facts</th></tr>
+    <tr><td class="l"><b>Bubble</b></td><td class="l">swap adjacent pairs; pass i floats the i-th largest to the end</td><td class="l">≤ n(n−1)/2 comparisons; swaps = inversions; <b>O(n) best</b> only with a "no swap → stop" flag</td></tr>
+    <tr><td class="l"><b>Selection</b></td><td class="l">find the minimum of the rest, swap it to the front</td><td class="l">always n(n−1)/2 comparisons, <span class="circ">≤ n − 1 swaps</span>; not stable, not adaptive</td></tr>
+    <tr><td class="l"><b>Insertion</b></td><td class="l">insert a[i] into the sorted prefix by shifting</td><td class="l">n − 1 comparisons if sorted; shifts = inversions; stable, adaptive, online</td></tr>
+    <tr><td class="l"><b>Shell</b> (1959)</td><td class="l">insertion sort on gaps h, shrinking to 1</td><td class="l">gaps n/2, n/4… → O(n²); Knuth 1, 4, 13, 40 → O(n^1.5); not stable</td></tr>
+    <tr><td class="l"><b>Heap</b></td><td class="l">build max-heap O(n), then n − 1 × (swap root, sift-down)</td><td class="l">Θ(n log n) always, O(1) space, not stable</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">Insertion</th><th class="l">5 2 4 6 1 3</th></tr>
+      <tr><td class="l">key 2</td><td class="l"><b>2 5</b> 4 6 1 3</td></tr>
+      <tr><td class="l">key 4</td><td class="l"><b>2 4 5</b> 6 1 3</td></tr>
+      <tr><td class="l">key 6</td><td class="l"><b>2 4 5 6</b> 1 3</td></tr>
+      <tr><td class="l">key 1</td><td class="l"><b>1 2 4 5 6</b> 3</td></tr>
+      <tr><td class="l">key 3</td><td class="l"><b>1 2 3 4 5 6</b> ✓</td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">Bubble</th><th class="l">5 1 4 2 8</th></tr>
+      <tr><td class="l">pass 1</td><td class="l">1 4 2 5 <b>8</b></td></tr>
+      <tr><td class="l">pass 2</td><td class="l">1 2 4 <b>5 8</b></td></tr>
+      <tr><td class="l">pass 3</td><td class="l">no swap → <span class="circ">stop</span></td></tr>
+      <tr><td class="l">Selection</td><td class="l">5ᵃ 5ᵇ 2 → 2 5ᵇ 5ᵃ</td></tr>
+      <tr><td class="l"></td><td class="l">5ᵃ jumped past 5ᵇ: unstable</td></tr>
+    </table>
+  </div>
+  <div class="sumbox small"><span class="lbl">Linear-time (non-comparison) sorts</span>
+    <b>Counting sort</b> (keys 0..k): count each key, prefix-sum the counts, place elements scanning <b>right to left</b> (keeps it stable) → Θ(n + k) time and space. A = 2 5 3 0 2 3 0 3: counts 2 0 2 3 0 1 → prefix 2 2 4 7 7 8 → 0 0 2 2 3 3 3 5.
+    <b>Radix sort</b> (LSD): stable counting sort on each of d digits → <span class="circ">Θ(d(n + k))</span>. <b>Bucket sort</b>: uniform input in [0, 1) into n buckets, insertion-sort each → Θ(n) average, O(n²) worst.</div>
+  <div class="ex small"><span class="lbl">Worked example ✍ LSD radix sort</span> 170 45 75 90 802 24 2 66 → by units: 170 90 802 2 24 45 75 66 → by tens: 802 2 24 45 66 170 75 90 → by hundreds: <b>2 24 45 66 75 90 170 802</b>. Each pass must be <b>stable</b>, or the earlier digit order is lost.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Selection Swaps least, Insertion Shifts.</b>" Fewest writes → selection (n − 1 swaps). Nearly sorted or tiny → insertion (used inside Timsort and introsort).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Every comparison sort needs <b>Ω(n log n)</b> comparisons in the worst case (log₂ n! — proof in the NP-Completeness lesson). Counting and radix sort beat it only because they <b>never compare keys</b>.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: merge, quick, big table ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Sorting II</span></div>
+  <h2><span class="no">5</span>Merge Sort, Quick Sort &amp; the Sort Table</h2><span class="tag">written favourite ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,330px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 340 214" width="326">
+      <g class="w">
+        <rect x="70" y="4" width="200" height="22" rx="5" class="ink fill-y"/>
+        <rect x="20" y="40" width="130" height="22" rx="5" class="ink fill-b"/>
+        <rect x="200" y="40" width="110" height="22" rx="5" class="ink fill-b"/>
+        <rect x="4" y="76" width="70" height="22" rx="5" class="ink fill-b"/>
+        <rect x="88" y="76" width="64" height="22" rx="5" class="ink fill-b"/>
+        <rect x="186" y="76" width="64" height="22" rx="5" class="ink fill-b"/>
+        <rect x="270" y="76" width="40" height="22" rx="5" class="ink fill-b"/>
+        <rect x="4" y="122" width="70" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="88" y="122" width="64" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="186" y="122" width="64" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="270" y="122" width="40" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="20" y="158" width="130" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="200" y="158" width="110" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="60" y="190" width="220" height="22" rx="5" class="ink-r fill-r"/>
+        <path class="ink" d="M140,26 L90,40 M200,26 L250,40 M60,62 L40,76 M110,62 L120,76 M240,62 L218,76 M280,62 L290,76"/>
+        <path class="ink-g" d="M40,98 L40,122 M120,98 L120,122 M218,98 L218,122 M290,98 L290,122 M40,144 L70,158 M120,144 L110,158 M218,144 L240,158 M290,144 L280,158 M90,180 L130,190 M250,180 L210,190"/>
+      </g>
+      <text x="170" y="20" text-anchor="middle" class="s">38 27 43 3 9 82 10</text>
+      <text x="85" y="56" text-anchor="middle" class="s">38 27 43 3</text>
+      <text x="255" y="56" text-anchor="middle" class="s">9 82 10</text>
+      <text x="39" y="92" text-anchor="middle" class="s">38 27</text>
+      <text x="120" y="92" text-anchor="middle" class="s">43 3</text>
+      <text x="218" y="92" text-anchor="middle" class="s">9 82</text>
+      <text x="290" y="92" text-anchor="middle" class="s">10</text>
+      <text x="39" y="138" text-anchor="middle" class="g s">27 38</text>
+      <text x="120" y="138" text-anchor="middle" class="g s">3 43</text>
+      <text x="218" y="138" text-anchor="middle" class="g s">9 82</text>
+      <text x="290" y="138" text-anchor="middle" class="g s">10</text>
+      <text x="85" y="174" text-anchor="middle" class="g s">3 27 38 43</text>
+      <text x="255" y="174" text-anchor="middle" class="g s">9 10 82</text>
+      <text x="170" y="206" text-anchor="middle" class="r s w6">3 9 10 27 38 43 82</text>
+    </svg><figcaption>merge sort: blue = split (free), green = merge (the real work)</figcaption></figure>
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">Merge sort</span> Split in half, sort both, <b>merge</b> in linear time: T(n) = 2T(n/2) + Θ(n) = <span class="circ">Θ(n log n)</span> in <b>every</b> case. Merging lists of m and k items takes at most m + k − 1 comparisons (at least min(m, k)). Stable if ties take from the left (≤). Θ(n) extra array; ideal for <b>linked lists</b> and <b>external</b> (k-way) sorting.</div>
+      <div class="def tiny"><span class="lbl">Quick sort</span> (Hoare, 1961) Pick a <b>pivot</b>, <b>partition</b> so smaller keys sit left and larger right, recurse on both sides. Best/average Θ(n log n) (≈ 1.39 n log₂ n comparisons); <span class="circ">worst Θ(n²)</span> when the pivot is always the min or max, e.g. sorted input with first/last pivot: T(n) = T(n−1) + Θ(n). Fix: <b>random</b> or <b>median-of-three</b> pivot.</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">Lomuto, pivot 4</th><th class="l">array (i = boundary)</th></tr>
+      <tr><td class="l">start, i = −1</td><td class="l">2 8 7 1 3 5 6 <b>4</b></td></tr>
+      <tr><td class="l">j=0: 2 ≤ 4, i=0</td><td class="l"><b>2</b> 8 7 1 3 5 6 4</td></tr>
+      <tr><td class="l">j=3: 1 ≤ 4, i=1</td><td class="l"><b>2 1</b> 7 8 3 5 6 4</td></tr>
+      <tr><td class="l">j=4: 3 ≤ 4, i=2</td><td class="l"><b>2 1 3</b> 8 7 5 6 4</td></tr>
+      <tr><td class="l">swap a[i+1], pivot</td><td class="l">2 1 3 <span class="circ">4</span> 7 5 6 8</td></tr>
+    </table>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Merge: easy split, hard join. Quick: hard split, easy join.</b>" Both are divide-and-conquer (design method covered in the Design Methods lesson); merge works in <b>combine</b>, quick works in <b>divide</b>.</div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Extra space</th><th>Stable</th><th style="white-space:nowrap">In-place</th></tr>
+    <tr><td class="l">Bubble (flag)</td><td>n</td><td>n²</td><td>n²</td><td>1</td><td>✓</td><td>✓</td></tr>
+    <tr><td class="l">Selection</td><td>n²</td><td>n²</td><td>n²</td><td>1</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">Insertion</td><td>n</td><td>n²</td><td>n²</td><td>1</td><td>✓</td><td>✓</td></tr>
+    <tr><td class="l">Shell (Knuth)</td><td>n log n</td><td>n^1.25</td><td>n^1.5</td><td>1</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">Merge</td><td>n log n</td><td>n log n</td><td>n log n</td><td>n</td><td>✓</td><td class="red">✗</td></tr>
+    <tr><td class="l">Quick</td><td>n log n</td><td>n log n</td><td class="red"><b>n²</b></td><td>log n</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">Heap</td><td>n log n</td><td>n log n</td><td>n log n</td><td>1</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">Counting</td><td>n + k</td><td>n + k</td><td>n + k</td><td>n + k</td><td>✓</td><td class="red">✗</td></tr>
+    <tr><td class="l">Radix (d digits)</td><td>d(n+k)</td><td>d(n+k)</td><td>d(n+k)</td><td>n + k</td><td>✓</td><td class="red">✗</td></tr>
+    <tr><td class="l">Bucket</td><td>n + k</td><td>n + k</td><td>n²</td><td>n + k</td><td>✓</td><td class="red">✗</td></tr>
+  </table>
+  <div class="exam tiny"><span class="lbl">Exam trap</span> (i) Quick sort's log n space is the <b>average</b> stack (naive worst O(n); recurse on the <b>smaller</b> side first). (ii) Selection sort is Θ(n²) even on sorted input. (iii) "Fastest in practice" for RAM arrays → <span class="hl">quick sort</span>; "guaranteed n log n and stable" → <span class="hl">merge sort</span>; "guaranteed n log n in O(1) space" → <span class="hl">heap sort</span>.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: searching ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Searching</span></div>
+  <h2><span class="no">6</span>Searching</h2><span class="tag">binary search ★</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Search</th><th class="l">Needs</th><th class="l">Best</th><th class="l">Average</th><th class="l">Worst</th></tr>
+    <tr><td class="l"><b>Linear</b></td><td class="l">nothing; any list</td><td class="l">O(1)</td><td class="l">(n+1)/2</td><td class="l">O(n)</td></tr>
+    <tr><td class="l"><b>Binary</b></td><td class="l"><span class="hl">sorted + random access</span></td><td class="l">O(1)</td><td class="l">O(log n)</td><td class="l"><span class="circ">⌈log₂(n+1)⌉</span></td></tr>
+    <tr><td class="l"><b>Interpolation</b></td><td class="l">sorted, uniform keys</td><td class="l">O(1)</td><td class="l">O(log log n)</td><td class="l">O(n)</td></tr>
+    <tr><td class="l"><b>Ternary</b></td><td class="l">sorted / unimodal</td><td class="l">O(1)</td><td class="l">O(log₃ n)</td><td class="l">O(log n)</td></tr>
+    <tr><td class="l"><b>Jump</b></td><td class="l">sorted</td><td class="l">O(1)</td><td class="l">O(√n)</td><td class="l">O(√n)</td></tr>
+    <tr><td class="l"><b>Hashing</b></td><td class="l">a hash table</td><td class="l">O(1)</td><td class="l">O(1)</td><td class="l">O(n)</td></tr>
+    <tr><td class="l"><b>Exponential</b></td><td class="l">sorted, unbounded (i = position)</td><td class="l">O(1)</td><td class="l">O(log i)</td><td class="l">O(log i)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code small" style="margin-top:0">int bsearch(const int a[], int n, int key) {
+  int lo = 0, hi = n - 1;
+  while (lo &lt;= hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (a[mid] == key) return mid;
+    if (a[mid] &lt; key) lo = mid + 1;
+    else              hi = mid - 1;
+  }
+  return -1;          /* not found */
+}</div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 190" width="290">
+      <g class="w">
+        <rect x="10" y="20" width="280" height="24" rx="4" class="ink fill-b"/>
+        <rect x="150" y="70" width="140" height="24" rx="4" class="ink fill-b"/>
+        <rect x="150" y="120" width="60" height="24" rx="4" class="ink-g fill-g"/>
+        <path class="ink-r" d="M150,16 V48 M210,66 V98"/>
+        <path class="ink" d="M250,44 L250,68" marker-end="url(#ahb)"/>
+        <path class="ink" d="M180,94 L180,118" marker-end="url(#ahb)"/>
+      </g>
+      <text x="80" y="37" text-anchor="middle" class="s">3 8 15</text><text x="150" y="13" text-anchor="middle" class="r s">23</text><text x="225" y="37" text-anchor="middle" class="s">42 57 91</text>
+      <text x="180" y="87" text-anchor="middle" class="s">42</text><text x="210" y="62" text-anchor="middle" class="r s">57</text><text x="260" y="87" text-anchor="middle" class="s">91</text>
+      <text x="180" y="137" text-anchor="middle" class="g s w6">42 ✓</text>
+      <text x="150" y="172" text-anchor="middle" class="s">n = 7 → at most 3 probes</text>
+      <text x="150" y="187" text-anchor="middle" class="r s">7 → 3 → 1 elements left</text>
+    </svg><figcaption>search 42: mid 23 → go right, mid 57 → go left, mid 42 ✓</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ trace and count</span> a = 3 8 15 23 42 57 91 (indices 0–6). <b>key 42</b>: (lo, hi, mid) = (0, 6, 3) → 23 &lt; 42 → lo = 4; (4, 6, 5) → 57 &gt; 42 → hi = 4; (4, 4, 4) → found at index 4 after <b>3</b> probes. <b>key 10</b>: mid 3 (23) → hi = 2; mid 1 (8) → lo = 2; mid 2 (15) → hi = 1; lo &gt; hi → <b>−1</b>, also 3 probes. Maximum probes = ⌊log₂ n⌋ + 1 = ⌈log₂(n + 1)⌉: n = 7 → 3, <span class="circ">n = 1000 → 10</span>, n = 1024 → 11, n = 10⁶ → 20.</div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">The others in one line</span> <b>Interpolation</b>: pos = lo + (key − a[lo])·(hi − lo) / (a[hi] − a[lo]) — guesses like a dictionary. <b>Ternary</b>: two mids split into thirds; fewer iterations but more comparisons than binary, so binary wins on arrays — ternary is for the max/min of a unimodal function. <b>Jump</b>: step √n, then linear. <b>Exponential</b>: probe 1, 2, 4, 8 … then binary.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Binary search on a <b>linked list</b> is O(n) — no random access. On <b>unsorted</b> data it is simply wrong. mid = (lo + hi)/2 can <b>overflow</b> int; use lo + (hi − lo)/2. Linear search unsuccessful = n comparisons (n + 1 with a sentinel).</div>
+  </div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>Halve until one: count the doublings.</b>" 2¹⁰ ≈ 1000, 2²⁰ ≈ 10⁶, 2³⁰ ≈ 10⁹ → 10, 20, 30 probes. Best case O(1): the key sits at the first mid. Used in C <code>bsearch</code>, Python <code>bisect</code>, B-tree node search, <code>git bisect</code>.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: hashing ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Hashing</span></div>
+  <h2><span class="no">7</span>Hashing &amp; Collision Resolution</h2><span class="tag">numerical ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Hashing</span> maps a key k to a slot h(k) ∈ {0 … m − 1} of a table of size m, giving search/insert/delete in <span class="circ">O(1) average</span> (O(n) worst). Two keys with the same slot <b>collide</b>. <span class="hl">Load factor α = n / m</span> (keys ÷ slots) decides the speed.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Function</th><th class="l">Rule</th><th class="l">Example (m = 100 unless stated)</th></tr>
+    <tr><td class="l"><b>Division</b></td><td class="l">k mod m; m prime, not near 2ᵖ</td><td class="l">m = 11: 59 → 4</td></tr>
+    <tr><td class="l"><b>Multiplication</b></td><td class="l">⌊m · frac(kA)⌋, A ≈ 0.618 (Knuth)</td><td class="l">123A = 76.018 → 1</td></tr>
+    <tr><td class="l"><b>Mid-square</b></td><td class="l">square k, take the middle digits</td><td class="l">56² = 3136 → 13</td></tr>
+    <tr><td class="l"><b>Folding</b></td><td class="l">split into parts and add, drop carry</td><td class="l">123+456+789 = 1368 → 368 (m = 1000)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 190" width="232">
+      <g class="w">
+        <rect x="8" y="6" width="34" height="176" class="ink fill-b"/>
+        <path class="ink" d="M8,23.6 H42 M8,41.2 H42 M8,58.8 H42 M8,76.4 H42 M8,94 H42 M8,111.6 H42 M8,129.2 H42 M8,146.8 H42 M8,164.4 H42"/>
+        <rect x="66" y="7" width="38" height="16" rx="3" class="ink fill-y"/>
+        <rect x="124" y="7" width="38" height="16" rx="3" class="ink fill-y"/>
+        <rect x="66" y="42" width="38" height="16" rx="3" class="ink-r fill-r"/>
+        <rect x="124" y="42" width="38" height="16" rx="3" class="ink-r fill-r"/>
+        <rect x="182" y="42" width="38" height="16" rx="3" class="ink-r fill-r"/>
+        <rect x="66" y="78" width="38" height="16" rx="3" class="ink fill-y"/>
+        <path class="ink" d="M42,15 L64,15 M104,15 L122,15 M42,50 L64,50 M104,50 L122,50 M162,50 L180,50 M42,86 L64,86" marker-end="url(#ahb)"/>
+      </g>
+      <text x="25" y="19" text-anchor="middle" class="s">0</text><text x="25" y="37" text-anchor="middle" class="s">1</text><text x="25" y="54" text-anchor="middle" class="s">2</text><text x="25" y="72" text-anchor="middle" class="s">3</text><text x="25" y="90" text-anchor="middle" class="s">4</text><text x="25" y="178" text-anchor="middle" class="s">9</text>
+      <text x="85" y="19" text-anchor="middle" class="s">50</text><text x="143" y="19" text-anchor="middle" class="s">60</text>
+      <text x="85" y="54" text-anchor="middle" class="s">22</text><text x="143" y="54" text-anchor="middle" class="s">32</text><text x="201" y="54" text-anchor="middle" class="s">42</text>
+      <text x="85" y="90" text-anchor="middle" class="s">34</text>
+      <text x="150" y="130" text-anchor="middle" class="s">h(k) = k mod 10</text>
+      <text x="150" y="150" text-anchor="middle" class="r s">chain length ≈ α</text>
+    </svg><figcaption>separate chaining, m = 10: each slot heads a linked list</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">Scheme</th><th class="l">Probe i (all mod m), α ≤ 1</th></tr>
+      <tr><td class="l"><b>Linear</b></td><td class="l">h + i → <span class="circ">primary clustering</span></td></tr>
+      <tr><td class="l"><b>Quadratic</b></td><td class="l">h + c₁i + c₂i² (often h + i²) → secondary clustering</td></tr>
+      <tr><td class="l"><b>Double</b></td><td class="l">h₁ + i·h₂; h₂ ≠ 0, coprime to m → near uniform</td></tr>
+      <tr><td class="l"><b>Chaining</b></td><td class="l">a list per slot; α may exceed 1</td></tr>
+    </table>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ insert 10, 22, 31, 4, 15, 28, 17, 88, 59 into m = 11, h₁ = k mod 11</span>
+    <table class="hand tiny" style="width:100%;margin-top:1mm">
+      <tr><th class="l">slot</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+      <tr><td class="l">linear = quadratic</td><td>22</td><td>88</td><td>–</td><td>–</td><td>4</td><td>15</td><td>28</td><td>17</td><td><b>59</b></td><td>31</td><td>10</td></tr>
+      <tr><td class="l">double</td><td>22</td><td>–</td><td><b>59</b></td><td>17</td><td>4</td><td>15</td><td>28</td><td>88</td><td>–</td><td>31</td><td>10</td></tr>
+    </table>
+    59 → h₁ = 4. Linear: 4, 5, 6, 7 full → slot 8 (<b>5 probes</b>). Quadratic: 4, 5 → 4 + 4 = 8 (3 probes). Double (h₂ = 1 + k mod 10): h₂(59) = 10, so 4 → 14 mod 11 = 3 (17) → 24 mod 11 = <b>2</b>.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Expected probes</th><th class="l">Unsuccessful</th><th class="l">Successful</th><th class="l">α = 0.5</th></tr>
+    <tr><td class="l">Chaining</td><td class="l">1 + α</td><td class="l">1 + α/2</td><td class="l">1.5 · 1.25</td></tr>
+    <tr><td class="l">Uniform open addressing</td><td class="l"><span class="circ">1/(1 − α)</span></td><td class="l">(1/α) ln 1/(1 − α)</td><td class="l">2 · 1.39</td></tr>
+    <tr><td class="l">Linear probing (Knuth)</td><td class="l">½(1 + 1/(1 − α)²)</td><td class="l">½(1 + 1/(1 − α))</td><td class="l">2.5 · 1.5</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Open addressing cannot simply empty a slot on delete — later keys become unreachable; mark it <b>DELETED</b> (tombstone). Quadratic probing may miss free slots unless m is prime and α ≤ ½. Rehash (double m) when α passes a threshold (0.75 in Java's HashMap).</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Linear Lumps, Quadratic Quietens, Double Disperses.</b>" Probe count blows up near α = 1: α = 0.9 → 10 probes for a miss. Uses: symbol tables, DB hash indexes, caches (Redis, Memcached), sets/dictionaries.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: storage management ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Storage management</span></div>
+  <h2><span class="no">8</span>Storage Management &amp; Garbage Collection</h2><span class="tag">syllabus line ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Storage management</span> hands out and takes back <b>heap</b> blocks (malloc/free, new/delete). Free blocks sit on a <b>free list</b>; a <b>placement policy</b> serves each request and freed neighbours are <b>coalesced</b>. The enemies: <b>fragmentation</b> and <b>garbage</b> (unreachable, unreleased blocks).</div>
+  <div class="sumbox tiny"><span class="lbl">Placement policies</span> <b>First fit</b>: first hole big enough — fastest. <b>Next fit</b>: first fit resumed where the last search stopped. <b>Best fit</b>: the <span class="circ">smallest</span> hole that fits — scans the whole list, leaves tiny slivers. <b>Worst fit</b>: the largest hole — leaves big leftovers. In the example below <b>only best fit</b> places all four.</div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ holes 100, 500, 200, 300, 600 KB; requests 212, 417, 112, 426</span>
+    <table class="hand tiny" style="width:100%;margin-top:1mm">
+      <tr><th class="l">Policy</th><th>212</th><th>417</th><th>112</th><th>426</th></tr>
+      <tr><td class="l">First fit</td><td>500 (→288)</td><td>600 (→183)</td><td>288 (→176)</td><td class="red"><b>waits</b></td></tr>
+      <tr><td class="l">Best fit</td><td>300 (→88)</td><td>500 (→83)</td><td>200 (→88)</td><td class="green"><b>600 ✓</b></td></tr>
+      <tr><td class="l">Worst fit</td><td>600 (→388)</td><td>500 (→83)</td><td>388 (→276)</td><td class="red"><b>waits</b></td></tr>
+    </table></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,230px);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Fragmentation</span> <b>External</b>: enough free memory in total but no single hole is large enough — cured by <span class="hl">compaction</span> (slide live blocks together; needs run-time relocation, costly). <b>Internal</b>: a block larger than the request — the unused tail is wasted (buddy system, fixed partitions, paging).</div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 270 176" width="226">
+      <g class="w">
+        <rect x="6" y="6" width="256" height="24" rx="4" class="ink fill-b"/>
+        <rect x="6" y="46" width="126" height="24" rx="4" class="ink fill-b"/>
+        <rect x="136" y="46" width="126" height="24" rx="4" class="ink fill-y"/>
+        <rect x="6" y="86" width="61" height="24" rx="4" class="ink fill-b"/>
+        <rect x="71" y="86" width="61" height="24" rx="4" class="ink fill-y"/>
+        <rect x="6" y="126" width="29" height="24" rx="4" class="ink-r fill-r"/>
+        <rect x="38" y="126" width="29" height="24" rx="4" class="ink fill-y"/>
+        <path class="ink" d="M134,30 L70,46 M134,30 L198,46 M68,70 L36,86 M68,70 L102,86 M36,110 L20,126 M36,110 L52,126"/>
+      </g>
+      <text x="134" y="23" text-anchor="middle" class="s">1024 KB</text>
+      <text x="69" y="63" text-anchor="middle" class="s">512</text><text x="199" y="63" text-anchor="middle" class="s">512 free</text>
+      <text x="36" y="103" text-anchor="middle" class="s">256</text><text x="101" y="103" text-anchor="middle" class="s">256 free</text>
+      <text x="20" y="143" text-anchor="middle" class="r s w6">128</text><text x="52" y="143" text-anchor="middle" class="s">128</text>
+      <text x="140" y="166" text-anchor="middle" class="r s">100 KB request → 128 KB block (28 KB lost)</text>
+    </svg><figcaption>buddy split of 1 MB</figcaption></figure>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Buddy system</span> Blocks are powers of 2. A request is <b>rounded up</b> to 2ᵏ; a larger block is split into two halves (<b>buddies</b>) until it fits. On free, a block merges with its buddy if the buddy is free; buddy address = addr <b>XOR</b> size. Fast split/merge, but internal fragmentation up to ~50%.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Garbage collector</th><th class="l">How it works</th><th class="l">Strength · weakness</th></tr>
+    <tr><td class="l"><b>Reference counting</b></td><td class="l">free when pointer count = 0</td><td class="l">immediate · <span class="circ">fails on cycles</span></td></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>Mark-and-sweep</b></td><td class="l">mark from <b>roots</b> (stack, globals), sweep rest</td><td class="l">handles cycles · pauses (Lisp, 1960)</td></tr>
+    <tr><td class="l"><b>Copying</b></td><td class="l">copy live objects to the other semi-space</td><td class="l">compacts · wastes half the heap</td></tr>
+    <tr><td class="l"><b>Generational</b></td><td class="l">collect the young area often</td><td class="l">short pauses (Java, .NET)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Two unreachable objects pointing at each other keep count 1 → <b>leak</b> under pure reference counting. <b>Dangling pointer</b> = freed but still used; <b>leak</b> = unused but never freed. Compaction cures external fragmentation only.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>First is Fast, Best leaves Bits, Worst leaves Wide.</b>" GC: "<b>count, mark, copy</b>" — counting misses cycles, copying needs twice the room.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Hanoi: <b>2ⁿ − 1</b> moves</p><p>naive fib: Θ(φⁿ), 2F(n+1) − 1 calls</p>
+      <p>recursion depth d → O(d) stack</p><p>tail call → reusable frame</p>
+      <p>O ≤ · Ω ≥ · Θ = · o &lt; · ω &gt;</p><p>log n! = Θ(n log n)</p>
+      <p>Master: compare f with n^(log_b a)</p><p>tie ⇒ × log n</p>
+      <p>2T(n/2) + n = <b>Θ(n log n)</b></p><p>T(n/2) + 1 = Θ(log n)</p>
+      <p>T(n−1) + n = Θ(n²)</p><p>7T(n/2) + n² = Θ(n^2.81)</p>
+      <p>comparison sort ≥ <b>Ω(n log n)</b></p><p>counting Θ(n + k), radix Θ(d(n + k))</p>
+      <p>binary search ≤ <b>⌈log₂(n+1)⌉</b></p><p>interpolation O(log log n) avg</p>
+      <p>α = n/m · miss ≈ 1/(1 − α)</p><p>linear probe → primary cluster</p>
+      <p>buddy: round up to 2ᵏ</p><p>ref-count misses cycles</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Stable: <b>bubble, insertion, merge</b>, counting, radix</li>
+      <li>Not stable: <b>selection, quick, heap</b>, shell</li>
+      <li>Quick worst Θ(n²): sorted input, end pivot</li>
+      <li>Merge: Θ(n log n) always, Θ(n) space</li>
+      <li>Heap: Θ(n log n) always, O(1) space</li>
+      <li>Fewest swaps: <b>selection</b> (n − 1)</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Best for nearly sorted: <b>insertion</b></li>
+      <li>Binary search needs sorted + random access</li>
+      <li>Max probes, n = 1000 → <b>10</b></li>
+      <li>Double hashing ≈ uniform hashing</li>
+      <li>Delete in open addressing → tombstone</li>
+      <li>Only best fit placed all four requests</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> O is a bound, not "the worst case" · Master theorem needs a·T(n/b), not T(n−1) · bubble sort is O(n) best <b>only</b> with the early-exit flag · quick sort's O(log n) space is average stack · binary search on a linked list is O(n) · mid = (lo + hi)/2 can overflow · emptying a slot breaks open-addressing search · amortized ≠ average case.</div>
+  <div class="trick"><span class="lbl">All tricks together</span> "base first, smaller next" · "Oh = ceiling, Omega = floor, Theta = both walls" · "leaves vs root" · "Selection Swaps least, Insertion Shifts" · "Merge: easy split, hard join; Quick: hard split, easy join" · "halve until one — 10, 20, 30" · "Linear Lumps, Quadratic Quietens, Double Disperses" · "First is Fast, Best leaves Bits, Worst leaves Wide" · "count, mark, copy".</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="486">
+    <g class="w">
+      <rect x="8" y="10" width="240" height="74" rx="10" class="ink-g fill-g"/>
+      <rect x="272" y="10" width="240" height="74" rx="10" class="ink-r fill-r"/>
+      <path class="ink-r" d="M256,47 L266,47" marker-end="url(#ah)"/>
+    </g>
+    <text x="128" y="40" text-anchor="middle" class="g w6 l">STABLE</text>
+    <text x="128" y="58" text-anchor="middle" class="g s">bubble · insertion · merge</text>
+    <text x="128" y="74" text-anchor="middle" class="g s">counting · radix · bucket</text>
+    <text x="392" y="40" text-anchor="middle" class="r w6 l">NOT STABLE</text>
+    <text x="392" y="58" text-anchor="middle" class="r s">selection · quick · heap</text>
+    <text x="392" y="74" text-anchor="middle" class="r s">shell</text>
+    <text x="260" y="102" text-anchor="middle" class="p s">long-distance swaps break stability</text>
+  </svg><figcaption>the stability split every MCQ paper tests</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Recursion, Sorting &amp; Hashing</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Moves for Hanoi with 5 discs:<ol class="opts"><li>31</li><li>32</li><li>25</li><li>63</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>T(n) = 2T(n/2) + n is:<ol class="opts"><li>Θ(n)</li><li>Θ(n²)</li><li>Θ(n log n)</li><li>Θ(log n)</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Stable in standard form:<ol class="opts"><li>quick sort</li><li>heap sort</li><li>selection</li><li>merge sort</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Quick sort, first pivot, sorted input:<ol class="opts"><li>O(n log n)</li><li>O(n²)</li><li>O(n)</li><li>O(log n)</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Max binary-search probes, n = 1000:<ol class="opts"><li>9</li><li>10</li><li>11</li><li>500</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>m = 7, k mod 7, linear probing; 10, 17, 24 inserted. 24 goes to:<ol class="opts"><li>3</li><li>4</li><li>5</li><li>6</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>f = Θ(g) means g is:<ol class="opts"><li>upper only</li><li>lower only</li><li>average case</li><li>tight bound</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Cannot reclaim cyclic garbage:<ol class="opts"><li>mark-sweep</li><li>ref counting</li><li>copying</li><li>generational</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>T(n) = 4T(n/2) + n² is:<ol class="opts"><li>Θ(n²)</li><li>Θ(n² log n)</li><li>Θ(n³)</li><li>Θ(n log n)</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Buddy system, 1 MB pool, 100 KB request gets:<ol class="opts"><li>100 KB</li><li>64 KB</li><li>128 KB</li><li>256 KB</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-a · 2-c · 3-d · 4-b · 5-b · 6-c · 7-d · 8-b · 9-b · 10-c</div>
+  <div class="wq"><span class="lbl">Written question</span> State the Master theorem and solve T(n) = 2T(n/2) + n and T(n) = 7T(n/2) + n². Trace Lomuto partition on 2 8 7 1 3 5 6 4 (pivot = last). Give quick sort's best and worst cases with their recurrences, and one way to avoid the worst case. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>Theorem</b> — T(n) = aT(n/b) + f(n), a ≥ 1, b &gt; 1. Compare f with n^(log_b a): smaller by n^ε → Θ(n^(log_b a)); equal → Θ(n^(log_b a) log n); larger by n^ε with a·f(n/b) ≤ c·f(n), c &lt; 1 → Θ(f(n)). <i class="mk">3</i></li>
+    <li><b>Solve</b> — 2T(n/2) + n: n^(log₂2) = n = f → case 2 → <b>Θ(n log n)</b>. 7T(n/2) + n²: n^(log₂7) ≈ n^2.81 &gt; n² → case 1 → <b>Θ(n^log₂7)</b>. <i class="mk">2</i></li>
+    <li><b>Partition</b> — i = −1; j = 0 (2 ≤ 4) i = 0; j = 3 (1) i = 1 → 2 1 7 8 3 5 6 4; j = 4 (3) i = 2 → 2 1 3 8 7 5 6 4; swap a[3] with pivot → <b>2 1 3 4 7 5 6 8</b>, pivot at index 3. <i class="mk">3</i></li>
+    <li><b>Cases</b> — best: balanced split, T(n) = 2T(n/2) + Θ(n) = Θ(n log n). Worst: split 0 / n − 1, T(n) = T(n−1) + Θ(n) = Θ(n²) (sorted input, end pivot). Avoid with a random or median-of-three pivot. <i class="mk">2</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>Can solve any a·T(n/b) + f(n) in 30 s</li>
+      <li>Can fill the sort table from memory</li>
+    </ul>
+    <ul class="tick">
+      <li>Can insert keys with 3 probing schemes</li>
+      <li>Can count binary-search probes</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

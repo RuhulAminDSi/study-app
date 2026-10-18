@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Search Techniques in AI: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Search Techniques in AI</span></h1>
+  <p class="subtitle">state space · BFS/DFS · UCS/IDDFS · greedy &amp; A* (f = g + h) · minimax &amp; α-β · backtracking: exam-ready in 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="620">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M242,132 L174,74 M242,168 L174,226 M320,108 L320,56 M398,132 L466,74 M398,168 L466,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="62" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="414" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="18" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="462" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="62" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="414" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">SEARCH IN AI</text><text x="320" y="170" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="144" y="65" text-anchor="middle" class="s">state space, b, d</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">uninformed: BFS/DFS ★</text>
+      <text x="496" y="65" text-anchor="middle" class="s">UCS · IDDFS</text>
+      <text x="98" y="155" text-anchor="middle" class="g w6">b^d growth</text>
+      <text x="542" y="156" text-anchor="middle" class="r w6" style="font-size:11px">A*, f = g + h ★</text>
+      <text x="144" y="245" text-anchor="middle" class="s">local search, GA</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">α-β pruning ★</text>
+      <text x="496" y="245" text-anchor="middle" class="s">backtracking, MRV</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the key idea</figcaption>
+  </figure>
+  <div class="sticky" style="width:60mm"><b>High-yield list</b><br>① nodes = states, edges = actions<br>② BFS = queue, DFS = stack<br>③ UCS = priority queue on g<br>④ A*: f(n) = g(n) + h(n)<br>⑤ admissible: h(n) ≤ h*(n)<br>⑥ α-β best case O(b^(d/2))<br>⑦ CSP: MRV + forward check<br>⑧ complete ≠ optimal</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The Artificial Intelligence syllabus lists: "Introduction to old and new AI techniques; Knowledge representation; Propositional and first order logic; <span class="hl">Search techniques in AI</span>; Probabilistic reasoning; Natural language processing." This notebook covers exactly that line. Knowledge representation and logic have their own note; probabilistic reasoning and NLP follow this one.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Search as a state-space problem … p. 2</li><li>Breadth-first &amp; depth-first … p. 3</li><li>UCS, depth-limited, IDDFS … p. 4</li><li>Informed: greedy &amp; A* … p. 5</li><li>Admissible, consistent, heuristics … p. 6</li></ul>
+    <ul class="tick"><li>Local search, annealing, GA … p. 7</li><li>Minimax &amp; α-β pruning … p. 8</li><li>Constraint satisfaction … p. 9</li><li>Choosing a search, the cost of it … p. 10</li><li>Night-before p. 11 · Practice p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: state-space search ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>State-space search</span></div>
+  <h2><span class="no">1</span>Search as a State-Space Problem</h2><span class="tag">foundation ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>State-space search</b> models a problem as a graph in which every <span class="hl">node is a complete state</span> of the world at one instant and every <span class="hl">edge is an action (operator)</span> that carries the agent to a successor state. The agent starts from the <b>initial state</b> and stops when a state passes the <b>goal test</b>.</div>
+  <div class="mnote green">a <b>state</b> is a snapshot; a <b>node</b> is a snapshot + how we got there</div>
+  <div class="cols" style="grid-template-columns:238px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 210" width="272">
+      <g class="w">
+        <circle cx="34" cy="100" r="14" class="ink-k fill-y"/>
+        <circle cx="106" cy="42" r="12" class="ink fill-b"/><circle cx="106" cy="158" r="12" class="ink fill-b"/>
+        <circle cx="186" cy="42" r="12" class="ink fill-b"/><circle cx="186" cy="158" r="12" class="ink fill-b"/>
+        <circle cx="264" cy="100" r="14" class="ink-r fill-r"/>
+        <path class="ink" d="M46,92 L96,50" marker-end="url(#ahb)"/>
+        <path class="ink" d="M46,108 L96,150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M118,42 L174,42" marker-end="url(#ahb)"/>
+        <path class="ink" d="M118,158 L174,158" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,50 L250,92" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,150 L250,108" marker-end="url(#ahb)"/>
+      </g>
+      <text x="34" y="106" text-anchor="middle" class="k w6 s">S</text>
+      <text x="106" y="47" text-anchor="middle" class="s">A</text>
+      <text x="106" y="163" text-anchor="middle" class="s">B</text>
+      <text x="186" y="47" text-anchor="middle" class="s">C</text>
+      <text x="186" y="163" text-anchor="middle" class="s">D</text>
+      <text x="264" y="106" text-anchor="middle" class="r w6 s">G</text>
+      <text x="34" y="132" text-anchor="middle" class="s k">initial</text>
+      <text x="264" y="132" text-anchor="middle" class="s r">goal test ✓</text>
+      <text x="60" y="62" text-anchor="end" class="s">4</text>
+      <text x="60" y="142" text-anchor="end" class="s">5</text>
+      <text x="146" y="34" text-anchor="middle" class="s">1</text>
+      <text x="146" y="150" text-anchor="middle" class="s">2</text>
+      <text x="212" y="58" class="s">6</text>
+      <text x="212" y="158" class="s">6</text>
+      <text x="150" y="196" text-anchor="middle" class="s k">path cost = sum of edge costs</text>
+    </svg><figcaption>every arrow is one move</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">The five parts of a formulation</span>
+        <b>I</b> initial state · <b>A</b> actions · <b>T</b> transition results(s, a) = s′ · <b>G</b> goal test · <b>C</b> path cost C(s₀, …, s<sub>k</sub>)</div>
+      <table class="hand tiny" style="margin-top:2mm">
+        <tr><th class="l">Term</th><th class="l">Meaning in one line</th></tr>
+        <tr><td class="l">state space</td><td class="l">every state reachable from the start</td></tr>
+        <tr><td class="l">frontier</td><td class="l">leaves generated, not yet expanded</td></tr>
+        <tr><td class="l">closed list</td><td class="l">nodes expanded — stops repeats</td></tr>
+        <tr><td class="l">d, b</td><td class="l">d = goal depth, b = mean successors</td></tr>
+        <tr><td class="l">g(n)</td><td class="l">cost of the best path start → n</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "The <b>frontier</b> is the waiting room, the <b>closed list</b> is the memory." A node is born on the frontier when generated, joins the closed list when expanded, and dies once its children are waiting.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) A <b>state</b> is a complete description, not a history. (ii) Two nodes may hold the <b>same state</b> by different paths; only the cheaper should survive. (iii) Goal <b>test</b> ≠ goal <b>state</b>. (iv) b is an <b>average</b>, not the maximum.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ formulate the 8-puzzle</span> <b>State</b>: the 3 × 3 arrangement of tiles 1–8 plus the blank. <b>Operator</b>: slide a neighbouring tile into the blank — 2, 3 or 4 legal moves, so b ≤ 4 and the effective branching factor is about <span class="circ">1.67</span>. <b>Goal test</b>: 1 2 3 / 4 5 6 / 7 8 blank. <b>Path cost</b>: number of moves. Only <span class="circ">9!/2 = 181 440</span> of the 9! arrangements are reachable, and the inversion test for reachability costs O(n²).</div>
+  <div class="tipbox small"><span class="lbl">Tree search vs graph search</span> <b>Tree search</b> keeps no list, so it can revisit the same state for ever — completeness then needs finite b and finite d. <b>Graph search</b> keeps a closed list, so each state is expanded once, but it costs memory and may need <span class="hl">re-expansion</span>.</div>
+  <div class="tipbox small"><span class="lbl">IT link</span> A program's "state" is a complete snapshot of memory and variables; in robotics the configuration space is the same idea. Any problem you can write as "state + action + goal test" is a search problem — and the algorithm simply walks that state graph.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: BFS and DFS ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>BFS &amp; DFS</span></div>
+  <h2><span class="no">2</span>Breadth-First &amp; Depth-First Search</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Uninformed (blind) search</b> uses no knowledge of the problem beyond the initial state and the goal test — it is systematic, not clever. <b>BFS</b> expands the <span class="hl">shallowest unexpanded node</span>, so the frontier is a <span class="hl">FIFO queue</span>. <b>DFS</b> expands the <span class="hl">deepest unexpanded node</span>, so the frontier is a <span class="hl">LIFO stack</span> and recursion is natural.</div>
+  <div class="cols" style="grid-template-columns:430px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 470 200" width="422">
+      <g class="w">
+        <path class="ink" d="M250,46 L150,86 M250,46 L350,86 M150,94 L110,132 M150,94 L190,132 M350,94 L310,132 M350,94 L390,132 M110,140 L80,172 M110,140 L140,172 M390,140 L390,186" marker-end="url(#ahb)"/>
+        <circle cx="250" cy="30" r="15" class="ink-k fill-y"/>
+        <circle cx="150" cy="78" r="14" class="ink fill-b"/><circle cx="350" cy="78" r="14" class="ink fill-b"/>
+        <circle cx="110" cy="124" r="14" class="ink fill-b"/><circle cx="190" cy="124" r="14" class="ink fill-b"/>
+        <circle cx="310" cy="124" r="14" class="ink fill-b"/><circle cx="390" cy="124" r="14" class="ink fill-b"/>
+        <circle cx="80" cy="164" r="14" class="ink fill-b"/><circle cx="140" cy="164" r="14" class="ink-r fill-r"/>
+        <circle cx="390" cy="182" r="14" class="ink-g fill-g"/>
+      </g>
+      <text x="250" y="36" text-anchor="middle" class="k w6">A</text>
+      <text x="150" y="84" text-anchor="middle" class="w6 s">B</text>
+      <text x="350" y="84" text-anchor="middle" class="w6 s">C</text>
+      <text x="110" y="130" text-anchor="middle" class="w6 s">D</text>
+      <text x="190" y="130" text-anchor="middle" class="w6 s">E</text>
+      <text x="310" y="130" text-anchor="middle" class="w6 s">F</text>
+      <text x="390" y="130" text-anchor="middle" class="w6 s">G</text>
+      <text x="80" y="170" text-anchor="middle" class="w6 s">H</text>
+      <text x="140" y="170" text-anchor="middle" class="w6 s">I</text>
+      <text x="390" y="188" text-anchor="middle" class="g w6">Z</text>
+      <text x="252" y="12" text-anchor="middle" class="s">1</text>
+      <text x="152" y="60" text-anchor="middle" class="s">2</text>
+      <text x="348" y="60" text-anchor="middle" class="s">3</text>
+      <text x="112" y="106" text-anchor="middle" class="s">4</text>
+      <text x="188" y="106" text-anchor="middle" class="s">5</text>
+      <text x="312" y="106" text-anchor="middle" class="s">6</text>
+      <text x="388" y="106" text-anchor="middle" class="s">7</text>
+      <text x="82" y="146" text-anchor="middle" class="s">8</text>
+<text x="138" y="146" text-anchor="middle" class="s r">5</text>
+    <text x="416" y="168" text-anchor="middle" class="s r">10</text>
+    </svg><figcaption>blue = BFS order (FIFO queue), red = DFS order (LIFO stack); breadth walks the levels, depth meets the dead end at I</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">Property</th><th class="l">Breadth-first</th><th class="l">Depth-first</th></tr>
+        <tr><td class="l">frontier</td><td class="l">FIFO <b>queue</b></td><td class="l">LIFO <b>stack</b></td></tr>
+        <tr><td class="l">expands</td><td class="l">shallowest left</td><td class="l">deepest left</td></tr>
+        <tr><td class="l">complete</td><td class="l">Yes, if b, d finite</td><td class="l"><span class="red"><b>No</b></span></td></tr>
+        <tr><td class="l">optimal</td><td class="l">Yes, <b>unit cost</b></td><td class="l">No</td></tr>
+        <tr><td class="l">time</td><td class="l">O(b^d)</td><td class="l">O(b^m)</td></tr>
+        <tr><td class="l">space</td><td class="l"><span class="red"><b>O(b^d)</b></span></td><td class="l">O(bm)</td></tr>
+        <tr><td class="l">for</td><td class="l">fewest steps</td><td class="l">tight memory</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "The <b>queue</b> is wide and blind — it remembers everything and knows nothing. The <b>stack</b> is narrow and brave — it remembers almost nothing and goes deep."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) "BFS finds the shortest path" means fewest <b>edges</b>; with unequal costs the fewest-edge path can be the <b>dearest</b> — use UCS. (ii) DFS is <b>not</b> complete and <b>not</b> optimal. (iii) BFS's real price is <span class="circ">space</span>. (iv) BFS = queue, DFS = stack; <b>every informed search uses a priority queue</b>.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ count the expansions</span> In the tree drawn above the goal Z sits under G. <b>BFS</b> expands A, B, C, D, E, F, G and only then Z → <span class="circ">8 expansions</span>, holding a whole level in memory. <b>DFS</b> expands A, B, D, H, I (dead end), E, C, F, G, Z → <span class="circ">10 expansions</span>: it wanders into the dead ends H and I first. DFS keeps only the current path, O(bm), yet does <b>more</b> work — completeness has to be paid for.</div>
+  <div class="tipbox small"><span class="lbl">IT link</span> BFS is the level-order walk behind "degrees of separation" in social graphs, BFS flood fill in a peer-to-peer network, and shortest-hop routing in a mesh. DFS is the DFS spanning tree behind cycle detection, topological sorting, connected components and the call stack of any recursive program.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: UCS, DLS, IDDFS ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>UCS, DLS, IDDFS</span></div>
+  <h2><span class="no">3</span>Uniform-Cost, Depth-Limited &amp; Iterative Deepening</h2><span class="tag">MCQ favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Uniform-cost search (UCS)</b> = BFS on costs: a priority queue ordered by the path cost g(n), so it expands the <span class="hl">cheapest node so far</span> — the uniform-cost algorithm of Dijkstra. <b>Depth-limited search (DLS)</b> = DFS cut off at depth <b>l</b>: complete iff l ≥ d, never optimal. <b>IDDFS</b> = DLS repeated with l = 0, 1, 2, … until the goal appears: <span class="hl">DFS memory, BFS completeness</span>.</div>
+  <div class="cols" style="grid-template-columns:262px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="254">
+      <g class="w">
+        <circle cx="28" cy="100" r="13" class="ink-k fill-y"/>
+        <circle cx="96" cy="44" r="12" class="ink fill-b"/><circle cx="96" cy="156" r="12" class="ink fill-b"/>
+        <circle cx="188" cy="44" r="12" class="ink fill-b"/><circle cx="188" cy="156" r="12" class="ink fill-b"/>
+        <circle cx="268" cy="100" r="13" class="ink-g fill-g"/>
+        <path class="ink" d="M39,92 L86,52" marker-end="url(#ahb)"/><path class="ink" d="M39,108 L86,148" marker-end="url(#ahb)"/>
+        <path class="ink" d="M96,58 L96,142" marker-end="url(#ahb)"/><path class="ink" d="M108,50 L176,148" marker-end="url(#ahb)"/>
+        <path class="ink" d="M108,156 L176,156" marker-end="url(#ahb)"/><path class="ink" d="M108,150 L176,52" marker-end="url(#ahb)"/>
+        <path class="ink" d="M200,50 L254,92" marker-end="url(#ahb)"/><path class="ink" d="M200,150 L254,108" marker-end="url(#ahb)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M39,92 L86,52" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M96,58 L96,142" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M108,156 L176,156" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M200,150 L254,108" marker-end="url(#ahg)"/>
+      </g>
+      <text x="28" y="106" text-anchor="middle" class="k w6 s">S</text>
+      <text x="96" y="49" text-anchor="middle" class="s">A</text>
+      <text x="96" y="161" text-anchor="middle" class="s">B</text>
+      <text x="188" y="49" text-anchor="middle" class="s">C</text>
+      <text x="188" y="161" text-anchor="middle" class="s">D</text>
+      <text x="268" y="106" text-anchor="middle" class="g w6 s">G</text>
+      <text x="54" y="62" text-anchor="end" class="s">1</text>
+      <text x="54" y="146" text-anchor="end" class="s">7</text>
+      <text x="86" y="106" text-anchor="end" class="s">2</text>
+      <text x="132" y="86" class="s">5</text>
+      <text x="142" y="148" text-anchor="middle" class="s">1</text>
+      <text x="142" y="112" class="s">5</text>
+      <text x="228" y="56" class="s">10</text>
+      <text x="228" y="146" class="s">2</text>
+      <text x="150" y="190" text-anchor="middle" class="g w6">green = UCS optimum, cost 6</text>
+    </svg><figcaption>cheapest node first — the rival route S-B-C-G costs 22</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">Step</th><th class="l">Expanded</th><th class="l">Open list after (node : g)</th></tr>
+        <tr><td class="l">1</td><td class="l">S (0)</td><td class="l">A : 1 &nbsp;·&nbsp; B : 7</td></tr>
+        <tr><td class="l">2</td><td class="l">A (1)</td><td class="l">B : <b>3</b> (was 7) · D : 6</td></tr>
+        <tr><td class="l">3</td><td class="l">B (3)</td><td class="l">D : <b>4</b> (was 6) · C : 8</td></tr>
+        <tr><td class="l">4</td><td class="l">D (4)</td><td class="l">G : 6 · C : 8</td></tr>
+        <tr><td class="l">5</td><td class="l">G (6)</td><td class="l">goal: S-A-B-D-G</td></tr>
+      </table>
+      <p class="small">A node is <b>re-inserted</b> whenever a cheaper path to it is found — that rule is what makes UCS optimal instead of merely greedy.</p>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Algorithm</th><th class="l">Complete</th><th class="l">Optimal</th><th class="l">Time</th><th class="l">Space</th></tr>
+    <tr><td class="l">BFS</td><td class="l">Yes</td><td class="l">Yes, unit cost</td><td class="l">O(b^d)</td><td class="l">O(b^d)</td></tr>
+    <tr><td class="l">DFS</td><td class="l"><span class="red"><b>No</b></span></td><td class="l"><span class="red"><b>No</b></span></td><td class="l">O(b^m)</td><td class="l">O(bm)</td></tr>
+    <tr><td class="l">UCS (Dijkstra)</td><td class="l">Yes</td><td class="l">Yes</td><td class="l">O(b^(C*/ε))</td><td class="l">O(b^(C*/ε))</td></tr>
+    <tr><td class="l">DLS</td><td class="l">Yes if l ≥ d</td><td class="l">No</td><td class="l">O(b^l)</td><td class="l">O(bl)</td></tr>
+    <tr><td class="l">IDDFS</td><td class="l">Yes</td><td class="l">Yes, unit cost</td><td class="l">O(b^d)</td><td class="l">O(bd)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "UCS is <b>BFS with a metre tape</b> — same sweep, but it counts cost, not steps. IDDFS is <b>BFS wearing a DFS's memory</b>." Symbols: b = branching, d = goal depth, m = max depth, C* = optimal cost, ε = smallest step cost.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) UCS is optimal only because every step cost is <span class="circ">at least ε &gt; 0</span>; a zero or negative cost edge breaks the argument. (ii) BFS is <b>not</b> optimal on weighted graphs — that is why UCS exists. (iii) IDDFS is optimal only for <b>unit</b> costs.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ UCS on the graph drawn above</span> S→A = 1, S→B = 7, A→B = 2, A→D = 5, B→D = 1, B→C = 5, C→G = 10, D→G = 2. UCS expands S, A, B, D, G and returns S-A-B-D-G with cost 1 + 2 + 1 + 2 = <span class="circ">6</span>. The rival S-B-C-G costs 7 + 5 + 10 = <span class="circ">22</span> and is never opened. Watch: B's g falls from 7 to 3 when A is expanded.</div>
+  <div class="tipbox small"><span class="lbl">Bidirectional search</span> Run a search <b>forward</b> from the start and <b>backward</b> from the goal at the same time and meet in the middle: a d-deep tree of branching b becomes two trees of depth d/2, so the work falls from <span class="circ">O(b^d)</span> to about <b>O(b^(d/2))</b>.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: informed search, greedy and A* ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Greedy &amp; A*</span></div>
+  <h2><span class="no">4</span>Informed Search: Greedy Best-First &amp; A*</h2><span class="tag">highest-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Informed (heuristic) search</b> uses domain knowledge: a <b>heuristic h(n)</b> estimates the cost from n to the goal. All the best-first algorithms keep the frontier in a <span class="hl">priority queue</span> and pop the node with the lowest f, differing only in f: <b>UCS</b> f = g(n), <b>greedy</b> f = h(n), <b>A*</b> f = <span class="circ">g(n) + h(n)</span> — g(n) paid so far, h(n) still to come.</div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="242">
+      <g class="w">
+        <circle cx="34" cy="100" r="15" class="ink-k fill-y"/>
+        <circle cx="112" cy="42" r="14" class="ink fill-b"/><circle cx="112" cy="158" r="14" class="ink fill-b"/>
+        <circle cx="252" cy="100" r="15" class="ink-r fill-r"/>
+        <path class="ink" d="M48,90 L98,52" marker-end="url(#ahb)"/><path class="ink" d="M48,110 L98,148" marker-end="url(#ahb)"/>
+        <path class="ink" d="M112,60 L112,140" marker-end="url(#ahb)"/>
+        <path class="ink" d="M126,50 L238,92" marker-end="url(#ahb)"/>
+        <path class="ink" d="M126,150 L238,108" marker-end="url(#ahb)"/>
+        <path class="ink-r" style="stroke-width:3" d="M48,110 L98,148" marker-end="url(#ah)"/>
+        <path class="ink-g" style="stroke-width:3" d="M48,90 L98,52" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3" d="M112,60 L112,140" marker-end="url(#ahg)"/>
+      </g>
+      <text x="34" y="94" text-anchor="middle" class="k w6">S</text>
+      <text x="34" y="110" text-anchor="middle" class="s">h=5</text>
+      <text x="112" y="36" text-anchor="middle" class="w6">A</text>
+      <text x="112" y="52" text-anchor="middle" class="s">h=4</text>
+      <text x="112" y="152" text-anchor="middle" class="w6">B</text>
+      <text x="112" y="168" text-anchor="middle" class="s">h=2</text>
+      <text x="252" y="94" text-anchor="middle" class="r w6">G</text>
+      <text x="252" y="110" text-anchor="middle" class="s">h=0</text>
+      <text x="66" y="70" text-anchor="end" class="s">1</text>
+      <text x="66" y="136" text-anchor="end" class="s">4</text>
+      <text x="104" y="104" text-anchor="end" class="s">2</text>
+      <text x="180" y="58" class="s">6</text>
+      <text x="180" y="150" class="s">2</text>
+      <text x="150" y="184" text-anchor="middle" class="g w6">A*: S-A-B-G, cost 5 ✓</text>
+      <text x="150" y="198" text-anchor="middle" class="r w6">greedy: S-B-G, cost 6 ✗</text>
+    </svg><figcaption>same graph, same heuristic — only f decides which path comes back</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">Algorithm</th><th class="l">f(n)</th><th class="l">Ranks by</th><th class="l">Complete</th><th class="l">Optimal</th></tr>
+        <tr><td class="l">UCS</td><td class="l">g(n)</td><td class="l">cost so far</td><td class="l">Yes</td><td class="l">Yes</td></tr>
+        <tr><td class="l">Greedy</td><td class="l">h(n)</td><td class="l">looks closest</td><td class="l"><span class="red">No</span></td><td class="l"><span class="red">No</span></td></tr>
+        <tr><td class="l">A*</td><td class="l"><b>g(n) + h(n)</b></td><td class="l">cheapest route</td><td class="l">Yes</td><td class="l">Yes, if h admiss.</td></tr>
+      </table>
+      <p class="small"><b>A* properties.</b> Time <b>O(b^d)</b>, space <b>O(b^d)</b> — worst case no better than BFS; the payoff is the <b>constant factor</b>. Put h = 0 and A* collapses to UCS.</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ the same graph, two answers</span> Edges S→A = 1, S→B = 4, A→B = 2, A→G = 6, B→G = 2; h(S) = 5, h(A) = 4, h(B) = 2, h(G) = 0.<br>
+    <b>Greedy best-first (f = h):</b> expand S → A (4), B (2); expand <b>B</b>; B generates G (0); expand <b>G</b> → returns S-B-G, cost 4 + 2 = <span class="circ">6</span>.<br>
+    <b>A* (f = g + h):</b> expand S (f = 5) → A (g 1, f 5), B (g 4, f 6); expand <b>A</b> → B is re-reached with g = 3 &lt; 4, so B becomes g 3, f 5; expand <b>B</b> → G is re-reached with g = 5 &lt; 7; expand <b>G</b> → returns S-A-B-G, cost 1 + 2 + 2 = <span class="circ">5</span>.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>g is the bill already paid, h is the doctor's guess, f is the total bill.</b>" Greedy looks only at the guess and throws the bill away; A* adds them — which is exactly why greedy can take the dear road.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) f = h(n) alone is <b>greedy</b>, f = g(n) alone is <b>UCS</b>, f = g·h is meaningless. (ii) A*'s optimality is a promise about h: an <b>over</b>estimating h silently returns a suboptimal path. (iii) Greedy best-first is <b>incomplete</b>. (iv) Tie-breaks change work, never the value.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">Where A* actually runs</span> Route finding (Google Maps, OSRM), robot path planning and typewriter word prediction. A* with a <b>consistent</b> heuristic is the dynamic-programming view of shortest paths: every node is settled once, in increasing order of f.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: admissibility, consistency, heuristics ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Heuristics</span></div>
+  <h2><span class="no">5</span>Admissible, Consistent &amp; Good Heuristics</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Write <b>h*(n)</b> for the true cost of the cheapest path from n to a goal. A heuristic is <span class="hl">admissible</span> if it <span class="circ">never overestimates</span>: h(n) ≤ h*(n) for every n. It is <span class="hl">consistent (monotone)</span> if <span class="circ">h(n) ≤ c(n, n′) + h(n′)</span> on every edge — the estimate may fall by at most the price of the move. Consistency implies admissibility.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Problem</th><th class="l">Usual heuristic h(n)</th><th class="l">Admissible?</th><th class="l">Comment</th></tr>
+    <tr><td class="l">route finding</td><td class="l">straight-line distance</td><td class="l">Yes</td><td class="l">roads wind, so it is weak</td></tr>
+    <tr><td class="l">8-puzzle</td><td class="l">tiles out of place</td><td class="l">Yes</td><td class="l">very weak — ignores the blank</td></tr>
+    <tr><td class="l">8-, 15-puzzle</td><td class="l"><b>Manhattan distance</b></td><td class="l">Yes</td><td class="l">row + column; standard</td></tr>
+    <tr><td class="l">sliding puzzles</td><td class="l">pattern databases</td><td class="l">Yes</td><td class="l">exact costs for a few tiles</td></tr>
+    <tr><td class="l">8-queens</td><td class="l">attacking pairs</td><td class="l">No</td><td class="l">divide by 2 to repair</td></tr>
+    <tr><td class="l">travelling salesman</td><td class="l">cheapest straight link</td><td class="l">Yes</td><td class="l">classic lower bound</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 200px;align-items:start">
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 1 ✍ 8-puzzle, Manhattan</span> Start 2 8 3 / 1 6 4 / 7 5 _ , goal 1 2 3 / 4 5 6 / 7 8 _ . Tiles out of place: 1, 2, 4, 5, 6, 8 → <b>h = 6</b>. Manhattan: tile 1 → 1, tile 2 → 1, tile 4 → 2, tile 5 → 1, tile 6 → 1, tile 8 → 2 → <span class="circ">h = 8</span>. Each move shifts one tile one square, so h* ≥ 8.</div>
+      <div class="ex small"><span class="lbl">Worked example 2 ✍ the admissibility audit</span> S→A = 2, S→B = 1, A→C = 2, B→C = 4, B→D = 5, C→G = 3, D→G = 2 with h(S) = 5, h(A) = 4, h(B) = 4, h(C) = 3, h(D) = 2, h(G) = 0. Backwards from the goal: h*(G) = 0, h*(C) = 3, h*(D) = 2, h*(A) = 5, h*(B) = 7, h*(S) = 7. Compare 5 ≤ 7, 4 ≤ 5, 4 ≤ 7, 3 ≤ 3, 2 ≤ 2, 0 ≤ 0 — <span class="circ">admissible</span>, and consistent too.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 176" width="196">
+      <g class="w">
+        <path class="ink-k" d="M14,18 H236 M14,18 V158" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M18,58 C74,64 140,110 232,140"/>
+        <path class="ink-r" style="stroke-dasharray:5 4" d="M18,120 C74,126 140,132 232,148"/>
+      </g>
+      <text x="26" y="40" class="w6">h</text>
+      <text x="14" y="172" class="s">g</text>
+      <text x="236" y="52" text-anchor="end" class="g s">h* — the truth</text>
+      <text x="236" y="140" text-anchor="end" class="r s">h — the estimate</text>
+    </svg><figcaption>an admissible estimate never rises above the true cost</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Admissible aims low.</b> Consistency is cautious: the estimate may fall by at most what the move costs." <b>Consistency ⇒ admissibility</b>, never the reverse.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Admissible means <b>never overestimate</b> — h = 0 is trivially admissible and useless. (ii) h estimates what is <b>left</b>; h* is the truth. (iii) <b>Tree search</b> A* needs admissible h, <b>graph search</b> A* needs consistency. (iv) Manhattan distance is <b>not</b> the count of tiles out of place.</div>
+  </div>
+  <div class="ex small"><span class="lbl">How good is "good"? ✍</span> If h = c · h* with a constant c &gt; 0, A* behaves roughly like an <span class="hl">uninformed search with branching factor b^δ</span>, where δ = h* − h: on the 8-puzzle the tile-count heuristic is like b ≈ 3, Manhattan like b ≈ 1.4.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: local search ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Local search</span></div>
+  <h2><span class="no">6</span>Local Search: Hill Climbing, Annealing, GA</h2><span class="tag">optimisation ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Local search</b> keeps only <span class="hl">one current state</span> — never a tree of them — and scores it with an <b>evaluation function E(s)</b> instead of a path cost. It suits spaces too large to build into a graph, and continuous ones. <b>Hill climbing</b> moves to a neighbour with better E and stops where none is better: a <span class="circ">local optimum</span>, which need not be the global one.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 430 200" width="292">
+      <g class="w">
+        <path class="ink-k" d="M14,168 H416"/>
+        <path class="ink" d="M30,114 L76,100 L122,128 L168,86 L214,156 L260,142 L306,72 L352,114 L398,86"/>
+        <ellipse cx="76" cy="114" rx="26" ry="19" class="ink-r"/>
+        <ellipse cx="306" cy="107" rx="28" ry="38" class="ink-g"/>
+        <path class="ink-p" style="stroke-dasharray:5 4" d="M168,86 L214,156" marker-end="url(#ahp)"/>
+        <path class="ink-p" style="stroke-dasharray:5 4" d="M260,142 L306,72" marker-end="url(#ahp)"/>
+      </g>
+      <text x="30" y="190" text-anchor="middle" class="s">0</text>
+      <text x="76" y="190" text-anchor="middle" class="s">1</text>
+      <text x="122" y="190" text-anchor="middle" class="s">2</text>
+      <text x="168" y="190" text-anchor="middle" class="s">3</text>
+      <text x="214" y="190" text-anchor="middle" class="s">4</text>
+      <text x="260" y="190" text-anchor="middle" class="s">5</text>
+      <text x="306" y="190" text-anchor="middle" class="s">6</text>
+      <text x="352" y="190" text-anchor="middle" class="s">7</text>
+      <text x="398" y="190" text-anchor="middle" class="s">8</text>
+      <text x="76" y="88" text-anchor="middle" class="r w6 s">E = 5</text>
+      <text x="76" y="72" text-anchor="middle" class="r s">local max</text>
+      <text x="306" y="58" text-anchor="middle" class="g w6 s">E = 7</text>
+      <text x="306" y="44" text-anchor="middle" class="g s">global max</text>
+      <text x="191" y="112" text-anchor="middle" class="p s">ΔE = −5</text>
+      <text x="283" y="110" text-anchor="middle" class="p s">ΔE = +1</text>
+    </svg><figcaption>E(x) for x = 0…8; hill climbing stops at x = 1, annealing jumps the valley</figcaption></figure>
+    <div>
+      <p class="small" style="margin-top:0">From <b>x = 3</b> (E = 6) the neighbours x = 2 (3) and x = 4 (1) are both worse, so hill climbing stops at the <span class="circ">local maximum 6</span> while the global maximum 7 at x = 6 lies two steps away.</p>
+      <p class="small"><b>Where they are used.</b> Hill climbing: VLSI layout, channel assignment. Annealing: 8-queens, tour improvement, chip placement. Genetic algorithms: antenna placement.</p>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%;margin-top:2mm">
+    <tr><th class="l">x</th><th>0</th><th class="red">1</th><th>2</th><th>3</th><th>4</th><th>5</th><th class="red">6</th><th>7</th><th>8</th></tr>
+    <tr><td class="l">E(x)</td><td>4</td><td class="red"><b>5</b></td><td>3</td><td>6</td><td>1</td><td>2</td><td class="red"><b>7</b></td><td>4</td><td>6</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Method</th><th class="l">What it does</th><th class="l">Local optimum?</th></tr>
+    <tr><td class="l">Hill climbing</td><td class="l">move to a better neighbour, stop when none is</td><td class="l">No — <span class="red">stuck</span></td></tr>
+    <tr><td class="l">Random restart</td><td class="l">restart from a random state, keep the best</td><td class="l">Yes, by luck</td></tr>
+    <tr><td class="l">Simulated annealing</td><td class="l">accept a worse move with p = <b>e^(−ΔE/T)</b>, T falling</td><td class="l">Yes while T is high</td></tr>
+    <tr><td class="l">Genetic algorithm</td><td class="l">a <b>population</b>: selection, crossover, mutation</td><td class="l">Yes, many live at once</td></tr>
+    <tr><td class="l">Tabu search</td><td class="l">forbid the last few moves (short memory)</td><td class="l">Yes, it walks out</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked example ✍ annealing over E(x)</span> At x = 3 (E = 6) the neighbours x = 2 (E = 3) and x = 4 (E = 1) are downhill by ΔE = −5 and −3. With T = 2 the move to x = 4 is accepted with probability e^(−5/2) ≈ <span class="circ">0.082</span> — unlikely, but not impossible. From x = 4 the move to x = 5 raises E to 2, so it is accepted outright; then x = 6 gives E = 7, the global maximum. As T → 0 the probability → 0 and annealing ends where hill climbing ends.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Annealing is eating a cold dinner</b> — to escape a bad meal you must first accept a worse one. A <b>genetic algorithm breeds a population</b>: fitness, selection, crossover, mutation."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Hill climbing stuck at a local maximum is the <b>defining</b> failure, not a bug. (ii) The acceptance probability falls both as T falls and as the move gets worse. (iii) GA operators are <b>selection, crossover, mutation</b>. (iv) Local search keeps <b>no path</b>.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: minimax and alpha-beta ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Minimax &amp; α-β</span></div>
+  <h2><span class="no">7</span>Adversarial Search: Minimax &amp; α-β Pruning</h2><span class="tag">games ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> When the states are shared by two opponents the graph is a game tree: one side wants the utility <b>maximised</b> (MAX), the other wants it <b>minimised</b> (MIN). <b>Minimax</b> walks the depth-first tree alternately, returning the best reply at every turn: v(s) = utility(s) on a terminal node, <span class="hl">max</span> of its successors at a MAX node, <span class="hl">min</span> at a MIN node. Branching b to depth d costs <span class="circ">O(b^d)</span> node evaluations.</div>
+  <figure class="doodle"><svg viewBox="0 0 470 216" width="430">
+    <g class="w">
+      <path class="ink" d="M235,42 L150,86 M235,42 L330,86 M150,98 L100,134 M150,98 L200,134 M330,98 L280,134 M330,98 L380,134"/>
+      <path class="ink" d="M100,146 L82,180 M100,146 L118,180 M200,146 L182,180 M200,146 L218,180 M280,146 L262,180 M280,146 L298,180 M380,146 L362,180"/>
+      <path class="ink-r" style="stroke-dasharray:5 4" d="M380,146 L398,180"/>
+      <path class="ink-g" style="stroke-width:3" d="M235,42 L150,86"/>
+      <path class="ink-g" style="stroke-width:3" d="M150,98 L200,134"/>
+      <path class="ink-g" style="stroke-width:3" d="M200,146 L218,180"/>
+      <circle cx="235" cy="26" r="17" class="ink-k fill-y"/>
+      <circle cx="150" cy="80" r="15" class="ink fill-b"/><circle cx="330" cy="80" r="15" class="ink fill-b"/>
+      <circle cx="100" cy="128" r="15" class="ink fill-b"/><circle cx="200" cy="128" r="15" class="ink fill-b"/>
+      <circle cx="280" cy="128" r="15" class="ink fill-b"/><circle cx="380" cy="128" r="15" class="ink fill-b"/>
+      <circle cx="82" cy="178" r="13" class="ink fill-y"/><circle cx="118" cy="178" r="13" class="ink fill-y"/>
+      <circle cx="182" cy="178" r="13" class="ink fill-y"/><circle cx="218" cy="178" r="13" class="ink fill-y"/>
+      <circle cx="262" cy="178" r="13" class="ink fill-y"/><circle cx="298" cy="178" r="13" class="ink fill-y"/>
+      <circle cx="362" cy="178" r="13" class="ink fill-y"/>
+      <path class="ink-r" style="stroke-width:3" d="M400,166 L416,190 M416,166 L400,190"/>
+    </g>
+    <text x="235" y="32" text-anchor="middle" class="k w6 s">MAX</text>
+    <text x="150" y="86" text-anchor="middle" class="w6 s">MIN</text>
+    <text x="330" y="86" text-anchor="middle" class="w6 s">MIN</text>
+    <text x="100" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="200" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="280" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="380" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="82" y="183" text-anchor="middle" class="k w6 s">3</text>
+    <text x="118" y="183" text-anchor="middle" class="k w6 s">5</text>
+    <text x="182" y="183" text-anchor="middle" class="k w6 s">6</text>
+    <text x="218" y="183" text-anchor="middle" class="g w6 s">9</text>
+    <text x="262" y="183" text-anchor="middle" class="k w6 s">2</text>
+    <text x="298" y="183" text-anchor="middle" class="k w6 s">3</text>
+    <text x="362" y="183" text-anchor="middle" class="k w6 s">5</text>
+    <text x="424" y="204" text-anchor="end" class="r s">cut</text>
+    <text x="258" y="26" class="p s">α = 6</text>
+    <text x="348" y="108" class="p s">β = 3</text>
+    <text x="235" y="212" text-anchor="middle" class="g w6">root value 6 — pruning never changes it</text>
+  </svg><figcaption>after the left subtree gives α = 6, at G the first leaf 5 already beats β = 3, so the leaf 8 is cut</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Node</th><th class="l">Left leaf</th><th class="l">Right leaf</th><th class="l">Value</th><th class="l">Note</th></tr>
+    <tr><td class="l">D (MAX)</td><td class="l">3</td><td class="l">5</td><td class="l">5</td><td class="l">max(3, 5)</td></tr>
+    <tr><td class="l">E (MAX)</td><td class="l">6</td><td class="l">9</td><td class="l">9</td><td class="l">max(6, 9)</td></tr>
+    <tr><td class="l">B (MIN)</td><td class="l">D = 5</td><td class="l">E = 9</td><td class="l"><b>6</b></td><td class="l">min → <span class="circ">α = 6</span> at the root</td></tr>
+    <tr><td class="l">F (MAX)</td><td class="l">2</td><td class="l">3</td><td class="l">3</td><td class="l">max(2, 3) → <span class="circ">β = 3</span> at C</td></tr>
+    <tr><td class="l">G (MAX)</td><td class="l">5</td><td class="l">8</td><td class="l">—</td><td class="l">5 ≥ β already, so the leaf 8 is cut</td></tr>
+    <tr><td class="l">C (MIN)</td><td class="l">F = 3</td><td class="l">G = 5</td><td class="l">3</td><td class="l">min(3, 5)</td></tr>
+    <tr><td class="l">root (MAX)</td><td class="l">B = 6</td><td class="l">C = 3</td><td class="l"><b>6</b></td><td class="l">max(6, 3) = 6</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>α is MAX's best so far, β is MIN's best so far.</b> If a node's best can no longer beat what the opponent already has, cut it." Update α at MAX nodes only, β at MIN nodes only; α ≤ β always holds at a node.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Pruning changes the <b>work</b>, never the <b>value</b>. (ii) Move order is everything: best first gives <span class="circ">O(b^(d/2))</span>, random order about O(b^(3d/4)), worst order the full O(b^d). (iii) Minimax assumes <b>optimal play by both sides</b>; real opponents are not minimax.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ the saving in numbers</span> Full minimax evaluates 8 leaves; with α-β and the order drawn above it evaluates <span class="circ">7</span> — one leaf saved. The effect grows with depth: for b = 2 and d = 10 plain minimax needs 2^10 = <span class="circ">1024</span> leaves while perfect-ordering α-β needs about 2^5 = <span class="circ">32</span>, the same time but <b>twice the depth</b>. Every modern chess engine adds transposition tables, killer moves and move-ordering heuristics on top of α-β.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: constraint satisfaction ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Constraint satisfaction</span></div>
+  <h2><span class="no">8</span>Constraint Satisfaction &amp; Backtracking</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <b>constraint satisfaction problem</b> is the triple (X, D, C): a set of <span class="hl">variables X</span>, a <span class="hl">domain D</span> for each variable, and <span class="hl">constraints C</span> that must all hold at once. A <b>solution</b> is a complete assignment — there is no path, no cost and no intermediate reward, which is why we do <b>not</b> run BFS or A* here. The standard solver is <span class="circ">backtracking search</span>: assign a value, recurse, undo the assignment when a constraint fails.</div>
+  <div class="cols" style="grid-template-columns:1fr 214px;align-items:start">
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">Ingredient</th><th class="l">Meaning</th></tr>
+        <tr><td class="l">variable, domain</td><td class="l">a thing to decide; its values</td></tr>
+        <tr><td class="l">unary/binary/n-ary</td><td class="l">constraint over 1, 2, k variables</td></tr>
+        <tr><td class="l">constraint graph</td><td class="l">variables as nodes, an edge per pair</td></tr>
+        <tr><td class="l">backtracking</td><td class="l">assign, recurse, <b>undo on failure</b></td></tr>
+        <tr><td class="l">forward checking</td><td class="l">prune neighbours' domains now</td></tr>
+        <tr><td class="l">MRV (fail-first)</td><td class="l">variable with the <b>fewest values left</b></td></tr>
+        <tr><td class="l">LCV</td><td class="l">value that constrains others <b>least</b></td></tr>
+        <tr><td class="l">arc consistency AC-3</td><td class="l">every value has support next door</td></tr>
+        <tr><td class="l">min-conflicts</td><td class="l">local search on assignments</td></tr>
+      </table>
+    </div>
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 296 152" width="208">
+        <g class="w">
+          <path class="ink" d="M78,40 L218,40 M78,40 L78,112 M218,40 L218,112 M78,112 L218,112"/>
+          <path class="ink-r" style="stroke-dasharray:5 4" d="M78,40 L218,112 M218,40 L78,112"/>
+          <circle cx="78" cy="40" r="17" class="ink fill-b"/>
+          <circle cx="218" cy="40" r="17" class="ink-r fill-r"/>
+          <circle cx="218" cy="112" r="17" class="ink fill-b"/>
+          <circle cx="78" cy="112" r="17" class="ink fill-b"/>
+        </g>
+        <text x="78" y="46" text-anchor="middle" class="w6">Q1</text>
+        <text x="218" y="46" text-anchor="middle" class="r w6">Q2</text>
+        <text x="218" y="118" text-anchor="middle" class="w6">Q3</text>
+        <text x="78" y="118" text-anchor="middle" class="w6">Q4</text>
+        <text x="148" y="145" text-anchor="middle" class="p s">solid: same row / column</text>
+        <text x="148" y="80" text-anchor="middle" class="r s">dotted:</text>
+        <text x="148" y="94" text-anchor="middle" class="r s">same diagonal</text>
+      </svg><figcaption>the 4-queens graph is complete — every pair of queens is constrained</figcaption></figure>
+    </div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 480 124" width="374">
+      <g class="w">
+        <path class="ink" d="M150,62 H166" marker-end="url(#ahb)"/>
+        <path class="ink" d="M312,62 H328" marker-end="url(#ahb)"/>
+        <rect x="8" y="6" width="142" height="112" rx="9" class="ink fill-b"/>
+        <rect x="170" y="6" width="142" height="112" rx="9" class="ink fill-r"/>
+        <rect x="332" y="6" width="142" height="112" rx="9" class="ink fill-g"/>
+      </g>
+      <text x="79" y="27" text-anchor="middle" class="k w6 s">Q1 = 1</text>
+      <text x="79" y="45" text-anchor="middle" class="s">Q2 ∈ {3, 4}</text>
+      <text x="79" y="62" text-anchor="middle" class="s">Q3 ∈ {2, 4}</text>
+      <text x="79" y="79" text-anchor="middle" class="s">Q4 ∈ {2, 3}</text>
+      <text x="79" y="104" text-anchor="middle" class="s">MRV ties at 2</text>
+      <text x="241" y="27" text-anchor="middle" class="r w6 s">Q2 = 3</text>
+      <text x="241" y="45" text-anchor="middle" class="s">Q3 ∈ {} — fail</text>
+      <text x="241" y="62" text-anchor="middle" class="s">undo, Q2 = 4</text>
+      <text x="241" y="79" text-anchor="middle" class="s">Q3 = 2, Q4 = 3</text>
+      <text x="241" y="104" text-anchor="middle" class="r s">diagonal clash</text>
+      <text x="403" y="27" text-anchor="middle" class="g w6 s">Q1 = 2</text>
+      <text x="403" y="45" text-anchor="middle" class="s">Q2 = {4} only</text>
+      <text x="403" y="62" text-anchor="middle" class="s">Q2 = 4 → Q3 = 1</text>
+      <text x="403" y="79" text-anchor="middle" class="s">Q4 = 3</text>
+      <text x="403" y="104" text-anchor="middle" class="g w6 s">solution (2,4,1,3)</text>
+    </svg><figcaption>forward checking after every assignment</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ 4-queens</span> Q1 = 1 gives Q2 ∈ {3,4}, Q3 ∈ {2,4}, Q4 ∈ {2,3}: every domain has two values, so MRV may take any. Q2 = 3 empties Q3; Q2 = 4 forces Q3 = 2, which leaves Q4 = 3, a diagonal clash — so Q1 = 1 is dead. <b>Q1 = 2</b> leaves Q2 ∈ {4}: MRV forces <b>Q2 = 4</b>, Q3 is forced to 1 and Q4 to 3, giving <span class="circ">(2, 4, 1, 3)</span> in four assignments.</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>MRV asks the most constrained question first; LCV tries the least annoying answer first.</b> Forward checking crosses out the answers your neighbours just lost."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) A CSP is <b>not</b> a path search: only the final assignment matters. (ii) Forward checking is <b>not</b> arc consistency — it never looks past the neighbours. (iii) MRV chooses the <b>variable</b>, LCV the <b>value</b>. (iv) Backtracking is complete but exponential.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">Applications</span> Sudoku, timetabling, rostering, cryptarithmetic, scheduling, register allocation in compilers. On an 8 × 8 board plain backtracking needs on the order of <span class="circ">10^5</span> nodes for the first solution; MRV plus forward checking brings that down to a few hundred.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: choosing a search ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Choosing a search</span></div>
+  <h2><span class="no">9</span>Choosing a Search &amp; What It Costs</h2><span class="tag">exam summary ★</span>
+  <table class="hand tiny" style="width:100%;margin-top:0">
+    <tr><th class="l">Algorithm</th><th class="l">Complete</th><th class="l">Optimal</th><th class="l">Time</th><th class="l">Space</th><th class="l">Frontier</th></tr>
+    <tr><td class="l">BFS</td><td class="l">Yes</td><td class="l">Yes, unit</td><td class="l">O(b^d)</td><td class="l">O(b^d)</td><td class="l">FIFO queue</td></tr>
+    <tr><td class="l">DFS</td><td class="l">No</td><td class="l">No</td><td class="l">O(b^m)</td><td class="l">O(bm)</td><td class="l">LIFO stack</td></tr>
+    <tr><td class="l">UCS</td><td class="l">Yes</td><td class="l">Yes</td><td class="l">O(b^(C*/ε))</td><td class="l">O(b^(C*/ε))</td><td class="l">queue on g</td></tr>
+    <tr><td class="l">IDDFS</td><td class="l">Yes</td><td class="l">Yes, unit</td><td class="l">O(b^d)</td><td class="l">O(bd)</td><td class="l">stack per depth</td></tr>
+    <tr><td class="l">Greedy b-f</td><td class="l">No</td><td class="l">No</td><td class="l">O(b^m)</td><td class="l">O(b^m)</td><td class="l">queue on h</td></tr>
+    <tr><td class="l">A*</td><td class="l">Yes</td><td class="l">Yes, admiss. h</td><td class="l">O(b^d)</td><td class="l">O(b^d)</td><td class="l">queue on g + h</td></tr>
+    <tr><td class="l">α-β</td><td class="l">Yes</td><td class="l">Yes, same value</td><td class="l">O(b^(d/2)) best</td><td class="l">O(bd)</td><td class="l">bounds α, β</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:start">
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">If the problem looks like…</th><th class="l">Use</th></tr>
+        <tr><td class="l">fewest steps, all equal</td><td class="l">BFS, or IDDFS when memory is tight</td></tr>
+        <tr><td class="l">deep search, little memory</td><td class="l">DFS, DLS, IDDFS</td></tr>
+        <tr><td class="l">roads, money, fuel</td><td class="l">UCS / Dijkstra</td></tr>
+        <tr><td class="l">roads with a map at hand</td><td class="l">A* with straight-line distance</td></tr>
+        <tr><td class="l">a board game, an opponent</td><td class="l">minimax + α-β</td></tr>
+        <tr><td class="l">timetable, roster, Sudoku</td><td class="l">backtracking + MRV + f.c.</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 400 176" width="282">
+      <g class="w">
+        <path class="ink-k" d="M14,152 H386"/>
+        <path class="ink-r" style="stroke-width:2" d="M300,152 V26"/>
+        <path class="ink-g" style="stroke-width:2" d="M60,152 V100"/>
+        <path class="ink-k" style="stroke-width:1.4" d="M129,148 V156 M240,148 V156 M351,148 V156"/>
+      </g>
+      <text x="14" y="170" class="s">10^0</text>
+      <text x="112" y="170" class="s">10^10</text>
+      <text x="223" y="170" class="s">10^20</text>
+      <text x="334" y="170" class="s">10^30</text>
+      <text x="300" y="20" text-anchor="middle" class="r w6">b^d = 7 × 10^32</text>
+      <text x="60" y="94" text-anchor="middle" class="g w6">states</text>
+      <text x="60" y="110" text-anchor="middle" class="g s">≈ 10^13</text>
+    </svg><figcaption>the 15-puzzle: b = 2.13, d = 100 gives b^d ≈ 7 × 10^32 nodes, yet only 16!/2 ≈ 1.05 × 10^13 states exist</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) <b>Complete ≠ optimal</b>: BFS and IDDFS are complete but optimal only for unit costs. (ii) A*'s O(b^d) is a <b>worst case</b>. (iii) α-β saves <b>time, never correctness</b>. (iv) A heuristic admissible for one problem is useless for another.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT link</span> Dijkstra/UCS powers network routing tables; A* powers road routing and robot path planning; BFS powers level-order traversal and shortest hops; IDA* powers the standard 15-puzzle solver; MRV plus forward checking is what every Sudoku solver uses; α-β is in every chess and Go engine.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ why heuristics are not optional</span> For the 15-puzzle the tree an uninformed search must face has about <span class="circ">7 × 10^32</span> nodes at b = 2.13 and d = 100, although the whole problem contains only 16!/2 ≈ <span class="circ">1.05 × 10^13</span> distinct states. With an admissible Manhattan heuristic the effective branching factor collapses to roughly 1.4 — the difference between a search that finishes and one that never will.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>node = state + parent + action + g(n)</p><p>b = branching, d = goal depth, m = max depth</p>
+      <p>UCS: priority queue on g(n)</p><p>A*: f(n) = g(n) + h(n)</p>
+      <p>Greedy: f(n) = h(n) alone</p><p>A* with h = 0 is UCS</p>
+      <p>admissible: h(n) ≤ h*(n)</p><p>consistent: h(n) ≤ c(n,n′) + h(n′)</p>
+      <p>8-puzzle: 9!/2 = 181 440, b ≈ 1.67</p><p>Manhattan = row + column</p>
+      <p>α-β: O(b^(d/2)), random O(b^(3d/4))</p><p>CSP = (X, D, C); MRV = fewest values</p>
+      <p>annealing: accept p = e^(−ΔE/T)</p><p>GA: selection, crossover, mutation</p>
+    </div>
+  </div>
+  <h3>Top one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>BFS frontier = FIFO <b>queue</b>; DFS = LIFO <b>stack</b></li>
+      <li>BFS optimal only for <b>unit</b> step costs</li>
+      <li>DFS is neither complete nor optimal</li>
+      <li>UCS = Dijkstra, optimal, needs ε &gt; 0</li>
+      <li>IDDFS = BFS completeness + DFS memory O(bd)</li>
+      <li>greedy best-first: f = h, not optimal</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>A* optimal ⟸ h admissible (never overestimates)</li>
+      <li>Consistency ⇒ admissibility</li>
+      <li>Manhattan distance is the 8-puzzle heuristic</li>
+      <li>Minimax: max at MAX nodes, min at MIN nodes</li>
+      <li>α-β prunes work, never the value</li>
+      <li>CSP = variables, domains, constraints — no path</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> BFS optimal ≠ BFS always optimal (weighted graphs need UCS) · f = h is greedy, f = g is UCS, f = g + h is A* · h = 0 is admissible but useless · DFS needs a depth limit on infinite-depth graphs · hill climbing stops at a <b>local</b> optimum · α is updated at MAX nodes, β at MIN nodes · forward checking prunes domains, arc consistency is stronger.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "The frontier is the waiting room, the closed list is the memory" · "the queue is wide and blind, the stack is narrow and brave" · "UCS is BFS with a metre tape; IDDFS is BFS wearing a DFS's memory" · "g is the bill paid, h is the guess, f is the total" · "admissible aims low; consistency is cautious" · "annealing eats a cold dinner, a GA breeds a population".</div>
+  <figure class="doodle"><svg viewBox="0 0 520 118" width="500">
+    <g class="w">
+      <circle cx="60" cy="46" r="38" class="ink fill-b"/>
+      <circle cx="168" cy="46" r="38" class="ink-g fill-g"/>
+      <circle cx="276" cy="46" r="38" class="ink-r fill-r"/>
+      <circle cx="384" cy="46" r="38" class="ink-r fill-r"/>
+      <circle cx="492" cy="46" r="38" class="ink-r fill-r"/>
+      <path class="ink-g" d="M100,46 H128 M208,46 H236 M316,46 H344 M424,46 H452" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M492,86 C410,100 140,100 58,86" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="52" text-anchor="middle" class="w6 s">formulate</text>
+    <text x="168" y="52" text-anchor="middle" class="w6 l">f = g + h</text>
+    <text x="276" y="52" text-anchor="middle" class="r w6 s">BFS · DFS</text>
+    <text x="384" y="52" text-anchor="middle" class="r w6 s">minimax</text>
+    <text x="492" y="52" text-anchor="middle" class="r w6 s">MRV · f.c.</text>
+    <text x="114" y="34" text-anchor="middle" class="g s">guides</text>
+    <text x="222" y="34" text-anchor="middle" class="g s">guides</text>
+    <text x="330" y="34" text-anchor="middle" class="g s">guided by</text>
+    <text x="438" y="34" text-anchor="middle" class="g s">guided by</text>
+    <text x="276" y="114" text-anchor="middle" class="p s">and complete / optimal are separate columns</text>
+  </svg><figcaption>one formulation, one priority rule, five algorithms — plus two columns that are not the same</figcaption></figure>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Search Techniques</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>BFS frontier is a:<ol class="opts"><li>LIFO stack</li><li>priority queue</li><li>search tree</li><li>FIFO queue</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>A* picks the next node:<ol class="opts"><li>g(n) + h(n)</li><li>g(n) × h(n)</li><li>h(n) alone</li><li>g(n) alone</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>h(n) is admissible if:<ol class="opts"><li>overestimates</li><li>never exceeds</li><li>constant time</li><li>falls by 1</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>α-β, perfect ordering:<ol class="opts"><li>O(b × d)</li><li>O(d^b)</li><li>O(b^(d/2))</li><li>O(b^(2d))</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>IDDFS is preferred for:<ol class="opts"><li>optimality</li><li>low memory</li><li>no depth limit</li><li>no repeats</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Plain DFS is complete if:<ol class="opts"><li>costs are equal</li><li>graph is finite</li><li>h is admissible</li><li>depth is finite</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>At a MIN node minimax:<ol class="opts"><li>the minimum</li><li>the maximum</li><li>the sum</li><li>α + β</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>MRV picks the variable:<ol class="opts"><li>largest domain</li><li>most constraints</li><li>fewest values</li><li>highest degree</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Annealing may accept:<ol class="opts"><li>worse moves</li><li>better moves</li><li>only uphill</li><li>random moves</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>UCS optimal if costs ≥:<ol class="opts"><li>ε &gt; 0</li><li>1 exactly</li><li>negative</li><li>zero</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-d · 2-a · 3-b · 4-c · 5-b · 6-d · 7-a · 8-c · 9-d · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Trace A* on the graph with edge costs S→A = 2, S→B = 1, A→C = 2, B→C = 4, B→D = 5, C→G = 3, D→G = 2 and heuristics 5, 4, 4, 3, 2, 0 for S, A, B, C, D, G. Give the expansion order, the path, its cost and an admissibility test. <i class="mk">10 marks</i></div>
+  <ol class="steps small" style="margin-top:2mm">
+    <li>Use <b>f = g + h</b>, frontier in a priority queue on f. Start: open = {S (g = 0, f = 5)}. <i class="mk">1</i></li>
+    <li>Expand <b>S</b>: A (g = 2, f = 6), B (g = 1, f = 5); open = {B 5, A 6}. <i class="mk">1</i></li>
+    <li>Expand <b>B</b>: C (g = 5, f = 8), D (g = 6, f = 8); open = {A 6, C 8, D 8}. <i class="mk">1</i></li>
+    <li>Expand <b>A</b> (f = 6): C is reachable with g = 4 &lt; 5, so C is <b>updated</b> to g = 4, f = 7; open = {C 7, D 8}. <i class="mk">1</i></li>
+    <li>Expand <b>C</b>: G (g 7, f 7); open = {G 7, D 8}; expand <b>G</b> — goal reached, order S, B, A, C, G. <i class="mk">2</i></li>
+    <li>Path <b>S-A-C-G</b>, cost 2 + 2 + 3 = <b>7</b>; S-B-C-G = 8 and S-B-D-G = 8 are dearer. <i class="mk">1</i></li>
+    <li>True remaining costs: h*(G) = 0, h*(C) = 3, h*(D) = 2, h*(A) = 5, h*(B) = 7, h*(S) = 7 — every h(n) ≤ h*(n), so h is <b>admissible</b> and consistent, and A*'s answer is guaranteed <b>optimal</b>. <i class="mk">3</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>Can write the five parts of a formulation</li>
+      <li>Can quote the BFS/DFS complete + optimal columns</li>
+    </ul>
+    <ul class="tick">
+      <li>Can trace A*, UCS and audit admissibility</li>
+      <li>Can prune minimax and run MRV + forward checking</li>
+    </ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

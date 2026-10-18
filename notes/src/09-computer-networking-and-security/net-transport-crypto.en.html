@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Transport Protocols &amp; Cryptography: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Transport Layer &amp; Cryptography</span></h1>
+  <p class="subtitle">TCP · UDP · cwnd · AAL · DES · IDEA · AES · RSA · DH: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">TRANSPORT + CRYPTO</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Ports · sockets</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">TCP header &amp; handshake ★</text>
+      <text x="500" y="65" text-anchor="middle">UDP · SCTP</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">cwnd: slow start ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">DES · 3DES · IDEA ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">AAL 1 · 2 · 3/4 · 5</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">RSA · Diffie–Hellman ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Classical ciphers · AES</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = supporting</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① TCP 20–60 B · UDP 8 B<br>② SYN, SYN+ACK, ACK<br>③ slow start ×2 · AIMD<br>④ 3 dup ACKs<br>⑤ DES 64/56/16<br>⑥ IDEA 64/128/8.5<br>⑦ RSA: e·d ≡ 1 mod φ</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"<span class="hl">Transport protocols</span>; Transmission control protocol: <span class="hl">connection management, transmission policy, congestion control, timer management</span>; UDP; <span class="hl">AAL of ATM</span>; Network security: <span class="hl">Cryptography, DES, IDEA, public key algorithm</span>". Authentication and digital signatures follow in the next lesson; the ATM cell and network layer are in the Firewalls/IP/ATM lesson.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Transport layer, ports, TCP header ……… p. 2</li><li>Connection setup, release, states ……… p. 3</li><li>Flow control, transmission policy, timers … p. 4</li><li>Congestion control + cwnd trace ……… p. 5</li><li>UDP, TCP vs UDP, SCTP ……… p. 6</li><li>AAL of ATM, cryptography basics ……… p. 7</li></ul>
+    <ul class="tick"><li>DES, 3DES, IDEA, AES ……… p. 8</li><li>Public key: RSA, Diffie–Hellman ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: transport layer, ports, TCP header ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Transport layer</span></div>
+  <h2><span class="no">1</span>The Transport Layer</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> Layer 4 (OSI) gives <span class="hl">process-to-process (end-to-end)</span> delivery; the network layer (IP) gives only host-to-host delivery. Services: multiplexing/demultiplexing by <b>port</b>, segmentation and reassembly, and (in TCP) reliability, ordering, flow control and congestion control. It runs only in the <b>end hosts</b>, never in routers.</div>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <div class="small">
+      <p><b>Port</b> = 16-bit number → <span class="circ">0–65,535</span></p>
+      <ul class="dash">
+        <li><span class="hl">Well-known</span> 0–1023 (servers)</li>
+        <li>Registered 1024–49,151</li>
+        <li>Dynamic / ephemeral 49,152–65,535 (clients)</li>
+      </ul>
+      <p><b>Socket</b> = IP address + port. A TCP connection is identified by the <span class="hl">4-tuple</span> (src IP, src port, dst IP, dst port).</p>
+      <p><b>PDU:</b> TCP <span class="hl">segment</span> · UDP <span class="hl">datagram</span>. IP protocol no. <span class="circ">TCP = 6, UDP = 17</span></p>
+    </div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">Service</th><th>Port</th><th>Over</th></tr>
+      <tr><td class="l">FTP data · control</td><td>20 · 21</td><td>TCP</td></tr>
+      <tr><td class="l">SSH · Telnet</td><td>22 · 23</td><td>TCP</td></tr>
+      <tr><td class="l">SMTP</td><td>25</td><td>TCP</td></tr>
+      <tr><td class="l">DNS</td><td>53</td><td>UDP/TCP</td></tr>
+      <tr><td class="l">DHCP · TFTP</td><td>67/68 · 69</td><td>UDP</td></tr>
+      <tr><td class="l">HTTP · HTTPS</td><td>80 · 443</td><td>TCP</td></tr>
+      <tr><td class="l">POP3 · IMAP</td><td>110 · 143</td><td>TCP</td></tr>
+      <tr><td class="l">SNMP · trap</td><td>161 · 162</td><td>UDP</td></tr>
+    </table>
+  </div>
+
+
+  <h2><span class="no">2</span>TCP Segment Header</h2><span class="tag">high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 640 190" width="640">
+    <g class="w">
+      <rect x="40" y="20" width="520" height="150" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+      <path class="ink-k" d="M40,45 H560 M40,70 H560 M40,95 H560 M40,120 H560 M40,145 H560" style="stroke-width:1.4"/>
+      <path class="ink-k" d="M300,20 V45 M300,95 V145 M105,95 V120 M170,95 V120" style="stroke-width:1.4"/>
+      <rect x="170" y="95" width="130" height="25" class="fill-y" style="stroke:none"/>
+      <path class="ink-r" d="M572,20 Q584,20 584,32 V70 Q584,82 594,82 Q584,82 584,94 V133 Q584,145 572,145"/>
+    </g>
+    <text x="40" y="14" class="s">bit 0</text><text x="300" y="14" text-anchor="middle" class="s">16</text><text x="560" y="14" text-anchor="end" class="s">31</text>
+    <text x="170" y="38" text-anchor="middle">Source port (16)</text><text x="430" y="38" text-anchor="middle">Destination port (16)</text>
+    <text x="300" y="63" text-anchor="middle">Sequence number (32)</text>
+    <text x="300" y="88" text-anchor="middle">Acknowledgement number (32)</text>
+    <text x="72" y="113" text-anchor="middle" class="s">HLEN 4</text><text x="137" y="113" text-anchor="middle" class="s">reserved</text><text x="235" y="113" text-anchor="middle" class="s r w6">flags</text><text x="430" y="113" text-anchor="middle">Window size (16)</text>
+    <text x="170" y="138" text-anchor="middle">Checksum (16)</text><text x="430" y="138" text-anchor="middle">Urgent pointer (16)</text>
+    <text x="300" y="163" text-anchor="middle" class="g">Options + padding (0–40 bytes)</text>
+    <text x="598" y="80" class="r s w6">20 B</text><text x="598" y="94" class="r s">fixed</text>
+    <text x="40" y="186" class="s p">flags: URG · ACK · PSH · RST · SYN · FIN (+ ECN bits CWR, ECE)</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <ul class="dash small">
+      <li><b>HLEN</b> counts <b>32-bit words</b>: 5 → 20 B, 15 → <span class="circ">60 B</span></li>
+      <li><b>Seq no.</b> numbers <b>bytes</b>; the ISN is random</li>
+      <li><b>Ack no.</b> = next byte expected (cumulative)</li>
+      <li><b>Window</b> = receiver's free buffer, ≤ 65,535 B unless scaled</li>
+      <li><b>Checksum</b>: mandatory, covers a pseudo-header</li>
+    </ul>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick: flags</span> "<b>U</b>nskilled <b>A</b>ttackers <b>P</b>ester <b>R</b>eal <b>S</b>ecurity <b>F</b>olks" = URG ACK PSH RST SYN FIN, in header order.</div>
+      <div class="exam small"><span class="lbl">Exam trap</span> HLEN = 8 means 8 × 4 = <b>32 bytes</b> of header, not 8.</div>
+    </div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: connection management ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Connection management</span></div>
+  <h2><span class="no">3</span>TCP Connection Management</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 255px;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 440 420" width="430">
+      <g class="w">
+        <path class="ink-k" d="M120,20 V405 M330,20 V405"/>
+        <path class="ink" d="M120,45 L330,75" marker-end="url(#ahb)"/>
+        <path class="ink" d="M330,85 L120,115" marker-end="url(#ahb)"/>
+        <path class="ink" d="M120,125 L330,155" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M120,178 H330 M330,190 H120" stroke-dasharray="6 5"/>
+        <path class="ink-r" d="M120,210 L330,240" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M330,250 L120,280" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M330,310 L120,340" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M120,350 L330,380" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M108,350 H100 V400 H108"/>
+      </g>
+      <text x="120" y="14" text-anchor="middle" class="k w6">Client</text><text x="330" y="14" text-anchor="middle" class="k w6">Server</text>
+      <text x="225" y="47" text-anchor="middle" class="s w6">SYN, seq = x</text>
+      <text x="225" y="83" text-anchor="middle" class="s w6">SYN+ACK, seq=y, ack=x+1</text>
+      <text x="225" y="122" text-anchor="middle" class="s w6">ACK, seq=x+1, ack=y+1</text>
+      <text x="225" y="173" text-anchor="middle" class="g s">data in both directions</text>
+      <text x="225" y="211" text-anchor="middle" class="r s w6">FIN, seq = u</text>
+      <text x="225" y="250" text-anchor="middle" class="r s w6">ACK, ack = u+1</text>
+      <text x="225" y="293" text-anchor="middle" class="p s">half-close: server may still send</text>
+      <text x="225" y="311" text-anchor="middle" class="r s w6">FIN, seq = w</text>
+      <text x="225" y="351" text-anchor="middle" class="r s w6">ACK, ack = w+1</text>
+      <text x="112" y="34" text-anchor="end" class="s">CLOSED</text><text x="112" y="62" text-anchor="end" class="s">SYN_SENT</text><text x="112" y="140" text-anchor="end" class="s g">ESTABLISHED</text>
+      <text x="112" y="226" text-anchor="end" class="s">FIN_WAIT_1</text><text x="112" y="296" text-anchor="end" class="s">FIN_WAIT_2</text><text x="96" y="372" text-anchor="end" class="s p w6">TIME_WAIT</text><text x="96" y="388" text-anchor="end" class="s p">2 MSL</text>
+      <text x="338" y="34" class="s">LISTEN</text><text x="338" y="102" class="s">SYN_RCVD</text><text x="338" y="166" class="s g">ESTABLISHED</text>
+      <text x="338" y="250" class="s">CLOSE_WAIT</text><text x="338" y="322" class="s">LAST_ACK</text><text x="338" y="392" class="s">CLOSED</text>
+    </svg><figcaption>3-way open (blue) · 4-way close (red)</figcaption></figure>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">3-way handshake</span> both sides choose and confirm their <span class="hl">initial sequence numbers</span>. SYN and FIN each <b>consume one sequence number</b>; a pure ACK consumes none.</div>
+      <div class="def small"><span class="lbl">4-way close</span> TCP is <b>full duplex</b>, so each direction is closed separately (FIN + ACK each way). Server ACK and FIN may be combined → 3 segments.</div>
+      <div class="sumbox small"><span class="lbl">States</span> TCP has <span class="circ">11 states</span>. The <b>active closer</b> waits in <span class="hl">TIME_WAIT for 2 MSL</span> so a lost final ACK can be resent and old duplicates die out.</div>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">State</th><th class="l">Meaning</th><th class="l">State</th><th class="l">Meaning</th></tr>
+    <tr><td class="l">LISTEN</td><td class="l">server waits for a SYN (passive open)</td><td class="l">CLOSE_WAIT</td><td class="l">got peer's FIN; app not closed yet</td></tr>
+    <tr><td class="l">SYN_SENT</td><td class="l">client sent SYN (active open)</td><td class="l">LAST_ACK</td><td class="l">sent own FIN, awaits its ACK</td></tr>
+    <tr><td class="l">SYN_RCVD</td><td class="l">half-open: SYN+ACK sent</td><td class="l">CLOSING</td><td class="l">both sides sent FIN at once</td></tr>
+  </table>
+  <p class="small"><b>Why three segments, not two?</b> Each side must have its own ISN <b>acknowledged</b>; a two-way exchange would let an old, delayed SYN open a ghost connection.</p>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Client ISN = 1000, server ISN = 5000. ① SYN seq = 1000 ② SYN+ACK seq = 5000, ack = <b>1001</b> ③ ACK seq = 1001, ack = 5001. Client now sends 400 bytes: seq = 1001 (bytes 1001–1400); server replies ack = <span class="circ">1401</span>.</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>RST</b> aborts a connection at once (no 4-way exchange). <b>SYN flood</b>: the attacker never sends the final ACK, filling the server's half-open (SYN_RCVD) queue; defence = <b>SYN cookies</b>.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Open = "<b>knock, knock-back, enter</b>". Close = two <b>goodbyes and two nods</b>. Whoever says goodbye first waits at the door (TIME_WAIT).</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: flow control, transmission policy, timers ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Flow control &amp; timers</span></div>
+  <h2><span class="no">4</span>Flow Control: the Sliding Window</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Idea</span> The receiver advertises <span class="hl">rwnd</span> (free buffer) in every segment; the sender keeps unacknowledged bytes ≤ window. Effective window = <span class="circ">min(rwnd, cwnd)</span>: flow control protects the <b>receiver</b>, congestion control protects the <b>network</b>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 120" width="640">
+    <g class="w">
+      <rect x="20" y="40" width="160" height="34" class="ink-g fill-g"/>
+      <rect x="180" y="40" width="160" height="34" class="ink-r fill-r"/>
+      <rect x="340" y="40" width="140" height="34" class="ink fill-y"/>
+      <rect x="480" y="40" width="140" height="34" class="ink-k"/>
+      <path class="ink-k" d="M60,40 V74 M100,40 V74 M140,40 V74 M220,40 V74 M260,40 V74 M300,40 V74 M375,40 V74 M410,40 V74 M445,40 V74 M515,40 V74 M550,40 V74 M585,40 V74" style="stroke-width:1"/>
+      <path class="ink-p" d="M180,30 V20 H480 V30" />
+      <path class="ink-p" d="M330,98 H460" marker-end="url(#ahp)"/>
+    </g>
+    <text x="330" y="15" text-anchor="middle" class="p s w6">send window = min(rwnd, cwnd)</text>
+    <text x="100" y="92" text-anchor="middle" class="g s">sent &amp; ACKed</text>
+    <text x="260" y="92" text-anchor="middle" class="r s">sent, not yet ACKed</text>
+    <text x="410" y="62" text-anchor="middle" class="s w6">may send now</text>
+    <text x="550" y="92" text-anchor="middle" class="s">cannot send yet</text>
+    <text x="250" y="114" class="p s">window slides right as ACKs arrive</text>
+  </svg><figcaption>byte stream seen by the sender</figcaption></figure>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Max throughput ≈ window / RTT. Window 65,535 B, RTT 100 ms → 65,535 × 8 / 0.1 ≈ <span class="circ">5.24 Mbps</span>, whatever the link speed. That is why the <b>window-scale</b> option (shift up to 14, window up to 2<sup>30</sup> B ≈ 1 GB) exists for long fat networks.</div>
+  <h3>Transmission policy (efficiency)</h3>
+  <table class="hand small">
+    <tr><th class="l">Problem / mechanism</th><th class="l">What it does</th></tr>
+    <tr><td class="l"><span class="hl">Silly window syndrome</span></td><td class="l">tiny segments waste bandwidth (40 B header for 1 B data)</td></tr>
+    <tr><td class="l">Nagle's algorithm (sender)</td><td class="l">hold small data until the outstanding data is ACKed or an MSS fills</td></tr>
+    <tr><td class="l">Clark's solution (receiver)</td><td class="l">advertise 0 until min(MSS, half the buffer) is free</td></tr>
+    <tr><td class="l">Delayed ACK</td><td class="l">wait (≤ 500 ms, typically 200 ms) to piggyback or combine ACKs</td></tr>
+    <tr><td class="l">Zero window</td><td class="l">sender stops; probes with the persist timer</td></tr>
+  </table>
+  <h2><span class="no">5</span>TCP Timer Management</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ul class="dash small">
+      <li><b>Retransmission (RTO)</b>: resend if no ACK in time</li>
+      <li><b>Persist</b>: breaks the zero-window <span class="hl">deadlock</span> with window probes</li>
+      <li><b>Keepalive</b>: checks an idle peer (default 2 hours)</li>
+      <li><b>TIME_WAIT</b>: 2 × MSL after an active close</li>
+    </ul>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">RTO: Jacobson / Karn</span><br>SRTT = ⅞ SRTT + ⅛ R<br>RTTVAR = ¾ RTTVAR + ¼ |SRTT − R|<br>RTO = SRTT + <span class="circ">4 × RTTVAR</span><br><b>Karn</b>: no RTT sample from a retransmitted segment; <b>double</b> RTO on every timeout</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> SRTT = 100 ms, RTTVAR = 20 ms, new sample R = 120 ms. RTTVAR = 15 + ¼(20) = 20 ms; SRTT = 87.5 + 15 = 102.5 ms; RTO = 102.5 + 80 = <b>182.5 ms</b> (RFC 6298 then applies a 1 s floor).</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: congestion control ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Congestion control</span></div>
+  <h2><span class="no">6</span>TCP Congestion Control</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Idea</span> The sender keeps a <span class="hl">congestion window (cwnd)</span>, counted in MSS, and a threshold <b>ssthresh</b>. Loss is taken as the sign of congestion. Overall rule: <span class="hl">AIMD</span>: additive increase, multiplicative decrease.</div>
+  <table class="hand small">
+    <tr><th class="l">Phase / event</th><th class="l">Rule</th><th class="l">Growth</th></tr>
+    <tr><td class="l"><b>Slow start</b> (cwnd &lt; ssthresh)</td><td class="l">+1 MSS per ACK</td><td class="l red"><b>×2 every RTT</b></td></tr>
+    <tr><td class="l"><b>Congestion avoidance</b> (≥ ssthresh)</td><td class="l">+1 MSS per RTT</td><td class="l">linear</td></tr>
+    <tr><td class="l"><b>Timeout</b> (Tahoe, Reno)</td><td class="l">ssthresh = cwnd/2; cwnd = <span class="circ">1 MSS</span></td><td class="l">slow start again</td></tr>
+    <tr><td class="l"><b>3 dup ACKs</b>: fast retransmit</td><td class="l">resend the lost segment now, no RTO wait</td><td class="l">—</td></tr>
+    <tr><td class="l">… then <b>fast recovery</b> (Reno)</td><td class="l">ssthresh = cwnd/2; cwnd = ssthresh</td><td class="l">linear</td></tr>
+    <tr><td class="l">… Tahoe instead</td><td class="l">ssthresh = cwnd/2; cwnd = 1</td><td class="l">slow start</td></tr>
+  </table>
+  <h3>Worked trace: ssthresh = 16 at the start</h3>
+  <figure class="doodle"><svg viewBox="0 0 560 230" width="520">
+    <g class="w">
+      <path class="ink-k" d="M30,190 V10 M30,190 H500"/>
+      <path class="ink-r" d="M30,62 H240 M255,110 H415 M430,142 H490" stroke-dasharray="5 4" style="stroke-width:1.5"/>
+      <path class="ink" d="M30,182 L55,174 L80,158 L105,126 L130,62" style="stroke-width:2.6"/>
+      <path class="ink-g" d="M130,62 L155,54 L180,46 L205,38 L230,30" style="stroke-width:2.6"/>
+      <path class="ink" d="M255,182 L280,174 L305,158 L330,126 L355,110" style="stroke-width:2.6"/>
+      <path class="ink-g" d="M355,110 L380,102 L405,94" style="stroke-width:2.6"/>
+      <path class="ink-p" d="M430,142 L455,134 L480,126" style="stroke-width:2.6"/>
+      <path class="ink-k" d="M230,30 L255,182 M405,94 L430,142" stroke-dasharray="3 4" style="stroke-width:1.3"/>
+    </g>
+    <text x="24" y="66" text-anchor="end" class="s">16</text><text x="24" y="114" text-anchor="end" class="s">10</text><text x="24" y="146" text-anchor="end" class="s">6</text><text x="24" y="34" text-anchor="end" class="s">20</text><text x="24" y="194" text-anchor="end" class="s">0</text>
+    <text x="30" y="206" text-anchor="middle" class="s">1</text><text x="130" y="206" text-anchor="middle" class="s">5</text><text x="230" y="206" text-anchor="middle" class="s">9</text><text x="330" y="206" text-anchor="middle" class="s">13</text><text x="430" y="206" text-anchor="middle" class="s">17</text><text x="500" y="206" text-anchor="middle" class="s">round</text>
+    <text x="236" y="22" class="r s w6">timeout</text><text x="410" y="86" class="p s w6">3 dup ACKs</text>
+    <text x="120" y="150" class="s">slow start</text><text x="150" y="82" class="g s">cong. avoid.</text><text x="36" y="56" class="r s">ssthresh 16</text><text x="260" y="104" class="r s">ssthresh 10</text><text x="440" y="160" class="r s">ssthresh 6</text>
+    <text x="4" y="226" class="s p">cwnd (MSS) vs transmission round · Reno</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th>Round</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>
+    <tr><th>cwnd</th><td>1</td><td>2</td><td>4</td><td>8</td><td>16</td><td>17</td><td>18</td><td>19</td><td class="red"><b>20</b></td></tr>
+    <tr><th>Round</th><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr>
+    <tr><th>cwnd</th><td>1</td><td>2</td><td>4</td><td>8</td><td>10</td><td>11</td><td class="red"><b>12</b></td><td>6</td><td>7</td></tr>
+  </table>
+  <p class="small">Timeout at 20 → ssthresh = <b>10</b>, cwnd = 1. Slow start stops at ssthresh (8 → 10, not 16). Three duplicate ACKs at 12 → ssthresh = cwnd = <b>6</b> (Reno skips slow start).</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Timeout = start over from 1; dup ACKs = cut in half</b>." 3 dup ACKs show later segments still get through.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> "Slow" start is actually <b>exponential</b>. It is slow only because cwnd starts at 1 MSS (modern stacks start at up to 10). Tahoe 1988, Reno 1990; CUBIC is the Linux default.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: UDP, TCP vs UDP, SCTP ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>UDP · TCP vs UDP</span></div>
+  <h2><span class="no">7</span>UDP: User Datagram Protocol</h2><span class="tag">MCQ favourite</span>
+  <div class="def"><span class="lbl">Definition</span> UDP (RFC 768, 1980) is a <span class="hl">connectionless, unreliable</span> transport: no handshake, no ACKs, no retransmission, no ordering, no flow or congestion control. It adds only ports and a checksum to IP, and <b>preserves message boundaries</b>.</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 130" width="330">
+      <g class="w">
+        <rect x="10" y="20" width="310" height="60" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M10,50 H320 M165,20 V80" style="stroke-width:1.4"/>
+        <rect x="10" y="80" width="310" height="34" class="ink-g fill-g"/>
+      </g>
+      <text x="10" y="14" class="s">0</text><text x="165" y="14" text-anchor="middle" class="s">16</text><text x="320" y="14" text-anchor="end" class="s">31</text>
+      <text x="87" y="40" text-anchor="middle" class="s w6">Source port</text><text x="242" y="40" text-anchor="middle" class="s w6">Destination port</text>
+      <text x="87" y="70" text-anchor="middle" class="s w6">Length</text><text x="242" y="70" text-anchor="middle" class="s w6">Checksum</text>
+      <text x="165" y="102" text-anchor="middle" class="g s">data</text>
+    </svg><figcaption>4 fields × 16 bits = 8 bytes</figcaption></figure>
+    <ul class="dash small">
+      <li>Header fixed at <span class="circ">8 bytes</span> (TCP: 20–60)</li>
+      <li><b>Length</b> = header + data, minimum 8</li>
+      <li>Checksum <b>optional in IPv4</b> (0 = unused), <b>mandatory in IPv6</b></li>
+      <li>Max payload over IPv4: 65,535 − 20 − 8 = <b>65,507 B</b></li>
+      <li>Only UDP supports <b>broadcast and multicast</b></li>
+    </ul>
+  </div>
+  <p class="small"><b>Used by:</b> <span class="hl">DNS</span> queries, DHCP, TFTP, SNMP, RIP (520), NTP (123), VoIP/RTP, live streaming, online games, and <b>QUIC</b> (HTTP/3 over UDP 443).</p>
+  <h2><span class="no">8</span>TCP vs UDP</h2><span class="tag">written favourite</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Feature</th><th class="l">TCP</th><th class="l">UDP</th></tr>
+    <tr><td class="l">Connection</td><td class="l">connection-oriented (handshake)</td><td class="l">connectionless</td></tr>
+    <tr><td class="l">Reliability</td><td class="l">ACK + retransmission, in-order</td><td class="l">best effort; may lose, reorder</td></tr>
+    <tr><td class="l">Data unit</td><td class="l">byte stream (segments)</td><td class="l">messages (datagrams)</td></tr>
+    <tr><td class="l">Header</td><td class="l">20–60 bytes</td><td class="l">8 bytes</td></tr>
+    <tr><td class="l">Flow / congestion ctrl</td><td class="l">yes / yes</td><td class="l">no / no</td></tr>
+    <tr><td class="l">Delivery</td><td class="l">unicast only</td><td class="l">unicast, broadcast, multicast</td></tr>
+    <tr><td class="l">Examples</td><td class="l">HTTP, HTTPS, FTP, SMTP, SSH</td><td class="l">DNS, DHCP, SNMP, VoIP</td></tr>
+  </table>
+  <h3>Other transport protocols</h3>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">SCTP</span> reliable and <b>message-oriented</b>, with <span class="hl">multi-streaming</span> and <span class="hl">multi-homing</span>; 4-way handshake (INIT, INIT-ACK, COOKIE-ECHO, COOKIE-ACK); used for telecom signalling (SIGTRAN).</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">DCCP</span> unreliable datagrams <b>with</b> congestion control, for streaming media. <b>RTP</b> runs over UDP and adds timestamps and sequence numbers for real-time audio/video.</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> "UDP is unreliable" means it gives <b>no delivery guarantee</b>, not that it corrupts data: the checksum still detects errors. DNS uses <b>TCP</b> 53 for zone transfers and large replies.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: AAL, crypto basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>AAL · crypto basics</span></div>
+  <h2><span class="no">9</span>ATM Adaptation Layer (AAL)</h2><span class="tag">MCQ</span>
+  <div class="def small"><span class="lbl">Role</span> An ATM cell is <span class="circ">53 bytes</span> (5 header + 48 payload). The AAL, above the ATM layer, adapts upper-layer data to cells through two sublayers: <b>CS</b> (convergence) and <b>SAR</b> (segmentation and reassembly).</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>AAL</th><th>Class</th><th class="l">Traffic</th><th class="l">Payload / cell</th><th class="l">Typical use</th></tr>
+    <tr><td>AAL1</td><td>A</td><td class="l">CBR, timed</td><td class="l">47 B</td><td class="l">circuit emulation, voice</td></tr>
+    <tr><td>AAL2</td><td>B</td><td class="l">VBR, timed</td><td class="l">mini-packets</td><td class="l">compressed voice/video</td></tr>
+    <tr><td>AAL3/4</td><td>C, D</td><td class="l">data (conn. / connless)</td><td class="l">44 B</td><td class="l">SMDS, legacy data</td></tr>
+    <tr><td class="red"><b>AAL5</b></td><td>C, D</td><td class="l">data, simple (SEAL)</td><td class="l"><b>48 B</b></td><td class="l"><span class="hl">IP over ATM</span>, LANE</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 320 120" width="320">
+      <g class="w">
+        <rect x="10" y="14" width="200" height="30" class="ink fill-b"/><rect x="210" y="14" width="40" height="30" class="ink-k"/><rect x="250" y="14" width="60" height="30" class="ink-r fill-r"/>
+        <path class="ink-g" d="M60,46 L40,74 M160,46 L180,74" marker-end="url(#ahg)"/>
+        <rect x="10" y="78" width="22" height="30" class="ink-k fill-y"/><rect x="32" y="78" width="70" height="30" class="ink fill-b"/>
+        <rect x="150" y="78" width="22" height="30" class="ink-k fill-y"/><rect x="172" y="78" width="70" height="30" class="ink fill-b"/>
+      </g>
+      <text x="110" y="34" text-anchor="middle" class="s">user data 1500 B</text><text x="230" y="34" text-anchor="middle" class="s">pad</text><text x="280" y="34" text-anchor="middle" class="r s">trailer 8</text>
+      <text x="21" y="98" text-anchor="middle" class="s">5</text><text x="67" y="98" text-anchor="middle" class="s">48</text><text x="161" y="98" text-anchor="middle" class="s">5</text><text x="207" y="98" text-anchor="middle" class="s">48</text><text x="126" y="98" text-anchor="middle" class="w6">…</text><text x="250" y="98" class="s g">× 32 cells</text>
+    </svg><figcaption>AAL5: one frame → many cells</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> 1500-byte IP packet over AAL5: 1500 + 8 = 1508 → ⌈1508/48⌉ = <b>32 cells</b> (pad 28 B). On the wire 32 × 53 = 1696 B, efficiency 1500/1696 ≈ <b>88.4%</b>. Trailer: UU, CPI, length, <b>CRC-32</b>; the PTI bit marks the last cell.</div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>1 = Constant, 2 = Variable, 3/4 = old data, 5 = the data workhorse</b>." Class letters A → D follow the AAL numbers.</div>
+
+  <h2><span class="no">10</span>Cryptography: Basics</h2><span class="tag">MCQ + Written</span>
+  <div class="def small"><span class="lbl">Terms</span> <b>Plaintext</b> → (encryption with a <b>key</b>) → <b>ciphertext</b> → (decryption) → plaintext. <span class="hl">Cryptology</span> = cryptography (making codes) + cryptanalysis (breaking them). Goals: confidentiality, integrity, authentication, non-repudiation. <b>Kerckhoffs</b>: security rests on the key alone.</div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">Symmetric (secret key)</th><th class="l">Asymmetric (public key)</th></tr>
+    <tr><td class="l">Keys</td><td class="l">one shared key</td><td class="l">public + private pair</td></tr>
+    <tr><td class="l">Speed</td><td class="l">fast (bulk data)</td><td class="l">100–1000× slower</td></tr>
+    <tr><td class="l">Keys for n users</td><td class="l"><span class="circ">n(n − 1)/2</span></td><td class="l">2n</td></tr>
+    <tr><td class="l">Examples</td><td class="l">DES, 3DES, IDEA, AES, RC4, Blowfish</td><td class="l">RSA, Diffie–Hellman, ECC, ElGamal</td></tr>
+  </table>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: classical ciphers, DES, 3DES, IDEA, AES ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Symmetric ciphers</span></div>
+  <h2><span class="no">11</span>Classical Ciphers</h2>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Substitution ✍</span> replace each letter. <b>Caesar</b> (shift 3): ATTACK → <b>DWWDFN</b>. Monoalphabetic: 26! keys, but broken by <b>letter frequency</b>. Polyalphabetic: Vigenère, Playfair. One-time pad: perfect secrecy.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Transposition ✍</span> reorder the letters. <b>Rail fence</b> (2 rails): ATTACKATDAWN → row 1 ATCADW + row 2 TAKTAN = <b>ATCADWTAKTAN</b>. Letter frequencies stay unchanged.</div>
+  </div>
+  <p class="small">Shannon: a strong cipher needs <span class="hl">confusion</span> (substitution, S-boxes) and <span class="hl">diffusion</span> (permutation, P-boxes). Block ciphers (DES, AES) encrypt fixed blocks; stream ciphers (RC4, ChaCha20) encrypt bit by bit or byte by byte.</p>
+
+  <h2><span class="no">12</span>DES and Triple DES</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 235px;align-items:center">
+    <div>
+      <ul class="dash small">
+        <li>IBM (from Lucifer), FIPS 46, <span class="circ">1977</span></li>
+        <li>Block <span class="circ">64 bits</span>; key 64 bits, <span class="circ">56</span> effective (8 parity)</li>
+        <li><span class="hl">16 Feistel rounds</span>, 48-bit round keys; IP … IP⁻¹</li>
+        <li>f: expand 32 → 48, XOR key, <b>8 S-boxes (6 → 4 bits)</b>, P-box</li>
+        <li>S-boxes = the only <b>non-linear</b> part</li>
+        <li>Brute-forced: EFF "Deep Crack", 1998 (56 h)</li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 170" width="230">
+      <g class="w">
+        <rect x="20" y="8" width="80" height="28" class="ink fill-b"/><rect x="150" y="8" width="80" height="28" class="ink fill-b"/>
+        <rect x="95" y="62" width="62" height="30" rx="8" class="ink-r fill-r"/>
+        <circle cx="60" cy="77" r="11" class="ink-k"/><path class="ink-k" d="M49,77 H71 M60,66 V88"/>
+        <path class="ink" d="M60,36 V66 M190,36 V77 H157 M95,77 H71"/>
+        <path class="ink-r" d="M126,44 V60" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M190,77 V104 L60,132 M60,88 V104 L190,132" style="stroke-width:1.8"/>
+        <rect x="20" y="132" width="80" height="28" class="ink-g fill-g"/><rect x="150" y="132" width="80" height="28" class="ink-g fill-g"/>
+      </g>
+      <text x="60" y="27" text-anchor="middle" class="s w6">Lᵢ</text><text x="190" y="27" text-anchor="middle" class="s w6">Rᵢ</text>
+      <text x="126" y="82" text-anchor="middle" class="r s w6">f</text><text x="134" y="50" class="s r">Kᵢ</text>
+      <text x="60" y="151" text-anchor="middle" class="s g">Lᵢ₊₁ = Rᵢ</text><text x="190" y="151" text-anchor="middle" class="s g">Lᵢ ⊕ f(Rᵢ)</text>
+    </svg><figcaption>one Feistel round</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">3DES (EDE)</span> C = E<sub>K3</sub>(D<sub>K2</sub>(E<sub>K1</sub>(P))). 3 keys: 168-bit key, ≈ 112-bit strength; 2 keys (K1 = K3): 112-bit key. K1 = K2 = K3 → single DES. <b>Double DES</b> ≈ 57 bits only (<span class="hl">meet-in-the-middle</span>).</div>
+
+  <h2><span class="no">13</span>IDEA and AES</h2>
+  <p class="small">IDEA: Lai &amp; Massey (ETH Zürich). AES: Rijndael (Daemen &amp; Rijmen), FIPS 197; each round = SubBytes, ShiftRows, MixColumns, AddRoundKey.</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Cipher</th><th>Block</th><th>Key</th><th>Rounds</th><th class="l">Structure / note</th></tr>
+    <tr><td class="l">DES</td><td>64</td><td>56</td><td>16</td><td class="l">Feistel</td></tr>
+    <tr><td class="l"><b>IDEA</b> 1991</td><td>64</td><td class="red"><b>128</b></td><td>8 + ½</td><td class="l">XOR, + mod 2<sup>16</sup>, × mod 2<sup>16</sup>+1; PGP</td></tr>
+    <tr><td class="l"><b>AES</b> 2001</td><td>128</td><td>128/192/256</td><td class="red"><b>10/12/14</b></td><td class="l">SPN (Rijndael)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> DES "<b>64-56-16</b>" (block, key, rounds). IDEA "<b>64-128-8</b>". AES rounds "<b>10-12-14</b>" = key/32 + 6.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> IDEA is <b>not Feistel</b>: 6 subkeys × 8 rounds + 4 (half-round) = <b>52</b> subkeys. AES is not Feistel either.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: public key ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Public-key algorithms</span></div>
+  <h2><span class="no">14</span>Public-Key Cryptography</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Idea</span> Each user has a <span class="hl">public key</span> (published) and a <span class="hl">private key</span> (secret). For confidentiality: encrypt with the receiver's public key, decrypt with the receiver's private key. Security rests on a hard problem: <b>factoring</b> (RSA) or the <b>discrete logarithm</b> (Diffie–Hellman, ElGamal, ECC). Diffie–Hellman (<span class="circ">1976</span>) came first, RSA (1977) next.</div>
+  <h3>RSA (Rivest, Shamir, Adleman, 1977)</h3>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ol class="steps small">
+      <li>Choose primes p, q; <b>n = p × q</b></li>
+      <li><span class="circ">φ(n) = (p − 1)(q − 1)</span></li>
+      <li>Choose e with 1 &lt; e &lt; φ(n), gcd(e, φ(n)) = 1</li>
+      <li>d = e⁻¹ mod φ(n), i.e. <b>e · d ≡ 1 (mod φ(n))</b></li>
+      <li>Public key (e, n) · private key (d, n)</li>
+      <li>Encrypt C = M<sup>e</sup> mod n · decrypt M = C<sup>d</sup> mod n</li>
+    </ol>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> p = 3, q = 11 → n = 33, φ = 2 × 10 = 20.<br>e = 7 (gcd(7, 20) = 1). 7d ≡ 1 (mod 20): 7 × 3 = 21 = 20 + 1 → <b>d = 3</b>.<br>M = 2: C = 2<sup>7</sup> mod 33 = 128 − 99 = <span class="circ">29</span>.<br>Check: 29<sup>3</sup> mod 33; 29 ≡ −4, (−4)<sup>3</sup> = −64 ≡ −64 + 66 = <b>2</b> ✓</div>
+  </div>
+  <p class="small">Real keys: n of <b>2048 bits</b> or more. RSA is slow, so it is used to exchange a session key or to sign (see the Authentication &amp; Digital Signatures lesson), while AES encrypts the bulk data: the <span class="hl">hybrid</span> scheme used by TLS and PGP.</p>
+  <h3>Diffie–Hellman key exchange</h3>
+  <figure class="doodle"><svg viewBox="0 0 640 140" width="640">
+    <g class="w">
+      <rect x="10" y="20" width="170" height="100" rx="12" class="ink fill-b"/>
+      <rect x="460" y="20" width="170" height="100" rx="12" class="ink fill-b"/>
+      <rect x="235" y="10" width="170" height="36" rx="10" class="ink-k fill-y"/>
+      <path class="ink-g" d="M182,62 H456" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M458,92 H184" marker-end="url(#ahp)"/>
+    </g>
+    <text x="320" y="33" text-anchor="middle" class="s w6">public: p = 23, g = 5</text>
+    <text x="95" y="42" text-anchor="middle" class="w6">Alice: a = 4</text><text x="95" y="66" text-anchor="middle" class="s">A = 5⁴ mod 23 = 4</text><text x="95" y="108" text-anchor="middle" class="r s w6">K = 10⁴ mod 23 = 18</text>
+    <text x="545" y="42" text-anchor="middle" class="w6">Bob: b = 3</text><text x="545" y="66" text-anchor="middle" class="s">B = 5³ mod 23 = 10</text><text x="545" y="108" text-anchor="middle" class="r s w6">K = 4³ mod 23 = 18</text>
+    <text x="320" y="56" text-anchor="middle" class="g s">sends A = 4</text><text x="320" y="86" text-anchor="middle" class="p s">sends B = 10</text>
+    <text x="320" y="134" text-anchor="middle" class="r s">both get K = g^(ab) mod p = 18; a, b and K never cross the wire</text>
+  </svg><figcaption>key agreement over an open channel</figcaption></figure>
+  <div class="ex small"><span class="lbl">Check the arithmetic ✍</span> 5⁴ = 625 = 27 × 23 + 4 → A = 4. 5³ = 125 = 5 × 23 + 10 → B = 10. Alice: 10² = 100 ≡ 8, 8² = 64 ≡ <b>18</b>. Bob: 4³ = 64 ≡ <b>18</b> ✓</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Plain Diffie–Hellman <b>agrees on a key; it does not encrypt</b> and has no authentication, so it falls to a <b>man-in-the-middle</b> attack. A and B are public values, not the key.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> RSA: "<b>Public Encrypts, Private Decrypts</b>" for secrecy. <b>ECC</b>: 256-bit ECC ≈ 3072-bit RSA ≈ AES-128 strength, so much smaller keys.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Ports 16 bits: 0–1023 well-known</p><p>TCP = 6, UDP = 17 (IP protocol no.)</p>
+      <p>TCP header 20–60 B · HLEN × 4</p><p>UDP header 8 B · max payload 65,507 B</p>
+      <p>SYN → SYN+ACK → ACK; SYN/FIN use 1 seq no.</p><p>TIME_WAIT = 2 MSL · 11 TCP states</p>
+      <p>window = min(rwnd, cwnd) · rate ≤ W/RTT</p><p>RTO = SRTT + 4 · RTTVAR</p>
+      <p>slow start ×2 per RTT · CA +1 MSS per RTT</p><p>timeout: cwnd = 1 · 3 dup ACKs: cwnd = ½</p>
+      <p>ATM cell 53 = 5 + 48 · AAL5 trailer 8 B</p><p>symmetric keys n(n − 1)/2 · public 2n</p>
+      <p>DES 64/56/16 · 3DES 168 (≈112)</p><p>IDEA 64/128/8.5, 52 subkeys</p>
+      <p>AES 128 block; 10/12/14 rounds</p><p>RSA φ = (p − 1)(q − 1), ed ≡ 1 mod φ</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Transport layer: process-to-process delivery</li>
+      <li>TCP is full duplex, byte-stream</li>
+      <li>Persist timer: zero-window deadlock</li>
+      <li>Nagle = sender side, Clark = receiver side</li>
+      <li>Fast retransmit: 3 duplicate ACKs</li>
+      <li>Reno adds fast recovery to Tahoe</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>AAL1 = CBR; AAL5 = IP over ATM</li>
+      <li>Caesar = substitution; rail fence = transposition</li>
+      <li>DES S-box: 6 bits in, 4 bits out</li>
+      <li>IDEA used in PGP</li>
+      <li>RSA rests on factoring n</li>
+      <li>DH: key exchange, open to MITM</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> HLEN counts 4-byte words · ack no. = next byte expected · "slow" start is exponential · Reno: timeout → 1, dup ACKs → half · UDP checksum optional only in IPv4 · DES key 64 bits written, 56 effective · IDEA and AES are not Feistel · Double DES ≈ single DES strength · DH does not encrypt</div>
+  <div class="trick"><span class="lbl">All tricks together</span> URG ACK PSH RST SYN FIN = "Unskilled Attackers Pester Real Security Folks" · knock, knock-back, enter · whoever says goodbye first waits (TIME_WAIT) · timeout = start over, dup ACKs = halve · AAL 1 constant, 2 variable, 5 data · 64-56-16, 64-128-8, 10-12-14 · Public Encrypts, Private Decrypts</div>
+  <figure class="doodle"><svg viewBox="0 0 600 100" width="600">
+    <g class="w">
+      <rect x="10" y="20" width="130" height="50" rx="10" class="ink fill-b"/>
+      <rect x="230" y="20" width="140" height="50" rx="10" class="ink-r fill-r"/>
+      <rect x="460" y="20" width="130" height="50" rx="10" class="ink-g fill-g"/>
+      <path class="ink-k" d="M142,45 H226 M372,45 H456" marker-end="url(#ahb)"/>
+    </g>
+    <text x="75" y="42" text-anchor="middle" class="w6">RSA / DH</text><text x="75" y="60" text-anchor="middle" class="s">share session key</text>
+    <text x="300" y="42" text-anchor="middle" class="r w6">AES session key</text><text x="300" y="60" text-anchor="middle" class="s">bulk encryption</text>
+    <text x="525" y="42" text-anchor="middle" class="g w6">over TCP 443</text><text x="525" y="60" text-anchor="middle" class="s">reliable stream</text>
+    <text x="300" y="92" text-anchor="middle" class="p s">one HTTPS session uses the whole lesson</text>
+  </svg><figcaption>hybrid encryption in TLS</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Transport &amp; Crypto</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Size of the UDP header:<ol class="opts"><li>20 bytes</li><li>8 bytes</li><li>16 bytes</li><li>4 bytes</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Which TCP flag opens a connection?<ol class="opts"><li>FIN</li><li>RST</li><li>PSH</li><li>SYN</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>After a retransmission timeout, TCP sets cwnd to:<ol class="opts"><li>1 MSS</li><li>half of cwnd</li><li>ssthresh + 3</li><li>unchanged</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>The AAL most used to carry IP over ATM:<ol class="opts"><li>AAL1</li><li>AAL2</li><li>AAL3/4</li><li>AAL5</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>DES block size and effective key length:<ol class="opts"><li>64 / 56 bits</li><li>128 / 128 bits</li><li>64 / 128 bits</li><li>56 / 64 bits</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>The key length of IDEA:<ol class="opts"><li>56 bits</li><li>64 bits</li><li>128 bits</li><li>256 bits</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Number of rounds in AES-256:<ol class="opts"><li>10</li><li>12</li><li>14</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>In RSA with p = 3 and q = 11, φ(n) is:<ol class="opts"><li>33</li><li>20</li><li>22</li><li>30</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>TCP fast retransmit is triggered by:<ol class="opts"><li>a timeout</li><li>3 duplicate ACKs</li><li>a zero window</li><li>an RST</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Ports 0–1023 are called:<ol class="opts"><li>well-known</li><li>registered</li><li>dynamic</li><li>ephemeral</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-d · 3-a · 4-d · 5-a · 6-c · 7-c · 8-b · 9-b · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Explain slow start and congestion avoidance. With ssthresh = 8 MSS and cwnd = 1 at round 1, a timeout occurs when cwnd = 12. Trace cwnd up to round 13. <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>Slow start: cwnd += 1 MSS per ACK, so it doubles every RTT until it reaches ssthresh <i class="mk">2</i></li>
+    <li>Congestion avoidance: cwnd += 1 MSS per RTT (additive increase); loss → multiplicative decrease <i class="mk">2</i></li>
+    <li>Rounds 1–8: 1, 2, 4, <b>8</b>, 9, 10, 11, <b>12</b> → timeout <i class="mk">2</i></li>
+    <li>ssthresh = 12/2 = <b>6</b>, cwnd = 1. Rounds 9–13: 1, 2, 4, <span class="circ">6</span> (capped at ssthresh), 7 <i class="mk">2</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can draw the TCP header with field sizes</li>
+        <li>Can draw the handshake and close with seq/ack numbers</li>
+        <li>Can trace cwnd through a timeout and 3 dup ACKs</li>
+        <li>Can do an RSA and a DH example by hand</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① TCP vs UDP with 2 apps each<br>② AAL types with uses<br>③ DES round structure<br>④ RSA: p = 5, q = 11, e = 3 → d = 27</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

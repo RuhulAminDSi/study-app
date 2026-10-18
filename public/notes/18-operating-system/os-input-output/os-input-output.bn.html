@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ইনপুট/আউটপুট, ডিস্ক ও ঘড়ি: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title" style="margin-top:1mm"><span class="u">ইনপুট/আউটপুট, ডিস্ক ও ক্লক</span></h1>
+  <p class="subtitle">কন্ট্রোলার · ইন্টারাপ্ট · DMA · ডিস্কের সময় ও শিডিউলিং · RAID · ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 250" width="580">
+      <g class="w">
+        <ellipse cx="320" cy="116" rx="94" ry="34" class="ink-k fill-y"/>
+        <path class="ink" d="M246,102 L180,62 M246,130 L180,172 M320,82 L320,46 M394,102 L460,62 M394,130 L460,172 M320,150 L320,186 M226,116 L186,116 M414,116 L454,116"/>
+        <rect x="68" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="241" y="14" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="412" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="22" y="100" width="152" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="462" y="100" width="154" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="68" y="176" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="241" y="190" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="412" y="176" width="158" height="32" rx="12" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="115" text-anchor="middle" class="k l">I/O + DISKS</text><text x="320" y="134" text-anchor="middle" class="bn r s">টপিক মাইন্ড-ম্যাপ</text>
+      <text x="147" y="46" text-anchor="middle" class="bn s" style="font-size:11px">কন্ট্রোলার ·</text><text x="147" y="59" text-anchor="middle" class="bn s" style="font-size:11px">রেজিস্টার</text>
+      <text x="320" y="35" text-anchor="middle" class="bn r w6">পোলিং · DMA ★</text>
+      <text x="491" y="46" text-anchor="middle" class="bn s" style="font-size:11px">ইন্টারাপ্ট ·</text><text x="491" y="59" text-anchor="middle" class="bn s" style="font-size:11px">ব্লক বনাম ক্যারেক্টার</text>
+      <text x="98" y="112" text-anchor="middle" class="bn g w6" style="font-size:12px">I/O স্তর</text><text x="98" y="126" text-anchor="middle" class="bn g s" style="font-size:11px">৪ স্তর</text>
+      <text x="539" y="112" text-anchor="middle" class="bn r w6" style="font-size:12px">শিডিউলিং ★</text><text x="539" y="126" text-anchor="middle" class="bn r s" style="font-size:11px">বাফারিং</text>
+      <text x="147" y="197" text-anchor="middle" class="bn r w6" style="font-size:12px">ডিস্কের গঠন ★</text><text x="147" y="210" text-anchor="middle" class="bn s" style="font-size:11px">সিক + রোটেশন</text>
+      <text x="320" y="211" text-anchor="middle" class="bn w6" style="font-size:13px">SCAN ট্রেস</text>
+      <text x="491" y="197" text-anchor="middle" class="bn r w6" style="font-size:12px">RAID · টার্মিনাল</text><text x="491" y="210" text-anchor="middle" class="bn r s" style="font-size:11px">ক্লক · টাইমার</text>
+      <text x="320" y="238" text-anchor="middle" class="bn s" style="font-size:11px">· অ্যাক্সেস টাইম: সিক + রোটেশনাল ডিলে + ট্রান্সফার · FCFS / SSTF / SCAN / C-SCAN / LOOK</text>
+      <text x="320" y="248" text-anchor="middle" class="bn s" style="font-size:11px">· ফরম্যাটিং, ব্যাড ব্লক, বুট ব্লক · RAID 0/1/5/6/10 · SSD বনাম ম্যাগনেটিক ডিস্ক</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = যে স্তর থেকে প্রথম প্রশ্নগুলো আসে</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;font-size:11pt"><b>হাই-ইল্ড তালিকা</b><br>① অ্যাক্সেস = সিক + ½ রোটেশন + ট্রান্সফার<br>② ½ রোটেশন = <b>30 ÷ rpm</b> সেকেন্ড<br>③ ট্রান্সফার = বাইট ÷ ট্রান্সফার রেট<br>④ CPU ছোঁয় শুধু কন্ট্রোলারের <b>রেজিস্টার</b><br>⑤ পোর্ট-ম্যাপড = নিজস্ব IN/OUT ঠিকানা<br>⑥ DMA = প্রতি ব্লকে <b>একটি</b> ইন্টারাপ্ট<br>⑦ SSTF ভোকে · SCAN ন্যায্য · C-SCAN সমান<br>⑧ RAID 5 = (N − 1) ডিস্ক, ১টি বাদ যায়</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">সিলেবাসে আছে "<span class="hl">Input/Output: hardware, software, disk, terminals, clocks</span>"। মেমোরি ম্যানেজমেন্ট মেমোরি লেসনে, ফাইল বরাদ্দ ফাইল সিস্টেম লেসনে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>I/O হার্ডওয়্যার ও রেজিস্টার … পৃ. ২</li><li>পোলিং, ইন্টারাপ্ট, DMA … পৃ. ৩</li><li>I/O সফটওয়্যারের স্তর … পৃ. ৪</li><li>শিডিউলিং ও বাফারিং … পৃ. ৫</li></ul>
+    <ul class="tick"><li>ডিস্কের গঠন ও সময় … পৃ. ৬</li><li>ডিস্ক শিডিউলিং ট্রেস … পৃ. ৭</li><li>ফরম্যাটিং, বুট ব্লক, RAID … পৃ. ৮</li><li>টার্মিনাল ও ক্লক … পৃ. ৯ · রাতের পাতা পৃ. ১০ · অনুশীলন পৃ. ১১</li></ul>
+  </div>
+  <div class="def tiny"><span class="lbl">এই পুরো লেসনের উদ্দেশ্য</span> প্রতিটি I/O কাজ আসলে একটি দীর্ঘ অপেক্ষা — রেজিস্টারে মাইক্রোসেকেন্ড, ডিস্কে মিলিসেকেন্ড — এবং পুরো বিষয়টি হলো <span class="circ">ডিভাইস প্রস্তুত না হওয়া পর্যন্ত CPU-কে খাটিয়ে রাখা</span>র শিল্প।</div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: I/O hardware ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>হার্ডওয়্যার, রেজিস্টার ও ইন্টারাপ্ট</span></div>
+  <h2><span class="no">১</span>I/O হার্ডওয়্যার: ডিভাইস, কন্ট্রোলার ও রেজিস্টার</h2><span class="tag">মূল বিষয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>I/O</b> বলতে কম্পিউটার ও বাইরের জগৎ — কীবোর্ড, প্রিন্টার, ডিস্ক, নেটওয়ার্ক — এর মধ্যে যেকোনো ডেটা স্থানান্তরকে বোঝায়। এ কাজ করে একটি <b>কন্ট্রোলার</b> (I/O সাবসিস্টেম, অ্যাডাপ্টার বা ইন্টারফেস কার্ড), যার তিনটি কাজ: এটি <span class="hl">ডিভাইস ও মেইন মেমোরির মধ্যে ডেটা নিয়ে যায়</span>, ডিভাইসের গতি লুকিয়ে রাখে, এবং ট্রান্সফার চলাকালীন CPU-কে <b>অন্য কাজ করতে দেয়</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,214px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 164" width="228">
+      <g class="w">
+        <rect x="10" y="8" width="96" height="34" rx="6" class="ink-k fill-y"/>
+        <rect x="10" y="52" width="96" height="30" rx="5" class="ink fill-b"/>
+        <rect x="10" y="90" width="96" height="30" rx="5" class="ink fill-b"/>
+        <rect x="10" y="128" width="96" height="30" rx="5" class="ink-r fill-r"/>
+        <rect x="168" y="40" width="100" height="80" rx="8" class="ink-g fill-g"/>
+        <ellipse cx="218" cy="60" rx="26" ry="13" class="ink"/>
+        <path class="ink" d="M106,25 L166,60 M106,67 L166,72 M106,105 L166,88 M106,143 L166,100"/>
+      </g>
+      <text x="58" y="22" text-anchor="middle" class="bn k w6" style="font-size:13px">CPU</text><text x="58" y="36" text-anchor="middle" class="bn s" style="font-size:10.5px">কমান্ড দেয়</text>
+      <text x="58" y="66" text-anchor="middle" class="bn k w6" style="font-size:12px">কন্ট্রোল রেজি.</text>
+      <text x="58" y="104" text-anchor="middle" class="bn k w6" style="font-size:12px">স্ট্যাটাস রেজি.</text>
+      <text x="58" y="141" text-anchor="middle" class="bn r w6" style="font-size:12px">ডেটা রেজি.</text>
+      <text x="218" y="106" text-anchor="middle" class="bn g w6" style="font-size:13px">কন্ট্রোলার</text><text x="218" y="118" text-anchor="middle" class="bn g s" style="font-size:10.5px">বাফার করে · ত্রুটি ধরে</text>
+      <text x="218" y="52" text-anchor="middle" class="bn s" style="font-size:10.5px">ডিস্ক / প্রিন্টার</text>
+    </svg><figcaption>একটি ডিভাইসের প্রতি CPU-র দৃষ্টিভঙ্গি হলো <b>তিনটি রেজিস্টার</b> আর একটি ইন্টারাপ্ট লাইন</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">অংশ</th><th class="l">আসলে কী</th></tr>
+      <tr><td class="l"><b>ডিভাইস</b></td><td class="l">আসল কাজ করে এমন ভৌত একক: হেড, ড্রাম, প্রিন্ট হেড, কী</td></tr>
+      <tr><td class="l"><b>কন্ট্রোলার</b></td><td class="l">মধ্যস্বামী — সাধারণ কমান্ড নেয়, বাফার করে, ত্রুটি জানায়</td></tr>
+      <tr><td class="l"><b>কন্ট্রোল রেজিস্টার</b></td><td class="l">পরের কাজ কী (পড়া, লেখা, সিলিন্ডারে যাওয়া)</td></tr>
+      <tr><td class="l"><b>স্ট্যাটাস রেজিস্টার</b></td><td class="l">কেমন চলছে: <span class="circ">বিজি, রেডি, এরর</span> — CPU এটাই পড়ে সিদ্ধান্ত নেয়</td></tr>
+      <tr><td class="l"><b>ডেটা রেজিস্টার</b></td><td class="l">এক শব্দের বাফার, যেখান দিয়ে বাইট CPU ও ডিভাইসের মধ্যে যায়</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ডিভাইস অ্যাড্রেসিং</th><th class="l">পোর্ট-ম্যাপড (আইসোলেটেড) I/O</th><th class="l">মেমোরি-ম্যাপড I/O</th></tr>
+    <tr><td class="l"><b>রেজিস্টার কোথায়</b></td><td class="l"><span class="hl">আলাদা পোর্ট ঠিকানা স্পেসে</span> — x86-এ 2¹⁶ = 64 K পোর্ট</td><td class="l">সাধারণ <b>মেমোরি ঠিকানায়</b> স্বাভাবিক অ্যাড্রেস স্পেসের ভেতরে</td></tr>
+    <tr><td class="l"><b>কোন ইনস্ট্রাকশন</b></td><td class="l">শুধু বিশেষ <b>IN</b> / <b>OUT</b> — অল্প অ্যাড্রেসিং মোড</td><td class="l">সাধারণ <b>লোড</b> / <b>স্টোর</b>; সব অ্যাড্রেসিং মোড কাজ করে</td></tr>
+    <tr><td class="l"><b>খরচ কোথায়</b></td><td class="l">আলাদা ইনস্ট্রাকশন সেট; <span class="circ">মেমোরি নষ্ট হয় না</span></td><td class="l"><span class="red">মেমোরি অ্যাড্রেস স্পেস খায়</span>, আর ওগুলো কখনো ক্যাশ করা যাবে না</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">ইন্টারাপ্ট</span> <b>ইন্টারাপ্ট</b> হলো ডিভাইসের CPU-কে ডাকার পদ্ধতি — উল্টোটা নয়। তিন প্রকার: <b>ট্র্যাপ</b> (ভেতরের এরর — শূন্যে ভাগ, পেজ ফল্ট), <b>ইন্টারাপ্ট</b> (ডিভাইস থেকে, <span class="hl">অ্যাসিঙ্ক্রোনাস</span>), <b>সফটওয়্যার ইন্টারাপ্ট</b> (সিস্টেম কল)। প্রতিটি হ্যান্ডলারের ঠিকানা CPU একটি <b>ভেক্টর টেবিলে</b> রাখে; একসঙ্গে কয়েকটি আসলে <b>প্রায়োরিটি</b> ঠিক করে কে আগে চলবে।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) মেমোরি-ম্যাপড I/O ডিভাইসকে মেমোরি <b>বানায় না</b> — ঠিকানাটা এখনো কন্ট্রোলারের রেজিস্টারেই পড়ে। (ii) ছোট ইনস্ট্রাকশন সেট কারোটা বলে ওটা <b>পোর্ট-ম্যাপড</b> I/O; অ্যাড্রেস স্পেস খায় সেটা <b>মেমোরি-ম্যাপড</b>। (iii) ইন্টারাপ্ট <b>অ্যাসিঙ্ক্রোনাস</b>; ট্র্যাপ ঘটে চলতে থাকা ইনস্ট্রাকশন থেকেই।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>তিনটি রেজিস্টার, একটি টেবিল।</b>" কন্ট্রোল বলে <i>কী</i>, স্ট্যাটাস বলে <i>কখন</i>, ডেটা বলে <i>কোন বাইট</i>; ভেক্টর টেবিল বলে <i>কোথায় লাফ দিতে হবে</i>। এই লেসনের বাকি সবই হলো কন্ট্রোল থেকে স্ট্যাটাস পর্যন্ত অপেক্ষা এড়ানোর একটি কৌশল। আধুনিক মেশিনে একটি PCIe/USB/SATA কন্ট্রোলার চিপের পেছনে সব একই থাকে — CPU তার কাছে যায় <b>মেমোরি-ম্যাপড</b> রেজিস্টার ও MSI-X ইন্টারাপ্ট দিয়ে।</div>
+  <div class="pg-no">২</div>
+</section>
+<!-- ============ SHEET 3: polling, interrupts, DMA ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>তিনভাবে ডেটা সরানো</span></div>
+  <h2><span class="no">২</span>পোলিং, ইন্টারাপ্ট-চালিত I/O ও ডিএমএ</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> এই পাতার প্রশ্নটা সবসময় একটাই: <span class="hl">বাইগুলো কে বহন করবে, আর তার সময় খরচ কে দেবে?</span> <b>পোলিং</b>-এ CPU বহন করে এবং পুরো অপেক্ষার খরচও দেয়; <b>ইন্টারাপ্ট-চালিত I/O</b>-তে প্রতিবার এক বাইট নিয়ে CPU বহন করে ও প্রতিবার একটি হ্যান্ডলারের খরচ দেয়; <b>DMA</b>-তে <b>কন্ট্রোলার</b> পুরো ব্লক বহন করে আর CPU শুধু <span class="circ">শেষে একবার</span> খরচ দেয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 120" width="228">
+      <g class="w">
+        <rect x="8" y="8" width="284" height="22" rx="5" class="ink-r fill-r"/>
+        <rect x="8" y="38" width="284" height="22" rx="5" class="ink fill-y"/>
+        <rect x="8" y="68" width="284" height="22" rx="5" class="ink-g fill-g"/>
+        <path class="ink" d="M150,30 L150,36 M150,60 L150,66" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M150,104 L150,30" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="20" y="23" class="bn r w6 s" style="font-size:11px">পোলিং — CPU ঘুরপাক খায়, নিজেই সব বাইট সরায়</text>
+      <text x="20" y="53" class="bn w6 s" style="font-size:11px">ইন্টারাপ্ট — প্রতি বাইটে একটি হ্যান্ডলার</text>
+      <text x="20" y="83" class="bn g w6 s" style="font-size:11px">DMA — ব্লকটা কন্ট্রোলার সরায়, শেষে ১ ইন্টারাপ্ট</text>
+      <text x="150" y="114" text-anchor="middle" class="bn g s k" style="font-size:10.5px">শুধু শেষ সারিটি বড় হলেও CPU-র সময় বাড়ে না</text>
+    </svg><figcaption>একই 1 KB ব্লক, একই ডিভাইস — বদলায় শুধু CPU-র অংশ</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">পদ্ধতি</th><th class="l">ডেটা কে সরায়</th><th class="l">ইন্টারাপ্ট</th><th class="l">মূল্যায়ন</th></tr>
+        <tr><td class="l"><b>পোলিং</b></td><td class="l">CPU, এক শব্দ করে</td><td class="l">কোনোটি নয়</td><td class="l"><span class="red">CPU ঘুরপাক করে</span></td></tr>
+        <tr><td class="l"><b>ইন্টারাপ্ট-চালিত</b></td><td class="l">প্রতিবার ইন্টারাপ্টে CPU</td><td class="l"><span class="hl">১ / বাইট</span></td><td class="l">CPU বাকি সময় কাজ করে; <b>~1 MB/s-এর নিচে পোলিং-এর চেয়ে খারাপ</b></td></tr>
+        <tr><td class="l"><b>DMA</b> ★</td><td class="l">কন্ট্রোলার, পুরো ব্লক</td><td class="l"><span class="circ">১ / ব্লক</span></td><td class="l">ডিস্ক বা নেটওয়ার্ক কার্ডের জন্য একমাত্র উপযুক্ত</td></tr>
+      </table>
+      <div class="def tiny" style="margin-top:1mm"><span class="lbl">ব্লক বনাম ক্যারেক্টার ডিভাইস</span> একটি <b>ব্লক ডিভাইস</b> (ডিস্ক, SSD) ডেটা রাখে <span class="hl">নির্দিষ্ট আকারের ব্লকে</span> এবং তা <b>যেকোনো ক্রমে</b> পৌঁছানো যায়, তাই বাফারিং, ক্যাশিং ও I/O শিডিউলিং সবই কাজে লাগে। একটি <b>ক্যারেক্টার ডিভাইস</b> (কীবোর্ড, মাউস, টার্মিনাল, প্রিন্টার) একটি <b>ধারাবাহিক বাইট স্ট্রিম</b> দেয় — সেখানে সিক নেই, ব্লক নেই, তাই শিডিউল বা ক্যাশ করার কিছু নেই। দুটিই OS-এ ফাইল হিসেবে দেখা যায়।</div>
+    </div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">DMA বাস ভাগ করে নেয় যেভাবে — আর দুই ধরনের ডিভাইস</span>
+    <div class="fgrid tiny">
+      <p><b>সাইকেল স্টিলিং</b> — একবারে এক মেমোরি সাইকেল নিয়ে বাস ফেরত দেয়; CPU ধীর হয় কিন্তু <b>থামে না</b></p>
+      <p><b>বার্স্ট মোড</b> — কন্ট্রোলারের নিজস্ব FIFO থেকে পুরো ব্লকের জন্য বাস ধরে রাখে; <span class="circ">সবচেয়ে বেশি থ্রুপুট</span></p>
+      <p><b>ট্রান্সপারেন্ট মোড</b> — CPU ব্যবহার না করলেই বাস নেয়; চাকরি চললে CPU <b>থামে</b></p>
+    </div></div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ 1 KB আসলে কত খরচ?</span> একটি ডিভাইস <b>প্রতি 1 µs-এ একটি বাইট</b> (1 MB/s) দেয়; ব্লক <b>1 KB</b>; একটি হ্যান্ডলারে CPU-র খরচ <b>2 µs</b>। <b>(ক)</b> ট্রান্সফারে সময় লাগে 1024 µs। <b>(খ)</b> <b>পোলিং:</b> CPU পুরো 1024 µs ব্যস্ত থাকে বাইট সরাতে। <b>(গ)</b> <b>ইন্টারাপ্ট-চালিত:</b> 1024 × 2 µs = <span class="circ">2048 µs CPU</span> — ট্রান্সফারের <b>দ্বিগুণ</b>, তাই এই গতিতে <b>পোলিং করলে দ্রুত</b>। <b>(ঘ)</b> <b>DMA:</b> ১টি ইন্টারাপ্ট = 1024 বাইটের জন্য 2 µs CPU, অর্থাৎ <b>0.2 %</b> ওভারহেড।</div>
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) "ইন্টারাপ্ট-চালিত সবসময় পোলিং-এর চেয়ে ভালো" এটি <b>মিথ্যা</b>: কয়েকটি ইনস্ট্রাকশনের চেয়ে একটি হ্যান্ডলার বেশি CPU সময় নেয়। (ii) DMA-তেও CPU-কে ট্রান্সফার <b>সাজাতে</b> হয় — CPU সরে যায় না, শুধু বাইট ধরে বদলানোর কাজটুকু যায়।</div>
+      <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>ধীরে ঘোরো, দ্রুতে ইন্টারাপ্ট, আরও দ্রুতে DMA।</b>" আর "<b>সাইকেল চুরি, বার্স্ট আঁকড়ে, চুপচাপ অপেক্ষা।</b>" — সাইকেল স্টিলিং, বার্স্ট ও ট্রান্সপারেন্ট তিন বাক্যে।</div>
+    </div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">আইটি সংযোগ</span> মাইক্রোপ্রসেসর লেসনের 8237 DMA কন্ট্রোলার ঠিক এই কাজটিই করে — চারটি চ্যানেল, প্রতিটি দিয়ে একটি করে ডিভাইস।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: I/O software stack ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>I/O সফটওয়্যারের স্তর</span></div>
+  <h2><span class="no">৩</span>I/O সফটওয়্যারের চারটি স্তর</h2><span class="tag">লিখিত প্রশ্নের প্রিয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> I/O সফটওয়্যার <span class="hl">চারটি স্তরে</span> তৈরি, আর পুরো নকশাটাই একটি প্রশ্নের উত্তর: <b>হার্ডওয়্যার-নির্দিষ্ট জ্ঞান কতদূর নামে যায়?</b> কন্ট্রোলারের ঠিক উপরের স্তরটিই মাত্র জানে ডিভাইসটি আছে, তাই নতুন ডিস্ক মানে <b>একটি নতুন ড্রাইভার</b> — নতুন প্রোগ্রাম নয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,210px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 116" width="202">
+      <g class="w">
+        <rect x="6" y="6" width="288" height="22" rx="5" class="ink fill-y"/>
+        <rect x="6" y="34" width="288" height="22" rx="5" class="ink fill-y"/>
+        <rect x="6" y="62" width="288" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="6" y="90" width="288" height="22" rx="5" class="ink-r fill-r"/>
+      </g>
+      <text x="18" y="21" class="bn w6 s" style="font-size:11px">১ · ইউজার-লেভেল I/O লাইব্রেরি</text>
+      <text x="18" y="49" class="bn w6 s" style="font-size:11px">২ · ডিভাইস-ইন্ডিপেন্ডেন্ট সফটওয়্যার</text>
+      <text x="18" y="77" class="bn g w6 s" style="font-size:11px">৩ · ডিভাইস ড্রাইভার</text>
+      <text x="18" y="105" class="bn r w6 s" style="font-size:11px">৪ · ইন্টারাপ্ট হ্যান্ডলার</text>
+    </svg><figcaption>স্তরগুলো, <code>read()</code> কল করা প্রোগ্রাম থেকে ডিভাইস পর্যন্ত</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">স্তর</th><th class="l">কী করে</th></tr>
+        <tr><td class="l"><b>১ · ইউজার-লেভেল I/O সফটওয়্যার</b></td><td class="l">প্রোগ্রাম যে লাইব্রেরি বলে; আউটপুট লাইনে বাফার করে, ফরম্যাট করে, ইউজার ও কার্নেল স্পেসের মধ্যে নেয়</td></tr>
+        <tr><td class="l"><b>২ · ডিভাইস-ইন্ডিপেন্ডেন্ট স্তর</b></td><td class="l">সমান নাম ও প্রোটেকশন, ডিভাইস বরাদ্দ ও ফেরত, <b>বাফারিং</b>, ব্লকের আকার, ত্রুটির রিপোর্ট</td></tr>
+        <tr><td class="l"><b>৩ · ডিভাইস ড্রাইভার</b> ★</td><td class="l"><span class="circ">একমাত্র</span> হার্ডওয়্যার-সচেতন স্তর: সাধারণ অনুরোধকে কন্ট্রোলার কমান্ডে বদলায়, I/O শুরু করে, স্ট্যাটাস রেজিস্টার পড়ে</td></tr>
+        <tr><td class="l"><b>৪ · ইন্টারাপ্ট হ্যান্ডলার</b></td><td class="l">ইন্টারাপ্টের অপেক্ষায় থাকে, কনটেক্সট সংরক্ষণ ও ফেরত করে, ডিভাইস শনাক্ত করে, ডেটা সরায়, অপেক্ষায় থাকা প্রসেস জাগায়</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) বাফারিং ও ত্রুটি ব্যবস্থাপনা <b>ডিভাইস-ইন্ডিপেন্ডেন্ট</b> স্তরে, ড্রাইভারে নয়। (ii) <b>ড্রাইভার</b> কার্নেল কোড; <b>ইন্টারাপ্ট হ্যান্ডলার</b> স্তরের <b>সবচেয়ে নিচের</b> স্তর, প্রতি ইন্টারাপ্টে কার্নেল মোডে চলে।</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">কে কীর উত্তর দেয়</span>
+    <div class="fgrid tiny">
+      <p><b>ডিভাইসের নাম কে দেয়?</b> স্তর ২ — একটি টেবিল লজিক্যাল নামকে ফিজিক্যাল নামে মেলায়</p>
+      <p><b>ডিভাইস কে চেনে?</b> স্তর ৩, ড্রাইভার — আর কেউ নয়</p>
+      <p><b>ইন্টারাপ্টের অপেক্ষা কে করে?</b> স্তর ৪, হ্যান্ডলার</p>
+      <p><b>300 বাইটের লেখাকে পূর্ণ ব্লকে কে প্যাড করে?</b> স্তর ২</p>
+    </div>
+    <p class="tiny" style="margin-top:1mm"><b>কার্নেলের ভেতরের ড্রাইভার</b> — লিনাক্স — একটি খারাপ ড্রাইভার পুরো মেশিন নষ্ট করতে পারে, কারণ সেটি কার্নেলের ঠিকানাতেই চলে। <b>ইউজার মোডের ড্রাইভার</b> (আধুনিক GPU ও USB স্ট্যাক) ক্ষতি সীমাবদ্ধ রাখে: ড্রাইভার মরলে শুধু সেই ডিভাইসটি হারায়, মেশিন চালু থাকে; দাম হলো একটি বার্তা পাঠানো-পাওয়া।</p></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>লাইব্রেরি, সাধারণ, ড্রাইভার, হ্যান্ডলার।</b>" স্তরগুলো পড়ুন "<i>কে চেয়েছে, কী নিয়ম, হার্ডওয়্যার কীভাবে চলে, কে জাগিয়েছে</i>" হিসেবে। লিখিত প্রশ্নে প্রায় সবসময় এই চারটি এই ক্রমে চাইয়া যায় — "বাফারিং কোন স্তরে?" জিজ্ঞেস করলে উত্তর <b>দ্বিতীয়</b>, "ড্রাইভার কী জানে?" জিজ্ঞেস করলে উত্তর <b>তৃতীয়</b>।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">আইটি সংযোগ</span> নতুন ডিভাইসের জন্য মডিউল লোড করা — USB প্রিন্টার, গ্রাফিক্স কার্ড — মানে রান টাইমে ঢোকানো স্তর ৩, আর <span class="hl">এর উপরের কিছুই বদলায় না</span>। তাই একই প্রোগ্রাম যেকোনো ডিস্কের সঙ্গে কাজ করে।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: I/O scheduling, buffering, spooling ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>শিডিউলিং, বাফারিং ও স্পুলিং</span></div>
+  <h2><span class="no">৪</span>I/O শিডিউলিং, বাফারিং, ক্যাশিং ও স্পুলিং</h2><span class="tag">হাই-ইল্ড ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি ডিভাইস একসঙ্গে একটিই অনুরোধ সামলাতে পারে, তাই সেগুলো জমে থাকে একটি <b>ডিভাইস কিউ</b>-তে। <b>I/O শিডিউলিং</b> হলো পরেরটি কোনটি সামলানোর নীতি, আর এর উদ্দেশ্য হলো কোনো অনুরোধকে <b>ভোকা</b> না দেওয়া।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">I/O শিডিউলিং নীতি</th><th class="l">কী সামলায়</th><th class="l">মূল্যায়ন</th></tr>
+    <tr><td class="l"><b>FCFS / ফেয়ার-শেয়ার</b></td><td class="l">আসার ক্রমে, প্রতি প্রসেসকে একবার করে</td><td class="l">ন্যায্য; তবে একটি বড় সিক পিছনের সবকে আটকে দেয়</td></tr>
+    <tr><td class="l"><b>প্রায়োরিটি</b></td><td class="l">সর্বোচ্চ প্রায়োরিটির অনুরোধ আগে</td><td class="l">কম প্রায়োরিটি ভোকা খেতে পারে</td></tr>
+    <tr><td class="l"><b>SSTF</b> (সর্বনিম্ন সিক আগে)</td><td class="l">এখনকার অবস্থানের সবচেয়ে <b>কাছের</b> অনুরোধ</td><td class="l"><span class="circ">গড় অপেক্ষা সবচেয়ে কম</span>, কিন্তু দূরের অনুরোধ ভোকা খায়</td></tr>
+    <tr><td class="l"><b>EDF</b> (নিকটতম ডেডলাইন আগে)</td><td class="l">ডেডলাইন সবচেয়ে কাছের অনুরোধ</td><td class="l">সবচেয়ে ন্যায্য নীতি; রিয়েল-টাইম সেবায়</td></tr>
+    <tr><td class="l"><b>র‍্যান্ডম (নো-সিক)</b></td><td class="l">যেকোনো ক্রমে</td><td class="l">ডিস্কে খারাপ; <b>SSD-তে সেরা</b>, কারণ প্রতিটি ব্লক সমান দূরে</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,196px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 124" width="188">
+      <g class="w">
+        <rect x="10" y="10" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="150" y="10" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="10" y="48" width="120" height="28" rx="6" class="ink-g fill-g"/>
+        <rect x="150" y="48" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="10" y="86" width="120" height="28" rx="6" class="ink fill-y"/>
+        <rect x="150" y="86" width="120" height="28" rx="6" class="ink-r fill-r"/>
+        <path class="ink-r" d="M24,124 L262,124" marker-end="url(#ah)"/>
+      </g>
+      <text x="70" y="21" text-anchor="middle" class="bn w6 s" style="font-size:10.5px">ডিস্কে স্পুল</text><text x="70" y="33" text-anchor="middle" class="bn s" style="font-size:10px">আউটপুট রাখা</text>
+      <text x="210" y="21" text-anchor="middle" class="bn w6 s" style="font-size:10.5px">ডিমন</text><text x="210" y="33" text-anchor="middle" class="bn s" style="font-size:10px">একবারে একটি কাজ</text>
+      <text x="70" y="59" text-anchor="middle" class="bn w6 s" style="font-size:10.5px">প্রিন্টার</text>
+      <text x="210" y="59" text-anchor="middle" class="bn s" style="font-size:10.5px">সাময়িক একক</text>
+      <text x="210" y="71" text-anchor="middle" class="bn s" style="font-size:10.5px">মালিক</text>
+      <text x="70" y="97" text-anchor="middle" class="bn w6 s" style="font-size:10.5px">P1 P2 P3</text>
+      <text x="210" y="97" text-anchor="middle" class="bn r w6 s" style="font-size:10.5px">স্পুলার</text><text x="210" y="109" text-anchor="middle" class="bn r s" style="font-size:10px">কলার মুক্ত করে</text>
+    </svg><figcaption>স্পুলিং প্রিন্টার দ্রুত করে না — সে কখনো <b>খালি রাখে না</b></figcaption></figure>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">বাফারিং: তিন পদ্ধতি ও তার খরচ</span>
+        <div class="fgrid tiny">
+          <p><b>সিঙ্গেল</b>: ভরাট হয়, তারপর খালি হয় — দুই পাশ আলাদা</p>
+          <p><b>ডাবল</b>: একটি ভরাতে থাকে, অন্যটি খালি হতে থাকে</p>
+          <p><b>সার্কুলার</b>: একটি বলয়; ব্যবহৃত বাফার <b>আবার ব্যবহার</b> হয়</p>
+          <p>C = গণনার সময়, M = একটি ব্লক স্থানান্তরের সময়</p>
+        </div>
+        <p class="tiny" style="margin-top:0.8mm">T = <b>C + M</b> বাফার ছাড়া · <b>max(C,M) + M</b> সিঙ্গেল · <b>max(C,M)</b> ডাবল · nটি সার্কুলার বাফারে <b>max(C, M÷n) + M</b>।</p></div>
+      <div class="def tiny" style="margin-top:1mm"><span class="lbl">ক্যাশিং বনাম স্পুলিং</span> <b>ক্যাশিং</b> এমন একটি অনুলিপি রাখে যা সহজেই আবার আনা যায়, তাই এটি <i>পড়া</i> দ্রুত করে। <b>স্পুলিং</b> কোনো প্রসেসের <b>পুরো আউটপুট</b> ডিস্কে রাখে যাতে একান্ত ব্যবহৃত ডিভাইস ভাগ করা যায়। ক্যাশ <span class="circ">একই পাঠককে আবার দেয়</span>; স্পুলিং <span class="circ">অনেক প্রসেসকে দেয়</span>।</div>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ প্রিন্টারের কেস স্টাডি</span> একটি লেজার প্রিন্টার <b>প্রতি 10 s-এ ১ পৃষ্ঠা</b> করে (6 পৃষ্ঠা/মিনিট)। একটি প্রোগ্রাম 500 পৃষ্ঠার রিপোর্ট বানাতে প্রতি পৃষ্ঠায় <b>0.2 s</b> কাজ লাগে। <b>(ক)</b> লেখা তৈরি = 500 × 0.2 = <b>100 s</b>; ছাপা = 500 × 10 s = <span class="circ">5000 s ≈ 83.3 মিনিট</span>, তাই বাধা প্রিন্টারটি। <b>(খ)</b> <b>বাফার নয়:</b> 10 + 0.2 = 10.2 s প্রতি পৃষ্ঠা। <b>সিঙ্গেল:</b> max(0.2, 10) + 10 = 20 s প্রতি পৃষ্ঠা ⇒ 500 পৃষ্ঠায় <span class="red">10 000 s</span>, অর্থাৎ <b>বাফার না রাখলেও খারাপ</b>। <b>ডাবল:</b> max(0.2, 10) = 10 s প্রতি পৃষ্ঠা = 5000 s, কেবল ছাপার সময়। <b>(গ)</b> <b>স্পুলিং</b> হলে প্রোগ্রাম 100 s পরেই ফিরে যায় আর একটি ডিমন ধীরে ছাপে, ততক্ষণে আরও দশটি প্রোগ্রাম নিজের আউটপুট সারিবদ্ধ রাখতে পারে।</div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <b>SSTF হলো I/O শিডিউলিং, SJF হলো CPU শিডিউলিং</b> — দুটোই "সবচেয়ে ছোটটা আগে", কিন্তু ভিন্ন রিসোর্সের জন্য। (ii) ডাবল বাফারিং <b>গণনা ও ট্রান্সফার</b> একসঙ্গে চালায়; কোনোটাই দ্রুত করে না। (iii) ক্যাশ একই ডেটা আবার দেয়, স্পুলিং ভিন্ন প্রসেসকে দেয়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বাফার = ফাঁক বাঁধে, স্পুল = একান্ত ডিভাইস ভাগ করে, ক্যাশ = পুনরায় পড়া এড়ায়।</b>" সার্কুলার বাফার আসলে "আরও স্লটসহ ডাবল বাফার"।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: disk structure and timings ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>ডিস্কের গঠন ও সময়</span></div>
+  <h2><span class="no">৫</span>ডিস্কের গঠন ও অ্যাক্সেস সময়</h2><span class="tag">হিসাব ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> ম্যাগনেটিক ডিস্ক হলো একটি স্পিন্ডলে গাঁথা <b>প্লাটারের</b> স্তূপ, নির্দিষ্ট গতিতে ঘুরছে। ডেটা থাকে কেন্দ্রীয় <b>ট্র্যাকে</b>; প্রতিটি ট্র্যাক নির্দিষ্ট দৈর্ঘ্যের <b>সেক্টরে</b> কাটা, আর সেক্টরই সবচেয়ে ছোট স্থানান্তরযোগ্য একক; প্রতিটি সারফেসে একটি <b>রিড/রাইট হেড</b> থাকে; আর <b>প্রতিটি</b> সারফেসের একই ব্যাসার্ধের ট্র্যাকগুলো মিলে একটি <b>সিলিন্ডার</b> — যা হেড না সরিয়েই পড়া যায়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,228px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 168" width="218">
+      <g class="w">
+        <ellipse cx="94" cy="82" rx="56" ry="43" class="ink-k fill-y"/>
+        <ellipse cx="94" cy="82" rx="35" ry="27" class="ink"/>
+        <ellipse cx="94" cy="82" rx="16" ry="12" class="ink"/>
+        <path class="ink" d="M94,82 L94,39 M94,82 L94,125 M94,82 L150,82 M94,82 L38,82 M94,82 L140,53 M94,82 L140,111 M94,82 L48,53 M94,82 L48,111"/>
+        <path class="ink-r" d="M232,30 L100,80"/>
+        <rect x="88" y="72" width="15" height="17" rx="3" class="ink-r fill-r"/>
+        <ellipse cx="94" cy="82" rx="69" ry="54" class="ink-g" style="stroke-dasharray:4 3"/>
+        <path class="ink" d="M72,66 L40,32"/>
+        <path class="ink" d="M120,104 L154,136"/>
+        <path class="ink-g" d="M163,82 L196,150"/>
+        <path class="ink-r" d="M226,22 L258,14"/>
+      </g>
+      <text x="94" y="26" text-anchor="middle" class="bn w6 s" style="font-size:11px">প্লাটার</text>
+      <text x="10" y="28" class="bn s k" style="font-size:10.5px">ট্র্যাক</text>
+      <text x="156" y="140" class="bn s k" style="font-size:10.5px">সেক্টর</text>
+      <text x="200" y="154" class="bn g s k" style="font-size:10.5px">সিলিন্ডার</text>
+      <text x="260" y="10" text-anchor="end" class="bn r s k" style="font-size:10.5px">হেড ও আর্ম</text>
+      <text x="150" y="166" text-anchor="middle" class="bn s k" style="font-size:10.5px">প্রতি সারফেসে একটি হেড; সব হেড একসঙ্গে চলে</text>
+    </svg><figcaption>সিলিন্ডার কোনো আকৃতি নয় — একই ব্যাসার্ধের সব ট্র্যাকের সমষ্টি</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">পরিভাষা</th><th class="l">অর্থ</th></tr>
+        <tr><td class="l"><b>প্লাটার / সারফেস</b></td><td class="l">একটি চুম্বকযোগ্য ডিস্ক, এক পাশ ব্যবহারযোগ্য ⇒ <b>হেডের সংখ্যা = সারফেস</b></td></tr>
+        <tr><td class="l"><b>ট্র্যাক</b></td><td class="l">এক সারফেসের একটি বৃত্ত; <b>সারফেসপ্রতি ট্র্যাক = সিলিন্ডার</b></td></tr>
+        <tr><td class="l"><b>সেক্টর</b></td><td class="l"><span class="hl">স্থানান্তরের একক</span> — <b>512 B</b>, অথবা অ্যাডভান্সড ফরম্যাটে <b>4 KiB</b></td></tr>
+        <tr><td class="l"><b>ঠিকানা</b></td><td class="l"><b>CHS</b> = (সিলিন্ডার, হেড, সেক্টর); আধুনিক ডিস্ক <b>LBA</b> দেয়</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) পুরোনো ডিস্কে প্রতিটি ট্র্যাকে <b>সমান সেক্টর</b> থাকে; আধুনিকে <b>জোন বিট রেকর্ডিং</b> হয়, তাই বাইরের ট্র্যাকে <b>বেশি</b> সেক্টর। (ii) সিলিন্ডার একটি <b>ট্র্যাকের সমষ্টি</b>, কোনো আকৃতি নয়।</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">তিনটি সময় ও সেই একটি সূত্র যা দিয়ে প্রশ্ন হয়</span>
+    <div class="fgrid tiny">
+      <p><b>সিক টাইম</b> T<sub>s</sub> — হেড ট্র্যাকে নিয়ে যাওয়া</p>
+      <p><b>রোটেশনাল ডিলে</b> T<sub>r</sub> = <b>½ × 60 ÷ rpm</b> সে</p>
+      <p><b>ট্রান্সফার টাইম</b> T<sub>t</sub> = বাইট ÷ ট্রান্সফার রেট</p>
+      <p><b>অ্যাক্সেস টাইম</b> = T<sub>s</sub> + T<sub>r</sub> + T<sub>t</sub></p>
+    </div>
+    <p class="tiny" style="margin-top:1mm">যেহেতু <span class="circ">একটি সেক্টর এক ঘূর্ণনের যেকোনো বিন্দুতে এসে পৌঁছায়, তাই গড় রোটেশনাল ডিলেই এক ঘূর্ণনের অর্ধেক</span> — অর্থাৎ <b>T<sub>r</sub> = 30 ÷ rpm সেকেন্ড</b>, আর হিসাবের সবচেয়ে ছোট উপায় এটাই।</p></div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ গড় অ্যাক্সেস সময়</span> একটি ডিস্ক <b>7200 rpm</b>-তে ঘোরে, গড় সিক টাইম <b>4 ms</b>, ট্রান্সফার রেট <b>200 MB/s</b>, আর পড়া হয় একটি <b>4 KiB</b> ব্লক। <b>(ক)</b> এক ঘূর্ণন = 60 ÷ 7200 = <b>8.33 ms</b>, তাই গড় রোটেশনাল ডিলে = <span class="circ">4.17 ms</b>। <b>(খ)</b> ট্রান্সফার = 4096 B ÷ (200 × 10⁶ B/s) = 2.05 × 10⁻⁵ s = <b>0.02 ms</b>। <b>(গ)</b> গড় অ্যাক্সেস = 4 + 4.17 + 0.02 = <span class="circ">8.19 ms</span>। <b>(ঘ)</b> রোটেশনাল ডিলে 4.17 ÷ 8.19 ≈ মোটের <b>51 %</b> — প্রতিটি অ্যাক্সেসের অর্ধেক সময় কেবল <i>সেক্টরের অপেক্ষায়</i> যায়। <b>(ঙ)</b> <b>14400 rpm</b>-এ ডিলেই অর্ধেক হয়ে 2.08 ms, মোট <b>6.10 ms</b>; ট্রান্সফার রেট দ্বিগুণ করলে মাত্র 0.01 ms বাঁচে।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>সিক, স্পিন, শিপ।</b>" হেড সরানো, সেক্টরের অপেক্ষা, বাইট সরানো — এই ক্রমেই, আর সবসময় <b>যোগ</b> করতে হয়। "<b>30 ভাগ rpm</b>"-ই অর্ধেক ঘূর্ণনের অপেক্ষা সেকেন্ডে।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">বাস্তবে</span> ড্রাইভের নিজস্ব ইলেকট্রনিক্স এখন বেশিরভাগ সিক ঢেকে দেয়: এটি অনুরোধ নিজে সাজায় ও ছোট ক্যাশ রাখে, তাই OS যা দেখে তা মোটামুটি <b>8–10 ms</b>, হেড আসলে যতটা সরেছে তার উপর নির্ভর করে না।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+<!-- ============ SHEET 7: disk scheduling ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>ডিস্ক শিডিউলিং</span></div>
+  <h2><span class="no">৬</span>ডিস্ক শিডিউলিং: FCFS, SSTF, SCAN, C-SCAN, LOOK</h2><span class="tag">ট্রেস করো ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> অনুরোধ জমা হয় <b>সিলিন্ডার নম্বর</b> হিসেবে, আর ডিস্ক শিডিউলিং ঠিক করে হেড কোন ক্রমে সেগুলোর কাছে যাবে। মাপকাটি হলো <span class="hl">মোট হেড চলাচল</span> সিলিন্ডারে, কারণ প্রতিটি পেরোনো সিলিন্ডারের দাম একটি সিক। <b>SSTF</b> মোট চলাচল সবচেয়ে কমায় কিন্তু ভোকায়; <b>SCAN</b> প্রত্যেক অনুরোধকে <b>সীমিত অপেক্ষা</b> দেয় — লিখিত উত্তরে এই দোয়োটার দোটাই তুলনা করতে হয়।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অ্যালগরিদম</th><th class="l">কোন ক্রমে সামলায়</th><th class="l">মূল্যায়ন</th></tr>
+    <tr><td class="l"><b>FCFS</b></td><td class="l">আসার ক্রমে</td><td class="l">ভোকা হয় না, তবে <span class="red">মোট চলাচল সবচেয়ে বেশি</span></td></tr>
+    <tr><td class="l"><b>SSTF</b></td><td class="l">যে সিলিন্ডার <b>সবচেয়ে কাছে</b></td><td class="l"><span class="circ">মোট সবচেয়ে কম</span> — দূরের অনুরোধ সারাবার ওদের দিকে আসতে পারে</td></tr>
+    <tr><td class="l"><b>SCAN</b> (এলিভেটর)</td><td class="l">একদিকে ডিস্কের <b>শেষ পর্যন্ত</b>, তারপর উল্টে</td><td class="l">ভারসাম্যপূর্ণ প্রত্যুত্তর</td></tr>
+    <tr><td class="l"><b>C-SCAN</b></td><td class="l">শুধু একদিকে; ফেরার পথে <b>কাউকে সামলায় না</b></td><td class="l"><span class="circ">অপেক্ষা সবচেয়ে সমান</span> — লিফট নয়, সারির মতো</td></tr>
+    <tr><td class="l"><b>LOOK / C-LOOK</b></td><td class="l">SCAN, তবে ডিস্কের কিনারা নয়, <b>শেষ অনুরোধে</b> থেমে</td><td class="l">বাস্তবসম্মত সংস্করণ; অপচয় কম</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত ট্রেস ✍ হেড সিলিন্ডার 53-এ, আসার ক্রমে সারিঃ 98, 183, 37, 122, 14, 124, 65, 67; ডিস্ক 0–199</span>
+    <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:5.2mm">
+      <tr><th>অ্যালগরিদম</th><th>হেড চলাচল, ধাপে ধাপে</th><th>মোট</th></tr>
+      <tr><td><b>FCFS</b></td><td>53→98→183→37→122→14→124→65→67 : 45+85+146+85+108+110+59+2</td><td><b>640</b></td></tr>
+      <tr><td><b>SSTF</b></td><td>53→65→67→37→14→98→122→124→183 : 12+2+30+23+84+24+2+59</td><td><b>236</b></td></tr>
+      <tr><td><b>SCAN</b> ↑</td><td>53→65→67→98→122→124→183→199, তারপর নিচে 37→14 : 130+16+162+23</td><td><b>331</b></td></tr>
+      <tr><td><b>LOOK</b> ↑</td><td>SCAN-এর মতো, কিন্তু 199-এ নয় 183-এ ফিরে : 130+169</td><td><b>299</b></td></tr>
+      <tr><td><b>C-SCAN</b> ↑</td><td>199 পর্যন্ত উপরে (146), 0-এ লাফ (199), তারপর 0→14→37 (14+23)</td><td><b>382</b></td></tr>
+      <tr><td><b>C-LOOK</b> ↑</td><td>183 পর্যন্ত উপরে (130), 14-এ ফিরে (169), তারপর 124 পর্যন্ত (110)</td><td><b>409</b></td></tr>
+    </table></div>
+  <figure class="doodle" style="margin-top:1mm"><svg viewBox="0 0 460 112" width="440">
+    <g class="w">
+      <path class="ink-k" d="M64,100 V12" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M46,100 V16" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M28,16 V100" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      <path class="ink" d="M56,93 H78 M56,82 H78 M56,68 H78 M56,55 H78 M56,23 H78"/>
+      <path class="ink-r" d="M16,75 H46"/>
+    </g>
+    <text x="150" y="14" text-anchor="middle" class="bn s" style="font-size:10.5px">সিলিন্ডার 199 — ডিস্কের কিনারা</text>
+    <text x="300" y="34" text-anchor="middle" class="bn g w6 s" style="font-size:12px">উপরে: লিফট পথেই সবাইকে সামলায়</text>
+    <text x="300" y="54" text-anchor="middle" class="bn r w6 s" style="font-size:12px">নিচে: C-SCAN কাউকে সামলায় না</text>
+    <text x="300" y="74" text-anchor="middle" class="bn k s" style="font-size:11px">হেড শুরু করে 53-এ; SCAN নিচের পথেও সামলায়</text>
+    <text x="300" y="94" text-anchor="middle" class="bn s" style="font-size:11px">অপেক্ষমাণ: 14 · 37 · 65 · 67 · 98 · 122 · 124 · 183</text>
+    <text x="452" y="110" text-anchor="end" class="bn p w6 s" style="font-size:11px">কোনো অনুরোধ একটি পূর্ণ স্ক্যানের বেশি অপেক্ষা করে না</text>
+  </svg><figcaption>এলিভেটর পরিবার: প্রতিটি অনুরোধ একটি পূর্ণ স্ক্যানের মধ্যেই পৌঁছে যায়</figcaption></figure>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <b>SCAN</b> ডিস্কের <b>শেষে</b> পৌঁছায়; <b>LOOK</b> শেষ অনুরোধে থামে — পুরো পার্থক্যই 331 − 32 = <b>299</b>। (ii) <b>C-SCAN</b> শুধু একদিকে সামলায়। (iii) "সবচেয়ে কম মোট চলাচল" আর "সবচেয়ে কম গড় অপেক্ষা" <b>এক প্রশ্ন নয়</b>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>SSTF হলো কাছের, SCAN হলো লিফট, C-SCAN হলো সারি।</b>" লিফট উপরে-নিচে দুই দিকেই মানুষ নেয়; সারি একদিকে পরিবেশনায়, ফেরার পথে কেউ নেই।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: formatting, boot blocks, RAID ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>ফরম্যাটিং, বুট ব্লক, RAID</span></div>
+  <h2><span class="no">৭</span>ফরম্যাটিং, বুট ব্লক, RAID ও সলিড-স্টেট ডিস্ক</h2><span class="tag">হিসাব ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> ফাঁকা ডিস্কে কিছু রাখার আগে তা চিহ্নিত করতে হয়, আর তা হয় <b>দুই স্তরে</b>। <b>লো-লেভেল (ফিজিক্যাল) ফরম্যাটিং</b> পৃষ্ঠকে সেক্টরে ভাগ করে এবং <span class="hl">প্রিঅ্যাম্বল, হেডার, ECC ও ইন্টার-সেক্টর গ্যাপ</span> লেখে; এটি কারখানার কাজ। <b>হাই-লেভেল (লজিক্যাল) ফরম্যাটিং</b> লেখে <b>ফ্রি-স্পেস স্ট্রাকচার</b> — প্রতিটি ব্লক চিহ্নিত করা বিট ম্যাপ।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,204px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 128" width="196">
+      <g class="w">
+        <rect x="8" y="10" width="264" height="24" rx="4" class="ink-r fill-r"/>
+        <rect x="8" y="38" width="58" height="24" rx="4" class="ink fill-b"/>
+        <rect x="70" y="38" width="58" height="24" rx="4" class="ink fill-y"/>
+        <rect x="132" y="38" width="58" height="24" rx="4" class="ink fill-b"/>
+        <rect x="194" y="38" width="78" height="24" rx="4" class="ink fill-y"/>
+        <path class="ink-r" d="M72,50 H66 M132,50 H126 M198,50 H192" style="stroke-dasharray:2 2"/>
+      </g>
+      <text x="140" y="20" text-anchor="middle" class="bn r w6 s" style="font-size:10.5px">বুট ব্লক (ব্লক 0) — বুট লোডার এখানে থাকে</text>
+      <text x="37" y="49" text-anchor="middle" class="bn w6 s" style="font-size:9.5px">প্রিঅ্যাম্বল</text>
+      <text x="99" y="49" text-anchor="middle" class="bn w6 s" style="font-size:9.5px">হেডার</text>
+      <text x="161" y="49" text-anchor="middle" class="bn w6 s" style="font-size:9.5px">ডেটা</text>
+      <text x="161" y="58" text-anchor="middle" class="bn s" style="font-size:8.5px">512 B</text>
+      <text x="233" y="49" text-anchor="middle" class="bn w6 s" style="font-size:9.5px">ECC</text>
+      <text x="233" y="58" text-anchor="middle" class="bn s" style="font-size:8.5px">প্যারিটি</text>
+      <text x="140" y="78" text-anchor="middle" class="bn r w6 s" style="font-size:10.5px">বিন্দুচিহ্নিত = ইন্টার-সেক্টর গ্যাপ: কোনো ডেটা নেই</text>
+      <text x="140" y="96" text-anchor="middle" class="bn s k" style="font-size:10.5px">লো-লেভেল ফরম্যাটিং = এই ছবি</text>
+      <text x="140" y="108" text-anchor="middle" class="bn s k" style="font-size:10.5px">হাই-লেভেল ফরম্যাটিং = ফ্রি-স্পেস বিট ম্যাপ</text>
+      <text x="140" y="124" text-anchor="middle" class="bn p w6 s" style="font-size:11px">পার্টিশন → ফাইল সিস্টেম → বুট ব্লক</text>
+    </svg><figcaption>ফরম্যাট করা ডিস্ক কেন আর তার নামানো ধারযত্যের চেয়ে কম দেখায়</figcaption></figure>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ফাঁকা ডিস্ক থেকে বুটযোগ্য সিস্টেম</span>
+        <div class="fgrid tiny">
+          <p><b>১ · লো-লেভেল ফরম্যাট:</b> সেক্টর, গ্যাপ, ECC</p>
+          <p><b>২ · পার্টিশন টেবিল:</b> MBR (৪টি প্রাইমারি, 2 TB) বা GPT (১২৮, অনেক বেশি)</p>
+          <p><b>৩ · হাই-লেভেল ফরম্যাট:</b> একটি পার্টিশনে ফাইল সিস্টেম</p>
+          <p><b>৪ · বুট ব্লক:</b> ব্লক 0-এ বুট লোডার</p>
+        </div>
+        <p class="tiny" style="margin-top:0.8mm">BIOS/UEFI ব্লক 0 পড়ে বুট লোডার চালায়, সে কার্নেল লোড করে। <b>ব্যাড ব্লক</b> <b>স্পেয়ারিং</b> দিয়ে সামলানো হয়: বিষয়বস্তু একটি রিজার্ভ সেক্টরে সরে যায় আর নম্বর নতুন করে বসে।</p></div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) সেক্টরগুলোর মধ্যে <span class="circ">ইন্টার-সেক্টর গ্যাপ</span> থাকে, তাই <b>ফরম্যাট করা ডিস্ক কখনো পূর্ণ নামানো ধারযত্য দেখায় না</b>। (ii) লো-লেভেল ফরম্যাটিং <b>কারখানার</b> কাজ; ব্যাড ব্লক <b>স্পেয়ার</b> হয়, ফরম্যেট করে মুছে ফেলা হয় না।</div>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">RAID স্তর</th><th class="l">কীভাবে কাজ করে</th><th class="l">ব্যবহারযোগ্য আয়তন (সর্বনিম্ন ডিস্ক)</th><th class="l">কতটি ডিস্ক বাদ যেতে পারে</th></tr>
+    <tr><td class="l"><b>0 — স্ট্রাইপিং</b></td><td class="l">ডেটা সব ডিস্কে ভাগ, কোনো অতিরিক্ততা নেই</td><td class="l"><b>100 %</b> = N × আকার (2)</td><td class="l"><span class="red">0</span> — একটি গেলেই সব শেষ</td></tr>
+    <tr><td class="l"><b>1 — মিররিং</b></td><td class="l">প্রতিটি ডিস্কে হুবহু অনুলিপি</td><td class="l">একটি ডিস্কের সমান (2)</td><td class="l">N − 1</td></tr>
+    <tr><td class="l"><b>5 — বিতরণ প্যারিটি</b> ★</td><td class="l">প্যারিটি চক্রাকারে ছড়ানো</td><td class="l"><b>(N − 1) × আকার</b> (3)</td><td class="l"><b>1</b></td></tr>
+    <tr><td class="l"><b>6 — দ্বৈ-প্যারিটি</b></td><td class="l">RAID 5 + <b>দুটি</b> প্যারিটি ব্লক</td><td class="l"><b>(N − 2) × আকার</b> (4)</td><td class="l"><b>2</b></td></tr>
+    <tr><td class="l"><b>10 — 1 + 0</b></td><td class="l">জোড়া মিরর করে, তারপর সেগুলোতে স্ট্রাইপ</td><td class="l">মোটের 50 % (4)</td><td class="l">প্রতি জোড়ায় ১টি</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ RAID হিসাব</span> <b>(ক)</b> 4 × 1 TB-এর RAID 0 → <b>4 TB</b>, অতিরিক্ততা নেই। <b>(খ)</b> 4 × 1 TB-এর RAID 1 → <b>1 TB</b>, যেকোনো <b>3টি</b> বাদ যেতে পারে। <b>(গ)</b> 4 × 1 TB-এর RAID 5 → (4 − 1) = <span class="circ">3 TB</span>, ১টি ডিস্ক বাদ যায়, তবে পুনর্গঠনে সব লেখা হয়। <b>(ঘ)</b> 5 × 1 TB-এর RAID 6 → (5 − 2) = <span class="circ">3 TB</span> ও <b>2টি</b> বাদ যায়; 8 × 1 TB-এর RAID 10 → 8 ÷ 2 = <b>4 TB</b>। <b>(ঙ)</b> RAID 5-এ <b>ছোট</b> একটি লেখা পাড়ে <span class="circ">4টি ডিস্ক I/O</span> — পুরোনো ডেটা পড়া, পুরোনো প্যারিটি পড়া, নতুন ডেটা লেখা, নতুন প্যারিটি লেখা।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>শূন্যে স্ট্রাইপ, একে মিরর, পাঁচে এক প্যারিটি, ছয়ে দুই, দশে অর্ধেক।</b>" মিরর করে স্ট্রাইপ লেখা হয় <b>10</b>; স্ট্রাইপ করে মিরর লেখা হয় <b>01</b> — সংখ্যাগুলো কাজের ক্রমই বোঝায়।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">SSD বনাম ম্যাগনেটিক ডিস্ক</span> নেই হেড, নেই ঘোরা, <span class="circ">যেকোনো অ্যাক্সেস ≈ 0.1 ms</span> বিপরীতে 4–10 ms; পড়া ও লেখা সমান; <b>ওয়েয়ার লেভেলিং</b> লেখা ছড়িয়ে দেয়; TRIM মৃত ব্লক জানায়। প্রতি TB-এ এখনো দামি।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: terminals and clocks ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>টার্মিনাল ও ক্লক</span></div>
+  <h2><span class="no">৮</span>টার্মিনাল, লাইন ডিসিপ্লিন, ক্লক ও টাইমার ইন্টারাপ্ট</h2><span class="tag">শেষ বিষয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>টার্মিনাল</b> (Terminal) হলো সেই ডিভাইস যার মাধ্যমে মানুষ কম্পিউটারের সঙ্গে কথা বলে — ইনপুটে কীবোর্ড, আউটপুটে ডিসপ্লে, <span class="hl">একটি একটি অক্ষরে</span>। OS কীবোর্ড সরাসরি প্রোগ্রামের সঙ্গে জোড়া দেয় না: মাঝখানে ডিভাইস-ইন্ডিপেন্ডেন্ট স্তরের একটি <b>লাইন ডিসিপ্লিন</b> বসে এবং বাফারিং, ইকো ও বিশেষ কী ঠিক করে দেয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,208px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 116" width="200">
+      <g class="w">
+        <rect x="8" y="8" width="112" height="28" rx="6" class="ink fill-b"/>
+        <rect x="8" y="54" width="112" height="28" rx="6" class="ink-g fill-g"/>
+        <rect x="180" y="30" width="112" height="28" rx="6" class="ink-r fill-r"/>
+        <rect x="180" y="78" width="112" height="28" rx="6" class="ink fill-y"/>
+        <path class="ink" d="M120,22 L178,38" marker-end="url(#ahb)"/>
+        <path class="ink" d="M120,68 L178,52" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M178,52 L178,84" marker-end="url(#ah)"/>
+      </g>
+      <text x="64" y="19" text-anchor="middle" class="bn w6 s" style="font-size:11px">টার্মিনাল</text><text x="64" y="31" text-anchor="middle" class="bn s" style="font-size:10px">কীবোর্ড + স্ক্রিন</text>
+      <text x="64" y="65" text-anchor="middle" class="bn g w6 s" style="font-size:11px">লাইন ডিসিপ্লিন</text><text x="64" y="77" text-anchor="middle" class="bn g s" style="font-size:10px">ক্যাননিক্যাল বা র’</text>
+      <text x="236" y="41" text-anchor="middle" class="bn r w6 s" style="font-size:11px">প্রোগ্রাম</text><text x="236" y="53" text-anchor="middle" class="bn s" style="font-size:10px">পুরো লাইন পায়</text>
+      <text x="236" y="89" text-anchor="middle" class="bn w6 s" style="font-size:11px">টাইমার</text><text x="236" y="101" text-anchor="middle" class="bn s" style="font-size:10px">ইন্টারাপ্ট → শিডিউলার</text>
+    </svg><figcaption>টার্মিনাল আর কোনো ক্যারেক্টার ডিভাইসের মতোই — চারপাশে দুই স্তরের সফটওয়্যার</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">টার্মিনাল</th><th class="l">এটা আসলে কী</th></tr>
+        <tr><td class="l"><b>ক্যারেক্টার টার্মিনাল</b></td><td class="l">কীবোর্ড + অক্ষরের ডিসপ্লে; ইনপুট একটি <b>বাইট স্ট্রিম</b>, আউটপুট লেখা — একটি <span class="circ">ক্যারেক্টার ডিভাইস</span></td></tr>
+        <tr><td class="l"><b>গ্রাফিক্স টার্মিনাল</b></td><td class="l"><b>এস্কেপ সিকোয়েন্স</b> নেয় এবং পিক্সেল পর্যায়ে আঁকে</td></tr>
+        <tr><td class="l"><b>লাইন ডিসিপ্লিন</b></td><td class="l"><b>ক্যাননিক্যাল</b> পুরো লাইন জোড়া করে ইকো করে; <b>র’ (raw)</b> প্রতিটি কী চাপেই পাঠায় — এডিটর, গেম</td></tr>
+        <tr><td class="l"><b>সিউডো-টার্মিনাল</b></td><td class="l">SSH যা ব্যবহার করে: একটি ফাইলে টার্মিনাল প্রোগ্রাম লেখে, লাইন ডিসিপ্লিন পড়ে, তারপর নেটওয়ার্কে পাঠায়</td></tr>
+      </table>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> টার্মিনাল কোনো "দূর কনসোল" নয়: এটি একটি I/O ডিভাইস, তাই এর <b>ড্রাইভার</b>, <b>লাইন ডিসিপ্লিন</b> ও <b>ইন্টারাপ্ট-চালিত ইনপুট</b> — তিনটিই এই লেসনের আগের পাতায়।</div>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">ক্লকের তিনটি কাজ — এবং প্রতিটি ছাড়া কী ভাঙে</span>
+    <div class="fgrid tiny">
+      <p><b>১ · কেটে যাওয়া সময় মাপা।</b> চলতে থাকা একটি কাউন্টার, প্রয়োজনে পড়া হয়</p>
+      <p><b>২ · সময়সীমা আরোপণ।</b> <span class="circ">ইন্টারভ্যাল টাইমার</span> — শিডিউলিংকে প্রিম্পটিভ করে</p>
+      <p><b>৩ · CPU সময়ের হিসাব।</b> প্রতিটি প্রসেসের টিকের হিসাব রাখা</p>
+      <p><b>টাইম-অফ-ডে ক্লক:</b> দেয়াল-ক্লকের সময় রাখে — ব্যাটারিব্যাকড CMOS/RTC</p>
+    </div>
+    <p class="tiny" style="margin-top:1mm">হার্ডওয়্যার খুব সরল: প্রতি ক্লক টিকে একটি কাউন্টার এক কমে, শূন্যে পৌঁছালে সে <b>ইন্টারাপ্ট তোলে</b> এবং পরের মানে রিলোড হয়। ওই একটি ইন্টারাপ্টই একটি চলতে থাকা প্রসেসকে সারাবার CPU আটকে রাখতে দেয় না। সাধারণ টিক <b>10 ms</b>, তাই আটটি প্রসেস একটি কোয়ান্টামে 80 ms-এর রাউন্ডে 10 ms করে পায়।</p></div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">ক্লক বনাম টাইমার</span> <b>ক্লক</b> <b>সময়</b> রাখে; <b>টাইমার</b> <b>গোনে</b> এবং <span class="hl">ইন্টারাপ্ট তোলে</span>। টাইম-অফ-ডে ক্লক পড়া যায় কিন্তু কখনো ইন্টারাপ্ট দেয় না; ইন্টারভ্যাল টাইমার সময়সূচি অনুযায়ী ইন্টারাপ্ট দেয়। আসল হার্ডওয়্যার দুটোকে একটি কাউন্টার ও একটি তুলনা রেজিস্টারে মিলিয়ে দেয়।</div>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ক্লক সময় বলে, টাইমার প্রসেসকে থামতে বলে।</b>" চলমান প্রসেসকে CPU থেকে সরাতে পারে শুধু একটি ইন্টারাপ্ট, আর সেই ইন্টারাপ্ট সবসময় আসে টাইমার থেকে।</div>
+      <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) টাইমার ইন্টারাপ্ট ছাড়া শিডিউলিং <b>নন-প্রিম্পটিভ</b> হয়। (ii) কোয়ান্টাম আরোপণ করে টাইম-অফ-ডে ক্লক নয়, ইন্টারভ্যাল টাইমার; লিনাক্স এখন <b>টিকলেস</b> চলে।</div>
+    </div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পত্র</span>
+    <div class="fgrid tiny">
+      <p><b>কন্ট্রোলার</b> = মধ্যস্বামী</p><p>কন্ট্রোল, স্ট্যাটাস, ডেটা রেজিস্টার</p>
+      <p>স্ট্যাটাস বলে <b>বিজি / রেডি / এরর</b></p><p>ভেক্টর টেবিল = হ্যান্ডলারের ঠিকানা</p>
+      <p>পোর্ট-ম্যাপড = IN/OUT, নিজস্ব স্পেস</p><p>মেমোরি-ম্যাপড = লোড/স্টোর, <b>স্পেস খায়</b></p>
+      <p>ট্র্যাপ = ভেতরের এরর</p><p>ইন্টারাপ্ট = ডিভাইস, অ্যাসিঙ্ক্রোনাস</p>
+      <p><b>পোলিং</b> = CPU ঘোরে</p><p>ইন্টারাপ্ট = CPU প্রতি বাইটে</p>
+      <p><b>DMA</b> = কন্ট্রোলার, পুরো ব্লক</p><p>DMA = প্রতি ব্লকে <b>১</b> ইন্টারাপ্ট</p>
+      <p>সাইকেল চুরি · বার্স্ট আঁকড়ে · চুপচাপ অপেক্ষা</p><p>ব্লক ডিভাইস = ব্লক · ক্যারেক্টার = স্ট্রিম</p>
+      <p>I/O স্তর: লাইব্রেরি, সাধারণ, ড্রাইভার, হ্যান্ডলার</p><p>ডিভাইস কে জানে শুধু ড্রাইভার</p>
+      <p>I/O নীতি: FCFS, প্রায়োরিটি, SSTF, EDF</p><p>SSD-তে <b>র‍্যান্ডম সেরা</b></p>
+      <p>বাফার = গতি ও আকারের অমিল</p><p>ক্যাশ = পুনরায় পড়া এড়ায়</p>
+      <p>স্পুল = একান্ত ডিভাইস ভাগ</p><p>স্পুলিংয়ে লাগে একটি <b>ডিমন</b></p>
+      <p>ডাবল বাফারে T = max(C,M)</p><p>প্লাটার → ট্র্যাক → সেক্টর → সিলিন্ডার</p>
+      <p><b>T<sub>r</sub> = 30 ÷ rpm</b> সেকেন্ড</p><p>T<sub>t</sub> = বাইট ÷ রেট</p>
+      <p>অ্যাক্সেস = সিক + স্পিন + শিপ</p><p>প্রতি ট্র্যাকে সমান সেক্টর: <b>না</b> (ZBR)</p>
+      <p>SSTF ভোকায় · SCAN হলো লিফট</p><p>C-SCAN = সারি, একদিকে</p>
+      <p>LOOK থামে শেষ অনুরোধে</p><p>ফরম্যাটিং: গ্যাপ · ECC · স্পেয়ারিং</p>
+      <p>বুট ব্লক = ব্লক 0 = বুট লোডার</p><p>RAID 0/1/5/6/10: 0 · 1 · N−1 · N−2 · N/2</p>
+      <p>RAID 5 ছোট লেখা = <b>4টি</b> I/O</p><p>SSD ≈ 0.1 ms · ডিস্ক ≈ 8 ms</p>
+      <p>লাইন ডিসিপ্লিন: ক্যাননিক্যাল বা র’</p><p>ক্লক সময় রাখে · টাইমার ইন্টারাপ্ট দেয়</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>CPU একটি ডিভাইসকে দেখে <b>তিনটি রেজিস্টার</b></li>
+      <li>মেমোরি-ম্যাপড I/O-র খরচ <b>অ্যাড্রেস স্পেস</b></li>
+      <li>ইন্টারাপ্ট-চালিত I/O = <b>প্রতি বাইটে ১টি</b> ইন্টারাপ্ট</li>
+      <li>DMA = প্রতি ব্লকে <b>একটি</b> ইন্টারাপ্ট</li>
+      <li>7200 rpm ⇒ গড় রোটেশনাল ডিলে <b>4.17 ms</b></li>
+      <li>7200 rpm + 4 ms সিক + 4 KiB ⇒ <b>8.19 ms</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>একই ব্যাসার্ধের সব ট্র্যাক = সিলিন্ডার</li>
+      <li>এই সারিটি SSTF-তে 53 থেকে ⇒ <b>236</b></li>
+      <li>একই সারি SCAN-এ ⇒ <b>331</b>; LOOK-এ ⇒ <b>299</b></li>
+      <li>4 ডিস্কের RAID 5 ⇒ <b>3</b> ব্যবহারযোগ্য, <b>1</b> বাদ যায়</li>
+      <li>কীবোর্ড, মাউস, প্রিন্টার = <b>ক্যারেক্টার</b> ডিভাইস</li>
+      <li>শুধু <b>টাইমার ইন্টারাপ্ট</b> প্রসেসকে প্রিম্পট করতে পারে</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> পোলিংকে কারণে "ইন্টারাপ্ট লাগে না, তাই দক্ষ" বলা · ইন্টারাপ্ট-চালিত I/O সবসময় পোলিং-এর চেয়ে ভালো বলা · DMA-কে CPU সরিয়ে দেওয়া বলা · প্রতিটি ট্র্যাকে সমান সেক্টর বলা · সিলিন্ডারকে আকৃতি ভাবা · SCAN শেষ অনুরোধে থামে বলা · C-SCAN ফেরার পথে সামলায় বলা · <b>RAID 5 দুটি ব্যর্থতা সহ্য করে</b> বলা · RAID 10 কে 01 লেখা · লো-লেভেল ফরম্যাটিংকে ব্যবহারকারীর কাজ বলা · টাইম-অফ-ডে ক্লককে কোয়ান্টাম আরোপণকারী বলা।</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসাথে</span> "তিনটি রেজিস্টার, একটি টেবিল" · "ধীরে ঘোরো, দ্রুতে ইন্টারাপ্ট, আরও দ্রুতে DMA" · "সাইকেল চুরি, বার্স্ট আঁকড়ে, চুপচাপ অপেক্ষা" · "লাইব্রেরি, সাধারণ, ড্রাইভার, হ্যান্ডলার" · "বাফার ফাঁক বাঁধে, স্পুল ভাগ করে, ক্যাশ পুনরায় পড়া এড়ায়" · "সিক, স্পিন, শিপ" · "30 ভাগ rpm" · "SSTF কাছের, SCAN লিফট, C-SCAN সারি" · "শূন্যে স্ট্রাইপ, একে মিরর, পাঁচে এক, ছয়ে দুই, দশে অর্ধেক" · "ক্লক সময় বলে, টাইমার প্রসেসকে থামতে বলে"।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ইনপুট/আউটপুট ও ডিস্ক</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set" style="font-size:11pt;line-height:5.6mm">
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">১.</span>কন্ট্রোলার পুরো ব্লকটা সরাসরি মেমোরিতে নিয়ে গিয়ে শেষে CPU-কে ইন্টারাপ্ট দেয়। প্রযুক্তিটি কোনটি:<ol class="opts"><li>প্রোগ্রামড I/O</li><li>পোলিং</li><li>ডাইরেক্ট মেমোরি অ্যাক্সেস</li><li>স্পুলিং</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">২.</span>পোর্ট-ম্যাপড I/O-র তুলনায় মেমোরি-ম্যাপড I/O-র প্রধান খরচ কী:<ol class="opts"><li>বিশেষ ইনস্ট্রাকশন লাগে</li><li>ইন্টারাপ্ট তুলতে পারে না</li><li>DMA বাধ্য</li><li>মেমোরি অ্যাড্রেস স্পেস খায়</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">৩.</span>কম গতিতে একটি হ্যান্ডলার ট্রান্সফারের চেয়ে বেশি খরচ হতে পারে, তাই কোন পদ্ধতি <b>দ্রুত</b> হতে পারে:<ol class="opts"><li>DMA</li><li>পোলিং</li><li>সাইকেল স্টিলিং</li><li>স্পুলিং</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">৪.</span>প্রতিটি প্লাটারের একই ব্যাসার্ধের ট্র্যাকগুলো মিলে কী:<ol class="opts"><li>সিলিন্ডার</li><li>সেক্টর</li><li>সারফেস</li><li>স্পিন্ডল</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">৫.</span>7200 rpm ডিস্কের গড় রোটেশনাল ডিলেই কত:<ol class="opts"><li>8.33 ms</li><li>2.08 ms</li><li>4.17 ms</li><li>16.7 ms</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">৬.</span>নিচের কোনটি <b>ক্যারেক্টার</b> ডিভাইস, ব্লক নয়:<ol class="opts"><li>হার্ড ডিস্ক</li><li>SSD</li><li>USB ফ্ল্যাশ ড্রাইভ</li><li>কীবোর্ড</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">৭.</span>কোন ডিস্ক নীতিতে কোনো অনুরোধ একটি পূর্ণ স্ক্যানের বেশি অপেক্ষা করে না:<ol class="opts"><li>FCFS</li><li>SCAN</li><li>SSTF</li><li>র‍্যান্ডম</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">৮.</span>হেড 53-এ, সারি 98, 183, 37, 122, 14, 124, 65, 67। <b>SSTF</b>-তে মোট হেড চলাচল:<ol class="opts"><li>236</li><li>640</li><li>331</li><li>299</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">৯.</span>প্রয়োজনীয় ট্র্যাকে হেড সরানোকে বলে:<ol class="opts"><li>রোটেশনাল ডিলে</li><li>ট্রান্সফার টাইম</li><li>কিউইং ডিলে</li><li>সিক টাইম</li></ol></div>
+    <div class="mcq" style="line-height:5.6mm"><span class="qn">১০.</span>টাইম-অফ-ডে ক্লক এমন কী করে যা ইন্টারভ্যাল টাইমার করে না:<ol class="opts"><li>সময়সূচি অনুযায়ী ইন্টারাপ্ট তোলে</li><li>দেয়াল-ক্লকের সময় রাখে</li><li>কোয়ান্টাম শেষ করে</li><li>প্রসেসের CPU সময়ের হিসাব রাখে</li></ol></div>
+  </div>
+  <div class="anskey tiny">উত্তরমালা → ১-গ · ২-ঘ · ৩-খ · ৪-ক · ৫-গ · ৬-ঘ · ৭-খ · ৮-ক · ৯-ঘ · ১০-খ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> অপারেটিং সিস্টেমে I/O সফটওয়্যারের স্তরগুলো ব্যাখ্যা করো। ডাইরেক্ট মেমোরি অ্যাক্সেস ও এর বাস ব্যবহারের তিনটি পদ্ধতি লেখো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5.2mm">
+    <li><b>চারটি স্তর</b> — (১) <b>ইউজার-লেভেল I/O সফটওয়্যার</b>: প্রোগ্রাম যে লাইব্রেরি বলে, আউটপুট লাইনে বাফার করে। (২) <b>ডিভাইস-ইন্ডিপেন্ডেন্ট OS সফটওয়্যার</b>: সমান নাম, ডিভাইস বরাদ্দ, বাফারিং, ব্লকের আকার, ত্রুটির রিপোর্ট। (৩) <b>ডিভাইস ড্রাইভার</b>: একমাত্র হার্ডওয়্যার-সচেতন স্তর, সাধারণ অনুরোধকে কন্ট্রোলার কমান্ডে বদলায়। (৪) <b>ইন্টারাপ্ট হ্যান্ডলার</b>: ইন্টারাপ্টে চলে, কনটেক্সট সংরক্ষণ করে, ডেটা সরায়, অপেক্ষায় থাকা প্রসেস জাগায়। <i class="mk">৪</i></li>
+    <li><b>DMA</b> — নিজে কন্ট্রোলার ডিভাইস ও মেইন মেমোরির মধ্যে <b>পুরো ব্লক</b> সরায়; CPU কেবল মেমরির ঠিকানা, গণনা ও ডিভাইস পোর্ট সাজায়, তারপর অন্য কাজ করে এবং <b>ব্লক সরে গেলে একবার</b> ইন্টারাপ্ট পায়। <i class="mk">৩</i></li>
+    <li><b>তিনটি পদ্ধতি</b> — <b>সাইকেল স্টিলিং</b>: একবারে এক মেমোরি সাইকেল নিয়ে বাস ফেরত দেয়, তাই CPU ধীর হলেও থামে না। <b>বার্স্ট মোড</b>: কন্ট্রোলারের নিজস্ব FIFO থেকে পুরো ব্লকের জন্য বাস ধরে রাখে, থ্রুপুট সবচেয়ে বেশি। <b>ট্রান্সপারেন্ট মোড</b>: CPU খালি থাকলেই বাস ব্যবহার করে। <i class="mk">৩</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>I/O স্তরের চারটি স্তরের নাম বলতে পারি</li>
+      <li>CPU খরচ দেখে পোলিং, ইন্টারাপ্ট ও DMA আলাদা করতে পারি</li>
+      <li>rpm, সিক ও রেট থেকে গড় অ্যাক্সেস সময় বের করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>SCAN-এ অনুরোধের সারি ট্রেস করে মোট চলাচল বের করতে পারি</li>
+      <li>RAID-এর আয়তনের হিসাব করে বলতে পারি কতটি ডিস্ক বাদ যাবে</li>
+      <li>ক্লক ও টাইমারের পার্থক্য বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script><script src="../../assets/fit.js"></script>
+</body>
+</html>

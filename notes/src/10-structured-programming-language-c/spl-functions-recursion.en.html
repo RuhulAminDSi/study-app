@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>C: Functions, Parameter Passing, Scope, Storage Classes &amp; Recursion: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Functions, Scope &amp; Recursion in C</span></h1>
+  <p class="subtitle">Functions · Parameter passing · Scope · Storage classes · Recursion: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L176,145 M424,145 L464,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink fill-b"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="k l">C functions</text><text x="320" y="164" text-anchor="middle" class="r s">call · pass · live · repeat</text>
+      <text x="142" y="62" text-anchor="middle" class="s">prototype vs definition</text>
+      <text x="320" y="38" text-anchor="middle" class="r w6">Call by value only ★</text>
+      <text x="498" y="62" text-anchor="middle" class="r w6">Pointer = "by ref" ★</text>
+      <text x="96" y="150" text-anchor="middle" class="s">block · file scope</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6">Storage classes ★</text>
+      <text x="142" y="238" text-anchor="middle" class="g w6">base case first</text>
+      <text x="320" y="264" text-anchor="middle" class="r w6">static keeps value ★</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6">fib tree · O(2ⁿ) ★</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = the rule every recursion hangs on</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm"><b>High-yield list</b><br>① Prototype = declaration; ends with <code>;</code><br>② Actual args → copied into formal params<br>③ C has <b>only</b> call by value<br>④ "By reference" = pass a pointer<br>⑤ Locals default to <code>auto</code>: garbage<br>⑥ <code>static</code>/global default to 0<br>⑦ static local keeps value: 1 2 3<br>⑧ No <code>&amp;</code> on a <code>register</code> variable<br>⑨ <code>extern</code> declares, does not define<br>⑩ No base case → stack overflow</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The Structured Programming Language syllabus lists: "<span class="hl">Functions and program structure: parameter passing conventions, scope rules and storage classes, recursion</span>". Data types, operators and control structures were the previous lesson; pointers and arrays are the next, structures and unions the one after.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>Functions: prototype, definition, call … p. 2</li><li>Parameter passing: value vs address … p. 3</li><li>Scope rules, linkage, lifetime … p. 4</li><li>Storage classes: the big table … p. 5</li><li>extern, static linkage, register … p. 6</li><li>Recursion and the call stack … p. 7</li></ul>
+    <ul class="tick"><li>Recursion tree, complexity, iteration … p. 8</li><li>Output-tracing drill … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: functions ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Functions</span></div>
+  <h2><span class="no">1</span>Functions: Prototype, Definition, Call</h2><span class="tag">basics, always asked ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">function</span> is a named, self-contained block of code that does one job and can be called many times. A C program is a collection of functions; execution starts at <code>main</code>. General form: <code>return_type name(type p1, type p2) { body; return value; }</code>. Gives <b>reuse</b> and <b>modularity</b>. Two kinds: <b>library</b> functions (<code>printf</code>, <code>sqrt</code>) and <b>user-defined</b> functions.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 100" width="460">
+    <g class="w">
+      <rect x="6" y="22" width="150" height="48" rx="10" class="ink fill-b"/>
+      <rect x="244" y="22" width="150" height="48" rx="10" class="ink-p fill-p"/>
+      <rect x="482" y="22" width="150" height="48" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M156,36 H240" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M394,36 H478" marker-end="url(#ahp)"/>
+      <path class="ink-r" d="M556,72 C556,86 82,86 82,74" marker-end="url(#ah)"/>
+    </g>
+    <text x="81" y="43" text-anchor="middle" class="s k w6">caller: main()</text><text x="81" y="61" text-anchor="middle" class="s">add(5, 3)</text>
+    <text x="198" y="30" text-anchor="middle" class="s">5, 3</text>
+    <text x="319" y="43" text-anchor="middle" class="s p w6">copied into</text><text x="319" y="61" text-anchor="middle" class="s p">a = 5, b = 3</text>
+    <text x="436" y="30" text-anchor="middle" class="s">body runs</text>
+    <text x="557" y="43" text-anchor="middle" class="s g w6">callee: add()</text><text x="557" y="61" text-anchor="middle" class="s g">return a + b</text>
+    <text x="320" y="98" text-anchor="middle" class="s r">value 8 comes back; control resumes after the call</text>
+  </svg><figcaption>one call: arguments go in, one value comes back</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">#include &lt;stdio.h&gt;
+int add(int a, int b);   /* prototype */
+
+int main(void) {
+    int s = add(5, 3);   /* call */
+    printf("%d\n", s);   /* 8 */
+    return 0;            /* success */
+}
+
+int add(int a, int b) {  /* definition */
+    return a + b;
+}</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Term</th><th class="l">Meaning</th></tr>
+      <tr><td class="l"><b>Prototype</b></td><td class="l">declaration: name, return type, parameter types; ends with <code>;</code>, no body</td></tr>
+      <tr><td class="l"><b>Definition</b></td><td class="l">header + body; exactly <span class="circ">one</span> per function</td></tr>
+      <tr><td class="l"><b>Call</b></td><td class="l"><code>add(5, 3)</code>: jumps in, gets a value back</td></tr>
+      <tr><td class="l"><b>Actual</b> params</td><td class="l">arguments in the call: 5, 3</td></tr>
+      <tr><td class="l"><b>Formal</b> params</td><td class="l">variables in the header: <i>a</i>, <i>b</i></td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Rule</th><th class="l">What to remember</th></tr>
+    <tr><td class="l">Return value</td><td class="l">at most <b>one</b> value per call; for more, use pointer parameters or return a <code>struct</code></td></tr>
+    <tr><td class="l"><code>void</code> function</td><td class="l">returns nothing; may use a bare <code>return;</code> to leave early</td></tr>
+    <tr><td class="l"><code>main</code></td><td class="l">returns <code>int</code>: 0 = success; <code>void main()</code> is non-standard</td></tr>
+    <tr><td class="l">Prototype</td><td class="l">names optional (<code>int add(int, int);</code>); none at all: C89 assumed <code>int</code>, C99+ forbids it</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Prototype = visiting card; definition = the person.</b>" You may hand out many cards, but there is only one person.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The order in which arguments are evaluated is <b>unspecified</b>: <code>f(i++, i++)</code> is undefined behaviour. A function cannot be <b>defined</b> inside another in standard C.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ output</span> <code>int sq(int x){return x*x;}</code> → <code>printf("%d", sq(3) + sq(4));</code> prints <span class="circ">25</span>. Actual 3, 4; formal <i>x</i>.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: parameter passing ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Parameter passing</span></div>
+  <h2><span class="no">2</span>Parameter Passing: by Value and by Address</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> In <span class="hl">call by value</span> the callee receives a <b>copy</b> of each argument in its formal parameter, so changes inside never reach the caller. C passes <span class="circ">every argument by value</span>. To let a function change the caller's variable, pass its <b>address</b>: the formal parameter is a pointer and the function writes through <code>*p</code>. This is usually called <span class="hl">call by reference</span>, but in C it is <b>simulated</b> — the address itself is copied. True references (<code>int &amp;a</code>) exist only in C++.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="470">
+    <g class="w">
+      <rect x="20" y="34" width="90" height="40" rx="6" class="ink fill-b"/>
+      <rect x="196" y="34" width="90" height="40" rx="6" class="ink-r fill-r"/>
+      <path class="ink-r" d="M110,54 H192" marker-end="url(#ah)"/>
+      <rect x="360" y="34" width="90" height="40" rx="6" class="ink-g fill-g"/>
+      <rect x="536" y="34" width="90" height="40" rx="6" class="ink-p fill-p"/>
+      <path class="ink-p" d="M536,54 H454" marker-end="url(#ahp)"/>
+      <path class="ink" d="M320,8 V108" style="stroke-dasharray:5 5"/>
+    </g>
+    <text x="150" y="18" text-anchor="middle" class="s k w6">byVal(x): a copy</text>
+    <text x="65" y="59" text-anchor="middle" class="s">x = 10</text>
+    <text x="241" y="59" text-anchor="middle" class="s r">a: 10 → 15</text>
+    <text x="150" y="46" text-anchor="middle" class="s r">copy</text>
+    <text x="150" y="98" text-anchor="middle" class="s k">after the call x is still 10</text>
+    <text x="490" y="18" text-anchor="middle" class="s k w6">byPtr(&amp;x): the address</text>
+    <text x="405" y="59" text-anchor="middle" class="s g">x: 10 → 15</text>
+    <text x="581" y="59" text-anchor="middle" class="s p">a = &amp;x</text>
+    <text x="495" y="46" text-anchor="middle" class="s p">points to</text>
+    <text x="490" y="98" text-anchor="middle" class="s g">*a = *a + 5 changes x itself</text>
+  </svg><figcaption>left: the function works on a photocopy · right: it holds the key to x</figcaption></figure>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void byVal(int a)  { a = a + 5; }
+void byPtr(int *a) { *a = *a + 5; }
+
+int x = 10;
+byVal(x);    /* x is still 10 */
+byPtr(&amp;x);   /* x becomes 15  */</div>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void swap(int *p, int *q) {
+    int t = *p;  *p = *q;  *q = t;
+}
+int a = 10, b = 20;
+swap(&amp;a, &amp;b);  /* a = 20, b = 10 */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Call by value</th><th class="l">By address (pointer)</th><th class="l">C++ reference</th></tr>
+    <tr><td class="l">What is passed</td><td class="l">copy of the value</td><td class="l">copy of the <b>address</b></td><td class="l">an alias of the variable</td></tr>
+    <tr><td class="l">Formal / call</td><td class="l"><code>int a</code> / <code>f(x)</code></td><td class="l"><code>int *a</code> / <code>f(&amp;x)</code></td><td class="l"><code>int &amp;a</code> / <code>f(x)</code></td></tr>
+    <tr><td class="l">Caller's variable changes?</td><td class="l">no</td><td class="l">yes, through <code>*a</code></td><td class="l">yes</td></tr>
+    <tr><td class="l">In C?</td><td class="l">the <span class="circ">only</span> mechanism</td><td class="l">yes (value of a pointer)</td><td class="l">no — C++ only</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Arrays decay to pointers</span> <code>void f(int a[])</code> ≡ <code>void f(int *a)</code>: only the address of element 0 is passed, the array is <b>not copied</b>, and changes inside are seen by the caller. <code>sizeof(a)</code> inside <i>f</i> = <b>pointer</b> size, so pass the length too. More: next lesson.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Structures are copied</span> A <code>struct</code> argument is copied whole — slow for big ones, so pass <code>const struct T *p</code>; <code>const</code> promises the data will not change. Structures in detail: lesson 4.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Value = photocopy; address = house key.</b>" Scribble on the photocopy and the original is safe; use the key and you rearrange the real house.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Common misconception</span> "C has call by reference" — no: the pointer is copied too. Setting <code>p = &amp;y;</code> inside the callee does <b>not</b> move the caller's pointer.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ swap by value</span> <code>void swap(int a,int b){int t=a;a=b;b=t;}</code>, <code>x=10,y=20; swap(x,y); printf("%d %d",x,y);</code> → <span class="circ">10 20</span>.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: scope ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Scope rules</span></div>
+  <h2><span class="no">3</span>Scope Rules, Linkage and Lifetime</h2><span class="tag">MCQ + output ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The <span class="hl">scope</span> of an identifier is the part of the program text where its name can be used. A <b>local</b> (inside a block, or a parameter) has <b>block scope</b>; a <b>global</b> (outside every function) has <b>file scope</b> to the end of the file. The C standard names <span class="circ">four scopes</span>: block, file, function and function prototype.</div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 220" width="218">
+      <g class="w">
+        <rect x="6" y="6" width="288" height="208" rx="10" class="ink fill-b"/>
+        <rect x="28" y="56" width="248" height="146" rx="10" class="ink-g fill-g"/>
+        <rect x="52" y="118" width="200" height="70" rx="10" class="ink-r fill-r"/>
+      </g>
+      <text x="150" y="28" text-anchor="middle" class="s k w6">file scope</text>
+      <text x="150" y="46" text-anchor="middle" class="s">int global = 100;</text>
+      <text x="152" y="78" text-anchor="middle" class="s g w6">show(): block scope</text>
+      <text x="152" y="98" text-anchor="middle" class="s g">int local = 5;</text>
+      <text x="152" y="140" text-anchor="middle" class="s r w6">inner { } block</text>
+      <text x="152" y="160" text-anchor="middle" class="s r">int local = 7; (shadows)</text>
+      <text x="152" y="178" text-anchor="middle" class="s r">sees 7 and 100</text>
+    </svg><figcaption>inner boxes see outward, never inward</figcaption></figure>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">int global = 100;          /* file scope */
+void show(void) {
+    int local = 5;         /* block scope */
+    {
+        int local = 7;     /* shadows it  */
+        printf("%d ", local);       /* 7 */
+    }
+    printf("%d %d", local, global);
+}                       /* prints 7 5 100 */
+/* in main(): local is unknown → error */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Scope (C standard)</th><th class="l">Applies to</th><th class="l">Visible from … to</th></tr>
+    <tr><td class="l"><b>Block</b></td><td class="l">locals, function parameters</td><td class="l">point of declaration → the closing <code>}</code></td></tr>
+    <tr><td class="l"><b>File</b></td><td class="l">globals, function names</td><td class="l">point of declaration → end of the source file</td></tr>
+    <tr><td class="l"><b>Function</b></td><td class="l"><span class="hl">labels only</span> (for <code>goto</code>)</td><td class="l">the whole function, even before the label</td></tr>
+    <tr><td class="l"><b>Function prototype</b></td><td class="l">parameter names in a prototype</td><td class="l">end of that prototype</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Term</th><th class="l">Question it answers</th><th class="l">Values</th></tr>
+    <tr><td class="l"><b>Scope</b></td><td class="l">where can the name be used? (compile time)</td><td class="l">block, file, function, prototype</td></tr>
+    <tr><td class="l"><b>Lifetime</b></td><td class="l">how long does the storage exist? (run time)</td><td class="l">automatic (block), static (whole program), allocated (<code>malloc</code>…<code>free</code>)</td></tr>
+    <tr><td class="l"><b>Linkage</b></td><td class="l">does the same name in another file mean the same object?</td><td class="l"><span class="hl">external</span>, <span class="hl">internal</span>, none</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Scope is the room you can call the name in; lifetime is how long the person lives.</b>" A static local lives all program long but answers only in its own room.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A shadowed global cannot be named in that block: C has no <code>::x</code> (C++ only). No use before the declaration line.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ output</span> <code>int x=1; void f(){int x=2; {x=3;} printf("%d",x);}</code> prints <span class="circ">3</span>: the inner block assigns f's <i>x</i>; the global stays 1.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: storage classes ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Storage classes</span></div>
+  <h2><span class="no">4</span>Storage Classes: the Big Table</h2><span class="tag">highest-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">storage class</span> specifier tells the compiler a variable's <b>storage location</b>, <b>default initial value</b>, <b>scope</b>, <b>lifetime</b> and <b>linkage</b>. C has four classic ones: <code>auto</code>, <code>register</code>, <code>static</code>, <code>extern</code> (C11 adds <code>_Thread_local</code>; <code>typedef</code> is one only in grammar). A local variable with no keyword is <span class="circ">auto</span>; a global with no keyword has external linkage.</div>
+  <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Class</th><th class="l">Stored in</th><th class="l">Default</th><th class="l">Scope</th><th class="l">Lifetime</th><th class="l">Linkage</th></tr>
+      <tr><td class="l"><b>auto</b></td><td class="l">stack</td><td class="l">garbage</td><td class="l">block</td><td class="l">block</td><td class="l">none</td></tr>
+      <tr><td class="l"><b>register</b></td><td class="l">CPU register (if granted)</td><td class="l">garbage</td><td class="l">block</td><td class="l">block</td><td class="l">none</td></tr>
+      <tr><td class="l"><b>static</b> local</td><td class="l">data / BSS</td><td class="l"><span class="circ">0</span></td><td class="l">block</td><td class="l">whole program</td><td class="l">none</td></tr>
+      <tr><td class="l"><b>static</b> global</td><td class="l">data / BSS</td><td class="l">0</td><td class="l">file</td><td class="l">whole program</td><td class="l">internal</td></tr>
+      <tr><td class="l"><b>extern</b></td><td class="l">wherever it is defined</td><td class="l">0 (from the definition)</td><td class="l">file (or block)</td><td class="l">whole program</td><td class="l">external</td></tr>
+      <tr><td class="l">plain global</td><td class="l">data / BSS</td><td class="l">0</td><td class="l">file</td><td class="l">whole program</td><td class="l">external</td></tr>
+    </table>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="500">
+    <g class="w">
+      <rect x="10" y="22" width="96" height="36" rx="4" class="ink-p fill-p"/>
+      <rect x="106" y="22" width="96" height="36" rx="4" class="ink-g fill-g"/>
+      <rect x="202" y="22" width="96" height="36" rx="4" class="ink-g fill-g"/>
+      <rect x="298" y="22" width="96" height="36" rx="4" class="ink fill-b"/>
+      <rect x="394" y="22" width="120" height="36" rx="4" class="ink-k" style="stroke-dasharray:4 4"/>
+      <rect x="514" y="22" width="116" height="36" rx="4" class="ink-r fill-r"/>
+      <path class="ink" d="M400,40 H440" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M508,40 H468" marker-end="url(#ah)"/>
+    </g>
+    <text x="58" y="45" text-anchor="middle" class="s p">text (code)</text>
+    <text x="154" y="45" text-anchor="middle" class="s g w6">data</text>
+    <text x="250" y="45" text-anchor="middle" class="s g w6">BSS</text>
+    <text x="346" y="45" text-anchor="middle" class="s">heap</text>
+    <text x="572" y="45" text-anchor="middle" class="s r w6">stack</text>
+    <text x="58" y="76" text-anchor="middle" class="s p">functions</text>
+    <text x="154" y="76" text-anchor="middle" class="s g">static/global ≠ 0</text>
+    <text x="250" y="76" text-anchor="middle" class="s g">static/global = 0</text>
+    <text x="346" y="76" text-anchor="middle" class="s">malloc</text>
+    <text x="572" y="76" text-anchor="middle" class="s r">auto, params</text>
+    <text x="10" y="14" class="s k">low address</text>
+    <text x="630" y="14" text-anchor="end" class="s k">high address</text>
+  </svg><figcaption>typical memory layout: where each storage class lives</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void counter(void) {
+    static int count = 0;  /* once */
+    count++;
+    printf("%d ", count);
+}
+/* main: counter(); counter(); counter();
+   prints: 1 2 3                         */
+/* without static:  1 1 1                */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">static local: three facts</span> ① It is created and <span class="hl">initialised once</span>, before <code>main</code> starts — the line <code>static int count = 0;</code> does <b>not</b> run again on each call. ② Its initialiser must be a <b>constant expression</b>: <code>static int n = f();</code> is a compile error in C. ③ It keeps its value between calls, yet its <b>scope stays the block</b>: <code>main</code> cannot name <code>count</code>. A function may return its address safely — it never dies.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>A-R die young, S-E live long.</b>" <b>A</b>uto and <b>R</b>egister die at the block's end with garbage; <b>S</b>tatic and <b>E</b>xtern live the whole run and start at zero.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Zero default = <b>static storage</b> only (static, globals). Uninitialised <code>auto</code> and <code>malloc</code> memory hold garbage (<code>calloc</code> gives 0).</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ output</span> <code>int f(){static int s=5; s+=2; return s;}</code> → <code>f(); f(); printf("%d", f());</code> prints <span class="circ">11</span> (7, 9, 11).</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: extern, static linkage, register ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>extern · static · register</span></div>
+  <h2><span class="no">5</span>extern, static Linkage and register</h2><span class="tag">trap-heavy ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <code>extern int g;</code> is a <span class="hl">declaration</span>: it says "<i>g</i> exists, defined somewhere else" and <b>allocates no storage</b>. The single <span class="hl">definition</span> <code>int g = 5;</code> outside all functions allocates the memory and carries the zero default. A program may declare <i>g</i> many times but define it <span class="circ">exactly once</span>; the <b>linker</b> joins every <code>extern</code> to that one definition.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 140" width="440">
+    <g class="w">
+      <rect x="10" y="10" width="200" height="110" rx="10" class="ink fill-b"/>
+      <rect x="430" y="10" width="200" height="110" rx="10" class="ink fill-b"/>
+      <rect x="260" y="44" width="120" height="44" rx="12" class="ink-g fill-g"/>
+      <path class="ink-g" d="M426,50 L384,60" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M212,50 L256,60" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M212,96 C300,130 360,130 426,100" marker-end="url(#ah)"/>
+    </g>
+    <text x="110" y="30" text-anchor="middle" class="s k w6">file1.c</text>
+    <text x="110" y="52" text-anchor="middle" class="s">int g = 5;  ← definition</text>
+    <text x="110" y="74" text-anchor="middle" class="s r">static int h;  ← private</text>
+    <text x="110" y="96" text-anchor="middle" class="s r">static void helper()</text>
+    <text x="530" y="30" text-anchor="middle" class="s k w6">file2.c</text>
+    <text x="530" y="52" text-anchor="middle" class="s">extern int g; ← declaration</text>
+    <text x="530" y="74" text-anchor="middle" class="s">g++;  /* same g */</text>
+    <text x="530" y="96" text-anchor="middle" class="s r">extern int h; ✗</text>
+    <text x="320" y="64" text-anchor="middle" class="s g w6">linker</text>
+    <text x="320" y="80" text-anchor="middle" class="s g">one g</text>
+    <text x="320" y="136" text-anchor="middle" class="s r">h has internal linkage: link error</text>
+  </svg><figcaption>extern reaches across files; static outside a function shuts the door</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Keyword and place</th><th class="l">Effect</th></tr>
+    <tr><td class="l"><code>static</code> on a <b>local</b> variable</td><td class="l">lifetime becomes the whole program; scope unchanged (block); no linkage</td></tr>
+    <tr><td class="l"><code>static</code> on a <b>global</b> variable</td><td class="l"><span class="hl">internal linkage</span>: visible only in its own source file</td></tr>
+    <tr><td class="l"><code>static</code> on a <b>function</b></td><td class="l">function is private to its file (helper functions, name clashes avoided)</td></tr>
+    <tr><td class="l"><code>extern</code> on a variable</td><td class="l">declaration only; refers to an external definition</td></tr>
+    <tr><td class="l"><code>extern int g = 5;</code> at file scope</td><td class="l">an initialiser makes it a <b>definition</b> (legal; compilers warn)</td></tr>
+    <tr><td class="l">functions with no keyword</td><td class="l"><code>extern</code> by default: callable from other files through a prototype</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">register</span> A <b>request</b> to keep the variable in a CPU register for speed (loop counters). The compiler <b>may ignore it</b>, (modern optimisers choose registers themselves). Only for locals and parameters; you <span class="circ">cannot take <code>&amp;</code></span> of it — a compile error even if it ends up in memory; default value garbage.</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">void loop(void) {
+    register int i;
+    for (i = 0; i &lt; 1000; i++)
+        ;            /* fast counter  */
+    int *p = &amp;i;     /* ✗ error: address
+                        of register   */
+}
+register int r;  /* ✗ not at file scope */</div>
+  </div>
+  <div class="exam tiny"><span class="lbl">Common misconceptions — corrected</span> ① "<code>extern</code> creates the variable with value 0" — no: the definition elsewhere owns the storage and the zero default. ② "A <code>static</code> global can be used anywhere" — no: outside a function it means <b>file-private</b>. ③ "<code>register</code> guarantees a register" — no: it is only a hint. ④ "<code>&amp;r</code> works on a register variable" — a compile error. ⑤ Two files both writing <code>int g = 1;</code> → <b>multiple definition</b> link error.</div>
+  <div class="cols" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>extern = 'lives elsewhere'; static outside = 'Keep Out' sign.</b>" Declaration = rumour; definition = birth.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ legal?</span> One file: <code>extern int n; extern int n; int n = 3;</code> → <span class="circ">legal</span>: two declarations, one definition.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: recursion and the call stack ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Recursion</span></div>
+  <h2><span class="no">6</span>Recursion and the Call Stack</h2><span class="tag">written + output ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Recursion</span>: a function calls itself, <b>directly</b> (f → f) or <b>indirectly</b> (f → g → f). Every recursive function needs a <span class="hl">base case</span> that returns without recursing and a <b>recursive case</b> that moves towards it. Each call gets its own <span class="hl">stack frame</span> (activation record: parameters, locals, return address). With no reachable base case the frames pile up until <span class="circ">stack overflow</span> (a run-time crash).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 270px;align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">long fact(int n) {
+    if (n == 0 || n == 1)      /* base case */
+        return 1;
+    return n * fact(n - 1);    /* recursive */
+}
+/* fact(5) = 5*4*3*2*1 = 120 */
+
+int fib(int n) {               /* 0 1 1 2 3 5 8 */
+    if (n &lt;= 1) return n;      /* fib(0)=0, fib(1)=1 */
+    return fib(n - 1) + fib(n - 2);
+}</div>
+    <figure class="doodle"><svg viewBox="0 0 280 210" width="262">
+      <g class="w">
+        <rect x="20" y="20" width="130" height="34" rx="5" class="ink-r fill-r"/>
+        <rect x="20" y="58" width="130" height="34" rx="5" class="ink fill-b"/>
+        <rect x="20" y="96" width="130" height="34" rx="5" class="ink fill-b"/>
+        <rect x="20" y="134" width="130" height="34" rx="5" class="ink fill-b"/>
+        <path class="ink" d="M10,14 V172 H160 V14"/>
+        <path class="ink-p" d="M180,170 V30" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M230,30 V170" marker-end="url(#ahg)"/>
+      </g>
+      <text x="85" y="42" text-anchor="middle" class="s r w6">fact(1) → 1</text>
+      <text x="85" y="80" text-anchor="middle" class="s">fact(2) → 2·1</text>
+      <text x="85" y="118" text-anchor="middle" class="s">fact(3) → 3·2</text>
+      <text x="85" y="156" text-anchor="middle" class="s">fact(4) → 4·6</text>
+      <text x="180" y="192" text-anchor="middle" class="s p">push</text>
+      <text x="230" y="192" text-anchor="middle" class="s g">pop</text>
+      <text x="85" y="194" text-anchor="middle" class="s k">fact(4) = 24 · 4 frames</text>
+    </svg><figcaption>winding down, unwinding up</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Kind</th><th class="l">Meaning</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Direct</b></td><td class="l">the function calls itself</td><td class="l"><code>fact</code>, <code>fib</code></td></tr>
+    <tr><td class="l"><b>Indirect</b> (mutual)</td><td class="l">A calls B, B calls A</td><td class="l"><code>isEven</code> ↔ <code>isOdd</code></td></tr>
+    <tr><td class="l"><b>Tail</b></td><td class="l">the recursive call is the <b>last</b> action; nothing left to do after it</td><td class="l"><code>return gcd(b, a % b);</code></td></tr>
+    <tr><td class="l"><b>Non-tail</b> (head)</td><td class="l">work remains after the call returns</td><td class="l"><code>return n * fact(n - 1);</code></td></tr>
+    <tr><td class="l"><b>Tree</b> (multiple)</td><td class="l">more than one recursive call per frame</td><td class="l"><code>fib</code>, Towers of Hanoi</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">int isOdd(int n);          /* prototype */
+int isEven(int n) {
+    return n == 0 ? 1 : isOdd(n - 1);
+}
+int isOdd(int n) {
+    return n == 0 ? 0 : isEven(n - 1);
+}           /* isEven(4) → 1  (indirect) */</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">long factT(int n, long acc) {
+    if (n &lt;= 1) return acc;
+    return factT(n - 1, n * acc); /* tail */
+}
+/* factT(5, 1) = 120: the frame has no
+   pending work, so an optimiser can
+   reuse it (a loop in disguise)      */</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Russian dolls</b>": open dolls on the way down (calls), the smallest is solid (base case), close them on the way up (returns).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Tail-call optimisation is something compilers <b>may</b> do (e.g. gcc -O2); the C standard does not require it. <code>main</code> may call itself in C (not in C++).</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ depth</span> <code>fact(5)</code> → frames for n = 5, 4, 3, 2, 1: maximum depth <span class="circ">5</span>; result 120. <code>fact(-1)</code> never reaches the base case → overflow.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: recursion tree, complexity, iteration ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Recursion tree &amp; cost</span></div>
+  <h2><span class="no">7</span>Recursion Tree, Complexity, Recursion vs Iteration</h2><span class="tag">frequently tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">recursion tree</span> draws one node per call. Naive <code>fib(n)</code> makes two calls per frame and recomputes the same values again and again: calls C(n) = C(n−1) + C(n−2) + 1 with C(0) = C(1) = 1, which solves to <span class="circ">C(n) = 2·F(n+1) − 1</span>. For <code>fib(5)</code>: 2·8 − 1 = 15 calls. Time O(2ⁿ) (tight: Θ(φⁿ), φ ≈ 1.618); stack depth only n.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 222" width="410">
+    <g class="w">
+      <path class="ink" d="M320,20 L180,65 M320,20 L470,65 M180,65 L100,110 M180,65 L260,110 M470,65 L410,110 M470,65 L540,110 M100,110 L55,155 M100,110 L145,155 M260,110 L225,155 M260,110 L295,155 M410,110 L375,155 M410,110 L445,155 M55,155 L25,200 M55,155 L85,200"/>
+      <circle cx="320" cy="20" r="15" class="ink-k fill-y"/>
+      <circle cx="180" cy="65" r="15" class="ink fill-b"/><circle cx="470" cy="65" r="15" class="ink-r fill-r"/>
+      <circle cx="100" cy="110" r="15" class="ink-r fill-r"/><circle cx="260" cy="110" r="15" class="ink fill-b"/><circle cx="410" cy="110" r="15" class="ink fill-b"/><circle cx="540" cy="110" r="15" class="ink-g fill-g"/>
+      <circle cx="55" cy="155" r="15" class="ink fill-b"/><circle cx="145" cy="155" r="15" class="ink-g fill-g"/><circle cx="225" cy="155" r="15" class="ink-g fill-g"/><circle cx="295" cy="155" r="15" class="ink-g fill-g"/><circle cx="375" cy="155" r="15" class="ink-g fill-g"/><circle cx="445" cy="155" r="15" class="ink-g fill-g"/>
+      <circle cx="25" cy="200" r="15" class="ink-g fill-g"/><circle cx="85" cy="200" r="15" class="ink-g fill-g"/>
+    </g>
+    <text x="320" y="25" text-anchor="middle" class="k w6">5</text>
+    <text x="180" y="70" text-anchor="middle" class="w6">4</text><text x="470" y="70" text-anchor="middle" class="r w6">3</text>
+    <text x="100" y="115" text-anchor="middle" class="r w6">3</text><text x="260" y="115" text-anchor="middle" class="w6">2</text><text x="410" y="115" text-anchor="middle" class="w6">2</text><text x="540" y="115" text-anchor="middle" class="g w6">1</text>
+    <text x="55" y="160" text-anchor="middle" class="w6">2</text><text x="145" y="160" text-anchor="middle" class="g w6">1</text><text x="225" y="160" text-anchor="middle" class="g w6">1</text><text x="295" y="160" text-anchor="middle" class="g w6">0</text><text x="375" y="160" text-anchor="middle" class="g w6">1</text><text x="445" y="160" text-anchor="middle" class="g w6">0</text>
+    <text x="25" y="205" text-anchor="middle" class="g w6">1</text><text x="85" y="205" text-anchor="middle" class="g w6">0</text>
+    <text x="590" y="160" text-anchor="middle" class="s r w6">15 calls</text>
+    <text x="590" y="180" text-anchor="middle" class="s r">fib(3) × 2</text>
+    <text x="590" y="200" text-anchor="middle" class="s">fib(2) × 3</text>
+    <text x="250" y="210" text-anchor="middle" class="s g">green = base cases (8 leaves)</text>
+  </svg><figcaption>node n = a call fib(n); red fib(3) is computed twice — wasted work</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">n</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+    <tr><td class="l">fib(n)</td><td>0</td><td>1</td><td>1</td><td>2</td><td>3</td><td>5</td><td>8</td></tr>
+    <tr><td class="l">calls made by naive fib(n)</td><td>1</td><td>1</td><td>3</td><td>5</td><td>9</td><td><b>15</b></td><td>25</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Algorithm</th><th class="l">Time</th><th class="l">Stack space</th></tr>
+      <tr><td class="l">factorial, recursive</td><td class="l">O(n)</td><td class="l">O(n)</td></tr>
+      <tr><td class="l">factorial, loop</td><td class="l">O(n)</td><td class="l">O(1)</td></tr>
+      <tr><td class="l">fib, naive recursive</td><td class="l"><span class="circ">O(2ⁿ)</span></td><td class="l">O(n)</td></tr>
+      <tr><td class="l">fib, memoised</td><td class="l">O(n)</td><td class="l">O(n)</td></tr>
+      <tr><td class="l">GCD (Euclid)</td><td class="l">O(log min(a,b))</td><td class="l">O(log)</td></tr>
+    </table>
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">long memo[50];   /* static: all 0 */
+long fibm(int n) {
+    if (n &lt;= 1) return n;
+    if (memo[n]) return memo[n];
+    return memo[n] =
+        fibm(n - 1) + fibm(n - 2);
+}         /* each n solved once */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Recursion</th><th class="l">Iteration (loop)</th></tr>
+    <tr><td class="l">Stops at</td><td class="l">base case</td><td class="l">loop condition false</td></tr>
+    <tr><td class="l">Memory</td><td class="l">one stack frame per active call</td><td class="l">constant</td></tr>
+    <tr><td class="l">Speed · failure</td><td class="l">slower (call overhead) · stack overflow</td><td class="l">faster · infinite loop</td></tr>
+    <tr><td class="l">Convertible?</td><td colspan="2" class="l">yes: any recursion → loop (+ explicit stack); recursion is clearer for trees, Hanoi</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Depth is the stack, nodes are the time.</b>" Naive fib: n deep, about 2ⁿ wide.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ Hanoi</span> 3 discs need 2³ − 1 = <span class="circ">7</span> moves; 4 discs 15; each extra disc doubles plus one.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: output tracing drill ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Output tracing</span></div>
+  <h2><span class="no">8</span>Output-Tracing Drill</h2><span class="tag">output questions ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Method</span> To trace any recursive output question: ① write the <b>call chain</b> going down with each argument; ② mark where the <span class="hl">base case</span> fires; ③ carry the <b>return values back up</b>, one frame at a time; ④ a <code>printf</code> <b>before</b> the recursive call prints on the way down, one <b>after</b> it prints on the way up (reversed order).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 270px;align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void p(int n) {
+    if (n == 0) return;
+    printf("%d", n);   /* before: down */
+    p(n - 1);
+    printf("%d", n);   /* after: up    */
+}
+p(3);              /* prints 321123 */</div>
+    <figure class="doodle"><svg viewBox="0 0 280 150" width="262">
+      <g class="w">
+        <rect x="10" y="8" width="70" height="28" rx="6" class="ink fill-b"/>
+        <rect x="40" y="48" width="70" height="28" rx="6" class="ink fill-b"/>
+        <rect x="70" y="88" width="70" height="28" rx="6" class="ink fill-b"/>
+        <rect x="100" y="122" width="70" height="24" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M200,10 L248,130" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M262,130 L262,14" marker-end="url(#ahg)"/>
+      </g>
+      <text x="45" y="27" text-anchor="middle" class="s">p(3)</text>
+      <text x="75" y="67" text-anchor="middle" class="s">p(2)</text>
+      <text x="105" y="107" text-anchor="middle" class="s">p(1)</text>
+      <text x="135" y="139" text-anchor="middle" class="s g">p(0)</text>
+      <text x="196" y="80" text-anchor="middle" class="s r">3 2 1</text>
+      <text x="236" y="40" text-anchor="middle" class="s g">1 2 3</text>
+    </svg><figcaption>down prints 3 2 1, up prints 1 2 3</figcaption></figure>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">① Sum of digits</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int sd(int n) {
+  return n == 0 ? 0 : n % 10 + sd(n / 10);
+}</div><code>sd(1234)</code> = 4 + 3 + 2 + 1 + 0 = <span class="circ">10</span>; 5 calls (1234, 123, 12, 1, 0).</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">② Power</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int pw(int b, int e) {
+  return e == 0 ? 1 : b * pw(b, e - 1);
+}</div><code>pw(2, 10)</code> = 1024 with 11 calls. Halving <i>e</i> (<code>pw(b*b, e/2)</code>) cuts it to O(log e).</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">③ GCD (Euclid)</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int gcd(int a, int b) {
+  return b == 0 ? a : gcd(b, a % b);
+}</div><code>gcd(48, 18)</code>: (48,18) → (18,12) → (12,6) → (6,0) → <b>6</b>. LCM = 48·18 / 6 = 144.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">④ Step of two</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int f(int n) {
+  return n &lt;= 1 ? 1 : n * f(n - 2);
+}</div><code>f(7)</code> = 7·5·3·1 = <b>105</b>, not 7! = 5040: the argument drops by 2.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">⑤ Binary by recursion</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">void bin(int n) {
+  if (n &gt; 1) bin(n / 2);
+  printf("%d", n % 2);
+}</div><code>bin(10)</code> prints <span class="circ">1010</span>: digits come out on the way up.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">⑥ static inside recursion</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int g(int n) {
+  static int s = 0;
+  s += n;  if (n &gt; 0) g(n - 1);
+  return s;
+}</div><code>g(3)</code> → one shared <i>s</i>: 3+2+1+0 = <b>6</b>; a second <code>g(3)</code> returns 12.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Print before = going down the stairs; print after = climbing back up.</b>" Down reads forwards, up reads backwards.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A <code>static</code> local is <b>shared by all frames</b> — one copy, not one per call. An <code>auto</code> local gets a fresh copy in every frame.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ sum</span> <code>int s(int n){return n==0?0:n+s(n-1);}</code> → <code>s(100)</code> = <span class="circ">5050</span>, 101 calls deep.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Prototype: <code>int add(int, int);</code></p><p>Definition: exactly one, with a body</p>
+      <p>Actual = in the call; formal = in the header</p><p><code>main</code> returns <code>int</code>; 0 = success</p>
+      <p>C: call by value only</p><p>"By reference" = <code>f(&amp;x)</code> + <code>int *p</code></p>
+      <p>Array parameter = pointer; pass length</p><p>4 scopes: block, file, function, prototype</p>
+      <p>auto/register: garbage, block life</p><p>static/global: 0, whole-program life</p>
+      <p>static global/function → internal linkage</p><p><code>extern</code>: declaration, no storage</p>
+      <p>No <code>&amp;</code> on register; hint only</p><p>fib(5) = 5 with 15 calls; 2·F(n+1) − 1</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Default storage class of a local: <code>auto</code></li>
+      <li>static local: initialised once, keeps value</li>
+      <li>counter() with static ×3 → 1 2 3</li>
+      <li>swap by value → no change (10 20)</li>
+      <li>Labels have function scope</li>
+      <li>Shadowing: inner name hides outer</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Recursion needs a base case</li>
+      <li>Each call = one stack frame</li>
+      <li>No base case → stack overflow</li>
+      <li>fact O(n); naive fib O(2ⁿ); memo O(n)</li>
+      <li>Tail call = recursive call is last</li>
+      <li>Hanoi: 2ⁿ − 1 moves</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 168px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Top traps</span> C has no true call by reference · <code>extern</code> allocates nothing · static global is file-private · <code>register</code> may be ignored · <code>f(i++, i++)</code> undefined · static local shared by all frames · <code>sizeof</code> of an array parameter = pointer size.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">All tricks together</span> visiting card vs person · photocopy vs house key · room vs lifespan · A-R die young, S-E live long · extern = lives elsewhere, static = Keep Out · Russian dolls · depth is the stack, nodes are the time · down the stairs, back up.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="164">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="s">passing</text>
+      <text x="75" y="64" text-anchor="middle" class="r s">static</text>
+      <text x="75" y="100" text-anchor="middle" class="g s">recursion</text>
+      <text x="215" y="28" text-anchor="middle" class="s">always a copy</text>
+      <text x="215" y="64" text-anchor="middle" class="s">lives, starts at 0</text>
+      <text x="215" y="100" text-anchor="middle" class="k s">base case first</text>
+    </svg><figcaption>three ideas, three lines</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ one keyword changes the output</span> <code>void c(){ int n = 0; n++; printf("%d ", n); }</code> called three times prints "1 1 1". Write <code>static int n = 0;</code> instead and the same three calls print "<span class="circ">1 2 3</span>" — the initialiser runs once and the value survives between calls.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · Functions &amp; Recursion</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">1.</span>The default storage class of a local variable in C is:<ol class="opts"><li>static</li><li>extern</li><li>auto</li><li>register</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">2.</span><code>counter()</code> has <code>static int c = 0; c++; printf("%d ", c);</code>. Three calls print:<ol class="opts"><li>1 2 3</li><li>1 1 1</li><li>0 1 2</li><li>3 3 3</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">3.</span>In C, function arguments are passed:<ol class="opts"><li>by reference</li><li>by name</li><li>by value and by reference</li><li>by value only (pointers simulate reference)</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">4.</span>The default initial value of a <code>static int</code> is:<ol class="opts"><li>garbage</li><li>0</li><li>1</li><li>−1</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">5.</span>The address operator <code>&amp;</code> cannot be applied to a:<ol class="opts"><li>register variable</li><li>static variable</li><li>extern variable</li><li>global variable</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">6.</span><code>static</code> on a global variable gives it:<ol class="opts"><li>external linkage</li><li>block scope</li><li>internal linkage (file-private)</li><li>automatic lifetime</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">7.</span>How many calls does naive recursive <code>fib(5)</code> make, counting the first?<ol class="opts"><li>5</li><li>8</li><li>9</li><li>15</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">8.</span><code>p(n)</code> prints n, calls <code>p(n-1)</code>, prints n again; <code>p(0)</code> returns. <code>p(3)</code> prints:<ol class="opts"><li>123321</li><li>321123</li><li>321</li><li>321321</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">9.</span><code>extern int x;</code> written at file scope:<ol class="opts"><li>declares x without allocating storage</li><li>defines x and sets it to 0</li><li>makes x private to the file</li><li>allocates x on the stack</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">10.</span>The time complexity of naive recursive Fibonacci is:<ol class="opts"><li>O(n)</li><li>O(log n)</li><li>O(n²)</li><li>O(2ⁿ)</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-a · 6-c · 7-d · 8-b · 9-a · 10-d</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Explain the four storage classes of C with a table (storage, default value, scope, lifetime). Write a program showing that a <code>static</code> local keeps its value, and a recursive factorial function; trace the stack for <code>fact(4)</code>. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>Table (4)</b> — auto: stack, garbage, block, block · register: CPU register if granted, garbage, block, block, no <code>&amp;</code> · static: data/BSS, 0, block or file, whole program · extern: declaration of a definition elsewhere, 0, file, whole program. <i class="mk">4</i></li>
+    <li><b>static program (2)</b> — <code>counter()</code> with <code>static int count = 0; count++;</code> called three times prints 1 2 3; without <code>static</code>, 1 1 1. <i class="mk">2</i></li>
+    <li><b>Factorial (2)</b> — base case <code>n == 0 || n == 1</code> returns 1; otherwise <code>n * fact(n - 1)</code>. <i class="mk">2</i></li>
+    <li><b>Trace (2)</b> — push fact(4), fact(3), fact(2), fact(1); fact(1) = 1; pop: 2·1 = 2, 3·2 = 6, 4·6 = 24. <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">Before the exam ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>Can tell prototype, definition and call apart</li>
+      <li>Can write swap by pointer</li>
+      <li>Can name the four C scopes</li>
+    </ul>
+    <ul class="tick">
+      <li>Can fill the storage-class table</li>
+      <li>Can trace a recursive output</li>
+      <li>Can count calls in a fib tree</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

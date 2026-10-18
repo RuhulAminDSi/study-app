@@ -1,4 +1,7 @@
+import { Fragment } from 'react'
 import type { ReactNode } from 'react'
+import NotesViewer from './NotesViewer'
+import { sanitizeHtml } from '../utils/sanitizeHtml'
 
 function parseTable(lines: string[]): ReactNode | null {
   const rows: string[][] = []
@@ -31,7 +34,7 @@ function parseTable(lines: string[]): ReactNode | null {
         <thead>
           <tr>
             {rows[0].map((cell, idx) => (
-              <th key={idx} dangerouslySetInnerHTML={{ __html: cell }} />
+              <th key={idx} dangerouslySetInnerHTML={{ __html: sanitizeHtml(cell) }} />
             ))}
           </tr>
         </thead>
@@ -39,7 +42,7 @@ function parseTable(lines: string[]): ReactNode | null {
           {rows.slice(1).map((row, rowIdx) => (
             <tr key={rowIdx}>
               {row.map((cell, cellIdx) => (
-                <td key={cellIdx} dangerouslySetInnerHTML={{ __html: cell }} />
+                <td key={cellIdx} dangerouslySetInnerHTML={{ __html: sanitizeHtml(cell) }} />
               ))}
             </tr>
           ))}
@@ -55,9 +58,27 @@ function isTableLine(line: string): boolean {
   return trimmed.includes('│') || /[┌┬┐├┤└┘┄┆─]/.test(trimmed)
 }
 
+/** A lesson body written by the server's notes:apply (a .hn-viewer block) becomes the NotesViewer. */
+function notesViewerFor(content: string): ReactNode | null {
+  if (!content.includes('class="hn-viewer"')) return null
+  const el = new DOMParser().parseFromString(content, 'text/html').querySelector<HTMLElement>('.hn-viewer')
+  const slug = el?.dataset.notes
+  const lang = el?.dataset.lang
+  if (!el || !slug || (lang !== 'en' && lang !== 'bn')) return null
+  const title = el.dataset.title || el.querySelector('.hn-viewer-title')?.textContent || slug
+  return <NotesViewer key={`${slug}.${lang}`} slug={slug} dir={el.dataset.notesDir} lang={lang} title={title} />
+}
+
+/** True when a lesson body is HTML (the rich-text editor's output) rather than the legacy line format. */
+export const isHtmlContent = (content: string) => HTML_START.test(content.trim())
+const HTML_START = /^\s*<(?:div|table|p|h[1-6]|pre|ul|ol|li|blockquote|hr|img|br|section|article|header|footer|main|figure|figcaption|span|a)\b/i
+
 export function renderContent(content: string): ReactNode[] {
-  if (/^\s*<(?:div|table|p|h[1-6]|pre|ul|ol|li|blockquote|hr|img|br|section|article|header|footer|main|figure|figcaption|span|a)\b/i.test(content.trim())) {
-    return [<div key="html" className="html-content" dangerouslySetInnerHTML={{ __html: content }} />]
+  const notes = notesViewerFor(content)
+  if (notes) return [notes]
+
+  if (isHtmlContent(content)) {
+    return [<div key="html" className="html-content" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />]
   }
 
   const allLines = content.split('\n')
@@ -68,6 +89,7 @@ export function renderContent(content: string): ReactNode[] {
     const line = allLines[i]
 
     if (isTableLine(line)) {
+      const start = i
       const tableLines: string[] = [line]
       i++
       while (i < allLines.length && isTableLine(allLines[i])) {
@@ -77,7 +99,7 @@ export function renderContent(content: string): ReactNode[] {
 
       if (tableLines.length >= 2) {
         const table = parseTable(tableLines)
-        if (table) result.push(table)
+        if (table) result.push(<Fragment key={start}>{table}</Fragment>)
       }
       continue
     }
@@ -88,7 +110,7 @@ export function renderContent(content: string): ReactNode[] {
     if (trimmed.startsWith('<table>')) {
       const tableMatch = trimmed.match(/<table>.*?<\/table>/s)
       if (tableMatch) {
-        result.push(<div key={i} className="lesson-table-container" dangerouslySetInnerHTML={{ __html: tableMatch[0] }} />)
+        result.push(<div key={i} className="lesson-table-container" dangerouslySetInnerHTML={{ __html: sanitizeHtml(tableMatch[0]) }} />)
       }
     } else if (trimmed.match(/^[🔬⚡🌊📐🧲🌐✅⚠️]$/)) {
       result.push(<div key={i} className="section-emoji">{trimmed}</div>)

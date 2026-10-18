@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>SPL: হেডার ফাইল, প্রিপ্রসেসর, পয়েন্টার, অ্যারে ও স্ট্রিং: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">C-তে অ্যাড্রেস, অ্যারে ও স্ট্রিং</span></h1>
+  <p class="subtitle">হেডার ফাইল · প্রিপ্রসেসর · ম্যাক্রো · পয়েন্টার · 1D/2D অ্যারে · স্ট্রিং: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L176,145 M424,145 L464,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink fill-b"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="bn k l">C-এর মেমোরি</text><text x="320" y="166" text-anchor="middle" class="bn r s">অ্যাড্রেস · উপাদান · ক্যারেক্টার</text>
+      <text x="142" y="62" text-anchor="middle" class="bn s">হেডার ফাইল &lt;&gt; বনাম ""</text>
+      <text x="320" y="38" text-anchor="middle" class="bn r w6" style="font-size:13px">ম্যাক্রো: SQUARE ফাঁদ ★</text>
+      <text x="498" y="62" text-anchor="middle" class="bn r w6" style="font-size:14px">&amp; ও * ★</text>
+      <text x="96" y="150" text-anchor="middle" class="s">#if · #ifdef · #error</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6">p + 1 = +sizeof ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn r w6" style="font-size:13px">2D অ্যাড্রেস সূত্র ★</text>
+      <text x="320" y="264" text-anchor="middle" class="g w6">arr[i] ≡ *(arr + i)</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6">'\0' · strlen ≠ sizeof ★</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = যে নিয়মের ওপর বাকি সব দাঁড়িয়ে</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm"><b>হাই-ইল্ড তালিকা</b><br>① <code>&lt;&gt;</code> সিস্টেম ডিরেক্টরি; <code>""</code> আগে নিজের ফোল্ডার<br>② প্রিপ্রসেসর = কম্পাইলের আগে টেক্সটের কাজ<br>③ <code>x*x</code> দিলে <code>SQUARE(2+3)</code> → 11<br>④ <code>&amp;</code> অ্যাড্রেস; <code>*</code> ওই অ্যাড্রেসের মান<br>⑤ <code>p + 1</code> সরে <code>sizeof(*p)</code> বাইট<br>⑥ <code>arr[i] ≡ *(arr+i) ≡ i[arr]</code><br>⑦ <code>sizeof(arr)</code> ≠ <code>sizeof(p)</code><br>⑧ C রো-মেজর<br>⑨ স্ট্রিং শেষ হয় <code>'\0'</code>-এ (ASCII 0)<br>⑩ <code>gets()</code> C11-এ বাদ → <code>fgets()</code></div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">Structured Programming Language সিলেবাসে আছে: "<span class="hl">Header files; Preprocessor; Pointers and arrays; Strings; Multidimensional array</span>"। ডেটা টাইপ, অপারেটর ও কন্ট্রোল ফ্লো, এবং ফাংশন, স্কোপ ও স্টোরেজ ক্লাস আগের লেসনে; স্ট্রাকচার, ইউনিয়ন ও enum, তারপর I/O, ফাইল ও <code>malloc</code> পরের লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>হেডার ফাইল ও বিল্ড পাইপলাইন … পৃ. ২</li><li>প্রিপ্রসেসর ডিরেক্টিভ ও ম্যাক্রো … পৃ. ৩</li><li>পয়েন্টার: &amp;, *, প্রকার, const … পৃ. ৪</li><li>পয়েন্টার অ্যারিথমেটিক … পৃ. ৫</li><li>1D অ্যারে ও অ্যারে–পয়েন্টার সম্পর্ক … পৃ. ৬</li></ul>
+    <ul class="tick"><li>2D অ্যারে ও অ্যাড্রেস সূত্র … পৃ. ৭</li><li>স্ট্রিং ও <code>'\0'</code> … পৃ. ৮</li><li>string.h ও স্ট্রিং ইনপুট … পৃ. ৯</li><li>রাতের পরীক্ষার পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: header files ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>হেডার ফাইল</span></div>
+  <h2><span class="no">১</span>হেডার ফাইল ও বিল্ড পাইপলাইন</h2><span class="tag">MCQ-র প্রিয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">হেডার ফাইল (Header File)</span> (<code>.h</code>) একাধিক সোর্স ফাইলের ভাগ করা <b>ডিক্লারেশন</b> রাখে: ফাংশন প্রোটোটাইপ, ম্যাক্রো, কনস্ট্যান্ট ও টাইপ সংজ্ঞা (<code>typedef</code>, <code>struct</code>)। <code>#include</code> লাইনটির জায়গায় ফাইলের পুরো টেক্সট বসিয়ে দেয় — <b>কম্পাইলের আগেই</b>। হেডারে কোনো কম্পাইলড কোড থাকে না: <code>printf</code>, <code>sqrt</code> … -এর বডি থাকে <span class="circ">লাইব্রেরিতে</span>, যা জোড়ে <b>লিংকার (Linker)</b>।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 100" width="500">
+    <g class="w">
+      <rect x="2" y="14" width="86" height="46" rx="10" class="ink fill-b"/>
+      <rect x="108" y="14" width="110" height="46" rx="10" class="ink-r fill-r"/>
+      <rect x="238" y="14" width="86" height="46" rx="10" class="ink fill-b"/>
+      <rect x="344" y="14" width="86" height="46" rx="10" class="ink fill-b"/>
+      <rect x="450" y="14" width="86" height="46" rx="10" class="ink-p fill-p"/>
+      <rect x="554" y="14" width="84" height="46" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M89,37 H104" marker-end="url(#ahb)"/>
+      <path class="ink" d="M219,37 H234" marker-end="url(#ahb)"/>
+      <path class="ink" d="M325,37 H340" marker-end="url(#ahb)"/>
+      <path class="ink" d="M431,37 H446" marker-end="url(#ahb)"/>
+      <path class="ink" d="M537,37 H550" marker-end="url(#ahb)"/>
+    </g>
+    <text x="45" y="33" text-anchor="middle" class="s k">hello.c</text><text x="45" y="52" text-anchor="middle" class="bn s">সোর্স</text>
+    <text x="163" y="33" text-anchor="middle" class="bn s r w6">প্রিপ্রসেসর</text><text x="163" y="51" text-anchor="middle" class="s r">→ hello.i</text>
+    <text x="281" y="33" text-anchor="middle" class="bn s k">কম্পাইলার</text><text x="281" y="51" text-anchor="middle" class="s">→ hello.s</text>
+    <text x="387" y="33" text-anchor="middle" class="bn s k">অ্যাসেম্বলার</text><text x="387" y="51" text-anchor="middle" class="s">→ hello.o</text>
+    <text x="493" y="33" text-anchor="middle" class="bn s p w6">লিংকার</text><text x="493" y="52" text-anchor="middle" class="bn s p">+ লাইব্রেরি</text>
+    <text x="596" y="33" text-anchor="middle" class="s g w6">hello.exe</text><text x="596" y="52" text-anchor="middle" class="bn s g">রান</text>
+    <text x="320" y="88" text-anchor="middle" class="bn s k">হেডার বসে প্রিপ্রসেসর ধাপে; লাইব্রেরির কোড জোড়ে লিংকার ধাপে</text>
+  </svg><figcaption>gcc -E প্রিপ্রসেসিংয়ের পরে থামে, -S কম্পাইলের পরে, -c অ্যাসেম্বলের পরে</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">হেডার</th><th class="l">কী দেয় · যে নামগুলো চিনতে হবে</th></tr>
+    <tr><td class="l"><code>&lt;stdio.h&gt;</code></td><td class="l">স্ট্যান্ডার্ড I/O: printf, scanf, puts, fgets, getchar, fopen, FILE, EOF</td></tr>
+    <tr><td class="l"><code>&lt;conio.h&gt;</code></td><td class="l">কনসোল I/O, <b>স্ট্যান্ডার্ড C নয়</b> (Turbo C/DOS, MSVC): clrscr, getch, getche</td></tr>
+    <tr><td class="l"><code>&lt;math.h&gt;</code></td><td class="l">double-এ গণিত: sqrt, pow, fabs, ceil, floor, sin, log (gcc: -lm দিয়ে লিংক)</td></tr>
+    <tr><td class="l"><code>&lt;string.h&gt;</code></td><td class="l">স্ট্রিং ও মেমোরি ব্লক: strlen, strcpy, strcat, strcmp, strstr, memcpy</td></tr>
+    <tr><td class="l"><code>&lt;stdlib.h&gt;</code></td><td class="l">সাধারণ ইউটিলিটি: malloc, calloc, free, atoi, rand, exit, abs, qsort</td></tr>
+    <tr><td class="l"><code>&lt;ctype.h&gt;</code></td><td class="l">ক্যারেক্টার পরীক্ষা ও কেস: isalpha, isdigit, isspace, toupper, tolower</td></tr>
+    <tr><td class="l"><code>&lt;time.h&gt;</code></td><td class="l">তারিখ ও সময়: time, clock, difftime, CLOCKS_PER_SEC</td></tr>
+    <tr><td class="l"><code>&lt;limits.h&gt;</code></td><td class="l">ইন্টিজারের সীমা: INT_MAX, INT_MIN, CHAR_BIT, LONG_MAX</td></tr>
+    <tr><td class="l"><code>&lt;float.h&gt;</code></td><td class="l">ফ্লোটিং-পয়েন্টের সীমা: FLT_MAX, DBL_MAX, FLT_EPSILON, FLT_DIG</td></tr>
+    <tr><td class="l"><code>&lt;stddef.h&gt;</code> · <code>&lt;stdbool.h&gt;</code></td><td class="l">NULL, size_t, ptrdiff_t · bool, true, false (C99)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">/* myheader.h */
+#ifndef MYHEADER_H     /* include guard */
+#define MYHEADER_H
+int add(int a, int b); /* prototype */
+#define MAX 100
+#endif
+/* main.c */
+#include &lt;stdio.h&gt;      /* system dirs */
+#include "myheader.h"   /* own dir 1st */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl"><code>&lt;…&gt;</code> বনাম <code>"…"</code></span> <code>&lt;stdio.h&gt;</code> খোঁজা হয় কেবল স্ট্যান্ডার্ড (সিস্টেম) ইনক্লুড ডিরেক্টরিতে — লাইব্রেরি হেডারের জন্য। <code>"my.h"</code> খোঁজা হয় <span class="circ">আগে নিজের ফোল্ডারে</span>, তারপর সিস্টেম ডিরেক্টরিতে — নিজের হেডারের জন্য। <span class="hl">ইনক্লুড গার্ড (Include Guard)</span> দ্বিতীয় কপি আটকায়, তাই "redefinition" এরর হয় না; <code>#pragma once</code> একই কাজ করে (স্ট্যান্ডার্ড নয়, তবে প্রায় সব কম্পাইলারে চলে)।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>অ্যাঙ্গেল ব্র্যাকেট = লাইব্রেরির তাক; কোটেশন = নিজের টেবিল</b>, আগে টেবিল দেখো, তারপর তাক।"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> হেডার তার লাইব্রেরি লিংক করে <b>না</b>: <code>&lt;math.h&gt;</code> থাকলেও gcc-তে <code>-lm</code> লাগে, নইলে "undefined reference"। <code>conio.h</code>, <code>clrscr()</code>, <code>getch()</code> ISO C নয়।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কোন হেডার?</span> <code>INT_MAX</code> → limits.h · <code>toupper</code> → ctype.h · <code>malloc</code> → stdlib.h · <code>fabs</code> → math.h কিন্তু <code>abs</code> → <span class="circ">stdlib.h</span>।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: preprocessor & macros ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>প্রিপ্রসেসর ও ম্যাক্রো</span></div>
+  <h2><span class="no">২</span>প্রিপ্রসেসর ডিরেক্টিভ ও ম্যাক্রো</h2><span class="tag">আউটপুট প্রশ্ন ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">প্রিপ্রসেসর (Preprocessor)</span> চলে <b>কম্পাইলারের আগে</b> এবং <code>#</code> দিয়ে শুরু হওয়া প্রতিটি লাইন (<b>ডিরেক্টিভ, Directive</b>) সামলায়। এর কাজ পুরোপুরি টেক্সটের — ফাইল যুক্ত করা, <span class="hl">ম্যাক্রো (Macro)</span> প্রতিস্থাপন, শর্তসাপেক্ষ কম্পাইলেশন — কমেন্ট সরানোর পরে। ডিরেক্টিভ লাইনের শেষে শেষ হয়: <span class="circ">সেমিকোলন নেই</span> (লম্বা হলে <code>\</code> দিয়ে পরের লাইনে)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">ডিরেক্টিভ</th><th class="l">কাজ</th></tr>
+      <tr><td class="l"><code>#include</code></td><td class="l">ফাইলের টেক্সট যুক্ত করে</td></tr>
+      <tr><td class="l"><code>#define</code></td><td class="l">কনস্ট্যান্ট বা ম্যাক্রো: <code>#define PI 3.1416</code></td></tr>
+      <tr><td class="l"><code>#undef</code></td><td class="l">ম্যাক্রোর সংজ্ঞা মুছে দেয়</td></tr>
+      <tr><td class="l"><code>#ifdef</code> · <code>#ifndef</code></td><td class="l">সংজ্ঞায়িত হলে · না হলে কম্পাইল</td></tr>
+      <tr><td class="l"><code>#if #elif #else #endif</code></td><td class="l">ধ্রুবক ইন্টিজার শর্তে কম্পাইল; <code>defined(X)</code> চলে</td></tr>
+      <tr><td class="l"><code>#error msg</code></td><td class="l">বার্তা দিয়ে কম্পাইল থামায়</td></tr>
+      <tr><td class="l"><code>#pragma</code> · <code>#line</code></td><td class="l">কম্পাইলার-নির্দিষ্ট নির্দেশ (<code>once</code>, <code>pack</code>) · লাইন নম্বর বদল</td></tr>
+    </table>
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">#define DEBUG 1
+#define VERSION 2
+#ifdef DEBUG
+  printf("Debug mode ON\n");
+#endif
+#if VERSION &gt;= 2
+  newApi();
+#elif VERSION == 1
+  oldApi();
+#else
+  #error "unknown VERSION"
+#endif
+#undef DEBUG /* gone from here */</div>
+  </div>
+  <p class="tiny" style="margin:1mm 0"><b>পূর্বনির্ধারিত ম্যাক্রো (Predefined Macro):</b> <code>__FILE__</code> ফাইলের নাম (স্ট্রিং) · <code>__LINE__</code> লাইন নম্বর (int) · <code>__DATE__</code> <code>"Oct 14 2026"</code> · <code>__TIME__</code> <code>"hh:mm:ss"</code> · <code>__STDC__</code> মানসম্মত কম্পাইলারে 1 · <code>__STDC_VERSION__</code> <code>199901L</code> (C99), <code>201112L</code> (C11)।</p>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="460">
+    <g class="w">
+      <rect x="4" y="22" width="150" height="44" rx="10" class="ink fill-b"/>
+      <rect x="220" y="4" width="200" height="38" rx="10" class="ink-r fill-r"/>
+      <rect x="220" y="50" width="200" height="38" rx="10" class="ink-g fill-g"/>
+      <rect x="478" y="4" width="156" height="38" rx="10" class="ink-r fill-r"/>
+      <rect x="478" y="50" width="156" height="38" rx="10" class="ink-g fill-g"/>
+      <path class="ink-r" d="M156,38 L216,24" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M156,52 L216,68" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M422,23 H474" marker-end="url(#ah)"/>
+      <path class="ink-g" d="M422,69 H474" marker-end="url(#ahg)"/>
+    </g>
+    <text x="79" y="49" text-anchor="middle" class="s k w6">SQUARE(2+3)</text>
+    <text x="320" y="28" text-anchor="middle" class="s r">x*x → 2+3*2+3</text>
+    <text x="320" y="74" text-anchor="middle" class="s g">((x)*(x)) → ((2+3)*(2+3))</text>
+    <text x="556" y="28" text-anchor="middle" class="s r w6">= 11 ✗</text>
+    <text x="556" y="74" text-anchor="middle" class="s g w6">= 25 ✓</text>
+  </svg><figcaption>ম্যাক্রো টেক্সট হিসেবে বসে; তারপর স্বাভাবিক অগ্রাধিকার খাটে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1.2fr) minmax(0,0.8fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">বিষয়</th><th class="l">ম্যাক্রো</th><th class="l">ফাংশন</th></tr>
+      <tr><td class="l">কখন</td><td class="l">প্রিপ্রসেসিং: টেক্সট</td><td class="l">রান টাইম: কল</td></tr>
+      <tr><td class="l">টাইপ চেক</td><td class="l"><b>নেই</b></td><td class="l">আছে (প্রোটোটাইপ)</td></tr>
+      <tr><td class="l">আর্গুমেন্ট</td><td class="l">প্রতি ব্যবহারে আবার মূল্যায়ন</td><td class="l">একবার মূল্যায়ন</td></tr>
+      <tr><td class="l">গতি · আকার</td><td class="l">কলের খরচ নেই · কোড বাড়ে</td><td class="l">কলের খরচ · এক কপি</td></tr>
+      <tr><td class="l">অ্যাড্রেস</td><td class="l">নেই</td><td class="l">ফাংশন পয়েন্টার</td></tr>
+    </table>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl"># ও ##</span> <b>#</b> স্ট্রিং বানায়: <code>#define STR(x) #x</code>, <code>STR(Dhaka)</code> → <code>"Dhaka"</code>। <b>##</b> টোকেন জোড়ে: <code>#define CAT(a,b) a##b</code>, <code>CAT(var,1)</code> → <code>var1</code>। ফাংশন-সদৃশ ম্যাক্রোর চেয়ে নিরাপদ: <code>inline</code> ফাংশন (C99)।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ভেতরে ব্র্যাকেট, বাইরেও ব্র্যাকেট</b>": প্রতিটি প্যারামিটার ও পুরো বডি মুড়ে দাও — <code>((x)*(x))</code>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>#define PI 3.14;</code> দিলে <b>;</b>-ও বসে যায়। <code>SQUARE(i++)</code> i-কে দুবার বাড়ায়: অনির্ধারিত। <code>#define SQ (x)</code>-এ ফাঁকা থাকলে তা অবজেক্ট-সদৃশ।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট</span> <code>#define SQ(x) (x)*(x)</code>: <code>100/SQ(5)</code> → <code>100/(5)*(5)</code> = 20×5 = <span class="circ">100</span>, 4 নয়। পুরো ব্র্যাকেটে: 4।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: pointers ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>পয়েন্টার</span></div>
+  <h2><span class="no">৩</span>পয়েন্টার: &amp;, *, প্রকার ও const</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">পয়েন্টার (Pointer)</span> এমন একটি ভেরিয়েবল যা অন্য অবজেক্টের <b>মেমোরি অ্যাড্রেস</b> রাখে: <code>type *name;</code>। <code>&amp;</code> (<b>অ্যাড্রেস-অফ</b>) অ্যাড্রেস দেয়; <code>*</code> (<b>ইনডিরেকশন / ডিরেফারেন্স</b>, "ওই অ্যাড্রেসের মান") সেই অ্যাড্রেসের অবজেক্ট দেয়। পয়েন্টারের নিজের আকার মেশিন ঠিক করে — 32-বিটে 4 বাইট, <span class="circ">64-বিটে 8</span> — যেটাকেই দেখাক; তার টাইপ ঠিক করে <code>*</code> কত বাইট পড়বে আর <code>+1</code> কতদূর সরবে।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 128" width="480">
+    <g class="w">
+      <rect x="20" y="30" width="140" height="48" rx="8" class="ink-g fill-g"/>
+      <rect x="250" y="30" width="140" height="48" rx="8" class="ink fill-b"/>
+      <rect x="480" y="30" width="140" height="48" rx="8" class="ink-p fill-p"/>
+      <path class="ink" d="M248,54 H164" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M478,54 H394" marker-end="url(#ahp)"/>
+    </g>
+    <text x="90" y="22" text-anchor="middle" class="s k w6">int a = 10;</text>
+    <text x="90" y="60" text-anchor="middle" class="g w6">10</text>
+    <text x="96" y="97" text-anchor="end" class="bn s">অ্যাড্রেস</text><text x="100" y="96" text-anchor="start" class="s">1000</text>
+    <text x="320" y="22" text-anchor="middle" class="s k w6">int *p = &amp;a;</text>
+    <text x="320" y="60" text-anchor="middle" class="w6">1000</text>
+    <text x="326" y="97" text-anchor="end" class="bn s">অ্যাড্রেস</text><text x="330" y="96" text-anchor="start" class="s">2000</text>
+    <text x="550" y="22" text-anchor="middle" class="s k w6">int **q = &amp;p;</text>
+    <text x="550" y="60" text-anchor="middle" class="p w6">2000</text>
+    <text x="556" y="97" text-anchor="end" class="bn s">অ্যাড্রেস</text><text x="560" y="96" text-anchor="start" class="s">3000</text>
+    <text x="320" y="122" text-anchor="middle" class="s r">*p = 10 · **q = 10 · *q = p = 1000 · &amp;p = 2000</text>
+  </svg><figcaption>পয়েন্টারের বাক্সে থাকে অন্য বাক্সের অ্যাড্রেস</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int a = 10;
+int *p;           /* declare      */
+p = &amp;a;           /* address of a */
+printf("%d", *p); /* 10           */
+*p = 20;          /* a is now 20  */
+int **q = &amp;p;     /* ptr to ptr   */
+printf("%d", **q);/* 20           */
+int *x, y;     /* x ptr, y int!   */</div>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">এক্সপ্রেশন</th><th class="l">মান</th></tr>
+      <tr><td class="l"><code>a</code> · <code>&amp;a</code></td><td class="l">20 · 1000</td></tr>
+      <tr><td class="l"><code>p</code> · <code>*p</code> · <code>&amp;p</code></td><td class="l">1000 · 20 · 2000</td></tr>
+      <tr><td class="l"><code>*&amp;a</code> (পরস্পর কাটে)</td><td class="l">20</td></tr>
+      <tr><td class="l"><code>q</code> · <code>*q</code> · <code>**q</code></td><td class="l">2000 · 1000 · 20</td></tr>
+      <tr><td class="l"><code>printf("%p", (void *)p)</code></td><td class="l">1000 ছাপে</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">প্রকার</th><th class="l">কী</th><th class="l">বিপদ ও প্রতিকার</th></tr>
+    <tr><td class="l"><b>NULL</b></td><td class="l"><code>int *p = NULL;</code> কোথাও দেখায় না</td><td class="l">ডিরেফারেন্স → ক্র্যাশ; আগে <code>p != NULL</code> দেখো</td></tr>
+    <tr><td class="l"><b>void (জেনেরিক)</b></td><td class="l">যেকোনো অবজেক্টের অ্যাড্রেস রাখে; <code>malloc</code> এটাই দেয়</td><td class="l">কাস্ট ছাড়া <code>*v</code> বা <code>v+1</code> নয়: <code>*(int *)v</code></td></tr>
+    <tr><td class="l"><b>ওয়াইল্ড (Wild)</b></td><td class="l">কখনো ইনিশিয়ালাইজ হয়নি: আবর্জনা অ্যাড্রেস</td><td class="l"><code>NULL</code> বা বৈধ অ্যাড্রেস দাও</td></tr>
+    <tr><td class="l"><b>ড্যাংলিং (Dangling)</b></td><td class="l">অবজেক্ট আর নেই: <code>free(p)</code>-এর পরে, বা লোকালের অ্যাড্রেস ফেরত দিলে</td><td class="l"><code>free</code>-এর পরে <code>p = NULL;</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">ডিক্লারেশন</th><th><code>*p=5</code></th><th><code>p++</code></th></tr>
+      <tr><td class="l"><code>const int *p</code> = <code>int const *p</code></td><td>✗</td><td>✓</td></tr>
+      <tr><td class="l"><code>int *const p = &amp;a;</code></td><td>✓</td><td>✗</td></tr>
+      <tr><td class="l"><code>const int *const p</code></td><td>✗</td><td>✗</td></tr>
+    </table>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">দেখতে একরকম</span> <code>int *p[3]</code>: ৩টি পয়েন্টারের অ্যারে। <code>int (*p)[3]</code>: ৩টি int-এর অ্যারের দিকে <b>একটি</b> পয়েন্টার। <code>int (*fp)(int)</code>: ফাংশন পয়েন্টার। ফাংশনে <code>&amp;x</code> পাঠানো: আগের লেসন।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>&amp; জিজ্ঞেস করে কোথায়; * জিজ্ঞেস করে সেখানে কী।</b>" ডান থেকে বাঁয়ে পড়ো: <code>int *const p</code> = "p হলো int-এর const পয়েন্টার"।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>int *x, y;</code>-এ কেবল <b>x</b> পয়েন্টার: <code>*</code> নামের সঙ্গে লাগে। NULL বা ওয়াইল্ড ডিরেফারেন্স কম্পাইল হয়, রান টাইমে ভাঙে।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ট্রেস</span> <code>int a = 5, *p = &amp;a, **q = &amp;p; **q += *p;</code> → দুটোই a, তাই a = 5 + 5 = <span class="circ">10</span>।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: pointer arithmetic ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>পয়েন্টার অ্যারিথমেটিক</span></div>
+  <h2><span class="no">৪</span>পয়েন্টার অ্যারিথমেটিক</h2><span class="tag">সংখ্যাভিত্তিক MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> পয়েন্টারে ইন্টিজার n যোগ করলে তা <b>n টি উপাদান</b> সরে, n বাইট নয়: <span class="hl">address(p + n) = address(p) + n × sizeof(*p)</span>। একই অ্যারের দুটি পয়েন্টার বিয়োগ করলে মাঝের <b>উপাদানের সংখ্যা</b> পাওয়া যায় (টাইপ <code>ptrdiff_t</code>)। ফল নির্ধারিত কেবল একটি অ্যারের ভেতরে, আর <span class="circ">শেষের ঠিক পরের</span> অবস্থানে।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 130" width="500">
+    <g class="w">
+      <rect x="40" y="40" width="100" height="40" class="ink fill-b"/>
+      <rect x="140" y="40" width="100" height="40" class="ink-g fill-g"/>
+      <rect x="240" y="40" width="100" height="40" class="ink fill-b"/>
+      <rect x="340" y="40" width="100" height="40" class="ink-r fill-r"/>
+      <rect x="440" y="40" width="100" height="40" class="ink fill-b"/>
+      <path class="ink" d="M90,10 V36" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M190,10 V36" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M390,10 V36" marker-end="url(#ah)"/>
+      <path class="ink-p" d="M90,100 C140,124 340,124 386,102" marker-end="url(#ahp)"/>
+    </g>
+    <text x="104" y="16" text-anchor="start" class="s k">p</text>
+    <text x="204" y="16" text-anchor="start" class="s g">p + 1</text>
+    <text x="404" y="16" text-anchor="start" class="s r">p + 3</text>
+    <text x="90" y="66" text-anchor="middle" class="w6">10</text><text x="190" y="66" text-anchor="middle" class="w6">20</text><text x="290" y="66" text-anchor="middle" class="w6">30</text><text x="390" y="66" text-anchor="middle" class="w6">40</text><text x="490" y="66" text-anchor="middle" class="w6">50</text>
+    <text x="90" y="96" text-anchor="middle" class="s">1000</text><text x="190" y="96" text-anchor="middle" class="s">1004</text><text x="290" y="96" text-anchor="middle" class="s">1008</text><text x="390" y="96" text-anchor="middle" class="s">1012</text><text x="490" y="96" text-anchor="middle" class="s">1016</text>
+    <text x="590" y="58" text-anchor="middle" class="s k">int = 4 B</text>
+    <text x="236" y="127" text-anchor="end" class="s p">(p + 3) − p =</text><text x="242" y="128" text-anchor="start" class="bn s p">৩টি উপাদান, ১২ নয়</text>
+  </svg><figcaption>int a[5] = {10,20,30,40,50}; int *p = a; — প্রতি ধাপে ৪ বাইট লাফ</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">পয়েন্টার টাইপ</th><th>sizeof(*p)</th><th>1000 থেকে <code>p+1</code></th></tr>
+      <tr><td class="l"><code>char *</code></td><td>1</td><td>1001</td></tr>
+      <tr><td class="l"><code>short *</code></td><td>2</td><td>1002</td></tr>
+      <tr><td class="l"><code>int *</code>, <code>float *</code></td><td>4</td><td>1004</td></tr>
+      <tr><td class="l"><code>double *</code></td><td>8</td><td>1008</td></tr>
+      <tr><td class="l"><code>int **</code> (64-বিট)</td><td>8</td><td>1008</td></tr>
+      <tr><td class="l">12 বাইটের <code>struct *</code></td><td>12</td><td>1012</td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">অপারেশন</th><th>চলে?</th><th class="l">ফল</th></tr>
+      <tr><td class="l"><code>p + n</code>, <code>p − n</code>, <code>p++</code>, <code>p--</code></td><td>✓</td><td class="l">n উপাদান সরে</td></tr>
+      <tr><td class="l"><code>p2 − p1</code></td><td>✓</td><td class="l">মাঝের উপাদান</td></tr>
+      <tr><td class="l"><code>p1 &lt; p2</code>, <code>p == NULL</code></td><td>✓</td><td class="l">অবস্থান তুলনা</td></tr>
+      <tr><td class="l"><code>p1 + p2</code></td><td><span class="red"><b>✗</b></span></td><td class="l">কম্পাইল এরর</td></tr>
+      <tr><td class="l"><code>p * 2</code>, <code>p / 2</code>, <code>p % 2</code></td><td><span class="red"><b>✗</b></span></td><td class="l">কম্পাইল এরর</td></tr>
+      <tr><td class="l"><code>void *</code> অ্যারিথমেটিক</td><td><span class="red"><b>✗</b></span></td><td class="l">ISO C নয় (gcc: 1 B)</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int a[] = {10, 20, 30, 40};
+int *p = a;
+int x = *p++;   /* x=10, p-&gt;a[1] */
+int y = (*p)++; /* y=20, a[1]=21 */
+int z = *++p;   /* z=30, p-&gt;a[2] */
+printf("%d %d %d %d", x, y, z, a[1]);
+                /* 10 20 30 21   */
+int *q = &amp;a[3];
+printf("%d", (int)(q - a)); /* 3 */</div>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">এক্সপ্রেশন</th><th class="l">যা বদলায়</th><th class="l">ব্যবহৃত মান</th></tr>
+      <tr><td class="l"><code>*p++</code> = <code>*(p++)</code></td><td class="l"><b>p</b>, পরে</td><td class="l">পুরোনো <code>*p</code></td></tr>
+      <tr><td class="l"><code>*++p</code></td><td class="l"><b>p</b>, আগে</td><td class="l">নতুন <code>*p</code></td></tr>
+      <tr><td class="l"><code>(*p)++</code></td><td class="l"><b>মান</b>, পরে</td><td class="l">পুরোনো মান</td></tr>
+      <tr><td class="l"><code>++*p</code></td><td class="l"><b>মান</b>, আগে</td><td class="l">নতুন মান</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">পয়েন্টার দিয়ে অ্যারে ঘোরা</span> <code>for (p = a; p &lt; a + n; p++) sum += *p;</code> — <code>a + n</code> (শেষের ঠিক পরের অবস্থান)-এর সঙ্গে তুলনা বৈধ, কিন্তু <code>*(a + n)</code> পড়া বৈধ নয়। <b>ভিন্ন</b> অ্যারের পয়েন্টার বিয়োগ বা <code>&lt;</code> দিয়ে তুলনা করা যায় না; <code>==</code> সবসময় চলে। পয়েন্টারের পার্থক্য ছাপতে <code>%td</code>।</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>টাইপই মাপার স্কেল।</b>" পয়েন্টার গোনে উপাদানে; এক ধাপ কত লম্বা তা বলে তার টাইপ।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>*p++</code> সরায় <b>পয়েন্টার</b>, মান নয়: পোস্টফিক্স <code>++</code>-এর বাঁধন <code>*</code>-এর চেয়ে শক্ত। ১২ বাইট দূরের দুটি int পয়েন্টারের পার্থক্য <b>3</b>।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ অ্যাড্রেস</span> <code>double *d</code>-এ 2000: <code>d + 5</code> = 2000 + 5×8 = <span class="circ">2040</span>। <code>char *</code> হলে: 2005।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: 1D arrays ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>অ্যারে ও পয়েন্টার</span></div>
+  <h2><span class="no">৫</span>1D অ্যারে ও অ্যারে–পয়েন্টার সম্পর্ক</h2><span class="tag">সবচেয়ে হাই-ইল্ড ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">অ্যারে (Array)</span> হলো <b>একই টাইপের</b> উপাদানের নির্দিষ্ট আকারের সংগ্রহ, যা <b>পরপর (contiguous)</b> মেমোরিতে থাকে, ইনডেক্স <code>0 … n−1</code>; <code>int arr[5]</code> নেয় 5 × 4 = 20 বাইট। C <b>সীমা যাচাই করে না</b>: <code>arr[5]</code> কম্পাইল হয়, কিন্তু অনির্ধারিত আচরণ (Undefined Behaviour)। বেশিরভাগ এক্সপ্রেশনে নামটি ০ নম্বর উপাদানের পয়েন্টারে <span class="hl">রূপান্তরিত (Decay)</span> হয়, তাই <span class="circ">arr[i] ≡ *(arr + i)</span> ≡ <code>*(i + arr)</code> ≡ <code>i[arr]</code>।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 118" width="500">
+    <g class="w">
+      <rect x="60" y="38" width="96" height="36" class="ink-g fill-g"/>
+      <rect x="156" y="38" width="96" height="36" class="ink fill-b"/>
+      <rect x="252" y="38" width="96" height="36" class="ink fill-b"/>
+      <rect x="348" y="38" width="96" height="36" class="ink fill-b"/>
+      <rect x="444" y="38" width="96" height="36" class="ink fill-b"/>
+      <path class="ink-g" d="M108,4 V34" marker-end="url(#ahg)"/>
+      <path class="ink" d="M204,4 V34" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M92,80 C200,116 520,116 552,80" marker-end="url(#ah)"/>
+    </g>
+    <text x="116" y="16" text-anchor="start" class="s g w6">arr</text>
+    <text x="212" y="16" text-anchor="start" class="bn s k">arr + 1 → 1004 (একটি int)</text>
+    <text x="108" y="61" text-anchor="middle" class="s">a[0] 1000</text><text x="204" y="61" text-anchor="middle" class="s">a[1] 1004</text><text x="300" y="61" text-anchor="middle" class="s">a[2] 1008</text><text x="396" y="61" text-anchor="middle" class="s">a[3] 1012</text><text x="492" y="61" text-anchor="middle" class="s">a[4] 1016</text>
+    <text x="596" y="74" text-anchor="middle" class="s r w6">1020</text>
+    <text x="320" y="115" text-anchor="middle" class="bn s r">&amp;arr + 1 → 1020 (পুরো ২০ বাইটের অ্যারে)</text>
+  </svg><figcaption>arr ও &amp;arr একই সংখ্যা ছাপে; তবে টাইপ ও ধাপ আলাদা</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">এক্সপ্রেশন</th><th class="l">টাইপ</th><th class="l">মান</th></tr>
+      <tr><td class="l"><code>arr</code>, <code>&amp;arr[0]</code></td><td class="l"><code>int *</code></td><td class="l">1000</td></tr>
+      <tr><td class="l"><code>arr + 1</code></td><td class="l"><code>int *</code></td><td class="l">1004</td></tr>
+      <tr><td class="l"><code>&amp;arr</code></td><td class="l"><code>int (*)[5]</code></td><td class="l">1000 (একই!)</td></tr>
+      <tr><td class="l"><code>&amp;arr + 1</code></td><td class="l"><code>int (*)[5]</code></td><td class="l">1020</td></tr>
+      <tr><td class="l"><code>sizeof(arr)</code></td><td class="l"><code>size_t</code></td><td class="l"><span class="circ">20</span></td></tr>
+      <tr><td class="l"><code>sizeof arr / sizeof arr[0]</code></td><td class="l"><code>size_t</code></td><td class="l">5</td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">ডিক্লারেশন</th><th class="l">বিষয়বস্তু</th></tr>
+      <tr><td class="l"><code>int a[5]={1,2};</code></td><td class="l">1 2 0 0 0</td></tr>
+      <tr><td class="l"><code>int a[]={1,2,3};</code></td><td class="l">আকার ধরা হয় 3</td></tr>
+      <tr><td class="l"><code>int a[5]={0};</code></td><td class="l">সব শূন্য</td></tr>
+      <tr><td class="l"><code>int a[5];</code> লোকাল · গ্লোবাল</td><td class="l">আবর্জনা · সব শূন্য</td></tr>
+      <tr><td class="l"><code>int a[5]={[2]=7};</code></td><td class="l">0 0 7 0 0 (C99)</td></tr>
+      <tr><td class="l"><code>int a[n];</code></td><td class="l">VLA: C99; C11-এ ঐচ্ছিক</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int sum(int a[], int n) { /* int *a */
+    int s = 0;
+    for (int i = 0; i &lt; n; i++)
+        s += a[i];       /* *(a + i) */
+    return s;  /* sizeof(a) = 8 here */
+}
+int arr[5] = {1, 2, 3, 4, 5};
+int n = sizeof arr / sizeof arr[0];
+sum(arr, n);   /* passes &amp;arr[0] */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">কখন নাম রূপান্তরিত হয় না</span> ① <code>sizeof</code>-এর ভেতরে → পুরো অ্যারের আকার; ② <code>&amp;</code>-এর সঙ্গে → পুরো অ্যারের পয়েন্টার; ③ <code>char</code> অ্যারেকে ইনিশিয়ালাইজ করা স্ট্রিং লিটারাল। নামটি <b>পরিবর্তনযোগ্য lvalue নয়</b>: <code>arr++</code>, <code>arr = p</code> চলে না; <code>p++</code> চলে। ফাংশন পায় কেবল অ্যাড্রেস, তাই <code>a[i]</code>-এর পরিবর্তন কলারের অ্যারেতে পৌঁছায়।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>অ্যারের নাম = ০ নম্বর উপাদানে পোঁতা স্থির সাইনবোর্ড; পয়েন্টার = হাতে বয়ে বেড়ানো সাইনবোর্ড।</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> অ্যারে প্যারামিটার আসলে পয়েন্টার: ফাংশনের ভেতরে <code>sizeof(a)</code> দেয় 8 (বা 4), অ্যারের আকার নয়। n সবসময় পাঠাও।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট</span> <code>int a[5]={1,2,3,4,5}; int *p=(int *)(&amp;a+1); printf("%d",*(p-1));</code> → <span class="circ">5</span>।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: 2D arrays ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>2D অ্যারে</span></div>
+  <h2><span class="no">৬</span>2D অ্যারে ও অ্যাড্রেস সূত্র</h2><span class="tag">লিখিত + সংখ্যাভিত্তিক ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <code>int m[R][C]</code> হলো R টি সারির অ্যারে, প্রতিটি সারি C টি int-এর অ্যারে। মেমোরি একটি সরল রেখা, আর C উপাদানগুলো রাখে <span class="hl">রো-মেজর ক্রমে (Row-major Order)</span>: আগে পুরো সারি ০, তারপর সারি ১, … কেবল <b>প্রথম</b> (সারির) আকার বাদ দেওয়া যায় — <code>int m[][3] = {…};</code>, <code>void f(int m[][3], int rows)</code> — কারণ প্রতিটি সারি কোথায় শুরু তা বের করতে <span class="circ">কলামের আকার লাগবেই</span>।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 116" width="500">
+    <g class="w">
+      <rect x="10" y="20" width="44" height="30" class="ink-g fill-g"/><rect x="54" y="20" width="44" height="30" class="ink-g fill-g"/><rect x="98" y="20" width="44" height="30" class="ink-g fill-g"/>
+      <rect x="10" y="50" width="44" height="30" class="ink-p fill-p"/><rect x="54" y="50" width="44" height="30" class="ink-p fill-p"/><rect x="98" y="50" width="44" height="30" class="ink-p fill-p"/>
+      <path class="ink" d="M160,50 H206" marker-end="url(#ahb)"/>
+      <rect x="216" y="34" width="68" height="34" class="ink-g fill-g"/><rect x="284" y="34" width="68" height="34" class="ink-g fill-g"/><rect x="352" y="34" width="68" height="34" class="ink-g fill-g"/>
+      <rect x="420" y="34" width="68" height="34" class="ink-p fill-p"/><rect x="488" y="34" width="68" height="34" class="ink-p fill-p"/><rect x="556" y="34" width="68" height="34" class="ink-p fill-p"/>
+    </g>
+    <text x="76" y="14" text-anchor="middle" class="s k w6">m[2][3]</text>
+    <text x="32" y="40" text-anchor="middle" class="s">1</text><text x="76" y="40" text-anchor="middle" class="s">2</text><text x="120" y="40" text-anchor="middle" class="s">3</text>
+    <text x="32" y="70" text-anchor="middle" class="s">4</text><text x="76" y="70" text-anchor="middle" class="s">5</text><text x="120" y="70" text-anchor="middle" class="s">6</text>
+    <text x="250" y="56" text-anchor="middle" class="s">1</text><text x="318" y="56" text-anchor="middle" class="s">2</text><text x="386" y="56" text-anchor="middle" class="s">3</text><text x="454" y="56" text-anchor="middle" class="s">4</text><text x="522" y="56" text-anchor="middle" class="s">5</text><text x="590" y="56" text-anchor="middle" class="s">6</text>
+    <text x="250" y="88" text-anchor="middle" class="s">1000</text><text x="318" y="88" text-anchor="middle" class="s">1004</text><text x="386" y="88" text-anchor="middle" class="s">1008</text><text x="454" y="88" text-anchor="middle" class="s">1012</text><text x="522" y="88" text-anchor="middle" class="s">1016</text><text x="590" y="88" text-anchor="middle" class="s">1020</text>
+    <text x="318" y="25" text-anchor="middle" class="bn s g w6">সারি ০</text><text x="522" y="25" text-anchor="middle" class="bn s p w6">সারি ১</text>
+    <text x="420" y="111" text-anchor="middle" class="bn s k">m + 1 পুরো এক সারি লাফায়: 1000 → 1012</text>
+  </svg><figcaption>গ্রিড আমাদের ভাবনা; রেখা হলো মেমোরিতে রাখার ধরন</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">int m[2][3] = { {1, 2, 3},
+                {4, 5, 6} };
+for (int i = 0; i &lt; 2; i++) {
+    for (int j = 0; j &lt; 3; j++)
+        printf("%d ", m[i][j]);
+    printf("\n");
+}            /* 1 2 3
+                4 5 6 */
+int (*row)[3] = m; /* ptr to a row */</div>
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">এক্সপ্রেশন</th><th class="l">অর্থ</th><th class="l">মান</th></tr>
+      <tr><td class="l"><code>m</code></td><td class="l">→ সারি ০</td><td class="l">1000</td></tr>
+      <tr><td class="l"><code>m + 1</code></td><td class="l">→ সারি ১ (+12 B)</td><td class="l">1012</td></tr>
+      <tr><td class="l"><code>*m + 1</code></td><td class="l"><code>&amp;m[0][1]</code> (+4 B)</td><td class="l">1004</td></tr>
+      <tr><td class="l"><code>*(m + 1) + 2</code></td><td class="l"><code>&amp;m[1][2]</code></td><td class="l">1020</td></tr>
+      <tr><td class="l"><code>*(*(m + 1) + 2)</code></td><td class="l"><code>m[1][2]</code></td><td class="l">6</td></tr>
+      <tr><td class="l"><code>sizeof m</code> · <code>m[0]</code></td><td class="l">পুরো · এক সারি</td><td class="l">24 · 12</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">অ্যাড্রেস সূত্র</span> M = সারি, N = কলাম, W = প্রতি উপাদানের বাইট, B = বেস অ্যাড্রেস, L<sub>r</sub>, L<sub>c</sub> = নিম্নসীমা (C-তে দুটোই 0)।<br><b>রো-মেজর:</b> <span class="hl">LOC(A[i][j]) = B + W × [N × (i − L<sub>r</sub>) + (j − L<sub>c</sub>)]</span><br><b>কলাম-মেজর:</b> <span class="hl">LOC(A[i][j]) = B + W × [M × (j − L<sub>c</sub>) + (i − L<sub>r</sub>)]</span><br>
+    C, C++, Pascal ও NumPy (ডিফল্ট) রো-মেজর; Fortran, MATLAB ও R কলাম-মেজর।</div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ A[1..10][1..15], W = 2, B = 100: A[4][8] কোথায়?</span> M = 10, N = 15। <b>রো-মেজর:</b> 100 + 2 × [15 × 3 + 7] = 100 + 2 × 52 = <span class="circ">204</span>। <b>কলাম-মেজর:</b> 100 + 2 × [10 × 7 + 3] = 100 + 2 × 73 = <span class="circ">246</span>। C-তে <code>int A[5][4]</code> 1000-এ: <code>&amp;A[3][2]</code> = 1000 + 4 × (3×4 + 2) = 1056।</div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ সারির পয়েন্টার</span> <code>int a[2][3] = {{1,2,3},{4,5,6}}; int (*r)[3] = a;</code> → <code>r[1][1]</code> = 5, <code>*(*(r + 1))</code> = <span class="circ">4</span> (সারি ১-এর প্রথম উপাদান), <code>*(*r + 2)</code> = 3। <code>r + 1</code> ১২ বাইট সরে, কারণ <code>*r</code> হলো ৩টি int-এর পুরো একটি সারি।</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>রো-মেজর বই পড়ার মতো</b>": এক লাইন শেষ, তারপর পরের লাইন। কলাম-মেজর পত্রিকার কলাম পড়ার মতো।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>int m[][] = {…};</code> এরর। <code>m + 1</code> এক সারি লাফায়, <code>*m + 1</code> এক উপাদান। সীমা 0 না 1 থেকে শুরু, দেখে নাও।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আকার</span> <code>int a[2][3][4]</code>-এ ২৪টি int = <b>96 বাইট</b>; <code>a[1]</code> হলো 48 বাইটের একটি 3×4 ব্লক।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: strings ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>স্ট্রিং</span></div>
+  <h2><span class="no">৭</span>স্ট্রিং ও নাল ক্যারেক্টার</h2><span class="tag">MCQ + আউটপুট ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> C-তে আলাদা স্ট্রিং টাইপ নেই: <span class="hl">স্ট্রিং (String)</span> হলো এমন <code>char</code> অ্যারে যার শেষে থাকে <span class="hl">নাল ক্যারেক্টার (Null Character) <code>'\0'</code></span> (ASCII মান 0)। প্রতিটি স্ট্রিং ফাংশন — <code>strlen</code>, <code>printf("%s")</code>, <code>strcpy</code> — <code>'\0'</code> না পাওয়া পর্যন্ত এগোয়। তাই লিটারাল <code>"Hello"</code> নেয় <span class="circ">৬ বাইট</span>: ৫টি অক্ষর + কম্পাইলারের যোগ করা টার্মিনেটর।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 124" width="480">
+    <g class="w">
+      <rect x="20" y="34" width="56" height="38" class="ink fill-b"/><rect x="76" y="34" width="56" height="38" class="ink fill-b"/><rect x="132" y="34" width="56" height="38" class="ink fill-b"/><rect x="188" y="34" width="56" height="38" class="ink fill-b"/><rect x="244" y="34" width="56" height="38" class="ink fill-b"/>
+      <rect x="300" y="34" width="56" height="38" class="ink-r fill-r"/>
+      <rect x="356" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/><rect x="412" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/><rect x="468" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/><rect x="524" y="34" width="56" height="38" class="ink-k" style="stroke-dasharray:5 4"/>
+      <path class="ink-g" d="M20,84 H292" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M20,102 H576" marker-end="url(#ahp)"/>
+    </g>
+    <text x="300" y="20" text-anchor="middle" class="s k w6">char s[10] = "Hello";</text>
+    <text x="48" y="59" text-anchor="middle" class="w6">H</text><text x="104" y="59" text-anchor="middle" class="w6">e</text><text x="160" y="59" text-anchor="middle" class="w6">l</text><text x="216" y="59" text-anchor="middle" class="w6">l</text><text x="272" y="59" text-anchor="middle" class="w6">o</text>
+    <text x="328" y="59" text-anchor="middle" class="r w6">\0</text>
+    <text x="384" y="58" text-anchor="middle" class="s">\0</text><text x="440" y="58" text-anchor="middle" class="s">\0</text><text x="496" y="58" text-anchor="middle" class="s">\0</text><text x="552" y="58" text-anchor="middle" class="s">\0</text>
+    <text x="304" y="89" text-anchor="start" class="s g">strlen(s) = 5</text>
+    <text x="578" y="121" text-anchor="end" class="bn s p">sizeof(s) = 10 (খালি বাইটে \0 বসে)</text>
+  </svg><figcaption>strlen থামে প্রথম '\0'-এ; sizeof গোনে অ্যারের সব বাইট</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1.25fr) minmax(0,0.75fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5.4mm">
+      <tr><th class="l">ডিক্লারেশন</th><th>বাইট</th><th class="l">মন্তব্য</th></tr>
+      <tr><td class="l"><code>char s1[] = {'H','i','\0'};</code></td><td>3</td><td class="l">হাতে <code>'\0'</code></td></tr>
+      <tr><td class="l"><code>char s2[] = "Hello";</code></td><td>6</td><td class="l"><code>'\0'</code> যোগ হয়</td></tr>
+      <tr><td class="l"><code>char s3[10] = "Hello";</code></td><td>10</td><td class="l">বাকি <code>'\0'</code></td></tr>
+      <tr><td class="l"><code>char s4[5] = "Hello";</code></td><td>5</td><td class="l"><b><code>'\0'</code> নেই</b></td></tr>
+    </table>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">প্রচলিত ভুল ধারণা</span> টার্মিনেটর হলো <code>'\0'</code>, মান 0 — <code>' '</code> (স্পেস, 32), <code>'0'</code> (অঙ্ক, 48) বা <code>'\n'</code> (10) <b>নয়</b>। <code>NULL</code> একটি <b>পয়েন্টার</b>; <code>'\0'</code> একটি <b>ক্যারেক্টার</b>।</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">বিষয়</th><th class="l"><code>char s[] = "Dhaka";</code></th><th class="l"><code>char *p = "Dhaka";</code></th></tr>
+    <tr><td class="l">এটি কী</td><td class="l">অ্যারে: নিজস্ব কপি, ৬ বাইট</td><td class="l">স্ট্রিং লিটারালের পয়েন্টার</td></tr>
+    <tr><td class="l">অক্ষর বদলানো</td><td class="l"><code>s[0] = 'd';</code> ✓</td><td class="l"><code>p[0] = 'd';</code> <span class="red"><b>✗</b></span> অনির্ধারিত (লিটারাল প্রায়ই রিড-অনলি → ক্র্যাশ)</td></tr>
+    <tr><td class="l">নতুন টেক্সট দেওয়া</td><td class="l"><code>s = "Khulna";</code> ✗ → <code>strcpy</code></td><td class="l"><code>p = "Khulna";</code> ✓ নতুন দিকে দেখায়</td></tr>
+    <tr><td class="l"><code>sizeof</code></td><td class="l">6</td><td class="l">8 (পয়েন্টার, 64-বিট)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">char s[] = "abc";
+printf("%zu %zu", sizeof s, strlen(s)); /* 4 3 */
+printf("%zu", sizeof("abc"));       /* 4 */
+char *p = "Hello";
+printf("%c %s", *(p + 1), p + 2);   /* e llo */
+printf("%c", "Hello"[4]);           /* o */
+char *names[] = {"Ali", "Rina"}; /* 2 ptrs */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl"><code>'A'</code> বনাম <code>"A"</code></span> <code>'A'</code> একটি ক্যারেক্টার কনস্ট্যান্ট, C-তে এর টাইপ <code>int</code>: <code>sizeof('A')</code> = 4 (C++-এ 1)। <code>"A"</code> হলো <code>{'A','\0'}</code>: <code>sizeof("A")</code> = 2। <code>char *names[]</code> = পয়েন্টারের অ্যারে; <code>char g[2][5]</code> = নির্দিষ্ট ৫ বাইটের সারি।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>প্রতিটি স্ট্রিং একটি অদৃশ্য দাঁড়ি বয়ে বেড়ায়</b>": দরকারি বাইট = অক্ষর + ১।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>s1 == s2</code> তুলনা করে <b>অ্যাড্রেস</b>, টেক্সট নয় → <code>strcmp</code>। <code>char t[] = {'H','i'};</code>-এ <code>'\0'</code> নেই: <code>%s</code> থামে না।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ নিজের strlen</span> <code>size_t len(const char *s){ const char *p = s; while (*p) p++; return p - s; }</code> → পার্থক্য = <span style="white-space:nowrap"><span class="circ">দৈর্ঘ্য</span>।</span></div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: string.h & string input ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>string.h ও ইনপুট</span></div>
+  <h2><span class="no">৮</span>string.h ফাংশন ও স্ট্রিং ইনপুট</h2><span class="tag">প্রায়ই আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <code>&lt;string.h&gt;</code>-এ আছে <code>'\0'</code>-সমাপ্ত স্ট্রিং ও কাঁচা মেমোরি ব্লকের ফাংশন। কোনোটিই গন্তব্যের আকার জানে না: <span class="hl">জায়গা রাখার দায় কলারের</span>, <code>'\0'</code>-এর বাইটসহ। তুলনা হয় <b>ক্যারেক্টার কোড ধরে অভিধানের ক্রমে (lexicographic)</b>।</div>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">ফাংশন</th><th class="l">কাজ</th><th class="l">ফেরত / মন্তব্য</th></tr>
+    <tr><td class="l"><code>strlen(s)</code></td><td class="l"><code>'\0'</code>-এর আগের অক্ষর গোনে</td><td class="l"><code>size_t</code>; <code>'\0'</code> গোনা হয় না</td></tr>
+    <tr><td class="l"><code>strcpy(d, s)</code></td><td class="l">s-কে <code>'\0'</code>সহ d-তে কপি</td><td class="l">d; আকার যাচাই নেই</td></tr>
+    <tr><td class="l"><code>strncpy(d, s, n)</code></td><td class="l">সর্বোচ্চ n অক্ষর কপি</td><td class="l"><code>strlen(s) ≥ n</code> হলে <b><code>'\0'</code> নেই</b></td></tr>
+    <tr><td class="l"><code>strcat</code> · <code>strncat(d, s, n)</code></td><td class="l">d-এর শেষে s (≤ n অক্ষর) জোড়ে</td><td class="l">d; <code>strncat</code> <code>'\0'</code> দেয়</td></tr>
+    <tr><td class="l"><code>strcmp(a, b)</code> · <code>strncmp</code></td><td class="l">অক্ষর ধরে ধরে তুলনা</td><td class="l"><span class="circ">সমান হলে 0</span>, &lt;0 বা &gt;0</td></tr>
+    <tr><td class="l"><code>strchr</code> · <code>strrchr</code> · <code>strstr</code></td><td class="l">প্রথম c · শেষ c · সাবস্ট্রিং</td><td class="l">পয়েন্টার, নয়তো <code>NULL</code></td></tr>
+    <tr><td class="l"><code>strtok</code> · <code>memcpy</code> · <code>memset</code></td><td class="l">ভাগ · কপি · কাঁচা বাইট ভরা</td><td class="l"><code>strtok</code> s বদলায়</td></tr>
+    <tr><td class="l"><code>strrev</code>, <code>strupr</code>, <code>itoa</code></td><td class="l">উল্টানো · বড় হাতের · int → টেক্সট</td><td class="l"><span class="red"><b>স্ট্যান্ডার্ড C নয়</b></span></td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 640 96" width="440">
+    <g class="w">
+      <rect x="120" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="164" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="208" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="252" y="8" width="44" height="30" class="ink-g fill-g"/><rect x="296" y="8" width="44" height="30" class="ink-r fill-r"/>
+      <rect x="120" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="164" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="208" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="252" y="48" width="44" height="30" class="ink-g fill-g"/><rect x="296" y="48" width="44" height="30" class="ink-r fill-r"/>
+      <path class="ink-r" d="M346,43 H388" marker-end="url(#ah)"/>
+    </g>
+    <text x="60" y="28" text-anchor="middle" class="s k">a = "apple"</text><text x="60" y="68" text-anchor="middle" class="s k">b = "apply"</text>
+    <text x="142" y="28" text-anchor="middle" class="s">a</text><text x="186" y="28" text-anchor="middle" class="s">p</text><text x="230" y="28" text-anchor="middle" class="s">p</text><text x="274" y="28" text-anchor="middle" class="s">l</text><text x="318" y="28" text-anchor="middle" class="s r w6">e</text>
+    <text x="142" y="68" text-anchor="middle" class="s">a</text><text x="186" y="68" text-anchor="middle" class="s">p</text><text x="230" y="68" text-anchor="middle" class="s">p</text><text x="274" y="68" text-anchor="middle" class="s">l</text><text x="318" y="68" text-anchor="middle" class="s r w6">y</text>
+    <text x="512" y="38" text-anchor="middle" class="s r">'e' (101) &lt; 'y' (121)</text>
+    <text x="512" y="60" text-anchor="middle" class="s r w6">strcmp(a, b) &lt; 0</text>
+    <text x="320" y="93" text-anchor="middle" class="bn s g">সমান অক্ষর বাদ যায়; প্রথম অমিলই ফল ঠিক করে</text>
+  </svg><figcaption>strcmp অভিধানের মতো কাজ করে, তবে ASCII কোড ধরে</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5.4mm">
+    <tr><th class="l">ইনপুট কল</th><th class="l">যেখানে থামে</th><th class="l">আকার যাচাই</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l"><code>scanf("%s", s)</code></td><td class="l">হোয়াইটস্পেসে</td><td class="l">নেই → <code>"%49s"</code></td><td class="l"><code>&amp;</code> নেই: s নিজেই অ্যাড্রেস</td></tr>
+    <tr><td class="l"><code>scanf("%[^\n]", s)</code></td><td class="l">নিউলাইনে</td><td class="l">নেই</td><td class="l">স্পেসসহ পড়ে</td></tr>
+    <tr><td class="l"><code>gets(s)</code></td><td class="l">নিউলাইনে</td><td class="l"><span class="red"><b>একেবারে নেই</b></span></td><td class="l"><span class="circ">C11-এ বাদ</span></td></tr>
+    <tr><td class="l"><code>fgets(s, n, stdin)</code></td><td class="l">নিউলাইন (রাখে) বা n−1</td><td class="l">✓ নিরাপদ</td><td class="l"><code>'\0'</code> দেয়; EOF-এ <code>NULL</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <div class="code" style="font-size:9.2pt;line-height:4.6mm;margin-top:0">char name[50];
+fgets(name, sizeof name, stdin);
+name[strcspn(name, "\n")] = '\0';
+if (strcmp(name, "Rahim") == 0)
+    puts("match");   /* puts adds \n */
+char d[6];
+strncpy(d, "Bangladesh", 5);
+d[5] = '\0';         /* "Bangl" */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">gets() কেন বাদ</span> আকারের কোনো প্যারামিটার নেই: লম্বা লাইন অ্যারে ছাপিয়ে পাশের মেমোরিতে লেখে — <span class="hl">বাফার ওভারফ্লো (Buffer Overflow)</span> (১৯৮৮-র Morris worm <code>fingerd</code>-এ এটাই কাজে লাগিয়েছিল)। C99 (TC3)-এ ডেপ্রিকেটেড, C11-এ বাদ। আরও I/O: পরের লেসন।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>strcmp = ASCII ধরে অভিধানের ক্রম</b>": বড় হাতের (65–90) আসে ছোট হাতের (97–122) আগে।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> স্ট্রিং দুটি <b>আলাদা</b> হলে <code>if (strcmp(a, b))</code> সত্য। নিশ্চিত কেবল চিহ্ন, −1/+1 নয়।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ মিশ্র ইনপুট</span> <code>scanf("%d",&amp;n); fgets(s,50,stdin);</code> → fgets পায় বাকি থাকা <code>'\n'</code>: একটি <b>ফাঁকা লাইন</b>।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য পাতা</span>
+    <div class="fgrid small">
+      <p><code>&lt;h&gt;</code>: সিস্টেম ডিরেক্টরি · <code>"h"</code>: আগে নিজের ফোল্ডার</p><p>পাইপলাইন: প্রিপ্রসেস → কম্পাইল → অ্যাসেম্বল → লিংক</p>
+      <p>ডিরেক্টিভ: <code>;</code> নেই, লাইনের শেষে শেষ</p><p>গার্ড: <code>#ifndef X / #define X / #endif</code></p>
+      <p><code>#</code> স্ট্রিং বানায় · <code>##</code> টোকেন জোড়ে</p><p><code>__FILE__ __LINE__ __DATE__ __TIME__</code></p>
+      <p><code>p + n</code> = অ্যাড্রেস + n × sizeof(*p)</p><p><code>p2 − p1</code> = উপাদান, বাইট নয়</p>
+      <p><code>arr[i] ≡ *(arr+i) ≡ i[arr]</code></p><p>রূপান্তর নেই: <code>sizeof arr</code>, <code>&amp;arr</code></p>
+      <p>রো-মেজর: B + W[N(i−L<sub>r</sub>) + (j−L<sub>c</sub>)]</p><p>কলাম-মেজর: B + W[M(j−L<sub>c</sub>) + (i−L<sub>r</sub>)]</p>
+      <p><code>"Hello"</code> = ৬ বাইট; <code>'\0'</code> = ASCII 0</p><p><code>strcmp</code>: সমান 0, &lt;0, &gt;0</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li><code>printf</code>/<code>scanf</code> → stdio.h; <code>malloc</code> → stdlib.h</li>
+      <li><code>conio.h</code> স্ট্যান্ডার্ড C নয়</li>
+      <li><code>x*x</code> দিলে <code>SQUARE(2+3)</code> → 11</li>
+      <li><code>const int *p</code>: মান স্থির; <code>int *const p</code>: পয়েন্টার স্থির</li>
+      <li>কাস্ট ছাড়া <code>void *</code> ডিরেফারেন্স হয় না</li>
+      <li><code>*p++</code> p সরায়; <code>(*p)++</code> মান বাড়ায়</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>পয়েন্টারের আকার: 4 B (32-বিট), 8 B (64-বিট)</li>
+      <li><code>&amp;arr + 1</code> পুরো অ্যারে পেরোয়</li>
+      <li>অ্যারে প্যারামিটার = পয়েন্টার; দৈর্ঘ্য পাঠাও</li>
+      <li>কেবল প্রথম মাত্রা বাদ দেওয়া যায়</li>
+      <li><code>strlen("abc")</code> = 3, <code>sizeof("abc")</code> = 4</li>
+      <li><code>gets</code> C11-এ বাদ → <code>fgets</code></li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 168px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">সেরা ফাঁদ</span> <code>;</code>সহ <code>#define</code> · <code>100/SQ(5)</code> = 100 · <code>int *x, y;</code> · <code>free</code>-এর পরে ড্যাংলিং · অ্যারে প্যারামিটারের <code>sizeof</code> · কলাম ছাড়া <code>m[][]</code> · <code>char *p = "…"</code> বদলানো · স্ট্রিংয়ে <code>==</code> · <code>'\0'</code> ছাড়া <code>strncpy</code>।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">সব কৌশল একসঙ্গে</span> তাক বনাম টেবিল · ভেতরে-বাইরে ব্র্যাকেট · &amp; বলে কোথায়, * বলে কী · টাইপই স্কেল · স্থির বনাম বয়ে বেড়ানো সাইনবোর্ড · রো-মেজর বই পড়ার মতো · অদৃশ্য দাঁড়ি · strcmp = ASCII অভিধান।</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="164">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="s">&amp;a</text>
+      <text x="75" y="64" text-anchor="middle" class="r s">arr + i</text>
+      <text x="75" y="100" text-anchor="middle" class="g s">"Hi"</text>
+      <text x="215" y="29" text-anchor="middle" class="bn s">একটি অ্যাড্রেস</text>
+      <text x="215" y="64" text-anchor="middle" class="s">&amp;arr[i]</text>
+      <text x="215" y="100" text-anchor="middle" class="k s">'H' 'i' '\0'</text>
+    </svg><figcaption>তিন ধারণা, তিন লাইন</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ এক স্নিপেটে পাঁচ তথ্য</span> <code>char s[] = "Dhaka"; char *p = s + 1;</code> → <code>sizeof s</code> = 6, <code>strlen(s)</code> = 5, <code>*p</code> = 'h', <code>p[2]</code> = 'k', <code>p - s</code> = <span class="circ">1</span>। আর <code>*s = 'd'</code> চলে, কারণ s একটি অ্যারে, লিটারাল নয়।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL · প্রিপ্রসেসর, পয়েন্টার, অ্যারে, স্ট্রিং</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১.</span><code>#define SQUARE(x) x*x</code> হলে <code>SQUARE(3+1)</code>-এর মান:<ol class="opts"><li>16</li><li>8</li><li>7</li><li>10</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">২.</span>64-বিট সিস্টেমে <code>void f(int a[])</code>-এর ভেতরে <code>sizeof(a)</code>:<ol class="opts"><li>8</li><li>20</li><li>5</li><li>4</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৩.</span><code>strlen()</code> কোন হেডারে ঘোষিত?<ol class="opts"><li>stdio.h</li><li>stdlib.h</li><li>ctype.h</li><li>string.h</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৪.</span><code>int *p</code> (৪ বাইটের int)-এ আছে 2000। <code>p + 3</code>:<ol class="opts"><li>2003</li><li>2012</li><li>2006</li><li>2024</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৫.</span><code>const int *p;</code>-এর অর্থ:<ol class="opts"><li><code>*p</code> রিড-অনলি</li><li><code>p</code> রিড-অনলি</li><li>দুটোই স্থির</li><li>কোনোটিই স্থির নয়</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৬.</span><code>int A[5][4]</code>, বেস 1000, ৪ বাইটের int, রো-মেজর। <code>A[3][2]</code>-এর অ্যাড্রেস:<ol class="opts"><li>1052</li><li>1048</li><li>1056</li><li>1060</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৭.</span>C11 স্ট্যান্ডার্ড থেকে কোন ফাংশন বাদ দেওয়া হয়েছে?<ol class="opts"><li>fgets</li><li>gets</li><li>puts</li><li>scanf</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৮.</span><code>char s[] = "Dhaka";</code> — <code>sizeof(s)</code>:<ol class="opts"><li>5</li><li>4</li><li>8</li><li>6</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৯.</span><code>strcmp("abc", "abd")</code> ফেরত দেয়:<ol class="opts"><li>0</li><li>ধনাত্মক মান</li><li>ঋণাত্মক মান</li><li>3</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১০.</span>একটি হেডার দুবার যুক্ত হওয়া আটকায়:<ol class="opts"><li><code>#pragma pack</code></li><li><code>#ifndef</code> / <code>#define</code> / <code>#endif</code></li><li><code>#error</code></li><li><code>#undef</code></li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-ঘ · ৪-খ · ৫-ক · ৬-গ · ৭-খ · ৮-ঘ · ৯-গ · ১০-খ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> C-তে অ্যারে ও পয়েন্টারের সম্পর্ক ব্যাখ্যা করো। <code>arr[i]</code> কীভাবে মূল্যায়িত হয় দেখাও, অ্যারে ও পয়েন্টারে <code>sizeof</code> কেন ভিন্ন ফল দেয় বলো, <code>A[i][j]</code>-এর রো-মেজর অ্যাড্রেস নির্ণয় করো, এবং পয়েন্টার দিয়ে স্ট্রিংয়ের দৈর্ঘ্য ফেরত দেয় এমন একটি ফাংশন লেখো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>রূপান্তর (২)</b> — এক্সপ্রেশনে অ্যারের নাম হয়ে যায় <code>&amp;arr[0]</code>; <code>arr[i]</code>-এর সংজ্ঞাই <code>*(arr + i)</code>, আর <code>arr + i</code> যোগ করে <code>i × sizeof(int)</code> বাইট। <i class="mk">২</i></li>
+    <li><b>sizeof (২)</b> — <code>sizeof</code>/<code>&amp;</code>-এর সঙ্গে রূপান্তর হয় না: <code>int arr[5]</code> → 20; পয়েন্টার (বা অ্যারে প্যারামিটার) → 64-বিটে 8; নামটিতে অ্যাসাইন বা ইনক্রিমেন্ট চলে না। <i class="mk">২</i></li>
+    <li><b>অ্যাড্রেস (৩)</b> — সারিগুলো পরপর থাকে: N উপাদানের i টি পুরো সারি পেরিয়ে তারপর j: LOC = B + W[N(i − L<sub>r</sub>) + (j − L<sub>c</sub>)]; যেমন <code>int A[5][4]</code> 1000-এ → <code>A[3][2]</code> = 1056। <i class="mk">৩</i></li>
+    <li><b>ফাংশন (৩)</b> — <code>size_t len(const char *s){ const char *p = s; while (*p) p++; return p - s; }</code>: <code>'\0'</code> পর্যন্ত এগোও, পয়েন্টারের পার্থক্যই দৈর্ঘ্য। <i class="mk">৩</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>যেকোনো সাধারণ ফাংশনের হেডার বলতে পারি</li>
+      <li>ম্যাক্রো প্রসারিত করে ফাঁদ ধরতে পারি</li>
+      <li><code>p + n</code> ও <code>p2 − p1</code> হিসাব করতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li><code>arr</code>, <code>&amp;arr</code>, <code>sizeof</code> আলাদা করতে পারি</li>
+      <li>দুটি 2D অ্যাড্রেস সূত্রই খাটাতে পারি</li>
+      <li><code>'\0'</code>সহ স্ট্রিংয়ের বাইট গুনতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

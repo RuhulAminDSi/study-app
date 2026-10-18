@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ট্রান্সপোর্ট লেয়ার ও ক্রিপ্টোগ্রাফি: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ট্রান্সপোর্ট লেয়ার ও ক্রিপ্টোগ্রাফি</span></h1>
+  <p class="subtitle">TCP · UDP · cwnd · AAL · DES · IDEA · AES · RSA · DH: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">ট্রান্সপোর্ট + ক্রিপ্টো</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">পোর্ট · সকেট</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">TCP হেডার ও হ্যান্ডশেক ★</text>
+      <text x="500" y="65" text-anchor="middle">UDP · SCTP</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">cwnd: স্লো স্টার্ট ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">DES · 3DES · IDEA ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">AAL 1 · 2 · 3/4 · 5</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">RSA · Diffie–Hellman ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">ক্লাসিক্যাল সাইফার · AES</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = সহায়ক অংশ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① TCP 20–60 B · UDP 8 B<br>② SYN, SYN+ACK, ACK<br>③ স্লো স্টার্ট ×2 · AIMD<br>④ ৩টি ডুপ্লিকেট ACK<br>⑤ DES 64/56/16<br>⑥ IDEA 64/128/8.5<br>⑦ RSA: e·d ≡ 1 mod φ</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"<span class="hl">Transport protocols</span>; Transmission control protocol: <span class="hl">connection management, transmission policy, congestion control, timer management</span>; UDP; <span class="hl">AAL of ATM</span>; Network security: <span class="hl">Cryptography, DES, IDEA, public key algorithm</span>"। অথেনটিকেশন ও ডিজিটাল সিগনেচার আছে পরের লেসনে; ATM সেল ও নেটওয়ার্ক লেয়ার আছে ফায়ারওয়াল/IP/ATM লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>ট্রান্সপোর্ট লেয়ার, পোর্ট, TCP হেডার ……… পৃ. ২</li><li>কানেকশন স্থাপন, সমাপ্তি, স্টেট ……… পৃ. ৩</li><li>ফ্লো কন্ট্রোল, ট্রান্সমিশন পলিসি, টাইমার … পৃ. ৪</li><li>কনজেশন কন্ট্রোল + cwnd ট্রেস ……… পৃ. ৫</li><li>UDP, TCP বনাম UDP, SCTP ……… পৃ. ৬</li><li>ATM-এর AAL, ক্রিপ্টোগ্রাফির মূল কথা ……… পৃ. ৭</li></ul>
+    <ul class="tick"><li>DES, 3DES, IDEA, AES ……… পৃ. ৮</li><li>পাবলিক কী: RSA, Diffie–Hellman ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: transport layer, ports, TCP header ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>ট্রান্সপোর্ট লেয়ার</span></div>
+  <h2><span class="no">১</span>ট্রান্সপোর্ট লেয়ার (Transport Layer)</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> OSI-এর লেয়ার ৪ <span class="hl">প্রসেস-টু-প্রসেস (এন্ড-টু-এন্ড)</span> ডেলিভারি দেয়; নেটওয়ার্ক লেয়ার (IP) দেয় কেবল হোস্ট-টু-হোস্ট ডেলিভারি। সেবাগুলো: <b>পোর্ট</b> দিয়ে মাল্টিপ্লেক্সিং/ডিমাল্টিপ্লেক্সিং, সেগমেন্টেশন ও রিঅ্যাসেম্বলি, আর (TCP-তে) নির্ভরযোগ্যতা, ক্রম বজায় রাখা, ফ্লো কন্ট্রোল ও কনজেশন কন্ট্রোল। এটি চলে কেবল <b>এন্ড হোস্টে</b>, রাউটারে কখনো নয়।</div>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr">
+    <div class="small">
+      <p><b>পোর্ট</b> = ১৬-বিট সংখ্যা → <span class="circ">0–65,535</span></p>
+      <ul class="dash">
+        <li><span class="hl">ওয়েল-নোন (Well-known)</span> 0–1023 (সার্ভার)</li>
+        <li>রেজিস্টার্ড 1024–49,151</li>
+        <li>ডায়নামিক / এফিমেরাল 49,152–65,535 (ক্লায়েন্ট)</li>
+      </ul>
+      <p><b>সকেট (Socket)</b> = IP অ্যাড্রেস + পোর্ট। একটি TCP কানেকশন চেনা যায় <span class="hl">৪-টাপল</span> দিয়ে (src IP, src port, dst IP, dst port)।</p>
+      <p><b>PDU:</b> TCP-তে <span class="hl">সেগমেন্ট</span> · UDP-তে <span class="hl">ডেটাগ্রাম</span>। IP প্রোটোকল নম্বর <span class="circ">TCP = 6, UDP = 17</span></p>
+    </div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">সার্ভিস</th><th>পোর্ট</th><th>মাধ্যম</th></tr>
+      <tr><td class="l">FTP ডেটা · কন্ট্রোল</td><td>20 · 21</td><td>TCP</td></tr>
+      <tr><td class="l">SSH · Telnet</td><td>22 · 23</td><td>TCP</td></tr>
+      <tr><td class="l">SMTP</td><td>25</td><td>TCP</td></tr>
+      <tr><td class="l">DNS</td><td>53</td><td>UDP/TCP</td></tr>
+      <tr><td class="l">DHCP · TFTP</td><td>67/68 · 69</td><td>UDP</td></tr>
+      <tr><td class="l">HTTP · HTTPS</td><td>80 · 443</td><td>TCP</td></tr>
+      <tr><td class="l">POP3 · IMAP</td><td>110 · 143</td><td>TCP</td></tr>
+      <tr><td class="l">SNMP · ট্র্যাপ</td><td>161 · 162</td><td>UDP</td></tr>
+    </table>
+  </div>
+
+  <h2><span class="no">২</span>TCP সেগমেন্ট হেডার</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 190" width="640">
+    <g class="w">
+      <rect x="40" y="20" width="520" height="150" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+      <path class="ink-k" d="M40,45 H560 M40,70 H560 M40,95 H560 M40,120 H560 M40,145 H560" style="stroke-width:1.4"/>
+      <path class="ink-k" d="M300,20 V45 M300,95 V145 M105,95 V120 M170,95 V120" style="stroke-width:1.4"/>
+      <rect x="170" y="95" width="130" height="25" class="fill-y" style="stroke:none"/>
+      <path class="ink-r" d="M572,20 Q584,20 584,32 V70 Q584,82 594,82 Q584,82 584,94 V133 Q584,145 572,145"/>
+    </g>
+    <text x="40" y="14" class="bn s">বিট 0</text><text x="300" y="14" text-anchor="middle" class="s">16</text><text x="560" y="14" text-anchor="end" class="s">31</text>
+    <text x="170" y="38" text-anchor="middle" class="bn">সোর্স পোর্ট (16)</text><text x="430" y="38" text-anchor="middle" class="bn">ডেস্টিনেশন পোর্ট (16)</text>
+    <text x="300" y="63" text-anchor="middle" class="bn">সিকোয়েন্স নম্বর (32)</text>
+    <text x="300" y="88" text-anchor="middle" class="bn">অ্যাকনলেজমেন্ট নম্বর (32)</text>
+    <text x="72" y="113" text-anchor="middle" class="s">HLEN 4</text><text x="137" y="113" text-anchor="middle" class="bn s">সংরক্ষিত</text><text x="235" y="113" text-anchor="middle" class="bn s r w6">ফ্ল্যাগ</text><text x="430" y="113" text-anchor="middle" class="bn">উইন্ডো সাইজ (16)</text>
+    <text x="170" y="138" text-anchor="middle" class="bn">চেকসাম (16)</text><text x="430" y="138" text-anchor="middle" class="bn">আর্জেন্ট পয়েন্টার (16)</text>
+    <text x="300" y="163" text-anchor="middle" class="bn g">অপশন + প্যাডিং (0–40 বাইট)</text>
+    <text x="598" y="80" class="r s w6">20 B</text><text x="598" y="94" class="bn r s">নির্দিষ্ট</text>
+    <text x="40" y="186" class="bn s p">ফ্ল্যাগ: URG · ACK · PSH · RST · SYN · FIN (+ ECN বিট CWR, ECE)</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <ul class="dash small">
+      <li><b>HLEN</b> গোনে <b>৩২-বিট ওয়ার্ড</b>: 5 → 20 B, 15 → <span class="circ">60 B</span></li>
+      <li><b>সিকোয়েন্স নম্বর</b> গোনে <b>বাইট</b>; ISN দৈবভাবে বাছা হয়</li>
+      <li><b>ACK নম্বর</b> = পরবর্তী প্রত্যাশিত বাইট (কিউমুলেটিভ)</li>
+      <li><b>উইন্ডো</b> = রিসিভারের খালি বাফার, স্কেলিং ছাড়া ≤ 65,535 B</li>
+      <li><b>চেকসাম</b>: বাধ্যতামূলক, সিউডো-হেডারসহ হিসাব হয়</li>
+    </ul>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল: ফ্ল্যাগ</span> "<b>U</b>nskilled <b>A</b>ttackers <b>P</b>ester <b>R</b>eal <b>S</b>ecurity <b>F</b>olks" = URG ACK PSH RST SYN FIN, হেডারের ক্রম অনুযায়ী।</div>
+      <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> HLEN = 8 মানে 8 × 4 = <b>32 বাইট</b> হেডার, 8 বাইট নয়।</div>
+    </div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: connection management ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>কানেকশন ম্যানেজমেন্ট</span></div>
+  <h2><span class="no">৩</span>TCP কানেকশন ম্যানেজমেন্ট</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 255px;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 440 420" width="430">
+      <g class="w">
+        <path class="ink-k" d="M120,20 V405 M330,20 V405"/>
+        <path class="ink" d="M120,45 L330,75" marker-end="url(#ahb)"/>
+        <path class="ink" d="M330,85 L120,115" marker-end="url(#ahb)"/>
+        <path class="ink" d="M120,125 L330,155" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M120,178 H330 M330,190 H120" stroke-dasharray="6 5"/>
+        <path class="ink-r" d="M120,210 L330,240" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M330,250 L120,280" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M330,310 L120,340" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M120,350 L330,380" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M108,350 H100 V400 H108"/>
+      </g>
+      <text x="120" y="14" text-anchor="middle" class="bn k w6">ক্লায়েন্ট</text><text x="330" y="14" text-anchor="middle" class="bn k w6">সার্ভার</text>
+      <text x="225" y="47" text-anchor="middle" class="s w6">SYN, seq = x</text>
+      <text x="225" y="83" text-anchor="middle" class="s w6">SYN+ACK, seq=y, ack=x+1</text>
+      <text x="225" y="122" text-anchor="middle" class="s w6">ACK, seq=x+1, ack=y+1</text>
+      <text x="225" y="173" text-anchor="middle" class="bn g s">দুই দিকেই ডেটা</text>
+      <text x="225" y="211" text-anchor="middle" class="r s w6">FIN, seq = u</text>
+      <text x="225" y="250" text-anchor="middle" class="r s w6">ACK, ack = u+1</text>
+      <text x="225" y="293" text-anchor="middle" class="bn p s">হাফ-ক্লোজ: সার্ভার তখনও পাঠাতে পারে</text>
+      <text x="225" y="311" text-anchor="middle" class="r s w6">FIN, seq = w</text>
+      <text x="225" y="351" text-anchor="middle" class="r s w6">ACK, ack = w+1</text>
+      <text x="112" y="34" text-anchor="end" class="s">CLOSED</text><text x="112" y="62" text-anchor="end" class="s">SYN_SENT</text><text x="112" y="140" text-anchor="end" class="s g">ESTABLISHED</text>
+      <text x="112" y="226" text-anchor="end" class="s">FIN_WAIT_1</text><text x="112" y="296" text-anchor="end" class="s">FIN_WAIT_2</text><text x="96" y="372" text-anchor="end" class="s p w6">TIME_WAIT</text><text x="96" y="388" text-anchor="end" class="s p">2 MSL</text>
+      <text x="338" y="34" class="s">LISTEN</text><text x="338" y="102" class="s">SYN_RCVD</text><text x="338" y="166" class="s g">ESTABLISHED</text>
+      <text x="338" y="250" class="s">CLOSE_WAIT</text><text x="338" y="322" class="s">LAST_ACK</text><text x="338" y="392" class="s">CLOSED</text>
+    </svg><figcaption>৩-ধাপে খোলা (নীল) · ৪-ধাপে বন্ধ (লাল)</figcaption></figure>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">থ্রি-ওয়ে হ্যান্ডশেক</span> দুই পক্ষই নিজের <span class="hl">ইনিশিয়াল সিকোয়েন্স নম্বর (ISN)</span> বেছে নেয় ও নিশ্চিত করে। SYN ও FIN প্রত্যেকে <b>একটি সিকোয়েন্স নম্বর খরচ করে</b>; শুধু ACK কোনো নম্বর খরচ করে না।</div>
+      <div class="def small"><span class="lbl">ফোর-ওয়ে ক্লোজ</span> TCP <b>ফুল ডুপ্লেক্স</b>, তাই প্রতিটি দিক আলাদাভাবে বন্ধ হয় (প্রতি দিকে FIN + ACK)। সার্ভারের ACK ও FIN একসাথে গেলে ৩টি সেগমেন্টেই হয়।</div>
+      <div class="sumbox small"><span class="lbl">স্টেট</span> TCP-র <span class="circ">১১টি স্টেট</span>। যে পক্ষ আগে বন্ধ করে (<b>অ্যাকটিভ ক্লোজার</b>) সে <span class="hl">TIME_WAIT-এ 2 MSL</span> অপেক্ষা করে, যাতে শেষ ACK হারালে আবার পাঠানো যায় এবং পুরোনো ডুপ্লিকেট সেগমেন্ট মুছে যায়।</div>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">স্টেট</th><th class="l">অর্থ</th><th class="l">স্টেট</th><th class="l">অর্থ</th></tr>
+    <tr><td class="l">LISTEN</td><td class="l">সার্ভার SYN-এর অপেক্ষায় (প্যাসিভ ওপেন)</td><td class="l">CLOSE_WAIT</td><td class="l">অপর পক্ষের FIN এসেছে; অ্যাপ এখনো বন্ধ করেনি</td></tr>
+    <tr><td class="l">SYN_SENT</td><td class="l">ক্লায়েন্ট SYN পাঠিয়েছে (অ্যাকটিভ ওপেন)</td><td class="l">LAST_ACK</td><td class="l">নিজের FIN পাঠিয়ে তার ACK-এর অপেক্ষা</td></tr>
+    <tr><td class="l">SYN_RCVD</td><td class="l">হাফ-ওপেন: SYN+ACK পাঠানো হয়েছে</td><td class="l">CLOSING</td><td class="l">দুই পক্ষ একসাথে FIN পাঠিয়েছে</td></tr>
+  </table>
+  <p class="small"><b>দুটি নয়, তিনটি সেগমেন্ট কেন?</b> প্রত্যেক পক্ষের নিজের ISN-এর <b>অ্যাকনলেজমেন্ট</b> পাওয়া দরকার; দুই ধাপে হলে পুরোনো, দেরিতে আসা একটি SYN ভুয়া কানেকশন খুলে ফেলতে পারত।</p>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ক্লায়েন্ট ISN = 1000, সার্ভার ISN = 5000। ① SYN seq = 1000 ② SYN+ACK seq = 5000, ack = <b>1001</b> ③ ACK seq = 1001, ack = 5001। এবার ক্লায়েন্ট ৪০০ বাইট পাঠায়: seq = 1001 (বাইট 1001–1400); সার্ভারের উত্তর ack = <span class="circ">1401</span>।</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>RST</b> কানেকশন সঙ্গে সঙ্গে ভেঙে দেয় (৪-ধাপের বিনিময় ছাড়াই)। <b>SYN ফ্লাড</b>: আক্রমণকারী শেষ ACK পাঠায় না, ফলে সার্ভারের হাফ-ওপেন (SYN_RCVD) কিউ ভরে যায়; প্রতিকার = <b>SYN কুকি</b>।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> খোলা = "<b>কড়া নাড়া, পাল্টা সাড়া, ভেতরে ঢোকা</b>"। বন্ধ = <b>দুবার বিদায়, দুবার মাথা নাড়া</b>। যে আগে বিদায় বলে, সে-ই দরজায় দাঁড়িয়ে থাকে (TIME_WAIT)।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: flow control, transmission policy, timers ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>ফ্লো কন্ট্রোল ও টাইমার</span></div>
+  <h2><span class="no">৪</span>ফ্লো কন্ট্রোল (Flow Control): স্লাইডিং উইন্ডো</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">ধারণা</span> রিসিভার প্রতিটি সেগমেন্টে <span class="hl">rwnd</span> (খালি বাফার) জানিয়ে দেয়; প্রেরক অ্যাকনলেজমেন্ট-না-পাওয়া বাইট উইন্ডোর মধ্যে রাখে। কার্যকর উইন্ডো = <span class="circ">min(rwnd, cwnd)</span>: ফ্লো কন্ট্রোল রক্ষা করে <b>রিসিভারকে</b>, কনজেশন কন্ট্রোল রক্ষা করে <b>নেটওয়ার্ককে</b>।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 120" width="640">
+    <g class="w">
+      <rect x="20" y="40" width="160" height="34" class="ink-g fill-g"/>
+      <rect x="180" y="40" width="160" height="34" class="ink-r fill-r"/>
+      <rect x="340" y="40" width="140" height="34" class="ink fill-y"/>
+      <rect x="480" y="40" width="140" height="34" class="ink-k"/>
+      <path class="ink-k" d="M60,40 V74 M100,40 V74 M140,40 V74 M220,40 V74 M260,40 V74 M300,40 V74 M375,40 V74 M410,40 V74 M445,40 V74 M515,40 V74 M550,40 V74 M585,40 V74" style="stroke-width:1"/>
+      <path class="ink-p" d="M180,30 V20 H480 V30" />
+      <path class="ink-p" d="M330,98 H460" marker-end="url(#ahp)"/>
+    </g>
+    <text x="330" y="15" text-anchor="middle" class="bn p s w6">সেন্ড উইন্ডো = min(rwnd, cwnd)</text>
+    <text x="100" y="92" text-anchor="middle" class="bn g s">পাঠানো ও ACK পাওয়া</text>
+    <text x="260" y="92" text-anchor="middle" class="bn r s">পাঠানো, ACK আসেনি</text>
+    <text x="410" y="62" text-anchor="middle" class="bn s w6">এখন পাঠানো যাবে</text>
+    <text x="550" y="92" text-anchor="middle" class="bn s">এখনো পাঠানো যাবে না</text>
+    <text x="210" y="114" class="bn p s">ACK এলে উইন্ডো ডানে সরে</text>
+  </svg><figcaption>প্রেরকের চোখে বাইট স্ট্রিম</figcaption></figure>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> সর্বোচ্চ থ্রুপুট ≈ উইন্ডো / RTT। উইন্ডো 65,535 B, RTT 100 ms → 65,535 × 8 / 0.1 ≈ <span class="circ">5.24 Mbps</span>, লিংকের গতি যত বেশিই হোক। এজন্যই লং ফ্যাট নেটওয়ার্কে <b>উইন্ডো-স্কেল</b> অপশন (শিফট সর্বোচ্চ 14, উইন্ডো 2<sup>30</sup> B ≈ 1 GB পর্যন্ত) লাগে।</div>
+  <h3>ট্রান্সমিশন পলিসি (দক্ষতা)</h3>
+  <table class="hand small">
+    <tr><th class="l">সমস্যা / কৌশল</th><th class="l">কী করে</th></tr>
+    <tr><td class="l"><span class="hl">সিলি উইন্ডো সিনড্রোম</span></td><td class="l">ক্ষুদ্র সেগমেন্টে ব্যান্ডউইথ নষ্ট (1 B ডেটায় 40 B হেডার)</td></tr>
+    <tr><td class="l">Nagle অ্যালগরিদম (প্রেরক)</td><td class="l">ACK না আসা বা MSS পূর্ণ না হওয়া পর্যন্ত ছোট ডেটা জমায়</td></tr>
+    <tr><td class="l">Clark-এর সমাধান (রিসিভার)</td><td class="l">min(MSS, অর্ধেক বাফার) খালি না হওয়া পর্যন্ত উইন্ডো 0 জানায়</td></tr>
+    <tr><td class="l">ডিলেড ACK</td><td class="l">ACK একত্র বা পিগিব্যাক করতে অপেক্ষা (≤ 500 ms, সাধারণত 200)</td></tr>
+    <tr><td class="l">জিরো উইন্ডো</td><td class="l">প্রেরক থামে; পারসিস্ট টাইমার দিয়ে প্রোব পাঠায়</td></tr>
+  </table>
+  <h2><span class="no">৫</span>TCP টাইমার ম্যানেজমেন্ট</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ul class="dash small">
+      <li><b>রিট্রান্সমিশন (RTO)</b>: সময়মতো ACK না এলে আবার পাঠায়</li>
+      <li><b>পারসিস্ট</b>: উইন্ডো প্রোব দিয়ে জিরো-উইন্ডো <span class="hl">ডেডলক (Deadlock)</span> ভাঙে</li>
+      <li><b>কিপঅ্যালাইভ</b>: নিষ্ক্রিয় অপর পক্ষকে যাচাই (ডিফল্ট ২ ঘণ্টা)</li>
+      <li><b>TIME_WAIT</b>: অ্যাকটিভ ক্লোজের পর 2 × MSL</li>
+    </ul>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">RTO: Jacobson / Karn</span><br>SRTT = ⅞ SRTT + ⅛ R<br>RTTVAR = ¾ RTTVAR + ¼ |SRTT − R|<br>RTO = SRTT + <span class="circ">4 × RTTVAR</span><br><b>Karn</b>: রিট্রান্সমিট করা সেগমেন্ট থেকে RTT নমুনা নয়; প্রতি টাইমআউটে RTO <b>দ্বিগুণ</b></div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> SRTT = 100 ms, RTTVAR = 20 ms, নতুন নমুনা R = 120 ms। RTTVAR = 15 + ¼(20) = 20 ms; SRTT = 87.5 + 15 = 102.5 ms; RTO = 102.5 + 80 = <b>182.5 ms</b> (এরপর RFC 6298 অনুযায়ী সর্বনিম্ন 1 s ধরা হয়)।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: congestion control ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>কনজেশন কন্ট্রোল</span></div>
+  <h2><span class="no">৬</span>TCP কনজেশন কন্ট্রোল (Congestion Control)</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">ধারণা</span> প্রেরক রাখে একটি <span class="hl">কনজেশন উইন্ডো (cwnd)</span>, যা MSS এককে গোনা হয়, আর একটি থ্রেশহোল্ড <b>ssthresh</b>। প্যাকেট হারানোকে জটের লক্ষণ ধরা হয়। মূল নিয়ম: <span class="hl">AIMD</span>: যোগাত্মক বৃদ্ধি (additive increase), গুণাত্মক হ্রাস (multiplicative decrease)।</div>
+  <table class="hand small">
+    <tr><th class="l">পর্যায় / ঘটনা</th><th class="l">নিয়ম</th><th class="l">বৃদ্ধি</th></tr>
+    <tr><td class="l"><b>স্লো স্টার্ট</b> (cwnd &lt; ssthresh)</td><td class="l">প্রতি ACK-এ +1 MSS</td><td class="l red"><b>প্রতি RTT-তে ×2</b></td></tr>
+    <tr><td class="l"><b>কনজেশন অ্যাভয়েডেন্স</b> (≥ ssthresh)</td><td class="l">প্রতি RTT-তে +1 MSS</td><td class="l">রৈখিক</td></tr>
+    <tr><td class="l"><b>টাইমআউট</b> (Tahoe, Reno)</td><td class="l">ssthresh = cwnd/2; cwnd = <span class="circ">1 MSS</span></td><td class="l">আবার স্লো স্টার্ট</td></tr>
+    <tr><td class="l"><b>৩টি ডুপ্লিকেট ACK</b>: ফাস্ট রিট্রান্সমিট</td><td class="l">হারানো সেগমেন্ট তখনই পাঠায়, RTO-র অপেক্ষা নয়</td><td class="l">—</td></tr>
+    <tr><td class="l">… তারপর <b>ফাস্ট রিকভারি</b> (Reno)</td><td class="l">ssthresh = cwnd/2; cwnd = ssthresh</td><td class="l">রৈখিক</td></tr>
+    <tr><td class="l">… Tahoe-তে বরং</td><td class="l">ssthresh = cwnd/2; cwnd = 1</td><td class="l">স্লো স্টার্ট</td></tr>
+  </table>
+  <h3>সমাধানকৃত ট্রেস: শুরুতে ssthresh = 16</h3>
+  <figure class="doodle"><svg viewBox="0 0 560 230" width="520">
+    <g class="w">
+      <path class="ink-k" d="M30,190 V10 M30,190 H500"/>
+      <path class="ink-r" d="M30,62 H240 M255,110 H415 M430,142 H490" stroke-dasharray="5 4" style="stroke-width:1.5"/>
+      <path class="ink" d="M30,182 L55,174 L80,158 L105,126 L130,62" style="stroke-width:2.6"/>
+      <path class="ink-g" d="M130,62 L155,54 L180,46 L205,38 L230,30" style="stroke-width:2.6"/>
+      <path class="ink" d="M255,182 L280,174 L305,158 L330,126 L355,110" style="stroke-width:2.6"/>
+      <path class="ink-g" d="M355,110 L380,102 L405,94" style="stroke-width:2.6"/>
+      <path class="ink-p" d="M430,142 L455,134 L480,126" style="stroke-width:2.6"/>
+      <path class="ink-k" d="M230,30 L255,182 M405,94 L430,142" stroke-dasharray="3 4" style="stroke-width:1.3"/>
+    </g>
+    <text x="24" y="66" text-anchor="end" class="s">16</text><text x="24" y="114" text-anchor="end" class="s">10</text><text x="24" y="146" text-anchor="end" class="s">6</text><text x="24" y="34" text-anchor="end" class="s">20</text><text x="24" y="194" text-anchor="end" class="s">0</text>
+    <text x="30" y="206" text-anchor="middle" class="s">1</text><text x="130" y="206" text-anchor="middle" class="s">5</text><text x="230" y="206" text-anchor="middle" class="s">9</text><text x="330" y="206" text-anchor="middle" class="s">13</text><text x="430" y="206" text-anchor="middle" class="s">17</text><text x="500" y="206" text-anchor="middle" class="bn s">রাউন্ড</text>
+    <text x="236" y="22" class="bn r s w6">টাইমআউট</text><text x="404" y="86" class="bn p s w6">৩ ডুপ্লিকেট ACK</text>
+    <text x="120" y="150" class="bn s">স্লো স্টার্ট</text><text x="150" y="82" class="bn g s">কনজেশন অ্যাভয়েডেন্স</text><text x="36" y="56" class="r s">ssthresh 16</text><text x="260" y="104" class="r s">ssthresh 10</text><text x="440" y="160" class="r s">ssthresh 6</text>
+    <text x="4" y="226" class="bn s p">cwnd (MSS) বনাম ট্রান্সমিশন রাউন্ড · Reno</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th>রাউন্ড</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>
+    <tr><th>cwnd</th><td>1</td><td>2</td><td>4</td><td>8</td><td>16</td><td>17</td><td>18</td><td>19</td><td class="red"><b>20</b></td></tr>
+    <tr><th>রাউন্ড</th><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr>
+    <tr><th>cwnd</th><td>1</td><td>2</td><td>4</td><td>8</td><td>10</td><td>11</td><td class="red"><b>12</b></td><td>6</td><td>7</td></tr>
+  </table>
+  <p class="small">20-এ টাইমআউট → ssthresh = <b>10</b>, cwnd = 1। স্লো স্টার্ট ssthresh-এ গিয়ে থামে (8 → 10, 16 নয়)। 12-তে তিনটি ডুপ্লিকেট ACK → ssthresh = cwnd = <b>6</b> (Reno স্লো স্টার্টে ফেরে না)।</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>টাইমআউট = আবার 1 থেকে শুরু; ডুপ্লিকেট ACK = অর্ধেক</b>"। ৩টি ডুপ্লিকেট ACK বোঝায় পরের সেগমেন্টগুলো তখনও পৌঁছাচ্ছে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "স্লো" স্টার্ট আসলে <b>সূচকীয় (exponential)</b>। একে ধীর বলা হয় কারণ cwnd শুরু হয় 1 MSS থেকে (আধুনিক স্ট্যাকে 10 পর্যন্ত)। Tahoe ১৯৮৮, Reno ১৯৯০; Linux-এ ডিফল্ট CUBIC।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: UDP, TCP vs UDP, SCTP ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>UDP · TCP বনাম UDP</span></div>
+  <h2><span class="no">৭</span>UDP: ইউজার ডেটাগ্রাম প্রোটোকল</h2><span class="tag">MCQ-তে প্রিয়</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> UDP (RFC 768, ১৯৮০) একটি <span class="hl">কানেকশনবিহীন (connectionless), অনির্ভরযোগ্য</span> ট্রান্সপোর্ট: হ্যান্ডশেক নেই, ACK নেই, রিট্রান্সমিশন নেই, ক্রমের নিশ্চয়তা নেই, ফ্লো বা কনজেশন কন্ট্রোল নেই। এটি IP-র সাথে কেবল পোর্ট ও চেকসাম যোগ করে এবং <b>বার্তার সীমানা (message boundary) বজায় রাখে</b>।</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 130" width="330">
+      <g class="w">
+        <rect x="10" y="20" width="310" height="60" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M10,50 H320 M165,20 V80" style="stroke-width:1.4"/>
+        <rect x="10" y="80" width="310" height="34" class="ink-g fill-g"/>
+      </g>
+      <text x="10" y="14" class="s">0</text><text x="165" y="14" text-anchor="middle" class="s">16</text><text x="320" y="14" text-anchor="end" class="s">31</text>
+      <text x="87" y="40" text-anchor="middle" class="bn s w6">সোর্স পোর্ট</text><text x="242" y="40" text-anchor="middle" class="bn s w6">ডেস্টিনেশন পোর্ট</text>
+      <text x="87" y="70" text-anchor="middle" class="bn s w6">দৈর্ঘ্য (Length)</text><text x="242" y="70" text-anchor="middle" class="bn s w6">চেকসাম</text>
+      <text x="165" y="102" text-anchor="middle" class="bn g s">ডেটা</text>
+    </svg><figcaption>৪টি ফিল্ড × 16 বিট = 8 বাইট</figcaption></figure>
+    <ul class="dash small">
+      <li>হেডার স্থির <span class="circ">8 বাইট</span> (TCP: 20–60)</li>
+      <li><b>Length</b> = হেডার + ডেটা, সর্বনিম্ন 8</li>
+      <li>চেকসাম <b>IPv4-এ ঐচ্ছিক</b> (0 = ব্যবহৃত নয়), <b>IPv6-এ বাধ্যতামূলক</b></li>
+      <li>IPv4-এ সর্বোচ্চ পেলোড: 65,535 − 20 − 8 = <b>65,507 B</b></li>
+      <li><b>ব্রডকাস্ট ও মাল্টিকাস্ট</b> কেবল UDP-তে সম্ভব</li>
+    </ul>
+  </div>
+  <p class="small"><b>ব্যবহার:</b> <span class="hl">DNS</span> কোয়েরি, DHCP, TFTP, SNMP, RIP (520), NTP (123), VoIP/RTP, লাইভ স্ট্রিমিং, অনলাইন গেম, এবং <b>QUIC</b> (UDP 443-এর ওপর HTTP/3)।</p>
+  <h2><span class="no">৮</span>TCP বনাম UDP</h2><span class="tag">লিখিত প্রশ্নে প্রিয়</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">বৈশিষ্ট্য</th><th class="l">TCP</th><th class="l">UDP</th></tr>
+    <tr><td class="l">কানেকশন</td><td class="l">কানেকশন-ওরিয়েন্টেড (হ্যান্ডশেক)</td><td class="l">কানেকশনবিহীন</td></tr>
+    <tr><td class="l">নির্ভরযোগ্যতা</td><td class="l">ACK + রিট্রান্সমিশন, ক্রমানুসারে</td><td class="l">বেস্ট এফোর্ট; হারাতে বা ক্রম বদলাতে পারে</td></tr>
+    <tr><td class="l">ডেটা একক</td><td class="l">বাইট স্ট্রিম (সেগমেন্ট)</td><td class="l">বার্তা (ডেটাগ্রাম)</td></tr>
+    <tr><td class="l">হেডার</td><td class="l">20–60 বাইট</td><td class="l">8 বাইট</td></tr>
+    <tr><td class="l">ফ্লো / কনজেশন কন্ট্রোল</td><td class="l">আছে / আছে</td><td class="l">নেই / নেই</td></tr>
+    <tr><td class="l">ডেলিভারি</td><td class="l">কেবল ইউনিকাস্ট</td><td class="l">ইউনিকাস্ট, ব্রডকাস্ট, মাল্টিকাস্ট</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">HTTP, HTTPS, FTP, SMTP, SSH</td><td class="l">DNS, DHCP, SNMP, VoIP</td></tr>
+  </table>
+  <h3>অন্যান্য ট্রান্সপোর্ট প্রোটোকল</h3>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">SCTP</span> নির্ভরযোগ্য ও <b>বার্তাভিত্তিক</b>, সাথে <span class="hl">মাল্টি-স্ট্রিমিং</span> ও <span class="hl">মাল্টি-হোমিং</span>; ৪-ধাপের হ্যান্ডশেক (INIT, INIT-ACK, COOKIE-ECHO, COOKIE-ACK); টেলিকম সিগন্যালিংয়ে (SIGTRAN) ব্যবহৃত।</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">DCCP</span> অনির্ভরযোগ্য ডেটাগ্রাম, <b>তবে</b> কনজেশন কন্ট্রোলসহ; মিডিয়া স্ট্রিমিংয়ের জন্য। <b>RTP</b> চলে UDP-র ওপর, রিয়েল-টাইম অডিও/ভিডিওর জন্য টাইমস্ট্যাম্প ও সিকোয়েন্স নম্বর যোগ করে।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> "UDP অনির্ভরযোগ্য" মানে এটি <b>ডেলিভারির নিশ্চয়তা দেয় না</b>, ডেটা নষ্ট করে এমন নয়: চেকসাম তখনও ত্রুটি ধরে। জোন ট্রান্সফার ও বড় উত্তরের জন্য DNS <b>TCP</b> 53 ব্যবহার করে।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: AAL, crypto basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>AAL · ক্রিপ্টোর মূল কথা</span></div>
+  <h2><span class="no">৯</span>ATM অ্যাডাপটেশন লেয়ার (AAL)</h2><span class="tag">MCQ</span>
+  <div class="def small"><span class="lbl">ভূমিকা</span> একটি ATM সেল <span class="circ">53 বাইট</span> (5 হেডার + 48 পেলোড)। ATM লেয়ারের ওপরের AAL ওপরের স্তরের ডেটাকে সেলে রূপান্তর করে দুটি সাবলেয়ারের মাধ্যমে: <b>CS</b> (কনভারজেন্স) ও <b>SAR</b> (সেগমেন্টেশন ও রিঅ্যাসেম্বলি)।</div>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>AAL</th><th>ক্লাস</th><th class="l">ট্রাফিক</th><th class="l">সেলপ্রতি পেলোড</th><th class="l">সাধারণ ব্যবহার</th></tr>
+    <tr><td>AAL1</td><td>A</td><td class="l">CBR, টাইমিংসহ</td><td class="l">47 B</td><td class="l">সার্কিট ইমুলেশন, ভয়েস</td></tr>
+    <tr><td>AAL2</td><td>B</td><td class="l">VBR, টাইমিংসহ</td><td class="l">মিনি-প্যাকেট</td><td class="l">কম্প্রেসড ভয়েস/ভিডিও</td></tr>
+    <tr><td>AAL3/4</td><td>C, D</td><td class="l">ডেটা (কানেকশনসহ/বিহীন)</td><td class="l">44 B</td><td class="l">SMDS, পুরোনো ডেটা</td></tr>
+    <tr><td class="red"><b>AAL5</b></td><td>C, D</td><td class="l">ডেটা, সরল (SEAL)</td><td class="l"><b>48 B</b></td><td class="l"><span class="hl">IP over ATM</span>, LANE</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 320 120" width="320">
+      <g class="w">
+        <rect x="10" y="14" width="200" height="30" class="ink fill-b"/><rect x="210" y="14" width="40" height="30" class="ink-k"/><rect x="250" y="14" width="60" height="30" class="ink-r fill-r"/>
+        <path class="ink-g" d="M60,46 L40,74 M160,46 L180,74" marker-end="url(#ahg)"/>
+        <rect x="10" y="78" width="22" height="30" class="ink-k fill-y"/><rect x="32" y="78" width="70" height="30" class="ink fill-b"/>
+        <rect x="150" y="78" width="22" height="30" class="ink-k fill-y"/><rect x="172" y="78" width="70" height="30" class="ink fill-b"/>
+      </g>
+      <text x="110" y="34" text-anchor="middle" class="bn s">ইউজার ডেটা 1500 B</text><text x="230" y="34" text-anchor="middle" class="bn s">প্যাড</text><text x="280" y="34" text-anchor="middle" class="bn r s">ট্রেইলার 8</text>
+      <text x="21" y="98" text-anchor="middle" class="s">5</text><text x="67" y="98" text-anchor="middle" class="s">48</text><text x="161" y="98" text-anchor="middle" class="s">5</text><text x="207" y="98" text-anchor="middle" class="s">48</text><text x="126" y="98" text-anchor="middle" class="w6">…</text><text x="250" y="98" class="bn s g">× ৩২টি সেল</text>
+    </svg><figcaption>AAL5: একটি ফ্রেম → অনেক সেল</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> AAL5-এ 1500 বাইটের IP প্যাকেট: 1500 + 8 = 1508 → ⌈1508/48⌉ = <b>৩২টি সেল</b> (প্যাড 28 B)। লাইনে যায় 32 × 53 = 1696 B, দক্ষতা 1500/1696 ≈ <b>88.4%</b>। ট্রেইলার: UU, CPI, দৈর্ঘ্য, <b>CRC-32</b>; শেষ সেল চেনায় PTI বিট।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>1 = স্থির (Constant), 2 = পরিবর্তনশীল (Variable), 3/4 = পুরোনো ডেটা, 5 = ডেটার প্রধান বাহন</b>"। ক্লাস A → D চলে AAL নম্বরের ক্রমে।</div>
+
+  <h2><span class="no">১০</span>ক্রিপ্টোগ্রাফির মূল কথা</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def small"><span class="lbl">পরিভাষা</span> <b>প্লেইনটেক্সট</b> → (একটি <b>কী</b> দিয়ে এনক্রিপশন) → <b>সাইফারটেক্সট</b> → (ডিক্রিপশন) → প্লেইনটেক্সট। <span class="hl">ক্রিপ্টোলজি</span> = ক্রিপ্টোগ্রাফি (গোপন সংকেত তৈরি) + ক্রিপ্টঅ্যানালাইসিস (তা ভাঙা)। লক্ষ্য: গোপনীয়তা (confidentiality), অখণ্ডতা (integrity), অথেনটিকেশন, নন-রিপুডিয়েশন। <b>Kerckhoffs-এর নীতি</b>: নিরাপত্তা নির্ভর করবে কেবল কী-এর ওপর।</div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">সিমেট্রিক (সিক্রেট কী)</th><th class="l">অ্যাসিমেট্রিক (পাবলিক কী)</th></tr>
+    <tr><td class="l">কী</td><td class="l">একটি শেয়ার করা কী</td><td class="l">পাবলিক + প্রাইভেট জোড়া</td></tr>
+    <tr><td class="l">গতি</td><td class="l">দ্রুত (বড় ডেটা)</td><td class="l">100–1000 গুণ ধীর</td></tr>
+    <tr><td class="l">n জন ব্যবহারকারীর কী</td><td class="l"><span class="circ">n(n − 1)/2</span></td><td class="l">2n</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">DES, 3DES, IDEA, AES, RC4, Blowfish</td><td class="l">RSA, Diffie–Hellman, ECC, ElGamal</td></tr>
+  </table>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: classical ciphers, DES, 3DES, IDEA, AES ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>সিমেট্রিক সাইফার</span></div>
+  <h2><span class="no">১১</span>ক্লাসিক্যাল সাইফার</h2>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">প্রতিস্থাপন (Substitution) ✍</span> প্রতিটি অক্ষর বদলে অন্য অক্ষর। <b>সিজার</b> (৩ ঘর সরানো): ATTACK → <b>DWWDFN</b>। মনোঅ্যালফাবেটিক: 26! টি কী, তবু <b>অক্ষরের ফ্রিকোয়েন্সি</b> দেখে ভাঙা যায়। পলিঅ্যালফাবেটিক: Vigenère, Playfair। ওয়ান-টাইম প্যাড: নিখুঁত গোপনীয়তা।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">ট্রান্সপজিশন (Transposition) ✍</span> অক্ষর একই থাকে, কেবল অবস্থান বদলায়। <b>রেল ফেন্স</b> (২ সারি): ATTACKATDAWN → সারি ১ ATCADW + সারি ২ TAKTAN = <b>ATCADWTAKTAN</b>। অক্ষরের ফ্রিকোয়েন্সি অপরিবর্তিত থাকে।</div>
+  </div>
+  <p class="small">Shannon: শক্তিশালী সাইফারে লাগে <span class="hl">কনফিউশন (confusion)</span> (প্রতিস্থাপন, S-বক্স) ও <span class="hl">ডিফিউশন (diffusion)</span> (পারমুটেশন, P-বক্স)। ব্লক সাইফার (DES, AES) নির্দিষ্ট আকারের ব্লক এনক্রিপ্ট করে; স্ট্রিম সাইফার (RC4, ChaCha20) বিট বা বাইট ধরে ধরে।</p>
+
+  <h2><span class="no">১২</span>DES ও ট্রিপল DES</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 235px;align-items:center">
+    <div>
+      <ul class="dash small">
+        <li>IBM (Lucifer থেকে), FIPS 46, <span class="circ">১৯৭৭</span></li>
+        <li>ব্লক <span class="circ">64 বিট</span>; কী 64 বিট, কার্যকর <span class="circ">56</span> (8টি প্যারিটি বিট)</li>
+        <li><span class="hl">১৬টি ফাইস্টেল (Feistel) রাউন্ড</span>, 48-বিট রাউন্ড কী; IP … IP⁻¹</li>
+        <li>f: 32 → 48 সম্প্রসারণ, কী-এর সাথে XOR, <b>৮টি S-বক্স (6 → 4 বিট)</b>, P-বক্স</li>
+        <li>S-বক্সই একমাত্র <b>অরৈখিক (non-linear)</b> অংশ</li>
+        <li>ব্রুট-ফোর্সে ভাঙা: EFF "Deep Crack", ১৯৯৮ (৫৬ ঘণ্টা)</li>
+      </ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 170" width="230">
+      <g class="w">
+        <rect x="20" y="8" width="80" height="28" class="ink fill-b"/><rect x="150" y="8" width="80" height="28" class="ink fill-b"/>
+        <rect x="95" y="62" width="62" height="30" rx="8" class="ink-r fill-r"/>
+        <circle cx="60" cy="77" r="11" class="ink-k"/><path class="ink-k" d="M49,77 H71 M60,66 V88"/>
+        <path class="ink" d="M60,36 V66 M190,36 V77 H157 M95,77 H71"/>
+        <path class="ink-r" d="M126,44 V60" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M190,77 V104 L60,132 M60,88 V104 L190,132" style="stroke-width:1.8"/>
+        <rect x="20" y="132" width="80" height="28" class="ink-g fill-g"/><rect x="150" y="132" width="80" height="28" class="ink-g fill-g"/>
+      </g>
+      <text x="60" y="27" text-anchor="middle" class="s w6">Lᵢ</text><text x="190" y="27" text-anchor="middle" class="s w6">Rᵢ</text>
+      <text x="126" y="82" text-anchor="middle" class="r s w6">f</text><text x="134" y="50" class="s r">Kᵢ</text>
+      <text x="60" y="151" text-anchor="middle" class="s g">Lᵢ₊₁ = Rᵢ</text><text x="190" y="151" text-anchor="middle" class="s g">Lᵢ ⊕ f(Rᵢ)</text>
+    </svg><figcaption>একটি ফাইস্টেল রাউন্ড</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">3DES (EDE)</span> C = E<sub>K3</sub>(D<sub>K2</sub>(E<sub>K1</sub>(P)))। ৩টি কী: 168-বিট কী, শক্তি ≈ 112 বিট; ২টি কী (K1 = K3): 112-বিট কী। K1 = K2 = K3 হলে → সাধারণ DES। <b>ডাবল DES</b> মাত্র ≈ 57 বিট (<span class="hl">মিট-ইন-দ্য-মিডল (meet-in-the-middle)</span> আক্রমণ)।</div>
+
+  <h2><span class="no">১৩</span>IDEA ও AES</h2>
+  <p class="small">IDEA: Lai ও Massey (ETH Zürich)। AES: Rijndael (Daemen ও Rijmen), FIPS 197; প্রতি রাউন্ড = SubBytes, ShiftRows, MixColumns, AddRoundKey।</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">সাইফার</th><th>ব্লক</th><th>কী</th><th>রাউন্ড</th><th class="l">গঠন / মন্তব্য</th></tr>
+    <tr><td class="l">DES</td><td>64</td><td>56</td><td>16</td><td class="l">Feistel</td></tr>
+    <tr><td class="l"><b>IDEA</b> 1991</td><td>64</td><td class="red"><b>128</b></td><td>8 + ½</td><td class="l">XOR, + mod 2<sup>16</sup>, × mod 2<sup>16</sup>+1; PGP</td></tr>
+    <tr><td class="l"><b>AES</b> 2001</td><td>128</td><td>128/192/256</td><td class="red"><b>10/12/14</b></td><td class="l">SPN (Rijndael)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> DES "<b>64-56-16</b>" (ব্লক, কী, রাউন্ড)। IDEA "<b>64-128-8</b>"। AES-এর রাউন্ড "<b>10-12-14</b>" = কী/32 + 6।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> IDEA <b>Feistel নয়</b>: ৬টি সাবকী × ৮ রাউন্ড + ৪ (অর্ধ-রাউন্ড) = <b>৫২টি</b> সাবকী। AES-ও Feistel নয়।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: public key ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>পাবলিক-কী অ্যালগরিদম</span></div>
+  <h2><span class="no">১৪</span>পাবলিক-কী ক্রিপ্টোগ্রাফি</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">ধারণা</span> প্রত্যেক ব্যবহারকারীর থাকে একটি <span class="hl">পাবলিক কী</span> (প্রকাশ্য) ও একটি <span class="hl">প্রাইভেট কী</span> (গোপন)। গোপনীয়তার জন্য: প্রাপকের পাবলিক কী দিয়ে এনক্রিপ্ট, প্রাপকের প্রাইভেট কী দিয়ে ডিক্রিপ্ট। নিরাপত্তা নির্ভর করে একটি কঠিন গাণিতিক সমস্যার ওপর: <b>উৎপাদকে বিশ্লেষণ (factoring)</b> (RSA) বা <b>ডিসক্রিট লগারিদম</b> (Diffie–Hellman, ElGamal, ECC)। প্রথমে আসে Diffie–Hellman (<span class="circ">১৯৭৬</span>), পরে RSA (১৯৭৭)।</div>
+  <h3>RSA (Rivest, Shamir, Adleman, ১৯৭৭)</h3>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ol class="steps small">
+      <li>দুটি মৌলিক সংখ্যা p, q বাছো; <b>n = p × q</b></li>
+      <li><span class="circ">φ(n) = (p − 1)(q − 1)</span></li>
+      <li>e বাছো যেন 1 &lt; e &lt; φ(n), gcd(e, φ(n)) = 1</li>
+      <li>d = e⁻¹ mod φ(n), অর্থাৎ <b>e · d ≡ 1 (mod φ(n))</b></li>
+      <li>পাবলিক কী (e, n) · প্রাইভেট কী (d, n)</li>
+      <li>এনক্রিপ্ট C = M<sup>e</sup> mod n · ডিক্রিপ্ট M = C<sup>d</sup> mod n</li>
+    </ol>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> p = 3, q = 11 → n = 33, φ = 2 × 10 = 20।<br>e = 7 (gcd(7, 20) = 1)। 7d ≡ 1 (mod 20): 7 × 3 = 21 = 20 + 1 → <b>d = 3</b>।<br>M = 2: C = 2<sup>7</sup> mod 33 = 128 − 99 = <span class="circ">29</span>।<br>যাচাই: 29<sup>3</sup> mod 33; 29 ≡ −4, (−4)<sup>3</sup> = −64 ≡ −64 + 66 = <b>2</b> ✓</div>
+  </div>
+  <p class="small">বাস্তবে n হয় <b>2048 বিট</b> বা তার বেশি। RSA ধীর, তাই এটি দিয়ে সেশন কী বিনিময় বা সিগনেচার করা হয় (অথেনটিকেশন ও ডিজিটাল সিগনেচার লেসন দেখো), আর মূল ডেটা এনক্রিপ্ট করে AES: TLS ও PGP-র এই <span class="hl">হাইব্রিড</span> পদ্ধতি।</p>
+  <h3>Diffie–Hellman কী বিনিময় (Key Exchange)</h3>
+  <figure class="doodle"><svg viewBox="0 0 640 140" width="640">
+    <g class="w">
+      <rect x="10" y="20" width="170" height="100" rx="12" class="ink fill-b"/>
+      <rect x="460" y="20" width="170" height="100" rx="12" class="ink fill-b"/>
+      <rect x="235" y="10" width="170" height="36" rx="10" class="ink-k fill-y"/>
+      <path class="ink-g" d="M182,62 H456" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M458,92 H184" marker-end="url(#ahp)"/>
+    </g>
+    <text x="320" y="33" text-anchor="middle" class="bn s w6">প্রকাশ্য: p = 23, g = 5</text>
+    <text x="95" y="42" text-anchor="middle" class="w6">Alice: a = 4</text><text x="95" y="66" text-anchor="middle" class="s">A = 5⁴ mod 23 = 4</text><text x="95" y="108" text-anchor="middle" class="r s w6">K = 10⁴ mod 23 = 18</text>
+    <text x="545" y="42" text-anchor="middle" class="w6">Bob: b = 3</text><text x="545" y="66" text-anchor="middle" class="s">B = 5³ mod 23 = 10</text><text x="545" y="108" text-anchor="middle" class="r s w6">K = 4³ mod 23 = 18</text>
+    <text x="320" y="56" text-anchor="middle" class="bn g s">A = 4 পাঠায়</text><text x="320" y="86" text-anchor="middle" class="bn p s">B = 10 পাঠায়</text>
+    <text x="320" y="134" text-anchor="middle" class="bn r s">দুজনেই পায় K = g^(ab) mod p = 18; a, b ও K কখনো নেটওয়ার্কে যায় না</text>
+  </svg><figcaption>খোলা চ্যানেলে কী-এর ব্যাপারে একমত হওয়া</figcaption></figure>
+  <div class="ex small"><span class="lbl">হিসাব যাচাই ✍</span> 5⁴ = 625 = 27 × 23 + 4 → A = 4। 5³ = 125 = 5 × 23 + 10 → B = 10। Alice: 10² = 100 ≡ 8, 8² = 64 ≡ <b>18</b>। Bob: 4³ = 64 ≡ <b>18</b> ✓</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> সাধারণ Diffie–Hellman <b>কেবল কী ঠিক করে, এনক্রিপ্ট করে না</b>, আর এতে অথেনটিকেশন নেই, তাই <b>ম্যান-ইন-দ্য-মিডল</b> আক্রমণে ভাঙে। A ও B প্রকাশ্য মান, কী নয়।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> RSA গোপনীয়তায়: "<b>পাবলিক দিয়ে তালা, প্রাইভেট দিয়ে খোলা</b>"। <b>ECC</b>: 256-বিট ECC ≈ 3072-বিট RSA ≈ AES-128-এর সমান শক্তি, তাই কী অনেক ছোট।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্যসার</span>
+    <div class="fgrid small">
+      <p>পোর্ট 16 বিট: 0–1023 ওয়েল-নোন</p><p>TCP = 6, UDP = 17 (IP প্রোটোকল নম্বর)</p>
+      <p>TCP হেডার 20–60 B · HLEN × 4</p><p>UDP হেডার 8 B · সর্বোচ্চ পেলোড 65,507 B</p>
+      <p>SYN → SYN+ACK → ACK; SYN/FIN 1টি seq নম্বর খরচ করে</p><p>TIME_WAIT = 2 MSL · TCP-র ১১টি স্টেট</p>
+      <p>উইন্ডো = min(rwnd, cwnd) · গতি ≤ W/RTT</p><p>RTO = SRTT + 4 · RTTVAR</p>
+      <p>স্লো স্টার্ট প্রতি RTT-তে ×2 · CA প্রতি RTT-তে +1 MSS</p><p>টাইমআউট: cwnd = 1 · ৩ ডুপ্লিকেট ACK: cwnd = ½</p>
+      <p>ATM সেল 53 = 5 + 48 · AAL5 ট্রেইলার 8 B</p><p>সিমেট্রিক কী n(n − 1)/2 · পাবলিক 2n</p>
+      <p>DES 64/56/16 · 3DES 168 (≈112)</p><p>IDEA 64/128/8.5, ৫২টি সাবকী</p>
+      <p>AES ব্লক 128; রাউন্ড 10/12/14</p><p>RSA φ = (p − 1)(q − 1), ed ≡ 1 mod φ</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>ট্রান্সপোর্ট লেয়ার: প্রসেস-টু-প্রসেস ডেলিভারি</li>
+      <li>TCP ফুল ডুপ্লেক্স, বাইট-স্ট্রিম</li>
+      <li>পারসিস্ট টাইমার: জিরো-উইন্ডো ডেডলক</li>
+      <li>Nagle = প্রেরকের দিক, Clark = রিসিভারের দিক</li>
+      <li>ফাস্ট রিট্রান্সমিট: ৩টি ডুপ্লিকেট ACK</li>
+      <li>Tahoe-র সাথে Reno যোগ করে ফাস্ট রিকভারি</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>AAL1 = CBR; AAL5 = IP over ATM</li>
+      <li>সিজার = প্রতিস্থাপন; রেল ফেন্স = ট্রান্সপজিশন</li>
+      <li>DES S-বক্স: 6 বিট ইনপুট, 4 বিট আউটপুট</li>
+      <li>IDEA ব্যবহৃত হয় PGP-তে</li>
+      <li>RSA-র ভিত্তি n-কে উৎপাদকে ভাঙার কাঠিন্য</li>
+      <li>DH: কী বিনিময়, MITM-এ দুর্বল</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> HLEN গোনে ৪-বাইটের ওয়ার্ড · ACK নম্বর = পরবর্তী প্রত্যাশিত বাইট · "স্লো" স্টার্ট আসলে সূচকীয় · Reno: টাইমআউট → 1, ডুপ্লিকেট ACK → অর্ধেক · UDP চেকসাম ঐচ্ছিক কেবল IPv4-এ · DES কী লেখা 64 বিট, কার্যকর 56 · IDEA ও AES Feistel নয় · ডাবল DES ≈ সাধারণ DES-এর শক্তি · DH এনক্রিপ্ট করে না</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> URG ACK PSH RST SYN FIN = "Unskilled Attackers Pester Real Security Folks" · কড়া নাড়া, পাল্টা সাড়া, ভেতরে ঢোকা · যে আগে বিদায় বলে সে অপেক্ষা করে (TIME_WAIT) · টাইমআউট = আবার শুরু, ডুপ্লিকেট ACK = অর্ধেক · AAL 1 স্থির, 2 পরিবর্তনশীল, 5 ডেটা · 64-56-16, 64-128-8, 10-12-14 · পাবলিক দিয়ে তালা, প্রাইভেট দিয়ে খোলা</div>
+  <figure class="doodle"><svg viewBox="0 0 600 100" width="600">
+    <g class="w">
+      <rect x="10" y="20" width="130" height="50" rx="10" class="ink fill-b"/>
+      <rect x="230" y="20" width="140" height="50" rx="10" class="ink-r fill-r"/>
+      <rect x="460" y="20" width="130" height="50" rx="10" class="ink-g fill-g"/>
+      <path class="ink-k" d="M142,45 H226 M372,45 H456" marker-end="url(#ahb)"/>
+    </g>
+    <text x="75" y="42" text-anchor="middle" class="w6">RSA / DH</text><text x="75" y="60" text-anchor="middle" class="bn s">সেশন কী ভাগাভাগি</text>
+    <text x="300" y="42" text-anchor="middle" class="bn r w6">AES সেশন কী</text><text x="300" y="60" text-anchor="middle" class="bn s">মূল ডেটা এনক্রিপশন</text>
+    <text x="525" y="42" text-anchor="middle" class="bn g w6">TCP 443-এর ওপর</text><text x="525" y="60" text-anchor="middle" class="bn s">নির্ভরযোগ্য স্ট্রিম</text>
+    <text x="300" y="92" text-anchor="middle" class="bn p s">একটি HTTPS সেশনেই পুরো লেসন কাজে লাগে</text>
+  </svg><figcaption>TLS-এ হাইব্রিড এনক্রিপশন</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>নেটওয়ার্কিং · ট্রান্সপোর্ট ও ক্রিপ্টো</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে চেষ্টা, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>UDP হেডারের আকার:<ol class="opts"><li>20 বাইট</li><li>8 বাইট</li><li>16 বাইট</li><li>4 বাইট</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>কোন TCP ফ্ল্যাগ কানেকশন শুরু করে?<ol class="opts"><li>FIN</li><li>RST</li><li>PSH</li><li>SYN</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>রিট্রান্সমিশন টাইমআউটের পর TCP cwnd রাখে:<ol class="opts"><li>1 MSS</li><li>cwnd-এর অর্ধেক</li><li>ssthresh + 3</li><li>অপরিবর্তিত</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>ATM-এ IP বহনে সবচেয়ে বেশি ব্যবহৃত AAL:<ol class="opts"><li>AAL1</li><li>AAL2</li><li>AAL3/4</li><li>AAL5</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>DES-এর ব্লক সাইজ ও কার্যকর কী দৈর্ঘ্য:<ol class="opts"><li>64 / 56 বিট</li><li>128 / 128 বিট</li><li>64 / 128 বিট</li><li>56 / 64 বিট</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>IDEA-র কী দৈর্ঘ্য:<ol class="opts"><li>56 বিট</li><li>64 বিট</li><li>128 বিট</li><li>256 বিট</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>AES-256-এ রাউন্ড সংখ্যা:<ol class="opts"><li>10</li><li>12</li><li>14</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>RSA-তে p = 3 ও q = 11 হলে φ(n):<ol class="opts"><li>33</li><li>20</li><li>22</li><li>30</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>TCP ফাস্ট রিট্রান্সমিট শুরু হয়:<ol class="opts"><li>টাইমআউটে</li><li>৩টি ডুপ্লিকেট ACK-এ</li><li>জিরো উইন্ডোতে</li><li>RST পেলে</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>0–1023 পোর্টগুলোকে বলে:<ol class="opts"><li>ওয়েল-নোন</li><li>রেজিস্টার্ড</li><li>ডায়নামিক</li><li>এফিমেরাল</li></ol></div>
+  </div>
+  <div class="anskey">উত্তর → ১-খ · ২-ঘ · ৩-ক · ৪-ঘ · ৫-ক · ৬-গ · ৭-গ · ৮-খ · ৯-খ · ১০-ক</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> স্লো স্টার্ট ও কনজেশন অ্যাভয়েডেন্স ব্যাখ্যা করো। ssthresh = 8 MSS এবং রাউন্ড ১-এ cwnd = 1; cwnd = 12 হলে টাইমআউট ঘটে। রাউন্ড ১৩ পর্যন্ত cwnd ট্রেস করো। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>স্লো স্টার্ট: প্রতি ACK-এ cwnd += 1 MSS, ফলে ssthresh-এ পৌঁছানো পর্যন্ত প্রতি RTT-তে দ্বিগুণ হয় <i class="mk">২</i></li>
+    <li>কনজেশন অ্যাভয়েডেন্স: প্রতি RTT-তে cwnd += 1 MSS (যোগাত্মক বৃদ্ধি); প্যাকেট হারালে গুণাত্মক হ্রাস <i class="mk">২</i></li>
+    <li>রাউন্ড ১–৮: 1, 2, 4, <b>8</b>, 9, 10, 11, <b>12</b> → টাইমআউট <i class="mk">২</i></li>
+    <li>ssthresh = 12/2 = <b>6</b>, cwnd = 1। রাউন্ড ৯–১৩: 1, 2, 4, <span class="circ">6</span> (ssthresh-এ সীমিত), 7 <i class="mk">২</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে ✓</h3>
+      <ul class="tick small">
+        <li>ফিল্ডের আকারসহ TCP হেডার আঁকতে পারি</li>
+        <li>seq/ack নম্বরসহ হ্যান্ডশেক ও ক্লোজ আঁকতে পারি</li>
+        <li>টাইমআউট ও ৩ ডুপ্লিকেট ACK-এর মধ্য দিয়ে cwnd ট্রেস করতে পারি</li>
+        <li>হাতে RSA ও DH উদাহরণ করতে পারি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>আরও অনুশীলন (লিখিত):</b><br>① TCP বনাম UDP, প্রতিটির ২টি অ্যাপ<br>② AAL-এর প্রকার ও ব্যবহার<br>③ DES রাউন্ডের গঠন<br>④ RSA: p = 5, q = 11, e = 3 → d = 27</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

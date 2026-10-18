@@ -1,72 +1,14 @@
-import express from "express";
-import cors from "cors";
-import path from "path";
+import { createApp } from "./app.js";
 import { config } from "./config.js";
-import { authRequired } from "./middleware/auth.js";
-import authRoutes from "./routes/auth.js";
-import chaptersRoutes from "./routes/chapters.js";
-import menusRoutes from "./routes/menus.js";
 
-import lessonsRoutes from "./routes/lessons.js";
-import filesRoutes from "./routes/files.js";
-import dashboardRoutes from "./routes/dashboard.js";
-
-const app = express();
-
-app.use(cors({ origin: "*", credentials: true }));
-app.use(express.json({ limit: "10mb" }));
-app.use("/uploads", express.static(path.resolve(config.uploadDir)));
-
-// Public routes
-app.use("/api/auth", authRoutes);
-
-// Protected routes
-app.use("/api/chapters", authRequired, chaptersRoutes);
-app.use("/api/menus", authRequired, menusRoutes);
-
-app.use("/api/lessons", authRequired, lessonsRoutes);
-app.use("/api/files", authRequired, filesRoutes);
-app.use("/api/dashboard", authRequired, dashboardRoutes);
-
-// Public read-only endpoints (no auth needed)
-import { Router } from "express";
-import { pool } from "./db/pool.js";
-const publicRouter = Router();
-publicRouter.get("/chapters/published", async (_req, res) => {
-  const result = await pool.query("SELECT * FROM chapters WHERE is_published = true ORDER BY sort_order");
-  res.json(result.rows);
-});
-publicRouter.get("/chapters/:id", async (req, res) => {
-  const result = await pool.query("SELECT * FROM chapters WHERE id = $1", [req.params.id]);
-  if (!result.rows[0]) { res.status(404).json({ error: "Not found" }); return; }
-  res.json(result.rows[0]);
-});
-publicRouter.get("/menus", async (_req, res) => {
-  const result = await pool.query("SELECT * FROM side_menus WHERE is_active = true ORDER BY sort_order");
-  res.json(result.rows);
-});
-publicRouter.get("/lessons/published", async (_req, res) => {
-  const result = await pool.query("SELECT * FROM lessons WHERE is_published = true ORDER BY lesson_number");
-  res.json(result.rows);
-});
-publicRouter.get("/lessons/by-menu/:menuId", async (req, res) => {
-  const result = await pool.query("SELECT * FROM lessons WHERE side_menu_id = $1 AND is_published = true ORDER BY lesson_number", [req.params.menuId]);
-  res.json(result.rows);
-});
-publicRouter.get("/lessons/:id", async (req, res) => {
-  const result = await pool.query("SELECT * FROM lessons WHERE id = $1", [req.params.id]);
-  if (!result.rows[0]) { res.status(404).json({ error: "Not found" }); return; }
-  res.json(result.rows[0]);
-});
-app.use("/api/public", publicRouter);
-
-// Error handling
-app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(err);
-  const status = err.status || 500;
-  res.status(status).json({ error: err.message || "Internal server error" });
-});
+const app = createApp();
 
 app.listen(config.port, () => {
   console.log(`⭐ StudyHub API running on http://localhost:${config.port}`);
+
+  // Run migrations after the server starts (non-blocking), as before.
+  import("./db/migrate.js")
+    .then(({ migrate }) => migrate())
+    .then(() => console.log("DB migrations complete"))
+    .catch((err: any) => console.error("MIGRATION FAILED:", err?.message || err));
 });

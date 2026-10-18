@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deadlock: Detection, Avoidance &amp; Recovery: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Deadlock</span></h1>
+  <p class="subtitle">Coffman's four conditions · RAG cycles · Banker's algorithm · exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">DEADLOCK</text><text x="320" y="170" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="142" y="58" text-anchor="middle" class="s">2 processes, 2 resources</text><text x="142" y="74" text-anchor="middle" class="s">the classic picture</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Coffman × 4 ★</text>
+      <text x="498" y="66" text-anchor="middle" class="s">Reusable vs consumable</text>
+      <text x="96" y="155" text-anchor="middle" class="g w6">RAG graph</text>
+      <text x="544" y="148" text-anchor="middle" class="r w6">Banker's</text><text x="544" y="164" text-anchor="middle" class="r w6">algorithm ★</text>
+      <text x="142" y="238" text-anchor="middle" class="s">Prevention: total order</text>
+      <text x="320" y="270" text-anchor="middle" class="r w6">Need = Max − Alloc ★</text>
+      <text x="498" y="246" text-anchor="middle" class="s">Recovery &amp; starvation</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the one diagram every question is drawn from</figcaption>
+  </figure>
+  <div class="sticky" style="width:70mm"><b>High-yield list</b><br>① Coffman × 4: M, H, N, C<br>② Claim R→P · request P→R<br>③ Cycle = deadlock only if 1 inst<br>④ Need = Max − Allocation<br>⑤ Work = Available, Work += Alloc<br>⑥ Safe = every Finish[i] true<br>⑦ Unsafe ≠ deadlocked<br>⑧ Break circular wait: total order<br>⑨ Recover: terminate / preempt<br>⑩ Aging → starvation, not deadlock</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The syllabus line is "<span class="hl">Deadlock: resource allocation and deadlock, deadlock detection, prevention and recovery</span>", plus avoidance by the Banker's algorithm. Scheduling and IPC are in the Process lesson.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>What a deadlock is … p. 2</li><li>Coffman's four conditions … p. 3</li><li>Resource types &amp; the RAG … p. 4</li><li>Cycle ⇒ deadlock? … p. 5</li><li>Prevention … p. 6</li></ul>
+    <ul class="tick"><li>Avoidance: safe states … p. 7</li><li>Banker's algorithms … p. 8</li><li>Detection &amp; recovery … p. 9</li><li>Night-before p. 10 · Practice p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: what a deadlock is ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Definition &amp; the classic case</span></div>
+  <h2><span class="no">1</span>What Is a Deadlock?</h2><span class="tag">definition ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">deadlock</span> is a set of processes such that <b>every</b> member is blocked and waiting for an event that only another blocked member of the same set can cause or allow. Nothing can proceed, nothing outside can help, and <span class="circ">the situation can never resolve itself</span>. One process waiting for a busy device is <b>not</b> a deadlock — that is ordinary blocking.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,286px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 214" width="282">
+      <g class="w">
+        <rect x="118" y="12" width="68" height="28" rx="4" class="ink fill-b"/>
+        <circle cx="152" cy="26" r="3.6" class="ink-k fill-y"/>
+        <rect x="118" y="160" width="68" height="28" rx="4" class="ink fill-b"/>
+        <circle cx="152" cy="174" r="3.6" class="ink-k fill-y"/>
+        <circle cx="44" cy="100" r="23" class="ink fill-y"/>
+        <circle cx="256" cy="100" r="23" class="ink fill-y"/>
+        <path class="ink" d="M126,40 L56,80" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M56,120 L126,162" marker-end="url(#ah)"/>
+        <path class="ink" d="M186,160 L246,120" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M246,80 L186,40" marker-end="url(#ah)"/>
+      </g>
+      <text x="152" y="31" text-anchor="middle" class="k w6">R1</text>
+      <text x="152" y="179" text-anchor="middle" class="k w6">R2</text>
+      <text x="44" y="106" text-anchor="middle" class="k w6">P1</text>
+      <text x="256" y="106" text-anchor="middle" class="k w6">P2</text>
+      <text x="152" y="208" text-anchor="middle" class="s k">blue = claim (allocated) · red = request (waiting)</text>
+    </svg><figcaption>R1 and R2 have <b>one instance each</b>: P1 holds R1 and wants R2; P2 holds R2 and wants R1</figcaption></figure>
+    <div>
+      <p class="small"><b>The classic two-process, two-resource example.</b> A printer (R1) and a disk drive (R2), one instance each, exclusive use.</p>
+      <ol class="steps small" style="margin-top:1mm">
+        <li><b>P1</b> takes <span class="hl">R1</span>, the printer, for its whole print job.</li>
+        <li><b>P2</b> finishes its disk work and asks for <span class="hl">R1</span>; it blocks.</li>
+        <li>P1 now needs <span class="hl">R2</span> for its spool file; R2 is free, so P1 takes it.</li>
+        <li>P1 finally wants to <b>print</b> — the printer is held by P2, which waits for P1. <span class="circ">Both blocked for ever.</span></li>
+      </ol>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Term</th><th class="l">Meaning</th><th class="l">Example here</th></tr>
+    <tr><td class="l">Request / wait for</td><td class="l">the process asks for an instance it does not have</td><td class="l">P1 waits for R1</td></tr>
+    <tr><td class="l">Hold / allocate</td><td class="l">the process has it and has not released it</td><td class="l">P2 holds R2</td></tr>
+    <tr><td class="l">Deadlock set</td><td class="l">the whole set of mutually blocking processes</td><td class="l">{P1, P2}</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "Deadlock needs <b>at least two</b>, and needs <b>all four</b>." One process can only be starved or blocked; a deadlock always involves a <b>set</b> and a <b>cycle</b>. All four Coffman conditions must hold at once — knock out <b>one</b> and it cannot form.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) A process waiting for a <b>busy device</b> is <b>not</b> a deadlock. (ii) A <b>cycle is not always a deadlock</b> — sheet 5. (iii) Deadlock ≠ starvation: in starvation the system keeps working and one process is cheated; in a deadlock <b>nothing</b> progresses.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ read the picture in words</span> R1 = one printer, R2 = one disk drive.
+    <b>(a)</b> P1 → R1 alone: <b>no</b> deadlock — P1 is merely waiting, nothing holds R1.
+    <b>(b)</b> P1 → R1 and P2 → R2 only: <b>no</b> — both instances are free, so one process gets one and the other waits harmlessly.
+    <b>(c)</b> R1 → P1, P1 → R2, R2 → P2, P2 → R1? <span class="circ">Yes</span> — a closed chain in which every holder waits for the next, and that chain <b>is</b> the deadlock.
+    <b>(d)</b> Add R2 → P3 with no request from P3: still a deadlock? <b>Yes</b> — the {P1, P2} cycle stands on its own.</div>
+  <div class="tipbox small"><span class="lbl">Where you meet it in practice</span> Two database transactions each updating account A then B in opposite orders; a thread holding a mutex while it blocks on a socket read. The moral is always the same: <b>fix the order in which things are taken</b>.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: Coffman conditions ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Coffman's four conditions</span></div>
+  <h2><span class="no">2</span>Coffman's Four Necessary Conditions</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Proposed by <b>Edward Coffman (1971)</b>: a deadlock is possible <span class="hl">if and only if all four</span> of these hold <b>at the same time</b>. They are <span class="circ">necessary conditions</span>, not a definition — none alone causes a deadlock, and denying any <b>one</b> of them makes deadlock impossible.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,270px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="266">
+      <g class="w">
+        <rect x="18" y="16" width="264" height="30" rx="5" class="ink-r fill-r"/>
+        <path class="ink-k" d="M10,158 H292"/>
+        <rect x="26" y="52" width="56" height="104" rx="3" class="ink fill-y"/>
+        <rect x="90" y="52" width="56" height="104" rx="3" class="ink fill-y"/>
+        <rect x="154" y="52" width="56" height="104" rx="3" class="ink fill-y"/>
+        <rect x="218" y="52" width="56" height="104" rx="3" class="ink fill-y"/>
+        <path class="ink-r" d="M118,124 L118,156" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="150" y="38" text-anchor="middle" class="r w6 l">DEADLOCK</text>
+      <text x="54" y="106" text-anchor="middle" class="k w6 l">M</text>
+      <text x="118" y="106" text-anchor="middle" class="k w6 l">H</text>
+      <text x="182" y="106" text-anchor="middle" class="k w6 l">N</text>
+      <text x="246" y="106" text-anchor="middle" class="k w6 l">C</text>
+      <text x="54" y="176" text-anchor="middle" class="s k">Mutual</text><text x="54" y="190" text-anchor="middle" class="s k">exclusion</text>
+      <text x="118" y="176" text-anchor="middle" class="s k">Hold-and-</text><text x="118" y="190" text-anchor="middle" class="s k">wait</text>
+      <text x="182" y="176" text-anchor="middle" class="s k">No pre-</text><text x="182" y="190" text-anchor="middle" class="s k">emption</text>
+      <text x="246" y="176" text-anchor="middle" class="s k">Circular</text><text x="246" y="190" text-anchor="middle" class="s k">wait</text>
+    </svg><figcaption>the roof falls only when <b>all four</b> pillars stand — pull one out (dashed) and nothing traps</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Condition</th><th class="l">Exactly what it says</th></tr>
+      <tr><td class="l"><b>M</b>utual exclusion</td><td class="l"><b>at least one</b> resource is non-sharable: one process at a time</td></tr>
+      <tr><td class="l"><b>H</b>old and wait</td><td class="l">a process <b>holds at least one</b> resource while <b>waiting</b> for more</td></tr>
+      <tr><td class="l"><b>N</b>o preemption</td><td class="l">a resource comes back only when its holder releases it voluntarily</td></tr>
+      <tr><td class="l"><b>C</b>ircular wait</td><td class="l">a closed chain: P0 waits for what P1 holds, …, Pn waits for what P0 holds</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <span class="hl">MHNC</span> — "Mutual, Hold-and-wait, No-preemption, Circular". A room with <b>four doors</b>: you are trapped only when all four are shut. On MCQs, "which is <b>NOT</b> a condition?" → the answer is <span class="circ">aging</span> (it fights starvation), or priority inversion, or thrashing.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Only <b>at least one</b> resource must be non-sharable. (ii) If every resource is sharable there is no deadlock. (iii) "Most practical prevention" = breaking <b>circular wait</b> by a total order. (iv) The conditions are <b>necessary</b>, not sufficient: some states satisfy all four and still complete.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ which conditions can you break here?</span> A word processor holds the <b>print-queue lock</b>, the <b>spell dictionary</b> and a <b>temporary file</b> while the user prints, and writes the dictionary to disk first. Its <b>clipboard</b> is sharable.
+    <b>(a)</b> Mutual exclusion — <span class="circ">cannot</span> break it for the print queue or a temp file open for writing; <b>can</b> break it for the dictionary by making it read-only and shared.
+    <b>(b)</b> Hold and wait — breakable: <b>release the dictionary before taking the print queue</b>, or ask for everything up front.
+    <b>(c)</b> No preemption — breakable for the dictionary (page it out, reload later) but <b>not</b> for half-printed pages on paper.
+    <b>(d)</b> Circular wait — breakable by ordering the locks: <b>clipboard &lt; dictionary &lt; temp file &lt; print queue</b>.</div>
+  <div class="sumbox small"><span class="lbl">The four strategies in one line each</span>
+    <div class="fgrid tiny">
+      <p><b>Prevention</b> = deny one condition a priori</p><p><b>Avoidance</b> = keep every state safe</p>
+      <p><b>Detection</b> = look for one after it formed</p><p><b>Recovery</b> = break it once found</p>
+    </div></div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: resource types & RAG ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Resources &amp; the RAG</span></div>
+  <h2><span class="no">3</span>Resource Types &amp; the Resource-Allocation Graph</h2><span class="tag">RAG ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">resource-allocation graph (RAG)</span> is a directed bipartite graph. <b>Process nodes</b> are <b>circles</b>, <b>resource nodes</b> are <b>squares</b>, and a square carries one <b>dot per instance</b> (no dot left = none free). Every edge joins a process to a resource, never two processes or two resources.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Edge</th><th class="l">Direction</th><th class="l">It means</th></tr>
+    <tr><td class="l"><b>Claim</b> (allocation) edge</td><td class="l"><span class="hl">Resource → Process</span></td><td class="l">that instance is <b>allocated</b> to the process — it holds it and has not released it</td></tr>
+    <tr><td class="l"><b>Request</b> edge</td><td class="l"><span class="hl">Process → Resource</span></td><td class="l">the process has asked for an instance of that type and is <b>waiting</b> for it</td></tr>
+  </table>
+  <div class="cols small" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">Classification</th><th class="l">Meaning &amp; examples</th></tr>
+      <tr><td class="l"><b>Reusable</b> (serialisable)</td><td class="l">used, released, available again — <b>never depleted</b>: CPU, memory, printer, disk, a mutex</td></tr>
+      <tr><td class="l"><b>Consumable</b></td><td class="l">used <b>up</b>, once gone gone: a printed page, a spool job, a queue message</td></tr>
+      <tr><td class="l"><b>Sharable</b></td><td class="l">many processes at the same instant: read-only file, code, shared read-only memory</td></tr>
+      <tr><td class="l"><b>Exclusive</b> (non-sharable)</td><td class="l">one process at a time: printer, tape drive, file open for writing, a lock</td></tr>
+    </table>
+    <div>
+      <div class="trick" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>R</b>eusable is <b>R</b>eturned; <b>C</b>onsumable is <b>C</b>onsumed." A consumable resource can <b>never</b> be preempted — half a printed page cannot be un-printed.</div>
+      <div class="exam"><span class="lbl">Exam trap</span> Arrow direction is the most-tested detail here. <span class="circ">R → P is the claim edge (allocated)</span>; <span class="circ">P → R is the request edge (waiting)</span>. A process holding <b>every</b> instance it asked for has <b>no</b> outgoing request edge — then it is <b>not</b> deadlocked.</div>
+    </div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 340 196" width="300">
+    <g class="w">
+      <rect x="128" y="20" width="78" height="38" rx="4" class="ink fill-b"/>
+      <circle cx="152" cy="32" r="3.4" class="ink-k fill-y"/><circle cx="182" cy="32" r="3.4" class="ink-k fill-y"/>
+      <rect x="128" y="138" width="78" height="38" rx="4" class="ink fill-b"/>
+      <circle cx="148" cy="166" r="3.4" class="ink-k fill-y"/><circle cx="167" cy="166" r="3.4" class="ink-k fill-y"/><circle cx="186" cy="166" r="3.4" class="ink-k fill-y"/>
+      <circle cx="42" cy="98" r="22" class="ink fill-y"/>
+      <circle cx="288" cy="98" r="22" class="ink fill-y"/>
+      <circle cx="167" cy="96" r="18" class="ink-g fill-g"/>
+      <path class="ink" d="M206,39 L272,80" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M280,116 L206,157" marker-end="url(#ah)"/>
+      <path class="ink" d="M128,157 L58,116" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M56,80 L128,39" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M167,114 L167,134" marker-end="url(#ah)"/>
+    </g>
+    <text x="167" y="52" text-anchor="middle" class="k w6">R1</text>
+    <text x="167" y="154" text-anchor="middle" class="k w6">R2</text>
+    <text x="42" y="104" text-anchor="middle" class="k w6">P1</text>
+    <text x="288" y="104" text-anchor="middle" class="k w6">P2</text>
+    <text x="167" y="101" text-anchor="middle" class="g w6 s">P3</text>
+    <text x="92" y="24" text-anchor="middle" class="s">2 instances</text>
+    <text x="246" y="192" text-anchor="end" class="s">3 instances</text>
+  </svg><figcaption><b>blue = claim</b> (allocated), <b>red = request</b> (waiting): a cycle P1 → R1 → P2 → R2 → P1 exists, yet <b>P3</b> can still run — R2 has a spare instance, so this is <b>not</b> a deadlock</figcaption></figure>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: cycle = deadlock? ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Cycle: deadlock or not?</span></div>
+  <h2><span class="no">4</span>Does a Cycle Mean Deadlock?</h2><span class="tag">crucial distinction ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">The rule in one sentence</span> A deadlock always produces a cycle, so a cycle is <span class="hl">necessary</span>. But it is <span class="circ">sufficient as well only when every resource type has exactly one instance</span>. With several instances a cycle is necessary <b>but not sufficient</b>: a process outside it may still finish and hand back an instance that breaks the cycle.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">Situation</th><th class="l">Cycle ⇒ deadlock?</th></tr>
+      <tr><td class="l">Every type has <b>1 instance</b></td><td class="l"><span class="circ">YES — always</span>; just look for a cycle</td></tr>
+      <tr><td class="l">Any type has <b>&gt; 1 instance</b></td><td class="l"><span class="red"><b>NO — maybe</b></span>; run the reduction</td></tr>
+    </table>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ reduce sheet 4's graph</span> R1 = 2 instances, R2 = 3 instances. P1 holds 1 × R1, wants R2; P2 holds 2 × R2, wants R1; P3 holds nothing, wants R2. <b>Free</b> R1 = 2 − 1 = <b>1</b>; free R2 = 3 − 2 = <b>1</b>.
+      <ol class="steps tiny" style="margin-top:1mm">
+        <li>P3's R2 request is paid (1 ≥ 1) → <b>P3 finishes</b> and frees it again.</li>
+        <li>P1's R2 request is paid. P1 finishes and returns its R1 → free R1 = 0 + 1 = <b>1</b>, free R2 = 0.</li>
+        <li>P2's R1 request is paid (1 ≥ 1). P2 finishes.</li>
+      </ol>
+      <span class="circ">Reduces away ⇒ a cycle but NO deadlock.</span></div>
+  </div>
+  <div class="sumbox small"><span class="lbl">The reduction test, formally</span>
+    <ol class="steps tiny">
+      <li>Count the free instances: <b>free[j] = total[j] − allocated[j]</b>.</li>
+      <li>Repeat: find a process P<sub>i</sub> whose outstanding request can be paid out of the free counts. Assume P<sub>i</sub> finishes and <b>returns every instance it holds</b>: free[j] += Allocation[i][j]; mark P<sub>i</sub> finished.</li>
+      <li>All marked → <span class="circ">no deadlock</span>. Some unmarked and still waiting → <span class="circ">deadlocked</span>.</li>
+    </ol></div>
+  <div class="cols small">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Never write "cycle = deadlock" without the qualifier. <b>Deadlock ⇒ cycle</b> always; <b>cycle ⇒ deadlock</b> only for single-instance resources. <span class="hl">High-yield</span>: for a single-instance graph "a deadlock <b>definitely</b> exists"; for a multiple-instance graph "a deadlock <b>may</b> exist".</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>One dot, one answer.</b>" If every square holds a single dot the cycle <b>is</b> the proof. If a square holds two or more dots, someone may still pay for somebody's request — so <b>peel the graph</b> and look at what is left.</div>
+  </div>
+  <div class="cols small">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ with 1 instance of R1</span> R1 = <b>1</b> instance (held by P1), R2 = 3 instances (2 held by P2). Free R1 = 0, free R2 = 1. P3 finishes, then both counts are 0 and nobody can move → <span class="circ">the cycle P1 → R1 → P2 → R2 → P1 is a real deadlock</span>.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">IT link</span> Lock-ordering analysers run this exact reduction over the lock graph of a running JVM. A graph that will not peel has found a deadlocked thread.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: prevention ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Prevention</span></div>
+  <h2><span class="no">5</span>Prevention: Break One of the Four</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Prevention</b> imposes a rule that keeps <b>at least one</b> Coffman condition permanently false, <span class="hl">before</span> any process runs. Nothing is detected and nothing is recovered — the deadlock simply cannot be built.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Condition denied</th><th class="l">The rule</th><th class="l">What it costs</th></tr>
+    <tr><td class="l"><b>Mutual exclusion</b></td><td class="l">make resources <b>sharable</b>: read-only files or a <b>spooler</b></td><td class="l">a printer is inherently exclusive → <span class="red"><b>not always possible</b></span></td></tr>
+    <tr><td class="l"><b>Hold and wait</b></td><td class="l">demand <b>all</b> at once, or <b>release everything held</b> before asking more</td><td class="l">low utilisation; losing every race introduces <span class="circ">starvation</span></td></tr>
+    <tr><td class="l"><b>No preemption</b></td><td class="l">if a request cannot be granted, <b>take back</b> what it holds</td><td class="l">works for <b>CPU, memory, files</b>; <span class="red"><b>impossible for a printer</b></span></td></tr>
+    <tr><td class="l"><b>Circular wait</b> ★</td><td class="l">a <b>total order</b>; a request must be for a <b>higher</b> number</td><td class="l">wrong-order requests start again; nothing is wasted</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,212px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 320 210" width="230">
+      <g class="w">
+        <rect x="16" y="142" width="64" height="42" class="ink fill-y"/>
+        <rect x="80" y="112" width="64" height="72" class="ink fill-y"/>
+        <rect x="144" y="82" width="64" height="102" class="ink fill-y"/>
+        <rect x="208" y="52" width="64" height="132" class="ink fill-y"/>
+        <path class="ink-g" d="M14,192 L78,164 L146,134 L214,104" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M300,32 L232,84" marker-end="url(#ah)"/>
+      </g>
+      <text x="48" y="170" text-anchor="middle" class="k w6">R1</text>
+      <text x="112" y="140" text-anchor="middle" class="k w6">R2</text>
+      <text x="176" y="110" text-anchor="middle" class="k w6">R3</text>
+      <text x="240" y="80" text-anchor="middle" class="k w6">R4</text>
+      <text x="316" y="26" text-anchor="end" class="s r">no going back</text>
+      <text x="160" y="206" text-anchor="middle" class="g s">request in increasing order</text>
+    </svg><figcaption>each type gets a fixed number <b>a priori</b></figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ enforcing the order</span> Order: R1 (tape) &lt; R2 (disk) &lt; R3 (printer) &lt; R4 (plotter).
+      <b>(a)</b> P wants R3 then R2. R2 is lower → <span class="circ">refused</span>; P must finish with R3, release it, then ask again.
+      <b>(b)</b> P wants R1 then R4. Both ascending → <b>granted</b>.
+      <b>(c)</b> Can a cycle form? Each process holds only lower-numbered resources than the one it waits for, so the wait chain strictly <b>decreases</b> → <span class="circ">circular wait is impossible</span>.
+      <b>(d)</b> P holds R4 and asks for a second instance of R4 → <span class="red"><b>refused</b></span>: never wait for another instance of a type you hold.</div>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Prevention asks for <b>all</b> resources at once; avoidance asks whether a request keeps the system <b>safe</b>. (ii) A spooler makes a printer sharable <i>in effect</i>, but the spool file is exclusive. (iii) Preemption of a <b>consumable</b> resource is impossible.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Denying circular wait is <b>the usual practical answer</b>, because the total order is fixed by the designer <span class="hl">a priori</span> — the OS needs <b>no knowledge of future claims at all</b>. Avoidance instead demands that every process declare its maximum claim first.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">This is what real systems do</span> Oracle, PostgreSQL and every careful codebase impose a <b>lock ordering</b>; Java code that touches two locks always takes them in the same global order. Two threads that grab A then B and B then A will hang the service — the textbook cycle, in production.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: avoidance ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Avoidance</span></div>
+  <h2><span class="no">6</span>Avoidance: Safe States</h2><span class="tag">Banker's ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Avoidance</b> with the <b>Banker's algorithm</b> (Dijkstra, 1965) lets processes request what they like, but <b>checks every request in advance</b> and grants it only if the resulting state keeps the possibility of every process finishing. The price: each process must declare <b>in advance</b> the <span class="hl">maximum number of instances of each type it may ever need</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,182px);align-items:start">
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Safe state</span> There exists an order ⟨P<sub>1</sub>, …, P<sub>n</sub>⟩ — a <b>safe sequence</b> — in which each process can obtain all its <b>remaining</b> need from what is free at that moment, then finish and hand everything back. No such order ⇒ <b>unsafe</b>.</div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">Data structure</th><th class="l">Size</th><th class="l">Meaning</th></tr>
+        <tr><td class="l"><b>Available</b>[j]</td><td class="l">m</td><td class="l">free units of type j now</td></tr>
+        <tr><td class="l"><b>Max</b>[i][j]</td><td class="l">n×m</td><td class="l">i's declared maximum claim</td></tr>
+        <tr><td class="l"><b>Allocation</b>[i][j]</td><td class="l">n×m</td><td class="l">units of type j i holds</td></tr>
+        <tr><td class="l"><b>Need</b>[i][j]</td><td class="l">n×m</td><td class="l"><span class="circ">Need = Max − Allocation</span></td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 264 186" width="178">
+      <g class="w">
+        <path class="ink-k" d="M16,158 H248" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M16,158 V24" marker-end="url(#ahb)"/>
+        <rect x="30" y="126" width="44" height="32" class="ink-g fill-g"/>
+        <rect x="76" y="98" width="44" height="28" class="ink-g fill-g"/>
+        <rect x="122" y="76" width="44" height="22" class="ink-g fill-g"/>
+        <rect x="168" y="54" width="44" height="22" class="ink-g fill-g"/>
+        <path class="ink-r" d="M226,54 L226,136" marker-end="url(#ah)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text x="24" y="34" class="k w6">Work</text>
+      <text x="246" y="176" text-anchor="end" class="s k">finishing order →</text>
+      <text x="52" y="148" text-anchor="middle" class="g w6 s">P1</text>
+      <text x="98" y="118" text-anchor="middle" class="g w6 s">P2</text>
+      <text x="144" y="92" text-anchor="middle" class="g w6 s">P3</text>
+      <text x="190" y="70" text-anchor="middle" class="g w6 s">P4</text>
+      <text x="222" y="42" text-anchor="end" class="s r">nothing left</text>
+    </svg><figcaption>each step is paid for by the work free at that moment</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <span class="circ">Unsafe ≠ deadlocked.</span> An unsafe state is one in which the <b>declared</b> maxima can no longer be met in any order; the processes may still finish if their real needs are smaller. A <b>safe state is guaranteed deadlock-free</b>; unsafe is only a warning. Also: <b>Need = Max − Allocation</b>, never Max − Available.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>N</b>eed is what I still have to <b>ask</b> for." So <b>Work</b> is only compared with <b>Need</b>, while <b>Allocation</b> is what gets <b>added back</b> when a process finishes. Work never shrinks — it only grows, which is why the loop must end.</div>
+  </div>
+  <div class="sumbox small"><span class="lbl">The four-word distinction</span>
+    <div class="fgrid tiny">
+      <p><b>Prevention</b>: a rule imposed <i>before</i> — "you may never do X"</p><p><b>Avoidance</b>: a decision at request time — "yes, this keeps us safe"</p>
+      <p><b>Detection</b>: a periodic check — "is one there now?"</p><p><b>Recovery</b>: action after the fact — "kill or preempt a victim"</p>
+    </div></div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ safe or unsafe</span> Four identical tape drives, <b>Available = 2</b>. P1 holds 2 and needs 0 more; P2 holds 0 and needs 1; P3 holds 0 and needs 4. Need[P1] = 0 ≤ 2 ✓ → P1 finishes and returns its 2 drives: Work = 4. Need[P2] = 1 ≤ 4 ✓. Need[P3] = 4 ≤ 4 ✓. <span class="circ">Safe ⟨P1, P2, P3⟩.</span> Now Available = 1: P1 and P2 finish (Work = 3), but P3 needs 4 → <span class="red"><b>unsafe</b></span>.</div>
+  <div class="cols small">
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Why avoidance is taught but rarely used</span> Every process must <b>declare a maximum in advance</b>, and real programs rarely know their own peak — so the OS over-reserves and utilisation falls. The safety check is cheap; the <b>prediction</b> is the expensive part.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> The ≤ in <b>Need[i] ≤ Work</b> is <b>component-wise</b>: Need = (7, 5, 3) vs Work = (10, 4, 5) fails because 5 &gt; 4, yet the totals 15 &lt; 19 look fine. Never compare vectors by their sum.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: bankers algorithms + worked example ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Banker's algorithm</span></div>
+  <h2><span class="no">7</span>The Banker's Algorithms, Worked Through</h2><span class="tag">written question ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Algorithm 1 — safety (is this state safe?)</span>
+      <ol class="steps tiny">
+        <li><b>Work = Available</b>; <b>Finish[i] = false</b> for all i.</li>
+        <li>Find any i with <b>Finish[i] = false</b> and <b>Need[i] ≤ Work</b> (component-wise).</li>
+        <li>Then <b>Work = Work + Allocation[i]</b>; set <b>Finish[i] = true</b>; back to step 2.</li>
+        <li>All Finish true → <span class="circ">SAFE</span>, and that order <b>is</b> the safe sequence. Some i stays false → <span class="red"><b>UNSAFE</b></span>.</li>
+      </ol></div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Algorithm 2 — request (may it be granted?)</span>
+      <ol class="steps tiny">
+        <li>If <b>Request[i] &gt; Need[i]</b> → <span class="red"><b>error</b></span>: the declared maximum was exceeded.</li>
+        <li>If <b>Request[i] &gt; Available</b> → <span class="red"><b>wait</b></span>: not enough free now.</li>
+        <li><b>Pretend</b> to grant: Available −= Request; Allocation[i] += Request; Need[i] −= Request.</li>
+        <li>Run the safety algorithm on the pretended state. <span class="circ">Safe → grant for real</span>; unsafe → <b>undo</b>, tell it to wait.</li>
+      </ol></div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l" rowspan="2">Process</th><th colspan="3">Allocation</th><th colspan="3">Maximum</th><th colspan="3">Need = Max − Alloc</th></tr>
+    <tr><th>A</th><th>B</th><th>C</th><th>A</th><th>B</th><th>C</th><th>A</th><th>B</th><th>C</th></tr>
+    <tr><td class="l">P0</td><td>0</td><td>1</td><td>0</td><td>7</td><td>5</td><td>3</td><td><b>7</b></td><td><b>4</b></td><td><b>3</b></td></tr>
+    <tr><td class="l">P1</td><td>2</td><td>0</td><td>0</td><td>3</td><td>2</td><td>2</td><td><b>1</b></td><td><b>2</b></td><td><b>2</b></td></tr>
+    <tr><td class="l">P2</td><td>3</td><td>0</td><td>2</td><td>9</td><td>0</td><td>2</td><td><b>6</b></td><td><b>0</b></td><td><b>0</b></td></tr>
+    <tr><td class="l">P3</td><td>2</td><td>1</td><td>1</td><td>2</td><td>2</td><td>2</td><td><b>0</b></td><td><b>1</b></td><td><b>1</b></td></tr>
+    <tr><td class="l">P4</td><td>0</td><td>0</td><td>2</td><td>4</td><td>3</td><td>3</td><td><b>4</b></td><td><b>3</b></td><td><b>1</b></td></tr>
+    <tr><td class="l"><b>Available</b></td><td><b>3</b></td><td><b>3</b></td><td><b>2</b></td><td class="l" colspan="6">totals: A = 10, B = 5, C = 7 instances</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,266px);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">Step</th><th>Process</th><th>Need</th><th>Work in</th><th>Work out</th></tr>
+      <tr><td class="l">1</td><td>P1</td><td>1 2 2</td><td>3 3 2 ✓</td><td><b>5 3 2</b></td></tr>
+      <tr><td class="l">2</td><td>P3</td><td>0 1 1</td><td>5 3 2 ✓</td><td><b>7 4 3</b></td></tr>
+      <tr><td class="l">3</td><td>P0</td><td>7 4 3</td><td>7 4 3 ✓</td><td><b>7 5 3</b></td></tr>
+      <tr><td class="l">4</td><td>P2</td><td>6 0 0</td><td>7 5 3 ✓</td><td><b>10 5 5</b></td></tr>
+      <tr><td class="l">5</td><td>P4</td><td>4 3 1</td><td>10 5 5 ✓</td><td><b>10 5 7</b></td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 320 116" width="262">
+      <g class="w">
+        <rect x="4" y="42" width="48" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="57" y="42" width="48" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="110" y="42" width="48" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="163" y="42" width="48" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="216" y="42" width="48" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="269" y="42" width="48" height="32" rx="5" class="ink-g fill-g"/>
+        <path class="ink-g" d="M50,58 H55 M103,58 H108 M156,58 H161 M209,58 H214 M262,58 H267" marker-end="url(#ahg)"/>
+      </g>
+      <text x="28" y="63" text-anchor="middle" class="g w6">3,3,2</text>
+      <text x="81" y="63" text-anchor="middle" class="g w6">5,3,2</text>
+      <text x="134" y="63" text-anchor="middle" class="g w6">7,4,3</text>
+      <text x="187" y="63" text-anchor="middle" class="g w6">7,5,3</text>
+      <text x="240" y="63" text-anchor="middle" class="g w6">10,5,5</text>
+      <text x="293" y="63" text-anchor="middle" class="g w6">10,5,7</text>
+      <text x="28" y="34" text-anchor="middle" class="s">Work</text>
+      <text x="81" y="34" text-anchor="middle" class="s">+P1</text>
+      <text x="134" y="34" text-anchor="middle" class="s">+P3</text>
+      <text x="187" y="34" text-anchor="middle" class="s">+P0</text>
+      <text x="240" y="34" text-anchor="middle" class="s">+P2</text>
+      <text x="293" y="34" text-anchor="middle" class="s">+P4</text>
+    </svg><figcaption>the Work vector of that walk — it only ever grows</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Result ✍ and now a request</span> Every Finish[i] became true, so the state is <span class="circ">SAFE</span> with safe sequence ⟨P1, P3, P0, P2, P4⟩. Check: the final Work (10, 5, 7) = Available + the whole Allocation column sum, (3+7, 3+2, 2+5) = (10, 5, 7) ✓. Now <b>Request[P1] = (1, 0, 2)</b>: ≤ Need[P1] ✓ and ≤ Available ✓. Pretend: Available = (2, 3, 0), Need[P1] = (0, 2, 0); the walk P1 → (5, 3, 2), P3 → (7, 4, 3), P0 → (7, 5, 3), P2 → (10, 5, 5), P4 → (10, 5, 7) finishes all five → <span class="circ">GRANT</span>. But <b>Request[P4] = (3, 3, 0)</b> gives Available = (0, 0, 2), Need[P4] = (1, 0, 1): no process fits → <span class="red"><b>REFUSE</b></span>.</div>
+  <div class="cols small">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Step 3 hands a process its whole remaining <b>Need</b>, but Work is increased by its <b>entire Allocation</b> — not its Need, not its Max. P3 gets (0, 1, 1) yet contributes (2, 1, 1), because P3 already held (2, 1, 1).</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Need</b> is the bill, <b>Allocation</b> is the wallet: the banker pays the bill and the whole wallet comes back. Max never enters the loop — it was only used once, to build Need.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: detection, recovery, starvation ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Detection &amp; recovery</span></div>
+  <h2><span class="no">8</span>Detection, Recovery &amp; Starvation</h2><span class="tag">last topic ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Detection</b> assumes the OS lets deadlocks happen, then <span class="hl">periodically</span> runs a check. It keeps the RAG plus <b>Request[i][j]</b> (what each process still waits for) and <b>Allocation[i][j]</b> — the same bookkeeping as the Banker's algorithm, used once instead of on every request.</div>
+  <div class="cols small" style="grid-template-columns:minmax(0,196px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 260 176" width="192">
+      <g class="w">
+        <rect x="104" y="12" width="56" height="24" rx="4" class="ink fill-b"/>
+        <circle cx="132" cy="24" r="3.4" class="ink-k fill-y"/>
+        <rect x="104" y="92" width="56" height="24" rx="4" class="ink fill-b"/>
+        <circle cx="132" cy="104" r="3.4" class="ink-k fill-y"/>
+        <circle cx="34" cy="40" r="20" class="ink fill-y"/>
+        <circle cx="226" cy="40" r="20" class="ink fill-y"/>
+        <path class="ink" d="M110,32 L54,36" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M44,60 L108,94" marker-end="url(#ah)"/>
+        <path class="ink" d="M160,104 L212,58" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M216,26 L160,28" marker-end="url(#ah)"/>
+      </g>
+      <text x="132" y="29" text-anchor="middle" class="k w6">R1</text>
+      <text x="132" y="109" text-anchor="middle" class="k w6">R2</text>
+      <text x="34" y="46" text-anchor="middle" class="k w6 s">P1</text>
+      <text x="226" y="46" text-anchor="middle" class="k w6 s">P2</text>
+      <text x="130" y="146" text-anchor="middle" class="s r">P1 → R2 → P2 → R1 → P1</text>
+      <text x="130" y="164" text-anchor="middle" class="s k">one dot each ⇒ cycle = deadlock</text>
+    </svg><figcaption>single-instance detection: the RAG <b>is</b> the algorithm</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">Case</th><th class="l">Detection method</th></tr>
+      <tr><td class="l"><b>Single instance</b> of every type</td><td class="l">the RAG with one dot per square; <span class="circ">any cycle = deadlock</span>; no extra matrix</td></tr>
+      <tr><td class="l"><b>Multiple instances</b></td><td class="l">the <b>reduction</b> test of sheet 5: pay off any process the free units can satisfy, adding back its Allocation</td></tr>
+      <tr><td class="l">Cost</td><td class="l">O(n²) or worse — which is why real systems do not do this</td></tr>
+    </table>
+  </div>
+  <div class="cols small">
+    <div class="def small" style="margin-top:0"><span class="lbl">Recovery 1 — process termination</span> Kill <b>all</b> deadlocked processes, or kill them <b>one at a time in a chosen order</b> until the cycle breaks; a killed process releases everything it held. Usual order, cheapest damage first: <b>least CPU time used so far → fewest resources held → fewest important resources held → longest CPU time still to run</b>.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Recovery 2 — resource preemption</span> <b>Take resources away</b> from a victim and hand them to a blocked process. The victim can only be restarted by <span class="hl">rollback</span> — restoring it to a previous safe state or checkpoint — because it may have already <b>partly used</b> the resource taken. <span class="circ">Guard against starvation:</span> count rollbacks before preempting the same process again.</div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Deadlock</th><th class="l">Starvation</th></tr>
+    <tr><td class="l">What happens</td><td class="l">a <b>set</b> of processes waits on itself; nothing in it can move</td><td class="l">one process is <b>indefinitely denied</b> what it needs</td></tr>
+    <tr><td class="l">Who is affected</td><td class="l"><span class="circ">every process in the cycle</span></td><td class="l">only the unlucky process; everyone else progresses</td></tr>
+    <tr><td class="l">Cure</td><td class="l">termination, or preemption + rollback</td><td class="l"><b>aging</b>, fair queues</td></tr>
+  </table>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>Deadlock stops the world, starvation picks a victim.</b>" Deadlock = a <b>set</b> stuck together; starvation = a <b>single</b> process shut out, with every state changing constantly. And <span class="hl">aging never fixes a deadlock</span> — nothing is progressing, so no priority is ever re-evaluated.</div>
+  <div class="tipbox small"><span class="lbl">The practical bottom line</span> Real operating systems and databases <b>largely avoid deadlock by design rather than detect it</b>: they use <b>ordered locking</b> (a global total order on locks) and <b>no hold-and-wait</b> (one lock at a time, or release before requesting the next). Where a cycle is still possible they set a <b>timeout</b> — a lock timer, a <code>tryLock</code> with a deadline, a watchdog that dumps stacks and aborts.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Coffman (1971): <b>M</b>utual exclusion</p><p><b>H</b>old and wait</p>
+      <p><b>N</b>o preemption</p><p><b>C</b>ircular wait</p>
+      <p>Claim edge <b>R → P</b> (allocated)</p><p>Request edge <b>P → R</b></p>
+      <p>1 instance ⇒ cycle = deadlock</p><p>many ⇒ run the reduction</p>
+      <p><b>Need = Max − Allocation</b></p><p><b>Work = Available</b></p>
+      <p><b>Work += Allocation[i]</b></p><p>all Finish true ⇒ <b>safe</b></p>
+      <p>Request &gt; Need ⇒ error</p><p>Request &gt; Available ⇒ wait</p>
+      <p>Unsafe ≠ deadlocked</p><p>total order set <b>a priori</b></p>
+      <p>Reusable vs consumable</p><p>Terminate: least CPU used</p>
+      <p>Preempt ⇒ <b>rollback</b></p><p>Aging ⇒ starvation only</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Needs <b>all four</b> conditions</li>
+      <li>Only <b>at least one</b> resource exclusive</li>
+      <li>Deadlock ⇒ cycle; cycle ⇒ deadlock <b>only</b> if single-instance</li>
+      <li>Claim <b>R → P</b>, request <b>P → R</b></li>
+      <li>Circle = process, square = resource, dots = instances</li>
+      <li>Prevention: <b>break circular wait</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Banker's = <b>avoidance</b> (Dijkstra)</li>
+      <li><b>Need = Max − Allocation</b></li>
+      <li>Work = Work + Allocation[i]</li>
+      <li>Unsafe is only a <b>warning</b></li>
+      <li>Recover: <b>terminate</b> or <b>preempt + rollback</b></li>
+      <li>Preemption <b>impossible</b> for a printer</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> cycle = deadlock <b>without</b> the single-instance qualifier · Need ≠ Max − Available · waiting for a busy device is <b>not</b> a deadlock · "at least one" resource, not all · unsafe ≠ deadlocked · aging fixes starvation, never deadlock · a process holding every instance it asked for has <b>no</b> request edge and is <b>not</b> deadlocked.</div>
+  <div class="trick"><span class="lbl">All tricks together</span> "Deadlock needs at least two, and needs all four" · "a room with four doors — deny one and you are free" · MHNC · "one dot, one answer" · "R is returned, C is consumed" · "the arrow leaves the holder and enters the wanted" · "the order is fixed a priori" · "Need is what I still have to ask for; Work only grows" · "deadlock stops the world, starvation picks a victim".</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="486">
+    <g class="w">
+      <rect x="8" y="10" width="240" height="74" rx="10" class="ink-g fill-g"/>
+      <rect x="272" y="10" width="240" height="74" rx="10" class="ink-r fill-r"/>
+      <path class="ink-r" d="M256,47 L266,47" marker-end="url(#ah)"/>
+    </g>
+    <text x="128" y="40" text-anchor="middle" class="g w6 l">SAFE</text>
+    <text x="128" y="58" text-anchor="middle" class="g s">⟨P1, P2, P3⟩ — every step is payable</text>
+    <text x="128" y="74" text-anchor="middle" class="g s">guaranteed deadlock-free</text>
+    <text x="392" y="40" text-anchor="middle" class="r w6 l">UNSAFE</text>
+    <text x="392" y="58" text-anchor="middle" class="r s">no order meets every declared max</text>
+    <text x="392" y="74" text-anchor="middle" class="r s">deadlock possible, not certain</text>
+    <text x="260" y="102" text-anchor="middle" class="p s">Banker grants only the one on the left</text>
+  </svg><figcaption>the whole avoidance idea in two boxes</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Deadlock</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A deadlock occurs only when:<ol class="opts"><li>all four hold</li><li>any three hold</li><li>circ. wait only</li><li>no mutual excl.</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>One instance of each resource:<ol class="opts"><li>maybe, not sure</li><li>always deadlocks</li><li>a safe state</li><li>only starvation</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>A claim (allocation) edge:<ol class="opts"><li>res → holder</li><li>proc → wanted</li><li>proc ↔ proc</li><li>type ↔ type</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Usual practical prevention:<ol class="opts"><li>preemption</li><li>all at once</li><li>a total order</li><li>all sharable</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>The Banker's algorithm is for:<ol class="opts"><li>detection</li><li>prevention</li><li>avoidance</li><li>recovery</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Need[i][j] equals:<ol class="opts"><li>Max + Alloc</li><li>Avail − Alloc</li><li>Max − Avail</li><li>Max − Alloc</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Work starts at Available, then:<ol class="opts"><li>+ Max[i]</li><li>− Alloc[i]</li><li>+ Need[i]</li><li>+ Alloc[i]</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>After preemption the victim:<ol class="opts"><li>is rolled back</li><li>resumes as was</li><li>is killed</li><li>gets new locks</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>NOT one of the four conditions:<ol class="opts"><li>hold and wait</li><li>aging</li><li>circ. wait</li><li>mutual excl.</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>A total order needs in advance:<ol class="opts"><li>max claims</li><li>not even that</li><li>CPU burst size</li><li>disk geometry</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-a · 2-b · 3-a · 4-c · 5-c · 6-d · 7-d · 8-a · 9-b · 10-b</div>
+  <div class="wq"><span class="lbl">Written question</span> State the four Coffman conditions and how prevention denies each. Draw the RAG of two deadlocked processes and say what a cycle proves with one instance per type. For P0–P4 as tabulated with Available = (3, 3, 2), find the safe sequence and decide whether Request[P1] = (1, 0, 2) may be granted. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>Conditions</b> — (i) <b>mutual exclusion</b>: at least one resource non-sharable; (ii) <b>hold and wait</b>: holds one, waits for more; (iii) <b>no preemption</b>: voluntary release only; (iv) <b>circular wait</b>: a closed chain P0 → … → Pn → P0. Denied by: sharable resources or a spooler; all-at-once or release-before-request; preemption of CPU/memory/files (never a printer); a total order. <i class="mk">3</i></li>
+    <li><b>The graph</b> — P1, P2 circles; R1, R2 squares with one dot each; claim R1 → P1, R2 → P2; request P1 → R2, P2 → R1. One instance per type ⇒ a cycle is <b>necessary and sufficient</b>. <i class="mk">3</i></li>
+    <li><b>The walk</b> — Need = 7 4 3 / 1 2 2 / 6 0 0 / 0 1 1 / 4 3 1. Work (3, 3, 2) → P1 (5, 3, 2) → P3 (7, 4, 3) → P0 (7, 5, 3) → P2 (10, 5, 5) → P4 (10, 5, 7) ⇒ <b>safe</b>, ⟨P1, P3, P0, P2, P4⟩. <i class="mk">3</i></li>
+    <li><b>The request</b> — (1, 0, 2) ≤ Need[P1] = (1, 2, 2) ✓ and ≤ Available ✓. Pretended Available = (2, 3, 0), Need[P1] = (0, 2, 0); the safety run finishes all five ⇒ <b>grant</b>. <i class="mk">1</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>Can name the four Coffman conditions</li>
+      <li>Can draw an RAG, claim vs request</li>
+    </ul>
+    <ul class="tick">
+      <li>Can run the safety algorithm on 5 × 3</li>
+      <li>Can tell starvation from deadlock</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>সিকোয়েনশিয়াল সার্কিট: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, gate symbols (inline attributes!)
+     pins: 2-input at (0,12) and (0,28), output at (60,20); NOT input at (0,20) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+    <g id="g-nand"><path d="M0,12H10M0,28H10M52,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="48" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-nor"><path d="M0,12H11M0,28H11M58,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="54" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-not"><path d="M0,20H12M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M12,8L42,20L12,32Z" fill="rgba(135,190,255,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="46" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">সিকোয়েনশিয়াল সার্কিট</span></h1>
+  <p class="subtitle">ল্যাচ · ফ্লিপ-ফ্লপ · রেজিস্টার · কাউন্টার · মিলি/মুর: ১২ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">সিকোয়েনশিয়াল</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">কম্বি বনাম সিকো · সিঙ্ক</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">ফ্লিপ-ফ্লপ SR JK D T ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">ল্যাচ · ট্রিগারিং</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">এক্সাইটেশন টেবিল ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">কাউন্টার ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">শিফট রেজিস্টার</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">মিলি / মুর ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">টাইমিং · f<tspan dy="4" class="s">max</tspan></text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = পদ্ধতি / প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① Q⁺ = JQ′ + K′Q<br>② SR-এর নিষিদ্ধ অবস্থা<br>③ এক্সাইটেশন টেবিল<br>④ রেস-অ্যারাউন্ড → M-S<br>⑤ রিং n · জনসন 2n<br>⑥ mod-N: ⌈log₂N⌉ টি FF<br>⑦ মিলি বনাম মুর</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"<span class="hl">Flip-flops, race around problems</span>; Counters: <span class="hl">asynchronous counters, synchronous counters</span> and their applications; Synchronous and asynchronous logic design; <span class="hl">State diagram, Mealy and Moore machines</span>; State minimizations and assignments; Pulse mode logic; Fundamental mode design"। গেট আছে লজিক গেট নোটে, K-ম্যাপ বুলিয়ান অ্যালজেবরা নোটে; MUX/ডিকোডার/অ্যাডার কম্বিনেশনাল সার্কিট লেসনের অংশ।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>কম্বিনেশনাল বনাম সিকোয়েনশিয়াল, ক্লক … পৃ. ২</li><li>SR ল্যাচ, গেটেড ল্যাচ ……… পৃ. ৩</li><li>ট্রিগারিং, বৈশিষ্ট্যসূচক সারণি … পৃ. ৪</li><li>এক্সাইটেশন, রেস-অ্যারাউন্ড, M-S … পৃ. ৫</li><li>রূপান্তর, টাইমিং, f<sub>max</sub> ……… পৃ. ৬</li><li>রেজিস্টার ও শিফট রেজিস্টার ……… পৃ. ৭</li></ul>
+    <ul class="tick"><li>কাউন্টার ১: রিপল ও সিঙ্ক্রোনাস … পৃ. ৮</li><li>কাউন্টার ২: রিং, জনসন, ডিজাইন … পৃ. ৯</li><li>স্টেট মেশিন, মিলি/মুর ……… পৃ. ১০</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১১</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>মূল ধারণা</span></div>
+  <h2><span class="no">১</span>কম্বিনেশনাল বনাম সিকোয়েনশিয়াল</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">সিকোয়েনশিয়াল সার্কিট (Sequential Circuit)</span> = কম্বিনেশনাল লজিক <b>+ মেমরি</b>: এর আউটপুট বর্তমান ইনপুট <b>এবং</b> বর্তমান অবস্থা (state), অর্থাৎ ইনপুটের <span class="hl">অতীত ইতিহাসের</span> ওপর নির্ভর করে। মেমরি উপাদান হলো ল্যাচ বা ফ্লিপ-ফ্লপ, যুক্ত থাকে <b>ফিডব্যাক</b> পথে।</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l"></th><th class="l">কম্বিনেশনাল</th><th class="l">সিকোয়েনশিয়াল</th></tr>
+      <tr><td class="l">আউটপুট নির্ভর করে</td><td class="l">শুধু ইনপুটে</td><td class="l">ইনপুট + অবস্থা</td></tr>
+      <tr><td class="l">মেমরি, ফিডব্যাক</td><td class="l">নেই</td><td class="l"><b>আছে</b> (FF)</td></tr>
+      <tr><td class="l">ক্লক</td><td class="l">লাগে না</td><td class="l">সাধারণত লাগে</td></tr>
+      <tr><td class="l">বর্ণনার উপায়</td><td class="l">সত্যক সারণি</td><td class="l">স্টেট টেবিল</td></tr>
+      <tr><td class="l">উদাহরণ</td><td class="l">অ্যাডার, MUX</td><td class="l">রেজিস্টার, কাউন্টার</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="250">
+      <g class="w">
+        <rect x="80" y="10" width="140" height="56" rx="8" class="ink fill-b"/>
+        <rect x="80" y="108" width="140" height="48" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M14,38 H78" marker-end="url(#ahb)"/>
+        <path class="ink" d="M222,38 H290" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M196,68 V106" marker-end="url(#ahg)"/>
+        <path class="ink-p" d="M104,106 V68" marker-end="url(#ahp)"/>
+        <path class="ink-k" d="M20,138 H78" marker-end="url(#ahb)"/>
+      </g>
+      <text x="150" y="34" text-anchor="middle" class="bn w6">কম্বিনেশনাল</text><text x="150" y="54" text-anchor="middle" class="bn w6">লজিক</text>
+      <text x="150" y="137" text-anchor="middle" class="bn r w6">মেমরি (FF)</text>
+      <text x="16" y="30" class="bn s">ইনপুট X</text><text x="226" y="28" class="bn s">আউটপুট Z</text>
+      <text x="204" y="92" class="bn g s">পরের অবস্থা</text><text x="2" y="92" class="bn p s">বর্তমান অবস্থা</text>
+      <text x="22" y="130" class="s k">CLK</text>
+    </svg><figcaption>ফিডব্যাক লুপ = মেমরি</figcaption></figure>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "সিকোয়েনশিয়াল = <b>মনে রাখে</b>"। প্রশ্ন করো: একই ইনপুটে কি দুই রকম আউটপুট আসতে পারে? পারলে সার্কিটে অবস্থা (state) আছে, অর্থাৎ এটি সিকোয়েনশিয়াল।</div>
+
+  <h2><span class="no">২</span>সিঙ্ক্রোনাস বনাম অ্যাসিঙ্ক্রোনাস</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l"></th><th class="l">সিঙ্ক্রোনাস (Synchronous)</th><th class="l">অ্যাসিঙ্ক্রোনাস (Asynchronous)</th></tr>
+    <tr><td class="l">অবস্থা বদলায়</td><td class="l">শুধু <b>ক্লক এজে</b></td><td class="l">ইনপুট বদলালেই সাথে সাথে</td></tr>
+    <tr><td class="l">মেমরি উপাদান</td><td class="l">ক্লকড ফ্লিপ-ফ্লপ</td><td class="l">ক্লকহীন ল্যাচ / গেট-ডিলে লুপ</td></tr>
+    <tr><td class="l">ডিজাইন ও টেস্টিং</td><td class="l"><span class="hl">সহজ, পূর্বানুমেয়</span></td><td class="l">কঠিন: রেস, হ্যাজার্ড</td></tr>
+    <tr><td class="l">গতি</td><td class="l">ক্লক পিরিয়ড দিয়ে সীমিত</td><td class="l">দ্রুত হতে পারে, কম পাওয়ার</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">সিঙ্ক কাউন্টার, শিফট রেজিস্টার, CPU</td><td class="l">SR ল্যাচ, রিপল কাউন্টার</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <ul class="dash small">
+      <li><span class="hl">ফান্ডামেন্টাল মোড</span> (অ্যাসিঙ্ক): ইনপুট লেভেল; একবারে <b>একটিই</b> ইনপুট বদলায়, তাও সার্কিট স্থির হলে</li>
+      <li><span class="hl">পালস মোড</span> (অ্যাসিঙ্ক): ইনপুট পালস, একবারে একটি, ক্লক নেই</li>
+      <li><b>ক্রিটিক্যাল রেস</b>: দুটি স্টেট বিট একসাথে বদলালে কোনটি আগে বদলায় তার ওপর ফল নির্ভর করে; প্রতিকার: এক-বিট-পরিবর্তনের স্টেট অ্যাসাইনমেন্ট</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 290 108" width="250">
+      <g class="w">
+        <path class="ink-k" d="M20,80 H40 V40 H80 V80 H120 V40 H160 V80 H200 V40 H240 V80 H280"/>
+        <path class="ink-p" d="M40,24 H120" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M120,96 H160" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M40,72 V50" marker-end="url(#ah)"/><path class="ink-r" d="M80,48 V70" marker-end="url(#ah)"/>
+      </g>
+      <text x="80" y="18" text-anchor="middle" class="bn p s w6">পিরিয়ড T</text>
+      <text x="166" y="104" class="g s">t<tspan dy="3" style="font-size:9px">H</tspan></text>
+      <text x="40" y="100" class="bn r s">রাইজিং</text><text x="88" y="100" class="bn r s">ফলিং</text>
+      <text x="250" y="32" class="s">f = 1/T</text>
+    </svg><figcaption>ক্লক: পিরিয়ড, এজ, ডিউটি সাইকেল</figcaption></figure>
+  </div>
+  <p class="small"><b>ক্লক:</b> f = <span class="circ">1/T</span> · ডিউটি সাইকেল = t<sub>H</sub>/T × 100% · T = 20 ns → f = 50 MHz। ফ্লিপ-ফ্লপ একটি <span class="hl">বাইস্টেবল মাল্টিভাইব্রেটর</span> (২টি স্থিতিশীল অবস্থা → <b>১ বিট</b>); মনোস্টেবল = একটি পালস (one-shot); অ্যাস্টেবল = কোনো স্থিতিশীল অবস্থা নেই, ক্লক অসিলেটর (555 টাইমার)।</p>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: latches ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>ল্যাচ</span></div>
+  <h2><span class="no">৩</span>SR ল্যাচ: মৌলিক মেমরি সেল</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">ল্যাচ (Latch)</span> হলো ক্রস-কাপলড দুটি NOR বা NAND গেট, যাদের প্রতিটির আউটপুট অন্যটির ইনপুটে যায়: দুটি স্থিতিশীল অবস্থা, Q = 1 (সেট) ও Q = 0 (রিসেট), এবং Q̄ = Q′।</div>
+  <div class="cols">
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 230 150" width="230">
+        <g class="w">
+          <use href="#g-nor" x="80" y="20"/><use href="#g-nor" x="80" y="90"/>
+          <path class="ink" d="M30,32 H80 M30,118 H80 M140,40 H200 M140,110 H200 M156,40 V62 L70,88 V102 H80 M156,110 V88 L70,62 V48 H80"/>
+          <circle cx="156" cy="40" r="3.5" fill="#1d3f8f"/><circle cx="156" cy="110" r="3.5" fill="#1d3f8f"/>
+        </g>
+        <text x="24" y="37" text-anchor="end" class="w6">R</text><text x="24" y="123" text-anchor="end" class="w6">S</text>
+        <text x="206" y="45" class="r w6">Q</text><text x="206" y="115" class="r w6"><tspan class="ov">Q</tspan></text>
+        <text x="115" y="146" text-anchor="middle" class="bn g s">NOR ল্যাচ: অ্যাকটিভ-HIGH</text>
+      </svg></figure>
+      <table class="hand small">
+        <tr><th>S</th><th>R</th><th>Q⁺</th><th class="l">কাজ</th></tr>
+        <tr><td>0</td><td>0</td><td>Q</td><td class="l">হোল্ড (অপরিবর্তিত)</td></tr>
+        <tr><td>0</td><td>1</td><td>0</td><td class="l">রিসেট</td></tr>
+        <tr><td>1</td><td>0</td><td>1</td><td class="l">সেট</td></tr>
+        <tr><td class="red"><b>1</b></td><td class="red"><b>1</b></td><td class="red">?</td><td class="l red"><b>নিষিদ্ধ</b>: Q = Q̄ = 0</td></tr>
+      </table>
+    </div>
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 230 150" width="230">
+        <g class="w">
+          <use href="#g-nand" x="80" y="20"/><use href="#g-nand" x="80" y="90"/>
+          <path class="ink" d="M30,32 H80 M30,118 H80 M140,40 H200 M140,110 H200 M156,40 V62 L70,88 V102 H80 M156,110 V88 L70,62 V48 H80"/>
+          <circle cx="156" cy="40" r="3.5" fill="#1d3f8f"/><circle cx="156" cy="110" r="3.5" fill="#1d3f8f"/>
+        </g>
+        <text x="24" y="37" text-anchor="end" class="w6"><tspan class="ov">S</tspan></text><text x="24" y="123" text-anchor="end" class="w6"><tspan class="ov">R</tspan></text>
+        <text x="206" y="45" class="r w6">Q</text><text x="206" y="115" class="r w6"><tspan class="ov">Q</tspan></text>
+        <text x="115" y="146" text-anchor="middle" class="bn g s">NAND ল্যাচ: অ্যাকটিভ-LOW</text>
+      </svg></figure>
+      <table class="hand small">
+        <tr><th>S̄</th><th>R̄</th><th>Q⁺</th><th class="l">কাজ</th></tr>
+        <tr><td>1</td><td>1</td><td>Q</td><td class="l">হোল্ড (অপরিবর্তিত)</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td class="l">রিসেট</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td class="l">সেট</td></tr>
+        <tr><td class="red"><b>0</b></td><td class="red"><b>0</b></td><td class="red">?</td><td class="l red"><b>নিষিদ্ধ</b>: Q = Q̄ = 1</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="small">NOR: Q = (R + Q̄)′, Q̄ = (S + Q)′ · NAND: Q = (S̄ · Q̄)′, Q̄ = (R̄ · Q)′ · প্রতিটিতে <span class="circ">২টি গেট</span></p>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> NOR ল্যাচে S = R = 1 কেন "নিষিদ্ধ"? ① Q ও Q̄ <b>সমান</b> হয়ে যায়, Q̄ আর পূরক থাকে না; ② এরপর দুটি ইনপুট <b>একসাথে</b> 0-তে ফিরলে রেস হয়, শেষ অবস্থা <span class="hl">অনিশ্চিত</span>। NAND ল্যাচে নিষিদ্ধ ইনপুট <b>00</b>, আর <b>11</b> হলো হোল্ড।</div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>NOR দুটি 1 সহ্য করে না, NAND দুটি 0 সহ্য করে না।</b>" NOR-এর ইনপুট অ্যাকটিভ-HIGH (বিশ্রামে 0); NAND-এর ইনপুট অ্যাকটিভ-LOW (বিশ্রামে 1, বার দিয়ে আঁকা)।</div>
+
+  <h2><span class="no">৪</span>গেটেড (ক্লকড) ল্যাচ</h2>
+  <div class="cols">
+    <div class="small">
+      <p><b>গেটেড SR ল্যাচ:</b> NAND ল্যাচের সামনে দুটি স্টিয়ারিং NAND (মোট <b>৪টি NAND</b>)। EN = 0 → হোল্ড; EN = 1 → SR ল্যাচের মতো (S = R = 1 এখনও নিষিদ্ধ)।</p>
+      <p><b>গেটেড D ল্যাচ:</b> S = D, R = D′ (একটি ইনভার্টার যোগ), তাই <span class="hl">S = R = 1 কখনও হয় না</span>। EN = 1 → <span class="circ">Q = D</span> (<b>স্বচ্ছ / transparent</b>); EN = 0 → Q আটকে থাকে।</p>
+    </div>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th>EN</th><th>D</th><th>Q⁺</th><th class="l">মোড</th></tr>
+        <tr><td>0</td><td>X</td><td>Q</td><td class="l">ল্যাচড (হোল্ড)</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td class="l">স্বচ্ছ</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td class="l">স্বচ্ছ</td></tr>
+      </table>
+      <div class="tipbox small"><span class="lbl">IT সংযোগ</span> SR ল্যাচ = <b>সুইচ ডিবাউন্সার</b>। ALE দিয়ে চালু 74LS373 অক্টাল স্বচ্ছ ল্যাচ 8085-এর মাল্টিপ্লেক্সড AD0–AD7 বাস আলাদা করে।</div>
+    </div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: triggering + characteristic tables ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>ফ্লিপ-ফ্লপ</span></div>
+  <h2><span class="no">৫</span>লেভেল বনাম এজ ট্রিগারিং</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">ল্যাচ বনাম ফ্লিপ-ফ্লপ</span> <b>ল্যাচ</b> <span class="hl">লেভেল-ট্রিগারড</span>: EN সক্রিয় থাকার পুরো সময় ইনপুট অনুসরণ করে। <b>ফ্লিপ-ফ্লপ</b> <span class="hl">এজ-ট্রিগারড</span>: শুধু ক্লক এজে ইনপুট নেয়, রাইজিং (<b>পজিটিভ</b>, 0 → 1) বা ফলিং (<b>নেগেটিভ</b>, 1 → 0)।</div>
+  <figure class="doodle"><svg viewBox="0 0 480 160" width="480">
+    <g class="w">
+      <rect x="96" y="8" width="36" height="28" class="fill-y" style="stroke:none"/><rect x="168" y="8" width="36" height="28" class="fill-y" style="stroke:none"/><rect x="240" y="8" width="36" height="28" class="fill-y" style="stroke:none"/><rect x="312" y="8" width="36" height="28" class="fill-y" style="stroke:none"/>
+      <path class="ink-k" d="M60,32 H96 V14 H132 V32 H168 V14 H204 V32 H240 V14 H276 V32 H312 V14 H348"/>
+      <path class="ink" d="M60,70 H78 V52 H141 V70 H186 V52 H258 V70 H285 V52 H303 V70 H348"/>
+      <path class="ink-g" d="M60,108 H96 V90 H168 V108 H186 V90 H258 V108 H348"/>
+      <path class="ink-r" d="M60,146 H96 V128 H168 V146 H240 V128 H312 V146 H348"/>
+      <path class="ink-r" d="M96,40 V156 M168,40 V156 M240,40 V156 M312,40 V156" stroke-dasharray="3 5" style="stroke-width:1.2"/>
+    </g>
+    <text x="52" y="28" text-anchor="end" class="s k w6">CLK</text><text x="52" y="66" text-anchor="end" class="s w6">D</text>
+    <text x="52" y="104" text-anchor="end" class="bn s g w6">Q ল্যাচ</text><text x="52" y="142" text-anchor="end" class="s r w6">Q FF ↑</text>
+    <text x="360" y="104" class="bn g s">CLK = 1 (রঙিন) থাকলে</text><text x="360" y="118" class="bn g s">D অনুসরণ করে</text>
+    <text x="360" y="142" class="bn r s">শুধু রাইজিং এজে</text><text x="360" y="156" class="bn r s">বদলায়</text>
+    <text x="356" y="62" class="bn s p">← এই পালস দুটোই</text><text x="366" y="76" class="bn s p">উপেক্ষা করে (CLK = 0)</text>
+  </svg><figcaption>একই D ও CLK: ২য় পালসের পরিবর্তন ল্যাচ পার করে দেয়, ফ্লিপ-ফ্লপ দেয় না</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1.25fr 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 96" width="290">
+      <g class="w">
+        <rect x="20" y="10" width="56" height="60" class="ink-k fill-b"/><rect x="120" y="10" width="56" height="60" class="ink-k fill-b"/><rect x="220" y="10" width="56" height="60" class="ink-k fill-b"/>
+        <path class="ink" d="M120,48 L130,55 L120,62 M220,48 L230,55 L220,62"/>
+        <path class="ink" d="M6,26 H20 M6,55 H20 M106,26 H120 M106,55 H120 M206,26 H220 M200,55 H212"/>
+      </g>
+      <circle cx="216" cy="55" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/>
+      <text x="26" y="31" class="s">D</text><text x="26" y="60" class="s">EN</text><text x="62" y="31" class="s">Q</text>
+      <text x="126" y="31" class="s">D</text><text x="162" y="31" class="s">Q</text><text x="226" y="31" class="s">D</text><text x="262" y="31" class="s">Q</text>
+      <text x="48" y="88" text-anchor="middle" class="bn g s">লেভেল</text><text x="148" y="88" text-anchor="middle" class="bn r s">+ve এজ ▷</text><text x="248" y="88" text-anchor="middle" class="bn p s">−ve এজ ○▷</text>
+    </svg></figure>
+    <div class="trick small" style="margin-top:0"><span class="lbl">প্রতীকের কৌশল</span> ক্লক পিনে <b>▷</b> = এজ-ট্রিগারড; <b>বাবল + ▷</b> = ফলিং এজ; ▷ নেই = লেভেল (ল্যাচ)। আউটপুটে ┐ চিহ্ন = মাস্টার-স্লেভ (পালস-ট্রিগারড)।</div>
+  </div>
+
+  <h2><span class="no">৬</span>বৈশিষ্ট্যসূচক সারণি ও সমীকরণ</h2><span class="tag">মুখস্থ রাখো</span>
+  <div class="cols">
+    <table class="hand small" style="margin-top:0">
+      <tr><th colspan="3">SR ফ্লিপ-ফ্লপ</th></tr><tr><th>S</th><th>R</th><th>Q⁺</th></tr>
+      <tr><td>0</td><td>0</td><td>Q (হোল্ড)</td></tr><tr><td>0</td><td>1</td><td>0 (রিসেট)</td></tr><tr><td>1</td><td>0</td><td>1 (সেট)</td></tr><tr><td>1</td><td>1</td><td class="red">অবৈধ</td></tr>
+      <tr><td colspan="3"><span class="circ">Q⁺ = S + R′Q</span>, SR = 0</td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0">
+      <tr><th colspan="3">JK ফ্লিপ-ফ্লপ</th></tr><tr><th>J</th><th>K</th><th>Q⁺</th></tr>
+      <tr><td>0</td><td>0</td><td>Q (হোল্ড)</td></tr><tr><td>0</td><td>1</td><td>0 (রিসেট)</td></tr><tr><td>1</td><td>0</td><td>1 (সেট)</td></tr><tr><td>1</td><td>1</td><td class="red"><b>Q′ (টগল)</b></td></tr>
+      <tr><td colspan="3"><span class="circ">Q⁺ = JQ′ + K′Q</span></td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <table class="hand small">
+      <tr><th colspan="2">D ফ্লিপ-ফ্লপ</th></tr><tr><th>D</th><th>Q⁺</th></tr>
+      <tr><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td></tr>
+      <tr><td colspan="2"><span class="hl">Q⁺ = D</span> (ডেটা / ডিলে)</td></tr>
+    </table>
+    <table class="hand small">
+      <tr><th colspan="2">T ফ্লিপ-ফ্লপ</th></tr><tr><th>T</th><th>Q⁺</th></tr>
+      <tr><td>0</td><td>Q (হোল্ড)</td></tr><tr><td>1</td><td>Q′ (টগল)</td></tr>
+      <tr><td colspan="2"><span class="hl">Q⁺ = T ⊕ Q</span> = TQ′ + T′Q</td></tr>
+    </table>
+  </div>
+  <div class="ex small"><span class="lbl">নির্ণয় ✍</span> SR: (S, R, Q) = 001, 100, 101-এ Q⁺ = 1; 110 ও 111 ডোন্ট-কেয়ার → K-ম্যাপ → <b>Q⁺ = S + R′Q</b>। JK: (J, K, Q) = 001, 100, 101, 110-এ Q⁺ = 1 → <b>Q⁺ = JQ′ + K′Q</b>।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: excitation, race-around, master-slave ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>এক্সাইটেশন ও রেস-অ্যারাউন্ড</span></div>
+  <h2><span class="no">৭</span>এক্সাইটেশন টেবিল (ডিজাইনের জন্য)</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">বৈশিষ্ট্যসূচক সারণি (Characteristic table)</span>: "ইনপুট দেওয়া আছে, Q⁺ কত?" (বিশ্লেষণ)। <span class="hl">এক্সাইটেশন টেবিল (Excitation table)</span> উল্টো প্রশ্নের উত্তর দেয়: "Q থেকে Q⁺-এ যেতে কোন ইনপুট লাগবে?" (কাউন্টার ও স্টেট মেশিন ডিজাইন)।</div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr;align-items:center">
+    <table class="hand" style="margin-top:0">
+      <tr><th>Q → Q⁺</th><th>S &nbsp; R</th><th>J &nbsp; K</th><th>D</th><th>T</th></tr>
+      <tr><td>0 → 0</td><td>0 &nbsp; X</td><td>0 &nbsp; X</td><td>0</td><td>0</td></tr>
+      <tr><td>0 → 1</td><td>1 &nbsp; 0</td><td>1 &nbsp; X</td><td>1</td><td>1</td></tr>
+      <tr><td>1 → 0</td><td>0 &nbsp; 1</td><td>X &nbsp; 1</td><td>0</td><td>1</td></tr>
+      <tr><td>1 → 1</td><td>X &nbsp; 0</td><td>X &nbsp; 0</td><td>1</td><td>0</td></tr>
+    </table>
+    <p class="small">JK-তে <span class="hl">সবচেয়ে বেশি X</span> (ডোন্ট-কেয়ার), তাই JK দিয়ে ডিজাইনে ইনপুট লজিক সবচেয়ে সরল; D-তে আলাদা টেবিলই লাগে না (D = Q⁺), তবে গেট সাধারণত বেশি লাগে।</p>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> <b>D কলাম = Q⁺ কলাম</b>। <b>T কলাম = Q ⊕ Q⁺</b> (বদলালেই 1)। <b>JK:</b> Q = 0 হলে শুধু J গুরুত্বপূর্ণ (J = Q⁺, K = X); Q = 1 হলে শুধু K (K = Q⁺′, J = X)।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> দুটি সারণি গুলিয়ো না: "J = K = 1 → টগল" হলো <b>বৈশিষ্ট্যসূচক</b>; "0 → 1-এ লাগে J = 1, K = X" হলো <b>এক্সাইটেশন</b> (K = X, K = 0 নয়)।</div>
+
+  <h2><span class="no">৮</span>রেস-অ্যারাউন্ড ও মাস্টার-স্লেভ ফ্লিপ-ফ্লপ</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 310px;align-items:center">
+    <div class="small">
+      <p><span class="hl">রেস-অ্যারাউন্ড অবস্থা (Race-around)</span>: <b>লেভেল-ট্রিগারড</b> JK-তে <b>J = K = 1</b> থাকলে ক্লক পালসের প্রস্থ t<sub>p</sub> প্রোপাগেশন ডিলে t<sub>pd</sub>-এর চেয়ে বেশি হলে এক পালসেই আউটপুট বারবার টগল করে, শেষ অবস্থা <b>অনিশ্চিত</b>।</p>
+      <p>এড়ানোর শর্ত <span class="circ">t<sub>p</sub> &lt; t<sub>pd</sub> &lt; T</span>, যা নিশ্চিত করা কঠিন। আসল সমাধান: <b>মাস্টার-স্লেভ</b> বা <b>এজ-ট্রিগারড</b> ফ্লিপ-ফ্লপ।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 310 112" width="285">
+      <g class="w">
+        <path class="ink-k" d="M40,34 H80 V14 H260 V34 H300"/>
+        <path class="ink-r" d="M40,84 H110 V64 H140 V84 H170 V64 H200 V84 H230 V64 H300"/>
+        <path class="ink-p" d="M80,100 H110" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+      </g>
+      <text x="32" y="30" text-anchor="end" class="s k w6">CLK</text><text x="32" y="80" text-anchor="end" class="s r w6">Q</text>
+      <text x="170" y="10" text-anchor="middle" class="bn s">t<tspan dy="3" style="font-size:9px">p</tspan><tspan dy="-3"> দীর্ঘ, J = K = 1</tspan></text>
+      <text x="116" y="108" class="p s">t<tspan dy="3" style="font-size:9px">pd</tspan></text><text x="270" y="58" class="r w6">?</text>
+    </svg><figcaption>CLK = 1 থাকা পর্যন্ত প্রতি t<sub>pd</sub>-তে Q টগল করে</figcaption></figure>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 400 118" width="400">
+    <g class="w">
+      <rect x="70" y="8" width="100" height="62" rx="6" class="ink fill-b"/><rect x="230" y="8" width="100" height="62" rx="6" class="ink-g fill-g"/>
+      <path class="ink" d="M36,24 H70 M36,54 H70 M170,24 H230 M170,54 H230 M330,24 H372 M330,54 H372"/>
+      <path class="ink-k" d="M20,104 H120 V70 M120,104 H160"/><use href="#g-not" x="160" y="84"/><path class="ink-k" d="M220,104 H280 V70"/>
+      <circle cx="120" cy="104" r="3.5" fill="#1f1f24"/>
+    </g>
+    <text x="30" y="29" text-anchor="end" class="s">J</text><text x="30" y="59" text-anchor="end" class="s">K</text>
+    <text x="120" y="36" text-anchor="middle" class="bn w6">মাস্টার</text><text x="120" y="56" text-anchor="middle" class="s">EN = CLK</text>
+    <text x="280" y="36" text-anchor="middle" class="bn g w6">স্লেভ</text><text x="280" y="56" text-anchor="middle" class="s">EN = CLK′</text>
+    <text x="378" y="29" class="r w6">Q</text><text x="378" y="59" class="r w6"><tspan class="ov">Q</tspan></text><text x="22" y="98" class="s k">CLK</text>
+  </svg><figcaption>Q, Q̄ মাস্টারেও ফিডব্যাক যায় (আঁকা হয়নি)</figcaption></figure>
+  <ol class="steps small">
+    <li>CLK = 1: <b>মাস্টার</b> J, K অনুসরণ করে; স্লেভ বন্ধ, তাই Q স্থির</li>
+    <li>CLK → 0: মাস্টার স্থির হয়, <b>স্লেভ তাকে কপি করে</b> → ফলিং এজের পরে Q একবারই বদলায়; পালস চলাকালীন Q বদলাতে পারে না → <span class="hl">রেস-অ্যারাউন্ড নেই</span></li>
+  </ol>
+  <p class="small"><b>অসুবিধা:</b> <b>ওয়ানস-ক্যাচিং (1s-catching)</b>: CLK = 1 থাকার সময় J/K-এর ক্ষণিক গ্লিচও মাস্টার ধরে ফেলে; এজ-ট্রিগারড FF (7474 D, 74LS76 JK) এ সমস্যা এড়ায়।</p>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: conversions + timing ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>রূপান্তর ও টাইমিং</span></div>
+  <h2><span class="no">৯</span>ফ্লিপ-ফ্লপ রূপান্তর (Conversion)</h2>
+  <p class="small"><b>পদ্ধতি:</b> ① যে FF <b>চাই</b> তার বৈশিষ্ট্যসূচক সারণি (তার ইনপুট + Q → Q⁺) ② যে FF <b>আছে</b> তার <b>এক্সাইটেশন</b> কলাম যোগ ③ চাওয়া ইনপুট ও Q-এর পদে প্রতিটি ইনপুটের K-ম্যাপ ④ বিদ্যমান FF-এর সামনে লজিক আঁকো।</p>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">আছে → চাই</th><th class="l">লজিক</th><th class="l">আছে → চাই</th><th class="l">লজিক</th></tr>
+    <tr><td class="l">JK → T</td><td class="l"><span class="hl">J = K = T</span></td><td class="l">D → T</td><td class="l"><span class="hl">D = T ⊕ Q</span></td></tr>
+    <tr><td class="l">JK → D</td><td class="l">J = D, K = D′</td><td class="l">D → JK</td><td class="l">D = JQ′ + K′Q</td></tr>
+    <tr><td class="l">SR → D</td><td class="l">S = D, R = D′</td><td class="l">D → SR</td><td class="l">D = S + R′Q</td></tr>
+    <tr><td class="l">SR → JK</td><td class="l">S = JQ′, R = KQ</td><td class="l">T → D</td><td class="l">T = D ⊕ Q</td></tr>
+    <tr><td class="l">SR → T</td><td class="l">S = TQ′, R = TQ</td><td class="l">T → JK</td><td class="l">T = JQ′ + KQ</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ: SR → JK ✍</span>
+    <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+      <table class="hand small" style="margin:0">
+        <tr><th>Q</th><th>J</th><th>K</th><th>Q⁺</th><th>S</th><th>R</th></tr>
+        <tr><td>0</td><td>0</td><td>X</td><td>0</td><td>0</td><td>X</td></tr>
+        <tr><td>0</td><td>1</td><td>X</td><td>1</td><td>1</td><td>0</td></tr>
+        <tr><td>1</td><td>X</td><td>0</td><td>1</td><td>X</td><td>0</td></tr>
+        <tr><td>1</td><td>X</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+      </table>
+      <p>(৮টি সারি সংক্ষেপে।) শুধু Q = 0, J = 1-এ S = 1 → <span class="circ">S = JQ′</span>; শুধু Q = 1, K = 1-এ R = 1 → <span class="circ">R = KQ</span>। S·R সবসময় 0, তাই নিষিদ্ধ ইনপুট আসে না।</p>
+    </div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "D চায় Q⁺, T চায় পরিবর্তন": D থেকে <b>যেকোনো</b> FF বানাতে D-তে কাঙ্ক্ষিত বৈশিষ্ট্যসূচক সমীকরণ দাও; T থেকে বানাতে T-তে দাও Q ⊕ Q⁺।</div>
+
+  <h2><span class="no">১০</span>টাইমিং প্যারামিটার ও সর্বোচ্চ ক্লক</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 330px;align-items:center">
+    <ul class="dash small">
+      <li><span class="hl">সেটআপ t<sub>su</sub></span>: এজের <b>আগে</b> D স্থির</li>
+      <li><span class="hl">হোল্ড t<sub>h</sub></span>: এজের <b>পরে</b> D স্থির</li>
+      <li><b>t<sub>pd</sub></b>: ক্লক-টু-Q ডিলে (t<sub>PLH</sub>, t<sub>PHL</sub>)</li>
+      <li><b>t<sub>w</sub></b>: ক্লক পালসের ন্যূনতম প্রস্থ</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 330 140" width="325">
+      <g class="w">
+        <rect x="140" y="46" width="65" height="28" class="fill-y" style="stroke:none"/>
+        <path class="ink-k" d="M50,34 H180 V12 H320"/>
+        <path class="ink" d="M50,50 H115 L123,70 H227 L235,50 H320 M50,70 H115 L123,50 H227 L235,70 H320"/>
+        <path class="ink-r" d="M50,118 H240 V98 H320"/>
+        <path class="ink-r" d="M180,6 V128" stroke-dasharray="4 4" style="stroke-width:1.3"/>
+        <path class="ink-p" d="M140,84 H180" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M180,84 H205" marker-start="url(#ahg)" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M180,132 H240" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      </g>
+      <text x="44" y="30" text-anchor="end" class="s k w6">CLK</text><text x="44" y="64" text-anchor="end" class="s w6">D</text><text x="44" y="114" text-anchor="end" class="s r w6">Q</text>
+      <text x="160" y="97" text-anchor="middle" class="p s">t<tspan dy="3" style="font-size:9px">su</tspan></text><text x="196" y="97" text-anchor="middle" class="g s">t<tspan dy="3" style="font-size:9px">h</tspan></text>
+      <text x="250" y="138" class="r s">t<tspan dy="3" style="font-size:9px">pd</tspan></text>
+    </svg><figcaption>রঙিন জানালার ভেতরে D অবশ্যই স্থির</figcaption></figure>
+  </div>
+  <div class="sumbox"><span class="lbl">সর্বোচ্চ ক্লক</span> T<sub>min</sub> = t<sub>pd(FF)</sub> + t<sub>comb(max)</sub> + t<sub>su</sub> (+ স্কিউ) → <span class="circ">f<sub>max</sub> = 1 / T<sub>min</sub></span><br><span class="small">হোল্ড যাচাই: t<sub>pd(FF)</sub> + t<sub>comb(min)</sub> ≥ t<sub>h</sub> · <span class="green"><b>উদাহরণ ✍</b></span> 10 + 15 + 5 = 30 ns → f<sub>max</sub> ≈ <b>33.3 MHz</b></span></div>
+  <div class="cols">
+    <p class="small"><b>অ্যাসিঙ্ক ইনপুট</b> PRE′ (Q = 1), CLR′ (Q = 0): <b>অ্যাকটিভ-LOW</b>, <b>ক্লককে উপেক্ষা করে</b> কাজ করে; দুটোই 0 নিষিদ্ধ (7474: PRE′/CLR′ সহ ডুয়াল +ve-এজ D)।</p>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> t<sub>su</sub> / t<sub>h</sub> লঙ্ঘন → <b>মেটাস্টেবিলিটি</b> (Q 0 ও 1-এর মাঝে আটকে থাকে)। সমাধান: <b>২-FF সিনক্রোনাইজার</b>।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: registers ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>রেজিস্টার</span></div>
+  <h2><span class="no">১১</span>রেজিস্টার ও শিফট রেজিস্টার</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">রেজিস্টার (Register)</span> হলো এক ক্লকে চলা <b>n টি ফ্লিপ-ফ্লপের</b> (সাধারণত D) একটি গুচ্ছ, যা একটি <b>n-বিট</b> শব্দ সংরক্ষণ করে। <span class="hl">শিফট রেজিস্টার</span> প্রতি ক্লক পালসে প্রতিটি বিটকে এক ঘর সরায় (প্রতিটি FF-এর Q পরের FF-এর D চালায়)।</div>
+  <figure class="doodle"><svg viewBox="0 0 430 128" width="430">
+    <g class="w">
+      <rect x="50" y="30" width="50" height="60" class="ink-k fill-b"/><rect x="140" y="30" width="50" height="60" class="ink-k fill-b"/><rect x="230" y="30" width="50" height="60" class="ink-k fill-b"/><rect x="320" y="30" width="50" height="60" class="ink-k fill-b"/>
+      <path class="ink" d="M12,50 H50 M100,50 H140 M190,50 H230 M280,50 H320 M370,50 H404" />
+      <path class="ink-g" d="M120,50 V14 M210,50 V14 M300,50 V14 M388,50 V14" />
+      <path class="ink" d="M50,72 L58,78 L50,84 M140,72 L148,78 L140,84 M230,72 L238,78 L230,84 M320,72 L328,78 L320,84"/>
+      <path class="ink-k" d="M34,116 H310 M40,116 V78 H50 M130,116 V78 H140 M220,116 V78 H230 M310,116 V78 H320"/>
+      <circle cx="120" cy="50" r="3" fill="#1f8a5c"/><circle cx="210" cy="50" r="3" fill="#1f8a5c"/><circle cx="300" cy="50" r="3" fill="#1f8a5c"/><circle cx="388" cy="50" r="3" fill="#1f8a5c"/>
+    </g>
+    <text x="12" y="44" class="s">D<tspan dy="3" style="font-size:9px">in</tspan></text><text x="372" y="68" class="bn s">সিরিয়াল আউট</text>
+    <text x="55" y="55" class="s">D</text><text x="86" y="55" class="s">Q</text><text x="145" y="55" class="s">D</text><text x="176" y="55" class="s">Q</text><text x="235" y="55" class="s">D</text><text x="266" y="55" class="s">Q</text><text x="325" y="55" class="s">D</text><text x="356" y="55" class="s">Q</text>
+    <text x="75" y="104" text-anchor="middle" class="s">FF0</text><text x="165" y="104" text-anchor="middle" class="s">FF1</text><text x="255" y="104" text-anchor="middle" class="s">FF2</text><text x="345" y="104" text-anchor="middle" class="s">FF3</text>
+    <text x="128" y="14" class="g s">Q0</text><text x="218" y="14" class="g s">Q1</text><text x="308" y="14" class="g s">Q2</text><text x="396" y="14" class="g s">Q3</text>
+    <text x="2" y="121" class="s k">CLK</text>
+  </svg><figcaption>৪-বিট শিফট-রাইট রেজিস্টার: SISO (সিরিয়াল আউট) বা SIPO (সবুজ ট্যাপ)</figcaption></figure>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l">ধরন</th><th class="l">ইন → আউট</th><th>n বিট লোড</th><th class="l">বের করা</th><th class="l">ব্যবহার · IC</th></tr>
+    <tr><td class="l"><b>SISO</b></td><td class="l">সিরিয়াল → সিরিয়াল</td><td><span class="circ">n</span> ক্লক</td><td class="l">আরও n − 1 ক্লক</td><td class="l">টাইম ডিলে · 7491 (8-বিট)</td></tr>
+    <tr><td class="l"><b>SIPO</b></td><td class="l">সিরিয়াল → প্যারালাল</td><td>n ক্লক</td><td class="l">একসাথে</td><td class="l">UART রিসিভার · 74164</td></tr>
+    <tr><td class="l"><b>PISO</b></td><td class="l">প্যারালাল → সিরিয়াল</td><td>1 ক্লক</td><td class="l">n − 1 শিফট</td><td class="l">UART ট্রান্সমিটার · 74165</td></tr>
+    <tr><td class="l"><b>PIPO</b></td><td class="l">প্যারালাল → প্যারালাল</td><td>1 ক্লক</td><td class="l">একসাথে</td><td class="l">বাফার, স্টোরেজ রেজিস্টার</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ফাঁকা ৪-বিট SIPO-তে ক্রমানুসারে 1, 0, 1, 1 ঢোকাও:
+      <table class="hand small" style="margin:1mm 0 0">
+        <tr><th>CLK</th><th>Din</th><th>Q0 Q1 Q2 Q3</th></tr>
+        <tr><td>0</td><td>–</td><td>0 0 0 0</td></tr><tr><td>1</td><td>1</td><td>1 0 0 0</td></tr><tr><td>2</td><td>0</td><td>0 1 0 0</td></tr><tr><td>3</td><td>1</td><td>1 0 1 0</td></tr><tr><td>4</td><td>1</td><td class="red"><b>1 1 0 1</b></td></tr>
+      </table>
+      প্রথম ঢোকানো বিট এখন Q3-তে (সিরিয়াল আউট)।</div>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th colspan="3">74194: ৪-বিট ইউনিভার্সাল (দ্বিমুখী)</th></tr>
+        <tr><th>S1</th><th>S0</th><th class="l">মোড</th></tr>
+        <tr><td>0</td><td>0</td><td class="l">হোল্ড (অপরিবর্তিত)</td></tr>
+        <tr><td>0</td><td>1</td><td class="l">শিফট রাইট (Q<sub>A</sub> → Q<sub>D</sub>)</td></tr>
+        <tr><td>1</td><td>0</td><td class="l">শিফট লেফট (Q<sub>D</sub> → Q<sub>A</sub>)</td></tr>
+        <tr><td>1</td><td>1</td><td class="l red"><b>প্যারালাল লোড</b></td></tr>
+      </table>
+      <p class="small">CLR′ অ্যাসিঙ্ক্রোনাস, অ্যাকটিভ-LOW। <span class="hl">ইউনিভার্সাল</span> = শিফট লেফট + শিফট রাইট + প্যারালাল লোড (+ হোল্ড)।</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> ডিলে লাইন হিসেবে n-বিট SISO ডেটাকে <b>n টি ক্লক পিরিয়ড</b> দেরি করায়: 1 MHz-এ 8 বিট → 8 µs। ধরন যা-ই হোক, n বিটের রেজিস্টারে <b>n টি</b> ফ্লিপ-ফ্লপ লাগে (প্রতিটিতে ১ বিট)।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>শিফট লেফট = × 2, শিফট রাইট = ÷ 2</b> (আনসাইনড): 0110 (6) ← 1100 (12)। নামেই "ইনপুট-আউটপুট": SIPO = <b>S</b>erial <b>I</b>n, <b>P</b>arallel <b>O</b>ut।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT সংযোগ</span> UART/SPI সিরিয়াল পোর্ট, CRC ও সিউডো-র‍্যান্ডম জেনারেটর (LFSR), CPU-র শিফট নির্দেশ (SHL/SHR), রিং ও জনসন কাউন্টার।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: counters I ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>কাউন্টার ১</span></div>
+  <h2><span class="no">১২</span>রিপল (অ্যাসিঙ্ক্রোনাস) ও সিঙ্ক্রোনাস কাউন্টার</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">কাউন্টার (Counter)</span> ক্লক পালসে একটি নির্দিষ্ট ক্রমে অবস্থা বদলায়। <b>মডুলাস (mod)</b> = ভিন্ন অবস্থার সংখ্যা। n টি FF → সর্বোচ্চ <span class="circ">2ⁿ</span> অবস্থা (গণনা 0 … 2ⁿ − 1); mod-N কাউন্টারে লাগে <span class="circ">⌈log₂N⌉</span> টি FF, এটি ক্লক ফ্রিকোয়েন্সিকে N দিয়ে ভাগ করে।</div>
+  <figure class="doodle"><svg viewBox="0 0 400 84" width="360">
+    <g class="w">
+      <rect x="70" y="10" width="56" height="56" class="ink-k fill-b"/><rect x="170" y="10" width="56" height="56" class="ink-k fill-b"/><rect x="270" y="10" width="56" height="56" class="ink-k fill-b"/>
+      <path class="ink" d="M70,46 L78,52 L70,58 M170,46 L178,52 L170,58 M270,46 L278,52 L270,58"/>
+      <path class="ink" d="M20,52 H62 M126,24 H150 V52 H162 M226,24 H250 V52 H262 M326,24 H360"/>
+    </g>
+    <circle cx="66" cy="52" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="166" cy="52" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="266" cy="52" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/>
+    <text x="98" y="34" text-anchor="middle" class="s">J=K=1</text><text x="198" y="34" text-anchor="middle" class="s">J=K=1</text><text x="298" y="34" text-anchor="middle" class="s">J=K=1</text>
+    <text x="98" y="80" text-anchor="middle" class="s">FF0</text><text x="198" y="80" text-anchor="middle" class="s">FF1</text><text x="298" y="80" text-anchor="middle" class="s">FF2</text>
+    <text x="20" y="46" class="s k">CLK</text><text x="130" y="18" class="r s">Q0</text><text x="230" y="18" class="r s">Q1</text><text x="330" y="18" class="r s">Q2</text>
+  </svg></figure>
+  <figure class="doodle"><svg viewBox="0 0 400 142" width="380">
+    <g class="w">
+      <path class="ink-k" d="M50,26 V10 H68 V26 H86 V10 H104 V26 H122 V10 H140 V26 H158 V10 H176 V26 H194 V10 H212 V26 H230 V10 H248 V26 H266 V10 H284 V26 H302 V10 H320 V26 H338"/>
+      <path class="ink" d="M50,56 H68 V40 H104 V56 H140 V40 H176 V56 H212 V40 H248 V56 H284 V40 H320 V56 H338"/>
+      <path class="ink-g" d="M50,86 H104 V70 H176 V86 H248 V70 H320 V86 H338"/>
+      <path class="ink-r" d="M50,116 H176 V100 H320 V116 H338"/>
+    </g>
+    <text x="42" y="22" text-anchor="end" class="s k w6">CLK</text><text x="42" y="52" text-anchor="end" class="s w6">Q0</text><text x="42" y="82" text-anchor="end" class="s g w6">Q1</text><text x="42" y="112" text-anchor="end" class="s r w6">Q2</text>
+    <text x="42" y="138" text-anchor="end" class="bn s p">গণনা</text>
+    <text x="59" y="138" text-anchor="middle" class="p s">0</text><text x="86" y="138" text-anchor="middle" class="p s">1</text><text x="122" y="138" text-anchor="middle" class="p s">2</text><text x="158" y="138" text-anchor="middle" class="p s">3</text><text x="194" y="138" text-anchor="middle" class="p s">4</text><text x="230" y="138" text-anchor="middle" class="p s">5</text><text x="266" y="138" text-anchor="middle" class="p s">6</text><text x="302" y="138" text-anchor="middle" class="p s">7</text><text x="329" y="138" text-anchor="middle" class="p s">0</text>
+    <text x="346" y="52" class="s">f/2</text><text x="346" y="82" class="g s">f/4</text><text x="346" y="112" class="r s">f/8</text>
+  </svg><figcaption>৩-বিট রিপল আপ কাউন্টার (ফলিং-এজ FF): আগের Q নামলে পরের ধাপ টগল করে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <table class="hand small" style="margin-top:0;white-space:nowrap">
+        <tr><th>FF</th><th>Q → CLK</th><th>Q̄ → CLK</th></tr>
+        <tr><td>−ve এজ</td><td class="red"><b>আপ</b></td><td>ডাউন</td></tr>
+        <tr><td>+ve এজ</td><td>ডাউন</td><td class="red"><b>আপ</b></td></tr>
+      </table>
+      <p class="small"><b>রিপল ডিলে:</b> শেষ FF স্থির হয় <span class="circ">n · t<sub>pd</sub></span> পরে → f<sub>max</sub> = 1/(n · t<sub>pd</sub>)। ৪-বিট, t<sub>pd</sub> = 10 ns → 40 ns → <b>25 MHz</b>। রিপলের কারণে ডিকোডিং <b>গ্লিচ</b>ও হয়।</p>
+    </div>
+    <div>
+      <p class="small"><b>রিসেট দিয়ে mod-N:</b> একটি NAND অবস্থা N শনাক্ত করে অ্যাসিঙ্ক্রোনাস CLR′ চালায়। mod-6: 110-এ NAND(Q2, Q1)। <span class="hl">mod-10 (ডিকেড)</span>: 1010-এ NAND(Q3, Q1)। অবস্থা N মাত্র কয়েক ns থাকে।</p>
+      <p class="small"><b>সিঙ্ক্রোনাস কাউন্টার:</b> সব FF একই CLK পায়। T0 = 1, T1 = Q0, T2 = Q0Q1, T3 = Q0Q1Q2 (নিচের সব বিট 1 হলে বিটটি টগল করে)। ডাউন: Q̄ নাও। f<sub>max</sub> = 1/(t<sub>pd</sub> + t<sub>AND</sub> + t<sub>su</sub>), <b>n-এর ওপর নির্ভর করে না</b>।</p>
+    </div>
+  </div>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l"></th><th class="l">রিপল (অ্যাসিঙ্ক্রোনাস)</th><th class="l">সিঙ্ক্রোনাস</th></tr>
+    <tr><td class="l">ক্লকিং</td><td class="l">শুধু FF0; প্রতিটি Q পরেরটিকে চালায়</td><td class="l">একটি সাধারণ CLK</td></tr>
+    <tr><td class="l">গতি</td><td class="l">ধীর (n · t<sub>pd</sub>), গ্লিচ</td><td class="l">দ্রুত (এক t<sub>pd</sub>), গ্লিচ নেই</td></tr>
+    <tr><td class="l">হার্ডওয়্যার</td><td class="l">সবচেয়ে সরল, বাড়তি গেট নেই</td><td class="l">বাড়তি AND গেট</td></tr>
+    <tr><td class="l">IC</td><td class="l">7490 (÷10), 7492 (÷12), 7493 (÷16)</td><td class="l">74161, <span class="hl">74163</span>, 74193</td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> 7490 = ÷2 + ÷5, Q<sub>A</sub>-কে CKB-তে যুক্ত করলেই BCD গোনে; 7493 = ÷2 + ÷8। 74161 ক্লিয়ার করে <b>অ্যাসিঙ্ক্রোনাসলি</b>, 74163 <b>সিঙ্ক্রোনাসলি</b> (পরের এজে); 74192/193 = আপ/ডাউন। mod-N কাউন্টার গোনে 0 থেকে <b>N − 1</b>।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: counters II ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>কাউন্টার ২</span></div>
+  <h2><span class="no">১৩</span>রিং ও জনসন কাউন্টার</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols small">
+    <div class="def" style="margin-top:0"><span class="lbl">রিং কাউন্টার</span> শিফট রেজিস্টারে <b>শেষ FF-এর Q → প্রথম FF-এর D</b>, শুরু 1000; একটি 1 ঘোরে: 1000 → 0100 → 0010 → 0001। <span class="circ">n টি FF → n অবস্থা</span>।</div>
+    <div class="def" style="margin-top:0"><span class="lbl">জনসন কাউন্টার</span> (টুইস্টেড-রিং, সুইচ-টেইল): <b>শেষ FF-এর Q̄ → প্রথম FF-এর D</b>, শুরু 0000। <span class="circ">n টি FF → 2n অবস্থা</span>।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:262px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 306 132" width="262">
+      <g class="w">
+        <rect x="6" y="16" width="56" height="26" rx="12" class="ink-r fill-r"/><rect x="81" y="16" width="56" height="26" rx="12" class="ink fill-b"/><rect x="156" y="16" width="56" height="26" rx="12" class="ink fill-b"/><rect x="231" y="16" width="56" height="26" rx="12" class="ink fill-b"/>
+        <rect x="231" y="88" width="56" height="26" rx="12" class="ink fill-b"/><rect x="156" y="88" width="56" height="26" rx="12" class="ink fill-b"/><rect x="81" y="88" width="56" height="26" rx="12" class="ink fill-b"/><rect x="6" y="88" width="56" height="26" rx="12" class="ink fill-b"/>
+        <path class="ink-g" d="M64,29 H79" marker-end="url(#ahg)"/><path class="ink-g" d="M139,29 H154" marker-end="url(#ahg)"/><path class="ink-g" d="M214,29 H229" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M229,101 H214" marker-end="url(#ahg)"/><path class="ink-g" d="M154,101 H139" marker-end="url(#ahg)"/><path class="ink-g" d="M79,101 H64" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M259,44 V86" marker-end="url(#ahg)"/><path class="ink-g" d="M34,86 V44" marker-end="url(#ahg)"/>
+      </g>
+      <text x="34" y="34" text-anchor="middle" class="r s w6">0000</text><text x="109" y="34" text-anchor="middle" class="s">1000</text><text x="184" y="34" text-anchor="middle" class="s">1100</text><text x="259" y="34" text-anchor="middle" class="s">1110</text>
+      <text x="259" y="106" text-anchor="middle" class="s">1111</text><text x="184" y="106" text-anchor="middle" class="s">0111</text><text x="109" y="106" text-anchor="middle" class="s">0011</text><text x="34" y="106" text-anchor="middle" class="s">0001</text>
+      <text x="150" y="70" text-anchor="middle" class="p s">Q̄3 → D0</text>
+      <text x="150" y="130" text-anchor="middle" class="bn g s">৪-বিট জনসন: ৮টি অবস্থা (Q0 Q1 Q2 Q3)</text>
+    </svg></figure>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">n টি FF</th><th>রিং</th><th>জনসন</th><th>বাইনারি</th></tr>
+      <tr><td class="l">অবস্থা</td><td><b>n</b></td><td><b>2n</b></td><td>2ⁿ</td></tr>
+      <tr><td class="l">অব্যবহৃত</td><td>2ⁿ − n</td><td>2ⁿ − 2n</td><td>0</td></tr>
+      <tr><td class="l">mod-10</td><td>10</td><td>5</td><td>4</td></tr>
+      <tr><td class="l">ডিকোডিং</td><td>নেই</td><td>2-ইন AND</td><td>n-ইন AND</td></tr>
+      <tr><td class="l">f<sub>out</sub></td><td>f/n</td><td>f/2n</td><td>f/2ⁿ</td></tr>
+    </table>
+  </div>
+  <p class="small">জনসন ডিকোডিং: প্রতি অবস্থায় একটি <b>২-ইনপুট AND</b>, যেমন 0000 → Q0′Q3′, 1000 → Q0Q1′, 1111 → Q0Q3, 0001 → Q2′Q3। কোনোটিই নিজে থেকে চালু হয় না (self-starting নয়): ভুল অবস্থায় চালু হলে সেটিই চিরকাল ঘোরে, তাই <b>প্রিসেট / সংশোধনী লজিক</b> লাগে।</p>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "<b>রিং = n, জনসন = 2n (মোচড় দ্বিগুণ করে)</b>।" ৪টি FF: রিং mod-4, জনসন mod-8, বাইনারি mod-16।</div>
+
+  <h2><span class="no">১৪</span>সিঙ্ক্রোনাস কাউন্টার ডিজাইন</h2><span class="tag">লিখিত পরীক্ষার প্রিয়</span>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ: D ফ্লিপ-ফ্লপে mod-6 কাউন্টার ✍</span>
+    <div class="cols" style="grid-template-columns:1fr 118px 232px;gap:0 4mm;align-items:start">
+      <ol class="steps">
+        <li>FF = ⌈log₂6⌉ = <b>৩টি</b> (Q2 Q1 Q0)</li>
+        <li>স্টেট টেবিল 0 → … → 5 → 0; 110, 111 অব্যবহৃত = X</li>
+        <li>এক্সাইটেশন: D-তে <b>D = Q⁺</b></li>
+        <li>m6, m7-এ X রেখে K-ম্যাপ:<br>D0 = <span class="circ">Q0′</span><br>D1 = Q1Q0′ + Q2′Q1′Q0<br>D2 = Q2Q0′ + Q1Q0</li>
+        <li>লক-আউট: 110 → 111 → 100 ✓ <b>সেলফ-স্টার্টিং</b></li>
+      </ol>
+      <table class="hand small" style="margin-top:0;white-space:nowrap">
+        <tr><th>Q2Q1Q0</th><th>পরের</th></tr>
+        <tr><td>000</td><td>001</td></tr><tr><td>001</td><td>010</td></tr><tr><td>010</td><td>011</td></tr><tr><td>011</td><td>100</td></tr><tr><td>100</td><td>101</td></tr><tr><td>101</td><td>000</td></tr><tr><td>11X</td><td>XXX</td></tr>
+      </table>
+      <figure class="doodle"><svg viewBox="46 6 282 180" width="232">
+        <g class="w">
+          <circle cx="210" cy="100" r="20" class="ink fill-b"/><circle cx="175" cy="161" r="20" class="ink fill-b"/><circle cx="105" cy="161" r="20" class="ink-r fill-r"/><circle cx="70" cy="100" r="20" class="ink fill-b"/><circle cx="105" cy="39" r="20" class="ink fill-b"/><circle cx="175" cy="39" r="20" class="ink fill-b"/>
+          <circle cx="300" cy="30" r="20" class="ink-p" stroke-dasharray="4 4"/><circle cx="300" cy="100" r="20" class="ink-p" stroke-dasharray="4 4"/>
+          <path class="ink-g" d="M199,119 L186,142" marker-end="url(#ahg)"/><path class="ink-g" d="M153,161 L127,161" marker-end="url(#ahg)"/><path class="ink-g" d="M94,142 L81,119" marker-end="url(#ahg)"/><path class="ink-g" d="M81,81 L94,58" marker-end="url(#ahg)"/><path class="ink-g" d="M127,39 L153,39" marker-end="url(#ahg)"/><path class="ink-g" d="M186,58 L199,81" marker-end="url(#ahg)"/>
+          <path class="ink-p" d="M300,52 V78" marker-end="url(#ahp)"/><path class="ink-p" d="M278,100 H232" marker-end="url(#ahp)"/>
+        </g>
+        <text x="210" y="105" text-anchor="middle" class="s">100</text><text x="175" y="166" text-anchor="middle" class="s">101</text><text x="105" y="166" text-anchor="middle" class="s r">000</text><text x="70" y="105" text-anchor="middle" class="s">001</text><text x="105" y="44" text-anchor="middle" class="s">010</text><text x="175" y="44" text-anchor="middle" class="s">011</text>
+        <text x="300" y="35" text-anchor="middle" class="s p">110</text><text x="300" y="105" text-anchor="middle" class="s p">111</text>
+      </svg><figcaption>ড্যাশ = অব্যবহৃত, দুটিই চক্রে ফেরে</figcaption></figure>
+    </div>
+  </div>
+  <p class="small"><b>JK বা T FF হলে</b> ধাপ একই; শুধু ধাপ ③-এ JK/T-এর এক্সাইটেশন টেবিল লাগে (বাইনারি আপ কাউন্টারে J<sub>k</sub> = K<sub>k</sub> = Q0 · Q1 ⋯ Q<sub>k−1</sub>)।</p>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <span class="hl">লক-আউট (Lock-out)</span>: অব্যবহৃত অবস্থায় চালু হয়ে কাউন্টার আর মূল চক্রে ফেরে না। প্রতিটি অব্যবহৃত অবস্থা যাচাই করো; নিজের মধ্যে ঘুরলে X বদলে ফেরত আনো (সেলফ-কারেক্টিং)।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: state machines ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>স্টেট মেশিন</span></div>
+  <h2><span class="no">১৫</span>স্টেট ডায়াগ্রাম: মিলি বনাম মুর</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> <span class="hl">ফাইনাইট স্টেট মেশিন (FSM)</span> = অবস্থা + ইনপুট + আউটপুট + পরের-অবস্থার লজিক + আউটপুট লজিক। <b>স্টেট ডায়াগ্রামে</b> অবস্থা বৃত্ত, ট্রানজিশন তীর; <b>স্টেট টেবিলে</b> বর্তমান অবস্থা, ইনপুট → পরের অবস্থা, আউটপুট। k টি অবস্থায় লাগে <span class="circ">⌈log₂k⌉</span> টি FF (বাইনারি কোড)।</div>
+  <table class="hand small" style="white-space:nowrap">
+    <tr><th class="l"></th><th class="l">মিলি (Mealy)</th><th class="l">মুর (Moore)</th></tr>
+    <tr><td class="l">আউটপুট নির্ভর করে</td><td class="l"><span class="hl">বর্তমান অবস্থা + ইনপুট</span></td><td class="l"><span class="hl">শুধু বর্তমান অবস্থা</span></td></tr>
+    <tr><td class="l">আউটপুট লেখা হয়</td><td class="l">তীরের ওপর: <b>x/z</b></td><td class="l">বৃত্তের ভেতর: <b>S/z</b></td></tr>
+    <tr><td class="l">অবস্থার সংখ্যা</td><td class="l">কম</td><td class="l">সাধারণত বেশি (প্রায়ই একটি বেশি)</td></tr>
+    <tr><td class="l">সাড়া</td><td class="l">একই সাইকেলে; ইনপুটের সাথে গ্লিচ হতে পারে</td><td class="l">এক ক্লক পরে; গ্লিচমুক্ত</td></tr>
+  </table>
+  <h3>101 সিকোয়েন্স ডিটেক্টর (ওভারল্যাপিং): মিলি ও মুর</h3>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <figure class="doodle"><svg viewBox="0 0 360 170" width="300">
+      <g class="w">
+        <circle cx="60" cy="70" r="24" class="ink fill-b"/><circle cx="180" cy="70" r="24" class="ink fill-b"/><circle cx="300" cy="70" r="24" class="ink-r fill-r"/>
+        <path class="ink" d="M8,70 H34" marker-end="url(#ahb)"/>
+        <path class="ink" d="M84,64 H154" marker-end="url(#ahb)"/><path class="ink" d="M204,62 H274" marker-end="url(#ahb)"/><path class="ink-r" d="M276,80 H206" marker-end="url(#ah)"/>
+        <path class="ink" d="M50,48 C30,6 90,6 70,48" marker-end="url(#ahb)"/><path class="ink" d="M170,48 C150,6 210,6 190,48" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M296,94 C270,160 90,160 64,94" marker-end="url(#ah)"/>
+      </g>
+      <text x="60" y="75" text-anchor="middle" class="w6">S0</text><text x="180" y="75" text-anchor="middle" class="w6">S1</text><text x="300" y="75" text-anchor="middle" class="r w6">S2</text>
+      <text x="60" y="16" text-anchor="middle" class="s">0/0</text><text x="180" y="16" text-anchor="middle" class="s">1/0</text>
+      <text x="118" y="58" text-anchor="middle" class="s">1/0</text><text x="240" y="55" text-anchor="middle" class="s">0/0</text><text x="240" y="98" text-anchor="middle" class="r s w6">1/1</text>
+      <text x="180" y="146" text-anchor="middle" class="r s">0/0</text>
+    </svg><figcaption>মিলি: ৩টি অবস্থা (S1 = "1", S2 = "10")</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 -30 330 232" width="265">
+      <g class="w">
+        <circle cx="60" cy="40" r="24" class="ink fill-b"/><circle cx="250" cy="40" r="24" class="ink fill-b"/><circle cx="250" cy="150" r="24" class="ink fill-b"/><circle cx="60" cy="150" r="24" class="ink-r fill-r"/>
+        <path class="ink" d="M4,40 H34" marker-end="url(#ahb)"/>
+        <path class="ink" d="M86,40 H224" marker-end="url(#ahb)"/>
+        <path class="ink" d="M250,66 V124" marker-end="url(#ahb)"/>
+        <path class="ink" d="M226,150 H86" marker-end="url(#ahb)"/>
+        <path class="ink" d="M78,168 C120,198 190,198 232,168" marker-end="url(#ahb)"/>
+        <path class="ink" d="M82,137 L227,53" marker-end="url(#ahb)"/>
+        <path class="ink" d="M227,137 L82,53" marker-end="url(#ahb)"/>
+        <path class="ink" d="M50,18 C30,-22 90,-22 70,18" marker-end="url(#ahb)"/>
+        <path class="ink" d="M272,30 C318,10 318,70 272,52" marker-end="url(#ahb)"/>
+      </g>
+      <text x="60" y="45" text-anchor="middle" class="s w6">S0/0</text><text x="250" y="45" text-anchor="middle" class="s w6">S1/0</text><text x="250" y="155" text-anchor="middle" class="s w6">S2/0</text><text x="60" y="155" text-anchor="middle" class="s r w6">S3/1</text>
+      <text x="60" y="-18" text-anchor="middle" class="s">0</text><text x="155" y="33" text-anchor="middle" class="s">1</text><text x="318" y="44" class="s">1</text>
+      <text x="258" y="100" class="s">0</text><text x="155" y="144" text-anchor="middle" class="s">1</text><text x="155" y="200" text-anchor="middle" class="s">0</text>
+      <text x="194" y="62" class="s">1</text><text x="114" y="62" class="s">0</text>
+    </svg><figcaption>মুর: ৪টি অবস্থা, আউটপুট বৃত্তের ভেতরে</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত ডিজাইন (মিলি, D ফ্লিপ-ফ্লপ) ✍</span> S0 = 00, S1 = 01, S2 = 10 (Q1Q0); 11 অব্যবহৃত = X।
+    <div class="cols" style="grid-template-columns:1.05fr 1fr;align-items:center">
+      <table class="hand small" style="margin:0">
+        <tr><th>Q1Q0</th><th>x</th><th>Q1⁺Q0⁺</th><th>z</th></tr>
+        <tr><td>00</td><td>0 / 1</td><td>00 / 01</td><td>0 / 0</td></tr>
+        <tr><td>01</td><td>0 / 1</td><td>10 / 01</td><td>0 / 0</td></tr>
+        <tr><td>10</td><td>0 / 1</td><td>00 / 01</td><td>0 / <b class="red">1</b></td></tr>
+      </table>
+      <p>K-ম্যাপ (11 = X): <span class="circ">D1 = x′Q0</span> · <span class="circ">D0 = x</span> · <span class="circ">z = xQ1</span><br>ট্রেস: x = 0 1 0 1 0 1 1 0 1 → z = 0 0 0 1 0 1 0 0 1</p>
+    </div>
+  </div>
+  <div class="cols">
+    <p class="small"><b>স্টেট রিডাকশন</b>: প্রতিটি ইনপুটে একই আউটপুট দিলে এবং একই (বা সমতুল্য) পরের অবস্থায় গেলে দুটি অবস্থা <span class="hl">সমতুল্য</span>; এদের একটি করে দাও (রো-ম্যাচিং, ইমপ্লিকেশন চার্ট)। কম অবস্থা → কম FF ও গেট।</p>
+    <p class="small"><b>স্টেট অ্যাসাইনমেন্ট</b>: বাইনারি (সবচেয়ে কম FF), গ্রে (পাশাপাশি অবস্থায় ১ বিট তফাত: সরল লজিক, অ্যাসিঙ্ক ডিজাইনে রেসমুক্ত), <b>ওয়ান-হট</b> (k টি FF, একটিতে 1; দ্রুত, FPGA-তে চলে)। ওপরের মুর ডিটেক্টরে S3 = 11 হলে z = Q1Q0।</p>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ওভারল্যাপিং</b> 101 ডিটেক্টরে 101-এর শেষ 1 পরের মিলের শুরু (S2 –1→ S1)। নন-ওভারল্যাপিং হলে S0-তে ফেরে। "আউটপুট শুধু অবস্থার ওপর নির্ভরশীল" = <b>মুর</b>।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>SR: Q⁺ = S + R′Q (SR = 0)</p><p>JK: Q⁺ = JQ′ + K′Q</p>
+      <p>D: Q⁺ = D · T: Q⁺ = T ⊕ Q</p><p>NOR ল্যাচে নিষিদ্ধ 11 · NAND-এ 00</p>
+      <p>JK এক্সাইটেশন: 0→1 = 1X, 1→0 = X1</p><p>JK → T: J = K = T · D → T: D = T ⊕ Q</p>
+      <p>রেস-অ্যারাউন্ড: J = K = 1, t<sub>p</sub> &gt; t<sub>pd</sub></p><p>f<sub>max</sub> = 1/(t<sub>pd</sub> + t<sub>comb</sub> + t<sub>su</sub>)</p>
+      <p>রিপল f<sub>max</sub> = 1/(n · t<sub>pd</sub>)</p><p>n FF: বাইনারি 2ⁿ · রিং n · জনসন 2n</p>
+      <p>mod-N: ⌈log₂N⌉ টি FF, আউটপুট f/N</p><p>74194: 00 হোল্ড 01 SR 10 SL 11 লোড</p>
+      <p>মিলি: f(অবস্থা, ইনপুট) · মুর: f(অবস্থা)</p><p>k অবস্থা → ⌈log₂k⌉ FF (ওয়ান-হট: k)</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>ফ্লিপ-ফ্লপ = বাইস্টেবল মাল্টিভাইব্রেটর, ১ বিট</li>
+      <li>মৌলিক ল্যাচ = ২টি ক্রস-কাপলড NOR/NAND</li>
+      <li>D FF-এ অবৈধ অবস্থা নেই; D ল্যাচ স্বচ্ছ</li>
+      <li>J = K = 1 হলে JK টগল করে</li>
+      <li>T = 1 হলে T FF ফ্রিকোয়েন্সি ২ দিয়ে ভাগ করে</li>
+      <li>মাস্টার-স্লেভ রেস-অ্যারাউন্ড দূর করে</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>ডিকেড কাউন্টারে ৪টি FF লাগে</li>
+      <li>৪-বিট রিপল: 16 kHz ইন → 1 kHz আউট</li>
+      <li>7490 ডিকেড · 7493 ৪-বিট · 74163 সিঙ্ক</li>
+      <li>৪-বিট জনসন = mod-8, রিং = mod-4</li>
+      <li>SISO: n বিট লোডে n ক্লক</li>
+      <li>মুরের অবস্থা ≥ মিলির অবস্থা</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> NAND ল্যাচে হোল্ড = 11, অবৈধ = 00 · বৈশিষ্ট্যসূচক ≠ এক্সাইটেশন · রেস-অ্যারাউন্ড শুধু <b>লেভেল</b>-ট্রিগারড JK-তে · রিপল কাউন্টার = অ্যাসিঙ্ক্রোনাস কাউন্টার · mod-N গোনে N − 1 পর্যন্ত · জনসন ফেরত দেয় Q̄, রিং দেয় Q · সেটআপ এজের <b>আগে</b>, হোল্ড <b>পরে</b></div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> সিকোয়েনশিয়াল = মনে রাখে · NOR দুটি 1 সহ্য করে না, NAND দুটি 0 · ▷ = এজ, বাবল ▷ = ফলিং · D কলাম = Q⁺, T কলাম = পরিবর্তন · JK: Q = 0 → J ঠিক করে, Q = 1 → K · D চায় Q⁺, T চায় পরিবর্তন · রিং n, জনসন 2n · শিফট লেফট × 2</div>
+  <figure class="doodle"><svg viewBox="0 0 560 96" width="560">
+    <g class="w">
+      <rect x="4" y="24" width="110" height="44" rx="12" class="ink fill-b"/><rect x="144" y="24" width="130" height="44" rx="12" class="ink fill-b"/><rect x="304" y="24" width="100" height="44" rx="12" class="ink-r fill-r"/><rect x="434" y="24" width="122" height="44" rx="12" class="ink-g fill-g"/>
+      <path class="ink-g" d="M116,46 H142" marker-end="url(#ahg)"/><path class="ink-g" d="M276,46 H302" marker-end="url(#ahg)"/><path class="ink-g" d="M406,46 H432" marker-end="url(#ahg)"/>
+    </g>
+    <text x="59" y="51" text-anchor="middle" class="bn w6">SR ল্যাচ</text><text x="209" y="51" text-anchor="middle" class="bn w6">গেটেড / D ল্যাচ</text><text x="354" y="51" text-anchor="middle" class="bn r w6">এজ FF</text><text x="495" y="51" text-anchor="middle" class="bn g w6">রেজি. · কাউন্টার</text>
+    <text x="129" y="18" text-anchor="middle" class="bn s">+ এনেবল</text><text x="289" y="18" text-anchor="middle" class="bn s">+ এজ</text><text x="419" y="18" text-anchor="middle" class="s">× n</text>
+    <text x="280" y="90" text-anchor="middle" class="bn p s">প্রতিটি ব্লক আগেরটি দিয়ে তৈরি</text>
+  </svg><figcaption>পুরো অধ্যায়ের ধাপে ধাপে গঠন</figcaption></figure>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · সিকোয়েনশিয়াল সার্কিট</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>ফ্লিপ-ফ্লপের স্থিতিশীল অবস্থা কয়টি?<ol class="opts"><li>0</li><li>1</li><li>2</li><li>3</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>JK ফ্লিপ-ফ্লপের বৈশিষ্ট্যসূচক সমীকরণ:<ol class="opts"><li>JQ + KQ′</li><li>JQ′ + K′Q</li><li>J + K′Q</li><li>J ⊕ Q</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>৪-বিট জনসন কাউন্টারের অবস্থা কয়টি?<ol class="opts"><li>4</li><li>16</li><li>6</li><li>8</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>NAND (S̄R̄) ল্যাচের অবৈধ ইনপুট:<ol class="opts"><li>S̄ = R̄ = 0</li><li>S̄ = R̄ = 1</li><li>S̄ = 0, R̄ = 1</li><li>S̄ = 1, R̄ = 0</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>রেস-অ্যারাউন্ড (J = K = 1) ঘটে:<ol class="opts"><li>D ফ্লিপ-ফ্লপে</li><li>এজ-ট্রিগারড T-তে</li><li>লেভেল-ট্রিগারড JK-তে</li><li>SR ল্যাচে</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>mod-12 কাউন্টারে ন্যূনতম ফ্লিপ-ফ্লপ:<ol class="opts"><li>3</li><li>12</li><li>6</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>74194-এ S1 S0 = 11 মানে:<ol class="opts"><li>প্যারালাল লোড</li><li>শিফট রাইট</li><li>শিফট লেফট</li><li>হোল্ড</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>মুর মেশিনে আউটপুট নির্ভর করে:<ol class="opts"><li>শুধু ইনপুটে</li><li>অবস্থা + ইনপুটে</li><li>শুধু অবস্থায়</li><li>শুধু ক্লকে</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>৩-বিট রিপল, প্রতি FF-এ t<sub>pd</sub> = 20 ns: f<sub>max</sub> ≈<ol class="opts"><li>50 MHz</li><li>16.7 MHz</li><li>25 MHz</li><li>60 MHz</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>Q: 0 → 1-এর জন্য JK এক্সাইটেশন:<ol class="opts"><li>J = 1, K = X</li><li>J = X, K = 1</li><li>J = 0, K = X</li><li>J = X, K = 0</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-খ · ৩-ঘ · ৪-ক · ৫-গ · ৬-ঘ · ৭-ক · ৮-গ · ৯-খ · ১০-ক</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> JK ফ্লিপ-ফ্লপ দিয়ে একটি ৩-বিট সিঙ্ক্রোনাস বাইনারি আপ কাউন্টার ডিজাইন করো। স্টেট টেবিল, এক্সাইটেশন টেবিল ও J, K সমীকরণ দাও এবং সার্কিট আঁকো। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>৩টি FF (2³ = 8 অবস্থা); স্টেট টেবিল 000 → 001 → … → 111 → 000 <i class="mk">১</i></li>
+    <li>প্রতিটি বিটের Q → Q⁺ লিখে JK এক্সাইটেশন টেবিল থেকে J, K বসাও (0→0: 0X, 0→1: 1X, 1→0: X1, 1→1: X0) <i class="mk">২</i></li>
+    <li>K-ম্যাপ: <span class="circ">J0 = K0 = 1</span> · <b>J1 = K1 = Q0</b> · <b>J2 = K2 = Q0Q1</b> (নিচের সব বিট 1 হলে বিট k টগল করে) <i class="mk">৩</i></li>
+    <li>সার্কিট: ৩টি FF-এ সাধারণ CLK, FF0-এর J, K = 1, Q0Q1-এর জন্য একটি ২-ইনপুট AND; f<sub>max</sub> = 1/(t<sub>pd</sub> + t<sub>AND</sub> + t<sub>su</sub>) <i class="mk">২</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>NOR ও NAND ল্যাচ সারণিসহ আঁকতে পারি</li>
+        <li>৪টি বৈশিষ্ট্যসূচক + ৪টি এক্সাইটেশন সারণি জানি</li>
+        <li>বাইনারি, রিং, জনসনের অবস্থা গুনতে পারি</li>
+        <li>কাউন্টার ও 101 ডিটেক্টর ডিজাইন করতে পারি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① JK → D ও D → JK রূপান্তর<br>② mod-5 সিঙ্ক্রোনাস কাউন্টার (JK)<br>③ ডিকোডিংসহ ৩-বিট জনসন কাউন্টার<br>④ 110-এর মুর ডিটেক্টর</div>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

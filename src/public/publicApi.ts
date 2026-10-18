@@ -1,3 +1,5 @@
+import { CANDIDATE_TOKEN_KEY, CANDIDATE_UNAUTHORIZED_EVENT } from '../candidate/candidateApi'
+
 export interface PublicChapter {
   id: string
   chapter_number: number
@@ -36,8 +38,18 @@ export interface PublicLesson {
   is_published: boolean
 }
 
+/** Study content needs a signed-in reader: a candidate, or an admin previewing the portal. */
+function readerToken(): string | null {
+  return localStorage.getItem(CANDIDATE_TOKEN_KEY) || localStorage.getItem('admin_token')
+}
+
 async function publicFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`/api/public${path}`)
+  const token = readerToken()
+  const res = await fetch(`/api/public${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+  if (res.status === 401 && localStorage.getItem(CANDIDATE_TOKEN_KEY)) {
+    // Expired or revoked session: sign out, which sends the reader back to the login screen.
+    window.dispatchEvent(new Event(CANDIDATE_UNAUTHORIZED_EVENT))
+  }
   if (!res.ok) throw new Error(`Public API error: ${res.statusText}`)
   return res.json()
 }
@@ -54,10 +66,85 @@ export function fetchActiveMenus(): Promise<PublicSideMenu[]> {
   return publicFetch<PublicSideMenu[]>('/menus')
 }
 
+/** Every published lesson in one request; callers group them by side menu. */
+export function fetchPublishedLessons(): Promise<PublicLesson[]> {
+  return publicFetch<PublicLesson[]>('/lessons/published')
+}
+
 export function fetchLessonsByMenu(menuId: string): Promise<PublicLesson[]> {
   return publicFetch<PublicLesson[]>(`/lessons/by-menu/${menuId}`)
 }
 
 export function fetchLessonById(id: string): Promise<PublicLesson> {
   return publicFetch<PublicLesson>(`/lessons/${id}`)
+}
+
+/** A dashboard notice that is published and inside its schedule (see LIVE_ANNOUNCEMENTS_SQL on the server). */
+export interface PublicAnnouncement {
+  id: string
+  title_en: string
+  title_bn: string | null
+  body_en: string | null
+  body_bn: string | null
+  tone: 'info' | 'exam' | 'important'
+  link_url: string | null
+  link_label_en: string | null
+  link_label_bn: string | null
+  starts_at: string | null
+  ends_at: string | null
+  is_pinned: boolean
+}
+
+export function fetchAnnouncements(): Promise<PublicAnnouncement[]> {
+  return publicFetch<PublicAnnouncement[]>('/announcements')
+}
+
+/** Text in both languages. */
+export interface Bi {
+  en: string
+  bn: string
+}
+
+/** One lesson's Exam Kit (server/src/services/examKitShape.ts). */
+export interface ExamKitData {
+  slug: string
+  chapter: number
+  subject: string
+  lessonTitleEn: string
+  status: 'draft' | 'published'
+  updatedOn: string
+  heat?: { asked: number; recent: number; repeats: number; byBody: Record<string, number>; topClusters: { name: string; asked: number }[] }
+  asked?: { group: string; cluster: string; question: string; kind: string; askedIn: string[]; sources: string[]; repeat: boolean }[]
+  mustKnow: Bi[]
+  formulas: { title: Bi; formula: string; example: { question: Bi; working: Bi; answer: string } }[]
+  traps: Bi[]
+  writtenPlan: { question: Bi; askedIn: string[]; skeleton: { en: string[]; bn: string[] }; marks: Partial<Record<'5' | '10' | '20', Bi>> }[]
+  viva: { q: Bi; a: Bi }[]
+  facts: string[]
+  factsResolved?: { id: string; en: string; bn: string; asOf: string; status: string; sources: string[] }[]
+  sources: { url: string; title: string; accessed: string }[]
+}
+
+export interface ExamKitResponse {
+  slug: string
+  chapter_number: number
+  lesson_title_en: string
+  data: ExamKitData
+  is_published: boolean
+}
+
+export interface ExamKitIndexEntry {
+  slug: string
+  chapter_number: number
+  lesson_title_en: string
+  asked: number | null
+}
+
+/** Published kits; the reader shows the Exam Kit tab only for lessons listed here. */
+export function fetchExamKitIndex(): Promise<ExamKitIndexEntry[]> {
+  return publicFetch<ExamKitIndexEntry[]>('/exam-kits')
+}
+
+export function fetchExamKit(slug: string): Promise<ExamKitResponse> {
+  return publicFetch<ExamKitResponse>(`/exam-kits/${encodeURIComponent(slug)}`)
 }

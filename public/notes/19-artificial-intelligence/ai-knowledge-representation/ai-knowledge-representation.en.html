@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Knowledge Representation &amp; Logic: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Knowledge Representation &amp; Logic</span></h1>
+  <p class="subtitle">Schemes · propositional &amp; first-order logic · unification · resolution · chaining: exam-ready in 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 186" width="440">
+      <g class="w">
+        <ellipse cx="320" cy="92" rx="92" ry="33" class="ink-k fill-y"/>
+        <path class="ink" d="M250,79 L188,42 M250,105 L188,142 M320,59 L320,30 M390,79 L452,42 M390,105 L452,142 M320,125 L320,154 M234,92 L194,92 M406,92 L446,92"/>
+        <rect x="74" y="26" width="148" height="30" rx="11" class="ink fill-b"/>
+        <rect x="242" y="8" width="156" height="30" rx="11" class="ink-r fill-r"/>
+        <rect x="418" y="26" width="148" height="30" rx="11" class="ink fill-b"/>
+        <rect x="24" y="77" width="148" height="30" rx="11" class="ink-g fill-g"/>
+        <rect x="468" y="77" width="148" height="30" rx="11" class="ink-r fill-r"/>
+        <rect x="74" y="138" width="148" height="30" rx="11" class="ink fill-b"/>
+        <rect x="242" y="154" width="156" height="30" rx="11" class="ink-r fill-r"/>
+        <rect x="418" y="138" width="148" height="30" rx="11" class="ink fill-b"/>
+      </g>
+      <text x="320" y="90" text-anchor="middle" class="k l">KNOWLEDGE REP.</text><text x="320" y="110" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="148" y="46" text-anchor="middle" style="font-size:12px">Frames · Minsky 1975</text>
+      <text x="320" y="29" text-anchor="middle" class="r w6">The schemes ★</text>
+      <text x="492" y="46" text-anchor="middle" class="r w6">Semantic nets ★</text>
+      <text x="98" y="97" text-anchor="middle" class="g w6">Fact vs rule</text>
+      <text x="542" y="97" text-anchor="middle" style="font-size:12px">Fwd vs bwd ★</text>
+      <text x="148" y="158" text-anchor="middle" style="font-size:12px">Propositional logic</text>
+      <text x="320" y="175" text-anchor="middle" class="r w6">FOL: ∀ and ∃ ★</text>
+      <text x="492" y="158" text-anchor="middle" style="font-size:12px">Resolution · Horn</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the one idea everything hangs on</figcaption>
+  </figure>
+  <div class="sticky" style="width:64mm"><b>High-yield</b><br>① KR = formal encoding, so a machine can reason<br>② Six schemes: logic, net, frame, rules, script, ontology<br>③ Quillian 1968 · Minsky 1975 · Schank &amp; Abelson 1977 · Robinson 1965<br>④ P→Q false only when P true, Q false<br>⑤ Modus ponens: P, P→Q ⊢ Q<br>⑥ Resolution: (P∨Q), (¬P∨R) ⇒ (Q∨R)<br>⑦ Horn = one positive literal at most<br>⑧ Forward = facts→goal, backward = goal→facts</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The Artificial Intelligence syllabus lists "Knowledge representation" and "Propositional and first order logic" as two separate lines. This notebook covers both, plus the inference machinery every exam paper on the topic assumes. Search and probabilistic reasoning are the neighbouring lessons.</p>
+  <div class="tipbox blk small"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>What knowledge representation is … p. 2</li><li>The representation schemes … p. 3</li><li>Semantic networks &amp; inheritance … p. 4</li><li>Frames and scripts … p. 5</li><li>Propositional logic: syntax … p. 6</li><li>Inference, validity, tautology … p. 7</li></ul>
+    <ul class="tick"><li>First-order logic &amp; quantifiers … p. 8</li><li>Unification, resolution, Horn … p. 9</li><li>Forward vs backward chaining … p. 10</li><li>Night-before p. 11 · Practice p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: what is knowledge representation ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Definition &amp; desiderata</span></div>
+  <h2><span class="no">1</span>What is Knowledge Representation?</h2><span class="tag">foundation ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Knowledge Representation (KR)</span> is the process of <b>formally encoding</b> information about the world in a form an AI system can store and use to <b>reason, infer and decide</b>. The knowledge is explicit and machine-processable instead of being hidden inside program code.</div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 176" width="246">
+      <g class="w">
+        <rect x="76" y="4" width="98" height="22" rx="11" class="ink-k fill-y"/>
+        <path class="ink" d="M125,26 L125,42" marker-end="url(#ahb)"/>
+        <rect x="4" y="42" width="242" height="22" rx="11" class="ink fill-b"/>
+        <path class="ink" d="M125,64 L125,80" marker-end="url(#ahb)"/>
+        <rect x="4" y="80" width="242" height="22" rx="11" class="ink fill-b"/>
+        <path class="ink" d="M125,102 L125,118" marker-end="url(#ahb)"/>
+        <rect x="4" y="118" width="242" height="22" rx="11" class="ink-r fill-r"/>
+        <path class="ink-g" d="M60,140 L60,158 M125,140 L125,158 M190,140 L190,158" marker-end="url(#ahg)"/>
+        <rect x="16" y="158" width="88" height="16" rx="8" class="ink-g fill-g"/>
+        <rect x="81" y="158" width="88" height="16" rx="8" class="ink-g fill-g"/>
+        <rect x="146" y="158" width="88" height="16" rx="8" class="ink-g fill-g"/>
+      </g>
+      <text x="125" y="20" text-anchor="middle" style="font-size:11px" class="k w6">KNOWLEDGE</text>
+      <text x="125" y="58" text-anchor="middle" style="font-size:10px">Fact · Rule · Ontology · Inference</text>
+      <text x="125" y="96" text-anchor="middle" style="font-size:10px">Logic · Semantic net · Frame</text>
+      <text x="125" y="134" text-anchor="middle" style="font-size:10px" class="r w6">Resolution · Horn · Chaining</text>
+      <text x="60" y="170" text-anchor="middle" style="font-size:10px" class="g">inference</text>
+      <text x="125" y="170" text-anchor="middle" style="font-size:10px" class="g">stored</text>
+      <text x="190" y="170" text-anchor="middle" style="font-size:10px" class="g">re-used</text>
+    </svg><figcaption>representation → logic → resolution → inference</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">The four building blocks</span>
+        <b>Fact</b> — a basic assertion, e.g. <i>Human(Socrates)</i> · <b>Rule</b> — a conditional linking facts, e.g. <i>Human(x) → Mortal(x)</i> · <b>Ontology</b> — the formal set of concepts and their relations in a domain · <b>Inference</b> — <span class="circ">deriving new knowledge from existing facts and rules</span></div>
+      <table class="hand small" style="margin-top:2mm">
+        <tr><th class="l">KR vs</th><th class="l">Answer</th></tr>
+        <tr><td class="l">data</td><td class="l">KR gives data <b>structure and meaning</b></td></tr>
+        <tr><td class="l">AI</td><td class="l">KR is a <b>part</b> of AI; AI also searches, learns</td></tr>
+        <tr><td class="l">a database</td><td class="l">a database <b>stores</b>; KR permits <b>inference</b></td></tr>
+      </table>
+    </div>
+  </div>
+  <table class="hand small" style="margin-top:0">
+    <tr><th class="l">Property a good scheme needs</th><th class="l">The question it answers</th></tr>
+    <tr><td class="l"><b>Representational adequacy</b></td><td class="l">can it describe everything the domain needs?</td></tr>
+    <tr><td class="l"><b>Inferential adequacy</b></td><td class="l">can the required conclusions be derived?</td></tr>
+    <tr><td class="l"><b>Inferential efficiency</b></td><td class="l">how fast is a conclusion produced?</td></tr>
+    <tr><td class="l"><b>Acquisitional efficiency</b></td><td class="l">how cheap is it to add a new fact?</td></tr>
+    <tr><td class="l"><b>Ease of acquisition</b></td><td class="l">can a human read, check and correct it?</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Representation on the left, reasoning on the right.</b>" KR decides <i>how knowledge is stored</i>; the inference engine decides <i>how it is used</i>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> KR is <b>not</b> the same as knowledge, nor a database. "Knowledge" here is <b>declarative</b> — a statement of what is true — while the procedure that uses it belongs to the inference engine.</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ the smallest possible expert system</span> Knowledge base: fact <i>Human(Socrates)</i>, rule <i>Human(x) → Mortal(x)</i>. Unify <span class="hl">x with Socrates</span>, apply the rule, get <i>Mortal(Socrates)</i>, then <span class="circ">store the conclusion back</span> in the base — that loop is inference.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Why it matters in practice</span> Two systems can hold identical facts and behave completely differently because their representation differs. A rule base lets you explain every answer; a neural network cannot. When an exam asks for two desirable properties, the table above is the answer.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: the representation schemes ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>The schemes</span></div>
+  <h2><span class="no">2</span>The Knowledge Representation Schemes</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">KR scheme</span> is the notation and structure used to encode knowledge. Every scheme is a compromise: it says a great deal about some kinds of fact and very little about others. The classic comparison has <span class="circ">six schemes</span> — logical, semantic network, frame, production rule, script and ontology.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 186" width="296">
+      <g class="w">
+        <rect x="8" y="4" width="108" height="24" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M62,28 L56,46 M62,28 L212,46"/>
+        <rect x="8" y="46" width="96" height="24" rx="8" class="ink fill-b"/>
+        <rect x="164" y="46" width="128" height="24" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M56,70 L56,80"/>
+        <rect x="8" y="80" width="96" height="26" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M228,70 L228,78 M228,70 L228,102 M228,70 L228,126 M228,70 L228,150"/>
+        <rect x="164" y="78" width="128" height="20" rx="8" class="ink-r fill-r"/>
+        <rect x="164" y="102" width="128" height="20" rx="8" class="ink-r fill-r"/>
+        <rect x="164" y="126" width="128" height="20" rx="8" class="ink-r fill-r"/>
+        <rect x="164" y="150" width="128" height="20" rx="8" class="ink fill-b"/>
+      </g>
+      <text x="62" y="21" text-anchor="middle" style="font-size:10px" class="k w6">KNOWLEDGE REP.</text>
+      <text x="56" y="63" text-anchor="middle" style="font-size:11px" class="k w6">LOGIC</text>
+      <text x="228" y="63" text-anchor="middle" style="font-size:11px" class="k w6">STRUCTURED</text>
+      <text x="56" y="97" text-anchor="middle" style="font-size:10px" class="g">Propositional + FOL</text>
+      <text x="228" y="92" text-anchor="middle" style="font-size:10px" class="r w6">Semantic network</text>
+      <text x="228" y="116" text-anchor="middle" style="font-size:10px" class="r w6">Frames</text>
+      <text x="228" y="140" text-anchor="middle" style="font-size:10px" class="r w6">Production rules</text>
+      <text x="228" y="164" text-anchor="middle" style="font-size:10px">Scripts · ontologies</text>
+    </svg><figcaption>two families: logic gives proof, the structured schemes give structure</figcaption></figure>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">Where they appear in real systems</span> Semantic networks and ontologies are the same idea at two scales — an early AI representation, and the machinery of the Semantic Web (RDF, OWL) and of modern knowledge graphs. Frames are the ancestor of every class-based object model; production rules of every expert system.</div>
+  </div>
+  <table class="hand small" style="margin-top:0">
+    <tr><th class="l">Scheme</th><th class="l">Core idea</th><th class="l">Strength</th><th class="l">Weakness</th></tr>
+    <tr><td class="l"><b>Logical</b> (PL, FOL)</td><td class="l">facts and rules as formulas</td><td class="l">exact and provable</td><td class="l">verbose, no partial knowledge</td></tr>
+    <tr><td class="l"><b>Semantic network</b></td><td class="l">nodes = concepts, arcs = relations</td><td class="l">facts inherit automatically</td><td class="l">no formal semantics, cannot prove</td></tr>
+    <tr><td class="l"><b>Frame</b></td><td class="l">a stereotyped object: slots, facets</td><td class="l">handles defaults and exceptions</td><td class="l">rigid and verbose, no computation</td></tr>
+    <tr><td class="l"><b>Production rule</b></td><td class="l">IF–THEN rules on a working memory</td><td class="l">modular, easy to extend</td><td class="l">slow, needs a conflict strategy</td></tr>
+    <tr><td class="l"><b>Script</b></td><td class="l">a stereotyped sequence of events</td><td class="l">reads situations well</td><td class="l">cannot compute, no surprises</td></tr>
+    <tr><td class="l"><b>Ontology</b></td><td class="l">axioms over classes, vocabulary</td><td class="l">reuse and consistency</td><td class="l">expensive to build and maintain</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> Match the <b>question</b> to the scheme: <i>is it true?</i> → logic · <i>how related?</i> → net · <i>what does it have?</i> → frame · <i>what if…?</i> → rule · <i>in what order?</i> → script · <i>what vocabulary?</i> → ontology.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> An ontology is <b>not</b> a sixth cousin of the others — it is <b>the vocabulary plus the constraints</b> they are written in. A script is <b>not</b> a plan: a script is what usually happens, a plan is what this agent intends.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ pick a scheme</span> "birds fly" → <b>frame</b> (default + exception penguin). "if temperature &gt; 100 °C then alarm" → <b>production rule</b>. "enter → order → eat → pay → leave" → <b>script</b>. "if it rains the ground is wet" → <b>propositional logic</b>. "dog is-a animal" → <b>semantic network</b>.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: semantic networks ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Semantic networks</span></div>
+  <h2><span class="no">3</span>Semantic Networks &amp; Inheritance</h2><span class="tag">MCQ favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">semantic network</span> represents knowledge as a <b>directed graph</b> whose <span class="circ">nodes are objects, concepts, events or properties</span> and whose <span class="circ">labelled arcs are the relations between them</span>. Introduced by <b>M. R. Quillian, 1968</b> as a model of associative memory; the direct ancestor of the knowledge graph.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="296">
+      <g class="w">
+        <rect x="60" y="4" width="108" height="24" rx="11" class="ink-k fill-y"/>
+        <rect x="60" y="46" width="108" height="24" rx="11" class="ink-k fill-y"/>
+        <rect x="60" y="88" width="108" height="24" rx="11" class="ink-r fill-r"/>
+        <rect x="60" y="130" width="108" height="24" rx="11" class="ink fill-b"/>
+        <path class="ink-r" d="M114,28 L114,46" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M114,70 L114,88" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M114,112 L114,130" marker-end="url(#ah)"/>
+        <rect x="4" y="90" width="44" height="22" rx="11" class="ink fill-b"/>
+        <rect x="4" y="130" width="44" height="22" rx="11" class="ink fill-b"/>
+        <path class="ink" d="M60,98 L48,98" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M26,112 L26,130" marker-end="url(#ahp)"/>
+        <rect x="182" y="128" width="38" height="22" rx="11" class="ink-g fill-g"/>
+        <path class="ink-g" d="M182,14 L196,128" marker-end="url(#ahg)" stroke-dasharray="4 3"/>
+        <path class="ink-g" d="M60,144 L48,144" marker-end="url(#ahg)"/>
+      </g>
+      <text x="114" y="21" text-anchor="middle" style="font-size:11px" class="k">ANIMAL</text>
+      <text x="114" y="63" text-anchor="middle" style="font-size:11px" class="k">MAMMAL</text>
+      <text x="114" y="105" text-anchor="middle" style="font-size:11px" class="r w6">DOG</text>
+      <text x="114" y="147" text-anchor="middle" style="font-size:11px">FIDO</text>
+      <text x="26" y="106" text-anchor="middle" style="font-size:10px">LEGS</text>
+      <text x="26" y="146" text-anchor="middle" style="font-size:10px">PAW</text>
+      <text x="201" y="145" text-anchor="middle" style="font-size:10px" class="g">EARTH</text>
+      <text x="120" y="42" style="font-size:9px" class="r">IS-A</text>
+      <text x="120" y="84" style="font-size:9px" class="r">IS-A</text>
+      <text x="120" y="126" style="font-size:9px" class="r">IS-A</text>
+      <text x="52" y="90" style="font-size:9px">HAS-A</text>
+      <text x="30" y="125" style="font-size:9px" class="p">PART-OF</text>
+      <text x="166" y="66" style="font-size:9px" class="g">lives-in</text>
+      <text x="56" y="170" style="font-size:10px" class="g">inherited: bark = yes</text>
+      <text x="112" y="183" text-anchor="middle" style="font-size:9px" class="r">three arcs, three relations</text>
+    </svg><figcaption>facts are not stored on Fido; they are inherited down the IS-A chain</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Arc family</th><th class="l">Typical labels</th></tr>
+        <tr><td class="l"><b>Structural</b></td><td class="l">IS-A, HAS-A, PART-OF, AKO</td></tr>
+        <tr><td class="l"><b>Semantic</b></td><td class="l">synonym, antonym, hyponym</td></tr>
+        <tr><td class="l"><b>Procedural</b></td><td class="l">arcs attached to an action</td></tr>
+      </table>
+      <div class="mnote">HAS-A means "has a part", IS-A means "is a kind of" — swap the two and the label flips!</div>
+      <div class="def small" style="margin-top:2mm"><span class="lbl">Inheritance</span> An object takes the properties of its class without restating them. Two kinds: <span class="hl">default inheritance</span> (assume the general case unless told otherwise) and <span class="hl">specific inheritance</span> (an override always wins). Inheritance is <span class="circ">transitive</span> — it travels down the whole chain.</div>
+    </div>
+  </div>
+  <table class="hand small" style="margin-top:0">
+    <tr><th class="l">Property</th><th class="l">Semantic network</th></tr>
+    <tr><td class="l">Facts inherit for free</td><td class="l"><b>yes</b> — add a property to a class and every subclass gains it</td></tr>
+    <tr><td class="l">Formal semantics</td><td class="l"><b>none</b> — the arcs have no logical meaning</td></tr>
+    <tr><td class="l">Consistency</td><td class="l">not guaranteed — two arcs can contradict</td></tr>
+    <tr><td class="l">Inference</td><td class="l">traversal only: <b>inheritance</b> and graph search</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>IS-A is a class arrow, HAS-A is an ownership arrow.</b>" You may say "a dog IS-A mammal"; you may never say "a mammal IS-A dog". Reversing an IS-A arc is the commonest mistake in an exam diagram.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A semantic network is <b>not</b> a truth table and <b>not</b> a production system — it answers "what is related to what", not "what follows from what". And it cannot <b>prove</b> anything.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ inheritance with an exception</span> Store <i>Animal → breathes = true</i>, <i>Mammal IS-A Animal</i>, <i>Dog IS-A Mammal</i>, <i>Fido IS-A Dog</i>, plus <i>Fido → legs = 4</i>. Ask for <i>Fido → breathes</i>: the engine walks the chain <span class="circ">Fido → Dog → Mammal → Animal</span> and answers <b>true</b> without Fido ever storing it. Now add <i>Fido → legs = 3</i> — the <b>specific</b> value 3 must win, which is exactly the conflict-resolution problem frames solve explicitly.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: frames and scripts ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Frames &amp; scripts</span></div>
+  <h2><span class="no">4</span>Frames and Scripts</h2><span class="tag">slot / facet ★</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr 232px;align-items:start">
+    <div class="def small" style="margin-top:0"><span class="lbl">Frame — Minsky, 1975</span> A <span class="hl">frame</span> describes a <b>stereotyped object, class or situation</b> as a named set of <b>slots</b>. Each slot holds a value, a <b>facet</b> (default, range, if-needed procedure) or a link to another frame. A frame for a class is a <b>schema</b>; filling one in gives an <b>instance</b>.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Script — Schank &amp; Abelson, 1977</span> A <span class="hl">script</span> is a stereotyped <b>ordered sequence of events</b> that normally takes place in a situation. It stores what is <i>typical</i>, so a story becomes predictable and cheap to understand.</div>
+    <figure class="doodle"><svg viewBox="0 0 232 140" width="228">
+      <g class="w">
+        <rect x="6" y="6" width="220" height="128" rx="6" class="ink-k"/>
+        <path class="ink-k" d="M6,28 L226,28 M6,50 L226,50 M6,72 L226,72 M6,94 L226,94 M6,116 L226,116"/>
+        <path class="ink-k" d="M114,28 L114,134" stroke-dasharray="4 4"/>
+        <path class="ink-k" d="M178,50 L178,134" stroke-dasharray="4 4"/>
+      </g>
+      <text x="116" y="22" text-anchor="middle" style="font-size:11px" class="k w6">FRAME: CAR</text>
+      <text x="12" y="43" style="font-size:11px">slot</text>
+      <text x="118" y="43" style="font-size:11px">value</text>
+      <text x="182" y="43" style="font-size:11px" class="g">facet</text>
+      <text x="12" y="65" style="font-size:11px">colour</text>
+      <text x="118" y="65" style="font-size:11px" class="r">red</text>
+      <text x="182" y="65" style="font-size:10px" class="g">def. white</text>
+      <text x="12" y="87" style="font-size:11px">wheels</text>
+      <text x="118" y="87" style="font-size:11px" class="r">4</text>
+      <text x="182" y="87" style="font-size:10px" class="g">range 2–8</text>
+      <text x="12" y="109" style="font-size:11px">engine</text>
+      <text x="118" y="109" style="font-size:11px" class="r">petrol</text>
+      <text x="182" y="109" style="font-size:10px" class="g">if-needed</text>
+      <text x="12" y="131" style="font-size:11px">owner</text>
+      <text x="118" y="131" style="font-size:11px" class="r">—</text>
+      <text x="182" y="131" style="font-size:10px" class="g">if-added</text>
+    </svg><figcaption>name · slots · values · facets — the facets are the whole point of a frame</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">The five parts of a script</span> ① <b>initial conditions</b> ② a sequence of <b>states and events</b> ③ <b>transitions</b>, each with a condition so steps can be skipped ④ <b>resulting conditions</b> ⑤ <b>props</b> — the roles played by objects: <i>customer</i>, <i>waiter</i>, <i>food</i>. A frame instead has a <span class="circ">name, slots, values and facets</span> — no time line at all.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Point of comparison</th><th class="l">Frame</th><th class="l">Script</th></tr>
+    <tr><td class="l">What it describes</td><td class="l">an <b>object or class</b> and its attributes</td><td class="l">a <b>situation</b> and its events in order</td></tr>
+    <tr><td class="l">Internal structure</td><td class="l">name + slots + values + facets</td><td class="l">initial + states + transitions + props</td></tr>
+    <tr><td class="l">Organised by</td><td class="l">a <b>class / instance</b> hierarchy</td><td class="l">a <b>time line</b> of states</td></tr>
+    <tr><td class="l">Handles exceptions</td><td class="l">yes — <span class="circ">default overridden</span></td><td class="l">partly — a step may be skipped</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Frame = furniture, script = theatre.</b>" A frame is a thing you point at; a script is something that happens to it in a fixed order. Facets live only in frames; props live only in scripts.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Frames are <b>not</b> a record format with typed columns — a slot may hold a value, a <b>default</b>, a range or a <b>procedure</b>. And a script is <b>not</b> a production rule: a rule is a guarantee, a script is only an expectation.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ a frame doing real work</span> Open the frame <i>CAR</i> and ask for the colour of "my car". No slot has been filled, so the engine takes the <span class="hl">default facet</span> and answers <span class="circ">white</span>. Ask for the engine of a car that has been scrapped: the <i>if-needed</i> procedure runs instead of returning a value. That is why frames are said to carry <b>procedural attachments</b>.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: propositional logic ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Propositional logic</span></div>
+  <h2><span class="no">5</span>Propositional Logic: Syntax &amp; Connectives</h2><span class="tag">highest-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Propositional (or sentential) logic treats every whole statement as a single <span class="hl">proposition</span> that is either true (T) or false (F), joined by <b>logical connectives</b>. An <b>atomic</b> proposition is a single letter P; a <b>compound</b> proposition is built from atoms and connectives.</div>
+<div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 100" width="246">
+      <g class="w">
+        <path class="ink" d="M10,26 L40,8 L40,44 Z"/>
+        <circle cx="44" cy="26" r="5" class="ink fill-b"/>
+        <path class="ink" d="M76,8 h20 a18,18 0 0 1 0,36 h-20 z"/>
+        <path class="ink" d="M120,26 C130,2 140,2 150,26 C140,50 130,50 120,26 Z"/>
+        <path class="ink" d="M176,14 L214,14 L214,38 L190,26 L176,38 Z"/>
+        <circle cx="219" cy="26" r="5" class="ink"/>
+        <path class="ink-r" d="M12,70 L62,70"/>
+        <path class="ink-g" d="M76,70 L130,70"/>
+        <path class="ink-p" d="M146,70 L218,70"/>
+      </g>
+      <text x="18" y="62" style="font-size:11px" class="k w6">NOT</text>
+      <text x="22" y="94" style="font-size:13px">¬</text>
+      <text x="84" y="62" style="font-size:11px" class="k w6">AND</text>
+      <text x="88" y="94" style="font-size:13px">∧</text>
+      <text x="134" y="62" style="font-size:11px" class="k w6">OR</text>
+      <text x="136" y="94" style="font-size:13px">∨</text>
+      <text x="182" y="62" style="font-size:11px" class="k w6">IMPLIES</text>
+      <text x="186" y="94" style="font-size:13px">→</text>
+    </svg><figcaption>the four connectives drawn as gates</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Connective</th><th>Symbol</th><th class="l">True exactly when</th></tr>
+      <tr><td class="l">negation, NOT</td><td>¬P</td><td class="l">P is false</td></tr>
+      <tr><td class="l">conjunction, AND</td><td>P ∧ Q</td><td class="l">both P and Q are true</td></tr>
+      <tr><td class="l">disjunction, OR, inclusive</td><td>P ∨ Q</td><td class="l">at least one of P, Q is true</td></tr>
+      <tr><td class="l">implication, IF–THEN</td><td>P → Q</td><td class="l"><span class="circ">anything except P true and Q false</span></td></tr>
+      <tr><td class="l">biconditional, IFF</td><td>P ↔ Q</td><td class="l">P and Q have the same truth value</td></tr>
+    </table>
+  </div>
+<table class="hand small" style="margin-top:0">
+    <tr><th>P</th><th>Q</th><th>P ∧ Q</th><th>P ∨ Q</th><th>¬P</th><th>P → Q</th><th>P ↔ Q</th></tr>
+    <tr><td>T</td><td>T</td><td>T</td><td>T</td><td>F</td><td>T</td><td>T</td></tr>
+    <tr><td>T</td><td>F</td><td class="red"><b>F</b></td><td>T</td><td>F</td><td class="red"><b>F</b></td><td>F</td></tr>
+    <tr><td>F</td><td>T</td><td>F</td><td>T</td><td>T</td><td>T</td><td>F</td></tr>
+    <tr><td>F</td><td>F</td><td>F</td><td>F</td><td>T</td><td>T</td><td>T</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Precedence, tightest first</span> <b>¬</b> → <b>∧</b> → <b>∨</b> → <b>→</b> → <b>↔</b>. Brackets beat everything: ¬(P ∧ Q) is <span class="red"><b>not</b></span> the same as (¬P) ∧ Q.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Limitation</span> Propositional logic <b>cannot</b> express variables, quantifiers or relations between objects. Nothing is shared between "Socrates is human" and "Plato is human" — the base grows as a flat list and inference cannot generalise.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ build and read a formula</span> "If it rains and I carry an umbrella, the ground stays dry." Let R = rain, U = umbrella, D = ground dry. The formula is <b>(R ∧ U) → D</b>. If R = T, U = T, D = F the implication is <span class="circ">false</span> — the one and only combination that breaks it. If R = F the formula is true whatever else happens: an implication is <b>not</b> a biconditional.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>→ only looks backwards once.</b>" P → Q is false in exactly one row, so read it as "everything is fine <i>unless</i> P happens and Q does not." Write P → Q as <b>¬P ∨ Q</b> and it becomes obvious.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) OR is <b>inclusive</b>: P ∨ P = P, not P. (ii) P → Q is <b>not</b> P ← Q. (iii) "P is false and Q is true" makes P → Q <b>true</b>, not false. (iv) A proposition is an entire sentence — you may not split "Socrates is a man" into two.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: inference, validity, tautology ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Validity &amp; inference</span></div>
+  <h2><span class="no">6</span>Validity, Satisfiability &amp; Inference Rules</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definitions — all four are about the truth table</span> A <span class="hl">tautology (valid)</span> formula is true for <b>every</b> assignment · a <span class="hl">contradiction (unsatisfiable)</span> is false for every assignment · a <span class="hl">satisfiable</span> formula is true for <b>at least one</b> assignment. "P ⊨ Q" means the truth table of <b>P → Q</b> is a tautology. n propositions need <span class="circ">2ⁿ rows</span>.</div>
+  <div class="cols" style="grid-template-columns:224px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 224 112" width="220">
+      <g class="w">
+        <rect x="4" y="6" width="66" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="4" y="58" width="66" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="154" y="6" width="66" height="26" rx="8" class="ink-r fill-r"/>
+        <path class="ink-g" d="M70,19 L106,36" marker-end="url(#ahg)"/>
+        <path class="ink-k" d="M106,25 L152,25" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M106,36 L106,71 L70,71" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M132,36 L132,48 L152,48" marker-end="url(#ah)"/>
+      </g>
+      <text x="37" y="24" text-anchor="middle" style="font-size:12px" class="k w6">P</text>
+      <text x="37" y="76" text-anchor="middle" style="font-size:11px" class="k w6">P → Q</text>
+      <text x="187" y="24" text-anchor="middle" style="font-size:12px" class="r w6">Q</text>
+      <text x="106" y="60" style="font-size:10px" class="k">modus ponens</text>
+      <text x="112" y="104" text-anchor="middle" style="font-size:9px" class="g">modus tollens: ¬Q, P → Q ⇒ ¬P</text>
+    </svg><figcaption>fact + rule → new fact: the only pattern every expert system runs</figcaption></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Rule of inference</th><th class="l">From</th><th class="l">Conclude</th></tr>
+      <tr><td class="l">Modus ponens</td><td class="l">P, P → Q</td><td class="l"><b>Q</b></td></tr>
+      <tr><td class="l">Modus tollens</td><td class="l">¬Q, P → Q</td><td class="l"><b>¬P</b></td></tr>
+      <tr><td class="l">Hypothetical syllogism</td><td class="l">P → Q, Q → R</td><td class="l"><b>P → R</b></td></tr>
+      <tr><td class="l">Disjunctive syllogism</td><td class="l">P ∨ Q, ¬P</td><td class="l"><b>Q</b></td></tr>
+      <tr><td class="l">Addition</td><td class="l">P</td><td class="l"><b>P ∨ Q</b></td></tr>
+      <tr><td class="l">Simplification</td><td class="l">P ∧ Q</td><td class="l"><b>P</b></td></tr>
+      <tr><td class="l">Resolution</td><td class="l">P ∨ Q, ¬P ∨ R</td><td class="l"><b>Q ∨ R</b></td></tr>
+    </table>
+  </div>
+  <div class="cols3">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 1 ✍ classify four formulas</span> (a) <b>P ∨ ¬P</b> — T in every row ⟹ <span class="circ">tautology</span>. (b) <b>P ∧ ¬P</b> — F in every row ⟹ <span class="circ">contradiction</span>. (c) <b>P → (Q ∨ ¬Q)</b> — consequent always true ⟹ tautology. (d) <b>(P ∨ Q) ∧ ¬P</b> — true when P = F, Q = T ⟹ satisfiable, not valid.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example 2 ✍ modus tollens in the clinic</span> From <i>P → Q</i> = "if the patient took the drug, the rash clears" and <i>¬Q</i> = "the rash has not cleared", modus tollens gives <span class="circ">¬P</span>: the patient did not take the drug.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Why resolution wins</span> Modus ponens needs a matching fact at every step; resolution needs only two clauses, and it alone works on disjunctions — hence automated theorem proving (Robinson, <span class="circ">1965</span>).</div>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Tautology always, satisfiable sometimes, contradiction never.</b>" Tautology = true <i>always</i>; contradiction = true <i>never</i>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> "Valid" and "true" are <b>not</b> the same: valid only if <i>every</i> assignment makes it true. P ⊨ Q does <b>not</b> give Q.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: first-order logic ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>First-order logic</span></div>
+  <h2><span class="no">7</span>First-Order Logic, Predicates &amp; Quantifiers</h2><span class="tag">most written ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">First-order logic (FOL)</span> extends propositional logic with <b>objects, predicates over them, functions and quantifiers</b>. A formula is built from atomic formulas <i>P(t₁,…,tₙ)</i> using connectives and quantifiers.</div>
+  <table class="hand small" style="width:100%;margin-top:0">
+      <tr><th class="l">Component</th><th class="l">What it is</th><th class="l">Example</th></tr>
+      <tr><td class="l">Constant</td><td class="l">one named individual</td><td class="l">Socrates</td></tr>
+      <tr><td class="l">Variable</td><td class="l">an arbitrary individual</td><td class="l">x, y</td></tr>
+      <tr><td class="l">Function</td><td class="l">individual → individual</td><td class="l">FatherOf(x)</td></tr>
+      <tr><td class="l">Predicate</td><td class="l">property or n-place relation</td><td class="l">Human(x), Loves(a,b)</td></tr>
+      <tr><td class="l">Quantifier</td><td class="l">ranges the variable</td><td class="l">∀x, ∃y</td></tr>
+    </table>
+<div class="cols" style="grid-template-columns:1fr 236px;align-items:start">
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The two quantifiers</span> <b>∀</b> "for <b>all</b> x …" · <b>∃</b> "there <b>exists</b> x such that …". <span class="circ">Their order matters.</span> A <b>WFF</b> is any well-formed formula; a <b>sentence</b> is a WFF with no free variables.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 236 118" width="232">
+      <g class="w">
+        <rect x="4" y="6" width="108" height="106" rx="9" class="ink-p"/>
+        <rect x="124" y="6" width="108" height="106" rx="9" class="ink-g"/>
+        <circle cx="58" cy="38" r="12" class="ink-p fill-p"/>
+        <circle cx="28" cy="76" r="7" class="ink-p"/><circle cx="58" cy="76" r="7" class="ink-p"/><circle cx="88" cy="76" r="7" class="ink-p"/>
+        <path class="ink-p" d="M53,47 L30,70 M58,47 L58,69 M63,47 L86,70"/>
+        <circle cx="28" cy="38" r="7" class="ink-g"/><circle cx="58" cy="38" r="7" class="ink-g"/><circle cx="88" cy="38" r="7" class="ink-g"/>
+        <circle cx="28" cy="76" r="7" class="ink-g fill-g"/><circle cx="58" cy="76" r="7" class="ink-g fill-g"/><circle cx="88" cy="76" r="7" class="ink-g fill-g"/>
+        <path class="ink-g" d="M30,45 L30,69 M58,45 L58,69 M90,45 L90,69"/>
+      </g>
+      <text x="58" y="20" text-anchor="middle" style="font-size:11px" class="p w6">∃x ∀y</text>
+      <text x="58" y="102" text-anchor="middle" style="font-size:10px" class="p">loves everyone</text>
+      <text x="178" y="20" text-anchor="middle" style="font-size:11px" class="g w6">∀x ∃y</text>
+      <text x="178" y="102" text-anchor="middle" style="font-size:10px" class="g">loves someone</text>
+    </svg><figcaption>the quantifier order changes the meaning</figcaption></figure>
+  </div>
+<table class="hand small" style="width:100%">
+  <tr><th class="l">English sentence</th><th class="l">First-order form</th><th class="l">Feature</th><th class="l">Propositional</th><th class="l">First-order</th></tr>
+  <tr><td class="l">All humans are mortal</td><td class="l">∀x (Human(x) → Mortal(x))</td><td class="l">Talks about</td><td class="l">whole statements</td><td class="l">objects, relations</td></tr>
+  <tr><td class="l">Someone loves everyone</td><td class="l">∃x ∀y Loves(x, y)</td><td class="l">Quantifiers</td><td class="l"><span class="red">none</span></td><td class="l"><span class="circ">∀ and ∃</span></td></tr>
+  <tr><td class="l">Everyone loves someone</td><td class="l">∀x ∃y Loves(x, y)</td><td class="l">Cost</td><td class="l">cheap, 2ⁿ rows</td><td class="l"><b>expensive</b></td></tr>
+</table>
+<div class="cols">
+  <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>∀ says every, ∃ says at least one.</b>" The <b>→ inside</b> the ∀ is what keeps "all humans are mortal" true even when some x is not a human: Human(x) → Mortal(x) never asserts Mortality of a non-human.</div>
+  <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> ∀x P(x) is <b>not</b> P(a). And "all humans are mortal" must <b>not</b> be written ∀x (Human(x) ∧ Mortal(x)) — that would claim everybody is both human and mortal.</div>
+</div>
+<div class="ex tiny" style="margin-bottom:1mm"><span class="lbl">Worked example ✍ why the order matters</span> Committee rule: "every member has at least one car" = ∀x (Member(x) → ∃y (Car(y) ∧ Owns(x,y))). The two quantifiers can pick <b>different</b> cars for <b>different</b> members, so the base stays consistent — but as soon as the committee shrinks to <b>one member and no cars</b>, ∀x∃y fails while its negation is still available, which is exactly the case a resolution engine detects automatically.</div>
+<div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: unification, resolution, Horn ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Unification &amp; resolution</span></div>
+  <h2><span class="no">8</span>Unification, Resolution &amp; Horn Clauses</h2><span class="tag">Robinson 1965 ★</span>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 250 128" width="246">
+        <g class="w">
+          <rect x="4" y="6" width="106" height="26" rx="7" class="ink fill-b"/>
+          <rect x="140" y="6" width="106" height="26" rx="7" class="ink fill-b"/>
+          <rect x="54" y="58" width="142" height="26" rx="7" class="ink-g fill-g"/>
+          <path class="ink-g" d="M56,32 C48,50 78,54 96,60" marker-end="url(#ahg)"/>
+          <path class="ink-g" d="M194,32 C202,50 172,54 154,60" marker-end="url(#ahg)"/>
+          <path class="ink-r" d="M4,100 L246,100" stroke-dasharray="5 4"/>
+        </g>
+        <text x="57" y="24" text-anchor="middle" style="font-size:11px">Loves(x, Bob)</text>
+        <text x="193" y="24" text-anchor="middle" style="font-size:11px">Loves(Alice, y)</text>
+        <text x="125" y="47" text-anchor="middle" style="font-size:11px" class="g">x↦Alice, y↦Bob</text>
+        <text x="125" y="77" text-anchor="middle" style="font-size:11px" class="g w6">Loves(Alice, Bob)</text>
+        <text x="125" y="120" text-anchor="middle" style="font-size:11px" class="r">P(x) and Q(y) clash</text>
+      </svg><figcaption>unify before you match: that is all inference in one picture</figcaption></figure>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Algorithm</span> Walk the atoms left to right. Equal constants → go on. A variable on either side → <span class="hl">bind it to the other term</span>. Different constants → clash. Never bind a variable to a term that already contains it (occurs check): X = f(X) has no solution.</div>
+    </div>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Unification</span> <span class="hl">Unification</span> is finding a substitution for the variables of two atoms so that they become identical. The result is the <b>most general unifier (MGU)</b>; when no substitution exists the two atoms <span class="red"><b>clash</b></span>.</div>
+      <table class="hand small" style="width:100%;margin-top:2mm">
+        <tr><th class="l">Atom pair</th><th class="l">Most general unifier</th></tr>
+        <tr><td class="l">Loves(x, Bob) , Loves(Alice, y)</td><td class="l">{x↦Alice, y↦Bob}</td></tr>
+        <tr><td class="l">Human(x) , Human(Socrates)</td><td class="l">{x↦Socrates}</td></tr>
+        <tr><td class="l">P(x) , Q(y)</td><td class="l"><span class="red"><b>clash — none</b></span></td></tr>
+        <tr><td class="l">P(x, y) , P(y, z)</td><td class="l">{y↦x, z↦x}</td></tr>
+      </table>
+      <div class="sumbox small" style="margin-top:2mm"><span class="lbl">Refutation by resolution</span> To prove goal φ, convert every statement to <b>clause form</b>, add the <b>negated</b> goal, and resolve clauses repeatedly. Two clauses that resolve to the <span class="circ">empty clause</span> prove the goal. Sound, and complete for FOL by Robinson's theorem.</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ prove Mortal(Socrates) by resolution</span>
+    <ol class="steps tiny">
+      <li>KB: Human(Socrates) · Human(x) → Mortal(x)</li>
+      <li>Clause form: <b>C₁ = Human(Socrates)</b>, <b>C₂ = ¬Human(x) ∨ Mortal(x)</b>; add the negated goal <b>C₃ = ¬Mortal(Socrates)</b></li>
+      <li>Resolve C₁ with C₂ — <i>Human</i> and <i>¬Human</i> disappear: <b>C₄ = Mortal(Socrates)</b></li>
+      <li>Resolve C₄ with C₃ — <i>Mortal</i> and <i>¬Mortal</i> disappear ⟹ <span class="circ">the empty clause</span>, so the goal is proved</li>
+    </ol></div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Prove by not-proving.</b>" Refutation: add ¬goal and search for a contradiction. Resolution is the only rule that consumes a <b>disjunction</b>, and every formula can be turned into a disjunction of disjunctions.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Resolving (P ∨ Q) with (¬P ∨ R) gives <b>Q ∨ R</b> — you drop the <b>complementary</b> pair P, ¬P and keep both remaining literals joined by <b>∨</b>, never ∧. Horn clauses, next box, cannot express a disjunction in the head at all.</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Horn clauses — why the exam loves them</span> A <span class="circ">Horn clause has at most one positive literal</span>, i.e. H ← B₁ ∧ B₂ ∧ … ∧ Bₙ. Three consequences: <b>forward chaining is complete</b> for Horn knowledge · <b>backward chaining is complete</b> as well · the logic is <span class="hl">monotonic</span> — adding facts never removes conclusions. Horn logic is exactly what Datalog and every production system run on.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: forward vs backward chaining ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Forward vs backward</span></div>
+  <h2><span class="no">9</span>Forward and Backward Chaining</h2><span class="tag">the classic question ★</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:start">
+    <div class="def small" style="margin-top:0"><span class="lbl">Forward chaining</span> <b>Data-driven, bottom-up.</b> Start from the facts, fire every rule whose antecedents are satisfied, and add each conclusion to the working memory. Repeat until nothing fires.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Backward chaining</span> <b>Goal-driven, top-down.</b> Start from the goal, find the rule whose head matches it, and recurse on that rule's antecedents until only facts remain.</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 640 172" width="600">
+    <g class="w">
+      <rect x="4" y="6" width="306" height="158" rx="11" class="ink-g"/>
+      <rect x="330" y="6" width="306" height="158" rx="11" class="ink-p"/>
+      <text x="157" y="26" text-anchor="middle" class="g" style="font-size:13px" font-weight="700">FORWARD · facts → goal</text>
+      <rect x="20" y="112" width="80" height="26" rx="7" class="ink-g fill-g"/>
+      <rect x="112" y="112" width="80" height="26" rx="7" class="ink-g fill-g"/>
+      <rect x="20" y="72" width="80" height="26" rx="7" class="ink fill-b"/>
+      <rect x="112" y="72" width="80" height="26" rx="7" class="ink fill-b"/>
+      <rect x="206" y="72" width="76" height="26" rx="7" class="ink-r fill-r"/>
+      <path class="ink-g" d="M60,112 L60,100 M152,112 L152,100 M244,85 L244,72"/>
+      <path class="ink-g" d="M100,85 L112,85" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M24,152 L290,152" marker-end="url(#ahg)"/>
+      <text x="157" y="48" text-anchor="middle" class="r" style="font-size:12px" font-weight="700">GOAL</text>
+      <text x="244" y="61" text-anchor="middle" class="r" style="font-size:10px">derived</text>
+      <text x="60" y="130" text-anchor="middle" style="font-size:11px">FACT</text>
+      <text x="152" y="130" text-anchor="middle" style="font-size:11px">FACT</text>
+      <text x="60" y="90" text-anchor="middle" style="font-size:11px">new</text>
+      <text x="152" y="90" text-anchor="middle" style="font-size:11px">new</text>
+      <text x="157" y="149" text-anchor="middle" class="g" style="font-size:10px">breadth ↑, relevance ↓</text>
+      <text x="483" y="26" text-anchor="middle" class="p" style="font-size:13px" font-weight="700">BACKWARD · goal → facts</text>
+      <rect x="346" y="112" width="132" height="26" rx="7" class="ink-g fill-g"/>
+      <rect x="498" y="112" width="120" height="26" rx="7" class="ink-g fill-g"/>
+      <rect x="346" y="72" width="132" height="26" rx="7" class="ink fill-b"/>
+      <rect x="498" y="72" width="120" height="26" rx="7" class="ink fill-b"/>
+      <rect x="380" y="40" width="200" height="26" rx="7" class="ink-r fill-r"/>
+      <path class="ink-p" d="M412,98 L412,110" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M478,125 L498,125" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M412,66 L412,58" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M558,66 L558,58" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M350,152 L624,152" marker-end="url(#ahp)"/>
+      <text x="480" y="61" text-anchor="middle" class="r" style="font-size:12px" font-weight="700">GOAL asked</text>
+      <text x="412" y="130" text-anchor="middle" style="font-size:11px">FACT</text>
+      <text x="558" y="130" text-anchor="middle" style="font-size:11px">FACT</text>
+      <text x="412" y="90" text-anchor="middle" style="font-size:11px">need</text>
+      <text x="558" y="90" text-anchor="middle" style="font-size:11px">need</text>
+      <text x="483" y="149" text-anchor="middle" class="p" style="font-size:10px">relevance ↑, work done ↓</text>
+    </g>
+  </svg><figcaption>both use the same rules — only the direction of travel differs</figcaption></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Point of comparison</th><th class="l">Forward chaining</th><th class="l">Backward chaining</th></tr>
+    <tr><td class="l">Starts from</td><td class="l">the facts (data-driven)</td><td class="l">the goal (goal-driven)</td></tr>
+    <tr><td class="l">Answers</td><td class="l"><b>everything</b> derivable</td><td class="l"><b>only</b> what the goal needs</td></tr>
+    <tr><td class="l">Cost</td><td class="l">may explode: many firings, irrelevant facts</td><td class="l">cheap when the goal is specific</td></tr>
+    <tr><td class="l">Explainability</td><td class="l">full — you can print the whole chain</td><td class="l">partial — only the proof needed</td></tr>
+    <tr><td class="l">Best when</td><td class="l">monitoring, all facts known, many questions</td><td class="l">diagnosis, one clear question, missing facts</td></tr>
+    <tr><td class="l">Complete for</td><td class="l">Horn knowledge</td><td class="l">Horn knowledge</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Forward looks up, backward looks down.</b>" Forward climbs from data to conclusions; backward descends from the question to the data. "Forward is thorough, backward is targeted" is the one-line answer to the written question.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Backward chaining does <b>not</b> invent facts — if the knowledge base does not support the goal it simply <b>fails</b>; it never guesses. When several rules fire at once the engine needs a <b>conflict-resolution strategy</b> (breadth-first, depth-first, most-specific, most-recent).</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ choose the direction</span> <b>(a)</b> A bank must flag every transaction above 10 000 taka <i>as it happens</i> — all facts are known and there is no single question: <span class="circ">forward chaining</span>. <b>(b)</b> A doctor types "diagnosis?" and the system must justify one answer from thousands of symptoms: <span class="circ">backward chaining</span>. <b>(c)</b> The knowledge base contains a disjunction P ∨ Q, which is not Horn: neither chaining is complete, and <span class="circ">resolution</span> is the answer.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:24pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>KR = formal encoding of information for reasoning</p><p>Six schemes: logic, net, frame, rules, script, ontology</p>
+      <p>Quillian 1968 · Minsky 1975 · Schank &amp; Abelson 1977</p><p>Robinson 1965 (resolution)</p>
+      <p>Semantic net: nodes + labelled arcs, inheritance</p><p>Frame: slots, values, facets, defaults</p>
+      <p>Script: initial, states, transitions, result, props</p><p>Ontology: vocabulary + axioms</p>
+      <p>Connectives: ¬ ∧ ∨ → ↔</p><p>P → Q false only when P = T, Q = F</p>
+      <p>Precedence: ¬ &gt; ∧ &gt; ∨ &gt; → &gt; ↔</p><p>P → Q ≡ ¬P ∨ Q ≡ contrapositive ¬Q → ¬P</p>
+      <p>Modus ponens P, P→Q ⊢ Q</p><p>Modus tollens ¬Q, P→Q ⊢ ¬P</p>
+      <p>Resolution: (P∨Q), (¬P∨R) ⇒ (Q∨R)</p><p>Tautology = always true · contradiction = never</p>
+      <p>∀x P(x) · ∃x P(x) · order matters</p><p>Horn clause: at most one positive literal</p>
+      <p>Forward = facts → goal · Backward = goal → facts</p><p>Both complete for Horn; Horn is monotonic</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Semantic networks: <b>Quillian, 1968</b></li>
+      <li>Frames: <b>Minsky, 1975</b></li>
+      <li>Scripts: <b>Schank &amp; Abelson, 1977</b></li>
+      <li>Resolution: <b>Robinson, 1965</b></li>
+      <li>IS-A only goes subclass → superclass</li>
+      <li>A semantic network has <b>no formal semantics</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>A frame carries <b>defaults and procedures</b></li>
+      <li>A script stores only what <b>usually</b> happens</li>
+      <li>Forward chaining: data-driven, <b>bottom-up</b></li>
+      <li>Backward chaining: goal-driven, <b>top-down</b></li>
+      <li>Resolution is <b>complete</b> for FOL by Robinson</li>
+      <li>Horn = <b>at most one positive literal</b></li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> P → Q is true when P is false · OR is inclusive · resolution keeps <b>∨</b>, never ∧ · modus tollens needs ¬Q, not P · ∃x ∀y ≠ ∀x ∃y · "all humans are mortal" uses <b>→</b> inside ∀, not ∧ · a script is not a plan · a frame is not a typed table row · backward chaining never guesses.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "Representation left, reasoning right" · "IS-A class arrow, HAS-A ownership arrow" · "Frame = furniture, script = theatre" · "→ only looks backwards once" · "Tautology always, satisfiable sometimes, contradiction never" · "∀ says every, ∃ says at least one" · "Prove by not-proving" · "Forward looks up, backward looks down".</div>
+  <figure class="doodle"><svg viewBox="0 0 620 88" width="560">
+    <g class="w">
+      <circle cx="60" cy="36" r="27" class="ink fill-b"/>
+      <circle cx="168" cy="36" r="27" class="ink-g fill-g"/>
+      <circle cx="276" cy="36" r="27" class="ink-r fill-r"/>
+      <circle cx="384" cy="36" r="27" class="ink-r fill-r"/>
+      <circle cx="492" cy="36" r="27" class="ink-r fill-r"/>
+      <path class="ink-g" d="M89,36 H138 M197,36 H246 M305,36 H354 M413,36 H462" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M492,64 C410,80 140,80 58,64" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="41" text-anchor="middle" class="w6 s">fact</text>
+    <text x="168" y="42" text-anchor="middle" class="w6 l">rule</text>
+    <text x="276" y="41" text-anchor="middle" class="r w6 s">unify</text>
+    <text x="384" y="41" text-anchor="middle" class="r w6 s">chain</text>
+    <text x="492" y="41" text-anchor="middle" class="r w6 s">refute</text>
+    <text x="114" y="27" text-anchor="middle" class="g" style="font-size:10px">one loop</text>
+    <text x="222" y="27" text-anchor="middle" class="g" style="font-size:10px">one loop</text>
+    <text x="330" y="27" text-anchor="middle" class="g" style="font-size:10px">one loop</text>
+    <text x="438" y="27" text-anchor="middle" class="g" style="font-size:10px">one loop</text>
+    <text x="310" y="84" text-anchor="middle" class="p s">and the new fact goes straight back into the base</text>
+  </svg><figcaption>fact + rule → unify → chain → refute, and the loop starts again</figcaption></figure>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · Knowledge Representation</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set" style="font-size:11pt">
+    <div class="mcq" style="font-size:11pt"><span class="qn">1.</span>Knowledge representation is:<ol class="opts"><li>a language</li><li>formal encoding for reasoning</li><li>a search algorithm</li><li>a database engine</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">2.</span>A semantic network uses:<ol class="opts"><li>nodes and labelled arcs</li><li>truth-table rows</li><li>IF–THEN rules only</li><li>slot tables only</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">3.</span>Frames are associated with:<ol class="opts"><li>Quillian</li><li>Robinson</li><li>Schank</li><li>Minsky</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">4.</span>P → Q is false only when:<ol class="opts"><li>P false, Q true</li><li>both false</li><li>P true, Q false</li><li>both true</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">5.</span>From P and P → Q, concluding Q uses:<ol class="opts"><li>modus tollens</li><li>modus ponens</li><li>hypothetical syll.</li><li>disjunctive syll.</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">6.</span>P → Q is equivalent to:<ol class="opts"><li>Q → P</li><li>¬P → ¬Q</li><li>¬Q → ¬P</li><li>P ∧ ¬Q</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">7.</span>Resolving (P ∨ Q) with (¬P ∨ R) gives:<ol class="opts"><li>(Q ∨ R)</li><li>(P ∨ R)</li><li>(¬Q ∨ R)</li><li>(Q ∧ R)</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">8.</span>"All men are mortal" is:<ol class="opts"><li>∃x (Man(x) → Mortal(x))</li><li>∀x (Man(x) → Mortal(x))</li><li>∀x (Man(x) ∧ Mortal(x))</li><li>∃x Man(x) ∧ ∃x Mortal(x)</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">9.</span>A Horn clause has at most:<ol class="opts"><li>one negative literal</li><li>one positive literal</li><li>one variable</li><li>one predicate</li></ol></div>
+    <div class="mcq" style="font-size:11pt"><span class="qn">10.</span>Forward chaining begins from:<ol class="opts"><li>the goal</li><li>the rules</li><li>the facts in memory</li><li>the refutation</li></ol></div>
+  </div>
+  <div class="anskey" style="font-size:12pt">Answer key → 1-b · 2-a · 3-d · 4-c · 5-b · 6-c · 7-a · 8-b · 9-b · 10-c</div>
+
+  <div class="wq tiny" style="line-height:6mm;margin:1mm 0"><span class="lbl">Written question</span> Define knowledge representation and name four schemes with one strength and one weakness each. Then for the KB <i>Human(Socrates)</i> and <i>Human(x) → Mortal(x)</i>: (a) write the first-order form, (b) convert it to clause form, (c) use resolution to prove Mortal(Socrates), (d) is forward or backward chaining better here, and why? <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:0">
+    <li><b>Definition and schemes (3)</b> — KR is the formal encoding of information so that an AI system can reason over it. Schemes: logic (exact, no partial knowledge) · semantic network (inherits facts, no formal semantics) · frame (defaults, but rigid) · production rules (modular, but slow). <i class="mk">3</i></li>
+    <li><b>First-order form (1)</b> — Human(Socrates) and ∀x (Human(x) → Mortal(x)). <i class="mk">1</i></li>
+    <li><b>Clause form (2)</b> — ¬Human(x) ∨ Mortal(x), quantifier dropped: C₁ = Human(Socrates), C₂ = ¬Human(x) ∨ Mortal(x). <i class="mk">2</i></li>
+    <li><b>Resolution (3)</b> — add negated goal C₃ = ¬Mortal(Socrates); C₁ with C₂ → Mortal(Socrates); that with C₃ → empty clause, goal proved. <i class="mk">3</i></li>
+    <li><b>Direction (1)</b> — both are complete for this Horn base; backward chaining, because one question is asked. <i class="mk">1</i></li>
+  </ol>
+  <div class="cols tiny" style="margin-top:1mm">
+    <ul class="tick"><li>Can define KR, list five schemes</li><li>Can build a truth table for → and ↔</li></ul>
+    <ul class="tick"><li>Can translate a sentence into ∀ / ∃</li><li>Can unify two atoms, resolve two clauses</li></ul>
+    <ul class="tick"><li>Can state the chaining trade-off</li><li>Knows what a Horn clause is</li></ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

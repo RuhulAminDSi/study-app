@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>অভ্যন্তরীণ ডেটা উপস্থাপন ও অ্যাবস্ট্রাক্ট ডেটা টাইপ: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ডেটা উপস্থাপন ও অ্যাবস্ট্রাক্ট ডেটা টাইপ</span></h1>
+  <p class="subtitle">বিট · 2's কমপ্লিমেন্ট · IEEE 754 · ADT · অ্যারে · লিস্ট · স্ট্যাক · কিউ · ট্রি · গ্রাফ: ১২ পাতায় পরীক্ষার প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink fill-b"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">ডেটা</text><text x="320" y="172" text-anchor="middle" class="bn r s">বিট → ADT → স্ট্রাকচার</text>
+      <text x="142" y="56" text-anchor="middle" class="bn r w6" style="font-size:11px">2's কমপ্লিমেন্ট</text><text x="142" y="70" text-anchor="middle" class="bn r w6" style="font-size:11px">রেঞ্জ ★</text>
+      <text x="320" y="40" text-anchor="middle" class="s" style="font-size:12px">IEEE 754 · ASCII</text>
+      <text x="498" y="56" text-anchor="middle" class="bn g w6" style="font-size:11px">ADT = কী করে,</text><text x="498" y="70" text-anchor="middle" class="bn g w6" style="font-size:11px">কীভাবে নয়</text>
+      <text x="96" y="154" text-anchor="middle" class="bn s" style="font-size:11px">অ্যারে: অ্যাড্রেস</text><text x="96" y="168" text-anchor="middle" class="bn s" style="font-size:11px">সূত্র</text>
+      <text x="544" y="150" text-anchor="middle" class="bn r w6" style="font-size:11px">স্ট্যাক · পোস্টফিক্স</text><text x="544" y="164" text-anchor="middle" class="bn r w6" style="font-size:11px">LIFO ★</text>
+      <text x="142" y="244" text-anchor="middle" class="bn r w6" style="font-size:11px">কিউ · সার্কুলার</text><text x="142" y="258" text-anchor="middle" class="bn r w6" style="font-size:11px">FIFO ★</text>
+      <text x="320" y="268" text-anchor="middle" class="bn r w6" style="font-size:12px">বাইনারি ট্রি ★</text>
+      <text x="498" y="244" text-anchor="middle" class="bn s" style="font-size:11px">লিংকড লিস্ট</text><text x="498" y="258" text-anchor="middle" class="bn s" style="font-size:11px">· গ্রাফ</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = যে ধারণা সবকিছু জুড়ে রাখে</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;line-height:5.8mm"><b>হাই-ইল্ড তালিকা</b><br>① n-বিট 2's কমপ্লিমেন্ট: <b>−2<sup>n−1</sup> … 2<sup>n−1</sup>−1</b><br>② −5 (8-বিট 2's) = <b>11111011</b><br>③ IEEE 754 সিঙ্গেল: 1 + 8 + 23, <b>বায়াস 127</b><br>④ ADT = অপারেশন, ইমপ্লিমেন্টেশন নয়<br>⑤ রো-মেজর: B + w[(i−L<sub>r</sub>)n + (j−L<sub>c</sub>)]<br>⑥ স্ট্যাক = <b>LIFO</b>, কিউ = <b>FIFO</b><br>⑦ সার্কুলার কিউ পূর্ণ: <b>(rear+1) % n == front</b><br>⑧ 2 3 4 * + = <b>14</b><br>⑨ বাইনারি ট্রি: n<sub>0</sub> = n<sub>2</sub> + 1, সর্বোচ্চ 2<sup>h+1</sup>−1 নোড<br>⑩ অ্যাডজ. ম্যাট্রিক্স <span class="circ">O(V²)</span> · লিস্ট O(V+E)</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">ডেটা স্ট্রাকচার ও অ্যালগরিদমের সিলেবাস শুরু হয়: "<span class="hl">Internal data representation; Abstract data types; Elementary data structures: arrays, lists, stacks, queues, trees, graphs</span>; Advanced data structures: heaps, Fibonacci heaps, B-trees; Recursion, sorting, searching, hashing, storage management …" <b>এই লেসন প্রথম তিনটি অংশ নেয়।</b> হিপ ও B-ট্রি, সর্টিং/সার্চিং/হ্যাশিং এবং গ্রাফ অ্যালগরিদমের আলাদা লেসন আছে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>বিট, টাইপ, সাইনড ইন্টিজার … পৃ. ২</li><li>IEEE 754, ক্যারেক্টার কোড … পৃ. ৩</li><li>অ্যাবস্ট্রাক্ট ডেটা টাইপ … পৃ. ৪</li><li>অ্যারে ও অ্যাড্রেস সূত্র … পৃ. ৫</li><li>লিংকড লিস্ট … পৃ. ৬</li><li>স্ট্যাক, ইনফিক্স → পোস্টফিক্স … পৃ. ৭</li></ul>
+    <ul class="tick"><li>কিউ, সার্কুলার, ডেক … পৃ. ৮</li><li>ট্রি, বাইনারি ট্রি … পৃ. ৯</li><li>গ্রাফ, কমপ্লেক্সিটি টেবিল … পৃ. ১০</li><li>রাতের পরীক্ষার পাতা … পৃ. ১১</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: bits, types, signed integers ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>বিট, টাইপ, ইন্টিজার</span></div>
+  <h2><span class="no">১</span>বিট, ডেটা টাইপ ও সাইনড ইন্টিজার</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>অভ্যন্তরীণ ডেটা উপস্থাপন (Internal data representation)</b> হলো সংখ্যা, অক্ষর ও নির্দেশনাকে <span class="hl">বাইনারি প্যাটার্নে</span> সংরক্ষণের পদ্ধতি। <b>বিট</b> = একটি 0/1, <b>নিবল</b> = 4 বিট, <b>বাইট</b> = 8 বিট, <b>ওয়ার্ড</b> = CPU-র স্বাভাবিক একক (16/32/64 বিট)। প্যাটার্নের অর্থ ঠিক করে <b>টাইপ</b>: <code>01000001</code> ইন্টিজার হিসেবে 65, ASCII হিসেবে 'A'। n বিটে <span class="circ">2<sup>n</sup> প্যাটার্ন</span>, তাই <b>আনসাইনড</b> n-বিট ইন্টিজারের রেঞ্জ <span class="hl">0 … 2<sup>n</sup> − 1</span> (8-বিট 0…255, 16-বিট 0…65535)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">প্রিমিটিভ বনাম নন-প্রিমিটিভ</span> <b>প্রিমিটিভ (Primitive)</b>: ভাষায় অন্তর্নির্মিত — int, char, float, double, boolean, pointer। <b>নন-প্রিমিটিভ</b>: এগুলো দিয়ে তৈরি — <b>লিনিয়ার</b> (অ্যারে, লিস্ট, স্ট্যাক, কিউ) ও <b>নন-লিনিয়ার</b> (ট্রি, গ্রাফ)। বেস রূপান্তর সংখ্যা-পদ্ধতির লেসনে; ১টি হেক্স অঙ্ক = 4 বিট।</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">C টাইপ</th><th>আকার</th><th class="l">সাধারণ রেঞ্জ</th></tr>
+      <tr><td class="l">char / unsigned char</td><td>1 B</td><td class="l">−128…127 / 0…255</td></tr>
+      <tr><td class="l">short</td><td>2 B</td><td class="l">−32768…32767</td></tr>
+      <tr><td class="l">int / long long</td><td>4 / 8 B</td><td class="l">−2<sup>31</sup>…2<sup>31</sup>−1 / −2<sup>63</sup>…</td></tr>
+      <tr><td class="l">float / double</td><td>4 / 8 B</td><td class="l">~7 / ~15–16 অঙ্ক</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">n বিটে ঋণাত্মক সংখ্যা রাখার তিন উপায়</span> <b>সাইন-ম্যাগনিচুড (Sign-magnitude)</b>: MSB = চিহ্ন (0 +, 1 −), বাকিটা |x|। <b>1's কমপ্লিমেন্ট</b>: +x-এর সব বিট উল্টাও। <b>2's কমপ্লিমেন্ট</b>: সব বিট উল্টে <span class="hl">1 যোগ</span> (= 2<sup>n</sup> − x)। CPU ব্যবহার করে <span class="hl">2's কমপ্লিমেন্ট</span>: শূন্য একটিই, আর একই অ্যাডারে যোগ-বিয়োগ দুটোই।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 120" width="460">
+    <g class="w">
+      <rect x="10" y="6" width="190" height="36" rx="6" class="ink fill-b"/>
+      <rect x="215" y="6" width="190" height="36" rx="6" class="ink-g fill-g"/>
+      <rect x="420" y="6" width="190" height="36" rx="6" class="ink-r fill-r"/>
+      <rect x="10" y="78" width="190" height="36" rx="6" class="ink fill-b"/>
+      <rect x="215" y="78" width="190" height="36" rx="6" class="ink fill-b"/>
+      <rect x="420" y="78" width="190" height="36" rx="6" class="ink-r fill-y"/>
+      <path class="ink" d="M105,42 V74" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M310,42 V74" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M515,42 V74" marker-end="url(#ah)"/>
+    </g>
+    <text x="105" y="30" text-anchor="middle" class="k w6">+5 = 00000101</text>
+    <text x="310" y="30" text-anchor="middle" class="bn g w6">সব বিট উল্টাও</text>
+    <text x="515" y="30" text-anchor="middle" class="bn r w6">উল্টাও, তারপর +1</text>
+    <text x="105" y="102" text-anchor="middle" class="k w6">S-M: 10000101</text>
+    <text x="310" y="102" text-anchor="middle" class="k w6">1's: 11111010</text>
+    <text x="515" y="102" text-anchor="middle" class="r w6">2's: 11111011</text>
+  </svg><figcaption>8 বিটে −5, তিন রূপে (4-বিটে: 1101 · 1010 · 1011)</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">পদ্ধতি</th><th class="l">n-বিট রেঞ্জ</th><th>8-বিট রেঞ্জ</th><th class="l">শূন্য</th><th>−5 (4-বিট)</th></tr>
+    <tr><td class="l">সাইন-ম্যাগনিচুড</td><td class="l">−(2<sup>n−1</sup>−1) … 2<sup>n−1</sup>−1</td><td>−127 … 127</td><td class="l"><span class="red"><b>দুটি</b></span> (+0, −0)</td><td>1101</td></tr>
+    <tr><td class="l">1's কমপ্লিমেন্ট</td><td class="l">−(2<sup>n−1</sup>−1) … 2<sup>n−1</sup>−1</td><td>−127 … 127</td><td class="l"><span class="red"><b>দুটি</b></span></td><td>1010</td></tr>
+    <tr><td class="l"><b>2's কমপ্লিমেন্ট</b></td><td class="l"><span class="circ">−2<sup>n−1</sup> … 2<sup>n−1</sup>−1</span></td><td><b>−128 … 127</b></td><td class="l">একটি</td><td><b>1011</b></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"প্রথম 1 পর্যন্ত কপি, বাকিটা উল্টাও।"</b> ডান দিক থেকে +x পড়ো, প্রথম 1 সহ সেখান পর্যন্ত বিট হুবহু রাখো, বাকিগুলো উল্টাও: 0000010<u>1</u> → 1111101<u>1</u>। <b>ডিকোড</b> করতে MSB-এর ওজন <b>−2<sup>n−1</sup></b>: 11111011 = −128 + 123 = <b>−5</b>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> 2's কমপ্লিমেন্ট <b>অসম</b>: 8 বিটে −128 আছে, +128 নেই। "−5-এর 2's কমপ্লিমেন্ট" প্রশ্নে <b>10000101</b> (S-M) ও <b>11111010</b> (1's) হলো ভুল বিকল্প। বিট বাড়াতে <b>সাইন বিট কপি</b> করো: 1011 → 1111 1011 (সাইন এক্সটেনশন)।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ওভারফ্লো (Overflow)</span> কেবল তখনই সম্ভব যখন <span class="hl">একই চিহ্নের দুটি সংখ্যা যোগ</span> করে ফল <b>বিপরীত চিহ্নের</b> হয় (MSB-তে ঢোকা ক্যারি ≠ বের হওয়া ক্যারি)। বিপরীত চিহ্নে <b>কখনো</b> ওভারফ্লো হয় না; MSB থেকে শুধু ক্যারি বের হলে তা ফেলে দেওয়া হয়।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ 8-বিট</span> 100 + 50: <code>01100100 + 00110010 = 10010110</code> → দুটি ধনাত্মক থেকে MSB 1: <span class="circ">ওভারফ্লো</span> (পড়া যায় −106)। 7 − 5 = 7 + (−5): <code>00000111 + 11111011 = 1 00000010</code> → ক্যারি বাদ → <b>2</b>, ওভারফ্লো নেই।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: IEEE 754 + character codes ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>ফ্লোটিং পয়েন্ট, ক্যারেক্টার</span></div>
+  <h2><span class="no">২</span>IEEE 754 ফ্লোটিং পয়েন্ট ও ক্যারেক্টার কোড</h2><span class="tag">লেআউট ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> বাস্তব সংখ্যা রাখা হয় নরমালাইজড রূপে <b>(−1)<sup>S</sup> × 1.M × 2<sup>E − bias</sup></b>, তিনটি ফিল্ডে: <span class="hl">সাইন</span> S, <span class="hl">বায়াসড এক্সপোনেন্ট</span> E ও <span class="hl">ম্যান্টিসা</span> (ভগ্নাংশ) M। শুরুর 1 টি <b>সংরক্ষিত হয় না</b> (হিডেন বিট)।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 130" width="480">
+    <g class="w">
+      <rect x="10" y="20" width="40" height="34" rx="4" class="ink-r fill-r"/>
+      <rect x="50" y="20" width="160" height="34" rx="4" class="ink fill-b"/>
+      <rect x="210" y="20" width="400" height="34" rx="4" class="ink-g fill-g"/>
+      <rect x="10" y="80" width="40" height="34" rx="4" class="ink-r fill-r"/>
+      <rect x="50" y="80" width="190" height="34" rx="4" class="ink fill-b"/>
+      <rect x="240" y="80" width="370" height="34" rx="4" class="ink-g fill-g"/>
+    </g>
+    <text x="30" y="43" text-anchor="middle" class="k w6">1</text>
+    <text x="130" y="43" text-anchor="middle" class="bn k w6">এক্সপোনেন্ট 8</text>
+    <text x="410" y="43" text-anchor="middle" class="bn k w6">ম্যান্টিসা 23 বিট</text>
+    <text x="320" y="14" text-anchor="middle" class="bn s">সিঙ্গেল (32 বিট) · বায়াস 127</text>
+    <text x="30" y="103" text-anchor="middle" class="k w6">1</text>
+    <text x="145" y="103" text-anchor="middle" class="bn k w6">এক্সপোনেন্ট 11</text>
+    <text x="425" y="103" text-anchor="middle" class="bn k w6">ম্যান্টিসা 52 বিট</text>
+    <text x="320" y="74" text-anchor="middle" class="bn s">ডাবল (64 বিট) · বায়াস 1023</text>
+  </svg><figcaption>S-E-M: 1 + 8 + 23 = 32 · 1 + 11 + 52 = 64</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ −6.75 → সিঙ্গেল</span> <b>১.</b> ঋণাত্মক → S = <b>1</b>। <b>২.</b> 6.75 = <b>110.11</b>₂। <b>৩.</b> নরমালাইজ: <b>1.1011 × 2²</b>; হিডেন 1 বাদ, M = 1011 0…0। <b>৪.</b> E = 2 + 127 = 129 = <b>10000001</b>। <b>৫.</b> <code>1 10000001 1011000…0</code> = <span class="hl">C0D80000</span>h। <b>যাচাই:</b> 1.1011₂ = 1.6875; × 2² = 6.75 ✓</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">ফরম্যাট</th><th>S</th><th>E</th><th>M</th><th>বায়াস</th><th class="l">অঙ্ক</th></tr>
+      <tr><td class="l"><b>সিঙ্গেল (32)</b></td><td>1</td><td>8</td><td>23</td><td><span class="circ">127</span></td><td class="l">~7</td></tr>
+      <tr><td class="l"><b>ডাবল (64)</b></td><td>1</td><td>11</td><td>52</td><td><b>1023</b></td><td class="l">~15–16</td></tr>
+      <tr><td class="l" colspan="6">E সব 0: ±0 (M = 0) বা ডিনরমাল · E সব 1: ±∞ (M = 0) বা NaN</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"1-8-23, 127; 1-11-52, 1023।"</b> k-বিট এক্সপোনেন্টে বায়াস সবসময় <b>2<sup>k−1</sup> − 1</b>: 2<sup>7</sup> − 1 = 127, 2<sup>10</sup> − 1 = 1023। ফিল্ডের ক্রম <b>S-E-M</b>: সাইন, এক্সপোনেন্ট, ম্যান্টিসা।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>0.1-এর নিখুঁত বাইনারি রূপ নেই</b> (0.000110011… পৌনঃপুনিক), তাই C, Java ও Python-এ <code>0.1 + 0.2 == 0.3</code> <b>মিথ্যা</b>। ফ্লোট তুলনা করো <code>|a − b| &lt; ε</code> দিয়ে; টাকা রাখো পূর্ণসংখ্যায় (পয়সা)।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কোড</th><th class="l">আকার</th><th class="l">পরীক্ষায় যে তথ্য আসে</th></tr>
+    <tr><td class="l"><b>BCD</b> (8421)</td><td class="l">প্রতি দশমিক অঙ্কে 4 বিট</td><td class="l">59 → <code>0101 1001</code>; 1010–1111 অবৈধ; 59-এর বিশুদ্ধ বাইনারি <code>111011</code></td></tr>
+    <tr><td class="l"><b>ASCII</b></td><td class="l"><span class="circ">7 বিট</span>, 128 অক্ষর</td><td class="l">'A' = 65 (41h), 'a' = 97 (61h), '0' = 48 (30h); বড়-ছোট হাতের পার্থক্য 32</td></tr>
+    <tr><td class="l">এক্সটেন্ডেড ASCII / EBCDIC</td><td class="l">8 বিট</td><td class="l">256 অক্ষর / IBM মেইনফ্রেম</td></tr>
+    <tr><td class="l"><b>ইউনিকোড</b></td><td class="l">একটি অক্ষর-<i>সেট</i></td><td class="l">U+0000 … U+10FFFF; বাংলা U+0980–U+09FF; 'অ' = U+0985</td></tr>
+    <tr><td class="l"><b>UTF-8</b> · 16 · 32</td><td class="l"><span class="hl">1–4</span> · 2/4 · 4 বাইট</td><td class="l">UTF-8 ASCII-সামঞ্জস্যপূর্ণ; 'অ' = <code>E0 A6 85</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ এন্ডিয়ানেস</span> <code>0x12345678</code> রাখা হলো অ্যাড্রেস 100-এ। <b>বিগ-এন্ডিয়ান</b>: 100→12, 101→34, 102→56, 103→78। <b>লিটল-এন্ডিয়ান</b>: 100→<b>78</b> … 103→12। x86 লিটল-এন্ডিয়ান; <b>নেটওয়ার্ক বাইট অর্ডার বিগ-এন্ডিয়ান</b>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "ইউনিকোড 16-বিট" কথাটি পুরোনো: ইউনিকোড 1 114 112 কোড পয়েন্টের সেট, আর <b>UTF-8/16/32 তার এনকোডিং</b>। ASCII <b>7-বিট</b>, 8 নয়। <code>int</code>-এর আকার <b>কম্পাইলার-নির্ভর</b> (C-তে ≥ 16 বিট)।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: ADT ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>অ্যাবস্ট্রাক্ট ডেটা টাইপ</span></div>
+  <h2><span class="no">৩</span>অ্যাবস্ট্রাক্ট ডেটা টাইপ</h2><span class="tag">সংজ্ঞার প্রশ্ন ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>অ্যাবস্ট্রাক্ট ডেটা টাইপ (ADT)</b> হলো এমন একটি গাণিতিক মডেল যেখানে টাইপকে সংজ্ঞায়িত করা হয় <span class="hl">তার মান ও সেগুলোর ওপর অপারেশন</span> (ও তাদের নিয়ম) দিয়ে, <b>কীভাবে ইমপ্লিমেন্ট করা হলো তা দিয়ে নয়</b>। <b>ডেটা স্ট্রাকচার</b> হলো মেমোরিতে ডেটা সাজানোর একটি বাস্তব উপায়, যা কোনো ADT-কে ইমপ্লিমেন্ট করে। "স্ট্যাক" একটি ADT; "<code>top</code> ইনডেক্সসহ অ্যারে" তার একটি ডেটা স্ট্রাকচার।</div>
+  <div class="mnote green">কী করে, কীভাবে নয়</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 600 250" width="290">
+      <g class="w">
+        <rect x="150" y="6" width="300" height="70" rx="10" class="ink-g fill-g"/>
+        <path class="ink" d="M20,110 H580" style="stroke-dasharray:8 6"/>
+        <rect x="20" y="150" width="250" height="80" rx="10" class="ink fill-b"/>
+        <rect x="330" y="150" width="250" height="80" rx="10" class="ink fill-b"/>
+        <path class="ink" d="M250,76 L150,146" marker-end="url(#ahb)"/>
+        <path class="ink" d="M350,76 L450,146" marker-end="url(#ahb)"/>
+      </g>
+      <text x="300" y="34" text-anchor="middle" class="bn g w6" style="font-size:20px">স্ট্যাক ADT (ইন্টারফেস)</text>
+      <text x="300" y="60" text-anchor="middle" class="s" style="font-size:17px">push · pop · peek · isEmpty</text>
+      <text x="580" y="102" text-anchor="end" class="bn r s" style="font-size:16px">অ্যাবস্ট্রাকশন সীমা</text>
+      <text x="145" y="182" text-anchor="middle" class="bn k w6" style="font-size:18px">অ্যারে + top</text>
+      <text x="145" y="208" text-anchor="middle" class="bn s" style="font-size:16px">নির্দিষ্ট আকার, দ্রুত</text>
+      <text x="455" y="182" text-anchor="middle" class="bn k w6" style="font-size:18px">লিংকড লিস্ট</text>
+      <text x="455" y="208" text-anchor="middle" class="bn s" style="font-size:16px">বাড়ে, ওভারফ্লো নেই</text>
+    </svg><figcaption>এক ইন্টারফেস, অনেক ইমপ্লিমেন্টেশন</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">বিষয়</th><th class="l">ADT</th><th class="l">ডেটা স্ট্রাকচার</th></tr>
+      <tr><td class="l">স্তর</td><td class="l">লজিক্যাল, বিমূর্ত</td><td class="l">ফিজিক্যাল, বাস্তব</td></tr>
+      <tr><td class="l">বলে</td><td class="l"><b>কী</b> করে</td><td class="l"><b>কীভাবে</b> করে</td></tr>
+      <tr><td class="l">ধারণ করে</td><td class="l">মান + অপারেশন + নিয়ম</td><td class="l">মেমোরি লেআউট + অ্যালগরিদম</td></tr>
+      <tr><td class="l">উদাহরণ</td><td class="l">Stack, Queue, List, Map</td><td class="l">অ্যারে, লিংকড লিস্ট, হিপ, হ্যাশ টেবিল</td></tr>
+      <tr><td class="l">কোডে</td><td class="l">ইন্টারফেস / হেডার</td><td class="l">ক্লাস / .c ফাইল</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ADT</th><th class="l">মূল অপারেশন</th><th class="l">নিয়ম</th><th class="l">যা দিয়ে তৈরি</th></tr>
+    <tr><td class="l"><b>লিস্ট</b></td><td class="l">insert, delete, get(i), search</td><td class="l">অবস্থান</td><td class="l">অ্যারে, লিংকড লিস্ট</td></tr>
+    <tr><td class="l"><b>স্ট্যাক</b></td><td class="l">push, pop, peek, isEmpty</td><td class="l"><span class="circ">LIFO</span></td><td class="l">অ্যারে, লিংকড লিস্ট</td></tr>
+    <tr><td class="l"><b>কিউ</b></td><td class="l">enqueue, dequeue, front, rear</td><td class="l"><b>FIFO</b></td><td class="l">সার্কুলার অ্যারে, লিস্ট</td></tr>
+    <tr><td class="l"><b>ডেক (Deque)</b></td><td class="l">দুই প্রান্তেই insert/delete</td><td class="l">দুই প্রান্ত</td><td class="l">ডাবলি লিংকড লিস্ট</td></tr>
+    <tr><td class="l"><b>প্রায়োরিটি কিউ</b></td><td class="l">insert, extract-max, peek</td><td class="l">অগ্রাধিকার</td><td class="l"><b>বাইনারি হিপ</b></td></tr>
+    <tr><td class="l"><b>সেট / ম্যাপ</b></td><td class="l">add, contains · put(k,v), get(k)</td><td class="l">ডুপ্লিকেট নেই</td><td class="l">হ্যাশ টেবিল, BST</td></tr>
+    <tr><td class="l"><b>ট্রি</b></td><td class="l">insert, delete, search, traverse</td><td class="l">এক প্যারেন্ট</td><td class="l">লিংকড নোড, অ্যারে</td></tr>
+    <tr><td class="l"><b>গ্রাফ</b></td><td class="l">addVertex, addEdge, adjacent</td><td class="l">যেকোনো থেকে যেকোনো</td><td class="l">অ্যাডজ. ম্যাট্রিক্স / লিস্ট</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">ADT কেন — তিনটি সুবিধা</span> <b>এনক্যাপসুলেশন (Encapsulation)</b> বা তথ্য গোপন: ব্যবহারকারী শুধু অপারেশন দেখে, তাই ভেতরের রূপ বদলালেও তার কোড ভাঙে না। <b>পুনর্ব্যবহারযোগ্যতা (Reusability)</b>: একই ADT নানাভাবে ইমপ্লিমেন্ট করে বহু প্রোগ্রামে ব্যবহার করা যায়। <b>মডিউলারিটি (Modularity)</b>: প্রতিটি মডিউল আলাদাভাবে লেখা, পরীক্ষা ও ডিবাগ করা যায়। মিলে তৈরি হয় <span class="hl">ডেটা অ্যাবস্ট্রাকশন</span>, যা OOP-র ক্লাসের ভিত্তি।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>ADT = মেনু; ডেটা স্ট্রাকচার = রান্নাঘর।</b> মেনুতে লেখা কী অর্ডার করা যায় (push, pop); রান্নাঘর ঠিক করে কীভাবে রান্না হবে (অ্যারে না লিস্ট)। রান্নাঘর বদলাও, মেনু একই। সুবিধা: "<b>E-R-M</b>" — এনক্যাপসুলেশন, রিইউজেবিলিটি, মডিউলারিটি।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> BFS ও DFS গ্রাফের ওপর চালানো <b>অ্যালগরিদম</b>, গ্রাফ ADT-র নিজস্ব অপারেশন নয়। প্রায়োরিটি কিউ <b>FIFO নয়</b>: অগ্রাধিকার অনুযায়ী সেবা দেয়। লিংকড লিস্ট একটি <b>ডেটা স্ট্রাকচার</b>; "লিস্ট" হলো ADT। "ADT সংজ্ঞায়িত করে…?" → <span class="circ">আচরণ</span>, স্টোরেজ নয়।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: arrays ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>অ্যারে</span></div>
+  <h2><span class="no">৪</span>অ্যারে ও অ্যাড্রেস নির্ণয়</h2><span class="tag">গাণিতিক MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>অ্যারে (Array)</b> হলো <span class="hl">একই টাইপের উপাদানের নির্দিষ্ট আকারের সংগ্রহ, পাশাপাশি (contiguous) মেমোরিতে</span>, যা ইনডেক্স দিয়ে পাওয়া যায়। উপাদানগুলো পাশাপাশি ও সমান আকারের বলে যেকোনো উপাদানের অ্যাড্রেস সূত্রে বের হয়, তাই <b>অ্যাক্সেস O(1)</b> (র‍্যান্ডম অ্যাক্সেস)। মাঝখানে ইনসার্ট বা ডিলিট করলে উপাদান সরাতে হয়: <b>O(n)</b>।</div>
+  <div class="mnote">র‍্যান্ডম অ্যাক্সেস O(1)</div>
+  <figure class="doodle" style="clear:both"><svg viewBox="0 0 620 140" width="520">
+    <g class="w">
+      <rect x="20" y="30" width="100" height="44" class="ink fill-b"/>
+      <rect x="120" y="30" width="100" height="44" class="ink fill-b"/>
+      <rect x="220" y="30" width="100" height="44" class="ink-r fill-r"/>
+      <rect x="320" y="30" width="100" height="44" class="ink fill-b"/>
+      <rect x="420" y="30" width="100" height="44" class="ink fill-b"/>
+      <path class="ink-r" d="M270,118 V80" marker-end="url(#ah)"/>
+    </g>
+    <text x="70" y="58" text-anchor="middle" class="k w6">A[0]</text>
+    <text x="170" y="58" text-anchor="middle" class="k w6">A[1]</text>
+    <text x="270" y="58" text-anchor="middle" class="r w6">A[2]</text>
+    <text x="370" y="58" text-anchor="middle" class="k w6">A[3]</text>
+    <text x="470" y="58" text-anchor="middle" class="k w6">A[4]</text>
+    <text x="70" y="22" text-anchor="middle" class="s">1000</text>
+    <text x="170" y="22" text-anchor="middle" class="s">1004</text>
+    <text x="270" y="22" text-anchor="middle" class="s">1008</text>
+    <text x="370" y="22" text-anchor="middle" class="s">1012</text>
+    <text x="470" y="22" text-anchor="middle" class="s">1016</text>
+    <text x="290" y="132" class="r s">1000 + 4 × (2 − 0) = 1008</text>
+    <text x="530" y="58" class="s">int, w = 4</text>
+  </svg><figcaption>বেস অ্যাড্রেস + প্রস্থ × অফসেট</figcaption></figure>
+  <div class="sumbox tiny"><span class="lbl">অ্যাড্রেস সূত্র</span> B = বেস অ্যাড্রেস, w = প্রতি উপাদানের বাইট, L = নিম্নসীমা।<br>
+    <b>1-D:</b> LOC(A[i]) = <span class="hl">B + w (i − L)</span> · উপাদান সংখ্যা = U − L + 1।<br>
+    <b>2-D, m সারি × n কলাম, রো-মেজর (Row-major)</b> (C, C++, Java, Python): LOC(A[i][j]) = <span class="hl">B + w [ (i − L<sub>r</sub>) · n + (j − L<sub>c</sub>) ]</span>।<br>
+    <b>2-D, কলাম-মেজর (Column-major)</b> (Fortran, MATLAB): LOC(A[i][j]) = <span class="hl">B + w [ (j − L<sub>c</sub>) · m + (i − L<sub>r</sub>) ]</span>।<br>
+    রো-মেজরে গুণ হয় <b>কলাম সংখ্যা n</b> দিয়ে; কলাম-মেজরে <b>সারি সংখ্যা m</b> দিয়ে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ 2-D, দুই ক্রমে</span> <code>int A[20][30]</code> (0-ভিত্তিক, m = 20, n = 30), B = 1000, w = 4। A[5][10] বের করো।<br><b>রো-মেজর:</b> 1000 + 4 (5 × 30 + 10) = 1000 + 4 × 160 = <span class="circ">1640</span>।<br><b>কলাম-মেজর:</b> 1000 + 4 (10 × 20 + 5) = 1000 + 4 × 205 = <b>1820</b>।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ নিম্নসীমা ≠ 0</span> <code>A[5..50]</code>, B = 200, w = 2। উপাদান = 50 − 5 + 1 = <b>46</b>। LOC(A[20]) = 200 + 2 (20 − 5) = <b>230</b>।<br><code>A[−5..10]</code>-এ উপাদান 10 − (−5) + 1 = <b>16</b>টি।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">n উপাদানের অ্যারেতে অপারেশন</th><th>সময়</th><th class="l">কেন</th></tr>
+    <tr><td class="l">A[i] অ্যাক্সেস</td><td><b>O(1)</b></td><td class="l">সূত্রে অ্যাড্রেস</td></tr>
+    <tr><td class="l">সার্চ (অসাজানো / সাজানো)</td><td>O(n) / O(log n)</td><td class="l">লিনিয়ার স্ক্যান / বাইনারি সার্চ</td></tr>
+    <tr><td class="l">শেষে ইনসার্ট / ডিলিট</td><td>O(1)</td><td class="l">সরাতে হয় না (জায়গা থাকলে)</td></tr>
+    <tr><td class="l">k অবস্থানে ইনসার্ট / ডিলিট</td><td><b>O(n)</b></td><td class="l">n − k টি উপাদান সরাতে হয়</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">স্পার্স ম্যাট্রিক্স (Sparse matrix)</span> বেশিরভাগ উপাদান 0। শুধু অশূন্যগুলো রাখো <b>ট্রিপলেট (সারি, কলাম, মান)</b> হিসেবে, বা লিংকড লিস্টে। 50টি অশূন্যসহ 100 × 100 ম্যাট্রিক্সে 10 000-এর বদলে লাগে 3 × 50 = 150 ঘর। n × n <b>লোয়ার-ট্রায়াঙ্গুলার</b> ম্যাট্রিক্সে উপাদান <span class="hl">n(n+1)/2</span>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>নিম্নসীমা</b> দেখো: 1-ভিত্তিক <code>A[1..m][1..n]</code> হলে আগে i ও j থেকে 1 বাদ দাও। প্রশ্নে রো-মেজর না কলাম-মেজর বলা আছে পড়ে নাও। C বাউন্ড যাচাই করে না: <code>int A[10]</code>-এ <code>A[10]</code> <b>অনির্ধারিত আচরণ (undefined behaviour)</b>, কোনো এরর বার্তা নয়।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: linked lists ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>লিংকড লিস্ট</span></div>
+  <h2><span class="no">৫</span>লিংকড লিস্ট: সিঙ্গলি, ডাবলি, সার্কুলার</h2><span class="tag">পয়েন্টার যুক্তি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>লিংকড লিস্ট (Linked list)</b> হলো <span class="hl">নোডের</span> ধারা; প্রতিটি নোডে থাকে ডেটা ও পরের নোডের <b>পয়েন্টার</b>, নোডগুলো মেমোরির যেকোনো জায়গায় থাকতে পারে। <b>head</b> পয়েন্টার প্রথম নোডে পৌঁছায়, শেষ নোডের <code>next</code> হলো NULL। রান-টাইমে আকার বাড়ে-কমে; র‍্যান্ডম অ্যাক্সেস নেই, তাই k-তম নোডে যেতে <b>O(n)</b>।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 220" width="440">
+    <g class="w">
+      <rect x="70" y="14" width="90" height="36" rx="4" class="ink fill-b"/><rect x="160" y="14" width="40" height="36" rx="4" class="ink fill-y"/>
+      <rect x="250" y="14" width="90" height="36" rx="4" class="ink fill-b"/><rect x="340" y="14" width="40" height="36" rx="4" class="ink fill-y"/>
+      <rect x="430" y="14" width="90" height="36" rx="4" class="ink fill-b"/><rect x="520" y="14" width="40" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M180,32 H246" marker-end="url(#ahb)"/>
+      <path class="ink" d="M360,32 H426" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M24,32 H66" marker-end="url(#ah)"/>
+      <rect x="50" y="94" width="34" height="36" rx="4" class="ink fill-y"/><rect x="84" y="94" width="80" height="36" rx="4" class="ink-g fill-g"/><rect x="164" y="94" width="34" height="36" rx="4" class="ink fill-y"/>
+      <rect x="260" y="94" width="34" height="36" rx="4" class="ink fill-y"/><rect x="294" y="94" width="80" height="36" rx="4" class="ink-g fill-g"/><rect x="374" y="94" width="34" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink-g" d="M190,106 H256" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M266,120 H200" marker-end="url(#ahg)"/>
+      <rect x="70" y="168" width="90" height="36" rx="4" class="ink fill-b"/><rect x="160" y="168" width="40" height="36" rx="4" class="ink fill-y"/>
+      <rect x="250" y="168" width="90" height="36" rx="4" class="ink fill-b"/><rect x="340" y="168" width="40" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M180,186 H246" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M360,186 H410 V214 H40 V186 H66" marker-end="url(#ahp)"/>
+    </g>
+    <text x="4" y="12" class="r s">head</text>
+    <text x="115" y="38" text-anchor="middle" class="k w6">10</text><text x="295" y="38" text-anchor="middle" class="k w6">20</text><text x="475" y="38" text-anchor="middle" class="k w6">30</text>
+    <text x="540" y="38" text-anchor="middle" class="r s">NULL</text>
+    <text x="124" y="118" text-anchor="middle" class="k w6">10</text><text x="334" y="118" text-anchor="middle" class="k w6">20</text>
+    <text x="440" y="118" class="bn g s">ডাবলি: prev · data · next</text>
+    <text x="115" y="192" text-anchor="middle" class="k w6">10</text><text x="295" y="192" text-anchor="middle" class="k w6">20</text>
+    <text x="440" y="192" class="bn p s">সার্কুলার: শেষ → head</text>
+    <text x="440" y="66" class="bn s">সিঙ্গলি: data · next</text>
+  </svg><figcaption>সিঙ্গলি · ডাবলি · সার্কুলার</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);align-items:start">
+    <div class="code">struct Node { int data;
+  struct Node *next; };
+
+/* insert at head: O(1) */
+struct Node *n = malloc(sizeof *n);
+n-&gt;data = x;
+n-&gt;next = head;
+head = n;
+
+/* delete the node after p: O(1) */
+struct Node *t = p-&gt;next;
+p-&gt;next = t-&gt;next;
+free(t);</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">ধরন</th><th class="l">নোড</th><th class="l">ব্যবহার</th></tr>
+      <tr><td class="l"><b>সিঙ্গলি</b></td><td class="l">data, next</td><td class="l">স্ট্যাক, সাধারণ লিস্ট</td></tr>
+      <tr><td class="l"><b>ডাবলি</b></td><td class="l">prev, data, next</td><td class="l">ব্রাউজার back/forward, LRU ক্যাশ, ডেক</td></tr>
+      <tr><td class="l"><b>সার্কুলার</b></td><td class="l">শেষ → প্রথম</td><td class="l"><span class="hl">রাউন্ড-রবিন শিডিউলিং</span></td></tr>
+      <tr><td class="l"><b>সার্কুলার ডাবলি</b></td><td class="l">দুই লিংকই ঘোরে</td><td class="l">মিউজিক প্লেলিস্ট, ফিবোনাচি হিপের রুট</td></tr>
+      <tr><td class="l"><b>হেডার লিস্ট</b></td><td class="l">ডামি প্রথম নোড</td><td class="l">খালি লিস্টের আলাদা কেস লাগে না</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">অ্যারে</th><th class="l">লিংকড লিস্ট</th></tr>
+    <tr><td class="l">মেমোরি</td><td class="l">পাশাপাশি, নির্দিষ্ট আকার</td><td class="l">ছড়ানো, রান-টাইমে বাড়ে</td></tr>
+    <tr><td class="l">k-তম অ্যাক্সেস</td><td class="l"><b>O(1)</b></td><td class="l"><b>O(n)</b></td></tr>
+    <tr><td class="l">সামনে ইনসার্ট/ডিলিট</td><td class="l">O(n) (সরাতে হয়)</td><td class="l"><b>O(1)</b></td></tr>
+    <tr><td class="l">শেষে ইনসার্ট</td><td class="l">O(1) জায়গা থাকলে</td><td class="l">O(n), tail পয়েন্টার থাকলে O(1)</td></tr>
+    <tr><td class="l">বাড়তি জায়গা</td><td class="l">নেই (অব্যবহৃত ঘর নষ্ট হতে পারে)</td><td class="l">প্রতি নোডে একটি পয়েন্টার (ডাবলিতে দুটি)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"আগে জোড়া, পরে কাটা।"</b> ইনসার্টের সময় পুরোনো পয়েন্টার ঘোরানোর <i>আগে</i> নতুন নোডের <code>next</code> সেট করো, নইলে লিস্টের বাকিটা হারায়। মাঝের নোড: <b>স্লো/ফাস্ট পয়েন্টার</b> (ফাস্ট ২ ধাপ, স্লো ১ ধাপ)। সাইকেল: ফ্লয়েডের কচ্ছপ-খরগোশ।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>সিঙ্গলি</b> লিস্টে নির্দিষ্ট নোড ডিলিট করতে তার <b>আগের নোড</b> লাগে, খুঁজতে O(n); <b>ডাবলি</b> লিস্টে তা <span class="circ">O(1)</span>। সিঙ্গলি লিস্ট উল্টাতে O(n) সময় ও O(1) জায়গা (তিন পয়েন্টার: prev, curr, next)।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: stacks ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>স্ট্যাক</span></div>
+  <h2><span class="no">৬</span>স্ট্যাক, ইনফিক্স → পোস্টফিক্স ও পোস্টফিক্স মূল্যায়ন</h2><span class="tag">সর্বোচ্চ হাই-ইল্ড ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>স্ট্যাক (Stack)</b> এমন লিস্ট যেখানে ইনসার্ট (<b>push</b>) ও ডিলিট (<b>pop</b>) হয় <span class="hl">এক প্রান্তে, top-এ</span>: <b>শেষে ঢুকলে আগে বের (LIFO)</b>। অ্যারে রূপে <code>top = −1</code> মানে খালি; <code>top == MAX−1</code> অবস্থায় push হলো <b>ওভারফ্লো</b>; <code>top == −1</code> অবস্থায় pop হলো <b>আন্ডারফ্লো</b>। লিংকড রূপে head-এ push/pop হয়, মেমোরি না ফুরালে ওভারফ্লো নেই। সব অপারেশন <b>O(1)</b>।</div>
+  <div class="cols" style="grid-template-columns:150px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 200 230" width="146">
+      <g class="w">
+        <path class="ink-k" d="M40,30 V210 H160 V30"/>
+        <rect x="50" y="166" width="100" height="36" rx="4" class="ink fill-b"/>
+        <rect x="50" y="126" width="100" height="36" rx="4" class="ink fill-b"/>
+        <rect x="50" y="86" width="100" height="36" rx="4" class="ink-r fill-r"/>
+        <path class="ink-g" d="M14,40 C14,70 40,80 60,80" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M140,80 C160,80 186,70 186,40" marker-end="url(#ah)"/>
+      </g>
+      <text x="100" y="190" text-anchor="middle" class="k w6">10</text>
+      <text x="100" y="150" text-anchor="middle" class="k w6">20</text>
+      <text x="100" y="110" text-anchor="middle" class="r w6">30 ← top</text>
+      <text x="14" y="24" text-anchor="middle" class="s">push</text>
+      <text x="186" y="24" text-anchor="middle" class="r s">pop</text>
+    </svg><figcaption>শেষে ঢুকলে আগে বের</figcaption></figure>
+    <div>
+      <div class="code">void push(int x) {
+  if (top == MAX-1) { puts("Overflow"); return; }
+  s[++top] = x; }
+int pop(void) {
+  if (top == -1) { puts("Underflow"); return -1; }
+  return s[top--]; }</div>
+      <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">প্রয়োগ</span> <span class="hl">ফাংশন কল ও রিকার্শন</span> (কল স্ট্যাকে রিটার্ন অ্যাড্রেস ও লোকাল ভেরিয়েবল) · এক্সপ্রেশন রূপান্তর ও মূল্যায়ন · ব্র্যাকেট মিলানো · undo/redo · ব্রাউজার back · ব্যাকট্র্যাকিং (গোলকধাঁধা, N-queens) · DFS · স্ট্রিং উল্টানো। যেকোনো রিকার্সিভ অ্যালগরিদম স্পষ্ট স্ট্যাক দিয়ে লেখা যায়।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ইনফিক্স → পোস্টফিক্সের নিয়ম</span> বাম থেকে ডানে পড়ো। <b>অপারেন্ড</b> → আউটপুট। <b>(</b> → push। <b>)</b> → "(" না আসা পর্যন্ত pop করে আউটপুট। <b>অপারেটর</b> → top-এ <b>বেশি বা সমান</b> অগ্রাধিকারের অপারেটর থাকলে pop (সমান হলে কেবল বাম-সহযোগী হলে), তারপর push। শেষে সব pop। ^ <b>ডান</b>-সহযোগী।<br>অগ্রাধিকার:&nbsp;&nbsp; <span class="circ">^ &gt; * / &gt; + −</span></div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">পড়া</th><th class="l">স্ট্যাক</th><th class="l">আউটপুট</th></tr>
+      <tr><td class="l">A</td><td class="l"></td><td class="l">A</td></tr>
+      <tr><td class="l">+</td><td class="l">+</td><td class="l">A</td></tr>
+      <tr><td class="l">B</td><td class="l">+</td><td class="l">A B</td></tr>
+      <tr><td class="l">*</td><td class="l">+ *</td><td class="l">A B</td></tr>
+      <tr><td class="l">C</td><td class="l">+ *</td><td class="l">A B C</td></tr>
+      <tr><td class="l">−</td><td class="l">−</td><td class="l">A B C * +</td></tr>
+      <tr><td class="l">D, /, E</td><td class="l">− /</td><td class="l">A B C * + D E</td></tr>
+      <tr><td class="l">শেষ</td><td class="l"></td><td class="l"><b>A B C * + D E / −</b></td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ পোস্টফিক্স মূল্যায়ন</span> অপারেন্ড → push; অপারেটর → pop <b>B</b> (top), pop <b>A</b>, push <b>A op B</b>।<br><code>2 3 4 * +</code>: push 2, 3, 4; * → 3 × 4 = 12; + → 2 + 12 = <span class="circ">14</span> (ইনফিক্সে 2 + 3 * 4)।<br><code>5 6 2 + * 12 4 / −</code>: 6 + 2 = 8; 5 × 8 = 40; 12 / 4 = 3; 40 − 3 = <b>37</b>।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ তিন নোটেশন</span> ইনফিক্স <code>(A + B) * (C − D)</code><br>পোস্টফিক্স (রিভার্স পোলিশ): <b>A B + C D − *</b><br>প্রিফিক্স (পোলিশ): <b>* + A B − C D</b><br>পোস্টফিক্সে <b>বন্ধনী বা অগ্রাধিকারের নিয়ম লাগে না</b>, তাই কম্পাইলার ও ক্যালকুলেটর এটি ব্যবহার করে।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"প্লেটের স্তূপ।"</b> সবশেষে ধোয়া প্লেটটিই আগে ব্যবহার হয়। পোস্টফিক্স মূল্যায়নে <b>দ্বিতীয় pop হলো বাম অপারেন্ড</b>: "pop B, pop A, হিসাব A op B" — − ও /-এর ক্ষেত্রে জরুরি।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>2 3 4 * +</code> = <b>14, 20 নয়</b>; 20 হতো <code>2 3 + 4 *</code>। 1, 2, 3 ক্রমে push করলে কখনো <b>3, 1, 2</b> ক্রমে pop হয় না। বেস কেসে না পৌঁছানো রিকার্শনের শেষ <b>স্ট্যাক ওভারফ্লো</b>।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: queues ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>কিউ</span></div>
+  <h2><span class="no">৭</span>কিউ: লিনিয়ার, সার্কুলার, ডেক, প্রায়োরিটি</h2><span class="tag">শর্তের MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>কিউ (Queue)</b> <b>rear</b>-এ ইনসার্ট (<i>enqueue</i>) ও <b>front</b> থেকে ডিলিট (<i>dequeue</i>) করে: <span class="hl">আগে ঢুকলে আগে বের (FIFO)</span>। সাধারণ অ্যারেতে front ও rear শুধু সামনে এগোয়, তাই খালি হওয়া ঘর আর ব্যবহার হয় না (অর্ধেক খালি থেকেও "পূর্ণ"); <b>সার্কুলার কিউ</b> ইনডেক্সকে <code>% n</code> দিয়ে ঘুরিয়ে আনে।</div>
+  <div class="cols" style="grid-template-columns:172px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 240 240" width="168">
+      <g class="w">
+        <circle cx="120" cy="120" r="96" class="ink fill-b"/>
+        <circle cx="120" cy="120" r="44" class="ink fill-y"/>
+        <path class="ink" d="M120,24 V76 M120,164 V216 M24,120 H76 M164,120 H216 M52,52 L89,89 M151,151 L188,188 M188,52 L151,89 M52,188 L89,151"/>
+        <path class="ink-g" d="M208,40 L176,66" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M30,200 L62,174" marker-end="url(#ah)"/>
+      </g>
+      <text x="142" y="52" text-anchor="middle" class="k w6">A</text>
+      <text x="190" y="104" text-anchor="middle" class="k w6">B</text>
+      <text x="190" y="146" text-anchor="middle" class="k w6">C</text>
+      <text x="120" y="126" text-anchor="middle" class="s">n = 8</text>
+      <text x="226" y="34" text-anchor="end" class="g s">front</text>
+      <text x="14" y="232" class="bn r s">rear ঘুরে আসে</text>
+    </svg><figcaption>rear = (rear + 1) % n</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">সার্কুলার কিউ (n আকারের অ্যারে)</th><th class="l">শর্ত</th></tr>
+        <tr><td class="l">Enqueue</td><td class="l"><code>rear = (rear + 1) % n; Q[rear] = x</code></td></tr>
+        <tr><td class="l">Dequeue</td><td class="l"><code>x = Q[front]; front = (front + 1) % n</code></td></tr>
+        <tr><td class="l"><b>পূর্ণ</b></td><td class="l"><span class="circ">(rear + 1) % n == front</span></td></tr>
+        <tr><td class="l"><b>খালি</b></td><td class="l"><code>front == −1</code> (এক-ঘর-খালি রূপে <code>front == rear</code>)</td></tr>
+        <tr><td class="l">উপাদান সংখ্যা</td><td class="l"><code>(rear − front + n) % n</code> (এক-ঘর-খালি রূপে)</td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">দুই রীতি</span> <code>front = rear = −1</code> মানে খালি: n ঘরই ব্যবহারযোগ্য। <code>front = rear = 0</code> মানে খালি: একটি ঘর ফাঁকা থাকে, ধারণক্ষমতা <b>n − 1</b>।</div>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ট্রেস</span> খালি কিউ: enqueue(1), enqueue(2), enqueue(3) → [1, 2, 3]; dequeue() সরায় <b>1</b> → [2, 3]; enqueue(4) → [2, 3, 4]; dequeue() সরায় <b>2</b> → [3, 4]। front = <span class="circ">3</span>, rear = 4। একই push-pop <b>স্ট্যাকে</b> করলে থাকে [1, 2], top-এ 2।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ধরন</th><th class="l">নিয়ম</th><th class="l">সাধারণ ব্যবহার</th></tr>
+    <tr><td class="l"><b>লিনিয়ার কিউ</b></td><td class="l">FIFO, ইনডেক্স শুধু সামনে এগোয়</td><td class="l">সাধারণ বাফার</td></tr>
+    <tr><td class="l"><b>সার্কুলার কিউ</b></td><td class="l">FIFO, ইনডেক্স % n দিয়ে ঘোরে</td><td class="l">CPU <span class="hl">রাউন্ড-রবিন</span>, কিবোর্ড ও নেটওয়ার্ক বাফার</td></tr>
+    <tr><td class="l"><b>ডেক</b></td><td class="l"><b>দুই</b> প্রান্তেই ইনসার্ট ও ডিলিট</td><td class="l">স্লাইডিং-উইন্ডো সর্বোচ্চ, undo ইতিহাস</td></tr>
+    <tr><td class="l">সীমিত ডেক</td><td class="l">ইনপুট-সীমিত: এক প্রান্তে ইনসার্ট · আউটপুট-সীমিত: এক প্রান্তে ডিলিট</td><td class="l">—</td></tr>
+    <tr><td class="l"><b>প্রায়োরিটি কিউ</b></td><td class="l">সর্বোচ্চ অগ্রাধিকার আগে; সমান হলে FIFO</td><td class="l">ডাইকস্ট্রা, OS জব শিডিউলিং, হাফম্যান</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"ব্যাংকের কাউন্টারের লাইন।"</b> পেছনে (rear) দাঁড়াও, সামনে (front) থেকে বের হও। <b>D</b>ouble-<b>E</b>nded <b>QUE</b>ue = ডেক। ব্যবহার: BFS, প্রিন্টার স্পুলিং, CPU শিডিউলিং, দ্রুত ও ধীর ডিভাইসের মাঝে বাফার।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> প্রায়োরিটি কিউ সবচেয়ে ভালো <b>বাইনারি হিপে</b>: insert ও delete-max দুটোই O(log n) — অসাজানো অ্যারেতে delete O(n)। <b>দুটি স্ট্যাক</b> দিয়ে কিউ বানানো যায় (অ্যামর্টাইজড O(1))। "BFS-এ কোনটি?" → কিউ; "DFS-এ?" → স্ট্যাক।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: trees ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>ট্রি</span></div>
+  <h2><span class="no">৮</span>ট্রি ও বাইনারি ট্রি</h2><span class="tag">সূত্র + ট্রাভার্সাল ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ট্রি (Tree)</b> হলো একটি <b>রুট</b>সহ সংযুক্ত, চক্রহীন স্তরবিন্যাস; বাকি প্রতিটি নোডের ঠিক একটি প্যারেন্ট, তাই n নোডে <span class="hl">n − 1 এজ</span>। <b>বাইনারি ট্রি</b>: সর্বোচ্চ দুটি চাইল্ড (বাম, ডান)। পরিভাষা: <b>লিফ</b>, <b>ইন্টার্নাল</b> নোড, <b>সিবলিং</b>, <b>ডিগ্রি</b> = চাইল্ড সংখ্যা, <b>লেভেল</b> (রুট = 0), <b>উচ্চতা</b> = রুট থেকে দীর্ঘতম লিফ পর্যন্ত এজ সংখ্যা।</div>
+  <div class="cols" style="grid-template-columns:230px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="226">
+      <g class="w">
+        <path class="ink" d="M150,34 L90,84 M150,34 L210,84 M90,84 L50,144 M90,84 L130,144 M210,84 L180,144"/>
+        <circle cx="150" cy="30" r="20" class="ink-r fill-r"/>
+        <circle cx="90" cy="88" r="20" class="ink fill-b"/>
+        <circle cx="210" cy="88" r="20" class="ink fill-b"/>
+        <circle cx="50" cy="148" r="20" class="ink-g fill-g"/>
+        <circle cx="130" cy="148" r="20" class="ink-g fill-g"/>
+        <circle cx="180" cy="148" r="20" class="ink-g fill-g"/>
+      </g>
+      <text x="150" y="36" text-anchor="middle" class="k w6">A</text>
+      <text x="90" y="94" text-anchor="middle" class="k w6">B</text>
+      <text x="210" y="94" text-anchor="middle" class="k w6">C</text>
+      <text x="50" y="154" text-anchor="middle" class="k w6">D</text>
+      <text x="130" y="154" text-anchor="middle" class="k w6">E</text>
+      <text x="180" y="154" text-anchor="middle" class="k w6">F</text>
+      <text x="234" y="36" class="bn r s">রুট, লেভেল 0</text>
+      <text x="150" y="192" text-anchor="middle" class="bn g s">লিফ D, E, F · উচ্চতা 2</text>
+    </svg><figcaption>F হলো C-এর <b>বাম</b> চাইল্ড</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">ট্রাভার্সাল</th><th class="l">ক্রম</th><th class="l">এই ট্রির ফল</th></tr>
+      <tr><td class="l"><b>প্রিঅর্ডার</b></td><td class="l">নোড, বাম, ডান</td><td class="l">A B D E C F</td></tr>
+      <tr><td class="l"><b>ইনঅর্ডার</b></td><td class="l">বাম, নোড, ডান</td><td class="l">D B E A F C</td></tr>
+      <tr><td class="l"><b>পোস্টঅর্ডার</b></td><td class="l">বাম, ডান, নোড</td><td class="l"><span class="circ">D E B F C A</span></td></tr>
+      <tr><td class="l"><b>লেভেল অর্ডার</b></td><td class="l">স্তরে স্তরে (কিউ)</td><td class="l">A B C D E F</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বাইনারি ট্রির ধর্ম (রুট লেভেল 0, উচ্চতা h)</th><th class="l">সূত্র</th><th class="l">যাচাই (h = 2)</th></tr>
+    <tr><td class="l">লেভেল i-তে সর্বোচ্চ নোড</td><td class="l"><span class="hl">2<sup>i</sup></span></td><td class="l">লেভেল 2: 4</td></tr>
+    <tr><td class="l">উচ্চতা h-এর ট্রিতে সর্বোচ্চ নোড</td><td class="l"><span class="hl">2<sup>h+1</sup> − 1</span></td><td class="l">7</td></tr>
+    <tr><td class="l">n নোডে ন্যূনতম উচ্চতা</td><td class="l">⌈log<sub>2</sub>(n + 1)⌉ − 1</td><td class="l">n = 7 → 2</td></tr>
+    <tr><td class="l">লিফ বনাম ডিগ্রি-2 নোড</td><td class="l"><span class="circ">n<sub>0</sub> = n<sub>2</sub> + 1</span></td><td class="l">পারফেক্ট h = 2: 4 = 3 + 1</td></tr>
+    <tr><td class="l">n নোডে ভিন্ন বাইনারি ট্রি</td><td class="l">ক্যাটালান: C(2n, n)/(n + 1)</td><td class="l">n = 3 → 5</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">বাইনারি ট্রির প্রকার</span> <b>ফুল / স্ট্রিক্ট</b>: প্রতিটি নোডের 0 বা 2 চাইল্ড। <b>কমপ্লিট</b>: শেষটি ছাড়া সব লেভেল পূর্ণ, শেষটি <b>বাম থেকে</b> ভরা (হিপের আকার)। <b>পারফেক্ট</b>: প্রতিটি ইন্টার্নাল নোডের 2 চাইল্ড, সব লিফ এক লেভেলে। <b>স্কিউড</b>: প্রতিটির এক চাইল্ড — আসলে লিস্ট।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">অ্যারে উপস্থাপন</span> লেভেল ধরে সাজাও। <b>0-ভিত্তিক:</b> বাম = <span class="hl">2i + 1</span>, ডান = 2i + 2, প্যারেন্ট = ⌊(i − 1)/2⌋। <b>1-ভিত্তিক:</b> বাম = 2i, ডান = 2i + 1, প্যারেন্ট = ⌊i/2⌋। কমপ্লিট ট্রির জন্য আদর্শ; স্কিউডে অপচয়।</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ দুই ট্রাভার্সাল থেকে ট্রি গঠন</span> প্রিঅর্ডার A B D E C F, ইনঅর্ডার D B E A F C। প্রিঅর্ডারের প্রথমটি রুট <b>A</b>; ইনঅর্ডারে D B E তার বাম সাবট্রি, F C ডান সাবট্রি। <b>B</b> বাম অংশের রুট (D, E); <b>C</b> ডান অংশের রুট, F তার বামে। পোস্টঅর্ডার: <b>D E B F C A</b>। ইনঅর্ডার + প্রি/পোস্ট মিলে ট্রি অনন্যভাবে নির্ধারিত; শুধু প্রি + পোস্টে নয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> নামই বলে <b>নোড কোথায় বসে</b>: <b>প্রি</b> = নোড আগে, <b>ইন</b> = নোড মাঝে, <b>পোস্ট</b> = নোড শেষে; বাম সবসময় ডানের আগে। <b>BST</b>: বাম &lt; নোড &lt; ডান, তাই এর <b>ইনঅর্ডার সাজানো</b>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> লেভেল গোনা কোথা থেকে শুরু দেখো: রুট লেভেল <b>1</b> হলে লেভেল i-তে সর্বোচ্চ 2<sup>i−1</sup> ও উচ্চতা h-এ 2<sup>h</sup> − 1 নোড। BST সার্চ <b>গড়ে</b> O(log n), কিন্তু <b>স্কিউড হলে O(n)</b> — তাই AVL ও রেড-ব্ল্যাক ট্রি।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: graphs + complexity ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>গ্রাফ ও কমপ্লেক্সিটি</span></div>
+  <h2><span class="no">৯</span>গ্রাফ, এবং প্রতিটি অপারেশনের খরচ</h2><span class="tag">সমাপনী ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>গ্রাফ (Graph)</b> G = (V, E) হলো ভার্টেক্সের সেট ও তাদের জোড়া সংযোগকারী এজের সেট। <b>আনডিরেক্টেড</b> বা <b>ডিরেক্টেড</b> (ডাইগ্রাফ), <b>ওয়েটেড</b> বা নয়। <b>ডিগ্রি</b> = এক ভার্টেক্সে এজ সংখ্যা (ডাইগ্রাফে ইন-/আউট-ডিগ্রি)। <b>পাথ</b> এজ দিয়ে ভার্টেক্স জোড়ে; <b>সাইকেল</b> শুরুতে ফেরে; প্রতিটি জোড়া পাথে যুক্ত হলে গ্রাফ <b>কানেক্টেড</b>। <span class="hl">ট্রি হলো সংযুক্ত চক্রহীন গ্রাফ</span>।</div>
+  <div class="cols" style="grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 220 180" width="196">
+      <g class="w">
+        <path class="ink" d="M71,40 L149,40 M50,61 L50,119 M65,55 L155,125 M170,61 L170,119"/>
+        <circle cx="50" cy="40" r="20" class="ink-r fill-r"/>
+        <circle cx="170" cy="40" r="20" class="ink fill-b"/>
+        <circle cx="50" cy="140" r="20" class="ink fill-b"/>
+        <circle cx="170" cy="140" r="20" class="ink fill-b"/>
+      </g>
+      <text x="50" y="46" text-anchor="middle" class="k w6">0</text>
+      <text x="170" y="46" text-anchor="middle" class="k w6">1</text>
+      <text x="50" y="146" text-anchor="middle" class="k w6">2</text>
+      <text x="170" y="146" text-anchor="middle" class="k w6">3</text>
+      <text x="110" y="176" text-anchor="middle" class="s">V = 4, E = 4</text>
+    </svg><figcaption>আনডিরেক্টেড, ৪টি এজ</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th>·</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+      <tr><th>0</th><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+      <tr><th>1</th><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+      <tr><th>2</th><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><th>3</th><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+    </table>
+    <div class="code">0 → 1 → 2 → 3
+1 → 0 → 3
+2 → 0
+3 → 0 → 1</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">অ্যাডজেসেন্সি ম্যাট্রিক্স</th><th class="l">অ্যাডজেসেন্সি লিস্ট</th></tr>
+    <tr><td class="l">জায়গা</td><td class="l"><span class="circ">O(V²)</span></td><td class="l"><b>O(V + E)</b></td></tr>
+    <tr><td class="l">(u, v) কি এজ?</td><td class="l"><b>O(1)</b></td><td class="l">O(u-এর ডিগ্রি)</td></tr>
+    <tr><td class="l">u-এর সব প্রতিবেশী</td><td class="l">O(V)</td><td class="l">O(u-এর ডিগ্রি)</td></tr>
+    <tr><td class="l">উপযুক্ত</td><td class="l"><b>ঘন (dense)</b> গ্রাফে</td><td class="l"><b>বিরল (sparse)</b> গ্রাফে (বাস্তবের বেশিরভাগ)</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">গণনার তথ্য</span> সর্বোচ্চ এজ: আনডিরেক্টেড সিম্পল গ্রাফে <span class="hl">n(n − 1)/2</span>, ডিরেক্টেডে n(n − 1) — তাই K<sub>5</sub>-এ 10টি এজ। <b>হ্যান্ডশেকিং</b>: সব ডিগ্রির যোগফল = 2|E|, তাই বিজোড়-ডিগ্রির ভার্টেক্স জোড়-সংখ্যক। n ভার্টেক্সের ট্রিতে n − 1 এজ; <b>DAG</b> হলো চক্রহীন ডিরেক্টেড গ্রাফ। <b>ইনসিডেন্স ম্যাট্রিক্স</b> V × E।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">স্ট্রাকচার</th><th>অ্যাক্সেস</th><th>সার্চ</th><th>ইনসার্ট</th><th>ডিলিট</th></tr>
+    <tr><td class="l">অ্যারে (অসাজানো)</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td class="l">সাজানো অ্যারে</td><td>O(1)</td><td>O(log n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td class="l">সিঙ্গলি লিংকড লিস্ট</td><td>O(n)</td><td>O(n)</td><td>head-এ O(1)</td><td>জানা নোডের পরে O(1)</td></tr>
+    <tr><td class="l">স্ট্যাক / কিউ</td><td>top/front O(1)</td><td>O(n)</td><td>O(1)</td><td>O(1)</td></tr>
+    <tr><td class="l">BST (গড় / সবচেয়ে খারাপ)</td><td>—</td><td>O(log n) / O(n)</td><td>O(log n) / O(n)</td><td>O(log n) / O(n)</td></tr>
+    <tr><td class="l">বাইনারি হিপ</td><td>max O(1)</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "অ্যাডজেসেন্সি লিস্টের জায়গা" <b>O(V + E)</b>, O(E) নয়: এজ না থাকলেও প্রতিটি ভার্টেক্সের লিস্ট-হেড লাগে। কমপ্লিট গ্রাফ ঘন, তাই সেখানে ম্যাট্রিক্স ভালো। গ্রাফে সাইকেল ও একাধিক কম্পোনেন্ট থাকতে পারে; ট্রিতে নয়।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">অধ্যায়ের বাকিটা কোথায়</span> <b>হিপ, ফিবোনাচি হিপ, B-ট্রি</b> → অ্যাডভান্সড ডেটা স্ট্রাকচার লেসন। <b>রিকার্শন, সর্টিং, সার্চিং, হ্যাশিং</b> → পরের লেসন। <b>BFS, DFS, টপোলজিক্যাল সর্ট, MST, শর্টেস্ট পাথ</b> → গ্রাফ অ্যালগরিদম লেসন।</div>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্য-পাতা</span>
+    <div class="fgrid small">
+      <p>n বিট → 2<sup>n</sup> প্যাটার্ন; আনসাইনড 0…2<sup>n</sup>−1</p><p>2's: −2<sup>n−1</sup> … 2<sup>n−1</sup>−1 (8-বিট −128…127)</p>
+      <p>−5: S-M 10000101 · 1's 11111010</p><p>2's-এ −5 (8-বিট) = <b>11111011</b></p>
+      <p>ওভারফ্লো: একই চিহ্ন ঢোকে, বিপরীত চিহ্ন বের হয়</p><p>ASCII 7-বিট · 'A' 65 · 'a' 97 · '0' 48</p>
+      <p>IEEE সিঙ্গেল 1-8-23, বায়াস 127</p><p>IEEE ডাবল 1-11-52, বায়াস 1023</p>
+      <p>ADT = কী (অপারেশন); DS = কীভাবে</p><p>লিটল-এন্ডিয়ান: ছোট বাইট নিচু অ্যাড্রেসে</p>
+      <p>রো-মেজর: B + w[(i−L<sub>r</sub>)n + (j−L<sub>c</sub>)]</p><p>কলাম-মেজর: B + w[(j−L<sub>c</sub>)m + (i−L<sub>r</sub>)]</p>
+      <p>স্ট্যাক LIFO · ওভারফ্লো top == MAX−1</p><p>সার্কুলার পূর্ণ: (rear+1) % n == front</p>
+      <p>লেভেল i ≤ 2<sup>i</sup> নোড; উচ্চতা h ≤ 2<sup>h+1</sup>−1</p><p>n<sub>0</sub> = n<sub>2</sub> + 1 · এজ = n − 1</p>
+      <p>চাইল্ড 2i+1, 2i+2 (0-ভিত্তিক)</p><p>ম্যাট্রিক্স O(V²) · লিস্ট O(V+E) · সর্বোচ্চ এজ n(n−1)/2</p>
+    </div>
+  </div>
+  <h3>MCQ-র সেরা ১২ এক-লাইন</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>2's-এ শূন্য একটি; S-M ও 1's-এ দুটি</li>
+      <li>প্রথম 1 পর্যন্ত কপি, বাকিটা উল্টাও</li>
+      <li>ইউনিকোড সেট; UTF-8 হলো 1–4 বাইট</li>
+      <li>ফ্লোটিং পয়েন্টে 0.1 + 0.2 ≠ 0.3</li>
+      <li>স্ট্যাক ADT: push, pop, peek, isEmpty</li>
+      <li>অ্যারে অ্যাক্সেস O(1); মাঝে ইনসার্ট O(n)</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>ডাবলি লিস্টে নির্দিষ্ট নোড ডিলিট O(1)</li>
+      <li><code>2 3 4 * +</code> = 14; A+B*C → ABC*+</li>
+      <li>অগ্রাধিকার ^ &gt; * / &gt; + −; ^ ডান-সহযোগী</li>
+      <li>রিকার্শনে স্ট্যাক; BFS-এ কিউ</li>
+      <li>প্রায়োরিটি কিউ → বাইনারি হিপ</li>
+      <li>BST-র ইনঅর্ডার সাজানো</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 150px;align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">প্রধান ফাঁদ</span> 10000101 হলো S-M, 2's নয় · −128-এর জোড়া +128 নেই · ক্যারি আউট ≠ ওভারফ্লো · ASCII 7-বিট · int-এর আকার কম্পাইলার-নির্ভর · নিম্নসীমা ≠ 0 · দ্বিতীয় pop বাম অপারেন্ড · প্রায়োরিটি কিউ FIFO নয় · BST-র সবচেয়ে খারাপ O(n) · লেভেল গোনা 0 না 1 থেকে।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">সব কৌশল একসাথে</span> প্রথম 1 পর্যন্ত কপি, বাকিটা উল্টাও · 1-8-23/127, 1-11-52/1023, বায়াস 2<sup>k−1</sup>−1 · ADT = মেনু, DS = রান্নাঘর · আগে জোড়া, পরে কাটা · প্লেটের স্তূপ · ব্যাংকের লাইন · প্রি/ইন/পোস্ট = নোড কোথায় বসে।</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="156">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text style="font-size:17px" x="75" y="28" text-anchor="middle" class="bn s">স্ট্যাক</text>
+      <text style="font-size:17px" x="75" y="64" text-anchor="middle" class="bn g s">কিউ</text>
+      <text style="font-size:17px" x="75" y="100" text-anchor="middle" class="bn r s">ট্রি</text>
+      <text style="font-size:17px" x="215" y="28" text-anchor="middle" class="s">LIFO</text>
+      <text style="font-size:17px" x="215" y="64" text-anchor="middle" class="s">FIFO</text>
+      <text style="font-size:17px" x="215" y="100" text-anchor="middle" class="bn k s">স্তরবিন্যাস</text>
+    </svg><figcaption>তিন রকম ক্রম</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কাজ</th><th class="l">স্ট্রাকচার</th><th class="l">কাজ</th><th class="l">স্ট্রাকচার</th></tr>
+    <tr><td class="l">রিকার্শন, undo, পোস্টফিক্স</td><td class="l"><b>স্ট্যাক</b></td><td class="l">BFS, প্রিন্টার স্পুল</td><td class="l"><b>কিউ</b></td></tr>
+    <tr><td class="l">রাউন্ড-রবিন CPU</td><td class="l">সার্কুলার কিউ / লিস্ট</td><td class="l">জব অগ্রাধিকার, ডাইকস্ট্রা</td><td class="l">প্রায়োরিটি কিউ (হিপ)</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ এক মিনিটে পাঁচটি সংখ্যা</span> (১) −20-এর 8-বিট 2's: 00010100 → <b>11101100</b>। (২) 16-বিট 2's রেঞ্জ: <b>−32768 … 32767</b>। (৩) <code>A[10][10]</code>, B = 500, w = 2, রো-মেজরে A[3][4]: 500 + 2 (34) = <b>568</b>। (৪) ১০টি লিফের বাইনারি ট্রিতে ডিগ্রি-2 নোড <b>৯</b>টি। (৫) ৬ ভার্টেক্সের সিম্পল আনডিরেক্টেড গ্রাফে সর্বোচ্চ <span class="circ">15</span>টি এজ।</div>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · ডেটা উপস্থাপন ও ADT</span><span>রিভিশন ২: অনুশীলনী</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মিলাও</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">১.</span>কোন ADT LIFO মেনে চলে?<ol class="opts"><li>কিউ</li><li>স্ট্যাক</li><li>প্রায়োরিটি কিউ</li><li>সার্কুলার কিউ</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">২.</span>−5-এর 8-বিট 2's কমপ্লিমেন্ট:<ol class="opts"><li>10000101</li><li>11111010</li><li>11111011</li><li>00000101</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৩.</span>8-বিট 2's কমপ্লিমেন্টের রেঞ্জ:<ol class="opts"><li>−127 … 127</li><li>−128 … 127</li><li>0 … 255</li><li>−128 … 128</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৪.</span>IEEE 754 সিঙ্গেলের এক্সপোনেন্ট বায়াস:<ol class="opts"><li>127</li><li>128</li><li>1023</li><li>255</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৫.</span><code>int A[20][30]</code>, B = 1000, w = 4, রো-মেজরে A[5][10]:<ol class="opts"><li>1820</li><li>1640</li><li>1600</li><li>1660</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৬.</span>পোস্টফিক্স <code>2 3 4 * +</code>-এর মান:<ol class="opts"><li>20</li><li>24</li><li>9</li><li>14</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৭.</span>n আকারের সার্কুলার কিউ পূর্ণ যখন:<ol class="opts"><li>front == rear</li><li>rear == n − 1</li><li>(rear+1)%n == front</li><li>front == 0</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৮.</span>enq 1, 2, 3, deq, enq 4, deq। front?<ol class="opts"><li>3</li><li>4</li><li>2</li><li>1</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৯.</span>উচ্চতা 3-এর বাইনারি ট্রিতে সর্বোচ্চ নোড:<ol class="opts"><li>8</li><li>7</li><li>15</li><li>16</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">১০.</span>অ্যাডজেসেন্সি ম্যাট্রিক্সের জায়গা:<ol class="opts"><li>O(V + E)</li><li>O(E)</li><li>O(V log V)</li><li>O(V²)</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-খ · ৪-ক · ৫-খ · ৬-ঘ · ৭-গ · ৮-ক · ৯-গ · ১০-ঘ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> অ্যাবস্ট্রাক্ট ডেটা টাইপ কী? স্ট্যাক ADT এবং ওভারফ্লো ও আন্ডারফ্লোসহ এর অ্যারে ইমপ্লিমেন্টেশন বর্ণনা করো। স্ট্যাক দেখিয়ে <code>A + B * C − D / E</code>-কে পোস্টফিক্সে রূপান্তর করো এবং <code>5 6 2 + * 12 4 / −</code> এর মান নির্ণয় করো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5.2mm">
+    <li><b>ADT (২)</b> — মান ও অপারেশন দিয়ে সংজ্ঞায়িত টাইপ, ইমপ্লিমেন্টেশন-নিরপেক্ষ; সুবিধা: এনক্যাপসুলেশন, রিইউজেবিলিটি, মডিউলারিটি। ডেটা স্ট্রাকচার একে ইমপ্লিমেন্ট করে। <i class="mk">২</i></li>
+    <li><b>স্ট্যাক ADT (২)</b> — LIFO লিস্ট; push, pop, peek, isEmpty, isFull, সব O(1)। ব্যবহার: কল স্ট্যাক, এক্সপ্রেশন, undo, ব্যাকট্র্যাকিং। <i class="mk">২</i></li>
+    <li><b>অ্যারে ইমপ্লিমেন্টেশন (২)</b> — <code>top = −1</code> খালি; push: <code>top == MAX−1</code> হলে → <b>ওভারফ্লো</b>, নইলে <code>s[++top] = x</code>; pop: <code>top == −1</code> হলে → <b>আন্ডারফ্লো</b>, নইলে <code>s[top−−]</code> ফেরত। <i class="mk">২</i></li>
+    <li><b>ইনফিক্স → পোস্টফিক্স (২)</b> — A আউট; + push; B আউট; * + এর চেয়ে বড়, push; C আউট; − এলে * ও + pop (≥ অগ্রাধিকার), − push; D আউট; / push; E আউট; / ও − pop → <b>A B C * + D E / −</b>। <i class="mk">২</i></li>
+    <li><b>মূল্যায়ন (২)</b> — push 5, 6, 2; + → 8; * → 40; push 12, 4; / → 3; − → 40 − 3 = <b>37</b>। <i class="mk">২</i></li>
+  </ol>
+  <h3 style="line-height:6mm;margin-top:3mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ul class="tick">
+      <li>−x কে S-M, 1's ও 2's-এ লিখতে পারি</li>
+      <li>IEEE 754 সিঙ্গেল ও ডাবলের বিন্যাস জানি</li>
+      <li>ADT সংজ্ঞা ও DS-এর সাথে পার্থক্য বলতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>2-D-র দুই অ্যাড্রেস সূত্র প্রয়োগ করতে পারি</li>
+      <li>ইনফিক্স → পোস্টফিক্স ও তার মান বের করতে পারি</li>
+      <li>সার্কুলার কিউ ও ট্রির সূত্র বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

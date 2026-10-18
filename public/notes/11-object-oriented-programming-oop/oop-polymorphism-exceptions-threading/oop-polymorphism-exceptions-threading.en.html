@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OOP: Polymorphism, Exceptions, Templates &amp; Multi-threading: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title" style="font-size:23pt"><span class="u">Polymorphism, Exceptions, Templates &amp; Threads</span></h1>
+  <p class="subtitle">Virtual · Exceptions · Templates · I/O · Threads: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L176,145 M424,145 L464,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="k l">Polymorphism +</text><text x="320" y="164" text-anchor="middle" class="r s">one interface, many forms</text>
+      <text x="142" y="62" text-anchor="middle" class="r w6">Overloading ★</text>
+      <text x="320" y="38" text-anchor="middle" class="r w6">virtual · vtable ★</text>
+      <text x="498" y="62" text-anchor="middle" class="s">Abstract class · = 0</text>
+      <text x="96" y="150" text-anchor="middle" class="g w6">early vs late</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6">Exceptions ★</text>
+      <text x="142" y="238" text-anchor="middle" class="s">Streams: &lt;&lt; &gt;&gt; fstream</text>
+      <text x="320" y="264" text-anchor="middle" class="r w6">Threads · sync ★</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6">Templates ★</text>
+    </svg>
+    <figcaption>↑ the whole lesson on one page: red = high-yield, green = the idea everything else hangs on</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm"><b>High-yield list</b><br>① Overload: compile time; override: run time<br>② Return type alone ≠ overload<br>③ No overload: <code>:: . .* ?: sizeof</code><br>④ Java methods virtual by default<br>⑤ ≥ 1 pure virtual ⇒ abstract<br>⑥ Polymorphic base: virtual dtor<br>⑦ <code>finally</code> runs either way<br>⑧ Checked = compiler-enforced<br>⑨ Templates: compile-time copies<br>⑩ <code>start()</code> = new thread; <code>run()</code> no</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The OOP syllabus continues with "<span class="hl">Polymorphism: overloading, abstract classes, virtual functions and overriding; Exceptions; Object Oriented I/O; Template functions and classes; Multi-threaded Programming.</span>" Classes, access and static members are in the first lesson; constructors and inheritance in the second.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>Polymorphism &amp; overloading … p. 2</li><li>Virtual functions &amp; overriding … p. 3</li><li>Abstract classes, virtual destructor … p. 4</li><li>Exceptions: C++ and Java … p. 5</li><li>Templates and generics … p. 6</li></ul>
+    <ul class="tick"><li>Object-oriented I/O: streams … p. 7</li><li>Threads: creation &amp; life cycle … p. 8</li><li>Synchronization &amp; deadlock … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: polymorphism + overloading ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Overloading</span></div>
+  <h2><span class="no">1</span>Polymorphism: Compile-time vs Run-time; Overloading</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Polymorphism</span> ("one interface, many forms") lets the same name do different work depending on the types involved. <b>Binding</b> = connecting a call to a function body. <span class="hl">Early (static) binding</span> happens at compile time — overloading and templates. <span class="hl">Late (dynamic) binding</span> happens at run time — overriding through a base pointer or reference.</div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="246">
+      <g class="w">
+        <rect x="80" y="6" width="140" height="32" rx="10" class="ink-k fill-y"/>
+        <rect x="6" y="70" width="134" height="36" rx="10" class="ink fill-b"/>
+        <rect x="160" y="70" width="134" height="36" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M130,38 L80,68 M170,38 L222,68"/>
+        <path class="ink" d="M40,106 V128 M74,106 V160 M110,106 V128"/>
+        <path class="ink-r" d="M227,106 V128"/>
+      </g>
+      <text x="150" y="27" text-anchor="middle" class="k w6">Polymorphism</text>
+      <text x="73" y="86" text-anchor="middle" class="w6 s">Compile-time</text>
+      <text x="73" y="100" text-anchor="middle" class="s">static · early</text>
+      <text x="36" y="144" text-anchor="middle" class="s">function</text>
+      <text x="36" y="158" text-anchor="middle" class="s">overload</text>
+      <text x="76" y="176" text-anchor="middle" class="s">operator</text>
+      <text x="76" y="190" text-anchor="middle" class="s">overload</text>
+      <text x="118" y="144" text-anchor="middle" class="s">template</text>
+      <text x="227" y="86" text-anchor="middle" class="r w6 s">Run-time</text>
+      <text x="227" y="100" text-anchor="middle" class="r s">dynamic · late</text>
+      <text x="227" y="144" text-anchor="middle" class="r s">virtual function</text>
+      <text x="227" y="160" text-anchor="middle" class="r s">overriding</text>
+    </svg><figcaption>two families, four tools</figcaption></figure>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Function overloading rules</span> Same name, same scope; parameter lists differ in <b>number</b>, <b>type</b> or <b>order</b>. <span class="circ">Return type alone</span> is not enough: <code>int f(int)</code> + <code>double f(int)</code> = compile error. The compiler ranks: exact match → promotion (<code>char→int</code>, <code>float→double</code>) → standard conversion → user conversion; two equally good matches = <b>ambiguity error</b>. Java also lets a subclass overload an inherited method.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Compile-time polymorphism</th><th class="l">Run-time polymorphism</th></tr>
+    <tr><td class="l">Also called</td><td class="l">static, early binding</td><td class="l">dynamic, late binding</td></tr>
+    <tr><td class="l">Decided by</td><td class="l">argument list / types</td><td class="l">actual object type</td></tr>
+    <tr><td class="l">Mechanism</td><td class="l">overloading, templates</td><td class="l"><code>virtual</code> + overriding</td></tr>
+    <tr><td class="l">Needs inheritance</td><td class="l">no</td><td class="l"><span class="circ">yes</span></td></tr>
+      </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Complex {
+  double re, im;
+public:
+  Complex(double r=0, double i=0)
+      : re(r), im(i) {}
+  Complex operator+(const Complex&amp; c) const {
+    return Complex(re + c.re, im + c.im);
+  }
+};
+Complex a(1,2), b(3,4);
+Complex c = a + b;  // a.operator+(b) → 4+6i</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ which f?</span> <code>void f(int); void f(double);</code><br><code>f('a')</code> → promotion → <span class="circ">f(int)</span><br><code>f(2.5f)</code> → float promotes → f(double)<br><code>f(5L)</code> → long converts to both → <b>ambiguous</b></div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:30%">C++ operators</th><th class="l">Operators</th></tr>
+    <tr><td class="l"><span class="red"><b>Cannot</b></span> be overloaded</td><td class="l"><code>::</code> · <code>.</code> · <code>.*</code> · <code>?:</code> · <code>sizeof</code> · <code>typeid</code> · <code>alignof</code> · the <code>_cast</code>s · <code>#</code> <code>##</code></td></tr>
+    <tr><td class="l">Only as a <b>member</b></td><td class="l"><code>=</code> · <code>()</code> · <code>[]</code> · <code>-&gt;</code> (and conversion operators)</td></tr>
+    <tr><td class="l">Usually a <b>friend</b></td><td class="l"><code>&lt;&lt;</code> <code>&gt;&gt;</code> for streams; symmetric <code>a + 2</code> / <code>2 + a</code></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> The five you can't touch: "<b>Scope, Dot, Dot-star, Question, Size</b>" — <code>:: . .* ?: sizeof</code>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Java has no user operator overloading</b>; <code>+</code> on String is built in. <code>f(int, int = 0)</code> + <code>f(int)</code>: <code>f(5)</code> is ambiguous.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Rules</span> Precedence, associativity and arity never change; no new operators (<code>**</code>); one operand must be a user type.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: virtual functions & overriding ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Virtual &amp; overriding</span></div>
+  <h2><span class="no">2</span>Virtual Functions, vtable and Overriding</h2><span class="tag">output questions ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Overriding</span> = a derived class redefines an inherited method with the <b>same signature</b>. A C++ <span class="hl">virtual function</span> is resolved by the <b>object's</b> type, not the pointer's, so <code>Base* p = new Derived; p-&gt;f();</code> runs <code>Derived::f</code>. Without <code>virtual</code> the pointer's type decides (static binding). The compiler implements this with a <b>vtable</b> per class and a hidden <b>vptr</b> per object.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 262px;align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Base { public:
+  void show() { cout &lt;&lt; "Base "; }
+  virtual void print() { cout &lt;&lt; "BasePrint"; }
+};
+class Derived : public Base { public:
+  void show() { cout &lt;&lt; "Derived "; }
+  void print() override
+               { cout &lt;&lt; "DerivedPrint"; }
+};
+Base* p = new Derived;
+p-&gt;show();   // Base         (static)
+p-&gt;print();  // DerivedPrint (dynamic)
+// output: Base DerivedPrint</div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="258">
+      <g class="w">
+        <rect x="8" y="30" width="86" height="64" rx="8" class="ink-k fill-y"/>
+        <rect x="150" y="10" width="142" height="54" rx="8" class="ink fill-b"/>
+        <rect x="150" y="104" width="142" height="54" rx="8" class="ink-r fill-r"/>
+        <path class="ink-r" d="M94,58 C120,58 120,112 146,120" marker-end="url(#ah)"/>
+      </g>
+      <text x="51" y="24" text-anchor="middle" class="s k w6">Derived object</text>
+      <text x="51" y="54" text-anchor="middle" class="s r">vptr</text>
+      <text x="51" y="78" text-anchor="middle" class="s">data</text>
+      <text x="221" y="30" text-anchor="middle" class="s w6">Base vtable</text>
+      <text x="221" y="50" text-anchor="middle" class="s">print → Base::print</text>
+      <text x="221" y="124" text-anchor="middle" class="s r w6">Derived vtable</text>
+      <text x="221" y="144" text-anchor="middle" class="s r">print → Derived::print</text>
+      <text x="80" y="176" text-anchor="middle" class="s g">p-&gt;print() reads vptr,</text>
+      <text x="80" y="192" text-anchor="middle" class="s g">then jumps via vtable</text>
+    </svg><figcaption>one vtable per class, one vptr per object</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Overloading</th><th class="l">Overriding</th></tr>
+    <tr><td class="l">Where</td><td class="l">same class</td><td class="l">base and derived class</td></tr>
+    <tr><td class="l">Signature</td><td class="l">must <b>differ</b></td><td class="l">must be the <b>same</b></td></tr>
+    <tr><td class="l">Return type</td><td class="l">anything</td><td class="l">same or covariant (a subclass type)</td></tr>
+    <tr><td class="l">Binding</td><td class="l">compile time</td><td class="l">run time</td></tr>
+    <tr><td class="l">Access (Java)</td><td class="l">any</td><td class="l">same or wider, never narrower</td></tr>
+    <tr><td class="l">static / private / final</td><td class="l">can be overloaded</td><td class="l"><span class="circ">not overridable</span>; static is <i>hidden</i></td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Language</th><th class="l">Virtual by default?</th><th class="l">Keywords</th><th class="l">Block overriding</th></tr>
+    <tr><td class="l">C++</td><td class="l">no</td><td class="l"><code>virtual</code>, <code>override</code></td><td class="l"><code>final</code> (C++11)</td></tr>
+    <tr><td class="l">Java</td><td class="l"><b>yes</b> (non-static, non-private)</td><td class="l"><code>@Override</code> (optional)</td><td class="l"><code>final</code></td></tr>
+    <tr><td class="l">C#</td><td class="l">no</td><td class="l"><code>virtual</code> / <code>override</code></td><td class="l"><code>sealed</code></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>The pointer picks the menu; with <code>virtual</code>, the object picks the dish.</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Constructors cannot be virtual</b>; a virtual call inside one runs the <i>base</i> version. Java overriding may not <b>reduce access</b> or throw broader checked exceptions.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ sizeof</span> 64-bit: <code>class A { int x; };</code> → 4. Add one virtual function → <span class="circ">16</span> (8-byte vptr + 4 + padding). More virtual functions: still one vptr.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: abstract classes, virtual destructor, slicing ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Abstract classes</span></div>
+  <h2><span class="no">3</span>Abstract Classes and Virtual Destructors</h2><span class="tag">high-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">pure virtual function</span> is declared with <code>= 0</code> — <code>virtual double area() = 0;</code> — and says "every subclass must supply this". A class with <span class="circ">at least one</span> pure virtual function is an <span class="hl">abstract class</span>: no objects of it can be created, but pointers and references to it can. A derived class that does not override every pure virtual function is abstract too. Java and C# use the keyword <code>abstract</code>.</div>
+  <div class="cols" style="grid-template-columns:236px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="232">
+      <g class="w">
+        <rect x="70" y="8" width="160" height="56" rx="10" class="ink-k fill-y" style="stroke-dasharray:6 4"/>
+        <rect x="8" y="122" width="120" height="44" rx="10" class="ink-g fill-g"/>
+        <rect x="172" y="122" width="120" height="44" rx="10" class="ink-g fill-g"/>
+        <path class="ink" d="M68,120 L120,66" marker-end="url(#ahb)"/>
+        <path class="ink" d="M232,120 L180,66" marker-end="url(#ahb)"/>
+      </g>
+      <text x="150" y="30" text-anchor="middle" class="k w6">Shape (abstract)</text>
+      <text x="150" y="50" text-anchor="middle" class="s r">area() = 0</text>
+      <text x="68" y="142" text-anchor="middle" class="s g w6">Circle</text>
+      <text x="68" y="158" text-anchor="middle" class="s">area() { πr² }</text>
+      <text x="232" y="142" text-anchor="middle" class="s g w6">Rect</text>
+      <text x="232" y="158" text-anchor="middle" class="s">area() { w·h }</text>
+      <text x="150" y="190" text-anchor="middle" class="s r">new Shape() ✗ · Shape* s ✓</text>
+    </svg><figcaption>dashed = cannot be instantiated</figcaption></figure>
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Shape { public:
+  virtual double area() = 0;  // pure
+  virtual ~Shape() {}         // virtual dtor
+};
+class Circle : public Shape { double r;
+public:
+  Circle(double r) : r(r) {}
+  double area() override { return 3.14159*r*r; }
+};
+Shape* s[2] = { new Circle(1), new Rect(2, 3) };
+double total = 0;
+for (auto x : s) total += x-&gt;area();
+// Shape t;  → error: abstract class</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Can an abstract class …</th><th class="l">C++</th><th class="l">Java</th></tr>
+    <tr><td class="l">have constructors, fields, normal methods?</td><td class="l">yes (derived class runs the constructor)</td><td class="l">yes</td></tr>
+    <tr><td class="l">have <b>zero</b> abstract methods?</td><td class="l">no — abstract only if ≥ 1 pure virtual</td><td class="l"><span class="circ">yes</span>, if marked <code>abstract</code></td></tr>
+    <tr><td class="l">give the abstract method a body?</td><td class="l">yes, defined outside: <code>Shape::area()</code></td><td class="l">no</td></tr>
+  </table>
+  <div class="tipbox tiny"><span class="lbl">Same in Java</span> <code>abstract class Shape { abstract double area(); }</code> · <code>class Circle extends Shape {…}</code> · <code>Shape s = new Circle(1);</code> is legal — the reference type may be abstract.</div>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Virtual destructor</span> <code>Base* p = new Derived; delete p;</code> — if <code>~Base()</code> is <b>not</b> virtual, only the base destructor runs (formally undefined behaviour) and the derived part leaks. Rule: <span class="hl">a class with any virtual function needs a virtual destructor</span>. Order with it: <code>~Derived()</code> then <code>~Base()</code>.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Object slicing</span> <code>Derived d; Base b = d;</code> copies <b>only the Base part</b>; the derived fields are "sliced off" and <code>b.print()</code> calls <code>Base::print</code>. Polymorphism works only through <b>pointers or references</b>, never by value. Java has no slicing: variables hold references.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>= 0 means zero objects.</b>" Put <code>= 0</code> anywhere in a class and it can no longer be built.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> "Abstract class contains only abstract methods" is <b>false</b>. C++ has no <code>abstract</code> keyword. Abstract class vs interface: first lesson.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ total area</span> Circle(1) + Rect(2,3) = 3.14159 + 6 = <span class="circ">9.14</span>, each <code>area()</code> chosen at run time.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: exceptions ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Exceptions</span></div>
+  <h2><span class="no">4</span>Exception Handling: C++ and Java</h2><span class="tag">output questions ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> An <span class="hl">exception</span> is an abnormal event at run time (divide by zero, bad index, missing file) that breaks the normal flow. <code>try</code> guards a block, <code>throw</code> raises an exception object, <code>catch</code> handles a matching type. A <code>throw</code> triggers <span class="hl">stack unwinding</span>: frames are popped and their locals destroyed until a handler matches; none → <code>std::terminate()</code> (C++) or the thread dies with a stack trace (Java).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 244px;align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">double divide(int a, int b) {
+  if (b == 0) throw runtime_error("b = 0");
+  return (double)a / b;
+}
+try {
+  cout &lt;&lt; divide(10, 0);   // skipped
+} catch (const runtime_error&amp; e) {
+  cout &lt;&lt; e.what();        // b = 0
+} catch (...) {             // any type
+  cout &lt;&lt; "unknown";
+}</div>
+    <figure class="doodle"><svg viewBox="0 0 280 190" width="240">
+      <g class="w">
+        <rect x="10" y="8" width="150" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="10" y="62" width="150" height="34" rx="8" class="ink fill-b"/>
+        <rect x="10" y="116" width="150" height="34" rx="8" class="ink-r fill-r"/>
+        <path class="ink-r" d="M170,132 C220,120 220,40 166,26" marker-end="url(#ah)"/>
+        <path class="ink" d="M85,42 V58 M85,96 V112" marker-end="url(#ahb)"/>
+      </g>
+      <text x="85" y="30" text-anchor="middle" class="s g w6">main(): try / catch</text>
+      <text x="85" y="84" text-anchor="middle" class="s">f(): locals destroyed</text>
+      <text x="85" y="138" text-anchor="middle" class="s r w6">g(): throw</text>
+      <text x="236" y="84" text-anchor="middle" class="s r">unwind</text>
+      <text x="140" y="176" text-anchor="middle" class="s k">calls go down, the exception goes up</text>
+    </svg><figcaption>stack unwinding</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:14%">Keyword</th><th class="l" style="width:40%">C++</th><th class="l">Java</th></tr>
+    <tr><td class="l"><code>throw</code></td><td class="l">any type; <code>throw;</code> rethrows</td><td class="l"><code>throw new X()</code> — a Throwable</td></tr>
+    <tr><td class="l"><code>throws</code></td><td class="l">none; <code>noexcept</code> = will not throw</td><td class="l">header lists checked exceptions</td></tr>
+    <tr><td class="l"><code>finally</code></td><td class="l"><b>none</b> — destructors clean up (RAII)</td><td class="l">runs <span class="circ">whether or not</span> one occurs</td></tr>
+    <tr><td class="l">catch-all</td><td class="l"><code>catch (...)</code>, must be last</td><td class="l"><code>catch (Exception e)</code>; multi-catch <code>A | B</code></td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:30%">Java class</th><th class="l" style="width:16%">Kind</th><th class="l">Examples</th></tr>
+    <tr><td class="l">Throwable → <b>Error</b></td><td class="l">unchecked</td><td class="l">OutOfMemoryError, StackOverflowError (don't catch)</td></tr>
+    <tr><td class="l">Exception → <b>RuntimeException</b></td><td class="l"><span class="hl">unchecked</span></td><td class="l">Arithmetic, NullPointer, ArrayIndexOutOfBounds, ClassCast</td></tr>
+    <tr><td class="l">other <b>Exception</b>s</td><td class="l"><span class="hl">checked</span></td><td class="l">IOException, FileNotFound, SQLException, InterruptedException</td></tr>
+  </table>
+  <p class="tiny" style="margin:0"><b>Checked</b> = the compiler forces you to catch it or declare it with <code>throws</code>. C++: <code>std::exception</code> → <i>logic_error</i> (out_of_range, invalid_argument), <i>runtime_error</i> (overflow_error, underflow_error), <i>bad_alloc</i>, <i>bad_cast</i>; all have <code>what()</code>.</p>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Catch the child before the parent.</b>" The first matching handler wins, so derived types go first. "<b>Checked = Compiler-checked.</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>catch (Exception e)</code> above a subclass catch = <b>compile error</b> in Java. <code>finally</code> is skipped only by <code>System.exit()</code> or a crash; a <code>return</code> in finally overrides the try's.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ trace</span> <code>int[] a = new int[3];</code> <code>try { a[3]=10; print("X"); } catch {print("Y");} finally {print("Z");} print("W");</code> → <span class="circ">YZW</span></div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: templates & generics ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Templates</span></div>
+  <h2><span class="no">5</span>Template Functions and Classes; Java Generics</h2><span class="tag">programming question ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">template</span> is a blueprint written once with a type parameter <code>T</code>. When code uses it with a concrete type, the compiler <span class="hl">instantiates</span> it — generates a separate function or class for that type — at <b>compile time</b>. This is <b>parametric (generic) polymorphism</b>; the whole STL (<code>vector&lt;T&gt;</code>, <code>sort</code>, <code>map&lt;K,V&gt;</code>) is built on it.</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">template &lt;typename T&gt;
+T maxOf(T a, T b) { return a &gt; b ? a : b; }
+
+cout &lt;&lt; maxOf(3, 7)        // T = int
+     &lt;&lt; " " &lt;&lt; maxOf(2.5, 1.5)
+     &lt;&lt; " " &lt;&lt; maxOf('a', 'z');
+// output: 7 2.5 z
+// maxOf(3, 2.5)  → error: T int or double?
+// maxOf&lt;double&gt;(3, 2.5) → 3</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">template &lt;class T, int N = 100&gt;
+class Stack {
+  T data[N];  int top = -1;
+public:
+  void push(const T&amp; x) {
+    if (top == N - 1) throw overflow_error("full");
+    data[++top] = x;
+  }
+  T pop() {
+    if (top &lt; 0) throw underflow_error("empty");
+    return data[top--];
+  }
+};
+Stack&lt;int&gt; si;  Stack&lt;string, 10&gt; ss;</div>
+  </div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="246">
+      <g class="w">
+        <rect x="70" y="6" width="160" height="40" rx="10" class="ink-k fill-y" style="stroke-dasharray:6 4"/>
+        <rect x="6" y="104" width="88" height="40" rx="8" class="ink fill-b"/>
+        <rect x="106" y="104" width="88" height="40" rx="8" class="ink fill-b"/>
+        <rect x="206" y="104" width="88" height="40" rx="8" class="ink fill-b"/>
+        <path class="ink-r" d="M120,48 L54,100" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M150,48 V100" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M180,48 L246,100" marker-end="url(#ah)"/>
+      </g>
+      <text x="150" y="31" text-anchor="middle" class="k w6">maxOf&lt;T&gt;</text>
+      <text x="40" y="66" text-anchor="middle" class="s r">compiler</text>
+      <text x="40" y="80" text-anchor="middle" class="s r">generates</text>
+      <text x="50" y="129" text-anchor="middle" class="s">maxOf&lt;int&gt;</text>
+      <text x="150" y="129" text-anchor="middle" class="s">&lt;double&gt;</text>
+      <text x="250" y="129" text-anchor="middle" class="s">&lt;char&gt;</text>
+      <text x="150" y="164" text-anchor="middle" class="s g">one source, three functions</text>
+    </svg><figcaption>instantiation at compile time</figcaption></figure>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Specialization</span> A <b>full specialization</b> replaces the template for one exact type: <code>template&lt;&gt; const char* maxOf(const char* a, const char* b)</code> using <code>strcmp</code> — without it two C strings are compared by <b>address</b>. Class templates may also be <b>partially</b> specialized (<code>Stack&lt;T*&gt;</code>); function templates cannot. Template code lives in the <b>header</b>: the compiler needs the full body to instantiate it.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:20%">Point</th><th class="l" style="width:36%">C++ template</th><th class="l">Java generics</th></tr>
+    <tr><td class="l">Resolved</td><td class="l">compile time, per type</td><td class="l">compile time, then <b>type erasure</b></td></tr>
+    <tr><td class="l">Code copies</td><td class="l">one per type (code bloat)</td><td class="l">one class (<code>Object</code> inside)</td></tr>
+    <tr><td class="l">Primitive args</td><td class="l">yes: <code>Stack&lt;int&gt;</code></td><td class="l">no: <code>List&lt;Integer&gt;</code>, never <code>&lt;int&gt;</code></td></tr>
+    <tr><td class="l">Extras</td><td class="l">non-type params <code>&lt;int N&gt;</code>, specialization</td><td class="l">bounds <code>&lt;T extends Comparable&lt;T&gt;&gt;</code>, wildcard <code>?</code></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Templates are cookie cutters</b>": one cutter, a new cookie for every dough (type). Java generics: one cookie with a label.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Java generics are <b>not</b> templates: after erasure <code>List&lt;String&gt;</code> and <code>List&lt;Integer&gt;</code> share <span class="circ">one class</span>, so <code>new T()</code> is illegal.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ Java</span> <code>static &lt;T&gt; void show(T v)</code>: <code>show(100)</code> autoboxes to Integer. <code>Box&lt;String&gt; b = new Box&lt;&gt;();</code> — the diamond infers String.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: object-oriented I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>OO I/O</span></div>
+  <h2><span class="no">6</span>Object-Oriented I/O: Streams</h2><span class="tag">MCQ facts</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> In OO I/O, data moves through <span class="hl">stream objects</span>: a stream is a sequence of bytes flowing from a source (keyboard, file) or to a sink (screen, file). C++ supplies a class hierarchy in <code>&lt;iostream&gt;</code>, <code>&lt;fstream&gt;</code>, <code>&lt;sstream&gt;</code>; <code>&lt;&lt;</code> (<b>insertion</b>) and <code>&gt;&gt;</code> (<b>extraction</b>) are overloaded operators, so user classes can join in.</div>
+  <div class="cols" style="grid-template-columns:262px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 220" width="258">
+      <g class="w">
+        <rect x="100" y="4" width="100" height="28" rx="8" class="ink-k fill-y"/>
+        <rect x="20" y="58" width="100" height="28" rx="8" class="ink fill-b"/>
+        <rect x="180" y="58" width="100" height="28" rx="8" class="ink fill-b"/>
+        <rect x="100" y="114" width="100" height="28" rx="8" class="ink-r fill-r"/>
+        <rect x="4" y="170" width="92" height="28" rx="8" class="ink-g fill-g"/>
+        <rect x="104" y="170" width="92" height="28" rx="8" class="ink-g fill-g"/>
+        <rect x="204" y="170" width="92" height="28" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M70,56 L130,34 M230,56 L170,34 M70,88 L130,112 M230,88 L170,112 M50,168 L60,88 M150,168 V144 M250,168 L240,88"/>
+      </g>
+      <text x="150" y="23" text-anchor="middle" class="s k w6">ios (ios_base)</text>
+      <text x="70" y="77" text-anchor="middle" class="s w6">istream</text>
+      <text x="230" y="77" text-anchor="middle" class="s w6">ostream</text>
+      <text x="150" y="133" text-anchor="middle" class="s r w6">iostream</text>
+      <text x="50" y="189" text-anchor="middle" class="s g">ifstream</text>
+      <text x="150" y="189" text-anchor="middle" class="s g">fstream</text>
+      <text x="250" y="189" text-anchor="middle" class="s g">ofstream</text>
+      <text x="150" y="214" text-anchor="middle" class="s">cin: istream · cout: ostream</text>
+    </svg><figcaption>iostream: multiple inheritance</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Object</th><th class="l">Class</th><th class="l">Device</th><th class="l">Buffered</th></tr>
+        <tr><td class="l"><code>cin</code></td><td class="l">istream</td><td class="l">keyboard</td><td class="l">yes</td></tr>
+        <tr><td class="l"><code>cout</code></td><td class="l">ostream</td><td class="l">screen</td><td class="l">yes</td></tr>
+        <tr><td class="l"><code>cerr</code></td><td class="l">ostream</td><td class="l">error</td><td class="l"><span class="circ">no</span></td></tr>
+        <tr><td class="l"><code>clog</code></td><td class="l">ostream</td><td class="l">error log</td><td class="l">yes</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Mode</th><th class="l">Meaning</th></tr>
+        <tr><td class="l"><code>ios::in</code> · <code>out</code></td><td class="l">read · write</td></tr>
+        <tr><td class="l"><code>ios::app</code></td><td class="l">every write at the end</td></tr>
+        <tr><td class="l"><code>ios::ate</code></td><td class="l">open, seek to end once</td></tr>
+        <tr><td class="l"><code>ios::trunc</code></td><td class="l">empty the file first</td></tr>
+        <tr><td class="l"><code>ios::binary</code></td><td class="l">no text translation</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">class Point { int x, y;
+ public:
+  Point(int a=0, int b=0) : x(a), y(b) {}
+  friend ostream&amp; operator&lt;&lt;(ostream&amp; os,
+                             const Point&amp; p) {
+    return os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ","
+              &lt;&lt; p.y &lt;&lt; ")";
+  }
+};
+ofstream out("pts.txt", ios::app);
+out &lt;&lt; Point(2, 3) &lt;&lt; endl;  // (2,3)
+out.close();
+ifstream in("pts.txt");  string line;
+while (getline(in, line)) cout &lt;&lt; line;</div>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Manipulator</th><th class="l">Effect</th></tr>
+        <tr><td class="l"><code>endl</code></td><td class="l">newline <b>+ flush</b></td></tr>
+        <tr><td class="l"><code>setw(n)</code></td><td class="l">width, <b>next</b> item only</td></tr>
+        <tr><td class="l"><code>setprecision(n)</code></td><td class="l">digits (after point with <code>fixed</code>)</td></tr>
+        <tr><td class="l"><code>setfill(c)</code></td><td class="l">padding character</td></tr>
+        <tr><td class="l"><code>hex</code> <code>oct</code> <code>dec</code></td><td class="l">number base (sticky)</td></tr>
+      </table>
+      <p class="tiny" style="margin:0">ofstream opens with <code>out | trunc</code> by default; check a file with <code>is_open()</code>, <code>eof()</code>, <code>fail()</code>.</p>
+    </div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Java I/O</span> <b>Byte</b> streams: InputStream / OutputStream (FileInputStream). <b>Character</b> streams: Reader / Writer (FileReader, FileWriter, BufferedReader with <code>readLine()</code>). <code>System.in</code> is an InputStream, <code>System.out</code> a PrintStream; <code>Scanner</code> parses tokens (<code>nextInt()</code>, <code>nextLine()</code>). Close files with <b>try-with-resources</b>; save whole objects with ObjectOutputStream (class must be Serializable).</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Arrows point where the data goes</b>": <code>cout &lt;&lt; x</code> pushes x out; <code>cin &gt;&gt; x</code> pulls into x.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>operator&lt;&lt;</code> must be a <b>non-member</b> (friend) returning <code>ostream&amp;</code> for chaining. <code>cin &gt;&gt; s</code> stops at a space.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍</span> <code>cout &lt;&lt; setw(5) &lt;&lt; 42 &lt;&lt; 7;</code> → "<span class="circ">␣␣␣427</span>": setw pads only 42.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: threads ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Threads</span></div>
+  <h2><span class="no">7</span>Threads: Creation and Life Cycle</h2><span class="tag">high-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">thread</span> is the smallest unit of CPU scheduling — a "lightweight process". <span class="hl">Multi-threading</span> runs two or more threads inside one process; they share its code, data and heap, but each has its own <b>stack, registers and program counter</b>. One core: threads run <b>concurrently</b> (interleaved); many cores: in <b>parallel</b>. Uses: responsive GUIs, servers, background downloads.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l" style="width:24%">Point</th><th class="l">Process</th><th class="l">Thread</th></tr>
+    <tr><td class="l">Memory</td><td class="l">own address space</td><td class="l">shares the process's memory</td></tr>
+    <tr><td class="l">Create / switch</td><td class="l">heavy, slow</td><td class="l"><span class="circ">light, fast</span></td></tr>
+    <tr><td class="l">Communication</td><td class="l">IPC: pipes, sockets</td><td class="l">shared variables (need locks)</td></tr>
+    <tr><td class="l">One crashes</td><td class="l">others unaffected</td><td class="l">can kill the whole process</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">// Way 1: extend Thread
+class MyThread extends Thread {
+  public void run() { System.out.println("T1"); }
+}
+// Way 2: implement Runnable (preferred)
+class Task implements Runnable {
+  public void run() { System.out.println("T2"); }
+}
+new MyThread().start();
+new Thread(new Task()).start();
+new Thread(() -&gt; System.out.println("T3"))
+    .start();               // lambda (Java 8)</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">start() vs run()</span> <code>start()</code> asks the JVM for a <b>new</b> thread, which then calls <code>run()</code>. Calling <code>run()</code> directly is an ordinary call on the <b>current</b> thread. <code>start()</code> twice → IllegalThreadStateException. <b>Runnable is preferred</b>: the class can still extend another class (single inheritance), and one task can be shared by many threads. The order in which threads print is <b>not guaranteed</b>.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Method</th><th class="l">Does</th></tr>
+      <tr><td class="l"><code>sleep(ms)</code></td><td class="l">pause; <b>keeps</b> locks</td></tr>
+      <tr><td class="l"><code>join()</code></td><td class="l">wait for it to end</td></tr>
+      <tr><td class="l"><code>yield()</code></td><td class="l">hint: let others run</td></tr>
+      <tr><td class="l"><code>wait()</code></td><td class="l"><b>releases</b> the lock</td></tr>
+      <tr><td class="l"><code>setPriority</code></td><td class="l">1 … <span class="circ">5</span> … 10</td></tr>
+      <tr><td class="l"><code>setDaemon</code></td><td class="l">background thread</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 330 200" width="298">
+      <g class="w">
+        <rect x="4" y="80" width="56" height="34" rx="8" class="ink fill-b"/>
+        <rect x="104" y="70" width="110" height="54" rx="10" class="ink-r fill-r"/>
+        <rect x="236" y="80" width="90" height="34" rx="8" class="ink-k fill-y"/>
+        <rect x="94" y="4" width="130" height="30" rx="8" class="ink-p fill-p"/>
+        <rect x="94" y="162" width="130" height="34" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M60,97 H100" marker-end="url(#ahb)"/>
+        <path class="ink" d="M214,97 H232" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M146,68 V38 M172,36 V66" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M146,126 V158 M172,160 V128" marker-end="url(#ahg)"/>
+      </g>
+      <text x="32" y="102" text-anchor="middle" class="s w6">NEW</text>
+      <text x="159" y="93" text-anchor="middle" class="s r w6">RUNNABLE</text>
+      <text x="159" y="110" text-anchor="middle" class="s r">ready + running</text>
+      <text x="281" y="102" text-anchor="middle" class="s k w6">TERMINATED</text>
+      <text x="159" y="24" text-anchor="middle" class="s p w6">BLOCKED (lock)</text>
+      <text x="159" y="176" text-anchor="middle" class="s g">WAITING /</text>
+      <text x="159" y="190" text-anchor="middle" class="s g">TIMED_WAITING</text>
+      <text x="80" y="72" text-anchor="middle" class="s">start()</text>
+      <text x="225" y="72" text-anchor="middle" class="s">ends</text>
+    </svg><figcaption>Java Thread.State: six states</figcaption></figure>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>New Runners Block, Wait, Time-wait, Terminate</b>" — the six Java states in enum order.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Java has <b>no RUNNING state</b>: RUNNABLE = ready + running. Waiting for a lock = BLOCKED; <code>wait()</code>/<code>join()</code> = WAITING; <code>sleep(ms)</code> = TIMED_WAITING.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍</span> <code>t.run(); print("M");</code> → run's output always first (same thread). <code>t.start(); print("M");</code> → order <span class="circ">unpredictable</span>.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: synchronization ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Synchronization</span></div>
+  <h2><span class="no">8</span>Synchronization, Race Conditions and Deadlock</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">race condition</span> occurs when two threads access shared data, at least one writes, and the result depends on the timing. The code that touches shared data is the <span class="hl">critical section</span>; <b>synchronization</b> guarantees <b>mutual exclusion</b> — only one thread in it at a time. <code>count++</code> looks like one step but is three (read, add, write), so two threads can lose an update.</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">// Java: monitor lock on 'this'
+class Counter {
+  private int count = 0;
+  public synchronized void increment() {
+    count++;
+  }
+  public int get() { return count; }
+}
+// or: synchronized (lock) { count++; }
+// or: AtomicInteger c; c.incrementAndGet();</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">// C++11: &lt;thread&gt;, &lt;mutex&gt;
+int count = 0;  mutex m;
+void work() {
+  for (int i = 0; i &lt; 1000; i++) {
+    lock_guard&lt;mutex&gt; g(m);  // RAII lock
+    count++;
+  }
+}
+thread t1(work), t2(work);
+t1.join();  t2.join();   // wait for both
+cout &lt;&lt; count;           // always 2000</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Tool</th><th class="l">What it gives</th></tr>
+    <tr><td class="l"><b>Mutex</b> (lock)</td><td class="l">one owner at a time; the locker must unlock</td></tr>
+    <tr><td class="l"><b>Semaphore</b></td><td class="l">counter: up to <i>n</i> threads; binary semaphore ≈ mutex (but no ownership)</td></tr>
+    <tr><td class="l"><b>Monitor</b></td><td class="l">lock + waiting in one object: <code>synchronized</code> + <code>wait/notify</code></td></tr>
+    <tr><td class="l"><code>volatile</code> (Java)</td><td class="l">visibility of the latest value; <span class="circ">not atomicity</span> — <code>count++</code> still races</td></tr>
+    <tr><td class="l"><code>join</code> / <code>detach</code> (C++)</td><td class="l">wait for it / let it run alone; neither → <code>std::terminate</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="246">
+      <g class="w">
+        <circle cx="60" cy="50" r="34" class="ink fill-b"/>
+        <circle cx="240" cy="50" r="34" class="ink fill-b"/>
+        <rect x="20" y="126" width="80" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="200" y="126" width="80" height="36" rx="8" class="ink-r fill-r"/>
+        <path class="ink-g" d="M60,122 V88" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M240,122 V88" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M100,138 L206,74" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M200,138 L94,74" marker-end="url(#ah)"/>
+      </g>
+      <text x="60" y="55" text-anchor="middle" class="s w6">Lock A</text>
+      <text x="240" y="55" text-anchor="middle" class="s w6">Lock B</text>
+      <text x="60" y="149" text-anchor="middle" class="s r w6">T1</text>
+      <text x="240" y="149" text-anchor="middle" class="s r w6">T2</text>
+      <text x="38" y="108" text-anchor="middle" class="s g">holds</text>
+      <text x="262" y="108" text-anchor="middle" class="s g">holds</text>
+      <text x="150" y="98" text-anchor="middle" class="s r">wants</text>
+      <text x="150" y="176" text-anchor="middle" class="s k">circular wait = deadlock</text>
+    </svg><figcaption>each holds one, waits for the other</figcaption></figure>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Deadlock: 4 Coffman conditions</span> ① <b>Mutual exclusion</b> — a resource is held by one thread. ② <b>Hold and wait</b> — hold one, wait for another. ③ <b>No preemption</b> — a lock cannot be taken away. ④ <b>Circular wait</b> — T1 → T2 → … → T1. All four are needed; break one and deadlock is impossible — usually a <span class="hl">fixed lock order</span> (always A before B). <b>Starvation</b> = never gets a turn; <b>livelock</b> = busy but no progress.</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> Coffman = "<b>My Hat, No Coat</b>": Mutual exclusion, Hold &amp; wait, No preemption, Circular wait.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>wait()</code>/<code>notify()</code> are <b>Object</b> methods, called only while holding the lock (else IllegalMonitorStateException).</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ lost update</span> count = 5. T1 reads 5, T2 reads 5, T1 writes 6, T2 writes 6 → final <span class="circ">6</span>, not 7. Without the lock, two × 1000 increments give ≤ 2000.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Overloading → compile time, early binding</p><p>Overriding + virtual → run time, late binding</p>
+      <p>Return type alone cannot overload</p><p>No overload: <code>:: . .* ?: sizeof</code></p>
+      <p>Member only: <code>= () [] -&gt;</code></p><p>Java: no user operator overloading</p>
+      <p>vtable per class, vptr per object</p><p>Constructor never virtual; destructor should be</p>
+      <p><code>virtual f() = 0</code> → abstract class</p><p>Polymorphism via pointer/reference; by value = slicing</p>
+      <p>C++ has no finally (RAII); Java finally always (except System.exit)</p><p>Checked: IOException, SQLException</p>
+      <p>Unchecked: RuntimeException + Error</p><p>Templates: instantiated per type at compile time</p>
+      <p>Java generics: type erasure, no primitives</p><p><code>endl</code> = newline + flush; <code>cerr</code> unbuffered</p>
+      <p>Thread shares heap; own stack + PC</p><p>Java: 6 thread states; priority 1–10, default 5</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Polymorphism = one interface, many forms</li>
+      <li>Function overloading = static polymorphism</li>
+      <li>Java methods are virtual by default</li>
+      <li>C# needs <code>virtual</code> + <code>override</code>; <code>sealed</code> stops it</li>
+      <li>Catch derived exceptions before base</li>
+      <li><code>catch (...)</code> catches anything, goes last</li>
+    </ol>
+    <ol class="num" start="7">
+      <li><code>throw</code> raises; <code>throws</code> declares</li>
+      <li><code>noexcept</code> violated → <code>std::terminate</code></li>
+      <li>STL is built on templates</li>
+      <li><code>&lt;&lt;</code> overload = friend, returns <code>ostream&amp;</code></li>
+      <li><code>start()</code> new thread; <code>run()</code> same thread</li>
+      <li>Deadlock needs all four Coffman conditions</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 200px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Top traps</span> return type ≠ overload · virtual call in a constructor runs the base version · abstract class may have constructors · Java has no RUNNING state · <code>volatile</code> ≠ atomic · <code>sleep()</code> keeps the lock, <code>wait()</code> releases it · catch(Exception) before a subclass = compile error.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">All tricks together</span> Scope, Dot, Dot-star, Question, Size · pointer picks the menu, object picks the dish · = 0 means zero objects · catch the child before the parent · cookie cutters · arrows point where data goes · New Runners Block… · My Hat, No Coat.</div>
+    <figure class="doodle"><svg viewBox="0 0 200 130" width="196">
+      <g class="w">
+        <rect x="2" y="6" width="90" height="30" rx="8" class="ink fill-b"/>
+        <rect x="2" y="48" width="90" height="30" rx="8" class="ink-r fill-r"/>
+        <rect x="2" y="90" width="90" height="30" rx="8" class="ink-g fill-g"/>
+        <rect x="108" y="6" width="90" height="30" rx="8" class="ink fill-b"/>
+        <rect x="108" y="48" width="90" height="30" rx="8" class="ink fill-b"/>
+        <rect x="108" y="90" width="90" height="30" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M93,21 H104" marker-end="url(#ahb)"/>
+        <path class="ink" d="M93,63 H104" marker-end="url(#ahb)"/>
+        <path class="ink" d="M93,105 H104" marker-end="url(#ahb)"/>
+      </g>
+      <text x="47" y="26" text-anchor="middle" class="s">overload</text>
+      <text x="47" y="68" text-anchor="middle" class="r s">virtual</text>
+      <text x="47" y="110" text-anchor="middle" class="g s">template</text>
+      <text x="153" y="26" text-anchor="middle" class="s">compile time</text>
+      <text x="153" y="68" text-anchor="middle" class="s">run time</text>
+      <text x="153" y="110" text-anchor="middle" class="k s">compile time</text>
+    </svg><figcaption>when is it decided?</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ one keyword changes the output</span> In the Base/Derived program, remove <code>virtual</code> from <code>print()</code>: <code>p-&gt;print()</code> is now bound to the pointer type, so the output becomes "<span class="circ">Base BasePrint</span>" instead of "Base DerivedPrint".</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OOP · Polymorphism to Threads</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">1.</span>Function overloading is resolved at:<ol class="opts"><li>compile time</li><li>run time</li><li>link time</li><li>load time</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">2.</span>Which operator cannot be overloaded in C++?<ol class="opts"><li><code>+</code></li><li><code>[]</code></li><li><code>==</code></li><li><code>::</code></li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">3.</span>A C++ class with at least one pure virtual function is:<ol class="opts"><li>a friend class</li><li>a template class</li><li>an abstract class</li><li>a static class</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">4.</span>In Java, which block runs whether or not an exception occurs?<ol class="opts"><li>catch</li><li>finally</li><li>throw</li><li>throws</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">5.</span>To begin a new thread in Java, call:<ol class="opts"><li><code>run()</code></li><li><code>init()</code></li><li><code>start()</code></li><li><code>execute()</code></li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">6.</span>Which is an unchecked exception in Java?<ol class="opts"><li>IOException</li><li>SQLException</li><li>EOFException</li><li>ArithmeticException</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">7.</span>Why make a base-class destructor virtual?<ol class="opts"><li>so <code>delete</code> via <code>Base*</code> runs <code>~Derived</code></li><li>to make the class abstract</li><li>to block copying</li><li>to speed up <code>delete</code></li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">8.</span>C++ templates are instantiated at:<ol class="opts"><li>run time</li><li>compile time</li><li>load time</li><li>link time only</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">9.</span>How many states does Java's <code>Thread.State</code> define?<ol class="opts"><li>6</li><li>4</li><li>5</li><li>7</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">10.</span>Which is <b>not</b> a necessary condition for deadlock?<ol class="opts"><li>mutual exclusion</li><li>hold and wait</li><li>circular wait</li><li>preemption</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-a · 2-d · 3-c · 4-b · 5-c · 6-d · 7-a · 8-b · 9-a · 10-d</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Distinguish compile-time and run-time polymorphism. Explain how a virtual function gives run-time polymorphism in C++, with an example and the vtable mechanism. Why should the destructor of a polymorphic base class be virtual? <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>Distinction (3)</b> — compile-time: overloading / templates, chosen from the argument list, early binding, fast; run-time: overriding of virtual functions through a base pointer or reference, chosen by the object's type, late binding, needs inheritance. <i class="mk">3</i></li>
+    <li><b>Example (3)</b> — <code>Base</code> with <code>virtual void print()</code>, <code>Derived</code> overriding it; <code>Base* p = new Derived; p-&gt;print();</code> prints the derived version; without <code>virtual</code>, the base version. <i class="mk">3</i></li>
+    <li><b>Mechanism (2)</b> — each class with virtual functions has a vtable of function addresses; each object has a hidden vptr to its class's vtable; the call reads vptr, indexes the table and jumps. <i class="mk">2</i></li>
+    <li><b>Virtual destructor (2)</b> — <code>delete p</code> with a non-virtual <code>~Base</code> runs only the base destructor (undefined behaviour, leak); a virtual one runs <code>~Derived</code> then <code>~Base</code>. <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">Before the exam ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>Can list the non-overloadable operators</li>
+      <li>Can trace a virtual / non-virtual call</li>
+      <li>Can write an abstract class in C++ and Java</li>
+      <li>Can order catch blocks and trace finally</li>
+    </ul>
+    <ul class="tick">
+      <li>Can write a function and class template</li>
+      <li>Can overload <code>&lt;&lt;</code> for a class</li>
+      <li>Can draw the six Java thread states</li>
+      <li>Can state the four deadlock conditions</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

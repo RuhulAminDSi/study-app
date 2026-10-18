@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Information Theory: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Information Theory</span></h1>
+  <p class="subtitle">Entropy · Rate · Huffman · Shannon · Capacity: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">INFORMATION THEORY</text><text x="320" y="168" text-anchor="middle" class="r s">Shannon, 1948</text>
+      <text x="140" y="65" text-anchor="middle">I = log₂(1/p) · units</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Entropy H ★</text>
+      <text x="500" y="65" text-anchor="middle">Rate R = r·H</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Huffman · η ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">C = B log₂(1+S/N) ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">BSC · mutual info</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Hamming distance ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Nyquist 2B log₂M</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① I = log₂(1/p)<br>② H<sub>max</sub> = log₂M<br>③ R = r·H<br>④ Huffman, η = H/L<br>⑤ C = B log₂(1 + S/N)<br>⑥ limit −1.6 dB<br>⑦ d<sub>min</sub> rules</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">Communication Theory: "<span class="hl">Information theory: entropy, information rate, Shannon's theorem, channel capacity</span>". Also: source coding (Shannon–Fano, Huffman), the BSC, the Nyquist limit and error-control basics. Sampling is in the <i>Spectral Analysis &amp; Sampling</i> notes; PCM, modulation and multiplexing in the <i>Modulation, Pulse Signals &amp; Multiple Access</i> notes.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>System model, information … p. 2</li><li>Entropy &amp; information rate … p. 3</li><li>Source coding, Shannon–Fano … p. 4</li><li>Huffman coding ……… p. 5</li><li>BSC &amp; coding theorem ……… p. 6</li></ul>
+    <ul class="tick"><li>Shannon–Hartley &amp; dB ……… p. 7</li><li>Shannon limit, trade-off, Nyquist … p. 8</li><li>Error-control coding basics ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: system model, measure of information ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>System model</span></div>
+  <h2><span class="no">1</span>The Digital Communication System</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> Information theory is the mathematics of <span class="hl">measuring, compressing and reliably transmitting</span> information. Founded by Claude E. Shannon in "A Mathematical Theory of Communication" (Bell System Technical Journal, <span class="circ">1948</span>): the "father of information theory".</div>
+  <figure class="doodle"><svg viewBox="0 0 640 196" width="640">
+    <g class="w">
+      <rect x="6" y="18" width="100" height="42" rx="10" class="ink fill-b"/>
+      <rect x="128" y="18" width="110" height="42" rx="10" class="ink-g fill-g"/>
+      <rect x="260" y="18" width="110" height="42" rx="10" class="ink-p fill-p"/>
+      <rect x="392" y="18" width="100" height="42" rx="10" class="ink fill-b"/>
+      <rect x="516" y="74" width="118" height="48" rx="10" class="ink-r fill-r"/>
+      <rect x="392" y="136" width="100" height="42" rx="10" class="ink fill-b"/>
+      <rect x="260" y="136" width="110" height="42" rx="10" class="ink-p fill-p"/>
+      <rect x="128" y="136" width="110" height="42" rx="10" class="ink-g fill-g"/>
+      <rect x="6" y="136" width="100" height="42" rx="10" class="ink fill-b"/>
+      <path class="ink" d="M106,39 H126" marker-end="url(#ahb)"/><path class="ink" d="M238,39 H258" marker-end="url(#ahb)"/><path class="ink" d="M370,39 H390" marker-end="url(#ahb)"/>
+      <path class="ink" d="M492,39 H575 V72" marker-end="url(#ahb)"/>
+      <path class="ink" d="M575,122 V157 H494" marker-end="url(#ahb)"/>
+      <path class="ink" d="M392,157 H372" marker-end="url(#ahb)"/><path class="ink" d="M260,157 H240" marker-end="url(#ahb)"/><path class="ink" d="M128,157 H108" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M626,30 V72" marker-end="url(#ah)"/>
+    </g>
+    <text x="56" y="44" text-anchor="middle" class="w6">Source</text>
+    <text x="183" y="36" text-anchor="middle" class="s w6">Source</text><text x="183" y="52" text-anchor="middle" class="s w6">encoder</text>
+    <text x="315" y="36" text-anchor="middle" class="s w6">Channel</text><text x="315" y="52" text-anchor="middle" class="s w6">encoder</text>
+    <text x="442" y="44" text-anchor="middle" class="w6">Modulator</text>
+    <text x="575" y="103" text-anchor="middle" class="r w6">Channel</text>
+    <text x="616" y="22" text-anchor="middle" class="r s">noise</text>
+    <text x="442" y="162" text-anchor="middle" class="w6">Demod</text>
+    <text x="315" y="154" text-anchor="middle" class="s w6">Channel</text><text x="315" y="170" text-anchor="middle" class="s w6">decoder</text>
+    <text x="183" y="154" text-anchor="middle" class="s w6">Source</text><text x="183" y="170" text-anchor="middle" class="s w6">decoder</text>
+    <text x="56" y="162" text-anchor="middle" class="w6">Sink</text>
+    <text x="56" y="84" text-anchor="middle" class="s">H, R = r·H</text>
+    <text x="183" y="84" text-anchor="middle" class="g s">removes redundancy</text><text x="183" y="99" text-anchor="middle" class="g s">(compress, L → H)</text>
+    <text x="315" y="84" text-anchor="middle" class="p s">adds redundancy</text><text x="315" y="99" text-anchor="middle" class="p s">(FEC, needs R &lt; C)</text>
+    <text x="442" y="84" text-anchor="middle" class="s">bits → waveform</text>
+    <text x="442" y="112" text-anchor="middle" class="r s">C = B log₂(1+S/N)</text>
+  </svg><figcaption>Shannon's model: source coding squeezes the redundancy out, channel coding puts controlled redundancy back in</figcaption></figure>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>S</b>ource coding <b>S</b>hrinks, <b>C</b>hannel coding <b>C</b>overs." Source coding = compression (Huffman, ZIP: L, η); channel coding = protection (parity, Hamming, CRC: code rate k/n, d<sub>min</sub>).</div>
+
+  <h2><span class="no">2</span>Measure of Information</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Self-information</span> A message of probability p carries <span class="circ">I = log₂(1/p) = −log₂ p bits</span>. The <span class="hl">less likely</span> the message, the <span class="hl">more information</span> it carries ("sun rose today" ≈ 0 bits; "earthquake in Dhaka" = many bits).</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ul class="dash small">
+      <li>p = 1 (certain event) → <b>I = 0</b>; always I ≥ 0</li>
+      <li>p<sub>1</sub> &lt; p<sub>2</sub> → I<sub>1</sub> &gt; I<sub>2</sub></li>
+      <li>Independent messages: <span class="hl">I(x₁x₂) = I(x₁) + I(x₂)</span> (log turns × into +)</li>
+      <li>Binary digit with p = ½ → exactly <b>1 bit</b></li>
+    </ul>
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Log base</th><th>Unit</th><th>= bits</th></tr>
+      <tr><td>2</td><td><b>bit</b> (shannon)</td><td>1</td></tr>
+      <tr><td>e</td><td><b>nat</b></td><td>1.443</td></tr>
+      <tr><td>10</td><td><b>decit / Hartley</b></td><td>3.322</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> p = 1/8 → I = log₂ 8 = <span class="circ">3 bits</span>. A card from a 52-card deck: log₂ 52 = <b>5.70 bits</b>; "it is an ace" (p = 4/52 = 1/13): log₂ 13 = <b>3.70 bits</b>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Baud</b> is a unit of <b>symbol rate</b>, not of information. And log₂ x = 3.322 log₁₀ x: keep that conversion for calculator-free MCQs.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: entropy & information rate ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Entropy &amp; rate</span></div>
+  <h2><span class="no">3</span>Entropy H: Average Information per Symbol</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> For a discrete memoryless source (DMS) with M symbols of probabilities p<sub>1</sub> … p<sub>M</sub>: <span class="circ">H(X) = Σ p<sub>i</sub> log₂(1/p<sub>i</sub>)</span> bits/symbol. Entropy = <span class="hl">average self-information</span> = average uncertainty removed per symbol = the <span class="hl">limit of lossless compression</span>.</div>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:center">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Bounds</span><br><span class="circ">0 ≤ H ≤ log₂M</span><br>H = 0 → one symbol certain (p = 1)<br>H = log₂M → all <b>equiprobable</b> (p = 1/M)<br>n-th extension: H(Xⁿ) = n·H(X)<br>Binary source: H(p) max <b>1 bit at p = 0.5</b></div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 170" width="265">
+      <g class="w">
+        <path class="ink-k" d="M40,150 V14 M40,140 H256" />
+        <path class="ink-r" d="M40.0,140.0 L45.0,121.4 L50.0,108.5 L55.0,97.7 L60.0,88.4 L65.0,80.2 L70.0,72.9 L75.0,66.4 L80.0,60.6 L85.0,55.4 L90.0,50.8 L95.0,46.7 L100.0,43.1 L105.0,39.9 L110.0,37.3 L115.0,35.0 L120.0,33.2 L125.0,31.8 L130.0,30.8 L135.0,30.2 L140.0,30.0 L145.0,30.2 L150.0,30.8 L155.0,31.8 L160.0,33.2 L165.0,35.0 L170.0,37.3 L175.0,39.9 L180.0,43.1 L185.0,46.7 L190.0,50.8 L195.0,55.4 L200.0,60.6 L205.0,66.4 L210.0,72.9 L215.0,80.2 L220.0,88.4 L225.0,97.7 L230.0,108.5 L235.0,121.4 L240.0,140.0"/>
+        <path class="ink-g" d="M140,30 V140 M60,88.4 H40" stroke-dasharray="4 4"/>
+      </g>
+      <text x="34" y="34" text-anchor="end" class="s">1</text><text x="34" y="92" text-anchor="end" class="s g">0.47</text><text x="34" y="144" text-anchor="end" class="s">0</text>
+      <text x="40" y="158" text-anchor="middle" class="s">0</text><text x="60" y="158" text-anchor="middle" class="s g">0.1</text><text x="140" y="158" text-anchor="middle" class="s r">0.5</text><text x="240" y="158" text-anchor="middle" class="s">1</text>
+      <text x="252" y="136" class="s">p</text><text x="46" y="14" class="s w6">H(p)</text>
+      <text x="148" y="24" class="r s">max = 1 bit</text>
+    </svg><figcaption>binary entropy function</figcaption></figure>
+  </div>
+  <table class="hand small">
+    <tr><th class="l">Source</th><th class="l">Probabilities</th><th>H (bits/symbol)</th></tr>
+    <tr><td class="l">Fair coin</td><td class="l">½, ½</td><td><b>1</b></td></tr>
+    <tr><td class="l">Biased coin</td><td class="l">0.9, 0.1</td><td>0.469</td></tr>
+    <tr><td class="l">4 equal symbols</td><td class="l">¼ each</td><td><b>2</b> = log₂4</td></tr>
+    <tr><td class="l">Dyadic source</td><td class="l">½, ¼, ⅛, ⅛</td><td class="red"><b>1.75</b></td></tr>
+    <tr><td class="l">Fair die</td><td class="l">1/6 each</td><td>2.585 = log₂6</td></tr>
+    <tr><td class="l">English letters</td><td class="l">letter frequencies</td><td>≈ 4.1 (max log₂26 = 4.70)</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> p = ½, ¼, ⅛, ⅛: H = ½(1) + ¼(2) + ⅛(3) + ⅛(3) = 0.5 + 0.5 + 0.375 + 0.375 = <span class="circ">1.75 bits/symbol</span> (&lt; log₂4 = 2, since not equiprobable). Source redundancy = 1 − H/H<sub>max</sub> = 1 − 1.75/2 = 12.5%.</div>
+
+  <h2><span class="no">4</span>Information Rate R</h2>
+  <div class="def"><span class="lbl">Definition</span> Source emitting r symbols/s: <span class="circ">R = r · H</span> bits/s.</div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> A 4 kHz signal sampled at the Nyquist rate (r = 8000 samples/s), quantized to 4 levels with p = ⅛, ⅜, ⅜, ⅛: H = 2 × ⅛ × 3 + 2 × ⅜ × log₂(8/3) = 0.75 + 1.061 = <b>1.811 bits</b> → R = 8000 × 1.811 ≈ <span class="circ">14.5 kbit/s</span> (equiprobable levels: 16 kbit/s).</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Equal → log, else less</b>": any imbalance lowers H.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> H = 2 bits/symbol, r = 2000/s → R = <b>4000 bit/s</b>, not 1000.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: source coding, Shannon–Fano ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Source coding</span></div>
+  <h2><span class="no">5</span>Source Coding: Length, Efficiency, Kraft</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Goal</span> Make the <span class="hl">average codeword length L</span> as small as possible without losing information: <b>short codes for frequent symbols</b> (the Morse idea).</div>
+  <div class="sumbox"><span class="lbl">Formulas</span>
+    <div class="fgrid small">
+      <p>Average length: <span class="circ">L = Σ p<sub>i</sub> l<sub>i</sub></span> bits/symbol</p><p>Efficiency: <span class="circ">η = H / L</span> (binary code)</p>
+      <p>Redundancy: γ = 1 − η</p><p>D-ary code: η = H / (L log₂D)</p>
+      <p>Kraft (prefix): <span class="hl">Σ 2<sup>−l<sub>i</sub></sup> ≤ 1</span></p><p>Fixed-length code: l = ⌈log₂M⌉ bits</p>
+    </div>
+  </div>
+  <div class="def small"><span class="lbl">Shannon's 1st theorem (source coding)</span> For any uniquely decodable code <span class="circ">L ≥ H</span>; a prefix code with <span class="hl">H ≤ L &lt; H + 1</span> always exists, and coding long blocks of symbols brings L/symbol as close to H as we like. η = 100% only when every p<sub>i</sub> is a power of ½ (dyadic).</div>
+  <table class="hand small">
+    <tr><th class="l">Code</th><th>A</th><th>B</th><th>C</th><th>D</th><th class="l">Verdict</th></tr>
+    <tr><td class="l">I</td><td>0</td><td>10</td><td>110</td><td>111</td><td class="l green"><b>prefix (instantaneous)</b>: no codeword starts another</td></tr>
+    <tr><td class="l">II</td><td>0</td><td>01</td><td>011</td><td>111</td><td class="l">not prefix (0 starts 01), still uniquely decodable</td></tr>
+    <tr><td class="l">III</td><td>0</td><td>1</td><td>01</td><td>10</td><td class="l red"><b>ambiguous</b>: "01" = AB or C; Kraft sum = 1.5 &gt; 1</td></tr>
+  </table>
+
+  <h2><span class="no">6</span>Shannon–Fano Coding (top-down)</h2>
+  <ol class="steps small">
+    <li>List the symbols in <b>decreasing</b> probability</li>
+    <li><b>Split</b> the list into two parts with totals as <b>nearly equal</b> as possible; give 0 to the upper part, 1 to the lower</li>
+    <li>Repeat inside each part until every part holds one symbol</li>
+  </ol>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> A 0.35, B 0.17, C 0.17, D 0.16, E 0.15
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>Symbol</th><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td></tr>
+        <tr><th>Code</th><td><b>00</b></td><td><b>01</b></td><td><b>10</b></td><td><b>110</b></td><td><b>111</b></td></tr>
+        <tr><th>l</th><td>2</td><td>2</td><td>2</td><td>3</td><td>3</td></tr>
+      </table>
+      Splits: 0.52 | 0.48, then 0.17 | 0.31<br>
+      L = 2(0.35 + 0.17 + 0.17) + 3(0.16 + 0.15) = <span class="circ">2.31 bits</span><br>
+      H = 2.233 bits → η = 2.233/2.31 = <b>96.7%</b>, γ = 3.3%</div>
+    <figure class="doodle"><svg viewBox="0 0 290 204" width="248">
+      <g class="w">
+        <rect x="40" y="6" width="210" height="32" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M145,38 L75,70 M145,38 L215,70"/>
+        <rect x="20" y="70" width="110" height="30" rx="8" class="ink fill-b"/>
+        <rect x="160" y="70" width="110" height="30" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M75,100 L45,132 M75,100 L105,132 M215,100 L180,132 M215,100 L250,132"/>
+        <path class="ink" d="M250,158 L225,184 M250,158 L275,184"/>
+      </g>
+      <text x="145" y="27" text-anchor="middle" class="s w6">A B C D E (1.00)</text>
+      <text x="75" y="90" text-anchor="middle" class="s">A B: 0.52</text><text x="215" y="90" text-anchor="middle" class="s r">C D E: 0.48</text>
+      <text x="96" y="56" class="g s">0</text><text x="186" y="56" class="g s">1</text>
+      <text x="45" y="148" text-anchor="middle" class="w6">A</text><text x="105" y="148" text-anchor="middle" class="w6">B</text><text x="180" y="148" text-anchor="middle" class="w6">C</text><text x="250" y="150" text-anchor="middle" class="s">D E: 0.31</text>
+      <text x="225" y="200" text-anchor="middle" class="w6">D</text><text x="275" y="200" text-anchor="middle" class="w6">E</text>
+    </svg><figcaption>split as evenly as possible, top-down</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Shannon–Fano is <b>not always optimal</b>: on this same source Huffman gives 2.30 bits (next sheet).</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: Huffman ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Huffman coding</span></div>
+  <h2><span class="no">7</span>Huffman Coding (bottom-up, optimal)</h2><span class="tag">written favourite</span>
+  <div class="def"><span class="lbl">Definition</span> D. A. Huffman (MIT, <span class="circ">1952</span>). Builds the code tree from the leaves up by repeatedly <span class="hl">merging the two least probable</span> entries. It gives the <span class="hl">minimum average length</span> of any symbol-by-symbol prefix code.</div>
+  <ol class="steps small">
+    <li>Arrange the probabilities in decreasing order</li>
+    <li><b>Merge the two smallest</b> into one node whose probability is their sum; label the branches 0 and 1</li>
+    <li>Re-sort and repeat until one node of probability 1 remains (M − 1 merges)</li>
+    <li>Read each codeword from the root down to the leaf</li>
+  </ol>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:center">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> Same source: A 0.35, B 0.17, C 0.17, D 0.16, E 0.15
+      <ol class="steps"><li>D + E = 0.15 + 0.16 = <b>0.31</b></li><li>B + C = 0.17 + 0.17 = <b>0.34</b></li><li>0.31 + 0.34 = <b>0.65</b></li><li>0.65 + A 0.35 = <b>1.00</b></li></ol>
+      Codes: A = <b>0</b>, B = 100, C = 101, D = 110, E = 111<br>
+      L = 0.35 × 1 + 0.65 × 3 = <span class="circ">2.30 bits</span><br>
+      η = 2.233/2.30 = <b>97.1%</b>, γ = 2.9% · Kraft: ½ + 4 × ⅛ = 1 ✓</div>
+    <figure class="doodle"><svg viewBox="0 0 300 236" width="295">
+      <g class="w">
+        <circle cx="150" cy="22" r="16" class="ink-k fill-y"/>
+        <path class="ink" d="M140,34 L60,70 M160,34 L200,70"/>
+        <circle cx="200" cy="84" r="16" class="ink fill-b"/>
+        <path class="ink" d="M190,96 L130,134 M210,96 L250,134"/>
+        <circle cx="120" cy="146" r="16" class="ink-g fill-g"/>
+        <circle cx="250" cy="146" r="16" class="ink-g fill-g"/>
+        <path class="ink" d="M112,160 L90,196 M128,160 L150,196 M242,160 L220,196 M258,160 L280,196"/>
+      </g>
+      <text x="150" y="27" text-anchor="middle" class="s w6">1.0</text>
+      <text x="56" y="88" text-anchor="middle" class="r w6">A 0.35</text><text x="200" y="89" text-anchor="middle" class="s">.65</text>
+      <text x="120" y="151" text-anchor="middle" class="s">.34</text><text x="250" y="151" text-anchor="middle" class="s">.31</text>
+      <text x="88" y="54" class="g s">0</text><text x="186" y="54" class="g s">1</text>
+      <text x="150" y="118" class="g s">0</text><text x="236" y="118" class="g s">1</text>
+      <text x="90" y="212" text-anchor="middle" class="w6">B</text><text x="150" y="212" text-anchor="middle" class="w6">C</text><text x="220" y="212" text-anchor="middle" class="w6">D</text><text x="280" y="212" text-anchor="middle" class="w6">E</text>
+      <text x="90" y="228" text-anchor="middle" class="s">100</text><text x="150" y="228" text-anchor="middle" class="s">101</text><text x="220" y="228" text-anchor="middle" class="s">110</text><text x="280" y="228" text-anchor="middle" class="s">111</text>
+    </svg><figcaption>left branch = 0, right branch = 1</figcaption></figure>
+  </div>
+  <table class="hand small">
+    <tr><th class="l">Code for A–E</th><th>L (bits)</th><th>η</th><th class="l">Remark</th></tr>
+    <tr><td class="l">Fixed length</td><td>3</td><td>74.4%</td><td class="l">⌈log₂5⌉ = 3</td></tr>
+    <tr><td class="l">Shannon–Fano</td><td>2.31</td><td>96.7%</td><td class="l">top-down split</td></tr>
+    <tr><td class="l red"><b>Huffman</b></td><td class="red"><b>2.30</b></td><td class="red"><b>97.1%</b></td><td class="l">optimal; H = 2.233 is the floor</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Huffman = Hug the two smallest</b> (bottom-up merge). <b>Fano = Fold in half</b> (top-down split).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Ties can give <b>different codewords</b> (and code-length variance), but the average length L is always the same. Dyadic source ½, ¼, ⅛, ⅛ → codes 0, 10, 110, 111, L = H = 1.75, η = <b>100%</b>.</div>
+  </div>
+  <div class="tipbox"><span class="lbl">IT link</span> Huffman (lossless) is the last stage of <span class="mono">DEFLATE</span> (ZIP, gzip, PNG = LZ77 + Huffman), of JPEG and of MP3 (their loss comes from earlier stages). Entropy explains why random or already-compressed data (H ≈ 8 bits per byte) cannot be zipped further.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: mutual information, BSC, coding theorem ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Channel &amp; coding theorem</span></div>
+  <h2><span class="no">8</span>Joint &amp; Conditional Entropy, Mutual Information</h2>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div class="small">
+      <p><b>Joint:</b> H(X, Y) = H(X) + H(Y|X) = H(Y) + H(X|Y)</p>
+      <p><b>Equivocation</b> H(X|Y): input uncertainty left after seeing the output (lost to noise)</p>
+      <p><b>Mutual information</b> (what gets through):<br><span class="circ">I(X;Y) = H(X) − H(X|Y)</span> = H(Y) − H(Y|X)</p>
+      <ul class="dash"><li>I ≥ 0, symmetric · independent X, Y → I = 0</li><li>Noiseless channel → H(X|Y) = 0, I = H(X)</li></ul>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 150" width="245">
+      <g class="w">
+        <circle cx="95" cy="72" r="56" class="ink fill-b"/>
+        <circle cx="155" cy="72" r="56" class="ink-g fill-g"/>
+        <path d="M125,24.7 A56,56 0 0 1 125,119.3 A56,56 0 0 1 125,24.7 Z" class="ink-r fill-r"/>
+      </g>
+      <text x="70" y="76" text-anchor="middle" class="s">H(X|Y)</text><text x="180" y="76" text-anchor="middle" class="s">H(Y|X)</text>
+      <text x="125" y="76" text-anchor="middle" class="r w6">I</text>
+      <text x="60" y="12" class="s w6">H(X)</text><text x="160" y="12" class="s w6">H(Y)</text>
+      <text x="125" y="144" text-anchor="middle" class="s">union = H(X, Y)</text>
+    </svg><figcaption>the information diagram</figcaption></figure>
+  </div>
+
+  <h2><span class="no">9</span>Channel Models &amp; Channel Capacity</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> A <b>discrete memoryless channel</b> (DMC) is described by its transition matrix P(y<sub>j</sub>|x<sub>i</sub>). Its <span class="hl">capacity</span> is the largest mutual information over all input distributions: <span class="circ">C = max I(X;Y)</span> bits per channel use.</div>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 270 150" width="265">
+      <g class="w">
+        <circle cx="40" cy="30" r="14" class="ink fill-b"/><circle cx="40" cy="120" r="14" class="ink fill-b"/>
+        <circle cx="230" cy="30" r="14" class="ink-g fill-g"/><circle cx="230" cy="120" r="14" class="ink-g fill-g"/>
+        <path class="ink-g" d="M56,30 H212 M56,120 H212" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M54,38 L214,112 M54,112 L214,38" marker-end="url(#ah)"/>
+      </g>
+      <text x="40" y="35" text-anchor="middle" class="w6">0</text><text x="40" y="125" text-anchor="middle" class="w6">1</text>
+      <text x="230" y="35" text-anchor="middle" class="w6">0</text><text x="230" y="125" text-anchor="middle" class="w6">1</text>
+      <text x="135" y="22" text-anchor="middle" class="g s">1 − p</text><text x="135" y="142" text-anchor="middle" class="g s">1 − p</text>
+      <text x="102" y="80" class="r s">p</text><text x="158" y="80" class="r s">p</text>
+      <text x="6" y="80" class="s">X</text><text x="256" y="80" class="s">Y</text>
+    </svg><figcaption>binary symmetric channel (BSC), crossover p</figcaption></figure>
+    <div>
+      <p class="small"><b>BSC capacity</b> (equiprobable input is optimal): <span class="circ">C = 1 − H(p)</span> bits/use</p>
+      <table class="hand small" style="margin-top:0">
+        <tr><th>p</th><td>0</td><td>0.01</td><td>0.1</td><td>0.2</td><td class="red"><b>0.5</b></td><td>1</td></tr>
+        <tr><th>C</th><td>1</td><td>0.919</td><td>0.531</td><td>0.278</td><td class="red"><b>0</b></td><td>1</td></tr>
+      </table>
+      <p class="small">Noiseless, M symbols: C = log₂M · erasure channel: C = 1 − α</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> BSC with p = 1 is <b>perfect</b> (C = 1: just invert every bit). The useless one is <b>p = 0.5</b>.</div>
+
+  <h2><span class="no">10</span>Shannon's Channel Coding Theorem</h2><span class="tag">high-yield</span>
+  <div class="sumbox"><span class="lbl">Shannon's 2nd theorem</span> If the information rate <span class="circ">R &lt; C</span>, there exists a channel code that makes the <span class="hl">probability of error arbitrarily small</span>. (R = C is the boundary.) If R &gt; C, no code can do so: the error probability stays bounded away from zero.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Below C, code and be free; above C, errors you'll see.</b>" Good codes <b>exist</b> (turbo, LDPC, polar come close).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> "Error-free" means <b>arbitrarily low error probability</b>, not zero errors; the price is <b>long codes / delay</b>.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: Shannon–Hartley ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Shannon–Hartley</span></div>
+  <h2><span class="no">11</span>Shannon–Hartley Capacity Theorem</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Statement</span> For a band-limited channel of bandwidth B (Hz) with additive white Gaussian noise (<b>AWGN</b>) and average signal-to-noise power ratio S/N:<br><span class="circ" style="font-size:1.15em">C = B log₂(1 + S/N) bits/s</span> &nbsp;where N = N₀B (N₀ = noise power spectral density).</div>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <ul class="dash small">
+      <li>S/N is a <span class="hl">linear power ratio</span>, never dB</li>
+      <li>C grows <b>linearly</b> with B, only <b>logarithmically</b> with S/N</li>
+      <li>High S/N: +3 dB (×2) adds ≈ 1 bit/s/Hz</li>
+      <li>Quick estimate: <span class="hl">C ≈ B × SNR<sub>dB</sub>/3</span></li>
+      <li>S/N = 0 → C = 0; S/N → ∞ (fixed B) → C → ∞</li>
+      <li>An upper limit: real modems stay below it</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 290 172" width="285">
+      <g class="w">
+        <path class="ink-k" d="M40,156 V14 M40,150 H284"/>
+        <path class="ink-r" d="M40.0,148.3 L52.0,147.5 L64.0,146.1 L76.0,144.2 L88.0,141.5 L100.0,138.0 L112.0,133.6 L124.0,128.3 L136.0,122.2 L148.0,115.6 L160.0,108.5 L172.0,101.1 L184.0,93.5 L196.0,85.8 L208.0,78.0 L220.0,70.1 L232.0,62.2 L244.0,54.3 L256.0,46.3 L268.0,38.4 L280.0,30.4"/>
+        <path class="ink-g" d="M160,150 V108.5 M220,150 V70.1 M160,108.5 H40 M220,70.1 H40" stroke-dasharray="4 4"/>
+      </g>
+      <text x="34" y="112" text-anchor="end" class="s g">3.46</text><text x="34" y="74" text-anchor="end" class="s g">6.66</text><text x="34" y="34" text-anchor="end" class="s">10</text>
+      <text x="40" y="166" text-anchor="middle" class="s">−10</text><text x="100" y="166" text-anchor="middle" class="s">0</text><text x="160" y="166" text-anchor="middle" class="s">10</text><text x="220" y="166" text-anchor="middle" class="s">20</text><text x="280" y="166" text-anchor="middle" class="s">30</text>
+      <text x="46" y="14" class="s w6">C/B (bit/s/Hz)</text><text x="284" y="144" text-anchor="end" class="s">SNR (dB)</text>
+      <text x="230" y="98" class="r s">≈ straight</text><text x="230" y="112" class="r s">at high SNR</text>
+    </svg><figcaption>C/B = log₂(1 + S/N) against SNR in dB</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>dB</th><th>S/N</th><th>log₂(1+S/N)</th></tr>
+      <tr><td>0</td><td>1</td><td>1</td></tr>
+      <tr><td>3</td><td>≈ 2</td><td>1.58</td></tr>
+      <tr><td>4.77</td><td>3</td><td>2</td></tr>
+      <tr><td>10</td><td>10</td><td>3.46</td></tr>
+      <tr><td>11.76</td><td>15</td><td><b>4</b></td></tr>
+      <tr><td>17.99</td><td>63</td><td><b>6</b></td></tr>
+      <tr><td>20</td><td>100</td><td>6.66</td></tr>
+      <tr><td><b>30</b></td><td><b>1000</b></td><td><b>9.97</b></td></tr>
+    </table>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">dB conversions</span><br>Power: SNR<sub>dB</sub> = <span class="circ">10 log₁₀(S/N)</span><br>Voltage: 20 log₁₀(V<sub>s</sub>/V<sub>n</sub>)<br>Back to linear: S/N = 10<sup>SNR<sub>dB</sub>/10</sup><br>Every +10 dB = ×10 power; +3 dB ≈ ×2</div>
+      <div class="trick small"><span class="lbl">Memory trick</span> Pick S/N = 2ᵏ − 1 (1, 3, 7, 15, 31, 63, 255) and log₂(1 + S/N) = <b>k</b> exactly: that is how MCQ numbers are built.</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span>
+    <ol class="steps"><li>B = 4 kHz, S/N = 15: C = 4000 × log₂16 = 4000 × 4 = <span class="circ">16 kbit/s</span></li>
+    <li>Telephone line B = 3 kHz, SNR = 30 dB → S/N = 1000: C = 3000 × log₂1001 = 3000 × 9.97 ≈ <b>29.9 kbit/s</b> (estimate: 3000 × 30/3 = 30 k ✓)</li>
+    <li>B = 1 MHz: 10 dB → 3.46 Mbit/s; 20 dB → 6.66 Mbit/s. B = 10 MHz at 10 dB → <b>34.6 Mbit/s</b> (10× B → 10× C)</li>
+    <li>Minimum S/N to carry 20 kbit/s in 5 kHz: log₂(1 + S/N) = 4 → S/N = 15 = <b>11.76 dB</b></li></ol></div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Plugging "20 dB" as 20 gives log₂21 = 4.39 instead of log₂101 = 6.66. <b>Convert dB to linear first</b>.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: Shannon limit, trade-off, Nyquist ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Limits &amp; Nyquist</span></div>
+  <h2><span class="no">12</span>Infinite Bandwidth &amp; the Shannon Limit</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div class="small">
+      <p>Fixed S and N₀: wider B lets in more noise (N = N₀B). As B → ∞, with ln(1 + x) ≈ x:</p>
+      <p><span class="circ">C<sub>∞</sub> = (S/N₀) log₂e ≈ 1.44 S/N₀</span></p>
+      <p>Capacity <b>saturates</b>: infinite B ≠ infinite C.</p>
+      <p>Put S = E<sub>b</sub>·C: E<sub>b</sub>/N₀ ≥ ln 2 = 0.693 = <span class="circ">−1.59 ≈ −1.6 dB</span></p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 172" width="285">
+      <g class="w">
+        <path class="ink-k" d="M40,156 V14 M40,150 H284"/>
+        <path class="ink-r" d="M40,150 L44.0,122.3 L48.0,108.6 L52.0,99.2 L56.0,92.2 L60.0,86.6 L68.0,78.3 L76.0,72.4 L84.0,67.9 L92.0,64.4 L100.0,61.6 L112.0,58.2 L124.0,55.6 L136.0,53.5 L148.0,51.8 L160.0,50.4 L176.0,48.8 L192.0,47.5 L208.0,46.5 L224.0,45.6 L240.0,44.8 L256.0,44.1 L280.0,43.3"/>
+        <path class="ink-g" d="M40,34.6 H284" stroke-dasharray="6 4"/>
+      </g>
+      <text x="46" y="28" class="g s w6">C∞ = 1.44 S/N₀</text>
+      <text x="34" y="154" text-anchor="end" class="s">0</text>
+      <text x="230" y="166" class="s">B →</text><text x="46" y="12" class="s w6">C</text>
+      <text x="120" y="80" class="r s">C = B log₂(1 + S/N₀B)</text>
+    </svg><figcaption>capacity flattens out as bandwidth grows</figcaption></figure>
+  </div>
+  <p class="small">Minimum E<sub>b</sub>/N₀ = (2<sup>C/B</sup> − 1)/(C/B): <b>0 dB</b> at 1 bit/s/Hz, 1.76 dB at 2, 5.74 dB at 4.</p>
+  <div class="exam small"><span class="lbl">Exam trap</span> −1.6 dB limits <b>E<sub>b</sub>/N₀</b> (energy per bit), not SNR, and needs infinite bandwidth. Below it, reliable communication is impossible at <b>any</b> rate.</div>
+
+  <h2><span class="no">13</span>Bandwidth–SNR Trade-off</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th colspan="4">Same C = 12 kbit/s</th></tr>
+      <tr><th>B</th><th>S/N</th><th>dB</th><th>S (× N₀·1 kHz)</th></tr>
+      <tr><td>3 kHz</td><td>15</td><td>11.76</td><td>45</td></tr>
+      <tr><td>4 kHz</td><td>7</td><td>8.45</td><td>28</td></tr>
+      <tr><td>6 kHz</td><td>3</td><td>4.77</td><td>18</td></tr>
+      <tr><td>12 kHz</td><td>1</td><td>0</td><td>12</td></tr>
+      <tr><td>∞</td><td>→ 0</td><td>−∞</td><td class="red"><b>8.32 floor</b></td></tr>
+    </table>
+    <div class="small">
+      <p>For a fixed C, <span class="hl">bandwidth can be traded for signal power</span>: more B → less S/N (and less S) needed. Basis of <b>spread spectrum / CDMA</b> and wideband FM.</p>
+      <p>Wide B, low S/N: deep space, CDMA. Narrow B, high S/N: phone modems, high-order QAM.</p>
+    </div>
+  </div>
+
+  <h2><span class="no">14</span>Nyquist Capacity (noiseless channel)</h2>
+  <div class="def small"><span class="lbl">Nyquist bit rate</span> A noiseless channel of bandwidth B carries at most 2B symbols/s (baud); with M levels: <span class="circ">C = 2B log₂M</span> bits/s. Shannon sets the noise ceiling; Nyquist says how many levels reach it.</div>
+  <div class="ex small"><span class="lbl">Worked examples ✍</span> ① B = 3 kHz: M = 2 → 6 kbit/s; M = 4 → <b>12 kbit/s</b>. ② B = 1 MHz, S/N = 63: Shannon C = 10⁶ × log₂64 = <span class="circ">6 Mbit/s</span>; use 4 Mbit/s for margin → 2 × 10⁶ × log₂M = 4 × 10⁶ → <b>M = 4</b>. ③ 265 kbit/s on a noiseless 20 kHz line: log₂M = 6.625 → M = 98.7 → use <b>128</b> levels.</div>
+  <div class="trick small"><span class="lbl">Memory trick</span> <b>Nyquist = No noise, Number of levels</b> (2B log₂M). <b>Shannon = S/N</b> (B log₂(1 + S/N)). Noisy channel: the answer is the <b>smaller</b> of the two.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: error-control coding ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Error control</span></div>
+  <h2><span class="no">15</span>Error-Control (Channel) Coding Basics</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Idea</span> The channel coding theorem says reliable transmission needs <span class="hl">controlled redundancy</span>. An <b>(n, k) block code</b> maps k data bits to n-bit codewords: n − k check bits, <span class="circ">code rate r = k/n</span> (&lt; 1).</div>
+  <table class="hand small">
+    <tr><th class="l"></th><th class="l">ARQ (Automatic Repeat reQuest)</th><th class="l">FEC (Forward Error Correction)</th></tr>
+    <tr><td class="l">Receiver</td><td class="l">detects, asks for retransmission</td><td class="l">detects <b>and corrects</b> itself</td></tr>
+    <tr><td class="l">Used in</td><td class="l">TCP, Wi-Fi MAC, CRC + retransmit</td><td class="l">satellite, deep space, CD/DVD, 4G/5G</td></tr>
+  </table>
+  <div class="cols">
+    <div>
+      <h3>Parity check (single-bit)</h3>
+      <p class="small"><b>Even parity:</b> total 1s (data + parity) even. 1011001 has four 1s → even parity bit <b>0</b>, odd parity bit <b>1</b>. Detects any <span class="hl">odd</span> number of errors, misses even numbers, <b>cannot correct</b> (d<sub>min</sub> = 2).</p>
+    </div>
+    <div>
+      <h3>Hamming distance</h3>
+      <p class="small">d(a, b) = positions that differ = 1s in a ⊕ b. 10101 ⊕ 11110 = 01011 → <span class="circ">d = 3</span>. <b>d<sub>min</sub></b> = smallest distance between any two codewords.</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">d<sub>min</sub> rules</span><br>Detect up to <span class="circ">s = d<sub>min</sub> − 1</span> errors<br>Correct up to <span class="circ">t = ⌊(d<sub>min</sub> − 1)/2⌋</span> errors<br>To correct t: d<sub>min</sub> ≥ 2t + 1 · detect s: d<sub>min</sub> ≥ s + 1</div>
+      <table class="hand small">
+        <tr><th>d<sub>min</sub></th><td>2</td><td>3</td><td>4</td><td>5</td><td>7</td></tr>
+        <tr><th>detect</th><td>1</td><td>2</td><td>3</td><td>4</td><td>6</td></tr>
+        <tr><th>correct</th><td>0</td><td class="red"><b>1</b></td><td>1</td><td class="red"><b>2</b></td><td>3</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 190" width="245">
+      <g class="w">
+        <path class="ink-k" d="M50,60 H150 V160 H50 Z M100,20 H200 V120 H100 Z M50,60 L100,20 M150,60 L200,20 M150,160 L200,120 M50,160 L100,120" style="stroke-width:1.4"/>
+        <circle cx="50" cy="160" r="9" class="ink-g fill-g"/>
+        <circle cx="200" cy="20" r="9" class="ink-r fill-r"/>
+        <path class="ink-p" d="M50,160 L100,120 L200,120 L200,20" style="stroke-width:2.6" stroke-dasharray="6 4"/>
+      </g>
+      <text x="40" y="180" class="g s w6">000</text><text x="186" y="14" class="r s w6">111</text>
+      <text x="154" y="174" class="s">100</text><text x="104" y="136" class="s">010</text><text x="204" y="136" class="s">110</text>
+      <text x="30" y="56" class="s">001</text><text x="94" y="14" class="s">011</text><text x="154" y="56" class="s">101</text>
+      <text x="125" y="104" class="p s">3 steps</text>
+    </svg><figcaption>repetition code {000, 111}: d<sub>min</sub> = 3 corrects 1 error (majority vote)</figcaption></figure>
+  </div>
+  <h3>Hamming code (single-error correcting, d<sub>min</sub> = 3)</h3>
+  <p class="small">Check bits r: <span class="hl">2<sup>r</sup> ≥ m + r + 1</span> (m data bits): m = 4 → r = 3, <b>(7, 4)</b>; m = 7 (ASCII) → r = 4, (11, 7). Parity bits at positions <b>1, 2, 4, 8 …</b>; P1 checks 1, 3, 5, 7 · P2: 2, 3, 6, 7 · P4: 4, 5, 6, 7.</p>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Data 1011 (even parity) → positions 3, 5, 6, 7 = 1, 0, 1, 1. P1 = 1 ⊕ 0 ⊕ 1 = 0 · P2 = 1 ⊕ 1 ⊕ 1 = 1 · P4 = 0 ⊕ 1 ⊕ 1 = 0 → codeword <span class="circ">0110011</span>.<br>
+    Received 01100<b>0</b>1: checks C4 C2 C1 = 1 1 0 → syndrome <b>110 = 6</b> → flip bit 6 → 0110011 ✓</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Detect d − 1, correct half of that</b>" (round down).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Parity <b>cannot correct</b> even one error; CRC only <b>detects</b>.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Formula sheet</span>
+    <div class="fgrid small">
+      <p>I = log₂(1/p) bits · p = 1 → I = 0</p><p>1 nat = 1.443 bit · 1 Hartley = 3.322 bit</p>
+      <p>H = Σ p log₂(1/p) · 0 ≤ H ≤ log₂M</p><p>Binary: H(0.5) = 1 bit · H(0.1) = 0.469</p>
+      <p>R = r · H bits/s · H(Xⁿ) = nH</p><p>L = Σ p l · η = H/L · γ = 1 − η</p>
+      <p>Kraft Σ 2<sup>−l</sup> ≤ 1 · H ≤ L &lt; H + 1</p><p>I(X;Y) = H(X) − H(X|Y) · C = max I</p>
+      <p>BSC: C = 1 − H(p) · p = 0.5 → C = 0</p><p>C = B log₂(1 + S/N), S/N linear</p>
+      <p>SNR<sub>dB</sub> = 10 log₁₀(S/N) · 30 dB = 1000</p><p>C<sub>∞</sub> = 1.44 S/N₀ · E<sub>b</sub>/N₀ ≥ −1.6 dB</p>
+      <p>Nyquist (noiseless): C = 2B log₂M</p><p>Hamming: 2<sup>r</sup> ≥ m + r + 1 · rate k/n</p>
+      <p>Detect d<sub>min</sub> − 1 · correct ⌊(d<sub>min</sub> − 1)/2⌋</p><p>Noisy channel: min(Shannon, Nyquist)</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Father of information theory: Shannon, 1948</li>
+      <li>Base-2 unit = bit; base e = nat; base 10 = decit</li>
+      <li>p = 1/8 → 3 bits; p = 1 → 0 bits</li>
+      <li>4 equiprobable symbols → H = 2 bits</li>
+      <li>½, ¼, ⅛, ⅛ → H = 1.75 bits</li>
+      <li>Huffman (1952): optimal prefix code, merge 2 smallest</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Shannon–Fano: top-down, not always optimal</li>
+      <li>B = 4 kHz, S/N = 15 → C = 16 kbit/s</li>
+      <li>30 dB = 1000; 20 dB = 100; 3 dB ≈ 2</li>
+      <li>B → ∞: C → 1.44 S/N₀ (finite)</li>
+      <li>Parity detects odd errors only, corrects none</li>
+      <li>Hamming (7, 4): 3 parity bits, corrects 1</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> dB into the formula without converting · H in bits/symbol vs R in bits/s · baud ≠ bit/s · BSC p = 1 is perfect, p = 0.5 is useless · "error-free" = arbitrarily small error, only for R &lt; C · infinite B ≠ infinite C · Huffman codewords not unique, L is · noisy channel: min(Shannon, Nyquist)</div>
+  <div class="trick"><span class="lbl">All tricks together</span> Source coding Shrinks, Channel coding Covers · equal → log, else less · Huffman hugs the two smallest, Fano folds in half · S/N = 2ᵏ − 1 gives k · Nyquist = No noise, Number of levels · below C, code and be free · detect d − 1, correct half of that</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="6" y="26" width="110" height="44" rx="12" class="ink fill-b"/>
+      <rect x="152" y="26" width="110" height="44" rx="12" class="ink-g fill-g"/>
+      <rect x="298" y="26" width="120" height="44" rx="12" class="ink-r fill-r"/>
+      <rect x="454" y="26" width="142" height="44" rx="12" class="ink-p fill-p"/>
+      <path class="ink-g" d="M118,48 H148" marker-end="url(#ahg)"/><path class="ink-g" d="M264,48 H294" marker-end="url(#ahg)"/><path class="ink-g" d="M420,48 H450" marker-end="url(#ahg)"/>
+    </g>
+    <text x="61" y="45" text-anchor="middle" class="w6">H</text><text x="61" y="62" text-anchor="middle" class="s">bits/symbol</text>
+    <text x="207" y="45" text-anchor="middle" class="g w6">R = r·H</text><text x="207" y="62" text-anchor="middle" class="s">bits/s</text>
+    <text x="358" y="45" text-anchor="middle" class="r w6">R &lt; C ?</text><text x="358" y="62" text-anchor="middle" class="s">coding theorem</text>
+    <text x="525" y="45" text-anchor="middle" class="p w6">B log₂(1+S/N)</text><text x="525" y="62" text-anchor="middle" class="s">C in bits/s</text>
+    <text x="300" y="90" text-anchor="middle" class="s">the four syllabus words in one chain</text>
+  </svg></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>Communication Theory · Information Theory</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Unit of information for log base e:<ol class="opts"><li>bit</li><li>decit</li><li>nat</li><li>baud</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Entropy of 8 equiprobable symbols:<ol class="opts"><li>3 bits</li><li>8 bits</li><li>1 bit</li><li>2.5 bits</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Information in an event of p = 1/16:<ol class="opts"><li>16 bits</li><li>0.0625 bit</li><li>2 bits</li><li>4 bits</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Capacity of a BSC with p = 0.5:<ol class="opts"><li>1 bit/use</li><li>0</li><li>0.5 bit/use</li><li>infinite</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>B = 3 kHz, S/N = 7 (linear). C = ?<ol class="opts"><li>21 kbit/s</li><li>24 kbit/s</li><li>9 kbit/s</li><li>3 kbit/s</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>20 dB SNR is a power ratio of:<ol class="opts"><li>20</li><li>200</li><li>10</li><li>100</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Shannon limit on E<sub>b</sub>/N₀:<ol class="opts"><li>0 dB</li><li>−1.6 dB</li><li>1.6 dB</li><li>3 dB</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>d<sub>min</sub> = 5 corrects up to:<ol class="opts"><li>2 errors</li><li>4 errors</li><li>5 errors</li><li>1 error</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Huffman coding gives a … code:<ol class="opts"><li>lossy</li><li>fixed-length</li><li>lossless prefix</li><li>error-correcting</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Noiseless 4 kHz, 8 levels: max rate?<ol class="opts"><li>24 kbit/s</li><li>12 kbit/s</li><li>32 kbit/s</li><li>8 kbit/s</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-c · 6-d · 7-b · 8-a · 9-c · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> A telephone channel has a bandwidth of 3.4 kHz and an SNR of 30 dB. (a) Find its Shannon capacity. (b) What SNR would be needed to carry 40 kbit/s? (c) How many signal levels should a Nyquist-type modem use to stay within capacity? (d) State the spectral efficiency. <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>S/N = 10<sup>30/10</sup> = 1000; C = 3400 × log₂1001 = 3400 × 9.967 ≈ <span class="circ">33.9 kbit/s</span> <i class="mk">3</i></li>
+    <li>log₂(1 + S/N) = 40 000/3400 = 11.76 → S/N = 2<sup>11.76</sup> − 1 ≈ 3479 → <b>≈ 35.4 dB</b> <i class="mk">2</i></li>
+    <li>2B log₂M ≤ C → log₂M ≤ 33 900/6800 = 4.98. M = 32 needs 34.0 kbit/s &gt; C, so use <b>M = 16</b> (27.2 kbit/s) <i class="mk">2</i></li>
+    <li>C/B ≈ 9.97 bit/s/Hz (≈ SNR<sub>dB</sub>/3 = 10 ✓) <i class="mk">1</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can compute I, H and R with units</li>
+        <li>Can build Shannon–Fano and Huffman codes, find L, η, γ</li>
+        <li>Can convert dB ↔ linear and apply Shannon–Hartley</li>
+        <li>Can use d<sub>min</sub> rules and encode Hamming (7, 4)</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise:</b><br>① Huffman: 0.4, 0.2, 0.2, 0.1, 0.1<br>② Derive C<sub>∞</sub> = 1.44 S/N₀<br>③ BSC capacity, p = 0.1<br>④ Hamming (7, 4) of 1101</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

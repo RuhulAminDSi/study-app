@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Operating System: Role, Concepts &amp; Structure: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Operating System</span></h1>
+  <p class="subtitle">Goals · System calls · Kernel structures · Boot · Virtualisation: exam-ready in 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="620">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L172,145 M424,145 L468,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="k l">OPERATING SYSTEM</text><text x="320" y="164" text-anchor="middle" class="r s">role · concepts · structure</text>
+      <text x="142" y="62" text-anchor="middle" class="s">Goals &amp; four aims</text>
+      <text x="320" y="38" text-anchor="middle" class="r w6">Resources ★</text>
+      <text x="498" y="62" text-anchor="middle" class="s">Types of OS</text>
+      <text x="96" y="150" text-anchor="middle" class="g w6">System calls ★</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6">Kernel designs ★</text>
+      <text x="142" y="238" text-anchor="middle" class="s">Generations 1–5</text>
+      <text x="320" y="264" text-anchor="middle" class="r w6">Boot: fw → init ★</text>
+      <text x="498" y="238" text-anchor="middle" class="s">Virtualisation ★</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = the door the OS revolves around</figcaption>
+  </figure>
+  <div class="sticky" style="width:76mm"><b>High-yield list</b><br>① OS = interface + manager + control<br>② Goals: easy, full, evolve, portable<br>③ Kernel privileged; shell only a UI<br>④ Call ⇒ user → kernel via a <b>trap</b><br>⑤ Monolithic: all in kernel space<br>⑥ Microkernel: IPC + scheduling only<br>⑦ Hybrid: Windows NT, macOS XNU<br>⑧ Type 1 = bare metal, Type 2 = host<br>⑨ Boot: fw → loader → kernel → init<br>⑩ Context switch ≈ 1–10 μs</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">The first two lines of the Operating System syllabus are "<span class="hl">its role in computer systems</span>" and "<span class="hl">OS concepts; OS structure</span>". This notebook covers exactly those two. Processes, scheduling, IPC, memory, I/O, deadlock, files and case studies have lessons of their own.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>What an OS is: goals &amp; roles … p. 2</li><li>System calls &amp; the mode switch … p. 3</li><li>Kernel structure: monolithic → micro … p. 4</li><li>Kernel, shell and utilities … p. 5</li><li>Types of operating systems … p. 6</li><li>Generations of operating systems … p. 7</li></ul>
+    <ul class="tick"><li>VM structure &amp; the hypervisor … p. 8</li><li>Boot: firmware → init … p. 9</li><li>Traps, interrupts, switch cost … p. 10</li><li>Night-before sheet … p. 11</li><li>Practice MCQs + written … p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: what an OS is, goals, roles ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Goals and roles</span></div>
+  <h2><span class="no">1</span>What Is an Operating System?</h2><span class="tag">foundation ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> An <b>operating system</b> is system software sitting between the user and the hardware, doing three jobs at once: an <span class="hl">interface</span> (a program asks for a service instead of driving the device), a <span class="hl">resource manager</span> (CPU, memory, files and I/O shared fairly) and a <span class="hl">control program</span> (hardware access is privileged, so only the OS may do it). Two textbook names for one object: the <b>extended machine</b> and the <b>resource-manager system</b>.</div>
+  <div class="mnote">no OS ⇒ only a circuit</div>
+  <div class="cols" style="grid-template-columns:224px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 232" width="220">
+      <g class="w">
+        <rect x="20" y="10" width="200" height="30" rx="10" class="ink fill-b"/>
+        <rect x="20" y="58" width="200" height="30" rx="10" class="ink-r fill-y"/>
+        <rect x="20" y="106" width="200" height="44" rx="10" class="ink-k fill-b"/>
+        <rect x="20" y="168" width="200" height="32" rx="10" class="ink-g fill-g"/>
+        <path class="ink-b" d="M120,40 V54" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M120,88 V102" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M120,150 V164" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M20,25 H8 V184 H20" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="120" y="30" text-anchor="middle" class="s k">USER PROGRAMS</text>
+      <text x="120" y="78" text-anchor="middle" class="s r">SYSTEM CALLS</text>
+      <text x="120" y="124" text-anchor="middle" class="s k">KERNEL</text>
+      <text x="120" y="140" text-anchor="middle" class="s">memory · files · devices</text>
+      <text x="120" y="189" text-anchor="middle" class="s g">HARDWARE</text>
+      <text x="228" y="30" class="s">user mode</text>
+      <text x="228" y="78" class="p s">the door</text>
+      <text x="228" y="128" class="s">kernel mode</text>
+      <text x="228" y="189" class="s">the machine</text>
+      <text x="150" y="220" text-anchor="middle" class="r s">a program never touches the hardware</text>
+    </svg><figcaption>one call crosses one boundary</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Two classic views of the same program</span>
+      <b>Resource manager / control program</b> — answers <i>who gets what, and when</i>: CPU time by scheduling, memory by allocation, files by the file system, devices by controllers and drivers. It optimises <b>efficiency</b>.<br>
+      <b>Extended machine</b> — answers <i>what the program sees</i>: an abstract machine of files, processes and devices, with interrupts, DMA and cache protocols hidden underneath. It optimises <b>convenience</b> and <b>portability</b>.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Goal</th><th class="l">What it demands</th><th class="l">Where you meet it</th></tr>
+    <tr><td class="l"><b>Convenience</b></td><td class="l">a usable interface, not machine code</td><td class="l">system calls, CLI shell, GUI, drivers</td></tr>
+    <tr><td class="l"><b>Efficiency</b></td><td class="l">resources used at full capacity</td><td class="l">scheduling, paging, buffering, caching</td></tr>
+    <tr><td class="l"><b>Ability to evolve</b></td><td class="l">new hardware absorbed without a rewrite</td><td class="l">modularity, layers, loadable modules</td></tr>
+    <tr><td class="l"><b>Portability</b></td><td class="l">the same OS on different hardware</td><td class="l">standard language (C), hardware abstraction layer</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Four Gs: <b>C</b>onvenience = <i>easy</i>, <b>E</b>fficiency = <i>full</i>, <b>E</b>volution = <i>changeable</i>, <b>P</b>ortability = <i>moves house</i>. "Which goal does paging serve?" → <b>efficiency</b>: it raises utilisation, not comfort. "Which does a hardware abstraction layer serve?" → <b>portability</b>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A <b>driver manages one device; the OS manages all devices and decides who gets them</b>. And "the interface" is ambiguous: the <span class="circ">shell</span> is the interface to the user, the <span class="circ">kernel</span> is the OS proper. "Which part runs privileged?" → <b>kernel</b>, never the shell.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ goals applied to one machine</span> One CPU, 8 GB RAM, one disk, four users. <b>Convenience</b> — each user gets a shell and named files instead of programming the disk controller. <b>Efficiency</b> — the scheduler time-slices so the CPU never idles; the file system caches hot blocks. <b>Evolution</b> — a new printer needs one driver, not a new OS. "Which goal did <i>virtual memory</i> serve?" → <span class="circ">efficiency</span>.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: system calls, traps, mode switch ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>System calls</span></div>
+  <h2><span class="no">2</span>System Calls, Traps and the Mode Switch</h2><span class="tag">MCQ staple ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <b>system call</b> is the interface through which a user program requests a service from the kernel — open a file, map memory, create a process, read a device. The kernel is the only code that runs <b>privileged</b>, so the request must change the CPU's privilege level. The mechanism is a <span class="hl">trap</span> (software interrupt): the CPU saves the context, switches to <b>kernel mode</b>, runs the handler, and returns. A <span class="hl">mode switch</span> that only changes the privilege bit is cheap; a <span class="hl">context switch</span> that also loads another process's state is not.</div>
+  <div class="cols" style="grid-template-columns:224px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="220">
+      <g class="w">
+        <rect x="8" y="8" width="86" height="38" rx="8" class="ink fill-b"/>
+        <rect x="112" y="8" width="86" height="38" rx="8" class="ink-r fill-r"/>
+        <rect x="216" y="8" width="80" height="38" rx="8" class="ink-k fill-g"/>
+        <path class="ink-b" d="M96,27 H108" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M200,27 H212" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M256,48 V72 H51 V48" marker-end="url(#ah)"/>
+        <rect x="8" y="96" width="62" height="16" rx="6" class="ink-g fill-g"/>
+        <rect x="8" y="126" width="234" height="16" rx="6" class="ink-r fill-r"/>
+      </g>
+      <text x="51" y="23" text-anchor="middle" class="s k">USER</text>
+      <text x="51" y="38" text-anchor="middle" class="s">program</text>
+      <text x="155" y="23" text-anchor="middle" class="s r">TRAP</text>
+      <text x="155" y="38" text-anchor="middle" class="s">software</text>
+      <text x="256" y="23" text-anchor="middle" class="s k">KERNEL</text>
+      <text x="256" y="38" text-anchor="middle" class="s">handler</text>
+      <text x="155" y="86" text-anchor="middle" class="r s">return from interrupt → user mode</text>
+      <text x="76" y="109" class="g s">mode switch — privilege bit only</text>
+      <text x="8" y="158" class="r s">context switch — save and restore a process</text>
+    </svg><figcaption>"switch" hides two very different costs</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Group of system calls</th><th class="l">Examples</th></tr>
+      <tr><td class="l">Process control</td><td class="l">fork, execve, wait, exit, kill</td></tr>
+      <tr><td class="l">File operations</td><td class="l">open, close, read, write, lseek</td></tr>
+      <tr><td class="l">Device management</td><td class="l">ioctl, read, write on a device</td></tr>
+      <tr><td class="l">Information</td><td class="l">getpid, uname, sysconf, time</td></tr>
+      <tr><td class="l">Memory management</td><td class="l">brk, mmap, munmap</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">User mode</th><th class="l">Kernel mode</th></tr>
+    <tr><td class="l">Who runs there</td><td class="l">every ordinary process: shell, editor, compiler</td><td class="l">scheduler, memory manager, drivers, file system</td></tr>
+    <tr><td class="l">Memory access</td><td class="l">its own address space only</td><td class="l"><span class="red"><b>any</b></span> address space, MMIO registers, page tables</td></tr>
+    <tr><td class="l">Instructions</td><td class="l">a restricted subset; privileged ones trap</td><td class="l">the complete set (x86 rings 3 → 0)</td></tr>
+    <tr><td class="l">Entered by</td><td class="l">a trap from a call, fault or interrupt</td><td class="l">— (it leaves by return-from-interrupt)</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Three doors into the kernel: the <b>trap</b> (the program asks), the <b>fault</b> (the CPU complains — page fault), the <b>interrupt</b> (the world asks — timer, keyboard, disk). All three land in kernel mode, the handler chosen by a vector number.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ what does the overhead cost?</span> A function call ≈ <span class="circ">20 ns</span>; a system call with trap and return ≈ <span class="circ">1 μs</span>. A program issuing 10⁶ system calls per second of its own work therefore spends <span class="circ">100 % of one core</span> inside the kernel.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT link</span> `man 2 read` = manual page of the <i>read</i> syscall; `strace -c ls` counts the traps; `time ls` reports user and system time separately.</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> A system call is <b>not</b> a call between two functions of your own program: the library wrapper (glibc) runs in <b>user mode</b> and only the trap enters the kernel.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: kernel structure ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Kernel structure</span></div>
+  <h2><span class="no">3</span>Kernel Structure: Monolithic, Layered, Micro, Modular, Hybrid</h2><span class="tag">highest-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The <b>kernel</b> is the privileged core: it runs in kernel mode, stays resident in memory, owns the hardware and implements the system calls. Its internal structure is a design choice — <b>monolithic</b>, <b>layered</b>, <b>microkernel</b>, <b>modular</b> — plus the <b>hybrid</b> compromise. All answer one question: <span class="hl">how much code is trusted enough to run privileged?</span></div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Structure</th><th class="l">Where things live</th><th class="l">Strength</th><th class="l">Weakness</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Monolithic</b></td><td class="l">everything in the kernel</td><td class="l">speed, simple call path</td><td class="l">one bug stops all</td><td class="l">UNIX, Linux, MS-DOS</td></tr>
+    <tr><td class="l"><b>Layered</b></td><td class="l">all in the kernel, in layers</td><td class="l">easy to verify</td><td class="l">cost of crossing layers</td><td class="l">THE, MULTICS, OS/2</td></tr>
+    <tr><td class="l"><b>Modular</b></td><td class="l">core + loadable modules</td><td class="l">flexible, small images</td><td class="l">module bugs not isolated</td><td class="l">Linux, Solaris, VxWorks</td></tr>
+    <tr><td class="l"><b>Microkernel</b></td><td class="l">IPC, scheduling, address space only</td><td class="l">reliable, provable</td><td class="l">message overhead</td><td class="l">Mach, MINIX 3, QNX, seL4</td></tr>
+    <tr><td class="l"><b>Hybrid</b></td><td class="l">most of it, microkernel-style</td><td class="l">speed and modularity</td><td class="l">neither simplest nor safest</td><td class="l">Windows NT, macOS XNU</td></tr>
+  </table>
+  <div class="cols3" style="grid-template-columns:186px 1fr 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 322 206" width="182">
+      <g class="w">
+        <rect x="8" y="22" width="144" height="154" rx="8" class="ink-b fill-b"/>
+        <rect x="14" y="28" width="132" height="30" rx="6" class="ink"/>
+        <rect x="14" y="62" width="132" height="30" rx="6" class="ink"/>
+        <rect x="14" y="96" width="132" height="30" rx="6" class="ink"/>
+        <rect x="14" y="130" width="132" height="30" rx="6" class="ink"/>
+        <rect x="170" y="22" width="144" height="48" rx="8" class="ink-k fill-y"/>
+        <rect x="170" y="86" width="144" height="90" rx="8" class="ink-g fill-g"/>
+        <rect x="176" y="92" width="132" height="32" rx="6" class="ink"/>
+        <rect x="176" y="132" width="132" height="32" rx="6" class="ink"/>
+        <path class="ink-p" d="M200,86 V74" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M286,86 V74" marker-end="url(#ahp)"/>
+      </g>
+      <text x="80" y="14" text-anchor="middle" class="k w6">MONOLITHIC</text>
+      <text x="242" y="14" text-anchor="middle" class="k w6">MICROKERNEL</text>
+      <text x="80" y="48" text-anchor="middle" class="s">memory manager</text>
+      <text x="80" y="82" text-anchor="middle" class="s">process manager</text>
+      <text x="80" y="116" text-anchor="middle" class="s">file system</text>
+      <text x="80" y="150" text-anchor="middle" class="s">device drivers</text>
+      <text x="242" y="40" text-anchor="middle" class="s k">IPC · scheduling</text>
+      <text x="242" y="58" text-anchor="middle" class="s k">address space</text>
+      <text x="242" y="113" text-anchor="middle" class="s">file-system server</text>
+      <text x="242" y="153" text-anchor="middle" class="s">driver server</text>
+      <text x="80" y="194" text-anchor="middle" class="g s">one direct call</text>
+      <text x="242" y="194" text-anchor="middle" class="r s">every call a message</text>
+    </svg><figcaption>same services — only the wall moves</figcaption></figure>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Hybrid is not "half of each"</b> — it borrows microkernel modularity but keeps drivers in kernel space for speed. <b>Modular ≠ microkernel</b>: a module is kernel code, a microkernel server is user code. A <b>layer</b> may use only the layer directly below it.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Big kernel, fast calls. Small kernel, chatty calls.</b>" Whatever the drawing style, the only thing that decides performance is whether a request crosses the user/kernel boundary or stays inside one address space.</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ price of the small kernel</span> A microkernel serves a file read as client → <b>IPC message</b> → file-system server → <b>IPC message</b> → back: at 2 μs per round trip that is <span class="circ">4 μs</span> of messaging where a monolithic kernel calls directly in under 0.1 μs. At 100 000 reads/s, 40 % of the CPU <span class="circ">goes on messaging</span>; at 1000 reads/s, 0.4 %.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Where the textbook examples really sit</span> <b>Windows NT</b> and <b>macOS (XNU)</b> are hybrid — macOS is the Mach microkernel with BSD services and the IOKit driver framework around it. <b>Linux</b> is monolithic but <i>modularly built</i>. <b>seL4</b> is a microkernel of a few thousand lines that has been <span class="circ">formally verified</span>.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: kernel, shell, utilities ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Kernel, shell, utilities</span></div>
+  <h2><span class="no">4</span>The Three Parts: Kernel, Shell, Utilities</h2><span class="tag">definition trap ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> "Operating system" is used loosely for two different sets of software. Narrowly it is the <span class="hl">kernel</span> alone: privileged, resident, in charge of the hardware. Broadly it is kernel <b>+</b> <span class="hl">shell</span> <b>+</b> <span class="hl">utilities</span> — the whole distribution a user touches. The three sit at three different privilege levels, and every question about "is the shell part of the OS?" turns on that difference.</div>
+  <div class="mnote purple">kernel ≠ shell ≠ utilities</div>
+  <figure class="doodle"><svg viewBox="0 0 620 128" width="600">
+    <g class="w">
+      <rect x="14" y="32" width="176" height="44" rx="10" class="ink-k fill-y"/>
+      <rect x="212" y="32" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="410" y="32" width="176" height="44" rx="10" class="ink-g fill-g"/>
+      <path class="ink-r" d="M190,54 H208" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M388,54 H406" marker-end="url(#ah)"/>
+      <path class="ink-k" d="M14,22 H586" style="stroke-dasharray:5 4"/>
+      <path class="ink-k" d="M14,86 H586" style="stroke-dasharray:5 4"/>
+      <path class="ink-k" d="M14,18 V90 M586,18 V90" style="stroke-dasharray:5 4"/>
+    </g>
+    <text x="102" y="50" text-anchor="middle" class="k w6">KERNEL</text>
+    <text x="102" y="68" text-anchor="middle" class="s">privileged · resident</text>
+    <text x="300" y="50" text-anchor="middle" class="k w6">SHELL</text>
+    <text x="300" y="68" text-anchor="middle" class="s">user mode · interpreter</text>
+    <text x="498" y="50" text-anchor="middle" class="k w6">UTILITIES</text>
+    <text x="498" y="68" text-anchor="middle" class="s">user mode · programs</text>
+    <text x="102" y="14" text-anchor="middle" class="r s">ring 0 — the only privileged layer</text>
+    <text x="498" y="104" text-anchor="middle" class="g s">ordinary programs, unprivileged, replaceable</text>
+    <text x="300" y="122" text-anchor="middle" class="k s">typed command → shell parses it → system call → kernel → hardware</text>
+  </svg><figcaption>only the kernel crosses into kernel mode</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l"></th><th class="l">Kernel</th><th class="l">Shell</th><th class="l">Utilities</th></tr>
+    <tr><td class="l">Runs in</td><td class="l"><span class="red"><b>kernel mode</b></span>, x86 ring 0</td><td class="l">user mode, ring 3</td><td class="l">user mode, ring 3</td></tr>
+    <tr><td class="l">Memory</td><td class="l">resident in main memory</td><td class="l">an ordinary process, swappable</td><td class="l">ordinary processes</td></tr>
+    <tr><td class="l">Job</td><td class="l">processes, memory, files, devices, protection</td><td class="l">reads the command line, starts the program</td><td class="l">one task each: <i>cp</i>, <i>ls</i>, <i>sort</i>, editors</td></tr>
+    <tr><td class="l">Replaced by</td><td class="l">never, while running</td><td class="l">freely — bash, sh, cmd.exe, PowerShell</td><td class="l">freely — any program at all</td></tr>
+    <tr><td class="l">Touches hardware</td><td class="l"><span class="circ">yes</span></td><td class="l"><span class="red"><b>no</b></span></td><td class="l"><span class="red"><b>no</b></span></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>The shell is not the kernel and is not privileged</b>; it issues system calls for you. Removing it would not crash the machine, corrupting the kernel would. The <b>compiler</b> is a utility, not part of the OS.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>The kernel is the one that cannot be replaced.</b>" Kernel — removing it stops the OS. Shell — you are stranded at a bare login prompt. Utility — you lose one command.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ trace one keystroke to a file</span> <b>cp a.txt b.txt</b>: the shell splits the line and <b>execve()</b>s <i>cp</i>; <i>cp</i> issues <b>open()</b>, <b>read()</b>, <b>write()</b>, <b>close()</b>, each trapping into the <b>kernel</b>. Privileged code entered: <span class="circ">five times</span>.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">Real-world names</span> Shell: <b>bash</b>, <b>zsh</b>, <b>fish</b> on UNIX-like systems, <b>cmd.exe</b> and <b>PowerShell</b> on Windows. Utilities: the <b>coreutils</b> family (<i>ls, cp, mv, grep</i>) plus editors and compilers. On Linux the shell is a program in <code>/bin</code>, replaceable per user.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: types of operating systems ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Types of OS</span></div>
+  <h2><span class="no">5</span>Types of Operating Systems</h2><span class="tag">frequently tested</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> An OS is "typed" by <b>how it shares the processor and whom it serves</b>, not by its vendor. Three questions fix the type: how many jobs sit in memory, is anybody at a keyboard, must a deadline be met?</div>
+  <div class="cols" style="grid-template-columns:196px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 168" width="192">
+      <g class="w">
+        <rect x="8" y="8" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="107" y="8" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="206" y="8" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="8" y="52" width="86" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="107" y="52" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="206" y="52" width="86" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="8" y="96" width="86" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="107" y="96" width="86" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="206" y="96" width="86" height="36" rx="8" class="ink fill-b"/>
+        <path class="ink-b" d="M96,26 H104" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M195,26 H203" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M96,70 H104" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M195,70 H203" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M96,114 H104" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M195,114 H203" marker-end="url(#ahb)"/>
+      </g>
+      <text x="51" y="31" text-anchor="middle" class="s">Batch</text>
+      <text x="150" y="27" text-anchor="middle" class="s">Multipro-</text>
+      <text x="150" y="40" text-anchor="middle" class="s">gramming</text>
+      <text x="249" y="31" text-anchor="middle" class="s">Time-sharing</text>
+      <text x="51" y="75" text-anchor="middle" class="r s">Real-time</text>
+      <text x="150" y="75" text-anchor="middle" class="s">Multiproc-</text>
+      <text x="249" y="75" text-anchor="middle" class="r s">Distributed</text>
+      <text x="51" y="119" text-anchor="middle" class="g s">Embedded</text>
+      <text x="150" y="119" text-anchor="middle" class="g s">Mobile</text>
+      <text x="249" y="119" text-anchor="middle" class="s">Cloud / VM</text>
+      <text x="150" y="158" text-anchor="middle" class="k s">more users and machines to the right</text>
+    </svg><figcaption>one box per promise made</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l"></th><th class="l">Hard real-time</th><th class="l">Soft real-time</th></tr>
+        <tr><td class="l">Missed deadline</td><td class="l"><span class="red"><b>failure</b></span></td><td class="l">degraded quality</td></tr>
+        <tr><td class="l">Example</td><td class="l">pacemaker, ABS, flight control</td><td class="l">streaming video, live TV</td></tr>
+        <tr><td class="l">Typical build</td><td class="l">small dedicated RTOS</td><td class="l">general OS + RT extension</td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">Not the same axis</span> Multiprogramming, time-sharing, multiprocessor and distributed differ in <i>how many</i> machines and users; real-time and embedded differ in <i>what promise</i> is made. Your phone is all of them at once.</div>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Type</th><th class="l">How the CPU is shared</th><th class="l">Chief goal</th><th class="l">Typical use</th></tr>
+    <tr><td class="l"><b>Batch</b></td><td class="l">one job at a time, queued off-line</td><td class="l">CPU utilisation</td><td class="l">mainframe runs</td></tr>
+    <tr><td class="l"><b>Multiprogramming</b></td><td class="l">many jobs resident; switch on I/O wait</td><td class="l">utilisation</td><td class="l">base of the next two</td></tr>
+    <tr><td class="l"><b>Time-sharing</b></td><td class="l">many users online, short slices</td><td class="l">response + fairness</td><td class="l">UNIX, Linux</td></tr>
+    <tr><td class="l"><b>Multiprocessor</b></td><td class="l">two or more CPUs share memory</td><td class="l">parallelism</td><td class="l">servers</td></tr>
+    <tr><td class="l"><b>Distributed</b></td><td class="l">independent computers, one machine</td><td class="l">sharing + reliability</td><td class="l">clusters</td></tr>
+    <tr><td class="l"><b>Real-time</b></td><td class="l">priority, bounded response</td><td class="l">predictability</td><td class="l">control, avionics</td></tr>
+    <tr><td class="l"><b>Embedded</b></td><td class="l">one dedicated chip, tiny kernel</td><td class="l">determinism, low power</td><td class="l">car ECUs</td></tr>
+    <tr><td class="l"><b>Mobile</b></td><td class="l">app sandboxes, flash storage</td><td class="l">user experience</td><td class="l">Android, iOS</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Time-sharing shares among people; real-time shares among deadlines.</b> A time-shared UNIX can still miss a 1 ms deadline: fairness and predictability pull opposite ways.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Real-time does not mean fast</b> — it means <span class="circ">predictable</span>. Batch is not "single-user": multiprogramming is what lets several jobs share a CPU.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ the time-sharing trade-off</span> 100 users, quantum q: worst-case wait = 100 × q. <b>q = 100 ms</b> → <span class="circ">10 s</span>; <b>q = 20 ms</b> → <span class="circ">2 s</span>, but switches now happen every 0.2 ms, so at 2 μs each the CPU loses <span class="circ">1 %</span> of its time.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: generations ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Generations</span></div>
+  <h2><span class="no">6</span>Generations of Operating Systems</h2><span class="tag">history ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Operating systems are dated by the <b>hardware generation they were built for</b>. Five generations are standard: the first had <b>no OS at all</b>, and each later one bought a single new capability.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 122" width="600">
+    <g class="w">
+      <path class="ink-b" d="M40,20 H580" marker-end="url(#ahb)"/>
+      <path class="ink-k" d="M40,60 H580"/>
+      <circle cx="60" cy="60" r="15" class="ink-k fill-b"/>
+      <circle cx="185" cy="60" r="15" class="ink fill-b"/>
+      <circle cx="310" cy="60" r="15" class="ink-g fill-g"/>
+      <circle cx="435" cy="60" r="15" class="ink-r fill-r"/>
+      <circle cx="560" cy="60" r="15" class="ink-r fill-r"/>
+    </g>
+    <text x="310" y="14" text-anchor="middle" class="k s">hardware gets smaller and cheaper → the OS gets bigger</text>
+    <text x="60" y="65" text-anchor="middle" class="k w6">1</text>
+    <text x="185" y="65" text-anchor="middle" class="k w6">2</text>
+    <text x="310" y="65" text-anchor="middle" class="k w6">3</text>
+    <text x="435" y="65" text-anchor="middle" class="k w6">4</text>
+    <text x="560" y="65" text-anchor="middle" class="k w6">5</text>
+    <text x="60" y="94" text-anchor="middle" class="s k">1945–55</text>
+    <text x="60" y="112" text-anchor="middle" class="s">no OS</text>
+    <text x="185" y="94" text-anchor="middle" class="s k">1956–65</text>
+    <text x="185" y="112" text-anchor="middle" class="s">batch</text>
+    <text x="310" y="94" text-anchor="middle" class="s k">1966–75</text>
+    <text x="310" y="112" text-anchor="middle" class="s">time-sharing</text>
+    <text x="435" y="94" text-anchor="middle" class="s k">1975–</text>
+    <text x="435" y="112" text-anchor="middle" class="s">PC, GUI, net</text>
+    <text x="560" y="94" text-anchor="middle" class="s k">now</text>
+    <text x="560" y="112" text-anchor="middle" class="s">mobile, VM</text>
+  </svg><figcaption>tube → transistor → IC → microprocessor → everywhere</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Gen</th><th class="l">Years</th><th class="l">Technology</th><th class="l">What the OS gained</th><th class="l">Landmark</th></tr>
+    <tr><td class="l">1st</td><td class="l">1945–1955</td><td class="l">vacuum tubes, paper tape</td><td class="l"><span class="red"><b>nothing</b></span>: one job, machine language</td><td class="l">IBM 701, EDSAC (1948)</td></tr>
+    <tr><td class="l">2nd</td><td class="l">1956–1965</td><td class="l">transistors</td><td class="l"><b>batch</b>: off-line input, spooling, fixed jobs</td><td class="l">IBM 7090; FORTRAN 1957, COBOL 1959</td></tr>
+    <tr><td class="l">3rd</td><td class="l">1966–1975</td><td class="l">integrated circuits</td><td class="l"><span class="hl">multiprogramming + time-sharing</span></td><td class="l">UNIX (1969), MULTICS, System/360 (1964)</td></tr>
+    <tr><td class="l">4th</td><td class="l">1975–</td><td class="l">VLSI, microprocessors</td><td class="l">PC era: GUI, networking, client–server</td><td class="l">MS-DOS (1981), Windows, Linux (1991)</td></tr>
+    <tr><td class="l">5th</td><td class="l">present</td><td class="l">very large-scale integration, ubiquitous devices</td><td class="l">mobile, embedded, virtualised, cloud</td><td class="l">Android (2008), hypervisors</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>None → batch → sharing → GUI/network → mobile/cloud.</b> Say the technologies aloud — <b>tube, transistor, IC, microprocessor, everywhere</b> — and the generation and its dates fall out.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Generations are <b>not</b> types: batch is a 2nd-generation <i>type</i>, time-sharing a 3rd-generation <i>type</i>. A paper offering both as rival answers is testing this confusion.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ reading a clue chain</span> "Several jobs in memory, interactive users, integrated circuits, famous system of 1969." → <b>multiprogramming</b> → <b>time-sharing</b> → <span class="circ">3rd generation</span> → <b>UNIX</b>. The clue chain beats the dates.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">One historical detail worth knowing</span> UNIX was written in 1969 for a DEC <b>PDP-7</b> by Ken Thompson and Dennis Ritchie, rewritten in C in 1970. Generation labels describe the <i>era</i>, not one machine.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: structural models + virtualisation ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Structure models &amp; VM</span></div>
+  <h2><span class="no">7</span>Structural Models: Extensible, VM &amp; the Hypervisor</h2><span class="tag">conceptual ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The <b>extensible / VM-based</b> model keeps the OS tiny: the kernel only traps, schedules and switches, while every user runs a complete little OS on top as a <span class="hl">virtual machine</span>. That gives fault isolation — a crash kills one VM, not the system — and it is the ancestor of the <b>hypervisor</b> (also <b>VMM</b>).</div>
+  <div class="cols" style="grid-template-columns:1fr 186px;align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Model</th><th class="l">Idea</th><th class="l">Used by</th></tr>
+      <tr><td class="l">Simple (MS-DOS-like)</td><td class="l">one program, no protection</td><td class="l">MS-DOS, early CP/M</td></tr>
+      <tr><td class="l">Monolithic</td><td class="l">every service in one kernel block</td><td class="l">UNIX, Linux</td></tr>
+      <tr><td class="l">Layered</td><td class="l">layers, each using only the one below</td><td class="l">THE, MULTICS, OS/2</td></tr>
+      <tr><td class="l">Microkernel</td><td class="l">minimal kernel, user-level servers</td><td class="l">Mach, MINIX 3, QNX, seL4</td></tr>
+      <tr><td class="l">Modular</td><td class="l">core plus loadable modules</td><td class="l">Linux, Solaris, VxWorks</td></tr>
+      <tr><td class="l">Hybrid</td><td class="l">microkernel ideas, monolithic speed</td><td class="l">Windows NT, macOS XNU</td></tr>
+      <tr><td class="l"><b>Extensible / VM</b></td><td class="l">tiny OS; each user runs a whole OS</td><td class="l">IBM VM/CMS, ES/VM; Xen, KVM</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 186" width="182">
+      <g class="w">
+        <rect x="18" y="10" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="162" y="10" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="18" y="50" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="162" y="50" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="18" y="100" width="262" height="34" rx="8" class="ink-r fill-r"/>
+        <rect x="18" y="146" width="262" height="24" rx="8" class="ink-k fill-y"/>
+        <path class="ink-b" d="M77,38 V46" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M221,38 V46" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M77,78 V96" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M221,78 V96" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M149,134 V142" marker-end="url(#ahg)"/>
+      </g>
+      <text x="77" y="29" text-anchor="middle" class="s k">VM 1</text>
+      <text x="221" y="29" text-anchor="middle" class="s k">VM 2</text>
+      <text x="77" y="69" text-anchor="middle" class="s">guest OS</text>
+      <text x="221" y="69" text-anchor="middle" class="s">guest OS</text>
+      <text x="149" y="122" text-anchor="middle" class="s r">HYPERVISOR (Type 1)</text>
+      <text x="149" y="163" text-anchor="middle" class="s k">bare hardware</text>
+    </svg><figcaption>each guest believes it owns the machine</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Type 1 — native / bare-metal</th><th class="l">Type 2 — hosted</th></tr>
+    <tr><td class="l">Runs on</td><td class="l"><span class="circ">directly on the hardware</span></td><td class="l"><span class="circ">on top of a host OS</span>, as an app</td></tr>
+    <tr><td class="l">Needs a host OS?</td><td class="l">no</td><td class="l">yes — Windows, macOS, Linux</td></tr>
+    <tr><td class="l">Speed</td><td class="l">near-native, thin layer</td><td class="l">slower: host kernel in the path</td></tr>
+    <tr><td class="l">Who uses it</td><td class="l">data centres, clouds, servers</td><td class="l">desktops, labs, training</td></tr>
+    <tr><td class="l">Examples</td><td class="l">Xen, KVM, ESXi, Hyper-V, Proxmox</td><td class="l">VirtualBox, Workstation, Parallels</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Type 1 owns the floor, Type 2 asks the landlord.</b>" Installed <i>into</i> an existing OS → Type 2.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Do not confuse <b>hypervisor</b> with <b>container</b>: a container shares the host <b>kernel</b>, a VM ships a whole guest OS.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ consolidation arithmetic</span> 20 old servers at 20 % load, each application in its own VM: 20 × 20 % = 400 % of one core, i.e. <span class="circ">4 cores</span>. One 32-core host at 15 % leaves <span class="circ">19 servers free</span>. <b>KVM</b> makes the Linux kernel itself a Type 1 hypervisor; <b>Xen</b> is paravirtualised.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: boot process ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Boot process</span></div>
+  <h2><span class="no">8</span>The Boot Process: Firmware → Bootloader → Kernel → init</h2><span class="tag">written favourite</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A stored-program machine does nothing until an address holds an instruction and the program counter points at it. The <b>boot sequence</b> is the ladder that puts the first instruction in the CPU and hands the machine to the OS, one owner at a time.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 140" width="600">
+    <g class="w">
+      <rect x="8" y="28" width="130" height="44" rx="10" class="ink-k fill-y"/>
+      <rect x="164" y="28" width="130" height="44" rx="10" class="ink fill-b"/>
+      <rect x="320" y="28" width="130" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="476" y="28" width="130" height="44" rx="10" class="ink-g fill-g"/>
+      <path class="ink-b" d="M140,50 H160" marker-end="url(#ahb)"/>
+      <path class="ink-b" d="M296,50 H316" marker-end="url(#ahb)"/>
+      <path class="ink-b" d="M452,50 H472" marker-end="url(#ahb)"/>
+      <path class="ink-k" d="M541,74 V90" marker-end="url(#ah)"/>
+    </g>
+    <text x="73" y="47" text-anchor="middle" class="k w6">FIRMWARE</text>
+    <text x="73" y="64" text-anchor="middle" class="s">BIOS / UEFI</text>
+    <text x="229" y="47" text-anchor="middle" class="k w6">BOOTLOADER</text>
+    <text x="229" y="64" text-anchor="middle" class="s">GRUB · MBR</text>
+    <text x="385" y="47" text-anchor="middle" class="k w6">KERNEL</text>
+    <text x="385" y="64" text-anchor="middle" class="s">vmlinuz loaded</text>
+    <text x="541" y="47" text-anchor="middle" class="k w6">INIT</text>
+    <text x="541" y="64" text-anchor="middle" class="s">systemd, PID 1</text>
+    <text x="73" y="88" text-anchor="middle" class="s">power on → self-test</text>
+    <text x="229" y="88" text-anchor="middle" class="s">loads kernel image</text>
+    <text x="385" y="88" text-anchor="middle" class="s">devices, memory</text>
+    <text x="541" y="112" text-anchor="middle" class="s g">services, login prompt</text>
+    <text x="310" y="132" text-anchor="middle" class="r s">at every rung exactly one program is in charge</text>
+  </svg><figcaption>each one loads the next, then gets out of the way</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Stage</th><th class="l">What it does</th><th class="l">Where it lives</th><th class="l">Examples</th></tr>
+    <tr><td class="l"><b>1. Firmware</b></td><td class="l">power-on self-test, initialise the hardware, find a boot device</td><td class="l">a chip on the motherboard; settings in CMOS</td><td class="l">legacy <b>BIOS</b>; modern <b>UEFI</b></td></tr>
+    <tr><td class="l"><b>2. Bootloader</b></td><td class="l">load the kernel image into RAM and jump to it</td><td class="l">first sector of the disk — <b>MBR</b> or the <b>ESP</b> partition</td><td class="l">GRUB, Windows Boot Manager, U-Boot</td></tr>
+    <tr><td class="l"><b>3. Kernel</b></td><td class="l">initialise subsystems, set up memory, probe devices, start <b>init</b></td><td class="l">loaded into RAM, now resident</td><td class="l">Linux, Windows NT, BSD</td></tr>
+    <tr><td class="l"><b>4. init / systemd</b></td><td class="l">start services in order, mount filesystems, run the login manager</td><td class="l">the first user-space process, <span class="circ">PID 1</span></td><td class="l">systemd (modern Linux), SysV init, launchd</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Firmware sells the machine, the bootloader loads the OS, the kernel owns the machine, init starts the services.</b>" Four verbs, four owners — only stage 3 is a <i>kernel</i>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>The bootloader is not the OS</b>, and <b>BIOS is not the firmware's only name</b> — UEFI is the successor and uses the ESP, not the MBR. A <b>kernel panic</b> is a stage-3 failure.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ why an examiner cares</span> "Logo and nothing else." No POST beep → failure <b>before</b> the bootloader (RAM, CPU, power). "No bootable device" → the firmware ran and found none. No GRUB menu → the bootloader is damaged.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> Dual boot is the bootloader earning its keep: GRUB shows a menu and loads a different kernel — so it is <i>not</i> part of any OS, and one bootloader can boot Windows and Linux from the same disk.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: traps, interrupts, context switch ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Traps &amp; interrupts</span></div>
+  <h2><span class="no">9</span>Traps, Interrupts and the Cost of a Context Switch</h2><span class="tag">most tested ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> Control reaches the kernel three ways. A <b>trap</b> is synchronous — the program caused it (system call, page fault, divide by zero). An <b>interrupt</b> is asynchronous — a device caused it (timer, keypress, disk). A <b>fault</b> is the CPU reporting a bad instruction. All save the context, take a <span class="hl">vector</span> from the vector table and run a handler in kernel mode.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Kind</th><th class="l">Caused by</th><th class="l">When</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Trap</b></td><td class="l">the running program</td><td class="l">synchronous</td><td class="l">read(), exit(), breakpoint</td></tr>
+    <tr><td class="l"><b>Fault</b></td><td class="l">the instruction itself</td><td class="l">synchronous</td><td class="l">page fault, divide by zero</td></tr>
+    <tr><td class="l"><b>Interrupt</b></td><td class="l">an external device</td><td class="l">asynchronous</td><td class="l">timer tick, keyboard, disk</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 280 128" width="246">
+      <g class="w">
+        <path class="ink-b" d="M30,98 H252" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M30,98 V14" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M42,86 C90,82 138,56 192,24" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M42,86 C100,88 156,86 230,84"/>
+        <circle cx="42" cy="86" r="4" class="ink-r"/>
+        <circle cx="192" cy="24" r="4" class="ink-r"/>
+        <path class="ink-g" d="M116,82 L138,46" marker-end="url(#ahg)"/>
+      </g>
+      <text x="42" y="76" text-anchor="middle" class="r s">trap</text>
+      <text x="204" y="20" text-anchor="middle" class="r s">fault</text>
+      <text x="140" y="112" text-anchor="middle" class="k s">running program</text>
+      <text x="146" y="42" class="g s">service</text>
+    </svg><figcaption>time is charged where the trap is taken</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Operation</th><th class="l">Cost</th><th class="l">Where the time goes</th></tr>
+      <tr><td class="l">Function call</td><td class="l">≈ 1–10 ns</td><td class="l">push registers, jump, return; caches stay warm</td></tr>
+      <tr><td class="l">System call (trap)</td><td class="l">≈ 1 μs</td><td class="l">save context, enter kernel mode, dispatch, return</td></tr>
+      <tr><td class="l">Context switch</td><td class="l">≈ <span class="circ">1–10 μs</span></td><td class="l">save + restore a PCB; TLB and caches cold after</td></tr>
+      <tr><td class="l">Major page fault</td><td class="l">≈ 100 μs – 1 ms</td><td class="l">disk read for the missing page</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">What a context switch really costs</span> Saving one process's CPU state and restoring another's is only the <b>direct</b> cost, typically <span class="circ">1–10 μs</span>. The <b>indirect</b> cost is larger: the new process meets an empty instruction cache, a cold TLB and cold data caches. More syscalls or a shorter quantum mean more switches.</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Trap is the program's fault; interrupt is the world's.</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A <b>page fault is not a crash</b> — the OS pages the frame in and restarts the instruction. A <b>trap is not a context switch</b>: that means a <i>different</i> process ran.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ throughput lost to switching</span> 50 users, quantum <b>20 ms</b>, switch <b>2 μs</b>. Average wait ≈ (50 − 1)/2 × 20 ms ≈ <span class="circ">490 ms</span>. Overhead per slice = 2/20 000 = <span class="circ">0.01 %</span> — the design point.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> `time` splits a program's life into <b>user</b> and <b>system</b> time; system time is time in the kernel. High system time with low CPU use is the signature of <b>thrashing</b>.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>OS = interface + resource manager + control program</p><p>Goals: convenience, efficiency, evolve, portability</p>
+      <p>Kernel = privileged, resident, always in RAM</p><p>Shell = user-mode command interpreter</p>
+      <p>System call ⇒ user → kernel mode via a trap</p><p>x86: user = ring 3, kernel = ring 0</p>
+      <p>Monolithic: all in kernel space (UNIX, Linux)</p><p>Microkernel: IPC + scheduling + address space</p>
+      <p>Hybrid: Windows NT, macOS XNU</p><p>Modular: Linux, Solaris</p>
+      <p>Type 1 hypervisor = bare metal</p><p>Type 2 = on a host OS (VirtualBox)</p>
+      <p>Boot: firmware → bootloader → kernel → init</p><p>init / systemd is PID 1</p>
+      <p>Trap synchronous · interrupt async</p><p>Context switch ≈ 1–10 μs; call ≈ 20 ns</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>OS = an interface <b>and</b> a resource manager</li>
+      <li>Four goals: convenience, efficiency, evolve, portability</li>
+      <li>Kernel = privileged core; shell = only a UI</li>
+      <li>System call switches user → kernel mode via a trap</li>
+      <li>Monolithic: file systems and drivers in kernel space</li>
+      <li>Microkernel: only IPC, scheduling, address space</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Hybrid kernel = Windows NT, macOS XNU</li>
+      <li>Type 1 on bare metal; Type 2 on a host OS</li>
+      <li>Boot: firmware → bootloader → kernel → init</li>
+      <li>init (systemd) is the first process, PID 1</li>
+      <li>Trap synchronous, interrupt asynchronous</li>
+      <li>Real-time means predictable, not fast</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:1fr 1fr 168px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Top traps</span> The shell is not the kernel · a driver manages one device, the OS all of them · generations are not types · real-time is not "fast" · a page fault is not a crash · a trap is not a context switch · a container is not a VM.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">All tricks together</span> Four Gs: convenient = easy, efficient = full, evolve = changeable, portable = moves · the kernel cannot be replaced · trap = the program's fault, interrupt = the world's · big kernel = fast calls, small kernel = chatty calls · Type 1 owns the floor, Type 2 asks the landlord.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="164">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink-b" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="s">user programs</text>
+      <text x="75" y="64" text-anchor="middle" class="g s">system calls</text>
+      <text x="75" y="100" text-anchor="middle" class="r s">kernel</text>
+      <text x="215" y="28" text-anchor="middle" class="s">utilities</text>
+      <text x="215" y="64" text-anchor="middle" class="s">shell</text>
+      <text x="215" y="100" text-anchor="middle" class="k s">hardware</text>
+    </svg><figcaption>everything hangs on the middle arrow</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ one number changes the answer</span> 1000 requests/s through a microkernel at 2 μs × 2 messages = 4 ms/s = <span class="circ">0.4 %</span> overhead; at 100 000 requests/s it is 40 %. The same architecture, the wrong answer — structure questions are load questions.</div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · Role &amp; Structure</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">1.</span>Which part of the OS stays resident and manages the CPU, memory and devices?<ol class="opts"><li>Shell</li><li>Kernel</li><li>Compiler</li><li>Bootloader</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">2.</span>A system call is:<ol class="opts"><li>a hardware fault</li><li>a call inside one program</li><li>the interface to get a kernel service</li><li>a command to restart the machine</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">3.</span>Which structure keeps only IPC, scheduling and low-level memory in the kernel, with files and drivers as user servers?<ol class="opts"><li>Microkernel</li><li>Monolithic</li><li>Layered</li><li>Simple (MS-DOS-like)</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">4.</span>The privilege change that lets a user program reach a kernel service is:<ol class="opts"><li>context switch</li><li>dispatch</li><li>trap</li><li>page replacement</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">5.</span>A pacemaker that must stimulate the heart within 2 ms runs on a:<ol class="opts"><li>batch OS</li><li>hard real-time OS</li><li>time-sharing OS</li><li>distributed OS</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">6.</span>Which OS generation had vacuum tubes, no OS and machine language?<ol class="opts"><li>first</li><li>second</li><li>third</li><li>fourth</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">7.</span>A hypervisor installed directly on the hardware with no host OS is:<ol class="opts"><li>Type 1</li><li>Type 2</li><li>Type 3</li><li>a container runtime</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">8.</span>Which component loads the kernel image into memory at start-up?<ol class="opts"><li>the shell</li><li>the bootloader</li><li>init</li><li>the device driver</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">9.</span>A page fault is:<ol class="opts"><li>a crash that ends the process</li><li>an asynchronous disk interrupt</li><li>a synchronous fault the OS services, then the instruction restarts</li><li>the scheduler's context switch</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">10.</span>On Linux the first user-space process (PID 1) is:<ol class="opts"><li>the bootloader</li><li>the shell</li><li>init / systemd</li><li>the file system</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-a · 4-c · 5-b · 6-a · 7-a · 8-b · 9-c · 10-c</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Define an OS, explain it as a resource manager and as a control program, describe with a labelled diagram how a user program reaches a kernel service through a system call, and compare the monolithic and microkernel structures. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>Definition (2)</b> — system software between the user and the hardware, managing CPU, memory, files and devices. <i class="mk">2</i></li>
+    <li><b>Resource manager (2)</b> — <i>who gets what and when</i>: CPU by scheduling, memory by allocation and paging, files by the file system, devices by drivers. <i class="mk">2</i></li>
+    <li><b>Control program (1)</b> — the only program that touches the hardware; programs are isolated, so a bug in one cannot damage the system. <i class="mk">1</i></li>
+    <li><b>Call path (3)</b> — program → library routine → <b>trap</b> → CPU saves context and switches to <b>kernel mode</b> → dispatch from the system-call table → service → return-from-trap. Label: user mode, kernel mode, trap, hardware. <i class="mk">3</i></li>
+    <li><b>Comparison (2)</b> — <b>monolithic</b>: all services in one kernel, fast but one bug can stop the machine (UNIX, Linux). <b>microkernel</b>: only IPC, scheduling and address space, files and drivers as user servers — reliable, but it pays message overhead (Mach, QNX). <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">Before the exam ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>Can list the four goals</li>
+      <li>Can name kernel, shell, utilities</li>
+      <li>Can draw the trap path</li>
+    </ul>
+    <ul class="tick">
+      <li>Can name the eight types</li>
+      <li>Can place the five generations</li>
+      <li>Can separate Type 1 from Type 2</li>
+    </ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

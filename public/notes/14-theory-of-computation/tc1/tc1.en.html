@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Language Theory &amp; Finite Automata: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (ah red, ahb blue, ahg green, ahp purple) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Language Theory &amp; Finite Automata</span></h1>
+  <p class="subtitle">Alphabet &amp; language · Chomsky types · DFA · NFA · DFA = NFA · PDA: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="560">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">LANGUAGE THEORY</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Alphabet, string, L</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Regex: * vs + ★</text>
+      <text x="500" y="65" text-anchor="middle">Chomsky 4 types</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">DFA 5-tuple ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">NFA + ε-move ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Minimisation</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">PDA 7-tuple ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Subset construction</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① DFA 5-tuple, PDA 7-tuple<br>② complete DFA: exactly 1 move<br>③ DFA ≡ NFA in power<br>④ subset build ≤ 2ⁿ states<br>⑤ PDA = context-free<br>⑥ pumping lemma: NOT regular</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Language theory; Finite automata: <span class="hl">deterministic finite automata</span>, <span class="hl">nondeterministic finite automata</span>, <span class="hl">equivalence and conversion</span> of deterministic and nondeterministic finite automata, <span class="hl">pushdown automata</span>; Context free languages; Context free grammars; Turing Machines: basic machines, configuration, computing with Turing machines." This notebook covers the language basics, the finite automata and the PDA; grammars are in the CFL &amp; CFG lesson, Turing machines in the next one.</p>
+  <div class="tipbox blk small"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Alphabet, string, language ……… p. 2</li><li>Chomsky's four types ……… p. 3</li><li>FA 5-tuple &amp; the DFA ……… p. 4</li><li>NFA and ε-moves ……… p. 5</li><li>DFA = NFA, subset construction ……… p. 6</li><li>Minimisation, pumping lemma ……… p. 7</li></ul>
+    <ul class="tick"><li>Pushdown automaton ……… p. 8</li><li>DFA vs NFA vs PDA ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: alphabet, string, language, regex ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>Language basics</span></div>
+  <h2><span class="no">1</span>Alphabet, String, Language</h2><span class="tag">MCQ foundation</span>
+  <div class="def small"><span class="lbl">Definition</span> <b>Language theory</b> studies <b>formal languages</b>: sets of strings built from a fixed finite alphabet. A machine <b>accepts</b> a language if it says "yes" for <span class="hl">exactly</span> its strings and "no" for all others. Everything else in this chapter is a machine for deciding one such set.</div>
+  <table class="hand small">
+    <tr><th class="l">Term</th><th class="l">Meaning</th><th class="l">Example with Σ = {0, 1}</th></tr>
+    <tr><td class="l">Alphabet Σ</td><td class="l">finite, non-empty set of <b>symbols</b></td><td class="l">Σ = {0, 1}</td></tr>
+    <tr><td class="l">String w</td><td class="l">finite sequence of symbols; |w| = length</td><td class="l">w = 1010, |w| = 4</td></tr>
+    <tr><td class="l">ε</td><td class="l">the <b>empty string</b>, |ε| = 0, ε ∈ Σ*</td><td class="l">no symbols at all</td></tr>
+    <tr><td class="l">Σ*</td><td class="l">all strings over Σ, ε included</td><td class="l">{ε, 0, 1, 00, 01, 10, 11, …}</td></tr>
+    <tr><td class="l">Language L</td><td class="l">any subset of Σ*</td><td class="l">L = {w | w ends with 0}</td></tr>
+    <tr><td class="l">Σⁿ</td><td class="l">strings of length exactly n; |Σⁿ| = |Σ|ⁿ</td><td class="l">Σ² = {00, 01, 10, 11}</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)">
+    <div>
+      <h3>Regular expressions: four operators</h3>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Operator</th><th class="l">Means</th><th class="l">Reads as</th></tr>
+        <tr><td class="l">a + b</td><td class="l">union: a <b>or</b> b</td><td class="l">"plus = or"</td></tr>
+        <tr><td class="l">ab</td><td class="l">concatenation: a then b</td><td class="l">"written together"</td></tr>
+        <tr><td class="l">(a + b)*</td><td class="l">Kleene star: <b>zero</b> or more</td><td class="l">"any number"</td></tr>
+        <tr><td class="l">(a + b)+</td><td class="l">one or more</td><td class="l">"at least one"</td></tr>
+      </table>
+      <div class="code">(a+b)*  = a*b* = (a+b)+ U {e}
+(a+b)+  = Sigma* \ {e}
+ab*a    = {a, aa, aba, abba, ...}</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 140" width="235">
+      <g class="w">
+        <rect x="8" y="24" width="254" height="32" rx="10" class="ink fill-b"/>
+        <rect x="8" y="66" width="254" height="32" rx="10" class="ink-k" style="fill:rgba(255,238,0,.4)"/>
+        <circle cx="34" cy="40" r="9" class="ink-r"/><circle cx="70" cy="40" r="9" class="ink-r"/><circle cx="106" cy="40" r="9" class="ink-r"/><circle cx="142" cy="40" r="9" class="ink-r"/>
+        <path class="ink-g" d="M40,82 H236" marker-end="url(#ahg)"/>
+      </g>
+      <text x="200" y="47" text-anchor="middle" class="k s">w = 1 0 1 0 , |w| = 4</text>
+      <text x="140" y="90" text-anchor="middle" class="g s">read left to right</text>
+      <text x="135" y="128" text-anchor="middle" class="r s">arrow = head, box = memory</text>
+    </svg><figcaption>a string is just symbols under one head</figcaption></figure>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> <b>star = zero or more, plus = one or more.</b> So <span class="mono">(a+b)*</span> <b>includes ε</b> and <span class="mono">(a+b)+</span> does not.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> <span class="mono">ab*a</span> = an a, then <b>zero</b> or more b's, then an a — so with zero b's the string is <span class="circ">aa</span>. And "w <b>contains</b> 01" ≠ "w <b>ends with</b> 01": a finite automaton can remember a suffix, never an arbitrary earlier occurrence.</div>
+  <div class="def small"><span class="lbl">Operations on languages</span> Languages are sets, so they take <b>set</b> operations: <b>L₁ ∪ L₂</b>, <b>L₁ ∩ L₂</b>, <b>Lᶜ = Σ* − L</b> (always over the same Σ), <b>L₁ · L₂</b> = {xy | x ∈ L₁, y ∈ L₂} and <b>L*</b> (ε included). Complement is taken over <b>Σ*</b>, never "over the machine": for Σ = {0,1}, the complement of "ends with 0" is "ends with 1 <b>or</b> is empty".</div>
+  <div class="mnote green">L is any subset of Σ* — including ∅ and Σ*</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: Chomsky hierarchy ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>Chomsky hierarchy</span></div>
+  <h2><span class="no">2</span>Chomsky's Hierarchy: Four Types</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> Chomsky's classification of formal languages into <span class="hl">four nested classes</span>, each defined by a kind of grammar and matched by a kind of machine. Type <b>n</b> sits inside Type <b>n−1</b>: every regular language is also context-free, and so on up the ladder.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Type</th><th class="l">Grammar</th><th class="l">Automaton</th><th class="l">Example language</th></tr>
+    <tr><td class="l"><b>Type 0</b> recursively enumerable</td><td class="l">unrestricted</td><td class="l">Turing machine</td><td class="l">{w # w | w ∈ {0,1}*}</td></tr>
+    <tr><td class="l"><b>Type 1</b> context-sensitive</td><td class="l">linear bounded (LBA)</td><td class="l">LBA</td><td class="l">{aⁿ bⁿ cⁿ | n ≥ 1}</td></tr>
+    <tr><td class="l"><b>Type 2</b> context-free</td><td class="l">context-free (CFG)</td><td class="l"><span class="red"><b>pushdown automaton</b></span></td><td class="l">{aⁿ bⁿ | n ≥ 0}</td></tr>
+    <tr><td class="l"><b>Type 3</b> regular</td><td class="l">regular</td><td class="l"><span class="red"><b>finite automaton</b></span></td><td class="l">{w | w ends with 01}</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:250px 1fr">
+    <figure class="doodle"><svg viewBox="0 0 300 214" width="248">
+      <g class="w">
+        <rect x="6" y="6" width="288" height="202" rx="16" class="ink-k" style="fill:rgba(29,63,143,.05)"/>
+        <rect x="30" y="30" width="240" height="154" rx="14" class="ink" style="fill:rgba(31,138,92,.07)"/>
+        <rect x="54" y="54" width="192" height="106" rx="12" class="ink-g" style="fill:rgba(106,63,160,.07)"/>
+        <rect x="80" y="78" width="140" height="58" rx="12" class="ink-r" style="fill:rgba(211,47,47,.09)"/>
+      </g>
+      <text x="150" y="24" text-anchor="middle" class="k s">Type 0 · r.e. · TM</text>
+      <text x="150" y="48" text-anchor="middle" class="g s">Type 1 · CS · LBA</text>
+      <text x="150" y="72" text-anchor="middle" class="p s">Type 2 · CF · PDA</text>
+      <text x="150" y="102" text-anchor="middle" class="r w6">Type 3 · Regular</text>
+      <text x="150" y="122" text-anchor="middle" class="r s">DFA = NFA</text>
+      <text x="150" y="204" text-anchor="middle" class="k s">each box sits inside the one above</text>
+    </svg><figcaption>strict containment: 0 ⊃ 1 ⊃ 2 ⊃ 3</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Machine ↔ language, the one-line answer</span>
+        <br>FA (DFA / NFA) ⇒ <b>regular</b> = Type 3 &nbsp;·&nbsp; PDA ⇒ <b>context-free</b> = Type 2
+        <br>LBA ⇒ <b>context-sensitive</b> = Type 1 &nbsp;·&nbsp; TM ⇒ <b>recursively enumerable</b> = Type 0</div>
+      <div class="trick small"><span class="lbl">Memory trick</span> Read the table <b>upwards</b>: each step adds one kind of memory — <b>none</b> (FA) → <b>stack</b> (PDA) → <b>tape</b> (LBA, TM). More memory ⇒ more languages.</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> {aⁿ bⁿ cⁿ} needs a <b>linear bounded</b> automaton, not a PDA: one stack counts only <b>one</b> balance, so it accepts aⁿbⁿ but never aⁿbⁿcⁿ. Type 0's example needs the "#" to find the middle.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">Neighbouring lessons</span> Context-free <b>grammars</b> (productions, derivation trees, parsing) are in the CFL &amp; CFG lesson; Turing machines, configurations and computability in the Turing Machines lesson. Both name the same Type 2 and Type 1 languages that this chapter's automata accept.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT link</span> The regex engines inside <span class="mono">grep</span>, <span class="mono">RegExp</span> and <span class="mono">lex</span> are finite automata in disguise: the <span class="hl">syntax</span> of a language is a regular (Type 3) language, while its <span class="hl">grammar</span> is context-free (Type 2) — which is exactly why parsing needs a stack.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: FA 5-tuple and the DFA ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>FA &amp; DFA</span></div>
+  <h2><span class="no">3</span>Finite Automaton: the 5-tuple</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> A <b>finite automaton</b> M = (Q, Σ, δ, q₀, F) reads a string left to right, changing state at each symbol, then <b>accepts</b> or <b>rejects</b>. It has <span class="hl">no memory</span> beyond its current state — which is why it recognises only regular languages.</div>
+  <table class="hand small">
+    <tr><th class="l">Part</th><th class="l">Is</th><th class="l">Meaning</th></tr>
+    <tr><td class="l"><b>Q</b></td><td class="l">finite non-empty set of states, |Q| = n</td><td class="l">the boxes in the diagram; q₀ ∈ Q</td></tr>
+    <tr><td class="l"><b>Σ</b></td><td class="l">input alphabet (finite, non-empty)</td><td class="l">the symbols the tape may carry</td></tr>
+    <tr><td class="l"><b>δ</b></td><td class="l">transition function, δ: Q × Σ → Q (DFA)</td><td class="l">the arrows: read a symbol, move state</td></tr>
+    <tr><td class="l"><b>q₀</b></td><td class="l">the single <b>start</b> state</td><td class="l">where the head begins</td></tr>
+    <tr><td class="l"><b>F</b></td><td class="l">set of <b>final / accepting</b> states, F ⊆ Q</td><td class="l">accept iff the run ends in F</td></tr>
+  </table>
+  <div class="trick small"><span class="lbl">Memory trick</span> Five parts in order: <b>Q</b>uestions (states), <b>Σ</b>ymbols, the <b>δ</b>ecision rule, the quest<b>0</b> entry, the <b>F</b>inish states. A PDA adds <b>Γ</b> (stack alphabet) and <b>Z₀</b> (bottom marker) = <span class="circ">7</span>.</div>
+  <h2><span class="no">4</span>Deterministic Finite Automaton (DFA)</h2><span class="tag">written favourite</span>
+  <div class="def small" style="margin-top:1mm"><span class="lbl">Definition</span> For <b>every</b> pair (state, symbol) there is <span class="circ">exactly one</span> next state: δ: Q × Σ → Q is <b>total</b>. No ε-move, no guessing.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:center">
+    <div>
+      <h3>L = {w | w ends with 0}</h3>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">State</th><th>on 0</th><th>on 1</th><th class="l">meaning</th></tr>
+        <tr><td class="l">→ q₀</td><td>q₁</td><td>q₀</td><td class="l">last symbol was 1</td></tr>
+        <tr><td class="l">* q₁</td><td>q₁</td><td>q₀</td><td class="l">last symbol was 0</td></tr>
+      </table>
+      <p class="small">over Σ = {0,1}. → start · * accepting. <b>1100:</b> q₀ -1→ q₀ -1→ q₀ -0→ q₁ -0→ q₁ ∈ F ⇒ <span class="green"><b>accept</b></span>. <b>1111:</b> ends in q₀ ∉ F ⇒ reject.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 178" width="292">
+      <g class="w">
+        <circle cx="250" cy="104" r="33" class="ink-g"/>
+        <circle cx="110" cy="104" r="26" class="ink"/>
+        <circle cx="250" cy="104" r="26" class="ink"/>
+        <path class="ink" d="M16,104 H74" marker-end="url(#ahb)"/>
+        <path class="ink" d="M93,84 Q110,52 127,84" marker-end="url(#ah)"/>
+        <path class="ink" d="M233,84 Q250,52 267,84" marker-end="url(#ah)"/>
+        <path class="ink" d="M138,96 Q180,70 222,96" marker-end="url(#ah)"/>
+        <path class="ink" d="M222,112 Q180,146 138,112" marker-end="url(#ah)"/>
+      </g>
+      <text x="30" y="90" class="s">start</text>
+      <text x="110" y="112" text-anchor="middle" class="k w6">q₀</text>
+      <text x="250" y="112" text-anchor="middle" class="k w6">q₁</text>
+      <text x="110" y="48" text-anchor="middle" class="r w6">1</text>
+      <text x="250" y="48" text-anchor="middle" class="r w6">0</text>
+      <text x="180" y="66" text-anchor="middle" class="r w6">0</text>
+      <text x="180" y="152" text-anchor="middle" class="r w6">1</text>
+      <text x="180" y="174" text-anchor="middle" class="g s">one move on 0 and on 1, from every state</text>
+    </svg><figcaption>"w ends with 0" — q₁ double circle = accepting</figcaption></figure>
+  </div>
+  <div class="def small" style="margin-top:2mm"><span class="lbl">Accept / reject, formally</span> Extend δ to strings: δ*(q₀, w) = the state reached after the <b>whole</b> w is read, so <span class="circ">w ∈ L ⇔ δ*(q₀, w) ∈ F</span>. A missing move means rejection — which is why a blank cell needs a trap state.</div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A DFA has <b>exactly one</b> transition per (state, symbol); "zero or more" and ε-moves belong to an <b>NFA</b>. A blank cell means an <b>incomplete</b> machine — add the trap state d.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Input <b>1</b> separates q₀ from q₁, so this 2-state DFA is already <b>minimal</b>.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: NFA and epsilon moves ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>NFA</span></div>
+  <h2><span class="no">5</span>Nondeterministic Finite Automaton (NFA)</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> For a (state, symbol) pair an NFA may have <span class="hl">zero, one or many</span> next states — δ: Q × (Σ ∪ {ε}) → P(Q) — and it may take an <b>ε-move</b>: change state <b>without consuming input</b>. It accepts if <b>some</b> path reaches a final state when the input runs out.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 310px;align-items:center">
+    <div>
+      <h3>L = {w | w contains 01}</h3>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">From</th><th>on 0</th><th>on 1</th></tr>
+        <tr><td class="l">→ q₀</td><td>q₀ <b>and</b> q₁</td><td>q₀</td></tr>
+        <tr><td class="l">q₁</td><td>—</td><td>q₂</td></tr>
+        <tr><td class="l">* q₂</td><td>q₂</td><td>q₂</td></tr>
+      </table>
+      <p class="small">q₀ guesses "a 0 may have just arrived"; a following 1 confirms it and q₂ keeps that memory for good. <b>0110:</b> q₀ -0→ {q₀,q₁} -1→ {q₀,q₂} -1→ {q₀,q₂} -0→ {q₀,q₂} ∋ q₂ ⇒ accept. <b>110:</b> q₀ -1→ q₀ -1→ q₀ -0→ {q₀,q₁} ⇒ reject.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 360 168" width="300">
+      <g class="w">
+        <circle cx="300" cy="104" r="33" class="ink-g"/>
+        <circle cx="66" cy="104" r="26" class="ink"/>
+        <circle cx="180" cy="104" r="26" class="ink"/>
+        <circle cx="300" cy="104" r="26" class="ink"/>
+        <path class="ink" d="M14,104 H30" marker-end="url(#ahb)"/>
+        <path class="ink" d="M52,84 Q66,48 80,84" marker-end="url(#ah)"/>
+        <path class="ink" d="M96,104 H148" marker-end="url(#ah)"/>
+        <path class="ink" d="M206,104 H268" marker-end="url(#ah)"/>
+        <path class="ink" d="M286,84 Q300,48 314,84" marker-end="url(#ah)"/>
+      </g>
+      <text x="66" y="112" text-anchor="middle" class="k w6">q₀</text>
+      <text x="180" y="112" text-anchor="middle" class="k w6">q₁</text>
+      <text x="300" y="112" text-anchor="middle" class="k w6">q₂</text>
+      <text x="66" y="42" text-anchor="middle" class="r w6">0,1</text>
+      <text x="300" y="42" text-anchor="middle" class="r w6">0,1</text>
+      <text x="122" y="94" text-anchor="middle" class="r w6">0</text>
+      <text x="237" y="94" text-anchor="middle" class="r w6">1</text>
+      <text x="170" y="150" text-anchor="middle" class="g s">no ε-move is needed for this language</text>
+    </svg><figcaption>NFA for "contains 01": q₂ loops, so the memory survives</figcaption></figure>
+  </div>
+  <h3>When an ε-move really helps: L = {w | w contains ab}</h3>
+  <div class="cols" style="grid-template-columns:1fr 240px;align-items:center">
+    <div>
+      <p class="small">The machine must not commit to the position of "ab", so it runs <b>two branches at once</b>: q₀ keeps scanning with a 0,1 loop, and the ε-move lets a copy jump to q₁, whose only job is to expect the b that confirms the a. An ε-move is the NFA's way of <span class="hl">cloning</span> — it costs no input, only a state change.</p>
+      <div class="code">q0 --a--> q0     q0 --b--> q0
+q0 --e--> q1     q1 --b--> q2*
+q2 --0,1--> q2</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 168" width="280">
+      <g class="w">
+        <circle cx="266" cy="100" r="30" class="ink-g"/>
+        <circle cx="62" cy="100" r="24" class="ink"/>
+        <circle cx="170" cy="100" r="24" class="ink"/>
+        <circle cx="266" cy="100" r="24" class="ink"/>
+        <path class="ink" d="M14,100 H34" marker-end="url(#ahb)"/>
+        <path class="ink" d="M48,80 Q62,44 76,80" marker-end="url(#ah)"/>
+        <path class="ink" d="M48,120 Q62,156 76,120" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M88,94 Q116,78 144,94" marker-end="url(#ahp)"/>
+        <path class="ink" d="M194,100 H240" marker-end="url(#ah)"/>
+        <path class="ink" d="M252,80 Q266,44 280,80" marker-end="url(#ah)"/>
+      </g>
+      <text x="62" y="108" text-anchor="middle" class="k w6">q₀</text>
+      <text x="170" y="108" text-anchor="middle" class="k w6">q₁</text>
+      <text x="266" y="108" text-anchor="middle" class="k w6">q₂</text>
+      <text x="62" y="38" text-anchor="middle" class="r w6">a</text>
+      <text x="62" y="164" text-anchor="middle" class="r w6">b</text>
+      <text x="116" y="72" text-anchor="middle" class="p w6">e</text>
+      <text x="217" y="90" text-anchor="middle" class="r w6">b</text>
+      <text x="266" y="38" text-anchor="middle" class="r w6">0,1</text>
+    </svg><figcaption>the ε-move (purple) copies the head forward for free</figcaption></figure>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> "zero or more transitions" and "ε allowed" are <b>NFA</b> features. An NFA with no ε-move and one move per pair is a <b>DFA</b> written differently — which is the whole content of the next sheet.</div>
+  <div class="ex small"><span class="lbl">Worked trace ✍ the ε-NFA on "aab"</span> start {q₀} → a: q₀ -a-> q₀ plus the ε-copy q₁ ⇒ {q₀, q₁} · a: only q₀ has an a-move ⇒ {q₀, q₁} · b: q₀ -b-> q₀ and q₁ -b-> q₂ ⇒ {q₀, q₂} ∋ q₂ ⇒ <b>accept</b>. A branch with no defined move simply dies — the "zero transitions" case.</div>
+  <div class="sumbox small"><span class="lbl">How an NFA is really run</span> Carry a <b>set</b> of states, never a single one: start with {q₀}; on each symbol a, replace the set by the union of the successors of <b>every</b> member; accept iff the final set meets F. That is why the trace above reads {q₀,q₁} then {q₀,q₂} — and it is exactly the object the next sheet turns into a DFA state.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: equivalence and subset construction ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>DFA = NFA</span></div>
+  <h2><span class="no">6</span>Equivalence of DFA and NFA</h2><span class="tag">written favourite</span>
+  <div class="sumbox small"><span class="lbl">Theorem (high-yield)</span> <span class="circ">DFA and NFA have exactly the same expressive power</span>: both accept <b>exactly</b> the regular languages. So <b>DFA → NFA is trivial</b> (an NFA may have one move per pair, so a DFA already <i>is</i> an NFA), <b>NFA → DFA is always possible</b>, an NFA can be <b>exponentially smaller</b>, and a DFA runs <b>faster</b> because there is no guessing to backtrack.</div>
+  <div class="def small"><span class="lbl">Proof sketch (both directions)</span> <b>DFA ⇒ NFA:</b> keep the same states and arrows — the NFA definition already allows zero or one move per pair. <b>NFA ⇒ DFA:</b> let one DFA state stand for the whole <b>set</b> of NFA states the NFA could occupy after the same prefix; then w is accepted iff that set holds an accepting state. ∎</div>
+  <div class="cols" style="grid-template-columns:1fr 260px;align-items:start">
+    <div>
+      <h3>Subset (powerset) construction</h3>
+      <ol class="steps small">
+        <li>One DFA state = a <b>set</b> of NFA states; start with ε-closure(q₀) = q₀ plus every state reachable by ε-moves alone</li>
+        <li><b>next = ε-closure(move(S, a))</b> — the union of the successors of <b>every</b> member of S; a set accepts if it <b>contains</b> an accepting NFA state, and the empty set ∅ is the dead state</li>
+      </ol>
+    </div>
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 300 150" width="258">
+        <g class="w">
+          <rect x="6" y="38" width="116" height="74" rx="10" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+          <circle cx="32" cy="60" r="12" class="ink"/>
+          <circle cx="32" cy="94" r="12" class="ink-r"/>
+          <circle cx="82" cy="77" r="12" class="ink"/>
+          <path class="ink-p" d="M124,77 H150" marker-end="url(#ahp)"/>
+          <rect x="152" y="34" width="142" height="82" rx="14" class="ink fill-y"/>
+        </g>
+        <text x="32" y="64" text-anchor="middle" class="k s">q₀</text>
+        <text x="32" y="98" text-anchor="middle" class="k s">q₁</text>
+        <text x="82" y="81" text-anchor="middle" class="k s">q₂</text>
+        <text x="64" y="132" text-anchor="middle" class="s g">the NFA states</text>
+        <text x="223" y="66" text-anchor="middle" class="k w6">{q₀, q₁, q₂}</text>
+        <text x="223" y="88" text-anchor="middle" class="k s">one DFA state</text>
+        <text x="223" y="106" text-anchor="middle" class="g s">= a whole set of them</text>
+      </svg><figcaption>each DFA state is a box of NFA states</figcaption></figure>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Size bound</span> An n-state NFA gives at most <span class="circ">2ⁿ</span> DFA states (2ⁿ subsets), and the bound is <b>tight</b> — some languages force every subset to appear.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> {q₀, q₂} and {q₀, q₁, q₂} in the table below have <b>identical</b> moves, so they merge: the minimal DFA has <b>3</b> states, not 4.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked conversion ✍</span> the "contains 01" NFA:
+    <table class="hand small" style="white-space:nowrap">
+      <tr><th class="l">DFA state = a set</th><th>on 0</th><th>on 1</th><th>accepting?</th></tr>
+      <tr><td class="l">→ {q₀}</td><td>{q₀, q₁}</td><td>{q₀}</td><td>no</td></tr>
+      <tr><td class="l">{q₀, q₁}</td><td>{q₀, q₁}</td><td>{q₀, q₂}</td><td>no</td></tr>
+      <tr><td class="l">{q₀, q₂}</td><td>{q₀, q₁, q₂}</td><td>{q₀, q₂}</td><td class="red"><b>yes</b></td></tr>
+      <tr><td class="l">{q₀, q₁, q₂}</td><td>{q₀, q₁, q₂}</td><td>{q₀, q₂}</td><td class="red"><b>yes</b></td></tr>
+    </table>
+    <b>Trace 0101:</b> {q₀} -0→ {q₀,q₁} -1→ {q₀,q₂} -0→ {q₀,q₁,q₂} -1→ {q₀,q₂} ⇒ accept (four sets, far below 2ⁿ = 16).</div>
+  <div class="cols">
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT link</span> <span class="mono">grep -E</span> builds an <b>NFA</b>, simulates all its states at once (Thompson), then converts it to a DFA table: cheap description, fast machine.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> NFA = "maybe, at once"; DFA = "exactly this one". Count the tuple to name the machine: <b>5</b> = FA, <b>7</b> = PDA.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: minimisation and pumping lemma ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>Minimisation</span></div>
+  <h2><span class="no">7</span>Minimisation &amp; the Pumping Lemma</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div>
+      <h3>Minimising a DFA (table filling)</h3>
+      <ol class="steps small">
+        <li>Drop <b>unreachable</b> states (no path from q₀)</li>
+        <li>Mark every (accepting, non-accepting) pair, then repeat: mark (p, q) if some symbol sends them to a marked pair</li>
+        <li>Unmarked pairs are <b>indistinguishable</b> ⇒ merge, then rebuild the table; the answer is <span class="hl">unique up to renaming</span></li>
+      </ol>
+      <h3>Pumping lemma (regular languages)</h3>
+      <p class="small">If L is regular then some length p exists such that <b>every</b> w ∈ L with |w| ≥ p splits as w = <b>xyz</b> with |xy| &lt; p, |y| &gt; 0 and <b>xyⁿz ∈ L for every n ≥ 0</b>. Its only use is the contrapositive: find one w that fails to pump ⇒ <span class="circ">L is not regular</span>.</p>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> Satisfying the lemma does <b>not</b> prove regularity — some non-regular languages also satisfy it. "Prove it is regular" is not a pumping-lemma question.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 160" width="284">
+      <g class="w">
+        <circle cx="274" cy="82" r="30" class="ink-g"/>
+        <circle cx="62" cy="82" r="24" class="ink"/>
+        <circle cx="168" cy="82" r="24" class="ink"/>
+        <circle cx="274" cy="82" r="24" class="ink"/>
+        <path class="ink" d="M10,82 H32" marker-end="url(#ahb)"/>
+        <path class="ink" d="M88,68 H138" marker-end="url(#ah)"/>
+        <path class="ink" d="M194,68 H244" marker-end="url(#ah)"/>
+        <path class="ink" d="M48,64 Q62,28 76,64" marker-end="url(#ah)"/>
+        <path class="ink" d="M156,64 Q168,28 180,64" marker-end="url(#ah)"/>
+        <path class="ink" d="M274,106 Q224,134 190,100" marker-end="url(#ah)"/>
+        <path class="ink" d="M252,95 Q160,148 88,97" marker-end="url(#ah)"/>
+      </g>
+      <text x="62" y="90" text-anchor="middle" class="k w6">q₀</text>
+      <text x="168" y="90" text-anchor="middle" class="k w6">q₁</text>
+      <text x="274" y="90" text-anchor="middle" class="k w6">q₂</text>
+      <text x="113" y="62" text-anchor="middle" class="r w6">a</text>
+      <text x="219" y="62" text-anchor="middle" class="r w6">b</text>
+      <text x="62" y="38" text-anchor="middle" class="r w6">b</text>
+      <text x="168" y="38" text-anchor="middle" class="r w6">a</text>
+      <text x="232" y="132" text-anchor="middle" class="r w6">a</text>
+      <text x="162" y="148" text-anchor="middle" class="r w6">b</text>
+    </svg><figcaption>minimal DFA for "w ends in ab": q₀ nothing yet, q₁ last was a, q₂ last two were ab (accepting)</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Language over {a,b}</th><th class="l">Regular?</th><th class="l">Machine / states</th></tr>
+      <tr><td class="l">a* b* &nbsp;·&nbsp; (ab)*</td><td class="l">yes</td><td class="l">DFA, 2–3 states</td></tr>
+      <tr><td class="l">even number of a's</td><td class="l">yes</td><td class="l">DFA, 2 states (parity)</td></tr>
+      <tr><td class="l">w ends in ab</td><td class="l">yes</td><td class="l">DFA, 3 states</td></tr>
+      <tr><td class="l">{aⁿ bⁿ | n ≥ 0}</td><td class="l"><span class="red"><b>no</b></span></td><td class="l">PDA needed</td></tr>
+      <tr><td class="l">{w | #a = #b}</td><td class="l"><span class="red"><b>no</b></span></td><td class="l">PDA needed</td></tr>
+      <tr><td class="l">{aⁿ bⁿ cⁿ | n ≥ 1}</td><td class="l"><span class="red"><b>no</b></span></td><td class="l">not even CF — LBA / TM</td></tr>
+    </table>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ binary divisible by 5</span>
+      <p class="small">Read a binary number MSB first; accept when its value ≡ 0 (mod 5), with ε counting as the value 0. Use <b>one state per remainder</b> r ∈ {0,1,2,3,4} and move r → <b>(2r + b) mod 5</b>: r = 0: 0→0, 1→1 · r = 1: 0→2, 1→3 · r = 2: 0→4, 1→0 · r = 3: 0→1, 1→2 · r = 4: 0→3, 1→4. State 0 is both the <b>start</b> and the only <b>accepting</b> state.</p>
+      <p class="small"><b>Trace 1111</b> (= 15): 0 -1→ 1 -1→ 3 -1→ 2 -1→ 0 ⇒ accept, since 15 mod 5 = 0.</p>
+      <span class="tiny green">5 states, and minimal: 2 is invertible mod 5, so powers of 2 reach every non-zero residue and any two different remainders can be separated by some suffix of 1s.</span></div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: pushdown automaton ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>PDA</span></div>
+  <h2><span class="no">8</span>Pushdown Automaton (PDA)</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> A <b>pushdown automaton</b> is a finite automaton plus a <span class="hl">stack</span> (LIFO memory) — M = (Q, Σ, Γ, δ, q₀, Z₀, F). Each move reads at most one input symbol and one stack symbol, then pushes or pops. One stack remembers <b>one unbounded count</b>, so a PDA accepts <span class="circ">exactly the context-free</span> languages.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Part</th><th class="l">Meaning</th></tr>
+    <tr><td class="l"><b>Q, Σ, q₀, F</b></td><td class="l">exactly as in the FA 5-tuple: states, input alphabet, start state, final states</td></tr>
+    <tr><td class="l"><b>Γ</b> &nbsp;<span class="red">(new)</span></td><td class="l">the <b>stack alphabet</b>: what may sit in the stack</td></tr>
+    <tr><td class="l"><b>Z₀</b> &nbsp;<span class="red">(new)</span></td><td class="l">bottom marker, Z₀ ∈ Γ; the stack begins as Z₀ and is "bare" when only Z₀ is left</td></tr>
+    <tr><td class="l"><b>δ</b></td><td class="l">δ: Q × (Σ ∪ {ε}) × Γ → P(Q × Γ*) — read a symbol (or ε) and a stack top, then replace the top by a <b>string</b></td></tr>
+  </table>
+  <h3>L = {aⁿ bⁿ | n ≥ 0}, with Σ = {a, b} and Γ = {A, Z₀}</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">state</th><th>input</th><th>top</th><th>replaces top</th><th class="l">role</th></tr>
+    <tr><td class="l">q₀</td><td>a</td><td>Z₀</td><td>A Z₀</td><td class="l">push for the first a</td></tr>
+    <tr><td class="l">q₀</td><td>a</td><td>A</td><td>A A</td><td class="l">push for every further a</td></tr>
+    <tr><td class="l">q₀ → q₁</td><td>b</td><td>A</td><td>ε</td><td class="l">first pop — now counting down</td></tr>
+    <tr><td class="l">q₁</td><td>b</td><td>A</td><td>ε</td><td class="l">keep popping</td></tr>
+    <tr><td class="l">q₁</td><td>ε</td><td>A</td><td>ε</td><td class="l">input over and stack bare ⇒ accept</td></tr>
+    <tr><td class="l">q₀ → q₂</td><td>ε</td><td>Z₀</td><td>Z₀</td><td class="l">n = 0: also accept the empty input</td></tr>
+  </table>
+  <div class="code" style="font-size:11pt;line-height:6mm">input: a a a b b b
+stack: Z0 -&gt; AZ0 -&gt; AAZ0 -&gt; AAAZ0 -&gt; AAZ0 -&gt; AZ0 -&gt; Z0  (q2, accept)</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:center">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The five moves above, on their own, <b>reject</b> the empty string — from q₀ with a bare stack there is no ε-move, yet the language reads {aⁿbⁿ | <b>n ≥ 0</b>}. So add δ(q₀, ε, Z₀) → (q₂, Z₀), as in the last row, or accept by empty stack. <b>n ≥ 0 in the statement and no ε-move out of q₀ cannot both be true.</b></div>
+    <figure class="doodle"><svg viewBox="0 0 214 156" width="206">
+      <g class="w">
+        <rect x="6" y="10" width="126" height="26" rx="10" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+        <rect x="6" y="54" width="126" height="46" rx="10" class="ink-r fill-r"/>
+        <rect x="6" y="116" width="126" height="26" rx="10" class="ink-g" style="fill:rgba(31,138,92,.12)"/>
+        <rect x="144" y="10" width="64" height="132" rx="9" class="ink-k" style="fill:rgba(255,238,0,.20)"/>
+        <rect x="152" y="24" width="48" height="17" rx="4" class="ink fill-b"/>
+        <rect x="152" y="45" width="48" height="17" rx="4" class="ink fill-b"/>
+        <rect x="152" y="66" width="48" height="17" rx="4" class="ink fill-b"/>
+        <rect x="152" y="87" width="48" height="17" rx="4" class="ink-p" style="fill:rgba(106,63,160,.16)"/>
+        <rect x="152" y="108" width="48" height="17" rx="4" class="ink-p" style="fill:rgba(106,63,160,.16)"/>
+        <path class="ink" d="M132,77 H140" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M69,100 V112" marker-end="url(#ah)"/>
+      </g>
+      <text x="69" y="28" text-anchor="middle" class="k s">input tape</text>
+      <text x="69" y="82" text-anchor="middle" class="r w6">finite control</text>
+      <text x="69" y="134" text-anchor="middle" class="g s">states q₀ q₁ q₂</text>
+      <text x="176" y="150" text-anchor="middle" class="p s">stack</text>
+      <text x="140" y="73" text-anchor="end" class="s">top</text>
+    </svg><figcaption>finite control + one stack</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Push on the a's, pop on the b's, accept only when the stack is <b>bare</b>. "Pushes must equal pops."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Common misconception</span> A <b>deterministic</b> PDA does <b>not</b> match a nondeterministic one — the opposite of DFA vs NFA: {aⁿbⁿ}, {w c wᴿ} are deterministic, {w wᴿ} needs an <b>NPDA</b>.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: comparison ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>Comparison</span></div>
+  <h2><span class="no">9</span>DFA vs NFA vs PDA</h2><span class="tag">most repeated table</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Feature</th><th class="l">DFA</th><th class="l">NFA</th><th class="l">PDA</th></tr>
+    <tr><td class="l">Formal definition</td><td class="l">5-tuple (Q, Σ, δ, q₀, F)</td><td class="l">5-tuple (Q, Σ, δ, q₀, F)</td><td class="l"><span class="red"><b>7-tuple</b></span> (Q, Σ, <b>Γ</b>, δ, q₀, <b>Z₀</b>, F)</td></tr>
+    <tr><td class="l">Transitions per input</td><td class="l"><span class="circ">exactly 1</span></td><td class="l">0, 1 or more</td><td class="l">0, 1 or more</td></tr>
+    <tr><td class="l">ε-transitions</td><td class="l">not allowed</td><td class="l">allowed</td><td class="l">allowed</td></tr>
+    <tr><td class="l">Memory</td><td class="l">none (state only)</td><td class="l">none (state only)</td><td class="l"><span class="red"><b>one stack</b></span></td></tr>
+    <tr><td class="l">Language class</td><td class="l">regular (Type 3)</td><td class="l">regular (Type 3)</td><td class="l">context-free (Type 2)</td></tr>
+    <tr><td class="l">Power compared</td><td class="l" colspan="2">DFA and NFA are <span class="circ">equal</span> — mutually convertible</td><td class="l">strictly stronger than any FA</td></tr>
+    <tr><td class="l">Deterministic form</td><td class="l">by definition</td><td class="l">nondeterministic</td><td class="l"><span class="red"><b>DPDA &lt; NPDA</b></span> — not equal</td></tr>
+    <tr><td class="l">Machine size / speed</td><td class="l">can be exponentially larger, but fastest</td><td class="l">often tiny; needs backtracking</td><td class="l">states + stack; slower</td></tr>
+    <tr><td class="l">Example language</td><td class="l">w ends with 0</td><td class="l">w contains 01</td><td class="l">aⁿ bⁿ, w wᴿ</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3>Which machine for which language</h3>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Language</th><th class="l">Smallest model</th></tr>
+        <tr><td class="l">a* b* &nbsp;·&nbsp; even number of a's</td><td class="l">DFA, 2 states</td></tr>
+        <tr><td class="l">w ends in ab</td><td class="l"><span class="hl">DFA, 3 states</span></td></tr>
+        <tr><td class="l">{aⁿ bⁿ | n ≥ 0}</td><td class="l"><b>DPDA</b> — deterministic CF</td></tr>
+        <tr><td class="l">{w c wᴿ | w ∈ {a,b}*}</td><td class="l"><b>DPDA</b> — deterministic CF</td></tr>
+        <tr><td class="l">{w wᴿ | w ∈ {a,b}*}</td><td class="l"><span class="red"><b>NPDA only</b></span> — no DPDA</td></tr>
+        <tr><td class="l">{aⁿ bⁿ cⁿ}</td><td class="l">neither — LBA / TM</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>The ladder of power</h3>
+      <p class="small">Finite automaton ⊂ pushdown automaton ⊂ linear bounded automaton ⊂ Turing machine. Every step up adds memory and accepts <b>strictly more</b>: no PDA accepts a non-context-free language, no FA accepts aⁿbⁿ.</p>
+      <div class="trick small"><span class="lbl">Memory trick</span> "**FA** = **f**ixation (one state), **PDA** = **p**ile (a stack), **TM** = **t**ape (unbounded, read and write)."</div>
+      <div class="tipbox small"><span class="lbl">IT link</span> A text editor matches brackets with a <b>stack</b> — the PDA of sheet 8. Whether a <span class="mono">while</span>/<span class="mono">if</span> nests correctly is <span class="hl">not</span> a finite-automaton property.</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> The inequality students forget: <b>DPDA ≠ NPDA</b>, while <b>DFA = NFA</b>. Both statements appear in the same paper.</div>
+    </div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Alphabet Σ, string w, |w|, ε, Σ*, L ⊆ Σ*</p><p>|Σⁿ| = |Σ|ⁿ · Σ⁰ = {ε}</p>
+      <p>star * = zero or more; plus + = one or more</p><p>(a+b)* = Σ* (with ε); (a+b)+ excludes ε</p>
+      <p>ab*a = a, zero or more b, then a → "aa" too</p><p>Type 0 ⊃ 1 ⊃ 2 ⊃ 3 (TM, LBA, PDA, FA)</p>
+      <p>FA / DFA / NFA = 5-tuple (Q, Σ, δ, q₀, F)</p><p>PDA = 7-tuple + Γ (stack alphabet) + Z₀ (bottom)</p>
+      <p>complete DFA: exactly 1 move per (state, symbol)</p><p>NFA: 0 or more moves; ε-move allowed</p>
+      <p>DFA ≡ NFA; subset build ≤ 2ⁿ states, tight</p><p>DPDA &lt; NPDA — the exception, not the rule</p>
+      <p>minimal DFA "ends in ab" = 3 states</p><p>binary mod 5 (MSB first) = 5 states, r → (2r+b) mod 5</p>
+      <p>pumping lemma proves <b>NOT</b> regular, never regular</p><p>ε ∈ {aⁿbⁿ | n ≥ 0}: the PDA accepts the empty string</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>DFA = 5-tuple, PDA = 7-tuple</li>
+      <li>Complete DFA ⇒ exactly one transition</li>
+      <li>DFA and NFA accept the same languages</li>
+      <li>Subset construction ≤ 2ⁿ DFA states</li>
+      <li>PDA ⇒ context-free, nothing more</li>
+      <li>star allows zero, plus does not</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>{aⁿbⁿ} is <b>not</b> regular — PDA needed</li>
+      <li>"ends in ab" needs 3 states</li>
+      <li>binary divisible by 5 needs 5 states</li>
+      <li>Pumping lemma only disproves regularity</li>
+      <li>{w wᴿ} needs nondeterminism</li>
+      <li>ε ∈ {aⁿbⁿ | n ≥ 0}</li>
+    </ol>
+  </div>
+  <div class="sumbox small"><span class="lbl">Which machine does the question want?</span> Mentions <b>states, no memory, tuple of 5</b> ⇒ DFA · "guess", <b>several moves</b> or <b>ε</b> ⇒ NFA · <b>stack</b>, tuple of <b>7</b>, language aⁿbⁿ-style ⇒ PDA · needs <b>two stacks / a tape</b> or not context-free at all ⇒ TM.</div>
+  <div class="exam small"><span class="lbl">Top traps</span> "zero or more transitions" is an NFA feature · a blank cell in a DFA table means an incomplete machine — add the trap state · satisfying the pumping lemma does not prove regularity · a subset-built DFA need not be minimal · DFA = NFA but DPDA ≠ NPDA · aⁿbⁿ with n ≥ 0 includes the empty string</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "star = zero or more, plus = one or more" · "five letters, then Γ and Z₀" · "DFA must know, NFA may guess" · "pushes must equal pops" · "FA = fixation, PDA = pile, TM = tape" · "one stack counts one balance"</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="500">
+    <g class="w">
+      <rect x="16" y="18" width="140" height="52" rx="26" class="ink fill-b"/>
+      <rect x="192" y="18" width="140" height="52" rx="26" class="ink fill-b"/>
+      <rect x="368" y="18" width="140" height="52" rx="26" class="ink-r fill-r"/>
+      <path class="ink-p" d="M156,44 H188" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M332,44 H364" marker-end="url(#ahp)"/>
+    </g>
+    <text x="86" y="40" text-anchor="middle" class="k w6">DFA = NFA</text>
+    <text x="86" y="60" text-anchor="middle" class="s">regular</text>
+    <text x="262" y="40" text-anchor="middle" class="k w6">NPDA</text>
+    <text x="262" y="60" text-anchor="middle" class="s">DPDA ⊂ NPDA</text>
+    <text x="438" y="40" text-anchor="middle" class="r w6">Turing machine</text>
+    <text x="438" y="60" text-anchor="middle" class="s">r.e.</text>
+    <text x="172" y="13" text-anchor="middle" class="p s">strictly more</text>
+    <text x="348" y="13" text-anchor="middle" class="p s">strictly more</text>
+    <text x="260" y="102" text-anchor="middle" class="g s">each step up = one more kind of memory</text>
+  </svg><figcaption>equal at the first step, strict at every step after it</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Language Theory &amp; Automata</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A DFA is a tuple of how many parts?<ol class="opts"><li>3</li><li>4</li><li>5</li><li>7</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>In a <b>complete</b> DFA, each state has:<ol class="opts"><li>exactly 1 move</li><li>at most 1</li><li>0 or more</li><li>at least 2</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>An NPDA accepts exactly the:<ol class="opts"><li>regular langs</li><li>context-sensitive</li><li>r. enumerable</li><li>context-free</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Over {a, b}, (a + b)* denotes:<ol class="opts"><li>all, with ε</li><li>non-empty</li><li>#a = #b</li><li>aⁿbⁿ only</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Which one is <b>NOT</b> regular?<ol class="opts"><li>a* b*</li><li>(ab)*</li><li>even # of a</li><li>{aⁿ bⁿ | n ≥ 0}</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Which string is in ab*a?<ol class="opts"><li>ab</li><li>aa</li><li>ba</li><li>abab</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>An n-state NFA gives at most:<ol class="opts"><li>n states</li><li>2n states</li><li>n² states</li><li>2ⁿ states</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Minimal DFA for "ends in ab":<ol class="opts"><li>2 states</li><li>3 states</li><li>4 states</li><li>5 states</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>The pumping lemma proves a language is:<ol class="opts"><li>minimal</li><li>convertible</li><li>NOT regular</li><li>regular</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Minimal DFA for binary divisible by 5:<ol class="opts"><li>5 states</li><li>2 states</li><li>4 states</li><li>32 states</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-a · 5-d · 6-b · 7-d · 8-b · 9-c · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Design a DFA over {0, 1} that accepts exactly the strings ending in <b>01</b>. Give its transition table and trace it on <span class="mono">1101</span>. <i class="mk">8 marks</i></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Model answer ✍</span>
+      <ol class="steps small">
+        <li><b>States</b> (progress toward 01): <b>q₀</b> start, nothing matched; <b>q₁</b> last symbol was 0; <b>q₂</b> last two were 01 — <b>accepting</b> <i class="mk">2</i></li>
+        <li><b>Table</b>, one move per symbol:
+          <table class="hand small" style="white-space:nowrap">
+            <tr><th class="l">state</th><th>on 0</th><th>on 1</th></tr>
+            <tr><td class="l">→ q₀</td><td>q₁</td><td>q₀</td></tr>
+            <tr><td class="l">q₁</td><td>q₁</td><td>q₂</td></tr>
+            <tr><td class="l">* q₂</td><td>q₁</td><td>q₀</td></tr>
+          </table>
+          M = ({q₀, q₁, q₂}, {0,1}, δ, q₀, {q₂}) <i class="mk">3</i></li>
+        <li><b>Trace 1101:</b> q₀ -1→ q₀ -1→ q₀ -0→ q₁ -1→ q₂ ∈ F ⇒ <b>accepted</b>; minimal, since q₀ and q₁ differ on input 1 <i class="mk">3</i></li>
+      </ol></div>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Template to memorise</span> a <b>k</b>-symbol suffix always needs <b>k+1</b> states: q₀ nothing matched … q_k the whole suffix just read (accepting).</div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can write both tuples from memory</li>
+        <li>Can draw DFAs and NFAs for "ends with" / "contains"</li>
+        <li>Can run subset construction on a 3-state NFA</li>
+      </ul>
+      <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① minimise a 5-state DFA<br>② convert the "contains ab" ε-NFA to a DFA</div>
+    </div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

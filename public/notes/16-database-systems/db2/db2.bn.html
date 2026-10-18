@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>কোয়েরি ল্যাংগুয়েজ: রিলেশনাল অ্যালজেবরা ও SQL: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>তারিখ: ১৩.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">কোয়েরি ল্যাংগুয়েজ: RA ও SQL</span></h1>
+  <p class="subtitle">রিলেশনাল অ্যালজেবরা · SQL কমান্ড পরিবার · ছয় জয়েন · অ্যাগ্রিগেট, NULL ও GROUP BY: ১০ পাতায় পরীক্ষার চেলেঞ্জ</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">কোয়েরি ভাষা</text><text x="320" y="172" text-anchor="middle" class="bn r s">রিলেশনাল অ্যালজেবরা · SQL</text>
+      <text x="142" y="58" text-anchor="middle" class="bn s" style="font-size:10px">সেট অপারেটর</text><text x="142" y="72" text-anchor="middle" class="bn s" style="font-size:10px">∪ &nbsp;−&nbsp; ∩</text>
+      <text x="320" y="40" text-anchor="middle" class="bn r w6" style="font-size:11px">σ π ρ × ⋈ ★</text>
+      <text x="498" y="58" text-anchor="middle" class="bn s" style="font-size:10px">SELECT-এর</text><text x="498" y="72" text-anchor="middle" class="bn s" style="font-size:10px">ক্রম ★</text>
+      <text x="96" y="148" text-anchor="middle" class="bn g w6" style="font-size:10px">DDL · DML</text><text x="96" y="163" text-anchor="middle" class="bn g w6" style="font-size:10px">DCL · TCL ★</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:10px">ছয় JOIN ★</text><text x="544" y="163" text-anchor="middle" class="bn r w6" style="font-size:10px">সারির সংখ্যা</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s" style="font-size:10px">সাব-কোয়েরি:</text><text x="142" y="252" text-anchor="middle" class="bn s" style="font-size:10px">করেলেটেড</text>
+      <text x="320" y="270" text-anchor="middle" class="bn r w6" style="font-size:10px">WHERE বনাম HAVING ★</text>
+      <text x="498" y="238" text-anchor="middle" class="bn r w6" style="font-size:10px">অ্যাগ্রিগেট</text><text x="498" y="252" text-anchor="middle" class="bn r w6" style="font-size:10px">ও NULL ★</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = বাস্তব কাজের পাশ</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm;line-height:5.6mm"><b>হাই-ইল্ড তালিকা</b><br>① σ বাছে <b>সারি</b>, π বাছে <b>কলাম</b><br>② ρ নাম বদলায়; × প্রতিটি সারির সঙ্গে প্রতিটি সারি<br>③ DDL · DML · DCL · TCL — চার পরিবার<br>④ <span class="circ">DROP</span> কাঠামো মোছে; DELETE/TRUNCATE মোছে না<br>⑤ <span class="circ">WHERE</span> গ্রুপিংয়ের <b>আগে</b>, <span class="circ">HAVING</span> <b>পরে</b><br>⑥ ১,NULL,৩,NULL,৫ তে <span class="circ">COUNT(*)=5, COUNT(a)=3</span><br>⑦ ১০,NULL,২০ এর AVG = <b>১৫</b>, কখনো ১০ নয়<br>⑧ জয়েনে NULL কখনো কারো সমান হয় না<br>⑨ ৬ জয়েন: INNER, LEFT, RIGHT, FULL, CROSS, SELF<br>⑩ σ ⇒ WHERE; π ⇒ SELECT-এর তালিকা</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">ডেটাবেস সিস্টেমের সিলেবাস লেখা আছে: "Concepts of database systems; Data Models: Entity-Relationship model, Relational model; <span class="hl">Query Languages: Relational algebra, SQL</span>; Constraints and triggers; Functional dependencies and normalization; File organization and data storage; Indexing: primary and secondary indexes, B+ trees, hash tables; Query optimization; …" <b>এই লেসন কেবল "Query Languages" অংশটি নেয়।</b> কনস্ট্রেইন্ট ও ট্রিগার একই সিলেবাস লাইনের একটু নিচে — ডেটা মডেলের সাথেই দেখা হয়েছে; নরমালাইজেশন, ইনডেক্সিং ও ট্রানজ্যাকশনের নিজস্ব লেসন আছে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>রিলেশনাল অ্যালজেবরার ৮ অপারেটর … পৃ. ২</li><li>Students / Courses দিয়ে RA … পৃ. ৩</li><li>প্রোডাক্ট, রিনেম, জয়েন, SQL ⇄ RA … পৃ. ৪</li><li>SQL: DDL, DML, DCL, TCL … পৃ. ৫</li><li>অ্যাগ্রিগেট, NULL, GROUP BY … পৃ. ৬</li><li>ছয় জয়েন, সারি ধরে ধরে … পৃ. ৭</li></ul>
+    <ul class="tick"><li>জয়েন প্যাটার্ন ও সাব-কোয়েরি … পৃ. ৮</li><li>রাতের পরীক্ষার পাতা … পৃ. ৯</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১০</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: relational algebra operators ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>রিলেশনাল অ্যালজেবরা</span></div>
+  <h2><span class="no">১</span>রিলেশনাল অ্যালজেবরা (RA): আটটি অপারেটর</h2><span class="tag">সবচেয়ে বেশি পরীক্ষা হয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>রিলেশনাল অ্যালজেবরা</b> হলো কোয়েরির <span class="hl">তাত্ত্বিক</span> ভাষা: যেকোনো চাওয়ামাত্র লেখা হয় রিলেশনের উপর করা অপারেশনের একটি ধারাবাহিকতা হিসেবে, আর এক ধাপের ফলাফল পরের ধাপের ইনপুট হয়। এর <span class="hl">পাঁচটি মৌলিক অপারেশন</span> আছে (σ, π, ρ, × এবং অ্যাসাইনমেন্ট); বাকি সব — জয়েন, ইন্টারসেকশন, ডিভিশন — এগুলো থেকেই তৈরি। প্রতিটি ধাপ একটি <span class="hl">রিলেশন</span> ফেরত দেয়, তাই ধাপগুলো স্বাধীনভাবে জোড়া লাগানো যায়।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অপারেশন</th><th>চিহ্ন</th><th class="l">কী করে</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>সিলেকশন</b></td><td>σ</td><td class="l">শর্ত পূরণ করা <span class="hl">সারি</span>গুলো রাখে</td><td class="l"><code>σ salary&gt;50000 (Emp)</code></td></tr>
+    <tr><td class="l"><b>প্রজেকশন</b></td><td>π</td><td class="l">বাছাই করা <span class="hl">কলাম</span> রাখে; নকল মুছে</td><td class="l"><code>π name,salary (Emp)</code></td></tr>
+    <tr><td class="l"><b>ইউনিয়ন</b></td><td>∪</td><td class="l">দুই রিলেশনের সব টিপল, একবার করে</td><td class="l"><code>A ∪ B</code></td></tr>
+    <tr><td class="l"><b>সেট ডিফারেন্স</b></td><td>−</td><td class="l">A-তে থাকা যেসব টিপল B-তে নেই</td><td class="l"><code>A − B</code></td></tr>
+    <tr><td class="l"><b>ইন্টারসেকশন</b></td><td>∩</td><td class="l">দুই-তেই থাকা টিপল</td><td class="l"><code>A ∩ B</code></td></tr>
+    <tr><td class="l"><b>কার্টেসিয়ান প্রোডাক্ট</b></td><td>×</td><td class="l"><span class="red"><b>A-র প্রতিটি সারির সঙ্গে B-র প্রতিটি সারি</b></span></td><td class="l"><code>Emp × Dept</code></td></tr>
+    <tr><td class="l"><b>রিনেম</b></td><td>ρ</td><td class="l">রিলেশন বা অ্যাট্রিবিউটের নাম বদলায়</td><td class="l"><code>ρ pay/salary (Emp)</code></td></tr>
+    <tr><td class="l"><b>জয়েন</b></td><td>⋈</td><td class="l">প্রোডাক্ট তারপর সিলেকশন — ন্যাচারাল বা θ</td><td class="l"><code>Emp ⋈ Dept</code></td></tr>
+  </table>
+  <div class="sumbox tiny" style="margin-top:0"><span class="lbl">ডেরাইভড অপারেশন</span> মৌলিক নয় এমন সবই এই পাঁচটি দিয়ে তৈরি: <b>θ-জয়েন</b> = <code>σ<sub>A=B</sub>(R × S)</code> · <b>ন্যাচারাল জয়েন</b> = θ-জয়েনের সঙ্গে জয়েন অ্যাট্রিবিউটের নকল কপি সরানো · <b>ইন্টারসেকশন</b> = <code>A − (A − B)</code> · <b>রিনেম</b> মৌলিক, কিন্তু সেলফ-জয়েন বৈধ করে তো এটাই।</div>
+  <div class="cols" style="grid-template-columns:330px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 420 215" width="330">
+      <g class="w">
+        <rect x="8" y="16" width="96" height="94" rx="6" class="ink-k fill-b"/>
+        <rect x="8" y="16" width="96" height="30" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M8,46 H104 M8,78 H104 M40,46 V110 M72,46 V110"/>
+        <rect x="136" y="48" width="72" height="32" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M106,63 H132" marker-end="url(#ahb)"/>
+        <rect x="222" y="16" width="96" height="94" rx="6" class="ink-k fill-b"/>
+        <rect x="222" y="16" width="96" height="30" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M222,46 H318 M254,46 V110 M286,46 V110"/>
+        <rect x="352" y="48" width="60" height="32" rx="6" class="ink-p fill-p"/>
+        <path class="ink" d="M320,63 H348" marker-end="url(#ahp)"/>
+      </g>
+      <text x="56" y="38" text-anchor="middle" class="bn k w6" style="font-size:11px">৩ সারি</text>
+      <text x="56" y="68" text-anchor="middle" class="bn s" style="font-size:10px">সারি ১</text>
+      <text x="56" y="100" text-anchor="middle" class="bn s" style="font-size:10px">সারি ২</text>
+      <text x="172" y="69" text-anchor="middle" class="bn g w6" style="font-size:11px">১ সারি</text>
+      <text x="270" y="38" text-anchor="middle" class="bn k w6" style="font-size:11px">৩ কলাম</text>
+      <text x="270" y="85" text-anchor="middle" class="bn s" style="font-size:10px">সারি ১</text>
+      <text x="382" y="69" text-anchor="middle" class="bn p w6" style="font-size:11px">১ কলাম</text>
+      <text x="100" y="140" text-anchor="middle" class="bn g w6" style="font-size:11px">σ সারি রাখে</text>
+      <text x="320" y="140" text-anchor="middle" class="bn p w6" style="font-size:11px">π কলাম রাখে</text>
+      <text x="210" y="176" text-anchor="middle" class="bn k s" style="font-size:11px">কোয়েরি একটি ধারা: এক রিলেশন পরেরটিকে খায়</text>
+      <text x="210" y="200" text-anchor="middle" class="bn r s" style="font-size:11px">ভেতর থেকে বাইরে পড়ো</text>
+    </svg><figcaption>σ নামানে নামায়, π পাশে পাশে কাটে</figcaption></figure>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>সিগমা সারি বাছে, পাই কলাম বাছে।</b>" σ হলো সেই অক্ষর যা দিয়ে টেবিলের একটি <i>লাইন</i> বোঝানো হয়; π ব্যবহার হয় একটি <i>তালিকা</i> বোঝাতে। SQL-এ এরা হলো <span class="circ">WHERE</span> ও <span class="circ">SELECT</span> — কখনোই অদল-বদল নয়।</div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>σ কলামের সংখ্যা বদলায় না</b> আর <b>π সারির সংখ্যা বদলায় না</b> (এটি নকল সরাতে পারে)। "কোন অপারেটর কলাম সরায়?" → <b>π</b>। "কোন অপারেটর সারি সরায়?" → <b>σ</b>। আর <b>ρ কিছুই বদলায় না</b>: শুধু নাম।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ সেট অপারেটরগুলো</span> ধরি <code>A = {1, 2, 3}</code> আর <code>B = {3, 4}</code>। তাহলে <b>A ∪ B = {1,2,3,4}</b> (নকল ৩ একবারই), <b>A − B = {1,2}</b>, <b>A ∩ B = {3}</b>, আর <b>A × B = ৬ টিপল</b> (৩ সারি × ২ সারি) — প্রোডাক্টে একটিও ডুপ্লিকেট থাকে না, প্রতিটি জোড়া আলাদা।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ইউনিয়ন, ইন্টারসেকশন ও ডিফারেন্স কাজ করে শুধু <b>ইউনিয়ন-কমপ্যাটিবল</b> রিলেশনে: অ্যাট্রিবিউটের সংখ্যা, ক্রম ও ডোমেইন এক হতে হয়। আর <b>π আর σ-এর ফলাফলে নকল থাকে না</b>, কারণ RA সেটের উপর কাজ করে — SQL-এর ব্যাগের উপর নয়।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: Students/Courses in RA ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>RA-তে সমাধান</span></div>
+  <h2><span class="no">২</span>Students / Courses ডেটাবেসে RA</h2><span class="tag">লিখিত প্রশ্নের প্রিয় ★</span>
+  <p class="tiny" style="margin-top:0">পরীক্ষায় আসা প্রতিটি RA প্রশ্ন কোনো না কোনো নির্দিষ্ট জোড়া রিলেশন নিয়ে করা হয়। এই দুটি মুখস্থ করলে চিহ্নটি আর বিমূর্ত হয় না।</p>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Students</th><th class="l">id</th><th class="l">name</th><th class="l">dept</th></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>1</u></td><td class="l">Alice</td><td class="l">CSE</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>2</u></td><td class="l">Bob</td><td class="l">EEE</td></tr>
+      <tr><th class="l">Courses</th><th class="l"><u>cid</u></th><th class="l"><u>name</u></th><th class="l">&nbsp;</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l">C1</td><td class="l">DBMS</td><td class="l">&nbsp;</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l">C2</td><td class="l">Algorithms</td><td class="l">&nbsp;</td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">RA কোয়েরি</th><th class="l">ফলাফল</th></tr>
+      <tr><td class="l"><code>σ dept='CSE'(Students)</code></td><td class="l">১ টিপল: (1,Alice,CSE)</td></tr>
+      <tr><td class="l"><code>π name (Students)</code></td><td class="l">২ টিপল: Alice, Bob</td></tr>
+      <tr><td class="l"><code>π dept (Students)</code></td><td class="l">২ টিপল: CSE, EEE</td></tr>
+      <tr><td class="l"><code>Students × Courses</code></td><td class="l">২ × ২ = <b>৪</b> টিপল</td></tr>
+    </table>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> এই দুটি রিলেশনের কার্টেসিয়ান প্রোডাক্ট হলো <span class="circ">৪</span> টিপল — ২ নয়, ৩-ও নয়: <b>সারি × সারি</b>। সাধারণত <i>m</i> সারির রিলেশন × <i>n</i> সারির রিলেশন = <i>m × n</i> সারি — ৩ সারির দুটি টেবিলে <b>৯</b>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍</span> "সব CSE ছাত্রের নাম ও বিভাগ দেখাও।"<br>
+        <b>RA:</b> <code>π name,dept (σ dept='CSE'(Students))</code><br>
+        <b>SQL:</b> <code>SELECT name, dept FROM Students WHERE dept='CSE';</code><br>
+        <span class="tiny">RA <b>ভেতর থেকে বাইরে</b> পড়ো: আগের বন্ধনীটি আগে চলে, তাই σ ছাঁকে আর π পরে কলাম কাটে।</span></div>
+      <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍</span> "প্রতিটি ছাত্রকে প্রতিটি কোর্সের সঙ্গে জোড়া করে দেখাও।"<br>
+        <b>RA:</b> <code>π name,cname (Students × ρ cname/name(Courses))</code><br>
+        <b>SQL:</b> <code>SELECT s.name, c.name FROM Students s, Courses c;</code><br>
+        <span class="tiny">ρ এখানে <b>আবশ্যক</b>: প্রোডাক্টের পর দুই রিলেশনেই <i>name</i> নামের অ্যাট্রিবিউট থাকে, আর একটি রিলেশনে একই নামের দুটি অ্যাট্রিবিউট থাকতে পারে না।</span></div>
+      <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ৩ ✍</span> "CSE ছাত্রদের নাম একবার করে দেখাও।" → <b>RA:</b> <code>π name (σ dept='CSE'(Students))</code> → <b>Alice</b>-ই। σ আগে চলে, তাই দ্বিতীয় ছাত্র π গোনার আগেই বাদ পড়েছে।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 240" width="290">
+      <g class="w">
+        <rect x="10" y="10" width="280" height="52" rx="8" class="ink-k fill-b"/>
+        <rect x="10" y="76" width="280" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="10" y="130" width="280" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="184" width="280" height="40" rx="8" class="ink-p fill-p"/>
+        <path class="ink" d="M150,62 V76" marker-end="url(#ahb)"/>
+        <path class="ink" d="M150,116 V130" marker-end="url(#ahb)"/>
+        <path class="ink" d="M150,170 V184" marker-end="url(#ahb)"/>
+      </g>
+      <text x="150" y="42" text-anchor="middle" class="bn k w6">Students (২ সারি)</text>
+      <text x="150" y="101" text-anchor="middle" class="bn g w6" style="font-size:12px">σ dept='CSE' → ১ সারি</text>
+      <text x="150" y="155" text-anchor="middle" class="bn r w6" style="font-size:12px">π name,dept → ২ কলাম</text>
+      <text x="150" y="209" text-anchor="middle" class="bn p w6" style="font-size:12px">১ টিপল: Alice, CSE</text>
+    </svg><figcaption>ভেতর থেকে বাইরে গণনা</figcaption></figure>
+  </div>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ ✍ বিখ্যাত জোড়া</span> কোনো প্রশ্নে <code>σ name (Students)</code> ও <code>π dept (Students)</code> — এই দুটি দেওয়া হয়। প্রথমটি <b>টাইপ এরর</b>: <i>name</i> একটি অ্যাট্রিবিউট, শর্ত নয়, তাই σ-এর একটি <b>শর্ত</b> লাগে আর π-এর একটি <b>অ্যাট্রিবিউট তালিকা</b> লাগে। আর "π নকল সরায়" — এটি <b>RA</b>-র সত্য; সাধারণ SQL-এর <code>SELECT</code> নকল রাখে, <code>DISTINCT</code> না লিখলে।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: product, rename, join, RA vs SQL ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>জয়েন ও অনুবাদ</span></div>
+  <h2><span class="no">৩</span>প্রোডাক্ট, রিনেম ও জয়েন — আর SQL-এ অনুবাদ</h2><span class="tag">জয়েনই সবচেয়ে প্রিয় ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 260px;align-items:start">
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">জয়েনের সূত্র</span>
+        <b>θ-জয়েন</b> <code>R ⋈<sub>A=θB</sub> S ≡ σ<sub>A=θB</sub>(R × S)</code> · <b>ন্যাচারাল জয়েন</b> <code>R ⋈ S</code> যেসব অ্যাট্রিবিউট দুই রিলেশনে <b>একই নামে</b> আছে তার উপর জোড়া লাগায়, তারপর নকল কপিটি সরায়।<br>
+        <b>ρ কেন দরকার:</b> একটি রিলেশনে একই নামের দুটি অ্যাট্রিবিউট থাকতে পারে না, তাই এক কপি রিনেম না করে <code>Emp × Emp</code> অবৈধ — এ কারণেই <span class="circ">প্রতিটি সেলফ-জয়েনে দুটি অ্যালিয়াস লাগে</span>।</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>আগে প্রোডাক্ট, তারপর বাছাই।</b>" এই এক বাক্য থেকেই জয়েন, সেমি-জয়েন আর প্রশ্নে আসা প্রতিটি θ-জয়েন পাওয়া যায়। একটি <code>WHERE</code>-ক্লজযুক্ত কোয়েরি <i>দেখতে</i> লাগে "প্রথমে জয়েন, তারপর ছাঁকা" — অপটিমাইজার সেটি নিঃশব্দে এই আকারেই সাজিয়ে নেয়।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 260 214" width="250">
+      <g class="w">
+        <rect x="8" y="6" width="108" height="34" rx="8" class="ink fill-b"/>
+        <rect x="144" y="6" width="108" height="34" rx="8" class="ink fill-b"/>
+        <rect x="8" y="80" width="108" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="144" y="80" width="108" height="34" rx="8" class="ink-g fill-g"/>
+        <rect x="8" y="154" width="244" height="34" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M62,40 V72" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,40 V72" marker-end="url(#ahb)"/>
+        <path class="ink" d="M62,114 V146" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,114 V146" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M116,23 H140" marker-end="url(#ah)"/>
+      </g>
+      <text x="62" y="28" text-anchor="middle" class="bn k w6" style="font-size:11px">R (m সারি)</text>
+      <text x="198" y="28" text-anchor="middle" class="bn k w6" style="font-size:11px">S (n সারি)</text>
+      <text x="62" y="102" text-anchor="middle" class="bn g w6" style="font-size:11px">ρ নাম বদলে</text>
+      <text x="198" y="102" text-anchor="middle" class="bn g w6" style="font-size:11px">ρ নাম বদলে</text>
+      <text x="130" y="176" text-anchor="middle" class="bn r w6" style="font-size:11px">σ শর্ত → ρ ফলাফল</text>
+      <text x="130" y="206" text-anchor="middle" class="bn k s" style="font-size:11px">m × n সারি, তারপর শুধু পাশ কারা পার</text>
+    </svg><figcaption>জয়েন = প্রোডাক্ট + সিলেকশন</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ইংরেজি প্রশ্ন</th><th class="l">রিলেশনাল অ্যালজেবরা</th><th class="l">SQL</th></tr>
+    <tr><td class="l">৫০ হাজারের বেশি বেতনভোগী</td><td class="l"><code>σ salary&gt;50000 (Emp)</code></td><td class="l"><code>SELECT * FROM Emp WHERE salary &gt; 50000</code></td></tr>
+    <tr><td class="l">শুধু নাম ও বেতন</td><td class="l"><code>π name,salary (Emp)</code></td><td class="l"><code>SELECT name, salary FROM Emp</code></td></tr>
+    <tr><td class="l">সব CSE ছাত্র</td><td class="l"><code>σ dept='CSE'(Students)</code></td><td class="l"><code>… WHERE dept='CSE'</code></td></tr>
+    <tr><td class="l">বেতনের নাম বদলে pay</td><td class="l"><code>ρ pay/salary (Emp)</code></td><td class="l"><code>SELECT salary AS pay</code></td></tr>
+    <tr><td class="l">CSE বিভাগের ছাত্ররা</td><td class="l"><code>Students ⋈ Dept</code></td><td class="l"><code>… JOIN Dept ON …</code></td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বৈশিষ্ট্য</th><th class="l">রিলেশনাল অ্যালজেবরা</th><th class="l">SQL</th></tr>
+    <tr><td class="l">প্রকৃতি</td><td class="l"><span class="hl">তাত্ত্বিক</span> ভিত্তি</td><td class="l"><span class="hl">বাস্তব</span>, ব্যবহারকারী ও অ্যাপ লেখে</td></tr>
+    <tr><td class="l">ধরন</td><td class="l">প্রসিডিউরাল — <i>কীভাবে</i> বলে</td><td class="l"><span class="red"><b>ডিক্লারেটিভ</b></span> — শুধু <i>কী</i> বলে</td></tr>
+    <tr><td class="l">নকল</td><td class="l">থাকে না (সেট থিওরি); π সরিয়ে দেয়</td><td class="l"><code>DISTINCT</code> না লিখলে থাকে</td></tr>
+    <tr><td class="l">"৫০ হাজারের বেশি"</td><td class="l"><code>σ salary&gt;50000 (Emp)</code></td><td class="l"><code>SELECT * FROM Emp WHERE salary&gt;50000</code></td></tr>
+    <tr><td class="l">অপটিমাইজেশন</td><td class="l">পুনর্লিখনে ঠিক সম রিলেশন পাওয়া যায়</td><td class="l">অপটিমাইজার <b>SQL-কে RA-ট্রিতে রূপান্তর</b> করে সবচেয়ে সস্তাটি বেছে নেয়</td></tr>
+  </table>
+  <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">কেন এটি গুরুত্বপূর্ণ</span> ব্যবহারকারী SQL লেখেন, আর ডেটাবেসের <b>কোয়েরি অপটিমাইজার</b> সেটিকে একটি <b>অ্যালজেব্রা ট্রি</b>তে নতুন করে লেখে, তারপর সবচেয়ে সস্তা সমতুল্য ট্রিটি বেছে নেয় — সিলেকশনগুলো নিচের দিকে ঠেলে দিয়ে যাতে বিশাল প্রোডাক্ট কখনোই না হয়। RA-এর পুরো উদ্দেশ্যই এটাই। কোন ইনডেক্স কোন ট্রিকে সস্তা করে, সেটা ইনডেক্সিং লেসনের বিষয় (<b>db4</b>)।</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ</span> RA কাজ করে <b>সেট</b> উপর, SQL কাজ করে <b>ব্যাগ</b> উপর — তাই একই প্রশ্নে দুই ভাষা ভিন্ন সারির সংখ্যা দিতে পারে। এটা ইচ্ছাকৃত ও পরীক্ষাযোগ্য পার্থক্য, কোনো বাগ নয়। আর SQL ডিক্লারেটিভ বলে অপারেশনের ক্রম ব্যবহারকারী ঠিক করে না — অপটিমাইজার করে, সিলেকশনগুলো নিচের দিকে ঠেলে দিয়ে যাতে বিশাল প্রোডাক্ট কখনোই না হয়।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: SQL command families ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>SQL কমান্ডের প্রকার</span></div>
+  <h2><span class="no">৪</span>SQL কমান্ডের প্রকার ও ক্লজগুলোর চলার ক্রম</h2><span class="tag">বেশি মান ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">পরিবার</th><th class="l">পূর্ণ নাম</th><th class="l">কমান্ড</th><th class="l">যার উপর কাজ করে</th></tr>
+    <tr><td class="l"><b>DDL</b></td><td class="l">ডেটা ডেফিনিশন ল্যাংগুয়েজ</td><td class="l">CREATE, ALTER, DROP, TRUNCATE, <span class="hl">RENAME</span></td><td class="l"><span class="hl">কাঠামো</span></td></tr>
+    <tr><td class="l"><b>DML</b></td><td class="l">ডেটা ম্যানিপুলেশন ল্যাংগুয়েজ</td><td class="l">SELECT, INSERT, UPDATE, DELETE (আরও MERGE)</td><td class="l"><span class="hl">সারি</span></td></tr>
+    <tr><td class="l"><b>DCL</b></td><td class="l">ডেটা কন্ট্রোল ল্যাংগুয়েজ</td><td class="l">GRANT, REVOKE</td><td class="l"><span class="hl">অধিকার</span></td></tr>
+    <tr><td class="l"><b>TCL</b></td><td class="l">ট্রানজ্যাকশন কন্ট্রোল ল্যাংগুয়েজ</td><td class="l">COMMIT, ROLLBACK, SAVEPOINT</td><td class="l"><span class="hl">ট্রানজ্যাকশন</span></td></tr>
+  </table>
+  <div class="mnote">D D M C T</div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">কমান্ড</th><th class="l">ডেটা</th><th class="l">কাঠামো</th><th class="l">WHERE চলবে?</th><th class="l">পরিবার</th></tr>
+    <tr><td class="l"><b>DROP TABLE</b></td><td class="l"><span class="red"><b>সব সারি মোছে</b></span></td><td class="l"><span class="red"><b>মোছে</b></span></td><td class="l">না</td><td class="l">DDL</td></tr>
+    <tr><td class="l"><b>DELETE</b></td><td class="l">মিলে যাওয়া সারি মোছে</td><td class="l"><span class="circ">থাকে</span></td><td class="l"><b>হ্যাঁ</b></td><td class="l">DML</td></tr>
+    <tr><td class="l"><b>TRUNCATE</b></td><td class="l">সব সারি মোছে</td><td class="l"><span class="circ">থাকে</span></td><td class="l">না</td><td class="l">DDL</td></tr>
+    <tr><td class="l"><b>ALTER</b></td><td class="l">থাকে</td><td class="l"><span class="hl">বদলায়</span></td><td class="l">না</td><td class="l">DDL</td></tr>
+  </table>
+  <div class="code">SELECT   name, salary          -- 5   কলাম বেছে নেওয়া
+FROM     Employees             -- 1   টেবিল থেকে শুরু
+WHERE    salary &gt; 50000       -- 2   সারি ছেঁকে নেওয়া
+GROUP BY dept_id              -- 3   গ্রুপ বানানো
+HAVING   COUNT(*) &gt; 3        -- 4   গ্রুপ ছেঁকে নেওয়া
+ORDER BY salary DESC;         -- 6   সাজানো
+
+INSERT INTO Students (id, name, dept) VALUES (1, 'Alice', 'CSE');
+UPDATE Employees SET salary = salary * 1.10 WHERE dept = 'IT';
+DELETE FROM Students WHERE id = 1;        -- WHERE দিলে DELETE নির্বাচনী হয়</div>
+  <figure class="doodle"><svg viewBox="0 0 620 96" width="580">
+    <g class="w">
+      <rect x="6" y="22" width="88" height="40" rx="8" class="ink-k fill-b"/>
+      <rect x="112" y="22" width="88" height="40" rx="8" class="ink-r fill-r"/>
+      <rect x="218" y="22" width="88" height="40" rx="8" class="ink fill-b"/>
+      <rect x="324" y="22" width="88" height="40" rx="8" class="ink-p fill-p"/>
+      <rect x="430" y="22" width="88" height="40" rx="8" class="ink fill-b"/>
+      <rect x="530" y="22" width="84" height="40" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M94,42 H110" marker-end="url(#ahb)"/>
+      <path class="ink" d="M200,42 H216" marker-end="url(#ahb)"/>
+      <path class="ink" d="M306,42 H322" marker-end="url(#ahb)"/>
+      <path class="ink" d="M412,42 H428" marker-end="url(#ahb)"/>
+      <path class="ink" d="M518,42 H528" marker-end="url(#ahg)"/>
+    </g>
+    <text x="50" y="47" text-anchor="middle" class="bn k w6" style="font-size:12px">FROM</text>
+    <text x="156" y="47" text-anchor="middle" class="bn r w6" style="font-size:12px">WHERE</text>
+    <text x="262" y="47" text-anchor="middle" class="bn k w6" style="font-size:12px">GROUP BY</text>
+    <text x="368" y="47" text-anchor="middle" class="bn p w6" style="font-size:12px">HAVING</text>
+    <text x="474" y="47" text-anchor="middle" class="bn k w6" style="font-size:12px">SELECT</text>
+    <text x="572" y="47" text-anchor="middle" class="bn g w6" style="font-size:12px">ORDER</text>
+    <text x="50" y="82" text-anchor="middle" class="bn r s" style="font-size:10px">টেবিল</text>
+    <text x="156" y="82" text-anchor="middle" class="bn r s" style="font-size:10px">সারি ★</text>
+    <text x="262" y="82" text-anchor="middle" class="bn s" style="font-size:10px">গ্রুপ</text>
+    <text x="368" y="82" text-anchor="middle" class="bn p s" style="font-size:10px">গ্রুপ ★</text>
+    <text x="474" y="82" text-anchor="middle" class="bn s" style="font-size:10px">কলাম</text>
+    <text x="572" y="82" text-anchor="middle" class="bn g s" style="font-size:10px">সাজানো</text>
+  </svg><figcaption>ক্লজগুলো <i>চলে</i> যে ক্রমে — আপনি যে ক্রমে লেখেন তা নয়</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>WHERE সারি ছাঁকে গ্রুপিংয়ের <i>আগে</i>; HAVING গ্রুপ ছাঁকে গ্রুপিংয়ের <i>পরে</i>।</b> পুরো পার্থক্য এটুকুই, আর অ্যাগ্রিগেট ব্যবহার করতে পারে শুধু HAVING — যেমন <code>HAVING COUNT(*) &gt; 5</code>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল ও অতিরিক্ত তথ্য</span> "<b>যেখানে আগে, হেভিং পরে।</b>" <i>W</i>here আসে <i>W</i>hen সারি এখনো সারি। <code>GROUP BY</code> ছাড়াই <code>HAVING</code> বৈধ: পুরো টেবিলটাই একটি গ্রুপ ধরা হয়, তাই <code>SELECT COUNT(*) FROM Emp HAVING COUNT(*) &gt; 5</code> হয় একটি সংখ্যা, নয়তে কিছু নয়।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: aggregates and NULL ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>অ্যাগ্রিগেট ও NULL</span></div>
+  <h2><span class="no">৫</span>অ্যাগ্রিগেট ফাংশন ও NULL-এর নিয়ম</h2><span class="tag">প্রতি পরীক্ষায় আসে ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অ্যাগ্রিগেট</th><th class="l">যা ফেরত দেয়</th><th class="l">কলামে NULL থাকলে</th><th class="l">খালি সেট</th></tr>
+    <tr><td class="l"><b>COUNT(*)</b></td><td class="l"><span class="hl">সারি</span>র সংখ্যা</td><td class="l"><span class="red"><b>তবুও গোনে</b></span></td><td class="l">0</td></tr>
+    <tr><td class="l"><b>COUNT(col)</b></td><td class="l">col-এর non-NULL মানের সংখ্যা</td><td class="l">বাদ দেয়</td><td class="l">0</td></tr>
+    <tr><td class="l"><b>SUM / AVG(col)</b></td><td class="l">non-NULL মানের যোগফল / গড়</td><td class="l"><span class="red"><b>বাদ দেয় — ০ ধরে না</b></span></td><td class="l">NULL</td></tr>
+    <tr><td class="l"><b>MIN / MAX(col)</b></td><td class="l">সবচেয়ে ছোট / বড় non-NULL মান</td><td class="l">বাদ দেয়</td><td class="l">NULL</td></tr>
+  </table>
+  <div class="mnote">NULL দেখে শুধু COUNT(*)</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start;clear:both">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ COUNT</span> <code>T(a)</code>-তে আছে <code>1, NULL, 3, NULL, 5</code>।<br>
+        <code>SELECT COUNT(*), COUNT(a) FROM T;</code> → <span class="circ">5, 3</span><br>
+        <b>COUNT(*)</b> গোনে <i>সারি</i>, তাই দুটো NULL সারিও গোনা হয়; <b>COUNT(a)</b> গোনে <i>a-এর মান</i>, আর NULL একটি মান নয়।</div>
+      <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ AVG</span> <code>R(score)</code>-তে আছে <code>10, NULL, 20</code>।<br>
+        <code>SELECT AVG(score) FROM R;</code> → (10 + 20) / 2 = <span class="circ">15</span><br>
+        <code>COUNT(*)</code> ছাড়া প্রতিটি অ্যাগ্রিগেট NULL উপেক্ষা করে; NULL-কে 0 ধরলে (10 + 0 + 20) / 3 = 10 হতো — এটিই <b>ভুল</b> উত্তর।</div>
+      <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ৩ ✍ GROUP BY + HAVING</span> <code>Sales(region, amount)</code> = ('N',100), ('N',200), ('S',50), ('S',70), ('E',300)<br>
+        <code>SELECT region, SUM(amount) FROM Sales GROUP BY region HAVING SUM(amount) &gt; 150;</code><br>
+        যোগফল: N = 300, S = 120, E = 300। 150 পেরোনো শুধু N ও E → <span class="circ">২ সারি</span>।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 152" width="240">
+      <g class="w">
+        <rect x="8" y="10" width="40" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="54" y="10" width="40" height="32" rx="5" class="ink-r fill-r"/>
+        <rect x="100" y="10" width="40" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="146" y="10" width="40" height="32" rx="5" class="ink-r fill-r"/>
+        <rect x="192" y="10" width="40" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="8" y="58" width="224" height="28" rx="6" class="ink-k fill-y"/>
+        <rect x="8" y="96" width="134" height="28" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M146,42 V54 M192,42 V54"/>
+      </g>
+      <text x="28" y="31" text-anchor="middle" class="k w6" style="font-size:11px">1</text>
+      <text x="74" y="31" text-anchor="middle" class="r w6" style="font-size:10px">NULL</text>
+      <text x="120" y="31" text-anchor="middle" class="k w6" style="font-size:11px">3</text>
+      <text x="166" y="31" text-anchor="middle" class="r w6" style="font-size:10px">NULL</text>
+      <text x="212" y="31" text-anchor="middle" class="k w6" style="font-size:11px">5</text>
+      <text x="120" y="77" text-anchor="middle" class="bn k w6" style="font-size:11px">COUNT(*) = ৫ সারি</text>
+      <text x="75" y="115" text-anchor="middle" class="bn k w6" style="font-size:11px">COUNT(a) = ৩</text>
+      <text x="150" y="115" class="bn r s" style="font-size:10px">NULL বাদ</text>
+      <text x="125" y="145" text-anchor="middle" class="bn k s" style="font-size:10px">একই পাঁচটি সারি, দুটি উত্তর</text>
+    </svg><figcaption>একই পাঁচটি সারি, দুটি গণনা</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> <code>10, NULL, 20</code>-এর <code>AVG</code> হলো <span class="circ">15</span>, 10 নয় — NULL হলো <b>অজানা</b>, শূন্য নয়। <b>২.</b> খালি টেবিলে <code>COUNT(*)</code> = 0, কিন্তু <code>AVG</code>, <code>SUM</code>, <code>MIN</code>, <code>MAX</code> ফেরত দেয় NULL। <b>৩.</b> NULL-এর উপর যেকোনো শর্ত <b>অজানা, কখনো সত্য নয়</b>, তাই <code>WHERE a &gt; 0</code> নিঃশব্দে NULL সারিগুলো বাদ দেয়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>তারকা প্রতিটি সারিই দেখে, কলাম শুধু আসল উত্তর দেখে।</b>" তারকা পুরো টিপলের পরিচয় দেয়, তাই মান অনুপস্থিত থাকলেও সারি গোনা হয়। <code>COUNT(*)</code> পড়ো "সারি গোনো", <code>COUNT(col)</code> পড়ো "উত্তর গোনো"। জয়েনের সঙ্গে <code>COUNT(*)</code> ব্যবহার করলে সাব-কোয়েরির প্রতিটি মিল-পঙ্ক্তি একবার গোনা হয়, তাই জয়েনের আগে গোনা হয় না।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: the six joins ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>ছয় জয়েন</span></div>
+  <h2><span class="no">৬</span>ছয়টি SQL জয়েন, সারি ধরে ধরে</h2><span class="tag">সারি গোনা ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 250px;align-items:start">
+    <div>
+      <p class="tiny" style="margin:0 0 0.5mm 0"><b>Emp(eid, dept_id)</b></p>
+      <table class="hand tiny" style="width:100%">
+        <tr><th>eid</th><th>dept_id</th></tr>
+        <tr><td>1</td><td>10</td></tr>
+        <tr><td>2</td><td>20</td></tr>
+        <tr><td>3</td><td><span class="red"><b>NULL</b></span></td></tr>
+        <tr><td>4</td><td>10</td></tr>
+      </table>
+      <p class="tiny" style="margin:1mm 0 0.5mm 0"><b>Dept(dept_id, name)</b></p>
+      <table class="hand tiny" style="width:100%">
+        <tr><th>dept_id</th><th>name</th></tr>
+        <tr><td>10</td><td>IT</td></tr>
+        <tr><td>20</td><td>HR</td></tr>
+        <tr><td>30</td><td>Finance</td></tr>
+      </table>
+    </div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">জয়েন</th><th class="l">কী রাখে</th><th class="l"><span class="hl">সারি</span></th></tr>
+      <tr><td class="l"><b>INNER</b></td><td class="l">শুধু মিল</td><td class="l"><span class="circ">3</span></td></tr>
+      <tr><td class="l"><b>LEFT</b></td><td class="l">সব Emp</td><td class="l"><span class="circ">4</span></td></tr>
+      <tr><td class="l"><b>RIGHT</b></td><td class="l">সব Dept</td><td class="l"><span class="circ">4</span></td></tr>
+      <tr><td class="l"><b>FULL OUTER</b></td><td class="l">সব দুটো</td><td class="l"><span class="circ">5</span></td></tr>
+      <tr><td class="l"><b>CROSS</b></td><td class="l">সব জোড়া</td><td class="l"><span class="circ">12</span></td></tr>
+      <tr><td class="l"><b>SELF</b></td><td class="l">নিজের সঙ্গে</td><td class="l">সারি-জোড়া</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 160" width="240">
+      <g class="w">
+        <circle cx="100" cy="62" r="52" class="ink-k" style="fill:rgba(255,238,0,.35)"/>
+        <circle cx="180" cy="62" r="52" class="ink-k"/>
+        <path d="M140,62 A40,40 0 0 1 180,22 A52,52 0 0 0 100,62 A40,40 0 0 1 140,62 Z" class="ink-g" style="fill:rgba(31,138,92,.30)"/>
+      </g>
+      <text x="62" y="34" text-anchor="middle" class="bn k w6" style="font-size:11px">শুধু Emp</text>
+      <text x="232" y="34" text-anchor="middle" class="bn k w6" style="font-size:11px">শুধু Dept</text>
+      <text x="140" y="60" text-anchor="middle" class="bn g w6" style="font-size:11px">INNER</text>
+      <text x="140" y="76" text-anchor="middle" class="bn g w6" style="font-size:9px">৩ সারি</text>
+      <text x="54" y="112" text-anchor="middle" class="bn r w6" style="font-size:11px">eid 3</text>
+      <text x="244" y="112" text-anchor="middle" class="bn r w6" style="font-size:11px">30</text>
+      <text x="140" y="146" text-anchor="middle" class="bn k s" style="font-size:11px">FULL OUTER = 3 + 1 + 1 = 5</text>
+    </svg><figcaption>তিনটি অংশ ও সারির সংখ্যা</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">INNER JOIN ✍</span> <code>SELECT e.eid, d.name FROM Emp e JOIN Dept d ON e.dept_id = d.dept_id;</code><br>
+        eid 1 → 10 IT · eid 2 → 20 HR · eid 4 → 10 IT। eid 3-এর মান NULL, আর <b>NULL = 10 সত্য নয়</b>, তাই সে বাদ পড়ে; dept 30-এর কোনো কর্মচারী নেই। → <span class="circ">৩ সারি</span></div>
+      <div class="ex tiny"><span class="lbl">LEFT ও RIGHT JOIN ✍</span> <b>LEFT</b> = ৩টি মিল + মিলহীন কর্মচারী (NULL দিয়ে পূরণ) → <b>৪ সারি</b>: (1,IT) (2,HR) (3,NULL) (4,IT)। <b>RIGHT</b> = ৩টি মিল + মিলহীন বিভাগ (NULL দিয়ে পূরণ) → <b>৪ সারি</b>: (1,IT) (2,HR) (4,IT) (NULL,Finance)।</div>
+      <div class="ex tiny"><span class="lbl">FULL OUTER ও CROSS JOIN ✍</span> FULL OUTER = ৩টি মিল জোড়া + ১টি মিলহীন <i>Emp</i> সারি (eid 3) + ১টি মিলহীন <i>Dept</i> সারি (30 Finance) = 3 + 1 + 1 = <span class="circ">৫ সারি</span>; সূত্র <b>INNER + শুধু-LEFT + শুধু-RIGHT</b>। CROSS JOIN হলো ৪ সারি × ৩ সারি = <span class="circ">১২ সারি</span>, কোনো শর্ত ছাড়াই প্রতিটি সারির প্রতিটি সারির সঙ্গে; সাধারণত <i>m</i> × <i>n</i>, তাই ৩ সারির দুটি টেবিলে <b>৯</b>।</div>
+    </div>
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">SELF JOIN</span> একটি রিলেশনকে <b>দুটি অ্যালিয়াস</b> নিয়ে নিজের সঙ্গে জোড়া লাগানো, যাতে একই টেবিলের সারিগুলোর সম্পর্ক দেখানো যায় — কর্মচারী তার ম্যানেজারের সঙ্গে। <i>Emp</i> টেবিলে আরও দুটি কলাম যোগ করুন — <code>name</code> এবং <code>mgr_id</code> (ম্যানেজারের <code>eid</code>) — তারপর:<br>
+        <code>SELECT a.name AS emp, b.name AS mgr
+FROM Emp a JOIN Emp b ON a.mgr_id = b.eid;</code><br>
+        <span class="tiny">দুটি অ্যালিয়াস <b>আবশ্যক</b>: না দিলে শর্তটি একটি কলামকে নিজের সঙ্গে তুলনা করত।</span></div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ NULL-এর ফাঁদ</span> যে কর্মচারীর <code>dept_id</code> NULL, সে কোনো <b>inner-join</b> বা <b>right-join</b> ফলাফলে থাকে না; <b>LEFT</b> ও <b>FULL OUTER</b> জয়েনে সে থাকে, NULL দিয়ে পূরণ করে। "আমার সারি কোথায় গেল?" → কারণ <span class="circ">NULL কখনো কারো সমান হয় না</span>, তাই ON শর্ত অজানা, সত্য নয়।</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">মনে রাখার কৌশল</span> শব্দটিকে <b>আগে-নাম দেওয়া</b> টেবিলের প্রতিশ্রুতি হিসেবে পড়ো। <b>LEFT</b>: বাম পাশের সব রাখো, ডান পাশ NULL দিয়ে পূরণ করো। <b>RIGHT</b>: শব্দটি বদলে দাও। <b>FULL OUTER</b>: দুই পাশের সব রাখো। <b>INNER</b>: শুধু যা মেলে। <b>CROSS</b>: কোনো প্রতিশ্রুতিই নেই।</div>
+    </div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: join patterns, subqueries, forward refs ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>প্যাটার্ন ও সাব-কোয়েরি</span></div>
+  <h2><span class="no">৭</span>জয়েন প্যাটার্ন, সাব-কোয়েরি ও বাকি অধ্যায়</h2><span class="tag">লিখিত প্যাটার্ন ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">প্যাটার্ন: কর্মচারী নেই এমন বিভাগসহ প্রতিটি বিভাগ</span> ইঞ্জিনের ডিফল্ট জয়েন তাদের বাদ দেয়, তাই স্পষ্ট চাইতে হয় — <code>LEFT JOIN</code> দিয়ে — আর তারপর গোনতে হয় <b>যুক্ত টেবিলের</b> কলাম, <code>*</code> নয়।</div>
+  <div class="code">SELECT d.dept_name, COUNT(e.emp_id) AS employee_count
+FROM   Department d
+LEFT JOIN Employee e ON e.dept_id = d.dept_id
+GROUP BY d.dept_id, d.dept_name
+ORDER BY employee_count DESC;</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ দুটি গণনা, আর বাম জয়েন বাতিল করা WHERE</span> <code>COUNT(e.emp_id)</code> বাইরের জয়েনে তৈরি NULL বাদ দেয়, তাই খালি বিভাগের জন্য ঠিক <b>0</b> দেয়; <code>COUNT(*)</code> পূরণ করা সারিটি গুনে ভুলে <b>1</b> দেয়। আর <code>dept_name</code>-এর সঙ্গে <code>dept_id</code> দিয়েও গ্রুপ করলে একই নামের দুটি বিভাগ আলাদা থাকে। আর <b>ডান</b> টেবিলের শর্ত <code>WHERE</code>-এ দিলে সেটি জয়েনের <i>পরে</i> মূল্যায়িত হয়ে পূরণ করা সারিগুলো বাদ দেয়, আর আপনার LEFT JOIN নিঃশব্দে INNER JOIN হয়ে যায় — শর্তটি <code>ON</code>-এ দিন।</div>
+  <div class="sumbox tiny"><span class="lbl">সাব-কোয়েরির তিন প্রকার</span> <b>স্কেলার</b> — তুলনার মধ্যে একটি মান: <code>WHERE salary &gt; (SELECT AVG(salary) FROM Emp)</code>। <b>IN / EXISTS</b> — একটি সেট, কিংবা সত্য/মিথ্যা: <code>WHERE id IN (SELECT emp_id FROM Emp)</code>। <b>করেলেটেড</b> — বাইরের সারিকে উল্লেখ করে, তাই <b>প্রতি বাইরের সারির জন্য একবার</b> নতুন করে চলে: <code>WHERE e2.dept_id = e.dept_id</code>।</div>
+  <div class="code">SELECT MAX(salary) AS second_highest        -- 2nd highest DISTINCT salary
+FROM   Employee
+WHERE  salary &lt; (SELECT MAX(salary) FROM Employee);    -- NULL if there is none
+-- and, above the average of the employee's OWN department:
+SELECT e.name, e.salary, d.dept_name
+FROM   Employee e JOIN Department d ON d.dept_id = e.dept_id
+WHERE  e.salary &gt; ( SELECT AVG(e2.salary) FROM Employee e2
+                      WHERE e2.dept_id = e.dept_id );</div>
+  <p class="tiny" style="margin-top:1mm">উপরের করেলেটেড কোয়েরির <b>সমতুল্য</b> ডেরাইভড টেবিল রূপ: প্রতিটি বিভাগের গড় একবার হিসাব করে <code>JOIN (SELECT dept_id, AVG(salary) AS avg_sal FROM Employee GROUP BY dept_id) a</code> এ তারপর <code>WHERE e.salary &gt; a.avg_sal</code> — সাধারণত এই পরিকল্পনাটিই দ্রুততর।</p>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> করেলেটেড সাব-কোয়েরি <b>প্রতি বাইরের সারির জন্য একবার</b> চলে, ফলে <i>e</i>-এর <i>নিজের</i> বিভাগের গড় পায়; প্রতিটি বিভাগের গড় আগে হিসাব করে নেওয়া ডেরাইভড টেবিল সাধারণত দ্রুততর পরিকল্পনা। <b>২.</b> দ্বিতীয়-সর্বোচ্চ কোয়েরিতে <code>&lt;</code> ব্যবহার হয়, <code>≤</code> নয়, তাই সর্বোচ্চ বেতন একাধিকবার থাকলেও ঠিক থাকে, আর সব বেতন সমান হলে NULL দেয়। <b>৩.</b> সাব-কোয়েরিতে একটি NULL থাকলে <code>NOT IN (subquery)</code> <b>একটিও সারি ফেরত দেয় না</b> — মান অনুপস্থিত হতে পারে এমন জায়গায় <code>NOT EXISTS</code> ব্যবহার করো।</div>
+  <div class="tipbox tiny"><span class="lbl">এই অধ্যায়ের বাকি অংশ কোথায়</span> <b>ফাংশনাল ডিপেন্ডেন্সি, ১NF–BCNF, নরমালাইজেশন</b> → <b>db3</b>। <b>ফাইল সংগঠন, প্রাইমারি ও সেকেন্ডারি ইনডেক্স, B+ ট্রি, কস্ট-বেসড অপটিমাইজেশন</b> — কোন ইনডেক্স কোন অ্যালজেব্রা-ট্রিকে সস্তা করে → <span class="hl">db4</span>। <b>ট্রানজ্যাকশন, ACID, আইসোলেশন, কনকারেন্সি, রিকভারি</b> → <b>db5</b>। <b>কনস্ট্রেইন্ট ও ট্রিগার</b> একই সিলেবাস লাইনে একটু নিচে, ডেটা মডেলের সাথেই দেখানো হয়েছে — <b>db1</b>। এখানে সেগুলো আবার বলা হয়নি।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">রাতের পরীক্ষার পাতা</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small">
+      <p>σ = <b>সারি</b> (SQL-এর WHERE)</p><p>π = <b>কলাম</b> (SQL-এর SELECT তালিকা)</p>
+      <p>ρ = রিনেম · × = প্রতিটি সারি × প্রতিটি সারি</p><p>জয়েন = <code>σ(R × S)</code></p>
+      <p>DDL: CREATE, ALTER, DROP, TRUNCATE</p><p>DML: SELECT, INSERT, UPDATE, DELETE</p>
+      <p>DCL: GRANT, REVOKE</p><p>TCL: COMMIT, ROLLBACK, SAVEPOINT</p>
+      <p>DROP কাঠামো ও ডেটা দুটোই মোছে</p><p>DELETE / TRUNCATE কাঠামো রাখে</p>
+      <p>চলার ক্রম: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</p><p>WHERE সারি ছাঁকে <b>আগে</b></p>
+      <p>HAVING গ্রুপ ছাঁকে <b>পরে</b></p><p>COUNT(*) সারি গোনে, NULL-সহ</p>
+      <p>COUNT(col) শুধু non-NULL গোনে</p><p>১০, NULL, ২০ এর AVG = <b>১৫</b></p>
+      <p>বাকি অ্যাগ্রিগেট NULL বাদ দেয়</p><p>জয়েনে NULL কখনো কারো সমান হয় না</p>
+      <p>FULL OUTER = INNER + শুধু-LEFT + শুধু-RIGHT</p><p>ছয় জয়েন: INNER, LEFT, RIGHT, FULL, CROSS, SELF</p>
+      <p>CROSS JOIN = m × n সারি</p><p>কর্মচারী নেই এমন বিভাগ: <code>COUNT(e.emp_id)</code></p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>সিলেকশন σ সারি ছাঁকে; প্রজেকশন π কলাম ছাঁকে</li>
+      <li>ρ নাম বদলায়; × প্রতিটি সারিকে প্রতিটি সারির সঙ্গে জোড়া করে</li>
+      <li>জয়েন = প্রোডাক্ট + সিলেকশন</li>
+      <li>DDL · DML · DCL · TCL — চার পরিবার, চার কাজ</li>
+      <li><b>DROP</b> কাঠামো ও ডেটা একসাথে মোছে</li>
+      <li><b>DELETE</b> ও <b>TRUNCATE</b> দুটোই কাঠামো রাখে</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>গ্রুপিংয়ের আগে WHERE, পরে HAVING</li>
+      <li>অ্যাগ্রিগেট ব্যবহার করতে পারে শুধু HAVING</li>
+      <li>১, NULL, ৩, NULL, ৫ তে COUNT(*)=5, COUNT(a)=3</li>
+      <li>১০, NULL, ২০ এর AVG = ১৫, কখনো ১০ নয়</li>
+      <li>জয়েনের শর্তে NULL কখনো কারো সমান হয় না</li>
+      <li>কর্মচারী নেই এমন বিভাগে <code>COUNT(e.emp_id)</code></li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> σ আর π অদল-বদল · π নকল সরায় কিন্তু SELECT সরায় না · DROP বনাম DELETE বনাম TRUNCATE · WHERE ও HAVING-এর গুলিয়ে ফেলা · <code>AVG</code>-এ NULL-কে 0 ধরা · NULL বিভাগের কর্মচারীকে inner join-এ খোঁজা · কর্মচারী নেই এমন বিভাগের জন্য <code>COUNT(*)</code> · ডান টেবিলের WHERE দিয়ে LEFT JOIN-কে INNER বানানো।</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">সব কৌশল একসাথে</span> সিগমা সারি বাছে, পাই কলাম বাছে · আগে প্রোডাক্ট, তারপর বাছাই · যেখানে আগে, হেভিং পরে · তারকা প্রতিটি সারি দেখে, কলাম শুধু আসল উত্তর দেখে · বাম পাশের সব রাখো, ডান পাশ NULL দিয়ে পূরণ করো · জয়েন করো অ্যালিয়াস দিয়ে, খালি টেবিল নাম দিয়ে নয়।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 130" width="290">
+      <g class="w">
+        <circle cx="60" cy="52" r="30" class="ink-k fill-b"/>
+        <circle cx="150" cy="52" r="30" class="ink fill-b"/>
+        <circle cx="240" cy="52" r="30" class="ink-r fill-r"/>
+        <path class="ink" d="M92,52 H118" marker-end="url(#ahb)"/>
+        <path class="ink" d="M182,52 H208" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M240,84 C190,116 70,116 60,84" marker-end="url(#ahp)"/>
+      </g>
+      <text x="60" y="57" text-anchor="middle" class="k w6" style="font-size:12px">σ</text>
+      <text x="150" y="57" text-anchor="middle" class="k w6" style="font-size:12px">π</text>
+      <text x="240" y="57" text-anchor="middle" class="r w6" style="font-size:12px">×</text>
+      <text x="105" y="42" text-anchor="middle" class="bn p s" style="font-size:10px">সারি</text>
+      <text x="195" y="42" text-anchor="middle" class="bn p s" style="font-size:10px">কলাম</text>
+      <text x="150" y="123" text-anchor="middle" class="bn p s" style="font-size:11px">⋈ = × তারপর σ</text>
+    </svg><figcaption>দুটি মৌলিক অপারেশনেই সব জয়েন</figcaption></figure>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · কোয়েরি ল্যাংগুয়েজ</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১.</span>কোন SQL কমান্ড একটি টেবিলের কাঠামো ও তার সব ডেটা একসঙ্গে মুছে ফেলে?<ol class="opts"><li>DELETE</li><li>TRUNCATE</li><li>ALTER</li><li>DROP</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">২.</span><code>GROUP BY</code> প্রয়োগের পর গ্রুপগুলো ছাঁকে কোন ক্লজ?<ol class="opts"><li>HAVING</li><li>WHERE</li><li>ORDER BY</li><li>DISTINCT</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৩.</span>কোন relational algebra operator প্রদত্ত শর্ত পূরণকারী টিপলগুলো রাখে?<ol class="opts"><li>Projection (π)</li><li>Rename (ρ)</li><li>Selection (σ)</li><li>Cartesian product (×)</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৪.</span><code>T</code>-তে একটি কলাম <code>a</code> এবং সারি 1, NULL, 3, NULL, 5। <code>SELECT COUNT(*), COUNT(a) FROM T;</code> দেয়:<ol class="opts"><li>3 এবং 3</li><li>5 এবং 3</li><li>5 এবং 5</li><li>3 এবং 5</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৫.</span><code>R.score</code>-এ আছে 10, NULL, 20। <code>SELECT AVG(score) FROM R;</code> ফেরত দেয়:<ol class="opts"><li>10</li><li>15</li><li>20</li><li>NULL</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৬.</span><code>Emp</code> = (1,10),(2,20),(3,NULL),(4,10) এবং <code>Dept</code> = (10,'IT'),(20,'HR'),(30,'Finance') হলে <code>dept_id</code>-তে INNER JOIN কতটি সারি ফেরত দেয়?<ol class="opts"><li>3 সারি</li><li>4 সারি</li><li>5 সারি</li><li>12 সারি</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৭.</span>একই ডেটাতে FULL OUTER JOIN কতটি সারি ফেরত দেয়?<ol class="opts"><li>3 সারি</li><li>4 সারি</li><li>5 সারি</li><li>6 সারি</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৮.</span><code>Sales</code> = ('N',100),('N',200),('S',50),('S',70),('E',300)। <code>GROUP BY region HAVING SUM(amount) &gt; 150</code> ফেরত দেয়:<ol class="opts"><li>1 সারি</li><li>3 সারি</li><li>5 সারি</li><li>2 সারি</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">৯.</span>খালি বিভাগসহ প্রতিটি বিভাগের কর্মচারী-সংখ্যা দেখাতে কী লাগে?<ol class="opts"><li>COUNT(*)</li><li>COUNT(e.emp_id)</li><li>COUNT(d.dept_name)</li><li>SUM(e.salary)</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">১০.</span>SQL-এ relational algebra-র selection σ কোনটির সঙ্গে মেলে?<ol class="opts"><li>WHERE ক্লজ</li><li>SELECT তালিকা</li><li>GROUP BY</li><li>ORDER BY</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ঘ · ২-ক · ৩-গ · ৪-খ · ৫-খ · ৬-ক · ৭-গ · ৮-ঘ · ৯-খ · ১০-ক</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> <code>Students(id, name, dept)</code> ও <code>Courses(cid, name)</code>-এর উপর রিলেশনাল অ্যালজেব্রার মৌলিক অপারেশনগুলো ব্যাখ্যা করো। DDL, DML, DCL ও TCL আলাদা করো এবং বলো DROP, DELETE, TRUNCATE, ALTER প্রতিটি ঠিক কী করে। তারপর <code>Emp</code> = (1,10),(2,20),(3,NULL),(4,10) ও <code>Dept</code> = (10,'IT'),(20,'HR'),(30,'Finance')-এর জন্য INNER, LEFT, RIGHT, FULL OUTER ও CROSS JOIN-এর সারির সংখ্যা দাও এবং ব্যাখ্যা করো কর্মচারী ৩ কেন inner join-এ কখনো আসে না। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:4.5mm">
+    <li><b>RA-র অপারেটর (২)</b> — <b>σ</b> শর্ত পূরণ করা সারি রাখে, <b>π</b> কলাম রাখে ও নকল সরায়, <b>ρ</b> নাম বদলায়, <b>×</b> এক রিলেশনের প্রতিটি সারিকে অন্যের প্রতিটি সারির সঙ্গে জোড়া করে (২ × ২ = <b>৪</b>), <b>∪ − ∩</b> সেট অপারেটর, আর <b>⋈</b> তৈরি হয় <code>σ(R × S)</code> থেকে। <i class="mk">২</i></li>
+    <li><b>কমান্ড পরিবার (২)</b> — <b>DDL</b> (Definition) কাঠামোর উপর: CREATE, ALTER, DROP, TRUNCATE। <b>DML</b> (Manipulation) সারির উপর: SELECT, INSERT, UPDATE, DELETE। <b>DCL</b> (Control) অধিকারের উপর: GRANT, REVOKE। <b>TCL</b>: COMMIT, ROLLBACK, SAVEPOINT। <i class="mk">২</i></li>
+    <li><b>চারটি কমান্ড (২)</b> — <b>DROP</b> কাঠামো <i>ও</i> ডেটা দুটোই সরায়; <b>DELETE</b> সারি সরায়, চাইলে <code>WHERE</code> দিয়ে, কাঠামো রাখে; <b>TRUNCATE</b> সব সারি সরায়, কাঠামো রাখে, <code>WHERE</code> নেয় না; <b>ALTER</b> কাঠামো বদলায়, ডেটা রাখে। <i class="mk">২</i></li>
+    <li><b>সারির সংখ্যা (১)</b> — INNER <b>3</b>, LEFT <b>4</b>, RIGHT <b>4</b>, FULL OUTER <b>5</b> = 3 + 1 + 1, CROSS 4 × 3 = <b>12</b>। <i class="mk">1</i></li>
+    <li><b>কর্মচারী ৩ কেন অদৃশ্য (২)</b> — তার <code>dept_id</code> NULL আর <b>NULL = 10 অজানা, সত্য নয়</b>; inner join কেবল তখনই সারি রাখে যখন ON শর্ত <b>সত্য</b>। <i class="mk">২</i></li>
+    <li><b>WHERE বনাম HAVING (১)</b> — <code>WHERE</code> গ্রুপিংয়ের <b>আগে সারি</b> ছাঁকে; <code>HAVING</code> <code>GROUP BY</code>-এর <b>পরে গ্রুপ</b> ছাঁকে, আর অ্যাগ্রিগেট ব্যবহার করতে পারে একমাত্র এটি। <i class="mk">১</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:0">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.0mm;margin-top:0">
+    <ul class="tick">
+      <li>σ, π, ρ, × বলতে পারি, প্রতিটির উদাহরণসহ</li>
+      <li>জয়েন σ(R × S) হিসেবে লিখতে পারি, ρ ব্যাখ্যা করতে পারি</li>
+      <li>যেকোনো কমান্ড DDL, DML, DCL বা TCL-এ বসাতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>DROP, DELETE, TRUNCATE, ALTER কী করে বলতে পারি</li>
+      <li>ছয় জয়েনের সারির সংখ্যা গোনতে পারি</li>
+      <li>COUNT(*) ও AVG-এর NULL নিয়ম বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

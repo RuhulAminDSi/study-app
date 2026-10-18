@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>File Systems &amp; OS Case Study: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">File Systems &amp; OS Case Study</span></h1>
+  <p class="subtitle">attributes · FAT · inode · directories · free space · journaling · UNIX, NT, Linux</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="560">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">FILE SYSTEMS</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="142" y="65" text-anchor="middle" class="s" style="font-size:11px">Types · logical vs physical</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">File attributes ★</text>
+      <text x="498" y="65" text-anchor="middle" class="s">The 7 operations</text>
+      <text x="96" y="155" text-anchor="middle" class="s">Contiguous</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">FAT · linked ★</text>
+      <text x="142" y="245" text-anchor="middle" class="s" style="font-size:11px">Directories · hash</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Inode · indexed ★</text>
+      <text x="498" y="245" text-anchor="middle" class="s" style="font-size:11px">FAT12/16/32 · ext · NTFS</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, blue = supporting detail</figcaption>
+  </figure>
+  <div class="sticky" style="width:74mm"><b>High-yield list</b><br>① 8 attributes; <b>7</b> operations<br>② contiguous = base + n, external frag<br>③ FAT = <b>linked</b>, links in a table<br>④ inode: 10 direct + 1, 2, 3 indirect<br>⑤ FAT12 2¹² · FAT16 2¹⁶ · FAT32 2²⁸<br>⑥ journal = write-ahead log, metadata<br>⑦ NT → registry; Linux → modules</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">Operating System: "… <span class="hl">File Systems: files, directories, security, protection</span>; <span class="hl">Case study of some operating systems</span>." Processes, scheduling, memory, I/O and deadlock are the other lessons of this chapter.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Files &amp; attributes … p. 2</li><li>The 7 operations &amp; access … p. 3</li><li>Contiguous &amp; linked (FAT) … p. 4</li><li>Indexed &amp; the inode … p. 5</li><li>Directory structures … p. 6</li><li>Trace: open → read → close … p. 7</li></ul>
+    <ul class="tick"><li>Free space &amp; protection … p. 8</li><li>FAT/NTFS/ext/XFS, journal … p. 9</li><li>Case study: DOS, UNIX, NT, Linux … p. 10</li><li>Night-before sheet … p. 11</li><li>Practice MCQs + written … p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: files and attributes ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Files &amp; attributes</span></div>
+  <h2><span class="no">1</span>The File System and the File</h2><span class="tag">most asked ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <b>file system</b> is how the OS <span class="hl">names, stores, shares and protects</span> data on secondary storage, giving programs one <span class="hl">device-independent</span> view — a tree of named files, not raw blocks. Two halves: <b>physical</b> (which blocks belong to a file) and <b>logical</b> (what a program may do with it). The disk is already cut into <span class="circ">blocks of 512 B – 4 KiB</span>.</div>
+<table class="hand small" style="width:100%">
+    <tr><th class="l" style="width:120px">Attribute</th><th class="l" style="width:250px">What it records</th><th class="l">Exam hooks</th></tr>
+    <tr><td class="l"><b>1 name</b></td><td class="l">the symbolic name</td><td class="l">directory entry, not the inode</td></tr>
+    <tr><td class="l"><b>2 identifier</b></td><td class="l">the number the OS uses</td><td class="l">inode no · first cluster</td></tr>
+    <tr><td class="l"><b>3 type</b></td><td class="l">text, binary, exec, special</td><td class="l">characters vs packed records</td></tr>
+    <tr><td class="l"><b>4 location</b></td><td class="l">pointer(s) to data blocks</td><td class="l">start block, chain or index</td></tr>
+    <tr><td class="l"><b>5 size</b></td><td class="l">length in bytes and blocks</td><td class="l">fixed field ⇒ alloc size</td></tr>
+    <tr><td class="l"><b>6 protection</b></td><td class="l">who may read / write / exec</td><td class="l">mode bits · ACL · ACE</td></tr>
+    <tr><td class="l"><b>7 timestamps</b></td><td class="l">creation, modification, access</td><td class="l">UNIX: atime, mtime, ctime</td></tr>
+    <tr><td class="l"><b>8 owner</b></td><td class="l">user id and group id</td><td class="l">only root may change it</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:288px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 344 236" width="280">
+      <g class="w">
+        <rect x="14" y="26" width="316" height="30" rx="5" class="ink fill-y"/>
+        <path class="ink-k" d="M54,26 V56 M93,26 V56 M133,26 V56 M172,26 V56 M212,26 V56 M251,26 V56 M291,26 V56"/>
+        <path class="ink-r" d="M133,56 V80" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M133,66 H182" style="stroke-dasharray:4 3"/>
+        <path class="ink-g" d="M44,128 H88" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M116,128 H160" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M188,128 H232" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M260,128 H304" marker-end="url(#ahg)"/>
+        <rect x="12" y="136" width="64" height="28" rx="5" class="ink fill-b"/>
+        <rect x="84" y="136" width="64" height="28" rx="5" class="ink fill-b"/>
+        <rect x="156" y="136" width="64" height="28" rx="5" class="ink fill-b"/>
+        <rect x="228" y="136" width="64" height="28" rx="5" class="ink fill-b"/>
+        <path class="ink-r" d="M44,168 V192 H82" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M116,164 V186 H154" marker-end="url(#ah)"/>
+        <rect x="172" y="178" width="130" height="32" rx="5" class="ink-r fill-r"/>
+        <path class="ink-g" d="M212,166 V176" marker-end="url(#ahg)"/>
+      </g>
+      <text x="172" y="18" text-anchor="middle" class="k w6">LOGICAL FILE — one byte stream</text>
+      <text x="34" y="46" text-anchor="middle" class="s">0</text><text x="73" y="46" text-anchor="middle" class="s">1</text>
+      <text x="113" y="46" text-anchor="middle" class="s">2</text><text x="152" y="46" text-anchor="middle" class="s">3</text>
+      <text x="192" y="46" text-anchor="middle" class="s">4</text><text x="231" y="46" text-anchor="middle" class="s">5</text>
+      <text x="271" y="46" text-anchor="middle" class="s">6</text><text x="310" y="46" text-anchor="middle" class="s">7</text>
+      <text x="138" y="96" class="s r">offset, set by seek</text>
+      <text x="172" y="118" text-anchor="middle" class="k w6">PHYSICAL FILE — scattered blocks</text>
+      <text x="44" y="154" text-anchor="middle" class="s">blk 9</text><text x="116" y="154" text-anchor="middle" class="s">blk 12</text>
+      <text x="188" y="154" text-anchor="middle" class="s">blk 5</text><text x="260" y="154" text-anchor="middle" class="s">blk 30</text>
+      <text x="237" y="192" text-anchor="middle" class="s r">dir entry: name → ino</text>
+      <text x="237" y="204" text-anchor="middle" class="s r">inode: 10 direct, 3 indirect</text>
+      <text x="100" y="228" text-anchor="middle" class="p s">order comes from the inode</text>
+    </svg><figcaption>the program sees 0, 1, 2, 3 …; the disk holds 9, 12, 5, 30</figcaption></figure>
+    <div>
+      <p class="small"><b>Logical file</b> = the bytes the program sees, from offset 0. <b>Physical file</b> = the blocks on the medium + the directory entry / inode pointing at them. The <span class="hl">logical → physical mapping</span> is the <b>file organisation</b>.</p>
+      <p class="small"><b>Types.</b> <span class="hl">text</span> (.txt .md .csv) · <span class="hl">binary</span> (.jpg .mp4 .exe) · <span class="hl">executable</span> (machine code; ELF on UNIX) · <span class="hl">special</span> (UNIX devices, FIFOs, sockets: /dev/sda, /dev/null).</p>
+<p class="small">Nothing inside a file marks where a "record" ends — <span class="hl">the format does</span>, so one file can be read byte-wise, record-wise or block-wise.</p>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "The inode holds everything <b>except the name</b>." Attribute 1 sits in the directory, 2–8 in the inode. That split explains hard links, <span class="mono">ln -s</span> and every path lookup.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A file's <b>identifier is not its name</b>, and the <b>superblock is not a file's metadata</b> — it describes the volume. A file system manages <b>secondary</b> storage; RAM holds buffers.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ decode one directory line</span> <span class="mono">-rwxr-xr-- 1 rahim exam 8200 Sep 9 10:14 report.txt</span> → <b>-</b> regular file (d = directory) · <b>rwxr-xr-- = 7 5 4</b>: owner rahim rwx, group exam r-x, others r-- · link count 1 · size <span class="circ">8 200 B</span> = 17 blocks of 512 B.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: the seven operations + access methods ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Operations &amp; access</span></div>
+  <h2><span class="no">2</span>The Seven Standard File Operations</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A file is an <span class="hl">abstract data type</span>: a named, protected sequence of bytes. Every operating system gives it <span class="circ">exactly seven operations</span>, and every system call is one of them.</div>
+<table class="hand small" style="width:100%">
+    <tr><th class="l" style="width:150px">Operation</th><th class="l" style="width:357px">What it does</th><th class="l">Typical call</th></tr>
+    <tr><td class="l"><b>create</b></td><td class="l">make a new empty file, add an entry</td><td class="l">creat(), open(O_CREAT)</td></tr>
+    <tr><td class="l"><b>delete</b></td><td class="l">remove the entry, free the blocks</td><td class="l">unlink(), remove()</td></tr>
+    <tr><td class="l"><b>open</b></td><td class="l">resolve name, read metadata, check rights</td><td class="l">open()</td></tr>
+    <tr><td class="l"><b>close</b></td><td class="l">flush, release the descriptor</td><td class="l">close()</td></tr>
+    <tr><td class="l"><b>read</b></td><td class="l">copy bytes from the offset to a buffer</td><td class="l">read(), fread()</td></tr>
+    <tr><td class="l"><b>write</b></td><td class="l">copy bytes to the file at the offset</td><td class="l">write(), fwrite()</td></tr>
+    <tr><td class="l"><b>seek</b></td><td class="l">move the offset: SET / CUR / END</td><td class="l">lseek(), fseek()</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr;align-items:start">
+    <div class="ex small" style="margin-top:0"><span class="lbl">The byte-stream model ✍</span> Everything follows from <b>one number</b>: the offset, initially <b>0</b>.
+      <div class="code">fd = open("/home/rahim/report.txt", O_RDONLY);
+n = read(fd, buf, 512);      /* 0 → 512 */
+p = lseek(fd, 0, SEEK_END);  /* p = size */
+close(fd);</div></div>
+    <div>
+      <p class="small"><span class="hl">Sequential</span> access reads from the start, record by record. <span class="hl">Direct</span> access turns block <i>n</i> into a physical block in <b>O(1)</b>.</p>
+      <table class="hand small" style="margin-top:1mm">
+        <tr><th class="l">Allocation</th><th class="l">Block n found by</th></tr>
+        <tr><td class="l">contiguous</td><td class="l">start + n</td></tr>
+        <tr><td class="l">linked / FAT</td><td class="l">FAT[n]</td></tr>
+        <tr><td class="l">indexed / inode</td><td class="l">index entry n</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "Create before you open, open before you read, close when done." Only read and write touch bytes.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>append</b> is not an eighth operation: it is <b>write</b> with the offset at the end. <b>rename</b> is a directory operation.</div>
+  </div>
+  <figure class="doodle">
+    <svg viewBox="0 0 620 96" width="486">
+      <g class="w">
+        <rect x="40" y="40" width="96" height="26" rx="4" class="ink fill-b"/>
+        <rect x="144" y="40" width="96" height="26" rx="4" class="ink fill-b"/>
+        <rect x="248" y="40" width="96" height="26" rx="4" class="ink-r fill-r"/>
+        <rect x="352" y="40" width="96" height="26" rx="4" class="ink fill-b"/>
+        <rect x="456" y="40" width="96" height="26" rx="4" class="ink fill-b"/>
+        <path class="ink-r" d="M248,32 V12" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M568,53 H582 V12 H560" marker-end="url(#ahg)"/>
+      </g>
+      <text x="248" y="26" text-anchor="middle" class="r s">offset 2048</text>
+      <text x="562" y="26" text-anchor="end" class="g s">SEEK_END → size 8200</text>
+      <text x="88" y="58" text-anchor="middle" class="s">blk 12</text><text x="192" y="58" text-anchor="middle" class="s">blk 13</text>
+      <text x="296" y="58" text-anchor="middle" class="s r">blk 14</text><text x="400" y="58" text-anchor="middle" class="s">blk 15</text>
+      <text x="504" y="58" text-anchor="middle" class="s">blk 16</text>
+      <text x="14" y="90" class="s k">one stream</text><text x="300" y="90" class="p s">the offset is the only state</text>
+    </svg>
+    <figcaption>seek moves the cursor between blocks; read/write then move it again</figcaption>
+  </figure>
+  <div class="ex small"><span class="lbl">Worked example ✍ turn an offset into a disk address</span> A <b>contiguous</b> file starts at <b>block 12</b>, block size <b>512 B</b>. <span class="mono">lseek(fd, 2048, SEEK_SET)</span> → logical block 2048 ÷ 512 = <span class="circ">4</span>, offset in block 2048 mod 512 = <span class="circ">0</span>; the transfer starts at <b>block 16</b>, so reading 1 KB touches <span class="circ">blocks 16 and 17</span>.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: contiguous & linked ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Contiguous &amp; linked</span></div>
+  <h2><span class="no">3</span>File Organisation I — Contiguous &amp; Linked</h2><span class="tag">high-yield ★</span>
+<div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>File organisation</b> decides <i>which disk blocks</i> belong to a file, and so how a logical block number becomes a physical one.</div>
+  <div class="cols" style="grid-template-columns:212px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 226" width="200">
+      <g class="w">
+        <rect x="10" y="24" width="62" height="34" rx="5" class="ink-r fill-r"/>
+        <rect x="78" y="24" width="62" height="34" rx="5" class="ink fill-b"/>
+        <rect x="146" y="24" width="62" height="34" rx="5" class="ink fill-b"/>
+        <rect x="214" y="24" width="62" height="34" rx="5" class="ink fill-b"/>
+        <path class="ink-g" d="M14,72 H272" marker-end="url(#ahg)"/>
+        <rect x="10" y="96" width="62" height="30" rx="5" class="ink-g fill-g"/>
+        <rect x="96" y="136" width="62" height="30" rx="5" class="ink fill-b"/>
+        <rect x="186" y="96" width="62" height="30" rx="5" class="ink fill-b"/>
+        <rect x="40" y="176" width="62" height="30" rx="5" class="ink-r fill-r"/>
+        <path class="ink-r" d="M72,111 C86,124 84,148 96,150" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M158,151 C174,132 176,124 186,111" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M186,126 C160,150 130,176 100,190" marker-end="url(#ah)"/>
+      </g>
+      <text x="143" y="16" text-anchor="middle" class="k w6">CONTIGUOUS</text>
+      <text x="41" y="45" text-anchor="middle" class="s r">0</text><text x="109" y="45" text-anchor="middle" class="s">1</text>
+      <text x="177" y="45" text-anchor="middle" class="s">2</text><text x="245" y="45" text-anchor="middle" class="s">3</text>
+      <text x="143" y="88" text-anchor="middle" class="g s">random access: base + n</text>
+      <text x="150" y="218" text-anchor="middle" class="k w6">LINKED / FAT</text>
+      <text x="41" y="115" text-anchor="middle" class="s g">blk 41</text><text x="127" y="155" text-anchor="middle" class="s">blk 7</text>
+      <text x="217" y="115" text-anchor="middle" class="s">blk 19</text><text x="71" y="196" text-anchor="middle" class="s r">end</text>
+      <text x="112" y="197" class="s r">0xFFF = end of chain</text>
+    </svg><figcaption>contiguous: one seek, base + n · linked: walk the chain</figcaption></figure>
+    <p class="small">Contiguous keeps the blocks <b>neighbouring</b>, so one seek serves the file. Linked scatters them and keeps the next address in each block, so the file grows anywhere.</p>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l" style="width:200px">Point</th><th class="l">Contiguous</th><th class="l">Linked</th></tr>
+    <tr><td class="l">Directory holds</td><td class="l">start block + length</td><td class="l">first block only</td></tr>
+    <tr><td class="l">Random access</td><td class="l"><b>O(1)</b>: base + n</td><td class="l">O(n): walk the chain</td></tr>
+    <tr><td class="l">Grows later</td><td class="l">must be <b>moved</b></td><td class="l">free, anywhere</td></tr>
+    <tr><td class="l">Fragmentation</td><td class="l"><b>external</b></td><td class="l">none outside</td></tr>
+    <tr><td class="l">Cost, damage</td><td class="l">no pointer; loses 1 block</td><td class="l">1 pointer; truncates file</td></tr>
+  </table>
+  <h2><span class="no">4</span>The FAT — Linked Allocation with a Table</h2><span class="tag">MCQ staple</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The <b>File Allocation Table (FAT)</b> is linked allocation in which the "next block" pointer of <span class="hl">every block on the volume</span> is kept in <span class="hl">one table at the start of the volume</span> instead of inside the data blocks. Entry <i>i</i> holds the block after block <i>i</i> of the same file; <span class="circ">0 = free</span>, <span class="circ">0xFFF = end of chain</span>.</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "A <b>F</b>AT is <b>linked</b> allocation whose links were moved into a <b>t</b>able."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A FAT is <b>not</b> contiguous and <b>not</b> indexed. It is <b>per volume, not per file</b>.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ what does the FAT cost?</span> A 1.44 MB floppy has 2 880 sectors of 512 B: <b>1</b> boot sector + <b>2 × 9</b> FAT12 sectors + <b>14</b> root-directory sectors, leaving 2 880 − 1 − 18 − 14 = <span class="circ">2 847 data clusters</span>. Check: 2 847 × 12 bits = 4 271 B → <span class="circ">9 sectors</span> ✓.</div>
+  <div class="ex small"><span class="lbl">Worked example ✍ the allocation-size problem</span> A <b>4 096 B</b> file with 512-B blocks needs 8 blocks, so contiguous allocation must <b>declare a length</b> at create time. With a 16-bit length field a file holds at most 65 535 blocks = <span class="circ">32 MiB</span>; appending past it forces the file to be <b>relocated</b>. The fix is <b>extents</b> — a list of (start, length) runs.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: indexed allocation and the inode ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Indexed &amp; the inode</span></div>
+  <h2><span class="no">5</span>Indexed Allocation &amp; the UNIX Inode</h2><span class="tag">written favourite ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>Indexed allocation</b> gives each file an <span class="hl">index block</span> — one block whose entries are the addresses of the file's data blocks. To reach logical block <i>n</i> the OS reads the index block and takes entry <i>n</i>: <b>no external fragmentation</b>, direct access, and the file may grow anywhere. Its one weakness is <span class="hl">internal fragmentation</span> — a 3-block file still burns a whole index block. <b>Multi-level indexing</b> lets index blocks point to index blocks, so the reach grows as n<sup>k</sup> instead of n.</div>
+  <div class="cols" style="grid-template-columns:296px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 400 254" width="288">
+      <g class="w">
+        <rect x="14" y="14" width="134" height="224" rx="6" class="ink-k fill-y"/>
+        <path class="ink-k" d="M14,38 H148 M14,63 H148 M14,88 H148 M14,113 H148 M14,138 H148 M14,163 H148 M14,188 H148 M14,213 H148"/>
+        <rect x="168" y="16" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="200" y="16" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="232" y="16" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="264" y="16" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="296" y="16" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="168" y="38" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="200" y="38" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="232" y="38" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="264" y="38" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <rect x="296" y="38" width="26" height="18" rx="3" class="ink-r fill-r"/>
+        <path class="ink-r" d="M148,28 H166"/>
+        <rect x="168" y="78" width="156" height="24" rx="4" class="ink-g fill-g"/>
+        <rect x="168" y="120" width="156" height="24" rx="4" class="ink-g fill-g"/>
+        <rect x="168" y="162" width="156" height="24" rx="4" class="ink-g fill-g"/>
+        <path class="ink-g" d="M148,90 H166" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M148,132 H166" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M148,174 H166" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M246,102 V114 H198 V206" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M270,144 V158 H246 V206" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M294,186 V196 H294 V206" marker-end="url(#ahg)"/>
+        <rect x="168" y="208" width="26" height="18" rx="3" class="ink fill-b"/>
+        <rect x="200" y="208" width="26" height="18" rx="3" class="ink fill-b"/>
+        <rect x="232" y="208" width="26" height="18" rx="3" class="ink fill-b"/>
+        <rect x="264" y="208" width="26" height="18" rx="3" class="ink fill-b"/>
+        <rect x="296" y="208" width="26" height="18" rx="3" class="ink fill-b"/>
+      </g>
+      <text x="81" y="31" text-anchor="middle" class="k w6">inode</text>
+      <text x="81" y="56" text-anchor="middle" class="s">mode, uid, gid</text>
+      <text x="81" y="81" text-anchor="middle" class="s">nlink = 1</text>
+      <text x="81" y="106" text-anchor="middle" class="s">size = 8 200 B</text>
+      <text x="81" y="131" text-anchor="middle" class="s">atime, mtime</text>
+      <text x="81" y="156" text-anchor="middle" class="r s">direct [10]</text>
+      <text x="81" y="181" text-anchor="middle" class="g s">indirect [1]</text>
+      <text x="81" y="206" text-anchor="middle" class="g s">double [1]</text>
+      <text x="81" y="231" text-anchor="middle" class="g s">triple [1]</text>
+      <text x="246" y="64" text-anchor="middle" class="r w6">10 direct pointers</text>
+      <text x="246" y="95" text-anchor="middle" class="g s">1 single indirect (128)</text>
+      <text x="246" y="137" text-anchor="middle" class="g s">1 double (128²)</text>
+      <text x="246" y="179" text-anchor="middle" class="g s">1 triple (128³)</text>
+      <text x="246" y="246" text-anchor="middle" class="s k">data blocks</text>
+    </svg><figcaption>the inode's 13 addresses reach ≈ 1 GB with 512-B blocks</figcaption></figure>
+    <div>
+      <table class="hand small" style="margin-top:0;width:100%">
+        <tr><th class="l">Level</th><th class="l">Reach</th><th>Reads</th></tr>
+        <tr><td class="l">direct (10)</td><td class="l">blocks 0–9</td><td>1</td></tr>
+        <tr><td class="l">single indirect</td><td class="l">+ 128 blocks</td><td>2</td></tr>
+        <tr><td class="l">double indirect</td><td class="l">+ 16 384</td><td>3</td></tr>
+        <tr><td class="l">triple indirect</td><td class="l">+ 2 097 152</td><td>4</td></tr>
+        <tr><td class="l"><b>total</b></td><td class="l"><b>2 113 674</b></td><td><b>≈ 1.01 GiB</b></td></tr>
+      </table>
+      <p class="small">Where <b>128</b> = block size ÷ pointer size = 512 B ÷ 4 B. Modern <b>ext2/ext4</b> keeps the shape with <span class="circ">12 direct + 1 + 1 + 1 = 15</span> pointers; with 4 KiB blocks and 1 KiB indirect blocks (1 024 addresses) it reaches 4 MiB + 4 GiB + 4 TiB.</p>
+      <p class="small">An <b>i-node</b> ("index node") holds the metadata <b>and</b> the pointers. A <b>hard link</b> is a second directory entry on the same inode, so the file dies only when <b>nlink</b> falls to 0 — and because the name is <i>not</i> in the inode, one file can have many names.</p>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 1 ✍ locate logical block 20</span> Direct covers 0–9, so block 20 is <b>single indirect</b>: 20 − 10 = <span class="circ">10</span> → the <b>11th</b> address in that block. Cost: <b>2 disk reads</b> (index, then data).</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example 2 ✍ locate logical block 300</span> Direct + single reach only 138 blocks, so 300 is <b>double indirect</b>: 300 − 138 = 162 → sub-block 162 ÷ 128 = 1 (the 2nd) and address 162 mod 128 = <span class="circ">34</span> in it. Cost: <b>3 disk reads</b>.</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "Subtract as you climb." Direct takes the first 10; subtract 10 and read a single indirect; if the answer is still ≥ 128, subtract 128 and read a double indirect. An indirect block is an <b>address book</b>, never data.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The inode stores the <b>name</b>? No — the directory does. The <b>superblock</b> holds the block bit map and the inode-table pointers, so it is volume-wide, not a file's metadata. A <b>file descriptor</b> is an integer index, not the inode.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: directory structures ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Directories</span></div>
+  <h2><span class="no">6</span>Directory Structures</h2><span class="tag">high-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A <b>directory</b> is a special file whose entries map a <span class="hl">name to an identifier</span> (an inode number or the first cluster) of a file or sub-directory. It does four jobs: <span class="hl">grouping, naming, searching, sharing</span>. A directory's own "write" bit is what allows entries to be added or removed inside it.</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 470 242" width="432">
+      <g class="w">
+        <path class="ink" d="M230,34 L85,58 M230,34 L255,58 M230,34 L425,58 M85,82 L56,106 M85,82 L166,106 M255,82 L255,106 M425,82 L425,106 M255,130 L255,154 M255,130 L360,154 M85,82 V190"/>
+        <path class="ink-r" style="stroke-dasharray:5 4" d="M360,178 C360,206 210,214 141,200" marker-end="url(#ah)"/>
+        <rect x="200" y="10" width="60" height="24" rx="12" class="ink-k fill-y"/>
+        <rect x="30" y="58" width="110" height="24" rx="6" class="ink fill-b"/>
+        <rect x="200" y="58" width="110" height="24" rx="6" class="ink fill-b"/>
+        <rect x="370" y="58" width="110" height="24" rx="6" class="ink fill-b"/>
+        <rect x="6" y="106" width="100" height="24" rx="6" class="ink fill-b"/>
+        <rect x="116" y="106" width="100" height="24" rx="6" class="ink fill-b"/>
+        <rect x="215" y="106" width="80" height="24" rx="6" class="ink fill-b"/>
+        <rect x="375" y="106" width="100" height="24" rx="6" class="ink fill-b"/>
+        <rect x="215" y="154" width="80" height="24" rx="6" class="ink fill-b"/>
+        <rect x="305" y="154" width="110" height="24" rx="6" class="ink-r fill-r"/>
+        <rect x="30" y="188" width="110" height="24" rx="6" class="ink fill-b"/>
+      </g>
+      <text x="230" y="27" text-anchor="middle" class="k s">/</text>
+      <text x="85" y="74" text-anchor="middle" class="s">/usr</text><text x="255" y="74" text-anchor="middle" class="s">/home</text><text x="425" y="74" text-anchor="middle" class="s">/etc</text>
+      <text x="56" y="122" text-anchor="middle" class="s">bin</text><text x="166" y="122" text-anchor="middle" class="s">lib</text>
+      <text x="255" y="122" text-anchor="middle" class="s">rahim</text><text x="425" y="122" text-anchor="middle" class="s">passwd</text>
+      <text x="255" y="170" text-anchor="middle" class="s">notes</text><text x="360" y="170" text-anchor="middle" class="s r">report.txt</text>
+      <text x="85" y="204" text-anchor="middle" class="s">share</text>
+      <text x="252" y="200" text-anchor="end" class="r s">symbolic link → /usr/share</text>
+      <text x="235" y="234" text-anchor="middle" class="p s">tree + shared links = acyclic graph</text>
+    </svg>
+    <figcaption>a tree with one shared node — the acyclic graph used by UNIX-style systems</figcaption>
+  </figure>
+<table class="hand small" style="width:100%">
+    <tr><th class="l" style="width:170px">Structure</th><th class="l" style="width:170px">Shape</th><th class="l" style="width:165px">Buys</th><th class="l">Weakness</th></tr>
+    <tr><td class="l"><b>single-level</b></td><td class="l">one flat list</td><td class="l">simplest</td><td class="l">name clashes, no grouping</td></tr>
+    <tr><td class="l"><b>two-level</b></td><td class="l">master + one per user</td><td class="l">per-user isolation</td><td class="l">no per-project grouping</td></tr>
+    <tr><td class="l"><b>tree</b></td><td class="l">acyclic, any depth</td><td class="l">natural hierarchy</td><td class="l">sharing needs copies or links</td></tr>
+    <tr><td class="l"><b>acyclic graph</b></td><td class="l">tree + shared dir</td><td class="l">one copy, many parents</td><td class="l">can dangle; ownership unclear</td></tr>
+    <tr><td class="l"><b>general graph</b></td><td class="l">cycles allowed</td><td class="l">maximum flexibility</td><td class="l">traversal may loop</td></tr>
+    <tr><td class="l"><b>hash</b></td><td class="l">h(name) → bucket</td><td class="l">O(1) lookup</td><td class="l">no order; poor when it grows</td></tr>
+  </table>
+<div class="cols small" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="tipbox" style="margin-top:0"><span class="lbl">Path names</span> absolute <span class="mono">/usr/bin/gcc</span>, relative <span class="mono">../docs/r.txt</span>.</div>
+    <div class="trick" style="margin-top:0"><span class="lbl">Memory trick</span> single → two → tree → acyclic → general → hash.</div>
+    <div class="exam" style="margin-top:0"><span class="lbl">Exam trap</span> A symlink stores a <b>path</b>, a hard link an <b>inode number</b>.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍ what does a path cost?</span> Opening <span class="mono">/a/b/c/file</span>: read the root's block → find <b>a</b>; read a's block → <b>b</b>; read b's block → <b>c</b>; read c's block → <b>file</b>; then the inode. With <span class="circ">512-B blocks</span> and 16-byte UNIX directory entries (2-byte inode number + 14-character name) a block holds <span class="circ">32 entries</span>, so it is <b>4 directory reads + 1 inode read</b> before a single data byte moves.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: the worked trace ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>open → read → close</span></div>
+  <h2><span class="no">7</span>Worked Trace: Opening a File</h2><span class="tag">10-mark written ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> <b>open()</b> does not read the file — it resolves a <span class="hl">path name to an inode</span>, checks the caller's rights and returns a <span class="hl">file descriptor</span>. Data blocks are touched by the first read or write.</div>
+  <div class="cols" style="grid-template-columns:264px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 256" width="256">
+      <g class="w">
+        <path class="ink" d="M150,42 V54 M150,84 V96 M150,126 V138 M150,168 V180 M150,210 V222"/>
+        <rect x="16" y="12" width="268" height="30" rx="6" class="ink-g fill-g"/>
+        <rect x="16" y="54" width="268" height="30" rx="6" class="ink fill-b"/>
+        <rect x="16" y="96" width="268" height="30" rx="6" class="ink fill-b"/>
+        <rect x="16" y="138" width="268" height="30" rx="6" class="ink-r fill-r"/>
+        <rect x="16" y="180" width="268" height="30" rx="6" class="ink-k fill-y"/>
+        <rect x="16" y="222" width="268" height="28" rx="6" class="ink-g fill-g"/>
+      </g>
+      <text x="150" y="32" text-anchor="middle" class="k w6">open("/home/rahim/report.txt")</text>
+      <text x="150" y="74" text-anchor="middle" class="s">parse path → start at root inode (2)</text>
+      <text x="150" y="116" text-anchor="middle" class="s">walk home → rahim → report.txt</text>
+      <text x="150" y="158" text-anchor="middle" class="s r">inode 4711: mode, uid, size, ptrs</text>
+      <text x="150" y="200" text-anchor="middle" class="s k">check rights → fd 3, offset 0</text>
+      <text x="150" y="241" text-anchor="middle" class="g s">read: direct[0] = blk 1042 → DMA</text>
+    </svg><figcaption>every component is resolved before any data is read</figcaption></figure>
+    <ol class="steps small" style="margin-top:0">
+      <li><b>Parse the path.</b> It starts with <span class="hl">/</span>, so the walk begins at the <b>root</b> (inode 2).</li>
+      <li><b>Walk the components.</b> Match <b>home</b> in the root's blocks, take its inode (30); repeat for <b>rahim</b> (41) and <b>report.txt</b> → inode <span class="circ">4711</span>.</li>
+      <li><b>Fetch the inode.</b> Using the inode-table pointers in the <b>superblock</b>: mode, ids, nlink, size, pointers.</li>
+      <li><b>Check protection.</b> Compare the mode's owner / group / other bits with the caller's ids; a missing right fails with <b>EACCES</b>.</li>
+      <li><b>Build the open-file entry.</b> Store the inode pointer, <b>O_RDONLY</b>, <b>offset 0</b>, a refcount; return the <b>descriptor</b> (<b>fd = 3</b>).</li>
+      <li><b>read(fd, buf, 512).</b> Offset 0 → block 0 → the first direct pointer → <span class="circ">block 1042</span> → DMA.</li>
+      <li><b>close(fd).</b> Flush, free the descriptor, decrement the refcount; at zero the inode goes.</li>
+    </ol>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Call</th><th class="l">Reads from disk</th><th class="l">Changes</th><th class="l">Returns</th></tr>
+    <tr><td class="l">open("/home/rahim/report.txt", O_RDONLY)</td><td class="l">3 directory blocks + inode</td><td class="l">one open-file entry, offset 0</td><td class="l">fd = 3</td></tr>
+    <tr><td class="l">read(3, buf, 512)</td><td class="l">data block 1042</td><td class="l">offset 0 → 512</td><td class="l">512</td></tr>
+    <tr><td class="l">lseek(3, 0, SEEK_END)</td><td class="l">nothing</td><td class="l">offset ← size</td><td class="l">8200</td></tr>
+    <tr><td class="l">close(3)</td><td class="l">nothing</td><td class="l">descriptor freed, refcount −1</td><td class="l">0</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>open()</b> touches <b>no data block</b> — only directories and the inode. Every component must resolve: a missing name anywhere aborts the <b>whole</b> call.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "Resolve, record, return — then read": path → inode → open-file table → descriptor → data block.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">IT link</span> This is exactly what a shell does for <span class="mono">./app --config conf.ini</span>: every component becomes a directory walk, every open an inode lookup, and the descriptor an entry in the process table that <span class="mono">/proc/&lt;pid&gt;/fd</span> exposes. A slow NFS mount makes step 2 one network round trip per component.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: free space and protection ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Free space &amp; protection</span></div>
+  <h2><span class="no">8</span>Free-Space Management</h2><span class="tag">high-yield ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The file system must always answer "where is the next run of free blocks?". <b>Free-space management</b> is that bookkeeping; <b>protection</b> decides which <span class="hl">subjects (users, processes)</span> may touch which <span class="hl">objects (files, devices)</span>.</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 630 200" width="500">
+      <g class="w">
+        <rect x="10" y="26" width="10" height="10" class="ink-r fill-r"/><rect x="26" y="26" width="10" height="10" class="ink fill-y"/>
+        <rect x="42" y="26" width="10" height="10" class="ink fill-y"/><rect x="58" y="26" width="10" height="10" class="ink-r fill-r"/>
+        <rect x="74" y="26" width="10" height="10" class="ink fill-y"/><rect x="90" y="26" width="10" height="10" class="ink fill-y"/>
+        <rect x="106" y="26" width="10" height="10" class="ink fill-y"/><rect x="122" y="26" width="10" height="10" class="ink fill-y"/>
+        <rect x="138" y="26" width="10" height="10" class="ink fill-y"/><rect x="154" y="26" width="10" height="10" class="ink-r fill-r"/>
+        <rect x="170" y="26" width="10" height="10" class="ink fill-y"/><rect x="186" y="26" width="10" height="10" class="ink fill-y"/>
+        <rect x="202" y="26" width="10" height="10" class="ink fill-y"/><rect x="218" y="26" width="10" height="10" class="ink-r fill-r"/>
+        <path class="ink-r" d="M58,44 V54" marker-end="url(#ah)"/>
+        <rect x="212" y="26" width="80" height="24" rx="4" class="ink fill-y"/>
+        <path class="ink" d="M292,38 H318" marker-end="url(#ah)"/>
+        <rect x="322" y="26" width="80" height="24" rx="4" class="ink fill-y"/>
+        <path class="ink" d="M402,38 H428" marker-end="url(#ah)"/>
+        <rect x="432" y="26" width="80" height="24" rx="4" class="ink-r fill-r"/>
+        <path class="ink-r" d="M512,38 H538" marker-end="url(#ah)"/>
+        <rect x="542" y="26" width="70" height="24" rx="4" class="ink fill-b"/>
+        <rect x="212" y="132" width="100" height="24" rx="4" class="ink fill-y"/>
+        <rect x="330" y="132" width="130" height="24" rx="4" class="ink fill-y"/>
+        <rect x="480" y="132" width="80" height="24" rx="4" class="ink fill-y"/>
+      </g>
+      <text x="110" y="18" text-anchor="middle" class="k w6">BIT VECTOR</text>
+      <text x="110" y="66" text-anchor="middle" class="s">1 = allocated · 1 bit per block</text>
+      <text x="412" y="18" text-anchor="middle" class="k w6">FREE LIST</text>
+      <text x="412" y="72" text-anchor="middle" class="s">the next free block's address sits inside a free block</text>
+      <text x="412" y="92" text-anchor="middle" class="s">grouping: one block holds many free addresses</text>
+      <text x="400" y="122" text-anchor="middle" class="k w6">EXTENTS — free runs (start, length)</text>
+      <text x="400" y="176" text-anchor="middle" class="p s">extents match how real files are laid out</text>
+    </svg>
+    <figcaption>three answers to "where is the next free run?"</figcaption>
+  </figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l" style="width:110px">Method</th><th class="l">Note</th></tr>
+      <tr><td class="l"><b>bit vector</b></td><td class="l">cached, very fast</td></tr>
+      <tr><td class="l"><b>linked list</b></td><td class="l">no extra space</td></tr>
+      <tr><td class="l"><b>grouping</b></td><td class="l">many per block</td></tr>
+      <tr><td class="l"><b>extents</b></td><td class="l">one entry per run</td></tr>
+    </table>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ how big is the bit vector?</span> A <b>1 GiB</b> volume with 512-B blocks has 2³⁰ ÷ 2⁹ = <span class="circ">2 097 152 blocks</span>, so the map needs 2 097 152 ÷ 8 = <span class="circ">256 KiB</span> — it fits in cache. A pointer list would need 4 B each = <span class="circ">8 MiB</span>.</div>
+  </div>
+  <h2><span class="no">9</span>Protection: Matrix, ACLs, Capabilities</h2><span class="tag">frequently tested</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> The <b>access control matrix</b> has subjects as rows and objects as columns; a cell holds the rights allowed on that pair. The classical rights are <span class="hl">read, write, execute, append, delete, change ownership</span>. It can never be stored densely, so two sparse forms are used.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l" style="width:190px">Form</th><th class="l" style="width:300px">Stored where</th><th class="l">Catch</th></tr>
+    <tr><td class="l"><b>Access list (ACL)</b></td><td class="l">per <i>file</i>: (user or group, rights)</td><td class="l">every user on every file</td></tr>
+    <tr><td class="l"><b>Capability list</b></td><td class="l">per <i>process</i>: unforgeable tokens</td><td class="l">revoked by hand</td></tr>
+    <tr><td class="l"><b>UNIX mode</b></td><td class="l">the inode: 9 bits, owner / group / others</td><td class="l">rwx = 4 + 2 + 1</td></tr>
+    <tr><td class="l"><b>NTFS ACE</b></td><td class="l">the MFT record: allow / deny per SID</td><td class="l">deny is evaluated first</td></tr>
+  </table>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ modes</span> <span class="mono">chmod 640 notes.txt</span> → owner <b>rw-</b> (6), group <b>r--</b> (4), others <b>---</b> (0). Special bits: setuid <b>4000</b>, setgid <b>2000</b>, sticky <b>1000</b> — so <span class="mono">/tmp</span> is 1777.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The <b>matrix is the model</b>; the ACL is per <b>object</b> and the capability per <b>subject</b>. Protection is about <b>rights</b>; authentication and encryption are <b>security</b>.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: file system types, journaling, recovery ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>FAT · NTFS · ext · XFS</span></div>
+  <h2><span class="no">10</span>File-System Types &amp; Journaling</h2><span class="tag">most tested ★</span>
+  <table class="hand small" style="margin-top:0;width:100%">
+    <tr><th class="l" style="width:140px">Point</th><th class="l" style="width:175px">FAT12</th><th class="l" style="width:190px">FAT16</th><th class="l">FAT32</th></tr>
+    <tr><td class="l">Bits per entry</td><td><b>12</b></td><td><b>16</b></td><td><b>32</b> (28 = cluster no.)</td></tr>
+    <tr><td class="l">Max clusters</td><td>2¹² = <b>4 096</b></td><td>2¹⁶ = <b>65 524</b></td><td>2²⁸ ≈ <b>268 M</b></td></tr>
+    <tr><td class="l">Cluster size</td><td>512 B</td><td>512 B–32 KB</td><td>512 B–32 KB</td></tr>
+    <tr><td class="l">Max volume</td><td>≈ <b>2 MB</b></td><td>≈ <b>32 MB</b> (2 GB)</td><td>128 GiB … <b>2 TB</b></td></tr>
+    <tr><td class="l">Names</td><td>8.3</td><td>8.3</td><td>8.3 + long (VFAT)</td></tr>
+    <tr><td class="l">Where used</td><td>1.44 MB floppies</td><td>1980s–90s disks</td><td>Windows 95 OSR2</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1.35fr 1fr;align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l" style="width:130px">System</th><th class="l" style="width:70px">Journal</th><th class="l">Defining features</th></tr>
+      <tr><td class="l">FAT12 / FAT16</td><td class="l">no</td><td class="l">table of links, 8.3</td></tr>
+      <tr><td class="l"><b>ext2</b> (1992)</td><td class="l">no</td><td class="l">15-pointer inode, groups</td></tr>
+      <tr><td class="l"><b>ext3</b> (2001)</td><td class="l"><b>yes</b></td><td class="l">ext2 + a metadata journal</td></tr>
+      <tr><td class="l"><b>ext4</b> (2006)</td><td class="l">yes</td><td class="l">extents, 64-bit, checksums</td></tr>
+      <tr><td class="l"><b>NTFS</b> (1993)</td><td class="l">yes</td><td class="l">MFT, ACLs, streams, EFS</td></tr>
+      <tr><td class="l"><b>XFS</b></td><td class="l">metadata</td><td class="l">64-bit, allocation groups</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 214" width="250">
+      <g class="w">
+        <path class="ink" d="M130,42 V58 M130,90 V106 M130,138 V154"/>
+        <rect x="14" y="10" width="232" height="32" rx="5" class="ink-g fill-g"/>
+        <rect x="14" y="58" width="232" height="32" rx="5" class="ink fill-b"/>
+        <rect x="14" y="106" width="232" height="32" rx="5" class="ink fill-b"/>
+        <rect x="14" y="154" width="232" height="32" rx="5" class="ink-g fill-g"/>
+        <path class="ink-r" d="M298,122 H250" marker-end="url(#ah)"/>
+      </g>
+      <text x="130" y="31" text-anchor="middle" class="g w6">1 write the LOG record + flush</text>
+      <text x="130" y="79" text-anchor="middle" class="s">2 write the real block</text>
+      <text x="130" y="127" text-anchor="middle" class="s">3 commit + flush</text>
+      <text x="130" y="175" text-anchor="middle" class="g w6">replay the log after a crash</text>
+      <text x="252" y="112" class="r s">crash</text>
+      <text x="150" y="202" text-anchor="middle" class="r s">power cut anywhere ⇒ log replayed</text>
+    </svg><figcaption>write-ahead logging: the intent is durable before the change</figcaption></figure>
+  </div>
+<div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Journaling = what exactly?</span> A <b>write-ahead log</b> of intended <span class="hl">metadata</span> changes, flushed to stable storage <b>before</b> the change itself; on the next mount it is <b>replayed</b> and discarded. A crash therefore leaves the file system <span class="hl">consistent</span>, not the data intact: it protects the <b>metadata</b>, not the user's bytes.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">Recovery without a journal</span> <b>fsck</b> (Linux: <b>e2fsck</b>) and <b>chkdsk</b> run at boot: verify the superblock, the bit maps, the inode table and the free-block count, rebuild the free-space map, then report or remove unreferenced inodes. It is O(volume size) — the cost a journal removes.</div>
+  </div>
+<div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "ext<b>3</b> = ext<b>2</b> + a <b>log</b> (2001); ext<b>4</b> = extents + 64-bit + checksums (2006)." <b>NTFS 1993</b>; <b>XFS</b> = allocation groups.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> FAT12's limit is <span class="circ">4 096 clusters</span> (≈ 2 MB); 65 524 belongs to FAT16. A journal protects <b>metadata</b>, not data.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: case study ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Case study</span></div>
+  <h2><span class="no">11</span>Case Study of Operating Systems</h2><span class="tag">final syllabus line</span>
+  <div class="cols" style="grid-template-columns:296px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 400 196" width="288">
+      <g class="w">
+        <rect x="8" y="34" width="120" height="100" rx="6" class="ink-r fill-r"/>
+        <path class="ink-k" d="M24,52 H112 M24,70 H112 M24,88 H112 M24,106 H112 M24,124 H112"/>
+        <rect x="18" y="8" width="52" height="18" rx="4" class="ink-g fill-g"/>
+        <path class="ink-g" d="M44,26 V34"/>
+        <circle cx="200" cy="84" r="20" class="ink-k fill-y"/>
+        <rect x="150" y="8" width="100" height="20" rx="4" class="ink fill-b"/>
+        <rect x="160" y="152" width="80" height="20" rx="4" class="ink fill-b"/>
+        <rect x="272" y="34" width="120" height="100" rx="6" class="ink-p fill-p"/>
+        <path class="ink-k" d="M294,52 H382 M294,70 H382 M294,88 H382 M294,106 H382 M294,124 H382"/>
+        <rect x="316" y="8" width="60" height="18" rx="4" class="ink-g fill-g"/>
+        <path class="ink-g" d="M346,26 V34"/>
+        <path class="ink" d="M200,104 V150"/>
+        <path class="ink" d="M222,92 C240,96 252,110 270,120"/>
+      </g>
+      <text x="44" y="21" text-anchor="middle" class="g s">load</text>
+      <text x="346" y="21" text-anchor="middle" class="g s">modules</text>
+      <text x="200" y="22" text-anchor="middle" class="k w6">MICROKERNEL</text>
+      <text x="200" y="166" text-anchor="middle" class="s">drivers</text>
+      <text x="200" y="89" text-anchor="middle" class="k s">μ</text>
+      <text x="228" y="78" class="s">fs</text>
+      <text x="68" y="152" text-anchor="middle" class="r w6">MONOLITHIC</text>
+      <text x="68" y="170" text-anchor="middle" class="s">UNIX · Linux</text>
+      <text x="338" y="152" text-anchor="middle" class="p w6">HYBRID</text>
+      <text x="338" y="170" text-anchor="middle" class="s">Windows NT: HAL</text>
+      <text x="200" y="188" text-anchor="middle" class="s">MINIX · Mach · QNX</text>
+    </svg><figcaption>three kernel shapes; Linux is monolithic but loadable</figcaption></figure>
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">MS-DOS (1981)</span> Single-user, <span class="hl">single-tasking</span>, real mode on the 8086, <span class="circ">640 KB</span> conventional memory, <b>no memory protection</b>. FAT12 / FAT16, 8.3 names.</div>
+      <div class="def small"><span class="lbl">UNIX (Bell Labs, 1969–70)</span> Ken Thompson and Dennis Ritchie; Version 1 in <b>1970</b>, renamed "Unix" in 1972, rewritten in <b>C</b> in 1973. Multi-user, multi-tasking; <span class="hl">everything is a file</span>; <b>pipes</b> join commands.</div>
+      <div class="def small"><span class="lbl">Windows NT (1993)</span> A <span class="hl">hybrid kernel</span> — microkernel core, large executive, user-mode subsystems — plus a <b>HAL</b> hiding the hardware. Its signature is the <span class="hl">registry</span>, a settings database that replaced the DOS text files.</div>
+      <div class="def small" style="margin-bottom:0"><span class="lbl">Linux (announced 14 August 1991)</span> Linus Torvalds, inspired by MINIX and UNIX. A <span class="hl">monolithic kernel</span>, modular at run time through <span class="hl">loadable kernel modules</span>. <span class="hl">Everything is a file</span>; the <b>VFS</b> makes ext4 and XFS look identical.</div>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l" style="width:140px">Point</th><th class="l">MS-DOS</th><th class="l">UNIX</th><th class="l">Windows NT</th><th class="l">Linux</th></tr>
+    <tr><td class="l">Origin</td><td class="l">IBM / MS, 1981</td><td class="l">Bell Labs, 1969</td><td class="l">Microsoft, 1993</td><td class="l">Torvalds, 1991</td></tr>
+    <tr><td class="l">Kernel</td><td class="l">none protected</td><td class="l">monolithic</td><td class="l"><b>hybrid</b></td><td class="l">mono + <b>modules</b></td></tr>
+    <tr><td class="l">Users / tasks</td><td class="l">1 / 1</td><td class="l">many / many</td><td class="l">many / many</td><td class="l">many / many</td></tr>
+    <tr><td class="l">Config</td><td class="l">CONFIG.SYS</td><td class="l">text /etc</td><td class="l"><b>registry</b></td><td class="l">text /etc</td></tr>
+    <tr><td class="l">File system</td><td class="l">FAT12 / FAT16</td><td class="l">inodes, ext4</td><td class="l"><b>NTFS</b>, FAT</td><td class="l">ext4, XFS</td></tr>
+    <tr><td class="l">All files?</td><td class="l">no</td><td class="l"><b>yes</b></td><td class="l">no</td><td class="l"><b>yes</b></td></tr>
+    <tr><td class="l">Protection</td><td class="l">none</td><td class="l">rwx, groups</td><td class="l">ACLs, SIDs</td><td class="l">rwx, groups</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Windows 1.0 (1985)</b> was a <b>GUI shell on top of DOS</b>, not a multitasking OS — that line is <b>Windows NT (1993)</b>.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "UNIX and Linux are <b>files</b>, Windows is a <b>database</b>." Shapes: monolithic · microkernel · hybrid.</div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>block size 512 B – 4 KiB</p><p>8 attributes, 7 operations</p>
+      <p>contiguous: base + n, external frag</p><p>linked: walk the chain</p>
+      <p>FAT = linked, links in a table</p><p>FAT entry 0 free, 0xFFF end</p>
+      <p>FAT12 2¹² = 4 096 clusters ≈ 2 MB</p><p>FAT16 2¹⁶ = 65 524 ≈ 32 MB</p>
+      <p>FAT32 28-bit cluster no. ≈ 2 TB</p><p>floppy: 2 880 sectors → 2 847 data</p>
+      <p>inode: 10 direct + 1, 1, 1 indirect</p><p>128 addrs per 512-B indirect</p>
+      <p>10+128+16 384+2 097 152 blocks</p><p>= 2 113 674 ≈ 1.01 GiB</p>
+      <p>ext2/4: 12 direct + 1 + 1 + 1</p><p>UNIX dirent 16 B → 32 per block</p>
+      <p>symlink = path, hard link = inode</p><p>1 GiB/512-B: 2 097 152 → 256 KiB</p>
+      <p>free: bit vector, list, grouping, extents</p><p>ACL per object, capability per subject</p>
+      <p>rwx = 4+2+1; 4000/2000/1000</p><p>ext2 1992 · ext3 2001 · ext4 2006</p>
+      <p>NTFS 1993: MFT, ACLs, $LogFile</p><p>journal = write-ahead log, metadata</p>
+      <p>fsck / e2fsck / chkdsk</p><p>DOS 1981 · UNIX 1969 · NT 1993</p>
+      <p>Linux 1991; NT kernel = hybrid</p><p>UNIX &amp; Linux: everything is a file</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ul class="dash">
+      <li>A file's <b>name</b> is in the directory, not the inode</li>
+      <li>Standard file operations = <b>7</b></li>
+      <li>Contiguous random access = base + n</li>
+      <li>Contiguous suffers <b>external</b> fragmentation</li>
+      <li>FAT = linked allocation with a table</li>
+      <li>FAT12 max = <b>4 096</b> clusters</li>
+    </ul>
+    <ul class="dash">
+      <li>ext3 = ext2 + a journal</li>
+      <li>A journal protects <b>metadata</b>, not data</li>
+      <li>ACL per object, capability per subject</li>
+      <li>Hard link = inode number, symlink = path</li>
+      <li>Windows NT replaced DOS text files with the <b>registry</b></li>
+      <li>UNIX and Linux: <b>everything is a file</b></li>
+    </ul>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Top traps</span> FAT12 = 4 096 clusters, not 65 524 · FAT is linked, not contiguous or indexed · the inode has no file name · 512 ÷ 4 = 128 addresses per indirect block · a bit vector needs n/8 bytes · a journal protects metadata · Windows 1.0 (1985) was a GUI on DOS.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">All tricks together</span> The inode holds everything except the name · FAT = linked links hoisted into a table · Contiguous = base + n, so it is fast · Subtract as you climb the indirect levels · a symlink stores a path, a hard link an inode number · ext3 = ext2 + a log · UNIX is files, Windows is a database.</div>
+  </div>
+  <figure class="doodle">
+    <svg viewBox="0 0 620 150" width="500">
+      <g class="w">
+        <circle cx="62" cy="52" r="40" class="ink fill-b"/>
+        <circle cx="186" cy="52" r="40" class="ink-g fill-g"/>
+        <circle cx="310" cy="52" r="40" class="ink-r fill-r"/>
+        <circle cx="434" cy="52" r="40" class="ink-r fill-r"/>
+        <circle cx="558" cy="52" r="40" class="ink-r fill-r"/>
+        <path class="ink-g" d="M102,52 H144 M226,52 H268 M350,52 H392 M474,52 H516" marker-end="url(#ahg)"/>
+        <path class="ink-p" d="M558,92 C420,126 160,126 60,92" marker-end="url(#ahp)"/>
+      </g>
+      <text x="62" y="46" text-anchor="middle" class="w6 s">directory</text>
+      <text x="62" y="62" text-anchor="middle" class="w6 s">name</text>
+      <text x="186" y="50" text-anchor="middle" class="w6 s">inode</text>
+      <text x="186" y="64" text-anchor="middle" class="w6 s">metadata</text>
+      <text x="310" y="48" text-anchor="middle" class="r w6 s">block map</text>
+      <text x="310" y="64" text-anchor="middle" class="r w6 s">FAT</text>
+      <text x="434" y="48" text-anchor="middle" class="r w6 s">journal</text>
+      <text x="434" y="64" text-anchor="middle" class="r w6 s">replay</text>
+      <text x="558" y="48" text-anchor="middle" class="r w6 s">ACL</text>
+      <text x="558" y="64" text-anchor="middle" class="r w6 s">rights</text>
+      <text x="124" y="106" text-anchor="middle" class="g s">name → id</text>
+      <text x="248" y="106" text-anchor="middle" class="g s">to the data</text>
+      <text x="372" y="106" text-anchor="middle" class="g s">crash-safe</text>
+      <text x="496" y="106" text-anchor="middle" class="g s">who may</text>
+      <text x="310" y="142" text-anchor="middle" class="p s">one path: name → id → blocks → survives a crash → who may touch it</text>
+    </svg>
+    <figcaption>the whole file system in five nouns</figcaption>
+  </figure>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · File Systems</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>How many standard file operations are there?<ol class="opts"><li>5</li><li>7</li><li>9</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>In UNIX/Linux a file's metadata and block pointers live in:<ol class="opts"><li>the superblock</li><li>the boot block</li><li>the inode</li><li>the file descriptor</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>The FAT is a variation of which allocation method?<ol class="opts"><li>linked allocation</li><li>contiguous allocation</li><li>indexed allocation</li><li>multi-level indexed allocation</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>A 512-B block of 16-byte UNIX directory entries holds:<ol class="opts"><li>16 entries</li><li>64 entries</li><li>8 entries</li><li>32 entries</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>ext3 differs from ext2 by adding:<ol class="opts"><li>an inode table</li><li>a journal (log)</li><li>clusters</li><li>a FAT</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>How many clusters can FAT12 address at most?<ol class="opts"><li>4 096</li><li>65 524</li><li>2²⁸</li><li>2¹⁶</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Free space recorded as (start, length) pairs is called:<ol class="opts"><li>a bit vector</li><li>a linked list</li><li>extents</li><li>an inode</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>A 1 GiB volume with 512-B blocks needs a bit vector of:<ol class="opts"><li>64 KiB</li><li>128 KiB</li><li>512 KiB</li><li>256 KiB</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Windows NT replaced the DOS text configuration files with:<ol class="opts"><li>CONFIG.SYS</li><li>the registry</li><li>the MFT</li><li>a batch file</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>A contiguous file starts at block 12; its 5th block is:<ol class="opts"><li>block 5</li><li>block 12</li><li>block 16</li><li>block 17</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-a · 4-d · 5-b · 6-a · 7-c · 8-d · 9-b · 10-c</div>
+
+  <div class="wq"><span class="lbl">Written question</span> A UNIX file system uses 512-byte blocks, 4-byte pointers and the classic inode: 10 direct addresses plus one each of single, double and triple indirect. (i) Largest file? (ii) Locate logical blocks 20 and 300? (iii) Two pros and two cons of a FAT. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>Per indirect block</b> — 512 ÷ 4 = <b>128</b>. <i class="mk">1</i></li>
+    <li><b>Max file</b> — 10 + 128 + 16 384 + 2 097 152 = <b>2 113 674 ≈ 1.01 GiB</b>. <i class="mk">2</i></li>
+    <li><b>Block 20</b> — direct covers 0–9 ⇒ <b>single indirect</b>, index 10; <b>2 reads</b>. <i class="mk">2</i></li>
+    <li><b>Block 300</b> — direct + single reach 138 ⇒ <b>double indirect</b>, 162, sub-block 1, address 34; <b>3 reads</b>. <i class="mk">2</i></li>
+    <li><b>FAT — pro</b> walk the chain without reading data. <b>Con</b> per-volume table grows with the disk. <i class="mk">3</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols small">
+    <ul class="dash"><li>8 attributes · 7 operations</li><li>contiguous / linked / indexed</li></ul>
+    <ul class="dash"><li>inode arithmetic · open → close</li><li>FAT limits · journal · four OS</li></ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

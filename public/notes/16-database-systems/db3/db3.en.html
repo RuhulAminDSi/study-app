@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Functional Dependencies &amp; Normalization (1NF–BCNF): Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Functional Dependencies &amp; Normalization</span></h1>
+  <p class="subtitle">FD notation · attribute closure · 1NF → 2NF → 3NF → BCNF · lossless decomposition: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="300">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">NORMALIZATION</text><text x="320" y="172" text-anchor="middle" class="r s">FDs · 1NF → BCNF</text>
+      <text x="142" y="58" text-anchor="middle" class="s" style="font-size:10px">FD notation</text><text x="142" y="72" text-anchor="middle" class="s" style="font-size:10px">A → B</text>
+      <text x="320" y="40" text-anchor="middle" class="r w6" style="font-size:11px">closure a+ · keys ★</text>
+      <text x="498" y="58" text-anchor="middle" class="s" style="font-size:10px">FD types:</text><text x="498" y="72" text-anchor="middle" class="s" style="font-size:10px">trivial · partial</text>
+      <text x="96" y="148" text-anchor="middle" class="g w6" style="font-size:10px">1NF: atomic</text><text x="96" y="163" text-anchor="middle" class="g w6" style="font-size:10px">values</text>
+      <text x="544" y="148" text-anchor="middle" class="r w6" style="font-size:10px">3NF: no</text><text x="544" y="163" text-anchor="middle" class="r w6" style="font-size:10px">transitive ★</text>
+      <text x="142" y="238" text-anchor="middle" class="s" style="font-size:10px">2NF: no</text><text x="142" y="252" text-anchor="middle" class="s" style="font-size:10px">partial</text>
+      <text x="320" y="270" text-anchor="middle" class="r w6" style="font-size:10px">BCNF: determinant ★</text>
+      <text x="498" y="238" text-anchor="middle" class="r w6" style="font-size:10px">Lossless</text><text x="498" y="252" text-anchor="middle" class="r w6" style="font-size:10px">decomposition ★</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the first rung</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>High-yield list</b><br>① <code>A → B</code>: same A ⇒ same B<br>② Trivial: Y ⊆ X · non-trivial: Y ⊄ X<br>③ Closure X<sup>+</sup> = everything from X<br>④ Superkey = any key; candidate = minimal<br>⑤ 1NF: atomic values, no repeating group<br>⑥ 2NF: no partial dependency<br>⑦ 3NF: no transitive dependency<br>⑧ <span class="circ">BCNF: every determinant is a key</span><br>⑨ Lossless ⟺ <span class="circ">(R1∩R2)→R1</span> or <span class="circ">→R2</span><br>⑩ Normalise for writes, not reads ★</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The Database Systems syllabus line in full: "<span class="hl">Normalization — Process of reducing redundancy and improving data consistency. Steps: 1NF → 2NF → 3NF → BCNF.</span>" <b>This lesson takes that clause in full.</b> The algebra and SQL that read these tables were covered in <b>db2</b>; the ER and relational models, file organisation, indexing and optimisation each have their own place in the chapter.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>FDs: notation and the five types … p. 2</li><li>Attribute closure, keys … p. 3</li><li>1NF and 2NF … p. 4</li><li>3NF and BCNF … p. 5</li><li>The ladder in one table … p. 6</li></ul>
+    <ul class="tick"><li>Lossless join, dependency preservation … p. 7</li><li>Full normalization, step by step … p. 8</li><li>Anomalies &amp; denormalization … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: functional dependencies ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>FDs &amp; notation</span></div>
+  <h2><span class="no">1</span>Functional Dependencies: What A → B Really Means</h2><span class="tag">foundation of all ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> R satisfies the functional dependency <code>X → Y</code> when <b>every two tuples that agree on X also agree on Y</b>. X is the <span class="hl">determinant</span>, Y the <span class="hl">dependent</span>; read <code>A → B</code> as "A determines B". Example: <code>StudentID → Name</code> — knowing the ID settles the name, so two rows sharing an ID can never carry different names. An FD is a statement about what a relation <i>means</i>, not about today's rows.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Type</th><th class="l">Rule</th><th class="l">Example</th><th class="l">Note</th></tr>
+    <tr><td class="l"><b>Trivial</b></td><td class="l">Y ⊆ X</td><td class="l"><code>(StudentID, Name) → Name</code></td><td class="l"><span class="circ">always true</span></td></tr>
+    <tr><td class="l"><b>Non-trivial</b></td><td class="l">Y ⊄ X</td><td class="l"><code>StudentID → Name</code></td><td class="l">the only ones that matter</td></tr>
+    <tr><td class="l"><b>Full</b></td><td class="l">Y needs the whole of X</td><td class="l"><code>(StudentID, CourseID) → Grade</code></td><td class="l">what 2NF insists on</td></tr>
+    <tr><td class="l"><b>Partial</b></td><td class="l">Y needs only part of X</td><td class="l"><code>StudentID → StudentName</code>, key (StudentID, CourseID)</td><td class="l"><span class="red"><b>breaks 2NF</b></span></td></tr>
+    <tr><td class="l"><b>Transitive</b></td><td class="l">A→B and B→C give A→C</td><td class="l"><code>StudentID → DeptID → DeptName</code></td><td class="l"><span class="red"><b>breaks 3NF</b></span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:290px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 420 200" width="280">
+      <g class="w">
+        <rect x="8" y="24" width="160" height="80" rx="6" class="ink-k fill-b"/>
+        <rect x="8" y="24" width="160" height="26" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M8,50 H168 M8,76 H168 M34,50 V104 M88,50 V104 M142,50 V104"/>
+        <rect x="248" y="24" width="160" height="80" rx="6" class="ink-k fill-b"/>
+        <rect x="248" y="24" width="160" height="26" rx="6" class="ink-r fill-y"/>
+        <path class="ink" d="M248,50 H408 M328,50 V104 M248,76 H408"/>
+        <path class="ink" d="M172,64 H244" marker-end="url(#ah)"/>
+      </g>
+      <text x="88" y="43" text-anchor="middle" class="k w6" style="font-size:11px">StudentID</text>
+      <text x="34" y="68" text-anchor="middle" class="s" style="font-size:10px">101</text>
+      <text x="88" y="68" text-anchor="middle" class="s" style="font-size:10px">102</text>
+      <text x="142" y="68" text-anchor="middle" class="s" style="font-size:10px">101</text>
+      <text x="34" y="94" text-anchor="middle" class="s" style="font-size:10px">Alice</text>
+      <text x="88" y="94" text-anchor="middle" class="s" style="font-size:10px">Bob</text>
+      <text x="142" y="94" text-anchor="middle" class="s" style="font-size:10px">Alice</text>
+      <text x="328" y="43" text-anchor="middle" class="k w6" style="font-size:11px">Name</text>
+      <text x="328" y="94" text-anchor="middle" class="s" style="font-size:10px">the only Name for 101</text>
+      <text x="208" y="56" text-anchor="middle" class="r w6" style="font-size:13px">A → B</text>
+      <text x="208" y="142" text-anchor="middle" class="r w6" style="font-size:11px">same A ⇒ same B</text>
+      <text x="208" y="164" text-anchor="middle" class="k s" style="font-size:11px">a promise the schema must keep</text>
+      <text x="208" y="186" text-anchor="middle" class="p s" style="font-size:11px">the left side alone decides</text>
+    </svg><figcaption>rows 1 and 3 share ID 101, so they must share the name</figcaption></figure>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>An arrow is a promise, not a coincidence.</b>" If <code>A → B</code>, the database must <i>never</i> hold two rows with the same A and different B — that is why <code>StudentID</code> is a key candidate, and why "same student, two names" is a <span class="circ">design error</span>.</div>
+      <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ two</span> <b>1.</b> <code>(A, B) → A</code> is <b>trivial</b> and true in every relation — no information at all. <b>2.</b> The arrow is <b>one-way</b>: <code>StudentID → Name</code> never licenses <code>Name → StudentID</code>, because two students may share a name.</div>
+    </div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Normalization</span> <b>Normalization</b> is the process of <span class="hl">reducing redundancy</span> and <span class="hl">improving data consistency</span> by decomposing a badly designed relation into smaller ones, each obeying a <b>normal form</b>. The ladder is cumulative: <b>1NF → 2NF → 3NF → BCNF</b>, each rung adding one condition to the one below.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 260px;align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Why bother?</span> A relation in BCNF stores each fact in <b>exactly one place</b>, which removes the three <span class="red">anomalies</span> — update, insert and delete. The price is extra joins at read time.</div>
+    <figure class="doodle"><svg viewBox="0 0 300 118" width="250">
+      <g class="w">
+        <rect x="76" y="4" width="120" height="24" rx="10" class="ink fill-b"/>
+        <rect x="76" y="34" width="120" height="24" rx="10" class="ink fill-b"/>
+        <rect x="76" y="64" width="120" height="24" rx="10" class="ink-r fill-r"/>
+        <rect x="76" y="94" width="120" height="24" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M136,28 V32" marker-end="url(#ahb)"/>
+        <path class="ink" d="M136,58 V62" marker-end="url(#ahb)"/>
+        <path class="ink" d="M136,88 V92" marker-end="url(#ahb)"/>
+      </g>
+      <text x="136" y="21" text-anchor="middle" class="k w6" style="font-size:12px">1NF</text>
+      <text x="136" y="51" text-anchor="middle" class="k w6" style="font-size:12px">2NF</text>
+      <text x="136" y="81" text-anchor="middle" class="r w6" style="font-size:12px">3NF</text>
+      <text x="136" y="111" text-anchor="middle" class="r w6" style="font-size:12px">BCNF</text>
+      <text x="70" y="21" text-anchor="end" class="s" style="font-size:10px">atomic</text>
+      <text x="70" y="51" text-anchor="end" class="s" style="font-size:10px">+ no partial</text>
+      <text x="70" y="81" text-anchor="end" class="s" style="font-size:10px">+ no transitive</text>
+      <text x="70" y="111" text-anchor="end" class="s" style="font-size:10px">+ determinant</text>
+      <text x="204" y="21" class="k s" style="font-size:10px">= key</text>
+      <text x="204" y="111" class="r w6" style="font-size:10px">★ strictest</text>
+    </svg><figcaption>each rung adds one clause to the one below</figcaption></figure>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: closure and keys ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>Closure &amp; keys</span></div>
+  <h2><span class="no">2</span>Attribute Closure, Candidate Keys and Superkeys</h2><span class="tag">where the marks are ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Attribute closure X<sup>+</sup></span> The set of every attribute you can derive from X using F repeatedly. <b>X is a key of R iff X<sup>+</sup> = R.</b> Start with X, then keep adding any Q for which some FD <code>P → Q</code> has P already inside the set, until nothing new appears.</div>
+    <div class="code">X⁺ = X
+repeat:
+  for every FD  P → Q  in F:
+      if  P ⊆ X⁺ :  X⁺ ← X⁺ ∪ Q
+until  X⁺ stops growing</div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked example 1 ✍ the classic closure</span> <code>R(A, B, C, D, E)</code> with <code>F = {A→B, BC→D, D→E}</code>.<br>
+    start <b>{A, C}</b> → <code>A→B</code> (A is in) → <b>{A, B, C}</b> → <code>BC→D</code> (B, C in) → <b>{A, B, C, D}</b> → <code>D→E</code> → <b>{A, B, C, D, E}</b> = R, so <span class="circ">{A,C}⁺ = {A,B,C,D,E}</span> and <b>AC is a key</b>. With all five attributes in, every FD fires, so it has stopped growing.</div>
+<figure class="doodle"><svg viewBox="0 0 600 108" width="540">
+    <g class="w">
+      <rect x="8" y="14" width="112" height="40" rx="8" class="ink-k fill-y"/>
+      <rect x="148" y="14" width="112" height="40" rx="8" class="ink fill-b"/>
+      <rect x="288" y="14" width="112" height="40" rx="8" class="ink fill-b"/>
+      <rect x="428" y="14" width="164" height="40" rx="8" class="ink-g fill-g"/>
+      <path class="ink" d="M124,34 H144" marker-end="url(#ahb)"/>
+      <path class="ink" d="M264,34 H284" marker-end="url(#ahb)"/>
+      <path class="ink" d="M404,34 H424" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M64,58 V76" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M352,58 V76" marker-end="url(#ah)"/>
+    </g>
+    <text x="64" y="39" text-anchor="middle" class="k w6" style="font-size:12px">{A, C}</text>
+    <text x="204" y="39" text-anchor="middle" class="k w6" style="font-size:12px">{A,B,C}</text>
+    <text x="344" y="39" text-anchor="middle" class="k w6" style="font-size:12px">{A,B,C,D}</text>
+    <text x="510" y="31" text-anchor="middle" class="g w6" style="font-size:12px">{A,B,C,D,E}</text>
+    <text x="510" y="47" text-anchor="middle" class="g w6" style="font-size:10px">= R → AC is a key</text>
+    <text x="64" y="98" text-anchor="middle" class="r s" style="font-size:10px">A→B</text>
+    <text x="204" y="98" text-anchor="middle" class="r s" style="font-size:10px">BC→D</text>
+    <text x="344" y="98" text-anchor="middle" class="r s" style="font-size:10px">D→E</text>
+    <text x="510" y="98" text-anchor="middle" class="k s" style="font-size:10px">stop growing</text>
+  </svg><figcaption>the closure ladder: each FD whose left side is already inside pushes one more attribute in</figcaption></figure>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Superkey · candidate key · prime attribute</span> A <b>superkey</b> is any attribute set whose closure is all of R — AB is one above, since {A,B}<sup>+</sup> = {A,B,C,D,E}. A <b>candidate key</b> is a <span class="hl">minimal</span> superkey: no proper subset still closes R. An attribute is <b>prime</b> if it belongs to <i>some</i> candidate key.</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked example 2 ✍ the superkey trap</span> <code>R(A, B, C, D)</code> with <code>F = {A→B, B→C, C→D}</code>. <b>A<sup>+</sup>:</b> A → {A,B} → {A,B,C} → {A,B,C,D} = R, so A is a superkey; being a <b>single attribute</b> it is minimal, so <span class="circ">A is the candidate key</span>. A also appears on <b>no right-hand side</b>, so every key of R must contain A. Then <b>AB is a superkey but not minimal</b> (drop B and A alone still closes R), so AB is <b>not</b> a candidate key. And <b>B<sup>+</sup> = {B, C, D}</b> — A can never be reached from B.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ minimal is the whole question</span> "Which is the candidate key?" is <b>not</b> "which set determines all attributes?" — that is the superkey, and there is usually more than one. Always test <b>minimality</b> second: remove one attribute, recompute the closure, and if it is still all of R the set was too big. R(A,B,C,D) above has superkeys AB, AC, AD, ABC, ABD, ACD, ABCD — and exactly <span class="circ">one</span> candidate key, A.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Super is a superset; candidate is the smallest one inside it.</b>" And "<b>prime = in some key</b>", not "in <i>every</i> key" — in R(A,B,C) with key A, only A is prime even though A is the sole key. Prime/non-prime is the exact test that separates 3NF from BCNF.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: 1NF and 2NF ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>1NF &amp; 2NF</span></div>
+  <h2><span class="no">3</span>First and Second Normal Form</h2><span class="tag">the two easy rungs ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">1NF — First Normal Form</span> Every attribute holds a <span class="hl">single atomic value</span>. No repeating groups, no lists or arrays inside a cell, no "one row, many facts" columns. A cell is atomic if it cannot usefully be split into several independent values.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Before 1NF</th><th>StudentID</th><th>Courses</th></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>101</u></td><td class="l"><span class="red"><b>CSE101, MAT201</b></span></td></tr>
+    </table>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">After 1NF</th><th>StudentID</th><th>Course</th></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>101</u></td><td class="l">CSE101</td></tr>
+      <tr><td class="l">&nbsp;</td><td class="l"><u>101</u></td><td class="l">MAT201</td></tr>
+    </table>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap</span> The comma-separated list breaks <b>three</b> rules at once: it is not atomic, it is a repeating group, and it hides a second fact per row. You cannot index <code>CSE101</code> without string surgery, and "how many courses does 101 take?" needs a <code>LIKE</code> guess. The fix costs <span class="hl">one extra row</span> and nothing else — always take it.</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">2NF — Second Normal Form</span> R is in 2NF iff it is in <b>1NF</b> and <b>no non-prime attribute depends on only part of a composite candidate key</b>. Partial dependency is impossible when the key is a single attribute, so 2NF only ever bites on <span class="hl">composite-key tables</span>.</div>
+  <div class="cols" style="grid-template-columns:300px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 186" width="290">
+      <g class="w">
+        <rect x="10" y="10" width="280" height="40" rx="8" class="ink-k fill-b"/>
+        <rect x="10" y="66" width="280" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="140" width="86" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="107" y="140" width="86" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="204" y="140" width="86" height="40" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M150,50 V62" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M110,106 V136" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M200,106 V136" marker-end="url(#ah)"/>
+      </g>
+      <text x="150" y="35" text-anchor="middle" class="k w6" style="font-size:11px">ENROLLMENT (key = StudentID + CourseID)</text>
+      <text x="150" y="90" text-anchor="middle" class="r w6" style="font-size:11px">partial: StudentName ← StudentID only</text>
+      <text x="53" y="164" text-anchor="middle" class="g w6" style="font-size:11px">Student</text>
+      <text x="150" y="164" text-anchor="middle" class="g w6" style="font-size:11px">Course</text>
+      <text x="247" y="164" text-anchor="middle" class="g w6" style="font-size:11px">Enrollment</text>
+    </svg><figcaption>a partial dependency is what forces the split</figcaption></figure>
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ before 2NF</span> Key is the composite <b>(StudentID, CourseID)</b>.<br>
+        <code>(StudentID, CourseID) → StudentName, Instructor, Grade</code><br>
+        <b>Problems:</b> StudentName depends on StudentID <b>alone</b> (partial); Instructor depends on CourseID <b>alone</b> (partial). Only <code>→ Grade</code> needs the whole key, so only it stays behind.</div>
+      <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:0 2mm">
+        <table class="hand tiny" style="width:100%">
+          <tr><th class="l">Student</th></tr>
+          <tr><td class="l"><u>StudentID</u> PK</td></tr>
+          <tr><td class="l">StudentName</td></tr>
+        </table>
+        <table class="hand tiny" style="width:100%">
+          <tr><th class="l">Course</th></tr>
+          <tr><td class="l"><u>CourseID</u> PK</td></tr>
+          <tr><td class="l">Instructor</td></tr>
+        </table>
+        <table class="hand tiny" style="width:100%">
+          <tr><th class="l">Enrollment</th></tr>
+          <tr><td class="l"><u>StudentID</u> PK, FK</td></tr>
+          <tr><td class="l"><u>CourseID</u> PK, FK</td></tr>
+          <tr><td class="l">Grade</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ two</span> <b>1.</b> A partial dependency is defined against a <b>composite key</b>; if you are asked about a relation whose key is a single attribute, 2NF is <span class="circ">automatically satisfied</span> and the real question is 3NF. <b>2.</b> The split must be <b>lossless</b>: here R1 ∩ R2 = {StudentID}, and StudentID → Student (the whole of R1), so joining the three tables reproduces the original rows exactly — nothing is invented, nothing is lost.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Split by the arrow, not by the column.</b>" Draw the FDs; every arrow whose tail is only <i>half</i> the key is a partial dependency, and the head of that arrow moves into a table of its own keyed by that tail. 1NF splits by <b>value</b> (one fact per cell); 2NF splits by <b>dependency</b> (one fact per table).</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: 3NF and BCNF ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>3NF &amp; BCNF</span></div>
+  <h2><span class="no">4</span>Third and Boyce–Codd Normal Form</h2><span class="tag">the tested pair ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">3NF — Third Normal Form</span> R is in 3NF iff it is in <b>2NF</b> and no non-prime attribute depends <b>transitively</b> on the key: for every FD <code>X → A</code> with A non-prime, X must be a superkey. In words: <span class="hl">no attribute may depend on another attribute that is not itself part of the key</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ the genuine 3NF violation</span>
+      <b>Before</b> — <code>Student(StudentID, Name, DeptID, DeptName)</code>, key <b>StudentID</b>:<br>
+      <code>StudentID → Name, DeptID</code> and then <code>DeptID → DeptName</code><br>
+      so <code>StudentID → DeptID → DeptName</code>. DeptID is <b>not</b> part of the key, yet DeptName hangs off it: a transitive dependency on a non-key attribute. <b>After</b> — <code>Student(StudentID, Name, DeptID·FK)</code> plus <code>Department(DeptID, DeptName)</code>. Now DeptName is stored once per department, no matter how many students sit in it.</div>
+    <figure class="doodle"><svg viewBox="0 0 300 190" width="290">
+      <g class="w">
+        <circle cx="66" cy="66" r="34" class="ink-k fill-y"/>
+        <circle cx="66" cy="152" r="34" class="ink fill-b"/>
+        <circle cx="234" cy="152" r="34" class="ink fill-b"/>
+        <path class="ink" d="M100,84 L204,134" marker-end="url(#ah)"/>
+        <path class="ink" d="M234,118 L100,84" marker-end="url(#ahb)"/>
+      </g>
+      <text x="66" y="62" text-anchor="middle" class="k w6" style="font-size:12px">Student</text>
+      <text x="66" y="76" text-anchor="middle" class="k w6" style="font-size:10px">ID</text>
+      <text x="66" y="152" text-anchor="middle" class="k w6" style="font-size:11px">DeptID</text>
+      <text x="234" y="148" text-anchor="middle" class="k w6" style="font-size:10px">Dept</text>
+      <text x="234" y="162" text-anchor="middle" class="k w6" style="font-size:10px">Name</text>
+      <text x="150" y="102" text-anchor="middle" class="r w6" style="font-size:11px">transitive</text>
+      <text x="150" y="118" text-anchor="middle" class="r w6" style="font-size:10px">3NF ✗</text>
+      <text x="150" y="182" text-anchor="middle" class="g w6" style="font-size:10px">split it → 3NF ✓</text>
+    </svg><figcaption>the arrow that 3NF is about</figcaption></figure>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">BCNF — Boyce–Codd Normal Form</span> R is in BCNF iff for <b>every</b> non-trivial FD <code>X → Y</code>, X is a <span class="hl">superkey</span>. In the shortest exam phrasing: <b>every determinant must be a candidate key</b>. It is strictly stronger than 3NF — 3NF only demands this when the dependent is <i>non-prime</i>.</div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked example ✍ a BCNF violation that 3NF cannot remove</span> Consider <code>R(CourseID, Semester, Instructor)</code> with <code>(CourseID, Semester) → Instructor</code> and <code>Instructor → CourseID</code>. Instructor is a prime attribute — it sits in no candidate key here, but the relation is <b>still only 2NF</b>, because the determinant <code>Instructor</code> is not a superkey. Check each side: neither <b>CourseID</b> alone nor <b>Semester</b> alone closes the relation, so the determinant (CourseID, Semester) is not a superkey either. <b>BCNF solution:</b> split — <code>Instructor(CourseID, Instructor)</code> keyed by Instructor, and <code>Offering(CourseID, Semester)</code>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> 3NF says "every <i>non-prime</i> attribute depends on the key"; BCNF says "every <i>determinant</i> is a key". A relation can satisfy 3NF and still fail BCNF exactly when a transitive chain runs through a <b>prime</b> attribute. <b>2.</b> The single-attribute key case has no partial dependency at all, so it can be in 2NF while still failing 3NF — the two rungs test different things. <b>3.</b> <b>BCNF is not the top of the ladder</b>: a 4NF exists for multi-valued dependencies. "The highest normal form" in an MCQ still means BCNF.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>1NF one value, 2NF whole key, 3NF no detour, BCNF key on every arrow.</b>" Read BCNF as a rule about the <i>left-hand sides</i>: walk through every FD in F and ask "is this determinant a key?" If any answer is no, split that relation.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: ladder summary + highest normal form ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>The ladder</span></div>
+  <h2><span class="no">5</span>The Ladder in One Table — and How Far Up It Goes</h2><span class="tag">memorise the table ★</span>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Normal form</th><th class="l">Requirement</th><th class="l">In plain words</th></tr>
+    <tr><td class="l"><b>1NF</b></td><td class="l">atomic values, no repeating groups</td><td class="l">one fact per cell</td></tr>
+    <tr><td class="l"><b>2NF</b></td><td class="l">1NF + <span class="hl">no partial dependency</span></td><td class="l">nothing hangs off half a composite key</td></tr>
+    <tr><td class="l"><b>3NF</b></td><td class="l">2NF + <span class="hl">no transitive dependency</span></td><td class="l">nothing hangs off a non-key attribute</td></tr>
+    <tr><td class="l"><b>BCNF</b></td><td class="l">3NF + <span class="hl">every determinant is a candidate key</span></td><td class="l">every arrow starts at a key</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ "the highest normal form"</span> <code>R(A, B, C)</code> with <code>F = {A→B, B→C}</code>, and A its only candidate key.<br>
+        <b>Keys.</b> A appears on no right-hand side, so every key contains A. A<sup>+</sup> = {A, B, C} = R, and A is one attribute, so A is the <b>sole candidate key</b> and the only <b>prime</b> attribute.<br>
+        <b>2NF?</b> The key is a <b>single</b> attribute, so no partial dependency can exist. <span class="circ">R is in 2NF.</span><br>
+        <b>3NF?</b> <code>A→B→C</code> is transitive: in <code>B→C</code>, B is not a superkey and C is not prime. So R <span class="red">violates 3NF</span> and BCNF too. <b>Answer: 2NF.</b> <b>Decompose:</b> <code>R1(A, B)</code>, <code>R2(B, C)</code>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 220" width="310">
+      <g class="w">
+        <rect x="10" y="8" width="300" height="40" rx="8" class="ink-k fill-b"/>
+        <rect x="10" y="62" width="300" height="40" rx="8" class="ink fill-b"/>
+        <rect x="10" y="116" width="300" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="10" y="176" width="144" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="166" y="176" width="144" height="36" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M160,48 V60" marker-end="url(#ahb)"/>
+        <path class="ink" d="M160,102 V114" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M100,156 V174" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M220,156 V174" marker-end="url(#ah)"/>
+      </g>
+      <text x="160" y="33" text-anchor="middle" class="k w6" style="font-size:12px">R(A, B, C): A→B, B→C</text>
+      <text x="160" y="87" text-anchor="middle" class="g w6" style="font-size:12px">single key A → 2NF ✓</text>
+      <text x="160" y="141" text-anchor="middle" class="r w6" style="font-size:12px">A→B→C transitive → 3NF ✗</text>
+      <text x="82" y="199" text-anchor="middle" class="r w6" style="font-size:12px">R1(A, B)</text>
+      <text x="238" y="199" text-anchor="middle" class="r w6" style="font-size:12px">R2(B, C)</text>
+    </svg><figcaption>why 2NF and not 3NF</figcaption></figure>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">How to answer any "highest normal form" question</span> Four moves, in order: <b>1.</b> find the candidate keys (closures + minimality); <b>2.</b> list the prime attributes; <b>3.</b> if the key is composite, look for <b>partial</b> dependencies — if any, stop at 1NF; <b>4.</b> otherwise look for a <b>transitive</b> dependency on a non-key attribute — if any, stop at 2NF; if none but some determinant is not a key, stop at 3NF; otherwise <span class="circ">BCNF</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick for the whole ladder</span> "<b>Atomic, All-key, Away-from-key, BCNF.</b>" 1NF is about <i>values</i>, 2NF about <i>the key's parts</i>, 3NF about <i>non-key detours</i>, BCNF about <i>the determinants themselves</i>. Each rung is "the one below, plus one more clause" — so a relation in BCNF is automatically in all three below it, never the reverse.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍</span> Students often answer "3NF" whenever a transitive dependency exists, forgetting that <b>3NF only forbids a transitive dependency whose destination is non-prime</b>. And they often call <code>AB</code> the candidate key when <code>A</code> alone already closes the relation — <b>minimality</b>, not size, is the test. Check prime membership before you write "3NF".</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: lossless join and dependency preservation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>Lossless &amp; preservation</span></div>
+  <h2><span class="no">6</span>Decomposition: Lossless Join and Dependency Preservation</h2><span class="tag">prove or it failed ★</span>
+  <p class="tiny" style="margin-top:0">Splitting a relation is a legitimate normalisation only if it is <b>lossless</b> (no information invented or destroyed) and <b>dependency-preserving</b> (the FDs can still be checked without joining).</p>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The lossless-join rule</span> For R → R1, R2 the join is <b>lossless</b> iff<br><code>(R1 ∩ R2) → R1</code> &nbsp;or&nbsp; <code>(R1 ∩ R2) → R2</code><br>Read it as: the attributes the pieces <b>share</b> must be a key of at least one of them. If the shared attribute decides one whole side, every original tuple has a definite partner and nothing is fabricated or lost.</div>
+      <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">Dependency preservation</span> The decomposition is <b>dependency-preserving</b> iff the union of the projections of F onto R1 and onto R2 is exactly F — in practice, iff <b>every FD in F lives <span class="hl">entirely inside one piece</span></b> and can be enforced there alone, with no join.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 150" width="280">
+      <g class="w">
+        <ellipse cx="160" cy="28" rx="106" ry="22" class="ink-k fill-y"/>
+        <rect x="24" y="76" width="118" height="46" rx="8" class="ink fill-b"/>
+        <rect x="178" y="76" width="118" height="46" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M106,48 L86,74" marker-end="url(#ahb)"/>
+        <path class="ink" d="M214,48 L234,74" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M142,99 H178" marker-end="url(#ah)"/>
+      </g>
+      <text x="160" y="34" text-anchor="middle" class="k w6" style="font-size:12px">R(A, B, C)</text>
+      <text x="83" y="96" text-anchor="middle" class="k w6" style="font-size:12px">R1(A, B)</text>
+      <text x="83" y="113" text-anchor="middle" class="k w6" style="font-size:11px">A→B</text>
+      <text x="237" y="96" text-anchor="middle" class="k w6" style="font-size:12px">R2(A, C)</text>
+      <text x="237" y="113" text-anchor="middle" class="k w6" style="font-size:11px">no FD</text>
+      <text x="160" y="68" text-anchor="middle" class="r w6" style="font-size:11px">the shared column A</text>
+      <text x="160" y="136" text-anchor="middle" class="g w6" style="font-size:11px">A → R1 ⇒ lossless ✓ · A→B stays in R1 ✓</text>
+    </svg><figcaption>the shared attribute decides one whole side</figcaption></figure>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked example ✍ the standard two-part answer</span> <code>R(A, B, C)</code> with <code>F = {A→B}</code>, decomposed into <code>R1(A, B)</code> and <code>R2(A, C)</code>.<br>
+    <b>Lossless?</b> <code>R1 ∩ R2 = {A}</code>, and <code>A→B</code> means <code>A→R1</code>, so the common attribute A is a key of R1. The first alternative holds → <span class="circ">lossless</span>: every original tuple has one A-value, hence exactly one R1 row and one R2 row to pair.<br>
+    <b>Preserved?</b> The only FD in F is <code>A→B</code> and it lies entirely inside R1, so it can be enforced there with no join → <span class="circ">dependency-preserving</span>.</div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ the lossy counter-example</span> Take the same R(A, B, C) with F = {A→B} but decompose it wrongly, into <code>R1(A, C)</code> and <code>R2(B, C)</code>. Now R1 ∩ R2 = {C}, and C determines neither R1 nor R2, so the rule fails: the join is <span class="red"><b>lossy</b></span> — pairing C = 3 from R1 with C = 3 from R2 produces a row (3, 3) that was never in R. The pieces must be split so the shared attribute is a <b>key</b> on one side; sharing a mere foreign key is not enough.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ lossless ≠ preserved</span> The two tests answer different questions and a decomposition can pass one and fail the other. A split can be lossless yet force you to <b>join</b> to check <code>A→B</code>, leaving the database unable to police the constraint. A split can preserve every dependency yet be lossy — which silently corrupts data. Give both verdicts separately.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Lossless asks about the overlap; preservation asks about the arrows.</b>" Overlap: the shared columns must decide one whole side. Arrows: every FD must sit inside one side. Neither test needs the data — <b>the FDs alone decide it</b>, which is why both can be examined in a written paper.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: full worked normalization example ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>Step by step</span></div>
+  <h2><span class="no">7</span>The Whole Normalization Example, Step by Step</h2><span class="tag">the standard written answer ★</span>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th>StudentID</th><th>Name</th><th>DeptID</th><th>DeptName</th><th>CourseID</th><th>CourseName</th><th>Grade</th></tr>
+    <tr><td><u>101</u></td><td>Alice</td><td>10</td><td>CSE</td><td>C101</td><td>DBMS</td><td>A</td></tr>
+    <tr><td><u>101</u></td><td>Alice</td><td>10</td><td>CSE</td><td>C102</td><td>Algorithms</td><td>B</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">What is wrong with this one table</span> It is already in 1NF — every cell holds a single value. But the key is the composite (StudentID, CourseID), and the table repeats three facts: <b>Alice</b> is written twice, <b>10 / CSE</b> is written twice, and a course name would be written once per student. A student's name and a department's name each live in several rows, and any one of those rows can disagree with the others.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">The three anomalies it causes</span> <b>Update</b> — rename Alice and you must edit every row she appears in; miss one and the database holds two names for student 101. <b>Insert</b> — a new department with no student cannot be recorded, because there is no StudentID to put beside it. <b>Delete</b> — delete Alice's only enrolment row and you lose her name <i>and</i> the fact that department 10 exists.</div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Step 1 — 1NF ✍</span> Already satisfied: each column holds one atomic value and the grade belongs to the pair (student, course), not to the student. Nothing to do.<br>
+    <b>Step 2 — 2NF ✍</b> The key (StudentID, CourseID) is composite, and three non-key attributes depend on only <b>half</b> of it: <code>StudentID → Name</code>, <code>CourseID → CourseName</code> and <code>StudentID → DeptID</code> are all partial, while <code>(StudentID, CourseID) → Grade</code> is full. Split each partial dependency into its own table.<br>
+    <b>Step 3 — 3NF ✍</b> The genuine remaining violation is the transitive chain <code>StudentID → DeptID → DeptName</code> inside <code>Student(StudentID, Name, DeptID, DeptName)</code>: DeptID is <b>not</b> part of the key, yet DeptName hangs off it. Moving DeptName out into its own Department table is exactly what removes it — that is the whole content of the 3NF step, and it is why Department must appear in the final design.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 250px;align-items:start">
+    <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 4mm">
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Student</th><th>Name</th><th>DeptID</th></tr>
+        <tr><td class="l"><u>101</u></td><td class="l">Alice</td><td class="l">10</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Department</th><th>DeptName</th></tr>
+        <tr><td class="l"><u>10</u></td><td class="l">CSE</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Course</th><th>CourseName</th></tr>
+        <tr><td class="l"><u>C101</u></td><td class="l">DBMS</td></tr>
+      </table>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Enrollment</th><th>Grade</th></tr>
+        <tr><td class="l"><u>101</u></td><td class="l">A</td></tr>
+      </table>
+      <p class="tiny" style="margin:0">Keys underlined; DeptID and both IDs of Enrollment are foreign keys into the tables above.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 164" width="240">
+      <g class="w">
+        <rect x="10" y="8" width="90" height="40" rx="8" class="ink-k fill-b"/>
+        <rect x="232" y="8" width="98" height="40" rx="8" class="ink fill-b"/>
+        <rect x="120" y="116" width="110" height="40" rx="8" class="ink fill-b"/>
+        <path class="ink" d="M100,22 L230,22" marker-end="url(#ah)"/>
+        <path class="ink" d="M56,50 L128,114" marker-end="url(#ah)"/>
+        <path class="ink" d="M182,114 L240,50" marker-end="url(#ah)"/>
+      </g>
+      <text x="55" y="26" text-anchor="middle" class="k w6" style="font-size:11px">Student</text>
+      <text x="55" y="40" text-anchor="middle" class="k w6" style="font-size:10px">101 · Alice</text>
+      <text x="281" y="26" text-anchor="middle" class="k w6" style="font-size:11px">Course</text>
+      <text x="281" y="40" text-anchor="middle" class="k w6" style="font-size:10px">C101 · DBMS</text>
+      <text x="175" y="132" text-anchor="middle" class="k w6" style="font-size:11px">Enrollment</text>
+      <text x="175" y="146" text-anchor="middle" class="k w6" style="font-size:10px">Grade = A</text>
+      <text x="163" y="80" text-anchor="middle" class="k s" style="font-size:10px">Department(10, CSE)</text>
+      <text x="58" y="92" text-anchor="middle" class="k s" style="font-size:10px">DeptID</text>
+      <text x="272" y="92" text-anchor="middle" class="k s" style="font-size:10px">CourseID</text>
+    </svg><figcaption>one fact, one place</figcaption></figure>
+  </div>
+  <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">The final design, and what it buys</span> Four relations: <b>Student(StudentID, Name, DeptID)</b> · <b>Department(DeptID, DeptName)</b> · <b>Course(CourseID, CourseName)</b> · <b>Enrollment(StudentID, CourseID, Grade)</b>. Grade stays with the pair it describes, a department's name is stored <b>once</b>, a course name is stored <b>once</b>. Renaming a student is now a <b>single</b> row update, a new empty department can be inserted without inventing a student, and deleting an enrolment cannot take a department with it.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: anomalies and denormalization ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>Anomalies &amp; denormalization</span></div>
+  <h2><span class="no">8</span>Anomalies, Denormalization and the Trade-off</h2><span class="tag">the "why" questions ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">The three anomalies, named</span> An <b>anomaly</b> is a wrong update that becomes possible only because the same fact is stored in several places. There are exactly three kinds, and a written question usually wants all three by name.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Update anomaly ✍</span> A fact must be changed in <b>every</b> copy or the relation becomes self-contradictory. Changing Alice's name means editing each row where 101 appears; one forgotten row leaves two names for the same student, and nothing in the schema stops it.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Insert anomaly ✍</span> A perfectly valid fact <b>cannot be stored</b> because the key demands a companion fact that does not exist yet. A brand-new department with no students has no StudentID to accompany it.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Delete anomaly ✍</span> Deleting one row silently removes facts that had nothing to do with it. Removing Alice's only enrolment row deletes her name and the existence of department 10 as well.</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 600 128" width="540">
+    <g class="w">
+      <rect x="8" y="14" width="176" height="44" rx="10" class="ink-k fill-y"/>
+      <rect x="212" y="14" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="416" y="14" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="8" y="76" width="176" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="212" y="76" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="416" y="76" width="176" height="44" rx="10" class="ink fill-b"/>
+      <path class="ink" d="M188,36 H208" marker-end="url(#ahb)"/>
+      <path class="ink" d="M392,36 H412" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M96,62 V72" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M300,62 V72" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M504,62 V72" marker-end="url(#ah)"/>
+    </g>
+    <text x="96" y="34" text-anchor="middle" class="k w6" style="font-size:12px">enrolment table</text>
+    <text x="96" y="49" text-anchor="middle" class="r w6" style="font-size:10px">every fact repeated</text>
+    <text x="300" y="34" text-anchor="middle" class="k w6" style="font-size:12px">normalise to</text>
+    <text x="300" y="49" text-anchor="middle" class="g w6" style="font-size:10px">1NF → 2NF → 3NF</text>
+    <text x="504" y="34" text-anchor="middle" class="k w6" style="font-size:12px">four small tables</text>
+    <text x="504" y="49" text-anchor="middle" class="g w6" style="font-size:10px">one fact, one home</text>
+    <text x="96" y="96" text-anchor="middle" class="r w6" style="font-size:11px">update ✗</text>
+    <text x="96" y="111" text-anchor="middle" class="r w6" style="font-size:10px">miss one copy</text>
+    <text x="300" y="96" text-anchor="middle" class="g w6" style="font-size:11px">insert ✓</text>
+    <text x="300" y="111" text-anchor="middle" class="g w6" style="font-size:10px">empty dept storable</text>
+    <text x="504" y="96" text-anchor="middle" class="g w6" style="font-size:11px">delete ✓</text>
+    <text x="504" y="111" text-anchor="middle" class="g w6" style="font-size:10px">nothing collateral lost</text>
+  </svg><figcaption>why the split is worth making</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Benefits of normalisation</span> <b>1.</b> Less redundancy, so less disk and fewer copies to keep in step. <b>2.</b> Better integrity — each fact has one home, so a single update is the whole update. <b>3.</b> Fewer <span class="red">update, insert and delete anomalies</span>. <b>4.</b> <span class="hl">Smaller, more meaningful tables</span>, so indexes and joins are cheaper to plan.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Denormalization — the deliberate undo</span> <b>Denormalization</b> is <span class="red"><b>intentionally</b> re-introducing redundancy after normalising</span> so that <b>reads</b> get fast. A normalised schema needs a three-table join to print one report row; copying a department name into a fact table turns that join into a single scan. It is a deliberate trade — <b>write once, read a million times</b> — and it re-opens all three anomalies.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ the direction question</span> "Which is better?" has no answer — it depends on the workload. Normalise for <b>OLTP</b> (many small inserts, updates and deletes, integrity enforced by the DBMS); denormalise for <b>reporting / data warehousing</b> (huge read volumes, occasional batch reloads). "Denormalization always improves performance" is <b>false</b>: it speeds reads and slows every write.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Where the rest of this chapter lives</span> <b>The algebra and SQL that read these tables</b> were covered in <b>db2</b>; <b>relational and ER models, constraints</b> in <b>db1</b>. <b>File organisation, indexes, B+ trees, cost-based optimisation</b> → <span class="hl">db4</span>. <b>Transactions, ACID, isolation, concurrency, recovery</b> → <b>db5</b>.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p><code>X → Y</code>: same X ⇒ same Y</p><p>X = determinant, Y = dependent</p>
+      <p>Trivial: Y ⊆ X · Non-trivial: Y ⊄ X</p><p>Partial: on part of X · Transitive: A→B, B→C</p>
+      <p><code>X⁺</code> = everything derivable from X</p><p>X is a key iff X<sup>+</sup> = R</p>
+      <p>Superkey = any key</p><p>Candidate key = minimal superkey</p>
+      <p>Prime = in some candidate key</p><p>1NF: atomic values</p>
+      <p>2NF: + no partial dependency</p><p>3NF: + no transitive dependency</p>
+      <p>BCNF: + every determinant is a key</p><p>Anomalies: update, insert, delete</p>
+      <p>Lossless ⟺ (R1∩R2)→R1 or →R2</p><p>Preserved ⟺ every FD inside one piece</p>
+      <p>{A,C}<sup>+</sup> in R(A,B,C,D,E) = all five</p><p>Key of R(A,B,C,D) with A→B→C→D is A alone</p>
+      <p>R(A,B,C), A→B→C, key A ⇒ 2NF only</p><p>Normalise for writes, denormalise for reads</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li><code>A → B</code>: two rows agreeing on A agree on B</li>
+      <li>Trivial FD: Y ⊆ X — always true, never interesting</li>
+      <li><code>X⁺ = R</code> means X is a key</li>
+      <li>Superkey = any key; candidate = the minimal one</li>
+      <li>Prime attribute = belongs to some candidate key</li>
+      <li>1NF needs one atomic value per cell</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>2NF matters only for composite keys</li>
+      <li>3NF forbids transitives through non-key attributes</li>
+      <li>BCNF: every determinant must be a candidate key</li>
+      <li>Lossless ⟺ (R1∩R2)→R1 or (R1∩R2)→R2</li>
+      <li>Lossless is about the overlap, preservation about the arrows</li>
+      <li>The anomalies are update, insert and delete</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">Top traps</span> calling a <b>superkey</b> the candidate key · forgetting to test <b>minimality</b> · answering "3NF" whenever a transitive dependency exists, without checking <b>primeness</b> · applying 2NF to a single-attribute key · reading the arrow backwards · omitting the <b>composite key</b> in the 2NF "before" table · claiming a decomposition is safe without testing <b>lossless-join</b> · confusing lossless with dependency-preserving · treating denormalization as free.</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">All tricks together</span> An arrow is a promise · one value per cell, then one arrow per table · split by the arrow, not by the column · super is a superset, candidate the smallest one inside it · atomic, whole key, no detour, key on every arrow · lossless asks about the overlap, preservation about the arrows · normalise for writes, denormalise for reads.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 130" width="290">
+      <g class="w">
+        <circle cx="60" cy="52" r="30" class="ink-k fill-b"/>
+        <circle cx="150" cy="52" r="30" class="ink fill-b"/>
+        <circle cx="240" cy="52" r="30" class="ink-r fill-r"/>
+        <path class="ink" d="M92,52 H118" marker-end="url(#ahb)"/>
+        <path class="ink" d="M182,52 H208" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M240,84 C190,116 70,116 60,84" marker-end="url(#ahp)"/>
+      </g>
+      <text x="60" y="57" text-anchor="middle" class="k w6" style="font-size:12px">1NF</text>
+      <text x="150" y="57" text-anchor="middle" class="k w6" style="font-size:12px">3NF</text>
+      <text x="240" y="57" text-anchor="middle" class="r w6" style="font-size:12px">BCNF</text>
+      <text x="105" y="42" text-anchor="middle" class="p s" style="font-size:10px">+ partial</text>
+      <text x="195" y="42" text-anchor="middle" class="p s" style="font-size:10px">+ transitive</text>
+      <text x="150" y="122" text-anchor="middle" class="p s" style="font-size:10px">each rung adds one clause</text>
+    </svg><figcaption>one clause per rung</figcaption></figure>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Functional Dependencies</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">1.</span>A relation is in First Normal Form (1NF) if:<ol class="opts"><li>Every attribute holds only atomic values</li><li>It has no partial dependencies</li><li>It has no transitive dependencies</li><li>Every determinant is a candidate key</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">2.</span><code>R(A, B, C, D)</code> has <code>A→B</code>, <code>B→C</code>, <code>C→D</code>. The candidate key of R is:<ol class="opts"><li>B</li><li>AB</li><li>A</li><li>CD</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">3.</span><code>R(A, B, C, D, E)</code> has <code>A→B</code>, <code>BC→D</code>, <code>D→E</code>. The closure {A, C}<sup>+</sup> is:<ol class="opts"><li>{A, B, C}</li><li>{A, B, C, D}</li><li>{A, C, E}</li><li>{A, B, C, D, E}</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">4.</span><code>R(A, B, C)</code> has <code>A→B</code>, <code>B→C</code>, and A is its only candidate key. The highest normal form is:<ol class="opts"><li>1NF only</li><li>2NF</li><li>3NF</li><li>BCNF</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">5.</span><code>R(A, B, C)</code> with <code>F = {A→B}</code> is split into <code>R1(A, B)</code> and <code>R2(A, C)</code>. Which is correct?<ol class="opts"><li>Lossy but dependency-preserving</li><li>Neither lossless nor preserving</li><li>Lossless but not dependency-preserving</li><li>Lossless and dependency-preserving</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">6.</span>In <code>Enrollment(StudentID, CourseID, Grade, StudentName, Instructor)</code> keyed (StudentID, CourseID), which FD is partial?<ol class="opts"><li>StudentID→StudentName</li><li>(StudentID, CourseID)→Grade</li><li>CourseID→Instructor</li><li>All three</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">7.</span>A relation is in BCNF only if:<ol class="opts"><li>It has no transitive dependencies</li><li>Every determinant is a candidate key</li><li>It has no partial dependencies</li><li>Every attribute holds an atomic value</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">8.</span>For R split into R1 and R2, the join is lossless iff:<ol class="opts"><li>R1 ∩ R2 is empty</li><li>R1 and R2 are both in 3NF</li><li>(R1 ∩ R2)→R1 or (R1 ∩ R2)→R2</li><li>Every dependency is preserved</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">9.</span>Denormalization is deliberately used to:<ol class="opts"><li>Remove redundancy and eliminate anomalies</li><li>Speed up read-heavy queries by accepting redundancy</li><li>Enforce foreign-key constraints automatically</li><li>Reduce update anomalies</li></ol></div>
+    <div class="mcq" style="line-height:4.0mm;font-size:10.2pt"><span class="qn">10.</span>In <code>R(A, B, C)</code> with <code>A→B</code>, <code>B→C</code> and A the only candidate key, how many prime attributes are there?<ol class="opts"><li>1</li><li>2</li><li>3</li><li>0</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-a · 2-c · 3-d · 4-b · 5-d · 6-a · 7-b · 8-c · 9-b · 10-a</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Define a functional dependency and name the five types, distinguishing trivial from non-trivial. For <code>R(A, B, C, D, E)</code> with <code>F = {A→B, BC→D, D→E}</code>, compute {A, C}<sup>+</sup> and say whether AC is a candidate key. For <code>R(A, B, C)</code> with <code>A→B, B→C</code> and A the only candidate key, state the highest normal form and decompose it. Then test the split of that R into <code>R1(A, B)</code> and <code>R2(A, C)</code> for lossless-join and dependency preservation. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:4.4mm">
+    <li><b>Definitions (2)</b> — <code>X → Y</code> holds when every two tuples agreeing on X also agree on Y; X is the determinant. <b>Trivial</b>: Y ⊆ X, e.g. (A, B)→A. <b>Non-trivial</b>: Y ⊄ X, e.g. StudentID→Name. <b>Full</b>: Y depends on the whole of X. <b>Partial</b>: on part of X. <b>Transitive</b>: A→B and B→C give A→C. <i class="mk">2</i></li>
+    <li><b>Closure (2)</b> — {A, C}; A→B adds B → {A, B, C}; BC→D adds D → {A, B, C, D}; D→E adds E → <b>{A, B, C, D, E} = R</b>, so <b>AC is a candidate key</b>. <i class="mk">2</i></li>
+    <li><b>Highest normal form (2)</b> — A is on no right-hand side and is one attribute, so it is the sole candidate key and the only prime attribute. A single key means no partial dependency, so R is in <b>2NF</b>. But A→B→C is transitive, and in B→C the determinant is not a superkey and C is not prime, so 3NF fails: the answer is <b>2NF</b>, decomposed to <b>R1(A, B)</b> and <b>R2(B, C)</b>. <i class="mk">2</i></li>
+    <li><b>Lossless (2)</b> — R1 ∩ R2 = {A}, and A→B gives A→R1, so the shared attribute is a key of R1: the join is <b>lossless</b>. <i class="mk">2</i></li>
+    <li><b>Preservation + rules (2)</b> — the only FD, A→B, lies entirely inside R1, so it holds with no join: <b>dependency-preserving</b>. In general lossless ⟺ (R1∩R2)→R1 or (R1∩R2)→R2; preserving ⟺ the projections of F onto R1 and R2 union to F. <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:0">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.0mm;margin-top:0">
+    <ul class="tick">
+      <li>Can write a definition and the five FD types</li>
+      <li>Can compute X<sup>+</sup> and find candidate keys</li>
+      <li>Can separate a superkey from a candidate key</li>
+    </ul>
+    <ul class="tick">
+      <li>Can state the four normal-form rules</li>
+      <li>Can test a decomposition for lossless-join</li>
+      <li>Can name the anomalies and denormalization</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>8254 টাইমার ও সিরিয়াল I/O: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">8254 টাইমার, সিরিয়াল I/O, RS-232, 8251</span></h1>
+  <p class="subtitle">PIT মোড · কন্ট্রোল ওয়ার্ড · কাউন্ট · অ্যাসিঙ্ক ফ্রেম · RS-232 · 8251: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M240,128 L170,74 M240,172 L170,226 M320,106 L320,56 M400,128 L470,74 M400,172 L470,226 M320,194 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="230" y="14" width="180" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="170" height="40" rx="14" class="ink fill-b"/>
+        <rect x="6" y="130" width="170" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="170" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="50" y="220" width="170" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="230" y="244" width="180" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="170" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">টাইমার + সিরিয়াল I/O</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">8253 বনাম 8254 · পিন</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">কন্ট্রোল ওয়ার্ড (36H) ★</text>
+      <text x="505" y="65" text-anchor="middle" class="bn">ল্যাচ · রিড-ব্যাক</text>
+      <text x="91" y="155" text-anchor="middle" class="bn r w6">৬টি মোড + তরঙ্গ ★</text>
+      <text x="549" y="155" text-anchor="middle" class="bn r w6">অ্যাসিঙ্ক ফ্রেম · বড ★</text>
+      <text x="135" y="245" text-anchor="middle" class="g">N = f_clk ÷ f_out</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">RS-232 লেভেল, DB-9 ★</text>
+      <text x="505" y="245" text-anchor="middle" class="bn g">8251 মোড/কমান্ড/স্ট্যাটাস</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = হিসাব / প্রোগ্রামিং</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① ৩টি 16-বিট, ৬ মোড<br>② CW: SC RW M BCD<br>③ মোড 3 = বর্গ তরঙ্গ<br>④ N = f_clk ÷ f_out<br>⑤ RS-232: 1 = ঋণাত্মক<br>⑥ 8251: 4EH, 37H</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Timer interfacing: <span class="hl">The 8254 programmable interval timer (PIT)</span>, timing applications; Serial I/O interface: <span class="hl">asynchronous and synchronous communication</span>, physical communication standard-<span class="hl">EIA RS232</span>, programmable communication interface, interfacing serial I/O devices- mouse, modem, PC Keyboard"। এখানে প্রোগ্রামেবল কমিউনিকেশন ইন্টারফেস মানে <b>8251A USART</b>। 8255A PPI ও পোর্ট ডিকোডিং আছে mp2 লেসনে; ইন্টারাপ্ট (8259A) ও DMA (8237) আছে mp4-এ।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>8254: বৈশিষ্ট্য, পিন, 8253-এর সাথে তুলনা … পৃ. ২</li><li>কন্ট্রোল ওয়ার্ড ও কাউন্টার পড়া ……… পৃ. ৩</li><li>ছয়টি মোড (তরঙ্গরূপ) ……… পৃ. ৪</li><li>কাউন্টের হিসাব ও প্রোগ্রামিং ……… পৃ. ৫</li><li>সিরিয়াল মূলনীতি: ফ্রেম, বড, ডুপ্লেক্স … পৃ. ৬</li></ul>
+    <ul class="tick"><li>EIA RS-232 স্ট্যান্ডার্ড ……… পৃ. ৭</li><li>8251 USART: গঠন ……… পৃ. ৮</li><li>8251 মোড, কমান্ড, স্ট্যাটাস ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: 8254 overview ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>8254 PIT</span></div>
+  <h2><span class="no">১</span>8254 প্রোগ্রামেবল ইন্টারভাল টাইমার</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> Intel 8254 PIT হলো ২৪-পিন, +5 V-এর একটি কাউন্টার/টাইমার চিপ, যাতে আছে <span class="hl">তিনটি স্বাধীন 16-বিট ডাউন কাউন্টার</span> (কাউন্টার 0, 1, 2)। প্রতিটি কাউন্টারের একটি <b>CLK</b> ইনপুট, একটি <b>GATE</b> ইনপুট ও একটি <b>OUT</b> আউটপুট আছে; এটি <span class="circ">৬টি মোডের</span> (0–5) যেকোনোটিতে চলে, <b>বাইনারি বা BCD</b>-তে গোনে এবং CLK-এর প্রতিটি <b>পতনশীল প্রান্তে (falling edge)</b> এক করে কমায়। সফটওয়্যার ডিলে লুপের বদলে হার্ডওয়্যারে সময় মাপে, তাই CPU মুক্ত থাকে।</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 340 214" width="330">
+      <g class="w">
+        <rect x="14" y="14" width="96" height="40" rx="6" class="ink fill-b"/>
+        <rect x="14" y="80" width="96" height="54" rx="6" class="ink fill-b"/>
+        <rect x="14" y="160" width="96" height="44" rx="6" class="ink-r fill-r"/>
+        <path class="ink-k" d="M130,14 V206" style="stroke-width:5"/>
+        <path class="ink" d="M110,34 H130 M110,107 H130 M110,182 H130 M130,36 H172 M130,107 H172 M130,178 H172"/>
+        <rect x="172" y="12" width="96" height="48" rx="6" class="ink-g fill-g"/>
+        <rect x="172" y="83" width="96" height="48" rx="6" class="ink-g fill-g"/>
+        <rect x="172" y="154" width="96" height="48" rx="6" class="ink-g fill-g"/>
+        <path class="ink" d="M296,22 H268 M296,38 H268" marker-end="url(#ahb)"/><path class="ink-r" d="M268,54 H296" marker-end="url(#ah)"/>
+        <path class="ink" d="M296,93 H268 M296,109 H268" marker-end="url(#ahb)"/><path class="ink-r" d="M268,125 H296" marker-end="url(#ah)"/>
+        <path class="ink" d="M296,164 H268 M296,180 H268" marker-end="url(#ahb)"/><path class="ink-r" d="M268,196 H296" marker-end="url(#ah)"/>
+      </g>
+      <text x="62" y="31" text-anchor="middle" class="bn s w6">ডেটা বাস</text><text x="62" y="47" text-anchor="middle" class="bn s w6">বাফার</text>
+      <text x="62" y="97" text-anchor="middle" class="bn s w6">রিড/রাইট</text><text x="62" y="112" text-anchor="middle" class="s">RD′ WR′ CS′</text><text x="62" y="127" text-anchor="middle" class="s">A1 A0</text>
+      <text x="62" y="178" text-anchor="middle" class="bn s r w6">কন্ট্রোল ওয়ার্ড</text><text x="62" y="194" text-anchor="middle" class="bn s r w6">রেজিস্টার</text>
+      <text x="220" y="40" text-anchor="middle" class="bn g w6">কাউন্টার 0</text><text x="220" y="111" text-anchor="middle" class="bn g w6">কাউন্টার 1</text><text x="220" y="182" text-anchor="middle" class="bn g w6">কাউন্টার 2</text>
+      <text x="300" y="26" class="s">CLK0</text><text x="300" y="42" class="s">GATE0</text><text x="300" y="58" class="s r">OUT0</text>
+      <text x="300" y="97" class="s">CLK1</text><text x="300" y="113" class="s">GATE1</text><text x="300" y="129" class="s r">OUT1</text>
+      <text x="300" y="168" class="s">CLK2</text><text x="300" y="184" class="s">GATE2</text><text x="300" y="200" class="s r">OUT2</text>
+      <text x="2" y="10" class="s">D7–D0 ⇄</text><text x="138" y="212" class="bn s">অভ্যন্তরীণ বাস</text>
+    </svg><figcaption>8254-এর ব্লক ডায়াগ্রাম</figcaption></figure>
+    <div>
+      <h3>এক নজরে ২৪টি পিন</h3>
+      <ul class="dash small">
+        <li><b>D7–D0</b>: 8-বিট ডেটা বাস (৮টি পিন)</li>
+        <li><b>CLK, GATE, OUT</b> × ৩ কাউন্টার (৯টি পিন)</li>
+        <li><b>RD′, WR′, CS′</b> (অ্যাকটিভ LOW), <b>A1, A0</b></li>
+        <li><b>V<sub>CC</sub></b>, <b>GND</b> → মোট <span class="circ">২৪</span></li>
+      </ul>
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>A1</th><th>A0</th><th class="l">নির্বাচিত হয়</th></tr>
+        <tr><td>0</td><td>0</td><td class="l">কাউন্টার 0</td></tr>
+        <tr><td>0</td><td>1</td><td class="l">কাউন্টার 1</td></tr>
+        <tr><td>1</td><td>0</td><td class="l">কাউন্টার 2</td></tr>
+        <tr><td>1</td><td>1</td><td class="l red"><b>কন্ট্রোল ওয়ার্ড রেজি.</b></td></tr>
+      </table>
+    </div>
+  </div>
+  <h3>8253 বনাম 8254 (প্রিয় তুলনা)</h3>
+  <table class="hand small">
+    <tr><th class="l">বৈশিষ্ট্য</th><th>8253</th><th>8254</th></tr>
+    <tr><td class="l">সর্বোচ্চ CLK ইনপুট</td><td><span class="circ">2.6 MHz</span></td><td>8 MHz; <span class="circ">10 MHz</span> (8254-2)</td></tr>
+    <tr><td class="l">রিড-ব্যাক কমান্ড</td><td>নেই</td><td class="red"><b>আছে</b> (কাউন্ট + স্ট্যাটাস ল্যাচ)</td></tr>
+    <tr><td class="l">কাউন্টারের স্ট্যাটাস বাইট</td><td>নেই</td><td>আছে</td></tr>
+    <tr><td class="l">কাউন্টার · মোড · পিন</td><td>3 · 6 · 24</td><td>3 · 6 · 24 (পিন-সামঞ্জস্যপূর্ণ)</td></tr>
+  </table>
+  <p class="small">প্রতিটি কাউন্টারের ভেতরে: <b>CR</b> (কাউন্ট রেজিস্টার, CPU লেখে) → <b>CE</b> (16-বিট কাউন্টিং এলিমেন্ট) → <b>OL</b> (আউটপুট ল্যাচ, CPU পড়ে)। কাউন্ট লেখার পর <span class="hl">পরের CLK পালসে</span> তা CR থেকে CE-তে যায়।</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>3-16-6-24</b>": ৩টি কাউন্টার, প্রতিটি 16 বিট, ৬টি মোড, ২৪টি পিন। 8254 = 8253 + <b>রিড-ব্যাক</b> + দ্রুততর ক্লক।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> কন্ট্রোল ওয়ার্ড রেজিস্টার <b>শুধু লেখা যায় (write-only)</b>; A1A0 = 11 দিয়ে কাউন্ট পড়া যায় না। সর্বোচ্চ কাউন্টের জন্য লোড করতে হয় <b>0000</b> = 65,536 (বাইনারি) বা 10,000 (BCD)।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: control word, reading counters ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>কন্ট্রোল ওয়ার্ড</span></div>
+  <h2><span class="no">২</span>কন্ট্রোল ওয়ার্ড (A1A0 = 11)</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 560 104" width="560">
+    <g class="w">
+      <rect x="40" y="30" width="480" height="40" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+      <path class="ink-k" d="M100,30V70M160,30V70M220,30V70M280,30V70M340,30V70M400,30V70M460,30V70" style="stroke-width:1.4"/>
+      <rect x="40" y="30" width="120" height="40" class="fill-r" style="stroke:none"/>
+      <rect x="160" y="30" width="120" height="40" class="fill-b" style="stroke:none"/>
+      <rect x="280" y="30" width="180" height="40" class="fill-g" style="stroke:none"/>
+      <rect x="460" y="30" width="60" height="40" class="fill-p" style="stroke:none"/>
+      <path class="ink-r" d="M44,78 Q100,92 156,78"/><path class="ink" d="M164,78 Q220,92 276,78"/><path class="ink-g" d="M284,78 Q370,94 456,78"/>
+    </g>
+    <text x="70" y="22" text-anchor="middle" class="s">D7</text><text x="130" y="22" text-anchor="middle" class="s">D6</text><text x="190" y="22" text-anchor="middle" class="s">D5</text><text x="250" y="22" text-anchor="middle" class="s">D4</text><text x="310" y="22" text-anchor="middle" class="s">D3</text><text x="370" y="22" text-anchor="middle" class="s">D2</text><text x="430" y="22" text-anchor="middle" class="s">D1</text><text x="490" y="22" text-anchor="middle" class="s">D0</text>
+    <text x="70" y="56" text-anchor="middle" class="w6">SC1</text><text x="130" y="56" text-anchor="middle" class="w6">SC0</text><text x="190" y="56" text-anchor="middle" class="w6">RW1</text><text x="250" y="56" text-anchor="middle" class="w6">RW0</text><text x="310" y="56" text-anchor="middle" class="w6">M2</text><text x="370" y="56" text-anchor="middle" class="w6">M1</text><text x="430" y="56" text-anchor="middle" class="w6">M0</text><text x="490" y="56" text-anchor="middle" class="w6">BCD</text>
+    <text x="100" y="102" text-anchor="middle" class="bn r s">কাউন্টার নির্বাচন</text><text x="220" y="102" text-anchor="middle" class="bn s">রিড/রাইট</text><text x="370" y="102" text-anchor="middle" class="bn g s">মোড 0–5</text><text x="490" y="102" text-anchor="middle" class="bn p s">গণনার ধরন</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>SC1 SC0</th><th class="l">কাউন্টার</th><th>RW1 RW0</th><th class="l">অ্যাক্সেস</th><th>M2 M1 M0</th><th class="l">মোড</th></tr>
+    <tr><td>0 0</td><td class="l">কাউন্টার 0</td><td>0 0</td><td class="l red"><b>ল্যাচ কমান্ড</b></td><td>0 0 0</td><td class="l">0 TC-তে ইন্টারাপ্ট</td></tr>
+    <tr><td>0 1</td><td class="l">কাউন্টার 1</td><td>0 1</td><td class="l">শুধু LSB</td><td>0 0 1</td><td class="l">1 ওয়ান-শট</td></tr>
+    <tr><td>1 0</td><td class="l">কাউন্টার 2</td><td>1 0</td><td class="l">শুধু MSB</td><td>X 1 0</td><td class="l">2 রেট জেনারেটর</td></tr>
+    <tr><td>1 1</td><td class="l red"><b>রিড-ব্যাক</b></td><td>1 1</td><td class="l"><span class="hl">LSB → MSB</span></td><td>X 1 1</td><td class="l">3 বর্গ তরঙ্গ</td></tr>
+    <tr><td colspan="4" class="l">D0 = BCD বিট: <b>0</b> = 16-বিট বাইনারি (সর্বোচ্চ 65,536)</td><td>1 0 0</td><td class="l">4 সফট স্ট্রোব</td></tr>
+    <tr><td colspan="4" class="l"><b>1</b> = ৪-ডিজিটের BCD (সর্বোচ্চ 10,000)</td><td>1 0 1</td><td class="l">5 হার্ড স্ট্রোব</td></tr>
+  </table>
+  <div class="ex"><span class="lbl">সমাধানকৃত উদাহরণ: ওয়ার্ড তৈরি ✍</span>
+    <ol class="steps small">
+      <li>কাউন্টার 0, আগে LSB পরে MSB, মোড 3, বাইনারি → 00 11 011 0 = <span class="circ">36H</span></li>
+      <li>কাউন্টার 2, আগে LSB পরে MSB, মোড 0, বাইনারি → 10 11 000 0 = <b>B0H</b></li>
+      <li>কাউন্টার 1, আগে LSB পরে MSB, মোড 3, BCD → 01 11 011 1 = <b>77H</b></li>
+      <li><b>74H</b> ভাঙো = 01 11 010 0 → কাউন্টার 1, LSB/MSB, <b>মোড 2</b>, বাইনারি</li>
+      <li>PC স্পিকার: কাউন্টার 2, LSB/MSB, মোড 3, বাইনারি → 10 11 011 0 = <b>B6H</b></li>
+    </ol></div>
+  <h2><span class="no">৩</span>চলন্ত অবস্থায় কাউন্টার পড়া</h2>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <ol class="num small">
+      <li><b>সাধারণ রিড</b>: আগে গণনা থামাও (GATE = 0 বা CLK বন্ধ), তারপর LSB, MSB পড়ো</li>
+      <li><b>কাউন্টার ল্যাচ কমান্ড</b>: SC বিট + <b>RW = 00</b> দিলে CE-এর মান OL-এ আটকে যায়; গণনা চলতে থাকে (কাউন্টার 1 ল্যাচ = <b>40H</b>)</li>
+      <li><b>রিড-ব্যাক</b> (শুধু 8254): একসাথে কয়েকটি কাউন্টারের কাউন্ট ও/বা <span class="hl">স্ট্যাটাস</span> ল্যাচ করে</li>
+    </ol>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">রিড-ব্যাক ওয়ার্ড</span><br>1 1 COUNT′ STATUS′ CNT2 CNT1 CNT0 0<br>(COUNT′/STATUS′ = 0 → ল্যাচ হবে)<br><b>স্ট্যাটাস বাইট:</b> OUT · NULL COUNT · RW1 RW0 · M2 M1 M0 · BCD</div>
+  </div>
+  <div class="ex small"><span class="lbl">রিড-ব্যাকের উদাহরণ ✍</span> কাউন্টার 1-এর কাউন্ট + স্ট্যাটাস ল্যাচ → 11 0 0 0 1 0 0 = <span class="circ">C4H</span> · তিনটিরই শুধু স্ট্যাটাস → 11 1 0 1 1 1 0 = <b>EEH</b> · কাউন্টার 0 ও 2-এর কাউন্ট → 11 0 1 1 0 1 0 = <b>DAH</b></div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কে · কীভাবে · কী · কোন সংখ্যা</b>": কাউন্টার, অ্যাক্সেস, মোড, বাইনারি/BCD = 2 + 2 + 3 + 1 বিট।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> মোড 2 = X10, মোড 3 = X11 (তাই 110 = মোড 2)। RW = 00 মানে "অ্যাক্সেস নেই" <b>নয়</b>: এটি ল্যাচ কমান্ড।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: six modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>মোড 0–5</span></div>
+  <h2><span class="no">৪</span>ছয়টি মোড ও আউটপুট তরঙ্গরূপ</h2><span class="tag">হাই-ইল্ড</span>
+  <p class="small">সব চিত্রে কাউন্ট <b>N = 4</b>; লাল ড্যাশ রেখা = কাউন্ট লেখার মুহূর্ত (W)। পরের পতনশীল CLK প্রান্তে কাউন্ট লোড হয়।</p>
+  <div class="cols" style="gap:0 4mm">
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,100 H146 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="106" y="116" text-anchor="middle" class="bn s r">N + 1 ক্লক LOW</text><text x="230" y="80" text-anchor="middle" class="bn s">নতুন কাউন্ট পর্যন্ত HIGH</text>
+    </svg><figcaption>মোড 0: টার্মিনাল কাউন্টে ইন্টারাপ্ট</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,66 H70 V52 H110 V66 H306"/>
+        <path class="ink" d="M46,86 H86 V100 H166 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="72" y="48" class="bn s g">↑ ট্রিগার</text><text x="126" y="117" text-anchor="middle" class="bn s r">N ক্লক LOW</text><text x="240" y="80" text-anchor="middle" class="bn s">পুনঃট্রিগারযোগ্য</text>
+    </svg><figcaption>মোড 1: হার্ডওয়্যার-রিট্রিগারেবল ওয়ান-শট</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,86 H126 V100 H146 V86 H206 V100 H226 V86 H286 V100 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="176" y="117" text-anchor="middle" class="bn s r">প্রতি N-এ ১ ক্লক LOW · f = f_clk ÷ N</text>
+    </svg><figcaption>মোড 2: রেট জেনারেটর (÷N, স্বয়ংক্রিয় রিলোড)</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,86 H106 V100 H146 V86 H186 V100 H226 V86 H266 V100 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="176" y="117" text-anchor="middle" class="bn s r">N/2 HIGH, N/2 LOW (৫০% ডিউটি)</text>
+    </svg><figcaption>মোড 3: বর্গ তরঙ্গ জেনারেটর ★</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,52 H306"/>
+        <path class="ink" d="M46,86 H146 V100 H166 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="156" y="117" text-anchor="middle" class="bn s r">N + 1-এর পর ১ ক্লকের স্ট্রোব</text><text x="240" y="80" text-anchor="middle" class="bn s">একবারই</text>
+    </svg><figcaption>মোড 4: সফটওয়্যার-ট্রিগার্ড স্ট্রোব</figcaption></figure>
+    <figure class="doodle"><svg viewBox="0 0 310 126" width="310">
+      <g class="w">
+        <path class="ink-k" d="M46,32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32h10V18h10V32" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M46,66 H70 V52 H100 V66 H306"/>
+        <path class="ink" d="M46,86 H166 V100 H186 V86 H306" style="stroke-width:2.6"/>
+        <path class="ink-r" d="M56,10 V104" stroke-dasharray="4 3"/>
+      </g>
+      <text x="2" y="30" class="s">CLK</text><text x="2" y="62" class="s g">GATE</text><text x="2" y="98" class="s w6">OUT</text>
+      <text x="60" y="12" class="s r">W</text><text x="72" y="48" class="bn s g">↑ ট্রিগার</text><text x="176" y="117" text-anchor="middle" class="bn s r">↑-এর N + 1 ক্লক পর স্ট্রোব</text>
+    </svg><figcaption>মোড 5: হার্ডওয়্যার-ট্রিগার্ড স্ট্রোব</figcaption></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th>মোড</th><th class="l">GATE LOW</th><th class="l">GATE-এর ঊর্ধ্বগামী প্রান্ত</th><th class="l">পুনরাবৃত্তি?</th><th class="l">সাধারণ ব্যবহার</th></tr>
+    <tr><td>0</td><td class="l">গণনা থামে</td><td class="l">–</td><td class="l">না</td><td class="l">ডিলে → ইন্টারাপ্ট</td></tr>
+    <tr><td>1</td><td class="l">–</td><td class="l"><b>শুরু / পুনরায় শুরু</b></td><td class="l">প্রতি ট্রিগারে</td><td class="l">মনোস্টেবল পালস</td></tr>
+    <tr><td>2</td><td class="l">থামে, OUT HIGH</td><td class="l">কাউন্ট রিলোড</td><td class="l"><span class="hl">হ্যাঁ, অটো-রিলোড</span></td><td class="l">টিক, বড ÷N</td></tr>
+    <tr><td>3</td><td class="l">থামে, OUT HIGH</td><td class="l">কাউন্ট রিলোড</td><td class="l"><span class="hl">হ্যাঁ, অটো-রিলোড</span></td><td class="l">টোন, বড ক্লক</td></tr>
+    <tr><td>4</td><td class="l">গণনা থামে</td><td class="l">–</td><td class="l">না</td><td class="l">সফটওয়্যার স্ট্রোব</td></tr>
+    <tr><td>5</td><td class="l">–</td><td class="l"><b>শুরু / পুনরায় শুরু</b></td><td class="l">প্রতি ট্রিগারে</td><td class="l">বিলম্বিত স্ট্রোব</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল: জোড়া</span> <b>0 ও 4</b> = সফটওয়্যার, একবার · <b>1 ও 5</b> = GATE-ট্রিগার্ড · <b>2 ও 3</b> = পর্যায়ক্রমিক। 4 যোগ করলে লম্বা আউটপুট হয়ে যায় <b>১ ক্লকের স্ট্রোব</b>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> মোড 2 (সরু পালস) ও মোড 3 (বর্গ তরঙ্গ) <b>একই ফ্রিকোয়েন্সি</b> f_clk ÷ N দেয়; পার্থক্য শুধু ডিউটি সাইকেলে। মোড 2 ও 3-এ ন্যূনতম কাউন্ট <span class="circ">2</span>।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: count maths ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>কাউন্টের হিসাব</span></div>
+  <h2><span class="no">৫</span>কাউন্টের হিসাব ও প্রোগ্রামিং</h2><span class="tag">লিখিতের প্রিয়</span>
+  <div class="sumbox"><span class="lbl">সূত্র</span>
+    <div class="fgrid small">
+      <p>মোড 2, 3: <span class="circ">N = f_clk ÷ f_out</span></p><p>ডিলে (মোড 0, 1, 4, 5): N = t × f_clk</p>
+      <p>T_clk = 1 ÷ f_clk (2 MHz → 0.5 µs)</p><p>সর্বনিম্ন f_out = f_clk ÷ 65,536</p>
+      <p>মোড 3, বিজোড় N: HIGH (N+1)/2, LOW (N−1)/2</p><p>N &gt; 65,536 → <span class="hl">দুটি কাউন্টার ক্যাসকেড</span></p>
+    </div>
+  </div>
+  <div class="ex"><span class="lbl">উদাহরণ ১: ক্লাসিক প্রোগ্রাম ✍</span> কাউন্টার 0 পোর্ট 40H-এ, কন্ট্রোল 43H-এ, CLK0 = 2 MHz; চাই 5 kHz বর্গ তরঙ্গ।
+    <div class="cols" style="grid-template-columns:1fr 1fr;align-items:start">
+      <ol class="steps small"><li>N = 2 MHz ÷ 5 kHz = 400 = <b>0190H</b> (1 kHz হলে: <span class="circ">2000 = 07D0H</span>)</li><li>CW: 00 11 011 0 = <b>36H</b> (কাউন্টার 0, LSB/MSB, মোড 3, বাইনারি)</li><li>43H-এ CW লেখো, তারপর <b>40H</b>-এ আগে LSB 90H, পরে MSB 01H</li></ol>
+      <div class="code">MOV AL, 36H   ; কন্ট্রোল ওয়ার্ড
+OUT 43H, AL
+MOV AL, 90H   ; 0190H-এর LSB
+OUT 40H, AL
+MOV AL, 01H   ; 0190H-এর MSB
+OUT 40H, AL</div>
+    </div></div>
+  <div class="ex"><span class="lbl">উদাহরণ ২: ডিলে ✍</span> কাউন্টার 2-এ মোড 0-তে 1 ms ডিলে, CLK = 2 MHz: N = 1 ms × 2 MHz = <b>2000</b> (07D0H); CW = 10 11 000 0 = <b>B0H</b>। 2000 + 1 ক্লক ≈ 1 ms পর OUT2 HIGH হয় → এটি ইন্টারাপ্ট ইনপুটে দাও (8259A, লেসন mp4)।</div>
+  <div class="ex"><span class="lbl">উদাহরণ ৩: BCD ✍</span> CLK1 = 1 MHz, BCD-তে 1 kHz: N = 1000 → আগে <b>00H</b>, পরে <b>10H</b> লেখো (BCD অঙ্ক 1 0 0 0); CW = 01 11 011 1 = <b>77H</b>।</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div class="ex small" style="margin-top:0"><span class="lbl">উদাহরণ ৪: ক্যাসকেড ✍</span> 2 MHz থেকে 1 Hz পেতে N = 2,000,000 &gt; 65,536, তাই একটি কাউন্টারে সম্ভব নয়। কাউন্টার 0, মোড 2, N = <b>2000</b> → 1 kHz; OUT0-কে CLK1-এ দাও; কাউন্টার 1, মোড 3, N = <b>1000</b> → <span class="circ">1 Hz</span>। যাচাই: 2000 × 1000 = 2 × 10⁶ ✓</div>
+    <figure class="doodle"><svg viewBox="0 0 300 92" width="295">
+      <g class="w">
+        <rect x="70" y="20" width="70" height="40" rx="8" class="ink-g fill-g"/>
+        <rect x="196" y="20" width="70" height="40" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M8,40 H70" marker-end="url(#ahb)"/><path class="ink" d="M140,40 H196" marker-end="url(#ahb)"/><path class="ink-r" d="M266,40 H296" marker-end="url(#ah)"/>
+      </g>
+      <text x="105" y="38" text-anchor="middle" class="s w6">C0 ÷2000</text><text x="105" y="54" text-anchor="middle" class="bn s">মোড 2</text>
+      <text x="231" y="38" text-anchor="middle" class="s w6">C1 ÷1000</text><text x="231" y="54" text-anchor="middle" class="bn s">মোড 3</text>
+      <text x="8" y="32" class="s">2 MHz</text><text x="146" y="32" class="s">1 kHz</text><text x="262" y="80" class="s r w6">1 Hz</text>
+      <text x="168" y="80" text-anchor="middle" class="s g">OUT0 → CLK1</text>
+    </svg><figcaption>সিরিজে দুই কাউন্টার: ভাজক গুণ হয়</figcaption></figure>
+  </div>
+  <div class="tipbox small"><span class="lbl">আইটি সংযোগ: IBM PC</span> PC-র 8253/8254 থাকে <b>40H–43H</b> পোর্টে, CLK = <span class="circ">1.193182 MHz</span>। কাউন্টার 0, মোড 3, কাউন্ট 0 (65,536) → IRQ0-তে <b>18.2 Hz</b> সিস্টেম টিক (প্রতি 54.9 ms); কাউন্টার 1, মোড 2, কাউন্ট 18 (CW 54H) → প্রতি 15.1 µs-এ DRAM রিফ্রেশ; কাউন্টার 2, মোড 3 (CW B6H) → স্পিকারের সুর (1 kHz-এ N ≈ 1193)।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> N হলো <b>ফ্রিকোয়েন্সির অনুপাত</b>; পর্যায়কাল উল্টো ভাগ কোরো না। কাউন্ট লিখতে হয় <b>কাউন্টারের</b> পোর্টে, আগে LSB; কখনো কন্ট্রোল পোর্টে নয়।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: serial basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>সিরিয়াল মূলনীতি</span></div>
+  <h2><span class="no">৬</span>সিরিয়াল বনাম প্যারালাল; সিঙ্ক্রোনাস বনাম অ্যাসিঙ্ক্রোনাস</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:auto auto;gap:0 3mm">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l"></th><th>সিরিয়াল</th><th>প্যারালাল</th></tr>
+      <tr><td class="l">বিট/ক্লক</td><td>1</td><td>8 বা বেশি</td></tr>
+      <tr><td class="l">দূরত্ব</td><td><b>দীর্ঘ</b></td><td>স্বল্প (স্কিউ)</td></tr>
+      <tr><td class="l">তার</td><td>কম</td><td>বেশি</td></tr>
+      <tr><td class="l">খরচ</td><td>কম</td><td>বেশি</td></tr>
+      <tr><td class="l">উদাহরণ</td><td>RS-232</td><td>8255A</td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l"></th><th>অ্যাসিঙ্ক্রোনাস</th><th>সিঙ্ক্রোনাস</th></tr>
+      <tr><td class="l">ক্লক</td><td>নেই (নির্ধারিত বড)</td><td>যৌথ / SYNC</td></tr>
+      <tr><td class="l">ফ্রেমিং</td><td><span class="hl">প্রতি ক্যারেক্টারে স্টার্ট + স্টপ</span></td><td>প্রতি <b>ব্লকে</b> SYNC</td></tr>
+      <tr><td class="l">ওভারহেড</td><td>বেশি (8N1: ২০%)</td><td>কম</td></tr>
+      <tr><td class="l">গতি</td><td>কম</td><td>বেশি</td></tr>
+      <tr><td class="l">উদাহরণ</td><td>UART, মাউস</td><td>HDLC, SPI</td></tr>
+    </table>
+  </div>
+  <h2><span class="no">৭</span>অ্যাসিঙ্ক্রোনাস ক্যারেক্টার ফ্রেম</h2><span class="tag">হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 132" width="640">
+    <g class="w">
+      <path class="ink-k" d="M20,80 V40" style="stroke-width:1.2"/>
+      <path class="ink" d="M20,40 H70 V80 H110 V40 H150 V80 H350 V40 H390 V80 H470 V40 H560" style="stroke-width:2.8"/>
+      <path class="ink-k" d="M70,30V92M110,30V92M150,30V92M190,30V92M230,30V92M270,30V92M310,30V92M350,30V92M390,30V92M430,30V92M470,30V92M510,30V92" stroke-dasharray="3 4" style="stroke-width:1"/>
+      <rect x="70" y="94" width="40" height="18" class="fill-r" style="stroke:none"/><rect x="110" y="94" width="320" height="18" class="fill-b" style="stroke:none"/><rect x="430" y="94" width="40" height="18" class="fill-p" style="stroke:none"/><rect x="470" y="94" width="40" height="18" class="fill-g" style="stroke:none"/>
+    </g>
+    <text x="4" y="45" class="s">1</text><text x="4" y="85" class="s">0</text>
+    <text x="30" y="28" class="bn s">অলস</text><text x="530" y="28" class="bn s">অলস (1)</text>
+    <text x="130" y="68" text-anchor="middle" class="s">1</text><text x="170" y="68" text-anchor="middle" class="s">0</text><text x="210" y="68" text-anchor="middle" class="s">0</text><text x="250" y="68" text-anchor="middle" class="s">0</text><text x="290" y="68" text-anchor="middle" class="s">0</text><text x="330" y="68" text-anchor="middle" class="s">0</text><text x="370" y="68" text-anchor="middle" class="s">1</text><text x="410" y="68" text-anchor="middle" class="s">0</text><text x="450" y="68" text-anchor="middle" class="s p">0</text>
+    <text x="90" y="108" text-anchor="middle" class="bn s r w6">স্টার্ট</text><text x="270" y="107" text-anchor="middle" class="s w6">D0 (LSB) … D7 (MSB)</text><text x="450" y="107" text-anchor="middle" class="s p w6">P</text><text x="490" y="108" text-anchor="middle" class="bn s g w6">স্টপ</text>
+    <text x="320" y="129" text-anchor="middle" class="bn s r">'A' = 41H = 0100 0001 · জোড় প্যারিটি → P = 0 · 1 + 8 + 1 + 1 = 11 বিট</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <ul class="dash small" style="margin-top:0">
+      <li>অলস লাইন = <b>1 (মার্ক)</b>; <span class="hl">স্টার্ট বিট = 0</span> (১ বিট; 1→0 প্রান্ত রিসিভারকে জাগায়)</li>
+      <li>ডেটা: <b>5–8 বিট, আগে LSB</b></li>
+      <li>প্যারিটি: জোড় / বিজোড় / নেই (ঐচ্ছিক)</li>
+      <li>স্টপ বিট = 1: <b>1, 1.5 বা 2</b> বিট</li>
+    </ul>
+    <div class="def small" style="margin-top:0"><span class="lbl">বড রেট বনাম বিট রেট</span> <b>বড (baud)</b> = প্রতি সেকেন্ডে সিগন্যাল পরিবর্তন (সিম্বল); <b>বিট রেট</b> = বড × প্রতি সিম্বলে বিট। দুই-লেভেল সিগন্যালে (RS-232, UART) <span class="circ">বড = bps</span>।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ① 9600 বড, 8N1 (1 + 8 + 1 = 10 বিট) → <span class="circ">960 ক্যারেক্টার/সে.</span>; বিট-সময় = 1 ÷ 9600 = 104.17 µs · ② 9600 বড, 8 ডেটা + প্যারিটি + 2 স্টপ = 12 বিট → <b>800 ক্যারেক্টার/সে.</b> · ③ 16 লেভেলে (৪ বিট/সিম্বল) 2400 বডের মডেম → 2400 × 4 = <b>9600 bps</b> · ④ 8N1-এর দক্ষতা = 8 ÷ 10 = <b>৮০%</b></div>
+  <h2><span class="no">৮</span>সিমপ্লেক্স, হাফ ডুপ্লেক্স, ফুল ডুপ্লেক্স</h2>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 120" width="325">
+      <g class="w">
+        <rect x="4" y="6" width="40" height="28" rx="6" class="ink fill-b"/><rect x="200" y="6" width="40" height="28" rx="6" class="ink fill-b"/>
+        <rect x="4" y="46" width="40" height="28" rx="6" class="ink fill-b"/><rect x="200" y="46" width="40" height="28" rx="6" class="ink fill-b"/>
+        <rect x="4" y="86" width="40" height="28" rx="6" class="ink fill-b"/><rect x="200" y="86" width="40" height="28" rx="6" class="ink fill-b"/>
+        <path class="ink-r" d="M48,20 H196" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M52,60 H192" marker-start="url(#ahp)" marker-end="url(#ahp)" stroke-dasharray="7 4"/>
+        <path class="ink-g" d="M48,94 H196" marker-end="url(#ahg)"/><path class="ink-g" d="M196,108 H48" marker-end="url(#ahg)"/>
+      </g>
+      <text x="24" y="25" text-anchor="middle" class="s">A</text><text x="220" y="25" text-anchor="middle" class="s">B</text><text x="24" y="65" text-anchor="middle" class="s">A</text><text x="220" y="65" text-anchor="middle" class="s">B</text><text x="24" y="105" text-anchor="middle" class="s">A</text><text x="220" y="105" text-anchor="middle" class="s">B</text>
+      <text x="248" y="25" class="bn s r w6">সিমপ্লেক্স</text><text x="248" y="65" class="bn s p w6">হাফ ডুপ্লেক্স</text><text x="248" y="105" class="bn s g w6">ফুল ডুপ্লেক্স</text>
+    </svg></figure>
+    <ul class="dash small">
+      <li><b>সিমপ্লেক্স (Simplex)</b>: শুধু এক দিকে (রেডিও/টিভি সম্প্রচার, কীবোর্ড → CPU)</li>
+      <li><b>হাফ ডুপ্লেক্স</b>: দুই দিকেই, তবে <b>একবারে এক দিকে</b> (ওয়াকি-টকি)</li>
+      <li><b>ফুল ডুপ্লেক্স</b>: দুই দিকে <span class="hl">একই সময়ে</span> (টেলিফোন; TxD + RxD সহ RS-232)</li>
+    </ul>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> ফ্রেম "<b>শুরু নিচে, শেষ উপরে</b>": স্টার্ট = 0, স্টপ = 1; তাই প্রতিটি ক্যারেক্টার নিশ্চিতভাবে একটি 1 → 0 প্রান্ত দিয়ে শুরু হয়।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: RS-232 ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>EIA RS-232</span></div>
+  <h2><span class="no">৯</span>EIA RS-232: ভৌত স্ট্যান্ডার্ড</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> RS-232 (EIA "Recommended Standard", ১৯৬২; RS-232-C ১৯৬৯) একটি <b>DTE</b> (ডেটা টার্মিনাল ইকুইপমেন্ট: PC) ও একটি <b>DCE</b> (ডেটা সার্কিট-টার্মিনেটিং ইকুইপমেন্ট: মডেম)-এর মধ্যকার <span class="hl">বৈদ্যুতিক, যান্ত্রিক ও কার্যগত</span> ইন্টারফেস নির্ধারণ করে। সিঙ্গেল-এন্ডেড, পয়েন্ট-টু-পয়েন্ট; ডেটা লাইনে <span class="hl">নেগেটিভ লজিক</span>।</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 206" width="295">
+      <g class="w">
+        <path class="ink-k" d="M60,8 V198"/>
+        <rect x="62" y="12" width="120" height="66" class="fill-g" style="stroke:none"/>
+        <rect x="62" y="78" width="120" height="44" style="fill:rgba(150,150,150,.25);stroke:none"/>
+        <rect x="62" y="122" width="120" height="66" class="fill-r" style="stroke:none"/>
+        <path class="ink-k" d="M56,100 H186" style="stroke-width:1.2"/>
+        <path class="ink" d="M190,150 C215,150 210,40 236,40" marker-end="url(#ahb)"/>
+      </g>
+      <text x="54" y="18" text-anchor="end" class="s">+25 V</text><text x="54" y="82" text-anchor="end" class="s">+3 V</text><text x="54" y="104" text-anchor="end" class="s">0</text><text x="54" y="126" text-anchor="end" class="s">−3 V</text><text x="54" y="192" text-anchor="end" class="s">−25 V</text>
+      <text x="122" y="42" text-anchor="middle" class="bn g w6">স্পেস = 0</text><text x="122" y="60" text-anchor="middle" class="bn s g">(কন্ট্রোল: ON)</text>
+      <text x="122" y="96" text-anchor="middle" class="bn s">অনির্ধারিত</text>
+      <text x="122" y="152" text-anchor="middle" class="bn r w6">মার্ক = 1</text><text x="122" y="170" text-anchor="middle" class="bn s r">(অলস; কন্ট্রোল OFF)</text>
+      <text x="240" y="30" class="s w6">MAX232</text><text x="240" y="46" class="s">±V ↔ TTL</text><text x="240" y="62" class="bn s">(উল্টায়)</text>
+    </svg><figcaption>RS-232 ডেটা লাইনের লেভেল</figcaption></figure>
+    <div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">প্যারামিটার</th><th class="l">মান</th></tr>
+      <tr><td class="l">লজিক 1 (মার্ক)</td><td class="l"><span class="circ">−3 থেকে −25 V</span></td></tr>
+      <tr><td class="l">লজিক 0 (স্পেস)</td><td class="l"><b>+3 থেকে +25 V</b></td></tr>
+      <tr><td class="l">ড্রাইভার (সাধারণত)</td><td class="l">±5 থেকে ±15 V (±12 V)</td></tr>
+      <tr><td class="l">সর্বোচ্চ দৈর্ঘ্য</td><td class="l">≈ 15 m (50 ft)</td></tr>
+      <tr><td class="l">সর্বোচ্চ রেট</td><td class="l">20 kbps (স্পেক)</td></tr>
+      <tr><td class="l">কানেক্টর</td><td class="l">DB-25, DB-9 (PC)</td></tr>
+    </table>
+    <p class="small">TTL ↔ RS-232: <b>MAX232</b> (শুধু +5 V, চার্জ পাম্প) অথবা MC1488 ড্রাইভার + MC1489 রিসিভার।</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">সিগন্যাল (DTE দিক থেকে)</th><th>DB-9</th><th>DB-25</th></tr>
+      <tr><td class="l">TxD ডেটা পাঠায়</td><td class="red"><b>3</b></td><td class="red"><b>2</b></td></tr>
+      <tr><td class="l">RxD ডেটা গ্রহণ</td><td class="red"><b>2</b></td><td class="red"><b>3</b></td></tr>
+      <tr><td class="l">RTS পাঠানোর অনুরোধ</td><td>7</td><td>4</td></tr>
+      <tr><td class="l">CTS পাঠানোর অনুমতি</td><td>8</td><td>5</td></tr>
+      <tr><td class="l">DSR ডেটা সেট রেডি</td><td>6</td><td>6</td></tr>
+      <tr><td class="l">সিগন্যাল গ্রাউন্ড</td><td><b>5</b></td><td><b>7</b></td></tr>
+      <tr><td class="l">DCD ক্যারিয়ার শনাক্ত</td><td>1</td><td>8</td></tr>
+      <tr><td class="l">DTR ডেটা টার্মিনাল রেডি</td><td>4</td><td>20</td></tr>
+      <tr><td class="l">RI রিং ইন্ডিকেটর</td><td>9</td><td>22</td></tr>
+    </table>
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 270 150" width="265">
+        <g class="w">
+          <rect x="6" y="8" width="66" height="134" rx="8" class="ink fill-b"/><rect x="198" y="8" width="66" height="134" rx="8" class="ink fill-b"/>
+          <path class="ink-r" d="M72,30 L198,52 M72,52 L198,30"/>
+          <path class="ink-g" d="M72,76 L198,98 M72,98 L198,76"/>
+          <path class="ink-p" d="M72,120 H198"/>
+        </g>
+        <text x="39" y="24" text-anchor="middle" class="s w6">DTE 1</text><text x="231" y="24" text-anchor="middle" class="s w6">DTE 2</text>
+        <text x="66" y="35" text-anchor="end" class="s">TxD</text><text x="66" y="57" text-anchor="end" class="s">RxD</text><text x="204" y="35" class="s">TxD</text><text x="204" y="57" class="s">RxD</text>
+        <text x="66" y="81" text-anchor="end" class="s">RTS</text><text x="66" y="103" text-anchor="end" class="s">CTS</text><text x="204" y="81" class="s">RTS</text><text x="204" y="103" class="s">CTS</text>
+        <text x="66" y="124" text-anchor="end" class="s">GND</text><text x="204" y="124" class="s">GND</text>
+      </svg><figcaption>নাল মডেম: TxD↔RxD, RTS↔CTS, DTR↔DSR ক্রস</figcaption></figure>
+    </div>
+  </div>
+  <p class="small"><b>হ্যান্ডশেক:</b> DTR/DSR = "প্রস্তুত"; RTS/CTS = "পাঠাতে পারি?" / "পাঠাও" (ফ্লো কন্ট্রোল); DCD = ক্যারিয়ার আছে; RI = রিং হচ্ছে। <span class="hl">নাল মডেম</span> দুটি DTE-কে সরাসরি যুক্ত করে (ন্যূনতম: TxD, RxD ক্রস + GND)।</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">স্ট্যান্ডার্ড</th><th>সিগন্যালিং</th><th>সংযোগ-বিন্যাস</th><th>সর্বোচ্চ দূরত্ব</th><th>সর্বোচ্চ রেট</th></tr>
+    <tr><td class="l"><b>RS-232</b></td><td>সিঙ্গেল-এন্ডেড</td><td>১ ড্রাইভার, ১ রিসিভার</td><td>≈ 15 m</td><td>20 kbps</td></tr>
+    <tr><td class="l">RS-422</td><td><span class="hl">ডিফারেনশিয়াল</span></td><td>১ ড্রাইভার, ১০ রিসিভার</td><td>1200 m</td><td>10 Mbps</td></tr>
+    <tr><td class="l">RS-485</td><td>ডিফারেনশিয়াল</td><td><b>মাল্টি-ড্রপ</b>, ৩২ নোড</td><td>1200 m</td><td>10 Mbps</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> DB-9-এ TxD <b>৩</b> নম্বর পিন, কিন্তু DB-25-এ <b>২</b> নম্বর; গ্রাউন্ড ৫ বনাম ৭। ডেটা লাইনে নেগেটিভ লজিক, কিন্তু কন্ট্রোল লাইন <b>ধনাত্মক হলে ON</b>।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>Mark is Minus</b>": দুটিই M দিয়ে শুরু। প্রায় −12 V-এ অলস লাইন মানে 1 পাঠাচ্ছে।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: 8251 architecture ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>8251 USART</span></div>
+  <h2><span class="no">১০</span>8251A USART (কমিউনিকেশন ইন্টারফেস)</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> Intel 8251A <span class="hl">ইউনিভার্সাল সিঙ্ক্রোনাস/অ্যাসিঙ্ক্রোনাস রিসিভার/ট্রান্সমিটার</span> (২৮ পিন, +5 V) CPU-র বাইটকে সিরিয়াল বিটে (<b>P → S</b>, TxD) এবং সিরিয়াল ইনপুটকে বাইটে (<b>S → P</b>, RxD) রূপান্তর করে; ফুল ডুপ্লেক্স।</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <ul class="dash small" style="margin-top:0">
+      <li>অ্যাসিঙ্ক: <b>5–8 ডেটা বিট</b>, ক্লক ×1, ×16 বা ×64, 1/1.5/2 স্টপ বিট, সর্বোচ্চ <span class="circ">19.2 kbps</span></li>
+      <li>সিঙ্ক: এক বা দুটি SYNC ক্যারেক্টার, অভ্যন্তরীণ বা বাহ্যিক সিঙ্ক শনাক্তকরণ, সর্বোচ্চ <span class="circ">64 kbps</span></li>
+      <li>প্যারিটি জোড়/বিজোড়/নেই; প্যারিটি, ওভাররান, ফ্রেমিং এরর ও ব্রেক শনাক্ত করে</li>
+    </ul>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">UART বনাম USART</span><br><b>UART</b> = শুধু অ্যাসিঙ্ক (8250, <b>16550</b>: 16-বাইট FIFO, PC-র COM পোর্ট)<br><b>USART</b> = দুই মোডই (<b>8251A</b>)</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 640 214" width="640">
+    <g class="w">
+      <path class="ink-k" d="M200,10 V206" style="stroke-width:5"/>
+      <rect x="40" y="12" width="130" height="40" rx="6" class="ink fill-b"/>
+      <rect x="40" y="66" width="130" height="62" rx="6" class="ink fill-b"/>
+      <rect x="40" y="142" width="130" height="62" rx="6" class="ink-p fill-p"/>
+      <rect x="240" y="12" width="150" height="40" rx="6" class="ink-g fill-g"/>
+      <rect x="240" y="62" width="150" height="40" rx="6" class="ink-g fill-g"/>
+      <rect x="240" y="116" width="150" height="40" rx="6" class="ink-r fill-r"/>
+      <rect x="240" y="166" width="150" height="40" rx="6" class="ink-r fill-r"/>
+      <path class="ink" d="M170,32 H200 M170,97 H200 M170,173 H200 M200,32 H240 M200,82 H240 M200,136 H240 M200,186 H240"/>
+      <path class="ink-g" d="M390,32 H470" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M390,82 H470" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M470,136 H390" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M470,186 H390" marker-end="url(#ah)"/>
+      <path class="ink" d="M4,32 H40" marker-start="url(#ahb)" marker-end="url(#ahb)"/>
+    </g>
+    <text x="105" y="37" text-anchor="middle" class="bn s w6">ডেটা বাস বাফার</text><text x="2" y="68" class="s">D7–D0</text>
+    <text x="105" y="84" text-anchor="middle" class="bn s w6">রিড/রাইট কন্ট্রোল</text><text x="105" y="101" text-anchor="middle" class="s">RD′ WR′ CS′</text><text x="105" y="118" text-anchor="middle" class="s">C/D′ RESET CLK</text>
+    <text x="105" y="164" text-anchor="middle" class="bn s p w6">মডেম কন্ট্রোল</text><text x="105" y="182" text-anchor="middle" class="s">DSR′ DTR′</text><text x="105" y="198" text-anchor="middle" class="s">CTS′ RTS′</text>
+    <text x="315" y="37" text-anchor="middle" class="bn s w6">ট্রান্সমিট বাফার (P→S)</text><text x="315" y="87" text-anchor="middle" class="bn s w6">ট্রান্সমিট কন্ট্রোল</text>
+    <text x="315" y="141" text-anchor="middle" class="bn s w6">রিসিভ বাফার (S→P)</text><text x="315" y="191" text-anchor="middle" class="bn s w6">রিসিভ কন্ট্রোল</text>
+    <text x="476" y="37" class="s g w6">TxD</text><text x="476" y="87" class="s g">TxRDY · TxEMPTY · TxC′</text>
+    <text x="476" y="141" class="s r w6">RxD</text><text x="476" y="191" class="s r">RxRDY · RxC′ · SYNDET/BRKDET</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th>C/D′</th><th>RD′</th><th>WR′</th><th class="l">কাজ</th></tr>
+      <tr><td>0</td><td>0</td><td>1</td><td class="l">CPU <b>ডেটা</b> পড়ে</td></tr>
+      <tr><td>0</td><td>1</td><td>0</td><td class="l">CPU <b>ডেটা</b> লেখে</td></tr>
+      <tr><td>1</td><td>0</td><td>1</td><td class="l">CPU <span class="hl">স্ট্যাটাস</span> পড়ে</td></tr>
+      <tr><td>1</td><td>1</td><td>0</td><td class="l">CPU <span class="hl">মোড / কমান্ড</span> লেখে</td></tr>
+    </table>
+    <ul class="dash small" style="margin-top:0">
+      <li><b>TxRDY</b>: CPU পরের বাইট লিখতে পারে</li>
+      <li><b>TxEMPTY</b>: শেষ বিটও TxD দিয়ে বেরিয়ে গেছে</li>
+      <li><b>RxRDY</b>: একটি বাইট CPU-র অপেক্ষায়</li>
+      <li>TxRDY/RxRDY দিয়ে IRQ দেওয়া যায় (8259A)</li>
+    </ul>
+  </div>
+  <h3>সিরিয়াল I/O ডিভাইস ইন্টারফেসিং</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">ডিভাইস</th><th class="l">কীভাবে যুক্ত হয়</th></tr>
+    <tr><td class="l" style="white-space:nowrap">সিরিয়াল মাউস</td><td class="l">অ্যাসিঙ্ক RS-232, প্রচলিতভাবে <b>1200 বড, 7N1</b>, ৩-বাইট প্যাকেট</td></tr>
+    <tr><td class="l" style="white-space:nowrap">মডেম (DCE)</td><td class="l">অ্যাসিঙ্ক RS-232 + পূর্ণ হ্যান্ডশেক; ডিজিটাল ↔ অ্যানালগ; AT কমান্ড</td></tr>
+    <tr><td class="l" style="white-space:nowrap">PC কীবোর্ড</td><td class="l"><span class="hl">সিঙ্ক্রোনাস সিরিয়াল</span> (CLOCK + DATA), 11-বিট ফ্রেম, স্ক্যান কোড → 8042, পোর্ট 60H, IRQ1</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> C/D′ = "<b>C</b>ontrol হলে 1, <b>D</b>ata হলে 0"। কন্ট্রোল + রিড = স্ট্যাটাস; কন্ট্রোল + রাইট = মোড/কমান্ড।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> 8251-এ <b>নিজস্ব বড জেনারেটর নেই</b>: TxC/RxC বাইরে থেকে দিতে হয়, সাধারণত মোড 3-এ চলা একটি 8254 থেকে।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: 8251 words ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>8251-এর ওয়ার্ড</span></div>
+  <h2><span class="no">১১</span>মোড, কমান্ড ও স্ট্যাটাস ওয়ার্ড</h2><span class="tag">হাই-ইল্ড</span>
+  <h3>মোড ওয়ার্ড (অ্যাসিঙ্ক্রোনাস): রিসেটের পর প্রথমে লেখা হয়</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>D7 D6: S2 S1</th><th>D5: EP</th><th>D4: PEN</th><th>D3 D2: L2 L1</th><th>D1 D0: B2 B1</th></tr>
+    <tr><td>স্টপ বিট</td><td>প্যারিটির ধরন</td><td>প্যারিটি চালু</td><td>ডেটা বিট</td><td>বড ফ্যাক্টর</td></tr>
+    <tr><td>00 অবৈধ · 01 = 1</td><td>1 = জোড়</td><td>1 = চালু</td><td>00 = 5 · 01 = 6</td><td>00 = <b>সিঙ্ক</b> · 01 = ×1</td></tr>
+    <tr><td>10 = 1.5 · 11 = 2</td><td>0 = বিজোড়</td><td>0 = নেই</td><td>10 = 7 · 11 = 8</td><td>10 = ×16 · 11 = ×64</td></tr>
+  </table>
+  <p class="small">সিঙ্ক মোড ওয়ার্ড: B2B1 = 00; D7 = <b>SCS</b> (1 = একটি SYNC ক্যারেক্টার), D6 = <b>ESD</b> (1 = বাহ্যিক সিঙ্ক)।</p>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> ① 8 ডেটা, প্যারিটি নেই, 1 স্টপ, ×16 → 01 0 0 11 10 = <span class="circ">4EH</span> · ② 7 ডেটা, জোড় প্যারিটি, 2 স্টপ, ×64 → 11 1 1 10 11 = <b>FBH</b> · ③ 7 ডেটা, বিজোড় প্যারিটি, 1 স্টপ, ×16 → 01 0 1 10 10 = <b>5AH</b> · ④ <b>7EH</b> ভাঙো = 01 1 1 11 10 → 1 স্টপ, জোড় প্যারিটি, 8 ডেটা, ×16</div>
+  <h3>কমান্ড ওয়ার্ড: পরবর্তী সব কন্ট্রোল রাইট</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th>D7</th><th>D6</th><th>D5</th><th>D4</th><th>D3</th><th>D2</th><th>D1</th><th>D0</th></tr>
+    <tr><td><b>EH</b></td><td><b>IR</b></td><td><b>RTS</b></td><td><b>ER</b></td><td><b>SBRK</b></td><td><b>RxE</b></td><td><b>DTR</b></td><td><b>TxEN</b></td></tr>
+    <tr class="tiny" style="white-space:nowrap"><td>হান্ট</td><td>রিসেট</td><td>RTS′ = 0</td><td>এরর মুছে</td><td>ব্রেক</td><td>Rx চালু</td><td>DTR′ = 0</td><td>Tx চালু</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍</span> RTS + ER + RxE + DTR + TxEN → 0011 0111 = <span class="circ">37H</span> · ER + RxE + TxEN → <b>15H</b> · অভ্যন্তরীণ রিসেট → <b>40H</b></div>
+  <h3>স্ট্যাটাস ওয়ার্ড: C/D′ = 1 দিয়ে পড়া হয়</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th>D7</th><th>D6</th><th>D5</th><th>D4</th><th>D3</th><th>D2</th><th>D1</th><th>D0</th></tr>
+    <tr><td>DSR</td><td>SYNDET</td><td><b>FE</b> ফ্রেমিং</td><td><b>OE</b> ওভাররান</td><td><b>PE</b> প্যারিটি</td><td>TxEMPTY</td><td class="red"><b>RxRDY</b></td><td class="red"><b>TxRDY</b></td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">ভেঙে পড়ো ✍</span> 85H = 1000 0101 → DSR, TxEMPTY, <b>TxRDY</b>: পাঠানো যাবে · 1AH = 0001 1010 → <b>OE + PE + RxRDY</b>: প্যারিটি এররসহ বাইট এসেছে, আগের একটি বাইট হারিয়েছে</div>
+  <h3>ইনিশিয়ালাইজ ও পোলিং (ডেটা 80H, কন্ট্রোল 81H)</h3>
+  <ol class="steps small">
+    <li>রিসেট: কন্ট্রোল পোর্টে <b>তিনবার 00H, তারপর 40H</b> (অভ্যন্তরীণ রিসেট)</li>
+    <li><b>মোড ওয়ার্ড</b> (যেমন 4EH); সিঙ্ক মোডে এরপর ১ বা ২টি SYNC ক্যারেক্টার</li>
+    <li><b>কমান্ড ওয়ার্ড</b> (যেমন 37H), তারপর স্ট্যাটাস পোল করে ডেটা আদান-প্রদান</li>
+  </ol>
+  <div class="cols" style="grid-template-columns:1fr 1fr;margin-top:2mm">
+    <div class="code" style="margin-top:0">TX: IN   AL, 81H ; স্ট্যাটাস
+    TEST AL, 01H ; TxRDY?
+    JZ   TX
+    MOV  AL, BL
+    OUT  80H, AL ; পাঠাও</div>
+    <div class="code" style="margin-top:0">RX: IN   AL, 81H ; স্ট্যাটাস
+    TEST AL, 02H ; RxRDY?
+    JZ   RX
+    IN   AL, 80H ; বাইট পড়ো</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> D0 থেকে ওপরে: "<b>T-R-T</b>" (TxRDY, RxRDY, TxEMPTY), তারপর এরর <span style="white-space:nowrap">"<b>P-O-F</b>"।</span></div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> বড = TxC ÷ ফ্যাক্টর: ×16-এ 9600 বডের জন্য TxC = <b>153.6 kHz</b>। FE শুধু <b>অ্যাসিঙ্ক</b> মোডে থাকে।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small">
+      <p>8254: 3 × 16-বিট, ৬ মোড, ২৪ পিন</p><p>8253 2.6 MHz · 8254-2 10 MHz</p>
+      <p>A1A0 = 11 → কন্ট্রোল ওয়ার্ড (write-only)</p><p>CW = SC1 SC0 RW1 RW0 M2 M1 M0 BCD</p>
+      <p>RW 00 = ল্যাচ · 11 = আগে LSB, পরে MSB</p><p>রিড-ব্যাক (শুধু 8254): 11 C′ S′ C2 C1 C0 0</p>
+      <p>N = f_clk ÷ f_out · কাউন্ট 0 = 65,536</p><p>36H = C0, LSB/MSB, মোড 3, বাইনারি</p>
+      <p>ফ্রেম: 0 · 5–8 ডেটা, আগে LSB · P · 1</p><p>9600 বডে 8N1 → 960 ক্যারেক্টার/সে.</p>
+      <p>RS-232: 1 = −3…−25 V · 0 = +3…+25 V</p><p>DB-9: TxD 3, RxD 2, GND 5</p>
+      <p>8251 C/D′: 1 = কন্ট্রোল/স্ট্যাটাস, 0 = ডেটা</p><p>4EH = 8N1 ×16 · 37H = Tx Rx ER RTS DTR</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>মোড 3 = বর্গ তরঙ্গ জেনারেটর</li>
+      <li>মোড 2 = রেট জেনারেটর (÷N)</li>
+      <li>মোড 0 = টার্মিনাল কাউন্টে ইন্টারাপ্ট</li>
+      <li>মোড 1, 5 = GATE ↑ দিয়ে ট্রিগার</li>
+      <li>রিড-ব্যাক কমান্ড: শুধু 8254-এ</li>
+      <li>PC টাইমার ক্লক 1.193182 MHz, টিক 18.2 Hz</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>bps = বড × প্রতি সিম্বলে বিট</li>
+      <li>অ্যাসিঙ্ক = প্রতি ক্যারেক্টারে স্টার্ট/স্টপ</li>
+      <li>RS-232 = নেগেটিভ লজিক, ≈ 15 m</li>
+      <li>MAX232: +5 V দিয়েই TTL ↔ RS-232</li>
+      <li>নাল মডেমে TxD ↔ RxD ক্রস</li>
+      <li>8251 স্ট্যাটাস D0 = TxRDY, D1 = RxRDY</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> A1A0 = 11 কন্ট্রোল রেজিস্টার, "কাউন্টার 3" নয় · RW = 00 ল্যাচ কমান্ড · আগে LSB পরে MSB, কাউন্টারের পোর্টে · মোড 2 বনাম 3: একই ফ্রিকোয়েন্সি, ভিন্ন ডিউটি · DB-9-এ TxD পিন 3, DB-25-এ পিন 2 · মার্ক (1) ঋণাত্মক · বড = bps শুধু দুই-লেভেল সিগন্যালে · 8251-এর বাইরের বড ক্লক লাগে</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> 3-16-6-24 · CW-এর জন্য "কে · কীভাবে · কী · কোন সংখ্যা" · মোডের জোড়া 0 ও 4, 1 ও 5, 2 ও 3 · শুরু নিচে, শেষ উপরে · Mark is Minus · C/D′: Control = 1 · স্ট্যাটাস বিট T-R-T, তারপর P-O-F</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="26" width="100" height="44" rx="8" class="ink fill-b"/>
+      <rect x="170" y="26" width="110" height="44" rx="8" class="ink-g fill-g"/>
+      <rect x="340" y="26" width="100" height="44" rx="8" class="ink-p fill-p"/>
+      <rect x="500" y="26" width="90" height="44" rx="8" class="ink-r fill-r"/>
+      <path class="ink" d="M110,48 H170" marker-end="url(#ahb)"/><path class="ink-g" d="M280,48 H340" marker-end="url(#ahg)"/><path class="ink-p" d="M440,48 H500" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="53" text-anchor="middle" class="s w6">8086 CPU</text>
+    <text x="225" y="45" text-anchor="middle" class="s w6">8251 USART</text><text x="225" y="61" text-anchor="middle" class="s">TxC ← 8254</text>
+    <text x="390" y="45" text-anchor="middle" class="s w6">MAX232</text><text x="390" y="61" text-anchor="middle" class="s">TTL → ±V</text>
+    <text x="545" y="53" text-anchor="middle" class="s r w6">DB-9</text>
+    <text x="140" y="40" text-anchor="middle" class="bn s">বাইট</text><text x="310" y="40" text-anchor="middle" class="bn s g">বিট</text><text x="470" y="40" text-anchor="middle" class="s p">±12 V</text>
+    <text x="300" y="92" text-anchor="middle" class="bn s g">পুরো সিরিয়াল পোর্ট শৃঙ্খল: প্যারালাল → সিরিয়াল → লাইন লেভেল → কানেক্টর</text>
+  </svg></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8254 টাইমার ও সিরিয়াল I/O</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>8254-এ আছে কিন্তু 8253-এ নেই কোনটি?<ol class="opts"><li>ছয়টি মোড</li><li>BCD গণনা</li><li>৩টি কাউন্টার</li><li>রিড-ব্যাক</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>8254-এর কন্ট্রোল ওয়ার্ড 36H নির্বাচন করে:<ol class="opts"><li>C0, মোড 3</li><li>C1, মোড 2</li><li>C2, মোড 3</li><li>C2, মোড 0</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>8254-এ A1A0 = 11 নির্বাচন করে:<ol class="opts"><li>কাউন্টার 0</li><li>কাউন্টার 2</li><li>কন্ট্রোল রেজি.</li><li>স্ট্যাটাস রেজি.</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>বর্গ তরঙ্গের জন্য 8254-এর মোড:<ol class="opts"><li>মোড 2</li><li>মোড 3</li><li>মোড 1</li><li>মোড 5</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>2 MHz CLK, 4 kHz বর্গ তরঙ্গ: N = ?<ol class="opts"><li>2000</li><li>400</li><li>250</li><li>500</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>RS-232-এ লজিক 1 (মার্ক):<ol class="opts"><li>+3 থেকে +25 V</li><li>−3 থেকে −25 V</li><li>0 থেকে +5 V</li><li>−3 থেকে +3 V</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>PC-র DB-9 কানেক্টরে TxD কত নম্বর পিন?<ol class="opts"><li>2</li><li>3</li><li>5</li><li>7</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>9600 বড, 1 স্টার্ট + 8 ডেটা + প্যারিটি + 2 স্টপ: ক্যারেক্টার/সে.?<ol class="opts"><li>960</li><li>1200</li><li>800</li><li>873</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>8251-এর মোড ওয়ার্ড 4EH মানে:<ol class="opts"><li>8N1, ×16</li><li>7E2, ×64</li><li>8O1, ×1</li><li>সিঙ্ক, 8 বিট</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>8251-এর কোন বিট: বাইট অপেক্ষায়?<ol class="opts"><li>TxRDY</li><li>TxEMPTY</li><li>SYNDET</li><li>RxRDY</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ঘ · ২-ক · ৩-গ · ৪-খ · ৫-ঘ · ৬-খ · ৭-খ · ৮-গ · ৯-ক · ১০-ঘ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> 8254-এর কাউন্টার 0 (পোর্ট 80H, কন্ট্রোল 83H, CLK0 = 1.8432 MHz) দিয়ে একটি 8251-কে (ডেটা 90H, কন্ট্রোল 91H) ×16-এ 9600 বডের ক্লক দিতে হবে। দুটিকেই প্রোগ্রাম করো (8251: 8 ডেটা, জোড় প্যারিটি, 1 স্টপ, Tx + Rx চালু)। <i class="mk">৮ নম্বর</i></div>
+  <ol class="steps small">
+    <li>TxC = 9600 × 16 = 153.6 kHz → N = 1,843,200 ÷ 153,600 = <span class="circ">12 = 000CH</span> <i class="mk">২</i></li>
+    <li>8254 CW: কাউন্টার 0, LSB/MSB, মোড 3, বাইনারি = <b>36H</b> <i class="mk">২</i></li>
+    <li>8251 মোড: 01 1 1 11 10 = <b>7EH</b> (1 স্টপ, জোড় প্যারিটি, 8 বিট, ×16) <i class="mk">২</i></li>
+    <li>8251 কমান্ড: <b>37H</b> (TxEN, DTR, RxE, ER, RTS); প্রোগ্রাম নিচে <i class="mk">২</i></li>
+  </ol>
+  <div class="cols" style="grid-template-columns:1fr 1fr;margin-top:2mm">
+    <div class="code" style="margin-top:0">MOV AL, 36H
+OUT 83H, AL   ; 8254 CW
+MOV AL, 0CH
+OUT 80H, AL   ; LSB
+MOV AL, 00H
+OUT 80H, AL   ; MSB</div>
+    <div class="code" style="margin-top:0">MOV AL, 7EH
+OUT 91H, AL   ; 8251 মোড
+MOV AL, 37H
+OUT 91H, AL   ; কমান্ড</div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>যেকোনো 8254 কন্ট্রোল ওয়ার্ড বানাতে/ভাঙতে পারি</li>
+        <li>ছয় মোডেরই OUT আঁকতে পারি</li>
+        <li>N বের করতে পারি; N &gt; 65,536 হলে ক্যাসকেড</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:2mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① 2 MHz-এ 8254 দিয়ে 1 ms ডিলে<br>② কাউন্টার 1 ল্যাচ করে পড়া<br>③ এরর যাচাইসহ 8251 রিসিভ</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

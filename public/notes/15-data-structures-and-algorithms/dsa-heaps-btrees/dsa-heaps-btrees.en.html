@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Advanced Data Structures: Heaps, Fibonacci Heaps, B-Trees: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Advanced Data Structures: Heaps, Fibonacci Heaps, B-Trees</span></h1>
+  <p class="subtitle">Binary heap · priority queue · d-ary &amp; binomial heaps · Fibonacci heap · B-tree · B+ tree: exam-ready in eleven sheets</p>
+  <p class="tiny center" style="margin:0 0 1mm"><b>Eleven sheets:</b> the array heap and its index formulas, every heap operation with its cost, why build-heap is linear, the heap family up to the Fibonacci heap, then the disk-friendly B-tree, its insert/delete rules and the B+ tree that every database index uses.</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-g fill-g"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">HEAPS &amp; B-TREES</text><text x="320" y="172" text-anchor="middle" class="r s">priority · disk index</text>
+      <text x="142" y="55" text-anchor="middle" class="r w6" style="font-size:13px">Array heap ★</text><text x="142" y="74" text-anchor="middle" class="r s" style="font-size:13px">2i, 2i+1, ⌊i/2⌋</text>
+      <text x="320" y="40" text-anchor="middle" class="r w6" style="font-size:14px">Build-heap O(n) ★</text>
+      <text x="498" y="55" text-anchor="middle" class="s" style="font-size:13px">d-ary heap</text><text x="498" y="74" text-anchor="middle" class="s" style="font-size:13px">log_d n levels</text>
+      <text x="96" y="146" text-anchor="middle" class="s" style="font-size:13px">Binomial heap</text><text x="96" y="166" text-anchor="middle" class="s" style="font-size:13px">n in binary</text>
+      <text x="544" y="146" text-anchor="middle" class="r w6" style="font-size:13px">Fibonacci heap</text><text x="544" y="166" text-anchor="middle" class="r w6" style="font-size:13px">O(1) decrease ★</text>
+      <text x="142" y="235" text-anchor="middle" class="r w6" style="font-size:13px">B-tree order m</text><text x="142" y="255" text-anchor="middle" class="r w6" style="font-size:13px">m−1 keys max ★</text>
+      <text x="320" y="270" text-anchor="middle" class="g w6" style="font-size:13px">B+ tree: linked leaves</text>
+      <text x="498" y="235" text-anchor="middle" class="r w6" style="font-size:13px">Split · borrow</text><text x="498" y="255" text-anchor="middle" class="r w6" style="font-size:13px">merge ★</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the database link</figcaption>
+  </figure>
+  <div class="sticky" style="width:78mm;line-height:5.4mm"><b>High-yield list</b><br>① Heap = complete tree + heap order<br>② 1-based: 2i, 2i+1, parent ⌊i/2⌋<br>③ 0-based: 2i+1, 2i+2, ⌊(i−1)/2⌋<br>④ Insert / extract: O(log n)<br>⑤ <span class="circ">Build-heap: O(n)</span> ★<br>⑥ Heap search: O(n)<br>⑦ Fib heap decrease-key O(1) am.<br>⑧ Dijkstra + Fib: O(E + V log V)<br>⑨ Order m: ≤ m−1 keys, ≤ m children<br>⑩ Non-root ≥ ⌈m/2⌉ children ★<br>⑪ B-tree grows at the root<br>⑫ B+ tree: data in linked leaves</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The syllabus line for Data Structures and Algorithms reads: "<span class="hl">Internal data representation; Abstract data types; Elementary data structures: arrays, lists, stacks, queues, trees, graphs; Advanced data Structures: heaps, Fibonacci heaps, B-trees;</span>" This set takes the <b>advanced</b> clause in full, plus the B+ tree that every exam pairs with it. The ADTs and elementary structures are the chapter's first lesson; <b>heapsort</b>, searching and hashing belong to the sorting lesson, and <b>Dijkstra / Prim</b> to the graph-algorithms lesson — they appear here only where a heap is the reason for their running time.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>Binary heap, array formulas, d-ary … p. 2</li><li>Heap operations, sift-up/down … p. 3</li><li>Build-heap O(n), heapsort, PQ … p. 4</li><li>Binomial &amp; Fibonacci heaps … p. 5</li><li>Heap costs compared, Dijkstra … p. 6</li></ul>
+    <ul class="tick"><li>B-tree: order m vs degree t … p. 7</li><li>B-tree insert &amp; delete … p. 8</li><li>B+ tree &amp; the big comparison … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: binary heap ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Binary heap</span></div>
+  <h2><span class="no">1</span>The Binary Heap: a Complete Tree Stored in an Array</h2><span class="tag">shape + order ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>binary heap</b> is a binary tree that satisfies <b>two</b> properties at once. <b>Shape:</b> it is a <span class="hl">complete binary tree</span> — every level is full except possibly the last, which is filled <b>from the left</b>. <b>Order (heap property):</b> in a <b>max-heap</b> every parent ≥ its children, so the <span class="hl">maximum is at the root</span>; in a <b>min-heap</b> every parent ≤ its children, so the minimum is at the root. Nothing is said about left versus right child — a heap is <b>not</b> a binary search tree.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 200" width="560">
+    <g class="w">
+      <circle cx="150" cy="28" r="18" class="ink-r fill-r"/>
+      <circle cx="80" cy="88" r="18" class="ink fill-b"/>
+      <circle cx="220" cy="88" r="18" class="ink fill-b"/>
+      <circle cx="40" cy="150" r="18" class="ink-g fill-g"/>
+      <circle cx="120" cy="150" r="18" class="ink-g fill-g"/>
+      <circle cx="190" cy="150" r="18" class="ink-g fill-g"/>
+      <path class="ink" d="M137,41 L93,75 M163,41 L207,75 M70,104 L48,134 M90,104 L112,134 M214,105 L196,134"/>
+      <rect x="330" y="62" width="270" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M375,62 V98 M420,62 V98 M465,62 V98 M510,62 V98 M555,62 V98"/>
+      <path class="ink-r" d="M397,100 C410,140 480,140 487,100" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M397,100 C420,170 520,170 532,100" marker-end="url(#ah)"/>
+    </g>
+    <text x="150" y="33" text-anchor="middle" class="k w6" style="font-size:12px">50</text>
+    <text x="80" y="93" text-anchor="middle" class="k w6" style="font-size:12px">30</text>
+    <text x="220" y="93" text-anchor="middle" class="k w6" style="font-size:12px">40</text>
+    <text x="40" y="155" text-anchor="middle" class="k w6" style="font-size:12px">10</text>
+    <text x="120" y="155" text-anchor="middle" class="k w6" style="font-size:12px">20</text>
+    <text x="190" y="155" text-anchor="middle" class="k w6" style="font-size:12px">35</text>
+    <text x="178" y="20" class="p s" style="font-size:10px">i=1</text>
+    <text x="50" y="72" class="p s" style="font-size:10px">2</text><text x="244" y="80" class="p s" style="font-size:10px">3</text>
+    <text x="10" y="182" class="p s" style="font-size:10px">4</text><text x="116" y="184" class="p s" style="font-size:10px">5</text><text x="186" y="184" class="p s" style="font-size:10px">6</text>
+    <text x="150" y="196" text-anchor="middle" class="g s" style="font-size:10px">leaves = ⌊n/2⌋+1 … n</text>
+    <text x="352" y="85" text-anchor="middle" class="k w6" style="font-size:12px">50</text>
+    <text x="397" y="85" text-anchor="middle" class="k w6" style="font-size:12px">30</text>
+    <text x="442" y="85" text-anchor="middle" class="k w6" style="font-size:12px">40</text>
+    <text x="487" y="85" text-anchor="middle" class="k w6" style="font-size:12px">10</text>
+    <text x="532" y="85" text-anchor="middle" class="k w6" style="font-size:12px">20</text>
+    <text x="577" y="85" text-anchor="middle" class="k w6" style="font-size:12px">35</text>
+    <text x="465" y="40" text-anchor="middle" class="p s" style="font-size:10px">1-based: 1 · 2 · 3 · 4 · 5 · 6</text>
+    <text x="465" y="54" text-anchor="middle" class="s" style="font-size:10px">0-based: 0 · 1 · 2 · 3 · 4 · 5</text>
+    <text x="465" y="186" text-anchor="middle" class="r w6" style="font-size:11px">node 2 → children 4 and 5</text>
+  </svg><figcaption>the same max-heap as a tree and as a level-order array — no pointers are stored</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Quantity</th><th class="l">Root at index 1 (CLRS)</th><th class="l">Root at index 0 (C / Java arrays)</th></tr>
+    <tr><td class="l"><b>Left child of i</b></td><td class="l"><span class="hl"><code>2i</code></span></td><td class="l"><code>2i + 1</code></td></tr>
+    <tr><td class="l"><b>Right child of i</b></td><td class="l"><code>2i + 1</code></td><td class="l"><code>2i + 2</code></td></tr>
+    <tr><td class="l"><b>Parent of i</b></td><td class="l"><code>⌊i / 2⌋</code></td><td class="l"><code>⌊(i − 1) / 2⌋</code></td></tr>
+    <tr><td class="l"><b>Leaves</b></td><td class="l">indices <code>⌊n/2⌋ + 1 … n</code></td><td class="l">indices <code>⌊n/2⌋ … n − 1</code></td></tr>
+    <tr><td class="l"><b>Last internal node</b></td><td class="l"><code>⌊n/2⌋</code></td><td class="l"><code>⌊n/2⌋ − 1</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Shape facts ✍ the numbers</span> Height of an n-node heap = <span class="circ">⌊log₂ n⌋</span>. A heap of height h holds between <code>2^h</code> and <code>2^(h+1) − 1</code> nodes. There are <code>⌈n/2⌉</code> leaves, and at most <code>⌈n / 2^(h+1)⌉</code> nodes of height h. Because the tree is complete, the array has <b>no gaps</b> — that is the only reason the index arithmetic works.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Double to go down, halve to go up.</b>" With the root at 1, a left child is the parent doubled and the right child is one more; the parent is the child halved and floored. For a 0-based array "<b>shift by one</b>": add 1 before you double, subtract 1 before you halve.</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> Read the question's indexing first: <code>2i, 2i+1</code> is the answer <b>only</b> for a root at index 1; for a root at 0 it is <code>2i+1, 2i+2</code>. <b>2.</b> In a max-heap the <b>minimum</b> is in one of the <b>leaves</b> (positions ⌊n/2⌋+1 … n), not necessarily the last array cell. <b>3.</b> An array sorted in <b>descending</b> order is always a valid max-heap, but a valid max-heap is <b>not</b> in general sorted.</div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Generalisation: the d-ary heap</span> Same complete-tree-in-an-array idea, but every node has <b>d</b> children. 0-based: children of i are <code>d·i + 1 … d·i + d</code>, parent is <code>⌊(i − 1)/d⌋</code>. Height ≈ <span class="hl">log_d n</span>, so <b>insert / decrease-key = O(log_d n)</b> (fewer levels to climb) but <b>extract-min = O(d · log_d n)</b> (d children compared per level). A large d suits many decrease-keys and few extracts — e.g. Dijkstra on a dense graph.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: heap operations ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Heap operations</span></div>
+  <h2><span class="no">2</span>Heap Operations: Sift-Up, Sift-Down and What Each Costs</h2><span class="tag">all O(log n) ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Insert = sift-up (bubble-up)</span> Put the new key in the <b>next free slot</b> (index n+1) so the tree stays complete, then <span class="hl">swap it with its parent while it is larger</span> (max-heap). At most one swap per level ⇒ <b>O(log n)</b>. <b>Increase-key</b> in a max-heap (decrease-key in a min-heap) is the same sift-up.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Extract-max = sift-down (heapify)</span> Save the root, <b>move the last element to the root</b>, shrink n, then <span class="hl">swap it with its larger child</span> until both children are smaller. Two comparisons per level ⇒ <b>O(log n)</b>. This sift-down is called <b>MAX-HEAPIFY</b>.</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 150" width="500">
+    <g class="w">
+      <rect x="10" y="20" width="270" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M55,20 V50 M100,20 V50 M145,20 V50 M190,20 V50 M235,20 V50"/>
+      <rect x="235" y="20" width="45" height="30" rx="4" class="ink-r fill-r"/>
+      <path class="ink-r" d="M257,52 C250,80 130,80 123,52" marker-end="url(#ah)"/>
+      <rect x="330" y="20" width="270" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M375,20 V50 M420,20 V50 M465,20 V50 M510,20 V50 M555,20 V50"/>
+      <rect x="420" y="20" width="45" height="30" rx="4" class="ink-g fill-g"/>
+      <rect x="10" y="100" width="225" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M55,100 V130 M100,100 V130 M145,100 V130 M190,100 V130"/>
+      <rect x="330" y="100" width="225" height="30" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M375,100 V130 M420,100 V130 M465,100 V130 M510,100 V130"/>
+      <path class="ink" d="M290,35 H322" marker-end="url(#ahb)"/>
+      <path class="ink" d="M290,115 H322" marker-end="url(#ahb)"/>
+    </g>
+    <text x="145" y="12" text-anchor="middle" class="k w6" style="font-size:11px">insert 45 at slot 6</text>
+    <text x="32" y="41" text-anchor="middle" class="s" style="font-size:11px">50</text><text x="77" y="41" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="122" y="41" text-anchor="middle" class="s" style="font-size:11px">40</text><text x="167" y="41" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="212" y="41" text-anchor="middle" class="s" style="font-size:11px">20</text><text x="257" y="41" text-anchor="middle" class="r w6" style="font-size:11px">45</text>
+    <text x="190" y="88" text-anchor="middle" class="r s" style="font-size:10px">45 &gt; parent 40 ⇒ swap; 45 &lt; 50 ⇒ stop</text>
+    <text x="465" y="12" text-anchor="middle" class="g w6" style="font-size:11px">after sift-up</text>
+    <text x="352" y="41" text-anchor="middle" class="s" style="font-size:11px">50</text><text x="397" y="41" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="442" y="41" text-anchor="middle" class="g w6" style="font-size:11px">45</text><text x="487" y="41" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="532" y="41" text-anchor="middle" class="s" style="font-size:11px">20</text><text x="577" y="41" text-anchor="middle" class="s" style="font-size:11px">40</text>
+    <text x="122" y="146" text-anchor="middle" class="k w6" style="font-size:10px">extract 50: 40 to root → [40,30,45,10,20]</text>
+    <text x="32" y="121" text-anchor="middle" class="s" style="font-size:11px">40</text><text x="77" y="121" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="122" y="121" text-anchor="middle" class="s" style="font-size:11px">45</text><text x="167" y="121" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="212" y="121" text-anchor="middle" class="s" style="font-size:11px">20</text>
+    <text x="352" y="121" text-anchor="middle" class="g w6" style="font-size:11px">45</text><text x="397" y="121" text-anchor="middle" class="s" style="font-size:11px">30</text><text x="442" y="121" text-anchor="middle" class="s" style="font-size:11px">40</text><text x="487" y="121" text-anchor="middle" class="s" style="font-size:11px">10</text><text x="532" y="121" text-anchor="middle" class="s" style="font-size:11px">20</text>
+    <text x="442" y="146" text-anchor="middle" class="g s" style="font-size:10px">40 swaps with larger child 45</text>
+  </svg><figcaption>a worked insert (top) and a worked extract-max (bottom) on the same array</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Operation (max-heap, n keys)</th><th>Time</th><th class="l">How</th></tr>
+    <tr><td class="l"><b>Find-max / peek</b></td><td><span class="hl">O(1)</span></td><td class="l">read <code>A[1]</code></td></tr>
+    <tr><td class="l"><b>Insert</b></td><td>O(log n)</td><td class="l">append, sift-up</td></tr>
+    <tr><td class="l"><b>Extract-max</b></td><td>O(log n)</td><td class="l">last → root, sift-down</td></tr>
+    <tr><td class="l"><b>Increase-key</b> (decrease-key in a min-heap)</td><td>O(log n)</td><td class="l">change, sift-up</td></tr>
+    <tr><td class="l"><b>Delete at a known index</b></td><td>O(log n)</td><td class="l">swap with last, sift up <i>or</i> down</td></tr>
+    <tr><td class="l"><b>MAX-HEAPIFY one node</b></td><td style="white-space:nowrap"><span class="circ">O(log n)</span></td><td class="l">one sift-down (O(h) for a node of height h)</td></tr>
+    <tr><td class="l"><b>BUILD-HEAP of n keys</b></td><td><span class="circ">O(n)</span></td><td class="l">heapify ⌊n/2⌋ … 1 (next sheet)</td></tr>
+    <tr><td class="l"><b>Search for an arbitrary key</b></td><td><span class="red">O(n)</span></td><td class="l">no order between siblings</td></tr>
+    <tr><td class="l"><b>Merge two heaps</b></td><td>O(n)</td><td class="l">concatenate arrays, build-heap</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code tiny" style="margin-top:0">MAX-HEAPIFY(A, i, n):   // 1-based
+  l = 2i ; r = 2i + 1 ; big = i
+  if l ≤ n and A[l] &gt; A[big]: big = l
+  if r ≤ n and A[r] &gt; A[big]: big = r
+  if big ≠ i:
+      swap A[i], A[big]
+      MAX-HEAPIFY(A, big, n)</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ heapify vs build-heap</span> "Heapify takes O(n)" is a classic muddle. <b>HEAPIFY</b> (one sift-down from one node) is <b>O(log n)</b>. <b>BUILD-HEAP</b> (heapify every internal node, bottom-up) is <b>O(n)</b>. Read which one the question means. Also: a heap gives the max in O(1), but <b>searching</b> for any other key is O(n).</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: build-heap, heapsort, priority queue ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Build-heap, heapsort, PQ</span></div>
+  <h2><span class="no">3</span>Build-Heap in O(n), Heapsort, and the Priority Queue</h2><span class="tag">the proof they ask for ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">BUILD-MAX-HEAP</span> Copy the n keys into the array as they are, then call <code>MAX-HEAPIFY(A, i)</code> for <span class="hl">i = ⌊n/2⌋ down to 1</span>. Leaves (⌊n/2⌋+1 … n) are already one-node heaps, so they are skipped; going bottom-up guarantees both subtrees of i are heaps when i is heapified.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Why O(n), not O(n log n) ✍ 4 marks</span> Heapify at a node of height h costs <b>O(h)</b>, and there are at most <code>⌈n / 2^(h+1)⌉</code> such nodes. So<br><code>T(n) = Σ_(h=0..⌊log n⌋) ⌈n/2^(h+1)⌉ · O(h) = O(n · Σ h/2^h)</code>.<br>Since <code>Σ_(h≥0) h/2^h = 2</code>, <span class="circ">T(n) = O(2n) = O(n)</span>. Intuition: <b>half the nodes are leaves</b> and do no work, a quarter sink at most one level, an eighth at most two — the expensive nodes are rare.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍</span> Build a max-heap from <code>[3, 9, 2, 1, 4, 5]</code>, n = 6, so start at <code>⌊6/2⌋ = 3</code>.<br><b>i = 3:</b> 2 vs child 5 → swap → <code>[3, 9, 5, 1, 4, 2]</code><br><b>i = 2:</b> 9 vs 1, 4 → no swap<br><b>i = 1:</b> 3 vs 9, 5 → swap with 9 → <code>[9, 3, 5, 1, 4, 2]</code>; 3 now at 2, vs 1, 4 → swap with 4 → <span class="hl"><code>[9, 4, 5, 1, 3, 2]</code></span><br>Check: 9 ≥ 4, 5 · 4 ≥ 1, 3 · 5 ≥ 2 ✓ — <b>3 swaps</b>.</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ two ways to build</span> Inserting the n keys <b>one by one</b> (top-down, sift-up each) costs <b>O(n log n)</b> in the worst case — e.g. keys arriving in increasing order into a max-heap, each rising to the root. The bottom-up <b>BUILD-HEAP is O(n)</b>. Both give a valid heap, but <b>not necessarily the same array</b>; a question that asks for "the heap after building" means the bottom-up method unless it says "insert one at a time".</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Heapsort — the link to sorting</span> Build a max-heap, then repeat n − 1 times: swap <code>A[1] ↔ A[k]</code>, shrink the heap by one, <code>MAX-HEAPIFY(A, 1)</code>. The array is a heap on the left and a growing sorted run on the right. Build-heap O(n) + (n − 1) extract-max at O(log n) each ⇒ <span class="hl">O(n log n) in best, average and worst case</span>. <b>In-place</b> (O(1) extra space) but <b>not stable</b>. A max-heap sorts ascending. The full comparison with quicksort and merge sort is in the sorting lesson of this chapter.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Priority queue (ADT)</span> A collection where each element has a <b>priority</b> and the operations are <code>insert</code>, <code>find-max</code>, <code>extract-max</code>, <code>increase-key</code> (max-PQ) or their min versions. The heap is its <span class="hl">standard implementation</span>: an unsorted array gives O(1) insert but O(n) extract; a sorted array the reverse; a heap gives O(log n) for both.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Where heaps / priority queues are used</th><th class="l">Heap operation that matters</th></tr>
+    <tr><td class="l">CPU / job scheduling, event-driven simulation</td><td class="l">extract-min of the next deadline or event time</td></tr>
+    <tr><td class="l">Dijkstra, Prim (graph-algorithms lesson)</td><td class="l">extract-min once per vertex, <b>decrease-key</b> once per edge</td></tr>
+    <tr><td class="l">Huffman coding, k-way merge, top-k of n items</td><td class="l">repeated extract-min; a size-k heap gives top-k in <b>O(n log k)</b></td></tr>
+  </table>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: binomial and Fibonacci heap structure ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Binomial &amp; Fibonacci heaps</span></div>
+  <h2><span class="no">4</span>Mergeable Heaps: the Binomial Heap and the Fibonacci Heap</h2><span class="tag">union is the point ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Binomial heap</span> <b>B<sub>0</sub></b> is one node; <span class="hl">B<sub>k</sub> = two B<sub>k−1</sub>, one root hung under the other</span>. B<sub>k</sub> has <b>2<sup>k</sup> nodes</b>, <b>height k</b>, <b>C(k, i)</b> nodes at depth i and a root of <b>degree k</b>. A binomial heap is a list of heap-ordered binomial trees with <b>at most one B<sub>k</sub> per k</b> — the trees match the 1-bits of n: 13 = 1101₂ ⇒ B<sub>3</sub>, B<sub>2</sub>, B<sub>0</sub>, so at most <span class="circ">⌊log₂ n⌋ + 1 trees</span>.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>A binomial heap is n written in binary; union is binary addition.</b>" Two B<sub>k</sub> are two 1-bits in one column: link them into a B<sub>k+1</sub> and <b>carry</b> — union is O(log n). Insert is "add 1": a long carry chain makes its worst case O(log n), but like a binary counter it is <b>O(1) amortized</b>.</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Fibonacci heap</span> (Fredman &amp; Tarjan, 1984) A collection of <span class="hl">heap-ordered trees</span> whose roots sit in a <b>circular, doubly-linked root list</b>, with a pointer <b>H.min</b> to the smallest root. The trees need <b>not</b> be binomial and several may share a degree — the structure is <span class="hl">lazy</span>: it postpones tidying until an extract-min forces it. Each node stores its <b>key, degree, parent, one child pointer, left/right sibling pointers</b> (children form their own circular list, so any splice or list concatenation is O(1)) and a boolean <b>mark</b> = "has lost a child since it last became a child of another node".</div>
+  <figure class="doodle"><svg viewBox="0 0 620 170" width="540">
+    <g class="w">
+      <path class="ink" d="M76,40 H144 M176,40 H244 M276,40 H364 M396,40 H484"/>
+      <path class="ink-p" d="M516,36 C590,-2 -10,-2 44,36" marker-end="url(#ahp)"/>
+      <circle cx="60" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="160" cy="40" r="16" class="ink-r fill-r"/>
+      <circle cx="260" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="380" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="500" cy="40" r="16" class="ink fill-b"/>
+      <circle cx="130" cy="100" r="14" class="ink fill-b"/><circle cx="190" cy="100" r="14" class="ink-k fill-y"/>
+      <circle cx="190" cy="150" r="13" class="ink fill-b"/>
+      <circle cx="380" cy="100" r="14" class="ink-k fill-y"/>
+      <circle cx="350" cy="150" r="13" class="ink fill-b"/><circle cx="410" cy="150" r="13" class="ink fill-b"/>
+      <path class="ink" d="M151,54 L137,88 M169,54 L183,88 M190,114 V136 M380,56 V86 M372,112 L356,138 M388,112 L404,138"/>
+      <path class="ink-r" d="M96,74 L146,54" marker-end="url(#ah)"/>
+    </g>
+    <text x="60" y="45" text-anchor="middle" class="k w6" style="font-size:11px">23</text>
+    <text x="160" y="45" text-anchor="middle" class="k w6" style="font-size:11px">3</text>
+    <text x="260" y="45" text-anchor="middle" class="k w6" style="font-size:11px">17</text>
+    <text x="380" y="45" text-anchor="middle" class="k w6" style="font-size:11px">7</text>
+    <text x="500" y="45" text-anchor="middle" class="k w6" style="font-size:11px">21</text>
+    <text x="130" y="104" text-anchor="middle" class="s" style="font-size:10px">52</text><text x="190" y="104" text-anchor="middle" class="s" style="font-size:10px">18</text>
+    <text x="190" y="154" text-anchor="middle" class="s" style="font-size:10px">39</text>
+    <text x="380" y="104" text-anchor="middle" class="s" style="font-size:10px">24</text>
+    <text x="350" y="154" text-anchor="middle" class="s" style="font-size:10px">26</text><text x="410" y="154" text-anchor="middle" class="s" style="font-size:10px">46</text>
+    <text x="88" y="86" text-anchor="middle" class="r w6" style="font-size:10px">H.min</text>
+    <text x="520" y="110" text-anchor="middle" class="p s" style="font-size:10px">yellow = marked</text>
+    <text x="520" y="126" text-anchor="middle" class="p s" style="font-size:10px">(lost one child)</text>
+    <text x="270" y="110" text-anchor="middle" class="g s" style="font-size:10px">roots in any order</text>
+  </svg><figcaption>five trees in the root list; 23, 17 and 21 all have degree 0 — repeated degrees are allowed</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The cheap operations</span> <b>Insert:</b> make a one-node tree, splice it into the root list, update H.min — <b>O(1)</b>, no tidying. <b>Union:</b> concatenate the two root lists, keep the smaller min — <b>O(1)</b>. <b>Find-min:</b> read H.min — <b>O(1)</b>.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Extract-min = the cleanup</span> Remove H.min, move its children to the root list, then <span class="hl">consolidate</span>: <b>link two roots of equal degree</b> (larger key under smaller) until all degrees differ, using an array indexed by degree; then scan the roots for the new min.</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm"><span class="lbl">Decrease-key = cut + cascading cut</span> Lower x's key. If it is now smaller than its parent y, <b>cut</b> x: move it (with its subtree) to the root list and unmark it. Then: if y is <b>unmarked</b>, mark it and stop; if y is <b>already marked</b>, cut y too and repeat on y's parent — the <span class="circ">cascading cut</span> — until an unmarked node or a root is reached. In one line: <b>a non-root node may lose one child; losing a second gets it cut.</b></div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍</span> Why these heaps exist: a binary heap cannot <b>merge</b> faster than O(n). Binomial and Fibonacci heaps are pointer-based <b>mergeable heaps</b> (so are leftist and skew heaps).</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: Fibonacci heap costs and Dijkstra ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Fibonacci heap: costs</span></div>
+  <h2><span class="no">5</span>Heap Costs Compared, and Why Dijkstra Wants a Fibonacci Heap</h2><span class="tag">amortized ≠ worst case ★</span>
+  <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ a cascading cut</span> In the tree on the previous sheet, 24 and 18 are marked. <b>Decrease 46 → 15:</b> 15 &lt; parent 24 ⇒ cut 15 to the root list; 24 is marked ⇒ cut 24 (with 26) as well; its parent 7 is a root ⇒ stop. <b>Decrease 39 → 1:</b> 1 &lt; 18 ⇒ cut 1; 18 is marked ⇒ cut 18; its parent 3 is a root ⇒ stop; <span class="hl">H.min = 1</span>. Each cut is O(1); the cascade is paid for by the marks it clears.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Potential function</span> <code>Φ(H) = t(H) + 2·m(H)</code>: t = trees in the root list, m = marked nodes. Consolidation is paid for by the trees it removes; each cascading cut <b>unmarks</b> a node (−2) and adds a tree (+1), so it pays for itself ⇒ decrease-key is <b>O(1) amortized</b>.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Where "Fibonacci" comes from</span> Since a node loses at most one child before it is cut, a node of degree k roots a subtree of at least <span class="hl">F<sub>k+2</sub> ≥ φ<sup>k</sup></span> nodes (φ ≈ 1.618). So the maximum degree is <span class="circ">D(n) ≤ ⌊log<sub>φ</sub> n⌋ ≈ 1.44 log₂ n</span> — which makes extract-min O(log n) amortized.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Operation</th><th>Binary heap (worst)</th><th>Binomial heap (worst)</th><th>Fibonacci heap (amortized)</th></tr>
+    <tr><td class="l">Insert</td><td>O(log n)</td><td>O(log n); O(1) amortized</td><td><span class="hl">O(1)</span></td></tr>
+    <tr><td class="l">Find-min</td><td>O(1)</td><td>O(log n); O(1) with a min pointer</td><td>O(1)</td></tr>
+    <tr><td class="l">Extract-min</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+    <tr><td class="l">Union / merge</td><td><span class="red">O(n)</span></td><td><b>O(log n)</b></td><td><span class="hl">O(1)</span></td></tr>
+    <tr><td class="l">Decrease-key</td><td>O(log n)</td><td>O(log n)</td><td><span class="circ">O(1)</span></td></tr>
+    <tr><td class="l">Delete (decrease to −∞, extract)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+  </table>
+  <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">Dijkstra / Prim: count the heap calls ✍</span> On a graph with V vertices and E edges both algorithms do <b>V inserts</b>, <b>V extract-mins</b> and up to <b>E decrease-keys</b>. <b>Array (no heap):</b> V × O(V) ⇒ <b>O(V²)</b> — best for dense graphs. <b>Binary heap:</b> (V + E) × O(log V) ⇒ <b>O((V + E) log V)</b>. <b>Fibonacci heap:</b> V × O(log V) + E × O(1) ⇒ <span class="circ">O(E + V log V)</span>. The gain is in the <b>E decrease-keys</b>: O(log V) → O(1). (Algorithms: graph-algorithms lesson.)</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍ two</span> <b>1.</b> Fibonacci bounds are <b>amortized</b>: one extract-min can really cost <b>O(n)</b> (n roots after n inserts), one decrease-key O(log n). <b>2.</b> Extract-min is <b>never</b> O(1) here.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Fibonacci is lazy: everything is O(1) except taking the minimum out.</b>" Insert, union, find-min, decrease-key — O(1); extract-min and delete — O(log n), because that is when the lazy heap tidies its root list. And "<b>lose one child, get marked; lose two, get cut.</b>" In practice a binary heap is often faster.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: B-tree definitions ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>B-tree definitions</span></div>
+  <h2><span class="no">6</span>B-Trees: Order m, Minimum Degree t, and the Height Bound</h2><span class="tag">two conventions ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>B-tree</b> (Bayer &amp; McCreight, 1972) is a <span class="hl">balanced multiway search tree</span> designed for disks: one node = one disk block, holding many sorted keys. A node with <b>k keys has k + 1 children</b>, and the keys separate the key ranges of the children. <span class="hl">All leaves are at the same level</span>, so every search reads the same number of blocks. Because the fan-out is large, the height is tiny, and search, insert and delete are all <b>O(log n)</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Order m (Knuth) — the exam convention</span> <b>1.</b> Every node has <b>at most m children</b> ⇒ at most <b>m − 1 keys</b>.<br><b>2.</b> Every internal node except the root has <b>at least ⌈m/2⌉ children</b> ⇒ at least <b>⌈m/2⌉ − 1 keys</b> (non-root leaves keep the same key minimum).<br><b>3.</b> The root has <b>at least 2 children</b> unless it is a leaf ⇒ at least 1 key.<br><b>4.</b> All leaves on the same level.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Minimum degree t (CLRS)</span> t ≥ 2. Every non-root node has <b>t − 1 to 2t − 1 keys</b>, i.e. <b>t to 2t children</b> if internal. The root has at least 1 key. A node with 2t − 1 keys is <b>full</b>.<br><span class="hl">Translation: order m = 2t</span>, so CLRS trees always have an even order. t = 2 ⇒ order 4 ⇒ the <b>2-3-4 tree</b>.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th>Order m</th><th>Max children</th><th>Max keys</th><th>Min children (non-root)</th><th>Min keys (non-root)</th><th class="l">Also called</th></tr>
+    <tr><td>3</td><td>3</td><td>2</td><td>2</td><td>1</td><td class="l">2-3 tree</td></tr>
+    <tr><td>4</td><td>4</td><td>3</td><td>2</td><td>1</td><td class="l">2-3-4 tree (CLRS t = 2)</td></tr>
+    <tr><td><b>5</b></td><td><b>5</b></td><td><span class="circ">4</span></td><td><b>3</b></td><td><span class="circ">2</span></td><td class="l">the usual exam example (next sheet)</td></tr>
+    <tr><td>m</td><td>m</td><td>m − 1</td><td>⌈m/2⌉</td><td>⌈m/2⌉ − 1</td><td class="l">general rule</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Height bound ✍ derivation</span> Fewest keys for height h (CLRS): root 1 key, then 2 nodes, 2t, 2t², … , 2t<sup>h−1</sup> nodes with t − 1 keys each:<br><code>n ≥ 1 + (t−1)·Σ 2t^(i−1) = 2t^h − 1</code><br>⇒ <span class="circ">h ≤ log_t((n + 1)/2)</span>. In order-m form: <code>h ≤ log_⌈m/2⌉((n+1)/2)</code>. Most keys at height h: every node full ⇒ <code>m^(h+1) − 1</code>.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Cost of a search</span> Descend from the root, choosing the child between the two keys that bracket the target. <b>Disk reads = O(h) = O(log_t n)</b>. CPU work is O(t) per node by linear scan (O(log t) with binary search) ⇒ <b>O(t log_t n)</b> CPU in total. Disk reads dominate, which is why t is chosen so one node fills one block.</div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm"><span class="lbl">Exam trap ✍ which "order"?</span> "Order" in an MCQ almost always means <b>Knuth's maximum number of children</b>: order 5 ⇒ max <b>4</b> keys, min <b>2</b> keys in a non-root node. Do not answer "5 keys". If the question gives a <b>minimum degree t</b> instead, use t − 1 … 2t − 1 keys. And the minimum is ⌈m/2⌉ children — so ⌈m/2⌉ − 1 <b>keys</b>.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: B-tree insert and delete ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>B-tree insert &amp; delete</span></div>
+  <h2><span class="no">7</span>B-Tree Insertion (Split) and Deletion (Borrow / Merge)</h2><span class="tag">the worked example ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Insertion</span> Search down to the correct <b>leaf</b> and insert the key in sorted position. If the leaf now has <b>m keys</b> (overflow), <span class="hl">split it</span>: the <b>median key moves up</b> into the parent, the keys left of it form one node and those right of it another. If the parent overflows, split it too. A split of the root makes a <b>new root</b> — <span class="circ">the tree grows only at the root</span>, which is why all leaves stay on one level.</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Deletion</span> <b>1.</b> Key in a leaf with more than the minimum ⇒ just remove it. <b>2.</b> Key in an internal node ⇒ replace it by its <b>in-order predecessor</b> (largest key of the left subtree) or successor, then delete that key from its leaf. <b>3.</b> A leaf <b>underflows</b> (below ⌈m/2⌉ − 1 keys) ⇒ <b>borrow</b> from an adjacent sibling that has spare keys (rotate through the parent), else <b>merge</b> with a sibling plus the parent's separator key. A merge can make the parent underflow; if the root empties, the tree <b>shrinks by one level</b>.</div>
+  </div>
+  <figure class="doodle"><svg viewBox="0 0 620 230" width="580">
+    <g class="w">
+      <rect x="10" y="22" width="180" height="28" rx="6" class="ink-r fill-r"/>
+      <path class="ink" d="M200,36 H232" marker-end="url(#ahb)"/>
+      <rect x="292" y="8" width="56" height="26" rx="6" class="ink fill-b"/>
+      <rect x="240" y="50" width="76" height="26" rx="6" class="ink fill-b"/>
+      <rect x="326" y="50" width="76" height="26" rx="6" class="ink fill-b"/>
+      <path class="ink" d="M308,34 L282,48 M332,34 L360,48"/>
+      <rect x="430" y="22" width="180" height="28" rx="6" class="ink-r fill-r"/>
+      <path class="ink" d="M412,36 H426" marker-end="url(#ahb)"/>
+      <rect x="230" y="110" width="160" height="26" rx="6" class="ink-g fill-g"/>
+      <rect x="140" y="160" width="100" height="26" rx="6" class="ink-g fill-g"/>
+      <rect x="260" y="160" width="100" height="26" rx="6" class="ink-g fill-g"/>
+      <rect x="380" y="160" width="120" height="26" rx="6" class="ink-g fill-g"/>
+      <path class="ink" d="M250,136 L190,158 M310,136 L310,158 M370,136 L440,158"/>
+    </g>
+    <text x="100" y="14" text-anchor="middle" class="k w6" style="font-size:10px">insert 10, 20, 30, 40, then 50</text>
+    <text x="100" y="41" text-anchor="middle" class="r w6" style="font-size:11px">10 20 30 40 50 ✗</text>
+    <text x="320" y="26" text-anchor="middle" class="k w6" style="font-size:11px">30</text>
+    <text x="278" y="68" text-anchor="middle" class="s" style="font-size:11px">10 20</text>
+    <text x="364" y="68" text-anchor="middle" class="s" style="font-size:11px">40 50</text>
+    <text x="520" y="14" text-anchor="middle" class="k w6" style="font-size:10px">add 60, 70, then 80</text>
+    <text x="520" y="41" text-anchor="middle" class="r w6" style="font-size:11px">40 50 60 70 80 ✗</text>
+    <text x="520" y="70" text-anchor="middle" class="r s" style="font-size:10px">median 60 goes up</text>
+    <text x="310" y="102" text-anchor="middle" class="g w6" style="font-size:10px">final tree after inserting 90</text>
+    <text x="310" y="128" text-anchor="middle" class="g w6" style="font-size:12px">30 · 60</text>
+    <text x="190" y="178" text-anchor="middle" class="s" style="font-size:11px">10 · 20</text>
+    <text x="310" y="178" text-anchor="middle" class="s" style="font-size:11px">40 · 50</text>
+    <text x="440" y="178" text-anchor="middle" class="s" style="font-size:11px">70 · 80 · 90</text>
+    <text x="310" y="210" text-anchor="middle" class="p s" style="font-size:10px">order 5: overflow at 5 keys, median (3rd) moves up, two nodes of 2 keys</text>
+    <text x="310" y="226" text-anchor="middle" class="r s" style="font-size:10px">2 splits, 1 new root — height grew from 0 to 1 at the top</text>
+  </svg><figcaption>order-5 insertion of 10, 20, …, 90, step by step</figcaption></figure>
+  <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked deletions on that tree ✍ order 5, min 2 keys</span> <b>Delete 40 (borrow):</b> leaf [40, 50] → [50] underflows. Left sibling [10, 20] has only the minimum, right sibling [70, 80, 90] has a spare ⇒ <b>rotate</b>: separator 60 comes down, 70 goes up. Result: root [30 | 70], leaves [10, 20] [50, 60] [80, 90]. <br><b>Delete 20 from the original tree (merge):</b> [10, 20] → [10] underflows; its only sibling [40, 50] has no spare ⇒ <b>merge</b> [10] + separator 30 + [40, 50] = [10, 30, 40, 50]. Root becomes [60] with leaves [10, 30, 40, 50] and [70, 80, 90] — still valid (root ≥ 1 key).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Too full? Split and push the middle up. Too empty? Borrow from a rich sibling, else merge and pull the separator down.</b>" Insert pushes keys <b>up</b>; delete pulls keys <b>down</b>. Height changes only at the root, in both directions.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap ✍</span> <b>1.</b> A B-tree never grows at the leaves — new levels appear <b>above</b> the old root. <b>2.</b> With an <b>even</b> order the overflowing node has an even count, so there are two middles; textbooks differ (left- or right-biased) — state your choice. <b>3.</b> CLRS inserts in <b>one pass</b>, splitting every full node on the way down, so it never has to back up.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: B+ tree ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>B+ tree &amp; comparison</span></div>
+  <h2><span class="no">8</span>The B+ Tree, Database Indexes, and the Big Comparison</h2><span class="tag">linked leaves ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>B+ tree</b> is a B-tree variant in which <span class="hl">all records (or record pointers) live in the leaves</span>; internal nodes hold only <b>copies of keys</b> as signposts, and the leaves are <b>linked in key order</b> (the sequence set).</div>
+  <figure class="doodle"><svg viewBox="0 0 620 150" width="560">
+    <g class="w">
+      <rect x="250" y="8" width="120" height="30" rx="6" class="ink-k fill-y"/>
+      <path class="ink" d="M310,8 V38"/>
+      <rect x="20" y="88" width="130" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="210" y="88" width="160" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="430" y="88" width="180" height="30" rx="6" class="ink-g fill-g"/>
+      <path class="ink" d="M262,38 L90,86 M310,38 L290,86 M358,38 L510,86"/>
+      <path class="ink-r" d="M152,103 H206" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M372,103 H426" marker-end="url(#ah)"/>
+    </g>
+    <text x="280" y="28" text-anchor="middle" class="k w6" style="font-size:12px">30</text><text x="340" y="28" text-anchor="middle" class="k w6" style="font-size:12px">60</text>
+    <text x="85" y="108" text-anchor="middle" class="g w6" style="font-size:12px">10 · 20</text>
+    <text x="290" y="108" text-anchor="middle" class="g w6" style="font-size:12px">30 · 40 · 50</text>
+    <text x="520" y="108" text-anchor="middle" class="g w6" style="font-size:12px">60 · 70 · 80 · 90</text>
+    <text x="179" y="96" text-anchor="middle" class="r s" style="font-size:10px">next</text><text x="399" y="96" text-anchor="middle" class="r s" style="font-size:10px">next</text>
+    <text x="310" y="138" text-anchor="middle" class="p s" style="font-size:10px">30 and 60 appear twice: as signposts in the root and as real keys in the leaves</text>
+    <text x="500" y="30" text-anchor="middle" class="s" style="font-size:10px">order 5: leaf ≤ 4 keys</text>
+  </svg><figcaption>the same nine keys as a correct two-level B+ tree: one root, three linked leaves</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">B-tree</th><th class="l">B+ tree</th></tr>
+    <tr><td class="l">Where data / record pointers sit</td><td class="l">in <b>every</b> node</td><td class="l"><span class="hl">only in the leaves</span></td></tr>
+    <tr><td class="l">Keys stored</td><td class="l">each key exactly once</td><td class="l">separator keys repeated in internal nodes</td></tr>
+    <tr><td class="l">Search</td><td class="l">may stop early at an internal node</td><td class="l">always ends at a leaf; higher fan-out ⇒ shorter tree</td></tr>
+    <tr><td class="l">Range query / full scan</td><td class="l">in-order traversal across levels</td><td class="l"><span class="circ">O(log n + k)</span> along the leaf chain</td></tr>
+    <tr><td class="l">Leaf split</td><td class="l">median <b>moves</b> up</td><td class="l">median <b>copied</b> up (stays in the leaf); internal splits still move it</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Fan-out arithmetic ✍</span> 4 KB page, 8-byte key + 8-byte child pointer ⇒ about <b>4096 ÷ 16 = 256</b> children per node. Three levels reach <code>256³ = 16,777,216</code> leaves. Root cached in RAM ⇒ any of ~16 million keys in <span class="hl">2–3 disk reads</span>.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Where they are used</span> <b>Databases:</b> MySQL InnoDB, PostgreSQL, Oracle and SQL Server use B+ trees for ordinary indexes. <b>File systems:</b> NTFS directory indexes (B+ tree), ext4 directories (HTree, a hashed B-tree), XFS and Btrfs (B-trees). B+ tree vs hash index: see the database chapter.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Structure</th><th>Find-min / max</th><th>Search any key</th><th>Insert</th><th class="l">Best for</th></tr>
+    <tr><td class="l">Binary heap</td><td>O(1)</td><td><span class="red">O(n)</span></td><td>O(log n)</td><td class="l">priority queue, heapsort</td></tr>
+    <tr><td class="l">Fibonacci heap</td><td>O(1)</td><td><span class="red">O(n)</span></td><td>O(1) amortized</td><td class="l">many decrease-keys (Dijkstra, Prim)</td></tr>
+    <tr><td class="l">B-tree</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td class="l">disk-based ordered storage</td></tr>
+    <tr><td class="l">B+ tree</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td class="l">DB indexes, range queries</td></tr>
+  </table>
+  <p class="tiny red" style="margin:1mm 0 0"><b>Trap:</b> a heap is not a search structure — only find-<b>min</b> is O(1); "O(1) search in a Fibonacci heap" is wrong.</p>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>Heap = complete tree + heap order</p><p>Max-heap: max at root, min in a leaf</p>
+      <p>1-based: 2i, 2i+1, ⌊i/2⌋</p><p>0-based: 2i+1, 2i+2, ⌊(i−1)/2⌋</p>
+      <p>Height = ⌊log₂ n⌋</p><p>Leaves: ⌊n/2⌋+1 … n (⌈n/2⌉ of them)</p>
+      <p>Insert / extract / heapify: O(log n)</p><p><span class="hl">Build-heap: O(n)</span></p>
+      <p>Search in a heap: O(n)</p><p>Heapsort: O(n log n), in-place, unstable</p>
+      <p>d-ary: insert O(log_d n)</p><p>d-ary: extract O(d log_d n)</p>
+      <p>B<sub>k</sub>: 2<sup>k</sup> nodes, height k, C(k,i)</p><p>Binomial heap ↔ n in binary</p>
+      <p>Binomial union: O(log n)</p><p>Binary-heap union: O(n)</p>
+      <p>Fib: insert/union/find/decrease O(1)</p><p>Fib: extract-min/delete O(log n)</p>
+      <p>Φ = trees + 2 × marked</p><p>D(n) ≤ log<sub>φ</sub> n</p>
+      <p>Dijkstra + Fib: O(E + V log V)</p><p>Dijkstra + binary: O((V+E) log V)</p>
+      <p>Order m: ≤ m children, ≤ m−1 keys</p><p>Non-root ≥ ⌈m/2⌉ children</p>
+      <p>CLRS t: t−1 … 2t−1 keys</p><p>h ≤ log<sub>t</sub>((n+1)/2)</p>
+      <p>B+ leaves linked, data in leaves</p><p>B+ range: O(log n + k)</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>Heap order says nothing about left vs right</li>
+      <li>Build-heap starts at ⌊n/2⌋, goes down to 1</li>
+      <li>Σ h/2<sup>h</sup> = 2 ⇒ build-heap is linear</li>
+      <li>Top-k with a size-k heap: O(n log k)</li>
+      <li>Mergeable heaps exist because of <b>union</b></li>
+      <li>Cascading cut: second lost child ⇒ cut</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Fibonacci bounds are <b>amortized</b></li>
+      <li>Order 5: keys 2…4, children 3…5</li>
+      <li>Order 3 = 2-3 tree; order 4 = 2-3-4 tree</li>
+      <li>B-tree grows and shrinks at the <b>root</b></li>
+      <li>Overflow ⇒ split; underflow ⇒ borrow / merge</li>
+      <li>B+ leaf split copies the key up</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0"><span class="lbl">Top traps</span> 2i+1 vs 2i (check the indexing) · heapify O(log n) vs build-heap O(n) · "O(1) search" in any heap · Fibonacci extract-min "O(1)" · amortized taken as worst case · order m giving "m keys" · min keys = ⌈m/2⌉ − 1, not ⌈m/2⌉ · a B-tree "growing at the leaves".</div>
+      <div class="trick tiny" style="margin-top:1mm"><span class="lbl">All tricks together</span> Double to go down, halve to go up · a binomial heap is n in binary, union is addition · Fibonacci is lazy: all O(1) except taking the min out · lose one child, get marked; lose two, get cut · too full: split and push up; too empty: borrow, else merge.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="290">
+      <g class="w">
+        <circle cx="66" cy="46" r="32" class="ink-r fill-r"/>
+        <circle cx="150" cy="46" r="32" class="ink fill-b"/>
+        <circle cx="234" cy="46" r="32" class="ink-g fill-g"/>
+        <path class="ink" d="M98,46 H116 M182,46 H200" marker-end="url(#ahb)"/>
+        <rect x="40" y="112" width="220" height="30" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="44" text-anchor="middle" class="r w6" style="font-size:11px">binary</text><text x="66" y="58" text-anchor="middle" class="r s" style="font-size:10px">heap</text>
+      <text x="150" y="44" text-anchor="middle" class="k w6" style="font-size:11px">Fibonacci</text><text x="150" y="58" text-anchor="middle" class="s" style="font-size:10px">heap</text>
+      <text x="234" y="44" text-anchor="middle" class="g w6" style="font-size:11px">B / B+</text><text x="234" y="58" text-anchor="middle" class="g s" style="font-size:10px">tree</text>
+      <text x="150" y="98" text-anchor="middle" class="p s" style="font-size:10px">RAM priority → disk search</text>
+      <text x="150" y="132" text-anchor="middle" class="k w6" style="font-size:11px">min fast · order on disk</text>
+    </svg><figcaption>two jobs: fast minimum, few disk reads</figcaption></figure>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Heaps &amp; B-Trees</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">1.</span>In a max-heap, the <b>largest</b> element is stored:<ol class="opts"><li>At the leftmost leaf</li><li>At the last array position</li><li>In any one of the leaves</li><li>At the root</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">2.</span>Root at index 1: the children of node i are at:<ol class="opts"><li>2i and 2i + 1</li><li>2i + 1 and 2i + 2</li><li>i + 1 and i + 2</li><li>i/2 and i/2 + 1</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">3.</span>Max-heap <code>[50, 30, 40, 10, 20]</code>; insert 45 with sift-up. The array becomes:<ol class="opts"><li>[50,45,30,10,20,40]</li><li>[50,30,45,10,20,40]</li><li>[45,30,50,10,20,40]</li><li>[50,30,40,10,20,45]</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">4.</span>Building a binary heap from n unsorted keys bottom-up takes:<ol class="opts"><li>O(log n)</li><li>O(n log n)</li><li>O(n)</li><li>O(n²)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">5.</span>Amortized cost of <b>decrease-key</b> in a Fibonacci heap:<ol class="opts"><li>O(log n)</li><li>O(n)</li><li>O(1)</li><li>O(log log n)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">6.</span>Dijkstra's algorithm with a Fibonacci heap runs in:<ol class="opts"><li>O(V²)</li><li>O(E + V log V)</li><li>O((V + E) log V)</li><li>O(E log E)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">7.</span>B-tree of order m = 5: max keys in a node and min keys in a non-root node?<ol class="opts"><li>5 and 3</li><li>4 and 3</li><li>5 and 2</li><li>4 and 2</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">8.</span>How does the height of a B-tree increase?<ol class="opts"><li>When the root splits</li><li>When a leaf splits</li><li>When two leaves merge</li><li>When a key is borrowed</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">9.</span>A binomial heap with 13 nodes contains the trees:<ol class="opts"><li>B<sub>3</sub>, B<sub>1</sub>, B<sub>0</sub></li><li>B<sub>2</sub>, B<sub>1</sub>, B<sub>0</sub></li><li>B<sub>3</sub>, B<sub>2</sub>, B<sub>1</sub></li><li>B<sub>3</sub>, B<sub>2</sub>, B<sub>0</sub></li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">10.</span>Why are B+ trees preferred over B-trees for database range queries?<ol class="opts"><li>They are binary trees</li><li>All keys are in linked leaves</li><li>They need no internal nodes</li><li>They store data in the root</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-d · 2-a · 3-b · 4-c · 5-c · 6-b · 7-d · 8-a · 9-d · 10-b</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> (a) Show that BUILD-MAX-HEAP runs in O(n). (b) Insert 10, 20, 30, 40, 50, 60, 70, 80, 90 into an empty B-tree of <b>order 5</b>, showing each split, then delete 40. (c) State the amortized costs of a Fibonacci heap and explain why Dijkstra then runs in O(E + V log V). <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>(a) Build-heap (3)</b> — heapify i = ⌊n/2⌋ … 1; a node of height h costs O(h) and there are ≤ ⌈n/2^(h+1)⌉ of them; <code>Σ ⌈n/2^(h+1)⌉·O(h) = O(n Σ h/2^h) = O(2n) = O(n)</code>. <i class="mk">3</i></li>
+    <li><b>(b) Splits (3)</b> — order 5 ⇒ max 4 keys, min 2. 10–40 fill one leaf; 50 overflows ⇒ median 30 up: [30] / [10 20] [40 50]. 60, 70 ⇒ [40 50 60 70]; 80 overflows ⇒ 60 up: [30 60] / [10 20] [40 50] [70 80]; 90 ⇒ [70 80 90]. <i class="mk">3</i></li>
+    <li><b>(b) Delete 40 (2)</b> — [50] underflows; left sibling at minimum, right sibling [70 80 90] has a spare ⇒ borrow: 60 down, 70 up ⇒ [30 70] / [10 20] [50 60] [80 90]. <i class="mk">2</i></li>
+    <li><b>(c) Fibonacci heap (2)</b> — insert, union, find-min, decrease-key O(1); extract-min, delete O(log n) amortized. Dijkstra = V extract-min + E decrease-key = O(V log V + E). <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>Can write both index formula sets</li>
+      <li>Can sift-up / sift-down an array by hand</li>
+      <li>Can prove build-heap is O(n)</li>
+    </ul>
+    <ul class="tick">
+      <li>Can fill the three-heap cost table</li>
+      <li>Can state order-m min/max keys</li>
+      <li>Can split, borrow and merge in a B-tree</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

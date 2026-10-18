@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ট্রানজেকশন, কনকারেন্সি, রিকভারি ও নিরাপত্তা: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" height="4000" width="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>তারিখ: ১৩.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ট্রানজেকশন, কনকারেন্সি, রিকভারি ও নিরাপত্তা</span></h1>
+  <p class="subtitle">ACID · ২PL · MVCC · আইসোলেশন লেভেল · WAL · GRANT · XML/JSON · OODB/ORDB</p>
+  <p class="tiny center" style="margin:0 0 1mm"><b>এগারো পাতা:</b> ট্রানজেকশন ও তার চারটি বৈশিষ্ট্য, কনকারেন্সির সৃষ্টি সমস্যা, সেগুলো থামানোর চারটি কৌশল, চারটি আইসোলেশন লেভেল, লগ দিয়ে ক্র্যাশের পর ডেটাবেস কীভাবে গড়ে ওঠে, কে কী দেখতে পাবে — এবং এরপরের আধা-কাঠামোবদ্ধ ও অবজেক্ট জগৎ।</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="250">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="106" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">ACID</text><text x="320" y="172" text-anchor="middle" class="bn r s">সব অথবা কিছু নয়</text>
+      <text x="142" y="65" text-anchor="middle" class="bn s" style="font-size:10px">সিরিয়াল সিডিউল</text>
+      <text x="320" y="40" text-anchor="middle" class="bn r w6" style="font-size:11px">২PL / MVCC ★</text>
+      <text x="498" y="65" text-anchor="middle" class="bn s" style="font-size:10px">ডার্টি রিড · ফ্যান্টম</text>
+      <text x="96" y="155" text-anchor="middle" class="bn g w6" style="font-size:10px">WAL: আগে লগ</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6" style="font-size:10px">Undo · Redo</text>
+      <text x="142" y="245" text-anchor="middle" class="bn s" style="font-size:10px">চেকপয়েন্ট + ব্যাকআপ</text>
+      <text x="320" y="270" text-anchor="middle" class="bn r w6" style="font-size:10px">GRANT / REVOKE</text>
+      <text x="498" y="245" text-anchor="middle" class="bn r w6" style="font-size:10px">XML · JSON · OODB</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = রিকভারির ইঞ্জিন</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;line-height:5.2mm"><b>হাই-ইল্ড তালিকা</b><br>① ACID = অ্যাটমিসিটি, কনসিসটেন্সি, আইসোলেশন, ডিওরেবিলিটি<br>② সব অথবা কিছু নয়: COMMIT বা ROLLBACK<br>③ Active → পার্শিয়ালি কমিটেড → কমিটেড<br>④ ব্যর্থতার পরে Failed → Aborted<br>⑤ সিরিয়ালাইজেবল = <i>যেন</i> একটির পর আরেকটি<br>⑥ ডার্টি · লস্ট আপডেট · নন-রিপিটেবল · ফ্যান্টম<br>⑦ S+S যায় · S+X না · X+X <span class="circ">কখনোই না</span><br>⑧ ২PL: আগে লক নাও, পরে ছাড়ো — ডেডলক তবুও হয়<br>⑨ RU &lt; RC &lt; RR &lt; সিরিয়াল = নিরাপদ, ধীর<br>⑩ <span class="circ">WAL নিয়ম</span>: আগে লগ রেকর্ড, তারপর ডেটা পেজ<br>⑪ আনকমিটেডের UNDO, কমিটেডের REDO<br>⑫ চেকপয়েন্ট + ফুল / ইনক্রিমেন্টাল ব্যাকআপ</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny" style="line-height:5.2mm">সিলেবাস এই লেসনের প্রতিটি অংশ নাম করে: "<span class="hl">Transaction processing; DBMS concurrency control; database recovery; database security and access control; XML, XPath and XQuery; object-oriented and object-relational databases.</span>" <b>প্রতিটি অংশই এখানে পূর্ণ করা হয়েছে।</b> আগের লেসনগুলোতে সম্পর্ক বানানো, পড়ার SQL, রিডান্ড্যান্সি সরানো ও ডিস্কে জায়গা দেওয়া হয়েছিল; এই লেসনে সেই সবকিছুকে একসঙ্গে <span class="hl">অনেক ব্যবহারকারী, একটি ব্যর্থতা ও একজন অনুমানকারী</span>র মুখোমুখি হতে হবে — <span class="hl">দশজন শিক্ষার্থী একসঙ্গে লগইন করলে, একজন মাঝপথে ক্র্যাশ করলে আর একজন অন্যের বেতন দেখতে চাইলে, ডেটাবেস কি তবুও ঠিক থাকবে?</span></p>
+  <div class="tipbox blk tiny" style="line-height:5.2mm"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধান-কৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ul class="tick"><li>ট্রানজেকশন ও ACID বৈশিষ্ট্য … পৃ. ২</li><li>সিডিউল ও কনকারেন্সি সমস্যা … পৃ. ৩</li><li>লক: S/X, ২PL ও ডেডলক … পৃ. ৪</li><li>টাইমস্ট্যাম্প, অপটিমিস্টিক, MVCC … পৃ. ৫</li><li>আইসোলেশন লেভেল, মানদণ্ড বনাম বাস্তব … পৃ. ৬</li></ul>
+    <ul class="tick"><li>রিকভারি: লগ, WAL, চেকপয়েন্ট … পৃ. ৭</li><li>অ্যাক্সেস কন্ট্রোল ও নিরাপত্তা … পৃ. ৮</li><li>XML, JSON, OODB/ORDB … পৃ. ৯</li><li>রাতের পরীক্ষার পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: transactions and ACID ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>ট্রানজেকশন ও ACID</span></div>
+  <h2><span class="no">১</span>ট্রানজেকশন: একটি যৌক্তিক কাজের একক, ও তার চারটি বৈশিষ্ট্য</h2><span class="tag">সব অথবা কিছু নয় ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">সংজ্ঞা</span> <b>ট্রানজেকশন (Transaction)</b> হলো <span class="hl">একটি একক যৌক্তিক কাজ হিসেবে সম্পাদিত অপারেশনের ক্রম</span>। এক পাশে <code>BEGIN</code> / <code>COMMIT</code>, অন্য পাশে <code>COMMIT</code> / <code>ROLLBACK</code> — অর্থাৎ <b>সব</b> অপারেশন কার্যকর হবে, নয়তো <b>একটিও</b> নয়। Tk 1000 পাঠানো মানে দুটি লেখা — অ্যাকাউন্ট A থেকে কাটা, অ্যাকাউন্ট B-তে যোগ করা — আর প্রথমটি যদি একমাত্র ডিস্কে পৌঁছায় তবে টাকা ধ্বংস হয়ে যায়; তাই দুটি লেখা একটিই ট্রানজেকশন হতে হবে।</div>
+  <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">BEGIN TRANSACTION;
+  UPDATE account SET balance = balance - 1000 WHERE accno = 'A-101';   -- 1
+UPDATE account SET balance = balance + 1000 WHERE accno = 'B-207';   -- 2
+COMMIT;   -- দুটোই, নয়তো একটিও নয়</div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">বৈশিষ্ট্য</th><th class="l">কী প্রতিশ্রুতি দেয়</th><th class="l">কে রক্ষা করে</th></tr>
+    <tr><td class="l"><b>অ্যাটমিসিটি (Atomicity)</b></td><td class="l"><span class="hl">সব অথবা কিছু নয়।</span> মাঝপথে ব্যর্থতা হলে পুরো একক পিছনে ফিরে যায়; অর্ধেক প্রয়োগ হওয়া ট্রান্সফার কখনো দৃশ্যমান হয় না।</td><td class="l">রিকভারি ম্যানেজার (UNDO)</td></tr>
+    <tr><td class="l"><b>কনসিসটেন্সি (Consistency)</b></td><td class="l">ঘোষিত <span class="hl">ইন্টেগ্রিটি কনস্ট্রেন্ট</span> ট্রানজেকশনের আগে ও পরে মান্য। <b>কনস্ট্রেন্টগুলো ব্যবহারকারী লেখেন</b> — ডিবিএমএস নিজে বানায় না।</td><td class="l">কনস্ট্রেন্ট, ব্যবহারকারীর SQL</td></tr>
+    <tr><td class="l"><b>আইসোলেশন (Isolation)</b></td><td class="l">প্রতিটি ট্রানজেকশন <span class="hl">একা একা চলছে বলে মনে হয়</span>। কনকারেন্সি কন্ট্রোল ঠিক এই বৈশিষ্ট্যই দেয়।</td><td class="l">কনকারেন্সি কন্ট্রোল</td></tr>
+    <tr><td class="l"><b>ডিওরেবিলিটি (Durability)</b></td><td class="l">কমিট করার পর পরিবর্তন <span class="hl">যেকোনো ক্র্যাশেও টিকে থাকে</span> — বিদ্যুৎ চলে গেলেও, মেশিন রিবুট হলেও।</td><td class="l">রিকভারি ম্যানেজার (REDO, WAL)</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 250" width="540">
+    <g class="w">
+      <rect x="235" y="6" width="150" height="34" rx="10" class="ink-k fill-y"/>
+      <rect x="8" y="94" width="164" height="48" rx="10" class="ink fill-b"/>
+      <rect x="228" y="94" width="164" height="48" rx="10" class="ink-g fill-g"/>
+      <rect x="444" y="94" width="164" height="48" rx="10" class="ink-k fill-y"/>
+      <rect x="120" y="200" width="150" height="34" rx="10" class="ink-r fill-r"/>
+      <rect x="350" y="200" width="150" height="34" rx="10" class="ink-r fill-r"/>
+      <path class="ink" d="M235,22 L168,92" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M310,40 V92" marker-end="url(#ahg)"/>
+      <path class="ink" d="M172,118 H226" marker-end="url(#ahb)"/>
+      <path class="ink" d="M392,118 H442" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M235,24 L200,64 V170 H195 V198" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M270,217 H348" marker-end="url(#ah)"/>
+      <path class="ink" d="M380,210 C460,196 540,170 552,148" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M500,222 H616 V60 H388 V42" marker-end="url(#ahp)"/>
+    </g>
+    <text x="310" y="28" text-anchor="middle" class="bn k w6" style="font-size:12px">সক্রিয়</text>
+    <text x="90" y="110" text-anchor="middle" class="bn k w6" style="font-size:10px">পার্শিয়ালি কমিটেড</text>
+    <text x="90" y="126" text-anchor="middle" class="bn s" style="font-size:10px">শেষ স্টেটমেন্ট চলেছে,</text>
+    <text x="90" y="138" text-anchor="middle" class="bn s" style="font-size:10px">আউটপুট এখনো স্থায়ী স্টোরেজে নয়</text>
+    <text x="310" y="110" text-anchor="middle" class="bn g w6" style="font-size:11px">কমিটেড</text>
+    <text x="310" y="126" text-anchor="middle" class="bn g s" style="font-size:10px">লগ রেকর্ড ফ্লাশ হয়েছে,</text>
+    <text x="310" y="138" text-anchor="middle" class="bn g s" style="font-size:10px">মান আর হারাবে না</text>
+    <text x="526" y="110" text-anchor="middle" class="bn k w6" style="font-size:11px">সমাপ্ত</text>
+    <text x="526" y="126" text-anchor="middle" class="bn s" style="font-size:10px">যৌক্তিক কাজের</text>
+    <text x="526" y="138" text-anchor="middle" class="bn s" style="font-size:10px">একক পুরোপুরি শেষ</text>
+    <text x="195" y="222" text-anchor="middle" class="bn r w6" style="font-size:11px">ব্যর্থ</text>
+    <text x="425" y="222" text-anchor="middle" class="bn r w6" style="font-size:11px">অ্যাবোর্টেড</text>
+    <text x="425" y="246" text-anchor="middle" class="bn p s" style="font-size:10px">রিলব্যাক হয়, তারপর আবার চলতে পারে</text>
+    <text x="196" y="192" text-anchor="middle" class="bn r s" style="font-size:10px">এরর, ডেডলক, ক্র্যাশ</text>
+    <text x="250" y="86" text-anchor="middle" class="bn g s" style="font-size:10px">কমিট রেকর্ড &#8594; ডিস্ক</text>
+    <text x="466" y="86" text-anchor="middle" class="bn p s" style="font-size:10px">শুরু থেকে আবার চলা</text>
+  </svg><figcaption>ট্রানজেকশন-স্টেট ডায়াগ্রামের পূর্ণ চেহারা: পাঁচটি অবস্থা, আর অ্যাবোর্টেড থেকে ফেরার লুপ</figcaption></figure>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ পাঁচটি ভুল আঁকা</span> <b>১.</b> <b>ব্যর্থ (Failed)</b> অবস্থায় আসা হয় <b>সক্রিয় (Active)</b> থেকে — <i>পার্শিয়ালি কমিটেড</i> থেকে নয়; আংশিক অবস্থা রাখা হয়েছে যাতে আউটপুটের সময় ব্যর্থতা ধরা পড়লেও ইউন্ডো করা যায়। <b>২.</b> <b>অ্যাবোর্টেড আসে ব্যর্থের পরে</b>, উল্টো নয়। <b>৩.</b> <b>সমাপ্ত (Terminated)</b> হলো আসল শেষ অবস্থা; এটি আসে <b>কমিটেড</b> <i>এবং</i> <b>অ্যাবোর্টেড</b> — থেকেও — "কমিটেডই শেষ অবস্থা" ভুল। <b>৪.</b> অ্যাবোর্টেড ট্রানজেকশন <span class="hl">শুরু থেকে আবার চালানো</span> যেতে পারে। <b>৫.</b> <b>কমিট</b> মানে <i>লগ রেকর্ড</i> স্থায়ী স্টোরেজে — এর মানে নয় যে সব নোংরা পেজ ফ্লাশ হয়ে গেছে।</div>
+  <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>কমিটির মতো ভাবো: অ্যাটমিক কখনো ভাঙে না, কনসিসটেন্ট নিয়ম মানে, আইসোলেটেড নিজের পরামর্শে চলে, ডিওরেবল বেরিয়ে গেলেও টিকে থাকে।</b>" আর ডায়াগ্রামের জন্য: "<b>সক্রিয় দিয়ে শুরু, পার্শিয়ালি দরজা, কমিটেড প্রতিশ্রুতি, সমাপ্ত দরজা বন্ধ; কেবল ব্যর্থতাই পাশের দরজা খুলে অ্যাবোর্টেডে নিয়ে যায়।</b>"</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: schedules and concurrency problems ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>সিডিউল ও অসঙ্গতি</span></div>
+  <h2><span class="no">২</span>সিডিউল, সিরিয়ালাইজেবিলিটি ও পাঁচটি অসঙ্গতি</h2><span class="tag">যেন একটির পর আরেকটি ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">সংজ্ঞা</span> <b>সিডিউল (Schedule)</b> হলো কয়েকটি ট্রানজেকশনের অপারেশন কী ক্রমে আপনাহিত হয়েছে। <b>সিরিয়াল সিডিউল</b>-এ <span class="hl">একটি ট্রানজেকশন পুরো শেষ হয়, তারপর পরেরটি শুরু</span> — সবসময় সঠিক, বাস্তবে অকার্যকর। <b>কনকারেন্ট সিডিউল</b> থ্রুপুটের জন্য অপারেশন মেশায়, আর তা <b>সিরিয়ালাইজেবল</b> যদি <span class="circ">কোনো একটি সিরিয়াল সিডিউলের সমতুল্য হয়</span> — পুরো কনকারেন্সি কন্ট্রোলের লক্ষ্য এই একটি শব্দ।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 200" width="430">
+    <g class="w">
+      <rect x="4" y="14" width="612" height="26" rx="12" class="ink fill-b"/>
+      <rect x="4" y="94" width="612" height="26" rx="12" class="ink fill-b"/>
+      <rect x="4" y="174" width="612" height="26" rx="12" class="ink fill-b"/>
+      <path class="ink-r" d="M250,48 V86" marker-end="url(#ah)"/>
+      <path class="ink" d="M300,128 V166" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M150,48 V86" marker-end="url(#ahg)"/>
+      <path class="ink" d="M470,128 V166" marker-end="url(#ahb)"/>
+    </g>
+    <text x="20" y="32" class="k w6" style="font-size:12px">T1</text>
+    <text x="70" y="32" class="s" style="font-size:11px">r1(A)=100</text>
+    <text x="290" y="32" class="r w6" style="font-size:11px">w1(A)=90</text>
+    <text x="20" y="112" class="k w6" style="font-size:12px">T2</text>
+    <text x="70" y="112" class="s" style="font-size:11px">r2(A)=100</text>
+    <text x="330" y="112" class="r w6" style="font-size:11px">w2(A)=110</text>
+    <text x="20" y="192" class="k w6" style="font-size:12px">A</text>
+    <text x="60" y="192" class="s" style="font-size:11px">100</text>
+    <text x="290" y="192" class="r w6" style="font-size:11px">90</text>
+    <text x="500" y="192" class="g w6" style="font-size:11px">110</text>
+  </svg><figcaption>এক সিডিউল, দুটি ত্রুটি: r2(A) পড়ে নেয় এমন মান যা T1 কখনো কমিট করেনি</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">অসঙ্গতি</th><th class="l">ঠিক কী ভুল হয়</th><th class="l">কী সারায়</th></tr>
+    <tr><td class="l"><b>ডার্টি রিড (Dirty Read)</b></td><td class="l">T2 এমন আইটেম পড়ে যা <span class="hl">T1 লিখেছে কিন্তু কমিট করেনি</span>; এরপর T1 রোলব্যাক করলে T2-এর উত্তর দাঁড়ায় এমন মানের উপর, যা কখনো ছিল না।</td><td class="l">S→X সংঘর্ষ · RR+</td></tr>
+    <tr><td class="l"><b>লস্ট আপডেট (Lost Update)</b></td><td class="l">দুজনেই A=100 পড়ে, তারপর দুজনেই লেখে; দ্বিতীয় লেখা <span class="hl">প্রথমটিকে দেখেই উপরে লেখে দেয়</span>। দুজন কমিট করলেও ভুল মান টেকে থাকে।</td><td class="l">কমিট পর্যন্ত X লক · ডিলেড লেখা</td></tr>
+    <tr><td class="l"><b>নন-রিপিটেবল রিড</b></td><td class="l">একই রিড কোয়েরি একটি ট্রানজেকশনের ভেতরে দুবার <span class="hl">ভিন্ন মান</span> দেয়, কারণ মাঝে অন্য ট্রানজেকশন সারি আপডেট করেছে।</td><td class="l">কমিট পর্যন্ত S লক · RR+</td></tr>
+    <tr><td class="l"><b>ফ্যান্টম রিড</b></td><td class="l">পুনরাবৃত্ত রেঞ্জ কোয়েরিতে <span class="hl">নতুন বা মুছে যাওয়া সারি</span> দেখা যায়। কোনো মান বদলায়নি, সারির <i>অস্তিত্ব</i> বদলেছে।</td><td class="l">রেঞ্জ লক · সিরিয়ালাইজেবল</td></tr>
+    <tr><td class="l"><b>অসামঞ্জস্যপূর্ণ বিশ্লেষণ (Incorrect Summary)</b></td><td class="l">একটি অ্যাগ্রিগেট আপডেটের আগে টেবিলের অংশ, পরে বাকিটা পড়ে, ফলে মোটটা <span class="hl">কোনো মুহূর্তেই সত্যি ছিল না</span>।</td><td class="l">পঠিত প্রতিটি সারিতে S লক</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ চারটি</span> <b>১.</b> <b>লস্ট আপডেট সবচেয়ে বিপজ্জনক, কারণ দুটো ট্রানজেকশনই কমিট করে</b> — কোনো রোলব্যাকে তা ফেরানো যায় না। <b>২.</b> <b>আইসোলেশন লেভেলের মানদণ্ড-সারণায় লস্ট আপডেট নেই</b>, ওখানে শুধু রিড-সংক্রান্ত অসঙ্গতি আছে। <b>৩.</b> <b>ফ্যান্টম মানে সারির আগমন, মান বদলানো নয়</b> — মান বদলালে সেটা নন-রিপিটেবল রিড। <b>৪.</b> "কনকারেন্সি কন্ট্রোল কেবল ডার্টি রিড নিয়ে" বাক্যাংশ অতিরঞ্জিত; সব চারটির সঙ্গে অসামঞ্জস্যপূর্ণ বিশ্লেষণ মিলিয়ে মানে প্রশ্নটি মানক পাঁচটির সেট চাইছে।</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>ডার্টি = অতি তাড়াতাড়ি, লস্ট = অতি দেরিতে, নন-রিপিটেবল = মান বদলাল, ফ্যান্টম = সারি এল।</b>" দুটি পড়া নিয়ে, দুটি লেখা নিয়ে; "ফ্যান্টম ঘটে মান বদলানোর সময়" — এই বাক্যাংশ কিছুই বর্ণনা করে না।</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">উত্তরের আরেক অর্ধেক</span> <b>সিরিয়ালাইজেবিলিটি প্রোগ্রামের নয়, সিডিউলের গুণ</b> — একই ট্রানজেকশনের দুটি সিডিউল সঠিকতায় ভিন্ন হতে পারে। তাই ডিবিএমএস আপনাহিত বন্ধ করে না; সে <span class="hl">এমন যেকোনো আপনাহিত গ্রহণ করে যার পরিণতি সিরিয়াল সিডিউল থেকে আলাদা নয়</span>।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: locks, 2PL, deadlock ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>লক, ২PL ও ডেডলক</span></div>
+  <h2><span class="no">৩</span>লক-ভিত্তিক কন্ট্রোল: সামঞ্জস্য ম্যাট্রিক্স, ২PL ও ডেডলক</h2><span class="tag">সবচেয়ে বেশি পরীক্ষিত সারণি ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">দুটি লক</span> আইটেম <i>পড়তে</i> <b>শেয়ার্ড লক S</b> নেওয়া হয় — অনেক ট্রানজেকশন একসঙ্গে ধরে রাখতে পারে। <i>লিখতে</i> <b>এক্সক্লুসিভ লক X</b> নেওয়া হয় — একটির বেশি পারে না। আইটেমের নাম <b>X</b> রাখা হয় কারণ লক <span class="circ">বদলে নয়, যোগ করে</span> উন্নীত হয়।</div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:4.8mm">
+    <tr><th class="l">ধারিত \ চাওয়া</th><th>S(A)</th><th>X(A)</th></tr>
+    <tr><td class="l"><b>S(A) ধারিত</b></td><td><span class="green"><b>সামঞ্জস্যপূর্ণ ✓</b></span></td><td><span class="red"><b>সংঘর্ষ ✗</b></span></td></tr>
+    <tr><td class="l"><b>X(A) ধারিত</b></td><td><span class="red"><b>সংঘর্ষ ✗</b></span></td><td><span class="red"><b>সংঘর্ষ ✗</b></span></td></tr>
+  </table>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি সিদ্ধান্ত সবাই ভুল করেন</span> <b>১.</b> চার ঘরের মধ্যে <b>একটিই</b> সামঞ্জস্যপূর্ণ — <span class="circ">S-এর সঙ্গে S</span>। "পড়ার জন্য S-এর সঙ্গে X সামঞ্জস্যপূর্ণ" মিথ্যা, কারণ X ধারী তখন মান বদলাতে পারে। <b>২.</b> X চাওয়া দুটি ট্রানজেকশন কখনো মিলিত হয় না, তাই <span class="hl">২PL-এ রিড-রাইট অসঙ্গতি টেকে না</span>; বিনিময়ে দিতে হয় ব্লকিং। <b>৩.</b> S ধরে X চাওয়া ট্রানজেকশন <b>সরাসরি X নিতে পারে না</b> — আগে S ছেড়তে হয়, আর ২PL-এ তখন সংক্ষেপণ পর্বই শেষ হয়ে গেছে হতে পারে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">টু-ফেজ লকিং (২PL) ✍ সংজ্ঞা</span> প্রতিটি ট্রানজেকশন <b>দুটি পর্বে</b> চলে: <span class="hl">গ্রোয়িং পর্ব</span>, যেখানে লক <b>অর্জন</b> করা যায় কিন্তু ছাড়া যায় না; আর <span class="hl">শ্রিংকিং পর্ব</span>, যেখানে লক <b>ছাড়া</b> যায় কিন্তু নতুন করা যায় না। সংক্ষেপণ পর্বের শেষে এটি কমিট করে।</div>
+      <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ ২PL কী দেয়, কী দেয় না</span> <b>দেয়:</b> <span class="hl">কনফ্লিক্ট-সিরিয়ালাইজেবল</span> সিডিউল (প্রিসিডেন্স গ্রাফে চক্কর হয় না) এবং, যেহেতু কমিটের আগে কোনো লক ছাড়া যায় না, <b>স্ট্রিক্ট</b> এবং তাই <b>রিকভারেবল</b> সিডিউল। <b>দেয় না:</b> <span class="red">ডেডলক থেকে মুক্তি</span> বা স্টারভেশন থেকে মুক্তি — বিপরীত ক্রমে লক নেওয়া দুটি ট্রানজেকশন ২PL-এ ডেডলক করে, আর এটিই এই টপিকের সবচেয়ে বেশি ভুল দাবি।</div>
+      <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>আগে শুধু দরজা খুলবে, পরে শুধু দরজা বন্ধ করবে।</b>" <b>রিগরাস ২PL</b> প্রতিটি <b>X</b> লক কমিট পর্যন্ত ধরে রাখে, ফলে সংক্ষেপণ পর্ব শেষে চলে যায় — স্ট্রিক্ট সিডিউল, তাই <b>ক্যাসকেডিং রোলব্যাক নেই</b>। <b>কনজারভেটিভ (স্ট্যাটিক) ২PL</b> প্রয়োজনীয় প্রতিটি লক <b>শুরুর আগেই</b> ঘোষণ করে, তাই কোনো লক না পেলে ট্রানজেকশনই শুরু হয় না: <span class="circ">ডেডলক-মুক্ত</span>, তবে কনকারেন্সির খরচ অনেক।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 200" width="212">
+      <g class="w">
+        <rect x="6" y="8" width="200" height="26" rx="12" class="ink-r fill-r"/>
+        <rect x="6" y="86" width="200" height="26" rx="12" class="ink fill-b"/>
+        <rect x="6" y="164" width="200" height="26" rx="12" class="ink-g fill-g"/>
+        <circle cx="26" cy="21" r="6" class="ink-r fill-r"/><circle cx="26" cy="99" r="6" class="ink fill-b"/><circle cx="26" cy="177" r="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M26,27 V97" marker-end="url(#ah)"/>
+        <path class="ink" d="M26,105 V175" marker-end="url(#ahb)"/>
+        <path class="ink" d="M206,177 H272 V21 H208" marker-end="url(#ah)"/>
+      </g>
+      <text x="46" y="26" class="bn r w6" style="font-size:10px">T1 ধরে আছে X(অ্যাকাউন্ট A)</text>
+      <text x="46" y="104" class="bn k w6" style="font-size:10px">T2 ধরে আছে X(অ্যাকাউন্ট B)</text>
+      <text x="46" y="182" class="bn g w6" style="font-size:10px">T1 চায় B &#183; T2 চায় A</text>
+      <text x="272" y="105" text-anchor="middle" class="bn r s" style="font-size:10px">চক্কর = ডেডলক</text>
+      <text x="106" y="140" text-anchor="middle" class="bn p s" style="font-size:10px">চক্কর না থাকলে ডেডলক নেই</text>
+    </svg><figcaption>ওয়েট-ফর গ্রাফ: চক্কর মানেই ডেডলক, আর ২PL তা বাদ দেয় না</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:4.8mm">
+    <tr><th class="l">ডেডলক সামলানোর উপায়</th><th class="l">পদ্ধতি</th></tr>
+    <tr><td class="l"><b>প্রতিরোধ (Prevention)</b> — ঘটার আগেই</td><td class="l">কোন আইটেমে প্রথম লক নেওয়া যাবে তার একটি <b>নির্দিষ্ট বৈশ্বিক ক্রম</b> ঠিক করে দাও — তাহলে চক্কর অসম্ভব। ডেটা-ইঞ্জিনিয়ারিংয়ে বিকল্প হলো <b>wait–die</b> ও <b>wound–wait</b>, যেগুলো <span class="hl">টাইমস্ট্যাম্প</span> ব্যবহার করে।</td></tr>
+    <tr><td class="l"><b>শনাক্তকরণ (Detection)</b> — ঘটার পরে</td><td class="l">একটি <b>ওয়েট-ফর গ্রাফ</b> রাখো: T<sub>i</sub>→T<sub>j</sub> মানে T<sub>i</sub> T<sub>j</sub>-এর জন্য অপেক্ষা করছে। নিয়মিত খুঁজে দেখো <span class="circ">চক্কর</span> আছে কি না; পেলে চক্করের <b>একটি ট্রানজেকশন অ্যাবোর্ট</b> করো — সাধারণত সবচেয়ে কম কাজ করা ট্রানজেকশনটি — তার লক ছাড়ো এবং আবার চালানোর সুযোগ দাও।</td></tr>
+  </table>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: timestamp, optimistic, MVCC ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>লকবিহীন কন্ট্রোল</span></div>
+  <h2><span class="no">৪</span>২PL-এর পর: টাইমস্ট্যাম্প অর্ডারিং, অপটিমিস্টিক কন্ট্রোল ও MVCC</h2><span class="tag">লক নেই, তবু সিরিয়ালাইজেবল ★</span>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">কৌশল</th><th class="l">কীভাবে কাজ করে</th><th class="l">আটকাটা</th></tr>
+    <tr><td class="l"><b>টাইমস্ট্যাম্প অর্ডারিং (TO)</b></td><td class="l">প্রতিটি ট্রানজেকশন পায় <code>TS(T) = (সময়, গণনা)</code>, যাতে <b>TS অদ্বিতীয় ও তুলনীয়</b> হয়। কোনো পড়া বা লেখা তখনই বৈধ যখন সেটি আইটেমের শেষ লেখকের সময় মেনে চলে; নয়তে ট্রানজেকশনটি <span class="hl">অ্যাবোর্ট ও পুনরায় চালাতে হয়</span>।</td><td class="l">ডেডলক-মুক্ত, তবে <b>কাজ নষ্ট হতে পারে</b> এবং স্টারভেশন হতে পারে।</td></tr>
+    <tr><td class="l"><b>অপটিমিস্টিক (ভ্যালিডেশন)</b></td><td class="l">ধরে নাও দ্বন্দ্ব <b>বিরল</b>: <span class="hl">একেবারে লক ছাড়া</span> চালাও, পঠিত ও লেখা আইটেম মনে রাখো, আর কমিটের সময় <b>যাচাই (validate)</b> করো যে পঠিত কিছু বদলায়নি।</td><td class="l"><b>লেখা-নির্ভর</b> কাজের জন্য অনুপযুক্ত — ভ্যালিডেশনের উত্তর প্রায়ই "অ্যাবোর্ট"।</td></tr>
+    <tr><td class="l"><b>MVCC</b> (মাল্টিভার্সন)</td><td class="l">প্রতিটি সারির <span class="hl">কয়েকটি সংস্করণ</span> রাখো, যেগুলোতে লেখার ট্রানজেকশনের ছাপ আছে। পাঠক একটি <b>স্ন্যাপশট</b> নিয়ে যে সংস্করণ দেখা উচিত তাই পড়ে, তাই <span class="circ">পাঠক লেখককে আটকায় না</span>; শুধু একই সারিতে দুই লেখকই সংঘর্ষ করে।</td><td class="l">পুরোনো সংস্করণ সরাতে হয়, আর <b>রাইট-স্কেউ</b> কমিটের সময়ই ঠেকাতে হয়।</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 190" width="540">
+    <g class="w">
+      <rect x="6" y="10" width="200" height="28" rx="8" class="ink fill-b"/>
+      <rect x="6" y="44" width="200" height="28" rx="8" class="ink fill-b"/>
+      <rect x="6" y="78" width="200" height="28" rx="8" class="ink-r fill-r"/>
+      <rect x="6" y="112" width="200" height="28" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M206,24 H250 M206,58 H250 M206,92 H250 M206,126 H250"/>
+      <path class="ink-g" d="M306,24 V58 M306,58 V92 M306,92 V126" marker-end="url(#ahg)"/>
+      <rect x="404" y="24" width="210" height="32" rx="8" class="ink-k fill-y"/>
+      <path class="ink" d="M509,56 V86" marker-end="url(#ahb)"/>
+      <rect x="404" y="88" width="210" height="54" rx="8" class="ink-g fill-g"/>
+    </g>
+    <text x="106" y="29" text-anchor="middle" class="bn s" style="font-size:11px">সংস্করণ ১ · TS = 10</text>
+    <text x="106" y="63" text-anchor="middle" class="bn s" style="font-size:11px">সংস্করণ ২ · TS = 22</text>
+    <text x="106" y="97" text-anchor="middle" class="bn r w6" style="font-size:10px">সংস্করণ ৩ · TS = 41 (আনকমিটেড)</text>
+    <text x="106" y="131" text-anchor="middle" class="bn s" style="font-size:11px">সংস্করণ ৪ · TS = 57</text>
+    <text x="228" y="20" class="bn p s" style="font-size:10px">রাখা হয় যতক্ষণ</text>
+    <text x="228" y="32" class="bn p s" style="font-size:10px">নতুন স্ন্যাপশট আসে</text>
+    <text x="509" y="44" text-anchor="middle" class="bn k w6" style="font-size:10px">TS = 35-এ স্ন্যাপশট নেওয়া হয়েছে</text>
+    <text x="509" y="110" text-anchor="middle" class="bn g w6" style="font-size:11px">এই পাঠক দেখে সংস্করণ ২</text>
+    <text x="509" y="126" text-anchor="middle" class="bn g s" style="font-size:10px">আনকমিটেড সংস্করণ ৩</text>
+    <text x="509" y="138" text-anchor="middle" class="bn g s" style="font-size:10px">অদৃশ্য — এটিই পুরো সমাধান</text>
+    <text x="320" y="172" text-anchor="middle" class="bn r w6" style="font-size:10px">এক সারি, চারটি জীবন্ত সংস্করণ — পাঠকের স্ন্যাপশট টাইমস্ট্যাম্পই বেছে নেয়</text>
+  </svg><figcaption>MVCC: সারির কয়েকটি সংস্করণ থাকে; পাঠকের স্ন্যাপশট টাইমস্ট্যাম্প ঠিক করে কোনটি দেখবে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ MVCC মানে "কোনো লক নেই" নয় ✍ তিনটি</span> <b>১.</b> "MVCC একেবারে লক ব্যবহার করে না" মিথ্যা — <span class="red">পাঠক</span> কোনো লক নেয় না, তবে একই সারিতে <b>দুজন লিখলে</b> সংঘর্ষ হয়। <b>২.</b> এর বিক্রয়-বিন্দু প্রায়ই ভুল বলা হয়: এটি <b>পাঠক–লেখক</b> ব্লকিং দূর করে, রাইট–রাইট সংঘর্ষ দূর করে না। <b>৩.</b> "MVCC সব অসঙ্গতি ঠেকায়" মিথ্যা — স্ন্যাপশট আইসোলেশনেও <b>রাইট-স্কেউ</b> ঢোকে, তাই আসল ইঞ্জিন তা ধরে <span class="hl">সিরিয়ালাইজেশন ব্যর্থতা দিয়ে অ্যাবোর্ট</span> করে, যা ক্লায়েন্ট আবার চালায়।</div>
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">কোথায় কোনটি ব্যবহৃত হয়</span> <b>PostgreSQL</b> পুরোনো টিউপল রাখে এবং <code>VACUUM</code> দিয়ে ফেরায়; <b>Oracle</b> রোলব্যাক সেগমেন্টে undo রাখে এবং তা দিয়ে রিড-কনসিসটেন্ট স্ন্যাপশট গড়ে; <b>MySQL InnoDB</b> undo লগ রাখে ও আনকমিটেড সংস্করণ অন্য সেশনকে দেখায় না; <b>SQL Server</b> tempdb-তে সারি-সংস্করণ রাখে। <span class="hl">লক ও সংস্করণ প্রতিদ্বন্দ্বী নয়</span> — এই প্রতিটি সিস্টেম দুটোই ব্যবহার করে।</div>
+  </div>
+  <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>লক সার পড়ে, টাইমস্ট্যাম্প বিচার করে, অপটিমিস্ট আশা করে, সংস্করণ চাল্চা করে।</b>" — ২PL ট্রানজেকশনকে পরস্পরের <i>অপেক্ষা</i> করায়, টাইমস্ট্যাম্প অর্ডারিং দেরি করা ট্রানজেকশনকে <i>আবার চালায়</i>, অপটিমিস্ট কন্ট্রোল তাকে <i>আশা</i> করতে বলে যে কিছুই বদলায়নি, আর MVCC সবাইকে পুরোনো কপি দেখায়, ফলে কেউ অপেক্ষাই করে না।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: isolation levels ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>আইসোলেশন লেভেল</span></div>
+  <h2><span class="no">৫</span>আইসোলেশন লেভেল: SQL মানদণ্ড, এবং আসল ইঞ্জিন যা করে</h2><span class="tag">একটি ডায়াল, চার অবস্থান ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">সংজ্ঞা</span> <b>আইসোলেশন লেভেল (Isolation Level)</b> হলো একটি ট্রানজেকশনের কাজ অন্যটির চোখে কতটা লুকানো থাকে — অর্থাৎ <span class="hl">কনসিসটেন্সি বনাম থ্রুপুট</span>র ডায়াল। সবচেয়ে শক্তিশালী নিশ্চয়তার জন্য ডানে ঘোরালে গতি সবচেয়ে কম, বামে ঘোরালে গতি বেশি কিন্তু অসঙ্গতি মেনে নিতে হয়। সর্বোচ্চ নিচের প্রতিটি লেভেল <b>কোন কোন অসঙ্গতি অনুমতি দেয়</b> তা দিয়েই সংজ্ঞায়িত।</div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap;line-height:5mm">
+    <tr><th class="l">আইসোলেশন লেভেল</th><th>ডার্টি রিড</th><th>নন-রিপিটেবল</th><th>ফ্যান্টম</th><th>গতি</th></tr>
+    <tr><td class="l"><b>রিড আনকমিটেড</b></td><td><span class="red">অনুমোদিত</span></td><td><span class="red">অনুমোদিত</span></td><td><span class="red">অনুমোদিত</span></td><td>সবচেয়ে দ্রুত</td></tr>
+    <tr><td class="l"><b>রিড কমিটেড</b></td><td><span class="green">না</span></td><td><span class="red">অনুমোদিত</span></td><td><span class="red">অনুমোদিত</span></td><td>দ্রুত</td></tr>
+    <tr><td class="l"><b>রিপিটেবল রিড</b></td><td><span class="green">না</span></td><td><span class="green">না</span></td><td><span class="red">অনুমোদিত</span></td><td>ধীর</td></tr>
+    <tr><td class="l"><b>সিরিয়ালাইজেবল</b></td><td><span class="green">না</span></td><td><span class="green">না</span></td><td><span class="green">না</span></td><td>সবচেয়ে ধীর</td></tr>
+  </table>
+  <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN TRANSACTION;
+  SELECT balance FROM account WHERE accno = 'A-101';
+  -- একই SELECT আরেকবার এখানে একই মান দিতে হবে
+COMMIT;</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ মানদণ্ডের সারণি প্রোডাক্ট যা করে তা নয় ✍ চারটি</span> <b>১.</b> উপরের সারণি <b>SQL মানদণ্ডের</b> সংজ্ঞা, যেখানে <span class="red">রিপিটেবল রিডেও ফ্যান্টম অনুমোদিত</span> — এটি সারির <i>মান</i> বদলানো আটকায়, সারির <i>আগমন</i> নয়। <b>২.</b> <b>MySQL InnoDB</b> আরও এগোয়: <span class="hl">next-key (গ্যাপ + রেকর্ড) লক</span> ব্যবহার করে রিপিটেবল রিডেও ফ্যান্টম আটকায়। <b>৩.</b> <b>PostgreSQL</b> রিপিটেবল রিডকে <span class="hl">স্ন্যাপশট আইসোলেশন</span> হিসেবে বাস্তবায়ন করে, যেটিও ফ্যান্টম আটকায়, আর সত্যিকারের সিরিয়ালাইজেবল লেভেলে রাইট-স্কেউ-ও যাচাই হয়। <b>৪.</b> <b>SQL Server</b> মানদণ্ডের কাছাকাছি থাকে, তাই রিড রিপিটেবলেও ফ্যান্টম সম্ভব। তাই "রিপিটেবল রিড ফ্যান্টম আটকায়" কথাটি <b>ইঞ্জিন-নির্ভর</b> — দ্ব্যর্থহীন MCQ-র প্রিয় ফাঁদ।</div>
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">লস্ট আপডেট: যা সারণি দেখাতে পারে না</span> তিনটি কলামই <i>পড়া</i> নিয়ে। <b>লস্ট আপডেট</b> একটি <i>লেখার</i> সংঘর্ষ, আর মানদণ্ড লেভেল বাড়িয়ে তা দূর করে না — অনেক ইঞ্জিনে একই লেভেলেও সারি লক না করলে আপডেট হারায়, তবে অ্যাপ্লিকেশন <span class="hl">ডিলেড (অপটিমিস্টিক) লেখা</span> করতে পারে: মান পড়ে নাও, তারপর <code>WHERE balance = &lt;যে মান পড়েছিলে&gt;</code> দিয়ে লেখো; কিছু না মিললে আবার চেষ্টা করো।</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>রিড আনকমিটেড গুজব, রিড কমিটেড সংবাদ, রিপিটেবল রিড সেদিনের দলিল, সিরিয়ালাইজেবল আদালতের লিপিবদ্ধ কার্যবিবরণী।</b>" সিঁড়িটি এক বাক্যে: <span class="circ">বেশি আইসোলেশন = কম অসঙ্গতি = বেশি অপেক্ষা</span>। লিখিত উত্তরে সবচেয়ে শক্তিশালী বাক্য: "লেভেল বাড়ালে যৌক্তিক ত্রুটির বদলে ভৌত অপেক্ষা আসে, তাই নির্বাচনটি সঠিকতা ও থ্রুপুটের মধ্যে।"</div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="270">
+      <g class="w">
+        <rect x="10" y="10" width="120" height="32" rx="9" class="ink-r fill-r"/>
+        <rect x="170" y="10" width="120" height="32" rx="9" class="ink-g fill-g"/>
+        <path class="ink" d="M60,42 V70 M240,42 V70" marker-end="url(#ahb)"/>
+        <rect x="10" y="72" width="120" height="32" rx="9" class="ink fill-b"/>
+        <rect x="170" y="72" width="120" height="32" rx="9" class="ink fill-b"/>
+        <path class="ink" d="M60,104 V132 M240,104 V132" marker-end="url(#ahb)"/>
+      </g>
+      <text x="70" y="31" text-anchor="middle" class="bn r w6" style="font-size:11px">ডার্টি রিড চলবে</text>
+      <text x="230" y="31" text-anchor="middle" class="bn g w6" style="font-size:11px">সিরিয়ালাইজেবল</text>
+      <text x="70" y="93" text-anchor="middle" class="bn k w6" style="font-size:11px">ডার্টি রিড নেই</text>
+      <text x="230" y="93" text-anchor="middle" class="bn k w6" style="font-size:11px">ফ্যান্টম নেই</text>
+      <text x="150" y="146" text-anchor="middle" class="bn r w6" style="font-size:10px">একটি ডায়াল: নিরাপত্তার জন্য ঘোরাও, বিনিময়ে সময়</text>
+    </svg><figcaption>সিঁড়িটি ডার্টি রিড থেকে সিরিয়াল সিডিউল পর্যন্ত</figcaption></figure>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: recovery ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>রিকভারি</span></div>
+  <h2><span class="no">৬</span>রিকভারি: লগ, WAL নিয়ম, UNDO/REDO, চেকপয়েন্ট ও ব্যাকআপ</h2><span class="tag">ক্র্যাশের পাতা ★</span>
+  <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+    <tr><th class="l">ব্যর্থতা</th><th class="l">যা ঘটেছে</th><th class="l">যা সামলায়</th></tr>
+    <tr><td class="l"><b>ট্রানজেকশন ব্যর্থতা</b></td><td class="l">লজিক্যাল এরর, কনস্ট্রেন্ট লঙ্ঘন, ডেডলকের শিকার, বা ব্যবহারকারী নিজে abort।</td><td class="l">সরাসরি <b>UNDO</b> — ডিবিএমএস আবার চালু হয় না</td></tr>
+    <tr><td class="l"><b>সিস্টেম ক্র্যাশ</b></td><td class="l">বিদ্যুৎ চলে যাওয়া, OS বন্ধ, হার্ডওয়্যার বিভ্রাট। র‍্যাম গেছে; <b>যা ডিস্কে ছিল তা বেঁচে গেছে</b>।</td><td class="l">লগ থেকে <b>REDO</b></td></tr>
+    <tr><td class="l"><b>মিডিয়া / ডিস্ক ব্যর্থতা</b></td><td class="l">খারাপ সেক্টর, হেড ক্র্যাশ, ভলিউম হারানো। ডেটাবেস নিজেই ক্ষতিগ্রস্ত বা নেই।</td><td class="l"><b>ব্যাকআপ</b> থেকে restore + লগের <b>REDO</b></td></tr>
+  </table>
+  <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">লগ রেকর্ডে থাকে কী</span> প্রতিটি রেকর্ডে থাকে <b>ট্রানজেকশন আইডি</b>, <b>আগের লগ-রেকর্ডের ঠিকানা</b> (তাই লগ <span class="hl">দুই দিকেই সাধানিত তালিকা</span> — রোলব্যাকের জন্য পিছনে, রিডোর জন্য সামনে), <b>ডেটা আইটেম</b>, তার <b>পুরোনো মান</b> (before-image) ও <b>নতুন মান</b> (after-image), এবং <code>&lt;T_i, X, V_old, V_new&gt;</code> কমিট/অ্যাবোর্ট চিহ্ন। একটি <b>চেকপয়েন্ট</b> নিজেও একটি লগ রেকর্ড — ডেটাবেসের সম্পূর্ণ কপি নয়।</div>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ WAL নিয়ম ✍ তিনটি</span> <span class="circ">রাইট-অ্যাহেড লগিং নিয়ম:</span> <b>আপডেটের লগ রেকর্ড স্থায়ী স্টোরেজে পৌঁছানোর আগে সংশ্লিষ্ট ডেটা পেজ স্থায়ী স্টোরেজে পৌঁছাতে পারে না।</b> <b>১.</b> "ডেটাবেসে লেখার পরে লগ" নিয়মটি উল্টে দেয়, তাই যেকোনো MCQ-তে ভুল অপশন। <b>২.</b> WAL-ই <b>ডিওরেবিলিটি ও অ্যাটমিসিটি</b> সস্তা করে; এটি <b>ব্যাকআপ নয়</b> এবং হারানো ডিস্ক রক্ষা করে না। <b>৩.</b> "চেকপয়েন্ট পুরো ডেটাবেস কপি করে" এটি ভুল ধারণা — একটি <b>ফাজি চেকপয়েন্ট</b> কেবল নোংরা পেজগুলোর নাম লিখে রাখে, তাই <span class="hl">কোনো কাজ আটকে না</span>।</div>
+  <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+    <tr><th class="l">আপডেট পলিসি</th><th class="l">ডেটা পেজ কখন লেখা হয়</th><th class="l">ক্র্যাশের পরে আমাদের…</th></tr>
+    <tr><td class="l"><b>ডিফার্ড আপডেট</b></td><td class="l">শুধু <b>কমিটের পরে</b> — আগে কোনো পেজ স্পর্শ হয় না।</td><td class="l">শুধু <b>REDO</b> — ডিস্কে আনকমিটেড কিছু নেই।</td></tr>
+    <tr><td class="l"><b>ইমিডিয়েট আপডেট</b></td><td class="l">বাফার ফ্লাশ হওয়ামাত্র, <b>কমিটের আগেই</b>।</td><td class="l">আনকমিটেডের <b>UNDO</b>, কমিটেডের <b>REDO</b>।</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 620 180" width="380">
+    <g class="w">
+      <rect x="4" y="12" width="120" height="30" rx="8" class="ink-k fill-y"/>
+      <rect x="132" y="12" width="120" height="30" rx="8" class="ink fill-b"/>
+      <rect x="260" y="12" width="120" height="30" rx="8" class="ink-r fill-r"/>
+      <rect x="388" y="12" width="120" height="30" rx="8" class="ink-g fill-g"/>
+      <rect x="516" y="12" width="100" height="30" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M124,27 H130 M252,27 H258 M380,27 H386 M508,27 H514" marker-end="url(#ahb)"/>
+      <rect x="4" y="68" width="612" height="48" rx="8" class="ink fill-b"/>
+      <path class="ink" d="M4,92 H616 M160,68 V116 M320,68 V116 M480,68 V116"/>
+      <rect x="388" y="140" width="228" height="32" rx="8" class="ink-g fill-g"/>
+      <path class="ink-g" d="M500,116 V138" marker-end="url(#ahg)"/>
+    </g>
+    <text x="64" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T1,A,100,90&gt;</text>
+    <text x="192" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T1,A,90,80&gt;</text>
+    <text x="320" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T1 commit&gt;</text>
+    <text x="448" y="32" text-anchor="middle" class="bn k w6" style="font-size:10px">চেকপয়েন্ট</text>
+    <text x="566" y="32" text-anchor="middle" class="k w6" style="font-size:10px">&lt;T2,A,…&gt;</text>
+    <text x="310" y="84" text-anchor="middle" class="bn k w6" style="font-size:11px">লগ: প্রতিটি আপডেট, যে ক্রমে ঘটেছে</text>
+    <text x="82" y="110" text-anchor="middle" class="bn s" style="font-size:10px">T1-এর কাজ</text>
+    <text x="240" y="110" text-anchor="middle" class="bn g s" style="font-size:10px">T1 কমিট করেছে — রাখো</text>
+    <text x="400" y="110" text-anchor="middle" class="bn p s" style="font-size:10px">&#8594; এর আগের সবকিছু</text>
+    <text x="548" y="110" text-anchor="middle" class="bn r s" style="font-size:10px">T2 — খোলা থাকলে UNDO</text>
+    <text x="502" y="161" text-anchor="middle" class="bn g w6" style="font-size:10px">চালু হলে কেবল শেষ চেকপয়েন্টের পরের লগ পড়তে হবে</text>
+  </svg><figcaption>একটি লগ, একটি চেকপয়েন্ট: রিকভারি কেবল শেষ চেকপয়েন্টের পরের অংশই চালায়</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">ব্যাকআপ ও বাকি কৌশল ✍</span> <b>ফুল</b> — সব কপি; ধীর, কিন্তু restore দ্রুত। <b>ডিফারেনশিয়াল</b> — <b>শেষ ফুল ব্যাকআপের পর</b> যা বদলেছে; সময়ের সঙ্গে বাড়ে। <b>ইনক্রিমেন্টাল</b> — <b>যেকোনো শেষ ব্যাকআপের পর</b> যা বদলেছে; সবচেয়ে ছোট, তবে restore-এ পুরো ধারাটি ক্রমে লাগে। <b>শ্যাডো পেজিং</b> প্রতিটি পেজের একটি ছায়া কপি রাখে এবং কমিটের সময় পরিবর্তনীয়ভাবে (atomically) স্থানান্তর করে — <span class="hl">রোলব্যাকের জন্য লগ লাগে না</span> — তবে পুরোনো পেজ-শৃঙ্খল আবর্জনা হয়ে থাকে। <b>ARIES</b>, যা আসল সিস্টেম ব্যবহার করে, তিনটি পাস চালায়: <b>বিশ্লেষণ</b> শেষ চেকপয়েন্ট থেকে, <b>রিডো</b> (ইতিহাস পুনরাবৃত্তি), <b>আনডু</b> (ব্যর্থদের রোলব্যাক)।</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>আগে লগ, পরে ডেটা</b>" — এই তিন শব্দেই WAL নিয়ম, এবং লগ থাকার পুরো কারণ। আর "<b>আনকমিটেডের UNDO, কমিটেডের REDO</b>" — প্রতিটি ক্র্যাশের ক্ষেত্রে ধরে; ক্র্যাশের আগে যে ট্রানজেকশন কমিটও করেনি অ্যাবোর্টও করেনি তাকে <i>অ্যাবোর্ট হয়েছে</i> ধরা হয়, তাই <span class="circ">বিদ্যুৎ চলে যাওয়ার পরে কোনো সন্দেহ থাকে না</span>।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: security ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>অ্যাক্সেস কন্ট্রোল ও নিরাপত্তা</span></div>
+  <h2><span class="no">৭</span>অ্যাক্সেস কন্ট্রোল ও নিরাপত্তা: কে কী দেখতে পাবে</h2><span class="tag">DAC · MAC · RBAC ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">দুই অংশ</span> <b>প্রমাণীকরণ (Authentication)</b> জিজ্ঞেস করে <span class="hl">"আপনি কে?"</span> — পাসওয়ার্ড, বায়োমেট্রিক, ওয়ান-টাইম কোড, দ্বিতীয় ফ্যাক্টর। <b>অনুমোদন (Authorisation)</b> জিজ্ঞেস করে <span class="hl">"আপনি কী করতে পারেন?"</span> — পড়া, ইনসার্ট, আপডেট, ডিলিট, নাকি কিছু নির্দিষ্ট কলামের কিছু সারি। ডেটাবেস <b>নিরাপদ</b> তখনই, যখন দুটোই আছে: খোলা দরজার পেছনে নিখুঁত অনুমোদন-ব্যবস্থার মূল্য নেই।</div>
+  <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+    <tr><th class="l">মডেল</th><th class="l">অ্যাক্সেস কে ঠিক করে</th><th class="l">এর বিশেষত্ব ও দুর্বলতা</th></tr>
+    <tr><td class="l"><b>DAC</b> — ডিসক্রিশনারি অ্যাক্সেস কন্ট্রোল</td><td class="l">প্রতিটি অবজেক্টের <b>মালিক</b>। প্রত্যেক ব্যবহারকারী নিজের অধিকার আরও এগিয়ে দিতে পারে।</td><td class="l">নমনীয় ও সস্তা, তবে ব্যবহারকারী <span class="red">নিজের ধারিত অধিকারই অন্যকে দিয়ে দিতে পারে</span> — এটিই ট্রোজান হর্সের পথ।</td></tr>
+    <tr><td class="l"><b>MAC</b> — ম্যান্ডেটরি অ্যাক্সেস কন্ট্রোল</td><td class="l"><b>সিস্টেম</b>, একটি সিকিউরিটি লেবেল থেকে: শ্রেণিবিভাগ × কম্পার্টমেন্ট (Top Secret, Secret, Confidential, Unclassified)।</td><td class="l">কেউ শ্রেণিবিভাগ <b>নামাতে পারে না</b>, মালিকও নয় — সামরিক ও সরকারি ডেটার জন্য।</td></tr>
+    <tr><td class="l"><b>RBAC</b> — রোল-ভিত্তিক অ্যাক্সেস কন্ট্রোল</td><td class="l"><b>রোল</b>: অনুমতি কাজের ধরনের সঙ্গে যুক্ত, আর ব্যবহারকারীরা রোলে নিয়োগ করা হয়।</td><td class="l"><span class="hl">"কে এটা করতে পারে?" বিস্তার ঘটায়</span> — চাকরি বদলালে রোল বদলাও, অনুমতির তালিকা ছুঁতে হয় না।</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start">
+    <div>
+      <div class="code tiny" style="font-size:9.5pt;line-height:5.2mm">CREATE ROLE Auditor;
+GRANT SELECT ON Employees TO Auditor;
+GRANT UPDATE (salary) ON Employees TO Auditor;
+REVOKE SELECT ON Payslips FROM intern;</div>
+      <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ পাঁচটি</span> <b>১.</b> <b>GRANT</b> অধিকার দেয়, <b>REVOKE</b> কেড়ে নেয় — দুটি বিনিময়যোগ্য নয়, আর <code>REVOKE</code>-এ গ্রান্টিপত্রের নাম লাগে। <b>২.</b> <b>MAC</b>-এ অধিকার ঠিক করে <b>সিস্টেম</b>, তাই ব্যবহারকারী <span class="red">কিছুই গ্রান্ট করতে পারে না</span>; <b>DAC</b>-এ অধিকার মালিকের সঙ্গে থাকে। <b>৩.</b> <b>RBAC রোল নিয়ে, সারি নিয়ে নয়</b> — সারি-ভিত্তিক অ্যাক্সেস আলাদা সুবিধা। <b>৪.</b> <b>ভিউ (View)</b> সস্তা কিন্তু শক্তিশালী দ্বিতীয় সুরক্ষা: প্রয়োজনমতো কলাম ও সারি দেখিয়ে <span class="hl">ভিউতে GRANT করো, টেবিলে নয়</span>। <b>৫.</b> <b>এনক্রিপশন</b> গোপনীয়তা, <b>অডিটিং</b> জবাবদিহি, <b>ইন্টেগ্রিটি কনস্ট্রেন্ট</b> সঠিকতা — তিনটি আলাদা কাজ, আর পরীক্ষা এগুলো গুলিয়ে দিতে পছন্দ করে।</div>
+    </div>
+    <div class="sumbox tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">ঝুঁকি ও তার উত্তর</span> <b>স্টোরেজে</b> — ডিস্ক বা ব্যাকআপ চুরি: <b>এনক্রিপশন</b>। <b>ট্রানজিটে</b> — নেটওয়ার্ক ট্যাপ: <b>TLS</b>। <b>অসতর্ক ব্যবহারকারী</b>: ভিউ, রোল, লিস্ট-প্রিভিলেজ। <b>অসতর্ক ডেভেলপার</b>: SQL ইনজেকশন — তাই কোয়েরি <b>প্যারামিটারাইজড</b> হয়, ইনপুট জোড়া লাগিয়ে কখনো সাজানো হয় না। <b>ভেতরের মানুষ</b>: <b>অডিট ট্রেইল</b>, যাতে পরে জবাবদিহি থাকে। <b>অসতর্ক প্রশাসক</b>: DBA সংজ্ঞানতই সর্বোচ্চ ক্ষমতাসম্পন্ন, তাই দায়িত্ব <span class="hl">আলাদা করা</span> হয় — রিকভারি প্রশাসন সাধারণ DDL থেকে ভাগ করা থাকে।</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">লিস্ট-প্রিভিলেজ, বাস্তবে ✍</span> কাজ করার জন্য যেটুকু <b>সবচেয়ে কম</b> অধিকার দরকার, এর বেশি কিছুই দেবেন না: দর্শকারীর জন্য শুধু পড়ার অধিকার, অপারেটরের জন্য একটি টেবিল, পুরো টেবিল নয় <code>GRANT UPDATE(column)</code> যখন মাত্র একটি ফিল্ড বদলায়, আর পে-রোল টেবিলে কখনো <code>SELECT *</code> নয়। দেওয়া প্রতিটি অধিকার <span class="hl">সেই মুহূর্তেই প্রতিটি ব্যাকআপ, রেপ্লিকা ও অডিট লগে চলে যায়</span>।</div>
+  <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">মনে রাখার কৌশল</span> "<b>DAC মালিক, MAC লেবেল, RBAC পদবি।</b>" এই ক্রমে বললে তিনটিই আটকে যায়। আর "<b>লিস্ট-প্রিভিলেজই পুরো নীতি</b>" — যে অধিকার আপনি দেননি, সেটি এমন একটি ফাটল যা ঠিক করতে হলো না।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: semi-structured and object worlds ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>XML, JSON, OODB ও ORDB</span></div>
+  <h2><span class="no">৮</span>আধা-কাঠামোবদ্ধ ডেটা: XML, XPath, XQuery, JSON — ও OODB বনাম ORDB</h2><span class="tag">শেষ দুটি অংশ ★</span>
+  <figure class="doodle"><svg viewBox="0 0 620 180" width="500">
+    <g class="w">
+      <rect x="236" y="6" width="150" height="28" rx="9" class="ink-k fill-y"/>
+      <rect x="18" y="62" width="140" height="28" rx="9" class="ink fill-b"/>
+      <rect x="238" y="62" width="140" height="28" rx="9" class="ink fill-b"/>
+      <rect x="458" y="62" width="146" height="28" rx="9" class="ink fill-b"/>
+      <rect x="18" y="122" width="140" height="28" rx="9" class="ink-r fill-r"/>
+      <rect x="238" y="122" width="140" height="28" rx="9" class="ink-r fill-r"/>
+      <rect x="458" y="122" width="146" height="28" rx="9" class="ink-r fill-r"/>
+      <path class="ink" d="M300,34 L90,60 M310,34 L308,60 M320,34 L528,60"/>
+      <path class="ink" d="M88,90 V120 M308,90 V120 M528,90 V120"/>
+    </g>
+    <text x="311" y="24" text-anchor="middle" class="k w6" style="font-size:12px">&lt;library&gt;</text>
+    <text x="88" y="80" text-anchor="middle" class="k w6" style="font-size:11px">&lt;book id="1"&gt;</text>
+    <text x="308" y="80" text-anchor="middle" class="k w6" style="font-size:11px">&lt;book id="2"&gt;</text>
+    <text x="531" y="80" text-anchor="middle" class="k w6" style="font-size:11px">&lt;book id="3"&gt;</text>
+    <text x="88" y="141" text-anchor="middle" class="bn r s" style="font-size:10px">title · author</text>
+    <text x="308" y="141" text-anchor="middle" class="bn r s" style="font-size:10px">title · author</text>
+    <text x="531" y="141" text-anchor="middle" class="bn r s" style="font-size:10px">title · author</text>
+    <text x="150" y="170" text-anchor="middle" class="bn p s" style="font-size:10px">নেস্টিং বাড়লে গভীরতা বাড়ে</text>
+    <text x="380" y="170" text-anchor="middle" class="bn p s" style="font-size:10px">আকৃতি ডেটার ভেতরেই, আলাদা ঘোষণা ছাড়াই</text>
+  </svg><figcaption>XML স্ব-বর্ণনামূলক: আকৃতি ডেটারই অংশ</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">দুটি কোয়েরি ভাষা — গুলিয়ে ফেলবেন না</span> <b>XPath</b> একটি ছোট <span class="hl">পাথ-ও-প্রেডিকেট ভাষা, একটি নথির উপর</span>: <code>/library/book/title</code>, <code>/library/book[@id="2"]/author</code>, <code>//author[text()="CLRS"]</code>। <b>XQuery</b> একটি <span class="hl">সম্পূর্ণ কোয়েরি ভাষা, FLWOR সহ</span> — <code>for</code>, <code>where</code>, <code>order by</code>, <code>return</code> — এক বা একাধিক নথির উপর, এবং গণনা ও জয়েনও করতে পারে। "XPath দুটি নথি জয়েন করে" — এই অপশন সরাসরি ভুল।</div>
+      <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">for $b in /library/book
+where $b/author = "CLRS"
+order by $b/title
+return $b/title/text()</div>
+      <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ তিনটি</span> <b>১.</b> XPath-এ <b>অ্যাট্রিবিউট হলো টেক্সট</b>: প্রেডিকেট <code>[@id="2"]</code> স্ট্রিং "2"-এর সঙ্গে মেলে, তাই <code>[@id=2]</code> ভুল বানান। <b>২.</b> <code>//</code> মানে "নিচের যেকোনো জায়গায়", "দ্বিতীয় স্তরে" নয়। <b>৩.</b> JSON-এ <span class="hl">কমেন্ট নেই, ডিফল্টভাবে স্কিমা নেই</span>, আর JSONPath XPath-এর চেয়ে অনেক সরু: নেভিগেট ও ফিল্টার করতে পারে, কিন্তু FLWOR বা জয়েন নেই।</div>
+    </div>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">রিলেশনাল, XML, JSON পাশাপাশি</span> <b>রিলেশনাল</b>: <i>কাঠামোবদ্ধ</i>, আগে স্কিমা ঘোষিত, মানের সারি, জয়েন ও সেট অপারেশন কিনে পাওয়া যায়, তবে আকৃতি বদলালে স্কিমাও বদলাতে হয়। <b>XML</b>: <i>আধা-কাঠামোবদ্ধ</i>, স্ব-বর্ণনামূলক, নেস্টিং ও বিভিন্ন ধরনের রেকর্ড, যাচাই হয় <b>DTD</b> বা <b>XSD</b> দিয়ে। <b>JSON</b>: তাও আধা-কাঠামোবদ্ধ, XML-এর চেয়ে হালকা, ওয়েবে স্বাভাবিক, প্রায় সব API-তে ব্যবহৃত। <span class="hl">তিনটিকেই ডিবিএমএসের উত্তর এক:</span> নথিটি সম্পূর্ণ অবস্থায় রাখো, নাকি সম্পর্কে ভেঙে (shred) রাখো — "XML থেকে রিলেশনাল ম্যাপিং" মানে এটিই।</div>
+      <div class="code tiny" style="font-size:10.5pt;line-height:5.6mm">{"library":{"books":[
+ {"id":1,"title":"DB Systems","author":"Navathe"},
+ {"id":2,"title":"Intro to Algorithms","author":"CLRS"}]}}
+$.library.books[*].title</div>
+      <table class="hand tiny" style="width:100%;font-size:10pt;line-height:5mm">
+        <tr><th class="l">বিষয়</th><th class="l">OODB</th><th class="l">ORDB</th></tr>
+        <tr><td class="l">ডেটা মডেল</td><td class="l"><b>শুধু অবজেক্ট</b>, পরিচয় সহ</td><td class="l"><span class="hl">টেবিল + টাইপ</span></td></tr>
+        <tr><td class="l">ভাষা</td><td class="l">OQL / ODL</td><td class="l">SQL + এক্সটেনশন</td></tr>
+        <tr><td class="l">উদাহরণ</td><td class="l">ObjectStore, db4o, ObjectDB</td><td class="l">PostgreSQL, Oracle, DB2</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">পরীক্ষার ফাঁদ ✍ শেষ তিনটি</span> <b>১.</b> <b>OODB অবজেক্ট পরিচয় (identity) রাখে</b> — মানে সমান দুটি অবজেক্টও আলাদা অবজেক্ট — ঠিক যেটা রিলেশনাল কি ছুঁড়ে দেয়। <b>২.</b> <b>ORDB মানে "ছবি জুড়ে দেওয়া রিলেশনাল ডেটাবেস" নয়</b>: এটি রিলেশনাল মডেলে <b>ব্যবহারকারী-নির্ধারিত টাইপ (UDT)</b>, <b>নেস্টেড টেবিল</b>, <b>অবজেক্ট পরিচয়</b> ও <b>ইনহেরিট্যান্স</b> যোগ করে, আর রিলেশনাল মূল অক্ষত থাকে। <b>৩.</b> "অবজেক্ট ডেটাবেস দ্রুত" কথাটি <span class="circ">গভীর ও জটিল অবজেক্ট গ্রাফের</span> ক্ষেত্রেই ধার্য; সাধারণ ব্যবসায়িক সারি ও জয়েনের ক্ষেত্রে পরিপক রিলেশনাল বা অবজেক্ট-রিলেশনাল ইঞ্জিনই টুলিং ও খরচে এগিয়ে।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের শীট</span></h1>
+  <div class="sumbox tiny" style="line-height:5.2mm"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small" style="line-height:5.5mm">
+      <p>ACID = অ্যাটমিক …</p><p>… কনসিসটেন্সি, আইসোলেশন, ডিওরেবিলিটি</p>
+      <p>Commit = সব, Rollback = কিছু নয়</p><p>Active → পার্শিয়ালি কমিটেড</p>
+      <p>→ Committed → সমাপ্ত</p><p>Active → Failed → অ্যাবোর্টেড</p>
+      <p>সিরিয়াল = একটির পর আরেকটি</p><p>সিরিয়ালাইজেবল = সিরিয়ালের মতো</p>
+      <p>ডার্টি: অতি তাড়াতাড়ি</p><p>লস্ট আপডেট: অতি দেরিতে</p>
+      <p>নন-রিপিটেবল: মান বদলাল</p><p>ফ্যান্টম: সারি এল</p>
+      <p>S + S = সামঞ্জস্যপূর্ণ</p><p>S + X, X + X = সংঘর্ষ</p>
+      <p>২PL: আগে নাও, পরে ছাড়ো</p><p>২PL ≠ ডেডলক-মুক্ত</p>
+      <p>রিগরাস ২PL ⇒ স্ট্রিক্ট</p><p>কনজারভেটিভ ⇒ ডেডলক-মুক্ত</p>
+      <p>ওয়েট-ফর চক্কর = ডেডলক</p><p>একটি অ্যাবোর্ট, বা নির্দিষ্ট ক্রম</p>
+      <p>টাইমস্ট্যাম্প: অ্যাবোর্ট হতে পারে</p><p>অপটিমিস্ট: কমিটে যাচাই</p>
+      <p>MVCC: স্ন্যাপশট পাঠক</p><p>RU &lt; RC &lt; RR &lt; সিরিয়াল</p>
+      <p>মানদণ্ডে RR: ফ্যান্টম চলে</p><p>InnoDB / PG: ফ্যান্টম নেই</p>
+      <p><span class="hl">WAL: আগে লগ, পরে ডেটা</span></p><p>আনকমিটেডের UNDO, কমিটেডের REDO</p>
+      <p>ডিফার্ড ⇒ শুধু REDO</p><p>ইমিডিয়েট ⇒ UNDO + REDO</p>
+      <p>চেকপয়েন্ট ⇒ এর পরের লগ</p><p>ফুল / ডিফারেনশিয়াল / ইনক্রিমেন্টাল</p>
+      <p>DAC মালিক · MAC লেবেল</p><p>RBAC পদবি</p>
+      <p>GRANT দেয়, REVOKE কেড়ে</p><p>লিস্ট-প্রিভিলেজই নীতি</p>
+      <p>XPath = পাথ · XQuery = FLWOR</p><p>OODB: অবজেক্ট + OQL</p>
+      <p>ORDB: টেবিল + UDT</p><p>কনসিসটেন্সি দেয় কনস্ট্রেন্ট</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ol class="num">
+      <li>ট্রানজেকশন সব-অথবা-কিছু-নয়</li>
+      <li><b>কমিটেড শেষ অবস্থা নয়</b> — সমাপ্ত</li>
+      <li><b>ব্যর্থ Active থেকে</b>; অ্যাবোর্ট ব্যর্থ থেকে</li>
+      <li>সিরিয়ালাইজেবল = কোনো সিরিয়ালের মতো</li>
+      <li>শুধু <b>S-এর সঙ্গে S</b> সামঞ্জস্যপূর্ণ</li>
+      <li>২PL সিরিয়ালাইজেবল, <b>ডেডলক-মুক্ত নয়</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>RR আটকায় মান বদলানো, <b>সারি আসা নয়</b></li>
+      <li>MVCC আটকায় কেবল পাঠক–লেখক ব্লকিং</li>
+      <li><span class="circ">WAL: আগে লগ রেকর্ড ডিস্কে</span></li>
+      <li>ডিফার্ড ⇒ <b>শুধু REDO</b>; ইমিডিয়েট ⇒ দুটো</li>
+      <li><b>DAC মালিক, MAC লেবেল, RBAC পদবি</b></li>
+      <li>FLWOR কেবল <b>XQuery</b>-তে</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> <b>২PL ডেডলক আটকায়</b> দাবি করা · <b>পার্শিয়ালি কমিটেডের পরে ব্যর্থ</b> আঁকা · <b>ফ্যান্টমকে</b> বদলানো মান বলা · ইঞ্জিনের নাম না বলে <b>RR ফ্যান্টম আটকায়</b> বলা · ডেটা লেখার <b>পরে</b> লগ · কমিটেড কাজের <b>UNDO</b> · <b>চেকপয়েন্ট = পূর্ণ কপি</b> · <b>MAC কে DAC</b> ভাবা · <b>XPath-কে FLWOR</b> দেওয়া।</div>
+      <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">সব কৌশল একসঙ্গে</span> কমিটির মতো ভাবো · সক্রিয় দিয়ে শুরু, সমাপ্তে শেষ · ডার্টি অতি তাড়াতাড়ি, লস্ট অতি দেরিতে · আগে দরজা খোলা, পরে বন্ধ · লক সার পড়ে, টাইমস্ট্যাম্প বিচার করে, অপটিমিস্ট আশা করে, সংস্করণ চাল্চা করে · বেশি আইসোলেশন = বেশি অপেক্ষা · আগে লগ, পরে ডেটা · আনকমিটেডের UNDO, কমিটেডের REDO · DAC মালিক, MAC লেবেল, RBAC পদবি।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 130" width="270">
+      <g class="w">
+        <circle cx="66" cy="40" r="28" class="ink-r fill-r"/>
+        <circle cx="150" cy="40" r="28" class="ink fill-b"/>
+        <circle cx="234" cy="40" r="28" class="ink-g fill-g"/>
+        <path class="ink" d="M96,40 H118 M180,40 H202" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M234,70 C190,106 70,106 66,70" marker-end="url(#ahp)"/>
+        <rect x="46" y="106" width="208" height="22" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="66" y="45" text-anchor="middle" class="bn r w6" style="font-size:12px">২PL</text>
+      <text x="150" y="45" text-anchor="middle" class="bn k w6" style="font-size:12px">MVCC</text>
+      <text x="234" y="45" text-anchor="middle" class="bn g w6" style="font-size:12px">WAL</text>
+      <text x="150" y="122" text-anchor="middle" class="bn k w6" style="font-size:10px">কনকারেন্সি + রিকভারি = সঠিকতা</text>
+    </svg><figcaption>তিনটি কৌশল, একটি প্রতিশ্রুতি</figcaption></figure>
+  </div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ট্রানজেকশন ও রিকভারি</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">১.</span>একটি ট্রানজেকশন <b>Committed</b> অবস্থায় পৌঁছায় কখন?<ol class="opts"><li>তার শেষ স্টেটমেন্ট চলার পর</li><li>সব আপডেট ডেটা পেজে ফ্লাশ হলে</li><li>তার কমিট লগ রেকর্ড স্থায়ী স্টোরেজে গেলে</li><li>তার ধারিত সব লক ছাড়ার পর</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">২.</span>কোন লক-জোড়া <b>সামঞ্জস্যপূর্ণ</b>?<ol class="opts"><li>S(A) সঙ্গে X(A)</li><li>X(A) সঙ্গে S(A)</li><li>S(A) সঙ্গে S(A)</li><li>X(A) সঙ্গে X(A)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৩.</span>টু-ফেজ লকিং (২PL) কী নিশ্চয়তা দেয়?<ol class="opts"><li>ডেডলক থেকে মুক্তি</li><li>কনফ্লিক্ট-সিরিয়ালাইজেবল ও রিকভারেবল সিডিউল</li><li>শুধু ক্যাসকেডিং রোলব্যাক থেকে মুক্তি</li><li>কোনো ট্রানজেকশন কখনো অ্যাবোর্ট হয় না</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৪.</span><b>ফ্যান্টম</b> ঘটে কখন?<ol class="opts"><li>একটি সারির মান দুবার আপডেট হলে</li><li>আনকমিটেড মান পড়া হলে</li><li>দুটি আপডেট একে অপরকে উপরে লিখলে</li><li>পুনরাবৃত্ত রেঞ্জ কোয়েরিতে নতুন সারি এলে</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৫.</span>SQL মানদণ্ড অনুযায়ী <b>রিপিটেবল রিড</b> এখনো কোনটি অনুমতি দেয়?<ol class="opts"><li>ডার্টি রিড</li><li>লস্ট আপডেট</li><li>ফ্যান্টম রিড</li><li>কিছুই নয় — এটি পুরো সিরিয়ালাইজেবল</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৬.</span>রাইট-অ্যাহেড লগিং নিয়ম কী দাবি করে?<ol class="opts"><li>লগের আগে ডেটা পেজ লেখা হয়</li><li>লগ রেকর্ড আগে স্থায়ী স্টোরেজে পৌঁছায়</li><li>দুটো একই ডিস্ক ব্লকে লেখা হয়</li><li>প্রতিটি কমিটের পর চেকপয়েন্ট</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৭.</span><b>ইমিডিয়েট আপডেটে</b> ক্র্যাশ হলে রিকভারিতে কী করতে হয়?<ol class="opts"><li>শুধু REDO</li><li>শুধু UNDO</li><li>আনকমিটেডের UNDO ও কমিটেডের REDO</li><li>শুধু শেষ ফুল ব্যাকআপ থেকে restore</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৮.</span><b>রাইট-স্কেউ</b> অসঙ্গতি কোন অবস্থায় সম্ভব?<ol class="opts"><li>সিরিয়ালাইজেবল সিডিউলে</li><li>স্ন্যাপশট আইসোলেশনে</li><li>টু-ফেজ লকিংয়ে</li><li>কনজারভেটিভ ২PL-এ</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">৯.</span><b>MAC</b> সম্পর্কে কোন বক্তব্য সঠিক?<ol class="opts"><li>মালিক যাকে খুশি গ্রান্ট করতে পারে</li><li>অধিকার ঠিক করে সিস্টেমের সিকিউরিটি লেবেল</li><li>অধিকার কাজের রোলের সঙ্গে যুক্ত</li><li>ব্যবহারকারী শ্রেণিবিভাগ সবসময় নামাতে পারে</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">১০.</span><b>for / where / return</b> কোন ভাষার?<ol class="opts"><li>XPath</li><li>XQuery</li><li>SQL</li><li>JSONPath</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-গ · ৩-খ · ৪-ঘ · ৫-গ · ৬-খ · ৭-গ · ৮-খ · ৯-খ · ১০-খ</div>
+  <div class="wq tiny" style="line-height:5.2mm"><span class="lbl">লিখিত প্রশ্ন</span> ট্রানজেকশনের সংজ্ঞা দাও এবং চারটি ACID বৈশিষ্ট্য বলো, <b>প্রতিটি কে রক্ষা করে তা-সহ</b>। <b>লক সামঞ্জস্য ম্যাট্রিক্স</b> দাও ও <b>টু-ফেজ লকিং</b> ব্যাখ্যা করো, তারপর বলো ২PL কী <b>দেয় না</b> এবং ডেডলক কীভাবে শনাক্ত হয়। <b>WAL নিয়ম</b> ও ক্র্যাশে <b>ডিফার্ড</b> ও <b>ইমিডিয়েট</b> আপডেটের পার্থক্য বলো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>ট্রানজেকশন ও ACID (৩)</b> — <b>একটি একক যৌক্তিক কাজ হিসেবে সম্পাদিত অপারেশনের ক্রম</b>, শেষে <code>COMMIT</code> বা <code>ROLLBACK</code>। <b>অ্যাটমিসিটি</b> সব অথবা কিছু নয়, রক্ষা করে রিকভারি ম্যানেজারের UNDO। <b>কনসিসটেন্সি</b> আগে ও পরে ঘোষিত ইন্টেগ্রিটি কনস্ট্রেন্ট মান্য — কনস্ট্রেন্টগুলো ব্যবহারকারীর, ডিবিএমএসের নয়। <b>আইসোলেশন</b> প্রতিটি ট্রানজেকশন একা চলছে বলে মনে হয়, রক্ষা করে কনকারেন্সি কন্ট্রোল। <b>ডিওরেবিলিটি</b> কমিটের পর ক্র্যাশেও টেকে থাকা, রক্ষা করে রিকভারি ম্যানেজার লগ ও WAL দিয়ে। <i class="mk">৩</i></li>
+    <li><b>লক ম্যাট্রিক্স (২)</b> — <code>S(A)</code> সঙ্গে <code>S(A)</code> হলো <b>একমাত্র</b> সামঞ্জস্যপূর্ণ জোড়া; <code>S</code> সঙ্গে <code>X</code>, <code>X</code> সঙ্গে <code>S</code> এবং <code>X</code> সঙ্গে <code>X</code> — সবই সংঘর্ষ। অনেক পাঠক, এক লেখক, দুজন লেখক কখনো নয়। <i class="mk">২</i></li>
+    <li><b>২PL ও তার সীমা (২)</b> — <b>গ্রোয়িং পর্ব</b> লক অর্জন করে কিন্তু ছাড়ে না, <b>শ্রিংকিং পর্ব</b> ছাড়ে কিন্তু অর্জন করে না; সংক্ষেপণ পর্বের শেষে কমিট করে। কমিটের আগে কোনো লক ছাড়া না হওয়ায় সিডিউলটি <b>কনফ্লিক্ট-সিরিয়ালাইজেবল ও স্ট্রিক্ট (ফলে রিকভারেবল)</b>। এটি <b>ডেডলক থেকে মুক্তি বা স্টারভেশন থেকে মুক্তি নিশ্চয়তা দেয় না</b>। <i class="mk">২</i></li>
+    <li><b>ডেডলক (১)</b> — <b>ওয়েট-ফর গ্রাফ</b> বানাও, T<sub>i</sub>→T<sub>j</sub> মানে T<sub>i</sub> T<sub>j</sub>-এর জন্য অপেক্ষা করছে; নিয়মিত <b>চক্কর</b> খোঁজা হয়; চক্কর মিললে একটি ট্রানজেকশন <b>অ্যাবোর্ট</b> করে আবার চালাতে হয়। প্রতিরোধে নির্দিষ্ট লক-ক্রম বা wait–die / wound–wait ব্যবহার হয়। <i class="mk">১</i></li>
+    <li><b>WAL ও দুটি আপডেট পলিসি (২)</b> — <span class="hl">আপডেটের লগ রেকর্ড স্থায়ী স্টোরেজে আগে, তারপর সংশ্লিষ্ট ডেটা পেজ</span>। <b>ডিফার্ড আপডেটে</b> কমিটের আগে কোনো পেজ লেখা হয় না, তাই রিকভারি করে <b>শুধু REDO</b>; <b>ইমিডিয়েট আপডেটে</b> পেজ আগেই ফ্লাশ হয়, তাই <b>আনকমিটেডের UNDO ও কমিটেডের REDO</b> দুটোই। চেকপয়েন্ট থেকেই লগ পুনরাবৃত্তি শুরু হয়। <i class="mk">২</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>পাঁচটি ট্রানজেকশন-স্টেট ডায়াগ্রাম আঁকতে পারি</li>
+      <li>পাঁচটি কনকারেন্সি অসঙ্গতির নাম বলতে পারি</li>
+      <li>লক সামঞ্জস্য ম্যাট্রিক্স হুবহু বলতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>২PL কী দেয় <i>না</i> তা বলতে পারি</li>
+      <li>WAL নিয়ম শব্দে শব্দে বলতে পারি</li>
+      <li>XPath থেকে XQuery, OODB থেকে ORDB আলাদা করতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

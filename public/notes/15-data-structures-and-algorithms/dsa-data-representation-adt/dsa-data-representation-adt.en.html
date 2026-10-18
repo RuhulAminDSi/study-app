@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Internal Data Representation &amp; Abstract Data Types: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Data Representation &amp; Abstract Data Types</span></h1>
+  <p class="subtitle">bits · 2's complement · IEEE 754 · ADT · arrays · lists · stacks · queues · trees · graphs: exam-ready in 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink fill-b"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">DATA</text><text x="320" y="172" text-anchor="middle" class="r s">bits → ADT → structure</text>
+      <text x="142" y="56" text-anchor="middle" class="r w6" style="font-size:11px">2's complement</text><text x="142" y="70" text-anchor="middle" class="r w6" style="font-size:11px">ranges ★</text>
+      <text x="320" y="40" text-anchor="middle" class="s" style="font-size:12px">IEEE 754 · ASCII</text>
+      <text x="498" y="56" text-anchor="middle" class="g w6" style="font-size:11px">ADT = what,</text><text x="498" y="70" text-anchor="middle" class="g w6" style="font-size:11px">not how</text>
+      <text x="96" y="154" text-anchor="middle" class="s" style="font-size:11px">Arrays: address</text><text x="96" y="168" text-anchor="middle" class="s" style="font-size:11px">formula</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6" style="font-size:11px">Stack · postfix</text><text x="544" y="164" text-anchor="middle" class="r w6" style="font-size:11px">LIFO ★</text>
+      <text x="142" y="244" text-anchor="middle" class="r w6" style="font-size:11px">Queue · circular</text><text x="142" y="258" text-anchor="middle" class="r w6" style="font-size:11px">FIFO ★</text>
+      <text x="320" y="268" text-anchor="middle" class="r w6" style="font-size:12px">Binary tree ★</text>
+      <text x="498" y="244" text-anchor="middle" class="s" style="font-size:11px">Linked lists</text><text x="498" y="258" text-anchor="middle" class="s" style="font-size:11px">· graphs</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the one idea that ties it together</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;line-height:5.8mm"><b>High-yield list</b><br>① n-bit 2's complement: <b>−2<sup>n−1</sup> … 2<sup>n−1</sup>−1</b><br>② −5 (8-bit 2's) = <b>11111011</b><br>③ IEEE 754 single: 1 + 8 + 23, <b>bias 127</b><br>④ ADT = operations, not implementation<br>⑤ Row-major: B + w[(i−L<sub>r</sub>)n + (j−L<sub>c</sub>)]<br>⑥ Stack = <b>LIFO</b>, queue = <b>FIFO</b><br>⑦ Circular queue full: <b>(rear+1) % n == front</b><br>⑧ 2 3 4 * + = <b>14</b><br>⑨ Binary tree: n<sub>0</sub> = n<sub>2</sub> + 1, max 2<sup>h+1</sup>−1 nodes<br>⑩ Adj. matrix <span class="circ">O(V²)</span> · list O(V+E)</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The Data Structures and Algorithms syllabus opens: "<span class="hl">Internal data representation; Abstract data types; Elementary data structures: arrays, lists, stacks, queues, trees, graphs</span>; Advanced data structures: heaps, Fibonacci heaps, B-trees; Recursion, sorting, searching, hashing, storage management …" <b>This lesson takes the first three clauses.</b> Heaps and B-trees, sorting/searching/hashing and graph algorithms have their own lessons.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>Bits, types, signed integers … p. 2</li><li>IEEE 754, character codes … p. 3</li><li>Abstract data types … p. 4</li><li>Arrays &amp; address formulas … p. 5</li><li>Linked lists … p. 6</li><li>Stacks, infix → postfix … p. 7</li></ul>
+    <ul class="tick"><li>Queues, circular, deque … p. 8</li><li>Trees, binary trees … p. 9</li><li>Graphs, complexity table … p. 10</li><li>Night-before sheet … p. 11</li><li>Practice MCQs + written … p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: bits, types, signed integers ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Bits, types, integers</span></div>
+  <h2><span class="no">1</span>Bits, Data Types and Signed Integers</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Internal data representation</b> is how numbers, characters and instructions are encoded as <span class="hl">binary patterns</span>. <b>Bit</b> = one 0/1, <b>nibble</b> = 4 bits, <b>byte</b> = 8 bits, <b>word</b> = the CPU's natural unit (16/32/64 bits). The <b>type</b> gives a pattern its meaning: <code>01000001</code> is 65 as an integer, 'A' as ASCII. n bits give <span class="circ">2<sup>n</sup> patterns</span>, so <b>unsigned</b> n-bit integers run <span class="hl">0 … 2<sup>n</sup> − 1</span> (8-bit 0…255, 16-bit 0…65535).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Primitive vs non-primitive</span> <b>Primitive</b>: built into the language — int, char, float, double, boolean, pointer. <b>Non-primitive</b>: built from them — <b>linear</b> (array, list, stack, queue) and <b>non-linear</b> (tree, graph). Base conversion is in the number-systems lessons; 1 hex digit = 4 bits.</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">C type</th><th>Size</th><th class="l">Typical range</th></tr>
+      <tr><td class="l">char / unsigned char</td><td>1 B</td><td class="l">−128…127 / 0…255</td></tr>
+      <tr><td class="l">short</td><td>2 B</td><td class="l">−32768…32767</td></tr>
+      <tr><td class="l">int / long long</td><td>4 / 8 B</td><td class="l">−2<sup>31</sup>…2<sup>31</sup>−1 / −2<sup>63</sup>…</td></tr>
+      <tr><td class="l">float / double</td><td>4 / 8 B</td><td class="l">~7 / ~15–16 digits</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">Three ways to store a negative number in n bits</span> <b>Sign-magnitude</b>: MSB = sign (0 +, 1 −), the rest = |x|. <b>1's complement</b>: invert every bit of +x. <b>2's complement</b>: invert every bit, then <span class="hl">add 1</span> (= 2<sup>n</sup> − x). CPUs use <span class="hl">2's complement</span>: one zero, and one adder for both + and −.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 120" width="460">
+    <g class="w">
+      <rect x="10" y="6" width="190" height="36" rx="6" class="ink fill-b"/>
+      <rect x="215" y="6" width="190" height="36" rx="6" class="ink-g fill-g"/>
+      <rect x="420" y="6" width="190" height="36" rx="6" class="ink-r fill-r"/>
+      <rect x="10" y="78" width="190" height="36" rx="6" class="ink fill-b"/>
+      <rect x="215" y="78" width="190" height="36" rx="6" class="ink fill-b"/>
+      <rect x="420" y="78" width="190" height="36" rx="6" class="ink-r fill-y"/>
+      <path class="ink" d="M105,42 V74" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M310,42 V74" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M515,42 V74" marker-end="url(#ah)"/>
+    </g>
+    <text x="105" y="30" text-anchor="middle" class="k w6">+5 = 00000101</text>
+    <text x="310" y="30" text-anchor="middle" class="g w6">invert every bit</text>
+    <text x="515" y="30" text-anchor="middle" class="r w6">invert, then +1</text>
+    <text x="105" y="102" text-anchor="middle" class="k w6">S-M: 10000101</text>
+    <text x="310" y="102" text-anchor="middle" class="k w6">1's: 11111010</text>
+    <text x="515" y="102" text-anchor="middle" class="r w6">2's: 11111011</text>
+  </svg><figcaption>−5 in 8 bits, three ways (4-bit: 1101 · 1010 · 1011)</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Method</th><th class="l">n-bit range</th><th>8-bit range</th><th class="l">Zeros</th><th>−5 (4-bit)</th></tr>
+    <tr><td class="l">Sign-magnitude</td><td class="l">−(2<sup>n−1</sup>−1) … 2<sup>n−1</sup>−1</td><td>−127 … 127</td><td class="l"><span class="red"><b>two</b></span> (+0, −0)</td><td>1101</td></tr>
+    <tr><td class="l">1's complement</td><td class="l">−(2<sup>n−1</sup>−1) … 2<sup>n−1</sup>−1</td><td>−127 … 127</td><td class="l"><span class="red"><b>two</b></span></td><td>1010</td></tr>
+    <tr><td class="l"><b>2's complement</b></td><td class="l"><span class="circ">−2<sup>n−1</sup> … 2<sup>n−1</sup>−1</span></td><td><b>−128 … 127</b></td><td class="l">one</td><td><b>1011</b></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"Copy up to the first 1, flip the rest."</b> Scan +x from the right, copy bits up to and including the first 1, invert the rest: 0000010<u>1</u> → 1111101<u>1</u>. To <b>decode</b>, the MSB weighs <b>−2<sup>n−1</sup></b>: 11111011 = −128 + 123 = <b>−5</b>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> 2's complement is <b>asymmetric</b>: −128 exists in 8 bits, +128 does not. <b>10000101</b> (S-M) and <b>11111010</b> (1's) are the distractors for "2's complement of −5". To widen, <b>copy the sign bit</b>: 1011 → 1111 1011 (sign extension).</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Overflow</span> Possible only when <span class="hl">two numbers of the same sign are added</span> and the result has the <b>opposite sign</b> (carry into MSB ≠ carry out). Opposite signs <b>never</b> overflow; a carry out of the MSB alone is simply discarded.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ 8-bit</span> 100 + 50: <code>01100100 + 00110010 = 10010110</code> → MSB 1 from two positives: <span class="circ">overflow</span> (reads −106). 7 − 5 = 7 + (−5): <code>00000111 + 11111011 = 1 00000010</code> → drop the carry → <b>2</b>, no overflow.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: IEEE 754 + character codes ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Floating point, characters</span></div>
+  <h2><span class="no">2</span>IEEE 754 Floating Point and Character Codes</h2><span class="tag">layout ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A real number is stored in normalised form <b>(−1)<sup>S</sup> × 1.M × 2<sup>E − bias</sup></b> with three fields: <span class="hl">sign</span> S, <span class="hl">biased exponent</span> E and <span class="hl">mantissa</span> (fraction) M. The leading 1 is <b>not stored</b> (hidden bit).</div>
+  <figure class="doodle"><svg viewBox="0 0 620 130" width="480">
+    <g class="w">
+      <rect x="10" y="20" width="40" height="34" rx="4" class="ink-r fill-r"/>
+      <rect x="50" y="20" width="160" height="34" rx="4" class="ink fill-b"/>
+      <rect x="210" y="20" width="400" height="34" rx="4" class="ink-g fill-g"/>
+      <rect x="10" y="80" width="40" height="34" rx="4" class="ink-r fill-r"/>
+      <rect x="50" y="80" width="190" height="34" rx="4" class="ink fill-b"/>
+      <rect x="240" y="80" width="370" height="34" rx="4" class="ink-g fill-g"/>
+    </g>
+    <text x="30" y="43" text-anchor="middle" class="k w6">1</text>
+    <text x="130" y="43" text-anchor="middle" class="k w6">exponent 8</text>
+    <text x="410" y="43" text-anchor="middle" class="k w6">mantissa 23 bits</text>
+    <text x="320" y="14" text-anchor="middle" class="s">SINGLE (32 bits) · bias 127</text>
+    <text x="30" y="103" text-anchor="middle" class="k w6">1</text>
+    <text x="145" y="103" text-anchor="middle" class="k w6">exponent 11</text>
+    <text x="425" y="103" text-anchor="middle" class="k w6">mantissa 52 bits</text>
+    <text x="320" y="74" text-anchor="middle" class="s">DOUBLE (64 bits) · bias 1023</text>
+  </svg><figcaption>S-E-M: 1 + 8 + 23 = 32 · 1 + 11 + 52 = 64</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ −6.75 → single</span> <b>1.</b> Negative → S = <b>1</b>. <b>2.</b> 6.75 = <b>110.11</b>₂. <b>3.</b> Normalise: <b>1.1011 × 2²</b>; drop the hidden 1, M = 1011 0…0. <b>4.</b> E = 2 + 127 = 129 = <b>10000001</b>. <b>5.</b> <code>1 10000001 1011000…0</code> = <span class="hl">C0D80000</span>h. <b>Check:</b> 1.1011₂ = 1.6875; × 2² = 6.75 ✓</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Format</th><th>S</th><th>E</th><th>M</th><th>Bias</th><th class="l">Digits</th></tr>
+      <tr><td class="l"><b>Single (32)</b></td><td>1</td><td>8</td><td>23</td><td><span class="circ">127</span></td><td class="l">~7</td></tr>
+      <tr><td class="l"><b>Double (64)</b></td><td>1</td><td>11</td><td>52</td><td><b>1023</b></td><td class="l">~15–16</td></tr>
+      <tr><td class="l" colspan="6">E all 0s: ±0 (M = 0) or denormal · E all 1s: ±∞ (M = 0) or NaN</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"1-8-23, 127; 1-11-52, 1023."</b> The bias is always <b>2<sup>k−1</sup> − 1</b> for a k-bit exponent: 2<sup>7</sup> − 1 = 127, 2<sup>10</sup> − 1 = 1023. Field order <b>S-E-M</b>: Sign, Exponent, Mantissa.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <b>0.1 has no exact binary form</b> (0.000110011… recurring), so <code>0.1 + 0.2 == 0.3</code> is <b>false</b> in C, Java and Python. Compare floats with <code>|a − b| &lt; ε</code>; keep money in integers (paisa).</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Code</th><th class="l">Size</th><th class="l">Facts examiners use</th></tr>
+    <tr><td class="l"><b>BCD</b> (8421)</td><td class="l">4 bits per decimal digit</td><td class="l">59 → <code>0101 1001</code>; 1010–1111 invalid; pure binary 59 = <code>111011</code></td></tr>
+    <tr><td class="l"><b>ASCII</b></td><td class="l"><span class="circ">7 bits</span>, 128 chars</td><td class="l">'A' = 65 (41h), 'a' = 97 (61h), '0' = 48 (30h); cases differ by 32</td></tr>
+    <tr><td class="l">Ext. ASCII / EBCDIC</td><td class="l">8 bits</td><td class="l">256 chars / IBM mainframes</td></tr>
+    <tr><td class="l"><b>Unicode</b></td><td class="l">a character <i>set</i></td><td class="l">U+0000 … U+10FFFF; Bangla U+0980–U+09FF; 'অ' = U+0985</td></tr>
+    <tr><td class="l"><b>UTF-8</b> · 16 · 32</td><td class="l"><span class="hl">1–4</span> · 2/4 · 4 bytes</td><td class="l">UTF-8 is ASCII-compatible; 'অ' = <code>E0 A6 85</code></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ endianness</span> <code>0x12345678</code> at address 100. <b>Big-endian</b>: 100→12, 101→34, 102→56, 103→78. <b>Little-endian</b>: 100→<b>78</b> … 103→12. x86 is little-endian; <b>network byte order is big-endian</b>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> "Unicode is 16-bit" is outdated: Unicode is a set of 1 114 112 code points and <b>UTF-8/16/32 are its encodings</b>. ASCII is <b>7-bit</b>, not 8. <code>int</code>'s size is <b>compiler-dependent</b> (≥ 16 bits in C).</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: ADT ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Abstract data types</span></div>
+  <h2><span class="no">3</span>Abstract Data Types</h2><span class="tag">definition question ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> An <b>abstract data type (ADT)</b> is a mathematical model of a type defined by <span class="hl">its values and the operations on them</span> (with their rules), <b>not by how it is implemented</b>. A <b>data structure</b> is a concrete way of arranging data in memory that implements an ADT. "Stack" is an ADT; "array with a <code>top</code> index" is one data structure that implements it.</div>
+  <div class="mnote green">what, not how</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 600 250" width="290">
+      <g class="w">
+        <rect x="150" y="6" width="300" height="70" rx="10" class="ink-g fill-g"/>
+        <path class="ink" d="M20,110 H580" style="stroke-dasharray:8 6"/>
+        <rect x="20" y="150" width="250" height="80" rx="10" class="ink fill-b"/>
+        <rect x="330" y="150" width="250" height="80" rx="10" class="ink fill-b"/>
+        <path class="ink" d="M250,76 L150,146" marker-end="url(#ahb)"/>
+        <path class="ink" d="M350,76 L450,146" marker-end="url(#ahb)"/>
+      </g>
+      <text x="300" y="34" text-anchor="middle" class="g w6" style="font-size:20px">STACK ADT (interface)</text>
+      <text x="300" y="60" text-anchor="middle" class="s" style="font-size:17px">push · pop · peek · isEmpty</text>
+      <text x="580" y="102" text-anchor="end" class="r s" style="font-size:16px">abstraction barrier</text>
+      <text x="145" y="182" text-anchor="middle" class="k w6" style="font-size:18px">array + top</text>
+      <text x="145" y="208" text-anchor="middle" class="s" style="font-size:16px">fixed size, fast</text>
+      <text x="455" y="182" text-anchor="middle" class="k w6" style="font-size:18px">linked list</text>
+      <text x="455" y="208" text-anchor="middle" class="s" style="font-size:16px">grows, no overflow</text>
+    </svg><figcaption>one interface, many implementations</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Point</th><th class="l">ADT</th><th class="l">Data structure</th></tr>
+      <tr><td class="l">Level</td><td class="l">logical, abstract</td><td class="l">physical, concrete</td></tr>
+      <tr><td class="l">Says</td><td class="l"><b>what</b> it does</td><td class="l"><b>how</b> it does it</td></tr>
+      <tr><td class="l">Contains</td><td class="l">values + operations + rules</td><td class="l">memory layout + algorithms</td></tr>
+      <tr><td class="l">Example</td><td class="l">Stack, Queue, List, Map</td><td class="l">array, linked list, heap, hash table</td></tr>
+      <tr><td class="l">In code</td><td class="l">interface / header</td><td class="l">class / .c file</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ADT</th><th class="l">Core operations</th><th class="l">Rule</th><th class="l">Built with</th></tr>
+    <tr><td class="l"><b>List</b></td><td class="l">insert, delete, get(i), search</td><td class="l">position</td><td class="l">array, linked list</td></tr>
+    <tr><td class="l"><b>Stack</b></td><td class="l">push, pop, peek, isEmpty</td><td class="l"><span class="circ">LIFO</span></td><td class="l">array, linked list</td></tr>
+    <tr><td class="l"><b>Queue</b></td><td class="l">enqueue, dequeue, front, rear</td><td class="l"><b>FIFO</b></td><td class="l">circular array, list</td></tr>
+    <tr><td class="l"><b>Deque</b></td><td class="l">insert/delete at both ends</td><td class="l">both ends</td><td class="l">doubly linked list</td></tr>
+    <tr><td class="l"><b>Priority queue</b></td><td class="l">insert, extract-max, peek</td><td class="l">priority</td><td class="l"><b>binary heap</b></td></tr>
+    <tr><td class="l"><b>Set / Map</b></td><td class="l">add, contains · put(k,v), get(k)</td><td class="l">no duplicates</td><td class="l">hash table, BST</td></tr>
+    <tr><td class="l"><b>Tree</b></td><td class="l">insert, delete, search, traverse</td><td class="l">one parent</td><td class="l">linked nodes, array</td></tr>
+    <tr><td class="l"><b>Graph</b></td><td class="l">addVertex, addEdge, adjacent</td><td class="l">any to any</td><td class="l">adj. matrix / list</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">Why ADTs — three benefits</span> <b>Encapsulation</b> (information hiding): users see only the operations, so the representation can change without breaking them. <b>Reusability</b>: the same ADT can be implemented several ways and reused in many programs. <b>Modularity</b>: each module is written, tested and debugged on its own. Together they give <span class="hl">data abstraction</span>, the basis of classes in OOP.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>ADT = a menu; data structure = the kitchen.</b> The menu lists what you can order (push, pop); the kitchen decides how it is cooked (array or list). Change the kitchen, keep the menu. Benefits: "<b>E-R-M</b>" — Encapsulation, Reusability, Modularity.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> BFS and DFS are <b>algorithms</b> run on a graph, not operations of the Graph ADT itself. A priority queue is <b>not FIFO</b>: it serves by priority. A linked list is a <b>data structure</b>; "List" is the ADT. Asked "an ADT defines…?" → <span class="circ">behaviour</span>, not storage.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: arrays ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Arrays</span></div>
+  <h2><span class="no">4</span>Arrays and Address Calculation</h2><span class="tag">numerical MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> An <b>array</b> is a fixed-size collection of elements of <span class="hl">one type in contiguous memory</span>, reached by index. Because the elements are contiguous and equally sized, the address of any element is computed by a formula, so <b>access is O(1)</b> (random access). Insertion or deletion in the middle shifts elements: <b>O(n)</b>.</div>
+  <div class="mnote">random access O(1)</div>
+  <figure class="doodle" style="clear:both"><svg viewBox="0 0 620 140" width="520">
+    <g class="w">
+      <rect x="20" y="30" width="100" height="44" class="ink fill-b"/>
+      <rect x="120" y="30" width="100" height="44" class="ink fill-b"/>
+      <rect x="220" y="30" width="100" height="44" class="ink-r fill-r"/>
+      <rect x="320" y="30" width="100" height="44" class="ink fill-b"/>
+      <rect x="420" y="30" width="100" height="44" class="ink fill-b"/>
+      <path class="ink-r" d="M270,118 V80" marker-end="url(#ah)"/>
+    </g>
+    <text x="70" y="58" text-anchor="middle" class="k w6">A[0]</text>
+    <text x="170" y="58" text-anchor="middle" class="k w6">A[1]</text>
+    <text x="270" y="58" text-anchor="middle" class="r w6">A[2]</text>
+    <text x="370" y="58" text-anchor="middle" class="k w6">A[3]</text>
+    <text x="470" y="58" text-anchor="middle" class="k w6">A[4]</text>
+    <text x="70" y="22" text-anchor="middle" class="s">1000</text>
+    <text x="170" y="22" text-anchor="middle" class="s">1004</text>
+    <text x="270" y="22" text-anchor="middle" class="s">1008</text>
+    <text x="370" y="22" text-anchor="middle" class="s">1012</text>
+    <text x="470" y="22" text-anchor="middle" class="s">1016</text>
+    <text x="290" y="132" class="r s">1000 + 4 × (2 − 0) = 1008</text>
+    <text x="530" y="58" class="s">int, w = 4</text>
+  </svg><figcaption>base address + width × offset</figcaption></figure>
+  <div class="sumbox tiny"><span class="lbl">Address formulas</span> B = base address, w = bytes per element, L = lower bound.<br>
+    <b>1-D:</b> LOC(A[i]) = <span class="hl">B + w (i − L)</span> · number of elements = U − L + 1.<br>
+    <b>2-D, m rows × n columns, row-major</b> (C, C++, Java, Python): LOC(A[i][j]) = <span class="hl">B + w [ (i − L<sub>r</sub>) · n + (j − L<sub>c</sub>) ]</span>.<br>
+    <b>2-D, column-major</b> (Fortran, MATLAB): LOC(A[i][j]) = <span class="hl">B + w [ (j − L<sub>c</sub>) · m + (i − L<sub>r</sub>) ]</span>.<br>
+    Row-major multiplies by the <b>number of columns n</b>; column-major by the <b>number of rows m</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ 2-D, both orders</span> <code>int A[20][30]</code> (0-based, m = 20, n = 30), B = 1000, w = 4. Find A[5][10].<br><b>Row-major:</b> 1000 + 4 (5 × 30 + 10) = 1000 + 4 × 160 = <span class="circ">1640</span>.<br><b>Column-major:</b> 1000 + 4 (10 × 20 + 5) = 1000 + 4 × 205 = <b>1820</b>.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ non-zero lower bound</span> <code>A[5..50]</code>, B = 200, w = 2. Elements = 50 − 5 + 1 = <b>46</b>. LOC(A[20]) = 200 + 2 (20 − 5) = <b>230</b>.<br><code>A[−5..10]</code> holds 10 − (−5) + 1 = <b>16</b> elements.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Operation on an array of n</th><th>Time</th><th class="l">Why</th></tr>
+    <tr><td class="l">Access A[i]</td><td><b>O(1)</b></td><td class="l">address by formula</td></tr>
+    <tr><td class="l">Search (unsorted / sorted)</td><td>O(n) / O(log n)</td><td class="l">linear scan / binary search</td></tr>
+    <tr><td class="l">Insert / delete at end</td><td>O(1)</td><td class="l">no shifting (if space remains)</td></tr>
+    <tr><td class="l">Insert / delete at position k</td><td><b>O(n)</b></td><td class="l">shift n − k elements</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Sparse matrix</span> Most elements are 0. Store only the non-zeros as <b>triplets (row, col, value)</b>, or as a linked list. A 100 × 100 matrix with 50 non-zeros needs 3 × 50 = 150 cells instead of 10 000. An n × n <b>lower-triangular</b> matrix has <span class="hl">n(n+1)/2</span> stored elements.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Check the <b>lower bound</b>: with 1-based <code>A[1..m][1..n]</code>, subtract 1 from i and j first. Read whether the question says row- or column-major. C has no bounds checking: <code>A[10]</code> in <code>int A[10]</code> is <b>undefined behaviour</b>, not an error message.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: linked lists ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Linked lists</span></div>
+  <h2><span class="no">5</span>Linked Lists: Singly, Doubly, Circular</h2><span class="tag">pointer logic ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>linked list</b> is a sequence of <span class="hl">nodes</span>, each holding data and a <b>pointer</b> to the next node; the nodes may lie anywhere in memory. A <b>head</b> pointer reaches the first node and the last node's <code>next</code> is NULL. Size grows and shrinks at run time; there is no random access, so reaching the k-th node is <b>O(n)</b>.</div>
+  <figure class="doodle"><svg viewBox="0 0 620 220" width="440">
+    <g class="w">
+      <rect x="70" y="14" width="90" height="36" rx="4" class="ink fill-b"/><rect x="160" y="14" width="40" height="36" rx="4" class="ink fill-y"/>
+      <rect x="250" y="14" width="90" height="36" rx="4" class="ink fill-b"/><rect x="340" y="14" width="40" height="36" rx="4" class="ink fill-y"/>
+      <rect x="430" y="14" width="90" height="36" rx="4" class="ink fill-b"/><rect x="520" y="14" width="40" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M180,32 H246" marker-end="url(#ahb)"/>
+      <path class="ink" d="M360,32 H426" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M24,32 H66" marker-end="url(#ah)"/>
+      <rect x="50" y="94" width="34" height="36" rx="4" class="ink fill-y"/><rect x="84" y="94" width="80" height="36" rx="4" class="ink-g fill-g"/><rect x="164" y="94" width="34" height="36" rx="4" class="ink fill-y"/>
+      <rect x="260" y="94" width="34" height="36" rx="4" class="ink fill-y"/><rect x="294" y="94" width="80" height="36" rx="4" class="ink-g fill-g"/><rect x="374" y="94" width="34" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink-g" d="M190,106 H256" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M266,120 H200" marker-end="url(#ahg)"/>
+      <rect x="70" y="168" width="90" height="36" rx="4" class="ink fill-b"/><rect x="160" y="168" width="40" height="36" rx="4" class="ink fill-y"/>
+      <rect x="250" y="168" width="90" height="36" rx="4" class="ink fill-b"/><rect x="340" y="168" width="40" height="36" rx="4" class="ink fill-y"/>
+      <path class="ink" d="M180,186 H246" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M360,186 H410 V214 H40 V186 H66" marker-end="url(#ahp)"/>
+    </g>
+    <text x="4" y="12" class="r s">head</text>
+    <text x="115" y="38" text-anchor="middle" class="k w6">10</text><text x="295" y="38" text-anchor="middle" class="k w6">20</text><text x="475" y="38" text-anchor="middle" class="k w6">30</text>
+    <text x="540" y="38" text-anchor="middle" class="r s">NULL</text>
+    <text x="124" y="118" text-anchor="middle" class="k w6">10</text><text x="334" y="118" text-anchor="middle" class="k w6">20</text>
+    <text x="440" y="118" class="g s">doubly: prev · data · next</text>
+    <text x="115" y="192" text-anchor="middle" class="k w6">10</text><text x="295" y="192" text-anchor="middle" class="k w6">20</text>
+    <text x="440" y="192" class="p s">circular: last → head</text>
+    <text x="440" y="66" class="s">singly: data · next</text>
+  </svg><figcaption>singly · doubly · circular</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);align-items:start">
+    <div class="code">struct Node { int data;
+  struct Node *next; };
+
+/* insert at head: O(1) */
+struct Node *n = malloc(sizeof *n);
+n-&gt;data = x;
+n-&gt;next = head;
+head = n;
+
+/* delete the node after p: O(1) */
+struct Node *t = p-&gt;next;
+p-&gt;next = t-&gt;next;
+free(t);</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Type</th><th class="l">Node</th><th class="l">Use</th></tr>
+      <tr><td class="l"><b>Singly</b></td><td class="l">data, next</td><td class="l">stacks, simple lists</td></tr>
+      <tr><td class="l"><b>Doubly</b></td><td class="l">prev, data, next</td><td class="l">browser back/forward, LRU cache, deque</td></tr>
+      <tr><td class="l"><b>Circular</b></td><td class="l">last → first</td><td class="l"><span class="hl">round-robin scheduling</span></td></tr>
+      <tr><td class="l"><b>Circular doubly</b></td><td class="l">both links wrap</td><td class="l">music playlists, Fibonacci heap roots</td></tr>
+      <tr><td class="l"><b>Header list</b></td><td class="l">dummy first node</td><td class="l">no special case for empty list</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Array</th><th class="l">Linked list</th></tr>
+    <tr><td class="l">Memory</td><td class="l">contiguous, fixed size</td><td class="l">scattered, grows at run time</td></tr>
+    <tr><td class="l">Access k-th</td><td class="l"><b>O(1)</b></td><td class="l"><b>O(n)</b></td></tr>
+    <tr><td class="l">Insert/delete at front</td><td class="l">O(n) (shift)</td><td class="l"><b>O(1)</b></td></tr>
+    <tr><td class="l">Insert at end</td><td class="l">O(1) if space</td><td class="l">O(n), or O(1) with a tail pointer</td></tr>
+    <tr><td class="l">Extra space</td><td class="l">none (may waste unused slots)</td><td class="l">one pointer per node (two if doubly)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"Link first, then cut."</b> When inserting, set the new node's <code>next</code> <i>before</i> redirecting the old pointer, or the rest of the list is lost. Middle node: <b>slow/fast pointers</b> (fast moves 2, slow 1). Cycle: Floyd's tortoise and hare.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Deleting a given node in a <b>singly</b> list needs its <b>predecessor</b>, so it costs O(n) to find it; in a <b>doubly</b> list it is <span class="circ">O(1)</span>. Reversing a singly list takes O(n) time and O(1) space (three pointers: prev, curr, next).</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: stacks ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Stacks</span></div>
+  <h2><span class="no">6</span>Stacks, Infix → Postfix and Postfix Evaluation</h2><span class="tag">highest-yield ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>stack</b> is a list in which insertion (<b>push</b>) and deletion (<b>pop</b>) happen at <span class="hl">one end, the top</span>: <b>Last In, First Out</b>. Array version: <code>top = −1</code> means empty; push when <code>top == MAX−1</code> is <b>overflow</b>; pop when <code>top == −1</code> is <b>underflow</b>. Linked version pushes and pops at the head and never overflows (until memory runs out). All operations <b>O(1)</b>.</div>
+  <div class="cols" style="grid-template-columns:150px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 200 230" width="146">
+      <g class="w">
+        <path class="ink-k" d="M40,30 V210 H160 V30"/>
+        <rect x="50" y="166" width="100" height="36" rx="4" class="ink fill-b"/>
+        <rect x="50" y="126" width="100" height="36" rx="4" class="ink fill-b"/>
+        <rect x="50" y="86" width="100" height="36" rx="4" class="ink-r fill-r"/>
+        <path class="ink-g" d="M14,40 C14,70 40,80 60,80" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M140,80 C160,80 186,70 186,40" marker-end="url(#ah)"/>
+      </g>
+      <text x="100" y="190" text-anchor="middle" class="k w6">10</text>
+      <text x="100" y="150" text-anchor="middle" class="k w6">20</text>
+      <text x="100" y="110" text-anchor="middle" class="r w6">30 ← top</text>
+      <text x="14" y="24" text-anchor="middle" class="g s">push</text>
+      <text x="186" y="24" text-anchor="middle" class="r s">pop</text>
+    </svg><figcaption>last in, first out</figcaption></figure>
+    <div>
+      <div class="code">void push(int x) {
+  if (top == MAX-1) { puts("Overflow"); return; }
+  s[++top] = x; }
+int pop(void) {
+  if (top == -1) { puts("Underflow"); return -1; }
+  return s[top--]; }</div>
+      <div class="sumbox tiny" style="margin-top:1mm"><span class="lbl">Applications</span> <span class="hl">function calls and recursion</span> (the call stack holds return addresses and locals) · expression conversion and evaluation · balanced-parenthesis check · undo/redo · browser back · backtracking (maze, N-queens) · DFS · reversing a string. Every recursive algorithm can be rewritten with an explicit stack.</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Infix → postfix rules</span> Scan left to right. <b>Operand</b> → output. <b>(</b> → push. <b>)</b> → pop to output until "(". <b>Operator</b> → pop while the top has <b>higher or equal</b> precedence (equal only if left-associative), then push. At the end pop everything. ^ is <b>right</b>-associative.<br>Precedence: <span class="circ">^ &gt; * / &gt; + −</span></div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Read</th><th class="l">Stack</th><th class="l">Output</th></tr>
+      <tr><td class="l">A</td><td class="l"></td><td class="l">A</td></tr>
+      <tr><td class="l">+</td><td class="l">+</td><td class="l">A</td></tr>
+      <tr><td class="l">B</td><td class="l">+</td><td class="l">A B</td></tr>
+      <tr><td class="l">*</td><td class="l">+ *</td><td class="l">A B</td></tr>
+      <tr><td class="l">C</td><td class="l">+ *</td><td class="l">A B C</td></tr>
+      <tr><td class="l">−</td><td class="l">−</td><td class="l">A B C * +</td></tr>
+      <tr><td class="l">D, /, E</td><td class="l">− /</td><td class="l">A B C * + D E</td></tr>
+      <tr><td class="l">end</td><td class="l"></td><td class="l"><b>A B C * + D E / −</b></td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ evaluate postfix</span> Operand → push; operator → pop <b>B</b> (top), pop <b>A</b>, push <b>A op B</b>.<br><code>2 3 4 * +</code>: push 2, 3, 4; * → 3 × 4 = 12; + → 2 + 12 = <span class="circ">14</span> (infix 2 + 3 * 4).<br><code>5 6 2 + * 12 4 / −</code>: 6 + 2 = 8; 5 × 8 = 40; 12 / 4 = 3; 40 − 3 = <b>37</b>.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ three notations</span> Infix <code>(A + B) * (C − D)</code><br>Postfix (reverse Polish): <b>A B + C D − *</b><br>Prefix (Polish): <b>* + A B − C D</b><br>Postfix needs <b>no parentheses and no precedence rules</b>, which is why compilers and calculators use it.</div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"Stack of plates."</b> The last plate washed is the first one used. For postfix evaluation, the <b>second pop is the left operand</b>: "pop B, pop A, compute A op B" — matters for − and /.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> <code>2 3 4 * +</code> is <b>14, not 20</b>; 20 would be <code>2 3 + 4 *</code>. Pushing 1, 2, 3 in order can never pop as <b>3, 1, 2</b>. Recursion that never reaches its base case ends in <b>stack overflow</b>.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: queues ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Queues</span></div>
+  <h2><span class="no">7</span>Queues: Linear, Circular, Deque, Priority</h2><span class="tag">condition MCQs ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>queue</b> inserts at the <b>rear</b> (<i>enqueue</i>) and deletes from the <b>front</b> (<i>dequeue</i>): <span class="hl">First In, First Out</span>. In a plain array front and rear only move forward, so freed slots are never reused ("full" while half empty); a <b>circular queue</b> wraps the indices with <code>% n</code>.</div>
+  <div class="cols" style="grid-template-columns:172px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 240 240" width="168">
+      <g class="w">
+        <circle cx="120" cy="120" r="96" class="ink fill-b"/>
+        <circle cx="120" cy="120" r="44" class="ink fill-y"/>
+        <path class="ink" d="M120,24 V76 M120,164 V216 M24,120 H76 M164,120 H216 M52,52 L89,89 M151,151 L188,188 M188,52 L151,89 M52,188 L89,151"/>
+        <path class="ink-g" d="M208,40 L176,66" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M30,200 L62,174" marker-end="url(#ah)"/>
+      </g>
+      <text x="142" y="52" text-anchor="middle" class="k w6">A</text>
+      <text x="190" y="104" text-anchor="middle" class="k w6">B</text>
+      <text x="190" y="146" text-anchor="middle" class="k w6">C</text>
+      <text x="120" y="126" text-anchor="middle" class="s">n = 8</text>
+      <text x="226" y="34" text-anchor="end" class="g s">front</text>
+      <text x="14" y="232" class="r s">rear wraps</text>
+    </svg><figcaption>rear = (rear + 1) % n</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Circular queue (array of n)</th><th class="l">Condition</th></tr>
+        <tr><td class="l">Enqueue</td><td class="l"><code>rear = (rear + 1) % n; Q[rear] = x</code></td></tr>
+        <tr><td class="l">Dequeue</td><td class="l"><code>x = Q[front]; front = (front + 1) % n</code></td></tr>
+        <tr><td class="l"><b>Full</b></td><td class="l"><span class="circ">(rear + 1) % n == front</span></td></tr>
+        <tr><td class="l"><b>Empty</b></td><td class="l"><code>front == −1</code> (or <code>front == rear</code> in the one-slot-free form)</td></tr>
+        <tr><td class="l">Elements</td><td class="l"><code>(rear − front + n) % n</code> (one-slot-free form)</td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">Two conventions</span> <code>front = rear = −1</code> as empty: all n slots usable. <code>front = rear = 0</code> as empty: one slot stays free, capacity <b>n − 1</b>.</div>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ trace</span> Empty queue: enqueue(1), enqueue(2), enqueue(3) → [1, 2, 3]; dequeue() removes <b>1</b> → [2, 3]; enqueue(4) → [2, 3, 4]; dequeue() removes <b>2</b> → [3, 4]. Front = <span class="circ">3</span>, rear = 4. The same pushes and pops on a <b>stack</b> leave [1, 2] with 2 on top.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Variant</th><th class="l">Rule</th><th class="l">Typical use</th></tr>
+    <tr><td class="l"><b>Linear queue</b></td><td class="l">FIFO, indices only move forward</td><td class="l">simple buffers</td></tr>
+    <tr><td class="l"><b>Circular queue</b></td><td class="l">FIFO, indices wrap with % n</td><td class="l">CPU <span class="hl">round-robin</span>, keyboard and network buffers</td></tr>
+    <tr><td class="l"><b>Deque</b></td><td class="l">insert and delete at <b>both</b> ends</td><td class="l">sliding-window maximum, undo history</td></tr>
+    <tr><td class="l">Restricted deque</td><td class="l">input-restricted: insert at one end · output-restricted: delete at one end</td><td class="l">—</td></tr>
+    <tr><td class="l"><b>Priority queue</b></td><td class="l">highest priority served first; ties FIFO</td><td class="l">Dijkstra, OS job scheduling, Huffman</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"Bank counter queue."</b> Join at the back (rear), leave from the front. <b>D</b>ouble-<b>E</b>nded <b>QUE</b>ue = deque. Uses: BFS, printer spooling, CPU scheduling, buffers between fast and slow devices.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A priority queue is best built on a <b>binary heap</b>: insert and delete-max both O(log n) — an unsorted array makes delete O(n). A queue can be built from <b>two stacks</b> (amortised O(1)). "Which structure for BFS?" → queue; "for DFS?" → stack.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: trees ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Trees</span></div>
+  <h2><span class="no">8</span>Trees and Binary Trees</h2><span class="tag">formula + traversal ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>tree</b> is a connected acyclic hierarchy with one <b>root</b>; every other node has exactly one parent, so n nodes have <span class="hl">n − 1 edges</span>. A <b>binary tree</b>: at most two children (left, right). Terms: <b>leaf</b>, <b>internal</b> node, <b>siblings</b>, <b>degree</b> = number of children, <b>level</b> (root = 0), <b>height</b> = edges on the longest root-to-leaf path.</div>
+  <div class="cols" style="grid-template-columns:230px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="226">
+      <g class="w">
+        <path class="ink" d="M150,34 L90,84 M150,34 L210,84 M90,84 L50,144 M90,84 L130,144 M210,84 L180,144"/>
+        <circle cx="150" cy="30" r="20" class="ink-r fill-r"/>
+        <circle cx="90" cy="88" r="20" class="ink fill-b"/>
+        <circle cx="210" cy="88" r="20" class="ink fill-b"/>
+        <circle cx="50" cy="148" r="20" class="ink-g fill-g"/>
+        <circle cx="130" cy="148" r="20" class="ink-g fill-g"/>
+        <circle cx="180" cy="148" r="20" class="ink-g fill-g"/>
+      </g>
+      <text x="150" y="36" text-anchor="middle" class="k w6">A</text>
+      <text x="90" y="94" text-anchor="middle" class="k w6">B</text>
+      <text x="210" y="94" text-anchor="middle" class="k w6">C</text>
+      <text x="50" y="154" text-anchor="middle" class="k w6">D</text>
+      <text x="130" y="154" text-anchor="middle" class="k w6">E</text>
+      <text x="180" y="154" text-anchor="middle" class="k w6">F</text>
+      <text x="258" y="36" class="r s">root, level 0</text>
+      <text x="150" y="192" text-anchor="middle" class="g s">leaves D, E, F · height 2</text>
+    </svg><figcaption>F is C's <b>left</b> child</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Traversal</th><th class="l">Order</th><th class="l">Result for this tree</th></tr>
+      <tr><td class="l"><b>Preorder</b></td><td class="l">Node, Left, Right</td><td class="l">A B D E C F</td></tr>
+      <tr><td class="l"><b>Inorder</b></td><td class="l">Left, Node, Right</td><td class="l">D B E A F C</td></tr>
+      <tr><td class="l"><b>Postorder</b></td><td class="l">Left, Right, Node</td><td class="l"><span class="circ">D E B F C A</span></td></tr>
+      <tr><td class="l"><b>Level order</b></td><td class="l">level by level (queue)</td><td class="l">A B C D E F</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Binary-tree property (root at level 0, height h)</th><th class="l">Formula</th><th class="l">Check (h = 2)</th></tr>
+    <tr><td class="l">Max nodes at level i</td><td class="l"><span class="hl">2<sup>i</sup></span></td><td class="l">level 2: 4</td></tr>
+    <tr><td class="l">Max nodes in a tree of height h</td><td class="l"><span class="hl">2<sup>h+1</sup> − 1</span></td><td class="l">7</td></tr>
+    <tr><td class="l">Min height with n nodes</td><td class="l">⌈log<sub>2</sub>(n + 1)⌉ − 1</td><td class="l">n = 7 → 2</td></tr>
+    <tr><td class="l">Leaves vs nodes of degree 2</td><td class="l"><span class="circ">n<sub>0</sub> = n<sub>2</sub> + 1</span></td><td class="l">perfect h = 2: 4 = 3 + 1</td></tr>
+    <tr><td class="l">Distinct binary trees with n nodes</td><td class="l">Catalan: C(2n, n)/(n + 1)</td><td class="l">n = 3 → 5</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Kinds of binary tree</span> <b>Full / strict</b>: every node has 0 or 2 children. <b>Complete</b>: all levels full except the last, filled <b>from the left</b> (heap shape). <b>Perfect</b>: every internal node has 2 children, all leaves on one level. <b>Skewed</b>: one child each — a list.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Array representation</span> Store level by level. <b>0-based:</b> left = <span class="hl">2i + 1</span>, right = 2i + 2, parent = ⌊(i − 1)/2⌋. <b>1-based:</b> left = 2i, right = 2i + 1, parent = ⌊i/2⌋. Ideal for complete trees; wasteful for skewed ones.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ rebuild from two traversals</span> Preorder A B D E C F, inorder D B E A F C. Preorder's first is the root <b>A</b>; in the inorder, D B E is its left subtree and F C its right. <b>B</b> roots the left part (D, E); <b>C</b> roots the right with F on its left. Postorder: <b>D E B F C A</b>. Inorder + pre/post fixes a tree uniquely; pre + post alone does not.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> The name says <b>where the Node goes</b>: <b>Pre</b> = node first, <b>In</b> = node in the middle, <b>Post</b> = node last; Left always comes before Right. <b>BST</b>: left &lt; node &lt; right, so its <b>inorder is sorted</b>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Check where the level count starts: with root at level <b>1</b>, max nodes at level i = 2<sup>i−1</sup> and in height h = 2<sup>h</sup> − 1. BST search is O(log n) <b>on average</b> but <b>O(n) when skewed</b> — hence AVL and red-black trees.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: graphs + complexity ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Graphs &amp; complexity</span></div>
+  <h2><span class="no">9</span>Graphs, and the Cost of Every Operation</h2><span class="tag">wraps up ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>graph</b> G = (V, E) is a set of vertices and a set of edges joining pairs of them. <b>Undirected</b> or <b>directed</b> (digraph), <b>weighted</b> or not. <b>Degree</b> = edges at a vertex (in-/out-degree in a digraph). A <b>path</b> joins vertices by edges; a <b>cycle</b> returns to its start; a graph is <b>connected</b> if every pair is joined by a path. A <span class="hl">tree is a connected acyclic graph</span>.</div>
+  <div class="cols" style="grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 220 180" width="196">
+      <g class="w">
+        <path class="ink" d="M71,40 L149,40 M50,61 L50,119 M65,55 L155,125 M170,61 L170,119"/>
+        <circle cx="50" cy="40" r="20" class="ink-r fill-r"/>
+        <circle cx="170" cy="40" r="20" class="ink fill-b"/>
+        <circle cx="50" cy="140" r="20" class="ink fill-b"/>
+        <circle cx="170" cy="140" r="20" class="ink fill-b"/>
+      </g>
+      <text x="50" y="46" text-anchor="middle" class="k w6">0</text>
+      <text x="170" y="46" text-anchor="middle" class="k w6">1</text>
+      <text x="50" y="146" text-anchor="middle" class="k w6">2</text>
+      <text x="170" y="146" text-anchor="middle" class="k w6">3</text>
+      <text x="110" y="176" text-anchor="middle" class="s">V = 4, E = 4</text>
+    </svg><figcaption>undirected, 4 edges</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th>·</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+      <tr><th>0</th><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+      <tr><th>1</th><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+      <tr><th>2</th><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><th>3</th><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+    </table>
+    <div class="code">0 → 1 → 2 → 3
+1 → 0 → 3
+2 → 0
+3 → 0 → 1</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Adjacency matrix</th><th class="l">Adjacency list</th></tr>
+    <tr><td class="l">Space</td><td class="l"><span class="circ">O(V²)</span></td><td class="l"><b>O(V + E)</b></td></tr>
+    <tr><td class="l">Is (u, v) an edge?</td><td class="l"><b>O(1)</b></td><td class="l">O(degree of u)</td></tr>
+    <tr><td class="l">List all neighbours of u</td><td class="l">O(V)</td><td class="l">O(degree of u)</td></tr>
+    <tr><td class="l">Best for</td><td class="l"><b>dense</b> graphs</td><td class="l"><b>sparse</b> graphs (most real ones)</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">Counting facts</span> Max edges: undirected simple graph <span class="hl">n(n − 1)/2</span>, directed n(n − 1) — so K<sub>5</sub> has 10 edges. <b>Handshaking</b>: sum of all degrees = 2|E|, so the number of odd-degree vertices is even. A tree on n vertices has n − 1 edges; a <b>DAG</b> is a directed graph with no cycle. An <b>incidence matrix</b> is V × E.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th></tr>
+    <tr><td class="l">Array (unsorted)</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td class="l">Sorted array</td><td>O(1)</td><td>O(log n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td class="l">Singly linked list</td><td>O(n)</td><td>O(n)</td><td>O(1) at head</td><td>O(1) after a known node</td></tr>
+    <tr><td class="l">Stack / Queue</td><td>top/front O(1)</td><td>O(n)</td><td>O(1)</td><td>O(1)</td></tr>
+    <tr><td class="l">BST (average / worst)</td><td>—</td><td>O(log n) / O(n)</td><td>O(log n) / O(n)</td><td>O(log n) / O(n)</td></tr>
+    <tr><td class="l">Binary heap</td><td>max O(1)</td><td>O(n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> "Space of an adjacency list" is <b>O(V + E)</b>, not O(E): every vertex needs a list head even with no edges. A complete graph is dense, so a matrix wins there. A graph may have cycles and several components; a tree may not.</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">Where the rest of this chapter lives</span> <b>Heaps, Fibonacci heaps, B-trees</b> → the advanced data structures lesson. <b>Recursion, sorting, searching, hashing</b> → the next one. <b>BFS, DFS, topological sort, MST, shortest paths</b> → the graph algorithms lesson.</div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>n bits → 2<sup>n</sup> patterns; unsigned 0…2<sup>n</sup>−1</p><p>2's comp: −2<sup>n−1</sup> … 2<sup>n−1</sup>−1 (8-bit −128…127)</p>
+      <p>−5: S-M 10000101 · 1's 11111010</p><p>−5 in 2's (8-bit) = <b>11111011</b></p>
+      <p>Overflow: same signs in, opposite sign out</p><p>ASCII 7-bit · 'A' 65 · 'a' 97 · '0' 48</p>
+      <p>IEEE single 1-8-23, bias 127</p><p>IEEE double 1-11-52, bias 1023</p>
+      <p>ADT = what (operations); DS = how</p><p>Little-endian: low byte at low address</p>
+      <p>Row-major: B + w[(i−L<sub>r</sub>)n + (j−L<sub>c</sub>)]</p><p>Col-major: B + w[(j−L<sub>c</sub>)m + (i−L<sub>r</sub>)]</p>
+      <p>Stack LIFO · overflow top == MAX−1</p><p>Circular full: (rear+1) % n == front</p>
+      <p>Level i ≤ 2<sup>i</sup> nodes; height h ≤ 2<sup>h+1</sup>−1</p><p>n<sub>0</sub> = n<sub>2</sub> + 1 · edges = n − 1</p>
+      <p>Children 2i+1, 2i+2 (0-based)</p><p>Matrix O(V²) · list O(V+E) · max edges n(n−1)/2</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>2's complement has one zero; S-M and 1's have two</li>
+      <li>Copy to the first 1, flip the rest</li>
+      <li>Unicode is a set; UTF-8 is 1–4 bytes</li>
+      <li>0.1 + 0.2 ≠ 0.3 in floating point</li>
+      <li>Stack ADT: push, pop, peek, isEmpty</li>
+      <li>Array access O(1); insert in middle O(n)</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Doubly list deletes a given node in O(1)</li>
+      <li><code>2 3 4 * +</code> = 14; A+B*C → ABC*+</li>
+      <li>Precedence ^ &gt; * / &gt; + −; ^ right-assoc.</li>
+      <li>Recursion uses the stack; BFS uses a queue</li>
+      <li>Priority queue → binary heap</li>
+      <li>Inorder of a BST is sorted</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 150px;align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Top traps</span> 10000101 is S-M, not 2's · −128 has no +128 partner · carry out ≠ overflow · ASCII is 7-bit · int size is compiler-dependent · lower bound ≠ 0 · second pop is the left operand · priority queue is not FIFO · BST worst case O(n) · level count from 0 or 1.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">All tricks together</span> Copy to the first 1, flip the rest · 1-8-23/127, 1-11-52/1023, bias 2<sup>k−1</sup>−1 · ADT = menu, DS = kitchen · link first, then cut · stack of plates · bank counter queue · Pre/In/Post = where the Node goes.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="156">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text style="font-size:17px" x="75" y="28" text-anchor="middle" class="s">stack</text>
+      <text style="font-size:17px" x="75" y="64" text-anchor="middle" class="g s">queue</text>
+      <text style="font-size:17px" x="75" y="100" text-anchor="middle" class="r s">tree</text>
+      <text style="font-size:17px" x="215" y="28" text-anchor="middle" class="s">LIFO</text>
+      <text style="font-size:17px" x="215" y="64" text-anchor="middle" class="s">FIFO</text>
+      <text style="font-size:17px" x="215" y="100" text-anchor="middle" class="k s">hierarchy</text>
+    </svg><figcaption>three orders</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Job</th><th class="l">Structure</th><th class="l">Job</th><th class="l">Structure</th></tr>
+    <tr><td class="l">recursion, undo, postfix</td><td class="l"><b>stack</b></td><td class="l">BFS, printer spool</td><td class="l"><b>queue</b></td></tr>
+    <tr><td class="l">round-robin CPU</td><td class="l">circular queue / list</td><td class="l">job priority, Dijkstra</td><td class="l">priority queue (heap)</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ five numbers in one minute</span> (1) 8-bit 2's of −20: 00010100 → <b>11101100</b>. (2) 16-bit 2's range: <b>−32768 … 32767</b>. (3) <code>A[10][10]</code>, B = 500, w = 2, row-major A[3][4]: 500 + 2 (34) = <b>568</b>. (4) Binary tree with 10 leaves has <b>9</b> nodes of degree 2. (5) Simple undirected graph on 6 vertices: at most <span class="circ">15</span> edges.</div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Data Representation &amp; ADTs</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">1.</span>Which ADT follows LIFO?<ol class="opts"><li>Queue</li><li>Stack</li><li>Priority queue</li><li>Circular queue</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">2.</span>8-bit two's complement of −5:<ol class="opts"><li>10000101</li><li>11111010</li><li>11111011</li><li>00000101</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">3.</span>Range of 8-bit two's complement:<ol class="opts"><li>−127 … 127</li><li>−128 … 127</li><li>0 … 255</li><li>−128 … 128</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">4.</span>Exponent bias of IEEE 754 single:<ol class="opts"><li>127</li><li>128</li><li>1023</li><li>255</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">5.</span><code>int A[20][30]</code>, B = 1000, w = 4, row-major A[5][10]:<ol class="opts"><li>1820</li><li>1640</li><li>1600</li><li>1660</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">6.</span>Value of postfix <code>2 3 4 * +</code>:<ol class="opts"><li>20</li><li>24</li><li>9</li><li>14</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">7.</span>A circular queue of size n is full when:<ol class="opts"><li>front == rear</li><li>rear == n − 1</li><li>(rear+1)%n == front</li><li>front == 0</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">8.</span>enq 1, 2, 3, deq, enq 4, deq. Front?<ol class="opts"><li>3</li><li>4</li><li>2</li><li>1</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">9.</span>Max nodes in a binary tree of height 3:<ol class="opts"><li>8</li><li>7</li><li>15</li><li>16</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">10.</span>Space of an adjacency matrix:<ol class="opts"><li>O(V + E)</li><li>O(E)</li><li>O(V log V)</li><li>O(V²)</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-b · 4-a · 5-b · 6-d · 7-c · 8-a · 9-c · 10-d</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> What is an abstract data type? Describe the Stack ADT and its array implementation with overflow and underflow. Convert <code>A + B * C − D / E</code> to postfix showing the stack, and evaluate <code>5 6 2 + * 12 4 / −</code>. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5.2mm">
+    <li><b>ADT (2)</b> — a type defined by its values and operations, independent of implementation; benefits: encapsulation, reusability, modularity. A data structure implements it. <i class="mk">2</i></li>
+    <li><b>Stack ADT (2)</b> — LIFO list; push, pop, peek, isEmpty, isFull, all O(1). Uses: call stack, expressions, undo, backtracking. <i class="mk">2</i></li>
+    <li><b>Array implementation (2)</b> — <code>top = −1</code> empty; push: if <code>top == MAX−1</code> → <b>overflow</b>, else <code>s[++top] = x</code>; pop: if <code>top == −1</code> → <b>underflow</b>, else return <code>s[top−−]</code>. <i class="mk">2</i></li>
+    <li><b>Infix → postfix (2)</b> — A out; push +; B out; * outranks +, push; C out; − pops * and + (≥ precedence), push −; D out; push /; E out; pop / and − → <b>A B C * + D E / −</b>. <i class="mk">2</i></li>
+    <li><b>Evaluate (2)</b> — push 5, 6, 2; + → 8; * → 40; push 12, 4; / → 3; − → 40 − 3 = <b>37</b>. <i class="mk">2</i></li>
+  </ol>
+  <h3 style="line-height:6mm;margin-top:3mm">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ul class="tick">
+      <li>Can write −x in S-M, 1's and 2's complement</li>
+      <li>Can lay out IEEE 754 single and double</li>
+      <li>Can define an ADT and contrast it with a DS</li>
+    </ul>
+    <ul class="tick">
+      <li>Can apply both 2-D address formulas</li>
+      <li>Can convert infix → postfix and evaluate it</li>
+      <li>Can state the circular-queue and tree formulas</li>
+    </ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

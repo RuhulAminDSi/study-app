@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>AI এ সার্চ টেকনিক: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">AI এ সার্চ টেকনিক</span></h1>
+  <p class="subtitle">স্টেট স্পেস · BFS/DFS · UCS/IDDFS · গ্রিডি ও A* (f = g + h) · মিনিম্যাক্স ও α-β · ব্যাকট্র্যাকিং: ১২ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="620">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M242,132 L174,74 M242,168 L174,226 M320,108 L320,56 M398,132 L466,74 M398,168 L466,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="62" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="414" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="18" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="462" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="62" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="414" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">AI তে সার্চ</text><text x="320" y="170" text-anchor="middle" class="bn r s">টপিকের মাইন্ড-ম্যাপ</text>
+      <text x="144" y="66" text-anchor="middle" class="bn s" style="font-size:11px">স্টেট স্পেস, b, d</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6" style="font-size:11px">আনইনফর্মড: BFS/DFS ★</text>
+      <text x="496" y="66" text-anchor="middle" class="s">UCS · IDDFS</text>
+      <text x="98" y="156" text-anchor="middle" class="bn g w6" style="font-size:11px">b^d বৃদ্ধি</text>
+      <text x="542" y="156" text-anchor="middle" class="bn r w6" style="font-size:11px">A*, f = g + h ★</text>
+      <text x="144" y="246" text-anchor="middle" class="bn s" style="font-size:11px">লোকাল সার্চ, GA</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6" style="font-size:11px">α-β প্রুনিং ★</text>
+      <text x="496" y="246" text-anchor="middle" class="bn s" style="font-size:11px">ব্যাকট্র্যাকিং, MRV</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = মূল ধারণা</figcaption>
+  </figure>
+  <div class="sticky" style="width:66mm"><b>হাই-ইল্ড তালিকা</b><br>① নোড = অবস্থা, এজ = কর্ম<br>② BFS = কিউ, DFS = স্ট্যাক<br>③ UCS = g-এর প্রায়োরিটি কিউ<br>④ A*: f(n) = g(n) + h(n)<br>⑤ অ্যাডমিসিবল: h(n) ≤ h*(n)<br>⑥ α-β সেরা ক্ষেত্রে O(b^(d/2))<br>⑦ CSP: MRV + ফরওয়ার্ড চেকিং<br>⑧ সম্পূর্ণ ≠ অপটিমাল</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">কৃত্রিম বুদ্ধিমত্তার সিলেবাসে লেখা: "পুরোনো ও নতুন AI কৌশলের পরিচিতি; জ্ঞান উপস্থাপন; প্রপোজিশনাল ও ফার্স্ট অর্ডার লজিক; <span class="hl">AI তে সার্চ টেকনিক</span>; প্রবণতাভিত্তিক যুক্তি; প্রাকৃতিক ভাষা প্রক্রিয়াকরণ।" এই নোটবুক ঠিক সেই লাইনটিই আলোচনা করে। জ্ঞান উপস্থাপন ও লজিকের নিজস্ব নোট আছে; প্রবণতাভিত্তিক যুক্তি ও NLP আসে এই লেসনের পরে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>স্টেট স্পেস হিসেবে সার্চ … পৃ. ২</li><li>অগ্রসর ও পশ্চাৎ অনুসন্ধান … পৃ. ৩</li><li>UCS, ডেপথ-লিমিটেড, IDDFS … পৃ. ৪</li><li>অনুমানভিত্তিক: গ্রিডি ও A* … পৃ. ৫</li><li>অ্যাডমিসিবল, সামঞ্জস্য, হিউরিস্টিক … পৃ. ৬</li></ul>
+    <ul class="tick"><li>লোকাল সার্চ, অ্যানিলিং, GA … পৃ. ৭</li><li>মিনিম্যাক্স ও α-β প্রতিরক্ষা … পৃ. ৮</li><li>শর্ত সন্তুষ্টি (CSP) … পৃ. ৯</li><li>সার্চ বাছাই ও খরচ … পৃ. ১০</li><li>রাতের পাতা পৃ. ১১ · অনুশীলন পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: state-space search ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>স্টেট স্পেস সার্চ</span></div>
+  <h2><span class="no">১</span>স্টেট স্পেস হিসেবে সার্চ</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>স্টেট স্পেস সার্চ</b> সমস্যাটিকে এমন গ্রাফ হিসেবে মডেল করে যেখানে প্রতিটি <span class="hl">নোড এক মুহূর্তের সম্পূর্ণ অবস্থা</span> এবং প্রতিটি <span class="hl">এজ একটি কর্ম (অপারেটর)</span>, যা এজেন্টকে পরবর্তী অবস্থায় নিয়ে যায়। এজেন্ট <b>প্রাথমিক অবস্থা</b> থেকে শুরু করে এবং কোনো অবস্থা <b>লক্ষ্য পরীক্ষায়</b> উত্তীর্ণ হলেই থেমে যায়।</div>
+  <div class="mnote green">অবস্থা = একটি ছবি; নোড = ছবি + কীভাবে সেখানে এলাম</div>
+  <div class="cols" style="grid-template-columns:238px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 210" width="232">
+      <g class="w">
+        <circle cx="34" cy="100" r="14" class="ink-k fill-y"/>
+        <circle cx="106" cy="42" r="12" class="ink fill-b"/><circle cx="106" cy="158" r="12" class="ink fill-b"/>
+        <circle cx="186" cy="42" r="12" class="ink fill-b"/><circle cx="186" cy="158" r="12" class="ink fill-b"/>
+        <circle cx="264" cy="100" r="14" class="ink-r fill-r"/>
+        <path class="ink" d="M46,92 L96,50" marker-end="url(#ahb)"/>
+        <path class="ink" d="M46,108 L96,150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M118,42 L174,42" marker-end="url(#ahb)"/>
+        <path class="ink" d="M118,158 L174,158" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,50 L250,92" marker-end="url(#ahb)"/>
+        <path class="ink" d="M198,150 L250,108" marker-end="url(#ahb)"/>
+      </g>
+      <text x="34" y="106" text-anchor="middle" class="k w6 s">S</text>
+      <text x="106" y="47" text-anchor="middle" class="s">A</text>
+      <text x="106" y="163" text-anchor="middle" class="s">B</text>
+      <text x="186" y="47" text-anchor="middle" class="s">C</text>
+      <text x="186" y="163" text-anchor="middle" class="s">D</text>
+      <text x="264" y="106" text-anchor="middle" class="r w6 s">G</text>
+      <text x="34" y="132" text-anchor="middle" class="bn s k" style="font-size:10px">প্রাথমিক</text>
+      <text x="264" y="132" text-anchor="middle" class="bn s r" style="font-size:10px">লক্ষ্য ✓</text>
+      <text x="60" y="62" text-anchor="end" class="s">4</text>
+      <text x="60" y="142" text-anchor="end" class="s">5</text>
+      <text x="146" y="34" text-anchor="middle" class="s">1</text>
+      <text x="146" y="150" text-anchor="middle" class="s">2</text>
+      <text x="212" y="58" class="s">6</text>
+      <text x="212" y="158" class="s">6</text>
+      <text x="150" y="196" text-anchor="middle" class="bn s k" style="font-size:10px">পথ খরচ = এজ খরচের যোগ</text>
+    </svg><figcaption>প্রতিটি তির = একটি বৈধ কর্ম</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">ফর্মুলেশনের পাঁচটি অংশ</span>
+        <b>I</b> প্রাথমিক অবস্থা · <b>A</b> কর্ম · <b>T</b> ট্রানজিশন ফাংশন results(s, a) = s′ · <b>G</b> লক্ষ্য পরীক্ষা · <b>C</b> পথ খরচ C(s₀, …, s<sub>k</sub>)</div>
+      <table class="hand tiny" style="margin-top:2mm">
+        <tr><th class="l">পরিভাষা</th><th class="l">এক লাইনে অর্থ</th></tr>
+        <tr><td class="l">স্টেট স্পেস</td><td class="l">শুরু থেকে পৌঁছানো সব অবস্থা</td></tr>
+        <tr><td class="l">ফ্রন্টিয়ার</td><td class="l">তৈরি, এখনো বিস্তার হয়নি এমন নোড</td></tr>
+        <tr><td class="l">ক্লোজড লিস্ট</td><td class="l">বিস্তার হওয়া নোড — পুনরাবৃত্তি ঠেকায়</td></tr>
+        <tr><td class="l">d, b</td><td class="l">d = লক্ষ্যের গভীরতা, b = গড় শাখা</td></tr>
+        <tr><td class="l">g(n)</td><td class="l">শুরু থেকে n পর্যন্ত সেরা পথের খরচ</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ফ্রন্টিয়ার</b> হলো অপেক্ষার ঘর, <b>ক্লোজড লিস্ট</b> হলো স্মৃতি।" নোড তৈরি হয়ে ফ্রন্টিয়ারে জন্মায়, বিস্তার হয়ে ক্লোজড লিস্টে যায়, আর তার সন্তানরা ফ্রন্টিয়ারে এলে সে বিদায় নেয়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <b>অবস্থা</b> সম্পূর্ণ বর্ণনা, কোনো ইতিহাস নয়। (ii) ভিন্ন পথে দুটি নোডে একই <b>অবস্থা</b> থাকতে পারে; কম খরচেরটিই থাকবে। (iii) লক্ষ্য <b>পরীক্ষা</b> ≠ লক্ষ্য <b>অবস্থা</b>। (iv) b হলো <b>গড়</b> শাখা গুণাঙ্ক, সর্বাধিক নয়।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ৮-পাজলের ফর্মুলেশন</span> <b>অবস্থা</b>: ৩ × ৩ বোর্ডে টাইল ১–৮ ও ফাঁকা ঘরের সাজানো। <b>কর্ম</b>: পাশের একটি টাইল ফাঁকায় সরানো — ২, ৩ বা ৪টি বৈধ সরণ, তাই b ≤ ৪ এবং কার্যকর শাখা গুণাঙ্ক প্রায় <span class="circ">1.67</span>। <b>লক্ষ্য পরীক্ষা</b>: 1 2 3 / 4 5 6 / 7 8 _। <b>পথ খরচ</b>: সরণের সংখ্যা। ৯! সাজানোর মধ্যে কেবল <span class="circ">9!/2 = 181 440</span>টি পৌঁছানো যায়, আর ইনভার্সন পরীক্ষার খরচ O(n²)।</div>
+  <div class="tipbox small"><span class="lbl">ট্রি সার্চ বনাম গ্রাফ সার্চ</span> <b>ট্রি সার্চ</b> কোনো তালিকা রাখে না, তাই একই অবস্থা বারবার ঘুরতে পারে — তখন সম্পূর্ণতার জন্য b ও d সসীম হতে হবে। <b>গ্রাফ সার্চ</b> ক্লোজড লিস্ট রাখে, তাই প্রতিটি অবস্থা একবারই বিস্তৃত হয়, তবে মেমোরি খরচ হয় এবং পরে সস্তা পথ এলে <span class="hl">পুনর্বিস্তারণ (re-expansion)</span> লাগতে পারে।</div>
+  <div class="tipbox small"><span class="lbl">IT সংযোগ</span> একটি প্রোগ্রামের "অবস্থা" মানে মেমোরি ও ভেরিয়েবলের সম্পূর্ণ ছবি, আর রোবটিক্সে কনফিগারেশন স্পেস (configuration space) ঠিক একই ধারণা। যে কোনো সমস্যাকে "অবস্থা + কর্ম + লক্ষ্য পরীক্ষা" আকারে লেখা যায়, সেটিই সার্চ সমস্যা — আর অ্যালগরিদম সেই অবস্থা-গ্রাফেই খোঁজে।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: BFS and DFS ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>BFS ও DFS</span></div>
+  <h2><span class="no">২</span>অগ্রসর ও পশ্চাৎ অনুসন্ধান</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>আনইনফর্মড (বিমুখী) সার্চ</b> প্রাথমিক অবস্থা আর লক্ষ্য পরীক্ষা ছাড়া সমস্যার কোনো জ্ঞান ব্যবহার করে না — এটি পদ্ধতিগত, চতুর নয়। <b>BFS</b> ফ্রন্টিয়ারের <span class="hl">সবচেয়ে অগভীর নোড</span> বিস্তার করে, তাই ফ্রন্টিয়ার একটি <span class="hl">FIFO কিউ</span>। <b>DFS</b> <span class="hl">সবচেয়ে গভীর নোড</span> বিস্তার করে, তাই ফ্রন্টিয়ার একটি <span class="hl">LIFO স্ট্যাক</span> এবং পুনরাবৃত্তিই এর স্বাভাবিক লেখার ধরন।</div>
+  <div class="cols" style="grid-template-columns:400px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 470 200" width="392">
+      <g class="w">
+        <path class="ink" d="M250,46 L150,86 M250,46 L350,86 M150,94 L110,132 M150,94 L190,132 M350,94 L310,132 M350,94 L390,132 M110,140 L80,172 M110,140 L140,172 M390,140 L390,186" marker-end="url(#ahb)"/>
+        <circle cx="250" cy="30" r="15" class="ink-k fill-y"/>
+        <circle cx="150" cy="78" r="14" class="ink fill-b"/><circle cx="350" cy="78" r="14" class="ink fill-b"/>
+        <circle cx="110" cy="124" r="14" class="ink fill-b"/><circle cx="190" cy="124" r="14" class="ink fill-b"/>
+        <circle cx="310" cy="124" r="14" class="ink fill-b"/><circle cx="390" cy="124" r="14" class="ink fill-b"/>
+        <circle cx="80" cy="164" r="14" class="ink fill-b"/><circle cx="140" cy="164" r="14" class="ink-r fill-r"/>
+        <circle cx="390" cy="182" r="14" class="ink-g fill-g"/>
+      </g>
+      <text x="250" y="36" text-anchor="middle" class="k w6">A</text>
+      <text x="150" y="84" text-anchor="middle" class="w6 s">B</text>
+      <text x="350" y="84" text-anchor="middle" class="w6 s">C</text>
+      <text x="110" y="130" text-anchor="middle" class="w6 s">D</text>
+      <text x="190" y="130" text-anchor="middle" class="w6 s">E</text>
+      <text x="310" y="130" text-anchor="middle" class="w6 s">F</text>
+      <text x="390" y="130" text-anchor="middle" class="w6 s">G</text>
+      <text x="80" y="170" text-anchor="middle" class="w6 s">H</text>
+      <text x="140" y="170" text-anchor="middle" class="w6 s">I</text>
+      <text x="390" y="188" text-anchor="middle" class="g w6">Z</text>
+      <text x="252" y="12" text-anchor="middle" class="s">1</text>
+      <text x="152" y="60" text-anchor="middle" class="s">2</text>
+      <text x="348" y="60" text-anchor="middle" class="s">3</text>
+      <text x="112" y="106" text-anchor="middle" class="s">4</text>
+      <text x="188" y="106" text-anchor="middle" class="s">5</text>
+      <text x="312" y="106" text-anchor="middle" class="s">6</text>
+      <text x="388" y="106" text-anchor="middle" class="s">7</text>
+      <text x="82" y="146" text-anchor="middle" class="s">8</text>
+      <text x="138" y="146" text-anchor="middle" class="s r">5</text>
+      <text x="416" y="168" text-anchor="middle" class="s r">10</text>
+    </svg><figcaption>নীল = BFS ক্রম (FIFO কিউ), লাল = DFS ক্রম (LIFO স্ট্যাক); অগ্রসর স্তরে স্তরে হাঁটে, পশ্চাৎ I-তে মৃত পথে পৌঁছে ফিরে আসে</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">বৈশিষ্ট্য</th><th class="l">অগ্রসর (BFS)</th><th class="l">পশ্চাৎ (DFS)</th></tr>
+        <tr><td class="l">ফ্রন্টিয়ার</td><td class="l">FIFO <b>কিউ</b></td><td class="l">LIFO <b>স্ট্যাক</b></td></tr>
+        <tr><td class="l">বিস্তার করে</td><td class="l">অগভীরতম নোড</td><td class="l">গভীরতম নোড</td></tr>
+        <tr><td class="l">সম্পূর্ণ</td><td class="l">হ্যাঁ, b, d সসীম হলে</td><td class="l"><span class="red"><b>না</b></span></td></tr>
+        <tr><td class="l">অপটিমাল</td><td class="l">হ্যাঁ, <b>সমান খরচে</b></td><td class="l">না</td></tr>
+        <tr><td class="l">সময় / স্থান</td><td class="l">O(b^d) / <span class="red"><b>O(b^d)</b></span></td><td class="l">O(b^m) / <b>O(bm)</b></td></tr>
+        <tr><td class="l">কখন</td><td class="l">কম সংখ্যক পদক্ষেপ</td><td class="l">মেমোরি স্বল্প</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কিউ</b> চওড়া ও অন্ধ — সব মনে রাখে, কিছুই জানে না। <b>স্ট্যাক</b> সরু ও সাহসী — প্রায় কিছুই মনে রাখে না, তবু গভীরে যায়।"</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) "BFS সংক্ষিপ্ত পথ খোঁজে" মানে কম <b>এজ</b>; ভিন্ন খরচে সবচেয়ে কম এজের পথ সবচেয়ে <b>ব্যয়বহল</b> হতে পারে — তখন UCS। (ii) DFS <b>ন</b> সম্পূর্ণ এবং <b>ন</b> অপটিমাল। (iii) BFS-এর আসল দাম <span class="circ">স্থান</span>, সময় নয়। (iv) BFS = কিউ, DFS = স্ট্যাক; <b>প্রতিটি অনুমানভিত্তিক সার্চ প্রায়োরিটি কিউ</b> ব্যবহার করে।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কতবার বিস্তার হয়</span> উপরের ট্রিতে লক্ষ্য Z আছে G-এর নিচে। <b>BFS</b> A, B, C, D, E, F, G এবং তারপর Z বিস্তার করে → <span class="circ">8 বার</span>, মেমোরিতে একটি পূর্ণ স্তর ধরে রাখে। <b>DFS</b> A, B, D, H, I (মৃত পথ), E, C, F, G, Z বিস্তার করে → <span class="circ">10 বার</span>: আগে H ও I-এর মৃত পথে ঢোকে। DFS কেবল বর্তমান পথ রাখে, O(bm), তবে <b>বেশি</b> কাজ করে — সম্পূর্ণতার দাম দিতে হয়।</div>
+  <div class="tipbox small"><span class="lbl">IT সংযোগ</span> BFS হলো সেই স্তর-ভিত্তিক হাঁটা যা সামাজিক নেটওয়ার্কের "ডিগ্রি অব সেপারেশন", পিয়ার-টু-পিয়ার নেটওয়ার্কের BFS ফ্লাড ফিল ও মেশ নেটওয়ার্কের সবচেয়ে কম হপ-এর রুটিং। DFS হলো DFS স্প্যানিং ট্রি, যা চক্র শনাক্তকরণ, টপোলজিক্যাল সর্টিং, সংযুক্ত উপাদান ও পুনরাবৃত্তি প্রোগ্রামের কল স্ট্যাকের পেছনে।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: UCS, DLS, IDDFS ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>UCS, DLS, IDDFS</span></div>
+  <h2><span class="no">৩</span>ইউনিফর্ম-কস্ট, ডেপথ-লিমিটেড ও ইটারেটিভ ডিপেনিং</h2><span class="tag">MCQ-র প্রিয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ইউনিফর্ম-কস্ট সার্চ (UCS)</b> হলো খরচের ওপর BFS: পথ খরচ g(n)-এর ওপর সাজানো প্রায়োরিটি কিউ, তাই এটি সবচেয়ে <span class="hl">সস্তা নোড</span> আগে বিস্তার করে — ডিজকস্ত্রার অ্যালগরিদম। <b>ডেপথ-লিমিটেড সার্চ (DLS)</b> হলো গভীরতা <b>l</b>-এ থামানো DFS: l ≥ d হলে সম্পূর্ণ, কখনো অপটিমাল নয়। <b>IDDFS</b> হলো l = 0, 1, 2, … বাড়িয়ে DLS পুনরাবৃত্তি, তাই এতে <span class="hl">DFS-এর মেমোরি, BFS-এর সম্পূর্ণতা</span>।</div>
+  <div class="cols" style="grid-template-columns:262px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="254">
+      <g class="w">
+        <circle cx="28" cy="100" r="13" class="ink-k fill-y"/>
+        <circle cx="96" cy="44" r="12" class="ink fill-b"/><circle cx="96" cy="156" r="12" class="ink fill-b"/>
+        <circle cx="188" cy="44" r="12" class="ink fill-b"/><circle cx="188" cy="156" r="12" class="ink fill-b"/>
+        <circle cx="268" cy="100" r="13" class="ink-g fill-g"/>
+        <path class="ink" d="M39,92 L86,52" marker-end="url(#ahb)"/><path class="ink" d="M39,108 L86,148" marker-end="url(#ahb)"/>
+        <path class="ink" d="M96,58 L96,142" marker-end="url(#ahb)"/><path class="ink" d="M108,50 L176,148" marker-end="url(#ahb)"/>
+        <path class="ink" d="M108,156 L176,156" marker-end="url(#ahb)"/><path class="ink" d="M108,150 L176,52" marker-end="url(#ahb)"/>
+        <path class="ink" d="M200,50 L254,92" marker-end="url(#ahb)"/><path class="ink" d="M200,150 L254,108" marker-end="url(#ahb)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M39,92 L86,52" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M96,58 L96,142" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M108,156 L176,156" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3.5" d="M200,150 L254,108" marker-end="url(#ahg)"/>
+      </g>
+      <text x="28" y="106" text-anchor="middle" class="k w6 s">S</text>
+      <text x="96" y="49" text-anchor="middle" class="s">A</text>
+      <text x="96" y="161" text-anchor="middle" class="s">B</text>
+      <text x="188" y="49" text-anchor="middle" class="s">C</text>
+      <text x="188" y="161" text-anchor="middle" class="s">D</text>
+      <text x="268" y="106" text-anchor="middle" class="g w6 s">G</text>
+      <text x="54" y="62" text-anchor="end" class="s">1</text>
+      <text x="54" y="146" text-anchor="end" class="s">7</text>
+      <text x="86" y="106" text-anchor="end" class="s">2</text>
+      <text x="132" y="86" class="s">5</text>
+      <text x="142" y="148" text-anchor="middle" class="s">1</text>
+      <text x="142" y="112" class="s">5</text>
+      <text x="228" y="56" class="s">10</text>
+      <text x="228" y="146" class="s">2</text>
+      <text x="150" y="190" text-anchor="middle" class="bn g w6" style="font-size:10px">সবুজ = UCS-এর সেরা পথ, খরচ 6</text>
+    </svg><figcaption>সবচেয়ে সস্তা নোড আগে — প্রতিপক্ষী পথ S-B-C-G-এর খরচ 22</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">ধাপ</th><th class="l">বিস্তার</th><th class="l">এরপর ওপেন তালিকা (নোড : g)</th></tr>
+        <tr><td class="l">1</td><td class="l">S (0)</td><td class="l">A : 1 &nbsp;·&nbsp; B : 7</td></tr>
+        <tr><td class="l">2</td><td class="l">A (1)</td><td class="l">B : <b>3</b> (আগে 7) · D : 6</td></tr>
+        <tr><td class="l">3</td><td class="l">B (3)</td><td class="l">D : <b>4</b> (আগে 6) · C : 8</td></tr>
+        <tr><td class="l">4</td><td class="l">D (4)</td><td class="l">G : 6 · C : 8</td></tr>
+        <tr><td class="l">5</td><td class="l">G (6)</td><td class="l">লক্ষ্য: S-A-B-D-G</td></tr>
+      </table>
+      <p class="small">কোনো নোডে সস্তা পথ পাওয়া গেলে সেটি <b>আবার ঢোকানো</b> হয় — এই একটি নিয়মই UCS-কে কেবল লোভী না রেখে অপটিমাল করে।</p>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">অ্যালগরিদম</th><th class="l">সম্পূর্ণ</th><th class="l">অপটিমাল</th><th class="l">সময়</th><th class="l">স্থান</th></tr>
+    <tr><td class="l">BFS</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ, সমান খরচে</td><td class="l">O(b^d)</td><td class="l">O(b^d)</td></tr>
+    <tr><td class="l">DFS</td><td class="l"><span class="red"><b>না</b></span></td><td class="l"><span class="red"><b>না</b></span></td><td class="l">O(b^m)</td><td class="l">O(bm)</td></tr>
+    <tr><td class="l">UCS (ডিজকস্ত্রা)</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ</td><td class="l">O(b^(C*/ε))</td><td class="l">O(b^(C*/ε))</td></tr>
+    <tr><td class="l">DLS</td><td class="l">l ≥ d হলে হ্যাঁ</td><td class="l">না</td><td class="l">O(b^l)</td><td class="l">O(bl)</td></tr>
+    <tr><td class="l">IDDFS</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ, সমান খরচে</td><td class="l">O(b^d)</td><td class="l">O(bd)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "UCS হলো <b>মিটার টেপসহ BFS</b> — একই সাফরি, কিন্তু পদক্ষেপ নয় খরচ গোনে। IDDFS হলো <b>DFS-এর মেমোরি পরা BFS</b>।" চিহ্ন: b = শাখা গুণাঙ্ক, d = লক্ষ্যের গভীরতা, m = সর্বোচ্চ গভীরতা, C* = সেরা সমাধানের খরচ, ε = ছোটতম পদক্ষেপ খরচ।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) UCS অপটিমাল শুধু তখনই, যখন প্রতিটি পদক্ষেপের খরচ <span class="circ">ε &gt; 0</span> বা তার বেশি; শূন্য বা ঋণাত্মক এজ প্রমাণটি ভেঙে দেয়। (ii) ওজনযুক্ত গ্রাফে BFS <b>অপটিমাল নয়</b> — তাই UCS আছে। (iii) IDDFS কেবল <b>সমান</b> খরচে অপটিমাল।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ উপরের গ্রাফে UCS</span> S→A = 1, S→B = 7, A→B = 2, A→D = 5, B→D = 1, B→C = 5, C→G = 10, D→G = 2। UCS S, A, B, D, G বিস্তার করে এবং S-A-B-D-G ফেরত দেয়, খরচ 1 + 2 + 1 + 2 = <span class="circ">6</span>। প্রতিপক্ষী S-B-C-G-এর খরচ 7 + 5 + 10 = <span class="circ">22</span> এবং সেটি কখনো খোলাই হয় না। খেয়াল করো: A বিস্তার হওয়ামাত্র B-এর g 7 থেকে 3 হয়ে যায়।</div>
+  <div class="tipbox small"><span class="lbl">দ্বিমুখী সার্চ</span> একই সময়ে শুরু থেকে <b>সামনে</b> এবং লক্ষ্য থেকে <b>পেছনে</b> সার্চ চালিয়ে মাঝখানে মেলানো হয়: b শাখার d-গভীর ট্রি হয়ে যায় দুটি d/2-গভীর ট্রি, তাই কাজ পড়ে <span class="circ">O(b^d)</span> থেকে প্রায় <b>O(b^(d/2))</b>।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: informed search, greedy and A* ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>গ্রিডি ও A*</span></div>
+  <h2><span class="no">৪</span>অনুমানভিত্তিক সার্চ: গ্রিডি বেস্ট-ফার্স্ট ও A*</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>অনুমানভিত্তিক (informed) সার্চ</b> ডোমেইন জ্ঞান ব্যবহার করে: <b>হিউরিস্টিক h(n)</b> n থেকে লক্ষ্য পর্যন্ত খরচের অনুমান। সব বেস্ট-ফার্স্ট অ্যালগরিদম ফ্রন্টিয়ার <span class="hl">প্রায়োরিটি কিউ</span>-তে রাখে এবং সবচেয়ে ছোট f-এর নোড বের করে; শুধু f কী তা আলাদা: <b>UCS</b> f = g(n), <b>গ্রিডি</b> f = h(n), <b>A*</b> f = <span class="circ">g(n) + h(n)</span> — g(n) এখন পর্যন্ত খরচ, h(n) বাকির খরচ।</div>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="242">
+      <g class="w">
+        <circle cx="34" cy="100" r="15" class="ink-k fill-y"/>
+        <circle cx="112" cy="42" r="14" class="ink fill-b"/><circle cx="112" cy="158" r="14" class="ink fill-b"/>
+        <circle cx="252" cy="100" r="15" class="ink-r fill-r"/>
+        <path class="ink" d="M48,90 L98,52" marker-end="url(#ahb)"/><path class="ink" d="M48,110 L98,148" marker-end="url(#ahb)"/>
+        <path class="ink" d="M112,60 L112,140" marker-end="url(#ahb)"/>
+        <path class="ink" d="M126,50 L238,92" marker-end="url(#ahb)"/>
+        <path class="ink" d="M126,150 L238,108" marker-end="url(#ahb)"/>
+        <path class="ink-r" style="stroke-width:3" d="M48,110 L98,148" marker-end="url(#ah)"/>
+        <path class="ink-g" style="stroke-width:3" d="M48,90 L98,52" marker-end="url(#ahg)"/>
+        <path class="ink-g" style="stroke-width:3" d="M112,60 L112,140" marker-end="url(#ahg)"/>
+      </g>
+      <text x="34" y="94" text-anchor="middle" class="k w6">S</text>
+      <text x="34" y="110" text-anchor="middle" class="s">h=5</text>
+      <text x="112" y="36" text-anchor="middle" class="w6">A</text>
+      <text x="112" y="52" text-anchor="middle" class="s">h=4</text>
+      <text x="112" y="152" text-anchor="middle" class="w6">B</text>
+      <text x="112" y="168" text-anchor="middle" class="s">h=2</text>
+      <text x="252" y="94" text-anchor="middle" class="r w6">G</text>
+      <text x="252" y="110" text-anchor="middle" class="s">h=0</text>
+      <text x="66" y="70" text-anchor="end" class="s">1</text>
+      <text x="66" y="136" text-anchor="end" class="s">4</text>
+      <text x="104" y="104" text-anchor="end" class="s">2</text>
+      <text x="180" y="58" class="s">6</text>
+      <text x="180" y="150" class="s">2</text>
+      <text x="150" y="184" text-anchor="middle" class="g w6" style="font-size:11px">A*: S-A-B-G, খরচ 5 ✓</text>
+      <text x="150" y="198" text-anchor="middle" class="r w6" style="font-size:11px">গ্রিডি: S-B-G, খরচ 6 ✗</text>
+    </svg><figcaption>একই গ্রাফ, একই হিউরিস্টিক — শুধু f ঠিক করে কোন পথ ফেরত হবে</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">অ্যালগরিদম</th><th class="l">f(n)</th><th class="l">সাজায়</th><th class="l">সম্পূর্ণ</th><th class="l">অপটিমাল</th></tr>
+        <tr><td class="l">UCS</td><td class="l">g(n)</td><td class="l">খরচ পর্যন্ত</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ</td></tr>
+        <tr><td class="l">গ্রিডি</td><td class="l">h(n)</td><td class="l">লক্ষ্যের কাছে</td><td class="l"><span class="red">না</span></td><td class="l"><span class="red">না</span></td></tr>
+        <tr><td class="l">A*</td><td class="l"><b>g(n) + h(n)</b></td><td class="l">সবচেয়ে সস্তা পথ</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ, h অ্যাডমিসিবল হলে</td></tr>
+      </table>
+      <p class="small"><b>A*-এর ধর্ম.</b> সময় <b>O(b^d)</b>, স্থান <b>O(b^d)</b> — সবচেয়ে খারাপ ক্ষেত্রে BFS-এর চেয়ে ভালো নয়; লাভ আসে <b>ধ্রুব গুণাঙ্ক</b> থেকে, কারণ অ্যাডমিসিবল h ট্রির বেশিরভাগ কেটে দেয়। h = 0 বসালে A* নিজেই UCS হয়ে যায়।</p>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একই গ্রাফ, দুই উত্তর</span> এজ S→A = 1, S→B = 4, A→B = 2, A→G = 6, B→G = 2; h(S) = 5, h(A) = 4, h(B) = 2, h(G) = 0।<br>
+    <b>গ্রিডি বেস্ট-ফার্স্ট (f = h):</b> S বিস্তার → A (4), B (2); <b>B</b> বিস্তার; B থেকে G (0); <b>G</b> বিস্তার → S-B-G ফেরত, খরচ 4 + 2 = <span class="circ">6</span>।<br>
+    <b>A* (f = g + h):</b> S (f = 5) বিস্তার → A (g 1, f 5), B (g 4, f 6); <b>A</b> বিস্তার → B আবার g = 3 &lt; 4 পাওয়া যায়, তাই B হয় g 3, f 5; <b>B</b> বিস্তার → G আবার g = 5 &lt; 7 পাওয়া যায়; <b>G</b> বিস্তার → S-A-B-G ফেরত, খরচ 1 + 2 + 2 = <span class="circ">5</span>।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>g হলো ইতিমধ্যে দেওয়া বিল, h ডাক্তারের অনুমান, f হলো মোট বিল।</b>" গ্রিডি কেবল অনুমান দেখে বিল ফেলে দেয়; A* দুটো যোগ করে — তাই গ্রিডি ব্যয়বহল পথ নিতে পারে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) শুধু f = h(n) হলো <b>গ্রিডি</b>, শুধু f = g(n) হলো <b>UCS</b>, f = g·h অর্থহীন। (ii) A*-এর অপটিমালতা h-এর প্রতিশ্রুতি, A*-এর নয়: <b>বেশি</b> অনুমান করা h নীরবে অসেরা পথ ফেরত দেয়। (iii) গ্রিডি বেস্ট-ফার্স্ট <b>অসম্পূর্ণ</b>। (iv) টাই ব্রেক শুধু কাজ বদলায়, সেরা মান নয়।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">A* আসলে কোথায় চলে</span> রুট খোঁজা (Google Maps, OSRM), রোবট পাথ পরিকল্পনা, অ্যাসেম্বলি লাইন সাজানো ও টাইপরাইটারের শব্দ পূর্বানুমান। সামঞ্জস্যপূর্ণ (consistent) h-এর সঙ্গে A* আসলে সর্বনিম্ন পথের গতিশীল-প্রোগ্রামিং দৃষ্টিভঙ্গি: প্রতিটি নোড f-এর বর্ণিত ক্রমে একবারই নিশ্চিত হয়।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: admissibility, consistency, heuristics ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>হিউরিস্টিক</span></div>
+  <h2><span class="no">৫</span>অ্যাডমিসিবল, সামঞ্জস্যপূর্ণ ও ভালো হিউরিস্টিক</h2><span class="tag">লিখিত প্রশ্নে প্রিয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> n থেকে লক্ষ্যে যাওয়ার সবচেয়ে সস্তা পথের প্রকৃত খরচকে <b>h*(n)</b> লিখি। কোনো হিউরিস্টিক <span class="hl">অ্যাডমিসিবল (admissible)</span> যদি সে <span class="circ">কখনো প্রতিরকমিতা করে না</span>: প্রতিটি n-এর জন্য h(n) ≤ h*(n)। আর তা <span class="hl">সামঞ্জস্যপূর্ণ (consistent)</span> যদি প্রতিটি এজে <span class="circ">h(n) ≤ c(n, n′) + h(n′)</span> হয় — অনুমান কর্মের দামের বেশি পড়তে পারে না। সামঞ্জস্যপূর্ণতা অ্যাডমিসিবলতা বোঝায়।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">সমস্যা</th><th class="l">প্রচলিত হিউরিস্টিক h(n)</th><th class="l">অ্যাডমিসিবল?</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l">রুট খোঁজা</td><td class="l">সরলরেখার দূরত্ব</td><td class="l">হ্যাঁ</td><td class="l">রাস্তা ঘোরে, তাই দুর্বল</td></tr>
+    <tr><td class="l">৮-পাজল</td><td class="l">ভ্রুক্ষেপে না থাকা টাইল</td><td class="l">হ্যাঁ</td><td class="l">খুব দুর্বল — ফাঁকা ঘর দেখে না</td></tr>
+    <tr><td class="l">৮-, ১৫-পাজল</td><td class="l"><b>ম্যানহাটন দূরত্ব</b></td><td class="l">হ্যাঁ</td><td class="l">সারি + কলাম; আদর্শ পছন্দ</td></tr>
+    <tr><td class="l">স্লাইডিং পাজল</td><td class="l">প্যাটার্ন ডেটাবেস</td><td class="l">হ্যাঁ</td><td class="l">কয়েকটি টাইলের প্রকৃত খরচ</td></tr>
+    <tr><td class="l">৮-রানী</td><td class="l">আক্রমণকারী জোড়া</td><td class="l">না</td><td class="l">২ দিয়ে ভাগ করলে ঠিক হয়</td></tr>
+    <tr><td class="l">ট্রাভেলিং সেলসম্যান</td><td class="l">বাইরে সবচেয়ে সস্তা সরল সংযোগ</td><td class="l">হ্যাঁ</td><td class="l">ধারণাগত নিম্নতম সীমা</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 200px;align-items:start">
+    <div>
+      <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ১ ✍ ৮-পাজল, ম্যানহাটন</span> শুরু 2 8 3 / 1 6 4 / 7 5 _ , লক্ষ্য 1 2 3 / 4 5 6 / 7 8 _ । ভ্রুক্ষেপে নেই এমন টাইল ১, ২, ৪, ৫, ৬, ৮ → <b>h = 6</b>। ম্যানহাটন: টাইল 1 → 1, 2 → 1, 4 → 2, 5 → 1, 6 → 1, 8 → 2 → <span class="circ">h = 8</span>। প্রতিটি সরণ একটি টাইল এক ঘর নামে, তাই অন্তত এত সরণ বাকি: h* ≥ 8।</div>
+      <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ২ ✍ অ্যাডমিসিবল পরীক্ষা</span> S→A = 2, S→B = 1, A→C = 2, B→C = 4, B→D = 5, C→G = 3, D→G = 2, h(S) = 5, h(A) = 4, h(B) = 4, h(C) = 3, h(D) = 2, h(G) = 0। লক্ষ্য থেকে পেছনে: h*(G) = 0, h*(C) = 3, h*(D) = 2, h*(A) = 5, h*(B) = 7, h*(S) = 7। তুলনা: 5 ≤ 7, 4 ≤ 5, 4 ≤ 7, 3 ≤ 3, 2 ≤ 2, 0 ≤ 0 — <span class="circ">অ্যাডমিসিবল ও সামঞ্জস্যপূর্ণ</span>।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 176" width="190">
+      <g class="w">
+        <path class="ink-k" d="M14,18 H236 M14,18 V158" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M18,58 C74,64 140,110 232,140"/>
+        <path class="ink-r" style="stroke-dasharray:5 4" d="M18,120 C74,126 140,132 232,148"/>
+      </g>
+      <text x="26" y="40" class="w6">h</text>
+      <text x="14" y="172" class="s">g</text>
+      <text x="236" y="52" text-anchor="end" class="bn g s" style="font-size:10px">h* — প্রকৃত মান</text>
+      <text x="236" y="140" text-anchor="end" class="bn r s" style="font-size:10px">h — অনুমান</text>
+    </svg><figcaption>অ্যাডমিসিবল অনুমান কখনো প্রকৃত মানের ওপরে ওঠে না</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>অ্যাডমিসিবল মান কম লক্ষ্য করে।</b> সামঞ্জস্যপূর্ণতা সাবধানী: কর্মের যা খরচ, তার বেশি অনুমান কমতে পারে না।" স্তর: <b>সামঞ্জস্যপূর্ণতা ⇒ অ্যাডমিসিবলতা</b>, উল্টোটা কখনো নয়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) অ্যাডমিসিবল মানে <b>কখনো বেশি অনুমান না করা</b> — h = 0 তাত্ত্বিকভাবে অ্যাডমিসিবল কিন্তু অকার্যকর। (ii) h হলো <b>বাকি</b>র অনুমান, h* প্রকৃত মান। (iii) <b>ট্রি সার্চ</b> A*-এর জন্য অ্যাডমিসিবল h যথেষ্ট, <b>গ্রাফ সার্চ</b> A*-এর জন্য সামঞ্জস্যপূর্ণ h দরকার। (iv) ম্যানহাটন দূরত্ব <b>ভ্রুক্ষেপে না থাকা টাইলের সংখ্যা নয়</b>।</div>
+  </div>
+  <div class="ex small"><span class="lbl">"ভালো" মানে কী? ✍</span> যদি h = c · h* হয়, c ধ্রুব > 0, তবে ভুল δ = h* − h-এর সঙ্গে বাড়ে, আর A* মোটামুটি <span class="hl">শাখা গুণাঙ্ক b^δ-এর একটি আনইনফর্মড সার্চের মতো</span> আচরণ করে: ৮-পাজলে টাইল-গণনার হিউরিস্টিক আচরণে b ≈ 3, আর ম্যানহাটন b ≈ 1.4।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: local search ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>লোকাল সার্চ</span></div>
+  <h2><span class="no">৬</span>লোকাল সার্চ: হিল ক্লাইম্বিং, অ্যানিলিং, GA</h2><span class="tag">অপটিমাইজেশন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>লোকাল সার্চ</b> কেবল <span class="hl">একটি বর্তমান অবস্থা</span> রাখে — তাদের গাছ নয় — আর পথ খরচের বদলে <b>মূল্যায়ন ফাংশন E(s)</b> দিয়ে তার মান দেখায়। এটি এমন স্থানের জন্য যখন গ্রাফ বানানো যায় না, বিশেষত ধারাবাহিক স্থানের জন্য। <b>হিল ক্লাইম্বিং</b> E বেশি এমন প্রতিবেশীতে যায়, আর যেখানে আর ভালো প্রতিবেশী নেই সেখানেই থেমে যায়: একটি <span class="circ">স্থানীয় অনুকূল (local optimum)</span>, যা বৈশ্বিক নাও হতে পারে।</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 430 200" width="292">
+      <g class="w">
+        <path class="ink-k" d="M14,168 H416"/>
+        <path class="ink" d="M30,114 L76,100 L122,128 L168,86 L214,156 L260,142 L306,72 L352,114 L398,86"/>
+        <ellipse cx="76" cy="114" rx="26" ry="19" class="ink-r"/>
+        <ellipse cx="306" cy="107" rx="28" ry="38" class="ink-g"/>
+        <path class="ink-p" style="stroke-dasharray:5 4" d="M168,86 L214,156" marker-end="url(#ahp)"/>
+        <path class="ink-p" style="stroke-dasharray:5 4" d="M260,142 L306,72" marker-end="url(#ahp)"/>
+      </g>
+      <text x="30" y="190" text-anchor="middle" class="s">0</text>
+      <text x="76" y="190" text-anchor="middle" class="s">1</text>
+      <text x="122" y="190" text-anchor="middle" class="s">2</text>
+      <text x="168" y="190" text-anchor="middle" class="s">3</text>
+      <text x="214" y="190" text-anchor="middle" class="s">4</text>
+      <text x="260" y="190" text-anchor="middle" class="s">5</text>
+      <text x="306" y="190" text-anchor="middle" class="s">6</text>
+      <text x="352" y="190" text-anchor="middle" class="s">7</text>
+      <text x="398" y="190" text-anchor="middle" class="s">8</text>
+      <text x="76" y="88" text-anchor="middle" class="r w6 s">E = 5</text>
+      <text x="76" y="72" text-anchor="middle" class="bn r s" style="font-size:10px">স্থানীয়</text>
+      <text x="306" y="58" text-anchor="middle" class="g w6 s">E = 7</text>
+      <text x="306" y="44" text-anchor="middle" class="bn g s" style="font-size:10px">বৈশ্বিক</text>
+      <text x="191" y="112" text-anchor="middle" class="p s">ΔE = −5</text>
+      <text x="283" y="110" text-anchor="middle" class="p s">ΔE = +1</text>
+    </svg><figcaption>E(x), x = 0…8; হিল ক্লাইম্বিং x = 1-এ থেমে যায়, অ্যানিলিং খাত টপকায়</figcaption></figure>
+    <div>
+      <p class="small" style="margin-top:0"><b>x = 3</b> (E = 6) থেকে প্রতিবেশী x = 2 (3) ও x = 4 (1) দুটোই খারাপ, তাই হিল ক্লাইম্বিং <span class="circ">স্থানীয় সর্বোচ্চ 6</span>-এ আটকে যায়, যদিও বৈশ্বিক সর্বোচ্চ 7 (x = 6) দুই ধাপ দূরে।</p>
+      <p class="small"><b>কোথায় ব্যবহার হয়।</b> হিল ক্লাইম্বিং: VLSI লেআউট, চ্যানেল বরাদ্দ। অ্যানিলিং: ৮-রানী, ট্যুর উন্নতি, চিপ প্লেসমেন্ট। জেনেটিক অ্যালগরিদম: অ্যান্টেনা প্লেসমেন্ট।</p>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%;margin-top:2mm">
+    <tr><th class="l">x</th><th>0</th><th class="red">1</th><th>2</th><th>3</th><th>4</th><th>5</th><th class="red">6</th><th>7</th><th>8</th></tr>
+    <tr><td class="l">E(x)</td><td>4</td><td class="red"><b>5</b></td><td>3</td><td>6</td><td>1</td><td>2</td><td class="red"><b>7</b></td><td>4</td><td>6</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">পদ্ধতি</th><th class="l">কী করে</th><th class="l">স্থানীয় অনুকূল?</th></tr>
+    <tr><td class="l">হিল ক্লাইম্বিং</td><td class="l">ভালো প্রতিবেশীতে যায়, না থাকলে থামে</td><td class="l">না — <span class="red">আটকে যায়</span></td></tr>
+    <tr><td class="l">এলোমেলো রিস্টার্ট</td><td class="l">আটকে গেলে নতুন অবস্থা থেকে শুরু, সেরাটি রাখে</td><td class="l">হ্যাঁ, ভাগ্যক্রমে</td></tr>
+    <tr><td class="l">সিমুলেটেড অ্যানিলিং</td><td class="l">খারাপ কর্ম গ্রহণের সম্ভাবনা <b>e^(−ΔE/T)</b>, T কমে</td><td class="l">T বড় থাকলে হ্যাঁ</td></tr>
+    <tr><td class="l">জেনেটিক অ্যালগরিদম</td><td class="l">একটি <b>জনগোষ্ঠী</b>: সিলেকশন, ক্রসওভার, মিউটেশন</td><td class="l">হ্যাঁ, অনেক প্রার্থী একসঙ্গে বেঁচে থাকে</td></tr>
+    <tr><td class="l">টাবু সার্চ</td><td class="l">গত কয়েকটি কর্ম নিষিদ্ধ করে (স্বল্প মেমোরি)</td><td class="l">হ্যাঁ, গর্ত থেকে বের হয়</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ E(x)-এর ওপর অ্যানিলিং</span> x = 3 (E = 6) থেকে প্রতিবেশী x = 2 (E = 3) ও x = 4 (E = 1) ডাউনহিল, ΔE = −5 ও −3। T = 2 হলে x = 4-এ যাওয়া গ্রহণ হয় সম্ভাবনা e^(−5/2) ≈ <span class="circ">0.082</span>-এ — অসম্ভব নয়, তবে কম। x = 4 থেকে x = 5-এ গেলে E বাড়ে 2, তাই তা সরাসরি গ্রহিত হয়; তারপর x = 6 এলে E = 7, বৈশ্বিক সর্বোচ্চ। T → 0 হলে গ্রহণের সম্ভাবনা → 0 এবং অ্যালগরিদম ঠিক হিল ক্লাইম্বিংয়ের মতোই শেষ হয়।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>অ্যানিলিং মানে ঠান্ডা খাবার খাওয়া</b> — খারাপ খাবার থেকে বাঁচতে আগে একটু খারাপই মেনে নিতে হয়। <b>জেনেটিক অ্যালগরিদম একটি জনগোষ্ঠীর প্রজনন</b>: ফিটনেস, সিলেকশন, ক্রসওভার, মিউটেশন।"</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) হিল ক্লাইম্বিং স্থানীয় সর্বোচ্চে আটকে যাওয়া তার <b>নিজস্ব সংজ্ঞা</b>, বাগ নয়। (ii) গ্রহণের সম্ভাবনা T কমলেও কমে, কর্ম খারাপ হলেও কমে। (iii) GA-র কর্মপদ্ধতি <b>সিলেকশন, ক্রসওভার, মিউটেশন</b>। (iv) লোকাল সার্চ কোনো <b>পথ</b> রাখে না, তাই অপটিমাল প্রমাণ করতে পারে না।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: minimax and alpha-beta ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>মিনিম্যাক্স ও α-β</span></div>
+  <h2><span class="no">৭</span>প্রতিপক্ষী সার্চ: মিনিম্যাক্স ও α-β প্রুনিং</h2><span class="tag">গেমস ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> দুই প্রতিপক্ষিও যখন একই অবস্থা ভাগ করে নেয়, তখন গ্রাফটি একটি গেম ট্রি: একদিক চায় উপযোগিতা <b>বাড়াতে</b> (MAX), অন্যদিক <b>কমাতে</b> (MIN)। <b>মিনিম্যাক্স</b> গভীরে প্রথমে ট্রিটি হেঁটে বদলে বদলে প্রতিটি চালে সেরা জবাব দেয়: টার্মিনাল নোডে v(s) = উপযোগিতা, MAX নোডে <span class="hl">সন্তানের সর্বোচ্চ</span>, MIN নোডে <span class="hl">সর্বনিম্ন</span>। b শাখা ও d গভীরতায় খরচ <span class="circ">O(b^d)</span> নোড মূল্যায়ন।</div>
+  <figure class="doodle"><svg viewBox="0 0 470 216" width="430">
+    <g class="w">
+      <path class="ink" d="M235,42 L150,86 M235,42 L330,86 M150,98 L100,134 M150,98 L200,134 M330,98 L280,134 M330,98 L380,134"/>
+      <path class="ink" d="M100,146 L82,180 M100,146 L118,180 M200,146 L182,180 M200,146 L218,180 M280,146 L262,180 M280,146 L298,180 M380,146 L362,180"/>
+      <path class="ink-r" style="stroke-dasharray:5 4" d="M380,146 L398,180"/>
+      <path class="ink-g" style="stroke-width:3" d="M235,42 L150,86"/>
+      <path class="ink-g" style="stroke-width:3" d="M150,98 L200,134"/>
+      <path class="ink-g" style="stroke-width:3" d="M200,146 L218,180"/>
+      <circle cx="235" cy="26" r="17" class="ink-k fill-y"/>
+      <circle cx="150" cy="80" r="15" class="ink fill-b"/><circle cx="330" cy="80" r="15" class="ink fill-b"/>
+      <circle cx="100" cy="128" r="15" class="ink fill-b"/><circle cx="200" cy="128" r="15" class="ink fill-b"/>
+      <circle cx="280" cy="128" r="15" class="ink fill-b"/><circle cx="380" cy="128" r="15" class="ink fill-b"/>
+      <circle cx="82" cy="178" r="13" class="ink fill-y"/><circle cx="118" cy="178" r="13" class="ink fill-y"/>
+      <circle cx="182" cy="178" r="13" class="ink fill-y"/><circle cx="218" cy="178" r="13" class="ink fill-y"/>
+      <circle cx="262" cy="178" r="13" class="ink fill-y"/><circle cx="298" cy="178" r="13" class="ink fill-y"/>
+      <circle cx="362" cy="178" r="13" class="ink fill-y"/>
+      <path class="ink-r" style="stroke-width:3" d="M400,166 L416,190 M416,166 L400,190"/>
+    </g>
+    <text x="235" y="32" text-anchor="middle" class="k w6 s">MAX</text>
+    <text x="150" y="86" text-anchor="middle" class="w6 s">MIN</text>
+    <text x="330" y="86" text-anchor="middle" class="w6 s">MIN</text>
+    <text x="100" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="200" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="280" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="380" y="133" text-anchor="middle" class="s">MAX</text>
+    <text x="82" y="183" text-anchor="middle" class="k w6 s">3</text>
+    <text x="118" y="183" text-anchor="middle" class="k w6 s">5</text>
+    <text x="182" y="183" text-anchor="middle" class="k w6 s">6</text>
+    <text x="218" y="183" text-anchor="middle" class="g w6 s">9</text>
+    <text x="262" y="183" text-anchor="middle" class="k w6 s">2</text>
+    <text x="298" y="183" text-anchor="middle" class="k w6 s">3</text>
+    <text x="362" y="183" text-anchor="middle" class="k w6 s">5</text>
+    <text x="424" y="204" text-anchor="end" class="bn r s" style="font-size:11px">বাদ</text>
+    <text x="258" y="26" class="p s">α = 6</text>
+    <text x="348" y="108" class="p s">β = 3</text>
+    <text x="235" y="212" text-anchor="middle" class="bn g w6" style="font-size:11px">রুটের মান 6 — প্রুনিং কখনো তা বদলায় না</text>
+  </svg><figcaption>বাম অর্ধেক α = 6 দেওয়ার পর G-তে প্রথম পাতা 5-ই β = 3-এর চেয়ে ভালো, তাই পাতা 8 বাদ পড়ে</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">নোড</th><th class="l">বাম পাতা</th><th class="l">ডান পাতা</th><th class="l">মান</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l">D (MAX)</td><td class="l">3</td><td class="l">5</td><td class="l">5</td><td class="l">max(3, 5)</td></tr>
+    <tr><td class="l">E (MAX)</td><td class="l">6</td><td class="l">9</td><td class="l">9</td><td class="l">max(6, 9)</td></tr>
+    <tr><td class="l">B (MIN)</td><td class="l">D = 5</td><td class="l">E = 9</td><td class="l"><b>6</b></td><td class="l">min → রুটে <span class="circ">α = 6</span></td></tr>
+    <tr><td class="l">F (MAX)</td><td class="l">2</td><td class="l">3</td><td class="l">3</td><td class="l">max(2, 3) → C-তে <span class="circ">β = 3</span></td></tr>
+    <tr><td class="l">G (MAX)</td><td class="l">5</td><td class="l">8</td><td class="l">—</td><td class="l">5-ই β-এর সমান বেশি, তাই পাতা 8 বাদ</td></tr>
+    <tr><td class="l">C (MIN)</td><td class="l">F = 3</td><td class="l">G = 5</td><td class="l">3</td><td class="l">min(3, 5)</td></tr>
+    <tr><td class="l">রুট (MAX)</td><td class="l">B = 6</td><td class="l">C = 3</td><td class="l"><b>6</b></td><td class="l">max(6, 3) = 6</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>α হলো MAX-এর এ পর্যন্ত সেরা মান, β হলো MIN-এর এ পর্যন্ত সেরা মান।</b> কোনো নোডের সেরা মান আর প্রতিপক্ষির হাতে যা আছে তা আর হারাতে পারে না — তাই কাটা যায়।" α কেবল MAX নোডে, β কেবল MIN নোডে হালনাগাদ হয়; নোডে α ≤ β সবসময়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) প্রুনিং <b>কাজ</b> বদলায়, <b>মান</b> কখনো নয় — সাধারণ মিনিম্যাক্সের সমান মানই ফেরত হয়। (ii) কর্মের ক্রমই আসল: সেরা কর্ম আগে <span class="circ">O(b^(d/2))</span>, অনিয়ম ব্রতন <b>O(b^(3d/4))</b>, সবচেয়ে খারাপ ক্রমে পুরো O(b^d)। (iii) মিনিম্যাক্স ধরে নেয় <b>উভয় পক্ষই অপটিমাল খেলে</b>; বাস্তব প্রতিপক্ষি মিনিম্যাক্স খেলে না।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ সংখ্যায় সাশ্রয়</span> পূর্ণ মিনিম্যাক্স ৮টি পাতা মূল্যায়ন করে; উপরের ক্রমে α-β করে <span class="circ">7</span>টি — একটি পাতা সাশ্রয়। গভীরতা বাড়লে প্রভাব বাড়ে: b = 2, d = 10 হলে পূর্ণ মিনিম্যাক্স 2^10 = <span class="circ">1024</span> পাতা লাগে, আর নিখুঁত ক্রমে α-β প্রায় 2^5 = <span class="circ">32</span> — একই সময়ে <b>দ্বিগুণ গভীর</b> অনুসন্ধান। আধুনিক দাবা ইঞ্জিনে α-β-এর সঙ্গে ট্রান্সপজিশন টেবিল, কিলার মুভ ও মুভ-অর্ডারিং যোগ করা হয়।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: constraint satisfaction ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>শর্ত সন্তুষ্টি</span></div>
+  <h2><span class="no">৮</span>শর্ত সন্তুষ্টি (CSP) ও ব্যাকট্র্যাকিং</h2><span class="tag">লিখিত প্রশ্নে প্রিয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি <b>শর্ত সন্তুষ্টি সমস্যা (CSP)</b> হলো ত্রৈপক (X, D, C): <span class="hl">চলকের সকল X</span>, প্রতিটি চলকের <span class="hl">ডোমেইন D</span>, এবং একসঙ্গে খাটতে হবে এমন <span class="hl">শর্তের সকল C</span>। <b>সমাধান</b> হলো সম্পূর্ণ নিয়োগ (assignment) — কোনো পথ, খরচ বা মধ্যবর্তী পুরস্কার নেই, তাই এখানে BFS বা A* চালানো হয় <b>না</b>। আদর্শ সমাধানকারী হলো <span class="circ">ব্যাকট্র্যাকিং সার্চ</span>: একটি মান বসান, পুনরাবৃত্তি করো, শর্ত ভাঙলে নিয়োগ ফেরত নাও।</div>
+  <div class="cols" style="grid-template-columns:1fr 214px;align-items:start">
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">উপাদান</th><th class="l">অর্থ</th></tr>
+        <tr><td class="l">চলক, ডোমেইন</td><td class="l">যা ঠিক করতে হবে ও তার মান</td></tr>
+        <tr><td class="l">unary/binary/n-ary</td><td class="l">১, ২, k চলকের শর্ত = তার <b>আর্টি (arity)</b></td></tr>
+        <tr><td class="l">শর্ত গ্রাফ</td><td class="l">চলক = নোড, প্রতি জোড়ায় একটি এজ</td></tr>
+        <tr><td class="l">ব্যাকট্র্যাকিং</td><td class="l">বসাও, পুনরাবৃত্তি, <b>ব্যর্থ হলে ফেরত নাও</b></td></tr>
+        <tr><td class="l">ফরওয়ার্ড চেকিং</td><td class="l">প্রতিটি নিয়োগের পরে প্রতিবেশীর ডোমেইন ছেঁকে ফেলো</td></tr>
+        <tr><td class="l">MRV (fail-first)</td><td class="l">পরের চলক = যার <b>সবচেয়ে কম মান বাকি</b></td></tr>
+        <tr><td class="l">LCV</td><td class="l">পরের মান = যা অন্যদের <b>সবচেয়ে কম</b> বাঁধে</td></tr>
+        <tr><td class="l">আর্ক সামঞ্জস্যতা AC-3</td><td class="l">প্রতিটি মানের পাশে সমর্থন থাকা দরকার</td></tr>
+        <tr><td class="l">min-conflicts</td><td class="l">লোকাল সার্চ: সবচেয়ে খারাপ সংঘাত ঠিক করো</td></tr>
+      </table>
+    </div>
+    <div>
+      <figure class="doodle"><svg viewBox="0 0 296 152" width="196">
+        <g class="w">
+          <path class="ink" d="M78,40 L218,40 M78,40 L78,112 M218,40 L218,112 M78,112 L218,112"/>
+          <path class="ink-r" style="stroke-dasharray:5 4" d="M78,40 L218,112 M218,40 L78,112"/>
+          <circle cx="78" cy="40" r="17" class="ink fill-b"/>
+          <circle cx="218" cy="40" r="17" class="ink-r fill-r"/>
+          <circle cx="218" cy="112" r="17" class="ink fill-b"/>
+          <circle cx="78" cy="112" r="17" class="ink fill-b"/>
+        </g>
+        <text x="78" y="46" text-anchor="middle" class="w6">Q1</text>
+        <text x="218" y="46" text-anchor="middle" class="r w6">Q2</text>
+        <text x="218" y="118" text-anchor="middle" class="w6">Q3</text>
+        <text x="78" y="118" text-anchor="middle" class="w6">Q4</text>
+        <text x="148" y="145" text-anchor="middle" class="bn p s" style="font-size:9px">লাইন: এক সারি/কলাম</text>
+        <text x="148" y="80" text-anchor="middle" class="bn r s" style="font-size:9px">ডট:</text>
+        <text x="148" y="94" text-anchor="middle" class="bn r s" style="font-size:9px">এক কোণাকুশি</text>
+      </svg><figcaption>৪-রানীর গ্রাফ সম্পূর্ণ — প্রতিটি জোড়া শর্তযুক্ত</figcaption></figure>
+    </div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 480 124" width="352">
+      <g class="w">
+        <path class="ink" d="M150,62 H166" marker-end="url(#ahb)"/>
+        <path class="ink" d="M312,62 H328" marker-end="url(#ahb)"/>
+        <rect x="8" y="6" width="142" height="112" rx="9" class="ink fill-b"/>
+        <rect x="170" y="6" width="142" height="112" rx="9" class="ink fill-r"/>
+        <rect x="332" y="6" width="142" height="112" rx="9" class="ink fill-g"/>
+      </g>
+      <text x="79" y="27" text-anchor="middle" class="k w6 s">Q1 = 1</text>
+      <text x="79" y="45" text-anchor="middle" class="s">Q2 ∈ {3, 4}</text>
+      <text x="79" y="62" text-anchor="middle" class="s">Q3 ∈ {2, 4}</text>
+      <text x="79" y="79" text-anchor="middle" class="s">Q4 ∈ {2, 3}</text>
+      <text x="79" y="104" text-anchor="middle" class="bn s" style="font-size:10px">MRV দুটোতেই 2</text>
+      <text x="241" y="27" text-anchor="middle" class="r w6 s">Q2 = 3</text>
+      <text x="241" y="45" text-anchor="middle" class="s">Q3 ∈ {} — ব্যর্থ</text>
+      <text x="241" y="62" text-anchor="middle" class="bn s" style="font-size:10px">ফেরত নাও, Q2 = 4</text>
+      <text x="241" y="79" text-anchor="middle" class="s">Q3 = 2, Q4 = 3</text>
+      <text x="241" y="104" text-anchor="middle" class="bn r s" style="font-size:10px">কোণার সংঘাত</text>
+      <text x="403" y="27" text-anchor="middle" class="g w6 s">Q1 = 2</text>
+      <text x="403" y="45" text-anchor="middle" class="s">Q2 = {4} মাত্র</text>
+      <text x="403" y="62" text-anchor="middle" class="s">Q2 = 4 → Q3 = 1</text>
+      <text x="403" y="79" text-anchor="middle" class="s">Q4 = 3</text>
+      <text x="403" y="104" text-anchor="middle" class="bn g w6" style="font-size:10px">সমাধান (2,4,1,3)</text>
+    </svg><figcaption>প্রতিটি নিয়োগের পর ফরওয়ার্ড চেকিং</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ৪-রানী</span> Q1 = 1 দিলে Q2 ∈ {3,4}, Q3 ∈ {2,4}, Q4 ∈ {2,3}: সব ডোমেইনে দুটি মান, তাই MRV যেকোনোটি নিতে পারে। Q2 = 3 করলে Q3 খালি; Q2 = 4 করলে Q3 = 2 বাধ্য, ফলে Q4 = 3 এবং কোণার সংঘাত — অর্থাৎ Q1 = 1 মৃত। <b>Q1 = 2</b> দিলে Q2 ∈ {4}, একটিমাত্র মান: MRV জোর করে <b>Q2 = 4</b> বসায়, Q3 বাধ্য 1 ও Q4 বাধ্য 3, তাই চার নিয়োগেই সমাধান <span class="circ">(2, 4, 1, 3)</span>।</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>MRV সবচেয়ে বাঁধা প্রশ্নটি আগে করে; LCV সবচেয়ে কম বিরোধী উত্তরটি আগে দেখে।</b> ফরওয়ার্ড চেকিং প্রতিবেশী হারানো সঙ্গে সঙ্গে তার হারানো উত্তর মুছে দেয়।"</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) CSP <b>পথ অনুসন্ধান নয়</b>: শুধু চূড়ান্ত নিয়োগই গুরুত্বপূর্ণ। (ii) ফরওয়ার্ড চেকিং <b>আর্ক সামঞ্জস্যতা নয়</b> — এটি প্রতিবেশীর ওপরে দেখে না। (iii) MRV চলক বাছে, LCV মান বাছে। (iv) ব্যাকট্র্যাকিং সম্পূর্ণ কিন্তু তাৎপর্যিক; সাধারণ CSP NP-complete।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">প্রয়োগ</span> সুডোকু, টাইমটেবিল, রোস্টার, ক্রিপটারিদমেটিক, শিডিউলিং, কম্পাইলারে রেজিস্টার বরাদ্দ। ৮ × ৮ বোর্ডে সাধারণ ব্যাকট্র্যাকিং প্রথম সমাধানে <span class="circ">10^5</span> ক্রম নোড লাগে; MRV ও ফরওয়ার্ড চেকিং যোগ করলে তা কয়েকশোতে নেমে আসে।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: choosing a search ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>সার্চ বাছাই</span></div>
+  <h2><span class="no">৯</span>সার্চ বাছাই ও এর খরচ</h2><span class="tag">পরীক্ষার সারসংক্ষেপ ★</span>
+  <table class="hand tiny" style="width:100%;margin-top:0">
+    <tr><th class="l">অ্যালগরিদম</th><th class="l">সম্পূর্ণ</th><th class="l">অপটিমাল</th><th class="l">সময়</th><th class="l">স্থান</th><th class="l">ফ্রন্টিয়ার</th></tr>
+    <tr><td class="l">BFS</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ, সমান খরচে</td><td class="l">O(b^d)</td><td class="l">O(b^d)</td><td class="l">FIFO কিউ</td></tr>
+    <tr><td class="l">DFS</td><td class="l">না</td><td class="l">না</td><td class="l">O(b^m)</td><td class="l">O(bm)</td><td class="l">LIFO স্ট্যাক</td></tr>
+    <tr><td class="l">UCS</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ</td><td class="l">O(b^(C*/ε))</td><td class="l">O(b^(C*/ε))</td><td class="l">g-এর কিউ</td></tr>
+    <tr><td class="l">IDDFS</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ, সমান খরচে</td><td class="l">O(b^d)</td><td class="l">O(bd)</td><td class="l">প্রতি গভীরতায় স্ট্যাক</td></tr>
+    <tr><td class="l">গ্রিডি বেস্ট-ফার্স্ট</td><td class="l">না</td><td class="l">না</td><td class="l">O(b^m)</td><td class="l">O(b^m)</td><td class="l">h-এর কিউ</td></tr>
+    <tr><td class="l">A*</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ, অ্যাডমিসিবল h</td><td class="l">O(b^d)</td><td class="l">O(b^d)</td><td class="l">g + h-এর কিউ</td></tr>
+    <tr><td class="l">α-β</td><td class="l">হ্যাঁ</td><td class="l">হ্যাঁ, একই মান</td><td class="l">O(b^(d/2)) সেরা</td><td class="l">O(bd)</td><td class="l">α, β সীমা</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:start">
+    <div>
+      <table class="hand tiny" style="width:100%;margin-top:0">
+        <tr><th class="l">সমস্যা দেখতে যদি এমন হয়…</th><th class="l">ব্যবহার করো</th></tr>
+        <tr><td class="l">কম পদক্ষেপ, সব খরচ সমান</td><td class="l">BFS, বা মেমোরি কম হলে IDDFS</td></tr>
+        <tr><td class="l">গভীর সার্চ, মেমোরি কম</td><td class="l">DFS, DLS, IDDFS</td></tr>
+        <tr><td class="l">রাস্তা, টাকা, জ্বালানি</td><td class="l">UCS / ডিজকস্ত্রা</td></tr>
+        <tr><td class="l">রাস্তা আর মানচিত্র হাতে</td><td class="l">A*, সরলরেখার দূরত্ব হিউরিস্টিকে</td></tr>
+        <tr><td class="l">বোর্ড গেম, প্রতিপক্ষি আছে</td><td class="l">মিনিম্যাক্স + α-β</td></tr>
+        <tr><td class="l">টাইমটেবিল, রোস্টার, সুডোকু</td><td class="l">ব্যাকট্র্যাকিং + MRV + ফরওয়ার্ড চেকিং</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 400 176" width="264">
+      <g class="w">
+        <path class="ink-k" d="M14,152 H386"/>
+        <path class="ink-r" style="stroke-width:2" d="M300,152 V26"/>
+        <path class="ink-g" style="stroke-width:2" d="M60,152 V100"/>
+        <path class="ink-k" style="stroke-width:1.4" d="M129,148 V156 M240,148 V156 M351,148 V156"/>
+      </g>
+      <text x="14" y="170" class="s">10^0</text>
+      <text x="112" y="170" class="s">10^10</text>
+      <text x="223" y="170" class="s">10^20</text>
+      <text x="334" y="170" class="s">10^30</text>
+      <text x="300" y="20" text-anchor="middle" class="r w6" style="font-size:12px">b^d = 7 × 10^32</text>
+      <text x="60" y="94" text-anchor="middle" class="bn g w6" style="font-size:12px">অবস্থা</text>
+      <text x="60" y="110" text-anchor="middle" class="g s">≈ 10^13</text>
+    </svg><figcaption>১৫-পাজল: b = 2.13, d = 100 হলে b^d ≈ 7 × 10^32 নোড, অথচ অবস্থা আছে মাত্র 16!/2 ≈ 1.05 × 10^13</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) <b>সম্পূর্ণ ≠ অপটিমাল</b>: BFS ও IDDFS দুটোই সম্পূর্ণ, কিন্তু সমান খরচে অপটিমাল। (ii) A*-এর O(b^d) একটি <b>সবচেয়ে খারাপ ক্ষেত্র</b>; কিছুই A* বক্তিমূলক করে না। (iii) α-β <b>সময় বাঁচায়, সত্যতা নয়</b>। (iv) এক সমস্যায় অ্যাডমিসিবল হিউরিস্টিক আরেক সমস্যায় অকার্যকর।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT সংযোগ</span> ডিজকস্ত্রা/UCS চালায় নেটওয়ার্ক রাউটিং টেবিল; A* চালায় রাস্তার রাউটিং ও রোবট পাথ পরিকল্পনা; BFS চালায় স্তর-ভিত্তিক ট্রাভার্সাল ও সবচেয়ে কম হপ; IDA* চালায় আদর্শ ১৫-পাজল সমাধানকারী; প্রতিটি সুডোকু সমাধানকারী MRV ও ফরওয়ার্ড চেকিং ব্যবহার করে; α-β প্রতিটি দাবা ও গো ইঞ্জিনে আছে।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ হিউরিস্টিক ছাড়া চলে না কেন</span> ১৫-পাজলে আনইনফর্মড সার্চের সামনের ট্রি প্রায় <span class="circ">7 × 10^32</span> নোড (b = 2.13, d = 100), অথচ পুরো সমস্যায় মাত্র 16!/2 ≈ <span class="circ">1.05 × 10^13</span> ভিন্ন অবস্থা আছে। অ্যাডমিসিবল ম্যানহাটন হিউরিস্টিকে কার্যকর শাখা গুণাঙ্ক প্রায় 1.4-এ নেমে আসে — এটাই শেষ হওয়া আর কখনো না শেষ হওয়ার পার্থক্য।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-তালিকা</span>
+    <div class="fgrid small">
+      <p>নোড = অবস্থা + পিতৃ + কর্ম + g(n)</p><p>b = শাখা, d = লক্ষ্যের গভীরতা, m = সর্বোচ্চ</p>
+      <p>UCS: g(n)-এর প্রায়োরিটি কিউ</p><p>A*: f(n) = g(n) + h(n)</p>
+      <p>গ্রিডি: শুধু f(n) = h(n)</p><p>h = 0 রাখলে A* = UCS</p>
+      <p>অ্যাডমিসিবল: h(n) ≤ h*(n)</p><p>সামঞ্জস্যপূর্ণ: h(n) ≤ c(n,n′) + h(n′)</p>
+      <p>৮-পাজল: 9!/2 = 181 440, b ≈ 1.67</p><p>ম্যানহাটন = সারি + কলাম</p>
+      <p>α-β: O(b^(d/2)), অনিয়মে O(b^(3d/4))</p><p>CSP = (X, D, C); MRV = সবচেয়ে কম মান</p>
+      <p>অ্যানিলিং: গ্রহণের সম্ভাবনা e^(−ΔE/T)</p><p>GA: সিলেকশন, ক্রসওভার, মিউটেশন</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা এক-লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>BFS-এর ফ্রন্টিয়ার FIFO <b>কিউ</b>; DFS = LIFO <b>স্ট্যাক</b></li>
+      <li>BFS কেবল <b>সমান</b> খরচে অপটিমাল</li>
+      <li>DFS ন সম্পূর্ণ, ন অপটিমাল</li>
+      <li>UCS = ডিজকস্ত্রা, অপটিমাল, ε &gt; 0 লাগে</li>
+      <li>IDDFS = BFS-এর সম্পূর্ণতা + DFS-এর মেমোরি O(bd)</li>
+      <li>গ্রিডি বেস্ট-ফার্স্ট: f = h, অপটিমাল নয়</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>A* অপটিমাল যদি h অ্যাডমিসিবল হয়</li>
+      <li>সামঞ্জস্যপূর্ণতা ⇒ অ্যাডমিসিবলতা</li>
+      <li>৮-পাজলের হিউরিস্টিক ম্যানহাটন দূরত্ব</li>
+      <li>মিনিম্যাক্স: MAX-এ max, MIN-এ min</li>
+      <li>α-β কাজ কমায়, মান নয়</li>
+      <li>CSP = চলক, ডোমেইন, শর্ত — কোনো পথ নেই</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">প্রধান ফাঁদ</span> BFS অপটিমাল ≠ BFS সবসময় অপটিমাল (ওজনযুক্ত গ্রাফে UCS দরকার) · f = h হলো গ্রিডি, f = g হলো UCS, f = g + h হলো A* · h = 0 অ্যাডমিসিবল কিন্তু অকার্যকর · অসীম গভীরতার গ্রাফে DFS-এর গভীরতা সীমা দরকার · হিল ক্লাইম্বিং <b>স্থানীয়</b> সর্বোচ্চে থেমে যায় · α MAX নোডে, β MIN নোডে হালনাগাদ হয় · ফরওয়ার্ড চেকিং ডোমেইন ছেঁকে, আর্ক সামঞ্জস্যতা আরও শক্তিশালী।</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসঙ্গে</span> "ফ্রন্টিয়ার অপেক্ষার ঘর, ক্লোজড লিস্ট স্মৃতি" · "কিউ চওড়া ও অন্ধ, স্ট্যাক সরু ও সাহসী" · "UCS মিটার টেপসহ BFS; IDDFS DFS-এর মেমোরি পরা BFS" · "g দেওয়া বিল, h অনুমান, f মোট বিল" · "অ্যাডমিসিবল মান কম লক্ষ্য করে; সামঞ্জস্যপূর্ণতা সাবধানী" · "অ্যানিলিং ঠান্ডা খাবার খায়, GA জনগোষ্ঠীর প্রজনন করে"।</div>
+  <figure class="doodle"><svg viewBox="0 0 520 118" width="500">
+    <g class="w">
+      <circle cx="60" cy="46" r="38" class="ink fill-b"/>
+      <circle cx="168" cy="46" r="38" class="ink-g fill-g"/>
+      <circle cx="276" cy="46" r="38" class="ink-r fill-r"/>
+      <circle cx="384" cy="46" r="38" class="ink-r fill-r"/>
+      <circle cx="492" cy="46" r="38" class="ink-r fill-r"/>
+      <path class="ink-g" d="M100,46 H128 M208,46 H236 M316,46 H344 M424,46 H452" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M492,86 C410,100 140,100 58,86" marker-end="url(#ahp)"/>
+    </g>
+    <text x="60" y="52" text-anchor="middle" class="bn w6 s" style="font-size:11px">ফর্মুলেশন</text>
+    <text x="168" y="52" text-anchor="middle" class="w6 l">f = g + h</text>
+    <text x="276" y="52" text-anchor="middle" class="r w6 s">BFS · DFS</text>
+    <text x="384" y="52" text-anchor="middle" class="bn r w6" style="font-size:10px">মিনিম্যাক্স</text>
+    <text x="492" y="52" text-anchor="middle" class="bn r w6" style="font-size:10px">MRV · ফ.চে.</text>
+    <text x="114" y="34" text-anchor="middle" class="bn g s" style="font-size:10px">গাইড করে</text>
+    <text x="222" y="34" text-anchor="middle" class="bn g s" style="font-size:10px">গাইড করে</text>
+    <text x="330" y="34" text-anchor="middle" class="bn g s" style="font-size:10px">গাইড করে</text>
+    <text x="438" y="34" text-anchor="middle" class="bn g s" style="font-size:10px">গাইড করে</text>
+    <text x="276" y="114" text-anchor="middle" class="bn p s" style="font-size:11px">আর complete / optimal আলাদা কলাম</text>
+  </svg><figcaption>একটি ফর্মুলেশন, একটি প্রায়োরিটি নিয়ম, পাঁচটি অ্যালগরিদম — আর দুটি কলাম এক নয়</figcaption></figure>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>AI · সার্চ টেকনিক</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>BFS-এর ফ্রন্টিয়ার কী?<ol class="opts"><li>LIFO স্ট্যাক</li><li>প্রায়োরিটি কিউ</li><li>সার্চ ট্রি</li><li>FIFO কিউ</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>A* পরের নোড কী দিয়ে বাছে?<ol class="opts"><li>g(n) + h(n)</li><li>g(n) × h(n)</li><li>শুধু h(n)</li><li>শুধু g(n)</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>h(n) অ্যাডমিসিবল যখন:<ol class="opts"><li>বেশি অনুমান করে</li><li>কখনো বেশি করে না</li><li>সময় ধ্রুব</li><li>প্রতি এজে 1 কমে</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>নিখুঁত ক্রমে α-β কত নোড দেখে?<ol class="opts"><li>O(b × d)</li><li>O(d^b)</li><li>O(b^(d/2))</li><li>O(b^(2d))</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>IDDFS কেন পছন্দ করা হয়?<ol class="opts"><li>সবসময় অপটিমাল</li><li>DFS-এর মেমোরি</li><li>গভীরতার সীমা লাগে না</li><li>নোড কখনো আরায় না</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>সাধারণ DFS কখন সম্পূর্ণ?<ol class="opts"><li>খরচ সমান হলে</li><li>গ্রাফ সসীম হলে</li><li>h অ্যাডমিসিবল হলে</li><li>গভীরতা সসীম হলে</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>MIN নোডে মিনিম্যাক্স কী দেয়?<ol class="opts"><li>সর্বনিম্ন মান</li><li>সর্বোচ্চ মান</li><li>সমষ্টি</li><li>α + β</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>CSP-তে MRV কী বাছে?<ol class="opts"><li>সবচেয়ে বড় ডোমেইন</li><li>সবচেয়ে বেশি শর্ত</li><li>সবচেয়ে কম মান বাকি</li><li>সবচেয়ে বেশি ডিগ্রি</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>অ্যানিলিং খারাপ কর্ম গ্রহণ করে:<ol class="opts"><li>T কমলে কমে</li><li>p = e^(−ΔE/T)</li><li>শুধু উপরের মুভে</li><li>সমান সম্ভাবনায়</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>UCS অপটিমাল যখন খরচ:<ol class="opts"><li>ε &gt; 0 হলে</li><li>ঠিক 1 হলে</li><li>ঋণাত্মক হলে</li><li>শূন্য হলে</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ঘ · ২-ক · ৩-খ · ৪-গ · ৫-খ · ৬-ঘ · ৭-ক · ৮-গ · ৯-ঘ · ১০-ক</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> নিচের ডিরেক্টেড গ্রাফে এজ খরচ S→A = 2, S→B = 1, A→C = 2, B→C = 4, B→D = 5, C→G = 3, D→G = 2 এবং h(S) = 5, h(A) = 4, h(B) = 4, h(C) = 3, h(D) = 2, h(G) = 0 নিয়ে A* সার্চ চালাও। বিস্তারের ক্রম, পাওয়া পথ ও তার খরচ দাও, আর হিউরিস্টিকটি অ্যাডমিসিবল কিনা তা যাচাই করো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps small" style="margin-top:2mm">
+    <li><b>f = g + h</b> ব্যবহার করো, ফ্রন্টিয়ার f-এর ওপর সাজানো প্রায়োরিটি কিউ। শুরু: open = {S (g = 0, f = 5)}। <i class="mk">1</i></li>
+    <li><b>S</b> বিস্তার: A (g = 2, f = 6), B (g = 1, f = 5); open = {B 5, A 6}। <i class="mk">1</i></li>
+    <li><b>B</b> বিস্তার: C (g = 5, f = 8), D (g = 6, f = 8); open = {A 6, C 8, D 8}। <i class="mk">1</i></li>
+    <li><b>A</b> বিস্তার (f = 6): C-তে g = 4 &lt; 5 পাওয়া যায়, তাই C <b>হালনাগাদ</b> হয়ে g = 4, f = 7; open = {C 7, D 8}। <i class="mk">1</i></li>
+    <li><b>C</b> বিস্তার: G (g 7, f 7); open = {G 7, D 8}; <b>G</b> বিস্তার — লক্ষ্য পূর্ণ, ক্রম S, B, A, C, G। <i class="mk">2</i></li>
+    <li>পথ <b>S-A-C-G</b>, খরচ 2 + 2 + 3 = <b>7</b>; S-B-C-G = 8 ও S-B-D-G = 8 বেশি। <i class="mk">1</i></li>
+    <li>প্রকৃত বাকি খরচ: h*(G) = 0, h*(C) = 3, h*(D) = 2, h*(A) = 5, h*(B) = 7, h*(S) = 7 — প্রতিটি h(n) ≤ h*(n), তাই h <b>অ্যাডমিসিবল</b> এবং সামঞ্জস্যপূর্ণও, ফলে A*-এর উত্তর নিশ্চিত <b>অপটিমাল</b>। <i class="mk">3</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে যাচাই ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>ফর্মুলেশনের পাঁচটি অংশ লিখতে পারি</li>
+      <li>BFS/DFS-এর সম্পূর্ণ ও অপটিমাল কলাম বলতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>A* ও UCS চালিয়ে অ্যাডমিসিবল যাচাই করতে পারি</li>
+      <li>α-β প্রুনিং ও MRV + ফরওয়ার্ড চেকিং করতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Database Concepts &amp; Data Models (ER, Relational): Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Database Concepts &amp; Data Models</span></h1>
+  <p class="subtitle">DB · DBMS · three levels · E-R · relational · keys · constraints · triggers</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">DATABASE</text><text x="320" y="172" text-anchor="middle" class="r s">concepts · data models</text>
+      <text x="142" y="56" text-anchor="middle" class="s" style="font-size:10px">Schema vs</text><text x="142" y="70" text-anchor="middle" class="s" style="font-size:10px">instance</text>
+      <text x="320" y="40" text-anchor="middle" class="r w6" style="font-size:12px">DB, DBMS, system ★</text>
+      <text x="498" y="56" text-anchor="middle" class="s" style="font-size:10px">Three-level</text><text x="498" y="70" text-anchor="middle" class="s" style="font-size:10px">architecture ★</text>
+      <text x="96" y="154" text-anchor="middle" class="g w6" style="font-size:11px">Data</text><text x="96" y="168" text-anchor="middle" class="g w6" style="font-size:11px">independence ★</text>
+      <text x="544" y="150" text-anchor="middle" class="r w6" style="font-size:11px">E-R</text><text x="544" y="164" text-anchor="middle" class="r w6" style="font-size:11px">model ★</text>
+      <text x="142" y="244" text-anchor="middle" class="s" style="font-size:10px">Relational</text><text x="142" y="258" text-anchor="middle" class="s" style="font-size:10px">model</text>
+      <text x="320" y="268" text-anchor="middle" class="r w6" style="font-size:12px">Keys ★</text>
+      <text x="498" y="244" text-anchor="middle" class="s" style="font-size:10px">Constraints ★</text><text x="498" y="258" text-anchor="middle" class="s" style="font-size:10px">triggers ★</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the idea the architecture exists for</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;line-height:5.8mm"><b>High-yield list</b><br>① DB system = <b>DB + DBMS + apps + users</b><br>② Schema = blueprint · instance = data now<br>③ External → Conceptual → Internal<br>④ Independence: <b>logical</b>, <b>physical</b><br>⑤ Chen: rect = entity, ellipse = attribute,<br>diamond = relationship, underline = key<br>⑥ Weak entity = <b>double rectangle</b><br>⑦ 1:N ⇒ "one" side's PK as FK in the "many" side<br>⑧ M:N ⇒ <b>needs its own junction table</b><br>⑨ FK ⇒ <b>referential</b>, PK ⇒ <b>entity</b> integrity<br>⑩ <span class="circ">DROP</span> kills structure, DELETE/TRUNCATE do not</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">The Database Systems syllabus reads: "Concepts of database systems; Data Models: <span class="hl">Entity-Relationship model, Relational model</span>; Query Languages: Relational algebra, SQL; <span class="hl">Constraints and triggers</span>; Functional dependencies and normalization; File organization and data storage; Indexing; Query optimization; Transaction management; Recovery; Concurrency control; Access control and security; Semi-structured database; Object oriented databases." <b>This lesson takes the first three clauses only.</b></p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>Database, DBMS, database system … p. 2</li><li>Three levels; schema vs instance … p. 3</li><li>Data independence … p. 4</li><li>E-R model, Chen's notation … p. 5</li><li>Cardinality 1:1, 1:N, M:N … p. 6</li><li>The relational model … p. 7</li></ul>
+    <ul class="tick"><li>Keys … p. 8</li><li>Constraints &amp; integrity … p. 9</li><li>Triggers; E-R vs relational … p. 10</li><li>Night-before sheet … p. 11</li><li>Practice MCQs + written … p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: database, DBMS, database system ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Database, DBMS, system</span></div>
+  <h2><span class="no">1</span>Database, DBMS and Database System</h2><span class="tag">foundation ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>database</b> is an organised collection of related data. A <b>DBMS</b> is the software that stores, retrieves and protects it. The <b>database system</b> is the whole assembly: <span class="hl">database + DBMS + application programs + users + hardware</span>. Every "which one is X?" question turns on which of those five a name denotes.</div>
+  <div class="mnote">DB = data, DBMS = software</div>
+  <figure class="doodle"><svg viewBox="0 0 620 156" width="500">
+    <g class="w">
+      <rect x="10" y="10" width="600" height="34" rx="8" class="ink-g fill-g"/>
+      <rect x="10" y="62" width="600" height="34" rx="8" class="ink fill-b"/>
+      <rect x="10" y="114" width="600" height="34" rx="8" class="ink-k fill-y"/>
+      <path class="ink-r" d="M310,44 V58" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M310,96 V110" marker-end="url(#ah)"/>
+    </g>
+    <text x="310" y="32" text-anchor="middle" class="k w6">APPLICATION PROGRAMS · USERS · HARDWARE</text>
+    <text x="310" y="84" text-anchor="middle" class="k w6">DBMS — the software that manages the data (MySQL, Oracle)</text>
+    <text x="310" y="136" text-anchor="middle" class="k w6">DATABASE — the organised collection of stored data</text>
+  </svg><figcaption>three words, one stack</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Term</th><th class="l">What it actually is</th><th class="l">Examples</th></tr>
+    <tr><td class="l"><b>Database</b></td><td class="l">the data itself, in an organised persistent form</td><td class="l">students, courses, exams of a university</td></tr>
+    <tr><td class="l"><b>DBMS</b></td><td class="l">software sitting between the application and the data</td><td class="l">MySQL, Oracle, PostgreSQL, SQL Server; MongoDB is <i>NoSQL</i></td></tr>
+    <tr><td class="l"><b>Database system</b></td><td class="l"><span class="red"><b>all five parts together</b></span></td><td class="l">what a university actually installs and runs</td></tr>
+    <tr><td class="l"><b>File system</b></td><td class="l">the OS's files: no rules, no shared access</td><td class="l">what the database replaced</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">Why databases replaced files</span> Four failures, four answers: <b>redundancy</b> (a fact stored in several files) → one schema; <b>inconsistency</b> (copies disagree) → <span class="hl">constraints</span>; <b>poor sharing</b> → views and a query language; <b>program–data dependence</b> (change the file layout, rewrite every program) → the DBMS owns the storage.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Data, software, everything.</b>" Is the DBMS the database? <b>No</b> — the DBMS is the manager. Is the database the DBMS? Also no. Only <b>database system</b> means the whole assembly.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A <b>database is not a table</b>, and a <b>file system is not a database</b>: files enforce no schema, no transactions, no concurrency. "Which one enforces integrity?" → the <b>DBMS</b>.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ an ATM</span> The <b>database</b> is the account table. The <b>DBMS</b> decrypts the PIN, locks the row so nobody withdraws at the same instant, checks the balance and writes the new one. The <b>application</b> is the screen menu; the <b>database system</b> is bank software + core server + card machine + network + customer.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: three-level architecture ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Three-level architecture</span></div>
+  <h2><span class="no">2</span>The Three-Level Architecture</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> The <b>three-level (three-schema) architecture</b> of <b>ANSI/SPARC</b> splits the database into an <span class="hl">external</span> level (what each user sees), a <span class="hl">conceptual</span> level (the logical structure of the whole organisation's data) and an <span class="hl">internal</span> level (how it is physically stored). Mappings join them — and the mappings are what make <b>data independence</b> possible.</div>
+  <div class="mnote purple">ANSI / SPARC</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 620 232" width="272">
+      <g class="w">
+        <rect x="8" y="6" width="604" height="66" rx="8" class="ink fill-b"/>
+        <rect x="60" y="22" width="160" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="230" y="22" width="160" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="400" y="22" width="160" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="8" y="96" width="604" height="56" rx="8" class="ink-r fill-y"/>
+        <rect x="8" y="176" width="604" height="56" rx="8" class="ink-k fill-g"/>
+        <path class="ink" d="M290,72 V92" marker-end="url(#ahb)"/>
+        <path class="ink" d="M330,152 V172" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M356,172 V152" marker-end="url(#ahp)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text style="font-size:20px" x="310" y="18" text-anchor="middle" class="k w6">EXTERNAL LEVEL — user views</text>
+      <text style="font-size:20px" x="140" y="45" text-anchor="middle" class="s g">View 1 · marks</text>
+      <text style="font-size:20px" x="310" y="45" text-anchor="middle" class="s g">View 2 · accounts</text>
+      <text style="font-size:20px" x="480" y="45" text-anchor="middle" class="s g">View 3 · library</text>
+      <text style="font-size:20px" x="310" y="118" text-anchor="middle" class="k w6">CONCEPTUAL LEVEL — logical schema</text>
+      <text style="font-size:20px" x="310" y="140" text-anchor="middle" class="s">every table, relation and constraint, for the whole organisation</text>
+      <text style="font-size:20px" x="310" y="198" text-anchor="middle" class="k w6">INTERNAL LEVEL — physical storage</text>
+      <text style="font-size:20px" x="310" y="220" text-anchor="middle" class="s">files, pages, blocks, indexes, compression, access paths</text>
+    </svg><figcaption>each arrow is a mapping that can be changed</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Level</th><th class="l">Question it answers</th><th class="l">Who sees it</th></tr>
+        <tr><td class="l"><b>External</b></td><td class="l">"What does <i>this</i> user see?"</td><td class="l">one user or application; many views</td></tr>
+        <tr><td class="l"><b>Conceptual</b></td><td class="l">"What data exists, and what does it mean?"</td><td class="l">the whole organisation's logical view</td></tr>
+        <tr><td class="l"><b>Internal</b></td><td class="l">"Where and how is it stored?"</td><td class="l">the DBMS alone</td></tr>
+      </table>
+      <div class="ex tiny" style="margin-top:1mm"><span class="lbl">Worked example ✍ schema vs instance, one table</span> The <b>schema</b> is <code>Student(id, name, dept)</code> — the blueprint, changed rarely, kept in the <b>data dictionary</b>. The <b>instance</b> is <code>(101,"Alice","CSE")</code>, <code>(102,"Bob","ECE")</code> — the values <i>right now</i>. <span class="circ">Schema changes slowly; instance changes constantly.</span></div>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Point</th><th class="l">Schema</th><th class="l">Instance</th></tr>
+    <tr><td class="l">Also called</td><td class="l">logical design, metadata</td><td class="l">snapshot, current state</td></tr>
+    <tr><td class="l">Contains</td><td class="l">names, columns, types, constraints</td><td class="l">the actual rows stored</td></tr>
+    <tr><td class="l">Changed</td><td class="l">rarely, by the designer (DDL)</td><td class="l">constantly, by every insert (DML)</td></tr>
+    <tr><td class="l">Stored in</td><td class="l">the data dictionary / catalogue</td><td class="l">the data files</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Outside, Concept, Inside.</b>" <i>E</i> = <b>E</b>very <b>u</b>ser, <i>C</i> = <b>C</b>ommunity view of all data, <i>I</i> = <b>I</b>nternal plumbing. Read the stack <b>top down</b>: from the user's words to the bytes on disk.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> The <b>external level is not one view</b> — there are normally several. The <b>internal level is private to the DBMS</b>; no program is written against it. The <b>conceptual level is logical</b>: no file names, no block sizes.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: data independence ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Data independence</span></div>
+  <h2><span class="no">3</span>Why Three Levels? Data Independence</h2><span class="tag">the reason it exists ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Data independence</b> is the ability to change one level of the schema without changing the level above. There are exactly <b>two</b> kinds; a paper offering "three levels of independence" is testing this. <span class="hl">Logical</span> is conceptual → external; <span class="hl">physical</span> is internal → conceptual.</div>
+  <div class="cols" style="grid-template-columns:200px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="196">
+      <g class="w">
+        <rect x="20" y="8" width="200" height="34" rx="8" class="ink fill-b"/>
+        <rect x="20" y="66" width="200" height="34" rx="8" class="ink-r fill-y"/>
+        <rect x="20" y="124" width="200" height="34" rx="8" class="ink-k fill-g"/>
+        <path class="ink" d="M110,42 V62" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M130,100 V120" marker-end="url(#ahp)"/>
+        <path class="ink" d="M170,120 V100" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M224,25 H236 V141 H224" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="120" y="30" text-anchor="middle" class="s k">EXTERNAL (views)</text>
+      <text x="120" y="88" text-anchor="middle" class="s r">CONCEPTUAL</text>
+      <text x="120" y="146" text-anchor="middle" class="s g">INTERNAL (files)</text>
+      <text x="252" y="70" class="p s">logical</text>
+      <text x="252" y="120" class="s g">physical</text>
+      <text x="150" y="184" text-anchor="middle" class="k s">change one side, keep the other</text>
+    </svg><figcaption>two arrows, two kinds</figcaption></figure>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The two kinds, precisely</span>
+      <b>Logical data independence</b> — change the <span class="hl">conceptual schema</span> (add a column, split a table, add a table) and the <b>external views and programs stay as they were</b>. Harder, because the meaning of data changes.<br>
+      <b>Physical data independence</b> — change the <span class="hl">internal schema</span> (add an index, split a file, reorganise pages, change compression) and the <b>conceptual schema and programs stay as they were</b>. Easier, because the meaning does not change.<br>
+      Both are delivered by the two mappings: <b>external/conceptual</b> and <b>conceptual/internal</b>.</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l"></th><th class="l">Logical data independence</th><th class="l">Physical data independence</th></tr>
+    <tr><td class="l">Between</td><td class="l">conceptual level and external level</td><td class="l">internal level and conceptual level</td></tr>
+    <tr><td class="l">You change</td><td class="l">the <b>logical</b> schema: add <code>phone</code>, split a table</td><td class="l">the <b>storage</b>: add a B+ tree index, reorganise pages</td></tr>
+    <tr><td class="l">Unaffected</td><td class="l">external views and application programs</td><td class="l">conceptual schema and application programs</td></tr>
+    <tr><td class="l">Holds because</td><td class="l">the external/conceptual <b>mapping</b> is rewritten</td><td class="l">the conceptual/internal <b>mapping</b> is rewritten</td></tr>
+    <tr><td class="l">Typical example</td><td class="l">adding a column without touching any query</td><td class="l">dropping an index changes speed, not meaning</td></tr>
+    <tr><td class="l">Difficulty</td><td class="l"><span class="red"><b>harder</b></span> — the meaning changes</td><td class="l"><span class="green"><b>easier</b></span> — only the layout changes</td></tr>
+  </table>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Logical is on top, physical is underneath.</b>" Read the arrow upwards in each pair: logical independence changes the level <i>above</i>, physical the level <i>below</i>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> There are <span class="circ">two</span> kinds, not three. Adding an index is <b>physical</b>; adding a column is <b>logical</b>; reformatting a file without touching the schema is the classic <b>physical</b> example.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ name the change</span> "The admin rebuilds the table with a hash index on <i>dept</i>." → <span class="circ">physical</span>: the queries still mean the same. "A column <i>nationality</i> is added to Student." → <span class="circ">logical</span>: the conceptual schema changed.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> This is the reason a dump from one engine can be reloaded into another, and the reason `ALTER TABLE … ADD COLUMN` on a big table is operationally cheaper than rewriting every program that reads that table. A <b>view</b> is the external level made real: it stores a query, not a copy of the data.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: ER model, Chen's notation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>E-R model</span></div>
+  <h2><span class="no">4</span>The Entity-Relationship Model in Chen's Notation</h2><span class="tag">draw it from memory ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> The <b>E-R model</b> (Peter Chen, <b>1976</b>) is a high-level <b>conceptual</b> model used to design a database before any table is built. It has three primitive components — <span class="hl">entity</span>, <span class="hl">attribute</span>, <span class="hl">relationship</span> — and every one has a fixed symbol.</div>
+  <div class="mnote">Chen, 1976</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 600 264" width="410">
+      <g class="w">
+        <rect x="20" y="14" width="120" height="44" rx="4" class="ink-k fill-b"/>
+        <rect x="26" y="20" width="108" height="32" rx="4" class="ink-k fill-b"/>
+        <rect x="420" y="14" width="120" height="44" rx="4" class="ink-k fill-b"/>
+        <path class="ink" d="M140,36 H218 M342,36 H420"/>
+        <path class="ink-r" d="M280,12 L342,36 L280,60 L218,36 Z"/>
+        <path class="ink-r" d="M280,18 L334,36 L280,54 L226,36 Z"/>
+        <path class="ink" d="M80,58 V92 M476,58 V92 M484,58 V92"/>
+        <ellipse cx="80" cy="118" rx="64" ry="26" class="ink-k fill-y"/>
+        <ellipse cx="480" cy="118" rx="60" ry="26" class="ink-k fill-y"/>
+        <path class="ink-r" d="M56,132 H104"/>
+        <path class="ink-r" d="M480,144 V174" style="stroke-dasharray:5 4"/>
+        <ellipse cx="480" cy="196" rx="62" ry="22" class="ink-r fill-r" style="stroke-dasharray:6 4"/>
+      </g>
+      <text x="80" y="42" text-anchor="middle" class="k w6" style="font-size:13px">DEPENDENT</text>
+      <text x="480" y="42" text-anchor="middle" class="k w6" style="font-size:13px">EMPLOYEE</text>
+      <text x="280" y="41" text-anchor="middle" class="r s">employs</text>
+      <text x="80" y="124" text-anchor="middle" class="s k">emp_no</text>
+      <text x="480" y="124" text-anchor="middle" class="s">name</text>
+      <text x="480" y="201" text-anchor="middle" class="r s">age</text>
+      <text x="4" y="252" class="r s">double rectangle = weak entity</text>
+      <text x="470" y="252" text-anchor="middle" class="r s">dashed ellipse = derived</text>
+    </svg><figcaption>weak entity, identifying relationship, key, derived attribute</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Component</th><th class="l">Symbol</th><th class="l">Example</th></tr>
+      <tr><td class="l"><b>Strong entity</b></td><td class="l">rectangle</td><td class="l">Employee</td></tr>
+      <tr><td class="l"><b>Weak entity</b></td><td class="l"><span class="red"><b>double rectangle</b></span></td><td class="l">Dependent</td></tr>
+      <tr><td class="l"><b>Attribute</b></td><td class="l">ellipse</td><td class="l">name, id</td></tr>
+      <tr><td class="l"><b>Key attribute</b></td><td class="l"><span class="circ">underlined</span></td><td class="l">id</td></tr>
+      <tr><td class="l"><b>Derived</b></td><td class="l">dashed ellipse</td><td class="l">age</td></tr>
+      <tr><td class="l"><b>Multivalued</b></td><td class="l">double ellipse</td><td class="l">phones</td></tr>
+      <tr><td class="l"><b>Relationship</b></td><td class="l">diamond</td><td class="l">Enrolls</td></tr>
+      <tr><td class="l"><b>Identifying</b></td><td class="l">double diamond</td><td class="l">owns</td></tr>
+      <tr><td class="l"><b>Cardinality</b></td><td class="l">1, N, M on arms</td><td class="l">1:N, M:N</td></tr>
+      <tr><td class="l"><b>Total particip.</b></td><td class="l">double line</td><td class="l">every emp has a dept</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A <b>weak entity set is a double rectangle</b> — not a diamond (relationship), not an ellipse (attribute), not a dashed ellipse (derived attribute). Its identifying relationship is a <b>double diamond</b>. A weak entity has <span class="circ">no key of its own</span>: it is identified by the <i>owner's key + its own partial key</i>.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Rectangle entity, ellipse attribute, diamond relationship, underlined = key.</b>" Then one letter per exception: <b>double</b> rectangle = weak, <b>dashed</b> ellipse = derived, <b>double</b> ellipse = multivalued, <b>double</b> diamond = identifying. A <b>composite</b> attribute is an ellipse with sub-ellipses (<i>address</i> = house, street, city).</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ reading an E-R diagram</span> "Every <b>DEPARTMENT</b> rectangle has one <b>name</b> underlined and a dashed ellipse <b>no_of_staff</b>. A <b>double rectangle</b> <b>ASSIGNMENT</b> joins PROJECT to it." — <i>name</i> is a key attribute; <i>no_of_staff</i> is <b>derived</b>; <b>ASSIGNMENT</b> is a <b>weak entity</b>, meaningless until you know which project and which employee it belongs to.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: cardinality ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Cardinality</span></div>
+  <h2><span class="no">5</span>Cardinality: 1:1, 1:N and M:N</h2><span class="tag">highest-yield ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <b>Cardinality</b> states how many instances of one entity may be associated with one instance of the other. There are only three shapes — <b>1:1</b>, <b>1:N</b>, <b>M:N</b> — and the shape decides <span class="hl">how many relations the design needs</span>.</div>
+  <figure class="doodle"><svg viewBox="0 0 600 216" width="590">
+    <g class="w">
+      <rect x="6" y="4" width="188" height="182" rx="8" class="ink fill-b"/>
+      <rect x="206" y="4" width="188" height="182" rx="8" class="ink fill-b"/>
+      <rect x="406" y="4" width="188" height="182" rx="8" class="ink-r fill-r"/>
+      <rect x="22" y="40" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="112" y="40" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <path class="ink" d="M88,55 H108" marker-end="url(#ahb)"/>
+      <path class="ink" d="M112,55 H92" marker-end="url(#ahb)"/>
+      <rect x="222" y="34" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="312" y="84" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <path class="ink" d="M288,49 L312,84" marker-end="url(#ahb)"/>
+      <path class="ink" d="M318,84 L294,53" marker-end="url(#ahb)"/>
+      <rect x="422" y="34" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="512" y="84" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <path class="ink" d="M488,49 L512,84" marker-end="url(#ahb)"/>
+      <path class="ink" d="M518,84 L494,53" marker-end="url(#ahb)"/>
+    </g>
+    <text x="100" y="26" text-anchor="middle" class="k w6">1:1</text>
+    <text x="55" y="60" text-anchor="middle" class="s k">PERSON</text>
+    <text x="145" y="60" text-anchor="middle" class="s k">PASSPORT</text>
+    <text x="100" y="104" text-anchor="middle" class="s">Person ↔ Passport</text>
+    <text x="100" y="128" text-anchor="middle" class="s">no extra table</text>
+    <text x="100" y="152" text-anchor="middle" class="g s">PK as FK on one side</text>
+    <text x="100" y="172" text-anchor="middle" class="s">each holds 0 or 1</text>
+    <text x="300" y="26" text-anchor="middle" class="k w6">1:N</text>
+    <text x="255" y="54" text-anchor="middle" class="s k">DEPT</text>
+    <text x="345" y="104" text-anchor="middle" class="s k">STUDENT</text>
+    <text x="300" y="132" text-anchor="middle" class="s">Department ↔ Students</text>
+    <text x="300" y="150" text-anchor="middle" class="s">no extra table</text>
+    <text x="300" y="166" text-anchor="middle" class="g s">dept id becomes FK</text>
+    <text x="300" y="180" text-anchor="middle" class="s">one dept, many students</text>
+    <text x="500" y="26" text-anchor="middle" class="r w6">M:N</text>
+    <text x="455" y="54" text-anchor="middle" class="s k">STUDENT</text>
+    <text x="545" y="104" text-anchor="middle" class="s k">COURSE</text>
+    <text x="500" y="132" text-anchor="middle" class="s">Student ↔ Courses</text>
+    <text x="500" y="150" text-anchor="middle" class="r s">no single FK works</text>
+    <text x="500" y="166" text-anchor="middle" class="r s">needs its own table</text>
+    <text x="500" y="180" text-anchor="middle" class="s">ENROLLS (junction)</text>
+    <text x="300" y="206" text-anchor="middle" class="k s">a 1:N relationship costs no extra table; an M:N relationship always costs one</text>
+  </svg><figcaption>the shape alone tells you the number of tables</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Cardinality</th><th class="l">Meaning</th><th class="l">Example</th><th class="l">Mapping to relations</th></tr>
+    <tr><td class="l"><b>1:1</b></td><td class="l">one A, at most one B</td><td class="l">Person ↔ Passport</td><td class="l">no new table: put the "one" side's <b>PK as an FK</b> in the other table</td></tr>
+    <tr><td class="l"><b>1:N</b></td><td class="l">one A, many B</td><td class="l">Department ↔ Students</td><td class="l">no new table: <b>the "one" side's PK as an FK in the "many" side</b></td></tr>
+    <tr><td class="l"><b>M:N</b></td><td class="l">many A, many B</td><td class="l">Student ↔ Courses</td><td class="l"><span class="red"><b>its own relation</b></span> whose FKs point to both sides</td></tr>
+    <tr><td class="l">1:N with data</td><td class="l">the relationship itself carries <i>since</i>, <i>grade</i></td><td class="l">Student ↔ Enrols</td><td class="l">the junction table becomes necessary even for 1:N</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> For <b>1:N the foreign key goes on the N side</b>; on the "one" side it would need several ids in one cell, which breaks 1NF. An <b>M:N cannot be written with any single foreign key</b>: a student has many courses <i>and</i> a course has many students, so neither table can hold the other's list. <span class="circ">Only M:N forces a new relation.</span></div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ why M:N needs a table</span> Try to put the link in <code>Student</code>: the column <code>courses</code> would hold <code>{CSE101, MAT201}</code> — a <b>multi-valued cell</b>, so one student gives one value per column, exactly what 1NF forbids. Put it in <code>Course</code> and the same problem appears. Therefore <b>ENROLLS(student_id, course_code)</b>, with an FK to each side; the pair is usually the composite key too.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">Choosing the side for a 1:1</span> Put the foreign key on the side that may be <b>missing</b>: the employee table gets <code>passport_no</code>, so an employee without a passport stores NULL, whereas putting it on <code>Passport</code> would demand a passport row for every employee. For <b>1:N the side is not a choice</b> — the key always goes on the N side.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: relational model ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Relational model</span></div>
+  <h2><span class="no">6</span>The Relational Model</h2><span class="tag">vocabulary test ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> The <b>relational model</b> (E. F. Codd, 1970) represents data as <span class="hl">relations</span> — mathematical sets of tuples over named attributes. A relation is shown as a table: tuples are rows, attributes are columns. Two properties matter in every answer: a relation has <b>no duplicate tuples</b> and <b>no order</b>.</div>
+  <div class="mnote">Codd, 1970</div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 600 244" width="246">
+      <g class="w">
+        <rect x="20" y="34" width="330" height="176" rx="8" class="ink-k fill-b"/>
+        <rect x="20" y="34" width="330" height="34" rx="8" class="ink-r fill-y"/>
+        <path class="ink" d="M20,68 H350 M130,68 V210 M240,68 V210 M20,113 H350 M20,158 H350"/>
+        <path class="ink-r" d="M68,62 H82"/>
+        <rect x="430" y="34" width="150" height="120" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M350,94 H426" marker-end="url(#ahb)"/>
+      </g>
+      <text x="185" y="20" text-anchor="middle" class="k w6" style="font-size:20px">RELATION (TABLE)</text>
+      <text style="font-size:20px" x="75" y="56" text-anchor="middle" class="s k">id</text>
+      <text style="font-size:20px" x="185" y="56" text-anchor="middle" class="s k">name</text>
+      <text style="font-size:20px" x="295" y="56" text-anchor="middle" class="s k">dept</text>
+      <text style="font-size:20px" x="75" y="97" text-anchor="middle" class="s">101</text>
+      <text style="font-size:20px" x="185" y="97" text-anchor="middle" class="s">Alice</text>
+      <text style="font-size:20px" x="295" y="97" text-anchor="middle" class="s">CSE</text>
+      <text style="font-size:20px" x="75" y="142" text-anchor="middle" class="s">102</text>
+      <text style="font-size:20px" x="185" y="142" text-anchor="middle" class="s">Bob</text>
+      <text style="font-size:20px" x="295" y="142" text-anchor="middle" class="s">ECE</text>
+      <text style="font-size:20px" x="75" y="192" text-anchor="middle" class="s">103</text>
+      <text style="font-size:20px" x="185" y="192" text-anchor="middle" class="s">Carol</text>
+      <text style="font-size:20px" x="295" y="192" text-anchor="middle" class="s">CSE</text>
+      <text style="font-size:20px" x="505" y="62" text-anchor="middle" class="k w6">DOMAIN</text>
+      <text style="font-size:20px" x="505" y="86" text-anchor="middle" class="s">101, 102, 103…</text>
+      <text style="font-size:20px" x="505" y="106" text-anchor="middle" class="s">integers 1–999</text>
+      <text style="font-size:20px" x="505" y="132" text-anchor="middle" class="g s">one per column</text>
+      <text style="font-size:20px" x="185" y="230" text-anchor="middle" class="k s">a relation is a set of tuples — the order of rows is irrelevant</text>
+    </svg><figcaption>rows in, rows out; columns carry domains</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">Formal term</th><th class="l">Everyday name</th><th class="l">Meaning</th></tr>
+        <tr><td class="l"><b>Relation</b></td><td class="l">table</td><td class="l">a set of tuples with the same attributes</td></tr>
+        <tr><td class="l"><b>Tuple</b></td><td class="l">row / record</td><td class="l">one fact: <code>(101,"Alice","CSE")</code></td></tr>
+        <tr><td class="l"><b>Attribute</b></td><td class="l">column / field</td><td class="l">a named property: <i>name</i>, <i>dept</i></td></tr>
+        <tr><td class="l"><b>Domain</b></td><td class="l">allowed value set</td><td class="l">integers 1–999 for <i>id</i></td></tr>
+        <tr><td class="l"><b>Degree</b></td><td class="l">arity, #columns</td><td class="l">Student has degree <span class="circ">3</span></td></tr>
+        <tr><td class="l"><b>Cardinality</b></td><td class="l">#rows</td><td class="l">Student holds 3 tuples</td></tr>
+        <tr><td class="l"><b>Relation schema</b></td><td class="l">table definition</td><td class="l"><code>Student(id, name, dept)</code></td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">Formal properties</span> Cells hold <b>atomic</b> values only · tuples are <b>unique</b> · tuple and attribute <b>order does not matter</b> · every tuple has the same attributes in the same domains.</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Table–Row–Column–Set.</b>" "Is degree rows or columns?" → <span class="circ">columns</span>. "Is cardinality rows or columns?" → <span class="circ">rows</span>. Degree and cardinality are the pair examiners swap.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A table <b>may be sorted on screen</b>, but the relation is a set, so <b>row order is not part of the data</b>. <b>Degree does not change</b> when rows are added. Two identical rows are <span class="circ">not</span> allowed — that is what the primary key prevents.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ describe one table formally</span> <code>Student(id, name, dept)</code> holding <code>(101,"Alice","CSE")</code>, <code>(102,"Bob","ECE")</code>, <code>(103,"Carol","CSE")</code>. Relation name <b>Student</b>; degree <span class="circ">3</span> (three attributes); cardinality <span class="circ">3</span> (three tuples); domain of <i>id</i> = integers 1–999; <i>id</i> underlined, so it is the key attribute. Adding a fourth student raises cardinality to 4 and leaves degree at 3.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: keys ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Keys</span></div>
+  <h2><span class="no">7</span>Keys: Super, Candidate, Primary, Foreign, Composite</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>superkey</b> is any set of attributes that uniquely identifies a tuple. A <b>candidate key</b> is a superkey that is <span class="hl">minimal</span> — remove one attribute and it no longer identifies. The <b>primary key</b> is the single candidate key chosen as the official identifier. A <b>foreign key</b> points at another relation's candidate key. A <b>composite key</b> is built from two or more attributes.</div>
+  <figure class="doodle"><svg viewBox="0 0 600 234" width="500">
+    <g class="w">
+      <rect x="14" y="18" width="572" height="184" rx="10" class="ink fill-b"/>
+      <rect x="60" y="64" width="480" height="104" rx="10" class="ink-p fill-p"/>
+      <rect x="270" y="100" width="180" height="40" rx="8" class="ink-r fill-r"/>
+      <path class="ink-g" d="M270,124 H100" marker-end="url(#ahg)"/>
+    </g>
+    <text x="300" y="40" text-anchor="middle" class="k w6">SUPERKEY</text>
+    <text x="300" y="58" text-anchor="middle" class="s">any set that uniquely identifies a row: {id}, {id, name}</text>
+    <text x="300" y="86" text-anchor="middle" class="p w6">CANDIDATE KEY = minimal superkey</text>
+    <text x="300" y="156" text-anchor="middle" class="s">remove any one attribute and it no longer identifies</text>
+    <text x="360" y="126" text-anchor="middle" class="r w6">PRIMARY KEY</text>
+    <text x="150" y="116" text-anchor="middle" class="g s">FOREIGN KEY</text>
+    <text x="300" y="192" text-anchor="middle" class="k s">exactly one primary key per table, however many candidate keys</text>
+    <text x="300" y="222" text-anchor="middle" class="g s">composite key = a key built from two or more attributes</text>
+  </svg><figcaption>every key is a superkey; not every superkey is a key</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Key</th><th class="l">What it is</th><th class="l">Rule</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Superkey</b></td><td class="l">identifies a row</td><td class="l">may be larger</td><td class="l">{id, name}</td></tr>
+    <tr><td class="l"><b>Candidate key</b></td><td class="l"><span class="red"><b>minimal</b></span> superkey</td><td class="l">nothing extra</td><td class="l">{id}</td></tr>
+    <tr><td class="l"><b>Primary key</b></td><td class="l">the chosen key</td><td class="l"><span class="circ">one per table; never NULL</span></td><td class="l">PRIMARY KEY (id)</td></tr>
+    <tr><td class="l"><b>Foreign key</b></td><td class="l">points at another key</td><td class="l"><b>referential</b> integrity</td><td class="l"><code>dept_id REFERENCES Dept(id)</code></td></tr>
+    <tr><td class="l"><b>Composite key</b></td><td class="l">2 or more attributes</td><td class="l">a PK may be composite</td><td class="l">(StudentID, CourseID)</td></tr>
+    <tr><td class="l"><b>Alternate key</b></td><td class="l">a key not chosen</td><td class="l">still UNIQUE</td><td class="l">{passport_no}</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Every candidate key is a superkey; every primary key is a candidate key; a foreign key is somebody else's primary key.</b>" The nesting runs one way: superkey ⊇ candidate key ⊇ primary key.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A table has <span class="circ">exactly one</span> primary key but many candidate keys and many superkeys. A primary key may be <b>composite</b> — it need not be one column. A foreign key column <b>may</b> hold NULL; only its non-NULL values must match.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ classify the keys of one table</span> <code>Person(pid, passport_no, phone)</code>. {pid} unique → superkey; remove <i>pid</i> and it fails → minimal → <b>candidate key</b>; chosen → <b>primary key</b>. {passport_no} is minimal too → <b>alternate key</b>. {pid, phone} is unique but <span class="circ">not</span> a candidate key, since <i>phone</i> can be dropped.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: constraints ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Constraints</span></div>
+  <h2><span class="no">8</span>Constraints and the Two Integrity Rules</h2><span class="tag">why constraints exist ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>constraint</b> is a rule declared on a column or a table that restricts what may be stored, so the data stays correct however it is written. SQL gives six constraint forms, and they exist to protect two named properties: <span class="hl">entity integrity</span> and <span class="hl">referential integrity</span>.</div>
+  <div class="mnote">two integrity rules</div>
+  <figure class="doodle"><svg viewBox="0 0 600 196" width="500">
+    <g class="w">
+      <rect x="20" y="24" width="240" height="130" rx="8" class="ink fill-b"/>
+      <rect x="20" y="24" width="240" height="30" rx="6" class="ink-r fill-y"/>
+      <path class="ink" d="M20,80 H260 M120,80 V154 M20,118 H260"/>
+      <rect x="360" y="24" width="220" height="130" rx="8" class="ink fill-b"/>
+      <rect x="360" y="24" width="220" height="30" rx="6" class="ink-r fill-y"/>
+      <path class="ink" d="M360,80 H580 M360,118 H580"/>
+      <path class="ink-g" d="M262,116 H356" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M48,130 L90,152 M90,130 L48,152"/>
+    </g>
+    <text x="140" y="18" text-anchor="middle" class="k w6">CHILD (Enrolls)</text>
+    <text x="470" y="18" text-anchor="middle" class="k w6">PARENT (Student)</text>
+    <text x="70" y="48" text-anchor="middle" class="s">student_id</text>
+    <text x="200" y="48" text-anchor="middle" class="s">course_code</text>
+    <text x="410" y="48" text-anchor="middle" class="s">id</text>
+    <text x="510" y="48" text-anchor="middle" class="s">name</text>
+    <text x="70" y="106" text-anchor="middle" class="s">101</text>
+    <text x="200" y="106" text-anchor="middle" class="s">CSE101</text>
+    <text x="410" y="106" text-anchor="middle" class="s">101</text>
+    <text x="510" y="106" text-anchor="middle" class="s">Alice</text>
+    <text x="70" y="143" text-anchor="middle" class="s">NULL</text>
+    <text x="200" y="143" text-anchor="middle" class="s">MAT201</text>
+    <text x="410" y="143" text-anchor="middle" class="s">102</text>
+    <text x="510" y="143" text-anchor="middle" class="s">Bob</text>
+    <text x="150" y="184" text-anchor="middle" class="g s">FK: value must exist in the parent</text>
+    <text x="450" y="184" text-anchor="middle" class="r s">PK: never NULL, never repeated</text>
+  </svg><figcaption>the FK arrow may not point at nothing</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Constraint</th><th class="l">What it forbids</th><th class="l">SQL</th></tr>
+    <tr><td class="l"><b>NOT NULL</b></td><td class="l">a NULL in the column</td><td class="l"><code>name VARCHAR(50) NOT NULL</code></td></tr>
+    <tr><td class="l"><b>UNIQUE</b></td><td class="l">two rows sharing a value (NULL excepted)</td><td class="l"><code>email VARCHAR(100) UNIQUE</code></td></tr>
+    <tr><td class="l"><b>PRIMARY KEY</b></td><td class="l">NULLs and duplicates — implies the two above</td><td class="l"><code>id INT PRIMARY KEY</code></td></tr>
+    <tr><td class="l"><b>FOREIGN KEY</b></td><td class="l">a value matching no key of the referenced table</td><td class="l"><code>dept_id INT REFERENCES Dept(id)</code></td></tr>
+    <tr><td class="l"><b>CHECK</b></td><td class="l">a value failing a stated condition</td><td class="l"><code>CHECK (Age &gt;= 18)</code></td></tr>
+    <tr><td class="l"><b>DEFAULT</b></td><td class="l">nothing — supplies a value when none is given</td><td class="l"><code>status VARCHAR(20) DEFAULT 'active'</code></td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">The two integrity rules constraints protect</span>
+    <b>Entity integrity</b> — <span class="hl">the primary key is never NULL</span> and is unique in every row. A relation must be addressable: a row with no identity cannot be pointed at. Enforced by <b>PRIMARY KEY</b>.<br>
+    <b>Referential integrity</b> — <span class="hl">every non-NULL foreign key value must match an existing key value in the table it references</span>. No orphans. Enforced by <b>FOREIGN KEY</b>; on deleting the parent you must choose <code>CASCADE</code>, <code>SET NULL</code>, <code>SET DEFAULT</code> or <code>RESTRICT</code>.</div>
+  <div class="code">CREATE TABLE Enrolls ( student_id  INT      NOT NULL REFERENCES Student(id),
+                    course_code CHAR(7)  NOT NULL REFERENCES Course(code),
+                    grade       CHAR(2)  CHECK (grade IN ('A','B','C','F')),
+                    enrolled_on DATE     DEFAULT CURRENT_DATE );</div>
+  <div class="exam tiny"><span class="lbl">Exam traps ✍ two of them</span> <b>1.</b> A foreign key exists to enforce <b>referential integrity</b> — not entity integrity, encryption or faster sorting; entity integrity is the primary key's job. A FK column <b>may</b> hold NULL. <b>2.</b> <span class="circ">DROP</span> removes the table's <b>structure and its data</b>; <b>DELETE</b> removes rows (optionally by <code>WHERE</code>) and <b>TRUNCATE</b> removes all rows, but <b>both keep the structure</b>; <b>ALTER</b> changes the structure and keeps the data.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: triggers + ER vs relational ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Triggers &amp; comparison</span></div>
+  <h2><span class="no">9</span>Triggers, and E-R Model vs Relational Model</h2><span class="tag">wraps up ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <b>trigger</b> is stored logic the DBMS executes <span class="hl">automatically when an event happens</span> on a table — before, after, or instead of an <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code>. The application never calls a trigger; the <i>engine</i> fires it, which is why it cannot be bypassed by any client.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 250px;align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">Timing</th><th class="l">Fires</th></tr>
+      <tr><td class="l">BEFORE</td><td class="l">before the row is written; may change <code>NEW</code></td></tr>
+      <tr><td class="l">AFTER</td><td class="l">after the row is written; <code>OLD</code> and <code>NEW</code> both available</td></tr>
+      <tr><td class="l">FOR EACH ROW</td><td class="l">once per affected row, not per statement</td></tr>
+      <tr><td class="l">INSTEAD OF</td><td class="l">on a <b>view</b>, to make it updatable</td></tr>
+    </table>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> A trigger is <b>not</b> a stored procedure: nobody executes it by name, it fires on an <b>event</b>. It is not a substitute for a constraint — a <code>CHECK</code> is cheaper and clearer. <b>Foreign-key enforcement is done by the constraint, not by a trigger.</b></div>
+  </div>
+  <div class="code">CREATE TRIGGER trg_student_count
+AFTER INSERT ON Student
+FOR EACH ROW
+BEGIN
+  UPDATE Department
+  SET StudentCount = StudentCount + 1
+  WHERE DeptID = NEW.DeptID;
+END;</div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ three uses</span> <b>1. Maintain a count:</b> the trigger above adds 1 to that department's head-count after every insert. <b>2. Audit:</b> after any update of <code>salary</code>, copy the old and new value into <code>Salary_Log</code>. <b>3. Validate:</b> before inserting, reject a booking dated in the past — though a <code>CHECK</code> is preferred.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Aspect</th><th class="l">E-R model (conceptual)</th><th class="l">Relational model</th></tr>
+    <tr><td class="l">Stage</td><td class="l"><span class="hl">design</span> — before any table exists</td><td class="l"><span class="hl">implementation</span> — the tables themselves</td></tr>
+    <tr><td class="l">Data as</td><td class="l">entities, attributes, relationships</td><td class="l">relations, tuples, attributes</td></tr>
+    <tr><td class="l">Abstraction</td><td class="l">high — logical, implementation-free</td><td class="l">low — close to storage</td></tr>
+    <tr><td class="l">Users</td><td class="l">designers and analysts</td><td class="l">programmers and DBAs</td></tr>
+    <tr><td class="l">Maps to the</td><td class="l"><b>conceptual level</b> of the three-level architecture</td><td class="l"><b>external and internal levels</b> of the implementation</td></tr>
+  </table>
+  <div class="tipbox tiny"><span class="lbl">Where the rest of this chapter lives</span> <b>Relational algebra and SQL</b> (selection σ, projection π, joins; SELECT, WHERE, GROUP BY, HAVING) → the query-languages lesson. <b>Functional dependencies, 1NF–BCNF, normalisation</b> → the normalisation lesson. <b>File organisation, indexes, B+ trees, hash tables, optimisation</b> → the indexing lesson. <b>ACID, transactions, concurrency, recovery</b> → the transactions lesson.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>DB system = DB + DBMS + apps + users + hardware</p><p>DB = the data; DBMS = the managing software</p>
+      <p>Schema = blueprint; instance = data now</p><p>External → Conceptual → Internal (ANSI/SPARC)</p>
+      <p>External = views · Conceptual = logical · Internal = physical</p><p>Independence: logical and physical — two kinds</p>
+      <p>Chen: entity = rectangle</p><p>Attribute = ellipse · key = underlined</p>
+      <p>Relationship = diamond · identifying = double diamond</p><p>Weak entity = <b>double rectangle</b> · derived = dashed</p>
+      <p>1:1 and 1:N need no extra table</p><p>M:N always needs its own junction relation</p>
+      <p>Degree = #columns · cardinality = #rows</p><p>Relation = set of tuples; no duplicates, no order</p>
+      <p>Superkey ⊇ candidate key ⊇ primary key</p><p>One primary key per table; never NULL</p>
+      <p>FK → referential · PK → entity integrity</p><p>DROP kills structure; DELETE/TRUNCATE do not</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>Database system ≠ database ≠ DBMS</li>
+      <li>Schema = blueprint, instance = the data now</li>
+      <li>ANSI/SPARC: external, conceptual, internal</li>
+      <li>Data independence has exactly <b>two</b> kinds</li>
+      <li>Adding an index is <b>physical</b> independence</li>
+      <li>Chen's entity is a rectangle, key an underlined ellipse</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>A weak entity set is a <b>double rectangle</b></li>
+      <li>For 1:N the FK goes on the <b>N side</b></li>
+      <li>Only M:N forces a junction table</li>
+      <li>Degree = columns, cardinality = rows</li>
+      <li>FK enforces <b>referential</b> integrity</li>
+      <li><b>DROP</b> removes structure; TRUNCATE does not</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 150px;align-items:start">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Top traps</span> Weak entity is not a diamond or an ellipse · one primary key but many candidate keys · a primary key may be composite · a FK column may be NULL · two kinds of independence, not three · degree and cardinality swapped · DROP vs DELETE vs TRUNCATE.</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">All tricks together</span> Rectangle entity, ellipse attribute, diamond relationship, underlined key · double rectangle weak, dashed ellipse derived · one dept, many students ⇒ FK on the many side · M:N needs its own table · superkey ⊇ candidate ⊇ primary · E-ntity integrity = no NULL PK, R-eferential = FK must land.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="156">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text style="font-size:17px" x="75" y="28" text-anchor="middle" class="s">external</text>
+      <text style="font-size:17px" x="75" y="64" text-anchor="middle" class="g s">conceptual</text>
+      <text style="font-size:17px" x="75" y="100" text-anchor="middle" class="r s">internal</text>
+      <text style="font-size:17px" x="215" y="28" text-anchor="middle" class="s">views</text>
+      <text style="font-size:17px" x="215" y="64" text-anchor="middle" class="s">tables</text>
+      <text style="font-size:17px" x="215" y="100" text-anchor="middle" class="k s">files</text>
+    </svg><figcaption>three levels, one meaning</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ one design, three relations</span> "Department 1:N Students, Students M:N Courses." → <code>Student</code> gets a <b>dept_id</b> FK (the N side); a separate <code>Enrolls(student_id, course_code)</code> appears, because M:N cannot use one FK. "How many relations?" → <span class="circ">3</span>.</div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · Concepts &amp; Data Models</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">1.</span>A database system has:<ol class="opts"><li>the DBMS alone</li><li>the database alone</li><li>DB + DBMS + apps + users</li><li>the data files alone</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">2.</span>Schema and instance are:<ol class="opts"><li>schema = structure</li><li>schema = data now</li><li>both in the data files</li><li>instance = blueprint</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">3.</span>Adding a B+ tree index without code change is:<ol class="opts"><li>logical independence</li><li>physical independence</li><li>the external level</li><li>a schema change</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">4.</span>Chen's weak entity set is drawn as:<ol class="opts"><li>a diamond</li><li>an ellipse</li><li>a dashed ellipse</li><li>a double rectangle</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">5.</span>1:N DEPARTMENT : EMPLOYEE maps as:<ol class="opts"><li>DEPT's PK as FK in EMPLOYEE</li><li>EMP's PK as FK in DEPT</li><li>merge both tables</li><li>a third table</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">6.</span>Student ↔ Course is M:N because:<ol class="opts"><li>many attributes</li><li>no single FK works</li><li>links cannot span two tables</li><li>it needs two indexes</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">7.</span>A foreign key constraint mainly enforces:<ol class="opts"><li>entity integrity</li><li>data encryption</li><li>referential integrity</li><li>faster sorting</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">8.</span>Which of these is a composite key?<ol class="opts"><li>id</li><li>(StudentID, CourseID)</li><li>name</li><li>the whole row</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">9.</span>A trigger differs from a procedure:<ol class="opts"><li>needs Java</li><li>cannot modify data</li><li>is called by the app</li><li>is run by the DBMS</li></ol></div>
+    <div class="mcq" style="line-height:4.3mm;font-size:11pt"><span class="qn">10.</span>Which drops structure and data?<ol class="opts"><li>DELETE</li><li>TRUNCATE</li><li>ALTER</li><li>DROP</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-b · 4-d · 5-a · 6-b · 7-c · 8-b · 9-d · 10-d</div>
+  <div class="wq tiny"><span class="lbl">Written question</span> Define a database system and distinguish schema from instance. Explain the three-level architecture and the two kinds of data independence. Draw Chen's E-R notation including a weak entity set, show how 1:1, 1:N and M:N map to relations, and state what constraints and triggers are for. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5.2mm">
+    <li><b>Definition (1)</b> — database = the data; DBMS = the managing software; database system = database + DBMS + applications + users + hardware. <b>Schema</b> = the blueprint, kept in the data dictionary; <b>instance</b> = the rows now. <i class="mk">1</i></li>
+    <li><b>Three levels (2)</b> — <b>external</b> (user views, one per application), <b>conceptual</b> (logical structure of all data: tables, relations, constraints), <b>internal</b> (files, pages, indexes). ANSI/SPARC. <i class="mk">2</i></li>
+    <li><b>Data independence (2)</b> — <b>logical</b>: change the conceptual schema; the external views and programs are unaffected. <b>physical</b>: change the internal schema (index, page layout); the conceptual schema and programs are unaffected. <i class="mk">2</i></li>
+    <li><b>E-R notation (2)</b> — entity = rectangle (weak = <b>double rectangle</b>), attribute = ellipse (key <b>underlined</b>, derived <b>dashed</b>), relationship = <b>diamond</b> (identifying = double), cardinality 1/N/M. <i class="mk">2</i></li>
+    <li><b>Mapping (2)</b> — <b>1:1</b> and <b>1:N</b>: no new relation; put the "one" side's primary key as a foreign key in the other / in the "many" side. <b>M:N</b>: no single FK works, so create a junction relation. <i class="mk">2</i></li>
+    <li><b>Constraints and triggers (1)</b> — declared rules (NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, DEFAULT) protecting <b>entity integrity</b> (PK never NULL) and <b>referential integrity</b> (FK matches an existing key); triggers are stored logic run automatically on an event. <i class="mk">1</i></li>
+  </ol>
+  <h3 style="line-height:6mm">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ul class="tick">
+      <li>Can separate database, DBMS, database system</li>
+      <li>Can give the three levels in order</li>
+      <li>Can name the two kinds of independence</li>
+    </ul>
+    <ul class="tick">
+      <li>Can draw all Chen symbols from memory</li>
+      <li>Can state why M:N needs a table</li>
+      <li>Can list the six constraints, DROP vs TRUNCATE</li>
+    </ul>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

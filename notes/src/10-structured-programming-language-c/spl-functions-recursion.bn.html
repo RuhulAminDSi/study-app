@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>C: ফাংশন, প্যারামিটার পাসিং, স্কোপ, স্টোরেজ ক্লাস ও রিকার্শন: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">C-তে ফাংশন, স্কোপ ও রিকার্শন</span></h1>
+  <p class="subtitle">ফাংশন · প্যারামিটার পাসিং · স্কোপ · স্টোরেজ ক্লাস · রিকার্শন: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 290" width="500">
+      <g class="w">
+        <ellipse cx="320" cy="145" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M238,128 L168,70 M238,162 L168,220 M320,103 L320,54 M402,128 L472,70 M402,162 L472,220 M320,187 L320,234 M216,145 L176,145 M424,145 L464,145"/>
+        <rect x="60" y="38" width="164" height="38" rx="14" class="ink fill-b"/>
+        <rect x="238" y="12" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="126" width="160" height="38" rx="14" class="ink fill-b"/>
+        <rect x="464" y="126" width="160" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="214" width="164" height="38" rx="14" class="ink-g fill-g"/>
+        <rect x="238" y="238" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="214" width="164" height="38" rx="14" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="141" text-anchor="middle" class="bn k l">C ফাংশন</text><text x="320" y="166" text-anchor="middle" class="bn r s">কল · পাস · আয়ু · পুনরাবৃত্তি</text>
+      <text x="142" y="62" text-anchor="middle" class="bn s">প্রোটোটাইপ বনাম ডেফিনিশন</text>
+      <text x="320" y="38" text-anchor="middle" class="bn r w6" style="font-size:13px">শুধু কল বাই ভ্যালু ★</text>
+      <text x="498" y="62" text-anchor="middle" class="bn r w6" style="font-size:13px">পয়েন্টার = "রেফারেন্স" ★</text>
+      <text x="96" y="150" text-anchor="middle" class="bn s">ব্লক · ফাইল স্কোপ</text>
+      <text x="544" y="150" text-anchor="middle" class="bn r w6" style="font-size:13px">স্টোরেজ ক্লাস ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn g w6" style="font-size:13px">আগে বেস কেস</text>
+      <text x="320" y="264" text-anchor="middle" class="bn r w6" style="font-size:13px">static মান রাখে ★</text>
+      <text x="498" y="238" text-anchor="middle" class="bn r w6" style="font-size:13px">fib ট্রি · O(2ⁿ) ★</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = যে নিয়মের ওপর প্রতিটি রিকার্শন দাঁড়িয়ে</figcaption>
+  </figure>
+  <div class="sticky" style="width:80mm"><b>হাই-ইল্ড তালিকা</b><br>① প্রোটোটাইপ = ডিক্লারেশন; শেষে <code>;</code><br>② অ্যাকচুয়াল আর্গুমেন্ট → ফরমাল প্যারামিটারে কপি<br>③ C-তে <b>শুধু</b> কল বাই ভ্যালু<br>④ "রেফারেন্স" = পয়েন্টার পাঠানো<br>⑤ লোকাল ডিফল্টে <code>auto</code>: গারবেজ<br>⑥ <code>static</code>/গ্লোবাল ডিফল্টে ০<br>⑦ static লোকাল মান রাখে: 1 2 3<br>⑧ <code>register</code> ভেরিয়েবলে <code>&amp;</code> নয়<br>⑨ <code>extern</code> ডিক্লেয়ার করে, ডিফাইন নয়<br>⑩ বেস কেস নেই → স্ট্যাক ওভারফ্লো</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">স্ট্রাকচার্ড প্রোগ্রামিং ল্যাঙ্গুয়েজ সিলেবাসে আছে: "<span class="hl">Functions and program structure: parameter passing conventions, scope rules and storage classes, recursion</span>"। ডেটা টাইপ, অপারেটর ও কন্ট্রোল স্ট্রাকচার আগের লেসনে; পয়েন্টার ও অ্যারে পরের লেসনে, স্ট্রাকচার ও ইউনিয়ন তার পরেরটিতে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>ফাংশন: প্রোটোটাইপ, ডেফিনিশন, কল … পৃ. ২</li><li>প্যারামিটার পাসিং: ভ্যালু বনাম অ্যাড্রেস … পৃ. ৩</li><li>স্কোপ, লিংকেজ, আয়ু … পৃ. ৪</li><li>স্টোরেজ ক্লাস: বড় টেবিল … পৃ. ৫</li><li>extern, static লিংকেজ, register … পৃ. ৬</li><li>রিকার্শন ও কল স্ট্যাক … পৃ. ৭</li></ul>
+    <ul class="tick"><li>রিকার্শন ট্রি, জটিলতা, ইটারেশন … পৃ. ৮</li><li>আউটপুট ট্রেসিং অনুশীলন … পৃ. ৯</li><li>রাতের পরীক্ষার পাতা … পৃ. ১০</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: functions ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>ফাংশন</span></div>
+  <h2><span class="no">১</span>ফাংশন: প্রোটোটাইপ, ডেফিনিশন, কল</h2><span class="tag">মৌলিক, সবসময় আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">ফাংশন (Function)</span> হলো নামযুক্ত, স্বয়ংসম্পূর্ণ কোড ব্লক, যা একটি কাজ করে এবং বহুবার কল করা যায়। একটি C প্রোগ্রাম কতগুলো ফাংশনের সমষ্টি; এক্সিকিউশন শুরু হয় <code>main</code> থেকে। সাধারণ রূপ: <code>return_type name(type p1, type p2) { body; return value; }</code>। সুবিধা: <b>পুনঃব্যবহার</b> ও <b>মডুলারিটি</b>। দুই প্রকার: <b>লাইব্রেরি</b> ফাংশন (<code>printf</code>, <code>sqrt</code>) ও <b>ইউজার-ডিফাইনড</b> ফাংশন।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 100" width="460">
+    <g class="w">
+      <rect x="6" y="22" width="150" height="48" rx="10" class="ink fill-b"/>
+      <rect x="244" y="22" width="150" height="48" rx="10" class="ink-p fill-p"/>
+      <rect x="482" y="22" width="150" height="48" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M156,36 H240" marker-end="url(#ahb)"/>
+      <path class="ink-p" d="M394,36 H478" marker-end="url(#ahp)"/>
+      <path class="ink-r" d="M556,72 C556,86 82,86 82,74" marker-end="url(#ah)"/>
+    </g>
+    <text x="81" y="43" text-anchor="middle" class="bn s k w6">কলার: main()</text><text x="81" y="61" text-anchor="middle" class="s">add(5, 3)</text>
+    <text x="198" y="30" text-anchor="middle" class="s">5, 3</text>
+    <text x="319" y="43" text-anchor="middle" class="bn s p w6">কপি হয়</text><text x="319" y="61" text-anchor="middle" class="s p">a = 5, b = 3</text>
+    <text x="436" y="30" text-anchor="middle" class="bn s">বডি চলে</text>
+    <text x="557" y="43" text-anchor="middle" class="bn s g w6">কলি: add()</text><text x="557" y="61" text-anchor="middle" class="s g">return a + b</text>
+    <text x="320" y="98" text-anchor="middle" class="bn s r">মান 8 ফেরত আসে; কলের পরের লাইন থেকে চলা শুরু</text>
+  </svg><figcaption>একটি কল: আর্গুমেন্ট ঢোকে, একটি মান ফেরত আসে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">#include &lt;stdio.h&gt;
+int add(int a, int b);   /* prototype */
+
+int main(void) {
+    int s = add(5, 3);   /* call */
+    printf("%d\n", s);   /* 8 */
+    return 0;            /* success */
+}
+
+int add(int a, int b) {  /* definition */
+    return a + b;
+}</div>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">পরিভাষা</th><th class="l">অর্থ</th></tr>
+      <tr><td class="l"><b>প্রোটোটাইপ</b></td><td class="l">ডিক্লারেশন: নাম, রিটার্ন টাইপ, প্যারামিটার টাইপ; শেষে <code>;</code>, বডি নেই</td></tr>
+      <tr><td class="l"><b>ডেফিনিশন</b></td><td class="l">হেডার + বডি; প্রতি ফাংশনে ঠিক <span class="circ">একটি</span></td></tr>
+      <tr><td class="l"><b>কল</b></td><td class="l"><code>add(5, 3)</code>: ভেতরে যায়, একটি মান ফেরত পায়</td></tr>
+      <tr><td class="l"><b>অ্যাকচুয়াল</b> প্যারামিটার</td><td class="l">কলে দেওয়া আর্গুমেন্ট: 5, 3</td></tr>
+      <tr><td class="l"><b>ফরমাল</b> প্যারামিটার</td><td class="l">হেডারের ভেরিয়েবল: <i>a</i>, <i>b</i></td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">নিয়ম</th><th class="l">যা মনে রাখতে হবে</th></tr>
+    <tr><td class="l">রিটার্ন মান</td><td class="l">প্রতি কলে সর্বোচ্চ <b>একটি</b> মান; বেশি লাগলে পয়েন্টার প্যারামিটার বা <code>struct</code> ফেরত</td></tr>
+    <tr><td class="l"><code>void</code> ফাংশন</td><td class="l">কিছু ফেরত দেয় না; আগেভাগে বেরোতে শুধু <code>return;</code> লেখা যায়</td></tr>
+    <tr><td class="l"><code>main</code></td><td class="l"><code>int</code> ফেরত দেয়: 0 = সফল; <code>void main()</code> মানসম্মত নয়</td></tr>
+    <tr><td class="l">প্রোটোটাইপ</td><td class="l">নাম ঐচ্ছিক (<code>int add(int, int);</code>); একেবারে না থাকলে: C89 <code>int</code> ধরত, C99+ নিষেধ</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>প্রোটোটাইপ = ভিজিটিং কার্ড; ডেফিনিশন = মানুষটি।</b>" কার্ড অনেক বিলানো যায়, মানুষ কিন্তু একজনই।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> আর্গুমেন্ট মূল্যায়নের ক্রম <b>অনির্দিষ্ট</b>: <code>f(i++, i++)</code> আনডিফাইনড বিহেভিয়ার। স্ট্যান্ডার্ড C-তে এক ফাংশনের ভেতরে আরেকটি <b>ডিফাইন</b> করা যায় না।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট</span> <code>int sq(int x){return x*x;}</code> → <code>printf("%d", sq(3) + sq(4));</code> ছাপে <span class="circ">25</span>। অ্যাকচুয়াল 3, 4; ফরমাল <i>x</i>।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: parameter passing ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>প্যারামিটার পাসিং</span></div>
+  <h2><span class="no">২</span>প্যারামিটার পাসিং: ভ্যালু ও অ্যাড্রেস দিয়ে</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">কল বাই ভ্যালু (Call by Value)</span>-তে কলি ফাংশন প্রতিটি আর্গুমেন্টের একটি <b>কপি</b> পায় তার ফরমাল প্যারামিটারে, তাই ভেতরের পরিবর্তন কলারের কাছে পৌঁছায় না। C <span class="circ">সব আর্গুমেন্ট ভ্যালুতে</span> পাঠায়। কলারের ভেরিয়েবল বদলাতে হলে তার <b>অ্যাড্রেস</b> পাঠাতে হয়: ফরমাল প্যারামিটার হয় পয়েন্টার, আর ফাংশন <code>*p</code> দিয়ে লেখে। একে সাধারণত <span class="hl">কল বাই রেফারেন্স (Call by Reference)</span> বলা হয়, কিন্তু C-তে এটি <b>অনুকরণ</b> মাত্র — অ্যাড্রেসটিই কপি হয়। আসল রেফারেন্স (<code>int &amp;a</code>) শুধু C++-এ।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="470">
+    <g class="w">
+      <rect x="20" y="34" width="90" height="40" rx="6" class="ink fill-b"/>
+      <rect x="196" y="34" width="90" height="40" rx="6" class="ink-r fill-r"/>
+      <path class="ink-r" d="M110,54 H192" marker-end="url(#ah)"/>
+      <rect x="360" y="34" width="90" height="40" rx="6" class="ink-g fill-g"/>
+      <rect x="536" y="34" width="90" height="40" rx="6" class="ink-p fill-p"/>
+      <path class="ink-p" d="M536,54 H454" marker-end="url(#ahp)"/>
+      <path class="ink" d="M320,8 V108" style="stroke-dasharray:5 5"/>
+    </g>
+    <text x="150" y="18" text-anchor="middle" class="bn s k w6">byVal(x): একটি কপি</text>
+    <text x="65" y="59" text-anchor="middle" class="s">x = 10</text>
+    <text x="241" y="59" text-anchor="middle" class="s r">a: 10 → 15</text>
+    <text x="150" y="46" text-anchor="middle" class="bn s r">কপি</text>
+    <text x="150" y="98" text-anchor="middle" class="bn s k">কলের পরেও x = 10</text>
+    <text x="490" y="18" text-anchor="middle" class="bn s k w6">byPtr(&amp;x): অ্যাড্রেস</text>
+    <text x="405" y="59" text-anchor="middle" class="s g">x: 10 → 15</text>
+    <text x="581" y="59" text-anchor="middle" class="s p">a = &amp;x</text>
+    <text x="495" y="46" text-anchor="middle" class="bn s p">নির্দেশ করে</text>
+    <text x="490" y="98" text-anchor="middle" class="bn s g">*a = *a + 5 খোদ x-কে বদলায়</text>
+  </svg><figcaption>বাঁয়ে: ফাংশন কাজ করে ফটোকপিতে · ডানে: তার হাতে x-এর চাবি</figcaption></figure>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void byVal(int a)  { a = a + 5; }
+void byPtr(int *a) { *a = *a + 5; }
+
+int x = 10;
+byVal(x);    /* x is still 10 */
+byPtr(&amp;x);   /* x becomes 15  */</div>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void swap(int *p, int *q) {
+    int t = *p;  *p = *q;  *q = t;
+}
+int a = 10, b = 20;
+swap(&amp;a, &amp;b);  /* a = 20, b = 10 */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">কল বাই ভ্যালু</th><th class="l">অ্যাড্রেস (পয়েন্টার) দিয়ে</th><th class="l">C++ রেফারেন্স</th></tr>
+    <tr><td class="l">কী পাঠানো হয়</td><td class="l">মানের কপি</td><td class="l"><b>অ্যাড্রেসের</b> কপি</td><td class="l">ভেরিয়েবলের অ্যালিয়াস</td></tr>
+    <tr><td class="l">ফরমাল / কল</td><td class="l"><code>int a</code> / <code>f(x)</code></td><td class="l"><code>int *a</code> / <code>f(&amp;x)</code></td><td class="l"><code>int &amp;a</code> / <code>f(x)</code></td></tr>
+    <tr><td class="l">কলারের ভেরিয়েবল বদলায়?</td><td class="l">না</td><td class="l">হ্যাঁ, <code>*a</code> দিয়ে</td><td class="l">হ্যাঁ</td></tr>
+    <tr><td class="l">C-তে আছে?</td><td class="l"><span class="circ">একমাত্র</span> পদ্ধতি</td><td class="l">হ্যাঁ (পয়েন্টারের মান)</td><td class="l">না — শুধু C++</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">অ্যারে পয়েন্টারে রূপ নেয় (decay)</span> <code>void f(int a[])</code> ≡ <code>void f(int *a)</code>: শুধু ০ নম্বর উপাদানের অ্যাড্রেস যায়, অ্যারে <b>কপি হয় না</b>, ভেতরের পরিবর্তন কলার দেখে। <i>f</i>-এর ভেতরে <code>sizeof(a)</code> = <b>পয়েন্টারের</b> আকার, তাই দৈর্ঘ্যও পাঠাও। বিস্তারিত: পরের লেসন।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">স্ট্রাকচার কপি হয়</span> <code>struct</code> আর্গুমেন্ট পুরোটা কপি হয় — বড় হলে ধীর, তাই <code>const struct T *p</code> পাঠাও; <code>const</code> প্রতিশ্রুতি দেয় যে ডেটা বদলাবে না। স্ট্রাকচার বিস্তারিত: লেসন ৪।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ভ্যালু = ফটোকপি; অ্যাড্রেস = বাড়ির চাবি।</b>" ফটোকপিতে দাগ দিলে আসলটা নিরাপদ; চাবি পেলে আসল বাড়িই এলোমেলো।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">প্রচলিত ভুল ধারণা</span> "C-তে কল বাই রেফারেন্স আছে" — না: পয়েন্টারও কপি হয়। কলির ভেতরে <code>p = &amp;y;</code> লিখলে কলারের পয়েন্টার <b>সরে না</b>।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ভ্যালুতে swap</span> <code>void swap(int a,int b){int t=a;a=b;b=t;}</code>, <code>x=10,y=20; swap(x,y); printf("%d %d",x,y);</code> → <span class="circ">10 20</span>।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: scope ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>স্কোপের নিয়ম</span></div>
+  <h2><span class="no">৩</span>স্কোপের নিয়ম, লিংকেজ ও আয়ু</h2><span class="tag">MCQ + আউটপুট ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> কোনো আইডেন্টিফায়ারের <span class="hl">স্কোপ (Scope)</span> হলো প্রোগ্রাম টেক্সটের সেই অংশ, যেখানে তার নাম ব্যবহার করা যায়। <b>লোকাল</b> (ব্লকের ভেতরে, বা প্যারামিটার) ভেরিয়েবলের <b>ব্লক স্কোপ</b>; <b>গ্লোবাল</b> (সব ফাংশনের বাইরে) ভেরিয়েবলের <b>ফাইল স্কোপ</b>, ফাইলের শেষ পর্যন্ত। C স্ট্যান্ডার্ডে <span class="circ">চার ধরনের স্কোপ</span>: ব্লক, ফাইল, ফাংশন ও ফাংশন প্রোটোটাইপ।</div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 220" width="218">
+      <g class="w">
+        <rect x="6" y="6" width="288" height="208" rx="10" class="ink fill-b"/>
+        <rect x="28" y="56" width="248" height="146" rx="10" class="ink-g fill-g"/>
+        <rect x="52" y="118" width="200" height="70" rx="10" class="ink-r fill-r"/>
+      </g>
+      <text x="150" y="28" text-anchor="middle" class="bn s k w6">ফাইল স্কোপ</text>
+      <text x="150" y="46" text-anchor="middle" class="s">int global = 100;</text>
+      <text x="152" y="78" text-anchor="middle" class="bn s g w6">show(): ব্লক স্কোপ</text>
+      <text x="152" y="98" text-anchor="middle" class="s g">int local = 5;</text>
+      <text x="152" y="140" text-anchor="middle" class="bn s r w6">ভেতরের { } ব্লক</text>
+      <text x="152" y="160" text-anchor="middle" class="bn s r">int local = 7; (ঢেকে দেয়)</text>
+      <text x="152" y="178" text-anchor="middle" class="bn s r">দেখে 7 ও 100</text>
+    </svg><figcaption>ভেতরের বাক্স বাইরে দেখে, বাইরেরটা ভেতরে নয়</figcaption></figure>
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">int global = 100;          /* file scope */
+void show(void) {
+    int local = 5;         /* block scope */
+    {
+        int local = 7;     /* shadows it  */
+        printf("%d ", local);       /* 7 */
+    }
+    printf("%d %d", local, global);
+}                       /* prints 7 5 100 */
+/* in main(): local is unknown → error */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">স্কোপ (C স্ট্যান্ডার্ড)</th><th class="l">কার জন্য</th><th class="l">কোথা থেকে … কোথা পর্যন্ত দৃশ্যমান</th></tr>
+    <tr><td class="l"><b>ব্লক</b></td><td class="l">লোকাল, ফাংশন প্যারামিটার</td><td class="l">ডিক্লারেশনের স্থান → সমাপ্তি <code>}</code></td></tr>
+    <tr><td class="l"><b>ফাইল</b></td><td class="l">গ্লোবাল, ফাংশনের নাম</td><td class="l">ডিক্লারেশনের স্থান → সোর্স ফাইলের শেষ</td></tr>
+    <tr><td class="l"><b>ফাংশন</b></td><td class="l"><span class="hl">শুধু লেবেল</span> (<code>goto</code>-র জন্য)</td><td class="l">পুরো ফাংশন, লেবেলের আগেও</td></tr>
+    <tr><td class="l"><b>ফাংশন প্রোটোটাইপ</b></td><td class="l">প্রোটোটাইপের প্যারামিটার নাম</td><td class="l">সেই প্রোটোটাইপের শেষ পর্যন্ত</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">পরিভাষা</th><th class="l">যে প্রশ্নের উত্তর দেয়</th><th class="l">মান</th></tr>
+    <tr><td class="l"><b>স্কোপ</b></td><td class="l">নাম কোথায় ব্যবহার করা যায়? (কম্পাইল টাইম)</td><td class="l">ব্লক, ফাইল, ফাংশন, প্রোটোটাইপ</td></tr>
+    <tr><td class="l"><b>আয়ু (Lifetime)</b></td><td class="l">স্টোরেজ কতক্ষণ থাকে? (রান টাইম)</td><td class="l">অটোমেটিক (ব্লক), স্ট্যাটিক (পুরো প্রোগ্রাম), অ্যালোকেটেড (<code>malloc</code>…<code>free</code>)</td></tr>
+    <tr><td class="l"><b>লিংকেজ (Linkage)</b></td><td class="l">অন্য ফাইলে একই নাম কি একই অবজেক্ট?</td><td class="l"><span class="hl">এক্সটার্নাল</span>, <span class="hl">ইন্টারনাল</span>, নেই</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>স্কোপ = যে ঘরে নাম ধরে ডাকা যায়; আয়ু = মানুষটি কতদিন বাঁচে।</b>" static লোকাল সারা প্রোগ্রাম বাঁচে, কিন্তু সাড়া দেয় শুধু নিজের ঘরে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ঢাকা পড়া (shadowed) গ্লোবালকে সেই ব্লকে নাম দিয়ে ধরা যায় না: C-তে <code>::x</code> নেই (শুধু C++)। ডিক্লারেশনের লাইনের আগে ব্যবহার চলে না।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট</span> <code>int x=1; void f(){int x=2; {x=3;} printf("%d",x);}</code> ছাপে <span class="circ">3</span>: ভেতরের ব্লক f-এর <i>x</i>-এ লেখে; গ্লোবাল থাকে 1।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: storage classes ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>স্টোরেজ ক্লাস</span></div>
+  <h2><span class="no">৪</span>স্টোরেজ ক্লাস: বড় টেবিল</h2><span class="tag">সর্বোচ্চ গুরুত্ব ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">স্টোরেজ ক্লাস (Storage Class)</span> স্পেসিফায়ার কম্পাইলারকে ভেরিয়েবলের <b>সংরক্ষণের স্থান</b>, <b>ডিফল্ট প্রাথমিক মান</b>, <b>স্কোপ</b>, <b>আয়ু</b> ও <b>লিংকেজ</b> জানায়। C-তে চারটি প্রচলিত: <code>auto</code>, <code>register</code>, <code>static</code>, <code>extern</code> (C11-এ <code>_Thread_local</code>; <code>typedef</code> শুধু ব্যাকরণগতভাবে)। কিওয়ার্ড ছাড়া লোকাল ভেরিয়েবল <span class="circ">auto</span>; কিওয়ার্ড ছাড়া গ্লোবালের লিংকেজ এক্সটার্নাল।</div>
+  <table class="hand tiny" style="width:100%">
+      <tr><th class="l">ক্লাস</th><th class="l">কোথায় থাকে</th><th class="l">ডিফল্ট</th><th class="l">স্কোপ</th><th class="l">আয়ু</th><th class="l">লিংকেজ</th></tr>
+      <tr><td class="l"><b>auto</b></td><td class="l">স্ট্যাক</td><td class="l">গারবেজ</td><td class="l">ব্লক</td><td class="l">ব্লক</td><td class="l">নেই</td></tr>
+      <tr><td class="l"><b>register</b></td><td class="l">CPU রেজিস্টার (পেলে)</td><td class="l">গারবেজ</td><td class="l">ব্লক</td><td class="l">ব্লক</td><td class="l">নেই</td></tr>
+      <tr><td class="l"><b>static</b> লোকাল</td><td class="l">data / BSS</td><td class="l"><span class="circ">0</span></td><td class="l">ব্লক</td><td class="l">পুরো প্রোগ্রাম</td><td class="l">নেই</td></tr>
+      <tr><td class="l"><b>static</b> গ্লোবাল</td><td class="l">data / BSS</td><td class="l">0</td><td class="l">ফাইল</td><td class="l">পুরো প্রোগ্রাম</td><td class="l">ইন্টারনাল</td></tr>
+      <tr><td class="l"><b>extern</b></td><td class="l">যেখানে ডিফাইন করা</td><td class="l">0 (ডেফিনিশন থেকে)</td><td class="l">ফাইল (বা ব্লক)</td><td class="l">পুরো প্রোগ্রাম</td><td class="l">এক্সটার্নাল</td></tr>
+      <tr><td class="l">সাধারণ গ্লোবাল</td><td class="l">data / BSS</td><td class="l">0</td><td class="l">ফাইল</td><td class="l">পুরো প্রোগ্রাম</td><td class="l">এক্সটার্নাল</td></tr>
+    </table>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="500">
+    <g class="w">
+      <rect x="10" y="22" width="96" height="36" rx="4" class="ink-p fill-p"/>
+      <rect x="106" y="22" width="96" height="36" rx="4" class="ink-g fill-g"/>
+      <rect x="202" y="22" width="96" height="36" rx="4" class="ink-g fill-g"/>
+      <rect x="298" y="22" width="96" height="36" rx="4" class="ink fill-b"/>
+      <rect x="394" y="22" width="120" height="36" rx="4" class="ink-k" style="stroke-dasharray:4 4"/>
+      <rect x="514" y="22" width="116" height="36" rx="4" class="ink-r fill-r"/>
+      <path class="ink" d="M400,40 H440" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M508,40 H468" marker-end="url(#ah)"/>
+    </g>
+    <text x="58" y="45" text-anchor="middle" class="s p">text (code)</text>
+    <text x="154" y="45" text-anchor="middle" class="s g w6">data</text>
+    <text x="250" y="45" text-anchor="middle" class="s g w6">BSS</text>
+    <text x="346" y="45" text-anchor="middle" class="s">heap</text>
+    <text x="572" y="45" text-anchor="middle" class="s r w6">stack</text>
+    <text x="58" y="76" text-anchor="middle" class="bn s p">ফাংশন</text>
+    <text x="154" y="76" text-anchor="middle" class="bn s g">static/গ্লোবাল ≠ 0</text>
+    <text x="250" y="76" text-anchor="middle" class="bn s g">static/গ্লোবাল = 0</text>
+    <text x="346" y="76" text-anchor="middle" class="s">malloc</text>
+    <text x="572" y="76" text-anchor="middle" class="bn s r">auto, প্যারামিটার</text>
+    <text x="10" y="14" class="bn s k">নিচু অ্যাড্রেস</text>
+    <text x="630" y="14" text-anchor="end" class="bn s k">উঁচু অ্যাড্রেস</text>
+  </svg><figcaption>সাধারণ মেমোরি বিন্যাস: কোন স্টোরেজ ক্লাস কোথায় থাকে</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void counter(void) {
+    static int count = 0;  /* once */
+    count++;
+    printf("%d ", count);
+}
+/* main: counter(); counter(); counter();
+   prints: 1 2 3                         */
+/* without static:  1 1 1                */</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">static লোকাল: তিনটি তথ্য</span> ① এটি তৈরি ও <span class="hl">একবারই ইনিশিয়ালাইজ</span> হয়, <code>main</code> শুরুর আগে — প্রতি কলে <code>static int count = 0;</code> লাইন আবার চলে <b>না</b>। ② এর ইনিশিয়ালাইজার <b>ধ্রুবক রাশি</b> হতে হবে: <code>static int n = f();</code> C-তে কম্পাইল এরর। ③ কলের মাঝে মান ধরে রাখে, তবু <b>স্কোপ ব্লকেই</b>: <code>main</code> <code>count</code>-কে নাম ধরে পায় না। ফাংশন এর অ্যাড্রেস নিরাপদে ফেরত দিতে পারে — এটি কখনো মরে না।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>A-R অল্পায়ু, S-E দীর্ঘায়ু।</b>" <b>A</b>uto ও <b>R</b>egister ব্লক শেষে মরে, শুরু গারবেজে; <b>S</b>tatic ও <b>E</b>xtern পুরো রান বাঁচে, শুরু শূন্যে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> শূন্য ডিফল্ট = শুধু <b>স্ট্যাটিক স্টোরেজ</b> (static, গ্লোবাল)। ইনিশিয়ালাইজ না করা <code>auto</code> ও <code>malloc</code> মেমোরিতে গারবেজ (<code>calloc</code> দেয় 0)।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট</span> <code>int f(){static int s=5; s+=2; return s;}</code> → <code>f(); f(); printf("%d", f());</code> ছাপে <span class="circ">11</span> (7, 9, 11)।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: extern, static linkage, register ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>extern · static · register</span></div>
+  <h2><span class="no">৫</span>extern, static লিংকেজ ও register</h2><span class="tag">ফাঁদে ভরা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <code>extern int g;</code> একটি <span class="hl">ডিক্লারেশন (Declaration)</span>: এটি বলে "<i>g</i> আছে, অন্য কোথাও ডিফাইন করা" এবং <b>কোনো স্টোরেজ বরাদ্দ করে না</b>। সব ফাংশনের বাইরে একমাত্র <span class="hl">ডেফিনিশন (Definition)</span> <code>int g = 5;</code> মেমোরি বরাদ্দ করে ও শূন্য ডিফল্ট বহন করে। প্রোগ্রাম <i>g</i>-কে বহুবার ডিক্লেয়ার করতে পারে, কিন্তু ডিফাইন <span class="circ">ঠিক একবার</span>; <b>লিংকার</b> প্রতিটি <code>extern</code>-কে সেই এক ডেফিনিশনের সঙ্গে জোড়ে।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 140" width="440">
+    <g class="w">
+      <rect x="10" y="10" width="200" height="110" rx="10" class="ink fill-b"/>
+      <rect x="430" y="10" width="200" height="110" rx="10" class="ink fill-b"/>
+      <rect x="260" y="44" width="120" height="44" rx="12" class="ink-g fill-g"/>
+      <path class="ink-g" d="M426,50 L384,60" marker-end="url(#ahg)"/>
+      <path class="ink-g" d="M212,50 L256,60" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M212,96 C300,130 360,130 426,100" marker-end="url(#ah)"/>
+    </g>
+    <text x="110" y="30" text-anchor="middle" class="s k w6">file1.c</text>
+    <text x="110" y="52" text-anchor="middle" class="bn s">int g = 5;  ← ডেফিনিশন</text>
+    <text x="110" y="74" text-anchor="middle" class="bn s r">static int h;  ← নিজস্ব</text>
+    <text x="110" y="96" text-anchor="middle" class="s r">static void helper()</text>
+    <text x="530" y="30" text-anchor="middle" class="s k w6">file2.c</text>
+    <text x="530" y="52" text-anchor="middle" class="bn s">extern int g; ← ডিক্লারেশন</text>
+    <text x="530" y="74" text-anchor="middle" class="bn s">g++;  /* একই g */</text>
+    <text x="530" y="96" text-anchor="middle" class="s r">extern int h; ✗</text>
+    <text x="320" y="64" text-anchor="middle" class="bn s g w6">লিংকার</text>
+    <text x="320" y="80" text-anchor="middle" class="bn s g">একটিই g</text>
+    <text x="320" y="136" text-anchor="middle" class="bn s r">h-এর লিংকেজ ইন্টারনাল: লিংক এরর</text>
+  </svg><figcaption>extern ফাইল পেরিয়ে পৌঁছায়; ফাংশনের বাইরে static দরজা বন্ধ করে</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কিওয়ার্ড ও স্থান</th><th class="l">প্রভাব</th></tr>
+    <tr><td class="l"><b>লোকাল</b> ভেরিয়েবলে <code>static</code></td><td class="l">আয়ু হয় পুরো প্রোগ্রাম; স্কোপ অপরিবর্তিত (ব্লক); লিংকেজ নেই</td></tr>
+    <tr><td class="l"><b>গ্লোবাল</b> ভেরিয়েবলে <code>static</code></td><td class="l"><span class="hl">ইন্টারনাল লিংকেজ</span>: শুধু নিজের সোর্স ফাইলে দৃশ্যমান</td></tr>
+    <tr><td class="l"><b>ফাংশনে</b> <code>static</code></td><td class="l">ফাংশনটি নিজের ফাইলে সীমাবদ্ধ (হেল্পার ফাংশন, নামের সংঘাত এড়ায়)</td></tr>
+    <tr><td class="l">ভেরিয়েবলে <code>extern</code></td><td class="l">শুধু ডিক্লারেশন; বাইরের ডেফিনিশনকে নির্দেশ করে</td></tr>
+    <tr><td class="l">ফাইল স্কোপে <code>extern int g = 5;</code></td><td class="l">ইনিশিয়ালাইজার থাকায় এটি <b>ডেফিনিশন</b> (বৈধ; কম্পাইলার সতর্ক করে)</td></tr>
+    <tr><td class="l">কিওয়ার্ডহীন ফাংশন</td><td class="l">ডিফল্টে <code>extern</code>: প্রোটোটাইপ দিয়ে অন্য ফাইল থেকে কল করা যায়</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">register</span> গতির জন্য ভেরিয়েবলকে CPU রেজিস্টারে রাখার <b>অনুরোধ</b> (লুপ কাউন্টার)। কম্পাইলার <b>উপেক্ষা করতে পারে</b> (আধুনিক অপটিমাইজার নিজেই রেজিস্টার বাছে)। শুধু লোকাল ও প্যারামিটারে; এর <span class="circ"><code>&amp;</code> নেওয়া যায় না</span> — মেমোরিতে থাকলেও কম্পাইল এরর; ডিফল্ট মান গারবেজ।</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">void loop(void) {
+    register int i;
+    for (i = 0; i &lt; 1000; i++)
+        ;            /* fast counter  */
+    int *p = &amp;i;     /* ✗ error: address
+                        of register   */
+}
+register int r;  /* ✗ not at file scope */</div>
+  </div>
+  <div class="exam tiny"><span class="lbl">প্রচলিত ভুল ধারণা — সংশোধিত</span> ① "<code>extern</code> ভেরিয়েবল তৈরি করে, মান 0" — না: স্টোরেজ ও শূন্য ডিফল্ট অন্যত্র থাকা ডেফিনিশনের। ② "<code>static</code> গ্লোবাল যেকোনো জায়গায় ব্যবহারযোগ্য" — না: ফাংশনের বাইরে এর মানে <b>ফাইলে সীমাবদ্ধ</b>। ③ "<code>register</code> রেজিস্টারের নিশ্চয়তা দেয়" — না: এটি শুধু ইঙ্গিত। ④ "register ভেরিয়েবলে <code>&amp;r</code> চলে" — কম্পাইল এরর। ⑤ দুই ফাইলেই <code>int g = 1;</code> → <b>মাল্টিপল ডেফিনিশন</b> লিংক এরর।</div>
+  <div class="cols" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>extern = 'অন্য কোথাও থাকে'; বাইরের static = 'প্রবেশ নিষেধ' সাইনবোর্ড।</b>" ডিক্লারেশন = গুজব; ডেফিনিশন = জন্ম।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ বৈধ?</span> একটি ফাইলে: <code>extern int n; extern int n; int n = 3;</code> → <span class="circ">বৈধ</span>: দুটি ডিক্লারেশন, একটি ডেফিনিশন।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: recursion and the call stack ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>রিকার্শন</span></div>
+  <h2><span class="no">৬</span>রিকার্শন ও কল স্ট্যাক</h2><span class="tag">লিখিত + আউটপুট ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">রিকার্শন (Recursion)</span>: ফাংশন নিজেকে কল করে, <b>প্রত্যক্ষভাবে</b> (f → f) বা <b>পরোক্ষভাবে</b> (f → g → f)। প্রতিটি রিকার্সিভ ফাংশনে লাগে একটি <span class="hl">বেস কেস (Base Case)</span>, যা আর রিকার্স না করে ফেরত দেয়, এবং একটি <b>রিকার্সিভ কেস</b>, যা বেস কেসের দিকে এগোয়। প্রতিটি কল পায় নিজস্ব <span class="hl">স্ট্যাক ফ্রেম (Stack Frame)</span> (অ্যাক্টিভেশন রেকর্ড: প্যারামিটার, লোকাল, রিটার্ন অ্যাড্রেস)। বেস কেসে পৌঁছানো না গেলে ফ্রেম জমতে জমতে <span class="circ">স্ট্যাক ওভারফ্লো</span> (রান-টাইম ক্র্যাশ)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 270px;align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">long fact(int n) {
+    if (n == 0 || n == 1)      /* base case */
+        return 1;
+    return n * fact(n - 1);    /* recursive */
+}
+/* fact(5) = 5*4*3*2*1 = 120 */
+
+int fib(int n) {               /* 0 1 1 2 3 5 8 */
+    if (n &lt;= 1) return n;      /* fib(0)=0, fib(1)=1 */
+    return fib(n - 1) + fib(n - 2);
+}</div>
+    <figure class="doodle"><svg viewBox="0 0 280 210" width="262">
+      <g class="w">
+        <rect x="20" y="20" width="130" height="34" rx="5" class="ink-r fill-r"/>
+        <rect x="20" y="58" width="130" height="34" rx="5" class="ink fill-b"/>
+        <rect x="20" y="96" width="130" height="34" rx="5" class="ink fill-b"/>
+        <rect x="20" y="134" width="130" height="34" rx="5" class="ink fill-b"/>
+        <path class="ink" d="M10,14 V172 H160 V14"/>
+        <path class="ink-p" d="M180,170 V30" marker-end="url(#ahp)"/>
+        <path class="ink-g" d="M230,30 V170" marker-end="url(#ahg)"/>
+      </g>
+      <text x="85" y="42" text-anchor="middle" class="s r w6">fact(1) → 1</text>
+      <text x="85" y="80" text-anchor="middle" class="s">fact(2) → 2·1</text>
+      <text x="85" y="118" text-anchor="middle" class="s">fact(3) → 3·2</text>
+      <text x="85" y="156" text-anchor="middle" class="s">fact(4) → 4·6</text>
+      <text x="180" y="192" text-anchor="middle" class="bn s p">push</text>
+      <text x="230" y="192" text-anchor="middle" class="bn s g">pop</text>
+      <text x="85" y="194" text-anchor="middle" class="bn s k">fact(4) = 24 · 4টি ফ্রেম</text>
+    </svg><figcaption>নামার সময় জমে, ওঠার সময় খোলে</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">প্রকার</th><th class="l">অর্থ</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>প্রত্যক্ষ (Direct)</b></td><td class="l">ফাংশন নিজেকে কল করে</td><td class="l"><code>fact</code>, <code>fib</code></td></tr>
+    <tr><td class="l"><b>পরোক্ষ (Indirect)</b></td><td class="l">A কল করে B-কে, B কল করে A-কে</td><td class="l"><code>isEven</code> ↔ <code>isOdd</code></td></tr>
+    <tr><td class="l"><b>টেইল (Tail)</b></td><td class="l">রিকার্সিভ কলটিই <b>শেষ</b> কাজ; পরে আর কিছু বাকি নেই</td><td class="l"><code>return gcd(b, a % b);</code></td></tr>
+    <tr><td class="l"><b>নন-টেইল (Head)</b></td><td class="l">কল ফেরার পরও কাজ বাকি থাকে</td><td class="l"><code>return n * fact(n - 1);</code></td></tr>
+    <tr><td class="l"><b>ট্রি (Multiple)</b></td><td class="l">প্রতি ফ্রেমে একাধিক রিকার্সিভ কল</td><td class="l"><code>fib</code>, টাওয়ার অব হ্যানয়</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">int isOdd(int n);          /* prototype */
+int isEven(int n) {
+    return n == 0 ? 1 : isOdd(n - 1);
+}
+int isOdd(int n) {
+    return n == 0 ? 0 : isEven(n - 1);
+}           /* isEven(4) → 1  (indirect) */</div>
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">long factT(int n, long acc) {
+    if (n &lt;= 1) return acc;
+    return factT(n - 1, n * acc); /* tail */
+}
+/* factT(5, 1) = 120: the frame has no
+   pending work, so an optimiser can
+   reuse it (a loop in disguise)      */</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>রাশিয়ান পুতুল</b>": নামার পথে পুতুল খোলো (কল), সবচেয়ে ছোটটি নিরেট (বেস কেস), ওঠার পথে বন্ধ করো (রিটার্ন)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> টেইল-কল অপটিমাইজেশন কম্পাইলার <b>করতে পারে</b> (যেমন gcc -O2); C স্ট্যান্ডার্ড বাধ্য করে না। C-তে <code>main</code> নিজেকে কল করতে পারে (C++-এ নয়)।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ গভীরতা</span> <code>fact(5)</code> → n = 5, 4, 3, 2, 1-এর ফ্রেম: সর্বোচ্চ গভীরতা <span class="circ">5</span>; ফল 120। <code>fact(-1)</code> বেস কেসে পৌঁছায় না → ওভারফ্লো।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: recursion tree, complexity, iteration ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>রিকার্শন ট্রি ও খরচ</span></div>
+  <h2><span class="no">৭</span>রিকার্শন ট্রি, জটিলতা, রিকার্শন বনাম ইটারেশন</h2><span class="tag">প্রায়ই আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">রিকার্শন ট্রি (Recursion Tree)</span> প্রতিটি কলের জন্য একটি নোড আঁকে। সাধারণ <code>fib(n)</code> প্রতি ফ্রেমে দুটি কল করে এবং একই মান বারবার হিসাব করে: কলসংখ্যা C(n) = C(n−1) + C(n−2) + 1, C(0) = C(1) = 1, যার সমাধান <span class="circ">C(n) = 2·F(n+1) − 1</span>। <code>fib(5)</code>-এর জন্য: 2·8 − 1 = 15টি কল। সময় O(2ⁿ) (সূক্ষ্ম: Θ(φⁿ), φ ≈ 1.618); স্ট্যাকের গভীরতা মাত্র n।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 222" width="500">
+    <g class="w">
+      <path class="ink" d="M320,20 L180,65 M320,20 L470,65 M180,65 L100,110 M180,65 L260,110 M470,65 L410,110 M470,65 L540,110 M100,110 L55,155 M100,110 L145,155 M260,110 L225,155 M260,110 L295,155 M410,110 L375,155 M410,110 L445,155 M55,155 L25,200 M55,155 L85,200"/>
+      <circle cx="320" cy="20" r="15" class="ink-k fill-y"/>
+      <circle cx="180" cy="65" r="15" class="ink fill-b"/><circle cx="470" cy="65" r="15" class="ink-r fill-r"/>
+      <circle cx="100" cy="110" r="15" class="ink-r fill-r"/><circle cx="260" cy="110" r="15" class="ink fill-b"/><circle cx="410" cy="110" r="15" class="ink fill-b"/><circle cx="540" cy="110" r="15" class="ink-g fill-g"/>
+      <circle cx="55" cy="155" r="15" class="ink fill-b"/><circle cx="145" cy="155" r="15" class="ink-g fill-g"/><circle cx="225" cy="155" r="15" class="ink-g fill-g"/><circle cx="295" cy="155" r="15" class="ink-g fill-g"/><circle cx="375" cy="155" r="15" class="ink-g fill-g"/><circle cx="445" cy="155" r="15" class="ink-g fill-g"/>
+      <circle cx="25" cy="200" r="15" class="ink-g fill-g"/><circle cx="85" cy="200" r="15" class="ink-g fill-g"/>
+    </g>
+    <text x="320" y="25" text-anchor="middle" class="k w6">5</text>
+    <text x="180" y="70" text-anchor="middle" class="w6">4</text><text x="470" y="70" text-anchor="middle" class="r w6">3</text>
+    <text x="100" y="115" text-anchor="middle" class="r w6">3</text><text x="260" y="115" text-anchor="middle" class="w6">2</text><text x="410" y="115" text-anchor="middle" class="w6">2</text><text x="540" y="115" text-anchor="middle" class="g w6">1</text>
+    <text x="55" y="160" text-anchor="middle" class="w6">2</text><text x="145" y="160" text-anchor="middle" class="g w6">1</text><text x="225" y="160" text-anchor="middle" class="g w6">1</text><text x="295" y="160" text-anchor="middle" class="g w6">0</text><text x="375" y="160" text-anchor="middle" class="g w6">1</text><text x="445" y="160" text-anchor="middle" class="g w6">0</text>
+    <text x="25" y="205" text-anchor="middle" class="g w6">1</text><text x="85" y="205" text-anchor="middle" class="g w6">0</text>
+    <text x="590" y="160" text-anchor="middle" class="bn s r w6">15টি কল</text>
+    <text x="590" y="180" text-anchor="middle" class="bn s r">fib(3) × 2</text>
+    <text x="590" y="200" text-anchor="middle" class="bn s">fib(2) × 3</text>
+    <text x="250" y="210" text-anchor="middle" class="bn s g">সবুজ = বেস কেস (8টি পাতা)</text>
+  </svg><figcaption>নোড n = একটি কল fib(n); লাল fib(3) দুবার হিসাব হয় — অপচয়</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">n</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+    <tr><td class="l">fib(n)</td><td>0</td><td>1</td><td>1</td><td>2</td><td>3</td><td>5</td><td>8</td></tr>
+    <tr><td class="l">সাধারণ fib(n)-এর কলসংখ্যা</td><td>1</td><td>1</td><td>3</td><td>5</td><td>9</td><td><b>15</b></td><td>25</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">অ্যালগরিদম</th><th class="l">সময়</th><th class="l">স্ট্যাক স্পেস</th></tr>
+      <tr><td class="l">ফ্যাক্টরিয়াল, রিকার্সিভ</td><td class="l">O(n)</td><td class="l">O(n)</td></tr>
+      <tr><td class="l">ফ্যাক্টরিয়াল, লুপ</td><td class="l">O(n)</td><td class="l">O(1)</td></tr>
+      <tr><td class="l">fib, সাধারণ রিকার্সিভ</td><td class="l"><span class="circ">O(2ⁿ)</span></td><td class="l">O(n)</td></tr>
+      <tr><td class="l">fib, মেমোয়াইজড</td><td class="l">O(n)</td><td class="l">O(n)</td></tr>
+      <tr><td class="l">GCD (ইউক্লিড)</td><td class="l">O(log min(a,b))</td><td class="l">O(log)</td></tr>
+    </table>
+    <div class="code" style="font-size:9.4pt;line-height:4.8mm;margin-top:0">long memo[50];   /* static: all 0 */
+long fibm(int n) {
+    if (n &lt;= 1) return n;
+    if (memo[n]) return memo[n];
+    return memo[n] =
+        fibm(n - 1) + fibm(n - 2);
+}         /* each n solved once */</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">রিকার্শন</th><th class="l">ইটারেশন (লুপ)</th></tr>
+    <tr><td class="l">থামে</td><td class="l">বেস কেসে</td><td class="l">লুপ শর্ত মিথ্যা হলে</td></tr>
+    <tr><td class="l">মেমোরি</td><td class="l">প্রতি সক্রিয় কলে একটি স্ট্যাক ফ্রেম</td><td class="l">ধ্রুবক</td></tr>
+    <tr><td class="l">গতি · ব্যর্থতা</td><td class="l">ধীর (কলের ওভারহেড) · স্ট্যাক ওভারফ্লো</td><td class="l">দ্রুত · অসীম লুপ</td></tr>
+    <tr><td class="l">রূপান্তরযোগ্য?</td><td colspan="2" class="l">হ্যাঁ: যেকোনো রিকার্শন → লুপ (+ স্পষ্ট স্ট্যাক); ট্রি, হ্যানয়ে রিকার্শন বেশি পরিষ্কার</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>গভীরতা = স্ট্যাক, নোড = সময়।</b>" সাধারণ fib: n গভীর, প্রায় 2ⁿ চওড়া।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ হ্যানয়</span> ৩টি চাকতিতে 2³ − 1 = <span class="circ">7</span>টি চাল; ৪টিতে 15; প্রতিটি নতুন চাকতি দ্বিগুণ করে এক যোগ।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: output tracing drill ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>আউটপুট ট্রেসিং</span></div>
+  <h2><span class="no">৮</span>আউটপুট ট্রেসিং অনুশীলন</h2><span class="tag">আউটপুট প্রশ্ন ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">পদ্ধতি</span> যেকোনো রিকার্সিভ আউটপুট প্রশ্নে: ① প্রতিটি আর্গুমেন্টসহ নিচের দিকে <b>কল চেইন</b> লেখো; ② কোথায় <span class="hl">বেস কেস</span> কাজ করে চিহ্নিত করো; ③ এক ফ্রেম করে <b>রিটার্ন মান ওপরে</b> নিয়ে যাও; ④ রিকার্সিভ কলের <b>আগের</b> <code>printf</code> নামার পথে ছাপে, <b>পরের</b>টি ওঠার পথে (উল্টো ক্রমে)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 270px;align-items:start">
+    <div class="code" style="font-size:9.6pt;line-height:4.9mm;margin-top:0">void p(int n) {
+    if (n == 0) return;
+    printf("%d", n);   /* before: down */
+    p(n - 1);
+    printf("%d", n);   /* after: up    */
+}
+p(3);              /* prints 321123 */</div>
+    <figure class="doodle"><svg viewBox="0 0 280 150" width="262">
+      <g class="w">
+        <rect x="10" y="8" width="70" height="28" rx="6" class="ink fill-b"/>
+        <rect x="40" y="48" width="70" height="28" rx="6" class="ink fill-b"/>
+        <rect x="70" y="88" width="70" height="28" rx="6" class="ink fill-b"/>
+        <rect x="100" y="122" width="70" height="24" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M200,10 L248,130" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M262,130 L262,14" marker-end="url(#ahg)"/>
+      </g>
+      <text x="45" y="27" text-anchor="middle" class="s">p(3)</text>
+      <text x="75" y="67" text-anchor="middle" class="s">p(2)</text>
+      <text x="105" y="107" text-anchor="middle" class="s">p(1)</text>
+      <text x="135" y="139" text-anchor="middle" class="s g">p(0)</text>
+      <text x="196" y="80" text-anchor="middle" class="s r">3 2 1</text>
+      <text x="236" y="40" text-anchor="middle" class="s g">1 2 3</text>
+    </svg><figcaption>নামতে ছাপে 3 2 1, উঠতে 1 2 3</figcaption></figure>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">① অঙ্কের যোগফল</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int sd(int n) {
+  return n == 0 ? 0 : n % 10 + sd(n / 10);
+}</div><code>sd(1234)</code> = 4 + 3 + 2 + 1 + 0 = <span class="circ">10</span>; ৫টি কল (1234, 123, 12, 1, 0)।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">② ঘাত (Power)</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int pw(int b, int e) {
+  return e == 0 ? 1 : b * pw(b, e - 1);
+}</div><code>pw(2, 10)</code> = 1024, ১১টি কলে। <i>e</i> অর্ধেক করলে (<code>pw(b*b, e/2)</code>) হয় O(log e)।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">③ GCD (ইউক্লিড)</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int gcd(int a, int b) {
+  return b == 0 ? a : gcd(b, a % b);
+}</div><code>gcd(48, 18)</code>: (48,18) → (18,12) → (12,6) → (6,0) → <b>6</b>। LCM = 48·18 / 6 = 144।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">④ দুই ধাপে নামা</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int f(int n) {
+  return n &lt;= 1 ? 1 : n * f(n - 2);
+}</div><code>f(7)</code> = 7·5·3·1 = <b>105</b>, 7! = 5040 নয়: আর্গুমেন্ট ২ করে কমে।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">⑤ রিকার্শনে বাইনারি</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">void bin(int n) {
+  if (n &gt; 1) bin(n / 2);
+  printf("%d", n % 2);
+}</div><code>bin(10)</code> ছাপে <span class="circ">1010</span>: অঙ্কগুলো বেরোয় ওঠার পথে।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">⑥ রিকার্শনের ভেতরে static</span><div class="code" style="font-size:9.2pt;line-height:4.6mm;margin:0">int g(int n) {
+  static int s = 0;
+  s += n;  if (n &gt; 0) g(n - 1);
+  return s;
+}</div><code>g(3)</code> → একটিই শেয়ার্ড <i>s</i>: 3+2+1+0 = <b>6</b>; দ্বিতীয়বার <code>g(3)</code> দেয় 12।</div>
+  </div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>আগে প্রিন্ট = সিঁড়ি দিয়ে নামা; পরে প্রিন্ট = আবার ওঠা।</b>" নামা সোজা পড়ে, ওঠা উল্টো।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>static</code> লোকাল <b>সব ফ্রেমে শেয়ার্ড</b> — একটিই কপি, প্রতি কলে আলাদা নয়। <code>auto</code> লোকাল প্রতিটি ফ্রেমে নতুন কপি পায়।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ যোগফল</span> <code>int s(int n){return n==0?0:n+s(n-1);}</code> → <code>s(100)</code> = <span class="circ">5050</span>, ১০১টি কল গভীর।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পাতা</span>
+    <div class="fgrid small">
+      <p>প্রোটোটাইপ: <code>int add(int, int);</code></p><p>ডেফিনিশন: ঠিক একটি, বডিসহ</p>
+      <p>অ্যাকচুয়াল = কলে; ফরমাল = হেডারে</p><p><code>main</code> ফেরত দেয় <code>int</code>; 0 = সফল</p>
+      <p>C: শুধু কল বাই ভ্যালু</p><p>"রেফারেন্স" = <code>f(&amp;x)</code> + <code>int *p</code></p>
+      <p>অ্যারে প্যারামিটার = পয়েন্টার; দৈর্ঘ্য পাঠাও</p><p>৪ স্কোপ: ব্লক, ফাইল, ফাংশন, প্রোটোটাইপ</p>
+      <p>auto/register: গারবেজ, ব্লক আয়ু</p><p>static/গ্লোবাল: 0, পুরো-প্রোগ্রাম আয়ু</p>
+      <p>static গ্লোবাল/ফাংশন → ইন্টারনাল লিংকেজ</p><p><code>extern</code>: ডিক্লারেশন, স্টোরেজ নেই</p>
+      <p>register-এ <code>&amp;</code> নয়; শুধু ইঙ্গিত</p><p>fib(5) = 5, ১৫টি কলে; 2·F(n+1) − 1</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>লোকালের ডিফল্ট স্টোরেজ ক্লাস: <code>auto</code></li>
+      <li>static লোকাল: একবার ইনিশিয়ালাইজ, মান রাখে</li>
+      <li>static-সহ counter() ×৩ → 1 2 3</li>
+      <li>ভ্যালুতে swap → পরিবর্তন নেই (10 20)</li>
+      <li>লেবেলের স্কোপ ফাংশন স্কোপ</li>
+      <li>শ্যাডোয়িং: ভেতরের নাম বাইরেরটাকে ঢাকে</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>রিকার্শনে বেস কেস লাগে</li>
+      <li>প্রতিটি কল = একটি স্ট্যাক ফ্রেম</li>
+      <li>বেস কেস নেই → স্ট্যাক ওভারফ্লো</li>
+      <li>fact O(n); সাধারণ fib O(2ⁿ); মেমো O(n)</li>
+      <li>টেইল কল = রিকার্সিভ কলই শেষ কাজ</li>
+      <li>হ্যানয়: 2ⁿ − 1 চাল</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 168px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">প্রধান ফাঁদ</span> C-তে আসল কল বাই রেফারেন্স নেই · <code>extern</code> কিছু বরাদ্দ করে না · static গ্লোবাল ফাইলে সীমাবদ্ধ · <code>register</code> উপেক্ষিত হতে পারে · <code>f(i++, i++)</code> আনডিফাইনড · static লোকাল সব ফ্রেমে শেয়ার্ড · অ্যারে প্যারামিটারের <code>sizeof</code> = পয়েন্টারের আকার।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">সব কৌশল একসঙ্গে</span> ভিজিটিং কার্ড বনাম মানুষ · ফটোকপি বনাম বাড়ির চাবি · ঘর বনাম আয়ু · A-R অল্পায়ু, S-E দীর্ঘায়ু · extern = অন্যত্র থাকে, static = প্রবেশ নিষেধ · রাশিয়ান পুতুল · গভীরতা = স্ট্যাক, নোড = সময় · সিঁড়ি দিয়ে নামা, আবার ওঠা।</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="164">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="bn s">পাসিং</text>
+      <text x="75" y="64" text-anchor="middle" class="r s">static</text>
+      <text x="75" y="100" text-anchor="middle" class="bn g s">রিকার্শন</text>
+      <text x="215" y="28" text-anchor="middle" class="bn s">সবসময় কপি</text>
+      <text x="215" y="64" text-anchor="middle" class="bn s">বাঁচে, শুরু ০-তে</text>
+      <text x="215" y="100" text-anchor="middle" class="bn k s">আগে বেস কেস</text>
+    </svg><figcaption>তিন ধারণা, তিন লাইন</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি কিওয়ার্ডে আউটপুট বদলায়</span> <code>void c(){ int n = 0; n++; printf("%d ", n); }</code> তিনবার কল করলে ছাপে "1 1 1"। এর বদলে <code>static int n = 0;</code> লিখলে একই তিন কলে ছাপে "<span class="circ">1 2 3</span>" — ইনিশিয়ালাইজার একবারই চলে, কলের মাঝে মান টিকে থাকে।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>C · ফাংশন ও রিকার্শন</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১.</span>C-তে লোকাল ভেরিয়েবলের ডিফল্ট স্টোরেজ ক্লাস:<ol class="opts"><li>static</li><li>extern</li><li>auto</li><li>register</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">২.</span><code>counter()</code>-এ আছে <code>static int c = 0; c++; printf("%d ", c);</code>। তিনটি কল ছাপে:<ol class="opts"><li>1 2 3</li><li>1 1 1</li><li>0 1 2</li><li>3 3 3</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৩.</span>C-তে ফাংশনের আর্গুমেন্ট পাঠানো হয়:<ol class="opts"><li>শুধু রেফারেন্সে</li><li>নাম দিয়ে</li><li>ভ্যালু ও রেফারেন্স দুভাবেই</li><li>শুধু ভ্যালুতে (পয়েন্টার রেফারেন্সের অনুকরণ করে)</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৪.</span><code>static int</code>-এর ডিফল্ট প্রাথমিক মান:<ol class="opts"><li>গারবেজ</li><li>0</li><li>1</li><li>−1</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৫.</span>অ্যাড্রেস অপারেটর <code>&amp;</code> প্রয়োগ করা যায় না:<ol class="opts"><li>register ভেরিয়েবলে</li><li>static ভেরিয়েবলে</li><li>extern ভেরিয়েবলে</li><li>গ্লোবাল ভেরিয়েবলে</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৬.</span>গ্লোবাল ভেরিয়েবলে <code>static</code> দিলে এটি পায়:<ol class="opts"><li>এক্সটার্নাল লিংকেজ</li><li>ব্লক স্কোপ</li><li>ইন্টারনাল লিংকেজ (ফাইলে সীমাবদ্ধ)</li><li>অটোমেটিক আয়ু</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৭.</span>প্রথমটি ধরে সাধারণ রিকার্সিভ <code>fib(5)</code> কয়টি কল করে?<ol class="opts"><li>5</li><li>8</li><li>9</li><li>15</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৮.</span><code>p(n)</code> n ছাপে, <code>p(n-1)</code> কল করে, আবার n ছাপে; <code>p(0)</code> ফেরত যায়। <code>p(3)</code> ছাপে:<ol class="opts"><li>123321</li><li>321123</li><li>321</li><li>321321</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৯.</span>ফাইল স্কোপে লেখা <code>extern int x;</code>:<ol class="opts"><li>স্টোরেজ ছাড়া x ডিক্লেয়ার করে</li><li>x ডিফাইন করে 0 বসায়</li><li>x-কে ফাইলে সীমাবদ্ধ করে</li><li>স্ট্যাকে x বরাদ্দ করে</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১০.</span>সাধারণ রিকার্সিভ ফিবোনাচির টাইম কমপ্লেক্সিটি:<ol class="opts"><li>O(n)</li><li>O(log n)</li><li>O(n²)</li><li>O(2ⁿ)</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-ঘ · ৪-খ · ৫-ক · ৬-গ · ৭-ঘ · ৮-খ · ৯-ক · ১০-ঘ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> একটি টেবিলসহ (স্টোরেজ, ডিফল্ট মান, স্কোপ, আয়ু) C-এর চারটি স্টোরেজ ক্লাস ব্যাখ্যা করো। <code>static</code> লোকাল যে মান ধরে রাখে তা দেখাতে একটি প্রোগ্রাম এবং একটি রিকার্সিভ ফ্যাক্টরিয়াল ফাংশন লেখো; <code>fact(4)</code>-এর স্ট্যাক ট্রেস করো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>টেবিল (৪)</b> — auto: স্ট্যাক, গারবেজ, ব্লক, ব্লক · register: পেলে CPU রেজিস্টার, গারবেজ, ব্লক, ব্লক, <code>&amp;</code> নয় · static: data/BSS, 0, ব্লক বা ফাইল, পুরো প্রোগ্রাম · extern: অন্যত্র থাকা ডেফিনিশনের ডিক্লারেশন, 0, ফাইল, পুরো প্রোগ্রাম। <i class="mk">৪</i></li>
+    <li><b>static প্রোগ্রাম (২)</b> — <code>static int count = 0; count++;</code>-সহ <code>counter()</code> তিনবার কল করলে ছাপে 1 2 3; <code>static</code> ছাড়া 1 1 1। <i class="mk">২</i></li>
+    <li><b>ফ্যাক্টরিয়াল (২)</b> — বেস কেস <code>n == 0 || n == 1</code> হলে 1; নইলে <code>n * fact(n - 1)</code>। <i class="mk">২</i></li>
+    <li><b>ট্রেস (২)</b> — push fact(4), fact(3), fact(2), fact(1); fact(1) = 1; pop: 2·1 = 2, 3·2 = 6, 4·6 = 24। <i class="mk">২</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>প্রোটোটাইপ, ডেফিনিশন ও কল আলাদা করতে পারি</li>
+      <li>পয়েন্টার দিয়ে swap লিখতে পারি</li>
+      <li>C-এর চারটি স্কোপের নাম বলতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>স্টোরেজ ক্লাস টেবিল পূরণ করতে পারি</li>
+      <li>রিকার্সিভ আউটপুট ট্রেস করতে পারি</li>
+      <li>fib ট্রিতে কল গুনতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

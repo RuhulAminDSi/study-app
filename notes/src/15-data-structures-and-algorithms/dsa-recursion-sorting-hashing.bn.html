@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>রিকার্শন, সর্টিং, সার্চিং, হ্যাশিং ও অ্যালগরিদম বিশ্লেষণ: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">রিকার্শন, সর্টিং, সার্চিং ও হ্যাশিং</span></h1>
+  <p class="subtitle">মাস্টার থিওরেম · সর্ট টেবিল · প্রোবিং · স্টোরেজ · ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="110" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M210,150 L176,150 M430,150 L464,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-g fill-g"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="150" text-anchor="middle" class="bn k l">অ্যালগরিদম</text><text x="320" y="174" text-anchor="middle" class="bn r s">টপিকের মাইন্ড-ম্যাপ</text>
+      <text x="142" y="58" text-anchor="middle" class="bn s" style="font-size:11px">রিকার্শন · হ্যানয়</text><text x="142" y="74" text-anchor="middle" class="bn s" style="font-size:11px">2ⁿ − 1 চাল</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6" style="font-size:13px">মাস্টার থিওরেম ★</text>
+      <text x="498" y="58" text-anchor="middle" class="bn r w6" style="font-size:12px">সর্ট টেবিল ★</text><text x="498" y="74" text-anchor="middle" class="r s" style="font-size:11px">best/avg/worst/stable</text>
+      <text x="96" y="155" text-anchor="middle" class="w6">O · Ω · Θ</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:12px">বাইনারি সার্চ</text><text x="544" y="164" text-anchor="middle" class="r s">⌈log₂(n+1)⌉ ★</text>
+      <text x="142" y="238" text-anchor="middle" class="bn s" style="font-size:11px">কুইক পার্টিশন</text><text x="142" y="254" text-anchor="middle" class="bn s" style="font-size:11px">পিভট = ফাঁদ</text>
+      <text x="320" y="264" text-anchor="middle" class="bn g w6" style="font-size:12px">হ্যাশিং ও প্রোবিং</text><text x="320" y="280" text-anchor="middle" class="g s">α = n / m</text>
+      <text x="498" y="238" text-anchor="middle" class="bn s" style="font-size:11px">স্টোরেজ: বাডি,</text><text x="498" y="254" text-anchor="middle" class="bn s" style="font-size:11px">ফিট, GC</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = গাণিতিক সমস্যা</figcaption>
+  </figure>
+  <div class="sticky" style="width:74mm"><b>হাই-ইল্ড তালিকা</b><br>① হ্যানয়: 2ⁿ − 1 চাল<br>② 2T(n/2) + n = Θ(n log n)<br>③ O ≠ worst, Θ ≠ average<br>④ কুইক worst O(n²): খারাপ পিভট<br>⑤ স্টেবল: মার্জ, ইনসার্শন, বাবল<br>⑥ আনস্টেবল: কুইক, হিপ, সিলেকশন<br>⑦ বাইনারি সার্চ ≤ ⌈log₂(n+1)⌉<br>⑧ তুলনাভিত্তিক সর্ট ≥ Ω(n log n)<br>⑨ প্রোব ≈ 1/(1 − α)<br>⑩ রেফারেন্স কাউন্টিং চক্রে ব্যর্থ</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">সিলেবাসের লাইন: "<span class="hl">Recursion, sorting, searching, hashing, storage management. Techniques for analysis of algorithms.</span>" হিপের ভেতরের গঠন হিপ ও B-ট্রি লেসনে, ডিভাইড-অ্যান্ড-কনকার / গ্রিডি / DP ডিজাইন পদ্ধতি লেসনে, আর লোয়ার-বাউন্ডের প্রমাণ NP-কমপ্লিটনেস লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>রিকার্শন ও কল স্ট্যাক … পৃ. ২</li><li>অ্যাসিম্পটোটিক নোটেশন … পৃ. ৩</li><li>রিকারেন্স ও মাস্টার থিওরেম … পৃ. ৪</li><li>সরল, হিপ ও লিনিয়ার-টাইম সর্ট … পৃ. ৫</li><li>মার্জ, কুইক ও সর্ট টেবিল … পৃ. ৬</li></ul>
+    <ul class="tick"><li>সার্চিং … পৃ. ৭</li><li>হ্যাশিং ও কলিশন … পৃ. ৮</li><li>স্টোরেজ ব্যবস্থাপনা ও GC … পৃ. ৯</li><li>রাতের পাতা পৃ. ১০ · অনুশীলন পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: recursion ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>রিকার্শন</span></div>
+  <h2><span class="no">১</span>রিকার্শন ও কল স্ট্যাক</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">রিকার্সিভ (Recursive)</span> ফাংশন একটি সমস্যাকে তার <b>ছোট</b> সংস্করণে নিজেকে কল করে সমাধান করে। এর লাগে একটি <span class="circ">বেস কেস</span> (কল ছাড়াই থামে) এবং একটি <b>রিকার্সিভ কেস</b>, যা ধাপে ধাপে বেস কেসের দিকে এগোয়। প্রতিটি কল স্ট্যাকে একটি <span class="hl">অ্যাক্টিভেশন রেকর্ড</span> (প্যারামিটার, লোকাল, রিটার্ন অ্যাড্রেস) পুশ করে, তাই গভীরতা d হলে <b>O(d) মেমরি</b>।</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">সমস্যা</th><th class="l">রিকারেন্স</th><th class="l">খরচ</th></tr>
+    <tr><td class="l">ফ্যাক্টরিয়াল</td><td class="l">n! = n·(n−1)!, 0! = 1</td><td class="l">Θ(n) সময় ও স্ট্যাক</td></tr>
+    <tr><td class="l">ফিবোনাচ্চি, সরল</td><td class="l">F(n) = F(n−1) + F(n−2); F(0)=0, F(1)=1</td><td class="l"><span class="circ">Θ(φⁿ)</span>, φ ≈ 1.618 (সাধারণত O(2ⁿ))</td></tr>
+    <tr><td class="l">ফিবোনাচ্চি, মেমো / লুপ</td><td class="l">প্রতিটি F(i) একবার</td><td class="l">Θ(n)</td></tr>
+    <tr><td class="l">টাওয়ার অব হ্যানয়</td><td class="l">M(n) = 2M(n−1) + 1, M(1) = 1</td><td class="l"><b>2ⁿ − 1</b> চাল</td></tr>
+    <tr><td class="l">দ্রুত ঘাত xⁿ</td><td class="l">xⁿ = (x^⌊n/2⌋)² (n বিজোড় হলে × x)</td><td class="l">Θ(log n)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,274px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="270">
+      <g class="w">
+        <path class="ink" d="M138,34 L96,62 M163,34 L209,62 M74,81 L54,101 M94,81 L114,101 M215,83 L207,99 M230,82 L242,100 M37,125 L28,142 M51,125 L60,142 M194,126 L186,141 M206,126 L214,141"/>
+        <circle cx="150" cy="26" r="15" class="ink-k fill-y"/>
+        <circle cx="84" cy="70" r="15" class="ink fill-b"/>
+        <circle cx="222" cy="70" r="15" class="ink-r fill-r"/>
+        <circle cx="44" cy="112" r="15" class="ink-r fill-r"/>
+        <circle cx="124" cy="112" r="15" class="ink fill-b"/>
+        <circle cx="200" cy="112" r="15" class="ink fill-b"/>
+        <circle cx="250" cy="112" r="15" class="ink fill-b"/>
+        <circle cx="22" cy="154" r="14" class="ink fill-b"/>
+        <circle cx="66" cy="154" r="14" class="ink fill-b"/>
+        <circle cx="180" cy="154" r="14" class="ink fill-b"/>
+        <circle cx="220" cy="154" r="14" class="ink fill-b"/>
+      </g>
+      <text x="150" y="31" text-anchor="middle" class="k w6 s">F4</text>
+      <text x="84" y="75" text-anchor="middle" class="s">F3</text>
+      <text x="222" y="75" text-anchor="middle" class="r w6 s">F2</text>
+      <text x="44" y="117" text-anchor="middle" class="r w6 s">F2</text>
+      <text x="124" y="117" text-anchor="middle" class="s">F1</text>
+      <text x="200" y="117" text-anchor="middle" class="s">F1</text>
+      <text x="250" y="117" text-anchor="middle" class="s">F0</text>
+      <text x="22" y="159" text-anchor="middle" class="s">F1</text>
+      <text x="66" y="159" text-anchor="middle" class="s">F0</text>
+      <text x="180" y="159" text-anchor="middle" class="s">F1</text>
+      <text x="220" y="159" text-anchor="middle" class="s">F0</text>
+      <text x="150" y="190" text-anchor="middle" class="bn r s">F2 দুবার → F4-এর জন্য ৯টি কল</text>
+    </svg><figcaption>সরল fib(4)-এর রিকার্শন ট্রি: একই উপসমস্যা বারবার (লাল), তাই সূচকীয় বৃদ্ধি</figcaption></figure>
+    <div class="code" style="margin-top:0;font-size:10pt;line-height:5.2mm">/* not tail-recursive: × after return */
+int fact(int n) {
+  if (n == 0) return 1;      /* base */
+  return n * fact(n - 1);
+}
+/* tail-recursive: call is the last act */
+int factT(int n, int acc) {
+  if (n == 0) return acc;
+  return factT(n - 1, n * acc);
+}</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">রিকার্শনের প্রকার</span> <b>প্রত্যক্ষ (Direct)</b>: f কল করে f-কে। <b>পরোক্ষ (Indirect)</b>: f → g → f। <b>লিনিয়ার</b>: প্রতি অ্যাক্টিভেশনে একটি কল (ফ্যাক্টরিয়াল)। <b>ট্রি</b>: দুই বা ততোধিক (ফিবোনাচ্চি, হ্যানয়)। <span class="hl">টেইল (Tail)</span>: কলটিই শেষ কাজ, তাই কম্পাইলার একই ফ্রেম আবার ব্যবহার করতে পারে (<b>টেইল-কল এলিমিনেশন</b>) → O(1) স্ট্যাক। যেকোনো রিকার্শনকে একটি স্পষ্ট স্ট্যাকসহ লুপে রূপান্তর করা যায়।</div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ টাওয়ার অব হ্যানয়</span> n − 1টি চাকতি A → B (C-এর সাহায্যে), সবচেয়ে বড়টি A → C, তারপর n − 1টি B → C। তাই M(n) = 2M(n−1) + 1 ⇒ M(n) + 1 = 2[M(n−1) + 1] ⇒ M(n) + 1 = 2ⁿ ⇒ <span class="circ">M(n) = 2ⁿ − 1</span>। n = 3: A→C, A→B, C→B, <b>A→C</b>, B→A, B→C, A→C = <b>৭</b> চাল; n = 4 → 15; n = 64 → 2⁶⁴ − 1 ≈ 1.8 × 10¹⁹। সবচেয়ে ছোট চাকতি প্রতিটি বিজোড় ধাপে সরে।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>আগে বেস, পরে ছোট।</b>" নিজেকে কল করার আগে থামার শর্ত লেখো, আর দেখো আর্গুমেন্ট ছোট হচ্ছে কি না। সরল fib(n) মোট <b>2F(n+1) − 1</b>টি কল করে: fib(4) → 9, fib(5) → 15।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> বেস কেস না থাকলে হয় <b>স্ট্যাক ওভারফ্লো</b>, অসীম লুপ নয়। রিকার্শন সাধারণত সমতুল্য লুপের চেয়ে <b>ধীর</b> (কলের ওভারহেড)। C ও Java টেইল-কল এলিমিনেশনের নিশ্চয়তা <b>দেয় না</b>। সরল fib(n)-এ কল সূচকীয় হলেও গভীরতা মাত্র n।</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: asymptotic notation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>অ্যাসিম্পটোটিক বিশ্লেষণ</span></div>
+  <h2><span class="no">২</span>অ্যাসিম্পটোটিক নোটেশন ও বিশ্লেষণ কৌশল</h2><span class="tag">সংজ্ঞা ★</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l" style="white-space:nowrap">নোটেশন</th><th class="l">আনুষ্ঠানিক সংজ্ঞা (∃ c, n₀ &gt; 0, ∀ n ≥ n₀)</th><th class="l">অর্থ</th><th>যেন</th></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>f = O(g)</b></td><td class="l">0 ≤ f(n) ≤ c·g(n)</td><td class="l">অ্যাসিম্পটোটিক <span class="hl">ঊর্ধ্বসীমা (upper bound)</span></td><td>≤</td></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>f = Ω(g)</b></td><td class="l">f(n) ≥ c·g(n) ≥ 0</td><td class="l">অ্যাসিম্পটোটিক <span class="hl">নিম্নসীমা (lower bound)</span></td><td>≥</td></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>f = Θ(g)</b></td><td class="l">c₁·g(n) ≤ f(n) ≤ c₂·g(n)</td><td class="l"><span class="hl">টাইট বাউন্ড</span>: O ও Ω দুটোই</td><td>=</td></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>f = o(g)</b></td><td class="l"><b>প্রতিটি</b> c &gt; 0-এর জন্য; lim f/g = 0</td><td class="l">কঠোরভাবে ধীর বৃদ্ধি</td><td>&lt;</td></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>f = ω(g)</b></td><td class="l">lim f/g = ∞</td><td class="l">কঠোরভাবে দ্রুত বৃদ্ধি</td><td>&gt;</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,250px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 260 190" width="246">
+      <g class="w">
+        <path class="ink-k" d="M20,170 H250" marker-end="url(#ahb)"/>
+        <path class="ink-k" d="M20,170 V12" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M22,168 C90,166 130,150 150,16"/>
+        <path class="ink-p" d="M22,168 C120,160 170,110 200,16"/>
+        <path class="ink" d="M22,168 C120,150 190,90 236,40"/>
+        <path class="ink-g" d="M22,168 L236,86"/>
+        <path class="ink-k" d="M22,168 C70,140 150,128 236,120"/>
+        <path class="ink-k" d="M22,160 H236" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="152" y="30" class="r s w6">2ⁿ</text>
+      <text x="204" y="30" class="p s w6">n²</text>
+      <text x="208" y="44" class="s">n log n</text>
+      <text x="238" y="84" class="g s">n</text>
+      <text x="196" y="116" class="s">log n</text>
+      <text x="200" y="156" class="s">1</text>
+      <text x="236" y="186" text-anchor="end" class="bn s">ইনপুট আকার n →</text>
+    </svg><figcaption>n বড় হলে ক্রম কখনো বদলায় না, ধ্রুবক যা-ই হোক</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">বৃদ্ধির সিঁড়ি</span> 1 &lt; log log n &lt; log n &lt; √n &lt; n &lt; <span class="circ">n log n</span> &lt; n² &lt; n³ &lt; 2ⁿ &lt; n! &lt; nⁿ। লগের ভিত্তি গুরুত্বহীন (logₐn = Θ(log_b n)), কিন্তু সূচকের ভিত্তি গুরুত্বপূর্ণ: 2ⁿ = o(3ⁿ)। log(n!) = Θ(n log n); 1 + 2 + … + n = Θ(n²); 1 + ½ + … + 1/n ≈ ln n।</div>
+      <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ Θ প্রমাণ</span> f(n) = 3n² + 5n + 2। n ≥ 1 হলে: 3n² ≤ f(n) ≤ 3n² + 5n² + 2n² = 10n²। তাই c₁ = 3, c₂ = 10, n₀ = 1 ⇒ <b>f = Θ(n²)</b>। আবার 2ⁿ⁺¹ = O(2ⁿ) (c = 2), কিন্তু 2²ⁿ = 4ⁿ ≠ O(2ⁿ)।</div>
+    </div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">লুপের ধরন</th><th class="l">মৌলিক ধাপ</th><th class="l">ক্রম</th></tr>
+    <tr><td class="l">for i = 1..n: for j = 1..i</td><td class="l">n(n+1)/2</td><td class="l">Θ(n²)</td></tr>
+    <tr><td class="l">for (i = 1; i &lt; n; i *= 2)</td><td class="l">⌈log₂ n⌉</td><td class="l">Θ(log n)</td></tr>
+    <tr><td class="l">for i = 1..n: for (j = i; j ≤ n; j += i)</td><td class="l">n(1 + ½ + … + 1/n)</td><td class="l">Θ(n log n)</td></tr>
+    <tr><td class="l">while (n &gt; 2) n = √n</td><td class="l">log₂ log₂ n</td><td class="l">Θ(log log n)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">প্রচলিত ভুল ধারণা</span> <span class="circ">O ≠ worst case</span>, Ω ≠ best case, Θ ≠ average case। নোটেশন একটি <b>ফাংশনকে</b> সীমাবদ্ধ করে; কেস বেছে নেয় <b>ইনপুট</b>। ইনসার্শন সর্ট: worst case Θ(n²), best case Θ(n); তাই এর রানিং টাইম O(n²) ও Ω(n), কিন্তু প্রতিটি ইনপুটে Θ(n²) নয়।</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">Best · average · worst</span> <b>Worst</b> = n আকারের সব ইনপুটে সর্বোচ্চ ধাপ (একটি নিশ্চয়তা)। <b>Best</b> = সর্বনিম্ন। <b>Average</b> = নির্দিষ্ট ইনপুট বণ্টনে প্রত্যাশিত ধাপ, যেমন লিনিয়ার সার্চ: key যেকোনো স্থানে সমসম্ভাব্য হলে (n + 1)/2টি তুলনা।</div>
+  </div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">অ্যামর্টাইজড বিশ্লেষণ (Amortized)</span> n টি অপারেশনের ধারার <span class="hl">worst-case মোট খরচ</span> ÷ n — কোনো সম্ভাবনা নেই। পূর্ণ হলে দ্বিগুণ হওয়া ডাইনামিক অ্যারে: n টি push-এর খরচ ≤ n + (1 + 2 + 4 + … + n) &lt; 3n ⇒ প্রতি push <b>O(1) অ্যামর্টাইজড</b>, যদিও একটি push O(n)। পদ্ধতি: <b>অ্যাগ্রিগেট</b>, <b>অ্যাকাউন্টিং</b> (ব্যাংকার), <b>পটেনশিয়াল</b>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>O = ছাদ, Ω = মেঝে, Θ = দুই দেয়াল।</b>" ছোট o / ω হলো কঠোর রূপ — &lt; ও &gt;-এর মতো। দুটি ফাংশন তুলনায় lim f/g নাও: 0 → o, ধ্রুবক → Θ, ∞ → ω। স্পেস কমপ্লেক্সিটিও একইভাবে, মেমরি সেল গুনে।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: recurrences & master theorem ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>রিকারেন্স</span></div>
+  <h2><span class="no">৩</span>রিকারেন্স ও মাস্টার থিওরেম</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">রিকারেন্স (Recurrence)</span> T(n)-কে ছোট ইনপুটের T দিয়ে প্রকাশ করে। সমাধান: <b>সাবস্টিটিউশন</b> (অনুমান করে ইনডাকশনে প্রমাণ), <b>ইটারেশন / রিকার্শন ট্রি</b> (প্রতি স্তরের খরচ যোগ), অথবা ডিভাইড-অ্যান্ড-কনকার রূপ T(n) = a·T(n/b) + f(n), a ≥ 1, b &gt; 1-এর জন্য <b>মাস্টার থিওরেম</b>।</div>
+  <div class="sumbox small"><span class="lbl">মাস্টার থিওরেম</span> f(n)-কে তুলনা করো <b>n^(log_b a)</b>-এর সঙ্গে, যা লিফগুলোর মোট খরচ।
+    <ol class="steps tiny">
+      <li><b>কেস ১</b> — কোনো ε &gt; 0-এর জন্য f(n) = O(n^(log_b a − ε)) (লিফ প্রধান) ⇒ <span class="circ">T(n) = Θ(n^(log_b a))</span>।</li>
+      <li><b>কেস ২</b> — f(n) = Θ(n^(log_b a)) (প্রতিটি স্তর সমান) ⇒ <b>T(n) = Θ(n^(log_b a) · log n)</b>। বর্ধিত রূপ: f = Θ(n^(log_b a) logᵏ n) ⇒ Θ(n^(log_b a) logᵏ⁺¹ n)।</li>
+      <li><b>কেস ৩</b> — f(n) = Ω(n^(log_b a + ε)) <b>এবং</b> রেগুলারিটি a·f(n/b) ≤ c·f(n), কোনো c &lt; 1 (রুট প্রধান) ⇒ <b>T(n) = Θ(f(n))</b>।</li>
+    </ol>
+    f(n) = Θ(nᵈ) হলে সংক্ষেপে: log_b a &gt; d → Θ(n^(log_b a)); = d → Θ(nᵈ log n); &lt; d → Θ(nᵈ)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,220px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 196" width="216">
+      <g class="w">
+        <rect x="92" y="6" width="56" height="24" rx="5" class="ink fill-y"/>
+        <rect x="40" y="52" width="56" height="24" rx="5" class="ink fill-b"/>
+        <rect x="144" y="52" width="56" height="24" rx="5" class="ink fill-b"/>
+        <rect x="8" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <rect x="70" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <rect x="124" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <rect x="186" y="98" width="44" height="22" rx="5" class="ink fill-b"/>
+        <path class="ink" d="M110,30 L72,52 M130,30 L170,52 M58,76 L30,98 M78,76 L92,98 M162,76 L146,98 M182,76 L208,98"/>
+        <path class="ink-g" d="M8,150 H232"/>
+      </g>
+      <text x="120" y="23" text-anchor="middle" class="s w6">n</text>
+      <text x="68" y="69" text-anchor="middle" class="s">n/2</text>
+      <text x="172" y="69" text-anchor="middle" class="s">n/2</text>
+      <text x="30" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="92" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="146" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="208" y="114" text-anchor="middle" class="s">n/4</text>
+      <text x="120" y="140" text-anchor="middle" class="bn s">⋮  1 খরচের n টি লিফ</text>
+      <text x="120" y="168" text-anchor="middle" class="bn g s w6">প্রতি স্তর = n, log₂ n স্তর</text>
+      <text x="120" y="188" text-anchor="middle" class="bn r s w6">মোট = Θ(n log n)</text>
+    </svg><figcaption>T(n) = 2T(n/2) + n-এর রিকার্শন ট্রি</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">রিকারেন্স</th><th>লিফ</th><th>কেস</th><th class="l">সমাধান</th></tr>
+      <tr><td class="l">T(n/2) + 1</td><td>1</td><td>2</td><td class="l">Θ(log n)</td></tr>
+      <tr><td class="l">2T(n/2) + 1</td><td>n</td><td>1</td><td class="l">Θ(n)</td></tr>
+      <tr><td class="l">2T(n/2) + n</td><td>n</td><td>2</td><td class="l"><b>Θ(n log n)</b></td></tr>
+      <tr><td class="l">4T(n/2) + n</td><td>n²</td><td>1</td><td class="l">Θ(n²)</td></tr>
+      <tr><td class="l">4T(n/2) + n²</td><td>n²</td><td>2</td><td class="l">Θ(n² log n)</td></tr>
+      <tr><td class="l">4T(n/2) + n³</td><td>n²</td><td>3</td><td class="l">Θ(n³)</td></tr>
+      <tr><td class="l">7T(n/2) + n²</td><td>n^2.81</td><td>1</td><td class="l">Θ(n^log₂7)</td></tr>
+      <tr><td class="l">3T(n/4) + n log n</td><td>n^0.79</td><td>3</td><td class="l">Θ(n log n)</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">মাস্টার রূপে নয়</th><th class="l">পদ্ধতি</th><th class="l">সমাধান</th></tr>
+    <tr><td class="l">T(n) = T(n−1) + 1 · T(n−1) + n</td><td class="l">ইটারেশন: 1 + 1 + … · n + (n−1) + … + 1</td><td class="l">Θ(n) · <span class="circ">Θ(n²)</span></td></tr>
+    <tr><td class="l">T(n) = 2T(n−1) + 1</td><td class="l">ইটারেশন (হ্যানয়)</td><td class="l">Θ(2ⁿ)</td></tr>
+    <tr><td class="l">T(n) = T(n/3) + T(2n/3) + n</td><td class="l">রিকার্শন ট্রি: প্রতি স্তর ≤ n, log₃/₂ n স্তর</td><td class="l">Θ(n log n)</td></tr>
+    <tr><td class="l">T(n) = 2T(n/2) + n log n</td><td class="l">কেসগুলোর ফাঁকে → বর্ধিত কেস ২</td><td class="l">Θ(n log² n)</td></tr>
+  </table>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ সাবস্টিটিউশন</span> T(n) = 2T(n/2) + n-এর জন্য অনুমান T(n) ≤ c·n log₂ n। তখন T(n) ≤ 2·c(n/2)log₂(n/2) + n = c·n log₂ n − c·n + n ≤ c·n log₂ n, যখন <b>c ≥ 1</b> ✓। অতএব T(n) = O(n log n)।</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>লিফ বনাম রুট।</b>" আগে n^(log_b a) বের করো। লিফ বড় → কেস ১, উত্তর = লিফ। সমান → <b>log n</b> দিয়ে গুণ। রুট বড় → উত্তর = f(n)।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> মাস্টার থিওরেম খাটে <b>না</b>: T(n−1) রূপে, a &lt; 1 হলে, a ধ্রুবক না হলে (যেমন 2ⁿT(n/2)), কিংবা n log n বনাম n-এর মতো <b>নন-পলিনোমিয়াল ফাঁক</b> থাকলে। কেস ৩-এ রেগুলারিটিও লাগে।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: simple, heap & linear-time sorts ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>সর্টিং ১</span></div>
+  <h2><span class="no">৪</span>সরল, হিপ ও লিনিয়ার-টাইম সর্ট</h2><span class="tag">বৈশিষ্ট্য ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">পরিভাষা</span> <span class="hl">স্টেবল (Stable)</span>: সমান key-গুলো ইনপুটের ক্রম ধরে রাখে। <span class="hl">ইন-প্লেস (In-place)</span>: O(1) অতিরিক্ত মেমরি (O(log n) স্ট্যাক সাধারণত চলে)। <b>অ্যাডাপটিভ</b>: প্রায়-সাজানো ইনপুটে দ্রুত। <b>অনলাইন</b>: ডেটা আসতে আসতেই সাজাতে পারে। <b>ইনভার্শন</b> হলো এমন জোড়া i &lt; j যেখানে a[i] &gt; a[j]; সর্বোচ্চ n(n−1)/2টি।</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">সর্ট</th><th class="l">ধারণা</th><th class="l">মূল তথ্য</th></tr>
+    <tr><td class="l"><b>বাবল</b></td><td class="l">পাশাপাশি জোড়া অদলবদল; i-তম পাসে i-তম বড়টি শেষে যায়</td><td class="l">≤ n(n−1)/2 তুলনা; swap = ইনভার্শন; "swap নেই → থামো" ফ্ল্যাগ থাকলে <b>তবেই O(n) best</b></td></tr>
+    <tr><td class="l"><b>সিলেকশন</b></td><td class="l">বাকিগুলোর সর্বনিম্ন খুঁজে সামনে swap</td><td class="l">সবসময় n(n−1)/2 তুলনা, <span class="circ">≤ n − 1 swap</span>; স্টেবল নয়, অ্যাডাপটিভ নয়</td></tr>
+    <tr><td class="l"><b>ইনসার্শন</b></td><td class="l">a[i]-কে সাজানো অংশে সরিয়ে (shift) বসানো</td><td class="l">সাজানো থাকলে n − 1 তুলনা; shift = ইনভার্শন; স্টেবল, অ্যাডাপটিভ, অনলাইন</td></tr>
+    <tr><td class="l"><b>শেল</b> (1959)</td><td class="l">ফাঁক h-এ ইনসার্শন সর্ট, ফাঁক কমে 1</td><td class="l">ফাঁক n/2, n/4… → O(n²); Knuth 1, 4, 13, 40 → O(n^1.5); স্টেবল নয়</td></tr>
+    <tr><td class="l"><b>হিপ</b></td><td class="l">max-heap গঠন O(n), তারপর n − 1 বার (রুট swap, sift-down)</td><td class="l">সবসময় Θ(n log n), O(1) মেমরি, স্টেবল নয়</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">ইনসার্শন</th><th class="l">5 2 4 6 1 3</th></tr>
+      <tr><td class="l">key 2</td><td class="l"><b>2 5</b> 4 6 1 3</td></tr>
+      <tr><td class="l">key 4</td><td class="l"><b>2 4 5</b> 6 1 3</td></tr>
+      <tr><td class="l">key 6</td><td class="l"><b>2 4 5 6</b> 1 3</td></tr>
+      <tr><td class="l">key 1</td><td class="l"><b>1 2 4 5 6</b> 3</td></tr>
+      <tr><td class="l">key 3</td><td class="l"><b>1 2 3 4 5 6</b> ✓</td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">বাবল</th><th class="l">5 1 4 2 8</th></tr>
+      <tr><td class="l">পাস ১</td><td class="l">1 4 2 5 <b>8</b></td></tr>
+      <tr><td class="l">পাস ২</td><td class="l">1 2 4 <b>5 8</b></td></tr>
+      <tr><td class="l">পাস ৩</td><td class="l">swap নেই → <span class="circ">থামো</span></td></tr>
+      <tr><td class="l">সিলেকশন</td><td class="l">5ᵃ 5ᵇ 2 → 2 5ᵇ 5ᵃ</td></tr>
+      <tr><td class="l"></td><td class="l">5ᵃ লাফিয়ে 5ᵇ-এর পরে: আনস্টেবল</td></tr>
+    </table>
+  </div>
+  <div class="sumbox small"><span class="lbl">লিনিয়ার-টাইম (তুলনাহীন) সর্ট</span>
+    <b>কাউন্টিং সর্ট</b> (key 0..k): প্রতিটি key গুনো, গণনার প্রিফিক্স-যোগফল নাও, <b>ডান থেকে বামে</b> স্ক্যান করে বসাও (তাই স্টেবল) → Θ(n + k) সময় ও মেমরি। A = 2 5 3 0 2 3 0 3: গণনা 2 0 2 3 0 1 → প্রিফিক্স 2 2 4 7 7 8 → 0 0 2 2 3 3 3 5।
+    <b>র‍্যাডিক্স সর্ট</b> (LSD): d টি অঙ্কের প্রতিটিতে স্টেবল কাউন্টিং সর্ট → <span class="circ">Θ(d(n + k))</span>। <b>বাকেট সর্ট</b>: [0, 1)-এ সুষম ইনপুট n টি বাকেটে, প্রতিটিতে ইনসার্শন সর্ট → গড়ে Θ(n), worst O(n²)।</div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ LSD র‍্যাডিক্স সর্ট</span> 170 45 75 90 802 24 2 66 → একক অঙ্কে: 170 90 802 2 24 45 75 66 → দশকে: 802 2 24 45 66 170 75 90 → শতকে: <b>2 24 45 66 75 90 170 802</b>। প্রতিটি পাস <b>স্টেবল</b> হতেই হবে, নইলে আগের অঙ্কের ক্রম হারায়।</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>সিলেকশন কম Swap, ইনসার্শন Shift।</b>" সবচেয়ে কম লেখা → সিলেকশন (n − 1 swap)। প্রায়-সাজানো বা ছোট → ইনসার্শন (Timsort ও introsort-এর ভেতরে)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> যেকোনো তুলনাভিত্তিক সর্টে worst case-এ <b>Ω(n log n)</b> তুলনা লাগে (log₂ n! — প্রমাণ NP-কমপ্লিটনেস লেসনে)। কাউন্টিং ও র‍্যাডিক্স সর্ট একে হারায় শুধু কারণ এরা <b>key তুলনাই করে না</b>।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: merge, quick, big table ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>সর্টিং ২</span></div>
+  <h2><span class="no">৫</span>মার্জ সর্ট, কুইক সর্ট ও সর্ট টেবিল</h2><span class="tag">লিখিত প্রশ্নের প্রিয় ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,330px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 340 214" width="326">
+      <g class="w">
+        <rect x="70" y="4" width="200" height="22" rx="5" class="ink fill-y"/>
+        <rect x="20" y="40" width="130" height="22" rx="5" class="ink fill-b"/>
+        <rect x="200" y="40" width="110" height="22" rx="5" class="ink fill-b"/>
+        <rect x="4" y="76" width="70" height="22" rx="5" class="ink fill-b"/>
+        <rect x="88" y="76" width="64" height="22" rx="5" class="ink fill-b"/>
+        <rect x="186" y="76" width="64" height="22" rx="5" class="ink fill-b"/>
+        <rect x="270" y="76" width="40" height="22" rx="5" class="ink fill-b"/>
+        <rect x="4" y="122" width="70" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="88" y="122" width="64" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="186" y="122" width="64" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="270" y="122" width="40" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="20" y="158" width="130" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="200" y="158" width="110" height="22" rx="5" class="ink-g fill-g"/>
+        <rect x="60" y="190" width="220" height="22" rx="5" class="ink-r fill-r"/>
+        <path class="ink" d="M140,26 L90,40 M200,26 L250,40 M60,62 L40,76 M110,62 L120,76 M240,62 L218,76 M280,62 L290,76"/>
+        <path class="ink-g" d="M40,98 L40,122 M120,98 L120,122 M218,98 L218,122 M290,98 L290,122 M40,144 L70,158 M120,144 L110,158 M218,144 L240,158 M290,144 L280,158 M90,180 L130,190 M250,180 L210,190"/>
+      </g>
+      <text x="170" y="20" text-anchor="middle" class="s">38 27 43 3 9 82 10</text>
+      <text x="85" y="56" text-anchor="middle" class="s">38 27 43 3</text>
+      <text x="255" y="56" text-anchor="middle" class="s">9 82 10</text>
+      <text x="39" y="92" text-anchor="middle" class="s">38 27</text>
+      <text x="120" y="92" text-anchor="middle" class="s">43 3</text>
+      <text x="218" y="92" text-anchor="middle" class="s">9 82</text>
+      <text x="290" y="92" text-anchor="middle" class="s">10</text>
+      <text x="39" y="138" text-anchor="middle" class="g s">27 38</text>
+      <text x="120" y="138" text-anchor="middle" class="g s">3 43</text>
+      <text x="218" y="138" text-anchor="middle" class="g s">9 82</text>
+      <text x="290" y="138" text-anchor="middle" class="g s">10</text>
+      <text x="85" y="174" text-anchor="middle" class="g s">3 27 38 43</text>
+      <text x="255" y="174" text-anchor="middle" class="g s">9 10 82</text>
+      <text x="170" y="206" text-anchor="middle" class="r s w6">3 9 10 27 38 43 82</text>
+    </svg><figcaption>মার্জ সর্ট: নীল = ভাগ (বিনা খরচে), সবুজ = মার্জ (আসল কাজ)</figcaption></figure>
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">মার্জ সর্ট</span> অর্ধেকে ভাগ, দুই অংশ সাজাও, লিনিয়ার সময়ে <b>মার্জ</b>: T(n) = 2T(n/2) + Θ(n) = <span class="circ">Θ(n log n)</span>, <b>সব</b> ক্ষেত্রে। m ও k উপাদানের দুটি তালিকা মার্জে সর্বোচ্চ m + k − 1 তুলনা (কমপক্ষে min(m, k))। সমান হলে বাম থেকে নিলে (≤) স্টেবল। Θ(n) অতিরিক্ত অ্যারে; <b>লিংকড লিস্ট</b> ও <b>এক্সটার্নাল</b> (k-way) সর্টিংয়ে আদর্শ।</div>
+      <div class="def tiny"><span class="lbl">কুইক সর্ট</span> (Hoare, 1961) একটি <b>পিভট</b> নাও, <b>পার্টিশন</b> করো যাতে ছোট key বামে ও বড় ডানে, তারপর দুই দিকে রিকার্শন। Best/average Θ(n log n) (≈ 1.39 n log₂ n তুলনা); <span class="circ">worst Θ(n²)</span> যখন পিভট সবসময় সর্বনিম্ন বা সর্বোচ্চ, যেমন সাজানো ইনপুটে প্রথম/শেষ পিভট: T(n) = T(n−1) + Θ(n)। প্রতিকার: <b>র‍্যান্ডম</b> বা <b>মিডিয়ান-অব-থ্রি</b> পিভট।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start">
+    <table class="hand small" style="margin-top:0;width:100%;white-space:nowrap">
+      <tr><th class="l">Lomuto, পিভট 4</th><th class="l">অ্যারে (i = সীমা)</th></tr>
+      <tr><td class="l">শুরু, i = −1</td><td class="l">2 8 7 1 3 5 6 <b>4</b></td></tr>
+      <tr><td class="l">j=0: 2 ≤ 4, i=0</td><td class="l"><b>2</b> 8 7 1 3 5 6 4</td></tr>
+      <tr><td class="l">j=3: 1 ≤ 4, i=1</td><td class="l"><b>2 1</b> 7 8 3 5 6 4</td></tr>
+      <tr><td class="l">j=4: 3 ≤ 4, i=2</td><td class="l"><b>2 1 3</b> 8 7 5 6 4</td></tr>
+      <tr><td class="l">a[i+1] ও পিভট swap</td><td class="l">2 1 3 <span class="circ">4</span> 7 5 6 8</td></tr>
+    </table>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>মার্জ: ভাগ সহজ, জোড়া কঠিন। কুইক: ভাগ কঠিন, জোড়া সহজ।</b>" দুটিই ডিভাইড-অ্যান্ড-কনকার (ডিজাইন পদ্ধতি লেসনে); মার্জের কাজ <b>combine</b>-এ, কুইকের কাজ <b>divide</b>-এ।</div>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">অ্যালগরিদম</th><th>Best</th><th>Average</th><th>Worst</th><th>অতিরিক্ত মেমরি</th><th>স্টেবল</th><th style="white-space:nowrap">ইন-প্লেস</th></tr>
+    <tr><td class="l">বাবল (ফ্ল্যাগ)</td><td>n</td><td>n²</td><td>n²</td><td>1</td><td>✓</td><td>✓</td></tr>
+    <tr><td class="l">সিলেকশন</td><td>n²</td><td>n²</td><td>n²</td><td>1</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">ইনসার্শন</td><td>n</td><td>n²</td><td>n²</td><td>1</td><td>✓</td><td>✓</td></tr>
+    <tr><td class="l">শেল (Knuth)</td><td>n log n</td><td>n^1.25</td><td>n^1.5</td><td>1</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">মার্জ</td><td>n log n</td><td>n log n</td><td>n log n</td><td>n</td><td>✓</td><td class="red">✗</td></tr>
+    <tr><td class="l">কুইক</td><td>n log n</td><td>n log n</td><td class="red"><b>n²</b></td><td>log n</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">হিপ</td><td>n log n</td><td>n log n</td><td>n log n</td><td>1</td><td class="red">✗</td><td>✓</td></tr>
+    <tr><td class="l">কাউন্টিং</td><td>n + k</td><td>n + k</td><td>n + k</td><td>n + k</td><td>✓</td><td class="red">✗</td></tr>
+    <tr><td class="l">র‍্যাডিক্স (d অঙ্ক)</td><td>d(n+k)</td><td>d(n+k)</td><td>d(n+k)</td><td>n + k</td><td>✓</td><td class="red">✗</td></tr>
+    <tr><td class="l">বাকেট</td><td>n + k</td><td>n + k</td><td>n²</td><td>n + k</td><td>✓</td><td class="red">✗</td></tr>
+  </table>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ</span> (i) কুইক সর্টের log n মেমরি হলো <b>গড়</b> স্ট্যাক (সরল রূপে worst O(n); আগে <b>ছোট</b> দিকে রিকার্শন করো)। (ii) সাজানো ইনপুটেও সিলেকশন সর্ট Θ(n²)। (iii) RAM-এর অ্যারেতে "বাস্তবে দ্রুততম" → <span class="hl">কুইক সর্ট</span>; "নিশ্চিত n log n ও স্টেবল" → <span class="hl">মার্জ সর্ট</span>; "O(1) মেমরিতে নিশ্চিত n log n" → <span class="hl">হিপ সর্ট</span>।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: searching ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>সার্চিং</span></div>
+  <h2><span class="no">৬</span>সার্চিং (Searching)</h2><span class="tag">বাইনারি সার্চ ★</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">সার্চ</th><th class="l">যা লাগে</th><th class="l">Best</th><th class="l">Average</th><th class="l">Worst</th></tr>
+    <tr><td class="l"><b>লিনিয়ার</b></td><td class="l">কিছু না; যেকোনো তালিকা</td><td class="l">O(1)</td><td class="l">(n+1)/2</td><td class="l">O(n)</td></tr>
+    <tr><td class="l"><b>বাইনারি</b></td><td class="l"><span class="hl">সাজানো + র‍্যান্ডম অ্যাক্সেস</span></td><td class="l">O(1)</td><td class="l">O(log n)</td><td class="l"><span class="circ">⌈log₂(n+1)⌉</span></td></tr>
+    <tr><td class="l"><b>ইন্টারপোলেশন</b></td><td class="l">সাজানো, সুষম key</td><td class="l">O(1)</td><td class="l">O(log log n)</td><td class="l">O(n)</td></tr>
+    <tr><td class="l"><b>টার্নারি</b></td><td class="l">সাজানো / ইউনিমোডাল</td><td class="l">O(1)</td><td class="l">O(log₃ n)</td><td class="l">O(log n)</td></tr>
+    <tr><td class="l"><b>জাম্প</b></td><td class="l">সাজানো</td><td class="l">O(1)</td><td class="l">O(√n)</td><td class="l">O(√n)</td></tr>
+    <tr><td class="l"><b>হ্যাশিং</b></td><td class="l">একটি হ্যাশ টেবিল</td><td class="l">O(1)</td><td class="l">O(1)</td><td class="l">O(n)</td></tr>
+    <tr><td class="l"><b>এক্সপোনেনশিয়াল</b></td><td class="l">সাজানো, সীমাহীন (i = অবস্থান)</td><td class="l">O(1)</td><td class="l">O(log i)</td><td class="l">O(log i)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code small" style="margin-top:0">int bsearch(const int a[], int n, int key) {
+  int lo = 0, hi = n - 1;
+  while (lo &lt;= hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (a[mid] == key) return mid;
+    if (a[mid] &lt; key) lo = mid + 1;
+    else              hi = mid - 1;
+  }
+  return -1;          /* not found */
+}</div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 190" width="290">
+      <g class="w">
+        <rect x="10" y="20" width="280" height="24" rx="4" class="ink fill-b"/>
+        <rect x="150" y="70" width="140" height="24" rx="4" class="ink fill-b"/>
+        <rect x="150" y="120" width="60" height="24" rx="4" class="ink-g fill-g"/>
+        <path class="ink-r" d="M150,16 V48 M210,66 V98"/>
+        <path class="ink" d="M250,44 L250,68" marker-end="url(#ahb)"/>
+        <path class="ink" d="M180,94 L180,118" marker-end="url(#ahb)"/>
+      </g>
+      <text x="80" y="37" text-anchor="middle" class="s">3 8 15</text><text x="150" y="13" text-anchor="middle" class="r s">23</text><text x="225" y="37" text-anchor="middle" class="s">42 57 91</text>
+      <text x="180" y="87" text-anchor="middle" class="s">42</text><text x="210" y="62" text-anchor="middle" class="r s">57</text><text x="260" y="87" text-anchor="middle" class="s">91</text>
+      <text x="180" y="137" text-anchor="middle" class="g s w6">42 ✓</text>
+      <text x="150" y="172" text-anchor="middle" class="bn s">n = 7 → সর্বোচ্চ ৩টি প্রোব</text>
+      <text x="150" y="187" text-anchor="middle" class="bn r s">বাকি থাকে 7 → 3 → 1 উপাদান</text>
+    </svg><figcaption>42 খোঁজা: mid 23 → ডানে, mid 57 → বামে, mid 42 ✓</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ট্রেস ও গণনা</span> a = 3 8 15 23 42 57 91 (ইনডেক্স 0–6)। <b>key 42</b>: (lo, hi, mid) = (0, 6, 3) → 23 &lt; 42 → lo = 4; (4, 6, 5) → 57 &gt; 42 → hi = 4; (4, 4, 4) → <b>৩</b>টি প্রোবে ইনডেক্স 4-এ পাওয়া গেল। <b>key 10</b>: mid 3 (23) → hi = 2; mid 1 (8) → lo = 2; mid 2 (15) → hi = 1; lo &gt; hi → <b>−1</b>, এটিও ৩টি প্রোব। সর্বোচ্চ প্রোব = ⌊log₂ n⌋ + 1 = ⌈log₂(n + 1)⌉: n = 7 → 3, <span class="circ">n = 1000 → 10</span>, n = 1024 → 11, n = 10⁶ → 20।</div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">বাকিগুলো এক লাইনে</span> <b>ইন্টারপোলেশন</b>: pos = lo + (key − a[lo])·(hi − lo) / (a[hi] − a[lo]) — অভিধানের মতো আন্দাজ। <b>টার্নারি</b>: দুটি mid দিয়ে তিন ভাগ; ইটারেশন কম কিন্তু তুলনা বাইনারির চেয়ে বেশি, তাই অ্যারেতে বাইনারিই জেতে — টার্নারি ইউনিমোডাল ফাংশনের সর্বোচ্চ/সর্বনিম্ন খোঁজার জন্য। <b>জাম্প</b>: √n ধাপে লাফ, তারপর লিনিয়ার। <b>এক্সপোনেনশিয়াল</b>: 1, 2, 4, 8 … প্রোব, তারপর বাইনারি।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>লিংকড লিস্টে</b> বাইনারি সার্চ O(n) — র‍্যান্ডম অ্যাক্সেস নেই। <b>অসাজানো</b> ডেটায় এটি সরাসরি ভুল। mid = (lo + hi)/2 int <b>ওভারফ্লো</b> করতে পারে; lo + (hi − lo)/2 লেখো। ব্যর্থ লিনিয়ার সার্চ = n টি তুলনা (সেন্টিনেলসহ n + 1)।</div>
+  </div>
+  <div class="trick tiny"><span class="lbl">মনে রাখার কৌশল</span> "<b>এক না হওয়া পর্যন্ত অর্ধেক: দ্বিগুণগুলো গোনো।</b>" 2¹⁰ ≈ 1000, 2²⁰ ≈ 10⁶, 2³⁰ ≈ 10⁹ → 10, 20, 30 প্রোব। Best case O(1): key প্রথম mid-এই। ব্যবহার: C-এর <code>bsearch</code>, Python-এর <code>bisect</code>, B-ট্রি নোডে খোঁজা, <code>git bisect</code>।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: hashing ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>হ্যাশিং</span></div>
+  <h2><span class="no">৭</span>হ্যাশিং ও কলিশন সমাধান</h2><span class="tag">গাণিতিক ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">হ্যাশিং (Hashing)</span> একটি key k-কে m আকারের টেবিলের স্লট h(k) ∈ {0 … m − 1}-এ ম্যাপ করে, ফলে সার্চ/ইনসার্ট/ডিলিট হয় <span class="circ">গড়ে O(1)</span> (worst O(n))। একই স্লটের দুটি key-তে <b>কলিশন (collision)</b>। <span class="hl">লোড ফ্যাক্টর α = n / m</span> (key ÷ স্লট) গতি ঠিক করে।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ফাংশন</th><th class="l">নিয়ম</th><th class="l">উদাহরণ (অন্যথা না বললে m = 100)</th></tr>
+    <tr><td class="l"><b>ডিভিশন</b></td><td class="l">k mod m; m মৌলিক, 2ᵖ-এর কাছে নয়</td><td class="l">m = 11: 59 → 4</td></tr>
+    <tr><td class="l"><b>মাল্টিপ্লিকেশন</b></td><td class="l">⌊m · frac(kA)⌋, A ≈ 0.618 (Knuth)</td><td class="l">123A = 76.018 → 1</td></tr>
+    <tr><td class="l"><b>মিড-স্কয়ার</b></td><td class="l">k-এর বর্গ, মাঝের অঙ্কগুলো নাও</td><td class="l">56² = 3136 → 13</td></tr>
+    <tr><td class="l"><b>ফোল্ডিং</b></td><td class="l">অংশে ভাগ করে যোগ, ক্যারি বাদ</td><td class="l">123+456+789 = 1368 → 368 (m = 1000)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,236px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 250 190" width="232">
+      <g class="w">
+        <rect x="8" y="6" width="34" height="176" class="ink fill-b"/>
+        <path class="ink" d="M8,23.6 H42 M8,41.2 H42 M8,58.8 H42 M8,76.4 H42 M8,94 H42 M8,111.6 H42 M8,129.2 H42 M8,146.8 H42 M8,164.4 H42"/>
+        <rect x="66" y="7" width="38" height="16" rx="3" class="ink fill-y"/>
+        <rect x="124" y="7" width="38" height="16" rx="3" class="ink fill-y"/>
+        <rect x="66" y="42" width="38" height="16" rx="3" class="ink-r fill-r"/>
+        <rect x="124" y="42" width="38" height="16" rx="3" class="ink-r fill-r"/>
+        <rect x="182" y="42" width="38" height="16" rx="3" class="ink-r fill-r"/>
+        <rect x="66" y="78" width="38" height="16" rx="3" class="ink fill-y"/>
+        <path class="ink" d="M42,15 L64,15 M104,15 L122,15 M42,50 L64,50 M104,50 L122,50 M162,50 L180,50 M42,86 L64,86" marker-end="url(#ahb)"/>
+      </g>
+      <text x="25" y="19" text-anchor="middle" class="s">0</text><text x="25" y="37" text-anchor="middle" class="s">1</text><text x="25" y="54" text-anchor="middle" class="s">2</text><text x="25" y="72" text-anchor="middle" class="s">3</text><text x="25" y="90" text-anchor="middle" class="s">4</text><text x="25" y="178" text-anchor="middle" class="s">9</text>
+      <text x="85" y="19" text-anchor="middle" class="s">50</text><text x="143" y="19" text-anchor="middle" class="s">60</text>
+      <text x="85" y="54" text-anchor="middle" class="s">22</text><text x="143" y="54" text-anchor="middle" class="s">32</text><text x="201" y="54" text-anchor="middle" class="s">42</text>
+      <text x="85" y="90" text-anchor="middle" class="s">34</text>
+      <text x="150" y="130" text-anchor="middle" class="s">h(k) = k mod 10</text>
+      <text x="150" y="150" text-anchor="middle" class="bn r s">চেইনের দৈর্ঘ্য ≈ α</text>
+    </svg><figcaption>সেপারেট চেইনিং, m = 10: প্রতিটি স্লটে একটি লিংকড লিস্ট</figcaption></figure>
+    <table class="hand small" style="margin-top:0;width:100%">
+      <tr><th class="l">পদ্ধতি</th><th class="l">প্রোব i (সব mod m), α ≤ 1</th></tr>
+      <tr><td class="l"><b>লিনিয়ার</b></td><td class="l">h + i → <span class="circ">প্রাইমারি ক্লাস্টারিং</span></td></tr>
+      <tr><td class="l"><b>কোয়াড্রাটিক</b></td><td class="l">h + c₁i + c₂i² (প্রায়ই h + i²) → সেকেন্ডারি ক্লাস্টারিং</td></tr>
+      <tr><td class="l"><b>ডাবল</b></td><td class="l">h₁ + i·h₂; h₂ ≠ 0, m-এর সাথে সহমৌলিক → প্রায় সুষম</td></tr>
+      <tr><td class="l"><b>চেইনিং</b></td><td class="l">প্রতি স্লটে একটি লিস্ট; α 1-এর বেশি হতে পারে</td></tr>
+    </table>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ m = 11, h₁ = k mod 11-এ 10, 22, 31, 4, 15, 28, 17, 88, 59 ইনসার্ট</span>
+    <table class="hand tiny" style="width:100%;margin-top:1mm">
+      <tr><th class="l">স্লট</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+      <tr><td class="l">লিনিয়ার = কোয়াড্রাটিক</td><td>22</td><td>88</td><td>–</td><td>–</td><td>4</td><td>15</td><td>28</td><td>17</td><td><b>59</b></td><td>31</td><td>10</td></tr>
+      <tr><td class="l">ডাবল</td><td>22</td><td>–</td><td><b>59</b></td><td>17</td><td>4</td><td>15</td><td>28</td><td>88</td><td>–</td><td>31</td><td>10</td></tr>
+    </table>
+    59 → h₁ = 4। লিনিয়ার: 4, 5, 6, 7 পূর্ণ → স্লট 8 (<b>৫টি প্রোব</b>)। কোয়াড্রাটিক: 4, 5 → 4 + 4 = 8 (৩টি প্রোব)। ডাবল (h₂ = 1 + k mod 10): h₂(59) = 10, তাই 4 → 14 mod 11 = 3 (17) → 24 mod 11 = <b>2</b>।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">প্রত্যাশিত প্রোব</th><th class="l">ব্যর্থ সার্চ</th><th class="l">সফল সার্চ</th><th class="l">α = 0.5</th></tr>
+    <tr><td class="l">চেইনিং</td><td class="l">1 + α</td><td class="l">1 + α/2</td><td class="l">1.5 · 1.25</td></tr>
+    <tr><td class="l">সুষম ওপেন অ্যাড্রেসিং</td><td class="l"><span class="circ">1/(1 − α)</span></td><td class="l">(1/α) ln 1/(1 − α)</td><td class="l">2 · 1.39</td></tr>
+    <tr><td class="l">লিনিয়ার প্রোবিং (Knuth)</td><td class="l">½(1 + 1/(1 − α)²)</td><td class="l">½(1 + 1/(1 − α))</td><td class="l">2.5 · 1.5</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ওপেন অ্যাড্রেসিংয়ে ডিলিট করে স্লট সোজা খালি করা যায় না — পরের key-গুলো আর খুঁজে পাওয়া যায় না; চিহ্ন দাও <b>DELETED</b> (টুম্বস্টোন)। m মৌলিক ও α ≤ ½ না হলে কোয়াড্রাটিক প্রোবিং খালি স্লট মিস করতে পারে। α সীমা ছাড়ালে রিহ্যাশ (m দ্বিগুণ) — Java-র HashMap-এ 0.75।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>লিনিয়ার জট পাকায়, কোয়াড্রাটিক কমায়, ডাবল ছড়ায়।</b>" α = 1-এর কাছে প্রোব বিস্ফোরিত হয়: α = 0.9 → ব্যর্থ সার্চে 10টি প্রোব। ব্যবহার: সিম্বল টেবিল, DB হ্যাশ ইনডেক্স, ক্যাশ (Redis, Memcached), সেট/ডিকশনারি।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: storage management ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>স্টোরেজ ব্যবস্থাপনা</span></div>
+  <h2><span class="no">৮</span>স্টোরেজ ব্যবস্থাপনা ও গারবেজ কালেকশন</h2><span class="tag">সিলেবাসের লাইন ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <span class="hl">স্টোরেজ ব্যবস্থাপনা (Storage management)</span> <b>হিপের</b> ব্লক বরাদ্দ দেয় ও ফেরত নেয় (malloc/free, new/delete)। খালি ব্লক থাকে একটি <b>ফ্রি লিস্টে</b>; প্রতিটি অনুরোধ মেটায় একটি <b>প্লেসমেন্ট নীতি</b>, আর মুক্ত হওয়া পাশাপাশি ব্লক <b>একীভূত (coalesce)</b> হয়। শত্রু দুটি: <b>ফ্র্যাগমেন্টেশন</b> ও <b>গারবেজ</b> (অপ্রাপ্য অথচ ছাড়া হয়নি এমন ব্লক)।</div>
+  <div class="sumbox tiny"><span class="lbl">প্লেসমেন্ট নীতি</span> <b>ফার্স্ট ফিট</b>: প্রথম যথেষ্ট বড় ফাঁকা অংশ — দ্রুততম। <b>নেক্সট ফিট</b>: আগের খোঁজ যেখানে থেমেছিল সেখান থেকে ফার্স্ট ফিট। <b>বেস্ট ফিট</b>: যেটিতে আঁটে তার মধ্যে <span class="circ">সবচেয়ে ছোট</span> — পুরো লিস্ট দেখে, খুদে টুকরো রেখে যায়। <b>ওয়ার্স্ট ফিট</b>: সবচেয়ে বড়টি — বড় অবশিষ্ট রাখে। নিচের উদাহরণে <b>শুধু বেস্ট ফিট</b> চারটিকেই জায়গা দেয়।</div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ফাঁকা 100, 500, 200, 300, 600 KB; অনুরোধ 212, 417, 112, 426</span>
+    <table class="hand tiny" style="width:100%;margin-top:1mm">
+      <tr><th class="l">নীতি</th><th>212</th><th>417</th><th>112</th><th>426</th></tr>
+      <tr><td class="l">ফার্স্ট ফিট</td><td>500 (→288)</td><td>600 (→183)</td><td>288 (→176)</td><td class="red"><b>অপেক্ষা</b></td></tr>
+      <tr><td class="l">বেস্ট ফিট</td><td>300 (→88)</td><td>500 (→83)</td><td>200 (→88)</td><td class="green"><b>600 ✓</b></td></tr>
+      <tr><td class="l">ওয়ার্স্ট ফিট</td><td>600 (→388)</td><td>500 (→83)</td><td>388 (→276)</td><td class="red"><b>অপেক্ষা</b></td></tr>
+    </table></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,230px);align-items:start">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">ফ্র্যাগমেন্টেশন</span> <b>এক্সটার্নাল</b>: মোট খালি মেমরি যথেষ্ট, কিন্তু কোনো একক ফাঁকা অংশ যথেষ্ট বড় নয় — প্রতিকার <span class="hl">কমপ্যাকশন (compaction)</span> (চালু ব্লকগুলো এক পাশে সরানো; রান-টাইম রিলোকেশন লাগে, ব্যয়বহুল)। <b>ইন্টারনাল</b>: অনুরোধের চেয়ে বড় ব্লক — অব্যবহৃত অংশ নষ্ট (বাডি সিস্টেম, স্থির পার্টিশন, পেজিং)।</div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 270 176" width="226">
+      <g class="w">
+        <rect x="6" y="6" width="256" height="24" rx="4" class="ink fill-b"/>
+        <rect x="6" y="46" width="126" height="24" rx="4" class="ink fill-b"/>
+        <rect x="136" y="46" width="126" height="24" rx="4" class="ink fill-y"/>
+        <rect x="6" y="86" width="61" height="24" rx="4" class="ink fill-b"/>
+        <rect x="71" y="86" width="61" height="24" rx="4" class="ink fill-y"/>
+        <rect x="6" y="126" width="29" height="24" rx="4" class="ink-r fill-r"/>
+        <rect x="38" y="126" width="29" height="24" rx="4" class="ink fill-y"/>
+        <path class="ink" d="M134,30 L70,46 M134,30 L198,46 M68,70 L36,86 M68,70 L102,86 M36,110 L20,126 M36,110 L52,126"/>
+      </g>
+      <text x="134" y="23" text-anchor="middle" class="s">1024 KB</text>
+      <text x="69" y="63" text-anchor="middle" class="s">512</text><text x="199" y="63" text-anchor="middle" class="bn s">512 খালি</text>
+      <text x="36" y="103" text-anchor="middle" class="s">256</text><text x="101" y="103" text-anchor="middle" class="bn s">256 খালি</text>
+      <text x="20" y="143" text-anchor="middle" class="r s w6">128</text><text x="52" y="143" text-anchor="middle" class="s">128</text>
+      <text x="140" y="166" text-anchor="middle" class="bn r s">100 KB অনুরোধ → 128 KB ব্লক (28 KB নষ্ট)</text>
+    </svg><figcaption>1 MB-এর বাডি বিভাজন</figcaption></figure>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">বাডি সিস্টেম (Buddy system)</span> ব্লকগুলো 2-এর ঘাত। অনুরোধকে 2ᵏ-এ <b>রাউন্ড আপ</b> করা হয়; বড় ব্লককে দুই অর্ধেকে (<b>বাডি</b>) ভাগ করা হয় যতক্ষণ না আঁটে। মুক্ত করলে বাডি খালি থাকলে তার সাথে জোড়া লাগে; বাডির ঠিকানা = addr <b>XOR</b> size। ভাগ/জোড়া দ্রুত, কিন্তু ইন্টারনাল ফ্র্যাগমেন্টেশন প্রায় ৫০% পর্যন্ত।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">গারবেজ কালেক্টর</th><th class="l">কীভাবে কাজ করে</th><th class="l">শক্তি · দুর্বলতা</th></tr>
+    <tr><td class="l"><b>রেফারেন্স কাউন্টিং</b></td><td class="l">পয়েন্টার-গণনা 0 হলে মুক্ত</td><td class="l">তাৎক্ষণিক · <span class="circ">চক্রে ব্যর্থ</span></td></tr>
+    <tr><td class="l" style="white-space:nowrap"><b>মার্ক-অ্যান্ড-সুইপ</b></td><td class="l"><b>রুট</b> (স্ট্যাক, গ্লোবাল) থেকে মার্ক, বাকিগুলো সুইপ</td><td class="l">চক্র সামলায় · বিরতি (Lisp, 1960)</td></tr>
+    <tr><td class="l"><b>কপিয়িং</b></td><td class="l">জীবিত অবজেক্ট অন্য সেমি-স্পেসে কপি</td><td class="l">কমপ্যাক্ট করে · অর্ধেক হিপ নষ্ট</td></tr>
+    <tr><td class="l"><b>জেনারেশনাল</b></td><td class="l">তরুণ অংশ ঘন ঘন সংগ্রহ</td><td class="l">ছোট বিরতি (Java, .NET)</td></tr>
+  </table>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> পরস্পরকে নির্দেশকারী দুটি অপ্রাপ্য অবজেক্টের গণনা 1-ই থাকে → বিশুদ্ধ রেফারেন্স কাউন্টিংয়ে <b>লিক</b>। <b>ড্যাংলিং পয়েন্টার</b> = মুক্ত কিন্তু তবু ব্যবহৃত; <b>লিক</b> = অব্যবহৃত কিন্তু কখনো মুক্ত নয়। কমপ্যাকশন শুধু এক্সটার্নাল ফ্র্যাগমেন্টেশন সারায়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ফার্স্ট দ্রুত, বেস্ট রাখে কুচি, ওয়ার্স্ট রাখে চওড়া।</b>" GC: "<b>গোনো, দাগাও, কপি করো</b>" — গণনা চক্র দেখে না, কপিতে দ্বিগুণ জায়গা লাগে।</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:26pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্যপত্র</span>
+    <div class="fgrid small">
+      <p>হ্যানয়: <b>2ⁿ − 1</b> চাল</p><p>সরল fib: Θ(φⁿ), 2F(n+1) − 1 কল</p>
+      <p>গভীরতা d → O(d) স্ট্যাক</p><p>টেইল কল → ফ্রেম পুনর্ব্যবহার</p>
+      <p>O ≤ · Ω ≥ · Θ = · o &lt; · ω &gt;</p><p>log n! = Θ(n log n)</p>
+      <p>মাস্টার: f বনাম n^(log_b a)</p><p>সমান ⇒ × log n</p>
+      <p>2T(n/2) + n = <b>Θ(n log n)</b></p><p>T(n/2) + 1 = Θ(log n)</p>
+      <p>T(n−1) + n = Θ(n²)</p><p>7T(n/2) + n² = Θ(n^2.81)</p>
+      <p>তুলনাভিত্তিক সর্ট ≥ <b>Ω(n log n)</b></p><p>কাউন্টিং Θ(n + k), র‍্যাডিক্স Θ(d(n + k))</p>
+      <p>বাইনারি সার্চ ≤ <b>⌈log₂(n+1)⌉</b></p><p>ইন্টারপোলেশন গড়ে O(log log n)</p>
+      <p>α = n/m · ব্যর্থ ≈ 1/(1 − α)</p><p>লিনিয়ার প্রোব → প্রাইমারি ক্লাস্টার</p>
+      <p>বাডি: 2ᵏ-এ রাউন্ড আপ</p><p>রেফ-কাউন্ট চক্র ধরে না</p>
+    </div>
+  </div>
+  <h3>MCQ-র সেরা ১২টি এক-লাইনার</h3>
+  <div class="cols small">
+    <ol class="num" style="list-style-type:bengali">
+      <li>স্টেবল: <b>বাবল, ইনসার্শন, মার্জ</b>, কাউন্টিং, র‍্যাডিক্স</li>
+      <li>আনস্টেবল: <b>সিলেকশন, কুইক, হিপ</b>, শেল</li>
+      <li>কুইক worst Θ(n²): সাজানো ইনপুট, প্রান্তের পিভট</li>
+      <li>মার্জ: সবসময় Θ(n log n), Θ(n) মেমরি</li>
+      <li>হিপ: সবসময় Θ(n log n), O(1) মেমরি</li>
+      <li>সবচেয়ে কম swap: <b>সিলেকশন</b> (n − 1)</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li>প্রায়-সাজানোয় সেরা: <b>ইনসার্শন</b></li>
+      <li>বাইনারি সার্চে লাগে সাজানো + র‍্যান্ডম অ্যাক্সেস</li>
+      <li>n = 1000-এ সর্বোচ্চ প্রোব → <b>10</b></li>
+      <li>ডাবল হ্যাশিং ≈ সুষম হ্যাশিং</li>
+      <li>ওপেন অ্যাড্রেসিংয়ে ডিলিট → টুম্বস্টোন</li>
+      <li>উদাহরণে শুধু বেস্ট ফিট চারটিই বসায়</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> O একটি সীমা, "worst case" নয় · মাস্টার থিওরেমে লাগে a·T(n/b), T(n−1) নয় · বাবল সর্ট best O(n) <b>কেবল</b> আর্লি-এক্সিট ফ্ল্যাগসহ · কুইক সর্টের O(log n) মেমরি গড় স্ট্যাক · লিংকড লিস্টে বাইনারি সার্চ O(n) · mid = (lo + hi)/2 ওভারফ্লো করতে পারে · স্লট খালি করলে ওপেন-অ্যাড্রেসিং সার্চ ভাঙে · অ্যামর্টাইজড ≠ average case।</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> "আগে বেস, পরে ছোট" · "O = ছাদ, Ω = মেঝে, Θ = দুই দেয়াল" · "লিফ বনাম রুট" · "সিলেকশন কম Swap, ইনসার্শন Shift" · "মার্জ: ভাগ সহজ, জোড়া কঠিন; কুইক: ভাগ কঠিন, জোড়া সহজ" · "অর্ধেক করতে থাকো — 10, 20, 30" · "লিনিয়ার জট পাকায়, কোয়াড্রাটিক কমায়, ডাবল ছড়ায়" · "ফার্স্ট দ্রুত, বেস্ট রাখে কুচি, ওয়ার্স্ট রাখে চওড়া" · "গোনো, দাগাও, কপি করো"।</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="486">
+    <g class="w">
+      <rect x="8" y="10" width="240" height="74" rx="10" class="ink-g fill-g"/>
+      <rect x="272" y="10" width="240" height="74" rx="10" class="ink-r fill-r"/>
+      <path class="ink-r" d="M256,47 L266,47" marker-end="url(#ah)"/>
+    </g>
+    <text x="128" y="40" text-anchor="middle" class="bn g w6 l">স্টেবল</text>
+    <text x="128" y="58" text-anchor="middle" class="bn g s">বাবল · ইনসার্শন · মার্জ</text>
+    <text x="128" y="74" text-anchor="middle" class="bn g s">কাউন্টিং · র‍্যাডিক্স · বাকেট</text>
+    <text x="392" y="40" text-anchor="middle" class="bn r w6 l">আনস্টেবল</text>
+    <text x="392" y="58" text-anchor="middle" class="bn r s">সিলেকশন · কুইক · হিপ</text>
+    <text x="392" y="74" text-anchor="middle" class="bn r s">শেল</text>
+    <text x="260" y="102" text-anchor="middle" class="bn p s">দূরের swap স্টেবিলিটি ভাঙে</text>
+  </svg><figcaption>যে স্টেবিলিটি-বিভাজন প্রতিটি MCQ প্রশ্নপত্রে আসে</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · রিকার্শন, সর্টিং ও হ্যাশিং</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা, পরে মিলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>৫টি চাকতির হ্যানয়ে চাল:<ol class="opts"><li>31</li><li>32</li><li>25</li><li>63</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>T(n) = 2T(n/2) + n হলো:<ol class="opts"><li>Θ(n)</li><li>Θ(n²)</li><li>Θ(n log n)</li><li>Θ(log n)</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>প্রচলিত রূপে স্টেবল:<ol class="opts"><li>কুইক সর্ট</li><li>হিপ সর্ট</li><li>সিলেকশন</li><li>মার্জ সর্ট</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>কুইক সর্ট, প্রথম পিভট, সাজানো ইনপুট:<ol class="opts"><li>O(n log n)</li><li>O(n²)</li><li>O(n)</li><li>O(log n)</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>n = 1000-এ বাইনারি সার্চের সর্বোচ্চ প্রোব:<ol class="opts"><li>9</li><li>10</li><li>11</li><li>500</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>m = 7, k mod 7, লিনিয়ার প্রোবিং; 10, 17, 24 ইনসার্ট। 24 যায়:<ol class="opts"><li>3</li><li>4</li><li>5</li><li>6</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>f = Θ(g) মানে g হলো:<ol class="opts"><li>শুধু ঊর্ধ্বসীমা</li><li>শুধু নিম্নসীমা</li><li>average case</li><li>টাইট বাউন্ড</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>চক্রাকার গারবেজ ফেরত নিতে পারে না:<ol class="opts"><li>মার্ক-সুইপ</li><li>রেফ কাউন্টিং</li><li>কপিয়িং</li><li>জেনারেশনাল</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>T(n) = 4T(n/2) + n² হলো:<ol class="opts"><li>Θ(n²)</li><li>Θ(n² log n)</li><li>Θ(n³)</li><li>Θ(n log n)</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>বাডি সিস্টেম, 1 MB পুল, 100 KB অনুরোধ পায়:<ol class="opts"><li>100 KB</li><li>64 KB</li><li>128 KB</li><li>256 KB</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-ক · ২-গ · ৩-ঘ · ৪-খ · ৫-খ · ৬-গ · ৭-ঘ · ৮-খ · ৯-খ · ১০-গ</div>
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> মাস্টার থিওরেম লেখো এবং T(n) = 2T(n/2) + n ও T(n) = 7T(n/2) + n² সমাধান করো। 2 8 7 1 3 5 6 4-এ (পিভট = শেষটি) Lomuto পার্টিশন ট্রেস করো। কুইক সর্টের best ও worst case রিকারেন্সসহ লেখো এবং worst case এড়ানোর একটি উপায় বলো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>থিওরেম</b> — T(n) = aT(n/b) + f(n), a ≥ 1, b &gt; 1। f-কে n^(log_b a)-এর সাথে তুলনা: n^ε গুণ ছোট → Θ(n^(log_b a)); সমান → Θ(n^(log_b a) log n); n^ε গুণ বড় এবং a·f(n/b) ≤ c·f(n), c &lt; 1 → Θ(f(n))। <i class="mk">৩</i></li>
+    <li><b>সমাধান</b> — 2T(n/2) + n: n^(log₂2) = n = f → কেস ২ → <b>Θ(n log n)</b>। 7T(n/2) + n²: n^(log₂7) ≈ n^2.81 &gt; n² → কেস ১ → <b>Θ(n^log₂7)</b>। <i class="mk">২</i></li>
+    <li><b>পার্টিশন</b> — i = −1; j = 0 (2 ≤ 4) i = 0; j = 3 (1) i = 1 → 2 1 7 8 3 5 6 4; j = 4 (3) i = 2 → 2 1 3 8 7 5 6 4; a[3] ও পিভট swap → <b>2 1 3 4 7 5 6 8</b>, পিভট ইনডেক্স 3-এ। <i class="mk">৩</i></li>
+    <li><b>কেস</b> — best: সুষম ভাগ, T(n) = 2T(n/2) + Θ(n) = Θ(n log n)। Worst: 0 / n − 1 ভাগ, T(n) = T(n−1) + Θ(n) = Θ(n²) (সাজানো ইনপুট, প্রান্তের পিভট)। র‍্যান্ডম বা মিডিয়ান-অব-থ্রি পিভটে এড়ানো যায়। <i class="mk">২</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে ✓</h3>
+  <div class="cols small">
+    <ul class="tick">
+      <li>যেকোনো a·T(n/b) + f(n) ৩০ সেকেন্ডে সমাধান</li>
+      <li>সর্ট টেবিল মুখস্থ থেকে পূরণ</li>
+    </ul>
+    <ul class="tick">
+      <li>তিন প্রোবিং পদ্ধতিতে key ইনসার্ট</li>
+      <li>বাইনারি সার্চের প্রোব গণনা</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

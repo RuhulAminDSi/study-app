@@ -1,36 +1,50 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useApp, useAppDispatch } from '../context/AppContext'
 import { useAuth } from '../context/AuthContext'
-import { api, type ApiChapter, type ApiLesson, type ApiSideMenu } from './api'
 import { translations } from '../data/translations'
 import type { Translations } from '../types'
 import { navigate, useRoute } from '../router'
+import AdminOverview from './AdminOverview'
 import AdminChapters from './AdminChapters'
 import AdminLessons from './AdminLessons'
-import AdminContent from './AdminContent'
-import AdminFiles from './AdminFiles'
+import AdminCandidates from './AdminCandidates'
+import AdminAnnouncements from './AdminAnnouncements'
+import AdminMedia from './AdminMedia'
+import LessonEditor from './LessonEditor'
+import { canLeave } from './navGuard'
+import { CONTENT_MANAGEMENT } from '../features'
+import { FeedbackProvider, Icon, type IconName } from './ui'
 import './admin.css'
+import './admin-content.css'
 
 interface AdminDashboardProps {
   onBack: () => void
 }
 
-type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'content' | 'files'
+type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'announcements' | 'media' | 'candidates'
 
-const navItems: { key: AdminView; icon: string }[] = [
-  { key: 'dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { key: 'chapters', icon: 'M4 6h16M4 12h16M4 18h16' },
-  { key: 'lessons', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-  { key: 'content', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-  { key: 'files', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+interface NavItem { key: AdminView; label: keyof Translations; subtitle: keyof Translations; icon: IconName }
+
+const navGroups: { label?: keyof Translations; items: NavItem[] }[] = [
+  { items: [{ key: 'dashboard', label: 'adminDashboard', subtitle: 'adminWelcomeSub', icon: 'dashboard' }] },
+  {
+    label: 'adminNavContent',
+    items: [
+      { key: 'chapters', label: 'adminChapters', subtitle: 'adminSubChapters', icon: 'chapters' },
+      { key: 'lessons', label: 'adminLessons', subtitle: 'adminSubLessons', icon: 'lessons' },
+      ...(CONTENT_MANAGEMENT ? [
+        { key: 'announcements', label: 'adminAnnouncements', subtitle: 'adminSubAnnouncements', icon: 'megaphone' } as NavItem,
+        { key: 'media', label: 'adminMedia', subtitle: 'adminSubMedia', icon: 'image' } as NavItem,
+      ] : []),
+    ],
+  },
+  { label: 'adminNavPeople', items: [{ key: 'candidates', label: 'adminCandidates', subtitle: 'adminSubCandidates', icon: 'candidates' }] },
 ]
+const navItems = navGroups.flatMap(g => g.items)
 
-const headerTitle: Record<AdminView, keyof Translations> = {
-  dashboard: 'adminDashboard', chapters: 'adminChapters', lessons: 'adminLessons', content: 'adminContent', files: 'adminFiles',
-}
-const labelKey: Record<AdminView, keyof Translations> = {
-  dashboard: 'adminDashboard', chapters: 'adminChapters', lessons: 'adminLessons', content: 'adminContent', files: 'adminFiles',
-}
+/** Candidate accounts hold personal data: only admins and super admins manage them (editors handle content). */
+const ROLE_VIEWS: Partial<Record<AdminView, string[]>> = { candidates: ['super_admin', 'admin'] }
+const ROLE_LABELS: Record<string, keyof Translations> = { super_admin: 'adminRoleSuperAdmin', admin: 'adminRoleAdmin', editor: 'adminRoleEditor' }
 
 export default function AdminDashboard({ onBack }: AdminDashboardProps) {
   const appState = useApp()
@@ -38,170 +52,123 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
   const auth = useAuth()
   const t = translations[appState.language]
   const route = useRoute()
-  const validViews: AdminView[] = ['dashboard', 'chapters', 'lessons', 'content', 'files']
-  const initialView = validViews.includes(route.adminView as AdminView) ? (route.adminView as AdminView) : 'dashboard'
-  const [view, setView] = useState<AdminView>(initialView)
-  const [chapters, setChapters] = useState<ApiChapter[]>([])
-  const [lessons, setLessons] = useState<ApiLesson[]>([])
-  const [menus, setMenus] = useState<ApiSideMenu[]>([])
-  const [loading, setLoading] = useState(true)
+  const role = auth.user?.role ?? ''
+  const canSee = (v: AdminView) => !ROLE_VIEWS[v] || ROLE_VIEWS[v]!.includes(role)
+  const validViews = navItems.filter(item => canSee(item.key)).map(item => item.key)
+  // The URL is the source of truth (#/admin/<view>[/<id>]), so back/forward and reloads land on the same screen.
+  const [viewPart, itemId] = (route.adminView ?? '').split('/')
+  const view: AdminView = validViews.includes(viewPart as AdminView) ? (viewPart as AdminView) : 'dashboard'
+  const editingLesson = CONTENT_MANAGEMENT && view === 'lessons' && itemId ? itemId : null
+  const current = navItems.find(item => item.key === view)!
   const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
-    navigate(`admin/${view === 'dashboard' ? '' : view}`)
-  }, [view])
+    if (!mobileOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [mobileOpen])
 
-  useEffect(() => {
-    const routeView = route.adminView
-    if (routeView !== undefined && validViews.includes(routeView as AdminView) && routeView !== view) {
-      setView(routeView as AdminView)
-    }
-  }, [route.adminView])
+  // Same as the portal's "Sign out": end the session and go back to the landing page.
+  const signOut = async () => {
+    if (!await canLeave()) return
+    auth.logout()
+    window.location.href = '/'
+  }
+  const go = async (key: AdminView) => {
+    setMobileOpen(false)
+    if (!await canLeave()) return // e.g. the lesson editor has unsaved changes
+    navigate(`admin/${key === 'dashboard' ? '' : key}`)
+  }
 
-  useEffect(() => {
-    Promise.all([api.chapters.list(), api.lessons.list(), api.menus.list()])
-      .then(([ch, le, me]) => { setChapters(ch); setLessons(le); setMenus(me) })
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [])
-
-  const publishedCh = chapters.filter(c => c.is_published).length
-  const publishedLe = lessons.filter(l => l.is_published).length
-  const beginner = lessons.filter(l => l.level === 'Beginner').length
-  const intermediate = lessons.filter(l => l.level === 'Intermediate').length
-  const advanced = lessons.filter(l => l.level === 'Advanced').length
+  const userName = auth.user?.username ?? ''
+  const initials = userName.slice(0, 2).toUpperCase() || 'AD'
+  const isDark = appState.theme === 'dark'
 
   return (
-    <div className="admin-layout">
-      <div className="admin-sidebar">
-        <div className="admin-logo">{t.studyHub}</div>
-        {navItems.map(item => (
-          <div
-            key={item.key}
-            className={`admin-nav-item ${view === item.key ? 'active' : ''}`}
-            onClick={() => { setView(item.key); setMobileOpen(false) }}
-          >
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-            </svg>
-            <span className="admin-nav-label">{t[labelKey[item.key]]}</span>
-          </div>
-        ))}
-        <div className="admin-nav-spacer" />
-        <div
-          className="admin-nav-item admin-logout-item"
-          onClick={() => { auth.logout(); navigate(''); }}
-        >
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          <span className="admin-nav-label">{t.adminLogout}</span>
-        </div>
-        <button className="admin-mobile-toggle" onClick={() => setMobileOpen(p => !p)}>
-          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-          </svg>
-        </button>
-      </div>
-
-      <div className={`admin-mobile-overlay ${mobileOpen ? 'open' : ''}`} onClick={() => setMobileOpen(false)} />
-      <div className={`admin-mobile-nav ${mobileOpen ? 'open' : ''}`}>
-        <div className="admin-mobile-nav-header">
-          <span className="admin-logo">{t.studyHub}</span>
-          <button className="admin-mobile-close" onClick={() => setMobileOpen(false)}>✕</button>
-        </div>
-        {navItems.map(item => (
-          <div
-            key={item.key}
-            className={`admin-nav-item ${view === item.key ? 'active' : ''}`}
-            onClick={() => { setView(item.key); setMobileOpen(false) }}
-          >
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-            </svg>
-            {t[labelKey[item.key]]}
-          </div>
-        ))}
-        <div style={{ flex: 1 }} />
-        <div
-          className="admin-nav-item"
-          onClick={() => { auth.logout(); navigate(''); }}
-          style={{ color: '#ef4444', borderTop: '1px solid var(--border)', marginTop: '0.5rem', paddingTop: '1rem' }}
-        >
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-          {t.adminLogout}
-        </div>
-      </div>
-
-      <div className="admin-main">
-        <div className="admin-header">
-          <h2>{t[headerTitle[view]]}</h2>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <button className="admin-mobile-hamburger" onClick={() => setMobileOpen(p => !p)}>
-              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+    <FeedbackProvider t={t}>
+      <div className="admin-layout">
+        <aside className={`adm-sidebar${mobileOpen ? ' open' : ''}`} aria-label="Admin">
+          <div className="adm-brand">
+            <span className="adm-brand-mark" aria-hidden="true">SH</span>
+            <div className="adm-brand-text">
+              <strong>{t.studyHub}</strong>
+              <span>{t.adminConsole}</span>
+            </div>
+            <button type="button" className="adm-icon-btn adm-sidebar-close" onClick={() => setMobileOpen(false)} aria-label={t.adminClose}>
+              <Icon name="close" />
             </button>
-            <button className="admin-action-btn sm" onClick={() => dispatch({ type: 'SET_LANGUAGE', language: appState.language === 'en' ? 'bn' : 'en' })}>
-              {appState.language === 'en' ? 'বাং' : 'EN'}
-            </button>
-            <button className="admin-back-btn" onClick={onBack}>{t.adminBack}</button>
           </div>
-        </div>
 
-        {view === 'dashboard' && (
-          <div>
-            {loading ? (
-              <div className="admin-loading">{t.adminLoading}</div>
-            ) : (
-              <>
-                <h3 style={{ marginBottom: '1rem', color: 'var(--text-dim)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                  {t.adminStatistics}
-                </h3>
-                <div className="admin-grid">
-                  <div className="admin-stat-card">
-                    <h3>{t.adminTotalChapters}</h3>
-                    <div className="stat-value">{chapters.length}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '0.25rem' }}>
-                      {publishedCh} {t.adminPublished}
-                    </div>
-                  </div>
-                  <div className="admin-stat-card">
-                    <h3>{t.adminSideMenus}</h3>
-                    <div className="stat-value">{menus.length}</div>
-                  </div>
-                  <div className="admin-stat-card">
-                    <h3>{t.adminTotalLessons}</h3>
-                    <div className="stat-value">{lessons.length}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '0.25rem' }}>
-                      {publishedLe} {t.adminPublished}
-                    </div>
-                  </div>
-                  <div className="admin-stat-card">
-                    <h3>{t.adminBeginner}</h3>
-                    <div className="stat-value" style={{ fontSize: '1.5rem', color: '#22c55e' }}>{beginner}</div>
-                  </div>
-                  <div className="admin-stat-card">
-                    <h3>{t.adminIntermediate}</h3>
-                    <div className="stat-value" style={{ fontSize: '1.5rem', color: '#f59e0b' }}>{intermediate}</div>
-                  </div>
-                  <div className="admin-stat-card">
-                    <h3>{t.adminAdvanced}</h3>
-                    <div className="stat-value" style={{ fontSize: '1.5rem', color: '#ef4444' }}>{advanced}</div>
-                  </div>
+          <nav className="adm-nav">
+            {navGroups.map((group, i) => {
+              const items = group.items.filter(item => canSee(item.key))
+              if (items.length === 0) return null
+              return (
+                <div key={i} className="adm-nav-group">
+                  {group.label && <div className="adm-nav-heading">{t[group.label]}</div>}
+                  {items.map(item => (
+                    <button key={item.key} type="button" className={`adm-nav-item${view === item.key ? ' active' : ''}`}
+                      aria-current={view === item.key ? 'page' : undefined} onClick={() => go(item.key)}>
+                      <Icon name={item.icon} size={18} />
+                      <span>{t[item.label]}</span>
+                    </button>
+                  ))}
                 </div>
-              </>
-            )}
-          </div>
-        )}
+              )
+            })}
+          </nav>
 
-        {view === 'chapters' && <AdminChapters language={appState.language} />}
-        {view === 'lessons' && <AdminLessons language={appState.language} />}
-        {view === 'content' && <AdminContent language={appState.language} />}
-        {view === 'files' && <AdminFiles language={appState.language} />}
+          <div className="adm-user">
+            <span className="adm-avatar" aria-hidden="true">{initials}</span>
+            <div className="adm-user-text">
+              <strong>{userName}</strong>
+              <span>{ROLE_LABELS[role] ? t[ROLE_LABELS[role]] : role}</span>
+            </div>
+            <button type="button" className="adm-icon-btn" onClick={signOut} title={t.signOut} aria-label={t.signOut}>
+              <Icon name="signOut" />
+            </button>
+          </div>
+        </aside>
+
+        <div className={`adm-scrim${mobileOpen ? ' open' : ''}`} onClick={() => setMobileOpen(false)} aria-hidden="true" />
+
+        <div className="admin-main">
+          <header className="adm-topbar">
+            <button type="button" className="adm-icon-btn adm-hamburger" onClick={() => setMobileOpen(true)} aria-label={t.adminOpenMenu} aria-expanded={mobileOpen}>
+              <Icon name="menu" size={18} />
+            </button>
+            <div className="adm-topbar-title">
+              <h2>{editingLesson ? t.edEditLesson : t[current.label]}</h2>
+              <p>{editingLesson ? t.adminSubEditor : t[current.subtitle]}</p>
+            </div>
+            <div className="adm-topbar-actions">
+              <button type="button" className="adm-icon-btn" title={isDark ? t.lightMode : t.darkMode} aria-label={isDark ? t.lightMode : t.darkMode}
+                onClick={() => dispatch({ type: 'SET_THEME', theme: isDark ? 'light' : 'dark' })}>
+                <Icon name={isDark ? 'sun' : 'moon'} />
+              </button>
+              <button type="button" className="adm-icon-btn adm-lang-btn" title="Language"
+                onClick={() => dispatch({ type: 'SET_LANGUAGE', language: appState.language === 'en' ? 'bn' : 'en' })}>
+                {appState.language === 'en' ? 'বাং' : 'EN'}
+              </button>
+              <button type="button" className="adm-btn primary adm-open-hub" onClick={async () => { if (await canLeave()) onBack() }}>
+                <Icon name="external" size={15} /><span>{t.adminBack}</span>
+              </button>
+            </div>
+          </header>
+
+          <main className="adm-content">
+            {view === 'dashboard' && <AdminOverview language={appState.language} userName={userName} showCandidates={canSee('candidates')} go={go} />}
+            {view === 'chapters' && <AdminChapters language={appState.language} />}
+            {view === 'lessons' && (editingLesson
+              ? <LessonEditor key={editingLesson} id={editingLesson} language={appState.language} onExit={() => go('lessons')} />
+              : <AdminLessons language={appState.language} />)}
+            {view === 'announcements' && <AdminAnnouncements language={appState.language} />}
+            {view === 'media' && <AdminMedia language={appState.language} />}
+            {view === 'candidates' && <AdminCandidates language={appState.language} />}
+          </main>
+        </div>
       </div>
-    </div>
+    </FeedbackProvider>
   )
 }

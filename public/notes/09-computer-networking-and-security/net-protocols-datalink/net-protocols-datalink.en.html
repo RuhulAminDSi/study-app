@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Protocol Hierarchies, Data Link and LANs: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Date: 08.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Protocol Hierarchies, Data Link &amp; LANs</span></h1>
+  <p class="subtitle">Layers · framing · CRC · Hamming · ARQ · HDLC/PPP · ATM · ALOHA/CSMA · Ethernet · switches: exam-ready in 12 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">DATA LINK LAYER</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Layers · PDUs</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">CRC · Hamming ★</text>
+      <text x="500" y="65" text-anchor="middle">Framing · ATM cell</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">GBN · SR ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">HDLC · PPP ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">IEEE 802 · Ethernet</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">ALOHA · CSMA ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Switch · VLAN</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = LAN practice</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① PDU name per layer<br>② bit stuffing, flag 7E<br>③ CRC &amp; Hamming bits<br>④ GBN 2ᵐ−1, SR 2ᵐ⁻¹<br>⑤ ALOHA 18.4% / 36.8%<br>⑥ Ethernet 64–1518 B<br>⑦ hub L1 · switch L2</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Computer Networking and Security: <span class="hl">Protocol hierarchies</span>; <span class="hl">Data link control: HDLC</span>; DLL in Internet; DLL of ATM; <span class="hl">LAN Protocols: Standards IEEE 802.*</span>; Hubs, Bridges, and Switches, FDDI, Fast Ethernet; …". Framing, error and flow control and medium access are added because every DLL question rests on them. Routing, IP, TCP, security and the full OSI-vs-TCP/IP comparison are in the other lessons of this chapter.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Protocol hierarchies, DLL services … p. 2</li><li>Framing, parity, checksum ……… p. 3</li><li>CRC &amp; Hamming code ……… p. 4</li><li>Flow control &amp; ARQ ……… p. 5</li><li>HDLC ……… p. 6</li><li>PPP, SLIP &amp; ATM data link ……… p. 7</li></ul>
+    <ul class="tick"><li>ALOHA, CSMA/CD, CSMA/CA ……… p. 8</li><li>Wi-Fi, Token Ring, FDDI, IEEE 802 … p. 9</li><li>Ethernet, hubs, switches, VLAN … p. 10</li><li>Night-before sheet ……… p. 11</li><li>Practice MCQs + written ……… p. 12</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: protocol hierarchies, DLL services ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Layers</span></div>
+  <h2><span class="no">1</span>Protocol Hierarchies: Why Layers?</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> A network is a <span class="hl">stack of layers</span>; each offers a <b>service</b> to the layer above and hides how. Layer n talks to layer n on the other machine (its <b>peer</b>) by the <span class="hl">layer-n protocol</span>. Architecture = layers + protocols; <b>protocol stack</b> = one protocol per layer.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 222" width="296">
+      <g class="w">
+        <rect x="20" y="22" width="100" height="150" rx="6" class="ink fill-b"/>
+        <rect x="210" y="22" width="100" height="150" rx="6" class="ink fill-b"/>
+        <path class="ink" d="M20,52 H120 M20,82 H120 M20,112 H120 M20,142 H120 M210,52 H310 M210,82 H310 M210,112 H310 M210,142 H310" style="stroke-width:1.4"/>
+        <path class="ink-p" d="M124,37 H206 M124,67 H206 M124,97 H206 M124,127 H206" stroke-dasharray="5 5" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+        <path class="ink-r" d="M10,30 V166" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M320,166 V30" marker-end="url(#ah)"/>
+        <path class="ink-k" d="M70,172 V196 H260 V172" style="stroke-width:2.6"/>
+      </g>
+      <text x="70" y="14" text-anchor="middle" class="k w6">Host A</text><text x="260" y="14" text-anchor="middle" class="k w6">Host B</text>
+      <text x="70" y="42" text-anchor="middle" class="s">Application</text><text x="70" y="72" text-anchor="middle" class="s">Transport</text><text x="70" y="102" text-anchor="middle" class="s">Network</text><text x="70" y="132" text-anchor="middle" class="s r w6">Data link</text><text x="70" y="162" text-anchor="middle" class="s">Physical</text>
+      <text x="260" y="42" text-anchor="middle" class="s">Application</text><text x="260" y="72" text-anchor="middle" class="s">Transport</text><text x="260" y="102" text-anchor="middle" class="s">Network</text><text x="260" y="132" text-anchor="middle" class="s r w6">Data link</text><text x="260" y="162" text-anchor="middle" class="s">Physical</text>
+      <text x="165" y="216" text-anchor="middle" class="s k">physical medium: the only real path</text>
+      <text x="165" y="160" text-anchor="middle" class="p s">virtual peer</text><text x="165" y="174" text-anchor="middle" class="p s">protocols</text>
+    </svg></figure>
+    <ul class="dash small">
+      <li><b>Protocol</b>: rules between <b>peers</b> (horizontal)</li>
+      <li><b>Service</b>: what a layer gives the layer above (vertical)</li>
+      <li><b>Interface</b>: boundary between adjacent layers</li>
+      <li><b>SAP</b> (service access point): port, IP, MAC</li>
+      <li><b>Encapsulation</b>: each layer adds its header going down</li>
+    </ul>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Layer (OSI no.)</th><th>PDU</th><th class="l">Address</th><th class="l">Device</th><th class="l">Example protocols</th></tr>
+    <tr><td class="l">Application (7)</td><td>message</td><td class="l">name / URL</td><td class="l">gateway</td><td class="l">HTTP, SMTP, DNS</td></tr>
+    <tr><td class="l">Transport (4)</td><td>segment</td><td class="l">port (16 bit)</td><td class="l">(end hosts)</td><td class="l">TCP, UDP</td></tr>
+    <tr><td class="l">Network (3)</td><td>packet</td><td class="l">IP (32/128 bit)</td><td class="l">router</td><td class="l">IP, ICMP</td></tr>
+    <tr><td class="l red"><b>Data link (2)</b></td><td class="red"><b>frame</b></td><td class="l"><span class="circ">MAC (48 bit)</span></td><td class="l">bridge, switch</td><td class="l">Ethernet, HDLC, PPP</td></tr>
+    <tr><td class="l">Physical (1)</td><td>bits</td><td class="l">none</td><td class="l">hub, repeater</td><td class="l">RS-232, 10Base-T</td></tr>
+  </table>
+  <div class="mnote">OSI 7 vs TCP/IP 4: full comparison in the OSI Model lesson</div>
+  <p class="small"><b>Connection-oriented</b> (set up → use → release: TCP, ATM) vs <b>connectionless</b> (full address in every unit: IP, UDP, Ethernet). <b>OSI primitives:</b> <span class="hl">Request → Indication → Response → Confirm</span>. <b>Design issues:</b> addressing, error and flow control, multiplexing, routing, fragmentation.</p>
+
+  <h2><span class="no">2</span>The Data Link Layer: Jobs &amp; Services</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr">
+    <ul class="dash small">
+      <li><b>Framing</b>: cut the bit stream into frames</li>
+      <li><b>Physical addressing</b>: MAC in header</li>
+      <li><b>Error control</b>: detect (CRC), retransmit</li>
+      <li><b>Flow control</b>: don't swamp the receiver</li>
+      <li><b>Access control</b>: who uses a shared link</li>
+    </ul>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">IEEE sublayers</span><br><b>LLC</b> (802.2): flow/error control, which network protocol<br><b>MAC</b> (802.3, 802.5, 802.11 …): access + framing on one medium</div>
+  </div>
+  <p class="small">Services: <b>unacknowledged connectionless</b> (Ethernet) · <b>acknowledged connectionless</b> (Wi-Fi) · <b>acknowledged connection-oriented</b> (HDLC). DLL delivery is <span class="hl">hop-to-hop</span>; transport is end-to-end.</p>
+  <div class="exam small"><span class="lbl">Exam trap</span> The data link layer adds a <b>trailer</b> (the FCS) as well as a header; the layers above add headers only.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: framing, parity, checksum ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Framing &amp; detection</span></div>
+  <h2><span class="no">3</span>Framing: Where Does a Frame Start?</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Method</th><th class="l">How</th><th class="l">Weakness / user</th></tr>
+    <tr><td class="l">Byte count</td><td class="l">header field gives the frame length</td><td class="l">one bad count → <b>sync lost</b></td></tr>
+    <tr><td class="l">Flag + <span class="hl">byte stuffing</span></td><td class="l">FLAG at both ends; ESC before FLAG/ESC in data</td><td class="l">byte-oriented: PPP, BISYNC</td></tr>
+    <tr><td class="l">Flag + <span class="hl">bit stuffing</span></td><td class="l">flag <span class="circ">01111110</span>; 0 after five 1s</td><td class="l">bit-oriented: HDLC, SDLC</td></tr>
+    <tr><td class="l">Coding violations</td><td class="l">symbols that never occur in data</td><td class="l">4B/5B (Fast Ethernet, FDDI)</td></tr>
+    <tr><td class="l">Fixed size</td><td class="l">every frame the same length</td><td class="l">ATM 53-byte cells</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 640 128" width="640">
+    <g class="w">
+      <rect x="120" y="86" width="110" height="32" rx="4" class="ink-r fill-r"/>
+      <rect x="230" y="86" width="250" height="32" rx="4" class="ink fill-b"/>
+      <rect x="480" y="86" width="110" height="32" rx="4" class="ink-r fill-r"/>
+    </g>
+    <text x="10" y="26" class="k w6">Data:</text><text x="120" y="26" class="l" style="letter-spacing:2px">0110 11111 11111 00</text>
+    <text x="10" y="62" class="k w6">Sent:</text><text x="120" y="62" class="l" style="letter-spacing:2px">0110 11111 <tspan class="r" style="fill:#d32f2f">0</tspan> 11111 <tspan style="fill:#d32f2f">0</tspan> 00</text>
+    <text x="460" y="26" class="g s">5 consecutive 1s →</text><text x="460" y="44" class="g s">stuff a 0 (red)</text>
+    <text x="175" y="107" text-anchor="middle" class="r w6">01111110</text><text x="355" y="107" text-anchor="middle">stuffed payload + FCS</text><text x="535" y="107" text-anchor="middle" class="r w6">01111110</text>
+    <text x="10" y="107" class="s">HDLC frame:</text>
+  </svg><figcaption>bit stuffing: the flag pattern can never appear inside the frame</figcaption></figure>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>Five ones, then a zero.</b>" Receiver, after 11111: next 0 → delete it; 0111111<b>0</b> → flag; seven 1s → abort.</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Byte stuffing ✍</span> A FLAG B → A <b>ESC</b> FLAG B · A ESC B → A <b>ESC</b> ESC B · A ESC FLAG B → A ESC ESC ESC FLAG B</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> The 0 is stuffed after five 1s <b>even if the next data bit is already 0</b>; the receiver always removes it. Worst case: 1 extra bit per 5 data bits.</div>
+
+  <h2><span class="no">4</span>Errors, Parity &amp; Checksum</h2><span class="tag">MCQ</span>
+  <p class="small"><b>Burst error</b> length = first to last bad bit (1 μs of noise at 10 Mbps hits 10 bits). <span class="hl">Detection</span> + resend = ARQ (LANs, TCP); <span class="hl">correction</span> = FEC (satellite, broadcast, ECC memory).</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Method</th><th class="l">Detects</th><th class="l">Misses</th><th class="l">Used in</th></tr>
+    <tr><td class="l">1-D parity</td><td class="l">any <b>odd</b> number of bit errors</td><td class="l">any <b>even</b> number</td><td class="l">serial ASCII</td></tr>
+    <tr><td class="l">2-D parity</td><td class="l">all 1-, 2-, 3-bit errors; corrects 1</td><td class="l">some 4-bit</td><td class="l">block codes</td></tr>
+    <tr><td class="l">Checksum</td><td class="l">16-bit 1's-complement sum</td><td class="l">swapped words</td><td class="l">IP, TCP, UDP</td></tr>
+    <tr><td class="l">CRC</td><td class="l">all bursts ≤ r bits, most others</td><td class="l">very few</td><td class="l">Ethernet, HDLC, PPP</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Checksum ✍ (4-bit words)</span> Data 7, 11, 12, 0, 6 → sum = 36 = 10 0100₂ → wrap the carry: 0100 + 10 = 0110 (6) → checksum = complement = <span class="circ">1001 (9)</span>. Receiver: 36 + 9 = 45 = 10 1101 → 1101 + 10 = 1111 → complement 0000 → accept.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: CRC and Hamming ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>CRC &amp; Hamming</span></div>
+  <h2><span class="no">5</span>CRC (Cyclic Redundancy Check)</h2><span class="tag">written favourite</span>
+  <div class="def"><span class="lbl">Method</span> Generator G(x) of degree <b>r</b> (r + 1 bits): append <span class="hl">r zeros</span>, divide by G in <b>modulo-2</b> (XOR); the r-bit remainder is the CRC; send data + CRC. Receiver divides by G: <span class="circ">remainder 0 → accept</span>.</div>
+  <div class="cols" style="grid-template-columns:1.1fr 1fr">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> Data 100100, G = 1101 (x³ + x² + 1, r = 3)
+      <ol class="steps"><li>Dividend 100100<b>000</b></li><li>1001⊕1101 = 0100 → 1000⊕1101 = 0101</li><li>1010⊕1101 = 0111 → 1110⊕1101 = 0011</li><li>0110 (leading 0: ⊕0000) → 1100⊕1101 = <b>001</b> → send <span class="circ">100100 001</span></li></ol></div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">CRC catches</span><br>all single-bit errors · all odd-count errors if (x + 1) divides G · <b>all bursts ≤ r</b> · burst r + 1: 1 − (½)^(r−1) · longer: 1 − (½)^r<br><b>CRC-8</b> ATM HEC · <b>CRC-16</b> HDLC, PPP · <b>CRC-32</b> Ethernet, Wi-Fi</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Append <b>degree</b> zeros (3 for 1101), not the number of generator bits (4). Modulo-2 subtraction = XOR: no borrows.</div>
+
+  <h2><span class="no">6</span>Hamming Distance &amp; Hamming Code</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Hamming distance</span> d(x, y) = positions where two codewords differ = 1s in x ⊕ y; d(10101, 11110) = 01011 → <b>3</b>. <b>d<sub>min</sub></b> = smallest distance between any two valid codewords.</div>
+  <div class="sumbox small"><span class="lbl">Rules</span> detect s: <span class="circ">d<sub>min</sub> ≥ s + 1</span> · correct t: <span class="circ">d<sub>min</sub> ≥ 2t + 1</span> · check bits: <span class="hl">2<sup>r</sup> ≥ m + r + 1</span> → m = 4: 3 (7, 4) · 7: 4 (11, 7) · 8: 4 (12, 8) · 16: 5 · 32: 6</div>
+  <div class="cols" style="grid-template-columns:330px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 158" width="326">
+      <g class="w">
+        <rect x="60" y="30" width="36" height="34" class="ink-k fill-y"/><rect x="96" y="30" width="36" height="34" class="ink-k fill-y"/><rect x="132" y="30" width="36" height="34" class="ink-k"/><rect x="168" y="30" width="36" height="34" class="ink-k fill-y"/><rect x="204" y="30" width="36" height="34" class="ink-k"/><rect x="240" y="30" width="36" height="34" class="ink-k" style="fill:rgba(211,47,47,.18)"/><rect x="276" y="30" width="36" height="34" class="ink-k"/>
+      </g>
+      <text x="78" y="22" text-anchor="middle" class="s">1</text><text x="114" y="22" text-anchor="middle" class="s">2</text><text x="150" y="22" text-anchor="middle" class="s">3</text><text x="186" y="22" text-anchor="middle" class="s">4</text><text x="222" y="22" text-anchor="middle" class="s">5</text><text x="258" y="22" text-anchor="middle" class="s r w6">6</text><text x="294" y="22" text-anchor="middle" class="s">7</text>
+      <text x="78" y="53" text-anchor="middle" class="k l">0</text><text x="114" y="53" text-anchor="middle" class="k l">1</text><text x="150" y="53" text-anchor="middle" class="k l">1</text><text x="186" y="53" text-anchor="middle" class="k l">0</text><text x="222" y="53" text-anchor="middle" class="k l">0</text><text x="258" y="53" text-anchor="middle" class="k l">1</text><text x="294" y="53" text-anchor="middle" class="k l">1</text>
+      <text x="78" y="82" text-anchor="middle" class="s">P1</text><text x="114" y="82" text-anchor="middle" class="s">P2</text><text x="150" y="82" text-anchor="middle" class="s">D</text><text x="186" y="82" text-anchor="middle" class="s">P4</text><text x="222" y="82" text-anchor="middle" class="s">D</text><text x="258" y="82" text-anchor="middle" class="s">D</text><text x="294" y="82" text-anchor="middle" class="s">D</text>
+      <text x="8" y="106" class="r s w6">P1</text><text x="8" y="126" class="g s w6">P2</text><text x="8" y="146" class="p s w6">P4</text>
+      <text x="78" y="106" text-anchor="middle" class="r">●</text><text x="150" y="106" text-anchor="middle" class="r">●</text><text x="222" y="106" text-anchor="middle" class="r">●</text><text x="294" y="106" text-anchor="middle" class="r">●</text>
+      <text x="114" y="126" text-anchor="middle" class="g">●</text><text x="150" y="126" text-anchor="middle" class="g">●</text><text x="258" y="126" text-anchor="middle" class="g">●</text><text x="294" y="126" text-anchor="middle" class="g">●</text>
+      <text x="186" y="146" text-anchor="middle" class="p">●</text><text x="222" y="146" text-anchor="middle" class="p">●</text><text x="258" y="146" text-anchor="middle" class="p">●</text><text x="294" y="146" text-anchor="middle" class="p">●</text>
+    </svg><figcaption>Hamming (7, 4) for data 1011: who checks whom</figcaption></figure>
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍</span> Data 1011 into positions 3, 5, 6, 7 (even parity):
+      <ol class="steps"><li>P1 = 3⊕5⊕7 = 1⊕0⊕1 = 0</li><li>P2 = 3⊕6⊕7 = 1⊕1⊕1 = 1</li><li>P4 = 5⊕6⊕7 = 0⊕1⊕1 = 0 → <b>0110011</b></li><li>Bit 6 flips: 0110001 → checks C4 C2 C1 = 1 1 0 = <span class="circ">6</span> → flip bit 6</li></ol></div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Parity bits sit at <b>powers of 2</b>; position k is checked by the ones that sum to k: 6 = 4 + 2.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Hamming (7, 4), d<sub>min</sub> = 3: corrects 1 <b>or</b> detects 2. An extra parity bit gives SEC-DED (ECC RAM).</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: flow control & ARQ ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Flow control</span></div>
+  <h2><span class="no">7</span>Flow Control: Stop-and-Wait</h2><span class="tag">numerical</span>
+  <div class="def"><span class="lbl">Definition</span> <b>Flow control</b> stops a fast sender flooding a slow receiver. <b>Error control</b> = <span class="hl">ARQ</span> (automatic repeat request): detect, ACK/NAK, timeout, resend. <b>Stop-and-wait</b>: one frame, then wait for its ACK; seq. numbers 0, 1 catch duplicates.</div>
+  <div class="cols" style="grid-template-columns:270px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 270 210" width="266">
+      <g class="w">
+        <path class="ink-k" d="M40,24 V204 M230,24 V204"/>
+        <path class="ink fill-b" d="M40,32 L230,112 L230,132 L40,52 Z"/>
+        <path class="ink-g" d="M230,134 L42,196" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M30,32 V52 M24,32 H36 M24,52 H36"/>
+        <path class="ink-p" d="M30,56 V194" stroke-dasharray="4 4"/>
+      </g>
+      <text x="40" y="16" text-anchor="middle" class="k w6">Sender</text><text x="230" y="16" text-anchor="middle" class="k w6">Receiver</text>
+      <text x="20" y="47" text-anchor="end" class="r s">Tt</text>
+      <text x="140" y="68" class="s">frame</text><text x="150" y="102" class="s">Tp</text>
+      <text x="150" y="176" class="g s">ACK (Tp)</text>
+      <text x="20" y="130" text-anchor="end" class="p s">idle</text><text x="20" y="144" text-anchor="end" class="p s">≈2Tp</text>
+    </svg><figcaption>the line sits idle for 2Tp per frame</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Formulas</span><br>Tt = L / B (frame bits ÷ bandwidth)<br>Tp = d / v (v ≈ 2 × 10⁸ m/s in cable)<br><span class="hl">a = Tp / Tt</span><br>Stop-and-wait: <span class="circ">η = 1 / (1 + 2a)</span><br>Sliding window: η = W / (1 + 2a), max 1<br>100% busy needs <b>W ≥ 1 + 2a</b><br>Throughput = η × B · BDP = B × RTT</div>
+  </div>
+  <div class="ex"><span class="lbl">Worked example ✍</span> B = 1 Mbps, L = 1000 bits, Tp = 20 ms. Tt = 1 ms → a = 20 → stop-and-wait η = 1/41 = <span class="circ">2.4%</span> (24 kbps). Full use needs W ≥ 41 → Go-Back-N: 2ᵐ − 1 ≥ 41 → <b>m = 6</b>; Selective Repeat: 2ᵐ⁻¹ ≥ 41 → <b>m = 7</b>.</div>
+
+  <h2><span class="no">8</span>Sliding Window: Go-Back-N vs Selective Repeat</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">Stop-and-Wait</th><th class="l">Go-Back-N</th><th class="l">Selective Repeat</th></tr>
+    <tr><td class="l">Sender window</td><td class="l">1</td><td class="l"><span class="circ">2ᵐ − 1</span></td><td class="l"><span class="circ">2ᵐ⁻¹</span></td></tr>
+    <tr><td class="l">Receiver window</td><td class="l">1</td><td class="l">1</td><td class="l">2ᵐ⁻¹</td></tr>
+    <tr><td class="l">Frame lost</td><td class="l">resend it</td><td class="l">resend it <b>and all after it</b></td><td class="l">resend <b>only</b> that frame</td></tr>
+    <tr><td class="l">ACK style</td><td class="l">one per frame</td><td class="l">cumulative</td><td class="l">individual (+ NAK)</td></tr>
+    <tr><td class="l">Out-of-order frames</td><td class="l">n/a</td><td class="l">discarded</td><td class="l">buffered</td></tr>
+  </table>
+  <p class="small">m = 3 → seq. 0–7: GBN window <b>7</b>, SR window <b>4</b>. <b>Piggybacking</b>: the ACK rides in a reverse data frame (HDLC N(R)). GBN wastes bandwidth on errors; SR needs most buffers.</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> GBN: "<b>all but one</b>" (2ᵐ − 1). SR: "<b>half</b>" (2ᵐ⁻¹).</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> SR window over half → an old and a new frame share a <b>number</b>.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: HDLC ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>HDLC</span></div>
+  <h2><span class="no">9</span>HDLC (High-Level Data Link Control)</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Definition</span> ISO <span class="hl">bit-oriented</span> protocol (from IBM's SDLC), point-to-point or multipoint, half/full duplex: <b>bit stuffing</b>, flag <span class="circ">01111110 (7E)</span>, sliding-window ARQ. Family: <b>LAPB</b> (X.25), <b>LAPD</b> (ISDN), LAPM (modems); basis of PPP and 802.2 LLC framing.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 92" width="640">
+    <g class="w">
+      <rect x="10" y="22" width="80" height="38" class="ink-r fill-r"/><rect x="90" y="22" width="95" height="38" class="ink fill-b"/><rect x="185" y="22" width="95" height="38" class="ink fill-b"/><rect x="280" y="22" width="175" height="38" class="ink-g fill-g"/><rect x="455" y="22" width="95" height="38" class="ink-k fill-y"/><rect x="550" y="22" width="80" height="38" class="ink-r fill-r"/>
+    </g>
+    <text x="50" y="46" text-anchor="middle" class="r w6">Flag</text><text x="137" y="46" text-anchor="middle" class="w6">Address</text><text x="232" y="46" text-anchor="middle" class="w6">Control</text><text x="367" y="46" text-anchor="middle" class="g w6">Information</text><text x="502" y="46" text-anchor="middle" class="w6">FCS</text><text x="590" y="46" text-anchor="middle" class="r w6">Flag</text>
+    <text x="50" y="80" text-anchor="middle" class="s">8 bits</text><text x="137" y="80" text-anchor="middle" class="s">8 (extendable)</text><text x="232" y="80" text-anchor="middle" class="s">8 or 16</text><text x="367" y="80" text-anchor="middle" class="s">variable (I-frames)</text><text x="502" y="80" text-anchor="middle" class="s">16 or 32 (CRC)</text><text x="590" y="80" text-anchor="middle" class="s">8 bits</text>
+    <text x="320" y="14" text-anchor="middle" class="r s">FCS covers address + control + information</text>
+  </svg><figcaption>HDLC frame: one flag may close one frame and open the next</figcaption></figure>
+  <p class="small"><b>Stations:</b> <b>primary</b> sends commands, <b>secondary</b> sends responses, <b>combined</b> does both. <b>Configurations:</b> <b>unbalanced</b> = 1 primary + n secondaries; <b>balanced</b> = 2 combined stations (point-to-point).</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Transfer mode</th><th class="l">Config.</th><th class="l">Who may start sending?</th></tr>
+    <tr><td class="l"><b>NRM</b> Normal Response Mode</td><td class="l">unbalanced</td><td class="l">secondary only when <b>polled</b> (multipoint)</td></tr>
+    <tr><td class="l"><b>ARM</b> Asynchronous Response Mode</td><td class="l">unbalanced</td><td class="l">secondary without permission (rare)</td></tr>
+    <tr><td class="l"><span class="hl"><b>ABM</b> Asynchronous Balanced Mode</span></td><td class="l">balanced</td><td class="l">either station, any time (LAPB; most common)</td></tr>
+  </table>
+  <h3>Control field (8-bit, modulo 8)</h3>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Frame</th><th>Bits 1 → 8</th><th class="l">Job</th></tr>
+    <tr><td class="l"><b>I</b>-frame</td><td><span class="red"><b>0</b></span> · N(S) 3 · P/F · N(R) 3</td><td class="l">user data + piggybacked ACK</td></tr>
+    <tr><td class="l"><b>S</b>-frame</td><td><span class="red"><b>10</b></span> · code 2 · P/F · N(R) 3</td><td class="l">ACK / NAK, flow control (no data)</td></tr>
+    <tr><td class="l"><b>U</b>-frame</td><td><span class="red"><b>11</b></span> · M 2 · P/F · M 3</td><td class="l">link management: SNRM, SABM, DISC, UA, FRMR</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th>S code</th><th class="l">Name</th><th class="l">Meaning</th></tr>
+      <tr><td>00</td><td class="l">RR</td><td class="l">ACK, ready</td></tr>
+      <tr><td>10</td><td class="l">RNR</td><td class="l">ACK, but stop</td></tr>
+      <tr><td>01</td><td class="l">REJ</td><td class="l">NAK: Go-Back-N</td></tr>
+      <tr><td>11</td><td class="l">SREJ</td><td class="l">NAK: Selective</td></tr>
+    </table>
+    <div>
+      <p class="small">3-bit N(S)/N(R) → window ≤ <span class="circ">7</span>; extended 16-bit control (SABME) → modulo 128, window ≤ 127. <b>P/F</b>: Poll in a command, Final in a response.</p>
+      <div class="trick small"><span class="lbl">Memory trick</span> I-S-U start with <b>0, 10, 11</b>. RR/RNR = "Ready / Not Ready", REJ = reject all, SREJ = reject one.</div>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap ✍</span> N(R) = the <b>next frame expected</b>, not the last received: an I-frame with N(S) = 3, N(R) = 5 is frame 3 and acknowledges frames up to 4. HDLC is bit-oriented; PPP looks similar but is <b>byte-oriented</b>.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: PPP, SLIP, ATM DLL ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Internet &amp; ATM DLL</span></div>
+  <h2><span class="no">10</span>DLL in the Internet: SLIP &amp; PPP</h2><span class="tag">MCQ + Written</span>
+  <p class="small">Point-to-point links (dial-up, leased lines, DSL as PPPoE, router-to-router over SONET) use <span class="hl">PPP</span> (RFC 1661), the successor of SLIP. On LANs the Internet runs over Ethernet and Wi-Fi.</p>
+  <figure class="doodle"><svg viewBox="0 0 640 90" width="640">
+    <g class="w">
+      <rect x="10" y="22" width="70" height="38" class="ink-r fill-r"/><rect x="80" y="22" width="75" height="38" class="ink fill-b"/><rect x="155" y="22" width="75" height="38" class="ink fill-b"/><rect x="230" y="22" width="90" height="38" class="ink-k fill-y"/><rect x="320" y="22" width="160" height="38" class="ink-g fill-g"/><rect x="480" y="22" width="80" height="38" class="ink fill-b"/><rect x="560" y="22" width="70" height="38" class="ink-r fill-r"/>
+    </g>
+    <text x="45" y="46" text-anchor="middle" class="r w6">7E</text><text x="117" y="46" text-anchor="middle" class="w6">FF</text><text x="192" y="46" text-anchor="middle" class="w6">03</text><text x="275" y="46" text-anchor="middle" class="w6">Protocol</text><text x="400" y="46" text-anchor="middle" class="g w6">Payload</text><text x="520" y="46" text-anchor="middle" class="w6">FCS</text><text x="595" y="46" text-anchor="middle" class="r w6">7E</text>
+    <text x="45" y="80" text-anchor="middle" class="s">flag</text><text x="117" y="80" text-anchor="middle" class="s">all stations</text><text x="192" y="80" text-anchor="middle" class="s">unnumbered</text><text x="275" y="80" text-anchor="middle" class="s">1–2 bytes</text><text x="400" y="80" text-anchor="middle" class="s">≤ 1500 B (default MRU)</text><text x="520" y="80" text-anchor="middle" class="s">2 or 4 B</text><text x="595" y="80" text-anchor="middle" class="s">flag</text>
+    <text x="320" y="14" text-anchor="middle" class="r s">protocol 0021 = IPv4 · C021 = LCP · C023 = PAP · C223 = CHAP · 8021 = IPCP</text>
+  </svg><figcaption>PPP frame: HDLC-like, but byte-oriented</figcaption></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">SLIP (RFC 1055)</th><th class="l">PPP (RFC 1661)</th></tr>
+    <tr><td class="l">Framing</td><td class="l">END byte C0, escape DB</td><td class="l">flag 7E, escape <span class="circ">7D</span>, byte ⊕ 20</td></tr>
+    <tr><td class="l">Error detection</td><td class="l">none</td><td class="l">FCS (CRC-16 or CRC-32)</td></tr>
+    <tr><td class="l">Network protocols</td><td class="l">IP only</td><td class="l">many (protocol field, NCPs)</td></tr>
+    <tr><td class="l">IP address</td><td class="l">configured by hand</td><td class="l">negotiated (IPCP)</td></tr>
+    <tr><td class="l">Authentication</td><td class="l">none</td><td class="l">PAP or CHAP</td></tr>
+  </table>
+  <p class="small"><b>PPP phases:</b> Dead → Establish (<span class="hl">LCP</span>: link options) → Authenticate (optional) → Network (<span class="hl">NCP</span>, e.g. IPCP) → Open → Terminate → Dead. <b>PAP</b>: 2-way, password in clear text, once. <b>CHAP</b>: 3-way challenge–response (MD5 hash of challenge + secret), secret never sent, repeated during the session. Stuffing: 7E → 7D 5E, 7D → 7D 5D.</p>
+  <div class="exam small"><span class="lbl">Exam trap</span> PPP <b>detects</b> errors (FCS) but in its default mode has no sequence numbers, ACKs or flow control: a bad frame is just dropped and upper layers recover.</div>
+
+  <h2><span class="no">11</span>Data Link Layer of ATM</h2><span class="tag">MCQ</span>
+  <div class="def small"><span class="lbl">Idea</span> ATM switches fixed <span class="circ">53-byte cells</span> = 5-byte header + 48-byte payload over virtual circuits (VPI/VCI instead of MAC addresses). The data-link-type work is done by the <b>TC (Transmission Convergence) sublayer</b> under the ATM layer.</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="296">
+      <g class="w">
+        <rect x="40" y="10" width="208" height="125" class="ink-k" style="fill:rgba(255,255,255,.5)"/>
+        <path class="ink-k" d="M40,35 H248 M40,60 H248 M40,85 H248 M40,110 H248" style="stroke-width:1.3"/>
+        <path class="ink-k" d="M144,10 V35 M144,35 V60 M144,85 V110 M222,85 V110" style="stroke-width:1.3"/>
+        <rect x="40" y="110" width="208" height="25" class="ink-r fill-r"/>
+      </g>
+      <text x="20" y="27" text-anchor="middle" class="s">1</text><text x="20" y="52" text-anchor="middle" class="s">2</text><text x="20" y="77" text-anchor="middle" class="s">3</text><text x="20" y="102" text-anchor="middle" class="s">4</text><text x="20" y="127" text-anchor="middle" class="s">5</text>
+      <text x="92" y="27" text-anchor="middle" class="s w6">GFC 4</text><text x="196" y="27" text-anchor="middle" class="s w6">VPI 4</text>
+      <text x="92" y="52" text-anchor="middle" class="s w6">VPI 4</text><text x="196" y="52" text-anchor="middle" class="s w6">VCI 4</text>
+      <text x="144" y="77" text-anchor="middle" class="s w6">VCI 8</text>
+      <text x="92" y="102" text-anchor="middle" class="s w6">VCI 4</text><text x="183" y="102" text-anchor="middle" class="s w6">PT 3</text><text x="235" y="102" text-anchor="middle" class="s" style="font-size:10px">CLP</text>
+      <text x="144" y="127" text-anchor="middle" class="r s w6">HEC 8 (CRC-8)</text>
+      <text x="256" y="56" class="g s">+ 48 B</text><text x="256" y="72" class="g s">payload</text>
+      <text x="144" y="149" text-anchor="middle" class="s">UNI header (NNI: 12-bit VPI, no GFC)</text>
+    </svg></figure>
+    <ul class="dash small">
+      <li><b>HEC</b>: CRC-8 (x⁸ + x² + x + 1) over the first <b>4 header bytes</b> only; corrects 1-bit, detects multi-bit header errors</li>
+      <li><b>Cell delineation</b>: find cell edges by checking HEC (hunt → presync → sync)</li>
+      <li>Cell-rate decoupling (idle cells), fit cells into SONET/SDH frames</li>
+      <li><b>CLP = 1</b>: drop this cell first under congestion</li>
+    </ul>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>5 + 48 = 53</b>". 48 was a compromise between 32 and 64 bytes. Cell tax = 5/53 ≈ <b>9.4%</b>.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">Elsewhere</span> AAL → Transport lesson; ATM network layer (VPI/VCI switching) → IP lesson.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: MAC - ALOHA, CSMA, CSMA/CD, CSMA/CA ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Medium access</span></div>
+  <h2><span class="no">12</span>Medium Access Control: Who Talks Next?</h2><span class="tag">high-yield</span>
+  <p class="small"><b>Random access:</b> ALOHA, CSMA, CSMA/CD, CSMA/CA · <b>Controlled access:</b> reservation, polling, <span class="hl">token passing</span> · <b>Channelization:</b> FDMA, TDMA, CDMA.</p>
+  <div class="cols" style="grid-template-columns:1fr 262px;align-items:center">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l"></th><th>Pure ALOHA</th><th>Slotted ALOHA</th></tr>
+      <tr><td class="l">Send</td><td>any time</td><td>slot start only</td></tr>
+      <tr><td class="l">Vulnerable</td><td>2 × T<sub>fr</sub></td><td>T<sub>fr</sub></td></tr>
+      <tr><td class="l">Throughput S</td><td>G·e<sup>−2G</sup></td><td>G·e<sup>−G</sup></td></tr>
+      <tr><td class="l">Max S</td><td><span class="circ">18.4%</span></td><td><span class="circ">36.8%</span></td></tr>
+      <tr><td class="l">at load</td><td>G = 0.5</td><td>G = 1</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 172" width="258">
+      <g class="w">
+        <path class="ink-k" d="M30,8 V150 H290"/>
+        <path class="ink-g" d="M30,150 C40,110 52,88 70,59 C85,40 98,38 110,39.6 C130,42 150,49 190,68.7 C220,84 250,98 270,105"/>
+        <path class="ink" d="M30,150 C40,120 55,98 70,94.8 C82,93 92,96 110,109.5 C130,120 150,128 190,139 C220,144 250,147 270,148"/>
+        <path class="ink-k" d="M110,39 V150 M70,95 V150" stroke-dasharray="3 4" style="stroke-width:1.2"/>
+      </g>
+      <text x="14" y="18" class="s k">S</text><text x="236" y="166" class="s k">G (load)</text>
+      <text x="66" y="166" class="s">0.5</text><text x="106" y="166" class="s">1</text>
+      <text x="116" y="30" class="g s w6">36.8%</text><text x="96" y="90" class="s w6">18.4%</text>
+      <text x="170" y="40" class="g s">slotted</text><text x="190" y="128" class="s">pure</text>
+    </svg></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> 200-bit frames on a 200 kbps channel → T<sub>fr</sub> = 1 ms. Load 1000 frames/s → G = 1. Pure: S = e<sup>−2</sup> = 0.135 → <b>135 frames/s</b> succeed. Slotted: S = e<sup>−1</sup> = 0.368 → <span class="circ">368 frames/s</span>.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">CSMA type</th><th class="l">Channel idle</th><th class="l">Channel busy</th><th class="l">Note</th></tr>
+    <tr><td class="l">1-persistent</td><td class="l">send at once</td><td class="l">keep sensing, send when idle</td><td class="l">Ethernet; most collisions</td></tr>
+    <tr><td class="l">Non-persistent</td><td class="l">send at once</td><td class="l">wait random time, sense again</td><td class="l">fewer collisions, more delay</td></tr>
+    <tr><td class="l">p-persistent</td><td class="l">send with probability p</td><td class="l">wait for next slot</td><td class="l">slotted channels</td></tr>
+  </table>
+  <h3>CSMA/CD (classic half-duplex Ethernet)</h3>
+  <p class="small">Listen before and <b>while</b> sending; on a collision send a <b>jam</b> signal, abort, back off. To detect a collision the sender must still be sending when it returns: <span class="hl">T<sub>fr</sub> ≥ 2 × T<sub>p</sub></span> → <span class="circ">L<sub>min</sub> = 2 × T<sub>p</sub> × B</span>.</p>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Example ✍</span> 10 Mbps, worst round trip 51.2 μs → L<sub>min</sub> = 10⁷ × 51.2 × 10⁻⁶ = <b>512 bits = 64 bytes</b>, the Ethernet minimum frame.</div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Binary exponential backoff</span> after the n-th collision wait K × 512 bit-times, K random in 0 … 2^min(n,10) − 1; give up after <b>16</b> tries.</div>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Full-duplex switched Ethernet has <b>no collisions</b>, so CSMA/CD is switched off. Carrier sensing cannot stop all collisions because of propagation delay.</div>
+  <div class="def small"><span class="lbl">CSMA/CA (wireless)</span> A radio cannot hear a collision while it transmits (its own signal swamps the receiver), and some stations cannot hear each other. So Wi-Fi <span class="hl">avoids</span> collisions: interframe spaces, a random contention window and a <b>positive ACK</b> for every frame.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: Wi-Fi, Token Ring, FDDI, IEEE 802 ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Wi-Fi · Token Ring · IEEE 802</span></div>
+  <h2><span class="no">13</span>IEEE 802.11 (Wi-Fi)</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:274px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 330 150" width="270">
+      <g class="w">
+        <ellipse cx="110" cy="70" rx="72" ry="52" class="ink-g" stroke-dasharray="6 5"/>
+        <ellipse cx="230" cy="70" rx="72" ry="52" class="ink-p" stroke-dasharray="6 5"/>
+        <circle cx="110" cy="70" r="15" class="ink fill-b"/><circle cx="170" cy="70" r="15" class="ink-r fill-r"/><circle cx="230" cy="70" r="15" class="ink fill-b"/>
+      </g>
+      <text x="110" y="76" text-anchor="middle" class="w6">A</text><text x="170" y="76" text-anchor="middle" class="r w6">B</text><text x="230" y="76" text-anchor="middle" class="w6">C</text>
+      <text x="60" y="12" class="g s">A's range</text><text x="230" y="12" class="p s">C's range</text>
+      <text x="165" y="140" text-anchor="middle" class="r s">A and C can't hear each other → collide at B</text>
+    </svg><figcaption>hidden-station problem → cured by RTS/CTS</figcaption></figure>
+    <ul class="dash small">
+      <li><b>RTS/CTS</b>: sender asks (RTS), receiver grants (CTS); all who hear CTS keep quiet</li>
+      <li><b>NAV</b>: virtual carrier sense, the "busy until" timer</li>
+      <li>IFS order: <span class="circ">SIFS &lt; PIFS &lt; DIFS</span>; ACK/CTS wait only SIFS, so they win</li>
+      <li><b>DCF</b> (contention, mandatory) · <b>PCF</b> (AP polls, optional)</li>
+      <li>Frame has up to <b>4 MAC addresses</b> (via the AP)</li>
+    </ul>
+  </div>
+  <p class="small"><b>802.11b</b> 2.4 GHz, 11 Mbps, DSSS · <b>a</b> 5 GHz, 54 Mbps, OFDM · <b>g</b> 2.4 GHz, 54 Mbps, OFDM · <b>n</b> (Wi-Fi 4) 2.4/5 GHz, 600 Mbps, MIMO · <b>ac</b> (Wi-Fi 5) 5 GHz, ≈ 6.9 Gbps, MU-MIMO · <b>ax</b> (Wi-Fi 6/6E) up to 6 GHz, ≈ 9.6 Gbps, OFDMA. BSS = AP + stations; ESS = BSSs on a distribution system; IBSS = ad hoc. Security: WEP (broken) → WPA → <b>WPA2</b> (802.11i, AES-CCMP) → WPA3.</p>
+  <div class="trick small"><span class="lbl">Memory trick</span> Wired = <b>D</b>etect (CD), wireless = <b>A</b>void (CA). "<b>S</b>hort waits win": SIFS is shortest.</div>
+
+  <h2><span class="no">14</span>Token Passing: Token Ring &amp; FDDI</h2><span class="tag">MCQ</span>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">Token Ring (IEEE 802.5)</span> 4 or 16 Mbps; a 3-byte <b>token</b> circulates and only its holder sends; differential Manchester; star-wired ring through an MAU; <span class="hl">no collisions, deterministic delay</span>. Token Bus = 802.4.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">FDDI (ANSI X3T9.5)</span> <span class="circ">100 Mbps</span> over fibre; <b>dual counter-rotating rings</b> (on a break the ring wraps); timed token; 4B/5B + NRZ-I; ring ≤ 100 km, ≈ 500 stations. <b>Trap:</b> ANSI, not IEEE 802.</div>
+  </div>
+
+  <h2><span class="no">15</span>The IEEE 802 Family</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Standard</th><th class="l">Covers</th><th class="l">Standard</th><th class="l">Covers</th></tr>
+    <tr><td class="l">802.1D</td><td class="l">bridges, Spanning Tree</td><td class="l"><span class="circ">802.3</span></td><td class="l">Ethernet (CSMA/CD)</td></tr>
+    <tr><td class="l">802.1Q · 802.1X</td><td class="l">VLAN tag · port access control</td><td class="l">802.4 · 802.5</td><td class="l">Token Bus · Token Ring</td></tr>
+    <tr><td class="l">802.2</td><td class="l">LLC</td><td class="l">802.6</td><td class="l">DQDB (MAN)</td></tr>
+    <tr><td class="l">802.3u</td><td class="l">Fast Ethernet 100 Mbps</td><td class="l"><span class="circ">802.11</span></td><td class="l">wireless LAN (CSMA/CA)</td></tr>
+    <tr><td class="l">802.3z / ab</td><td class="l">Gigabit (fibre / UTP)</td><td class="l">802.15</td><td class="l">WPAN: .1 Bluetooth, .4 (ZigBee)</td></tr>
+    <tr><td class="l">802.3ae · af</td><td class="l">10 GbE · Power over Ethernet</td><td class="l">802.16</td><td class="l">WiMAX (wireless MAN)</td></tr>
+  </table>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: Ethernet, devices, VLAN ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Ethernet · devices · VLAN</span></div>
+  <h2><span class="no">16</span>Ethernet Frame &amp; MAC Address</h2><span class="tag">high-yield</span>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="640">
+    <g class="w">
+      <rect x="10" y="24" width="88" height="38" class="ink-k" style="fill:rgba(0,0,0,.05)"/><rect x="98" y="24" width="50" height="38" class="ink-k" style="fill:rgba(0,0,0,.05)"/>
+      <rect x="148" y="24" width="78" height="38" class="ink fill-b"/><rect x="226" y="24" width="78" height="38" class="ink fill-b"/><rect x="304" y="24" width="80" height="38" class="ink-k fill-y"/><rect x="384" y="24" width="170" height="38" class="ink-g fill-g"/><rect x="554" y="24" width="76" height="38" class="ink-r fill-r"/>
+      <path class="ink-r" d="M148,80 V88 H630 V80"/>
+    </g>
+    <text x="54" y="48" text-anchor="middle" class="s w6">Preamble</text><text x="123" y="48" text-anchor="middle" class="s w6">SFD</text><text x="187" y="48" text-anchor="middle" class="w6">Dest</text><text x="265" y="48" text-anchor="middle" class="w6">Source</text><text x="344" y="48" text-anchor="middle" class="w6">Type/Len</text><text x="469" y="48" text-anchor="middle" class="g w6">Data + pad</text><text x="592" y="48" text-anchor="middle" class="r w6">FCS</text>
+    <text x="54" y="16" text-anchor="middle" class="s">7 B</text><text x="123" y="16" text-anchor="middle" class="s">1 B</text><text x="187" y="16" text-anchor="middle" class="s">6 B</text><text x="265" y="16" text-anchor="middle" class="s">6 B</text><text x="344" y="16" text-anchor="middle" class="s">2 B</text><text x="469" y="16" text-anchor="middle" class="s">46–1500 B</text><text x="592" y="16" text-anchor="middle" class="s">4 B (CRC-32)</text>
+    <text x="389" y="106" text-anchor="middle" class="r s w6">frame = 64 to 1518 bytes (1522 with a VLAN tag)</text>
+    <text x="78" y="84" text-anchor="middle" class="s">added by PHY</text>
+  </svg></figure>
+  <ul class="dash small">
+    <li>Preamble 10101010 × 7, SFD <b>10101011</b> (not counted); data &lt; 46 B is <b>padded</b>; gap 96 bit-times. Type ≥ 0x0600 → <b>EtherType</b> (0800 IPv4, 0806 ARP, 86DD IPv6); ≤ 1500 → length.</li>
+    <li><b>MAC address</b> <span class="circ">48 bits</span>: first 24 = <b>OUI</b> (vendor); LSB of byte 1: 0 unicast, 1 multicast; broadcast <b>FF-FF-FF-FF-FF-FF</b>.</li>
+  </ul>
+  <p class="small"><b>Media:</b> 10Base5 thick coax 500 m · 10Base2 thin coax 185 m · 10Base-T UTP 100 m · 10Base-F 2 km (Manchester) · Fast Ethernet 802.3u: <span class="hl">100Base-TX</span> Cat 5, 100 m, 4B/5B + MLT-3 · 100Base-FX fibre 2 km · 100Base-T4 Cat 3, 8B/6T.</p>
+  <div class="exam small"><span class="lbl">Exam trap</span> Minimum frame <b>64 B</b>, minimum data <b>46 B</b>; max frame 1518 B, MTU 1500 B. Fast Ethernet keeps the 64-byte minimum.</div>
+  <div class="mnote">Gigabit Ethernet: Authentication &amp; DNS lesson</div>
+
+  <h2><span class="no">17</span>Hubs, Bridges, Switches &amp; VLANs</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Device</th><th>Layer</th><th class="l">Forwards by</th><th>Collision dom.</th><th>Broadcast dom.</th></tr>
+    <tr><td class="l">Repeater / <b>hub</b></td><td>1</td><td class="l">nothing: repeats to all ports</td><td>1 for all ports</td><td>1</td></tr>
+    <tr><td class="l"><b>Bridge</b> / <b>switch</b></td><td>2</td><td class="l">MAC address</td><td>1 per port</td><td>1 (per VLAN)</td></tr>
+    <tr><td class="l"><b>Router</b> / L3 switch</td><td>3</td><td class="l">IP address</td><td>1 per port</td><td><span class="circ">1 per port</span></td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:228px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 320 170" width="224">
+      <g class="w">
+        <rect x="110" y="64" width="100" height="42" rx="6" class="ink-k fill-y"/>
+        <path class="ink" d="M58,34 L112,70 M58,140 L112,100 M262,34 L208,70 M262,140 L208,100"/>
+        <rect x="14" y="16" width="44" height="30" rx="5" class="ink fill-b"/><rect x="14" y="126" width="44" height="30" rx="5" class="ink fill-b"/><rect x="262" y="16" width="44" height="30" rx="5" class="ink fill-b"/><rect x="262" y="126" width="44" height="30" rx="5" class="ink fill-b"/>
+      </g>
+      <text x="160" y="90" text-anchor="middle" class="k w6">Switch</text>
+      <text x="36" y="36" text-anchor="middle" class="w6">A</text><text x="36" y="146" text-anchor="middle" class="w6">B</text><text x="284" y="36" text-anchor="middle" class="w6">C</text><text x="284" y="146" text-anchor="middle" class="w6">D</text>
+      <text x="96" y="52" class="r s">1</text><text x="96" y="126" class="r s">2</text><text x="218" y="52" class="r s">3</text><text x="218" y="126" class="r s">4</text>
+      <text x="160" y="20" text-anchor="middle" class="g s">learns: source MAC → port</text>
+      <text x="160" y="160" text-anchor="middle" class="p s">unknown destination → flood</text>
+    </svg></figure>
+    <p class="small"><b>Transparent bridge</b> (802.1D): <span class="hl">backward learning</span> of each <b>source</b> MAC → port; then <b>forward</b> to the known port, <b>filter</b> if same port, <b>flood</b> if unknown/broadcast. Switch modes: <b>store-and-forward</b> (CRC checked) · <b>cut-through</b> (after dest. MAC) · <b>fragment-free</b> (first 64 B).</p>
+  </div>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">STP (802.1D)</span> Loops cause <b>broadcast storms</b>; STP elects a <span class="hl">root bridge</span> (lowest priority + MAC) and blocks ports → one loop-free tree. RSTP = 802.1w.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">VLAN (802.1Q)</span> A software <span class="hl">broadcast domain</span>. 4-byte tag: TPID 8100, PCP 3, DEI 1, VID 12 bits → <span class="circ">4094</span>; trunks carry tags.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Router → switch (4 PCs) and → hub (3 PCs). Collision domains = 5 switch ports + 1 hub = <span class="circ">6</span>; broadcast domains = <span class="circ">2</span>.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>PDU: bits → frame → packet → segment</p><p>DLL adds header + trailer (FCS)</p>
+      <p>Bit stuffing: 0 after five 1s · flag 7E</p><p>PPP escape 7D, byte ⊕ 20 · SLIP C0</p>
+      <p>Parity: catches odd-count errors only</p><p>CRC: degree r → r zeros, bursts ≤ r</p>
+      <p>Detect s: d<sub>min</sub> ≥ s + 1</p><p>Correct t: d<sub>min</sub> ≥ 2t + 1</p>
+      <p>Hamming: 2<sup>r</sup> ≥ m + r + 1</p><p>m = 4 → 3 · 7 → 4 · 8 → 4 · 16 → 5</p>
+      <p>a = Tp / Tt · S&amp;W η = 1/(1 + 2a)</p><p>window η = W/(1 + 2a); W ≥ 1 + 2a</p>
+      <p>GBN W ≤ 2ᵐ − 1 · SR W ≤ 2ᵐ⁻¹</p><p>HDLC NRM · ARM · ABM; I/S/U</p>
+      <p>S-frames RR 00 · REJ 01 · RNR 10 · SREJ 11</p><p>ATM 53 = 5 + 48; HEC = CRC-8</p>
+      <p>Pure ALOHA 18.4% at G = 0.5</p><p>Slotted ALOHA 36.8% at G = 1</p>
+      <p>CSMA/CD: L<sub>min</sub> = 2 · Tp · B</p><p>Backoff 0 … 2^min(n,10) − 1; quit at 16</p>
+      <p>Ethernet 64–1518 B, data 46–1500</p><p>MAC 48 bit, OUI 24 · bcast FF…FF</p>
+      <p>SIFS &lt; PIFS &lt; DIFS · RTS/CTS</p><p>FDDI 100 Mbps dual ring (ANSI)</p>
+      <p>802.3 · 802.5 · 802.11 · 802.1Q</p><p>VLAN tag 4 B, VID 12 bit, 4094</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>MAC address = 48 bits</li>
+      <li>Ethernet = IEEE 802.3, Wi-Fi = 802.11</li>
+      <li>Token Ring = 802.5, Token Bus = 802.4</li>
+      <li>HDLC is bit-oriented; PPP byte-oriented</li>
+      <li>3-bit seq: GBN window 7, SR window 4</li>
+      <li>Wi-Fi uses CSMA/CA, not CSMA/CD</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Hub L1 · bridge, switch L2 · router L3</li>
+      <li>Router separates broadcast domains</li>
+      <li>ATM HEC protects the header only</li>
+      <li>CHAP: 3-way, secret never sent</li>
+      <li>STP = 802.1D; VLAN = 802.1Q</li>
+      <li>Fast Ethernet 802.3u, 100Base-TX</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> CRC zeros = degree, not generator length · N(R) = next frame expected · Hamming (7, 4) corrects 1 <b>or</b> detects 2 · stuff the 0 even if the next bit is 0 · full-duplex Ethernet has no CSMA/CD · minimum frame 64 B vs minimum data 46 B · FDDI is ANSI, not IEEE</div>
+  <div class="trick"><span class="lbl">All tricks together</span> Five ones, then a zero · parity bits at powers of 2 · GBN all but one, SR half · I-S-U = 0, 10, 11 · 5 + 48 = 53 · wired Detects, wireless Avoids · short waits win (SIFS) · hub hears all, switch splits collisions, router splits broadcasts</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="60" width="130" height="30" rx="8" class="ink fill-b"/>
+      <rect x="160" y="40" width="130" height="50" rx="8" class="ink-g fill-g"/>
+      <rect x="310" y="20" width="130" height="70" rx="8" class="ink-p fill-p"/>
+      <rect x="460" y="4" width="130" height="86" rx="8" class="ink-r fill-r"/>
+    </g>
+    <text x="75" y="80" text-anchor="middle" class="w6">L1: hub</text>
+    <text x="225" y="70" text-anchor="middle" class="g w6">L2: switch</text><text x="225" y="86" text-anchor="middle" class="g s">frame · MAC</text>
+    <text x="375" y="52" text-anchor="middle" class="p w6">L3: router</text><text x="375" y="70" text-anchor="middle" class="p s">packet · IP</text>
+    <text x="525" y="38" text-anchor="middle" class="r w6">Gateway</text><text x="525" y="56" text-anchor="middle" class="r s">all layers,</text><text x="525" y="72" text-anchor="middle" class="r s">protocol convert</text>
+  </svg><figcaption>the device staircase: each step up reads one more header</figcaption></figure>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · Data Link &amp; LANs</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Go-Back-N with 4-bit sequence numbers: maximum sender window?<ol class="opts"><li>16</li><li>8</li><li>15</li><li>7</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Maximum throughput of pure ALOHA:<ol class="opts"><li>18.4%</li><li>36.8%</li><li>50%</li><li>100%</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>HDLC bit stuffing inserts a 0 after:<ol class="opts"><li>four 1s</li><li>six 1s</li><li>eight 1s</li><li>five consecutive 1s</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>The HEC field of an ATM cell protects:<ol class="opts"><li>the 48-byte payload</li><li>the cell header only</li><li>the whole 53-byte cell</li><li>the AAL trailer</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Minimum Ethernet frame size:<ol class="opts"><li>64 bytes</li><li>46 bytes</li><li>512 bytes</li><li>1518 bytes</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Which device separates broadcast domains?<ol class="opts"><li>hub</li><li>switch</li><li>router</li><li>bridge</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Hamming check bits needed for 7 data bits:<ol class="opts"><li>3</li><li>5</li><li>7</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Medium access method of IEEE 802.11:<ol class="opts"><li>CSMA/CD</li><li>CSMA/CA</li><li>token passing</li><li>pure ALOHA</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>IEEE 802.1Q defines:<ol class="opts"><li>Spanning Tree</li><li>LLC</li><li>VLAN tagging</li><li>Token Ring</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>HDLC frames used for link set-up and disconnect:<ol class="opts"><li>U-frames</li><li>I-frames</li><li>S-frames</li><li>P-frames</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-a · 6-c · 7-d · 8-b · 9-c · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> A 1 Mbps satellite link has a one-way propagation delay of 270 ms and carries 1000-bit frames. Find (i) the link utilization with stop-and-wait, (ii) the window size for full utilization, (iii) the minimum sequence-number bits for Go-Back-N and for Selective Repeat. <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li>Tt = L/B = 1000 / 10⁶ = 1 ms; a = Tp/Tt = 270 <i class="mk">1</i></li>
+    <li>Stop-and-wait η = 1/(1 + 2a) = 1/541 ≈ <span class="circ">0.18%</span> (throughput ≈ 1.85 kbps) <i class="mk">2</i></li>
+    <li>Full use: W ≥ 1 + 2a = <b>541 frames</b> (bandwidth × RTT = 541 000 bits) <i class="mk">2</i></li>
+    <li>GBN: 2ᵐ − 1 ≥ 541 → <b>m = 10</b> (window 1023). SR: 2ᵐ⁻¹ ≥ 541 → <b>m = 11</b> (window 1024) <i class="mk">3</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can name PDU, address and device for each layer</li>
+        <li>Can bit-stuff and byte-stuff a data stream</li>
+        <li>Can compute a CRC and a Hamming (7, 4) code</li>
+        <li>Can count collision and broadcast domains</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① CRC of 1101 with G = 1011<br>② HDLC modes and frame types<br>③ CSMA/CD minimum frame, 1 Gbps, 1 km<br>④ hidden station and RTS/CTS</div>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

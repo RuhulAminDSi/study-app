@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>8086/8088 মাইক্রোপ্রসেসর: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>তারিখ: ০৭.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">8086/8088 মাইক্রোপ্রসেসর</span></h1>
+  <p class="subtitle">BIU/EU · রেজিস্টার ও ফ্ল্যাগ · সেগমেন্টেশন · অ্যাড্রেসিং · অ্যাসেম্বলি: ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="600">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">8086 / 8088</text><text x="320" y="168" text-anchor="middle" class="bn r s">মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn">বিবর্তন · MPU বনাম MCU</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">BIU / EU · কিউ ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn">পিন · মিন/ম্যাক্স মোড</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">রেজিস্টার · ৯ ফ্ল্যাগ ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Seg × 10H + offset ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">নির্দেশনার গ্রুপ</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">অ্যাড্রেসিং মোড ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">অ্যাসেম্বলি · ডিরেক্টিভ</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = প্রোগ্রামিং</figcaption>
+  </figure>
+  <div class="sticky"><b>হাই-ইল্ড তালিকা</b><br>① 16-বিট ডেটা, 20-বিট অ্যাড্রেস, 1 MB<br>② কিউ 6 বাইট (8086) / 4 বাইট (8088)<br>③ PA = seg × 10H + offset<br>④ ৯টি ফ্ল্যাগ: ৬ স্ট্যাটাস + ৩ কন্ট্রোল<br>⑤ BP → SS, BX/SI/DI → DS<br>⑥ রিসেট: CS:IP = FFFF:0000</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"Introduction to microprocessor: overview of computer architecture, <span class="hl">evolution of microprocessors</span>, difference between microprocessor and microcontroller; Introduction to 8086/8088: <span class="hl">basic architecture of 8086, memory segmentation, flags, addressing modes</span>, pins &amp; signals, single and multi-processor systems; Microprocessor programming: instruction sets, introduction to assembly language programming; Tools: assemblers, debuggers, development systems"। বাস কন্ট্রোলার, 8255A, টাইমার, সিরিয়াল I/O, ইন্টারাপ্ট ও DMA: এই অধ্যায়ের অন্য লেসনে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ রাখার তথ্য · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>মাইক্রোপ্রসেসর, বাস, বিবর্তন ……… পৃ. ২</li><li>8086 বনাম 8088, BIU/EU, কিউ ……… পৃ. ৩</li><li>রেজিস্টার ও ৯টি ফ্ল্যাগ ……… পৃ. ৪</li><li>সেগমেন্টেশন ও ভৌত ঠিকানা ……… পৃ. ৫</li><li>ব্যাংক, পিন, মিন/ম্যাক্স মোড ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>অ্যাড্রেসিং মোড ……… পৃ. ৭</li><li>নির্দেশনা সেট ……… পৃ. ৮</li><li>প্রোগ্রাম, ডিরেক্টিভ, টুলস ……… পৃ. ৯</li><li>পরীক্ষার আগের রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: microprocessor, buses, evolution ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>মূল ধারণা ও বিবর্তন</span></div>
+  <h2><span class="no">১</span>মাইক্রোপ্রসেসর ও তাকে ঘিরে কম্পিউটার</h2><span class="tag">MCQ + লিখিত</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> মাইক্রোপ্রসেসর (Microprocessor, MPU) হলো একটি <span class="hl">প্রোগ্রামযোগ্য, ক্লক-চালিত, রেজিস্টার-ভিত্তিক IC</span>, যার একটি চিপেই পুরো CPU (ALU + কন্ট্রোল ইউনিট + রেজিস্টার) থাকে। এটি মেমরি থেকে নির্দেশনা (instruction) আনে, ডিকোড করে ও সম্পাদন করে; মেমরি ও I/O থাকে চিপের <b>বাইরে</b>।</div>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="295">
+      <g class="w">
+        <rect x="8" y="8" width="80" height="44" rx="8" class="ink-k" style="fill:rgba(255,238,0,.45)"/>
+        <rect x="112" y="8" width="80" height="44" rx="8" class="ink fill-b"/>
+        <rect x="214" y="8" width="80" height="44" rx="8" class="ink fill-b"/>
+        <path class="ink-r" d="M30,52 V76 H284 M134,76 V56 M236,76 V56"/>
+        <path class="ink-g" d="M48,52 V100 H284 M152,100 V52 M254,100 V52"/>
+        <path class="ink-p" d="M66,52 V124 H284 M170,124 V52 M272,124 V52"/>
+      </g>
+      <text x="48" y="35" text-anchor="middle" class="w6">CPU</text>
+      <text x="152" y="35" text-anchor="middle" class="bn w6">মেমরি</text><text x="254" y="35" text-anchor="middle" class="w6">I/O</text>
+      <text x="76" y="71" class="bn r s">অ্যাড্রেস</text><text x="76" y="95" class="bn g s">ডেটা</text><text x="76" y="119" class="bn p s">কন্ট্রোল</text>
+      <text x="150" y="145" text-anchor="middle" class="bn s">তিন-বাস ব্যবস্থা</text>
+    </svg></figure>
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">বাস</th><th>দিক</th><th class="l">প্রস্থ যা ঠিক করে</th></tr>
+      <tr><td class="l">অ্যাড্রেস</td><td><span class="circ">একমুখী</span></td><td class="l">মেমরির আকার = 2ⁿ</td></tr>
+      <tr><td class="l">ডেটা</td><td><b>দ্বিমুখী</b></td><td class="l">ওয়ার্ডের দৈর্ঘ্য (বিট)</td></tr>
+      <tr><td class="l">কন্ট্রোল</td><td>মিশ্র</td><td class="l">RD, WR, M/IO</td></tr>
+    </table>
+  </div>
+  <p class="small"><b>ইনস্ট্রাকশন সাইকেল</b> = ফেচ → ডিকোড → এক্সিকিউট। এতে এক বা একাধিক <b>মেশিন সাইকেল</b> থাকে, প্রতিটিতে কয়েকটি <b>T-স্টেট</b> (ক্লক পিরিয়ড)। n টি অ্যাড্রেস লাইন → 2ⁿ বাইট: 16 → 64 KB, <span class="hl">20 → 1 MB</span>, 32 → 4 GB।</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বিষয়</th><th class="l">মাইক্রোপ্রসেসর (MPU)</th><th class="l">মাইক্রোকন্ট্রোলার (MCU)</th></tr>
+    <tr><td class="l">চিপে থাকে</td><td class="l">শুধু CPU</td><td class="l">CPU + RAM + ROM + I/O + টাইমার</td></tr>
+    <tr><td class="l">মেমরি · ব্যবহার</td><td class="l">ভন নিউম্যান · সাধারণ PC</td><td class="l">সাধারণত হার্ভার্ড · এম্বেডেড, IoT</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">8085, 8086, Core i7</td><td class="l">8051 (4 KB ROM, 128 B RAM), ATmega328</td></tr>
+  </table>
+
+  <h2><span class="no">২</span>মাইক্রোপ্রসেসরের বিবর্তন</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">চিপ</th><th>সাল</th><th>ডেটা</th><th>অ্যাড্রেস → আকার</th><th class="l">যে কারণে মনে রাখবে</th></tr>
+    <tr><td class="l">4004</td><td><span class="circ">1971</span></td><td>4-বিট</td><td>12 → 4 KB</td><td class="l">প্রথম বাণিজ্যিক MPU</td></tr>
+    <tr><td class="l">8008 · 8080</td><td>1972 · 74</td><td>8-বিট</td><td>14 · 16 → 16 · 64 KB</td><td class="l">8080: প্রথম জনপ্রিয় 8-বিট</td></tr>
+    <tr><td class="l">8085</td><td>1976</td><td>8-বিট</td><td>16 → 64 KB</td><td class="l">একক +5 V, AD0–AD7</td></tr>
+    <tr><td class="l red"><b>8086 · 8088</b></td><td><span class="circ">1978</span> · 79</td><td><b>16-বিট</b></td><td><b>20 → 1 MB</b></td><td class="l">8088: IBM PC (1981)</td></tr>
+    <tr><td class="l">80286</td><td>1982</td><td>16-বিট</td><td>24 → 16 MB</td><td class="l">প্রোটেক্টেড মোড</td></tr>
+    <tr><td class="l">80386 · 80486</td><td>1985 · 89</td><td><b>32-বিট</b></td><td>32 → 4 GB</td><td class="l">পেজিং · FPU + ক্যাশ</td></tr>
+    <tr><td class="l">Pentium</td><td>1993</td><td>32-বিট</td><td>32 → 4 GB</td><td class="l">সুপারস্কেলার (২ পাইপলাইন)</td></tr>
+    <tr><td class="l">AMD64 · Core 2</td><td>2003 · 06</td><td>64-বিট</td><td>48 (ভার্চুয়াল)</td><td class="l">x86-64 · মাল্টি-কোর</td></tr>
+  </table>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> Pentium একটি <b>32-বিট</b> প্রসেসর (এর <i>বাহ্যিক ডেটা বাস</i> 64 বিট চওড়া)। 64-বিট x86 এসেছে AMD64 (Opteron, 2003) দিয়ে। প্রসেসর কত "বিট" তা ঠিক করে ডেটা বাস/রেজিস্টার, অ্যাড্রেস বাস নয়।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: 8086 vs 8088, BIU/EU, queue ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>আর্কিটেকচার</span></div>
+  <h2><span class="no">৩</span>এক নজরে 8086 ও 8086 বনাম 8088</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:1fr 1.15fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">8086-এর তথ্য</span><br>Intel <b>1978</b> · 40-পিন DIP · +5 V · 29,000 ট্রানজিস্টর<br><span class="hl">16-বিট ALU, রেজিস্টার ও ডেটা বাস</span><br><span class="hl">20-বিট অ্যাড্রেস বাস → 2²⁰ = 1 MB</span><br>I/O: 16-বিট পোর্ট অ্যাড্রেস → 64K পোর্ট<br>ক্লক 5, 8 বা 10 MHz<br>256 ধরনের ইন্টারাপ্ট (লেসন mp4)</div>
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">বৈশিষ্ট্য</th><th>8086</th><th>8088</th></tr>
+      <tr><td class="l">বাহ্যিক ডেটা বাস</td><td><b>16</b></td><td><b>8</b></td></tr>
+      <tr><td class="l">ইনস্ট্রাকশন কিউ</td><td><span class="circ">6 B</span></td><td><span class="circ">4 B</span></td></tr>
+      <tr><td class="l">পিন 34</td><td><span class="ov">BHE</span>/S7</td><td><span class="ov">SS0</span></td></tr>
+      <tr><td class="l">মেমরি/IO পিন</td><td>M/<span class="ov">IO</span></td><td>IO/<span class="ov">M</span></td></tr>
+      <tr><td class="l">মাল্টিপ্লেক্সড লাইন</td><td>AD0–AD15</td><td>AD0–AD7</td></tr>
+      <tr><td class="l">ওয়ার্ড অ্যাক্সেস</td><td>1 বা 2 সাইকেল</td><td>সবসময় 2</td></tr>
+    </table>
+  </div>
+  <p class="small">একই EU, একই রেজিস্টার, একই নির্দেশনা সেট, একই 1 MB: 8088 হলো 8-বিট বাহ্যিক বাসওয়ালা 8086; সস্তা 8-বিট সহায়ক চিপের কারণে IBM PC-তে এটিই নেওয়া হয়।</p>
+
+  <h2><span class="no">৪</span>দুই ইউনিট: BIU ও EU</h2><span class="tag">লিখিতে প্রিয়</span>
+  <figure class="doodle"><svg viewBox="0 0 640 262" width="640">
+    <g class="w">
+      <rect x="8" y="26" width="300" height="206" rx="10" class="ink-k" style="fill:rgba(29,63,143,.05)"/>
+      <rect x="336" y="26" width="296" height="206" rx="10" class="ink-k" style="fill:rgba(31,138,92,.06)"/>
+      <rect x="22" y="40" width="70" height="22" class="ink fill-b"/><rect x="22" y="62" width="70" height="22" class="ink fill-b"/><rect x="22" y="84" width="70" height="22" class="ink fill-b"/><rect x="22" y="106" width="70" height="22" class="ink fill-b"/><rect x="22" y="138" width="70" height="22" class="ink-r fill-r"/>
+      <circle cx="150" cy="96" r="22" class="ink-r fill-r"/>
+      <path class="ink" d="M92,84 H128 M92,149 H120 V112 L132,108" marker-end="url(#ahb)"/>
+      <rect x="196" y="40" width="100" height="44" rx="8" class="ink fill-b"/>
+      <path class="ink-r" d="M172,96 H246 V84" marker-end="url(#ah)"/>
+      <rect x="120" y="182" width="174" height="26" class="ink-k fill-y"/>
+      <path class="ink-k" d="M149,182 V208 M178,182 V208 M207,182 V208 M236,182 V208 M265,182 V208" style="stroke-width:1.3"/>
+      <path class="ink" d="M284,84 V178" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M294,195 H372 V196" marker-end="url(#ahg)"/>
+      <rect x="350" y="40" width="58" height="22" class="ink fill-g"/><rect x="350" y="62" width="58" height="22" class="ink fill-g"/><rect x="350" y="84" width="58" height="22" class="ink fill-g"/><rect x="350" y="106" width="58" height="22" class="ink fill-g"/>
+      <rect x="416" y="40" width="58" height="22" class="ink fill-g"/><rect x="416" y="62" width="58" height="22" class="ink fill-g"/><rect x="416" y="84" width="58" height="22" class="ink fill-g"/><rect x="416" y="106" width="58" height="22" class="ink fill-g"/>
+      <path class="ink-k" style="fill:rgba(255,238,0,.45)" d="M500,44 H556 L566,62 L576,44 H622 L596,104 H526 Z"/>
+      <rect x="500" y="132" width="120" height="26" class="ink-r fill-r"/>
+      <rect x="376" y="170" width="120" height="50" rx="8" class="ink-p fill-p"/>
+      <path class="ink" d="M58,232 V252"/>
+    </g>
+    <text x="158" y="20" text-anchor="middle" class="k w6">BIU: Bus Interface Unit</text><text x="484" y="20" text-anchor="middle" class="k w6">EU: Execution Unit</text>
+    <text x="57" y="56" text-anchor="middle" class="s w6">CS</text><text x="57" y="78" text-anchor="middle" class="s w6">DS</text><text x="57" y="100" text-anchor="middle" class="s w6">SS</text><text x="57" y="122" text-anchor="middle" class="s w6">ES</text><text x="57" y="154" text-anchor="middle" class="s r w6">IP</text>
+    <text x="150" y="102" text-anchor="middle" class="r l">Σ</text><text x="172" y="136" text-anchor="middle" class="bn r s">অ্যাড্রেস যোগকারী</text>
+    <text x="246" y="59" text-anchor="middle" class="bn s">বাস কন্ট্রোল</text><text x="246" y="75" text-anchor="middle" class="bn s">লজিক</text>
+    <text x="196" y="176" text-anchor="middle" class="bn s w6">6-বাইট কিউ (FIFO)</text>
+    <text x="134" y="200" text-anchor="middle" class="s">1</text><text x="163" y="200" text-anchor="middle" class="s">2</text><text x="192" y="200" text-anchor="middle" class="s">3</text><text x="221" y="200" text-anchor="middle" class="s">4</text><text x="250" y="200" text-anchor="middle" class="s">5</text><text x="279" y="200" text-anchor="middle" class="s">6</text>
+    <text x="64" y="256" class="bn s">↕ বাহ্যিক বাস: AD0–AD15, A16–A19 (20-বিট অ্যাড্রেস বের হয়)</text>
+    <text x="330" y="190" text-anchor="middle" class="bn g s">অপকোড</text>
+    <text x="379" y="56" text-anchor="middle" class="s w6">AH|AL</text><text x="379" y="78" text-anchor="middle" class="s w6">BH|BL</text><text x="379" y="100" text-anchor="middle" class="s w6">CH|CL</text><text x="379" y="122" text-anchor="middle" class="s w6">DH|DL</text>
+    <text x="445" y="56" text-anchor="middle" class="s w6">SP</text><text x="445" y="78" text-anchor="middle" class="s w6">BP</text><text x="445" y="100" text-anchor="middle" class="s w6">SI</text><text x="445" y="122" text-anchor="middle" class="s w6">DI</text>
+    <text x="560" y="90" text-anchor="middle" class="k w6">ALU</text><text x="560" y="150" text-anchor="middle" class="r s w6">FLAGS</text>
+    <text x="436" y="191" text-anchor="middle" class="bn p s w6">কন্ট্রোল ইউনিট</text><text x="436" y="208" text-anchor="middle" class="bn p s">(ডিকোডার)</text>
+    <text x="560" y="190" text-anchor="middle" class="bn s">16-বিট অভ্যন্তরীণ</text><text x="560" y="206" text-anchor="middle" class="bn s">ডেটা বাস</text>
+  </svg><figcaption>BIU বাইরের জগতের সাথে কথা বলে; EU শুধু সম্পাদন করে</figcaption></figure>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">BIU (বাইরের কাজ)</th><th class="l">EU (ভেতরের কাজ)</th></tr>
+    <tr><td class="l">নির্দেশনার বাইট এনে <span class="hl">কিউ</span>-তে রাখে</td><td class="l">কিউ থেকে অপকোড নিয়ে সম্পাদন করে</td></tr>
+    <tr><td class="l">20-বিট ভৌত ঠিকানা তৈরি করে (Σ)</td><td class="l">16-বিট অফসেট (<b>ইফেক্টিভ অ্যাড্রেস</b>) হিসাব করে</td></tr>
+    <tr><td class="l">মেমরি ও I/O অপারেন্ড পড়ে/লেখে</td><td class="l">ALU-র কাজ করে, ফ্ল্যাগ সেট করে</td></tr>
+    <tr><td class="l">CS, DS, SS, ES, IP রাখে</td><td class="l">AX–DX, SP, BP, SI, DI, FLAGS রাখে</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>BIU = বাজারকারী</b> (বাসে বাইরে যায়, কিউ ভরে), <b>EU = রাঁধুনি</b> (রান্নাঘর ছাড়ে না, কিউতে যা আছে তা দিয়েই কাজ করে)।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> EU বানায় 16-বিট <b>অফসেট</b>; 20-বিট <b>ভৌত ঠিকানা</b> তৈরি হয় <b>BIU</b>-তে। IP থাকে BIU-তে, EU-তে নয়।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: queue, pipelining, registers, flags ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>কিউ · রেজিস্টার · ফ্ল্যাগ</span></div>
+  <h2><span class="no">৫</span>কিউ ও পাইপলাইনিং (Pipelining)</h2>
+  <div class="cols" style="grid-template-columns:1fr 290px;align-items:center">
+    <div class="small">
+      <p>EU যখন সম্পাদন করে, BIU তখন <span class="hl">পরের বাইটগুলো আগেভাগে আনে</span> (prefetch): ফেচ ও এক্সিকিউট একসাথে চলে (২-ধাপের পাইপলাইন)।</p>
+      <p>8086 কিউ ভরে <b>≥ 2</b> বাইট খালি হলে; 8088 <b>≥ 1</b> হলে।</p>
+      <p><span class="circ">JMP / CALL / RET / INT</span> হলে কিউ <b>ফ্লাশ</b> হয় এবং নতুন CS:IP থেকে আবার ভরে।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 290 120" width="285">
+      <g class="w">
+        <rect x="60" y="10" width="44" height="22" class="ink fill-b"/><rect x="104" y="10" width="44" height="22" class="ink fill-b"/><rect x="148" y="10" width="44" height="22" class="ink fill-b"/><rect x="192" y="10" width="44" height="22" class="ink fill-b"/>
+        <rect x="104" y="36" width="44" height="22" class="ink-g fill-g"/><rect x="148" y="36" width="44" height="22" class="ink-g fill-g"/><rect x="192" y="36" width="44" height="22" class="ink-g fill-g"/><rect x="236" y="36" width="44" height="22" class="ink-g fill-g"/>
+        <rect x="60" y="80" width="44" height="22" class="ink fill-b"/><rect x="104" y="80" width="44" height="22" class="ink-g fill-g"/><rect x="148" y="80" width="44" height="22" class="ink fill-b"/><rect x="192" y="80" width="44" height="22" class="ink-g fill-g"/>
+      </g>
+      <text x="4" y="26" class="s w6">BIU</text><text x="4" y="52" class="s w6">EU</text><text x="4" y="96" class="s w6">8085</text>
+      <text x="82" y="26" text-anchor="middle" class="s">F1</text><text x="126" y="26" text-anchor="middle" class="s">F2</text><text x="170" y="26" text-anchor="middle" class="s">F3</text><text x="214" y="26" text-anchor="middle" class="s">F4</text>
+      <text x="126" y="52" text-anchor="middle" class="s">E1</text><text x="170" y="52" text-anchor="middle" class="s">E2</text><text x="214" y="52" text-anchor="middle" class="s">E3</text><text x="258" y="52" text-anchor="middle" class="s">E4</text>
+      <text x="82" y="96" text-anchor="middle" class="s">F1</text><text x="126" y="96" text-anchor="middle" class="s">E1</text><text x="170" y="96" text-anchor="middle" class="s">F2</text><text x="214" y="96" text-anchor="middle" class="s">E2</text>
+      <text x="150" y="74" text-anchor="middle" class="bn r s">8086: একসাথে চলে</text><text x="150" y="117" text-anchor="middle" class="bn r s">ওভারল্যাপ নেই: একই সময়ে মাত্র ২টি</text>
+    </svg></figure>
+  </div>
+
+  <h2><span class="no">৬</span>রেজিস্টার সেট: ১৪টি রেজিস্টার, সবই 16-বিট</h2><span class="tag">হাই-ইল্ড</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">গ্রুপ</th><th class="l">রেজিস্টার ও বিশেষ কাজ</th></tr>
+    <tr><td class="l">সাধারণ (ডেটা)</td><td class="l"><b>AX</b> অ্যাকুমুলেটর (MUL, DIV, IN, OUT) · <b>BX</b> বেস (একমাত্র সাধারণ রেজিস্টার যা পয়েন্টার হতে পারে) · <b>CX</b> কাউন্ট (LOOP, REP, CL-এ শিফট সংখ্যা) · <b>DX</b> ডেটা (পোর্ট অ্যাড্রেস, MUL/DIV-এর উচ্চ ওয়ার্ড)। প্রতিটি দুই 8-বিট অংশে ভাগ হয়: AH/AL …</td></tr>
+    <tr><td class="l">সেগমেন্ট</td><td class="l"><b>CS</b> কোড · <b>DS</b> ডেটা · <b>SS</b> স্ট্যাক · <b>ES</b> এক্সট্রা (স্ট্রিং গন্তব্য)</td></tr>
+    <tr><td class="l">পয়েন্টার ও ইনডেক্স</td><td class="l"><b>SP</b> স্ট্যাকের শীর্ষ · <b>BP</b> বেস পয়েন্টার (স্ট্যাক ফ্রেম) · <b>SI</b> সোর্স ইনডেক্স · <b>DI</b> ডেস্টিনেশন ইনডেক্স</td></tr>
+    <tr><td class="l">অন্যান্য</td><td class="l"><b>IP</b> পরের নির্দেশনার অফসেট (সরাসরি লেখা যায় না) · <b>FLAGS</b></td></tr>
+  </table>
+  <div class="mnote">৪ + ৪ + ৪ + ২ = ১৪টি রেজিস্টার</div>
+  <p class="small">ডিফল্ট জোড়া: <span class="circ">CS:IP</span> · SS:SP · SS:BP · DS:BX · DS:SI · ES:DI (স্ট্রিং গন্তব্য)।</p>
+
+  <h2><span class="no">৭</span>ফ্ল্যাগ রেজিস্টার: ১৬ বিটের ৯টি ব্যবহৃত</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <figure class="doodle"><svg viewBox="0 0 640 74" width="640">
+    <g class="w">
+      <rect x="8" y="22" width="624" height="30" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+      <path class="ink-k" d="M47,22V52M86,22V52M125,22V52M164,22V52M203,22V52M242,22V52M281,22V52M320,22V52M359,22V52M398,22V52M437,22V52M476,22V52M515,22V52M554,22V52M593,22V52" style="stroke-width:1.2"/>
+      <rect x="164" y="22" width="156" height="30" class="ink-p fill-p"/>
+      <rect x="320" y="22" width="78" height="30" class="ink-r fill-r"/><rect x="437" y="22" width="39" height="30" class="ink-r fill-r"/><rect x="515" y="22" width="39" height="30" class="ink-r fill-r"/><rect x="593" y="22" width="39" height="30" class="ink-r fill-r"/>
+    </g>
+    <text x="27" y="16" text-anchor="middle" class="s">15</text><text x="183" y="16" text-anchor="middle" class="s">11</text><text x="222" y="16" text-anchor="middle" class="s">10</text><text x="261" y="16" text-anchor="middle" class="s">9</text><text x="300" y="16" text-anchor="middle" class="s">8</text><text x="339" y="16" text-anchor="middle" class="s">7</text><text x="378" y="16" text-anchor="middle" class="s">6</text><text x="456" y="16" text-anchor="middle" class="s">4</text><text x="534" y="16" text-anchor="middle" class="s">2</text><text x="612" y="16" text-anchor="middle" class="s">0</text>
+    <text x="27" y="43" text-anchor="middle" class="s">–</text><text x="66" y="43" text-anchor="middle" class="s">–</text><text x="105" y="43" text-anchor="middle" class="s">–</text><text x="144" y="43" text-anchor="middle" class="s">–</text>
+    <text x="183" y="43" text-anchor="middle" class="r w6">OF</text><text x="222" y="43" text-anchor="middle" class="p w6">DF</text><text x="261" y="43" text-anchor="middle" class="p w6">IF</text><text x="300" y="43" text-anchor="middle" class="p w6">TF</text><text x="339" y="43" text-anchor="middle" class="r w6">SF</text><text x="378" y="43" text-anchor="middle" class="r w6">ZF</text><text x="417" y="43" text-anchor="middle" class="s">–</text><text x="456" y="43" text-anchor="middle" class="r w6">AF</text><text x="495" y="43" text-anchor="middle" class="s">–</text><text x="534" y="43" text-anchor="middle" class="r w6">PF</text><text x="573" y="43" text-anchor="middle" class="s">–</text><text x="612" y="43" text-anchor="middle" class="r w6">CF</text>
+    <text x="242" y="68" text-anchor="middle" class="bn p s">বেগুনি = কন্ট্রোল (DF, IF, TF; OF স্ট্যাটাস)</text><text x="480" y="68" text-anchor="middle" class="bn r s">লাল = ৬টি স্ট্যাটাস ফ্ল্যাগ</text>
+  </svg></figure>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th>ফ্ল্যাগ</th><th>বিট</th><th class="l">= 1 হয় যখন …</th><th>ফ্ল্যাগ</th><th>বিট</th><th class="l">= 1 হলে / অর্থ …</th></tr>
+    <tr><td>CF</td><td>0</td><td class="l">MSB থেকে ক্যারি / MSB-তে বরো</td><td>OF</td><td>11</td><td class="l">সাইনড ফল সীমার বাইরে</td></tr>
+    <tr><td>PF</td><td>2</td><td class="l">নিচের বাইটে <b>জোড়</b> সংখ্যক 1</td><td>TF</td><td>8</td><td class="l">প্রতি নির্দেশনার পর সিঙ্গল-স্টেপ</td></tr>
+    <tr><td>AF</td><td>4</td><td class="l">বিট 3 → 4 ক্যারি (BCD)</td><td>IF</td><td>9</td><td class="l">INTR চালু (STI / CLI)</td></tr>
+    <tr><td>ZF</td><td>6</td><td class="l">ফল = 0</td><td>DF</td><td>10</td><td class="l">স্ট্রিং <b>কমতে থাকে</b> (STD)</td></tr>
+    <tr><td>SF</td><td>7</td><td class="l">ফলের MSB = 1</td><td colspan="3" class="l">৬ স্ট্যাটাস + <span class="circ">৩ কন্ট্রোল</span> = ৯টি ফ্ল্যাগ</td></tr>
+  </table>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> স্ট্যাটাস ফ্ল্যাগ, বিট 0 থেকে ওপরে: "<b>C</b>an <b>P</b>eople <b>A</b>lways <b>Z</b>ip <b>S</b>afely? <b>O</b>K": CF 0, PF 2, AF 4, ZF 6, SF 7 … OF 11 (বিট 0-2-4-6-7, তারপর 11)। কন্ট্রোল = "<b>T-I-D</b>": TF 8, IF 9, DF 10।</div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> শুধু AX, BX, CX, DX দুই 8-বিট অংশে ভাগ হয়; SP, BP, SI, DI হয় না (8086-এ "SIL" নেই)। IP সরাসরি লোড করার কোনো নির্দেশনা নেই: JMP, CALL, RET ও INT একে বদলায়।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: segmentation ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>ফ্ল্যাগ · সেগমেন্টেশন</span></div>
+  <h2><span class="no">৮</span>ফ্ল্যাগের প্রয়োগ: সমাধানকৃত উদাহরণ</h2><span class="tag">গাণিতিক</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">নির্দেশনা</th><th>ফল</th><th>CF</th><th>PF</th><th>AF</th><th>ZF</th><th>SF</th><th>OF</th></tr>
+    <tr><td class="l">MOV AL,7FH · ADD AL,01H</td><td>80H</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td class="red"><b>1</b></td></tr>
+    <tr><td class="l">MOV AL,0FFH · ADD AL,01H</td><td>00H</td><td class="red"><b>1</b></td><td>1</td><td>1</td><td class="red"><b>1</b></td><td>0</td><td>0</td></tr>
+    <tr><td class="l">MOV AL,80H · SUB AL,01H</td><td>7FH</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> CF হলো <b>আনসাইনড</b> ওভারফ্লোর জন্য, OF <b>সাইনড</b>-এর জন্য। +127 + 1 → −128 হলে OF সেট হয়, CF নয়; FFH + 1 হলে CF সেট হয়, OF নয় (−1 + 1 = 0 সঠিক)। PF দেখে শুধু <b>নিচের 8 বিট</b>।</div>
+
+  <h2><span class="no">৯</span>মেমরি সেগমেন্টেশন (Segmentation)</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">কেন</span> রেজিস্টার 16-বিট (সর্বোচ্চ 64 KB) কিন্তু অ্যাড্রেস বাস 20-বিট (1 MB)। তাই 1 MB-কে দেখা হয় <span class="hl">সর্বোচ্চ 64 KB-র সেগমেন্ট</span> হিসেবে, প্রতিটি শুরু হয় 16-বাইটের (<b>প্যারাগ্রাফ</b>) সীমানায়। <b>লজিক্যাল অ্যাড্রেস</b> = সেগমেন্ট : অফসেট।</div>
+  <div class="cols" style="grid-template-columns:1fr 250px;align-items:start">
+    <div>
+      <div class="sumbox" style="margin-top:0"><span class="lbl">সূত্র</span> <span class="circ">PA = Segment × 10H + Offset</span><br><span class="small">× 10H = ৪ বিট বাঁয়ে শিফট = ডানে একটি হেক্স 0 বসানো</span></div>
+      <ol class="steps small">
+        <li>CS:IP = 1234:5678 → 12340 + 5678 = <span class="circ">179B8H</span></li>
+        <li>CS:IP = 2000:0150 → 20000 + 0150 = <b>20150H</b></li>
+        <li>DS = 3000H → বিস্তার <b>30000H – 3FFFFH</b></li>
+        <li>PA 4A3B2H, DS 4000H → অফসেট <b>A3B2H</b></li>
+      </ol>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 230" width="245">
+      <g class="w">
+        <rect x="70" y="8" width="70" height="214" class="ink-k" style="fill:rgba(255,255,255,.6)"/>
+        <rect x="70" y="150" width="70" height="56" class="ink fill-b"/>
+        <rect x="70" y="100" width="70" height="66" class="ink-g fill-g" style="fill-opacity:.7"/>
+        <rect x="70" y="30" width="70" height="52" class="ink-r fill-r"/>
+        <path class="ink-p" d="M146,150 H176 M146,206 H176" />
+        <path class="ink-p" d="M170,150 V206" marker-start="url(#ahp)" marker-end="url(#ahp)"/>
+      </g>
+      <text x="64" y="16" text-anchor="end" class="s">FFFFFH</text><text x="64" y="224" text-anchor="end" class="s">00000H</text>
+      <text x="105" y="184" text-anchor="middle" class="s w6">CS</text><text x="105" y="138" text-anchor="middle" class="g s w6">DS</text><text x="105" y="62" text-anchor="middle" class="r s w6">SS</text>
+      <text x="64" y="154" text-anchor="end" class="bn s">বেস</text>
+      <text x="180" y="176" class="p s">≤ 64 KB</text>
+      <text x="180" y="120" class="bn g s">সেগমেন্ট</text><text x="180" y="134" class="bn g s">ওভারল্যাপ সম্ভব</text>
+    </svg><figcaption>1 MB = 64 KB-র জানালা</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex small" style="margin-top:0"><span class="lbl">অনেক নাম, একই বাইট ✍</span><br>1000:2345 → 10000 + 2345 = 12345H<br>1234:0005 → 12340 + 0005 = 12345H<br>1200:0345 → 12000 + 0345 = <span class="circ">12345H</span></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">স্ট্যাক ও বাইট ক্রম ✍</span><br>SS = 5000H, SP = 1000H, AX = 1234H<br>PUSH AX → SP = <b>0FFEH</b> (আগে SP − 2)<br>[50FFEH] = 34H, [50FFFH] = 12H<br><span class="tiny">লিটল-এন্ডিয়ান: নিচের বাইট নিচের ঠিকানায়</span></div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>একটা শূন্য বসাও, তারপর যোগ করো</b>": সেগমেন্টের ডানে 0 লেখো, নিচে অফসেট সাজাও, হেক্সে যোগ করো।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> FFFF:0010 → 100000H-এ ২১ বিট লাগে; 8086 <b>ঘুরে 00000H-এ যায়</b>। সর্বোচ্চ FFFF:FFFF = 10FFEFH → 0FFEFH।</div>
+  </div>
+  <p class="small"><b>সুবিধা:</b> <span class="hl">স্থানান্তরযোগ্য প্রোগ্রাম</span> (relocatable; শুধু সেগমেন্ট রেজিস্টার বদলালেই হয়), কোড/ডেটা/স্ট্যাক আলাদা, সেগমেন্টের ভেতরে 16-বিট পয়েন্টার। <b>সীমা:</b> প্রতি সেগমেন্ট 64 KB; ওভারল্যাপহীন ১৬টি সেগমেন্টে 1 MB পূর্ণ।</p>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: banks, pins, min/max ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>ব্যাংক · পিন · মোড</span></div>
+  <h2><span class="no">১০</span>মেমরি ব্যাংক: <span class="ov">BHE</span> ও A0</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="cols" style="grid-template-columns:290px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 290 170" width="285">
+      <g class="w">
+        <rect x="20" y="20" width="110" height="110" class="ink fill-b"/>
+        <rect x="160" y="20" width="110" height="110" class="ink-g fill-g"/>
+        <path class="ink-k" d="M20,46H130M20,72H130M20,98H130M160,46H270M160,72H270M160,98H270" style="stroke-width:1.2"/>
+        <path class="ink-r" d="M75,130 V158 M215,130 V158" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      </g>
+      <text x="75" y="14" text-anchor="middle" class="bn s w6">বিজোড় (উচ্চ) ব্যাংক</text><text x="215" y="14" text-anchor="middle" class="bn g s w6">জোড় (নিম্ন) ব্যাংক</text>
+      <text x="75" y="38" text-anchor="middle" class="s">FFFFF</text><text x="75" y="64" text-anchor="middle" class="s">…</text><text x="75" y="90" text-anchor="middle" class="s">00003</text><text x="75" y="116" text-anchor="middle" class="s">00001</text>
+      <text x="215" y="38" text-anchor="middle" class="s">FFFFE</text><text x="215" y="64" text-anchor="middle" class="s">…</text><text x="215" y="90" text-anchor="middle" class="s">00002</text><text x="215" y="116" text-anchor="middle" class="s">00000</text>
+      <text x="84" y="150" class="r s">D8–D15</text><text x="224" y="150" class="r s">D0–D7</text>
+      <text x="75" y="168" text-anchor="middle" class="bn s">চালু: <tspan class="ov">BHE</tspan> = 0</text><text x="215" y="168" text-anchor="middle" class="bn s">চালু: A0 = 0</text>
+    </svg></figure>
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th><span class="ov">BHE</span></th><th>A0</th><th class="l">স্থানান্তর</th></tr>
+        <tr><td>0</td><td>0</td><td class="l red"><b>পুরো ওয়ার্ড</b> (জোড় ঠিকানা)</td></tr>
+        <tr><td>0</td><td>1</td><td class="l">শুধু বিজোড় বাইট (D8–D15)</td></tr>
+        <tr><td>1</td><td>0</td><td class="l">শুধু জোড় বাইট (D0–D7)</td></tr>
+        <tr><td>1</td><td>1</td><td class="l">কিছু না (নিষ্ক্রিয়)</td></tr>
+      </table>
+      <p class="small">প্রতিটি ব্যাংক = <b>512 KB</b>, ঠিকানা দেয় A1–A19।</p>
+    </div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>বিজোড়</b> ঠিকানার ওয়ার্ড (যেমন 2001H) আনঅ্যালাইনড: এতে <span class="circ">২টি বাস সাইকেল</span> লাগে (আগে বিজোড় বাইট, পরে 2002H-এর জোড় বাইট)। জোড় ঠিকানার ওয়ার্ডে লাগে ১টি। ওয়ার্ড ডেটা জোড় ঠিকানায় রাখো (<b>EVEN</b> ডিরেক্টিভ)।</div>
+
+  <h2><span class="no">১১</span>পিন ও সিগন্যাল; মিনিমাম বনাম ম্যাক্সিমাম মোড</h2><span class="tag">MCQ</span>
+  <div class="cols" style="grid-template-columns:290px 1fr">
+    <figure class="doodle"><svg viewBox="0 0 290 300" width="285">
+      <g class="w">
+        <rect x="100" y="8" width="66" height="290" rx="6" class="ink-k" style="fill:rgba(255,238,0,.45)"/>
+        <path class="ink" d="M90,22H100M90,36H100M90,50H100M90,64H100M90,78H100M90,92H100M90,106H100M90,120H100M90,134H100M90,148H100M90,162H100M90,176H100M90,190H100M90,204H100M90,218H100M90,232H100M90,246H100M90,260H100M90,274H100M90,288H100M166,288H176M166,274H176M166,260H176M166,246H176M166,232H176M166,218H176M166,204H176M166,190H176M166,176H176M166,162H176M166,148H176M166,134H176M166,120H176M166,106H176M166,92H176M166,78H176M166,64H176M166,50H176M166,36H176M166,22H176" style="stroke-width:1.5"/>
+        <path class="ink-g" d="M84,36 Q76,36 76,48 V122 Q76,134 68,134 Q76,134 76,146 V220 Q76,232 84,232"/>
+      </g>
+      <text x="133" y="150" text-anchor="middle" class="k w6">8086</text><text x="133" y="168" text-anchor="middle" class="bn s">40-পিন DIP</text>
+      <text x="86" y="26" text-anchor="end" style="font-size:11px">1 GND</text><text x="86" y="250" text-anchor="end" style="font-size:11px">17 NMI</text><text x="86" y="264" text-anchor="end" style="font-size:11px">18 INTR</text><text x="86" y="278" text-anchor="end" style="font-size:11px">19 CLK</text><text x="86" y="292" text-anchor="end" style="font-size:11px">20 GND</text><text x="64" y="128" text-anchor="end" style="font-size:11px" class="g">2–16</text><text x="64" y="142" text-anchor="end" style="font-size:11px" class="g">AD14…AD0</text><text x="180" y="26" style="font-size:11px">40 VCC</text><text x="180" y="40" style="font-size:11px">39 AD15</text><text x="180" y="54" style="font-size:11px">38 A16/S3</text><text x="180" y="68" style="font-size:11px">37 A17/S4</text><text x="180" y="82" style="font-size:11px">36 A18/S5</text><text x="180" y="96" style="font-size:11px">35 A19/S6</text><text x="180" y="110" style="font-size:11px">34 BHE/S7</text><text x="180" y="124" style="font-size:11px" class="r">33 MN/MX</text><text x="180" y="138" style="font-size:11px">32 RD</text><text x="180" y="152" style="font-size:11px" class="p">31 RQ/GT0 (HOLD)</text><text x="180" y="166" style="font-size:11px" class="p">30 RQ/GT1 (HLDA)</text><text x="180" y="180" style="font-size:11px" class="p">29 LOCK (WR)</text><text x="180" y="194" style="font-size:11px" class="p">28 S2 (M/IO)</text><text x="180" y="208" style="font-size:11px" class="p">27 S1 (DT/R)</text><text x="180" y="222" style="font-size:11px" class="p">26 S0 (DEN)</text><text x="180" y="236" style="font-size:11px" class="p">25 QS0 (ALE)</text><text x="180" y="250" style="font-size:11px" class="p">24 QS1 (INTA)</text><text x="180" y="264" style="font-size:11px">23 TEST</text><text x="180" y="278" style="font-size:11px">22 READY</text><text x="180" y="292" style="font-size:11px">21 RESET</text>
+    </svg><figcaption>বেগুনি: ম্যাক্স-মোডের নাম (মিন-মোডের নাম)</figcaption></figure>
+    <div class="small">
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l"></th><th class="l">মিনিমাম</th><th class="l">ম্যাক্সিমাম</th></tr>
+        <tr><td class="l">MN/<span class="ov">MX</span></td><td class="l">= 1 (V<sub>CC</sub>)</td><td class="l">= 0 (GND)</td></tr>
+        <tr><td class="l">সিস্টেম</td><td class="l">একটি CPU</td><td class="l">বহু CPU, 8087</td></tr>
+        <tr><td class="l">কন্ট্রোল</td><td class="l">8086 নিজে</td><td class="l"><span class="circ">8288</span> (S0–S2)</td></tr>
+        <tr><td class="l">বাস হস্তান্তর</td><td class="l">HOLD/HLDA</td><td class="l">RQ/GT0, 1</td></tr>
+      </table>
+      <ul class="dash">
+        <li><b>ALE</b> AD0–AD15 থেকে ঠিকানা ল্যাচ করে (8282/74LS373)</li>
+        <li><b>DT/<span class="ov">R</span>, <span class="ov">DEN</span></b> 8286 ট্রান্সিভার চালায়</li>
+        <li><b>READY</b> লো → ওয়েট স্টেট (Tw)</li>
+        <li><b><span class="ov">TEST</span></b> যাচাই করে WAIT (8087 BUSY)</li>
+        <li><b>QS0, QS1</b> = 8087-এর জন্য কিউ স্ট্যাটাস</li>
+        <li>S4 S3: 00 ES, 01 SS, 10 CS/নেই, 11 DS</li>
+      </ul>
+    </div>
+  </div>
+  <div class="sumbox small"><span class="lbl">রিসেট ও টাইমিং</span> RESET-এর পর: <span class="circ">CS = FFFFH, IP = 0000H</span> → প্রথম ফেচ <b>FFFF0H</b> থেকে; DS = SS = ES = 0, ফ্ল্যাগ মুছে যায় (IF = 0), কিউ খালি। একটি বাস সাইকেল = <b>৪টি T-স্টেট</b> (T1 ঠিকানা, T2–T4 ডেটা); 5 MHz-এ T = 200 ns → প্রতি সাইকেল 800 ns। ক্লক (8284A) ও বাস কন্ট্রোলারের বিস্তারিত: লেসন mp2।</div>
+  <p class="small"><b>মাল্টিপ্রসেসর বিন্যাস:</b> কোপ্রসেসর (8087 NDP একই বাস ব্যবহার করে, QS0/QS1 দেখে) · ক্লোজলি কাপলড (8089 I/O প্রসেসর) · লুজলি কাপলড (প্রতিটি CPU-র নিজস্ব লোকাল বাস, যৌথ বাসে <span class="hl">8289 বাস আরবিটার</span>)। <b>LOCK</b> প্রিফিক্স রিড-মডিফাই-রাইটের সময় বাস ধরে রাখে।</p>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: addressing modes ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>অ্যাড্রেসিং মোড</span></div>
+  <h2><span class="no">১২</span>অ্যাড্রেসিং মোড (Addressing Mode)</h2><span class="tag">খুব হাই-ইল্ড</span>
+  <div class="def"><span class="lbl">সংজ্ঞা</span> অ্যাড্রেসিং মোড হলো নির্দেশনা <span class="hl">অপারেন্ড কোথায় আছে তা যেভাবে জানায়</span>: নির্দেশনার ভেতরেই, রেজিস্টারে, অথবা মেমরিতে এমন এক <b>ইফেক্টিভ অ্যাড্রেস</b>-এ (EA, 16-বিট অফসেট) যা EU হিসাব করে।</div>
+  <figure class="doodle"><svg viewBox="0 0 600 120" width="600">
+    <g class="w">
+      <rect x="30" y="24" width="90" height="56" rx="8" class="ink fill-b"/>
+      <rect x="180" y="24" width="90" height="56" rx="8" class="ink-g fill-g"/>
+      <rect x="330" y="24" width="120" height="56" rx="8" class="ink-p fill-p"/>
+      <rect x="500" y="24" width="80" height="56" rx="8" class="ink-r fill-r"/>
+    </g>
+    <text x="75" y="18" text-anchor="middle" class="bn s w6">বেস</text><text x="225" y="18" text-anchor="middle" class="bn g s w6">ইনডেক্স</text><text x="390" y="18" text-anchor="middle" class="bn p s w6">ডিসপ্লেসমেন্ট</text><text x="540" y="18" text-anchor="middle" class="r s w6">EA</text>
+    <text x="75" y="48" text-anchor="middle" class="w6">BX → DS</text><text x="75" y="70" text-anchor="middle" class="w6">BP → SS</text>
+    <text x="225" y="48" text-anchor="middle" class="g w6">SI</text><text x="225" y="70" text-anchor="middle" class="g w6">DI</text>
+    <text x="390" y="48" text-anchor="middle" class="bn p w6">নেই, 8-বিট</text><text x="390" y="70" text-anchor="middle" class="bn p w6">বা 16-বিট</text>
+    <text x="150" y="58" text-anchor="middle" class="l">+</text><text x="300" y="58" text-anchor="middle" class="l">+</text><text x="475" y="58" text-anchor="middle" class="l">=</text>
+    <text x="540" y="58" text-anchor="middle" class="bn r w6">অফসেট</text>
+    <text x="300" y="108" text-anchor="middle" class="bn r">যেকোনো অংশ বাদ থাকতে পারে · PA = segment × 10H + EA</text>
+  </svg><figcaption>প্রতিটি মেমরি মোড বেস + ইনডেক্স + ডিসপ্লেসমেন্টের একটি বিশেষ রূপ</figcaption></figure>
+  <p class="small"><b>উদাহরণের মান</b> (প্রতিটি সারিতে): DS = 2000H, SS = 3000H, BX = 0100H, BP = 0200H, SI = 0050H, DI = 0030H।</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">মোড</th><th class="l">উদাহরণ</th><th class="l">অপারেন্ড / EA</th><th>PA</th></tr>
+    <tr><td class="l">ইমিডিয়েট</td><td class="l">MOV AX, 1234H</td><td class="l">ডেটা নির্দেশনার ভেতরেই</td><td>–</td></tr>
+    <tr><td class="l">রেজিস্টার</td><td class="l">MOV AX, BX</td><td class="l">ডেটা রেজিস্টারে (দ্রুততম)</td><td>–</td></tr>
+    <tr><td class="l">ডাইরেক্ট</td><td class="l">MOV AX, [1234H]</td><td class="l">EA = 1234H</td><td>21234H</td></tr>
+    <tr><td class="l">রেজিস্টার ইনডাইরেক্ট</td><td class="l">MOV AX, [BX]</td><td class="l">EA = BX = 0100H</td><td>20100H</td></tr>
+    <tr><td class="l">বেসড</td><td class="l">MOV AX, [BX+10H]</td><td class="l">EA = 0110H</td><td>20110H</td></tr>
+    <tr><td class="l">ইনডেক্সড</td><td class="l">MOV AX, [SI+10H]</td><td class="l">EA = 0060H</td><td>20060H</td></tr>
+    <tr><td class="l">বেসড-ইনডেক্সড</td><td class="l">MOV AX, [BX+SI]</td><td class="l">EA = 0150H</td><td>20150H</td></tr>
+    <tr><td class="l">বেসড-ইনডেক্সড + disp</td><td class="l">MOV AX, [BX+SI+10H]</td><td class="l">EA = 0160H</td><td>20160H</td></tr>
+    <tr><td class="l red"><b>BP-ভিত্তিক (স্ট্যাক)</b></td><td class="l">MOV AX, [BP+DI+10H]</td><td class="l">EA = 0240H, সেগমেন্ট <b>SS</b></td><td><span class="circ">30240H</span></td></tr>
+  </table>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">অন্যান্য মোড</th><th class="l">উদাহরণ</th><th class="l">মন্তব্য</th></tr>
+    <tr><td class="l">স্ট্রিং</td><td class="l">MOVSB</td><td class="l">উৎস DS:SI, গন্তব্য ES:DI, অন্তর্নিহিত</td></tr>
+    <tr><td class="l">I/O পোর্ট: ডাইরেক্ট / ইনডাইরেক্ট</td><td class="l">IN AL, 80H · IN AL, DX</td><td class="l">8-বিট পোর্ট নম্বর (0–FFH) · 0–FFFFH-এর জন্য DX</td></tr>
+    <tr><td class="l">রিলেটিভ (ব্রাঞ্চ)</td><td class="l">JNZ NEXT</td><td class="l">IP + সাইনড ডিসপ্লেসমেন্ট</td></tr>
+    <tr><td class="l">ইমপ্লায়েড</td><td class="l">CLC, STD, CBW</td><td class="l">অপারেন্ড অপকোডেই নির্দিষ্ট</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>BP থাকে Stack-এ</b>": BP (বা SP) দিয়ে গড়া যেকোনো ঠিকানা SS ব্যবহার করে; BX, SI, DI ব্যবহার করে DS। প্রিফিক্স দিয়ে বদলানো যায়: MOV AX, ES:[BX]।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> [ ]-এর ভেতরে বসতে পারে শুধু <b>BX, BP, SI, DI</b>: MOV AX,[CX] ও [DX] অবৈধ, তেমনি [BX+BP] ও [SI+DI] (দুটি বেস / দুটি ইনডেক্স)।</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: instruction set ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>নির্দেশনা সেট</span></div>
+  <h2><span class="no">১৩</span>নির্দেশনার গ্রুপ (Instruction Groups)</h2><span class="tag">MCQ + লিখিত</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">গ্রুপ</th><th class="l">নির্দেশনা</th><th class="l">মনে রাখার বিষয়</th></tr>
+    <tr><td class="l">ডেটা ট্রান্সফার</td><td class="l">MOV, XCHG, PUSH, POP, IN, OUT, LEA, LDS, LES, XLAT, LAHF, SAHF, PUSHF, POPF</td><td class="l">MOV / PUSH / POP <b>কোনো ফ্ল্যাগ</b> বদলায় না</td></tr>
+    <tr><td class="l">অ্যারিথমেটিক</td><td class="l">ADD, ADC, SUB, SBB, INC, DEC, NEG, CMP, MUL, IMUL, DIV, IDIV, CBW, CWD, DAA, DAS, AAA, AAS, AAM, AAD</td><td class="l">INC / DEC CF ছোঁয় না</td></tr>
+    <tr><td class="l">লজিক্যাল, শিফট, রোটেট</td><td class="l">AND, OR, XOR, NOT, TEST, SHL/SAL, SHR, SAR, ROL, ROR, RCL, RCR</td><td class="l">8086-এ গণনা = 1 বা CL</td></tr>
+    <tr><td class="l">স্ট্রিং</td><td class="l">MOVS, CMPS, SCAS, LODS, STOS + REP, REPE/REPZ, REPNE/REPNZ</td><td class="l">CX = গণনা, DF ঠিক করে দিক</td></tr>
+    <tr><td class="l">প্রোগ্রাম ট্রান্সফার</td><td class="l">JMP, Jcc, LOOP, LOOPE, LOOPNE, JCXZ, CALL, RET, INT, INTO, IRET</td><td class="l">Jcc পরিসর: −128 … +127 বাইট</td></tr>
+    <tr><td class="l">প্রসেসর কন্ট্রোল</td><td class="l">CLC, STC, CMC, CLD, STD, CLI, STI, HLT, NOP, WAIT, LOCK, ESC</td><td class="l">NOP = XCHG AX,AX (90H)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">MUL / DIV-এর অপারেন্ড</span><br>MUL BL: <span class="hl">AX = AL × BL</span><br>MUL BX: <span class="hl">DX:AX = AX × BX</span><br>DIV BL: AL = AX ÷ BL, AH = ভাগশেষ<br>DIV BX: AX = DX:AX ÷ BX, DX = ভাগশেষ<br>ভাগফল বড় বা ÷ 0 → টাইপ 0 ইন্টারাপ্ট</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধান ✍</span><br>AX = 1234H, BX = 0100H, MUL BX<br>→ DX = <b>0012H</b>, AX = <b>3400H</b><br>AX = 0065H (101), BL = 0AH, DIV BL<br>→ AL = <b>0AH</b> (10), AH = <b>01H</b> (1)<br>CMP AX, BX = ফল না রেখে SUB</div>
+  </div>
+  <div class="cols" style="grid-template-columns:1fr 260px;align-items:center">
+    <table class="hand small" style="margin-top:0;white-space:nowrap">
+      <tr><th class="l">পরীক্ষা</th><th class="l">আনসাইনড</th><th class="l">সাইনড</th></tr>
+      <tr><td class="l">বড়</td><td class="l">JA (CF = 0, ZF = 0)</td><td class="l">JG (ZF = 0, SF = OF)</td></tr>
+      <tr><td class="l">ছোট</td><td class="l">JB = JC (CF = 1)</td><td class="l">JL (SF ≠ OF)</td></tr>
+      <tr><td class="l">সমান</td><td class="l" colspan="2">JE = JZ (ZF = 1) · JNE = JNZ</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 260 150" width="255">
+      <g class="w">
+        <rect x="70" y="10" width="80" height="26" class="ink fill-b"/><rect x="70" y="36" width="80" height="26" class="ink fill-b"/><rect x="70" y="62" width="80" height="26" class="ink-g fill-g"/><rect x="70" y="88" width="80" height="26" class="ink-g fill-g"/><rect x="70" y="114" width="80" height="26" class="ink fill-b"/>
+        <path class="ink-r" d="M200,49 H156" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M200,101 H156" marker-end="url(#ahg)"/>
+      </g>
+      <text x="64" y="52" text-anchor="end" class="s">1000H</text><text x="64" y="104" text-anchor="end" class="s">0FFEH</text>
+      <text x="110" y="80" text-anchor="middle" class="g s w6">12H</text><text x="110" y="106" text-anchor="middle" class="g s w6">34H</text>
+      <text x="204" y="53" class="bn r s">আগে SP</text><text x="204" y="105" class="bn g s">পরে SP</text><text x="64" y="78" text-anchor="end" class="s">0FFFH</text>
+      <text x="130" y="148" text-anchor="middle" class="s">PUSH AX (AX = 1234H): SP − 2</text>
+    </svg></figure>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>A</b>bove/<b>B</b>elow = চিহ্নহীন <b>B</b>yte; <b>G</b>reater/<b>L</b>ess = চিহ্নসহ"। স্ট্যাক: <b>LIFO</b>, বাড়ে <b>নিচের দিকে</b>, PUSH = আগে SP − 2, তারপর রাখা।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> PUSH/POP <b>শুধু 16-বিট</b> (PUSH AL নেই)। MOV DS, 1234H অবৈধ: সাধারণ রেজিস্টার দিয়ে সেগমেন্ট রেজিস্টার লোড করো। MOV [BX], [SI] অবৈধ (মেমরি-থেকে-মেমরি MOV নেই; MOVS ব্যবহার করো)।</div>
+  </div>
+  <p class="small"><b>স্ট্রিং প্রস্তুতি:</b> উৎস <span class="hl">DS:SI</span>, গন্তব্য <span class="hl">ES:DI</span>, গণনা CX; CLD → DF = 0 → SI, DI বাড়ে (বাইটে 1, ওয়ার্ডে 2); CX ≠ 0 যতক্ষণ, REP পুনরাবৃত্তি করে। LOOP = CX − 1, CX ≠ 0 হলে লাফ (ফ্ল্যাগ অপরিবর্তিত)।</p>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: programs, directives, tools ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>প্রোগ্রামিং ও টুলস</span></div>
+  <h2><span class="no">১৪</span>অ্যাসেম্বলি প্রোগ্রাম (MASM / TASM)</h2><span class="tag">লিখিতে প্রিয়</span>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <h3>P1: পূর্ণ প্রোগ্রাম, দুই ওয়ার্ড যোগ</h3>
+      <div class="code" style="font-size:10.5pt;line-height:5.05mm">.MODEL SMALL
+.STACK 100H
+.DATA
+N1   DW 9ABCH
+N2   DW 8765H
+SUM  DW ?
+CY   DB 0
+.CODE
+START: MOV AX, @DATA ; DS-এ সরাসরি
+     MOV DS, AX     ; মান দেওয়া যায় না
+     MOV AX, N1
+     ADD AX, N2     ; 2221H, CF = 1
+     MOV SUM, AX
+     ADC CY, 0      ; CY = 1
+     MOV AX, 4C00H  ; DOS-এ ফেরা
+     INT 21H
+     END START</div>
+      <p class="small">যোগফল = <span class="circ">12221H</span> → SUM 2221H, CY 1</p>
+    </div>
+    <div>
+      <h3>P2: ৫টি বাইটের বৃহত্তম</h3>
+      <div class="code" style="font-size:10.5pt;line-height:5.05mm">LIST DB 25H,7AH,13H,0C4H,56H
+BIG  DB ?
+     LEA SI, LIST
+     MOV CX, 4      ; ৪টি তুলনা
+     MOV AL, [SI]   ; max = 25H
+NXT: INC SI
+     CMP AL, [SI]
+     JAE SKIP       ; আনসাইনড
+     MOV AL, [SI]   ; নতুন max
+SKIP: LOOP NXT
+     MOV BIG, AL    ; C4H</div>
+      <p class="small">AL: 25 → 7A → 7A → <b>C4</b> → C4 (JGE: 7AH)</p>
+      <h3>P3: একটি বাইটে 1 গোনা</h3>
+      <div class="code" style="font-size:10.5pt;line-height:5.05mm">     MOV AL, 0B5H   ; 1011 0101
+     MOV CX, 8
+     XOR BL, BL     ; গণনা = 0
+AGN: SHL AL, 1      ; MSB → CF
+     JNC ZRO
+     INC BL
+ZRO: LOOP AGN       ; BL = 5</div>
+    </div>
+  </div>
+  <div class="ex small"><span class="lbl">P4: ব্লক কপি ✍</span> CLD · LEA SI,SRC · LEA DI,DST · MOV CX,10 · <b>REP MOVSB</b> → ১০ বাইট কপি, CX = 0।</div>
+
+  <h2><span class="no">১৫</span>অ্যাসেম্বলার ডিরেক্টিভ ও টুলস</h2><span class="tag">MCQ</span>
+  <p class="small"><span class="hl">ডিরেক্টিভ (pseudo-op)</span> অ্যাসেম্বলারকে পথ দেখায়, <b>মেশিন কোড তৈরি করে না</b>; নির্দেশনা করে।</p>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">ডিরেক্টিভ</th><th class="l">অর্থ</th><th class="l">ডিরেক্টিভ</th><th class="l">অর্থ</th></tr>
+    <tr><td class="l">DB · DW · DD · DQ · DT</td><td class="l"><span class="circ">1 · 2 · 4 · 8 · 10</span> বাইট</td><td class="l">ASSUME</td><td class="l">সেগ. রেজি. ↔ সেগমেন্ট</td></tr>
+    <tr><td class="l">SEGMENT / ENDS</td><td class="l">সেগমেন্ট শুরু / শেষ</td><td class="l">PROC / ENDP</td><td class="l">প্রসিডিউর</td></tr>
+    <tr><td class="l">EQU · ORG · DUP</td><td class="l">ধ্রুবক · অবস্থান · পুনরাবৃত্তি</td><td class="l">OFFSET · PTR</td><td class="l">অফসেট · টাইপ</td></tr>
+    <tr><td class="l">.MODEL · .DATA · .CODE</td><td class="l">সরলীকৃত সেগমেন্ট</td><td class="l">END label</td><td class="l">শেষ + প্রবেশবিন্দু</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:300px 1fr;align-items:center">
+    <figure class="doodle"><svg viewBox="0 0 300 96" width="295">
+      <g class="w">
+        <rect x="4" y="8" width="58" height="30" rx="6" class="ink fill-b"/><rect x="120" y="8" width="58" height="30" rx="6" class="ink fill-b"/><rect x="236" y="8" width="58" height="30" rx="6" class="ink-g fill-g"/>
+        <path class="ink-r" d="M62,23 H116 M178,23 H232" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M265,40 V70 H190" marker-end="url(#ahp)"/>
+      </g>
+      <text x="33" y="28" text-anchor="middle" class="s w6">.ASM</text><text x="149" y="28" text-anchor="middle" class="s w6">.OBJ</text><text x="265" y="28" text-anchor="middle" class="g s w6">.EXE</text>
+      <text x="89" y="52" text-anchor="middle" class="bn r s">অ্যাসেম্বলার</text><text x="205" y="52" text-anchor="middle" class="bn r s">লিংকার</text>
+      <text x="120" y="74" text-anchor="middle" class="bn p s">লোডার → ডিবাগার</text><text x="150" y="92" text-anchor="middle" class="bn s">(+ .LST লিস্টিং, সিম্বল টেবিল)</text>
+    </svg></figure>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> DB-DW-DD-DQ-DT = <b>B</b>yte, <b>W</b>ord, <b>D</b>ouble, <b>Q</b>uad, <b>T</b>en: 1, 2, 4, 8, 10।</div>
+  </div>
+  <p class="small"><b>টুলস:</b> অ্যাসেম্বলার MASM, TASM, NASM (টু-পাস: পাস ১-এ <span class="hl">সিম্বল টেবিল</span> তৈরি, পাস ২-এ কোড) · লিংকার LINK/TLINK · ডিবাগার DEBUG (R রেজিস্টার, D ডাম্প, E এন্টার, A অ্যাসেম্বল, U আনঅ্যাসেম্বল, T ট্রেস, G গো, Q কুইট), Turbo Debugger · ডেভেলপমেন্ট সিস্টেম: এমুলেটর (emu8086), ট্রেইনার কিট, ইন-সার্কিট এমুলেটর (ICE)। <b>.COM</b> ফাইল একটি মাত্র 64 KB সেগমেন্ট, শুরু <b>ORG 100H</b> থেকে।</p>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পাতা</span>
+    <div class="fgrid small">
+      <p>8086: 1978, 16-বিট, 40 পিন, +5 V</p><p>20 অ্যাড্রেস লাইন → 2²⁰ = 1 MB</p>
+      <p>কিউ: 8086 = 6 B · 8088 = 4 B</p><p>BIU: CS DS SS ES IP, Σ, কিউ</p>
+      <p>EU: AX–DX, SP BP SI DI, ALU, ফ্ল্যাগ</p><p>১৪টি রেজিস্টার, সবই 16-বিট</p>
+      <p>PA = segment × 10H + offset</p><p>সেগমেন্ট ≤ 64 KB, 16-বাইট সীমানায়</p>
+      <p>৯ ফ্ল্যাগ = ৬ স্ট্যাটাস + ৩ কন্ট্রোল</p><p>CF0 PF2 AF4 ZF6 SF7 TF8 IF9 DF10 OF11</p>
+      <p>BP, SP → SS · BX, SI, DI → DS</p><p>স্ট্রিং: DS:SI → ES:DI, CX, DF</p>
+      <p><span class="ov">BHE</span> A0 = 00 ওয়ার্ড · 01 বিজোড় · 10 জোড়</p><p>MN/<span class="ov">MX</span> = 1 মিন · 0 ম্যাক্স (8288)</p>
+      <p>রিসেট → CS:IP = FFFF:0000 = FFFF0H</p><p>বাস সাইকেল = ৪টি T-স্টেট</p>
+      <p>MUL BL → AX · MUL BX → DX:AX</p><p>DB 1 · DW 2 · DD 4 · DQ 8 · DT 10</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২ এক লাইনের তথ্য</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>প্রথম MPU: Intel 4004 (১৯৭১), 4-বিট</li>
+      <li>8085: 8-বিট, 64 KB, একক +5 V</li>
+      <li>8088-এর বাহ্যিক ডেটা বাস 8-বিট</li>
+      <li>ভৌত ঠিকানা হিসাব হয় BIU-তে</li>
+      <li>ফেচ/এক্সিকিউট একসাথে = পাইপলাইনিং</li>
+      <li>জাম্প বা কলে কিউ ফ্লাশ হয়</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>MOV দিয়ে IP লোড করা যায় না</li>
+      <li>নিচের বাইটে জোড় সংখ্যক 1 → PF = 1</li>
+      <li>DF = 1 → স্ট্রিং কমতে থাকে</li>
+      <li>TF = 1 → সিঙ্গল-স্টেপ মোড</li>
+      <li>বিজোড় ঠিকানার ওয়ার্ড = ২ বাস সাইকেল</li>
+      <li>ডিরেক্টিভ মেশিন কোড তৈরি করে না</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">প্রধান ফাঁদ</span> Pentium 32-বিট · CF = আনসাইনড, OF = সাইনড · INC/DEC CF ছোঁয় না · [BP…] ব্যবহার করে SS, DS নয় · [CX], [DX], [BX+BP], [SI+DI] নেই · PUSH AL নেই, MOV DS, imm নেই, মেমরি-থেকে-মেমরি MOV নেই · FFFF:0010 ঘুরে 00000H · JA/JB আনসাইনড, JG/JL সাইনড</div>
+  <div class="trick"><span class="lbl">সব কৌশল একসাথে</span> PA-র জন্য "একটা শূন্য বসাও, তারপর যোগ" · বিট 0-2-4-6-7-11-এ "C-P-A-Z-S … O", তারপর কন্ট্রোলে "T-I-D" · "BP থাকে Stack-এ" · Above/Below = আনসাইনড, Greater/Less = সাইনড · স্ট্যাক নিচে বাড়ে, PUSH = আগে SP − 2 · BIU বাজারকারী, EU রাঁধুনি</div>
+  <figure class="doodle"><svg viewBox="0 0 560 104" width="560">
+    <g class="w">
+      <rect x="10" y="20" width="120" height="34" rx="8" class="ink fill-b"/>
+      <rect x="170" y="20" width="120" height="34" rx="8" class="ink-g fill-g"/>
+      <rect x="400" y="20" width="140" height="34" rx="8" class="ink-r fill-r"/>
+      <path class="ink-r" d="M290,37 H394" marker-end="url(#ah)"/>
+    </g>
+    <text x="70" y="16" text-anchor="middle" class="bn s">সেগমেন্ট</text><text x="230" y="16" text-anchor="middle" class="bn g s">অফসেট</text><text x="470" y="16" text-anchor="middle" class="bn r s">20-বিট PA</text>
+    <text x="70" y="43" text-anchor="middle" class="w6">1234<tspan class="r">0</tspan></text><text x="150" y="43" text-anchor="middle" class="l">+</text><text x="230" y="43" text-anchor="middle" class="g w6">5678</text><text x="470" y="43" text-anchor="middle" class="r w6">179B8H</text>
+    <text x="342" y="30" text-anchor="middle" class="r s">Σ (BIU)</text>
+    <text x="280" y="84" text-anchor="middle" class="bn s">সেগমেন্টের ডানে একটি হেক্স 0 বসাও, তারপর অফসেট যোগ করো</text>
+  </svg><figcaption>যে হিসাবটি সবচেয়ে বেশি আসে</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>MPI · 8086/8088</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>8086-এর অ্যাড্রেস বাস:<ol class="opts"><li>16 বিট</li><li>24 বিট</li><li>20 বিট</li><li>32 বিট</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>8088-এর ইনস্ট্রাকশন কিউ:<ol class="opts"><li>4 বাইট</li><li>6 বাইট</li><li>8 বাইট</li><li>2 বাইট</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>CS = 2000H, IP = 0150H হলে ভৌত ঠিকানা:<ol class="opts"><li>02150H</li><li>21500H</li><li>2150H</li><li>20150H</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>MOV AX,[BP+4] সেগমেন্ট নেয়:<ol class="opts"><li>DS</li><li>SS</li><li>ES</li><li>CS</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>20-বিট ভৌত ঠিকানা তৈরি করে:<ol class="opts"><li>EU</li><li>ALU</li><li>BIU</li><li>ডিকোডার</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>MOV AL,7FH তারপর ADD AL,01H দেয়:<ol class="opts"><li>OF=0, CF=1</li><li>OF=1, CF=1</li><li>OF=0, SF=1</li><li>OF=1, SF=1</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>8086 কয়টি ফ্ল্যাগ ব্যবহার করে?<ol class="opts"><li>9</li><li>6</li><li>16</li><li>8</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>RESET-এর পর 8086 প্রথম ফেচ করে:<ol class="opts"><li>00000H</li><li>FFFF0H</li><li>FFFFFH</li><li>00400H</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>ম্যাক্সিমাম মোডে কোন বাস কন্ট্রোলার লাগে?<ol class="opts"><li>8284</li><li>8255</li><li>8259</li><li>8288</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>DW প্রতি আইটেমে কত বাইট রাখে?<ol class="opts"><li>1</li><li>2</li><li>4</li><li>8</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-ঘ · ৪-খ · ৫-গ · ৬-ঘ · ৭-ক · ৮-খ · ৯-ঘ · ১০-খ</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> ডেটা সেগমেন্টের অফসেট 0200H থেকে রাখা ১০টি আনসাইনড বাইট যোগ করে 16-বিট যোগফল অফসেট 0300H-এ রাখার একটি 8086 প্রোগ্রাম লেখো (DS আগেই সেট করা)। ব্যবহৃত অ্যাড্রেসিং মোড ব্যাখ্যা করো। <i class="mk">৮ নম্বর</i></div>
+  <div class="cols" style="grid-template-columns:1fr 1fr;align-items:start">
+    <div class="code" style="font-size:10.5pt;line-height:5.05mm">     MOV SI, 0200H  ; পয়েন্টার
+     MOV CX, 10     ; কাউন্টার
+     XOR AX, AX     ; যোগফল = 0
+NXT: ADD AL, [SI]   ; বাইট যোগ
+     ADC AH, 0      ; ক্যারি রাখা
+     INC SI
+     LOOP NXT
+     MOV [0300H], AX
+     HLT</div>
+    <ol class="steps small">
+      <li>প্রস্তুতি: SI পয়েন্টার, CX গণনা, AX = 0 <i class="mk">২</i></li>
+      <li>লুপ: ADD AL,[SI] (রেজিস্টার ইনডাইরেক্ট) + <span class="hl">ADC AH,0</span> 8-বিট যোগকে 16-বিট যোগফলে পরিণত করে <i class="mk">৩</i></li>
+      <li>INC SI, LOOP (CX − 1, ≠ 0 হলে আবার) <i class="mk">১</i></li>
+      <li>MOV [0300H],AX: ডাইরেক্ট মোড; নিচের বাইট 0300H-এ, উচ্চ বাইট 0301H-এ <i class="mk">২</i></li>
+    </ol>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>BIU/EU আঁকতে ও কাজ বলতে পারি</li>
+        <li>৯টি ফ্ল্যাগ সঠিক বিটে বসাতে পারি</li>
+        <li>PA, সেগমেন্টের বিস্তার, অফসেট বের করতে পারি</li>
+        <li>যেকোনো MOV-এর মোড ও PA বলতে পারি</li>
+        <li>ট্রেসসহ LOOP প্রোগ্রাম লিখতে পারি</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>লিখিতের জন্য আরও অনুশীলন:</b><br>① পিন 24–31 সহ মিন বনাম ম্যাক্স মোড<br>② BHE/A0 ও বিজোড় ঠিকানার ওয়ার্ড<br>③ 9AH + 7BH-এর পর ফ্ল্যাগ<br>④ SI/DI দিয়ে স্ট্রিং উল্টানো</div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

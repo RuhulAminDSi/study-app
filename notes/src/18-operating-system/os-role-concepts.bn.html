@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>অপারেটিং সিস্টেম: ভূমিকা, ধারণা ও কাঠামো: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>তারিখ: ০৯.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">অপারেটিং সিস্টেম</span></h1>
+  <p class="subtitle">লক্ষ্য · সিস্টেম কল · কার্নেলের গঠন · বুট · ভার্চুয়ালাইজেশন: ১২ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="520">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">অপারেটিং সিস্টেম</text><text x="320" y="172" text-anchor="middle" class="bn r s">ভূমিকা · ধারণা · কাঠামো</text>
+      <text x="142" y="58" text-anchor="middle" class="bn s" style="font-size:11px">লক্ষ্য ও চার উদ্দেশ্য</text><text x="142" y="74" text-anchor="middle" class="bn s" style="font-size:11px">সুবিধা · দক্ষতা</text>
+      <text x="320" y="42" text-anchor="middle" class="bn r w6">রিসোর্স ★</text>
+      <text x="498" y="58" text-anchor="middle" class="bn s" style="font-size:11px">অপারেটিং সিস্টেমের</text><text x="498" y="74" text-anchor="middle" class="bn s" style="font-size:11px">প্রকার</text>
+      <text x="96" y="156" text-anchor="middle" class="bn g w6" style="font-size:12px">সিস্টেম কল ★</text>
+      <text x="544" y="148" text-anchor="middle" class="bn r w6" style="font-size:12px">কার্নেলের</text><text x="544" y="166" text-anchor="middle" class="bn r w6" style="font-size:12px">গঠন ★</text>
+      <text x="142" y="246" text-anchor="middle" class="bn s" style="font-size:11px">প্রজন্ম ১–৫</text>
+      <text x="320" y="270" text-anchor="middle" class="bn r w6" style="font-size:13px">বুট: ফার্মওয়্যার → ইনিট ★</text>
+      <text x="498" y="246" text-anchor="middle" class="bn s" style="font-size:11px">ভার্চুয়ালাইজেশন ★</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = OS-এর মাঝের সেই একটি দরজা</figcaption>
+  </figure>
+  <div class="sticky" style="width:76mm"><b>হাই-ইল্ড তালিকা</b><br>① OS = ইন্টারফেস + ম্যানেজার + কন্ট্রোল<br>② লক্ষ্য: সুবিধা, দক্ষতা, বিবর্তন, পোর্টেবিলিটি<br>③ কার্নেল প্রিভিলেজড; শেল কেবল একটি UI<br>④ কল ⇒ ইউজার → কার্নেল, <b>ট্র্যাপ</b>-এর মাধ্যমে<br>⑤ মনোলিথিক: সব কিছু কার্নেল স্পেসে<br>⑥ মাইক্রোকার্নেল: শুধু IPC ও শিডিউলিং<br>⑦ হাইব্রিড: Windows NT, macOS XNU<br>⑧ টাইপ ১ = বেয়ার মেটাল, টাইপ ২ = হোস্টের ওপরে<br>⑨ বুট: ফার্মওয়্যার → লোডার → কার্নেল → ইনিট<br>⑩ কনটেক্সট সুইচ ≈ ১–১০ μs</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">অপারেটিং সিস্টেমের সিলেবাসের প্রথম দুই লাইন "<span class="hl">কম্পিউটার সিস্টেমে এর ভূমিকা</span>" এবং "<span class="hl">OS-এর ধারণা; OS-এর কাঠামো</span>"। এই নোটবুক ঠিক সেই দুটিই আড়াল করে; প্রসেস, শিডিউলিং, IPC, মেমোরি, I/O, ডেডলক ও ফাইলসের নিজস্ব লেসন আছে।</p>
+  <div class="tipbox blk"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="line-height:5.4mm">
+    <ul class="tick"><li>অপারেটিং সিস্টেম কী: লক্ষ্য ও ভূমিকা … পৃ. ২</li><li>সিস্টেম কল ও মোড সুইচ … পৃ. ৩</li><li>কার্নেলের গঠন: মনোলিথিক → মাইক্রো … পৃ. ৪</li><li>কার্নেল, শেল ও ইউটিলিটি … পৃ. ৫</li><li>অপারেটিং সিস্টেমের প্রকার … পৃ. ৬</li><li>অপারেটিং সিস্টেমের প্রজন্ম … পৃ. ৭</li></ul>
+    <ul class="tick"><li>VM গঠন ও হাইপারভাইজর … পৃ. ৮</li><li>বুট: ফার্মওয়্যার → ইনিট … পৃ. ৯</li><li>ট্র্যাপ, ইন্টারাপ্ট ও সুইচের খরচ … পৃ. ১০</li><li>রাতের পরীক্ষার পাতা … পৃ. ১১</li><li>অনুশীলনী MCQ + লিখিত প্রশ্ন … পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: what an OS is, goals, roles ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>লক্ষ্য ও ভূমিকা</span></div>
+  <h2><span class="no">১</span>অপারেটিং সিস্টেম কী?</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>অপারেটিং সিস্টেম</b> হলো ব্যবহারকারী ও হার্ডওয়্যারের মাঝের সিস্টেম সফটওয়্যার, যা একসঙ্গে তিনটি কাজ করে: একটি <span class="hl">ইন্টারফেস</span> (প্রোগ্রাম সরাসরি ডিভাইস চালায় না, সেবা চায়), একটি <span class="hl">রিসোর্স ম্যানেজার</span> (CPU, মেমোরি, ফাইল ও I/O ন্যায্যভাবে ভাগ হয়) এবং একটি <span class="hl">কন্ট্রোল প্রোগ্রাম</span> (হার্ডওয়্যারে প্রবেশ কেবল প্রিভিলেজড, তাই কেবল OS-ই পারে)। একই বস্তুর দুটি বইয়ার নাম: <b>extended machine</b> এবং <b>resource-manager system</b>।</div>
+  <div class="mnote">OS ছাড়া = শুধু একটি সার্কিট</div>
+  <div class="cols" style="grid-template-columns:224px 1fr;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 300 232" width="220">
+      <g class="w">
+        <rect x="20" y="10" width="200" height="30" rx="10" class="ink fill-b"/>
+        <rect x="20" y="58" width="200" height="30" rx="10" class="ink-r fill-y"/>
+        <rect x="20" y="106" width="200" height="44" rx="10" class="ink-k fill-b"/>
+        <rect x="20" y="168" width="200" height="32" rx="10" class="ink-g fill-g"/>
+        <path class="ink-b" d="M120,40 V54" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M120,88 V102" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M120,150 V164" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M20,25 H8 V184 H20" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="120" y="30" text-anchor="middle" class="bn s k">ইউজার প্রোগ্রাম</text>
+      <text x="120" y="78" text-anchor="middle" class="bn s r">সিস্টেম কল</text>
+      <text x="120" y="124" text-anchor="middle" class="bn s k">কার্নেল</text>
+      <text x="120" y="140" text-anchor="middle" class="bn s" style="font-size:11px">মেমোরি · ফাইল · ডিভাইস</text>
+      <text x="120" y="189" text-anchor="middle" class="bn s g">হার্ডওয়্যার</text>
+      <text x="228" y="30" class="bn s" style="font-size:11px">ইউজার মোড</text>
+      <text x="228" y="78" class="bn p s">এই দরজা</text>
+      <text x="228" y="128" class="bn s" style="font-size:11px">কার্নেল মোড</text>
+      <text x="228" y="189" class="bn s">যন্ত্র</text>
+      <text x="150" y="220" text-anchor="middle" class="bn r s" style="font-size:11px">প্রোগ্রাম কখনো হার্ডওয়্যার ছোঁয় না</text>
+    </svg><figcaption>একটি কল = একটি সীমানা পার হওয়া</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">একই প্রোগ্রামের দুটি ধরনা</span>
+      <b>রিসোর্স ম্যানেজার / কন্ট্রোল প্রোগ্রাম</b> — কৌকুটির উত্তর: <i>কে কখন কী পাবে</i>: CPU সময় শিডিউলিংয়ে, মেমোরি অ্যালোকেশনে, ফাইল ফাইল সিস্টেমে, ডিভাইস কন্ট্রোলার ও ড্রাইভারে। এটি <b>দক্ষতা</b> বাড়ায়।<br>
+      <b>Extended machine</b> — প্রোগ্রাম কী দেখে তার উত্তর: ফাইল, প্রসেস ও ডিভাইসের একটি বিমূর্ত যন্ত্র; নিচে ইন্টারাপ্ট, DMA ও ক্যাশের নিয়ম লুকানো। এটি <b>সুবিধা</b> ও <b>পোর্টেবিলিটি</b> বাড়ায়।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">লক্ষ্য</th><th class="l">এটি কী চায়</th><th class="l">কোথায় চেনা যায়</th></tr>
+    <tr><td class="l"><b>সুবিধা</b></td><td class="l">ব্যবহারযোগ্য ইন্টারফেস, মেশিন কোড নয়</td><td class="l">সিস্টেম কল, CLI শেল, GUI, ড্রাইভার</td></tr>
+    <tr><td class="l"><b>দক্ষতা</b></td><td class="l">রিসোর্স পূর্ণ ক্ষমতায় ব্যবহার</td><td class="l">শিডিউলিং, পেজিং, বাফারিং, ক্যাশিং</td></tr>
+    <tr><td class="l"><b>বিবর্তনের সামর্থ্য</b></td><td class="l">নতুন হার্ডওয়্যার নতুন লেখা ছাড়াই গ্রহণ</td><td class="l">মডুলারিটি, লেয়ার, লোডেবল মডিউল</td></tr>
+    <tr><td class="l"><b>পোর্টেবিলিটি</b></td><td class="l">একই OS ভিন্ন হার্ডওয়্যারে</td><td class="l">স্ট্যান্ডার্ড ভাষা (C), হার্ডওয়্যার অ্যাবস্ট্রাকশন লেয়ার</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> চারটি G: <b>C</b>onvenience = <i>সহজ</i>, <b>E</b>fficiency = <i>পূর্ণ</i>, <b>E</b>volution = <i>বদলানোযোগ্য</i>, <b>P</b>ortability = <i>বাড়ি বদলায়</i>। "পেজিং কোন লক্ষ্য মেটায়?" → <b>দক্ষতা</b>: এটি ব্যবহার বাড়ায়, আরাম নয়। "হার্ডওয়্যার অ্যাবস্ট্রাকশন লেয়ার কোনটি?" → <b>পোর্টেবিলিটি</b>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> একটি <b>ড্রাইভার একটি ডিভাইস সামলায়; OS সব ডিভাইস সামলায় ও কাকে কী দেবে ঠিক করে</b>। আর "ইন্টারফেস" অস্পষ্ট: <span class="circ">শেল</span> ব্যবহারকারীর ইন্টারফেস, <span class="circ">কার্নেল</span> আসল OS। "কোন অংশটি প্রিভিলেজড চলে?" → <b>কার্নেল</b>, কখনো শেল নয়।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি মেশিনে লক্ষ্যের প্রয়োগ</span> একটি CPU, ৮ GB RAM, একটি ডিস্ক, চারজন ব্যবহারকারী। <b>সুবিধা</b> — প্রত্যেকে একটি শেল ও নাম দেওয়া ফাইল পায়, ডিস্ক কন্ট্রোলার প্রোগ্রাম করতে হয় না। <b>দক্ষতা</b> — শিডিউলার টাইম-স্লাইস দিয়ে CPU কখনো খালি থাকে না; ফাইল সিস্টেম গরম ব্লক ক্যাশ করে। <b>বিবর্তন</b> — নতুন প্রিন্টারে একটি ড্রাইভার লাগে, নতুন OS নয়। "<i>ভার্চুয়াল মেমোরি</i> কোন লক্ষ্য মেটায়?" → <span class="circ">দক্ষতা</span>।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: system calls, traps, mode switch ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>সিস্টেম কল</span></div>
+  <h2><span class="no">২</span>সিস্টেম কল, ট্র্যাপ ও মোড সুইচ</h2><span class="tag">MCQ-র আলাদা পাতা ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>সিস্টেম কল</b> হলো সেই ইন্টারফেস যার মাধ্যমে ইউজার প্রোগ্রাম কার্নেলের কাছে সেবা চায় — ফাইল খোলা, মেমোরি ম্যাপ করা, প্রসেস তৈরি, ডিভাইস পড়া। কার্নেলই কেবল <b>প্রিভিলেজড</b> কোড চালায়, তাই অনুরোধে CPU-র প্রিভিলেজ বদলাতেই হয়। কৌশলটি <span class="hl">ট্র্যাপ</span> (সফটওয়্যার ইন্টারাপ্ট): CPU কনটেক্সট সেভ করে <b>কার্নেল মোডে</b> যায়, হ্যান্ডলার চালায়, ফিরে আসে। শুধু প্রিভিলেজ বিট বদলালে তা <span class="hl">মোড সুইচ</span> — সস্তা; অন্য প্রসেসের অবস্থাও লোড করলে তা <span class="hl">কনটেক্সট সুইচ</span> — সস্তা নয়।</div>
+  <div class="cols" style="grid-template-columns:224px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 180" width="220">
+      <g class="w">
+        <rect x="8" y="8" width="86" height="38" rx="8" class="ink fill-b"/>
+        <rect x="112" y="8" width="86" height="38" rx="8" class="ink-r fill-r"/>
+        <rect x="216" y="8" width="80" height="38" rx="8" class="ink-k fill-g"/>
+        <path class="ink-b" d="M96,27 H108" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M200,27 H212" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M256,48 V72 H51 V48" marker-end="url(#ah)"/>
+        <rect x="8" y="96" width="62" height="16" rx="6" class="ink-g fill-g"/>
+        <rect x="8" y="126" width="234" height="16" rx="6" class="ink-r fill-r"/>
+      </g>
+      <text x="51" y="23" text-anchor="middle" class="bn s k">ইউজার</text>
+      <text x="51" y="38" text-anchor="middle" class="bn s">প্রোগ্রাম</text>
+      <text x="155" y="23" text-anchor="middle" class="bn s r">ট্র্যাপ</text>
+      <text x="155" y="38" text-anchor="middle" class="bn s" style="font-size:11px">সফটওয়্যার</text>
+      <text x="256" y="23" text-anchor="middle" class="bn s k">কার্নেল</text>
+      <text x="256" y="38" text-anchor="middle" class="bn s" style="font-size:11px">হ্যান্ডলার</text>
+      <text x="155" y="88" text-anchor="middle" class="bn r s" style="font-size:11px">ইন্টারাপ্ট থেকে ফেরা → ইউজার মোড</text>
+      <text x="76" y="109" class="bn g s" style="font-size:11px">মোড সুইচ — কেবল প্রিভিলেজ বিট</text>
+      <text x="8" y="158" class="bn r s" style="font-size:11px">কনটেক্সট সুইচ — প্রসেস সেভ ও রিস্টোর</text>
+    </svg><figcaption>"সুইচ" লেখার ভিতরে দুটি ভিন্ন খরচ</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">সিস্টেম কলের গোষ্ঠী</th><th class="l">উদাহরণ</th></tr>
+      <tr><td class="l">প্রসেস নিয়ন্ত্রণ</td><td class="l">fork, execve, wait, exit, kill</td></tr>
+      <tr><td class="l">ফাইল কাজ</td><td class="l">open, close, read, write, lseek</td></tr>
+      <tr><td class="l">ডিভাইস ব্যবস্থাপনা</td><td class="l">ioctl, ডিভাইসে read ও write</td></tr>
+      <tr><td class="l">তথ্য</td><td class="l">getpid, uname, sysconf, time</td></tr>
+      <tr><td class="l">মেমোরি ব্যবস্থাপনা</td><td class="l">brk, mmap, munmap</td></tr>
+    </table>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">ইউজার মোড</th><th class="l">কার্নেল মোড</th></tr>
+    <tr><td class="l">কে চালায়</td><td class="l">সব সাধারণ প্রসেস: শেল, এডিটর, কম্পাইলার</td><td class="l">শিডিউলার, মেমোরি ম্যানেজার, ড্রাইভার, ফাইল সিস্টেম</td></tr>
+    <tr><td class="l">মেমোরি প্রবেশ</td><td class="l">শুধু নিজের অ্যাড্রেস স্পেস</td><td class="l"><span class="red"><b>যেকোনো</b></span> অ্যাড্রেস স্পেস, MMIO রেজিস্টার, পেজ টেবিল</td></tr>
+    <tr><td class="l">নির্দেশ</td><td class="l">সীমিত সাবসেট; প্রিভিলেজড হলে ট্র্যাপ হয়</td><td class="l">সম্পূর্ণ সেট (x86 ring 3 → 0)</td></tr>
+    <tr><td class="l">কীভাবে ঢোকে</td><td class="l">কল, ফল্ট বা ইন্টারাপ্ট থেকে ট্র্যাপ</td><td class="l">— (return-from-interrupt দিয়ে বের হয়)</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> কার্নেলে ঢোকার তিনটি দরজা: <b>ট্র্যাপ</b> (প্রোগ্রাম চাইছে), <b>ফল্ট</b> (CPU অভিযোগ করছে — পেজ ফল্ট), <b>ইন্টারাপ্ট</b> (পৃথিবী চাইছে — টাইমার, কীবোর্ড, ডিস্ক)। তিনটিই কার্নেল মোডে যায়, হ্যান্ডলার বেছে নেয় ভেক্টর নম্বর দিয়ে।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ওভারহেড কত?</span> একটি ফাংশন কল ≈ <span class="circ">২০ ns</span>; ট্র্যাপসহ সিস্টেম কল ≈ <span class="circ">১ μs</span>। নিজের কাজের প্রতি সেকেন্ডে ১০⁶ সিস্টেম কল করা একটি প্রোগ্রাম তাই <span class="circ">একটি কোরের ১০০ %</span> কার্নেলের ভেতরে কাটায়।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT সংযোগ</span> `man 2 read` = <i>read</i> সিস্টেম কলের ম্যানুয়াল; `strace -c ls` ট্র্যাপ গোনে; `time ls` ইউজার ও সিস্টেম সময় আলাদা করে দেখায়।</div>
+  </div>
+  <div class="exam small"><span class="lbl">পরীক্ষার ফাঁদ</span> সিস্টেম কল <b>আপনার প্রোগ্রামের দুটি ফাংশনের মধ্যে কল নয়</b>: লাইব্রেরি র্যাপার (glibc) <b>ইউজার মোডে</b> চলে, কেবল ট্র্যাপই কার্নেলে ঢোকে।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: kernel structure ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>কার্নেলের গঠন</span></div>
+  <h2><span class="no">৩</span>কার্নেলের গঠন: মনোলিথিক, লেয়ারড, মাইক্রো, মডুলার, হাইব্রিড</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>কার্নেল</b> হলো প্রিভিলেজড কোর: এটি কার্নেল মোডে চলে, মেমোরিতে স্থায়ী থাকে, হার্ডওয়্যারের মালিক এবং সিস্টেম কল বাস্তবায়ন করে। এর ভেতরের গঠন একটি নকশার সিদ্ধান্ত — <b>মনোলিথিক</b>, <b>লেয়ারড</b>, <b>মাইক্রোকার্নেল</b>, <b>মডুলার</b> — এবং তার মাঝামাঝি <b>হাইব্রিড</b>। সবই একটি প্রশ্নের উত্তর দেয়: <span class="hl">কতটা কোড প্রিভিলেজড হিসেবে বিশ্বাসযোগ্য?</span></div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">গঠন</th><th class="l">কোথায় কী থাকে</th><th class="l">শক্তি</th><th class="l">দুর্বলতা</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>মনোলিথিক</b></td><td class="l">সব কিছু কার্নেলের ভেতরে</td><td class="l">গতি, সহজ কল-পথ</td><td class="l">একটি বাগ সব থামায়</td><td class="l">UNIX, Linux, MS-DOS</td></tr>
+    <tr><td class="l"><b>লেয়ারড</b></td><td class="l">সব কিছু কার্নেলে, স্তরে স্তরে</td><td class="l">যাচাই করা সহজ</td><td class="l">স্তর পেরোনোর খরচ</td><td class="l">THE, MULTICS, OS/2</td></tr>
+    <tr><td class="l"><b>মডুলার</b></td><td class="l">কোর + লোডেবল মডিউল</td><td class="l">নমনীয়, ছোট ইমেজ</td><td class="l">মডিউলের বাগ আলাদা হয় না</td><td class="l">Linux, Solaris, VxWorks</td></tr>
+    <tr><td class="l"><b>মাইক্রোকার্নেল</b></td><td class="l">শুধু IPC, শিডিউলিং, অ্যাড্রেস স্পেস</td><td class="l">নির্ভরযোগ্য, প্রমাণযোগ্য</td><td class="l">মেসেজ ওভারহেড</td><td class="l">Mach, MINIX 3, QNX, seL4</td></tr>
+    <tr><td class="l"><b>হাইব্রিড</b></td><td class="l">বেশিরভাগ, মাইক্রোকার্নেলের ধরনে</td><td class="l">গতি ও মডুলারিটি দুটোই</td><td class="l">না সবচেয়ে সহজ, না সবচেয়ে নিরাপদ</td><td class="l">Windows NT, macOS XNU</td></tr>
+  </table>
+  <div class="cols3" style="grid-template-columns:186px 1fr 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 322 206" width="182">
+      <g class="w">
+        <rect x="8" y="22" width="144" height="154" rx="8" class="ink-b fill-b"/>
+        <rect x="14" y="28" width="132" height="30" rx="6" class="ink"/>
+        <rect x="14" y="62" width="132" height="30" rx="6" class="ink"/>
+        <rect x="14" y="96" width="132" height="30" rx="6" class="ink"/>
+        <rect x="14" y="130" width="132" height="30" rx="6" class="ink"/>
+        <rect x="170" y="22" width="144" height="48" rx="8" class="ink-k fill-y"/>
+        <rect x="170" y="86" width="144" height="90" rx="8" class="ink-g fill-g"/>
+        <rect x="176" y="92" width="132" height="32" rx="6" class="ink"/>
+        <rect x="176" y="132" width="132" height="32" rx="6" class="ink"/>
+        <path class="ink-p" d="M200,86 V74" marker-end="url(#ahp)"/>
+        <path class="ink-p" d="M286,86 V74" marker-end="url(#ahp)"/>
+      </g>
+      <text x="80" y="14" text-anchor="middle" class="bn k w6" style="font-size:12px">মনোলিথিক</text>
+      <text x="242" y="14" text-anchor="middle" class="bn k w6" style="font-size:11px">মাইক্রোকার্নেল</text>
+      <text x="80" y="48" text-anchor="middle" class="bn s" style="font-size:11px">মেমোরি ম্যানেজার</text>
+      <text x="80" y="82" text-anchor="middle" class="bn s" style="font-size:11px">প্রসেস ম্যানেজার</text>
+      <text x="80" y="116" text-anchor="middle" class="bn s">ফাইল সিস্টেম</text>
+      <text x="80" y="150" text-anchor="middle" class="bn s" style="font-size:11px">ডিভাইস ড্রাইভার</text>
+      <text x="242" y="40" text-anchor="middle" class="bn s k" style="font-size:11px">IPC · শিডিউলিং</text>
+      <text x="242" y="58" text-anchor="middle" class="bn s k" style="font-size:11px">অ্যাড্রেস স্পেস</text>
+      <text x="242" y="113" text-anchor="middle" class="bn s" style="font-size:11px">ফাইল সিস্টেম সার্ভার</text>
+      <text x="242" y="153" text-anchor="middle" class="bn s">ড্রাইভার সার্ভার</text>
+      <text x="80" y="194" text-anchor="middle" class="bn g s" style="font-size:11px">একটি সরাসরি কল</text>
+      <text x="242" y="194" text-anchor="middle" class="bn r s" style="font-size:11px">প্রতিটি কল একটি মেসেজ</text>
+    </svg><figcaption>একই সেবা — শুধু দেয়াল সরে গেছে</figcaption></figure>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>হাইব্রিড মানে "অর্ধেক-অর্ধেক" নয়</b> — এটি মাইক্রোকার্নেলের মডুলারিটা নেয়, কিন্তু গতির জন্য ড্রাইভার কার্নেল স্পেসে রাখে। <b>মডুলার ≠ মাইক্রোকার্নেল</b>: মডিউল কার্নেল কোড, মাইক্রোকার্নেল সার্ভার ইউজার কোড। একটি <b>স্তর</b> কেবল ঠিক নিচের স্তরটি ব্যবহার করতে পারে।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বড় কার্নেল, দ্রুত কল। ছোট কার্নেল, বকবক কল।</b>" আঁকার ধরন যাই হোক, কর্মক্ষমতা ঠিক করে একটিমাত্র বিষয়: অনুরোধ কি ইউজার-কার্নেল সীমানা পার হয়, নাকি একই অ্যাড্রেস স্পেসে থাকে।</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ছোট কার্নেলের দাম</span> একটি মাইক্রোকার্নেল একটি ফাইল রিড ক্লায়েন্ট → <b>IPC মেসেজ</b> → ফাইল সিস্টেম সার্ভার → <b>IPC মেসেজ</b> → ফেরত: প্রতি রাউন্ড ট্রিপে ২ μs হলে তা <span class="circ">৪ μs</span> মেসেজিং, যেখানে মনোলিথিক কার্নেল সরাসরি 0.1 μs-এর কমে কল করে। ১০০ ০০০ রিড/সে-এ CPU-র <span class="circ">৪০ %</span> মেসেজিংয়ে যায়; ১০০০ রিড/সে-এ মাত্র ০.৪ %।</div>
+    <div class="tipbox tiny" style="margin-top:0"><span class="lbl">বইয়ের উদাহরণ আসলে কোথায় বসে</span> <b>Windows NT</b> ও <b>macOS (XNU)</b> হাইব্রিড — macOS আসলে Mach মাইক্রোকার্নেল, তার চারপাশে BSD সেবা ও IOKit ড্রাইভার ফ্রেমওয়ার্ক। <b>Linux</b> মনোলিথিক, তবে <i>মডুলারভাবে বানানো</i>। <b>seL4</b> কয়েক হাজার লাইনের মাইক্রোকার্নেল যা <span class="circ">আনুষ্ঠানিকভাবে যাচাই</span> করা হয়েছে।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: kernel, shell, utilities ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>কার্নেল, শেল, ইউটিলিটি</span></div>
+  <h2><span class="no">৪</span>তিনটি অংশ: কার্নেল, শেল, ইউটিলিটি</h2><span class="tag">সংজ্ঞার ফাঁদ ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> "অপারেটিং সিস্টেম" কথাটি দুটি ভিন্ন সফটওয়্যারের জগতের জন্য আলগোভাবে ব্যবহৃত হয়। সরু অর্থে এটি কেবল <span class="hl">কার্নেল</span>: প্রিভিলেজড, স্থায়ী, হার্ডওয়্যারের দায়িত্বে। বিস্তৃত অর্থে এটি কার্নেল <b>+</b> <span class="hl">শেল</span> <b>+</b> <span class="hl">ইউটিলিটি</span> — ব্যবহারকারী যা ছোঁয় এমন পুরো বিতরণ। তিনটি তিনটি ভিন্ন প্রিভিলেজ স্তরে বসে, আর "শেল কি OS-এর অংশ?" ধরনের প্রতিটি প্রশ্ন এই পার্থক্যেই আটকে থাকে।</div>
+  <div class="mnote purple">কার্নেল ≠ শেল ≠ ইউটিলিটি</div>
+  <figure class="doodle"><svg viewBox="0 0 620 128" width="600">
+    <g class="w">
+      <rect x="14" y="32" width="176" height="44" rx="10" class="ink-k fill-y"/>
+      <rect x="212" y="32" width="176" height="44" rx="10" class="ink fill-b"/>
+      <rect x="410" y="32" width="176" height="44" rx="10" class="ink-g fill-g"/>
+      <path class="ink-r" d="M190,54 H208" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M388,54 H406" marker-end="url(#ah)"/>
+      <path class="ink-k" d="M14,22 H586" style="stroke-dasharray:5 4"/>
+      <path class="ink-k" d="M14,86 H586" style="stroke-dasharray:5 4"/>
+      <path class="ink-k" d="M14,18 V90 M586,18 V90" style="stroke-dasharray:5 4"/>
+    </g>
+    <text x="102" y="50" text-anchor="middle" class="bn k w6">কার্নেল</text>
+    <text x="102" y="68" text-anchor="middle" class="bn s" style="font-size:11px">প্রিভিলেজড · স্থায়ী</text>
+    <text x="300" y="50" text-anchor="middle" class="bn k w6">শেল</text>
+    <text x="300" y="68" text-anchor="middle" class="bn s" style="font-size:11px">ইউজার মোড · ব্যাখ্যাকারী</text>
+    <text x="498" y="50" text-anchor="middle" class="bn k w6">ইউটিলিটি</text>
+    <text x="498" y="68" text-anchor="middle" class="bn s" style="font-size:11px">ইউজার মোড · প্রোগ্রাম</text>
+    <text x="102" y="14" text-anchor="middle" class="bn r s" style="font-size:11px">ring 0 — একমাত্র প্রিভিলেজড স্তর</text>
+    <text x="498" y="104" text-anchor="middle" class="bn g s" style="font-size:11px">সাধারণ প্রোগ্রাম, অপ্রিভিলেজড, বদলানো যায়</text>
+    <text x="300" y="122" text-anchor="middle" class="bn k s" style="font-size:11px">কমান্ড লেখা → শেল পার্স করে → সিস্টেম কল → কার্নেল → হার্ডওয়্যার</text>
+  </svg><figcaption>শুধু কার্নেলই কার্নেল মোডে প্রবেশ করে</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l"></th><th class="l">কার্নেল</th><th class="l">শেল</th><th class="l">ইউটিলিটি</th></tr>
+    <tr><td class="l">যেখানে চলে</td><td class="l"><span class="red"><b>কার্নেল মোডে</b></span>, x86 ring 0</td><td class="l">ইউজার মোড, ring 3</td><td class="l">ইউজার মোড, ring 3</td></tr>
+    <tr><td class="l">মেমোরি</td><td class="l">মূল মেমোরিতে স্থায়ী</td><td class="l">একটি সাধারণ প্রসেস, বদলানো যায়</td><td class="l">সাধারণ প্রসেস</td></tr>
+    <tr><td class="l">কাজ</td><td class="l">প্রসেস, মেমোরি, ফাইল, ডিভাইস, প্রোটেকশন</td><td class="l">কমান্ড লাইন পড়ে, প্রোগ্রাম চালায়</td><td class="l">একটি করে কাজ: <i>cp</i>, <i>ls</i>, <i>sort</i>, এডিটর</td></tr>
+    <tr><td class="l">কী দিয়ে বদলায়</td><td class="l">চলাকালে কখনো নয়</td><td class="l">নির্দ্বিধায় — bash, sh, cmd.exe, PowerShell</td><td class="l">নির্দ্বিধায় — যেকোনো প্রোগ্রামই</td></tr>
+    <tr><td class="l">হার্ডওয়্যার ছোঁয়</td><td class="l"><span class="circ">হ্যাঁ</span></td><td class="l"><span class="red"><b>না</b></span></td><td class="l"><span class="red"><b>না</b></span></td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>শেল কার্নেল নয় এবং প্রিভিলেজড নয়</b>; এটি আপনার হয়ে সিস্টেম কল করে। শেল সরালে মেশিন ক্র্যাশ হবে না, কার্নেল নষ্ট হলে হবে। <b>কম্পাইলার</b> একটি ইউটিলিটি, OS-এর অংশ নয়।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>কার্নেলই সেটাই, যা বদলানো যায় না।</b>" কার্নেল — সরালে OS বন্ধ। শেল — আপনি নগ্ন লগইন প্রম্পটে আটকে যান। ইউটিলিটি — একটি কমান্ড হারিয়ে ফেলেন।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি কী-প্রেস থেকে ফাইল পর্যন্ত</span> <b>cp a.txt b.txt</b>: শেল লাইনটি ভাগ করে <b>execve()</b> দিয়ে <i>cp</i> চালায়; <i>cp</i> <b>open()</b>, <b>read()</b>, <b>write()</b>, <b>close()</b> করে, প্রতিটি ট্র্যাপ করে <b>কার্নেলে</b> ঢোকে। প্রিভিলেজড কোডে প্রবেশ: <span class="circ">পাঁচবার</span>।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">বাস্তব নাম</span> শেল: UNIX-ধরনের সিস্টেমে <b>bash</b>, <b>zsh</b>, <b>fish</b>; Windows-এ <b>cmd.exe</b> ও <b>PowerShell</b>। ইউটিলিটি: <b>coreutils</b> পরিবার (<i>ls, cp, mv, grep</i>) এবং এডিটর ও কম্পাইলার। Linux-এ শেল <code>/bin</code>-এ একটি প্রোগ্রাম, ব্যবহারকারীভেদে বদলানো যায়।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: types of operating systems ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>অপারেটিং সিস্টেমের প্রকার</span></div>
+  <h2><span class="no">৫</span>অপারেটিং সিস্টেমের প্রকার</h2><span class="tag">প্রায়ই পরীক্ষায় আসে</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি OS-কে "টাইপ" করা হয় <b>সে প্রসেসরকে কীভাবে ভাগ করে ও কাকে সেবা দেয়</b> তা দিয়ে, কোম্পানির নাম দিয়ে নয়। তিনটি প্রশ্নেই ধরা পড়ে: মেমোরিতে একসাথে কতটি কাজ, কোথাও কি কীবোর্ডের ইউজার আছে, ডেডলাইন কতটা কঠোর?</div>
+  <div class="cols" style="grid-template-columns:196px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 168" width="192">
+      <g class="w">
+        <rect x="8" y="8" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="107" y="8" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="206" y="8" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="8" y="52" width="86" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="107" y="52" width="86" height="36" rx="8" class="ink fill-b"/>
+        <rect x="206" y="52" width="86" height="36" rx="8" class="ink-r fill-r"/>
+        <rect x="8" y="96" width="86" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="107" y="96" width="86" height="36" rx="8" class="ink-g fill-g"/>
+        <rect x="206" y="96" width="86" height="36" rx="8" class="ink fill-b"/>
+        <path class="ink-b" d="M96,26 H104" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M195,26 H203" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M96,70 H104" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M195,70 H203" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M96,114 H104" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M195,114 H203" marker-end="url(#ahb)"/>
+      </g>
+      <text x="51" y="31" text-anchor="middle" class="bn s">ব্যাচ</text>
+      <text x="150" y="27" text-anchor="middle" class="bn s" style="font-size:11px">মাল্টিপ্রো-</text>
+      <text x="150" y="40" text-anchor="middle" class="bn s" style="font-size:11px">গ্রামিং</text>
+      <text x="249" y="31" text-anchor="middle" class="bn s" style="font-size:11px">টাইম-শেয়ারিং</text>
+      <text x="51" y="75" text-anchor="middle" class="bn r s" style="font-size:11px">রিয়েল-টাইম</text>
+      <text x="150" y="75" text-anchor="middle" class="bn s" style="font-size:10px">মাল্টিপ্রো-</text>
+      <text x="150" y="88" text-anchor="middle" class="bn s" style="font-size:10px">সেসর</text>
+      <text x="249" y="75" text-anchor="middle" class="bn r s" style="font-size:10px">ডিস্ট্রিবিউটেড</text>
+      <text x="51" y="119" text-anchor="middle" class="bn g s" style="font-size:11px">এমবেডেড</text>
+      <text x="150" y="119" text-anchor="middle" class="bn g s">মোবাইল</text>
+      <text x="249" y="119" text-anchor="middle" class="bn s">ক্লাউড / VM</text>
+      <text x="150" y="158" text-anchor="middle" class="bn k s" style="font-size:11px">ডান দিকে যত বেশি, তত বেশি ইউজার ও মেশিন</text>
+    </svg><figcaption>প্রতিটি বাক্স = একটি প্রতিশ্রুতি</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l"></th><th class="l">হার্ড রিয়েল-টাইম</th><th class="l">সফট রিয়েল-টাইম</th></tr>
+        <tr><td class="l">ডেডলাইন বাদ পড়লে</td><td class="l"><span class="red"><b>ব্যর্থতা</b></span></td><td class="l">গুণের মান খারাপ হয়</td></tr>
+        <tr><td class="l">উদাহরণ</td><td class="l">পেসমেকার, ABS, ফ্লাইট কন্ট্রোল</td><td class="l">স্ট্রিমিং ভিডিও, লাইভ টিভি</td></tr>
+        <tr><td class="l">সাধারণ বিল্ড</td><td class="l">ছোট ডেডিকেটেড RTOS</td><td class="l">সাধারণ OS + RT সম্প্রসারণ</td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">একই অক্ষ নয়</span> মাল্টিপ্রোগ্রামিং, টাইম-শেয়ারিং, মাল্টিপ্রোসেসর ও ডিস্ট্রিবিউটেড আলাদা করে <i>কতগুলো</i> মেশিন ও ইউজার; রিয়েল-টাইম ও এমবেডেড আলাদা করে <i>কোন প্রতিশ্রুতি</i> দেওয়া হয়। আপনার ফোন একই সাথে সবগুলো।</div>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">প্রকার</th><th class="l">CPU কীভাবে ভাগ হয়</th><th class="l">মূল লক্ষ্য</th><th class="l">সাধারণ ব্যবহার</th></tr>
+    <tr><td class="l"><b>ব্যাচ</b></td><td class="l">একবারে একটি কাজ, অফলাইনে সারিবদ্ধ</td><td class="l">CPU-র ব্যবহার</td><td class="l">মেইনফ্রেম চালানো</td></tr>
+    <tr><td class="l"><b>মাল্টিপ্রোগ্রামিং</b></td><td class="l">অনেক কাজ মেমোরিতে; I/O-র অপেক্ষায় বদল</td><td class="l">ব্যবহার</td><td class="l">পরের দুটির ভিত্তি</td></tr>
+    <tr><td class="l"><b>টাইম-শেয়ারিং</b></td><td class="l">অনেক ইউজার অনলাইন, ছোট স্লাইস</td><td class="l">সাড়া + ন্যায্যতা</td><td class="l">UNIX, Linux</td></tr>
+    <tr><td class="l"><b>মাল্টিপ্রোসেসর</b></td><td class="l">দুই বা তত বেশি CPU ভাগ করে মেমোরি</td><td class="l">সমান্তরালতা</td><td class="l">সার্ভার</td></tr>
+    <tr><td class="l"><b>ডিস্ট্রিবিউটেড</b></td><td class="l">স্বাধীন কম্পিউটার, এক মেশিন</td><td class="l">ভাগাভাগি + নির্ভরযোগ্যতা</td><td class="l">ক্লাস্টার</td></tr>
+    <tr><td class="l"><b>রিয়েল-টাইম</b></td><td class="l">প্রায়োরিটি, সীমিত সাড়া</td><td class="l">পূর্বানুমানযোগ্যতা</td><td class="l">নিয়ন্ত্রণ, এভিওনিক্স</td></tr>
+    <tr><td class="l"><b>এমবেডেড</b></td><td class="l">একটি নির্দিষ্ট চিপ, ক্ষুদ্র কার্নেল</td><td class="l">নির্ধারিততা, কম পাওয়ার</td><td class="l">গাড়ির ECU</td></tr>
+    <tr><td class="l"><b>মোবাইল</b></td><td class="l">অ্যাপ স্যান্ডবক্স, ফ্ল্যাশ স্টোরেজ</td><td class="l">ব্যবহারের অভিজ্ঞতা</td><td class="l">Android, iOS</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>টাইম-শেয়ারিং মানুষের মধ্যে ভাগ করে; রিয়েল-টাইম ডেডলাইনের মধ্যে ভাগ করে।</b> টাইম-শেয়ার করা UNIX-ও ১ ms ডেডলাইন ছুড়তে পারে: ন্যায্যতা আর পূর্বানুমানযোগ্যতা বিপরীত দিকে টানে।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>রিয়েল-টাইম মানে দ্রুত নয়</b> — মানে <span class="circ">পূর্বানুমানযোগ্য</span>। ব্যাচ মানে "একক ব্যবহারকারী" নয়: একাধিক কাজকে একটি CPU-র সাথে ভাগ করাই মাল্টিপ্রোগ্রামিং।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ টাইম-শেয়ারিংের হিসাব</span> ১০০ জন, কোয়ান্টাম q: সর্বোচ্চ অপেক্ষা = ১০০ × q। <b>q = ১০০ ms</b> → <span class="circ">১০ s</span>; <b>q = ২০ ms</b> → <span class="circ">২ s</span>, তবে এখন সুইচ হয় প্রতি 0.2 ms-এ, তাই প্রতিটি ২ μs ধরলে CPU হারায় <span class="circ">১ %</span> সময়।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: generations ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>প্রজন্ম</span></div>
+  <h2><span class="no">৬</span>অপারেটিং সিস্টেমের প্রজন্ম</h2><span class="tag">ইতিহাস ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> অপারেটিং সিস্টেমকে তার <b>যে হার্ডওয়্যার প্রজন্মের জন্য বানানো হয়েছে</b> তা দিয়ে তারিখ দেওয়া হয়। পাঁচটি প্রজন্ম প্রমিত: প্রথমে <b>কোনো OS ছিল না</b>, আর প্রতিটি পরেরটি একটি নতুন সক্ষমতা কিনে আসে।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 122" width="600">
+    <g class="w">
+      <path class="ink-b" d="M40,20 H580" marker-end="url(#ahb)"/>
+      <path class="ink-k" d="M40,60 H580"/>
+      <circle cx="60" cy="60" r="15" class="ink-k fill-b"/>
+      <circle cx="185" cy="60" r="15" class="ink fill-b"/>
+      <circle cx="310" cy="60" r="15" class="ink-g fill-g"/>
+      <circle cx="435" cy="60" r="15" class="ink-r fill-r"/>
+      <circle cx="560" cy="60" r="15" class="ink-r fill-r"/>
+    </g>
+    <text x="310" y="14" text-anchor="middle" class="bn k s" style="font-size:11px">হার্ডওয়্যার ছোট ও সস্তা হয় → OS বড় হয়</text>
+    <text x="60" y="65" text-anchor="middle" class="bn k w6">১</text>
+    <text x="185" y="65" text-anchor="middle" class="bn k w6">২</text>
+    <text x="310" y="65" text-anchor="middle" class="bn k w6">৩</text>
+    <text x="435" y="65" text-anchor="middle" class="bn k w6">৪</text>
+    <text x="560" y="65" text-anchor="middle" class="bn k w6">৫</text>
+    <text x="60" y="94" text-anchor="middle" class="bn s k" style="font-size:11px">১৯৪৫–৫৫</text>
+    <text x="60" y="112" text-anchor="middle" class="bn s" style="font-size:11px">কোনো OS নেই</text>
+    <text x="185" y="94" text-anchor="middle" class="bn s k" style="font-size:11px">১৯৫৬–৬৫</text>
+    <text x="185" y="112" text-anchor="middle" class="bn s">ব্যাচ</text>
+    <text x="310" y="94" text-anchor="middle" class="bn s k" style="font-size:11px">১৯৬৬–৭৫</text>
+    <text x="310" y="112" text-anchor="middle" class="bn s" style="font-size:11px">টাইম-শেয়ারিং</text>
+    <text x="435" y="94" text-anchor="middle" class="bn s k" style="font-size:11px">১৯৭৫–</text>
+    <text x="435" y="112" text-anchor="middle" class="bn s" style="font-size:11px">পিসি, GUI, নেটওয়ার্ক</text>
+    <text x="560" y="94" text-anchor="middle" class="bn s k" style="font-size:11px">এখন</text>
+    <text x="560" y="112" text-anchor="middle" class="bn s" style="font-size:11px">মোবাইল, VM</text>
+  </svg><figcaption>টিউব → ট্রানজিস্টর → IC → মাইক্রোপ্রসেসর → সবচ্য়ে জায়গায়</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">প্রজন্ম</th><th class="l">সময়</th><th class="l">প্রযুক্তি</th><th class="l">OS যা পেল</th><th class="l">চিহ্ন</th></tr>
+    <tr><td class="l">১ম</td><td class="l">1945–1955</td><td class="l">ভ্যাকুয়াম টিউব, পেপার টেইপ</td><td class="l"><span class="red"><b>কিছু নয়</b></span>: একটি কাজ, মেশিন ভাষা</td><td class="l">IBM 701, EDSAC (1948)</td></tr>
+    <tr><td class="l">২য়</td><td class="l">1956–1965</td><td class="l">ট্রানজিস্টর</td><td class="l"><b>ব্যাচ</b>: অফলাইন ইনপুট, স্পুলিং, নির্দিষ্ট কাজ</td><td class="l">IBM 7090; FORTRAN 1957, COBOL 1959</td></tr>
+    <tr><td class="l">৩য়</td><td class="l">1966–1975</td><td class="l">ইন্টিগ্রেটেড সার্কিট</td><td class="l"><span class="hl">মাল্টিপ্রোগ্রামিং + টাইম-শেয়ারিং</span></td><td class="l">UNIX (1969), MULTICS, System/360 (1964)</td></tr>
+    <tr><td class="l">৪র্থ</td><td class="l">1975–</td><td class="l">VLSI, মাইক্রোপ্রসেসর</td><td class="l">পিসি যুগ: GUI, নেটওয়ার্ক, ক্লায়েন্ট–সার্ভার</td><td class="l">MS-DOS (1981), Windows, Linux (1991)</td></tr>
+    <tr><td class="l">৫ম</td><td class="l">বর্তমান</td><td class="l">অতি বড় স্কেল ইন্টিগ্রেশন, সর্বত্র ডিভাইস</td><td class="l">মোবাইল, এমবেডেড, ভার্চুয়ালাইজড, ক্লাউড</td><td class="l">Android (2008), হাইপারভাইজর</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>কিছু নয় → ব্যাচ → ভাগ করে ব্যবহার → GUI/নেটওয়ার্ক → মোবাইল/ক্লাউড।</b> প্রযুক্তিগুলো জোরে বলো — <b>টিউব, ট্রানজিস্টর, IC, মাইক্রোপ্রসেসর, সবচ্য়ে জায়গায়</b> — তাহলে প্রজন্ম আর তারিখ নিজে থেকেই বেরিয়ে আসে।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> প্রজন্ম <b>প্রকার নয়</b>: ব্যাচ ২য় প্রজন্মের একটি <i>প্রকার</i>, টাইম-শেয়ারিং ৩য় প্রজন্মের <i>প্রকার</i>। প্রশ্নে দুটি প্রতিদ্বন্দ্বী অপশন দিলে এই গুলিষ্টিই ধরা হচ্ছে।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ সূত্রের সরল জেরে পড়া</span> "মেমোরিতে অনেক কাজ, ইন্টারঅ্যাক্টিভ ইউজার, ইন্টিগ্রেটেড সার্কিট, বিখ্যাত 1969-এর সিস্টেম।" → <b>মাল্টিপ্রোগ্রামিং</b> → <b>টাইম-শেয়ারিং</b> → <span class="circ">তৃতীয় প্রজন্ম</span> → <b>UNIX</b>। সূত্র তারিখের চেয়ে জোরালো।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">জানার মতো একটি ঐতিহাসিক বিবরণ</span> UNIX 1969 সালে DEC-এর <b>PDP-7</b>-এর জন্য Ken Thompson ও Dennis Ritchie লিখেছিলেন, 1970 সালে C-তে আবার লেখেন। প্রজন্ম-নাম <i>যুগ</i> বোঝায়, একটি নির্দিষ্ট মেশিন নয়।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: structural models + virtualisation ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>গঠনগত মডেল ও VM</span></div>
+  <h2><span class="no">৭</span>গঠনগত মডেল: এক্সটেনসিবল, VM ও হাইপারভাইজর</h2><span class="tag">ধারণাগত ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>এক্সটেনসিবল / VM-ভিত্তিক</b> মডেলে OS ছোট থাকে: কার্নেল কেবল ট্র্যাপ করে, শিডিউল করে ও সুইচ করে, আর প্রতিটি ইউজার তার উপরে একটি পুরো ছোট OS চালায় — সেটিই <span class="hl">ভার্চুয়াল মেশিন</span>। এতে ফল্ট আইসোলেশন পাওয়া যায়: একটি VM ডেউ হলে সিস্টেম নয়, শুধু সেই VM ডেউ হয়। আর এখান থেকেই এসেছে <b>হাইপারভাইজর</b> (আরেক নাম <b>VMM</b>)।</div>
+  <div class="cols" style="grid-template-columns:1fr 186px;align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">মডেল</th><th class="l">ভাবনা</th><th class="l">কে ব্যবহার করে</th></tr>
+      <tr><td class="l">সিম্পল (MS-DOS-ধরন)</td><td class="l">একটি প্রোগ্রাম, কোনো প্রোটেকশন নেই</td><td class="l">MS-DOS, আগের CP/M</td></tr>
+      <tr><td class="l">মনোলিথিক</td><td class="l">প্রতিটি সেবা এক কার্নেল ব্লকে</td><td class="l">UNIX, Linux</td></tr>
+      <tr><td class="l">লেয়ারড</td><td class="l">স্তর, প্রতিটি কেবল নিচেরটি ব্যবহার করে</td><td class="l">THE, MULTICS, OS/2</td></tr>
+      <tr><td class="l">মাইক্রোকার্নেল</td><td class="l">ক্ষুদ্র কার্নেল, ইউজার-লেভেল সার্ভার</td><td class="l">Mach, MINIX 3, QNX, seL4</td></tr>
+      <tr><td class="l">মডুলার</td><td class="l">কোর ছাড়া লোডেবল মডিউল</td><td class="l">Linux, Solaris, VxWorks</td></tr>
+      <tr><td class="l">হাইব্রিড</td><td class="l">মাইক্রোকার্নেলের ভাবনা, মনোলিথিকের গতি</td><td class="l">Windows NT, macOS XNU</td></tr>
+      <tr><td class="l"><b>এক্সটেনসিবল / VM</b></td><td class="l">ক্ষুদ্র OS; প্রতিটি ইউজার পুরো OS চালায়</td><td class="l">IBM VM/CMS, ES/VM; Xen, KVM</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 300 186" width="182">
+      <g class="w">
+        <rect x="18" y="10" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="162" y="10" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="18" y="50" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="162" y="50" width="118" height="28" rx="7" class="ink fill-b"/>
+        <rect x="18" y="100" width="262" height="34" rx="8" class="ink-r fill-r"/>
+        <rect x="18" y="146" width="262" height="24" rx="8" class="ink-k fill-y"/>
+        <path class="ink-b" d="M77,38 V46" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M221,38 V46" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M77,78 V96" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M221,78 V96" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M149,134 V142" marker-end="url(#ahg)"/>
+      </g>
+      <text x="77" y="29" text-anchor="middle" class="bn s k">VM 1</text>
+      <text x="221" y="29" text-anchor="middle" class="bn s k">VM 2</text>
+      <text x="77" y="69" text-anchor="middle" class="bn s">গেস্ট OS</text>
+      <text x="221" y="69" text-anchor="middle" class="bn s">গেস্ট OS</text>
+      <text x="149" y="122" text-anchor="middle" class="bn s r" style="font-size:11px">হাইপারভাইজর (টাইপ ১)</text>
+      <text x="149" y="163" text-anchor="middle" class="bn s k" style="font-size:11px">খালি হার্ডওয়্যার</text>
+    </svg><figcaption>প্রতিটি গেস্ট মনে করে সে একা মালিক</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">টাইপ ১ — নেটিভ / বেয়ার-মেটাল</th><th class="l">টাইপ ২ — হোস্টেড</th></tr>
+    <tr><td class="l">চলে</td><td class="l"><span class="circ">সরাসরি হার্ডওয়্যারের উপরে</span></td><td class="l"><span class="circ">হোস্ট OS-এর উপরে</span>, একটি অ্যাপ হিসেবে</td></tr>
+    <tr><td class="l">হোস্ট OS লাগে?</td><td class="l">না</td><td class="l">হ্যাঁ — Windows, macOS, Linux</td></tr>
+    <tr><td class="l">গতি</td><td class="l">নেটিভের কাছাকাছি, পাতলা স্তর</td><td class="l">ধীর: পথে হোস্ট কার্নেল</td></tr>
+    <tr><td class="l">কে ব্যবহার করে</td><td class="l">ডেটা সেন্টার, ক্লাউড, সার্ভার</td><td class="l">ডেস্কটপ, ল্যাব, প্রশিক্ষণ</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">Xen, KVM, ESXi, Hyper-V, Proxmox</td><td class="l">VirtualBox, Workstation, Parallels</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>টাইপ ১ মেঝে মালিক, টাইপ ২ বাড়িওয়ালার কাছ থেকে ভাড়া চায়।</b>" বিদ্যমান OS-এর <i>ভেতরে</i> বসানো হলে → টাইপ ২।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>হাইপারভাইজর</b> আর <b>কন্টেইনার</b> গুলিয়ে ফেলবেন না: কন্টেইনার হোস্ট <b>কার্নেল</b> ভাগ করে, VM-এ পুরো একটি গেস্ট OS থাকে।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ কনসলিডেশনের হিসাব</span> ২০টি পুরনো সার্ভার ২০ % লোডে, প্রতিটি অ্যাপ নিজ VM-এ: ২০ × ২০ % = এক কোরের ৪০০ %, মানে <span class="circ">৪টি কোর</span>। একটি 32-কোরের হোস্ট ১৫ % খালি রাখলে <span class="circ">১৯টি সার্ভার</span> বসানো যায়। <b>KVM</b> লিনাক্স কার্নেলকেই টাইপ ১ হাইপারভাইজর বানায়; <b>Xen</b> প্যারাভার্চুয়ালাইজড।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: boot process ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>বুট প্রসেস</span></div>
+  <h2><span class="no">৮</span>বুট প্রসেস: ফার্মওয়্যার → বুটলোডার → কার্নেল → ইনিট</h2><span class="tag">লিখিত প্রশ্নের প্রিয়</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> সংরক্ষিত প্রোগ্রাম মেশিন (stored-program machine) কোনো কিছু করে না, যতক্ষণ না কোনো ঠিকানায় একটি নির্দেশ থাকে আর প্রোগ্রাম কাউন্টার সেখানে দাঁড়ায়। <b>বুট সিকোয়েন্স</b> সেই সিঁড়ি, যা একজন মালিকের পর একজন মালিক হয়ে CPU-তে প্রথম নির্দেশ বসায় এবং মেশিনটি OS-এর হাতে দেয়।</div>
+  <figure class="doodle"><svg viewBox="0 0 620 140" width="600">
+    <g class="w">
+      <rect x="8" y="28" width="130" height="44" rx="10" class="ink-k fill-y"/>
+      <rect x="164" y="28" width="130" height="44" rx="10" class="ink fill-b"/>
+      <rect x="320" y="28" width="130" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="476" y="28" width="130" height="44" rx="10" class="ink-g fill-g"/>
+      <path class="ink-b" d="M140,50 H160" marker-end="url(#ahb)"/>
+      <path class="ink-b" d="M296,50 H316" marker-end="url(#ahb)"/>
+      <path class="ink-b" d="M452,50 H472" marker-end="url(#ahb)"/>
+      <path class="ink-k" d="M541,74 V90" marker-end="url(#ah)"/>
+    </g>
+    <text x="73" y="47" text-anchor="middle" class="bn k w6" style="font-size:13px">ফার্মওয়্যার</text>
+    <text x="73" y="64" text-anchor="middle" class="bn s" style="font-size:11px">BIOS / UEFI</text>
+    <text x="229" y="47" text-anchor="middle" class="bn k w6" style="font-size:11px">বুটলোডার</text>
+    <text x="229" y="64" text-anchor="middle" class="bn s" style="font-size:11px">GRUB · MBR</text>
+    <text x="385" y="47" text-anchor="middle" class="bn k w6">কার্নেল</text>
+    <text x="385" y="64" text-anchor="middle" class="bn s" style="font-size:11px">vmlinuz লোড হয়</text>
+    <text x="541" y="47" text-anchor="middle" class="bn k w6">ইনিট</text>
+    <text x="541" y="64" text-anchor="middle" class="bn s" style="font-size:11px">systemd, PID 1</text>
+    <text x="73" y="88" text-anchor="middle" class="bn s" style="font-size:10px">পাওয়ার অন → সেলফ-টেস্ট</text>
+    <text x="229" y="88" text-anchor="middle" class="bn s" style="font-size:10px">কার্নেলের ইমেজ লোড করে</text>
+    <text x="385" y="88" text-anchor="middle" class="bn s" style="font-size:10px">ডিভাইস, মেমোরি</text>
+    <text x="541" y="112" text-anchor="middle" class="bn s g" style="font-size:10px">সেবা, লগইন প্রম্পট</text>
+    <text x="310" y="132" text-anchor="middle" class="bn r s" style="font-size:11px">প্রতিটি ধাপে ঠিক একটি প্রোগ্রামই দায়িত্বে</text>
+  </svg><figcaption>প্রত্যেকটি পরেরটিকে লোড করে, তারপর সরে যায়</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">ধাপ</th><th class="l">এটি কী করে</th><th class="l">কোথায় থাকে</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>১. ফার্মওয়্যার</b></td><td class="l">পাওয়ার-অন সেলফ-টেস্ট, হার্ডওয়্যার চালু, বুট ডিভাইস খোঁজে</td><td class="l">মেসিনবোর্ডের একটি চিপ; CMOS-তে সেটিংস</td><td class="l">পুরনো <b>BIOS</b>; আধুনিক <b>UEFI</b></td></tr>
+    <tr><td class="l"><b>২. বুটলোডার</b></td><td class="l">কার্নেলের ইমেজ RAM-এ নিয়ে সেখানে লাফ দেয়</td><td class="l">ডিস্কের প্রথম সেক্টর — <b>MBR</b> বা <b>ESP</b> পার্টিশন</td><td class="l">GRUB, Windows Boot Manager, U-Boot</td></tr>
+    <tr><td class="l"><b>৩. কার্নেল</b></td><td class="l">সাবসিস্টেম চালু করে, মেমোরি সাজায়, ডিভাইস খোঁজে, <b>ইনিট</b> শুরু করে</td><td class="l">RAM-এ লোড, এখন স্থায়ী</td><td class="l">Linux, Windows NT, BSD</td></tr>
+    <tr><td class="l"><b>৪. init / systemd</b></td><td class="l">ক্রমে সেবা চালায়, ফাইল সিস্টেম মাউন্ট করে, লগইন ম্যানেজার চালায়</td><td class="l">প্রথম ইউজার-স্পেস প্রসেস, <span class="circ">PID 1</span></td><td class="l">systemd (আধুনিক Linux), SysV init, launchd</td></tr>
+  </table>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ফার্মওয়্যার মেশিন বিক্রি করে, বুটলোডার OS তোলে, কার্নেল মেশিনের মালিক হয়, ইনিট সেবা চালায়।</b>" চারটি ক্রিয়া, চারজন মালিক — কেবল ধাপ ৩ <i>কার্নেল</i>।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>বুটলোডার OS নয়</b>, আর <b>BIOS ফার্মওয়্যারের একমাত্র নাম নয়</b> — UEFI তার উত্তরসূরী, এবং এটি MBR নয়, ESP ব্যবহার করে। <b>কার্নেল প্যানিক</b> মানে ধাপ ৩-এ ব্যর্থতা।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ পরীক্ষকী কেন জিজ্ঞেস করেন</span> "লোগো, আর কিছু নয়।" POST শব্দ না হলে বুটলোডারের <b>আগেই</b> ব্যর্থতা (RAM, CPU, পাওয়ার)। "No bootable device" → ফার্মওয়্যার চলেছে, কিন্তু বুটযোগ্য ডিভাইস পায়নি। GRUB মেনু নেই → বুটলোডার নষ্ট।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT সংযোগ</span> ডুয়াল বুটেই বুটলোডার নিজের কাজ দেখায়: GRUB একটি মেনু দেখায় ও অন্য কার্নেল লোড করে — তাই এটি কোনো OS-এর অংশ নয়, এবং একই বুটলোডার একই ডিস্ক থেকে Windows ও Linux দুটোই চালাতে পারে।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: traps, interrupts, context switch ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>ট্র্যাপ ও ইন্টারাপ্ট</span></div>
+  <h2><span class="no">৯</span>ট্র্যাপ, ইন্টারাপ্ট ও কনটেক্সট সুইচের খরচ</h2><span class="tag">সবচেয়ে বেশি পরীক্ষা হয় ★</span>
+  <div class="def small" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> কার্নেলে নিয়ন্ত্রণ আসে তিনভাবে। <b>ট্র্যাপ</b> সিঙ্ক্রন — প্রোগ্রাম নিজেই ঘটিয়েছে (সিস্টেম কল, পেজ ফল্ট, শূন্যে ভাগ)। <b>ইন্টারাপ্ট</b> অ্যাসিঙ্ক্রন — ডিভাইস ঘটিয়েছে (টাইমার, কীপ্রেস, ডিস্ক)। <b>ফল্ট</b> হলো CPU কুন্ড় নির্দেশের রিপোর্ট করছে। সবাই কনটেক্সট সেভ করে, ভেক্টর টেবিল থেকে একটি <span class="hl">ভেক্টর</span> নিয়ে কার্নেল মোডে হ্যান্ডলার চালায়।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">প্রকার</th><th class="l">কে ঘটায়</th><th class="l">কখন</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>ট্র্যাপ</b></td><td class="l">চলতে থাকা প্রোগ্রাম</td><td class="l">সিঙ্ক্রন</td><td class="l">read(), exit(), ব্রেকপয়েন্ট</td></tr>
+    <tr><td class="l"><b>ফল্ট</b></td><td class="l">নির্দেশটি নিজেই</td><td class="l">সিঙ্ক্রন</td><td class="l">পেজ ফল্ট, শূন্যে ভাগ</td></tr>
+    <tr><td class="l"><b>ইন্টারাপ্ট</b></td><td class="l">বাইরের একটি ডিভাইস</td><td class="l">অ্যাসিঙ্ক্রন</td><td class="l">টাইমার টিক, কীবোর্ড, ডিস্ক</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:250px 1fr;align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 280 128" width="246">
+      <g class="w">
+        <path class="ink-b" d="M30,98 H252" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M30,98 V14" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M42,86 C90,82 138,56 192,24" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M42,86 C100,88 156,86 230,84"/>
+        <circle cx="42" cy="86" r="4" class="ink-r"/>
+        <circle cx="192" cy="24" r="4" class="ink-r"/>
+<path class="ink-g" d="M116,82 L134,52" marker-end="url(#ahg)"/>
+      </g>
+      <text x="42" y="76" text-anchor="middle" class="bn r s">ট্র্যাপ</text>
+      <text x="204" y="20" text-anchor="middle" class="bn r s">ফল্ট</text>
+      <text x="140" y="112" text-anchor="middle" class="bn k s" style="font-size:11px">চলতে থাকা প্রসেস</text>
+      <text x="152" y="46" class="bn g s">সেবা</text>
+    </svg><figcaption>সময় ধার্য হয় যেখানে ট্র্যাপ নেওয়া হয়</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">কাজ</th><th class="l">খরচ</th><th class="l">সময় কোথায় যায়</th></tr>
+      <tr><td class="l">ফাংশন কল</td><td class="l">≈ ১–১০ ns</td><td class="l">রেজিস্টার সেভ, লাফ, ফেরা; ক্যাশ গরম থাকে</td></tr>
+      <tr><td class="l">সিস্টেম কল (ট্র্যাপ)</td><td class="l">≈ ১ μs</td><td class="l">কনটেক্সট সংরক্ষণ, কার্নেল মোড, ডিসপ্যাচ, ফেরা</td></tr>
+      <tr><td class="l">কনটেক্সট সুইচ</td><td class="l">≈ <span class="circ">১–১০ μs</span></td><td class="l">PCB সেভ ও রিস্টোর; পরে TLB ও ক্যাশ ঠান্ডা</td></tr>
+      <tr><td class="l">মেজর পেজ ফল্ট</td><td class="l">≈ ১০০ μs – ১ ms</td><td class="l">অনুপস্থিত পেজের জন্য ডিস্ক রিড</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">কনটেক্সট সুইচের আসল খরচ</span> একটি প্রসেসের CPU অবস্থা সেভ করে আরেকটি রিস্টোর করা কেবল <b>প্রত্যক্ষ</b> খরচ, সাধারণত <span class="circ">১–১০ μs</span>। <b>পরোক্ষ</b> খরচ আরও বড়: নতুন প্রসেস পায় খালি ইনস্ট্রাকশন ক্যাশ, ঠান্ডা TLB ও ঠান্ডা ডেটা ক্যাশ। বেশি সিস্টেম কল বা ছোট কোয়ান্টাম মানে বেশি সুইচ।</div>
+  <div class="cols3" style="align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ট্র্যাপ প্রোগ্রামের দোষ, ইন্টারাপ্ট পৃথিবীর।</b>"</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> একটি <b>পেজ ফল্ট ক্র্যাশ নয়</b> — OS ফ্রেম পেজ করে নির্দেশটি আবার চালায়। আর <b>ট্র্যাপ কনটেক্সট সুইচ নয়</b>: তা মানে <i>অন্য</i> কোনো প্রসেস চলেছিল।</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ সুইচে হারানো থ্রুপুট</span> ৫০ জন, কোয়ান্টাম <b>২০ ms</b>, সুইচ <b>২ μs</b>। গড় অপেক্ষা ≈ (৫০ − ১)/২ × ২০ ms ≈ <span class="circ">৪৯০ ms</span>। প্রতি স্লাইসে ওভারহেড = ২/২০ ০০০ = <span class="circ">০.০১ %</span> — এটাই নকশার ধারা।</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT সংযোগ</span> `time` একটি প্রোগ্রামের জীবনকে <b>ইউজার</b> ও <b>সিস্টেম</b> সময়ে ভাগ করে; সিস্টেম সময় মানে কার্নেলে কাটানো সময়। CPU-র ব্যবহার কম থাকা অথচ সিস্টেম সময় বেশি হলে তা <b>থ্র্যাশিং</b>-এর চিহ্ন।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">রাতের-পরীক্ষার পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পত্র</span>
+    <div class="fgrid small">
+      <p>OS = ইন্টারফেস + রিসোর্স ম্যানেজার + কন্ট্রোল প্রোগ্রাম</p><p>লক্ষ্য: সুবিধা, দক্ষতা, বিবর্তন, পোর্টেবিলিটি</p>
+      <p>কার্নেল = প্রিভিলেজড, স্থায়ী, সবসময় RAM-এ</p><p>শেল = ইউজার মোডের কমান্ড ব্যাখ্যাকারী</p>
+      <p>সিস্টেম কল ⇒ ট্র্যাপে ইউজার → কার্নেল মোড</p><p>x86: ইউজার = ring 3, কার্নেল = ring 0</p>
+      <p>মনোলিথিক: সব কার্নেল স্পেসে (UNIX, Linux)</p><p>মাইক্রোকার্নেল: শুধু IPC, শিডিউলিং, অ্যাড্রেস স্পেস</p>
+      <p>হাইব্রিড: Windows NT, macOS XNU</p><p>মডুলার: Linux, Solaris</p>
+      <p>টাইপ ১ হাইপারভাইজর = বেয়ার মেটাল</p><p>টাইপ ২ = হোস্ট OS-এর উপরে (VirtualBox)</p>
+      <p>বুট: ফার্মওয়্যার → বুটলোডার → কার্নেল → ইনিট</p><p>init / systemd হলো PID 1</p>
+      <p>ট্র্যাপ সিঙ্ক্রন · ইন্টারাপ্ট অ্যাসিঙ্ক্রন</p><p>কনটেক্সট সুইচ ≈ ১–১০ μs; কল ≈ ২০ ns</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>OS = একটি ইন্টারফেস <b>এবং</b> একটি রিসোর্স ম্যানেজার</li>
+      <li>চারটি লক্ষ্য: সুবিধা, দক্ষতা, বিবর্তন, পোর্টেবিলিটি</li>
+      <li>কার্নেল = প্রিভিলেজড কোর; শেল = কেবল একটি UI</li>
+      <li>সিস্টেম কল ট্র্যাপের মাধ্যমে ইউজার → কার্নেল মোডে যায়</li>
+      <li>মনোলিথিক: ফাইল সিস্টেম ও ড্রাইভার কার্নেল স্পেসে</li>
+      <li>মাইক্রোকার্নেল: শুধু IPC, শিডিউলিং, অ্যাড্রেস স্পেস</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>হাইব্রিড কার্নেল = Windows NT, macOS XNU</li>
+      <li>টাইপ ১ বেয়ার মেটালে; টাইপ ২ হোস্ট OS-এর উপরে</li>
+      <li>বুট: ফার্মওয়্যার → বুটলোডার → কার্নেল → ইনিট</li>
+      <li>init (systemd) প্রথম প্রসেস, PID 1</li>
+      <li>ট্র্যাপ সিঙ্ক্রন, ইন্টারাপ্ট অ্যাসিঙ্ক্রন</li>
+      <li>রিয়েল-টাইম মানে দ্রুত নয়, পূর্বানুমানযোগ্য</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:1fr 1fr 168px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> শেল কার্নেল নয় · একটি ড্রাইভার একটি ডিভাইস সামলায়, OS সবগুলো · প্রজন্ম প্রকার নয় · রিয়েল-টাইম "দ্রুত" নয় · পেজ ফল্ট ক্র্যাশ নয় · ট্র্যাপ কনটেক্সট সুইচ নয় · কন্টেইনার VM নয়।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">সব কৌশল একসাথে</span> চারটি G: সুবিধা = সহজ, দক্ষতা = পূর্ণ, বিবর্তন = বদলানোযোগ্য, পোর্টেবিলিটি = বাড়ি বদলায় · কার্নেল বদলানো যায় না · ট্র্যাপ = প্রোগ্রামের দোষ, ইন্টারাপ্ট = পৃথিবীর · বড় কার্নেল = দ্রুত কল, ছোট কার্নেল = বকবক কল · টাইপ ১ মেঝের মালিক, টাইপ ২ বাড়িওয়ালার কাছে চায়।</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="164">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink-b" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink-b" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="bn s" style="font-size:10px">ইউজার প্রোগ্রাম</text>
+      <text x="75" y="64" text-anchor="middle" class="bn g s" style="font-size:10px">সিস্টেম কল</text>
+      <text x="75" y="100" text-anchor="middle" class="bn r s">কার্নেল</text>
+      <text x="215" y="28" text-anchor="middle" class="bn s">ইউটিলিটি</text>
+      <text x="215" y="64" text-anchor="middle" class="bn s">শেল</text>
+      <text x="215" y="100" text-anchor="middle" class="bn k s" style="font-size:11px">হার্ডওয়্যার</text>
+    </svg><figcaption>সব কিছু মাঝের তিরের উপর নির্ভরশীল</figcaption></figure>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি সংখ্যাই উত্তর বদলে দেয়</span> মাইক্রোকার্নেলে ২ μs × ২ মেসেজ = ৪ ms/s = <span class="circ">০.৪ %</span> ওভারহেড প্রতি ১০০০ অনুরোধ/সে-এ; ১০০ ০০০ অনুরোধ/সে-এ তা ৪০ %। একই গঠন, ভিন্ন উত্তর — গঠন-প্রশ্ন আসলে লোড-প্রশ্ন।</div>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>OS · ভূমিকা ও কাঠামো</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১.</span>OS-এর কোন অংশটি স্থায়ী থাকে এবং CPU, মেমোরি ও ডিভাইস সামলায়?<ol class="opts"><li>শেল</li><li>কার্নেল</li><li>কম্পাইলার</li><li>বুটলোডার</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">২.</span>সিস্টেম কল কী:<ol class="opts"><li>একটি হার্ডওয়্যার ফল্ট</li><li>একটি প্রোগ্রামের ভেতরের কল</li><li>কার্নেলের সেবা পাওয়ার ইন্টারফেস</li><li>মেশিন রিস্টার্টের কমান্ড</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৩.</span>কোন গঠনে কার্নেলে কেবল IPC, শিডিউলিং ও নিম্নমানের মেমোরি থাকে, আর ফাইল ও ড্রাইভার ইউজার সার্ভার হয়?<ol class="opts"><li>মাইক্রোকার্নেল</li><li>মনোলিথিক</li><li>লেয়ারড</li><li>সিম্পল (MS-DOS-ধরন)</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৪.</span>ইউজার প্রোগ্রামকে কার্নেলের সেবায় পৌঁছানোর প্রিভিলেজ পরিবর্তনটি কী:<ol class="opts"><li>কনটেক্সট সুইচ</li><li>ডিসপ্যাচ</li><li>ট্র্যাপ</li><li>পেজ রিপ্লেসমেন্ট</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৫.</span>২ ms-এর মধ্যে হৃদস্পন্দন উদ্দীপিত করতে হবে এমন পেসমেকার চলে কোনটিতে?<ol class="opts"><li>ব্যাচ OS</li><li>হার্ড রিয়েল-টাইম OS</li><li>টাইম-শেয়ারিং OS</li><li>ডিস্ট্রিবিউটেড OS</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৬.</span>কোন প্রজন্মে ছিল ভ্যাকুয়াম টিউব, কোনো OS নয় এবং মেশিন ভাষা?<ol class="opts"><li>প্রথম</li><li>দ্বিতীয়</li><li>তৃতীয়</li><li>চতুর্থ</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৭.</span>কোনো হোস্ট OS ছাড়াই সরাসরি হার্ডওয়্যারের উপর বসানো হাইপারভাইজর কী:<ol class="opts"><li>টাইপ ১</li><li>টাইপ ২</li><li>টাইপ ৩</li><li>একটি কন্টেইনার রানটাইম</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৮.</span>স্টার্টআপে কার্নেলের ইমেজ মেমোরিতে কে লোড করে?<ol class="opts"><li>শেল</li><li>বুটলোডার</li><li>ইনিট</li><li>ডিভাইস ড্রাইভার</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">৯.</span>একটি পেজ ফল্ট কী:<ol class="opts"><li>এমন ক্র্যাশ যা প্রসেস শেষ করে দেয়</li><li>অ্যাসিঙ্ক্রন ডিস্ক ইন্টারাপ্ট</li><li>একটি সিঙ্ক্রন ফল্ট, OS সেবা দিয়ে নির্দেশটি আবার চালায়</li><li>শিডিউলারের কনটেক্সট সুইচ</li></ol></div>
+    <div class="mcq" style="line-height:4.8mm"><span class="qn">১০.</span>Linux-এ প্রথম ইউজার-স্পেস প্রসেস (PID 1) কে:<ol class="opts"><li>বুটলোডার</li><li>শেল</li><li>init / systemd</li><li>ফাইল সিস্টেম</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ক · ৪-গ · ৫-খ · ৬-ক · ৭-ক · ৮-খ · ৯-গ · ১০-গ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> অপারেটিং সিস্টেমের সংজ্ঞা দাও, সেটিকে রিসোর্স ম্যানেজার ও কন্ট্রোল প্রোগ্রাম হিসেবে ব্যাখ্যা করো, চিহ্নিত চিত্রে দেখাও কীভাবে ইউজার প্রোগ্রাম সিস্টেম কলের মাধ্যমে কার্নেলের সেবায় পৌঁছায়, এবং মনোলিথিক ও মাইক্রোকার্নেল গঠনের তুলনা করো। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps tiny" style="margin-top:2mm">
+    <li><b>সংজ্ঞা (২)</b> — ব্যবহারকারী ও হার্ডওয়্যারের মাঝের সিস্টেম সফটওয়্যার, যা CPU, মেমোরি, ফাইল ও ডিভাইস সামলায়। <i class="mk">২</i></li>
+    <li><b>রিসোর্স ম্যানেজার (২)</b> — <i>কে কখন কী পাবে</i>: CPU শিডিউলিংয়ে, মেমোরি অ্যালোকেশন ও পেজিংয়ে, ফাইল ফাইল সিস্টেমে, ডিভাইস ড্রাইভারে। <i class="mk">২</i></li>
+    <li><b>কন্ট্রোল প্রোগ্রাম (১)</b> — কেবল এটিই হার্ডওয়্যার ছোঁয়; প্রোগ্রামগুলো আলাদা থাকে, তাই একটির বাগ পুরো সিস্টেম ক্ষতিগ্রস্ত করতে পারে না। <i class="mk">১</i></li>
+    <li><b>কলের পথ (৩)</b> — প্রোগ্রাম → লাইব্রেরি রুটিন → <b>ট্র্যাপ</b> → CPU কনটেক্সট সেভ করে <b>কার্নেল মোডে</b> যায় → সিস্টেম-কল টেবিল থেকে ডিসপ্যাচ → সেবা → return-from-trap। চিহ্নিত করো: ইউজার মোড, কার্নেল মোড, ট্র্যাপ, হার্ডওয়্যার। <i class="mk">৩</i></li>
+    <li><b>তুলনা (২)</b> — <b>মনোলিথিক</b>: সব সেবা এক কার্নেলে, দ্রুত কিন্তু একটি বাগ মেশিন থামাতে পারে (UNIX, Linux)। <b>মাইক্রোকার্নেল</b>: কেবল IPC, শিডিউলিং ও অ্যাড্রেস স্পেস; ফাইল ও ড্রাইভার ইউজার সার্ভার — নির্ভরযোগ্য, কিন্তু মেসেজ ওভারহেড বেশি (Mach, QNX)। <i class="mk">২</i></li>
+  </ol>
+  <h3 style="line-height:6.4mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols small" style="line-height:5.6mm">
+    <ul class="tick">
+      <li>চারটি লক্ষ্য বলতে পারি</li>
+      <li>কার্নেল, শেল, ইউটিলিটির নাম বলতে পারি</li>
+      <li>ট্র্যাপের পথ আঁকতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>আটটি প্রকারের নাম বলতে পারি</li>
+      <li>পাঁচটি প্রজন্ম স্থানে বসাতে পারি</li>
+      <li>টাইপ ১ ও টাইপ ২ আলাদা করতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

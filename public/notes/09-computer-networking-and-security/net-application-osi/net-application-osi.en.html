@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OSI Model, HTTP, WWW and SNMP: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>Date: 09.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">OSI Model, HTTP, WWW &amp; SNMP</span></h1>
+  <p class="subtitle">7 layers · TCP/IP · encapsulation · URL trace · HTTP · ports · SNMP: exam-ready in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M216,150 L176,150 M424,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">LAYERED MODELS</text><text x="320" y="168" text-anchor="middle" class="r s">&amp; application layer</text>
+      <text x="140" y="65" text-anchor="middle">TCP/IP 4 layers</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">OSI 7 layers + PDUs ★</text>
+      <text x="500" y="65" text-anchor="middle" class="r w6">Devices per layer ★</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Encapsulation ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">Port numbers ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">URL → page trace</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">HTTP codes ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">SNMP · FTP · DHCP</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = applied / walk-through</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① 7 layers in order<br>② PDU: bit, frame, packet, segment<br>③ hub L1 · switch L2 · router L3<br>④ HTTP 80 · HTTPS 443<br>⑤ status-code classes<br>⑥ SNMP UDP 161 / 162</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Computer Networking and Security: <span class="hl">Protocol hierarchies</span> … Domain Name System … Email and its privacy; <span class="hl">SNMP</span>; <span class="hl">HTTP</span>; <span class="hl">World Wide Web</span>." This notebook covers the OSI and TCP/IP layer models, encapsulation, the end-to-end journey of a web request, HTTP, the Web, SNMP and the well-known ports. Protocol internals live in the neighbouring notes: data link &amp; LANs, routing, IP/ARP, TCP/UDP, DNS &amp; email.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Layers &amp; the OSI model ……… p. 2</li><li>Layer duties, addresses, devices … p. 3</li><li>TCP/IP model, encapsulation … p. 4</li><li>Headers; trace: opening a URL … p. 5</li><li>HTTP &amp; HTTPS ……… p. 6</li></ul>
+    <ul class="tick"><li>WWW, URL, FTP, Telnet, SSH ……… p. 7</li><li>DHCP &amp; well-known ports ……… p. 8</li><li>SNMP ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: why layers, OSI at a glance ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>OSI at a glance</span></div>
+  <h2><span class="no">1</span>Layers &amp; the OSI Reference Model</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Protocol hierarchy</span> Network software is split into <span class="hl">layers</span>; each layer gives a <b>service</b> to the layer above through an <b>interface</b> and talks to its <b>peer</b> layer on the other host by a <b>protocol</b>. Only layer 1 really moves bits; the others talk to their peers <i>virtually</i>. A layer can change (Wi-Fi ↔ Ethernet) without touching the rest.</div>
+  <p class="small"><b>OSI</b> = Open Systems Interconnection, by <span class="hl">ISO</span> (ISO 7498, <span class="circ">1984</span>; also ITU-T X.200). <b>7 layers</b>; a <i>reference</i> model: its own protocols never caught on, but its vocabulary is used everywhere.</p>
+  <table class="hand small" style="width:100%">
+    <tr><th>#</th><th class="l">Layer</th><th class="l">Main job (one line)</th><th>PDU</th><th class="l">Examples</th></tr>
+    <tr><td>7</td><td class="l"><b>Application</b></td><td class="l">network services for the user/app</td><td>data</td><td class="l">HTTP, FTP, SMTP, DNS, SNMP</td></tr>
+    <tr><td>6</td><td class="l"><b>Presentation</b></td><td class="l">translation, <b>encryption</b>, <b>compression</b></td><td>data</td><td class="l">JPEG, MPEG, ASCII, SSL/TLS*</td></tr>
+    <tr><td>5</td><td class="l"><b>Session</b></td><td class="l">dialog control, <b>checkpoints</b></td><td>data</td><td class="l">NetBIOS, RPC, PPTP</td></tr>
+    <tr><td>4</td><td class="l"><b>Transport</b></td><td class="l"><b>process-to-process</b>: ports, reliability</td><td class="red"><b>segment</b></td><td class="l">TCP, UDP</td></tr>
+    <tr><td>3</td><td class="l"><b>Network</b></td><td class="l"><b>host-to-host</b>: IP address, <b>routing</b></td><td class="red"><b>packet</b></td><td class="l">IP, ICMP, IGMP, OSPF</td></tr>
+    <tr><td>2</td><td class="l"><b>Data Link</b></td><td class="l"><b>node-to-node</b> (hop): framing, MAC, CRC</td><td class="red"><b>frame</b></td><td class="l">Ethernet, PPP, HDLC, Wi-Fi</td></tr>
+    <tr><td>1</td><td class="l"><b>Physical</b></td><td class="l">raw <b>bits</b>: voltage, pins, medium</td><td class="red"><b>bit</b></td><td class="l">RJ-45, fibre, RS-232, DSL</td></tr>
+  </table>
+  <p class="tiny">* SSL/TLS: see the exam trap on the next sheet. UDP's PDU is called a <b>user datagram</b>. Layer numbers start at the <b>bottom</b>: Physical = 1.</p>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> 7 → 1: "<b>A</b>ll <b>P</b>eople <b>S</b>eem <b>T</b>o <b>N</b>eed <b>D</b>ata <b>P</b>rocessing".<br>1 → 7: "<b>P</b>lease <b>D</b>o <b>N</b>ot <b>T</b>hrow <b>S</b>ausage <b>P</b>izza <b>A</b>way".</div>
+      <div class="trick small"><span class="lbl">PDU trick</span> L4 → L1: "<b>S</b>ome <b>P</b>eople <b>F</b>ear <b>B</b>irthdays" = <span class="hl">Segment, Packet, Frame, Bit</span>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 236" width="295">
+      <g class="w">
+        <rect x="6" y="6" width="116" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="6" y="36" width="116" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="6" y="66" width="116" height="28" rx="5" class="ink-r fill-r"/>
+        <rect x="6" y="96" width="116" height="28" rx="5" class="ink-p fill-p"/>
+        <rect x="6" y="126" width="116" height="28" rx="5" class="ink fill-b"/>
+        <rect x="6" y="156" width="116" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="6" y="186" width="116" height="28" rx="5" class="ink-g fill-g"/>
+        <rect x="176" y="6" width="118" height="88" rx="8" class="ink-r fill-r"/>
+        <rect x="176" y="96" width="118" height="28" rx="5" class="ink-p fill-p"/>
+        <rect x="176" y="126" width="118" height="28" rx="5" class="ink fill-b"/>
+        <rect x="176" y="156" width="118" height="58" rx="8" class="ink-g fill-g"/>
+        <path class="ink-k" d="M124,50 H172 M124,110 H172 M124,140 H172 M124,185 H172" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="64" y="25" text-anchor="middle" class="s">7 Application</text><text x="64" y="55" text-anchor="middle" class="s">6 Presentation</text><text x="64" y="85" text-anchor="middle" class="s">5 Session</text><text x="64" y="115" text-anchor="middle" class="s">4 Transport</text><text x="64" y="145" text-anchor="middle" class="s">3 Network</text><text x="64" y="175" text-anchor="middle" class="s">2 Data Link</text><text x="64" y="205" text-anchor="middle" class="s">1 Physical</text>
+      <text x="235" y="48" text-anchor="middle" class="r w6">Application</text><text x="235" y="68" text-anchor="middle" class="s">HTTP · DNS · SMTP</text>
+      <text x="235" y="115" text-anchor="middle" class="p w6">Transport</text>
+      <text x="235" y="145" text-anchor="middle" class="w6">Internet</text>
+      <text x="235" y="181" text-anchor="middle" class="g w6">Link /</text><text x="235" y="200" text-anchor="middle" class="g w6">Network Access</text>
+      <text x="64" y="232" text-anchor="middle" class="k w6">OSI (7)</text><text x="235" y="232" text-anchor="middle" class="k w6">TCP/IP (4)</text>
+    </svg></figure>
+  </div>
+  <div class="exam small"><span class="lbl">Exam trap</span> Layers 4–7 are <b>end-to-end</b>: they exist only in the two hosts. A router implements only layers <b>1–3</b>, a switch 1–2, a hub 1. "Layer 3 device" = router; "Layer 2 device" = switch.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: duties, addresses, devices ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>Duties &amp; devices</span></div>
+  <h2><span class="no">2</span>Who Does What: Key Duties per Layer</h2><span class="tag">MCQ favourite</span>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Duty asked in the MCQ</th><th class="l">Layer</th></tr>
+    <tr><td class="l">bit synchronisation, line coding, topology, data rate</td><td class="l">1 Physical</td></tr>
+    <tr><td class="l">framing, <b>physical (MAC) addressing</b>, hop-to-hop error &amp; flow control, media access (CSMA/CD)</td><td class="l">2 Data Link</td></tr>
+    <tr><td class="l"><b>logical (IP) addressing</b>, routing, fragmentation, TTL</td><td class="l">3 Network</td></tr>
+    <tr><td class="l"><b>port addressing</b>, segmentation &amp; reassembly, end-to-end error/flow control, congestion control</td><td class="l">4 Transport</td></tr>
+    <tr><td class="l">dialog control (half/full duplex), checkpoints, login session</td><td class="l">5 Session</td></tr>
+    <tr><td class="l">encryption/decryption, compression, character code translation (ASCII ↔ EBCDIC)</td><td class="l" style="white-space:nowrap">6 Presentation</td></tr>
+    <tr><td class="l">file transfer, mail, web, remote login, directory services</td><td class="l">7 Application</td></tr>
+  </table>
+  <div class="mnote">flow &amp; error control appear twice: L2 (per hop) and L4 (end to end)</div>
+  <h3>Three addresses, three layers</h3>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Address</th><th>Layer</th><th>Size</th><th class="l">Scope / example</th></tr>
+    <tr><td class="l">MAC (physical)</td><td>2</td><td><span class="circ">48 bit</span></td><td class="l">one link · 3C-52-82-1A-0F-9B</td></tr>
+    <tr><td class="l">IP (logical)</td><td>3</td><td>32 / 128 bit</td><td class="l">end to end · 192.168.1.10</td></tr>
+    <tr><td class="l">Port</td><td>4</td><td><span class="circ">16 bit</span></td><td class="l">one process · 0–65535 · :443</td></tr>
+  </table>
+  <h3>Devices by layer</h3>
+  <figure class="doodle"><svg viewBox="0 0 640 128" width="640">
+    <g class="w">
+      <rect x="6" y="20" width="140" height="62" rx="10" class="ink-g fill-g"/>
+      <rect x="164" y="20" width="140" height="62" rx="10" class="ink fill-b"/>
+      <rect x="322" y="20" width="140" height="62" rx="10" class="ink-r fill-r"/>
+      <rect x="480" y="20" width="154" height="62" rx="10" class="ink-p fill-p"/>
+    </g>
+    <text x="76" y="14" text-anchor="middle" class="g w6">Layer 1</text><text x="234" y="14" text-anchor="middle" class="w6">Layer 2</text><text x="392" y="14" text-anchor="middle" class="r w6">Layer 3</text><text x="557" y="14" text-anchor="middle" class="p w6">Layer 4–7</text>
+    <text x="76" y="44" text-anchor="middle">hub · repeater</text><text x="76" y="66" text-anchor="middle" class="s">cable, modem</text>
+    <text x="234" y="44" text-anchor="middle">switch · bridge</text><text x="234" y="66" text-anchor="middle" class="s">NIC, access point</text>
+    <text x="392" y="44" text-anchor="middle">router</text><text x="392" y="66" text-anchor="middle" class="s">layer-3 switch</text>
+    <text x="557" y="44" text-anchor="middle">gateway</text><text x="557" y="66" text-anchor="middle" class="s">firewall, proxy</text>
+    <text x="76" y="104" text-anchor="middle" class="s">1 collision domain</text><text x="234" y="104" text-anchor="middle" class="s">splits collision domains</text><text x="392" y="104" text-anchor="middle" class="s r">splits broadcast domains</text><text x="557" y="104" text-anchor="middle" class="s">translates protocols</text>
+    <text x="320" y="124" text-anchor="middle" class="g s">reads: bits → MAC → IP → ports / content</text>
+  </svg></figure>
+  <div class="exam"><span class="lbl">Exam trap: borderline protocols</span> <b>ARP</b> maps IP → MAC: most MCQ keys put it in the <b>Network layer</b>, though it really works between L2 and L3 (TCP/IP puts it in the link layer). <b>SSL/TLS</b>: textbook MCQs say <b>Presentation</b> (encryption); in practice it runs on top of TCP, below HTTP. <b>NIC</b>: L1 + L2. Pick the answer the option list allows.</div>
+  <div class="tipbox small"><span class="lbl">IT link</span> Troubleshoot bottom-up: link light / cable (L1) → <span class="mono">arp -a</span>, switch port (L2) → <span class="mono">ping</span>, <span class="mono">tracert</span> (L3) → <span class="mono">telnet host 443</span> or <span class="mono">Test-NetConnection</span> (L4) → browser / <span class="mono">curl</span> (L7).</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: TCP/IP vs OSI, encapsulation ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>TCP/IP · encapsulation</span></div>
+  <h2><span class="no">3</span>The TCP/IP (Internet) Model</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> The model the Internet actually runs on, from the US DoD/ARPANET work (Cerf &amp; Kahn, 1974); ARPANET switched to TCP/IP on <span class="circ">1 Jan 1983</span>. RFC 1122 defines <span class="hl">4 layers</span>: <b>Application</b> (HTTP, DNS, SMTP, DHCP, SNMP) · <b>Transport</b> (TCP, UDP) · <b>Internet</b> (IP, ICMP, IGMP) · <b>Link</b> (Ethernet, Wi-Fi, PPP, ARP). Textbooks often use a 5-layer hybrid: Link split into Data Link + Physical.</div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Point</th><th class="l">OSI</th><th class="l">TCP/IP</th></tr>
+    <tr><td class="l">Layers</td><td class="l"><span class="circ">7</span></td><td class="l"><span class="circ">4</span> (5 in the hybrid)</td></tr>
+    <tr><td class="l">Origin</td><td class="l">ISO: model first, protocols later</td><td class="l">DoD: protocols first, model later</td></tr>
+    <tr><td class="l">Service / interface / protocol</td><td class="l">clearly separated</td><td class="l">not clearly separated</td></tr>
+    <tr><td class="l">Network layer</td><td class="l">connectionless + connection-oriented</td><td class="l"><b>connectionless only</b> (IP)</td></tr>
+    <tr><td class="l">Transport layer</td><td class="l">connection-oriented only</td><td class="l">both (TCP and UDP)</td></tr>
+    <tr><td class="l">Session, Presentation</td><td class="l">separate layers</td><td class="l">folded into Application</td></tr>
+  </table>
+  <div class="trick small"><span class="lbl">Memory trick</span> "<b>3-1-1-2</b>": OSI's top <b>3</b> → TCP/IP Application, <b>1</b> → Transport, <b>1</b> → Internet, bottom <b>2</b> → Link. So OSI <b>Network</b> = TCP/IP <b>Internet</b>; "Network Access" = OSI L1 + L2, not L3.</div>
+  <h2><span class="no">4</span>Encapsulation &amp; Decapsulation</h2><span class="tag">written favourite</span>
+  <div class="def small"><span class="lbl">Definition</span> Going <b>down</b>, each layer treats what it gets as its <b>payload (SDU)</b> and adds its own <span class="hl">header</span> (the data link layer also adds a <span class="hl">trailer</span>) to form its PDU. Going <b>up</b> at the receiver, each layer reads and strips its own header: <b>decapsulation</b>.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 200" width="640">
+    <g class="w">
+      <rect x="300" y="12" width="200" height="28" rx="4" class="ink-k fill-y"/>
+      <rect x="240" y="56" width="60" height="28" rx="4" class="ink-p fill-p"/><rect x="300" y="56" width="200" height="28" rx="4" class="ink-k"/>
+      <rect x="180" y="100" width="60" height="28" rx="4" class="ink fill-b"/><rect x="240" y="100" width="260" height="28" rx="4" class="ink-k"/>
+      <rect x="110" y="144" width="70" height="28" rx="4" class="ink-g fill-g"/><rect x="180" y="144" width="320" height="28" rx="4" class="ink-k"/><rect x="500" y="144" width="54" height="28" rx="4" class="ink-g fill-g"/>
+      <path class="ink-r" d="M106,184 H560"/>
+    </g>
+    <text x="400" y="31" text-anchor="middle" class="w6">HTTP data (GET /index.html)</text><text x="6" y="31" class="k w6">L7–5 data</text>
+    <text x="270" y="75" text-anchor="middle" class="p w6">TCP</text><text x="400" y="75" text-anchor="middle" class="s">data</text><text x="6" y="75" class="p w6">L4 segment</text>
+    <text x="210" y="119" text-anchor="middle" class="w6">IP</text><text x="370" y="119" text-anchor="middle" class="s">TCP hdr + data</text><text x="6" y="119" class="w6">L3 packet</text>
+    <text x="145" y="163" text-anchor="middle" class="g w6">Eth hdr</text><text x="340" y="163" text-anchor="middle" class="s">IP packet</text><text x="527" y="163" text-anchor="middle" class="g w6">FCS</text><text x="6" y="163" class="g w6">L2 frame</text>
+    <text x="6" y="189" class="r w6">L1 bits</text><text x="590" y="189" text-anchor="middle" class="r s">0101100…</text>
+    <text x="270" y="51" text-anchor="middle" class="p s">20 B</text><text x="210" y="95" text-anchor="middle" class="s">20 B</text><text x="145" y="139" text-anchor="middle" class="g s">14 B</text><text x="527" y="139" text-anchor="middle" class="g s">4 B</text>
+    <text x="604" y="70" class="r s" transform="rotate(90 604 70)">encapsulate ↓</text>
+  </svg><figcaption>headers go on the front; only layer 2 adds a trailer (FCS = CRC-32)</figcaption></figure>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: headers + URL trace ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>Data travel</span></div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Header</th><th>Min. size</th><th class="l">Key fields</th></tr>
+    <tr><td class="l">TCP</td><td>20 B</td><td class="l">source/destination port, sequence &amp; ack no., flags, window</td></tr>
+    <tr><td class="l">UDP</td><td><span class="circ">8 B</span></td><td class="l">source/destination port, length, checksum</td></tr>
+    <tr><td class="l">IPv4</td><td>20 B</td><td class="l">source/destination IP, TTL, protocol (6 = TCP, 17 = UDP)</td></tr>
+    <tr><td class="l">Ethernet II</td><td>14 + 4 B</td><td class="l">destination/source MAC, EtherType (0x0800 = IPv4), FCS</td></tr>
+  </table>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> Ethernet MTU = 1500 B (the IP packet). TCP payload per frame = 1500 − 20 − 20 = <span class="circ">1460 B</span> (the usual MSS). Frame = 1460 + 20 + 20 + 14 + 4 = 1518 B → efficiency 1460/1518 ≈ <b>96.2%</b>.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> At every <b>router</b> the frame is stripped and a new one built: <b>MAC addresses change each hop</b>, the <b>IP addresses stay the same</b> end to end (unless NAT), and TTL drops by 1. Russian dolls: each layer opens <b>only its own</b> doll.</div>
+  <h2><span class="no">5</span>What Happens When You Open a URL</h2><span class="tag">written favourite</span>
+  <p class="small">You type <span class="mono">https://www.example.com/index.html</span>. The PC already has its IP, mask, gateway and DNS server from <b>DHCP</b>.</p>
+  <ol class="steps small">
+    <li><b>Parse URL</b>: scheme https → port <b>443</b>; host www.example.com; path /index.html. Check browser and OS caches.</li>
+    <li><b>DNS</b> (UDP 53): ask the resolver for the A/AAAA record → the server's IP. <span class="tiny">(details: DNS notes)</span></li>
+    <li><b>ARP</b>: the server is on another network, so the PC needs the <b>gateway's MAC</b>, not the server's (ARP request = broadcast, reply = unicast).</li>
+    <li><b>TCP 3-way handshake</b> to port 443: <span class="circ">SYN → SYN-ACK → ACK</span> (1 RTT); the client uses an ephemeral port, e.g. 52814.</li>
+    <li><b>TLS handshake</b>: certificate check, key agreement (TLS 1.3: 1 RTT) → session keys.</li>
+    <li><b>HTTP GET</b> /index.html (encrypted) → segment → packet → frame → bits.</li>
+    <li><b>Routing</b> hop by hop: each router decrements TTL, looks up the destination network, re-frames. <span class="mono">tracert</span> / <span class="mono">traceroute</span> lists the hops using TTL expiry + ICMP.</li>
+    <li><b>Server</b> decapsulates upward, replies <b>200 OK</b> + HTML; the browser then fetches CSS, JS and images on the same connection.</li>
+    <li><b>Close</b> with FIN/ACK, or keep the connection alive for reuse.</li>
+  </ol>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>D-A-T-T-H</b>": DNS, ARP, TCP, TLS, HTTP: the order of first contact.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> IP <b>fragments</b> are reassembled by the destination's <b>IP</b> layer; out-of-order <b>segments</b> are reordered by <b>TCP</b>.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: HTTP ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>HTTP</span></div>
+  <h2><span class="no">6</span>HTTP: HyperText Transfer Protocol</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> Application-layer, <span class="hl">client–server, request–response</span> protocol of the Web, over TCP port <span class="circ">80</span> (HTTPS: <span class="circ">443</span>). It is <span class="hl">stateless</span>: the server keeps no memory of earlier requests; <b>cookies</b> (Set-Cookie → Cookie headers) add state for logins and carts.</div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Method</th><th class="l">Use</th><th>Safe</th><th>Idem.</th></tr>
+      <tr><td class="l">GET</td><td class="l">read</td><td>✓</td><td>✓</td></tr>
+      <tr><td class="l">HEAD</td><td class="l">headers only</td><td>✓</td><td>✓</td></tr>
+      <tr><td class="l">POST</td><td class="l">submit/create</td><td>✗</td><td class="red"><b>✗</b></td></tr>
+      <tr><td class="l">PUT</td><td class="l">replace</td><td>✗</td><td>✓</td></tr>
+      <tr><td class="l">PATCH</td><td class="l">partial edit</td><td>✗</td><td>✗</td></tr>
+      <tr><td class="l">DELETE</td><td class="l">remove</td><td>✗</td><td>✓</td></tr>
+    </table>
+    <table class="hand small" style="margin-top:0">
+      <tr><th>Class</th><th class="l">Meaning · examples</th></tr>
+      <tr><td>1xx</td><td class="l">informational · 100, 101</td></tr>
+      <tr><td>2xx</td><td class="l"><b>success</b> · 200 OK, 201, 204</td></tr>
+      <tr><td>3xx</td><td class="l">redirect · <b>301</b>, 302, 304</td></tr>
+      <tr><td>4xx</td><td class="l"><b>client error</b> · 401, 403, <span class="circ">404</span></td></tr>
+      <tr><td>5xx</td><td class="l"><b>server error</b> · 500, 502, 503</td></tr>
+    </table>
+  </div>
+  <p class="small">Safe = changes nothing on the server; Idem. (idempotent) = repeating it gives the same result. 401 = not authenticated (log in) · 403 = authenticated but forbidden · 301 = moved permanently · 304 = not modified (use cache) · 503 = service unavailable.</p>
+  <h3>Persistent vs non-persistent</h3>
+  <div class="cols" style="grid-template-columns:1fr 240px;align-items:center">
+    <div>
+      <p class="small"><b>Non-persistent</b> (HTTP/1.0 default): a new TCP connection per object, <span class="hl">2 RTT + transfer time</span> each. <b>Persistent</b> (HTTP/1.1 default, keep-alive): one connection serves many objects; <b>pipelining</b> sends requests back to back.</p>
+      <div class="ex small"><span class="lbl">Worked example ✍</span> 1 HTML + 10 images, ignore transfer time:<br>non-persistent, serial: 11 × 2 = <b>22 RTT</b><br>persistent, no pipelining: 2 + 10 = <b>12 RTT</b><br>persistent, pipelined: 2 + 1 = <span class="circ">3 RTT</span></div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 240 200" width="235">
+      <g class="w">
+        <path class="ink-k" d="M40,16 V196 M200,16 V196"/>
+        <path class="ink" d="M40,30 L200,56" marker-end="url(#ahb)"/>
+        <path class="ink" d="M200,56 L40,82" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M40,92 L200,118" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M200,118 L40,166" marker-end="url(#ahg)" style="stroke-width:3.5"/>
+        <path d="M22,30 V82" class="ink-p"/><path d="M22,92 V166" class="ink-p"/>
+      </g>
+      <text x="40" y="10" text-anchor="middle" class="s k">client</text><text x="200" y="10" text-anchor="middle" class="s k">server</text>
+      <text x="120" y="36" text-anchor="middle" class="s">SYN</text><text x="120" y="60" text-anchor="middle" class="s">SYN-ACK</text>
+      <text x="120" y="96" text-anchor="middle" class="s r">ACK + GET</text><text x="160" y="156" text-anchor="middle" class="s g">200 OK + file</text>
+      <text x="16" y="60" text-anchor="end" class="p s">1</text><text x="16" y="132" text-anchor="end" class="p s">2</text>
+      <text x="120" y="192" text-anchor="middle" class="p s">2 RTT + transfer</text>
+    </svg></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Version</th><th class="l">Year · RFC</th><th class="l">What is new</th></tr>
+    <tr><td class="l">HTTP/1.0</td><td class="l" style="white-space:nowrap">1996 · 1945</td><td class="l">headers, status codes; a new connection per object</td></tr>
+    <tr><td class="l">HTTP/1.1</td><td class="l">1997 · 2068</td><td class="l"><b>persistent</b> by default, pipelining, <b>Host</b> header required</td></tr>
+    <tr><td class="l">HTTP/2</td><td class="l" style="white-space:nowrap">2015 · 7540</td><td class="l"><b>binary framing</b>, multiplexed streams on one TCP connection, HPACK</td></tr>
+    <tr><td class="l">HTTP/3</td><td class="l" style="white-space:nowrap">2022 · 9114</td><td class="l">over <span class="circ">QUIC on UDP</span>; no TCP head-of-line blocking; TLS 1.3 built in</td></tr>
+  </table>
+  <div class="exam small"><span class="lbl">Exam trap</span> <b>HTTPS</b> is not a separate protocol: it is HTTP inside <b>TLS</b> (SSL is its deprecated predecessor) on port 443, giving confidentiality, integrity and server authentication by certificate.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: WWW, URL ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>World Wide Web</span></div>
+  <h2><span class="no">7</span>The World Wide Web</h2><span class="tag">MCQ favourite</span>
+  <div class="def small"><span class="lbl">Definition</span> A distributed system of <span class="hl">hypertext documents linked by URLs</span>, served over HTTP and shown by a browser. Proposed by <b>Tim Berners-Lee</b> at <b>CERN</b> in <span class="circ">1989</span>; first server and browser 1990–91; <b>Mosaic</b> (1993) made it popular; <b>W3C</b> founded 1994. Three pillars: <b>HTML</b> (the page), <b>URL</b> (its address), <b>HTTP</b> (the transfer). Web servers: Apache, Nginx, IIS.</div>
+  <h3>URL anatomy</h3>
+  <figure class="doodle"><svg viewBox="0 0 640 96" width="640">
+    <g class="w">
+      <rect x="20" y="6" width="82" height="30" rx="6" class="ink-p fill-p"/>
+      <rect x="108" y="6" width="142" height="30" rx="6" class="ink-r fill-r"/>
+      <rect x="256" y="6" width="48" height="30" rx="6" class="ink fill-b"/>
+      <rect x="310" y="6" width="142" height="30" rx="6" class="ink-g fill-g"/>
+      <rect x="458" y="6" width="82" height="30" rx="6" class="ink fill-b"/>
+      <rect x="546" y="6" width="74" height="30" rx="6" class="ink-k fill-y"/>
+    </g>
+    <text x="61" y="27" text-anchor="middle" class="k w6">https://</text>
+    <text x="179" y="27" text-anchor="middle" class="k w6">www.example.com</text>
+    <text x="280" y="27" text-anchor="middle" class="k w6">:443</text>
+    <text x="381" y="27" text-anchor="middle" class="k w6">/notes/osi.html</text>
+    <text x="499" y="27" text-anchor="middle" class="k w6">?lang=en</text>
+    <text x="583" y="27" text-anchor="middle" class="k w6">#layer4</text>
+    <text x="61" y="56" text-anchor="middle" class="p s">scheme</text>
+    <text x="179" y="56" text-anchor="middle" class="r s">host (domain)</text>
+    <text x="280" y="56" text-anchor="middle" class="s">port (opt.)</text>
+    <text x="381" y="56" text-anchor="middle" class="g s">path</text>
+    <text x="499" y="56" text-anchor="middle" class="s">query</text>
+    <text x="583" y="56" text-anchor="middle" class="k s">fragment</text>
+    <text x="179" y="76" text-anchor="middle" class="s">www = subdomain, com = TLD</text>
+    <text x="499" y="76" text-anchor="middle" class="s">key=value</text>
+    <text x="583" y="76" text-anchor="middle" class="s g">not sent</text>
+  </svg><figcaption>scheme://host:port/path?query#fragment</figcaption></figure>
+  <p class="small">URL = where a resource is; URN = its name (urn:isbn:…); both are <b>URIs</b>. The default port comes from the scheme (http 80, https 443). The <b>#fragment is never sent</b> to the server.</p>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Aspect</th><th class="l">Internet</th><th class="l">World Wide Web</th></tr>
+    <tr><td class="l">What</td><td class="l">global network of networks (infrastructure)</td><td class="l">one <b>service</b> running on the Internet</td></tr>
+    <tr><td class="l">Made of</td><td class="l">routers, links + TCP/IP</td><td class="l">pages, browsers, servers + HTTP</td></tr>
+    <tr><td class="l">Origin</td><td class="l">ARPANET, 1969</td><td class="l">CERN, 1989</td></tr>
+    <tr><td class="l">Carries</td><td class="l">web, email, FTP, VoIP, SSH …</td><td class="l">web pages only</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Internet = the <b>roads</b>; the Web = <b>one kind of traffic</b> on them. Email is another kind on the same roads.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Internet ≠ WWW. HTML is a <b>markup</b> language, not a programming language. A static page is the same file for all; a dynamic page is built per request (PHP, Node).</div>
+  </div>
+  <h2><span class="no">8</span>FTP, Telnet, SSH</h2>
+  <div class="cols">
+    <div class="def small" style="margin-top:0"><span class="lbl">FTP</span> TCP, <b>two connections</b>: control on <span class="circ">21</span> (stays open: "out-of-band" control), data on <span class="circ">20</span> in active mode (a new connection per file). <b>Passive</b> mode: the server names a port and the client connects (firewall friendly). Plain text. <b>TFTP</b>: UDP 69, no login.</div>
+    <div class="def small" style="margin-top:0"><span class="lbl">Telnet vs SSH</span> Both give a remote terminal. <b>Telnet</b>: TCP 23, everything, password included, in <b>plain text</b>. <b>SSH</b>: TCP <span class="circ">22</span>, encrypted and authenticated (key or password); also carries <b>SCP/SFTP</b> and tunnels.</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: DHCP, ports ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>DHCP · ports</span></div>
+  <h2><span class="no">9</span>DHCP</h2>
+  <div class="cols" style="grid-template-columns:1fr 270px;align-items:center">
+    <div class="def small" style="margin-top:0"><span class="lbl">DHCP</span> Gives a host its IP, mask, gateway and DNS server automatically for a <b>lease</b> time. UDP: server <span class="circ">67</span>, client <span class="circ">68</span>. Four messages, <span class="hl">DORA</span>: Discover (broadcast) → Offer → Request (broadcast) → Ack. A <b>relay agent</b> forwards them across routers. Successor of BOOTP.</div>
+    <figure class="doodle"><svg viewBox="0 0 270 140" width="265">
+      <g class="w">
+        <path class="ink-k" d="M30,14 V136 M240,14 V136"/>
+        <path class="ink-r" d="M30,30 L240,44" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M240,58 L30,72" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M30,86 L240,100" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M240,114 L30,128" marker-end="url(#ahg)"/>
+      </g>
+      <text x="30" y="10" text-anchor="middle" class="s k">client :68</text><text x="240" y="10" text-anchor="middle" class="s k">server :67</text>
+      <text x="135" y="27" text-anchor="middle" class="r s">Discover (broadcast)</text><text x="135" y="56" text-anchor="middle" class="g s">Offer</text>
+      <text x="135" y="83" text-anchor="middle" class="r s">Request</text><text x="135" y="112" text-anchor="middle" class="g s">Ack</text>
+    </svg></figure>
+  </div>
+  <h2><span class="no">10</span>Well-Known Ports</h2><span class="tag">high-yield</span>
+  <table class="hand small" style="width:100%;white-space:nowrap">
+    <tr><th class="l">Protocol</th><th>Port</th><th>Over</th><th class="l">Protocol</th><th>Port</th><th>Over</th></tr>
+    <tr><td class="l">FTP data / control</td><td>20 / 21</td><td>TCP</td><td class="l">POP3</td><td>110</td><td>TCP</td></tr>
+    <tr><td class="l">SSH, SCP, SFTP</td><td>22</td><td>TCP</td><td class="l">NTP</td><td>123</td><td>UDP</td></tr>
+    <tr><td class="l">Telnet</td><td>23</td><td>TCP</td><td class="l">IMAP</td><td>143</td><td>TCP</td></tr>
+    <tr><td class="l">SMTP (relay)</td><td>25</td><td>TCP</td><td class="l">SNMP / trap</td><td>161 / 162</td><td>UDP</td></tr>
+    <tr><td class="l">DNS</td><td><span class="circ">53</span></td><td>UDP + TCP</td><td class="l">LDAP</td><td>389</td><td>TCP</td></tr>
+    <tr><td class="l">DHCP server/client</td><td>67 / 68</td><td>UDP</td><td class="l">HTTPS</td><td>443</td><td>TCP*</td></tr>
+    <tr><td class="l">TFTP</td><td>69</td><td>UDP</td><td class="l">SMTP submit</td><td>587</td><td>TCP</td></tr>
+    <tr><td class="l">HTTP</td><td>80</td><td>TCP</td><td class="l">IMAPS / POP3S</td><td>993 / 995</td><td>TCP</td></tr>
+  </table>
+  <p class="small">* HTTP/3 uses UDP 443. Port = 16 bits → 0–65535: <b>well-known</b> 0–1023 · <b>registered</b> 1024–49151 · <b>dynamic / ephemeral</b> 49152–65535 (IANA). Others: RDP 3389, MySQL 3306, BGP TCP 179.</p>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Count up the ladder: <b>20-21 FTP, 22 SSH, 23 Telnet, 25 SMTP</b> ("files, secure, plain, mail"). Mail in: POP <b>110</b>, IMAP <b>143</b>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>UDP</b>: DNS queries, DHCP, TFTP, SNMP, NTP. <b>TCP</b>: FTP, SSH, Telnet, SMTP, POP3, IMAP, HTTP/1.1 and /2. DNS zone transfers use TCP 53.</div>
+  </div>
+  <div class="ex small"><span class="lbl">Worked example ✍</span> A firewall must allow a user to browse securely, fetch mail by IMAP over TLS and log in to a router safely. Open: TCP <b>443</b> (and UDP 443 for HTTP/3), TCP <b>993</b>, TCP <b>22</b>; block Telnet 23 because it sends the password in plain text.</div>
+  <div class="tipbox small"><span class="lbl">IT link</span> <span class="mono">netstat -an</span> lists open ports and connections; <span class="mono">nslookup</span> tests DNS; <span class="mono">curl -I https://site</span> shows the HTTP status line and headers; <span class="mono">ipconfig /renew</span> runs DHCP again.</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: SNMP ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>SNMP</span></div>
+  <h2><span class="no">11</span>SNMP: Simple Network Management Protocol</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> Application-layer protocol over <span class="hl">UDP</span> to <b>monitor and configure</b> routers, switches, servers, printers and UPSs. A <b>manager</b> polls <b>agents</b>; agents can also report events on their own. The agent listens on UDP <span class="circ">161</span>; the manager receives traps on UDP <span class="circ">162</span>.</div>
+  <div class="cols" style="grid-template-columns:1fr 300px;align-items:center">
+    <ul class="dash small">
+      <li><b>Manager / NMS</b>: the monitoring station</li>
+      <li><b>Agent</b>: software inside each managed device</li>
+      <li><b>MIB</b> (Management Information Base): the agent's database of managed objects, e.g. MIB-II</li>
+      <li><b>OID</b>: an object's dotted address in a global tree, e.g. sysDescr = 1.3.6.1.2.1.1.1</li>
+      <li><b>SMI</b>: rules for naming and typing objects, written in <b>ASN.1</b>, encoded with BER</li>
+    </ul>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="295">
+      <g class="w">
+        <rect x="6" y="56" width="92" height="56" rx="10" class="ink fill-b"/>
+        <rect x="196" y="16" width="98" height="56" rx="10" class="ink-g fill-g"/>
+        <rect x="196" y="104" width="98" height="56" rx="10" class="ink-g fill-g"/>
+        <path class="ink" d="M98,70 L196,40" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M196,60 L98,84" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M196,128 L98,100" marker-end="url(#ah)"/>
+      </g>
+      <text x="52" y="82" text-anchor="middle" class="w6">Manager</text><text x="52" y="100" text-anchor="middle" class="s">NMS</text>
+      <text x="245" y="40" text-anchor="middle" class="g w6">Agent</text><text x="245" y="58" text-anchor="middle" class="s">MIB · :161</text>
+      <text x="245" y="128" text-anchor="middle" class="g w6">Agent</text><text x="245" y="146" text-anchor="middle" class="s">MIB · :161</text>
+      <text x="138" y="40" text-anchor="middle" class="s">Get / Set</text><text x="150" y="88" text-anchor="middle" class="g s">Response</text>
+      <text x="136" y="134" text-anchor="middle" class="r s">Trap → :162</text>
+    </svg></figure>
+  </div>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">PDU (operation)</th><th class="l">Direction</th><th class="l">Purpose</th><th>Since</th></tr>
+    <tr><td class="l">GetRequest</td><td class="l">manager → agent</td><td class="l">read one or more objects</td><td>v1</td></tr>
+    <tr><td class="l">GetNextRequest</td><td class="l">manager → agent</td><td class="l">read the next OID (walk a table)</td><td>v1</td></tr>
+    <tr><td class="l">SetRequest</td><td class="l">manager → agent</td><td class="l">change a value (configure)</td><td>v1</td></tr>
+    <tr><td class="l">Response</td><td class="l">agent → manager</td><td class="l">answer to Get/Set (v1: GetResponse)</td><td>v1</td></tr>
+    <tr><td class="l"><b>Trap</b></td><td class="l">agent → manager</td><td class="l"><b>unsolicited</b> alert, <b>not acknowledged</b></td><td>v1</td></tr>
+    <tr><td class="l">GetBulkRequest</td><td class="l">manager → agent</td><td class="l">many objects in one request</td><td class="red"><b>v2</b></td></tr>
+    <tr><td class="l">InformRequest</td><td class="l">agent → manager</td><td class="l">a notification that <b>is acknowledged</b></td><td class="red"><b>v2</b></td></tr>
+  </table>
+  <table class="hand small" style="width:100%">
+    <tr><th class="l">Version</th><th class="l">Security</th><th class="l">Notes</th></tr>
+    <tr><td class="l">SNMPv1 (1990)</td><td class="l"><b>community string</b>, plain text</td><td class="l">defaults "public" (read), "private" (write)</td></tr>
+    <tr><td class="l">SNMPv2c</td><td class="l">still community string</td><td class="l">adds GetBulk, Inform, 64-bit counters</td></tr>
+    <tr><td class="l">SNMPv3</td><td class="l"><span class="hl">USM</span>: authentication + privacy (encryption); <b>VACM</b> access control</td><td class="l">the only secure version</td></tr>
+  </table>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "Agent <b>one-six-one</b> listens; manager <b>one-six-two</b> hears the trouble." Polling = the manager asks; a trap = the agent shouts.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> SNMP runs over <b>UDP</b>, not TCP. Encryption arrives only in <b>v3</b>; the "c" in v2c means community.</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">IT link</span> v3 security levels: <b>noAuthNoPriv</b> · <b>authNoPriv</b> · <b>authPriv</b> (authenticated and encrypted). Reading a router's name from a Linux shell: <span class="mono">snmpget -v2c -c public 10.0.0.1 1.3.6.1.2.1.1.5.0</span> (sysName); <span class="mono">snmpwalk</span> repeats GetNext down the tree.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>OSI: ISO 7498, 1984, 7 layers</p><p>TCP/IP: 4 layers (RFC 1122)</p>
+      <p>PDU: data · segment · packet · frame · bit</p><p>UDP PDU = user datagram</p>
+      <p>Hub L1 · switch/bridge L2 · router L3</p><p>Gateway: any / all layers</p>
+      <p>MAC 48 bit · IPv4 32 · IPv6 128 · port 16</p><p>Only L2 adds a trailer (FCS)</p>
+      <p>Encryption, compression → L6</p><p>Dialog control, checkpoints → L5</p>
+      <p>Routing, logical address → L3</p><p>Port, end-to-end reliability → L4</p>
+      <p>HTTP 80 · HTTPS 443 · HTTP/3: QUIC</p><p>Non-persistent: 2 RTT per object</p>
+      <p>SNMP UDP 161 agent / 162 trap</p><p>DHCP UDP 67/68, DORA</p>
+      <p>FTP 20/21 · SSH 22 · Telnet 23 · SMTP 25</p><p>DNS 53 · POP3 110 · IMAP 143</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>WWW: Berners-Lee, CERN, 1989</li>
+      <li>HTTP is stateless; cookies add state</li>
+      <li>HTTP/1.1: persistent by default</li>
+      <li>404 Not Found = client error (4xx)</li>
+      <li>301 = moved permanently</li>
+      <li>POST is not idempotent; PUT is</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>MAC changes per hop; IP does not</li>
+      <li>TCP/IP Application = OSI L5 + L6 + L7</li>
+      <li>Trap = unsolicited, unacknowledged</li>
+      <li>SNMPv3 adds auth + encryption</li>
+      <li>FTP control channel is out-of-band</li>
+      <li>URL #fragment is not sent to server</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> Physical is layer 1, not 7 · OSI Network = TCP/IP Internet · ARP: MCQ keys usually say Network layer · SSL/TLS: textbook keys say Presentation · Internet ≠ WWW · SNMP and DHCP run over UDP · 401 = unauthenticated, 403 = forbidden · IP reassembles fragments, TCP reorders segments</div>
+  <div class="trick"><span class="lbl">All tricks together</span> All People Seem To Need Data Processing (7 → 1) · Please Do Not Throw Sausage Pizza Away (1 → 7) · Some People Fear Birthdays (S-P-F-B) · 3-1-1-2 mapping · Russian dolls · D-A-T-T-H · ports 20-21-22-23-25 · agent 161, trap 162</div>
+  <figure class="doodle"><svg viewBox="0 0 620 96" width="620">
+    <g class="w">
+      <rect x="6" y="30" width="100" height="40" rx="10" class="ink-p fill-p"/><rect x="128" y="30" width="100" height="40" rx="10" class="ink-p fill-p"/>
+      <rect x="250" y="30" width="100" height="40" rx="10" class="ink-r fill-r"/><rect x="372" y="30" width="100" height="40" rx="10" class="ink-r fill-r"/>
+      <rect x="494" y="30" width="120" height="40" rx="10" class="ink-g fill-g"/>
+      <path class="ink" d="M106,50 H126" marker-end="url(#ahb)"/><path class="ink" d="M228,50 H248" marker-end="url(#ahb)"/><path class="ink" d="M350,50 H370" marker-end="url(#ahb)"/><path class="ink" d="M472,50 H492" marker-end="url(#ahb)"/>
+    </g>
+    <text x="56" y="56" text-anchor="middle" class="p w6">DNS</text><text x="178" y="56" text-anchor="middle" class="p w6">ARP</text><text x="300" y="56" text-anchor="middle" class="r w6">TCP</text><text x="422" y="56" text-anchor="middle" class="r w6">TLS</text><text x="554" y="56" text-anchor="middle" class="g w6">HTTP GET</text>
+    <text x="56" y="22" text-anchor="middle" class="s">UDP 53</text><text x="178" y="22" text-anchor="middle" class="s">gateway MAC</text><text x="300" y="22" text-anchor="middle" class="s">SYN, SYN-ACK, ACK</text><text x="422" y="22" text-anchor="middle" class="s">keys, certificate</text><text x="554" y="22" text-anchor="middle" class="s">200 OK</text>
+    <text x="310" y="90" text-anchor="middle" class="g s">opening https://… in one line</text>
+  </svg><figcaption>D-A-T-T-H: the first five exchanges of a web visit</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>Networking · OSI, HTTP &amp; SNMP</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Which OSI layer is responsible for routing?<ol class="opts"><li>Data link</li><li>Transport</li><li>Network</li><li>Session</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>The PDU of the data link layer is:<ol class="opts"><li>frame</li><li>packet</li><li>segment</li><li>bit</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Encryption and compression: which layer?<ol class="opts"><li>Application</li><li>Session</li><li>Transport</li><li>Presentation</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>SNMP traps arrive on UDP port:<ol class="opts"><li>161</li><li>162</li><li>143</li><li>110</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>HTTP status 404 belongs to the class:<ol class="opts"><li>2xx</li><li>3xx</li><li>5xx</li><li>4xx</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>TCP/IP Internet layer = OSI's:<ol class="opts"><li>Network</li><li>Transport</li><li>Data link</li><li>Session</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Which HTTP method is NOT idempotent?<ol class="opts"><li>GET</li><li>PUT</li><li>POST</li><li>DELETE</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>The FTP control port (TCP) is:<ol class="opts"><li>20</li><li>21</li><li>22</li><li>23</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Unchanged as a packet crosses routers:<ol class="opts"><li>source MAC</li><li>destination MAC</li><li>TTL</li><li>destination IP</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>HTTP/3 runs over:<ol class="opts"><li>QUIC (UDP)</li><li>TCP only</li><li>SCTP</li><li>raw IP</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-d · 6-a · 7-c · 8-b · 9-d · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> With a diagram, explain how data is encapsulated as it moves down the OSI layers when a browser requests a web page, naming the PDU and the header added at each layer. How does decapsulation work at the receiver? <i class="mk">10 marks</i></div>
+  <ol class="steps small">
+    <li>Draw the 7-layer stacks for client and server with the physical link between them; peer layers talk virtually <i class="mk">2</i></li>
+    <li>L7–L5: the HTTP request (GET, Host header) is the data; L6 may encrypt it (TLS) <i class="mk">2</i></li>
+    <li>L4 adds a TCP header (ports 52814 → 443, seq/ack) → <b>segment</b>; L3 adds an IP header (IPs, TTL) → <b>packet</b>; L2 adds the Ethernet header (MACs, EtherType) + FCS → <b>frame</b>; L1 sends <b>bits</b> <i class="mk">4</i></li>
+    <li>Receiver: each layer checks and removes its own header (FCS check, IP address, port → process) and passes the payload up; routers in between work only up to L3 and re-frame <i class="mk">2</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can list 7 layers with job, PDU, device</li>
+        <li>Can map OSI ↔ TCP/IP and compare them</li>
+        <li>Can trace a URL: DNS → ARP → TCP → TLS → HTTP</li>
+        <li>Know status-code classes and all key ports</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① Compare OSI and TCP/IP<br>② Persistent vs non-persistent HTTP with RTT count<br>③ SNMP architecture and versions<br>④ FTP's two connections</div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

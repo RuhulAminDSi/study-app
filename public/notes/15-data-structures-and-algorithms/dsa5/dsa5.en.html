@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Flow, Approximation &amp; Parallel Algorithms: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Flow, Approximation &amp; Parallel Algorithms</span></h1>
+  <p class="subtitle">max-flow = min-cut · Ford–Fulkerson · Edmonds–Karp · ρ-approximation · PTAS/FPTAS · speedup · Amdahl</p>
+  <p class="tiny center" style="margin:0 0 1mm;line-height:5.2mm"><b>Eleven sheets:</b> how much can a network carry and where it chokes, how to get a provably good answer when the exact one is out of reach, and how fast many processors really make a program — the three "beyond the basics" clauses of the algorithms syllabus.</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="380">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="106" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">3 toolkits</text><text x="320" y="172" text-anchor="middle" class="r s">flow · approx · parallel</text>
+      <text x="142" y="65" text-anchor="middle" class="s" style="font-size:17px">residual graph</text>
+      <text x="320" y="40" text-anchor="middle" class="r w6" style="font-size:14px">max-flow = min-cut ★</text>
+      <text x="498" y="65" text-anchor="middle" class="r w6" style="font-size:17px">FF · EK O(VE²)</text>
+      <text x="96" y="155" text-anchor="middle" class="s" style="font-size:17px">bipartite matching</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6" style="font-size:17px">vertex cover: 2</text>
+      <text x="142" y="245" text-anchor="middle" class="s" style="font-size:17px">metric TSP: 2 / 1.5</text>
+      <text x="320" y="270" text-anchor="middle" class="r w6" style="font-size:17px">Amdahl's law ★</text>
+      <text x="498" y="245" text-anchor="middle" class="g w6" style="font-size:17px">speedup · efficiency</text>
+    </svg>
+    <figcaption>↑ the whole topic: red = high-yield, green = the parallel metrics</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;line-height:5.2mm"><b>High-yield list</b><br>① 0 ≤ f ≤ c; in = out except at s, t<br>② <span class="circ">max flow = min cut</span><br>③ Residual: forward c−f, backward f<br>④ FF O(E·|f*|), integer capacities<br>⑤ Edmonds–Karp = BFS paths, O(VE²)<br>⑥ Dinic O(V²E) · push–relabel O(V²E)<br>⑦ Matching = flow with unit capacities<br>⑧ ρ ≥ 1; vertex cover 2-approx<br>⑨ Metric TSP 2 (MST), Christofides 1.5<br>⑩ Set cover greedy H(n) ≈ ln n<br>⑪ S = T₁/Tₚ, E = S/p<br>⑫ <span class="circ">Amdahl</span>: S ≤ 1/((1−P)+P/N)</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny" style="line-height:5.2mm">The algorithms syllabus lists, after graph traversal, spanning trees and shortest paths: "<span class="hl">Flow algorithms; Approximation algorithms; Parallel algorithms;</span>" — followed by lower-bound theory and NP-completeness. <b>All three clauses are taken in full here.</b> Graph searching (BFS/DFS), MST and greedy methods come from the previous lesson; why some problems need approximation at all — <span class="hl">NP-hardness</span> — is the next lesson. Here the question is practical: <span class="hl">how much, how close, how fast?</span></p>
+  <div class="tipbox blk tiny" style="line-height:5.2mm"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = memory trick · <span class="red"><b>red</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ul class="tick"><li>Flow networks &amp; residual graph … p. 2</li><li>Ford–Fulkerson &amp; complexities … p. 3</li><li>Worked max-flow + min cut … p. 4</li><li>Max-flow min-cut &amp; applications … p. 5</li><li>Approximation: ratio, vertex cover … p. 6</li></ul>
+    <ul class="tick"><li>TSP, set cover, knapsack, PTAS … p. 7</li><li>Parallel metrics &amp; Amdahl's law … p. 8</li><li>Parallel sorting, matrix, BFS … p. 9</li><li>Night-before sheet … p. 10</li><li>Practice MCQs + written … p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: flow networks ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Flow networks</span></div>
+  <h2><span class="no">1</span>Flow Networks: Source, Sink, Capacity, Flow — and the Residual Graph</h2><span class="tag">the vocabulary ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Definition</span> A <b>flow network</b> is a <span class="hl">directed graph G = (V, E) in which every edge (u, v) has a capacity c(u, v) ≥ 0</span>, with two special vertices: the <b>source s</b>, where flow originates, and the <b>sink t</b>, where it is absorbed. A <b>flow</b> f assigns to each edge the amount actually passing through it. Water pipes, road lanes, network links and conveyor belts are all the same model: <i>how much can travel from s to t per unit time?</i></div>
+  <figure class="doodle"><svg viewBox="0 0 600 226" width="440">
+    <g class="w">
+      <circle cx="40" cy="113" r="20" class="ink-k fill-y"/>
+      <circle cx="200" cy="38" r="20" class="ink fill-b"/>
+      <circle cx="200" cy="188" r="20" class="ink fill-b"/>
+      <circle cx="400" cy="38" r="20" class="ink fill-b"/>
+      <circle cx="400" cy="188" r="20" class="ink fill-b"/>
+      <circle cx="560" cy="113" r="20" class="ink-g fill-g"/>
+      <path class="ink" d="M58,104 L180,48" marker-end="url(#ahb)"/>
+      <path class="ink" d="M58,122 L180,178" marker-end="url(#ahb)"/>
+      <path class="ink" d="M220,38 H378" marker-end="url(#ahb)"/>
+      <path class="ink" d="M200,58 V166" marker-end="url(#ahb)"/>
+      <path class="ink" d="M216,50 L382,174" marker-end="url(#ahb)"/>
+      <path class="ink" d="M220,188 H378" marker-end="url(#ahb)"/>
+      <path class="ink" d="M400,168 V60" marker-end="url(#ahb)"/>
+      <path class="ink" d="M418,47 L540,104" marker-end="url(#ahb)"/>
+      <path class="ink" d="M418,179 L540,122" marker-end="url(#ahb)"/>
+    </g>
+    <text x="40" y="118" text-anchor="middle" class="k w6" style="font-size:14px">s</text>
+    <text x="200" y="43" text-anchor="middle" class="k w6" style="font-size:14px">A</text>
+    <text x="200" y="193" text-anchor="middle" class="k w6" style="font-size:14px">C</text>
+    <text x="400" y="43" text-anchor="middle" class="k w6" style="font-size:14px">B</text>
+    <text x="400" y="193" text-anchor="middle" class="k w6" style="font-size:14px">D</text>
+    <text x="560" y="118" text-anchor="middle" class="g w6" style="font-size:14px">t</text>
+    <text x="104" y="66" text-anchor="middle" class="r w6" style="font-size:13px">10</text>
+    <text x="104" y="172" text-anchor="middle" class="r w6" style="font-size:13px">10</text>
+    <text x="300" y="30" text-anchor="middle" class="r w6" style="font-size:13px">4</text>
+    <text x="186" y="118" text-anchor="middle" class="r w6" style="font-size:13px">2</text>
+    <text x="312" y="104" text-anchor="middle" class="r w6" style="font-size:13px">8</text>
+    <text x="300" y="214" text-anchor="middle" class="r w6" style="font-size:13px">9</text>
+    <text x="414" y="118" text-anchor="middle" class="r w6" style="font-size:13px">6</text>
+    <text x="496" y="66" text-anchor="middle" class="r w6" style="font-size:13px">10</text>
+    <text x="496" y="172" text-anchor="middle" class="r w6" style="font-size:13px">10</text>
+  </svg><figcaption>the running example of this lesson: red numbers are capacities; it is solved on sheet 4</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Rule</th><th class="l">Statement</th><th class="l">Meaning</th></tr>
+    <tr><td class="l"><b>Capacity constraint</b></td><td class="l"><span class="circ">0 ≤ f(u,v) ≤ c(u,v)</span></td><td class="l">No edge carries more than its capacity, and never a negative amount.</td></tr>
+    <tr><td class="l"><b>Flow conservation</b></td><td class="l">Σ f(·, v) = Σ f(v, ·) for every v ≠ s, t</td><td class="l"><span class="hl">What enters a vertex leaves it</span> — only s and t are exempt.</td></tr>
+    <tr><td class="l"><b>Value of the flow</b></td><td class="l">|f| = Σ f(s, v) − Σ f(v, s)</td><td class="l">Net flow out of the source = net flow into the sink.</td></tr>
+    <tr><td class="l"><b>Bottleneck</b></td><td class="l">c_f(p) = min residual capacity on path p</td><td class="l">The amount one augmenting path can add.</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 270px;align-items:start">
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Residual graph G_f ✍</span> For every edge carrying f of capacity c, the residual graph has a <b>forward edge</b> with <span class="hl">c_f(u,v) = c(u,v) − f(u,v)</span> (room left) and a <b>backward edge</b> with <span class="hl">c_f(v,u) = f(u,v)</span> (flow that may be cancelled). An <b>augmenting path</b> is any s→t path in G_f; edges with c_f = 0 are dropped.</div>
+    <figure class="doodle"><svg viewBox="0 0 280 130" width="250">
+      <g class="w">
+        <circle cx="30" cy="28" r="16" class="ink fill-b"/><circle cx="250" cy="28" r="16" class="ink fill-b"/>
+        <path class="ink" d="M46,28 H232" marker-end="url(#ahb)"/>
+        <circle cx="30" cy="100" r="16" class="ink fill-b"/><circle cx="250" cy="100" r="16" class="ink fill-b"/>
+        <path class="ink-g" d="M46,92 H232" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M234,110 H48" marker-end="url(#ah)"/>
+      </g>
+      <text x="30" y="33" text-anchor="middle" class="k w6" style="font-size:12px">u</text><text x="250" y="33" text-anchor="middle" class="k w6" style="font-size:12px">v</text>
+      <text x="30" y="105" text-anchor="middle" class="k w6" style="font-size:12px">u</text><text x="250" y="105" text-anchor="middle" class="k w6" style="font-size:12px">v</text>
+      <text x="140" y="20" text-anchor="middle" class="k w6" style="font-size:11px">network: f/c = 6/10</text>
+      <text x="140" y="86" text-anchor="middle" class="g w6" style="font-size:11px">forward 10 − 6 = 4</text>
+      <text x="140" y="126" text-anchor="middle" class="r w6" style="font-size:11px">backward 6 (undo)</text>
+    </svg><figcaption>one edge → two residual edges</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> Conservation does <b>not</b> hold at s and t — that is where the flow value is measured. <b>2.</b> The backward edge is <span class="hl">not a real pipe</span>; pushing along it means <i>cancelling</i> flow already sent. <b>3.</b> A saturated edge (f = c) disappears forward but <b>still exists backward</b>.</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Forward = room left, backward = regret.</b>" Every unit you send buys you the right to change your mind about it later — that is the residual graph in one line.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: Ford-Fulkerson and the algorithm table ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Max-flow algorithms</span></div>
+  <h2><span class="no">2</span>Ford–Fulkerson, Edmonds–Karp, Dinic and Push–Relabel</h2><span class="tag">the complexity table ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="code tiny" style="font-size:10pt;line-height:5.2mm;margin-top:0">FORD-FULKERSON(G, s, t)
+  for each edge (u,v): f(u,v) = 0
+  while an s→t path p exists in G_f:
+    b = min{ c_f(u,v) : (u,v) on p }
+    for each (u,v) on p:
+      if (u,v) ∈ E: f(u,v) += b
+      else:         f(v,u) -= b
+  return f      // |f| is maximum</div>
+    <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">The method in four steps</span> <b>1.</b> Start with <span class="hl">zero flow</span>. <b>2.</b> Find any augmenting path in the residual graph. <b>3.</b> Push its <b>bottleneck</b> b along it and update residual capacities (forward −b, backward +b). <b>4.</b> Repeat until <span class="hl">no s→t path remains</span>; the flow is then maximum. FF is a <i>method</i>: it does not say <b>how</b> to find the path.</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Algorithm</th><th class="l">How the path / flow is chosen</th><th class="l">Time</th></tr>
+    <tr><td class="l"><b>Ford–Fulkerson</b> (1956)</td><td class="l">Any augmenting path (often DFS). Needs <b>integer</b> capacities to be sure of stopping.</td><td class="l"><span class="circ">O(E·|f*|)</span></td></tr>
+    <tr><td class="l"><b>Edmonds–Karp</b> (1972)</td><td class="l">FF with <span class="hl">BFS = shortest augmenting path</span> (fewest edges). O(VE) augmentations × O(E) per BFS.</td><td class="l"><span class="circ">O(VE²)</span></td></tr>
+    <tr><td class="l"><b>Dinic</b> (1970)</td><td class="l">BFS builds a <b>level graph</b>; DFS pushes a <b>blocking flow</b>; at most V−1 phases.</td><td class="l">O(V²E); unit capacity O(E·min(V^⅔, E^½))</td></tr>
+    <tr><td class="l"><b>Push–Relabel</b> (Goldberg–Tarjan)</td><td class="l">Not path-based: keeps a <b>preflow</b>, pushes excess downhill, <b>relabels</b> heights.</td><td class="l">generic O(V²E); FIFO O(V³)</td></tr>
+    <tr><td class="l"><b>Hopcroft–Karp</b></td><td class="l">Dinic specialised to <b>bipartite matching</b>.</td><td class="l">O(E√V)</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 280px;align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ three corrections</span> <b>1.</b> <b>Dinic is O(V²E)</b> in general. The bound O(E·min(V^⅔, E^½)) holds <span class="red">only for unit-capacity networks</span> — quoting it as the general bound is wrong. <b>2.</b> <b>O(E·|f*|)</b> assumes integer capacities: each augmentation adds ≥ 1. With <span class="red">irrational capacities</span> plain FF may <b>never terminate</b> (and may even converge to a wrong value). <b>3.</b> Edmonds–Karp's bound is <span class="hl">independent of the capacities</span> — that is exactly why BFS is used.</div>
+    <figure class="doodle"><svg viewBox="0 0 280 170" width="250">
+      <g class="w">
+        <circle cx="30" cy="80" r="16" class="ink-k fill-y"/>
+        <circle cx="140" cy="22" r="16" class="ink fill-b"/>
+        <circle cx="140" cy="138" r="16" class="ink fill-b"/>
+        <circle cx="250" cy="80" r="16" class="ink-g fill-g"/>
+        <path class="ink" d="M44,72 L124,30 M44,88 L124,130 M156,30 L236,72 M156,130 L236,88" />
+        <path class="ink-r" d="M140,38 V120" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M150,118 C170,90 170,70 150,42" marker-end="url(#ahg)"/>
+      </g>
+      <text x="30" y="85" text-anchor="middle" class="k w6" style="font-size:12px">s</text>
+      <text x="140" y="27" text-anchor="middle" class="k w6" style="font-size:12px">a</text>
+      <text x="140" y="143" text-anchor="middle" class="k w6" style="font-size:12px">b</text>
+      <text x="250" y="85" text-anchor="middle" class="g w6" style="font-size:12px">t</text>
+      <text x="122" y="84" text-anchor="middle" class="r w6" style="font-size:10px">a→b</text>
+      <text x="196" y="84" text-anchor="middle" class="g w6" style="font-size:10px">undo</text>
+      <text x="140" y="166" text-anchor="middle" class="s" style="font-size:10px">all capacities 1 · max flow 2</text>
+    </svg><figcaption>s→a→b→t first: only the backward edge b→a lets s→b→a→t reach flow 2</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Ford finds any road, Edmonds–Karp takes the shortest, Dinic floods by levels, push–relabel lets water run downhill.</b>" Complexities pair up: <b>E-K = VE²</b>, <b>Dinic = V²E</b> — the squares swap places.</div>
+    <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Integrality theorem</span> With <b>integer</b> capacities, FF returns a max flow in which <span class="hl">every edge carries an integer</span>. This is what makes the matching reduction (sheet 5) give a real matching, not fractions.</div>
+  </div>
+  <div class="ex tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Worked example ✍ why the path choice matters</span> s→u 1000, s→v 1000, u→v 1, u→t 1000, v→t 1000. A careless FF can alternate s→u→v→t and s→v→u→t (through the backward edge v→u), adding <b>1</b> each time: <span class="hl">2000 augmentations</span>. Edmonds–Karp picks the 2-edge paths s→u→t and s→v→t first: <b>2 augmentations</b>, same max flow <b>2000</b>.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: worked max-flow ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Worked max-flow</span></div>
+  <h2><span class="no">3</span>Worked Example: Max Flow of the Sheet-2 Network, Checked by a Min Cut</h2><span class="tag">written-exam favourite ★</span>
+  <div class="ex tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Worked example ✍ Edmonds–Karp (shortest paths first)</span> Network: s→A 10, s→C 10, A→B 4, A→C 2, A→D 8, C→D 9, D→B 6, B→t 10, D→t 10. Each row: the path found in the current residual graph, its bottleneck, and what it saturates.</div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">#</th><th class="l">Augmenting path</th><th class="l">Residual capacities on the path</th><th>Bottleneck</th><th class="l">Saturates</th><th>|f|</th></tr>
+    <tr><td class="l">1</td><td class="l">s→A→B→t</td><td class="l">10, 4, 10</td><td><b>4</b></td><td class="l">A→B</td><td>4</td></tr>
+    <tr><td class="l">2</td><td class="l">s→A→D→t</td><td class="l">6, 8, 10</td><td><b>6</b></td><td class="l">s→A</td><td>10</td></tr>
+    <tr><td class="l">3</td><td class="l">s→C→D→t</td><td class="l">10, 9, 4</td><td><b>4</b></td><td class="l">D→t</td><td>14</td></tr>
+    <tr><td class="l">4</td><td class="l">s→C→D→B→t</td><td class="l">6, 5, 6, 6</td><td><b>5</b></td><td class="l">C→D</td><td><span class="circ">19</span></td></tr>
+    <tr><td class="l">5</td><td class="l" colspan="5">From s only C is reachable (s→A = 0, C→D = 0, no flow on A→C to cancel) — <b>no augmenting path: stop.</b></td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 600 236" width="450">
+    <g class="w">
+      <circle cx="40" cy="113" r="20" class="ink-k fill-y"/>
+      <circle cx="200" cy="38" r="20" class="ink fill-b"/>
+      <circle cx="200" cy="188" r="20" class="ink-p fill-p"/>
+      <circle cx="400" cy="38" r="20" class="ink fill-b"/>
+      <circle cx="400" cy="188" r="20" class="ink fill-b"/>
+      <circle cx="560" cy="113" r="20" class="ink-g fill-g"/>
+      <path class="ink-r" d="M58,104 L180,48" marker-end="url(#ah)"/>
+      <path class="ink" d="M58,122 L180,178" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M220,38 H378" marker-end="url(#ah)"/>
+      <path class="ink" d="M200,58 V166" marker-end="url(#ahb)"/>
+      <path class="ink" d="M216,50 L382,174" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M220,188 H378" marker-end="url(#ah)"/>
+      <path class="ink" d="M400,168 V60" marker-end="url(#ahb)"/>
+      <path class="ink" d="M418,47 L540,104" marker-end="url(#ahb)"/>
+      <path class="ink-r" d="M418,179 L540,122" marker-end="url(#ah)"/>
+      <path class="ink-p" style="stroke-dasharray:7 5" d="M112,6 L150,132 L300,152 L300,232"/>
+    </g>
+    <text x="40" y="118" text-anchor="middle" class="k w6" style="font-size:14px">s</text>
+    <text x="200" y="43" text-anchor="middle" class="k w6" style="font-size:14px">A</text>
+    <text x="200" y="193" text-anchor="middle" class="k w6" style="font-size:14px">C</text>
+    <text x="400" y="43" text-anchor="middle" class="k w6" style="font-size:14px">B</text>
+    <text x="400" y="193" text-anchor="middle" class="k w6" style="font-size:14px">D</text>
+    <text x="560" y="118" text-anchor="middle" class="g w6" style="font-size:14px">t</text>
+    <text x="96" y="62" text-anchor="middle" class="r w6" style="font-size:12px">10/10</text>
+    <text x="96" y="178" text-anchor="middle" class="k w6" style="font-size:12px">9/10</text>
+    <text x="300" y="30" text-anchor="middle" class="r w6" style="font-size:12px">4/4</text>
+    <text x="178" y="112" text-anchor="middle" class="k w6" style="font-size:12px">0/2</text>
+    <text x="318" y="100" text-anchor="middle" class="k w6" style="font-size:12px">6/8</text>
+    <text x="350" y="212" text-anchor="middle" class="r w6" style="font-size:12px">9/9</text>
+    <text x="424" y="118" text-anchor="middle" class="k w6" style="font-size:12px">5/6</text>
+    <text x="500" y="64" text-anchor="middle" class="k w6" style="font-size:12px">9/10</text>
+    <text x="504" y="176" text-anchor="middle" class="r w6" style="font-size:12px">10/10</text>
+    <text x="60" y="226" text-anchor="middle" class="p w6" style="font-size:12px">S = {s, C}</text>
+    <text x="520" y="226" text-anchor="middle" class="p w6" style="font-size:12px">T = {A, B, D, t}</text>
+  </svg><figcaption>final flow f/c (red = saturated); the purple dashed line is the minimum cut</figcaption></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <table class="hand tiny" style="width:100%;line-height:5mm;margin-top:1mm">
+      <tr><th class="l">Cut S | T</th><th class="l">Forward edges S→T</th><th>c(S,T)</th></tr>
+      <tr><td class="l">{s}</td><td class="l">10 + 10</td><td>20</td></tr>
+      <tr><td class="l">{s, A, C}</td><td class="l">4 + 8 + 9</td><td>21</td></tr>
+      <tr><td class="l">{s,A,B,C,D}</td><td class="l">10 + 10</td><td>20</td></tr>
+      <tr><td class="l"><b>{s, C}</b></td><td class="l">s→A 10 + C→D 9</td><td><span class="circ">19</span></td></tr>
+    </table>
+    <div class="sumbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Check every vertex</span> A: in 10, out 4+0+6 = 10 ✓ · C: in 9, out 9 ✓ · D: in 6+9 = 15, out 5+10 = 15 ✓ · B: in 4+5 = 9, out 9 ✓ · out of s 10+9 = <b>19</b> = into t 9+10 ✓. <span class="hl">The vertices reachable from s in the final residual graph form the min-cut side S.</span></div>
+  </div>
+  <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ two</span> <b>1.</b> A→C crosses the cut from T to S, so it is <span class="red">not added</span> to the cut capacity — a cut counts only <b>S→T</b> edges. <b>2.</b> The obvious cuts ({s} = 20, into t = 20) are <b>not</b> the minimum; always search the residual graph for the true S.</div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Reading the answer like an engineer</span> The min cut names the <b>bottleneck links</b>: only raising <b>s→A</b> or <b>C→D</b> can increase the throughput. Upgrading B→t or D→t to 100 changes nothing, because <span class="hl">the flow is limited by the cut, not by the sink side</span>. Edges outside every min cut have slack.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: max-flow min-cut and applications ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Min cut &amp; applications</span></div>
+  <h2><span class="no">4</span>The Max-Flow Min-Cut Theorem, and Where Flow Is Used</h2><span class="tag">one theorem, many problems ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Definitions</span> An <b>s–t cut</b> (S, T) splits V into two parts with s ∈ S and t ∈ T. Its <b>capacity</b> is <span class="hl">c(S,T) = Σ c(u,v) over edges u ∈ S, v ∈ T</span> — forward edges only. The <b>net flow across</b> it is forward flow minus backward flow, and for <i>every</i> cut it equals |f|.</div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Max-flow min-cut theorem (Ford–Fulkerson, 1956) ✍</span> The following are <b>equivalent</b>: <b>(1)</b> f is a maximum flow; <b>(2)</b> the residual graph G_f has <span class="hl">no augmenting path</span>; <b>(3)</b> |f| = c(S, T) for some cut. Hence <span class="circ">max |f| = min c(S,T)</span>. The easy half (<b>weak duality</b>): <i>every</i> flow ≤ <i>every</i> cut, because all flow must cross the cut.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Bipartite matching as a flow ✍</span> Left set L, right set R. Add <b>s → every u ∈ L</b> and <b>every v ∈ R → t</b>, orient each L–R edge left to right, and give <span class="hl">every edge capacity 1</span>. By the integrality theorem the max flow is 0/1 on each edge, and the edges L→R carrying flow form a <b>maximum matching</b>: <span class="circ">max matching = max flow</span>.</div>
+      <div class="ex tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Worked example</span> Workers W1, W2, W3; jobs J1, J2, J3. W1 can do J1, J2; W2 only J1; W3 J2, J3. Paths s→W1→J1→t, s→W3→J2→t give 2; then s→W2→J1 is blocked forward, but the residual edge <b>J1→W1</b> lets s→W2→J1→W1→J2→W3→J3→t re-route: flow <b>3</b> = W1–J2, W2–J1, W3–J3.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="270">
+      <g class="w">
+        <circle cx="22" cy="100" r="14" class="ink-k fill-y"/>
+        <circle cx="110" cy="36" r="14" class="ink fill-b"/><circle cx="110" cy="100" r="14" class="ink fill-b"/><circle cx="110" cy="164" r="14" class="ink fill-b"/>
+        <circle cx="200" cy="36" r="14" class="ink-p fill-p"/><circle cx="200" cy="100" r="14" class="ink-p fill-p"/><circle cx="200" cy="164" r="14" class="ink-p fill-p"/>
+        <circle cx="278" cy="100" r="14" class="ink-g fill-g"/>
+        <path class="ink" d="M34,92 L97,42 M36,100 H96 M34,108 L97,158 M213,42 L266,92 M214,100 H264 M213,158 L266,108"/>
+        <path class="ink" d="M124,36 H186 M124,158 L188,106"/>
+        <path class="ink-r" d="M124,42 L188,94 M124,94 L188,42 M124,164 H186"/>
+      </g>
+      <text x="22" y="105" text-anchor="middle" class="k w6" style="font-size:11px">s</text>
+      <text x="110" y="40" text-anchor="middle" class="k w6" style="font-size:10px">W1</text><text x="110" y="104" text-anchor="middle" class="k w6" style="font-size:10px">W2</text><text x="110" y="168" text-anchor="middle" class="k w6" style="font-size:10px">W3</text>
+      <text x="200" y="40" text-anchor="middle" class="k w6" style="font-size:10px">J1</text><text x="200" y="104" text-anchor="middle" class="k w6" style="font-size:10px">J2</text><text x="200" y="168" text-anchor="middle" class="k w6" style="font-size:10px">J3</text>
+      <text x="278" y="105" text-anchor="middle" class="g w6" style="font-size:11px">t</text>
+      <text x="155" y="196" text-anchor="middle" class="r s" style="font-size:10px">red = matched (cap 1 each)</text>
+    </svg><figcaption>matching = unit-capacity flow</figcaption></figure>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Application</th><th class="l">What s, t, edges and capacities stand for</th></tr>
+    <tr><td class="l"><b>Network routing / bandwidth</b></td><td class="l">Routers are vertices, links carry Mbps capacities; max flow = the most traffic s can send to t; the min cut is the <span class="hl">set of links whose failure disconnects them cheapest</span>.</td></tr>
+    <tr><td class="l"><b>Transportation &amp; logistics</b></td><td class="l">Depots, roads with truck limits, warehouses — how many tonnes per day can reach the port.</td></tr>
+    <tr><td class="l"><b>Image segmentation</b></td><td class="l">Pixels are vertices; s = "foreground", t = "background"; edge weights = similarity. The <b>min cut</b> is the cheapest boundary between object and background (graph cuts).</td></tr>
+    <tr><td class="l"><b>Disjoint paths (Menger)</b></td><td class="l">Unit capacities: max flow = number of <b>edge-disjoint</b> s–t paths = fewest links whose removal disconnects s from t.</td></tr>
+    <tr><td class="l"><b>Scheduling / assignment</b></td><td class="l">Crews to flights, students to projects — matching with capacities; also project selection and baseball elimination.</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap</span> Max flow equals the <b>minimum</b> cut, not "the sum of all capacities" nor "the largest edge". A flow network can have <span class="red">several</span> minimum cuts but only one max-flow <i>value</i>.</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>A chain is as strong as its weakest link — a network is as wide as its narrowest cut.</b>"</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: approximation basics, vertex cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Approximation I</span></div>
+  <h2><span class="no">5</span>Approximation Algorithms: the Ratio ρ, and Vertex Cover</h2><span class="tag">provably close, provably fast ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Definition</span> An <b>approximation algorithm</b> runs in <span class="hl">polynomial time</span> on an <b>NP-hard optimisation problem</b> and returns a solution with a <b>proven guarantee</b> of how far it can be from the optimum. (Why the exact answer is out of reach — NP-hardness — is the subject of the next lesson.) A heuristic with no guarantee is <i>not</i> an approximation algorithm.</div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Problem type</th><th class="l">Approximation ratio ρ(n)</th><th class="l">Reading it</th></tr>
+    <tr><td class="l"><b>Minimisation</b> (cover, tour)</td><td class="l"><span class="circ">ρ = C / C* ≥ 1</span></td><td class="l">C = algorithm's cost, C* = optimal. ρ = 2: never more than twice the optimum.</td></tr>
+    <tr><td class="l"><b>Maximisation</b> (knapsack, cut)</td><td class="l">ρ = C* / C ≥ 1</td><td class="l">ρ = 2: never less than half the optimum.</td></tr>
+    <tr><td class="l"><b>Combined (CLRS)</b></td><td class="l">max(C/C*, C*/C) ≤ ρ(n)</td><td class="l">ρ = 1 means exact; the nearer to 1, the better.</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Problem</th><th class="l">Algorithm</th><th>Ratio</th><th class="l">Note</th></tr>
+    <tr><td class="l"><b>Vertex cover</b></td><td class="l">take both ends of a maximal matching</td><td><b>2</b></td><td class="l">sheet below</td></tr>
+    <tr><td class="l"><b>Metric TSP</b></td><td class="l">MST, preorder walk, shortcut</td><td><b>2</b></td><td class="l">Christofides <b>1.5</b></td></tr>
+    <tr><td class="l"><b>Set cover</b></td><td class="l">greedy: most uncovered elements</td><td><b>H(n) ≈ ln n</b></td><td class="l">≤ ln n + 1</td></tr>
+    <tr><td class="l"><b>0/1 knapsack</b></td><td class="l">value-scaling DP</td><td><b>1 + ε</b></td><td class="l">FPTAS</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 270px;align-items:start">
+    <div>
+      <div class="code tiny" style="font-size:10pt;line-height:5.2mm;margin-top:1mm">APPROX-VERTEX-COVER(G)
+  C = ∅;  E' = E
+  while E' ≠ ∅:
+    pick any edge (u,v) in E'
+    C = C ∪ {u, v}
+    delete from E' every edge touching u or v
+  return C           // O(V + E)</div>
+      <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Why ratio 2 ✍ proof</span> The picked edges form a <b>matching M</b> (no two share a vertex), and |C| = 2|M|. Any cover — the optimal C* too — must contain <span class="hl">at least one endpoint of each edge of M</span>, and those endpoints are all different, so |C*| ≥ |M|. Hence <span class="circ">|C| = 2|M| ≤ 2|C*|</span>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 270 200" width="240">
+      <g class="w">
+        <path class="ink" d="M135,100 L45,30 M135,100 L225,30 M135,100 L225,170"/>
+        <path class="ink-r" d="M135,100 L45,170"/>
+        <circle cx="135" cy="100" r="18" class="ink-r fill-r"/>
+        <circle cx="45" cy="30" r="15" class="ink fill-b"/><circle cx="225" cy="30" r="15" class="ink fill-b"/>
+        <circle cx="45" cy="170" r="15" class="ink-r fill-r"/><circle cx="225" cy="170" r="15" class="ink fill-b"/>
+      </g>
+      <text x="135" y="105" text-anchor="middle" class="k w6" style="font-size:12px">c</text>
+      <text x="45" y="35" text-anchor="middle" class="k w6" style="font-size:11px">1</text><text x="225" y="35" text-anchor="middle" class="k w6" style="font-size:11px">2</text>
+      <text x="45" y="175" text-anchor="middle" class="k w6" style="font-size:11px">3</text><text x="225" y="175" text-anchor="middle" class="k w6" style="font-size:11px">4</text>
+      <text x="135" y="196" text-anchor="middle" class="r w6" style="font-size:11px">algorithm {c, 3} = 2 · OPT {c} = 1</text>
+    </svg><figcaption>a star: the bound 2 is tight</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ two</span> <b>1.</b> The <span class="red">"pick the highest-degree vertex"</span> greedy is <b>not</b> a 2-approximation — its ratio grows like log n. The 2 belongs to the <b>both-endpoints</b> rule. <b>2.</b> A <i>minimisation</i> ratio of 2 allows up to 2 × OPT, never below OPT.</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Grab the whole edge, pay double at most.</b>" One endpoint of each grabbed edge was needed anyway; the other is the price of not knowing which.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: TSP, set cover, knapsack, PTAS ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Approximation II</span></div>
+  <h2><span class="no">6</span>Metric TSP, Set Cover, Knapsack — and PTAS vs FPTAS</h2><span class="tag">the classic ratios ★</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Metric TSP: the MST tour ✍</span> Distances obey the <span class="hl">triangle inequality</span> d(u,w) ≤ d(u,v) + d(v,w). <b>1.</b> Build an <b>MST</b> T (Prim/Kruskal, previous lesson). <b>2.</b> Walk it in <b>DFS preorder</b>: the full walk uses each MST edge twice, cost 2·w(T). <b>3.</b> <b>Shortcut</b> repeated vertices — by the triangle inequality this never adds cost. Since deleting one edge of the optimal tour leaves a spanning tree, <span class="circ">w(T) ≤ OPT</span>, so tour ≤ 2·w(T) ≤ <b>2·OPT</b>.</div>
+    <figure class="doodle"><svg viewBox="0 0 290 190" width="260">
+      <g class="w">
+        <path class="ink" d="M145,30 L60,90 M145,30 L230,90 M60,90 L40,160 M60,90 L110,160"/>
+        <path class="ink-r" style="stroke-dasharray:6 4" d="M145,30 L60,90 L40,160 L110,160 L230,90 L145,30"/>
+        <circle cx="145" cy="30" r="13" class="ink-k fill-y"/>
+        <circle cx="60" cy="90" r="13" class="ink fill-b"/><circle cx="230" cy="90" r="13" class="ink fill-b"/>
+        <circle cx="40" cy="160" r="13" class="ink fill-b"/><circle cx="110" cy="160" r="13" class="ink fill-b"/>
+      </g>
+      <text x="145" y="35" text-anchor="middle" class="k w6" style="font-size:13px">a</text>
+      <text x="60" y="95" text-anchor="middle" class="k w6" style="font-size:13px">b</text><text x="230" y="95" text-anchor="middle" class="k w6" style="font-size:13px">e</text>
+      <text x="40" y="165" text-anchor="middle" class="k w6" style="font-size:13px">c</text><text x="110" y="165" text-anchor="middle" class="k w6" style="font-size:13px">d</text>
+      <text x="200" y="150" text-anchor="middle" class="k s" style="font-size:10px">solid = MST</text>
+      <text x="200" y="166" text-anchor="middle" class="r s" style="font-size:10px">dashed = tour</text>
+      <text x="145" y="186" text-anchor="middle" class="r w6" style="font-size:10px">a b c d e a (shortcut a-b-c-b-d-b-a-e-a)</text>
+    </svg><figcaption>preorder a, b, c, d, e, then back to a</figcaption></figure>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Beyond 2 — Christofides (1976)</span> MST + a <b>minimum-weight perfect matching</b> on the odd-degree MST vertices gives an Eulerian graph; shortcut its Euler tour → <span class="circ">ratio 1.5</span> for metric TSP. <b>General TSP</b> (no triangle inequality) has <span class="red">no constant-ratio approximation unless P = NP</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Set cover: greedy</span> Universe U of n elements, a family of subsets; choose the fewest subsets covering U. Greedy: <span class="hl">repeatedly take the set covering the most still-uncovered elements</span>. Ratio <b>H(n) = 1 + ½ + … + 1/n ≤ ln n + 1</b> — essentially the best possible in polynomial time (unless P = NP).</div>
+    <div class="ex tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Worked example</span> U = {1,…,6}; S1 = {1,2,3,4}, S2 = {4,5}, S3 = {5,6}, S4 = {1,6}. Greedy takes S1 (4 new), then S3 (5, 6: 2 new) → <b>2 sets</b>, all covered. Here greedy is optimal; on adversarial inputs it can be ≈ ln n times worse.</div>
+  </div>
+  <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">0/1 knapsack: FPTAS ✍</span> The exact DP is O(nW) — <b>pseudo-polynomial</b>. Scale every value down: v′ = ⌊v / K⌋ with <span class="hl">K = ε·v_max / n</span>, run the DP indexed by value in O(n³/ε), and the answer is ≥ <b>(1 − ε)·OPT</b>. Simpler: max(greedy by value/weight, best single item) is a <b>2-approximation</b>. (Fractional knapsack needs none of this — greedy is exact.)</div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Scheme</th><th class="l">Guarantee</th><th class="l">Running time</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>PTAS</b></td><td class="l">within (1 + ε) for <b>every fixed</b> ε &gt; 0</td><td class="l">polynomial in n, <span class="red">may be exponential in 1/ε</span>, e.g. O(n^{1/ε})</td><td class="l">Euclidean TSP, bin-packing variants</td></tr>
+    <tr><td class="l"><b>FPTAS</b></td><td class="l">within (1 + ε)</td><td class="l"><span class="circ">polynomial in n and 1/ε</span>, e.g. O(n³/ε)</td><td class="l">0/1 knapsack, subset sum</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap ✍ three</span> <b>1.</b> Every FPTAS is a PTAS, <b>not</b> the reverse. <b>2.</b> A <span class="red">strongly NP-hard</span> problem has no FPTAS unless P = NP; knapsack is only <i>weakly</i> NP-hard. <b>3.</b> "Set cover greedy ratio 2" is wrong — it is <b>ln n</b>.</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>Cover 2, Tour 2 then 1.5, Set ln n, Knapsack 1+ε.</b>" And "<b>F</b>PTAS is <b>F</b>ully polynomial — in <b>both</b> n and 1/ε."</div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: parallel metrics and Amdahl ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Parallel I</span></div>
+  <h2><span class="no">7</span>Parallel Algorithms: Speedup, Efficiency, Granularity, Amdahl's Law</h2><span class="tag">the formula sheet ★</span>
+  <div class="def tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Definition</span> A <b>parallel algorithm</b> <span class="hl">divides a problem into sub-problems solved simultaneously on several processors</span>, then combines the results. Its quality is measured against the <b>best sequential</b> algorithm, not against itself on one processor.</div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Measure</th><th class="l">Formula</th><th class="l">Meaning</th></tr>
+    <tr><td class="l"><b>Speedup S</b></td><td class="l"><span class="circ">S = T₁ / Tₚ</span></td><td class="l">T₁ = best sequential time, Tₚ = time on p processors. Ideal (linear): S = p.</td></tr>
+    <tr><td class="l"><b>Efficiency E</b></td><td class="l">E = S / p</td><td class="l">Fraction of processor time doing useful work; 0 &lt; E ≤ 1 normally.</td></tr>
+    <tr><td class="l"><b>Cost</b></td><td class="l">p × Tₚ</td><td class="l"><b>Cost-optimal</b> if p·Tₚ = Θ(T₁).</td></tr>
+    <tr><td class="l"><b>Granularity</b></td><td class="l">computation / communication</td><td class="l"><b>Fine</b>-grained: many small tasks, much communication. <b>Coarse</b>-grained: few large tasks.</td></tr>
+    <tr><td class="l"><b>Work–span</b></td><td class="l">Tₚ ≥ T₁/p, Tₚ ≥ T∞</td><td class="l">T∞ (span) = longest dependency chain; parallelism = T₁/T∞; Brent: Tₚ ≤ T₁/p + T∞.</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Data vs task parallelism</span> <b>Data</b>: the <span class="hl">same operation on different pieces of data</span> — vector addition, matrix multiply, image filters (SIMD, GPUs). <b>Task</b>: <span class="hl">different operations at once</span> — pipeline stages, a web server's independent requests (MIMD).</div>
+    <div class="sumbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Flynn's taxonomy</span> <b>SISD</b> classic uniprocessor · <b>SIMD</b> vector units, GPUs · <b>MISD</b> rare (fault-tolerant pipelines) · <b>MIMD</b> multicores, clusters. PRAM models: <b>EREW</b>, <b>CREW</b>, <b>CRCW</b> (exclusive/concurrent read/write).</div>
+  </div>
+  <div class="tipbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Amdahl's law (fixed problem size) ✍</span> If a fraction <b>P</b> of the work can run in parallel on <b>N</b> processors and 1 − P stays serial: <span class="circ">S(N) = 1 / ((1 − P) + P/N)</span>. As N → ∞, <span class="hl">S → 1 / (1 − P)</span> — the serial part caps the speedup.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="ex tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Worked example</span> <b>P = 0.9, N = 10:</b> S = 1 / (0.1 + 0.09) = 1/0.19 ≈ <b>5.26</b>; E = 5.26/10 ≈ <b>53%</b>; limit 1/0.1 = <b>10</b>, however many processors. <b>P = 0.8, N = 4:</b> S = 1/(0.2 + 0.2) = <b>2.5</b>; limit 5.</div>
+      <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Gustafson's law (scaled size)</span> When the problem grows with N: <b>S = (1 − P) + P·N</b> (P = parallel share of the parallel run). P = 0.9, N = 10 → 0.1 + 9 = <b>9.1</b>. Amdahl is pessimistic, Gustafson optimistic.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 380 200" width="290">
+      <g class="w">
+        <path class="ink" d="M40,10 V170 H350"/>
+        <path class="ink-g" style="stroke-dasharray:5 4" d="M40,20 H345 M40,95 H345 M40,155 H345"/>
+        <path class="ink-r" d="M40,162.5 L70,155.7 L100,143.9 L130,125.6 L160,101.4 L190,75.9 L220,54.4 L250,39.4 L280,30.4 L310,25.4 L340,22.7"/>
+        <path class="ink" d="M40,162.5 L70,156.4 L100,146.9 L130,134.7 L160,122 L190,111.5 L220,104.2 L250,99.9 L280,97.5 L340,95.7"/>
+        <path class="ink-p" d="M40,162.5 L70,160 L100,158 L130,156.7 L160,155.9 L190,155.5 L220,155.2 L340,155"/>
+      </g>
+      <text x="34" y="24" text-anchor="end" class="s" style="font-size:10px">20</text>
+      <text x="34" y="99" text-anchor="end" class="s" style="font-size:10px">10</text>
+      <text x="34" y="159" text-anchor="end" class="s" style="font-size:10px">2</text>
+      <text x="40" y="184" text-anchor="middle" class="s" style="font-size:10px">1</text>
+      <text x="160" y="184" text-anchor="middle" class="s" style="font-size:10px">16</text>
+      <text x="340" y="184" text-anchor="middle" class="s" style="font-size:10px">1024</text>
+      <text x="200" y="198" text-anchor="middle" class="k s" style="font-size:10px">processors N (log scale)</text>
+      <text x="290" y="48" text-anchor="middle" class="r w6" style="font-size:10px">P = 0.95</text>
+      <text x="290" y="88" text-anchor="middle" class="k w6" style="font-size:10px">P = 0.90</text>
+      <text x="290" y="148" text-anchor="middle" class="p w6" style="font-size:10px">P = 0.50</text>
+    </svg><figcaption>speedup flattens at 1/(1−P): 2, 10, 20</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap</span> In Amdahl's law <b>P is the parallel fraction</b>; mixing it with the serial fraction inverts every answer. Speedup <b>above p</b> (superlinear) can occur through cache effects, but is not the norm.</div>
+    <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Memory trick</span> "<b>The slowest part sets the pace.</b>" Ten percent serial ⇒ never more than <span class="hl">ten times faster</span>.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: parallel algorithms ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Parallel II</span></div>
+  <h2><span class="no">8</span>Parallel Sorting, Matrix Multiplication, BFS — and the Pitfalls</h2><span class="tag">the standard algorithms ★</span>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Problem</th><th class="l">Parallel approach</th><th class="l">Cost / time</th></tr>
+    <tr><td class="l"><b>Reduction (sum of n)</b></td><td class="l">Pairwise tree: n/2 adds, then n/4, …</td><td class="l"><span class="circ">O(log n)</span> steps, n/2 processors</td></tr>
+    <tr><td class="l"><b>Parallel merge sort</b></td><td class="l">Split among p processors, sort locally, merge in a tree of log p levels.</td><td class="l">O((n/p) log(n/p)) local sort + merging</td></tr>
+    <tr><td class="l"><b>Bitonic sort</b></td><td class="l">Sorting <b>network</b>: build bitonic sequences, then bitonic-merge with compare–exchange; n a power of 2.</td><td class="l"><span class="hl">O(log² n)</span> time, O(n log² n) comparisons</td></tr>
+    <tr><td class="l"><b>Matrix multiply</b></td><td class="l"><b>Block</b> decomposition; <b>Cannon's</b> algorithm on a √p × √p processor grid.</td><td class="l">O(n³/p) compute, √p shift steps</td></tr>
+    <tr><td class="l"><b>Graph search</b></td><td class="l"><b>Level-synchronous BFS</b>: expand the whole frontier in parallel; also parallel Dijkstra (Δ-stepping).</td><td class="l">rounds = depth of the BFS tree</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 250px;align-items:start">
+    <div class="ex tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Worked example: parallel merge sort</span> Array [38, 27, 43, 3, 9, 82, 10] on 2 processors. <b>P0</b> gets [38, 27, 43] → sorts to [27, 38, 43]; <b>P1</b> gets [3, 9, 82, 10] → [3, 9, 10, 82] — <span class="hl">both at the same time</span>. One merge step → <b>[3, 9, 10, 27, 38, 43, 82]</b>. With p processors the merge tree has log₂ p levels.</div>
+    <figure class="doodle"><svg viewBox="0 0 300 160" width="230">
+      <g class="w">
+        <rect x="6" y="6" width="120" height="28" rx="8" class="ink fill-b"/>
+        <rect x="160" y="6" width="134" height="28" rx="8" class="ink fill-b"/>
+        <rect x="6" y="64" width="120" height="28" rx="8" class="ink-g fill-g"/>
+        <rect x="160" y="64" width="134" height="28" rx="8" class="ink-g fill-g"/>
+        <rect x="40" y="124" width="220" height="30" rx="8" class="ink-r fill-r"/>
+        <path class="ink" d="M66,34 V62 M227,34 V62" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M66,92 L130,122 M227,92 L170,122" marker-end="url(#ah)"/>
+      </g>
+      <text x="66" y="25" text-anchor="middle" class="k w6" style="font-size:11px">P0: 38 27 43</text>
+      <text x="227" y="25" text-anchor="middle" class="k w6" style="font-size:11px">P1: 3 9 82 10</text>
+      <text x="66" y="83" text-anchor="middle" class="g w6" style="font-size:11px">27 38 43</text>
+      <text x="227" y="83" text-anchor="middle" class="g w6" style="font-size:11px">3 9 10 82</text>
+      <text x="150" y="144" text-anchor="middle" class="r w6" style="font-size:11px">3 9 10 27 38 43 82</text>
+      <text x="96" y="52" class="s" style="font-size:10px">sort locally</text>
+    </svg><figcaption>split, sort in parallel, merge</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Bitonic half-cleaner ✍</span> A <b>bitonic</b> sequence rises then falls (or a rotation of one). Compare item i with item i + n/2 and swap if out of order: [2, 5, 8, 9 | 7, 6, 3, 1] → low [2, 5, 3, 1], high [7, 6, 8, 9]. Every low ≤ every high, and <span class="hl">each half is bitonic again</span> — recurse. n = 8 needs 3·4/2 = <b>6</b> compare stages.</div>
+    <div class="def tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Cannon's algorithm</span> Processor P(i,j) holds blocks A(i,j), B(i,j). <b>Skew</b>: shift row i of A left by i, column j of B up by j. Then √p times: <b>multiply-add</b> local blocks, shift A one left and B one up. Each processor stores <span class="hl">only one block of each matrix at a time</span>.</div>
+  </div>
+  <table class="hand tiny" style="width:100%;line-height:5.2mm">
+    <tr><th class="l">Challenge</th><th class="l">What goes wrong / the remedy</th></tr>
+        <tr><td class="l"><b>Communication overhead</b></td><td class="l">Sending data costs time; fine granularity can make Tₚ <i>worse</i> than T₁.</td></tr>
+    <tr><td class="l"><b>Load balancing</b></td><td class="l">Uneven pieces leave processors idle — dynamic scheduling, work stealing.</td></tr>
+    <tr><td class="l"><b>Synchronisation, races, deadlocks</b></td><td class="l">Barriers make fast processors wait; unordered updates race (BFS "visited" flag → atomic compare-and-swap); circular lock waits deadlock.</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Applications</span> Scientific simulation (weather, physics) · <b>big data</b>: Hadoop MapReduce, Apache Spark · graphics <b>rendering</b> on GPUs · <b>distributed ML</b> training (data-parallel gradients, all-reduce).</div>
+    <div class="exam tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">Exam trap</span> Bitonic sort does <b>more</b> comparisons than merge sort (n log² n vs n log n) — it wins because its <span class="red">compare pattern is fixed</span>, ideal for hardware and GPUs.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox tiny" style="line-height:5.2mm"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small" style="line-height:5.5mm">
+      <p>0 ≤ f(u,v) ≤ c(u,v)</p><p>In = out, except s and t</p>
+      <p>|f| = net flow out of s</p><p>Residual fwd c − f, back f</p>
+      <p>Augmenting path: s→t in G_f</p><p>Bottleneck = min c_f on path</p>
+      <p>FF: O(E·|f*|), integer caps</p><p>Irrational caps: may not stop</p>
+      <p>Edmonds–Karp: BFS, O(VE²)</p><p>Dinic: O(V²E)</p>
+      <p>Dinic unit caps: E·min(V^⅔,E^½)</p><p>Push–relabel O(V²E), FIFO O(V³)</p>
+      <p><span class="hl">max flow = min cut</span></p><p>Cut counts S→T edges only</p>
+      <p>Matching = unit-cap flow</p><p>Hopcroft–Karp O(E√V)</p>
+      <p>Min: ρ = C/C* ≥ 1</p><p>Max: ρ = C*/C ≥ 1</p>
+      <p>Vertex cover: 2</p><p>Metric TSP: 2 (MST)</p>
+      <p>Christofides: 1.5</p><p>General TSP: no constant</p>
+      <p>Set cover: H(n) ≤ ln n + 1</p><p>Knapsack: FPTAS O(n³/ε)</p>
+      <p>PTAS: poly in n</p><p>FPTAS: poly in n and 1/ε</p>
+      <p>S = T₁/Tₚ · E = S/p</p><p>Cost = p·Tₚ</p>
+      <p>Amdahl 1/((1−P)+P/N)</p><p>Limit 1/(1−P)</p>
+      <p>Gustafson (1−P)+P·N</p><p>Bitonic O(log² n)</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ol class="num">
+      <li>Max flow = capacity of a <b>min</b> cut</li>
+      <li>Edmonds–Karp = FF + <b>BFS</b></li>
+      <li>E-K <b>VE²</b>, Dinic <b>V²E</b></li>
+      <li>Back edges let flow be <b>cancelled</b></li>
+      <li>Conservation fails only at s, t</li>
+      <li>Matching: all capacities <b>1</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Vertex cover: both endpoints, <b>2</b></li>
+      <li>MST tour <b>2</b>, Christofides <b>1.5</b></li>
+      <li>Greedy set cover <b>ln n</b></li>
+      <li>FPTAS ⊂ PTAS</li>
+      <li><span class="circ">P = 0.9 ⇒ S ≤ 10</span></li>
+      <li>E = S/p, ideal E = 1</li>
+    </ol>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div>
+      <div class="exam tiny" style="margin-top:0;line-height:5.2mm"><span class="lbl">Top traps</span> quoting Dinic's <b>unit-capacity</b> bound as general · FF <b>always terminates</b> (only with integer/rational caps) · adding <b>T→S</b> edges to a cut · max-degree greedy as <b>2-approx</b> · set cover ratio <b>2</b> · <b>FPTAS</b> exponential in 1/ε · Amdahl with the <b>serial</b> fraction as P.</div>
+      <div class="trick tiny" style="margin-top:1mm;line-height:5.2mm"><span class="lbl">All tricks together</span> Forward = room left, backward = regret · Ford any road, E-K shortest, Dinic levels, push–relabel downhill · As wide as the narrowest cut · Grab the whole edge, pay double · Cover 2, Tour 2 → 1.5, Set ln n, Knapsack 1+ε · The slowest part sets the pace.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 130" width="270">
+      <g class="w">
+        <circle cx="56" cy="44" r="36" class="ink-r fill-r"/>
+        <circle cx="150" cy="44" r="36" class="ink fill-b"/>
+        <circle cx="244" cy="44" r="36" class="ink-g fill-g"/>
+        <rect x="46" y="100" width="208" height="24" rx="10" class="ink-k fill-y"/>
+      </g>
+      <text x="56" y="40" text-anchor="middle" class="r w6" style="font-size:11px">max flow</text>
+      <text x="56" y="56" text-anchor="middle" class="r w6" style="font-size:11px">= min cut</text>
+      <text x="150" y="40" text-anchor="middle" class="k w6" style="font-size:11px">ρ = 2</text>
+      <text x="150" y="56" text-anchor="middle" class="k w6" style="font-size:11px">cover, tour</text>
+      <text x="244" y="40" text-anchor="middle" class="g w6" style="font-size:11px">S ≤</text>
+      <text x="244" y="56" text-anchor="middle" class="g w6" style="font-size:11px">1/(1−P)</text>
+      <text x="150" y="117" text-anchor="middle" class="k w6" style="font-size:11px">how much · how close · how fast</text>
+    </svg><figcaption>three numbers, three toolkits</figcaption></figure>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DSA · Flow, Approx &amp; Parallel</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">1.</span>By the max-flow min-cut theorem, the maximum s–t flow equals:<ol class="opts"><li>The number of edges</li><li>The sum of all capacities</li><li>The capacity of a minimum s–t cut</li><li>The largest edge capacity</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">2.</span>Edmonds–Karp (FF with BFS augmenting paths) runs in:<ol class="opts"><li>O(VE²)</li><li>O(E log V)</li><li>O(V²)</li><li>O(E·|f*|) only</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">3.</span>An edge with capacity 10 carries flow 6. Its residual edges are:<ol class="opts"><li>forward 6, backward 4</li><li>forward 10, backward 0</li><li>forward 16, backward 6</li><li>forward 4, backward 6</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">4.</span>Taking both endpoints of a maximal matching gives a vertex cover within a factor of:<ol class="opts"><li>1.5</li><li>2</li><li>log n</li><li>n</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">5.</span>The MST-based (double-tree) algorithm for <b>metric</b> TSP has ratio:<ol class="opts"><li>2</li><li>1.5</li><li>ln n</li><li>no constant</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">6.</span>An FPTAS runs in time polynomial in:<ol class="opts"><li>n only</li><li>1/ε only</li><li>both n and 1/ε</li><li>neither</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">7.</span>By Amdahl's law, with 90% parallel code on 10 processors the speedup is about:<ol class="opts"><li>9.1</li><li>5.26</li><li>10</li><li>4.75</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">8.</span>A program gets speedup 6 on 8 processors. Its efficiency is:<ol class="opts"><li>1.33</li><li>48</li><li>0.60</li><li>0.75</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">9.</span>Bitonic sort with n/2 comparators per stage takes parallel time:<ol class="opts"><li>O(log n)</li><li>O(n)</li><li>O(log² n)</li><li>O(n log n)</li></ol></div>
+    <div class="mcq" style="line-height:3.9mm;font-size:10pt"><span class="qn">10.</span>The greedy set-cover algorithm has approximation ratio:<ol class="opts"><li>H(n) ≈ ln n</li><li>2</li><li>1 + ε</li><li>1.5</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-a · 6-c · 7-b · 8-d · 9-c · 10-a</div>
+  <div class="wq tiny" style="line-height:5.2mm"><span class="lbl">Written question</span> Define a <b>flow network</b> and state the capacity and conservation constraints. Find the maximum flow of the network on sheet 2 by Ford–Fulkerson with BFS paths, and verify it with a <b>minimum cut</b>. State <b>Amdahl's law</b> and compute the speedup for P = 0.8 on 4 processors and its upper limit. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="margin-top:0;line-height:4.4mm">
+    <li><b>Definition (2)</b> — directed graph, capacity c(u,v) ≥ 0 on each edge, source s, sink t. <b>Capacity:</b> 0 ≤ f(u,v) ≤ c(u,v). <b>Conservation:</b> inflow = outflow at every vertex except s and t. <i class="mk">2</i></li>
+    <li><b>Augmentations (3)</b> — s→A→B→t (4), s→A→D→t (6), s→C→D→t (4), s→C→D→B→t (5): total <b>19</b>; then no s→t path exists in the residual graph. <i class="mk">3</i></li>
+    <li><b>Min cut (2)</b> — S = {s, C} (reachable from s in G_f), T = rest; S→T edges s→A (10) + C→D (9) = <b>19</b> = |f|, so the flow is maximum by the max-flow min-cut theorem. <i class="mk">2</i></li>
+    <li><b>Amdahl (3)</b> — S = 1/((1 − P) + P/N) = 1/(0.2 + 0.8/4) = 1/0.4 = <b>2.5</b>; efficiency 2.5/4 = 62.5%; limit N → ∞: 1/(1 − 0.8) = <b>5</b> — the 20% serial part caps it. <i class="mk">3</i></li>
+  </ol>
+  <h3 style="line-height:5mm;margin-top:2mm">Before the exam ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:4.4mm;margin-top:0">
+    <ul class="tick">
+      <li>Can run Ford–Fulkerson by hand with residuals</li>
+      <li>Can find the min cut from the final residual graph</li>
+      <li>Can quote the four max-flow complexities</li>
+    </ul>
+    <ul class="tick">
+      <li>Can prove the vertex-cover ratio 2</li>
+      <li>Can separate PTAS from FPTAS</li>
+      <li>Can compute Amdahl speedup, limit and efficiency</li>
+    </ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

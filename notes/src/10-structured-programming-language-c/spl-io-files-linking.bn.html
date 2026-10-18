@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>C-তে I/O, ফাইল, এরর ও লিংকিং: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title" style="margin-top:1mm"><span class="u">C-তে I/O, ফাইল, এরর ও লিংকিং</span></h1>
+  <p class="subtitle">printf/scanf · fopen · fseek · stdarg · argc/argv · errno · লিংকিং · ১১ পাতায় পরীক্ষার পূর্ণ প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 250" width="580">
+      <g class="w">
+        <ellipse cx="320" cy="116" rx="94" ry="34" class="ink-k fill-y"/>
+        <path class="ink" d="M246,102 L180,62 M246,130 L180,172 M320,82 L320,46 M394,102 L460,62 M394,130 L460,172 M320,150 L320,186 M226,116 L186,116 M414,116 L454,116"/>
+        <rect x="68" y="32" width="158" height="32" rx="12" class="ink fill-b"/>
+        <rect x="241" y="14" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="412" y="32" width="158" height="32" rx="12" class="ink-r fill-r"/>
+        <rect x="22" y="100" width="152" height="30" rx="12" class="ink-g fill-g"/>
+        <rect x="462" y="100" width="154" height="30" rx="12" class="ink-r fill-r"/>
+        <rect x="68" y="176" width="158" height="40" rx="12" class="ink-r fill-r"/>
+        <rect x="241" y="194" width="158" height="28" rx="12" class="ink fill-b"/>
+        <rect x="412" y="176" width="158" height="40" rx="12" class="ink-r fill-r"/>
+      </g>
+      <text x="320" y="115" text-anchor="middle" class="k l">C I/O + LINKING</text><text x="320" y="134" text-anchor="middle" class="bn r s">টপিক মাইন্ড-ম্যাপ</text>
+      <text x="147" y="46" text-anchor="middle" class="s" style="font-size:11px">stdin · stdout · stderr</text><text x="147" y="59" text-anchor="middle" class="bn s" style="font-size:11px">বাফারিং · রিডাইরেকশন</text>
+      <text x="320" y="35" text-anchor="middle" class="r w6">printf / scanf ★</text>
+      <text x="491" y="46" text-anchor="middle" class="bn r w6" style="font-size:12px">fopen মোড ★</text><text x="491" y="59" text-anchor="middle" class="bn r s" style="font-size:11px">টেক্সট বনাম বাইনারি</text>
+      <text x="98" y="112" text-anchor="middle" class="bn g w6" style="font-size:13px">FILE স্ট্রিম</text><text x="98" y="126" text-anchor="middle" class="bn g s" style="font-size:11px">খোলা · ব্যবহার · বন্ধ</text>
+      <text x="539" y="112" text-anchor="middle" class="r w6">argc / argv ★</text><text x="539" y="126" text-anchor="middle" class="bn r s" style="font-size:11px">ভেরিয়াডিক ...</text>
+      <text x="147" y="197" text-anchor="middle" class="r w6">errno · perror ★</text><text x="147" y="210" text-anchor="middle" class="bn s" style="font-size:11px">assert · এক্সিট স্ট্যাটাস</text>
+      <text x="320" y="213" text-anchor="middle" class="w6" style="font-size:13px">graphics.h (BGI)</text>
+      <text x="491" y="197" text-anchor="middle" class="bn r w6" style="font-size:13px">লিংকিং ★</text><text x="491" y="210" text-anchor="middle" class="bn r s" style="font-size:11px">স্ট্যাটিক বনাম ডাইনামিক · -lm</text>
+      <text x="320" y="238" text-anchor="middle" class="bn s" style="font-size:10.5px">· fseek / ftell / rewind · feof()-এর ফাঁদ · va_start / va_arg / va_end · লাইব্রেরি হেডার</text>
+      <text x="320" y="249" text-anchor="middle" class="bn s" style="font-size:10.5px">· প্রিপ্রসেসর → কম্পাইলার → অ্যাসেম্বলার → লিংকার → লোডার · extern ও একাধিক ফাইলের প্রোগ্রাম</text>
+    </svg>
+    <figcaption>↑ পুরো লেসন এক পাতায়: লাল = বেশি আসে, সবুজ = যে ধারণার ওপর বাকি সব দাঁড়িয়ে</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;font-size:10.5pt"><b>হাই-ইল্ড তালিকা</b><br>① scanf: <b>%f</b> = float, <b>%lf</b> = double<br>② size_t (strlen, sizeof) → <b>%zu</b><br>③ fopen ব্যর্থ ⇒ ফেরত দেয় <b>NULL</b><br>④ "w" মুছে ফেলে · "a" সবসময় শেষে লেখে<br>⑤ <b>./prog one two</b> ⇒ argc = 3, argv[3] = NULL<br>⑥ কখনো va_arg(ap, float) নয় — double<br>⑦ perror লেখে <b>stderr</b>-এ<br>⑧ স্ট্যাটিক লিংক কেবল <b>দরকারি মডিউল</b> কপি করে; <span style="white-space:nowrap">-lm = libm</span></div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">স্ট্রাকচার্ড প্রোগ্রামিং সিলেবাসে আছে "<span class="hl">Input and Output: standard input and output, formatted input and output, file access; Variable length argument list; Command line parameters; Error Handling; Graphics; Linking; Library functions</span>"। ডেটা টাইপ, ফাংশন, পয়েন্টার ও স্ট্রাকচার আলাদা লেসনে।</p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি বক্স</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল বক্স</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>স্ট্রিম ও printf … পৃ. ২</li><li>scanf ও ক্যারেক্টার I/O … পৃ. ৩</li><li>ফাইল অ্যাক্সেস ও মোড … পৃ. ৪</li><li>র‍্যান্ডম অ্যাক্সেস ও EOF … পৃ. ৫</li></ul>
+    <ul class="tick"><li>ভেরিয়াডিক ফাংশন ও argc/argv … পৃ. ৬</li><li>এরর হ্যান্ডলিং … পৃ. ৭</li><li>গ্রাফিক্স ও লাইব্রেরি ফাংশন … পৃ. ৮</li><li>কম্পাইলিং ও লিংকিং … পৃ. ৯ · রাতের পাতা পৃ. ১০ · অনুশীলন পৃ. ১১</li></ul>
+  </div>
+  <div class="def tiny"><span class="lbl">এই পুরো লেসনের উদ্দেশ্য</span> একটি C প্রোগ্রাম বাইরের জগতের সঙ্গে কথা বলে কেবল <b>স্ট্রিম</b> আর লাইব্রেরি কলের <b>রিটার্ন মান</b> দিয়ে, এবং চালানোর যোগ্য হয় কেবল তখনই যখন <b>লিংকার</b> একে ওই লাইব্রেরিগুলোর সঙ্গে জোড়ে — তাই পুরো লেসনটি হলো <span class="circ">স্ট্রিমে ঢোকো, যাচাই রাখো, শেষে লিংকার</span>।</div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: streams and printf ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>স্ট্রিম ও ফরম্যাটেড আউটপুট</span></div>
+  <h2><span class="no">১</span>স্ট্যান্ডার্ড স্ট্রিম ও ফরম্যাটেড আউটপুট (printf)</h2><span class="tag">মূল বিষয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>স্ট্রিম (stream)</b> হলো বাইটের যেকোনো উৎস বা গন্তব্য — কীবোর্ড, স্ক্রিন, ফাইল, পাইপ — দেখার C-র একক উপায়, যা একটি <code>FILE *</code> দিয়ে ধরা হয়। প্রতিটি হোস্টেড C প্রোগ্রাম শুরু হয় <span class="hl">আগে থেকেই খোলা তিনটি স্ট্রিম</span> নিয়ে, যা <b>&lt;stdio.h&gt;</b>-এ ঘোষিত: <b>stdin</b> (কীবোর্ড), <b>stdout</b> (স্ক্রিন; টার্মিনালে লাইন-বাফারড, ফাইলে পুরো বাফারড) এবং <b>stderr</b> (স্ক্রিন, <span class="circ">আনবাফারড</span> — সঙ্গে সঙ্গে দেখায়)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,214px) minmax(0,1fr);align-items:center">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 150" width="214">
+      <g class="w">
+        <rect x="6" y="52" width="74" height="34" rx="6" class="ink fill-b"/>
+        <rect x="104" y="48" width="74" height="42" rx="6" class="ink-k fill-y"/>
+        <rect x="204" y="12" width="70" height="32" rx="6" class="ink-g fill-g"/>
+        <rect x="204" y="92" width="70" height="32" rx="6" class="ink-r fill-r"/>
+        <path class="ink" d="M80,69 L102,69" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M178,60 L202,34" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M178,80 L202,104" marker-end="url(#ah)"/>
+      </g>
+      <text x="43" y="74" text-anchor="middle" class="bn w6 s">কীবোর্ড</text>
+      <text x="43" y="102" text-anchor="middle" class="s" style="font-size:11px">stdin · fd 0</text>
+      <text x="141" y="67" text-anchor="middle" class="bn k w6 s">প্রোগ্রাম</text><text x="141" y="81" text-anchor="middle" class="s" style="font-size:10px">printf · scanf</text>
+      <text x="239" y="33" text-anchor="middle" class="bn g w6 s">স্ক্রিন</text>
+      <text x="239" y="60" text-anchor="middle" class="g s" style="font-size:11px">stdout · fd 1</text>
+      <text x="239" y="113" text-anchor="middle" class="bn r w6 s">স্ক্রিন</text>
+      <text x="239" y="140" text-anchor="middle" class="r s" style="font-size:11px">stderr · fd 2</text>
+      <text x="76" y="140" text-anchor="middle" class="bn p s" style="font-size:10px">"&gt; out.txt" সরায় শুধু stdout</text>
+    </svg><figcaption>স্ক্রিনে একই রকম দেখায় — কিন্তু এরা <b>আলাদা স্ট্রিম</b></figcaption></figure>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) <b>stderr</b> কোনো লগ ফাইল নয়: এটিও স্ক্রিনে যায়, কিন্তু <code>prog &gt; out.txt</code> কেবল stdout সরায়, তাই এরর তখনো দেখা যায়। (২) stdout-এর বাফারে থাকা লেখা <b>প্রোগ্রাম ক্র্যাশ করলে হারিয়ে যায়</b> — <code>fflush(stdout)</code> জোর করে বের করে দেয়।</div>
+  </div>
+  <div class="cols" style="align-items:start">
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">স্পেসি.</th><th class="l">আর্গুমেন্ট</th><th class="l">ছাপে</th></tr>
+      <tr><td class="l"><b>%d %i</b></td><td class="l">int</td><td class="l">-42</td></tr>
+      <tr><td class="l"><b>%u</b></td><td class="l">unsigned int</td><td class="l">42</td></tr>
+      <tr><td class="l"><b>%ld %lld</b></td><td class="l">long, long long</td><td class="l">123456789</td></tr>
+      <tr><td class="l"><b>%f</b></td><td class="l"><span class="hl">double (float উন্নীত হয়)</span></td><td class="l">3.140000</td></tr>
+      <tr><td class="l"><b>%Lf</b></td><td class="l">long double</td><td class="l">3.140000</td></tr>
+      <tr><td class="l"><b>%e %g</b></td><td class="l">double: সূচক / ছোটটি</td><td class="l">3.14e+00 · 3.14</td></tr>
+    </table>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">স্পেসি.</th><th class="l">আর্গুমেন্ট</th><th class="l">ছাপে</th></tr>
+      <tr><td class="l"><b>%c</b></td><td class="l">char (int হিসেবে)</td><td class="l">A</td></tr>
+      <tr><td class="l"><b>%s</b></td><td class="l">char * স্ট্রিং</td><td class="l">Dhaka</td></tr>
+      <tr><td class="l"><b>%p</b></td><td class="l">void * পয়েন্টার</td><td class="l">0x7ffd…</td></tr>
+      <tr><td class="l"><b>%x %X %o</b></td><td class="l">unsigned: হেক্স / অক্টাল</td><td class="l">ff · FF · 377</td></tr>
+      <tr><td class="l"><b>%zu</b></td><td class="l"><span class="circ">size_t</span></td><td class="l">5</td></tr>
+      <tr><td class="l"><b>%%</b></td><td class="l">কিছু না</td><td class="l">একটি % চিহ্ন</td></tr>
+    </table>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">গঠন: % [ফ্ল্যাগ] [প্রস্থ] [.প্রিসিশন] [দৈর্ঘ্য] অক্ষর</span>
+    <div class="fgrid tiny">
+      <p><b>-</b> বাঁয়ে সাজায় · <b>+</b> চিহ্ন দেখায় · <b>0</b> শূন্য দিয়ে ভরে · <b>#</b> %x-এ 0x, %o-তে 0</p>
+      <p><b>প্রস্থ (width)</b> = <span class="hl">ন্যূনতম</span>, কখনো কাটে না; <b>*</b> দিলে আর্গুমেন্ট থেকে নেয়</p>
+      <p><b>.প্রিসিশন</b>: দশমিকের পরের অঙ্ক (%f) · সর্বোচ্চ অক্ষর (%s)</p>
+      <p><b>দৈর্ঘ্য</b>: hh, h, l, ll, L, z — আর্গুমেন্টের আকার</p>
+    </div>
+    <p class="tiny"><b>printf ফেরত দেয়</b> ছাপা অক্ষরের সংখ্যা (এররে ঋণাত্মক): <code>printf("%d", printf("Hello"))</code> ছাপে <span class="circ">Hello5</span>।</p></div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট বলো (_ = একটি স্পেস)</span> <code>"%5d|"</code>, 42 → <b>___42|</b> · <code>"%-5d|"</code>, 42 → <b>42___|</b> · <code>"%05d"</code>, 42 → <b>00042</b> · <code>"%+d"</code>, 42 → <b>+42</b> · <code>"%.2f"</code>, 3.14159 → <b>3.14</b> · <code>"%8.3f|"</code>, 3.14159 → <b>___3.142|</b> · <code>"%#x %X %o"</code>, 255 ×3 → <b>0xff FF 377</b> · <code>"%.3s"</code>, "Bangladesh" → <b>Ban</b> · <code>"%2d"</code>, 12345 → <b>12345</b>।</div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) <b>printf</b>-এ %f দিয়েই float <i>ও</i> double দুটোই চলে — float আর্গুমেন্ট double-এ উন্নীত হয়; পার্থক্যটা কেবল scanf-এ। (২) <code>printf("%d", 3.5)</code> <b>অনির্ধারিত আচরণ (undefined)</b>। (৩) <code>strlen</code> ফেরত দেয় <b>size_t</b>: ছাপো <b>%zu</b> দিয়ে, %d বা %lu নয়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ফ্ল্যাগ, প্রস্থ, ডট, দৈর্ঘ্য, অক্ষর</b>" — সবসময় এই ক্রমে। "<b>মাইনাস বাঁয়ে সরায়, শূন্য ভরে, প্লাস দেখায়।</b>"</div>
+  </div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: scanf and character I/O ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>ফরম্যাটেড ইনপুট ও ক্যারেক্টার I/O</span></div>
+  <h2><span class="no">২</span>ফরম্যাটেড ইনপুট (scanf) ও ক্যারেক্টার / লাইন I/O</h2><span class="tag">ফাঁদে ভরা ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>scanf</b> stdin থেকে অক্ষর পড়ে, ফরম্যাট অনুযায়ী রূপান্তর করে এবং <span class="hl">প্রতিটি ফল একটি পয়েন্টারের মাধ্যমে জমা রাখে</span> — তাই অ্যারে নয় এমন প্রতিটি আর্গুমেন্টে <b>&amp;</b> লাগে। এটি ফেরত দেয় <b>যতগুলো আইটেম বসানো হলো সেই সংখ্যা</b>, অথবা প্রথম রূপান্তরের আগেই ইনপুট ব্যর্থ হলে <b>EOF</b>। %d, %f ও %s শুরুর ফাঁকা জায়গা (white space) বাদ দেয়; <b>%c দেয় না</b>।</div>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">টাইপ</th><th class="l">printf</th><th class="l">scanf</th><th class="l">পার্থক্য কেন</th></tr>
+    <tr><td class="l"><b>float</b></td><td class="l">%f</td><td class="l">%f</td><td class="l">পায় একটি <b>float *</b> — 4 বাইট</td></tr>
+    <tr><td class="l"><b>double</b></td><td class="l">%f (C99 থেকে %lf-ও)</td><td class="l"><span class="circ">%lf</span></td><td class="l"><b>double *</b>: 8 বাইট; %f ভরে কেবল 4</td></tr>
+    <tr><td class="l"><b>long double</b></td><td class="l">%Lf</td><td class="l">%Lf</td><td class="l">বড় হাতের L, ছোট হাতের নয়</td></tr>
+    <tr><td class="l"><b>short</b> / <b>long</b></td><td class="l">%hd / %ld</td><td class="l">%hd / %ld</td><td class="l">আকার পয়েন্টারের সঙ্গে মিলতে হবে</td></tr>
+    <tr><td class="l"><b>char</b></td><td class="l">%c</td><td class="l">%c, বা <b>" %c"</b></td><td class="l">স্পেসটি আগের '\n' বাদ দেয়</td></tr>
+    <tr><td class="l"><b>স্ট্রিং</b></td><td class="l">%s</td><td class="l">%s, <b>&amp; ছাড়া</b></td><td class="l">অ্যারের নামই ঠিকানা; স্পেসে থামে</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,224px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 280 124" width="224">
+      <g class="w">
+        <rect x="8" y="28" width="34" height="30" rx="3" class="ink-g fill-g"/>
+        <rect x="44" y="28" width="34" height="30" rx="3" class="ink-g fill-g"/>
+        <rect x="80" y="28" width="34" height="30" rx="3" class="ink fill-b"/>
+        <rect x="116" y="28" width="34" height="30" rx="3" class="ink fill-y"/>
+        <rect x="152" y="28" width="34" height="30" rx="3" class="ink fill-y"/>
+        <rect x="188" y="28" width="34" height="30" rx="3" class="ink fill-y"/>
+        <rect x="224" y="28" width="46" height="30" rx="3" class="ink-r fill-r"/>
+        <path class="ink-g" d="M10,66 L76,66"/>
+        <path class="ink" d="M118,66 L220,66"/>
+        <path class="ink-r" d="M247,100 L247,62" marker-end="url(#ah)"/>
+      </g>
+      <text x="140" y="16" text-anchor="middle" class="bn k w6 s">42 3.5 ⏎ টাইপ করার পর কীবোর্ড বাফার</text>
+      <text x="25" y="48" text-anchor="middle" class="w6">4</text><text x="61" y="48" text-anchor="middle" class="w6">2</text>
+      <text x="97" y="48" text-anchor="middle" class="bn s">স্পেস</text>
+      <text x="133" y="48" text-anchor="middle" class="w6">3</text><text x="169" y="48" text-anchor="middle" class="w6">.</text><text x="205" y="48" text-anchor="middle" class="w6">5</text>
+      <text x="247" y="48" text-anchor="middle" class="r w6">\n</text>
+      <text x="43" y="82" text-anchor="middle" class="g s" style="font-size:11px">%d → 42</text>
+      <text x="169" y="82" text-anchor="middle" class="bn s" style="font-size:11px">%f স্পেস বাদ দেয় → 3.5</text>
+      <text x="196" y="114" text-anchor="end" class="bn r s" style="font-size:11px">পড়ে থাকে: পরের %c এটি পড়ে</text>
+    </svg><figcaption><code>scanf("%d %f", &amp;n, &amp;x)</code> এন্টার কী-র আগেই থামে</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">ফাংশন</th><th class="l">কাজ</th></tr>
+      <tr><td class="l"><b>getchar()</b> / <b>putchar(c)</b></td><td class="l">একটি অক্ষর ইন / আউট; getchar ফেরত দেয় <b>int</b>, যাতে EOF আঁটে</td></tr>
+      <tr><td class="l"><b>gets(s)</b></td><td class="l"><span class="red">C11-এ বাতিল</span> — আকারের সীমা নেই, বাফার ওভারফ্লো</td></tr>
+      <tr><td class="l"><b>fgets(s, n, stdin)</b></td><td class="l">সর্বোচ্চ <b>n − 1</b> অক্ষর, <span class="hl">'\n' রেখে দেয়</span>, '\0' যোগ করে</td></tr>
+      <tr><td class="l"><b>puts(s)</b> / <b>fputs(s, fp)</b></td><td class="l">puts '\n' যোগ করে; fputs কিছুই না</td></tr>
+      <tr><td class="l"><b>getch()</b> / <b>getche()</b></td><td class="l">এন্টার ছাড়া একটি কী — <b>conio.h</b>, শুধু DOS/Turbo C, স্ট্যান্ডার্ড নয়</td></tr>
+    </table>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ scanf কী ফেরত দেয়?</span> <code>int a = 0, b = 0, r = scanf("%d %d", &amp;a, &amp;b);</code> <b>(ক)</b> ইনপুট <b>10 20</b> → r = <span class="circ">2</span>, a = 10, b = 20। <b>(খ)</b> ইনপুট <b>10 abc</b> → r = <b>1</b>, b থাকে 0 এবং "abc" পরের পড়ার জন্য <b>বাফারেই থেকে যায়</b>। <b>(গ)</b> ইনপুট <b>abc</b> → r = <b>0</b>। <b>(ঘ)</b> ইনপুট শেষ (Ctrl+Z / Ctrl+D) → r = <b>EOF</b>। নিরাপদ লুপ: <code>while (scanf("%d", &amp;x) == 1) sum += x;</code></div>
+  <div class="sumbox tiny"><span class="lbl">scanf-এর তিনটি কাজের কৌশল</span>
+    <div class="fgrid three tiny">
+      <p><b>%9s</b> — প্রস্থের সীমা: <code>char s[10]</code>-এ সর্বোচ্চ 9 অক্ষর</p>
+      <p><b>%[^\n]</b> — স্ক্যানসেট: স্পেসসহ পুরো লাইন</p>
+      <p><b>%*d</b> — পড়ে <b>ফেলে দেয়</b>; রিটার্নে গোনা হয় না</p>
+    </div></div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) &amp; ছাড়া <code>scanf("%d", x)</code> একটি মানকে ঠিকানা হিসেবে পাঠায় — অনির্ধারিত আচরণ, সাধারণত ক্র্যাশ। (২) যেখানে char আনসাইনড, সেখানে <code>char c = getchar();</code> কখনো EOF-এর সমান হয় না — <b>int</b> রাখো। (৩) স্ট্যান্ডার্ড C-তে <code>fflush(stdin)</code> অনির্ধারিত। (৪) %s কেবল <b>একটি শব্দ</b> পড়ে।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>printf নেয় মান, scanf নেয় ঠিকানা।</b>" আর "<b>lf = long float = double</b>": scanf-এ float আর double-এর মাঝে ফারাক শুধু ওই <b>l</b>।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: file access ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>ফাইল অ্যাক্সেস ও মোড</span></div>
+  <h2><span class="no">৩</span>ফাইল অ্যাক্সেস: FILE *, fopen মোড, টেক্সট বনাম বাইনারি</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> ফাইল ব্যবহার করা হয় একটি <b>FILE স্ট্রাকচারের পয়েন্টার</b> দিয়ে (&lt;stdio.h&gt;-এ ঘোষিত), যেটি রাখে <b>বাফার</b>, <b>বর্তমান অবস্থান (position)</b> এবং <b>ফাইল-শেষ ও এরর ফ্ল্যাগ</b>। প্রতিটি ফাইলের কাজের তিন ধাপ: <code>fopen(name, mode)</code> দিয়ে <b>খোলা</b>, যা <span class="circ">ব্যর্থ হলে NULL ফেরত দেয়</span>; <b>প্রসেস</b> করা; <code>fclose(fp)</code> দিয়ে <b>বন্ধ</b>, যা বাফার খালি করে 0 ফেরত দেয় (ব্যর্থ হলে EOF)।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,204px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 270 150" width="204">
+      <g class="w">
+        <rect x="6" y="40" width="64" height="36" rx="6" class="ink fill-b"/>
+        <rect x="94" y="10" width="92" height="96" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M100,40 L180,40 M100,64 L180,64"/>
+        <ellipse cx="236" cy="30" rx="28" ry="9" class="ink-g fill-g"/>
+        <path class="ink-g" d="M208,30 L208,86 M264,30 L264,86"/>
+        <path class="ink-g" d="M208,86 Q236,100 264,86"/>
+        <path class="ink" d="M70,58 L92,58" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M186,58 L206,58" marker-end="url(#ahg)"/>
+      </g>
+      <text x="38" y="56" text-anchor="middle" class="bn w6 s">প্রোগ্রাম</text><text x="38" y="70" text-anchor="middle" class="bn s" style="font-size:10px">fp রাখে</text>
+      <text x="140" y="30" text-anchor="middle" class="k w6 s">FILE</text>
+      <text x="140" y="56" text-anchor="middle" class="bn s" style="font-size:11px">বাফার</text>
+      <text x="140" y="80" text-anchor="middle" class="bn s" style="font-size:11px">অবস্থান · ফ্ল্যাগ</text>
+      <text x="140" y="98" text-anchor="middle" class="bn s" style="font-size:10px">EOF · এরর</text>
+      <text x="236" y="66" text-anchor="middle" class="bn g w6 s">ডিস্ক ফাইল</text>
+      <text x="135" y="128" text-anchor="middle" class="bn r s" style="font-size:11px">fp = fopen(...) — NULL কিনা যাচাই করো</text>
+      <text x="135" y="144" text-anchor="middle" class="bn s" style="font-size:10.5px">fclose(fp) বাফার ডিস্কে লিখে দেয়</text>
+    </svg><figcaption>প্রোগ্রাম রাখে শুধু একটি পয়েন্টার; হিসাব রাখে FILE</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">মোড</th><th class="l">ফাইল থাকলে</th><th class="l">না থাকলে</th><th class="l">অনুমতি</th></tr>
+      <tr><td class="l"><b>"r"</b></td><td class="l">শুরু থেকে খোলে</td><td class="l"><b>NULL</b></td><td class="l">পড়া</td></tr>
+      <tr><td class="l"><b>"w"</b></td><td class="l"><span class="circ">শূন্যে কেটে ফেলে</span></td><td class="l">তৈরি করে</td><td class="l">লেখা</td></tr>
+      <tr><td class="l"><b>"a"</b></td><td class="l">রাখে; <b>প্রতিটি</b> লেখা যায় শেষে</td><td class="l">তৈরি করে</td><td class="l">যোগ (append)</td></tr>
+      <tr><td class="l"><b>"r+"</b></td><td class="l">খোলে, কাটে <b>না</b></td><td class="l"><b>NULL</b></td><td class="l">পড়া + লেখা</td></tr>
+      <tr><td class="l"><b>"w+"</b></td><td class="l">কেটে ফেলে</td><td class="l">তৈরি করে</td><td class="l">লেখা + পড়া</td></tr>
+      <tr><td class="l"><b>"a+"</b></td><td class="l">রাখে; যেকোনো জায়গা পড়ে, শেষে লেখে</td><td class="l">তৈরি করে</td><td class="l">পড়া + যোগ</td></tr>
+    </table>
+  </div>
+  <p class="tiny"><span class="hl">বাইনারি</span>-র জন্য <b>b</b> যোগ করো: "rb", "wb", "ab", "r+b" (= "rb+"), "w+b", "a+b"। C11 যোগ করেছে <b>x</b> ("wx"): ওভাররাইট না করে ব্যর্থ হয়। মনে রাখো <code>printf(…)</code> ≡ <code>fprintf(stdout, …)</code>।</p>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">স্তর</th><th class="l">পড়া</th><th class="l">লেখা</th><th class="l">শেষে / এররে সংকেত</th></tr>
+    <tr><td class="l"><b>অক্ষর</b></td><td class="l">fgetc(fp), getc(fp)</td><td class="l">fputc(c, fp), putc(c, fp)</td><td class="l">EOF</td></tr>
+    <tr><td class="l"><b>লাইন / স্ট্রিং</b></td><td class="l">fgets(s, n, fp)</td><td class="l">fputs(s, fp)</td><td class="l">NULL · EOF</td></tr>
+    <tr><td class="l"><b>ফরম্যাটেড</b></td><td class="l">fscanf(fp, fmt, …)</td><td class="l">fprintf(fp, fmt, …)</td><td class="l">সংখ্যা বা EOF · ঋণাত্মক</td></tr>
+    <tr><td class="l"><b>ব্লক (বাইনারি)</b> ★</td><td class="l">fread(ptr, size, n, fp)</td><td class="l">fwrite(ptr, size, n, fp)</td><td class="l">যতগুলো হলো; শেষে বা এররে <b>&lt; n</b></td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">/* copy in.txt to out.txt */
+FILE *in  = fopen("in.txt", "r");
+FILE *out = fopen("out.txt", "w");
+if (in == NULL || out == NULL) {
+    perror("fopen");
+    return 1;
+}
+int c;              /* int, not char */
+while ((c = fgetc(in)) != EOF)
+    fputc(c, out);
+fclose(in);
+fclose(out);</div>
+    <div>
+      <div class="def tiny" style="margin-top:0"><span class="lbl">টেক্সট বনাম বাইনারি</span> <b>টেক্সট মোডে</b> লাইব্রেরি লাইনের শেষ বদলাতে পারে — Windows-এ '\n' লেখা হয় "\r\n" হিসেবে আর পড়ার সময় আবার '\n'। <b>বাইনারি মোড</b> বাইট হুবহু সরায়। Linux/UNIX-এ দুই মোড একই। <code>fprintf(fp, "%d", 12345)</code> লেখে <b>5টি অক্ষর</b>; <code>fwrite(&amp;n, sizeof n, 1, fp)</code> লেখে <span class="circ">sizeof(int) বাইট</span> (বেশিরভাগ সিস্টেমে 4)।</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) <b>"w" পুরোনো লেখা মুছে দেয়</b>; রাখতে চাইলে "a"। (২) <b>"r+"</b> কখনো ফাইল তৈরি করে না। (৩) fopen ব্যর্থতা জানায় <b>NULL</b> দিয়ে, EOF বা −1 নয়। (৪) fclose ভুলে গেলে <b>বাফারের ডেটা হারাতে পারে</b>। (৫) "a"/"a+"-এ fseek-এর পরেও লেখা যায় শেষে।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>r পড়ে, w মোছে, a জোড়ে — আর + দেয় বাকি অর্ধেক।</b>" "<b>b মানে বাইট।</b>" ফাইল না থাকলে ব্যর্থ হয় কেবল দুটি r-মোড; সব w- ও a-মোড ফাইল তৈরি করে।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: random access and EOF ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>র‍্যান্ডম অ্যাক্সেস, EOF ও স্ট্রিমের অবস্থা</span></div>
+  <h2><span class="no">৪</span>র‍্যান্ডম অ্যাক্সেস: fseek, ftell, rewind ও EOF-এর নিয়ম</h2><span class="tag">হিসাব ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> প্রতিটি খোলা স্ট্রিমের একটি <span class="hl">ফাইল পজিশন ইন্ডিকেটর</span> থাকে — যে বাইট অফসেটে পরের পড়া বা লেখা হবে। ধারাবাহিক (sequential) I/O একে নিজে নিজে সামনে নেয়; <b>র‍্যান্ডম অ্যাক্সেস</b> একে সরাসরি সরায় <code>fseek(fp, offset, whence)</code> দিয়ে, ফলে বাইনারি ফাইলের <i>k</i>-তম রেকর্ড আগের <i>k</i> − 1টি না পড়েই পড়া যায়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,232px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 130" width="232">
+      <g class="w">
+        <rect x="10" y="44" width="280" height="28" rx="3" class="ink fill-b"/>
+        <path class="ink" d="M66,44 L66,72 M122,44 L122,72 M178,44 L178,72 M234,44 L234,72"/>
+        <rect x="122" y="44" width="56" height="28" rx="3" class="ink-k fill-y"/>
+        <path class="ink-g" d="M12,30 L118,30" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M288,96 L240,96" marker-end="url(#ah)"/>
+        <path class="ink-p" d="M150,108 L176,108" marker-end="url(#ahp)"/>
+      </g>
+      <text x="12" y="20" class="bn g s" style="font-size:11px">SEEK_SET (0) · বাইট 0 থেকে</text>
+      <text x="38" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 0</text><text x="94" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 1</text>
+      <text x="150" y="63" text-anchor="middle" class="k w6 s" style="font-size:11px">rec 2</text>
+      <text x="206" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 3</text><text x="262" y="63" text-anchor="middle" class="s" style="font-size:11px">rec 4</text>
+      <text x="288" y="90" text-anchor="end" class="bn r s" style="font-size:11px">SEEK_END (2) · অফসেট ≤ 0</text>
+      <text x="146" y="112" text-anchor="end" class="bn p s" style="font-size:11px">SEEK_CUR (1) · এখান থেকে</text>
+      <text x="150" y="127" text-anchor="middle" class="bn s" style="font-size:10.5px">রেকর্ড k শুরু হয় বাইট k × sizeof(record)-এ</text>
+    </svg><figcaption>তিনটি শুরুবিন্দু, একটি অফসেট — এই-ই পুরো র‍্যান্ডম অ্যাক্সেস</figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">কল</th><th class="l">ফল · রিটার্ন</th></tr>
+      <tr><td class="l"><b>fseek(fp, off, whence)</b></td><td class="l">শুরুবিন্দু + off-এ যায় · সফল হলে <b>0</b></td></tr>
+      <tr><td class="l"><b>ftell(fp)</b></td><td class="l">বর্তমান অফসেট, <b>long</b> হিসেবে · এররে −1L</td></tr>
+      <tr><td class="l"><b>rewind(fp)</b></td><td class="l">0-তে ফেরে <b>এবং</b> এরর ফ্ল্যাগ মোছে · void</td></tr>
+      <tr><td class="l"><b>feof(fp)</b></td><td class="l">কোনো পড়া শেষে <span class="circ">ইতিমধ্যে ঠেকলে</span> অশূন্য</td></tr>
+      <tr><td class="l"><b>ferror(fp)</b> / <b>clearerr(fp)</b></td><td class="l">এরর ফ্ল্যাগ আছে? / দুটি ফ্ল্যাগই মোছে</td></tr>
+      <tr><td class="l"><b>fflush(fp)</b></td><td class="l">আউটপুট বাফার এখনই লিখে দেয়</td></tr>
+      <tr><td class="l"><b>remove(n)</b> / <b>rename(o, n)</b></td><td class="l">ফাইল মোছে / নাম বদলায় · সফল হলে 0</td></tr>
+    </table>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ ছাত্রদের রেকর্ডের বাইনারি ফাইল</span> <code>struct student { int roll; char name[16]; float cgpa; };</code> — 4 + 16 + 4 = <b>24 বাইট</b> (এখানে প্যাডিং লাগে না; প্যাডিংয়ের নিয়ম স্ট্রাকচার লেসনে)। <b>(ক)</b> ফাইলের আকার: <code>fseek(fp, 0, SEEK_END); long n = ftell(fp);</code> → n = 240 ⇒ 240 ÷ 24 = <span class="circ">১০টি রেকর্ড</span>। <b>(খ)</b> <b>৫ম</b> রেকর্ড পড়া (k = 4): <code>fseek(fp, 4 * sizeof(struct student), SEEK_SET)</code> → বাইট <b>96</b>, তারপর <code>fread(&amp;s, sizeof s, 1, fp)</code> ফেরত দেয় 1। <b>(গ)</b> এখন <code>ftell(fp)</code> = 96 + 24 = <b>120</b>। <b>(ঘ)</b> জায়গাতেই হালনাগাদ: <b>"rb+"</b> দিয়ে খোলো, <code>fseek(fp, -24L, SEEK_CUR)</code>, তারপর <code>fwrite(&amp;s, sizeof s, 1, fp)</code>। <b>(ঙ)</b> শেষ রেকর্ড: <code>fseek(fp, -24L, SEEK_END)</code> → বাইট 216।</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">/* WRONG: the last line prints twice */
+while (!feof(fp)) {
+    fgets(line, 80, fp);
+    fputs(line, stdout);
+}
+/* RIGHT: test the read itself */
+while (fgets(line, sizeof line, fp) != NULL)
+    fputs(line, stdout);</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">EOF একটি মান, বাইট নয়</span> <b>EOF</b> হলো &lt;stdio.h&gt;-এর একটি ম্যাক্রো, একটি <b>ঋণাত্মক int</b> (সাধারণত −1), যা কিছু না থাকলে ইনপুট ফাংশন ফেরত দেয়। ফাইলে কোনো EOF অক্ষর জমা থাকে না; ফাইল শুধু শেষ হয়। তাই <span class="hl">fgetc ফেরত দেয় int</span>: এতে 256টি বাইট-মান <i>এবং</i> EOF — সবই আঁটতে হবে।</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) <b>feof() সামনে দেখে না</b>: কোনো পড়া ব্যর্থ হওয়ার পরেই এটি সত্য হয়, তাই <code>while (!feof(fp))</code> লুপ একবার বেশি চলে। (২) ftell দিয়ে বাইটের হিসাবের জন্য <b>বাইনারি</b> মোড লাগে। (৩) লেখা আর পড়ার মাঝে fseek বা fflush ডাকো।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>SET, CUR, END = 0, 1, 2 — শুরু, এখানে, শেষ।</b>" আর "<b>আগে পড়ো, পরে জিজ্ঞেস করো</b>": fgetc/fgets/fread-এর ফেরত মান যাচাই করো; feof() জিজ্ঞেস করো কেবল <i>কেন</i> থামল জানতে।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: variadic functions and command line ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>পরিবর্তনশীল আর্গুমেন্ট ও কমান্ড লাইন</span></div>
+  <h2><span class="no">৫</span>পরিবর্তনশীল দৈর্ঘ্যের আর্গুমেন্ট তালিকা (stdarg.h)</h2><span class="tag">লিখিত প্রশ্নে প্রিয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ভেরিয়াডিক ফাংশন (variadic function)</b> পরিবর্তনশীল সংখ্যক আর্গুমেন্ট নেয়, যা ঘোষণা করা হয় <span class="hl">অন্তত একটি নামযুক্ত প্যারামিটারের</span> পরে একটি এলিপসিস <b>...</b> দিয়ে: <code>int printf(const char *fmt, ...);</code>। <b>&lt;stdarg.h&gt;</b>-এর ম্যাক্রোগুলো নামহীন আর্গুমেন্ট একটা একটা করে পড়ে; কতগুলো এল তা ফাংশনের নিজের <b>জানার কোনো উপায় নেই</b>।</div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">#include &lt;stdarg.h&gt;
+int sum(int count, ...) {
+    va_list ap;
+    int total = 0;
+    va_start(ap, count);
+    for (int i = 0; i &lt; count; i++)
+        total += va_arg(ap, int);
+    va_end(ap);
+    return total;
+}
+sum(4, 10, 20, 30, 40)   → 100
+sum(2, 5, 15)            → 20</div>
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">ম্যাক্রো / টাইপ</th><th class="l">কাজ</th></tr>
+      <tr><td class="l"><b>va_list ap</b></td><td class="l">আর্গুমেন্টগুলোর ওপর কার্সর</td></tr>
+      <tr><td class="l"><b>va_start(ap, last)</b></td><td class="l"><b>শেষ নামযুক্ত</b> প্যারামিটারের পর থেকে শুরু</td></tr>
+      <tr><td class="l"><b>va_arg(ap, T)</b></td><td class="l">পরেরটি T টাইপ হিসেবে আনে</td></tr>
+      <tr><td class="l"><b>va_copy(d, s)</b></td><td class="l">কার্সরের কপি (C99)</td></tr>
+      <tr><td class="l"><b>va_end(ap)</b></td><td class="l">পরিষ্কার করে — প্রতি va_start-এ একটি</td></tr>
+    </table>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> নামহীন আর্গুমেন্টে <b>ডিফল্ট প্রোমোশন</b> হয়: char, short → <b>int</b>; float → <b>double</b>। তাই <span class="circ">va_arg(ap, float)</span> ও va_arg(ap, char) অনির্ধারিত — double / int চাও। শেষ আর্গুমেন্টের পরে পড়াও অনির্ধারিত।</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">কলি সংখ্যা জানে কীভাবে</span> একটি <b>count</b> আর্গুমেন্ট (ওপরের sum) · শেষে একটি <b>সেন্টিনেল</b> (NULL, −1) · একটি <b>ফরম্যাট স্ট্রিং</b> — printf % চিহ্ন গোনে। সংখ্যা ভুল হলে va_arg আবর্জনা পড়ে।</div>
+  </div>
+  <h2 style="margin-top:2mm"><span class="no">৬</span>কমান্ড-লাইন প্যারামিটার (argc, argv)</h2><span class="tag">সবচেয়ে বেশি আসে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <code>int main(int argc, char *argv[])</code> (বা <code>char **argv</code>) কমান্ডের পরে টাইপ করা শব্দগুলো পায়। <b>argc</b> = কতগুলো শব্দ, <span class="hl">প্রোগ্রামের নামসহ</span>; <b>argv[0]</b> = প্রোগ্রামের নাম; argv[1] … argv[argc − 1] = আর্গুমেন্টগুলো, <b>সবসময় স্ট্রিং হিসেবে</b>; এবং <span class="circ">argv[argc] = NULL</span>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,220px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 260 132" width="214">
+      <g class="w">
+        <rect x="8" y="22" width="70" height="24" rx="3" class="ink fill-b"/>
+        <rect x="8" y="48" width="70" height="24" rx="3" class="ink fill-b"/>
+        <rect x="8" y="74" width="70" height="24" rx="3" class="ink fill-b"/>
+        <rect x="8" y="100" width="70" height="24" rx="3" class="ink-r fill-r"/>
+        <rect x="128" y="22" width="92" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="128" y="48" width="60" height="24" rx="3" class="ink-g fill-g"/>
+        <rect x="128" y="74" width="60" height="24" rx="3" class="ink-g fill-g"/>
+        <path class="ink" d="M78,34 L126,34 M78,60 L126,60 M78,86 L126,86" marker-end="url(#ahb)"/>
+      </g>
+      <text x="130" y="14" text-anchor="middle" class="k w6 s">$ ./prog one two   ⇒ argc = 3</text>
+      <text x="43" y="39" text-anchor="middle" class="s" style="font-size:11px">argv[0]</text>
+      <text x="43" y="65" text-anchor="middle" class="s" style="font-size:11px">argv[1]</text>
+      <text x="43" y="91" text-anchor="middle" class="s" style="font-size:11px">argv[2]</text>
+      <text x="43" y="117" text-anchor="middle" class="r w6 s" style="font-size:11px">argv[3]</text>
+      <text x="174" y="39" text-anchor="middle" class="g s" style="font-size:11px">"./prog\0"</text>
+      <text x="158" y="65" text-anchor="middle" class="g s" style="font-size:11px">"one\0"</text>
+      <text x="158" y="91" text-anchor="middle" class="g s" style="font-size:11px">"two\0"</text>
+      <text x="90" y="117" class="bn r s" style="font-size:11px">NULL — তালিকার শেষ</text>
+    </svg><figcaption>argv হলো স্ট্রিং-পয়েন্টারের একটি অ্যারে</figcaption></figure>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ <code>$ ./sum 10 20 30</code></span> argc = <b>4</b>; argv[1] হলো <b>স্ট্রিং</b> "10", তাই যোগফলের জন্য রূপান্তর লাগে: <code>for (i = 1; i &lt; argc; i++) s += atoi(argv[i]);</code> → <span class="circ">60</span>। <b>(খ)</b> <code>$ ./prog "hello world"</code> → argc = <b>2</b>: শেলের উদ্ধৃতিচিহ্ন একে একটি আর্গুমেন্ট বানায়। <b>(গ)</b> শুধু <code>$ ./prog</code> → argc = 1, argv[1] = NULL: আগে <code>argc &lt; 2</code> যাচাই করো। <b>(ঘ)</b> atoi("12ab") চুপচাপ 12 দেয় — <b>strtol</b> এরর জানাতে পারে।</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) বাস্তবে argc কখনো 0 নয় — নামটাও গোনা হয়। (২) <code>argv[1] + argv[2]</code> যোগ করে <b>পয়েন্টার</b>, সংখ্যা নয়। (৩) argc/argv নাম শুধু প্রথা; স্ট্যান্ডার্ড যা ঠিক করে দেয় তা হলো <b>টাইপ</b>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>argc নামও গোনে; argv শেষ হয় NULL-এ।</b>" stdarg-এর জন্য: "<b>start, arg, arg, …, end</b>" — আর "<b>ছোটরা বড় হয়</b>": char → int, float → double।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: error handling ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>এরর হ্যান্ডলিং</span></div>
+  <h2><span class="no">৭</span>এরর হ্যান্ডলিং: রিটার্ন মান, errno, perror, assert, exit</h2><span class="tag">হাই-ইল্ড ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> C-তে <b>এক্সেপশন (exception) নেই</b>। লাইব্রেরি ফাংশন ব্যর্থতা জানায় তার <span class="hl">রিটার্ন মান</span> দিয়ে এবং অনেকে <b>errno</b>-তে একটি কোড রেখে; প্রোগ্রামকে <b>যাচাই</b> করতে হয়, <b>stderr</b>-এ জানাতে হয় এবং <b>ব্যর্থতার এক্সিট স্ট্যাটাস</b> দিয়ে শেষ করতে হয়। যাচাই বাদ দিলে আপনা-আপনি কিছুই ঘটে না।</div>
+  <div class="cols" style="align-items:start">
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">কল</th><th class="l">ব্যর্থতার চেহারা</th></tr>
+      <tr><td class="l">fopen, malloc, calloc, fgets</td><td class="l"><b>NULL</b></td></tr>
+      <tr><td class="l">scanf, fscanf</td><td class="l">চাওয়ার চেয়ে কম আইটেম, বা <b>EOF</b></td></tr>
+      <tr><td class="l">fgetc, getchar, fclose, fputs</td><td class="l"><b>EOF</b></td></tr>
+      <tr><td class="l">printf, fprintf</td><td class="l">একটি <b>ঋণাত্মক</b> মান</td></tr>
+      <tr><td class="l">fseek / ftell</td><td class="l">অশূন্য / <b>−1L</b></td></tr>
+      <tr><td class="l">fread, fwrite</td><td class="l"><b>n</b>-এর চেয়ে কম আইটেম</td></tr>
+      <tr><td class="l">sqrt(−1) · strtol ওভারফ্লো</td><td class="l">errno = <b>EDOM</b> · <b>ERANGE</b></td></tr>
+    </table>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 270 160" width="226">
+      <g class="w">
+        <rect x="70" y="4" width="130" height="26" rx="6" class="ink fill-b"/>
+        <path class="ink-k fill-y" d="M135,40 L190,62 L135,84 L80,62 Z"/>
+        <rect x="4" y="100" width="118" height="26" rx="6" class="ink-r fill-r"/>
+        <rect x="150" y="100" width="116" height="26" rx="6" class="ink-g fill-g"/>
+        <rect x="4" y="132" width="118" height="24" rx="6" class="ink-r fill-r"/>
+        <path class="ink" d="M135,30 L135,38" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M80,62 L63,62 L63,98" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M190,62 L208,62 L208,98" marker-end="url(#ahg)"/>
+      </g>
+      <text x="135" y="21" text-anchor="middle" class="w6 s">fp = fopen(...)</text>
+      <text x="135" y="66" text-anchor="middle" class="k w6 s" style="font-size:11px">fp == NULL ?</text>
+      <text x="56" y="56" text-anchor="middle" class="bn r s" style="font-size:11px">হ্যাঁ</text>
+      <text x="216" y="56" text-anchor="middle" class="bn g s" style="font-size:11px">না</text>
+      <text x="63" y="117" text-anchor="middle" class="r s" style="font-size:11px">perror → stderr</text>
+      <text x="208" y="117" text-anchor="middle" class="bn g s" style="font-size:11px">ব্যবহার, তারপর fclose</text>
+      <text x="63" y="148" text-anchor="middle" class="r s" style="font-size:10.5px">exit(EXIT_FAILURE)</text>
+      <text x="208" y="148" text-anchor="middle" class="g s" style="font-size:11px">return 0</text>
+    </svg><figcaption>যাচাই করো, জানাও, বেরিয়ে যাও — প্রতিটি লাইব্রেরি কলে</figcaption></figure>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+FILE *fp = fopen("data.txt", "r");
+if (fp == NULL) {
+    perror("data.txt");
+    fprintf(stderr, "code %d: %s\n",
+            errno, strerror(errno));
+    exit(EXIT_FAILURE);
+}</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">errno · perror · strerror</span> <b>errno</b> (&lt;errno.h&gt;) ব্যর্থ কল একটি ধনাত্মক কোডে বসায়, আর লাইব্রেরি একে <b>কখনো 0-তে ফেরায় না</b>। ISO C সংজ্ঞায়িত করে কেবল <b>EDOM, ERANGE, EILSEQ</b>; ENOENT ইত্যাদি POSIX-এর। <b>perror("data.txt")</b> stderr-এ ছাপে <span class="circ">data.txt: No such file or directory</span>; <b>strerror(errno)</b> (&lt;string.h&gt;) সেই লেখাটি স্ট্রিং হিসেবে দেয়।</div>
+  </div>
+  <div class="sumbox tiny"><span class="lbl">assert, exit, abort — প্রোগ্রাম যেভাবে শেষ হয়</span>
+    <div class="fgrid tiny">
+      <p><b>assert(expr)</b>: মিথ্যা হলে stderr-এ এক্সপ্রেশন, ফাইল, লাইন ছাপে, তারপর <b>abort()</b></p>
+      <p>&lt;assert.h&gt;-এর আগে <b>#define NDEBUG</b> ⇒ সব assert <span class="hl">উধাও</span></p>
+      <p><b>exit(status)</b>: স্ট্রিম ফ্লাশ ও বন্ধ করে, atexit() হ্যান্ডলার চালায়</p>
+      <p>main-এ <b>return n;</b> ≡ <b>exit(n)</b> · EXIT_SUCCESS 0 · EXIT_FAILURE ≠ 0</p>
+    </div>
+    <p class="tiny"><b>abort()</b>: অস্বাভাবিক সমাপ্তি, atexit হ্যান্ডলার চলে না। শেল স্ট্যাটাস পড়ে <b>$?</b> / <b>%ERRORLEVEL%</b> দিয়ে।</p></div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ শূন্য দিয়ে ভাগ</span> b = 0 হলে পূর্ণসংখ্যার <code>a / b</code> <b>অনির্ধারিত আচরণ</b> — কোনো রিটার্ন কোড নেই, errno নেই, সাধারণত ক্র্যাশ — তাই <b>আগে যাচাই</b>: <code>if (b == 0) { fputs("divide by zero\n", stderr); return EXIT_FAILURE; }</code>। (IEEE 754 float-এ 1.0 / 0.0 = <b>inf</b>।)</div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) errno অর্থবহ কেবল ব্যর্থ কলের <b>ঠিক পরে</b>। (২) <b>assert</b> ইনপুট যাচাই নয় — রিলিজ বিল্ডে উধাও হয়। (৩) এরর জানাও <b>stderr</b>-এ, stdout-এ নয়। (৪) <b>0 = সাফল্য</b>, অশূন্য = ব্যর্থতা — উল্টো নয়।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>যাচাই, জানাও, বেরোও।</b>" রিটার্ন মান যাচাই করো, stderr-কে জানাও (perror), EXIT_FAILURE দিয়ে বেরোও। "<b>বাগের জন্য assert, ব্যবহারকারীর জন্য if।</b>"</div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: graphics and library functions ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>গ্রাফিক্স ও লাইব্রেরি ফাংশন</span></div>
+  <h2><span class="no">৮</span>C-তে গ্রাফিক্স (graphics.h, Turbo C)</h2><span class="tag">MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>graphics.h</b> হলো DOS-এর Turbo C/C++-এর জন্য Borland-এর <b>BGI</b> (Borland Graphics Interface) — <span class="hl">ISO C-র অংশ নয়</span> (gcc-তে এমন হেডার নেই)। স্ক্রিন হলো পিক্সেলের গ্রিড, যার <b>মূলবিন্দু (0, 0) ওপরে-বাঁয়ে</b> এবং <b>y বাড়ে নিচের দিকে</b>; VGA হাই মোডে (640 × 480, 16 রং) <code>getmaxx()</code> = 639 ও <code>getmaxy()</code> = 479।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,200px) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 250 160" width="200">
+      <g class="w">
+        <rect x="20" y="20" width="200" height="124" rx="2" class="ink-k fill-b"/>
+        <path class="ink-g" d="M20,20 L236,20" marker-end="url(#ahg)"/>
+        <path class="ink-r" d="M20,20 L20,156" marker-end="url(#ah)"/>
+        <rect x="60" y="52" width="60" height="60" rx="1" class="ink-r"/>
+        <ellipse cx="90" cy="82" rx="30" ry="30" class="ink"/>
+        <path class="ink" d="M150,60 L205,120"/>
+      </g>
+      <text x="6" y="14" class="k s" style="font-size:11px">(0,0)</text>
+      <text x="236" y="34" text-anchor="end" class="g s" style="font-size:11px">x →</text>
+      <text x="26" y="154" class="r s" style="font-size:11px">y ↓</text>
+      <text x="218" y="138" text-anchor="end" class="s" style="font-size:10.5px">(639, 479)</text>
+      <text x="90" y="128" text-anchor="middle" class="r s" style="font-size:10px">rectangle(60,52,120,112)</text>
+      <text x="178" y="56" text-anchor="middle" class="s" style="font-size:10px">line()</text>
+    </svg><figcaption>স্ক্রিন স্থানাঙ্ক: y নির্দেশ করে <b>নিচে</b></figcaption></figure>
+    <table class="hand tiny" style="margin-top:0;width:100%;line-height:5mm">
+      <tr><th class="l">ফাংশন</th><th class="l">কাজ</th></tr>
+      <tr><td class="l"><b>initgraph(&amp;gd, &amp;gm, path)</b></td><td class="l">গ্রাফিক্স মোড; <b>gd = DETECT</b></td></tr>
+      <tr><td class="l"><b>graphresult()</b> · <b>closegraph()</b></td><td class="l"><b>grOk</b> (0) · টেক্সটে ফেরা</td></tr>
+      <tr><td class="l"><b>putpixel(x,y,c)</b> · <b>line(x1,y1,x2,y2)</b></td><td class="l">একটি পিক্সেল · একটি রেখা</td></tr>
+      <tr><td class="l"><b>circle(x,y,r)</b> · <b>rectangle(l,t,r,b)</b></td><td class="l">ব্যাসার্ধ · <span class="circ">দুই কোণ</span></td></tr>
+      <tr><td class="l"><b>setcolor(c)</b> · <b>setbkcolor(c)</b></td><td class="l">BLACK 0 · RED 4 · WHITE 15</td></tr>
+      <tr><td class="l"><b>setfillstyle</b> + <b>floodfill(x,y,b)</b></td><td class="l">সীমানা b পর্যন্ত ভরাট</td></tr>
+      <tr><td class="l"><b>outtextxy(x,y,s)</b> · <b>cleardevice()</b></td><td class="l">লেখা · স্ক্রিন মোছা</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;    /* getch() */
+int main(void) {
+  int gd = DETECT, gm;
+  initgraph(&amp;gd, &amp;gm, "C:\\TC\\BGI");
+  if (graphresult() != grOk) return 1;
+  setcolor(RED);  rectangle(100,100,200,200);
+  setcolor(BLUE); circle(150, 150, 50);
+  outtextxy(110, 220, "Graphics Example");
+  getch(); closegraph(); return 0;
+}</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) <b>getch()</b> আছে <b>conio.h</b>-এ, graphics.h-এ নয় — এটি শুধু একটি কী চাপা পর্যন্ত ছবিটা ধরে রাখে। (২) rectangle নেয় <b>দুই কোণ</b>, প্রস্থ-উচ্চতা নয়। (৩) বড় y মানে <b>নিচে</b>।</div>
+  </div>
+  <h2 style="margin-top:2mm"><span class="no">৯</span>স্ট্যান্ডার্ড লাইব্রেরি ফাংশন ও হেডার</h2><span class="tag">MCQ ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>C স্ট্যান্ডার্ড লাইব্রেরি</b> হলো কম্পাইলারের সঙ্গে আসা আগে-কম্পাইল-করা কোড। <b>হেডার ঘোষণা করে</b> (প্রোটোটাইপ, ম্যাক্রো, টাইপ); <b>লাইব্রেরি আর্কাইভ সংজ্ঞা দেয়</b> (যে মেশিন কোড লিংকার যোগ করে)। C89-এ স্ট্যান্ডার্ড হেডার <b>১৫টি</b>, C99-এ <b>২৪টি</b>, C11-এ <b>২৯টি</b>।</div>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">হেডার</th><th class="l">হাই-ইল্ড সদস্য</th></tr>
+    <tr><td class="l"><b>&lt;stdio.h&gt;</b></td><td class="l">printf, scanf, fopen, fgets, fread, perror, EOF, FILE, NULL</td></tr>
+    <tr><td class="l"><b>&lt;stdlib.h&gt;</b></td><td class="l">malloc, calloc, realloc, free, atoi, strtol, <span class="hl">rand, srand, exit, abs</span>, qsort, system</td></tr>
+    <tr><td class="l"><b>&lt;string.h&gt;</b></td><td class="l">strlen, strcpy, strcat, strcmp, strchr, strstr, memcpy, memset, strerror</td></tr>
+    <tr><td class="l"><b>&lt;math.h&gt;</b></td><td class="l">sqrt, pow, fabs, ceil, floor, sin, cos, log, log10, exp — সবই ফেরত দেয় <b>double</b></td></tr>
+    <tr><td class="l"><b>&lt;ctype.h&gt;</b> · <b>&lt;time.h&gt;</b></td><td class="l">isalpha, isdigit, toupper, tolower · time, clock, difftime</td></tr>
+    <tr><td class="l"><b>&lt;limits.h&gt;</b> · <b>&lt;stddef.h&gt;</b></td><td class="l">INT_MAX, CHAR_BIT · size_t, NULL, offsetof</td></tr>
+  </table>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ আউটপুট</span> strlen("Dhaka") = <b>5</b>, sizeof("Dhaka") = <b>6</b> · pow(2, 10) = <b>1024.000000</b> · floor(−2.1) = <b>−3.0</b> · <code>srand(time(NULL))</code>-এর পর <code>rand() % 6 + 1</code> = একটি ছক্কার দান।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>abs থাকে stdlib-এ, fabs থাকে math-এ।</b>" "<b>হেডার ঘোষণা করে, লাইব্রেরি সংজ্ঞা দেয়</b>" — কোড আনে শুধু লিংকার।</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: compiling and linking ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>কম্পাইলিং ও লিংকিং</span></div>
+  <h2><span class="no">১০</span>সোর্স থেকে এক্সিকিউটেবল: কম্পাইলিং ও লিংকিং</h2><span class="tag">লিখিত প্রশ্নে প্রিয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> একটি C প্রোগ্রাম তৈরি হয় চার ধাপে, আর <b>লিংকার (linker)</b> শেষ ধাপ: এটি অবজেক্ট ফাইল ও লাইব্রেরি জুড়ে একটি এক্সিকিউটেবল বানায় <span class="hl">সিম্বল রিজলভ করে</span> — প্রতিটি বাইরের নামের ব্যবহারকে ঠিক একটি সংজ্ঞার সঙ্গে মিলিয়ে — এবং ঠিকানা <b>রিলোকেট</b> করে। এরপর <b>লোডার</b> এক্সিকিউটেবলটি মেমোরিতে বসিয়ে চালু করে।</div>
+  <figure class="doodle"><svg viewBox="0 0 640 112" width="600">
+    <g class="w">
+      <rect x="4" y="30" width="62" height="30" rx="5" class="ink fill-b"/>
+      <rect x="92" y="24" width="96" height="42" rx="6" class="ink-k fill-y"/>
+      <rect x="214" y="24" width="88" height="42" rx="6" class="ink-k fill-y"/>
+      <rect x="328" y="24" width="88" height="42" rx="6" class="ink-k fill-y"/>
+      <rect x="442" y="20" width="84" height="50" rx="6" class="ink-r fill-r"/>
+      <rect x="554" y="30" width="82" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="430" y="84" width="108" height="24" rx="5" class="ink-p fill-p"/>
+      <path class="ink" d="M66,45 L90,45 M188,45 L212,45 M302,45 L326,45 M416,45 L440,45" marker-end="url(#ahb)"/>
+      <path class="ink-g" d="M526,45 L552,45" marker-end="url(#ahg)"/>
+      <path class="ink-p" d="M484,84 L484,72" marker-end="url(#ahp)"/>
+    </g>
+    <text x="35" y="50" text-anchor="middle" class="w6 s">hello.c</text>
+    <text x="140" y="42" text-anchor="middle" class="bn k w6 s">প্রিপ্রসেসর</text><text x="140" y="58" text-anchor="middle" class="s" style="font-size:11px">-E → hello.i</text>
+    <text x="258" y="42" text-anchor="middle" class="bn k w6 s">কম্পাইলার</text><text x="258" y="58" text-anchor="middle" class="s" style="font-size:11px">-S → hello.s</text>
+    <text x="372" y="42" text-anchor="middle" class="bn k w6 s">অ্যাসেম্বলার</text><text x="372" y="58" text-anchor="middle" class="s" style="font-size:11px">-c → hello.o</text>
+    <text x="484" y="42" text-anchor="middle" class="bn r w6 s">লিংকার ★</text><text x="484" y="58" text-anchor="middle" class="bn r s" style="font-size:11px">নাম মেলায়</text>
+    <text x="595" y="50" text-anchor="middle" class="g w6 s">a.out / .exe</text>
+    <text x="484" y="100" text-anchor="middle" class="p s" style="font-size:11px">libc · libm · .a / .so</text>
+    <text x="200" y="100" text-anchor="middle" class="bn s" style="font-size:11px">তারপর লোডার প্রোগ্রামটি মেমোরিতে বসিয়ে main ডাকে</text>
+    <text x="320" y="12" text-anchor="middle" class="bn s" style="font-size:11px">gcc ডিফল্টে চারটিই চালায়: gcc hello.c -o hello</text>
+  </svg><figcaption>যেকোনো ধাপের পরে থামো তার ফ্ল্যাগ দিয়ে: -E, -S বা -c</figcaption></figure>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">ধাপ</th><th class="l">ইন → আউট</th><th class="l">কী করে · সাধারণ এরর</th></tr>
+    <tr><td class="l"><b>প্রিপ্রসেসর</b></td><td class="l">.c → .i</td><td class="l">#include, #define, #if; কমেন্ট বাদ দেয় (প্রিপ্রসেসর লেসন) · হেডার ফাইল না পাওয়া</td></tr>
+    <tr><td class="l"><b>কম্পাইলার</b></td><td class="l">.i → .s</td><td class="l">সিনট্যাক্স ও টাইপ যাচাই, অ্যাসেম্বলি কোড · সেমিকোলন বাদ, টাইপ অমিল</td></tr>
+    <tr><td class="l"><b>অ্যাসেম্বলার</b></td><td class="l">.s → .o / .obj</td><td class="l"><b>অমীমাংসিত</b> বাইরের সিম্বলসহ মেশিন কোড</td></tr>
+    <tr><td class="l"><b>লিংকার</b> ★</td><td class="l">.o + libs → exe</td><td class="l">রিজলভ ও রিলোকেট করে · <span class="circ">undefined reference</span>, multiple definition</td></tr>
+  </table>
+  <table class="hand tiny" style="width:100%;line-height:5mm">
+    <tr><th class="l">দিক</th><th class="l">স্ট্যাটিক লিংকিং</th><th class="l">ডাইনামিক (শেয়ার্ড) লিংকিং</th></tr>
+    <tr><td class="l"><b>লাইব্রেরি ফাইল</b></td><td class="l">.a (Linux) · .lib (Windows)</td><td class="l">.so (Linux) · .dll (Windows)</td></tr>
+    <tr><td class="l"><b>কখন যুক্ত</b></td><td class="l">লিংকের সময়: <span class="hl">কেবল দরকারি অবজেক্ট মডিউল</span> কপি হয়</td><td class="l">লোডের সময় ডাইনামিক লিংকার দিয়ে (বা রানটাইমে: dlopen, LoadLibrary)</td></tr>
+    <tr><td class="l"><b>আকার · মেমোরি</b></td><td class="l">বড় ফাইল; প্রতিটি প্রোগ্রামের নিজস্ব কপি</td><td class="l">ছোট ফাইল; মেমোরিতে <b>একটি কপি ভাগাভাগি</b></td></tr>
+    <tr><td class="l"><b>লাইব্রেরি হালনাগাদ</b></td><td class="l">প্রতিটি প্রোগ্রাম আবার লিংক</td><td class="l">.so/.dll একবার বদলালেই হয়</td></tr>
+    <tr><td class="l"><b>ঝুঁকি</b></td><td class="l">রানটাইমে নেই — স্বয়ংসম্পূর্ণ</td><td class="l">লাইব্রেরি না থাকা বা ভুল সংস্করণ ("DLL hell")</td></tr>
+  </table>
+  <div class="cols" style="align-items:start">
+    <div class="code" style="font-size:9.4pt;line-height:4.7mm;margin-top:0">/* util.h */ extern int counter;
+              int add(int a, int b);
+/* util.c */ int counter = 0;
+              int add(int a, int b)
+              { counter++; return a + b; }
+/* main.c */ #include "util.h"
+gcc -c main.c      → main.o
+gcc -c util.c      → util.o
+gcc main.o util.o -o prog
+gcc prog.c -o prog -lm   (libm)</div>
+    <div class="def tiny" style="margin-top:0"><span class="lbl">extern ও লিংকেজ</span> <b>extern</b> এমন একটি নাম ঘোষণা করে যার সংজ্ঞা <b>অন্য কোথাও</b>; সংজ্ঞা থাকতে হবে ঠিক <b>একটি</b> ফাইলে। ফাইল স্কোপে <b>static</b> দেয় <b>ইন্টারনাল লিংকেজ</b>: নামটি লিংকার ও অন্য ফাইলের কাছে অদৃশ্য (স্টোরেজ ক্লাস লেসন)। <b>-lm</b> গণিত লাইব্রেরি libm যুক্ত করে; একে সোর্স ফাইলের <b>পরে</b> রাখো।</div>
+  </div>
+  <div class="cols">
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> (১) &lt;math.h&gt; দেয় কেবল প্রোটোটাইপ; "<b>undefined reference to sqrt</b>" একটি <b>লিংকার</b> এরর, সারে -lm দিয়ে। (২) স্ট্যাটিক লিংকিং পুরো লাইব্রেরি কপি করে <b>না</b>।</div>
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>Please Compile And Link</b>" — Preprocess, Compile, Assemble, Link; ফ্ল্যাগ <b>-E -S -c</b> প্রথম তিনটির পরে থামায়। "<b>স্ট্যাটিক = সঙ্গে স্যুটকেস, ডাইনামিক = পৌঁছে ধার।</b>"</div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্য-পত্র</span>
+    <div class="fgrid tiny">
+      <p>stdin 0 · stdout 1 · stderr 2</p><p>stderr <b>আনবাফারড</b></p>
+      <p>%d int · %u unsigned · %ld long</p><p>%c char · %s স্ট্রিং · %p void *</p>
+      <p>%x হেক্স · %o অক্টাল · %e সূচক</p><p><b>size_t → %zu</b></p>
+      <p>printf-এ %f = float <i>ও</i> double</p><p><b>scanf: %f float, %lf double</b></p>
+      <p>% ফ্ল্যাগ প্রস্থ .প্রিসিশন দৈর্ঘ্য অক্ষর</p><p>প্রস্থ ন্যূনতম, কখনো কাটে না</p>
+      <p>printf ফেরত দেয় ছাপা অক্ষর</p><p>scanf ফেরত দেয় আইটেম সংখ্যা / EOF</p>
+      <p>scanf-এ &amp; লাগে, অ্যারেতে নয়</p><p>gets C11-এ বাতিল → fgets</p>
+      <p>fgets '\n' রাখে, পড়ে n − 1</p><p>getchar ফেরত দেয় <b>int</b></p>
+      <p>fopen ব্যর্থ ⇒ <b>NULL</b></p><p>"w" কেটে ফেলে · "a" জোড়ে</p>
+      <p>"r", "r+" কখনো ফাইল বানায় না</p><p>b = বাইনারি · x = এক্সক্লুসিভ (C11)</p>
+      <p>fread/fwrite ফেরত দেয় সম্পন্ন আইটেম</p><p>SEEK_SET 0 · CUR 1 · END 2</p>
+      <p>আকার = fseek END + ftell</p><p>rewind = 0-তে seek + এরর মোছা</p>
+      <p>feof সত্য কেবল ব্যর্থ পড়ার <b>পরে</b></p><p>EOF = ঋণাত্মক int, সাধারণত −1</p>
+      <p>va_start · va_arg · va_end</p><p>float → double, char → int</p>
+      <p>argc প্রোগ্রামের নামও গোনে</p><p>argv[argc] = NULL</p>
+      <p>perror → stderr</p><p>errno: EDOM · ERANGE · EILSEQ</p>
+      <p>NDEBUG দিলে assert বন্ধ</p><p>EXIT_SUCCESS 0 · EXIT_FAILURE</p>
+      <p>getch() আছে conio.h-এ</p><p>BGI: (0,0) ওপরে-বাঁয়ে, y নিচে</p>
+      <p>-E · -S · -c · লিংক</p><p>স্ট্যাটিক .a/.lib · ডাইনামিক .so/.dll</p>
+      <p>-lm গণিত লাইব্রেরি যুক্ত করে</p><p>abs stdlib-এ · fabs math-এ</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols tiny">
+    <ol class="num" style="list-style-type:bengali">
+      <li>printf ও scanf ঘোষিত <b>&lt;stdio.h&gt;</b>-এ</li>
+      <li><code>printf("%d", printf("Hello"))</code> ⇒ <b>Hello5</b></li>
+      <li>3.14159-এর <code>"%8.3f"</code> ⇒ <b>___3.142</b></li>
+      <li>double পড়তে: <b>scanf("%lf", &amp;d)</b></li>
+      <li>"r"-এ নেই এমন ফাইল fopen ⇒ <b>NULL</b></li>
+      <li>24-বাইট রেকর্ডের ৫ম রেকর্ড শুরু বাইট <b>96</b>-এ</li>
+    </ol>
+    <ol class="num" start="7" style="list-style-type:bengali">
+      <li><code>./prog one two</code> ⇒ argc = <b>3</b></li>
+      <li>ভেরিয়াডিক ম্যাক্রো থাকে <b>&lt;stdarg.h&gt;</b>-এ</li>
+      <li>perror("x") ⇒ "x: &lt;কারণ&gt;" <b>stderr</b>-এ</li>
+      <li>assert মিথ্যা ⇒ বার্তা + <b>abort()</b></li>
+      <li>undefined reference to sqrt ⇒ <b>-lm</b> যোগ</li>
+      <li>শেয়ার্ড লাইব্রেরি যুক্ত হয় <b>লোডের সময়</b></li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> scanf-এ double-এর জন্য %f · size_t-এর জন্য %lu বা %d · scanf-এ &amp; ভুলে যাওয়া · <code>char c = getchar()</code> · <b>while (!feof(fp))</b> · ডেটা রাখার দরকার থাকলেও "w" · fopen-কে EOF-এর সঙ্গে মেলানো · va_arg(ap, float) · argc প্রোগ্রামের নাম বাদ দেয় বলা · stdout-এ এরর · ইনপুট যাচাইয়ে assert · getch()-কে graphics.h-এ রাখা · <b>স্ট্যাটিক লিংকিং পুরো লাইব্রেরি কপি করে বলা</b>।</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসাথে</span> "ফ্ল্যাগ, প্রস্থ, ডট, দৈর্ঘ্য, অক্ষর" · "printf নেয় মান, scanf নেয় ঠিকানা" · "lf = long float = double" · "r পড়ে, w মোছে, a জোড়ে; + দেয় বাকি অর্ধেক; b মানে বাইট" · "SET, CUR, END = 0, 1, 2" · "আগে পড়ো, পরে জিজ্ঞেস" · "start, arg, arg, …, end; ছোটরা বড় হয়" · "argc নামও গোনে; argv শেষ হয় NULL-এ" · "যাচাই, জানাও, বেরোও" · "বাগের জন্য assert, ব্যবহারকারীর জন্য if" · "abs stdlib-এ, fabs math-এ" · "Please Compile And Link" · "স্ট্যাটিক = স্যুটকেস, ডাইনামিক = পৌঁছে ধার"।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>SPL (C) · I/O, ফাইল ও লিংকিং</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set" style="font-size:10.2pt;line-height:5mm">
+    <div class="mcq" style="line-height:5mm"><span class="qn">১.</span>scanf দিয়ে একটি <b>double</b> পড়তে কোন কনভার্শন লাগে?<ol class="opts"><li>%f</li><li>%d</li><li>%lf</li><li>%Lf</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">২.</span>ফাইল খুলতে না পারলে fopen() কী ফেরত দেয়?<ol class="opts"><li>একটি NULL পয়েন্টার</li><li>EOF</li><li>−1</li><li>একটি খালি FILE</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">৩.</span><code>int main(int argc, char *argv[])</code> সহ প্রোগ্রাম <code>./prog one two</code> হিসেবে চালানো হলো। argc কত?<ol class="opts"><li>1</li><li>2</li><li>4</li><li>3</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">৪.</span>কোন মোড লেখার জন্য ফাইল খোলে এবং আগের সব লেখা <b>মুছে ফেলে</b>?<ol class="opts"><li>"a"</li><li>"w"</li><li>"r+"</li><li>"a+"</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">৫.</span><code>printf("%5.2f|", 3.14159);</code> ছাপে (_ = একটি স্পেস):<ol class="opts"><li>3.14|</li><li>_3.14|</li><li>3.14159|</li><li>00003.14|</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">৬.</span>va_start, va_arg ও va_end সংজ্ঞায়িত কোথায়?<ol class="opts"><li>&lt;stdio.h&gt;</li><li>&lt;stdlib.h&gt;</li><li>&lt;stdarg.h&gt;</li><li>&lt;conio.h&gt;</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">৭.</span>gcc জানাল "undefined reference to sqrt"। সমাধান হলো:<ol class="opts"><li>লিংকের সময় -lm যোগ</li><li>#include &lt;math.h&gt; যোগ</li><li>-c দিয়ে কম্পাইল</li><li>-E দিয়ে কম্পাইল</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">৮.</span><b>feof(fp)</b> সম্পর্কে কোনটি সত্য?<ol class="opts"><li>পরের পড়া ব্যর্থ হবে আগেই বলে</li><li>EOF অক্ষর ফেরত দেয়</li><li>conio.h-এ ঘোষিত</li><li>কোনো পড়া শেষে ঠেকার পরেই সত্য হয়</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">৯.</span>perror() তার বার্তা লেখে কোথায়?<ol class="opts"><li>stdout</li><li>একটি লগ ফাইলে</li><li>stderr</li><li>stdin</li></ol></div>
+    <div class="mcq" style="line-height:5mm"><span class="qn">১০.</span><b>স্ট্যাটিক</b> লিংকিংয়ে লিংকার:<ol class="opts"><li>রানটাইমে লাইব্রেরি লোড করে</li><li>কেবল দরকারি অবজেক্ট মডিউল কপি করে</li><li>এক্সিকিউটেবল ছোট করে</li><li>রানটাইমে .dll চায়</li></ol></div>
+  </div>
+  <div class="anskey tiny">উত্তরমালা → ১-গ · ২-ক · ৩-ঘ · ৪-খ · ৫-খ · ৬-গ · ৭-ক · ৮-ঘ · ৯-গ · ১০-খ</div>
+  <div class="wq tiny"><span class="lbl">লিখিত প্রশ্ন</span> একটি C প্রোগ্রাম লেখো যা কমান্ড লাইন থেকে একটি ফাইলের নাম নেয়, ফাইলের পূর্ণসংখ্যাগুলো পড়ে তাদের যোগফল ছাপে এবং প্রতিটি এরর ঠিকভাবে সামলায়। argc/argv এবং তোমার প্রতিটি যাচাই ব্যাখ্যা করো। <i class="mk">১০</i></div>
+  <ol class="steps tiny" style="margin-top:1mm;line-height:5mm">
+    <li><b>আর্গুমেন্ট</b> — <code>int main(int argc, char *argv[])</code>; argc প্রোগ্রামের নামও গোনে, তাই একটি ফাইলের নাম মানে <b>argc == 2</b>, আর argv[1] হলো নামটি। <code>argc != 2</code> হলে stderr-এ ব্যবহারবিধি ছাপো এবং <code>return EXIT_FAILURE;</code>। <i class="mk">২</i></li>
+    <li><b>খোলা</b> — <code>FILE *fp = fopen(argv[1], "r");</code> এবং <code>if (fp == NULL) { perror(argv[1]); return EXIT_FAILURE; }</code> — perror errno থেকে কারণটি যোগ করে, stderr-এ। <i class="mk">২</i></li>
+    <li><b>পড়া</b> — <code>long sum = 0; int x; while (fscanf(fp, "%d", &amp;x) == 1) sum += x;</code> — লুপটি <b>রিটার্ন মান</b> যাচাই করে (feof নয়), তাই ফাইল শেষে ও ভুল ডেটায় থামে; তারপর <code>if (ferror(fp))</code> হলে পড়ার এরর জানাও। <i class="mk">৩</i></li>
+    <li><b>শেষ</b> — <code>fclose(fp); printf("Sum = %ld\n", sum); return EXIT_SUCCESS;</code> — স্ট্যাটাস 0 শেলকে জানায় কাজ সফল। <i class="mk">১</i></li>
+    <li><b>ব্যাখ্যা</b> — argv রাখে স্ট্রিং, argv[argc] হলো NULL; C-তে এক্সেপশন নেই বলে প্রতিটি লাইব্রেরি কল যাচাই করা হয়েছে: fopen-এর NULL, fscanf-এর আইটেম সংখ্যা, ferror-এর ফ্ল্যাগ। <i class="mk">২</i></li>
+  </ol>
+  <h3>পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick">
+      <li>যেকোনো প্রস্থ, প্রিসিশন ও ফ্ল্যাগে printf-এর আউটপুট বলতে পারি</li>
+      <li>ছয়টি fopen মোড এবং আগের ফাইলে প্রত্যেকটি কী করে বলতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>রেকর্ড k-এর জন্য fseek অফসেট বের করতে পারি</li>
+      <li>চারটি বিল্ড ধাপের নাম বলতে ও স্ট্যাটিক-ডাইনামিক লিংকিংয়ের তুলনা করতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

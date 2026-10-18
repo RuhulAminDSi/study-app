@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Logic Gates: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads, logic-gate symbols (inline attributes!)
+     pins: 2-input at (0,12) and (0,28), output at (60,20); NOT input at (0,20); 3-input at (0,8),(0,20),(0,32) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <g id="g-and"><path d="M0,12H10M0,28H10M44,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-nand"><path d="M0,12H10M0,28H10M52,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="48" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-nand3"><path d="M0,8H10M0,20H10M0,32H10M52,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,2H28A18,18 0 0 1 28,38H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="50" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-or"><path d="M0,12H11M0,28H11M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-nor"><path d="M0,12H11M0,28H11M58,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="54" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-xor"><path d="M0,12H6M0,28H6M50,20H60M3,4Q11,20 3,36" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(255,105,180,.25)" stroke="#1d3f8f" stroke-width="2.2"/></g>
+    <g id="g-xnor"><path d="M0,12H6M0,28H6M58,20H60M3,4Q11,20 3,36" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(255,105,180,.25)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="54" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-not"><path d="M0,20H12M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M12,8L42,20L12,32Z" fill="rgba(135,190,255,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="46" cy="20" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <!-- bubbled-input forms (De Morgan equivalents) -->
+    <g id="g-bor"><path d="M0,12H3M0,28H3M50,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M8,4H24Q40,4 50,20Q40,36 24,36H8Q16,20 8,4Z" fill="rgba(120,255,120,.30)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="8" cy="12" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="8" cy="28" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+    <g id="g-band"><path d="M0,12H2M0,28H2M44,20H60" fill="none" stroke="#1d3f8f" stroke-width="2" stroke-linecap="round"/><path d="M10,4H28A16,16 0 0 1 28,36H10Z" fill="rgba(255,238,0,.35)" stroke="#1d3f8f" stroke-width="2.2"/><circle cx="6" cy="12" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/><circle cx="6" cy="28" r="4" fill="#fffdf6" stroke="#1d3f8f" stroke-width="2"/></g>
+  </defs>
+</svg>
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Date: 07.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Logic Gates</span></h1>
+  <p class="subtitle">Truth tables · universal gates · De Morgan · ICs: exam-ready in 10 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="92" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M228,150 L176,150 M412,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">LOGIC GATES</text><text x="320" y="168" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle">Logic levels · 2ⁿ</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">7 gates + truth tables ★</text>
+      <text x="500" y="65" text-anchor="middle">AND · OR · NOT</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Universal gates ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">XOR properties ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">SOP / POS → circuit</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">De Morgan ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">74xx ICs · TTL/CMOS</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① 2-input truth tables<br>② min. NAND/NOR counts<br>③ De Morgan &amp; bubbles<br>④ XOR = odd parity<br>⑤ 7400/02/04/08/32/86<br>⑥ +ve vs −ve logic</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Digital logic: Boolean algebra, <span class="hl">De Morgan's Theorems</span>, <span class="hl">logic gates and their truth tables</span>, canonical forms, combinational logic circuits, minimization techniques". This notebook covers the gate part in depth and bridges into canonical forms; K-maps are in the Boolean Algebra lesson.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Fundamentals &amp; logic levels ……… p. 2</li><li>AND, OR, NOT ……… p. 3</li><li>NAND, NOR, XOR, XNOR ……… p. 4</li><li>Universal gates &amp; counts ……… p. 5</li><li>De Morgan &amp; bubble pushing ……… p. 6</li></ul>
+    <ul class="tick"><li>Expression → circuit (SOP/POS) … p. 7</li><li>ICs, families, applications ……… p. 8</li><li>Night-before sheet ……… p. 9</li><li>Practice MCQs + written ……… p. 10</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: fundamentals ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Fundamentals</span></div>
+  <h2><span class="no">1</span>What Is a Logic Gate?</h2><span class="tag">MCQ + Written</span>
+  <div class="def"><span class="lbl">Definition</span> A logic gate is an electronic circuit that takes one or more <span class="hl">binary inputs</span> and produces one binary output according to a fixed <span class="hl">Boolean function</span>. Gates are the building blocks of every digital system: ALU, memory, CPU control.</div>
+  <div class="mnote">Gate = Boolean operator made of transistors</div>
+  <table class="hand">
+    <tr><th class="l">Boolean operation</th><th>Symbol</th><th>Gate</th><th class="l">Output is 1 when …</th></tr>
+    <tr><td class="l">Logical product</td><td>A·B</td><td>AND</td><td class="l">all inputs are 1</td></tr>
+    <tr><td class="l">Logical sum</td><td>A+B</td><td>OR</td><td class="l">at least one input is 1</td></tr>
+    <tr><td class="l">Complement</td><td>A′</td><td>NOT</td><td class="l">the input is 0</td></tr>
+  </table>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Counting rules</span><br>n inputs → <span class="circ">2ⁿ</span> rows in the truth table<br>n variables → <span class="circ">2^(2ⁿ)</span> different Boolean functions<br>(n = 2 → 4 rows, <b>16</b> functions)</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Write the input columns like binary counting: 00, 01, 10, 11. You can never miss a row.</div>
+  </div>
+
+  <h2><span class="no">2</span>Logic Levels: Positive vs Negative Logic</h2>
+  <div class="cols" style="grid-template-columns:1fr 250px">
+    <div>
+      <p>A gate does not "see" 0 and 1; it sees <b>voltage ranges</b>.</p>
+      <ul class="dash">
+        <li><span class="hl">Positive logic</span>: HIGH = 1, LOW = 0 (the default)</li>
+        <li><span class="hl">Negative logic</span>: HIGH = 0, LOW = 1</li>
+      </ul>
+      <p>Same circuit, different labels → a different function.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 250 140" width="245">
+      <g class="w">
+        <path class="ink-k" d="M30,132 V8 M30,132 H240"/>
+        <rect x="32" y="16" width="200" height="60" class="fill-g" style="stroke:none"/>
+        <rect x="32" y="100" width="200" height="30" class="fill-b" style="stroke:none"/>
+        <path class="ink-r" d="M30,76 H232 M30,100 H232" stroke-dasharray="5 4"/>
+      </g>
+      <text x="4" y="20" class="s">5 V</text><text x="4" y="80" class="s">2 V</text><text x="0" y="104" class="s">0.8 V</text><text x="6" y="136" class="s">0</text>
+      <text x="120" y="50" class="g s w6">HIGH (1)</text><text x="110" y="92" class="r s">forbidden</text><text x="120" y="122" class="s w6">LOW (0)</text>
+    </svg><figcaption>TTL input thresholds</figcaption></figure>
+  </div>
+  <table class="hand small">
+    <tr><th class="l">TTL (5 V) level</th><th>Input</th><th>Output</th></tr>
+    <tr><td class="l">LOW (0)</td><td>V<sub>IL</sub> ≤ <span class="circ">0.8 V</span></td><td>V<sub>OL</sub> ≤ 0.4 V</td></tr>
+    <tr><td class="l">HIGH (1)</td><td>V<sub>IH</sub> ≥ <span class="circ">2.0 V</span></td><td>V<sub>OH</sub> ≥ 2.4 V</td></tr>
+  </table>
+  <p class="small">Noise margin = 2.4 − 2.0 = 0.8 − 0.4 = <b>0.4 V</b>. CMOS thresholds scale with the supply (roughly 30% / 70% of V<sub>DD</sub>).</p>
+  <div class="exam"><span class="lbl">Exam trap</span> A positive-logic <b>AND</b> gate behaves as an <b>OR</b> gate in negative logic; positive <b>NAND</b> = negative <b>NOR</b> (De Morgan in disguise).</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: AND, OR, NOT ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Basic gates</span></div>
+  <h2><span class="no">3</span>The Basic Gates: AND, OR, NOT</h2>
+  <h3>AND: output 1 only if ALL inputs are 1 &nbsp;·&nbsp; Y = A·B</h3>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 150 50" width="150"><g class="w"><use href="#g-and" x="35" y="4"/></g><text x="28" y="21" text-anchor="end">A</text><text x="28" y="37" text-anchor="end">B</text><text x="100" y="29" class="r">Y = A·B</text></svg></figure>
+    <table class="hand small"><tr><th>A</th><th>B</th><th>Y</th></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td class="red"><b>1</b></td></tr></table>
+    <figure class="doodle"><svg viewBox="0 0 200 70" width="190"><g class="w"><path class="ink" d="M10,60 V40 H40 M40,40 L60,28 M64,40 H95 M95,40 L115,28 M119,40 H180 V60 H112 M88,60 H10"/><circle cx="100" cy="60" r="10" class="ink-r fill-y"/></g><text x="48" y="22" class="s">A</text><text x="104" y="22" class="s">B</text></svg><figcaption>switches in series</figcaption></figure>
+  </div>
+  <h3>OR: output 0 only if ALL inputs are 0 &nbsp;·&nbsp; Y = A + B</h3>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 150 50" width="150"><g class="w"><use href="#g-or" x="35" y="4"/></g><text x="28" y="21" text-anchor="end">A</text><text x="28" y="37" text-anchor="end">B</text><text x="100" y="29" class="r">Y = A+B</text></svg></figure>
+    <table class="hand small"><tr><th>A</th><th>B</th><th>Y</th></tr><tr><td>0</td><td>0</td><td class="red"><b>0</b></td></tr><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td></tr></table>
+    <figure class="doodle"><svg viewBox="0 0 200 80" width="190"><g class="w"><path class="ink" d="M10,72 V30 H40 M40,30 V12 H60 M60,12 L80,2 M84,12 H120 V30 M40,30 V46 H60 M60,46 L80,36 M84,46 H120 V30 M120,30 H180 V72 H112 M88,72 H10"/><circle cx="100" cy="72" r="9" class="ink-r fill-y"/></g><text x="66" y="8" class="s">A</text><text x="66" y="42" class="s">B</text></svg><figcaption>switches in parallel</figcaption></figure>
+  </div>
+  <h3>NOT (inverter): output = complement &nbsp;·&nbsp; Y = A′</h3>
+  <div class="cols3">
+    <figure class="doodle"><svg viewBox="0 0 150 44" width="150"><g class="w"><use href="#g-not" x="35" y="2"/></g><text x="28" y="27" text-anchor="end">A</text><text x="100" y="27" class="r">Y = <tspan class="ov">A</tspan></text></svg></figure>
+    <table class="hand small"><tr><th>A</th><th>Y</th></tr><tr><td>0</td><td class="red"><b>1</b></td></tr><tr><td>1</td><td>0</td></tr></table>
+    <p class="small">The only <b>single-input</b> gate. The bubble ○ on any symbol means NOT. Two NOTs in a row cancel: (A′)′ = A.</p>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>Multi-input gates</h3>
+      <ul class="dash small">
+        <li>n-input AND: 1 only for 11…1 (one row out of 2ⁿ)</li>
+        <li>n-input OR: 0 only for 00…0</li>
+        <li>AND, OR are associative: (A·B)·C = A·(B·C), so 2-input gates can be <span class="hl">cascaded</span></li>
+      </ul>
+    </div>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Gating (enable / inhibit)</span><br>AND: control 1 → <b>passes</b> data, 0 → forces 0<br>OR: control 0 → passes data, 1 → forces 1<br>XOR: control 1 → <b>inverts</b> data</div>
+  </div>
+  <div class="trick"><span class="lbl">Memory trick</span> <b>AND = "all"</b>, <b>OR = "any"</b>. AND looks for one 0 to kill the output; OR looks for one 1 to set it.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: derived gates ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Derived gates</span></div>
+  <h2><span class="no">4</span>NAND, NOR, XOR, XNOR</h2><span class="tag">high-yield</span>
+  <div class="cols">
+    <div class="ex"><span class="lbl">NAND = NOT + AND</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-nand" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = <tspan class="ov">A·B</tspan></text></svg></figure>
+      <p class="small">Y = (AB)′ · 0 <b>only</b> when all inputs are 1</p></div>
+    <div class="ex"><span class="lbl">NOR = NOT + OR</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-nor" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = <tspan class="ov">A+B</tspan></text></svg></figure>
+      <p class="small">Y = (A+B)′ · 1 <b>only</b> when all inputs are 0</p></div>
+    <div class="ex"><span class="lbl">XOR (exclusive-OR)</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-xor" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = A⊕B</text></svg></figure>
+      <p class="small">A⊕B = <span class="hl">A′B + AB′</span> · 1 when inputs <b>differ</b></p></div>
+    <div class="ex"><span class="lbl">XNOR (equivalence)</span>
+      <figure class="doodle"><svg viewBox="0 0 170 46" width="170"><g class="w"><use href="#g-xnor" x="35" y="3"/></g><text x="28" y="20" text-anchor="end">A</text><text x="28" y="36" text-anchor="end">B</text><text x="102" y="28" class="r">Y = <tspan class="ov">A⊕B</tspan></text></svg></figure>
+      <p class="small">A⊙B = <span class="hl">AB + A′B′</span> · 1 when inputs are <b>equal</b></p></div>
+  </div>
+  <h3>Master truth table (all 2-input gates)</h3>
+  <table class="hand">
+    <tr><th>A</th><th>B</th><th>AND</th><th>OR</th><th>NAND</th><th>NOR</th><th>XOR</th><th>XNOR</th></tr>
+    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td><td class="red"><b>1</b></td><td>0</td><td class="red"><b>1</b></td></tr>
+    <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+    <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td><td>0</td></tr>
+    <tr><td>1</td><td>1</td><td class="red"><b>1</b></td><td>1</td><td>0</td><td>0</td><td>0</td><td class="red"><b>1</b></td></tr>
+  </table>
+  <div class="mnote purple">Complement pairs: AND↔NAND, OR↔NOR, XOR↔XNOR</div>
+  <div class="sumbox"><span class="lbl">XOR properties</span>
+    <div class="fgrid small">
+      <p>A ⊕ 0 = A &nbsp;(pass)</p><p>A ⊕ 1 = <span class="circ">A′</span> &nbsp;(invert)</p>
+      <p>A ⊕ A = 0</p><p>A ⊕ A′ = 1</p>
+      <p>commutative &amp; associative</p><p>(A ⊕ B)′ = A′ ⊕ B = A ⊕ B′</p>
+    </div>
+    <p class="small">n-input XOR = 1 when the number of 1s is <span class="hl">odd</span> → <b>odd-parity function</b>; used for parity generators/checkers, comparators, adders, controlled inverters.</p>
+  </div>
+  <div class="exam"><span class="lbl">Exam trap</span> NAND and NOR are <b>not associative</b>: (A NAND B) NAND C ≠ A NAND (B NAND C). A 3-input NAND is (ABC)′, not a cascade of two 2-input NANDs.</div>
+  <div class="trick"><span class="lbl">Memory trick</span> "N" in front = put a bubble on the output = flip that gate's column. XOR = "<b>different</b> → 1", XNOR = "<b>same</b> → 1".</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: universal gates ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Universal gates</span></div>
+  <h2><span class="no">5</span>Universal Gates: NAND &amp; NOR</h2><span class="tag">written favourite</span>
+  <div class="def"><span class="lbl">Definition</span> A gate is <span class="hl">universal</span> if NOT, AND and OR (hence <b>any</b> Boolean function) can be built from it alone. <span class="circ">NAND</span> and <span class="circ">NOR</span> are universal; AND, OR, XOR are not.</div>
+  <h3>Only NAND</h3>
+  <figure class="doodle">
+    <svg viewBox="0 0 470 200" width="470">
+      <g class="w">
+        <path class="ink" d="M8,40H26M26,32V48M26,32H36M26,48H36"/><use href="#g-nand" x="36" y="20"/>
+        <path class="ink" d="M150,32H166M150,48H166M226,40H236M236,32V48M236,32H244M236,48H244"/><use href="#g-nand" x="166" y="20"/><use href="#g-nand" x="244" y="20"/>
+        <path class="ink" d="M10,125H34M34,117V133M34,117H44M34,133H44M10,175H34M34,167V183M34,167H44M34,183H44M104,125H130V142H160M104,175H140V158H160"/><use href="#g-nand" x="44" y="105"/><use href="#g-nand" x="44" y="155"/><use href="#g-nand" x="160" y="130"/>
+      </g>
+      <text x="4" y="36" text-anchor="end">A</text><text x="102" y="45" class="r">A′</text><text x="50" y="80" class="g">NOT (1)</text>
+      <text x="146" y="36" text-anchor="end">A</text><text x="146" y="52" text-anchor="end">B</text><text x="310" y="45" class="r">A·B</text><text x="205" y="80" class="g">AND (2)</text>
+      <text x="6" y="129" text-anchor="end">A</text><text x="6" y="179" text-anchor="end">B</text><text x="108" y="120" class="s">A′</text><text x="108" y="170" class="s">B′</text><text x="226" y="154" class="r">(A′·B′)′ = A+B</text><text x="110" y="198" class="g">OR (3)</text>
+      <text x="350" y="120" class="p">tie inputs together:</text><text x="350" y="140" class="p">NAND(A, A) = A′</text>
+    </svg>
+  </figure>
+  <p class="small"><b>Only NOR</b> (mirror image): NOR(A, A) = A′ (1 gate) · NOR then NOR-inverter = <b>OR</b> (2) · invert both inputs, then NOR: (A′ + B′)′ = <b>AND</b> (3).</p>
+  <table class="hand">
+    <tr><th class="l">Function</th><th>NOT</th><th>AND</th><th>OR</th><th>XOR</th><th>XNOR</th></tr>
+    <tr><td class="l">Min. 2-input <b>NAND</b> gates</td><td>1</td><td>2</td><td>3</td><td class="red"><b>4</b></td><td>5</td></tr>
+    <tr><td class="l">Min. 2-input <b>NOR</b> gates</td><td>1</td><td>3</td><td>2</td><td>5</td><td class="red"><b>4</b></td></tr>
+  </table>
+  <div class="mnote green">NAND and NOR swap the AND/OR and XOR/XNOR counts (duality)</div>
+  <h3>XOR with 4 NAND gates (the minimum)</h3>
+  <figure class="doodle"><svg viewBox="0 0 470 135" width="440">
+      <g class="w">
+        <path class="ink" d="M20,22 H240 M60,22 V62 H120 M20,118 H240 M80,118 V78 H120 M180,70 H210 V38 H240 M210,70 V102 H240 M300,30 H330 V62 H360 M300,110 H330 V78 H360 M420,70 H450"/>
+        <circle cx="60" cy="22" r="3.5" fill="#1d3f8f"/><circle cx="80" cy="118" r="3.5" fill="#1d3f8f"/><circle cx="210" cy="70" r="3.5" fill="#1d3f8f"/>
+        <use href="#g-nand" x="120" y="50"/><use href="#g-nand" x="240" y="10"/><use href="#g-nand" x="240" y="90"/><use href="#g-nand" x="360" y="50"/>
+      </g>
+      <text x="14" y="27" text-anchor="end">A</text><text x="14" y="123" text-anchor="end">B</text><text x="186" y="62" class="r s">P</text><text x="304" y="22" class="r s">Q</text><text x="304" y="128" class="r s">R</text><text x="454" y="66" class="r">Y</text>
+    </svg></figure>
+  <div class="fgrid small"><p>① P = (AB)′ = A′ + B′</p><p>② Q = (A·P)′ = (A(A′+B′))′ = (AB′)′</p><p>③ R = (B·P)′ = (A′B)′</p><p>④ Y = (Q·R)′ = AB′ + A′B = <span class="circ">A ⊕ B</span></p></div>
+  <div class="exam"><span class="lbl">Exam trap</span> Many textbooks draw XOR with <b>5 NAND</b> or <b>6 NOR</b> (inverters + SOP). Those work but are not minimal; MCQs ask the <b>minimum: 4 NAND, 5 NOR</b>.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: De Morgan ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>De Morgan</span></div>
+  <h2><span class="no">6</span>De Morgan's Theorems</h2><span class="tag">high-yield</span>
+  <div class="sumbox"><span class="lbl">The two laws</span> &nbsp;<span class="circ">(A · B)′ = A′ + B′</span> &nbsp;&nbsp; <span class="circ">(A + B)′ = A′ · B′</span><br>
+    n variables: (A·B·C…)′ = A′ + B′ + C′ + … &nbsp;·&nbsp; (A + B + C + …)′ = A′·B′·C′…</div>
+  <div class="cols" style="grid-template-columns:1.05fr 1fr">
+    <div>
+      <h3>Proof by truth table</h3>
+      <table class="hand small" style="white-space:nowrap">
+        <tr><th>A</th><th>B</th><th>(AB)′</th><th>A′+B′</th><th>(A+B)′</th><th>A′B′</th></tr>
+        <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Equivalent symbols</h3>
+      <figure class="doodle"><svg viewBox="0 0 300 120" width="290">
+        <g class="w"><use href="#g-nand" x="10" y="6"/><use href="#g-bor" x="170" y="6"/><use href="#g-nor" x="10" y="70"/><use href="#g-band" x="170" y="70"/></g>
+        <text x="122" y="31" class="r l">≡</text><text x="122" y="95" class="r l">≡</text>
+        <text x="20" y="62" class="s">NAND</text><text x="170" y="62" class="s">bubbled-input OR</text><text x="20" y="120" class="s">NOR</text><text x="170" y="120" class="s">bubbled-input AND</text>
+      </svg></figure>
+    </div>
+  </div>
+  <div class="trick"><span class="lbl">Memory trick</span> "<b>Break the bar, change the sign</b>". In symbols: <b>bubble pushing</b>: move bubbles from output to all inputs (or back) and swap AND ↔ OR.</div>
+  <h3>Worked example (written-answer format)</h3>
+  <div class="wq"><span class="lbl">Q</span> Simplify F = (A + B)′ + (A′ + B′)′ and name the gate it equals. <i class="mk">4 marks</i></div>
+  <ol class="steps">
+    <li>De Morgan on each term: (A + B)′ = A′B′ and (A′ + B′)′ = A″B″ = AB</li>
+    <li>So F = A′B′ + AB</li>
+    <li>This is 1 when A = B → F = <span class="circ">A ⊙ B (XNOR)</span></li>
+    <li>Circuit: one XNOR gate replaces 2 NOR + 2 NOT + 1 OR → <span class="hl">fewer gates, lower cost &amp; delay</span></li>
+  </ol>
+  <h2><span class="no">7</span>Duality Principle</h2>
+  <div class="def"><span class="lbl">Rule</span> Every Boolean identity stays true if you swap <b>+ ↔ ·</b> and <b>0 ↔ 1</b> (variables are <b>not</b> complemented).</div>
+  <table class="hand small">
+    <tr><th class="l">Identity</th><th class="l">Its dual</th></tr>
+    <tr><td class="l">A + 0 = A</td><td class="l">A · 1 = A</td></tr>
+    <tr><td class="l">A + A′ = 1</td><td class="l">A · A′ = 0</td></tr>
+    <tr><td class="l">A(B + C) = AB + AC</td><td class="l">A + BC = (A + B)(A + C)</td></tr>
+    <tr><td class="l">(A + B)′ = A′B′</td><td class="l">(AB)′ = A′ + B′</td></tr>
+  </table>
+  <div class="exam"><span class="lbl">Exam trap</span> The dual is <b>not</b> the complement. Complement also flips every variable (A → A′); the dual does not.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: expression to circuit ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Expression → circuit</span></div>
+  <h2><span class="no">8</span>From Truth Table to Gate Circuit</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div>
+      <div class="def small" style="margin-top:0"><span class="lbl">Minterm (m)</span> AND term with every variable, = 1 for exactly one row. <b>SOP</b> = OR of minterms = <b>Σm</b></div>
+      <div class="def small"><span class="lbl">Maxterm (M)</span> OR term with every variable, = 0 for exactly one row. <b>POS</b> = AND of maxterms = <b>ΠM</b></div>
+    </div>
+    <ol class="steps small">
+      <li>Write the truth table (2ⁿ rows)</li>
+      <li>Rows with F = 1 → minterms (SOP)</li>
+      <li>Simplify (Boolean laws or K-map)</li>
+      <li>Draw AND-OR (or NAND-NAND)</li>
+      <li>Check every row again</li>
+    </ol>
+  </div>
+  <h3>Worked example: 3-input majority voter</h3>
+  <p>F = 1 when <b>at least two</b> of A, B, C are 1 (e.g. 2-out-of-3 approval).</p>
+  <div class="cols" style="grid-template-columns:200px 1fr">
+    <table class="hand small">
+      <tr><th>#</th><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+      <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+      <tr><td>3</td><td>0</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr>
+      <tr><td>4</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+      <tr><td>5</td><td>1</td><td>0</td><td>1</td><td class="red"><b>1</b></td></tr>
+      <tr><td>6</td><td>1</td><td>1</td><td>0</td><td class="red"><b>1</b></td></tr>
+      <tr><td>7</td><td>1</td><td>1</td><td>1</td><td class="red"><b>1</b></td></tr>
+    </table>
+    <div>
+      <p>Canonical SOP: F = Σm(3, 5, 6, 7) = A′BC + AB′C + ABC′ + ABC</p>
+      <p>Canonical POS: F = ΠM(0, 1, 2, 4)</p>
+      <p>Simplify (add ABC twice, A + A′ = 1):</p>
+      <p class="center"><span class="circ">F = AB + BC + CA</span></p>
+      <p class="small">= (A + B)(B + C)(C + A) in POS form</p>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:300px 1fr">
+    <figure class="doodle"><svg viewBox="0 0 300 160" width="300">
+      <g class="w">
+        <path class="ink-k" d="M20,10 V155 M40,10 V155 M60,10 V155"/>
+        <path class="ink" d="M20,22 H100 M40,38 H100 M40,72 H100 M60,88 H100 M20,122 H100 M60,138 H100 M160,30 H180 V68 H200 M160,80 H200 M160,130 H180 V92 H200 M260,80 H288"/>
+        <circle cx="20" cy="22" r="3" fill="#1d3f8f"/><circle cx="40" cy="38" r="3" fill="#1d3f8f"/><circle cx="40" cy="72" r="3" fill="#1d3f8f"/><circle cx="60" cy="88" r="3" fill="#1d3f8f"/><circle cx="20" cy="122" r="3" fill="#1d3f8f"/><circle cx="60" cy="138" r="3" fill="#1d3f8f"/>
+        <use href="#g-nand" x="100" y="10"/><use href="#g-nand" x="100" y="60"/><use href="#g-nand" x="100" y="110"/><use href="#g-nand3" x="200" y="60"/>
+      </g>
+      <text x="20" y="8" text-anchor="middle" class="s">A</text><text x="40" y="8" text-anchor="middle" class="s">B</text><text x="60" y="8" text-anchor="middle" class="s">C</text><text x="292" y="76" class="r">F</text>
+    </svg><figcaption>NAND-NAND: 3 two-input + 1 three-input NAND</figcaption></figure>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Two-level rules</span><br>SOP (AND-OR) → replace every gate by <b>NAND</b> = <span class="hl">NAND-NAND</span><br>POS (OR-AND) → replace every gate by <b>NOR</b> = <span class="hl">NOR-NOR</span><br>Why: F = ((AB)′(BC)′(CA)′)′ = AB + BC + CA by De Morgan</div>
+      <p class="small">Fewer literals → fewer gates. Systematic minimisation (K-map, don't-cares) → see the <b>Boolean Algebra</b> lesson.</p>
+    </div>
+  </div>
+  <div class="exam"><span class="lbl">Exam trap</span> The minterm list and the maxterm list are <b>complements</b>: together they cover all 2ⁿ row numbers (here {3,5,6,7} ∪ {0,1,2,4}).</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: ICs, families, applications ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Hardware &amp; applications</span></div>
+  <h2><span class="no">9</span>Gate ICs (74xx TTL family)</h2>
+  <div class="cols" style="grid-template-columns:1.3fr 1fr">
+    <table class="hand small">
+      <tr><th>IC</th><th class="l">Contents</th></tr>
+      <tr><td><span class="circ">7400</span></td><td class="l">quad 2-input NAND</td></tr>
+      <tr><td>7402</td><td class="l">quad 2-input NOR</td></tr>
+      <tr><td><span class="circ">7404</span></td><td class="l">hex inverter (6 NOT)</td></tr>
+      <tr><td>7408</td><td class="l">quad 2-input AND</td></tr>
+      <tr><td>7432</td><td class="l">quad 2-input OR</td></tr>
+      <tr><td>7486</td><td class="l">quad 2-input XOR</td></tr>
+      <tr><td>74266</td><td class="l">quad 2-input XNOR (open collector)</td></tr>
+    </table>
+    <figure class="doodle"><svg viewBox="0 0 200 170" width="200">
+      <g class="w">
+        <rect x="60" y="10" width="80" height="150" rx="6" class="ink-k" style="fill:rgba(31,31,36,.08)"/>
+        <path class="ink-k" d="M90,10 A10,10 0 0 0 110,10"/>
+        <path class="ink" d="M48,22H60M48,42H60M48,62H60M48,82H60M48,102H60M48,122H60M48,142H60 M140,22H152M140,42H152M140,62H152M140,82H152M140,102H152M140,122H152M140,142H152"/>
+      </g>
+      <text x="42" y="26" text-anchor="end" class="s">1</text><text x="42" y="146" text-anchor="end" class="r s w6">7 GND</text><text x="158" y="26" class="r s w6">14 V<tspan dy="3" font-size="9">CC</tspan></text><text x="158" y="146" class="s">8</text>
+      <text x="100" y="90" text-anchor="middle" class="k s">74xx</text><text x="100" y="106" text-anchor="middle" class="s">14-pin DIP</text>
+    </svg><figcaption>notch up, pin 1 top-left, count anticlockwise</figcaption></figure>
+  </div>
+  <p class="small">"Quad" = 4 gates, "hex" = 6 gates. Standard 14-pin DIP: <span class="circ">V<sub>CC</sub> = pin 14, GND = pin 7</span>.</p>
+  <h2><span class="no">10</span>Logic Families &amp; Gate Parameters</h2>
+  <table class="hand small">
+    <tr><th class="l"></th><th>TTL (74xx)</th><th>CMOS (4000 / 74HC)</th></tr>
+    <tr><td class="l">built from</td><td>bipolar transistors</td><td>MOSFETs (n + p pairs)</td></tr>
+    <tr><td class="l">supply</td><td>5 V ± 5%</td><td>3–15 V (4000), 2–6 V (74HC)</td></tr>
+    <tr><td class="l">static power</td><td>higher (mW per gate)</td><td><b>very low</b> → used in CPUs, phones</td></tr>
+    <tr><td class="l">fan-out</td><td>about 10 (standard TTL)</td><td>large (gate inputs draw ~no current)</td></tr>
+  </table>
+  <ul class="dash small">
+    <li><b>Fan-in</b> = number of inputs of a gate · <b>Fan-out</b> = number of gate inputs one output can drive</li>
+    <li><b>Propagation delay</b> = input-to-output time (about 10 ns for standard TTL) → limits clock speed</li>
+    <li><b>Noise margin</b> = how much noise a level tolerates (TTL: 0.4 V)</li>
+    <li>Integration scale (typical convention): <b>SSI</b> &lt; 12 gates · <b>MSI</b> 12–99 · <b>LSI</b> 100–9,999 · <b>VLSI</b> ≥ 10,000</li>
+  </ul>
+  <h2><span class="no">11</span>Where Gates Work</h2>
+  <div class="cols">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Classic circuits</span><br>Half adder: S = A ⊕ B, C = AB<br>Even-parity bit for A, B, C: P = A ⊕ B ⊕ C<br>Equality (1-bit comparator): A ⊙ B</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">IT link: C bitwise</span><br>12 &amp; 10 = <b>8</b> · 12 | 10 = <b>14</b> · 12 ^ 10 = <b>6</b> · ~12 = −13<br>Masks: x &amp; 1 → odd/even test · x | mask sets bits · x ^ mask toggles<br>Swap: a ^= b; b ^= a; a ^= b;</div>
+  </div>
+  <div class="trick"><span class="lbl">Memory trick</span> 74 + gate code: <b>00</b> NAND, <b>02</b> NOR, <b>04</b> NOT, <b>08</b> AND, <b>32</b> OR, <b>86</b> XOR. "Zero-zero is the universal hero".</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>AND: A·B · OR: A+B · NOT: A′</p><p>NAND: (AB)′ · NOR: (A+B)′</p>
+      <p>XOR: A′B + AB′ (differ → 1)</p><p>XNOR: AB + A′B′ (same → 1)</p>
+      <p>(AB)′ = A′+B′ · (A+B)′ = A′B′</p><p>A⊕0 = A · A⊕1 = A′ · A⊕A = 0</p>
+      <p>n inputs → 2ⁿ rows · 2^(2ⁿ) functions</p><p>Universal: NAND, NOR only</p>
+      <p>NAND: NOT 1, AND 2, OR 3, XOR 4</p><p>NOR: NOT 1, OR 2, AND 3, XNOR 4</p>
+      <p>SOP → NAND-NAND · POS → NOR-NOR</p><p>TTL: V<sub>IL</sub> ≤ 0.8 V, V<sub>IH</sub> ≥ 2 V, NM 0.4 V</p>
+      <p>7400 NAND · 7402 NOR · 7404 NOT</p><p>7408 AND · 7432 OR · 7486 XOR</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Basic gates: AND, OR, NOT</li>
+      <li>Universal gates: NAND, NOR</li>
+      <li>Only single-input gate: NOT</li>
+      <li>Output 1 for all-0 inputs: NAND, NOR, XNOR</li>
+      <li>Output 0 for all-1 inputs: NAND, NOR, XOR</li>
+      <li>XOR is also called "inequality" gate</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>XNOR is the "equality / equivalence" gate</li>
+      <li>NAND(A, A) = NOR(A, A) = A′</li>
+      <li>Min. NAND for XOR = 4</li>
+      <li>Positive AND = negative OR</li>
+      <li>Half-adder sum = XOR, carry = AND</li>
+      <li>7404 = hex inverter (6 NOTs)</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> OR is 0 <b>only</b> for all-0 inputs · NAND/NOR not associative · dual ≠ complement · XOR, XNOR and AND, OR are <b>not</b> universal · textbook 5-NAND XOR is not the minimum</div>
+  <div class="trick"><span class="lbl">All tricks together</span> AND = all, OR = any · "N" = bubble = flip the column · break the bar, change the sign · bubble pushing swaps AND ↔ OR · XOR = different, XNOR = same · 7400 = universal hero</div>
+  <figure class="doodle"><svg viewBox="0 0 600 70" width="600">
+    <g class="w">
+      <use href="#g-and" x="10" y="14"/><use href="#g-or" x="90" y="14"/><use href="#g-not" x="170" y="14"/><use href="#g-nand" x="250" y="14"/><use href="#g-nor" x="330" y="14"/><use href="#g-xor" x="410" y="14"/><use href="#g-xnor" x="490" y="14"/>
+    </g>
+    <text x="40" y="68" text-anchor="middle" class="s">AND</text><text x="120" y="68" text-anchor="middle" class="s">OR</text><text x="200" y="68" text-anchor="middle" class="s">NOT</text><text x="280" y="68" text-anchor="middle" class="s r">NAND</text><text x="360" y="68" text-anchor="middle" class="s r">NOR</text><text x="440" y="68" text-anchor="middle" class="s">XOR</text><text x="520" y="68" text-anchor="middle" class="s">XNOR</text>
+  </svg><figcaption>draw all 7 symbols from memory before the exam</figcaption></figure>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DLD · Logic Gates</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>Which gate gives output 1 only when all inputs are 0?<ol class="opts"><li>NAND</li><li>NOR</li><li>XOR</li><li>OR</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Minimum number of 2-input NAND gates to build XOR:<ol class="opts"><li>3</li><li>5</li><li>4</li><li>6</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>A ⊕ 1 equals:<ol class="opts"><li>A</li><li>1</li><li>0</li><li>A′</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Rows in the truth table of a 4-input gate:<ol class="opts"><li>8</li><li>16</li><li>4</li><li>32</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>IC 7404 contains:<ol class="opts"><li>6 inverters</li><li>4 NAND</li><li>4 NOR</li><li>4 XOR</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>A positive-logic AND gate works in negative logic as:<ol class="opts"><li>NAND</li><li>NOR</li><li>OR</li><li>AND</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>(A + B)′ equals:<ol class="opts"><li>A′B′</li><li>A′ + B′</li><li>AB</li><li>(AB)′</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Number of distinct Boolean functions of 2 variables:<ol class="opts"><li>4</li><li>8</li><li>2</li><li>16</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Minimum 2-input NOR gates for an AND gate:<ol class="opts"><li>2</li><li>3</li><li>1</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>In C, 12 ^ 10 evaluates to:<ol class="opts"><li>6</li><li>8</li><li>14</li><li>2</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-d · 4-b · 5-a · 6-c · 7-a · 8-d · 9-b · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Implement a 2-input XOR gate using the minimum number of NAND gates only. Draw the circuit and prove it algebraically. <i class="mk">8 marks</i></div>
+  <ol class="steps small">
+    <li><b>Circuit:</b> G1 = NAND(A, B) → P; G2 = NAND(A, P) → Q; G3 = NAND(B, P) → R; G4 = NAND(Q, R) → Y (diagram on sheet 5). <i class="mk">2</i></li>
+    <li>P = (AB)′ = A′ + B′ (De Morgan); Q = (A(A′ + B′))′ = (AA′ + AB′)′ = (AB′)′; R = (A′B)′ <i class="mk">3</i></li>
+    <li>Y = (Q · R)′ = Q′ + R′ = <b>AB′ + A′B = A ⊕ B</b> ✓ (De Morgan + double complement) <i class="mk">2</i></li>
+    <li>Check: AB = 00 → P = 1, Q = 1, R = 1, Y = 0 ✓; AB = 10 → P = 1, Q = 0, Y = 1 ✓. <b>4 gates = minimum.</b> <i class="mk">1</i></li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can draw all 7 symbols + truth tables</li>
+        <li>Can build NOT/AND/OR from NAND and NOR</li>
+        <li>Know minimum gate counts (4 NAND XOR)</li>
+        <li>Can apply De Morgan &amp; bubble pushing</li>
+        <li>Know 7400 … 7486 and V<sub>CC</sub>/GND pins</li>
+      </ul>
+    </div>
+    <div class="sticky pink" style="float:none;width:auto;margin:4mm 2mm 0 4mm"><b>Also practise (written):</b><br>① XNOR from 4 NOR gates<br>② Majority voter with NAND only<br>③ Prove De Morgan by truth table<br>④ Even-parity generator for 4 bits</div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

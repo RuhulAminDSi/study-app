@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ডেটাবেস ধারণা ও ডেটা মডেল (ER, রিলেশনাল): রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>তারিখ: ১৩.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">ডেটাবেস ধারণা ও ডেটা মডেল</span></h1>
+  <p class="subtitle">DB · DBMS · ত্রি স্তর · E-R · রিলেশনাল · কী · কনস্ট্রেইন্ট · ট্রিগার</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="400">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="44" class="ink-k fill-y"/>
+        <path class="ink" d="M238,132 L168,74 M238,168 L168,226 M320,106 L320,56 M402,132 L472,74 M402,168 L472,226 M320,194 L320,244 M216,150 L170,150 M424,150 L470,150"/>
+        <rect x="60" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="14" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="40" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+        <rect x="238" y="244" width="164" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="220" width="164" height="40" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">ডেটাবেস</text><text x="320" y="172" text-anchor="middle" class="bn r s">ধারণা · ডেটা মডেল</text>
+      <text x="142" y="56" text-anchor="middle" class="bn s" style="font-size:10px">স্কিমা বনাম</text><text x="142" y="70" text-anchor="middle" class="bn s" style="font-size:10px">ইনস্ট্যান্স</text>
+      <text x="320" y="40" text-anchor="middle" class="bn r w6" style="font-size:11px">DB, DBMS, সিস্টেম ★</text>
+      <text x="498" y="56" text-anchor="middle" class="bn s" style="font-size:10px">ত্রি-স্তরের</text><text x="498" y="70" text-anchor="middle" class="bn s" style="font-size:10px">আর্কিটেকচার ★</text>
+      <text x="96" y="154" text-anchor="middle" class="bn g w6" style="font-size:11px">ডেটা</text><text x="96" y="168" text-anchor="middle" class="bn g w6" style="font-size:11px">ইন্ডিপেন্ডেন্স ★</text>
+      <text x="544" y="150" text-anchor="middle" class="bn r w6" style="font-size:11px">E-R</text><text x="544" y="164" text-anchor="middle" class="bn r w6" style="font-size:11px">মডেল ★</text>
+      <text x="142" y="244" text-anchor="middle" class="bn s" style="font-size:10px">রিলেশনাল</text><text x="142" y="258" text-anchor="middle" class="bn s" style="font-size:10px">মডেল</text>
+      <text x="320" y="268" text-anchor="middle" class="bn r w6" style="font-size:12px">কী ★</text>
+      <text x="498" y="244" text-anchor="middle" class="bn s" style="font-size:10px">কনস্ট্রেইন্ট ★</text><text x="498" y="258" text-anchor="middle" class="bn s" style="font-size:10px">ট্রিগার ★</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = গোটা আর্কিটেকচার যার জন্য তৈরি</figcaption>
+  </figure>
+  <div class="sticky" style="width:82mm;line-height:5.8mm"><b>হাই-ইল্ড তালিকা</b><br>① ডেটাবেস সিস্টেম = <b>DB + DBMS + অ্যাপ + ব্যবহারকারী</b><br>② স্কিমা = ব্লুপ্রিন্ট · ইনস্ট্যান্স = এখনকার ডেটা<br>③ এক্সটার্নাল → কনসেপচুয়াল → ইন্টার্নাল<br>④ ইন্ডিপেন্ডেন্স: <b>লজিক্যাল</b>, <b>ফিজিক্যাল</b><br>⑤ চেন: আয়তক্ষেত্র = এন্টিটি, ডিম্ব = অ্যাট্রিবিউট,<br>লম্ব = সম্পর্ক, আন্ডারলাইন = কী<br>⑥ ওয়াক এন্টিটি = <b>ডাবল রেক্টাঙ্গল</b><br>⑦ ১:N ⇒ "এক" পাশের PK, "অনেক" পাশে FK<br>⑧ M:N ⇒ <b>নিজস্ব জাংশন টেবিল লাগেই</b><br>⑨ FK ⇒ <b>রেফারেনশিয়াল</b>, PK ⇒ <b>এনটিটি</b> ইন্টেগ্রিটি<br>⑩ <span class="circ">DROP</span> কাঠামো মুছে, DELETE/TRUNCATE মোছে না</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="tiny">ডেটাবেস সিস্টেমের সিলেবাস লেখা আছে: "Concepts of database systems; Data Models: <span class="hl">Entity-Relationship model, Relational model</span>; Query Languages: Relational algebra, SQL; <span class="hl">Constraints and triggers</span>; Functional dependencies and normalization; File organization and data storage; Indexing; Query optimization; Transaction management; Recovery; Concurrency control; Access control and security; Semi-structured database; Object oriented databases." <b>এই লেসন কেবল প্রথম তিনটি অংশ নেয়।</b></p>
+  <div class="tipbox blk tiny"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = অবশ্যই মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = মনে রাখার কৌশল · <span class="red"><b>লাল</b></span> = পরীক্ষার ফাঁদ · <span class="green"><b>সবুজ</b></span> = সমাধানকৃত উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ul class="tick"><li>ডেটাবেস, DBMS, সিস্টেম … পৃ. ২</li><li>ত্রি স্তর; স্কিমা বনাম ইনস্ট্যান্স … পৃ. ৩</li><li>ডেটা ইন্ডিপেন্ডেন্স … পৃ. ৪</li><li>E-R মডেল, চেনের নোটেশন … পৃ. ৫</li><li>কার্ডিনালিটি ১:১, ১:N, M:N … পৃ. ৬</li><li>রিলেশনাল মডেল … পৃ. ৭</li></ul>
+    <ul class="tick"><li>কী … পৃ. ৮</li><li>কনস্ট্রেইন্ট ও ইন্টেগ্রিটি … পৃ. ৯</li><li>ট্রিগার; E-R বনাম রিলেশনাল … পৃ. ১০</li><li>রাতের পরীক্ষার পাতা … পৃ. ১১</li><li>অনুশীলনী MCQ + লিখিত … পৃ. ১২</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: database, DBMS, database system ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>ডেটাবেস, DBMS, সিস্টেম</span></div>
+  <h2><span class="no">১</span>ডেটাবেস, DBMS ও ডেটাবেস সিস্টেম</h2><span class="tag">ভিত্তি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ডেটাবেস</b> হলো সম্পর্কিত ডেটার সাজানো সংগ্রহ। <b>DBMS</b> (ডেটাবেস ম্যানেজমেন্ট সিস্টেম) হলো সেই সফটওয়্যার যা ডেটা সংরক্ষণ, পুনরুদ্ধার ও সুরক্ষা করে। আর <b>ডেটাবেস সিস্টেম</b> হলো পুরো সমষেটি: <span class="hl">ডেটাবেস + DBMS + অ্যাপ্লিকেশন প্রোগ্রাম + ব্যবহারকারী + হার্ডওয়্যার</span>। "কোনটি কী?" ধরনের প্রতিটি প্রশ্নের উত্তর নির্ভর করে এই পাঁচটি অংশের কোনটি বোঝানো হচ্ছে।</div>
+  <div class="mnote">DB = ডেটা, DBMS = সফটওয়্যার</div>
+  <figure class="doodle"><svg viewBox="0 0 620 156" width="500">
+    <g class="w">
+      <rect x="10" y="10" width="600" height="34" rx="8" class="ink-g fill-g"/>
+      <rect x="10" y="62" width="600" height="34" rx="8" class="ink fill-b"/>
+      <rect x="10" y="114" width="600" height="34" rx="8" class="ink-k fill-y"/>
+      <path class="ink-r" d="M310,44 V58" marker-end="url(#ah)"/>
+      <path class="ink-r" d="M310,96 V110" marker-end="url(#ah)"/>
+    </g>
+    <text x="310" y="32" text-anchor="middle" class="bn k w6">অ্যাপ্লিকেশন প্রোগ্রাম · ব্যবহারকারী · হার্ডওয়্যার</text>
+    <text x="310" y="84" text-anchor="middle" class="bn k w6">DBMS — ডেটা পরিচালনার সফটওয়্যার (MySQL, Oracle)</text>
+    <text x="310" y="136" text-anchor="middle" class="bn k w6">ডেটাবেস — সাজানোভাবে সংরক্ষিত ডেটা</text>
+  </svg><figcaption>তিনটি শব্দ, এক স্তূপ</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">পরিভাষা</th><th class="l">আসলে কী</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>ডেটাবেস</b></td><td class="l">নিজেই ডেটা, সাজানো স্থায়ী রূপে</td><td class="l">বিশ্ববিদ্যালয়ের ছাত্র, কোর্স, পরীক্ষা</td></tr>
+    <tr><td class="l"><b>DBMS</b></td><td class="l">অ্যাপ ও ডেটার মাঝের সফটওয়্যার</td><td class="l">MySQL, Oracle, PostgreSQL; MongoDB <i>NoSQL</i></td></tr>
+    <tr><td class="l"><b>ডেটাবেস সিস্টেম</b></td><td class="l"><span class="red"><b>পাঁচটি অংশ একসঙ্গে</b></span></td><td class="l">বিশ্ববিদ্যালয় যা বসিয়ে চালায়</td></tr>
+    <tr><td class="l"><b>অ্যাপ্লিকেশন প্রোগ্রাম</b></td><td class="l">DBMS-এর কাছে ডেটা চাওয়া প্রোগ্রাম</td><td class="l">নম্বর লিপিবদ্ধকারী, ATM, ওয়েবসাইট</td></tr>
+    <tr><td class="l"><b>হার্ডওয়্যার</b></td><td class="l">ফাইল ও ব্লক ধরে রাখার মেমোরি ও ডিস্ক</td><td class="l">ডেটা সত্যিই যেখানে বসে থাকে</td></tr>
+    <tr><td class="l"><b>ফাইল সিস্টেম</b></td><td class="l">ওএসের ফাইল: নিয়ম নেই, ভাগাভাগি নেই</td><td class="l">ডেটাবেস যা প্রতিস্থাপন করেছে</td></tr>
+    <tr><td class="l"><b>ফাইল সিস্টেম</b> যা নেই</td><td class="l">ট্রানজ্যাকশন, কনকারেন্সি নিয়ন্ত্রণ, সুরক্ষা</td><td class="l">এখানেই DBMS-এর প্রয়োজন</td></tr>
+  </table>
+  <div class="sumbox small"><span class="lbl">ডেটাবেস ফাইল কেন হারাল</span> চারটি ব্যর্থতা, চারটি উত্তর: <b>অতিরিক্ততা</b> (এক তথ্য কয়েক ফাইলে) → একটি স্কিমা; <b>অসামঞ্জস্য</b> (দুই কপি অমিল) → <span class="hl">কনস্ট্রেইন্ট</span>; <b>কম ভাগাভাগি</b> → ভিউ ও কোয়েরি ভাষা; <b>প্রোগ্রাম-ডেটা নির্ভরশীলতা</b> → স্টোরেজের মালিক DBMS।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>ডেটা, সফটওয়্যার, সবকিছু।</b>" DBMS কি ডেটাবেস? <b>না</b> — DBMS হলো ম্যানেজার। ডেটাবেস কি DBMS? তাও না। পুরো সমষেটি বোঝায় শুধু <b>ডেটাবেস সিস্টেম</b>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ডেটাবেস একটি টেবিল নয়</b>, আর <b>ফাইল সিস্টেম ডেটাবেস নয়</b>: ফাইলে স্কিমা, ট্রানজ্যাকশন বা একাধিক ব্যবহারকারীর নিয়ন্ত্রণ থাকে না। "কোনটি ইন্টেগ্রিটি রক্ষা করে?" → <b>DBMS</b>।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি ATM</span> <b>ডেটাবেস</b> হলো অ্যাকাউন্ট টেবিল। <b>DBMS</b> পিন ডিক্রিপ্ট করে, সারি লক করে যাতে একসঙ্গে দুইজন টাকা না তুলতে পারে, ব্যালেন্স যাচাই করে ও নতুন ব্যালেন্স লেখে। <b>অ্যাপ্লিকেশন</b> হলো পর্দার মেনু; <b>ডেটাবেস সিস্টেম</b> হলো ব্যাংকের সফটওয়্যার + সার্ভার + কার্ড মেশিন + নেটওয়ার্ক + গ্রাহক।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: three-level architecture ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>ত্রি-স্তরের আর্কিটেকচার</span></div>
+  <h2><span class="no">২</span>ত্রি-স্তরের আর্কিটেকচার</h2><span class="tag">সবচেয়ে বেশি পরীক্ষা হয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ত্রি-স্তরের (ত্রি-স্কিমা) আর্কিটেকচার</b>, <b>ANSI/SPARC</b>-এর প্রস্তাব, ডেটাবেসকে ভাগ করে <span class="hl">এক্সটার্নাল</span> স্তরে (ব্যবহারকারী যা দেখে), <span class="hl">কনসেপচুয়াল</span> স্তরে (পুরো প্রতিষ্ঠানের ডেটার যৌক্তিক কাঠামো) এবং <span class="hl">ইন্টার্নাল</span> স্তরে (ফিজিক্যালভাবে কীভাবে রাখা হয়)। এদের মাঝে থাকে <b>ম্যাপিং</b>, আর ওই ম্যাপিংই <b>ডেটা ইন্ডিপেন্ডেন্স</b> তৈরি করে।</div>
+  <div class="mnote purple">ANSI / SPARC</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 620 232" width="272">
+      <g class="w">
+        <rect x="8" y="6" width="604" height="66" rx="8" class="ink fill-b"/>
+        <rect x="60" y="22" width="160" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="230" y="22" width="160" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="400" y="22" width="160" height="34" rx="6" class="ink-g fill-g"/>
+        <rect x="8" y="96" width="604" height="56" rx="8" class="ink-r fill-y"/>
+        <rect x="8" y="176" width="604" height="56" rx="8" class="ink-k fill-g"/>
+        <path class="ink" d="M290,72 V92" marker-end="url(#ahb)"/>
+        <path class="ink" d="M330,152 V172" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M356,172 V152" marker-end="url(#ahp)" style="stroke-dasharray:5 4"/>
+      </g>
+      <text style="font-size:20px" x="310" y="18" text-anchor="middle" class="bn k w6">এক্সটার্নাল স্তর — ব্যবহারকারীর ভিউ</text>
+      <text style="font-size:20px" x="140" y="45" text-anchor="middle" class="bn s g">ভিউ ১ · নম্বর</text>
+      <text style="font-size:20px" x="310" y="45" text-anchor="middle" class="bn s g">ভিউ ২ · হিসাব</text>
+      <text style="font-size:20px" x="480" y="45" text-anchor="middle" class="bn s g">ভিউ ৩ · লাইব্রেরি</text>
+      <text style="font-size:20px" x="310" y="118" text-anchor="middle" class="bn k w6">কনসেপচুয়াল স্তর — যৌক্তিক স্কিমা</text>
+      <text style="font-size:20px" x="310" y="140" text-anchor="middle" class="bn s">প্রতিষ্ঠানের সব টেবিল, রিলেশন ও কনস্ট্রেইন্ট</text>
+      <text style="font-size:20px" x="310" y="198" text-anchor="middle" class="bn k w6">ইন্টার্নাল স্তর — ফিজিক্যাল স্টোরেজ</text>
+      <text style="font-size:20px" x="310" y="220" text-anchor="middle" class="bn s">ফাইল, পেজ, ব্লক, ইনডেক্স, কম্প্রেশন</text>
+    </svg><figcaption>প্রতিটি তির একটি ম্যাপিং, বদলানো যায়</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">স্তর</th><th class="l">কোন প্রশ্নের উত্তর</th><th class="l">কে দেখে</th></tr>
+        <tr><td class="l"><b>এক্সটার্নাল</b></td><td class="l">"<i>এই</i> ব্যবহারকারী কী দেখে?"</td><td class="l">একজন ব্যবহারকারী; ভিউ অনেক</td></tr>
+        <tr><td class="l"><b>কনসেপচুয়াল</b></td><td class="l">"কোন ডেটা আছে, তার অর্থ কী?"</td><td class="l">পুরো প্রতিষ্ঠানের যৌক্তিক চোখ</td></tr>
+        <tr><td class="l"><b>ইন্টার্নাল</b></td><td class="l">"কোথায় ও কীভাবে রাখা?"</td><td class="l">শুধু DBMS</td></tr>
+        <tr><td class="l"><b>ম্যাপিং</b></td><td class="l">"উপরের স্তরের ভাষা নিচেরটায় কীভাবে বাগ করব?"</td><td class="l">DBMS-ই লেখে, ব্যবহারকারী নয়</td></tr>
+      </table>
+      <div class="ex small" style="margin-top:1mm"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একই টেবিলে স্কিমা বনাম ইনস্ট্যান্স</span> <b>স্কিমা</b> হলো <code>Student(id, name, dept)</code> — ব্লুপ্রিন্ট, খুব কম বদলায়, থাকে <b>ডেটা ডিকশনারিতে</b>। <b>ইনস্ট্যান্স</b> হলো <code>(১০১,"আলিস","CSE")</code> — এই মুহূর্তের মান। <span class="circ">স্কিমা আস্তে বদলায়, ইনস্ট্যান্স বারবার।</span></div>
+    </div>
+  </div>
+  <table class="hand tiny" style="width:100%;white-space:nowrap">
+    <tr><th class="l">বিষয়</th><th class="l">স্কিমা</th><th class="l">ইনস্ট্যান্স</th></tr>
+    <tr><td class="l">আরও নাম</td><td class="l">যৌক্তিক নকশা, মেটাডেটা</td><td class="l">স্ন্যাপশট, বর্তমান অবস্থা</td></tr>
+    <tr><td class="l">এতে থাকে</td><td class="l">নাম, কলাম, টাইপ, কনস্ট্রেইন্ট</td><td class="l">প্রকৃত সংরক্ষিত সারি</td></tr>
+    <tr><td class="l">বদলায়</td><td class="l">খুব কম, ডিজাইনার করে (DDL)</td><td class="l">প্রতি মুহূর্তে (DML)</td></tr>
+    <tr><td class="l">থাকে</td><td class="l">ডেটা ডিকশনারিতে</td><td class="l">ডেটা ফাইলে</td></tr>
+    <tr><td class="l">কে দেখে</td><td class="l">ডিজাইনার, DBA</td><td class="l">ব্যবহারকারী ও অ্যাপ</td></tr>
+    <tr><td class="l">উদাহরণ</td><td class="l">DDL দিয়ে CREATE / ALTER</td><td class="l">DML দিয়ে INSERT / UPDATE</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>বাইরে, ধারণা, ভিতরে।</b>" <i>E</i> = <b>E</b>very <b>u</b>ser — প্রত্যেক ব্যবহারকারী, <i>C</i> = <b>C</b>ommunity — সব ডেটার একসঙ্গে, <i>I</i> = <b>I</b>nternal — ভেতরের পাইপিং। স্তূপ <b>উপরে নিচে</b> পড়ো।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>এক্সটার্নাল স্তর একটি ভিউ নয়</b> — সাধারণত অনেকগুলো। <b>ইন্টার্নাল স্তর শুধু DBMS-এর</b>। <b>কনসেপচুয়াল স্তর যৌক্তিক</b>: এতে ফাইলের নাম বা ব্লক সাইজ থাকে না।</div>
+  </div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: data independence ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>ডেটা ইন্ডিপেন্ডেন্স</span></div>
+  <h2><span class="no">৩</span>তিন স্তর কেন? ডেটা ইন্ডিপেন্ডেন্স</h2><span class="tag">এর জন্যই তৈরি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ডেটা ইন্ডিপেন্ডেন্স</b> হলো উপরের স্তর না বদলে কোনো একটি স্তরের স্কিমা বদলানোর সক্ষমতা। এর ধরন মাত্র <b>দুটি</b>; "তিন স্তরের ইন্ডিপেন্ডেন্স" বলা একটি প্রশ্ন এখানেই ফাঁদ। <span class="hl">লজিক্যাল</span> = কনসেপচুয়াল → এক্সটার্নাল; <span class="hl">ফিজিক্যাল</span> = ইন্টার্নাল → কনসেপচুয়াল।</div>
+  <div class="cols" style="grid-template-columns:200px minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="196">
+      <g class="w">
+        <rect x="20" y="8" width="200" height="34" rx="8" class="ink fill-b"/>
+        <rect x="20" y="66" width="200" height="34" rx="8" class="ink-r fill-y"/>
+        <rect x="20" y="124" width="200" height="34" rx="8" class="ink-k fill-g"/>
+        <path class="ink" d="M110,42 V62" marker-end="url(#ahb)"/>
+        <path class="ink-p" d="M130,100 V120" marker-end="url(#ahp)"/>
+        <path class="ink" d="M170,120 V100" marker-end="url(#ahb)"/>
+        <path class="ink-g" d="M224,25 H236 V141 H224" style="stroke-dasharray:4 4"/>
+      </g>
+      <text x="120" y="30" text-anchor="middle" class="bn s k">এক্সটার্নাল (ভিউ)</text>
+      <text x="120" y="88" text-anchor="middle" class="bn s r">কনসেপচুয়াল</text>
+      <text x="120" y="146" text-anchor="middle" class="bn s g">ইন্টার্নাল (ফাইল)</text>
+      <text x="252" y="70" class="bn p s">লজিক্যাল</text>
+      <text x="252" y="120" class="bn s g">ফিজিক্যাল</text>
+      <text x="150" y="184" text-anchor="middle" class="bn k s">এক পাশ বদলাও, অপর পাশ রাখো</text>
+    </svg><figcaption>দুটি তির, দুই ধরনের স্বাধীনতা</figcaption></figure>
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">দুটি ধরন, ঠিকভাবে</span>
+      <b>লজিক্যাল ডেটা ইন্ডিপেন্ডেন্স</b> — <span class="hl">কনসেপচুয়াল স্কিমা</span> বদলাও (কলাম যোগ, টেবিল ভাগ) আর <b>এক্সটার্নাল ভিউ ও প্রোগ্রাম অপরিবর্তিত থাকে</b>। কঠিন, কারণ ডেটার অর্থই বদলায়।<br>
+      <b>ফিজিক্যাল ডেটা ইন্ডিপেন্ডেন্স</b> — <span class="hl">ইন্টার্নাল স্কিমা</span> বদলাও (ইনডেক্স যোগ, ফাইল ভাগ) আর <b>কনসেপচুয়াল স্কিমা ও প্রোগ্রাম অপরিবর্তিত থাকে</b>। সহজ, কারণ অর্থ বদলায় না।<br>
+      দুটিই দেওয়া হয় দুটি ম্যাপিং দিয়ে: <b>এক্সটার্নাল/কনসেপচুয়াল</b> ও <b>কনসেপচুয়াল/ইন্টার্নাল</b>।</div>
+  </div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l"></th><th class="l">লজিক্যাল ডেটা ইন্ডিপেন্ডেন্স</th><th class="l">ফিজিক্যাল ডেটা ইন্ডিপেন্ডেন্স</th></tr>
+    <tr><td class="l">কোনদের মধ্যে</td><td class="l">কনসেপচুয়াল ও এক্সটার্নাল স্তর</td><td class="l">ইন্টার্নাল ও কনসেপচুয়াল স্তর</td></tr>
+    <tr><td class="l">আপনি বদলাই</td><td class="l"><b>যৌক্তিক</b> স্কিমা: <code>phone</code> যোগ</td><td class="l"><b>স্টোরেজ</b>: B+ ট্রি ইনডেক্স যোগ</td></tr>
+    <tr><td class="l">অপ্রভাবিত থাকে</td><td class="l">এক্সটার্নাল ভিউ ও অ্যাপ প্রোগ্রাম</td><td class="l">কনসেপচুয়াল স্কিমা ও অ্যাপ প্রোগ্রাম</td></tr>
+    <tr><td class="l">কীসের জন্য</td><td class="l">এক্সটার্নাল/কনসেপচুয়াল <b>ম্যাপিং</b> লেখা হয়</td><td class="l">কনসেপচুয়াল/ইন্টার্নাল <b>ম্যাপিং</b> লেখা হয়</td></tr>
+    <tr><td class="l">সাধারণ উদাহরণ</td><td class="l">কোনো কোয়েরি না ছুঁয়েই কলাম যোগ</td><td class="l">ইনডেক্স সরালে গতি বদলায়, অর্থ নয়</td></tr>
+    <tr><td class="l">কতটা কঠিন</td><td class="l"><span class="red"><b>কঠিন</b></span> — অর্থ বদলায়</td><td class="l"><span class="green"><b>সহজ</b></span> — শুধু বিন্যাস বদলায়</td></tr>
+    <tr><td class="l">উদাহরণ হিসেবে</td><td class="l">এক টেবিল ভেঙে দুই টেবিল, নতুন টেবিল যোগ</td><td class="l">নতুন ডিস্ক, পেজ বিন্যাস, কম্প্রেশন</td></tr>
+    <tr><td class="l">ঝুঁকি</td><td class="l">ভুল অর্থ ভাগ করলে ভুল উত্তর</td><td class="l">কোয়েরি একই থাকে</td></tr>
+    <tr><td class="l">এড়িয়ে যায়</td><td class="l">কখনো না — ব্যবহারকারীদের সুবিধাই মূল কারণ</td><td class="l">প্রায় সবসময়</td></tr>
+  </table>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>লজিক্যাল উপরে, ফিজিক্যাল নিচে।</b>" লজিক্যাল স্বাধীনতা <i>উপরের</i> স্তর বদলায়, ফিজিক্যাল <i>নিচের</i>।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ধরন <span class="circ">দুটি</span>, তিনটি নয়। ইনডেক্স যোগ = <b>ফিজিক্যাল</b>; কলাম যোগ = <b>লজিক্যাল</b>; স্কিমা না ছুঁয়ে ফাইলের বিন্যাস বদলানো = চিরন্তন <b>ফিজিক্যাল</b> উদাহরণ।</div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ বদল কোনটি</span> "অ্যাডমিন <i>dept</i>-এ হ্যাশ ইনডেক্স দিয়ে টেবিল সাজালেন।" → <span class="circ">ফিজিক্যাল</span>: কোয়েরির অর্থ একই। "Student-এ <i>nationality</i> কলাম যোগ হলো।" → <span class="circ">লজিক্যাল</span>।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">IT link</span> এক ইঞ্জিন থেকে নেওয়া ডাম্প অন্য ইঞ্জিনে চালানো যায় এর জন্যই। বড় টেবিলে `ALTER TABLE … ADD COLUMN` করা সব প্রোগ্রাম নতুন করে লেখার চেয়ে সস্তা। <b>ভিউ</b> হলো বাস্তবায়িত এক্সটার্নাল স্তর।</div>
+  <div class="pg-no">৪</div>
+</section><!-- ============ SHEET 5: ER model, Chen's notation ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>E-R মডেল</span></div>
+  <h2><span class="no">৪</span>চেনের নোটেশনে এন্টিটি-রিলেশনশিপ মডেল</h2><span class="tag">মুখস্থে আঁকতে হবে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>E-R মডেল</b> (পিটার চেন, <b>১৯৭৬</b>) একটি উচ্চ-স্তরের <b>কনসেপচুয়াল</b> মডেল, যা দিয়ে টেবিল বানানোর আগে ডেটাবেস ডিজাইন করা হয়। এর তিনটি মূল উপাদান — <span class="hl">এন্টিটি</span>, <span class="hl">অ্যাট্রিবিউট</span>, <span class="hl">সম্পর্ক</span> — এবং প্রতিটির নির্দিষ্ট প্রতীক আছে।</div>
+  <div class="mnote">চেন, ১৯৭৬</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 600 264" width="410">
+      <g class="w">
+        <rect x="20" y="14" width="120" height="44" rx="4" class="ink-k fill-b"/>
+        <rect x="26" y="20" width="108" height="32" rx="4" class="ink-k fill-b"/>
+        <rect x="420" y="14" width="120" height="44" rx="4" class="ink-k fill-b"/>
+        <path class="ink" d="M140,36 H218 M342,36 H420"/>
+        <path class="ink-r" d="M280,12 L342,36 L280,60 L218,36 Z"/>
+        <path class="ink-r" d="M280,18 L334,36 L280,54 L226,36 Z"/>
+        <path class="ink" d="M80,58 V92 M476,58 V92 M484,58 V92"/>
+        <ellipse cx="80" cy="118" rx="64" ry="26" class="ink-k fill-y"/>
+        <ellipse cx="480" cy="118" rx="60" ry="26" class="ink-k fill-y"/>
+        <path class="ink-r" d="M56,132 H104"/>
+        <path class="ink-r" d="M480,144 V174" style="stroke-dasharray:5 4"/>
+        <ellipse cx="480" cy="196" rx="62" ry="22" class="ink-r fill-r" style="stroke-dasharray:6 4"/>
+      </g>
+      <text x="80" y="42" text-anchor="middle" class="bn k w6" style="font-size:12px">ডিপেন্ডেন্ট</text>
+      <text x="480" y="42" text-anchor="middle" class="bn k w6" style="font-size:12px">কর্মচারী</text>
+      <text x="280" y="41" text-anchor="middle" class="bn r s">নিয়োগ করে</text>
+      <text x="80" y="124" text-anchor="middle" class="bn s k">emp_no</text>
+      <text x="480" y="124" text-anchor="middle" class="bn s">নাম</text>
+      <text x="480" y="201" text-anchor="middle" class="bn r s">বয়স</text>
+      <text x="4" y="252" class="bn r s">ডাবল রেক্টাঙ্গল = ওয়াক এন্টিটি</text>
+      <text x="470" y="252" text-anchor="middle" class="bn r s">ডটেড এলিপস = ডেরাইভড</text>
+    </svg><figcaption>ওয়াক এন্টিটি, আইডেন্টিফাইং সম্পর্ক, কী, ডেরাইভড</figcaption></figure>
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">উপাদান</th><th class="l">প্রতীক</th><th class="l">উদাহরণ</th></tr>
+      <tr><td class="l"><b>স্ট্রং এন্টিটি</b></td><td class="l">আয়তক্ষেত্র</td><td class="l">কর্মচারী</td></tr>
+      <tr><td class="l"><b>ওয়াক এন্টিটি</b></td><td class="l"><span class="red"><b>ডাবল রেক্টাঙ্গল</b></span></td><td class="l">ডিপেন্ডেন্ট</td></tr>
+      <tr><td class="l"><b>অ্যাট্রিবিউট</b></td><td class="l">ডিম্বাকৃতি</td><td class="l">নাম, id</td></tr>
+      <tr><td class="l"><b>কী অ্যাট্রিবিউট</b></td><td class="l"><span class="circ">আন্ডারলাইন</span></td><td class="l">id</td></tr>
+      <tr><td class="l"><b>ডেরাইভড</b></td><td class="l">ডটেড এলিপস</td><td class="l">বয়স</td></tr>
+      <tr><td class="l"><b>মাল্টিভ্যালুড</b></td><td class="l">ডাবল এলিপস</td><td class="l">ফোন নম্বর</td></tr>
+      <tr><td class="l"><b>কম্পোজিট</b></td><td class="l">ভেতরে ছোট ডিম্বসহ ডিম্ব</td><td class="l">ঠিকানা</td></tr>
+      <tr><td class="l"><b>পার্টিয়াল কী</b></td><td class="l">ওয়াক এন্টিটির নিজস্ব আংশিক কী</td><td class="l">ডিপেন্ডেন্টের ধরন</td></tr>
+      <tr><td class="l"><b>অস্তিত্ব-নির্ভরশীল</b></td><td class="l">মালিক মুছলে মুছে যায়</td><td class="l">ডিপেন্ডেন্ট</td></tr>
+      <tr><td class="l"><b>সম্পর্ক</b></td><td class="l">হীরক</td><td class="l">Enrolls</td></tr>
+      <tr><td class="l"><b>আইডেন্টিফাইং</b></td><td class="l">ডাবল হীরক</td><td class="l">অধিপতি</td></tr>
+      <tr><td class="l"><b>কার্ডিনালিটি</b></td><td class="l">১, N বা M</td><td class="l">১:N, M:N</td></tr>
+      <tr><td class="l"><b>টোটাল পার্টিসিপেশন</b></td><td class="l">ডাবল রেখা</td><td class="l">প্রত্যেক কর্মচারীর বিভাগ আছে</td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>ওয়াক এন্টিটি সেট আঁকা হয় ডাবল রেক্টাঙ্গল</b> — হীরক নয় (সেটি সম্পর্ক), ডিম্বাকৃতি নয় (সেটি অ্যাট্রিবিউট), ডটেড ডিম্বও নয় (সেটি <i>ডেরাইভড</i>)। এর আইডেন্টিফাইং সম্পর্ক <b>ডাবল হীরক</b>। ওয়াক এন্টিটির <span class="circ">নিজস্ব কী থাকে না</span>: চিহ্নিত হয় <i>মালিকের কী + নিজের পার্টিয়াল কী</i> দিয়ে।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>আয়তক্ষেত্র এন্টিটি, ডিম্ব অ্যাট্রিবিউট, হীরক সম্পর্ক, আন্ডারলাইন = কী।</b>" প্রতিটি ব্যতিক্রমে একটি অক্ষর: <b>ডাবল</b> রেক্টাঙ্গল = ওয়াক, <b>ডটেড</b> এলিপস = ডেরাইভড, <b>ডাবল</b> এলিপস = মাল্টিভ্যালুড, <b>ডাবল</b> হীরক = আইডেন্টিফাইং। <b>কম্পোজিট</b> = ভেতরে ছোট ডিম্বসহ ডিম্ব (<i>ঠিকানা</i>)।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ E-R ডায়াগ্রাম পড়া</span> "প্রতিটি <b>বিভাগ</b> আয়তক্ষেত্রে একটি আন্ডারলাইন করা <b>নাম</b> আছে এবং একটি ডটেড এলিপস <b>staff_cnt</b>। একটি <b>ডাবল রেক্টাঙ্গল</b> <b>অ্যাসাইনমেন্ট</b> PROJECT-কে যুক্ত করে।" — <i>নাম</i> স্ট্রং এন্টিটির কী অ্যাট্রিবিউট; <i>staff_cnt</i> <b>ডেরাইভড</b>; <b>অ্যাসাইনমেন্ট</b> একটি <b>ওয়াক এন্টিটি</b>, কোন প্রজেক্ট ও কোন কর্মচারীর জন্য তা জানা ছাড়া অর্থহীন।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: cardinality ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>কার্ডিনালিটি</span></div>
+  <h2><span class="no">৫</span>কার্ডিনালিটি: ১:১, ১:N ও M:N</h2><span class="tag">সবচেয়ে বেশি মান ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>কার্ডিনালিটি</b> জানায় একটি এন্টিটির একটি উদাহরণের সঙ্গে অপরটির সর্বোচ্চ কতগুলো উদাহরণ যুক্ত হতে পারে। আকার মাত্র তিনটি — <b>১:১</b>, <b>১:N</b>, <b>M:N</b> — এবং সেই আকারই ঠিক করে <span class="hl">ডিজাইনে কতগুলো রিলেশন লাগবে</span>।</div>
+  <figure class="doodle"><svg viewBox="0 0 600 216" width="590">
+    <g class="w">
+      <rect x="6" y="4" width="188" height="182" rx="8" class="ink fill-b"/>
+      <rect x="206" y="4" width="188" height="182" rx="8" class="ink fill-b"/>
+      <rect x="406" y="4" width="188" height="182" rx="8" class="ink-r fill-r"/>
+      <rect x="22" y="40" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="112" y="40" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <path class="ink" d="M88,55 H108" marker-end="url(#ahb)"/>
+      <path class="ink" d="M112,55 H92" marker-end="url(#ahb)"/>
+      <rect x="222" y="34" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="312" y="84" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <path class="ink" d="M288,49 L312,84" marker-end="url(#ahb)"/>
+      <path class="ink" d="M318,84 L294,53" marker-end="url(#ahb)"/>
+      <rect x="422" y="34" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <rect x="512" y="84" width="66" height="30" rx="5" class="ink-g fill-g"/>
+      <path class="ink" d="M488,49 L512,84" marker-end="url(#ahb)"/>
+      <path class="ink" d="M518,84 L494,53" marker-end="url(#ahb)"/>
+    </g>
+    <text x="100" y="26" text-anchor="middle" class="bn k w6">১:১</text>
+    <text x="55" y="60" text-anchor="middle" class="bn s k">ব্যক্তি</text>
+    <text x="145" y="60" text-anchor="middle" class="bn s k">পাসপোর্ট</text>
+    <text x="100" y="104" text-anchor="middle" class="bn s">ব্যক্তি ↔ পাসপোর্ট</text>
+    <text x="100" y="128" text-anchor="middle" class="bn s">আলাদা টেবিল নয়</text>
+    <text x="100" y="152" text-anchor="middle" class="bn g s">এক পাশে PK থেকে FK</text>
+    <text x="100" y="172" text-anchor="middle" class="bn s">প্রতিটিতে ০ বা ১টি</text>
+    <text x="300" y="26" text-anchor="middle" class="bn k w6">১:N</text>
+    <text x="255" y="54" text-anchor="middle" class="bn s k">বিভাগ</text>
+    <text x="345" y="104" text-anchor="middle" class="bn s k">ছাত্র</text>
+    <text x="300" y="132" text-anchor="middle" class="bn s">বিভাগ ↔ ছাত্র</text>
+    <text x="300" y="150" text-anchor="middle" class="bn s">আলাদা টেবিল নয়</text>
+    <text x="300" y="166" text-anchor="middle" class="bn g s">dept id FK হয়</text>
+    <text x="300" y="180" text-anchor="middle" class="bn s">এক বিভাগ, অনেক ছাত্র</text>
+    <text x="500" y="26" text-anchor="middle" class="bn r w6">M:N</text>
+    <text x="455" y="54" text-anchor="middle" class="bn s k">ছাত্র</text>
+    <text x="545" y="104" text-anchor="middle" class="bn s k">কোর্স</text>
+    <text x="500" y="132" text-anchor="middle" class="bn s">ছাত্র ↔ কোর্স</text>
+    <text x="500" y="150" text-anchor="middle" class="bn r s">একটি FK যথেষ্ট নয়</text>
+    <text x="500" y="166" text-anchor="middle" class="bn r s">নিজস্ব টেবিল লাগে</text>
+    <text x="500" y="180" text-anchor="middle" class="bn s">ENROLLS (জাংশন)</text>
+    <text x="300" y="206" text-anchor="middle" class="bn k s">১:N-এ আলাদা টেবিল লাগে না; M:N-এ সবসময় একটি লাগে</text>
+  </svg><figcaption>শুধু আকার দেখেই টেবিলের সংখ্যা বলা যায়</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কার্ডিনালিটি</th><th class="l">অর্থ</th><th class="l">উদাহরণ</th><th class="l">রিলেশনে ম্যাপিং</th></tr>
+    <tr><td class="l"><b>১:১</b></td><td class="l">একজন A, সর্বোচ্চ একজন B</td><td class="l">ব্যক্তি ↔ পাসপোর্ট</td><td class="l">নতুন টেবিল নয়: "এক" পাশের <b>PK অন্য টেবিলে FK</b></td></tr>
+    <tr><td class="l"><b>১:N</b></td><td class="l">একজন A, অনেকজন B</td><td class="l">বিভাগ ↔ ছাত্র</td><td class="l">নতুন টেবিল নয়: <b>"এক" পাশের PK "অনেক" পাশে FK</b></td></tr>
+    <tr><td class="l"><b>M:N</b></td><td class="l">অনেকজন A, অনেকজন B</td><td class="l">ছাত্র ↔ কোর্স</td><td class="l"><span class="red"><b>নিজস্ব রিলেশন</b></span>, দুই পাশেই FK</td></tr>
+    <tr><td class="l">তথ্যসহ ১:N</td><td class="l">সম্পর্কটিও ডেটা রাখে (<i>since</i>, <i>grade</i>)</td><td class="l">ছাত্র ↔ Enrolls</td><td class="l">১:N-এও জাংশন টেবিল লাগে</td></tr>
+    <tr><td class="l"><b>বাধ্যতামূলক ১:N</b></td><td class="l">প্রতিটি ছাত্রের অবশ্যই একটি বিভাগ</td><td class="l">বিভাগ ↔ ছাত্র</td><td class="l">dept_id NOT NULL রাখতে হয়</td></tr>
+    <tr><td class="l"><b>ঐচ্ছিক ১:N</b></td><td class="l">ছাত্রের বিভাগ নাও থাকতে পারে</td><td class="l">ছাত্র ↔ উপদেষ্টা</td><td class="l">FK রাখা যায়, NULL-ও থাকতে পারে</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>১:N-এ foreign key থাকে N পাশে</b>; "এক" পাশে রাখলে একটি ঘরে কয়েকটি id লাগবে, যা ১NF ভাঙে। <b>M:N কোনো একক foreign key দিয়ে লেখা যায় না</b>: একজন ছাত্রের অনেক কোর্স <i>এবং</i> একটি কোর্সের অনেক ছাত্র, তাই কোনো টেবিলেই অপরের তালিকা রাখা যায় না। <span class="circ">শুধু M:N-ই নতুন রিলেশন বাধ্য করে।</span></div>
+    <div class="ex small" style="margin-top:0"><span class="lbl">সমাধানকৃত উদাহরণ ✍ M:N-এ টেবিল কেন লাগে</span> <code>Student</code>-এ রাখো: <code>courses</code> কলামে <code>{CSE101, MAT201}</code> জমতে হতো — এটি <b>মাল্টিভ্যালুড ঘর</b>, যা ১NF নিষিদ্ধ করে। <code>Course</code>-এ রাখলে একই সমস্যা। তাই <b>ENROLLS(student_id, course_code)</b>, দুই পাশেই FK; জোড়াটি সাধারণত কম্পোজিট কীও।</div>
+  </div>
+  <div class="tipbox small"><span class="lbl">১:১-এ কোন পাশে রাখব</span> যে পাশে <b>সংখ্যা না থাকতে পারে</b> তার দিকে FK রাখো: কর্মচারী টেবিলে <code>passport_no</code> গেলে পাসপোর্টনহীন কর্মচারীর জায়গায় NULL থাকে। <b>১:N-এ পাশ বাছাই নয়</b> — কী সবসময় N পাশে যায়।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: relational model ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>রিলেশনাল মডেল</span></div>
+  <h2><span class="no">৬</span>রিলেশনাল মডেল</h2><span class="tag">পরিভাষা পরীক্ষা ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>রিলেশনাল মডেল</b> (ই. এফ. কড, ১৯৭০) ডেটাকে <span class="hl">রিলেশন</span> হিসেবে দেখায় — নাম দেওয়া অ্যাট্রিবিউটের উপর টিপলের গাণিতিক সেট। রিলেশনকে টেবিল হিসেবে দেখানো হয়: টিপল = সারি, অ্যাট্রিবিউট = কলাম। দুটি বৈশিষ্ট্য প্রতিটি উত্তরে লাগে: রিলেশনে <b>ভিন্ন টিপল থাকে না</b> এবং <b>কোনো ক্রম থাকে না</b>।</div>
+  <div class="mnote">কড, ১৯৭০</div>
+  <div class="cols" style="grid-template-columns:250px minmax(0,1fr);align-items:start;clear:both">
+    <figure class="doodle"><svg viewBox="0 0 600 244" width="246">
+      <g class="w">
+        <rect x="20" y="34" width="330" height="176" rx="8" class="ink-k fill-b"/>
+        <rect x="20" y="34" width="330" height="34" rx="8" class="ink-r fill-y"/>
+        <path class="ink" d="M20,68 H350 M130,68 V210 M240,68 V210 M20,113 H350 M20,158 H350"/>
+        <path class="ink-r" d="M68,62 H82"/>
+        <rect x="430" y="34" width="150" height="120" rx="8" class="ink-g fill-g"/>
+        <path class="ink" d="M350,94 H426" marker-end="url(#ahb)"/>
+      </g>
+      <text x="185" y="20" text-anchor="middle" class="bn k w6" style="font-size:20px">রিলেশন (টেবিল)</text>
+      <text style="font-size:20px" x="75" y="56" text-anchor="middle" class="bn s k">id</text>
+      <text style="font-size:20px" x="185" y="56" text-anchor="middle" class="bn s k">নাম</text>
+      <text style="font-size:20px" x="295" y="56" text-anchor="middle" class="bn s k">বিভাগ</text>
+      <text style="font-size:20px" x="75" y="97" text-anchor="middle" class="bn s">১০১</text>
+      <text style="font-size:20px" x="185" y="97" text-anchor="middle" class="bn s">আলিস</text>
+      <text style="font-size:20px" x="295" y="97" text-anchor="middle" class="bn s">CSE</text>
+      <text style="font-size:20px" x="75" y="142" text-anchor="middle" class="bn s">১০২</text>
+      <text style="font-size:20px" x="185" y="142" text-anchor="middle" class="bn s">বাবু</text>
+      <text style="font-size:20px" x="295" y="142" text-anchor="middle" class="bn s">ECE</text>
+      <text style="font-size:20px" x="75" y="192" text-anchor="middle" class="bn s">১০৩</text>
+      <text style="font-size:20px" x="185" y="192" text-anchor="middle" class="bn s">করিম</text>
+      <text style="font-size:20px" x="295" y="192" text-anchor="middle" class="bn s">CSE</text>
+      <text style="font-size:20px" x="505" y="62" text-anchor="middle" class="bn k w6">ডোমেইন</text>
+      <text style="font-size:20px" x="505" y="86" text-anchor="middle" class="bn s">১০১, ১০২, ১০৩…</text>
+      <text style="font-size:20px" x="505" y="106" text-anchor="middle" class="bn s">পূর্ণসংখ্যা ১–৯৯৯</text>
+      <text style="font-size:20px" x="505" y="132" text-anchor="middle" class="bn g s">প্রতি কলামে একটি</text>
+      <text style="font-size:20px" x="185" y="230" text-anchor="middle" class="bn k s">রিলেশন টিপলের সেট — সারির ক্রম অর্থহীন</text>
+    </svg><figcaption>সারি ঢোকে, সারি বেরোয়; কলাম বহন করে ডোমেইন</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="width:100%">
+        <tr><th class="l">আনুষ্ঠানিক পরিভাষা</th><th class="l">সাধারণ নাম</th><th class="l">অর্থ</th></tr>
+        <tr><td class="l"><b>রিলেশন</b></td><td class="l">টেবিল</td><td class="l">একই অ্যাট্রিবিউটের টিপলের সেট</td></tr>
+        <tr><td class="l"><b>টিপল</b></td><td class="l">সারি / রেকর্ড</td><td class="l">একটি তথ্য: <code>(১০১,"আলিস","CSE")</code></td></tr>
+        <tr><td class="l"><b>অ্যাট্রিবিউট</b></td><td class="l">কলাম / ক্ষেত্র</td><td class="l">নাম দেওয়া বৈশিষ্ট্য: <i>নাম</i>, <i>বিভাগ</i></td></tr>
+        <tr><td class="l"><b>ডোমেইন</b></td><td class="l">অনুমোদিত মানের সেট</td><td class="l"><i>id</i>-এর জন্য ১–৯৯৯</td></tr>
+        <tr><td class="l"><b>ডিগ্রি</b></td><td class="l">আরিটি, কলাম সংখ্যা</td><td class="l">Student-এ ডিগ্রি <span class="circ">৩</span></td></tr>
+        <tr><td class="l"><b>কার্ডিনালিটি</b></td><td class="l">সারি সংখ্যা</td><td class="l">Student-এ ৩টি টিপল</td></tr>
+        <tr><td class="l"><b>রিলেশন স্কিমা</b></td><td class="l">টেবিলের সংজ্ঞা</td><td class="l"><code>Student(id, name, dept)</code></td></tr>
+        <tr><td class="l"><b>রিলেশন ইনস্ট্যান্স</b></td><td class="l">বর্তমান বিষয়বস্তু</td><td class="l">এই মুহূর্তের সারিগুলো</td></tr>
+        <tr><td class="l"><b>কী</b></td><td class="l">টিপল শনাক্তকারী অ্যাট্রিবিউট</td><td class="l">আন্ডারলাইন করা <i>id</i></td></tr>
+      </table>
+      <div class="tipbox tiny" style="margin-top:1mm"><span class="lbl">আনুষ্ঠানিক ধর্ম</span> ঘরে শুধু <b>অ্যাটমিক</b> মান · টিপল <b>আলাদা</b> · টিপল ও অ্যাট্রিবিউটের <b>ক্রম অর্থহীন</b> · প্রতিটি টিপলে একই অ্যাট্রিবিউট, একই ডোমেইন।</div>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>টেবিল–সারি–কলাম–সেট।</b>" "ডিগ্রি সারি না কলাম?" → <span class="circ">কলাম</span>। "কার্ডিনালিটি সারি না কলাম?" → <span class="circ">সারি</span>। পরীক্ষকারী এই দুটি অদল-বদল করেন।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> পর্দায় টেবিল <b>সাজানো থাকতে পারে</b>, কিন্তু রিলেশন একটি সেট, তাই <b>সারির ক্রম ডেটার অংশ নয়</b>। সারি যোগ করলে <b>ডিগ্রি বদলায় না</b>। হুবহু একই দুটি সারি <span class="circ">চলবে না</span>।</div>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি টেবিল আনুষ্ঠানিকভাবে বর্ণনা</span> <code>Student(id, name, dept)</code>-এ <code>(১০১,"আলিস","CSE")</code>, <code>(১০২,"বাবু","ECE")</code>, <code>(১০৩,"করিম","CSE")</code>। রিলেশনের নাম <b>Student</b>; ডিগ্রি <span class="circ">৩</span> (তিনটি অ্যাট্রিবিউট); কার্ডিনালিটি <span class="circ">৩</span> (তিনটি টিপল); <i>id</i>-এর ডোমেইন পূর্ণসংখ্যা ১–৯৯৯; <i>id</i> আন্ডারলাইন, তাই কী অ্যাট্রিবিউট। চতুর্থ ছাত্র যোগে কার্ডিনালিটি ৪ হয়, ডিগ্রি ৩-ই থাকে।</div>
+  <div class="pg-no">৭</div>
+</section><!-- ============ SHEET 8: keys ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>কী</span></div>
+  <h2><span class="no">৭</span>কী: সুপার, ক্যান্ডিডেট, প্রাইমারি, ফরেন, কম্পোজিট</h2><span class="tag">সবচেয়ে বেশি পরীক্ষা হয় ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>সুপারকী</b> হলো টিপলকে অনন্যভাবে শনাক্ত করে এমন যেকোনো অ্যাট্রিবিউটের সেট। <b>ক্যান্ডিডেট কী</b> হলো এমন সুপারকী যা <span class="hl">সর্বনিম্ন</span> — একটি অ্যাট্রিবিউট সরালেই আর শনাক্ত করে না। <b>প্রাইমারি কী</b> হলো সেই একটি ক্যান্ডিডেট কী যা আনুষ্ঠানিক শনাক্তকারী মনে করা হয়। <b>ফরেন কী</b> অন্য রিলেশনের ক্যান্ডিডেট কী-র দিকে নির্দেশ করে। <b>কম্পোজিট কী</b> দুই বা তার বেশি অ্যাট্রিবিউট দিয়ে তৈরি।</div>
+  <figure class="doodle"><svg viewBox="0 0 600 234" width="500">
+    <g class="w">
+      <rect x="14" y="18" width="572" height="184" rx="10" class="ink fill-b"/>
+      <rect x="60" y="64" width="480" height="104" rx="10" class="ink-p fill-p"/>
+      <rect x="270" y="100" width="180" height="40" rx="8" class="ink-r fill-r"/>
+      <path class="ink-g" d="M270,124 H100" marker-end="url(#ahg)"/>
+    </g>
+    <text x="300" y="40" text-anchor="middle" class="bn k w6">সুপারকী</text>
+    <text x="300" y="58" text-anchor="middle" class="bn s">যেকোনো সেট যা সারি অনন্যভাবে শনাক্ত করে: {id}, {id, name}</text>
+    <text x="300" y="86" text-anchor="middle" class="bn p w6">ক্যান্ডিডেট কী = সর্বনিম্ন সুপারকী</text>
+    <text x="300" y="156" text-anchor="middle" class="bn s">একটি অ্যাট্রিবিউট সরালেই আর শনাক্ত করে না</text>
+    <text x="360" y="126" text-anchor="middle" class="bn r w6">প্রাইমারি কী</text>
+    <text x="150" y="116" text-anchor="middle" class="bn g s">ফরেন কী</text>
+    <text x="300" y="192" text-anchor="middle" class="bn k s">প্রতি টেবিলে একটিই প্রাইমারি কী, তবে ক্যান্ডিডেট যত খুশি</text>
+    <text x="300" y="222" text-anchor="middle" class="bn g s">কম্পোজিট কী = দুই বা তার বেশি অ্যাট্রিবিউটের কী</text>
+  </svg><figcaption>প্রতিটি কী-ই সুপারকী; সব সুপারকী কিন্তু কী নয়</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কী</th><th class="l">এটা কী</th><th class="l">নিয়ম</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>সুপারকী</b></td><td class="l">টিপল শনাক্ত করে এমন সেট</td><td class="l">প্রয়োজনের চেয়ে বড় হতে পারে</td><td class="l">{id, name}</td></tr>
+    <tr><td class="l"><b>ক্যান্ডিডেট কী</b></td><td class="l"><span class="red"><b>সর্বনিম্ন</b></span> সুপারকী</td><td class="l">কিছু সরানো যায় না</td><td class="l">{id}</td></tr>
+    <tr><td class="l"><b>প্রাইমারি কী</b></td><td class="l">বেছে নেওয়া ক্যান্ডিডেট কী</td><td class="l"><span class="circ">টেবিলে একটি; NULL নয়</span></td><td class="l">PRIMARY KEY (id)</td></tr>
+    <tr><td class="l"><b>ফরেন কী</b></td><td class="l">অন্য টেবিলের কী-র দিকে নির্দেশ</td><td class="l">রক্ষা করে <b>রেফারেনশিয়াল ইন্টেগ্রিটি</b></td><td class="l"><code>dept_id REFERENCES Dept(id)</code></td></tr>
+    <tr><td class="l"><b>কম্পোজিট কী</b></td><td class="l">২ বা তার বেশি অ্যাট্রিবিউট</td><td class="l">প্রাইমারি কী কম্পোজিট হতে পারে</td><td class="l">(StudentID, CourseID)</td></tr>
+    <tr><td class="l"><b>অল্টারনেট কী</b></td><td class="l">বাছাই না করা ক্যান্ডিডেট কী</td><td class="l">তাও UNIQUE থাকে</td><td class="l">{passport_no}</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> "<b>প্রতিটি ক্যান্ডিডেট কী একটি সুপারকী; প্রতিটি প্রাইমারি কী একটি ক্যান্ডিডেট কী; ফরেন কী অন্যের প্রাইমারি কী।</b>" সাঁটানোটি একদিকে: সুপারকী ⊇ ক্যান্ডিডেট কী ⊇ প্রাইমারি কী।</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> একটি টেবিলে <span class="circ">ঠিক একটিই</span> প্রাইমারি কী, তবে অনেক ক্যান্ডিডেট কী ও সুপারকী থাকতে পারে। প্রাইমারি কী <b>কম্পোজিট</b> হতে পারে — এক কলাম হওয়া বাধ্যতামূলক নয়। ফরেন কী কলামে <b>NULL থাকতে পারে</b>; তার NULL-নয় মানগুলোই মিলতে হবে।</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ একটি টেবিলের কী শ্রেণিবিভাগ</span> <code>Person(pid, passport_no, phone)</code>। {pid} অনন্য → সুপারকী; <i>pid</i> সরালে ব্যর্থ → সর্বনিম্ন → <b>ক্যান্ডিডেট কী</b>; বেছে নেওয়া → <b>প্রাইমারি কী</b>। {passport_no}-ও সর্বনিম্ন → <b>অল্টারনেট কী</b>। {pid, phone} অনন্য, কিন্তু <i>phone</i> সরানো যায় বলে সেটি <b>ক্যান্ডিডেট কী নয়</b> — শুধু সুপারকী।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: constraints ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>কনস্ট্রেইন্ট</span></div>
+  <h2><span class="no">৮</span>কনস্ট্রেইন্ট ও দুটি ইন্টেগ্রিটি নিয়ম</h2><span class="tag">কেন এগুলো আছে ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>কনস্ট্রেইন্ট</b> হলো কোনো কলাম বা টেবিলে ঘোষিত নিয়ম, যা লেখার যেকোনো উপায়েই ডেটাকে সঠিক রাখে। SQL-এ কনস্ট্রেইন্টের ছয় রূপ আছে, আর সেগুলো দুটি নাম দেওয়া বৈশিষ্ট্য রক্ষা করে: <span class="hl">এনটিটি ইন্টেগ্রিটি</span> ও <span class="hl">রেফারেনশিয়াল ইন্টেগ্রিটি</span>।</div>
+  <div class="mnote">দুটি ইন্টেগ্রিটি নিয়ম</div>
+  <figure class="doodle"><svg viewBox="0 0 600 196" width="500">
+    <g class="w">
+      <rect x="20" y="24" width="240" height="130" rx="8" class="ink fill-b"/>
+      <rect x="20" y="24" width="240" height="30" rx="6" class="ink-r fill-y"/>
+      <path class="ink" d="M20,80 H260 M120,80 V154 M20,118 H260"/>
+      <rect x="360" y="24" width="220" height="130" rx="8" class="ink fill-b"/>
+      <rect x="360" y="24" width="220" height="30" rx="6" class="ink-r fill-y"/>
+      <path class="ink" d="M360,80 H580 M360,118 H580"/>
+      <path class="ink-g" d="M262,116 H356" marker-end="url(#ahg)"/>
+      <path class="ink-r" d="M48,130 L90,152 M90,130 L48,152"/>
+    </g>
+    <text x="140" y="18" text-anchor="middle" class="bn k w6">চাইল্ড (Enrolls)</text>
+    <text x="470" y="18" text-anchor="middle" class="bn k w6">প্যারেন্ট (Student)</text>
+    <text x="70" y="48" text-anchor="middle" class="bn s">student_id</text>
+    <text x="200" y="48" text-anchor="middle" class="bn s">course_code</text>
+    <text x="410" y="48" text-anchor="middle" class="bn s">id</text>
+    <text x="510" y="48" text-anchor="middle" class="bn s">নাম</text>
+    <text x="70" y="106" text-anchor="middle" class="bn s">১০১</text>
+    <text x="200" y="106" text-anchor="middle" class="bn s">CSE101</text>
+    <text x="410" y="106" text-anchor="middle" class="bn s">১০১</text>
+    <text x="510" y="106" text-anchor="middle" class="bn s">আলিস</text>
+    <text x="70" y="143" text-anchor="middle" class="bn s">NULL</text>
+    <text x="200" y="143" text-anchor="middle" class="bn s">MAT201</text>
+    <text x="410" y="143" text-anchor="middle" class="bn s">১০২</text>
+    <text x="510" y="143" text-anchor="middle" class="bn s">বাবু</text>
+    <text x="150" y="184" text-anchor="middle" class="bn g s">FK: মান প্যারেন্টে থাকতে হবে</text>
+    <text x="450" y="184" text-anchor="middle" class="bn r s">PK: কখনো NULL নয়</text>
+  </svg><figcaption>FK-র তির কখনো ফাঁকায় পড়তে পারে না</figcaption></figure>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">কনস্ট্রেইন্ট</th><th class="l">যা নিষিদ্ধ করে</th><th class="l">SQL</th></tr>
+    <tr><td class="l"><b>NOT NULL</b></td><td class="l">কলামে NULL মান</td><td class="l"><code>name VARCHAR(50) NOT NULL</code></td></tr>
+    <tr><td class="l"><b>UNIQUE</b></td><td class="l">দুই সারিতে একই মান (NULL ছাড়া)</td><td class="l"><code>email VARCHAR(100) UNIQUE</code></td></tr>
+    <tr><td class="l"><b>PRIMARY KEY</b></td><td class="l">NULL ও ডুপ্লিকেট — উপরের দুটিই ধারণ করে</td><td class="l"><code>id INT PRIMARY KEY</code></td></tr>
+    <tr><td class="l"><b>FOREIGN KEY</b></td><td class="l">যে মান রেফারেন্স করা টেবিলের কী-র সঙ্গে মেলে না</td><td class="l"><code>dept_id INT REFERENCES Dept(id)</code></td></tr>
+    <tr><td class="l"><b>CHECK</b></td><td class="l">বলা শর্তে মান না পূরা করা</td><td class="l"><code>CHECK (Age &gt;= 18)</code></td></tr>
+    <tr><td class="l"><b>DEFAULT</b></td><td class="l">কিছু নয় — মান না দিলে একটি দেয়</td><td class="l"><code>status VARCHAR(20) DEFAULT 'active'</code></td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">কনস্ট্রেইন্ট যে দুটি নিয়ম রক্ষা করে</span>
+    <b>এনটিটি ইন্টেগ্রিটি</b> — <span class="hl">প্রাইমারি কী কখনো NULL হয় না</span> এবং প্রতিটি সারিতে অনন্য। যে রিলেশনকে ঠিকানা বলা যায়, তার সারির পরিচয় থাকতে হবে; না হলে অন্য টেবিল তাকে নির্দেশ করতে পারে না। রক্ষা করে <b>PRIMARY KEY</b>।<br>
+    <b>রেফারেনশিয়াল ইন্টেগ্রিটি</b> — <span class="hl">ফরেন কী-র প্রতিটি NULL-নয় মান রেফারেন্স করা টেবিলের কোনো কী-র সঙ্গে মেলে</span>। কোনো অসংযুক্ত সারি থাকবে না। রক্ষা করে <b>FOREIGN KEY</b>; প্যারেন্ট মুছলে বেছে নিতে হয় <code>CASCADE</code>, <code>SET NULL</code>, <code>SET DEFAULT</code> বা <code>RESTRICT</code>।</div>
+  <div class="code">CREATE TABLE Enrolls ( student_id  INT      NOT NULL REFERENCES Student(id),
+                    course_code CHAR(7)  NOT NULL REFERENCES Course(code),
+                    grade       CHAR(2)  CHECK (grade IN ('A','B','C','F')),
+                    enrolled_on DATE     DEFAULT CURRENT_DATE );</div>
+  <div class="exam tiny"><span class="lbl">পরীক্ষার ফাঁদ ✍ দুটি</span> <b>১.</b> ফরেন কী আছে <b>রেফারেনশিয়াল ইন্টেগ্রিটি</b> বলবার জন্য — এনটিটি ইন্টেগ্রিটি, এনক্রিপশন বা দ্রুত সাজানো নয়; এনটিটি ইন্টেগ্রিটি প্রাইমারি কী-এর কাজ। FK কলামে <b>NULL থাকতে পারে</b>। <b>২.</b> <span class="circ">DROP</span> টেবিলের <b>কাঠামো ও ডেটা দুটোই</b> মুছে দেয়; <b>DELETE</b> সারি মোছে, <b>TRUNCATE</b> সব সারি মোছে, কিন্তু <b>দুটোই কাঠামো রাখে</b>; <b>ALTER</b> কাঠামো বদলায়, ডেটা রাখে।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: triggers + ER vs relational ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>ট্রিগার ও তুলনা</span></div>
+  <h2><span class="no">৯</span>ট্রিগার, এবং E-R বনাম রিলেশনাল মডেল</h2><span class="tag">লেসনের সমাপ্তি ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">সংজ্ঞা</span> <b>ট্রিগার</b> হলো সংরক্ষিত যৌক্তিকতা, যা কোনো টেবিলে কোনো <span class="hl">ঘটনা ঘটলে DBMS নিজে থেকেই</span> চালায় — <code>INSERT</code>, <code>UPDATE</code> বা <code>DELETE</code>-এর আগে, পরে, বা বদলে। অ্যাপ্লিকেশন কখনো ট্রিগার ডাকে না; চালায় <i>ইঞ্জিন</i>, তাই কোনো ক্লায়েন্ট তাকে বাঁচাতে পারে না।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 250px;align-items:start">
+    <table class="hand tiny" style="width:100%">
+      <tr><th class="l">সময়</th><th class="l">কখন চলে</th></tr>
+      <tr><td class="l">BEFORE</td><td class="l">সারি লেখার আগে; <code>NEW</code> বদলাতে পারে</td></tr>
+      <tr><td class="l">AFTER</td><td class="l">সারি লেখার পরে; <code>OLD</code> ও <code>NEW</code> দুটোই পাওয়া যায়</td></tr>
+      <tr><td class="l">FOR EACH ROW</td><td class="l">প্রতিটি প্রভাবিত সারিতে একবার</td></tr>
+      <tr><td class="l">INSTEAD OF</td><td class="l"><b>ভিউ</b>-র উপর, ভিউকে আপডেটেবল করতে</td></tr>
+    </table>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> ট্রিগার <b>স্টোরড প্রসিডিউর নয়</b>: কেউ নাম ধরে ডাকে না, এটি <b>ঘটনা</b>-তে চলে। কনস্ট্রেইন্টের বিকল্পও নয় — একই কাজের জন্য <code>CHECK</code> সস্তা ও পরিষ্কার। <b>ফরেন কী বাধ্যতামূলকতা কনস্ট্রেইন্ট দিয়ে হয়, ট্রিগার দিয়ে নয়।</b></div>
+  </div>
+  <div class="code">CREATE TRIGGER trg_student_count
+AFTER INSERT ON Student
+FOR EACH ROW
+BEGIN
+  UPDATE Department
+  SET StudentCount = StudentCount + 1
+  WHERE DeptID = NEW.DeptID;
+END;</div>
+  <div class="ex tiny"><span class="lbl">সমাধানকৃত উদাহরণ ✍ তিনটি ব্যবহার</span> <b>১. সংখ্যা ধরে রাখা:</b> উপরের ট্রিগার প্রতিটি insert-এর পরে ওই বিভাগের মোট ছাত্র এক বাড়ায়। <b>২. অডিট:</b> <code>salary</code> বদলালে পুরনো ও নতুন মান <code>Salary_Log</code>-এ কপি হয়। <b>৩. যাচাই:</b> insert-এর আগে অতীতের তারিখের বুকিং ঠেকানো — তবে এখানে <code>CHECK</code> ভালো।</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">বিষয়</th><th class="l">E-R মডেল (কনসেপচুয়াল)</th><th class="l">রিলেশনাল মডেল</th></tr>
+    <tr><td class="l">ধাপ</td><td class="l"><span class="hl">ডিজাইন</span> — টেবিল বানানোর আগে</td><td class="l"><span class="hl">বাস্তবায়ন</span> — টেবিলগুলোই</td></tr>
+    <tr><td class="l">ডেটা হিসেবে</td><td class="l">এন্টিটি, অ্যাট্রিবিউট, সম্পর্ক</td><td class="l">রিলেশন, টিপল, অ্যাট্রিবিউট</td></tr>
+    <tr><td class="l">অ্যাবস্ট্রাকশন</td><td class="l">উচ্চ — যৌক্তিক, বাস্তবায়ন-মুক্ত</td><td class="l">নিম্ন — স্টোরেজের কাছাকাছি</td></tr>
+    <tr><td class="l">ব্যবহারকারী</td><td class="l">ডিজাইনার ও বিশ্লেষক</td><td class="l">প্রোগ্রামার ও DBA</td></tr>
+    <tr><td class="l">কোন স্তরে</td><td class="l">ত্রি-স্তরের <b>কনসেপচুয়াল</b> স্তর</td><td class="l">বাস্তবায়নের <b>এক্সটার্নাল ও ইন্টার্নাল</b> স্তর</td></tr>
+  </table>
+  <div class="tipbox tiny"><span class="lbl">অধ্যায়ের বাকি অংশ কোথায়</span> <b>রিলেশনাল অ্যালজেব্রা ও SQL</b> (সিলেকশন σ, প্রজেকশন π, জয়ন; SELECT, WHERE, GROUP BY, HAVING) → কোয়েরি ভাষার লেসন। <b>ফাংশনাল ডিপেন্ডেন্সি, ১NF–BCNF, নরমালাইজেশন</b> → নরমালাইজেশন লেসন। <b>ফাইল সংগঠন, ইনডেক্স, B+ ট্রি, হ্যাশ টেবিল</b> → ইনডেক্স লেসন। <b>ACID, ট্রানজ্যাকশন, কনকারেন্সি, রিকভারি</b> → ট্রানজ্যাকশন লেসন।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">রাতের পরীক্ষার পাতা</span></h1>
+  <div class="sumbox tiny"><span class="lbl">তথ্যপাতা</span>
+    <div class="fgrid small">
+      <p>ডেটাবেস সিস্টেম = DB + DBMS + অ্যাপ + ব্যবহারকারী</p><p>DB = ডেটা; DBMS = পরিচালনার সফটওয়্যার</p>
+      <p>স্কিমা = ব্লুপ্রিন্ট; ইনস্ট্যান্স = এখনকার ডেটা</p><p>এক্সটার্নাল → কনসেপচুয়াল → ইন্টার্নাল</p>
+      <p>এক্সটার্নাল = ভিউ · ইন্টার্নাল = ফিজিক্যাল</p><p>ইন্ডিপেন্ডেন্স: লজিক্যাল ও ফিজিক্যাল — দুটি</p>
+      <p>চেন: এন্টিটি = আয়তক্ষেত্র</p><p>অ্যাট্রিবিউট = ডিম্ব · কী = আন্ডারলাইন</p>
+      <p>সম্পর্ক = হীরক · আইডেন্টিফাইং = ডাবল হীরক</p><p>ওয়াক এন্টিটি = <b>ডাবল রেক্টাঙ্গল</b> · ডেরাইভড = ডটেড</p>
+      <p>১:১ ও ১:N-এ আলাদা টেবিল নেই</p><p>M:N-এ সবসময় নিজস্ব জাংশন রিলেশন লাগে</p>
+      <p>ডিগ্রি = কলাম সংখ্যা · কার্ডিনালিটি = সারি সংখ্যা</p><p>রিলেশন = টিপলের সেট; নকল নেই, ক্রম নেই</p>
+      <p>সুপারকী ⊇ ক্যান্ডিডেট কী ⊇ প্রাইমারি কী</p><p>প্রতি টেবিলে একটিই প্রাইমারি কী; NULL নয়</p>
+      <p>ফরেন কী → রেফারেনশিয়াল ইন্টেগ্রিটি</p><p>প্রাইমারি কী → এনটিটি ইন্টেগ্রিটি</p>
+      <p>ট্রিগার = ঘটনায় স্বয়ংক্রিয় যৌক্তিকতা</p><p>১:N-এ চাইলে জাংশন টেবিলও লাগে</p>
+      <p>DROP কাঠামো মোছে; DELETE/TRUNCATE মোছে না</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য সেরা ১২টি এক-লাইনের কথা</h3>
+  <div class="cols small" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.6mm">
+    <ol class="num">
+      <li>ডেটাবেস সিস্টেম ≠ ডেটাবেস ≠ DBMS</li>
+      <li>স্কিমা = ব্লুপ্রিন্ট, ইনস্ট্যান্স = এখনকার ডেটা</li>
+      <li>ANSI/SPARC: এক্সটার্নাল, কনসেপচুয়াল, ইন্টার্নাল</li>
+      <li>ইন্ডিপেন্ডেন্সের ধরন ঠিক <b>দুটি</b></li>
+      <li>ইনডেক্স যোগ = <b>ফিজিক্যাল</b> ইন্ডিপেন্ডেন্স</li>
+      <li>চেনে এন্টিটি আয়তক্ষেত্র, কী আন্ডারলাইন ডিম্ব</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>ওয়াক এন্টিটি সেট = <b>ডাবল রেক্টাঙ্গল</b></li>
+      <li>১:N-এ FK থাকে <b>N পাশে</b></li>
+      <li>শুধু M:N-ই জাংশন টেবিল বাধ্য করে</li>
+      <li>ডিগ্রি = কলাম, কার্ডিনালিটি = সারি</li>
+      <li>FK বাধ্যতামূলক করে <b>রেফারেনশিয়াল</b> ইন্টেগ্রিটি</li>
+      <li><b>DROP</b> কাঠামো মোছে; TRUNCATE মোছে না</li>
+    </ol>
+  </div>
+  <div class="cols3" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 150px;align-items:start">
+    <div class="exam small" style="margin-top:0"><span class="lbl">সবচেয়ে বড় ফাঁদগুলো</span> ওয়াক এন্টিটি হীরক বা ডিম্ব নয় · একটি প্রাইমারি কী, অনেক ক্যান্ডিডেট কী · প্রাইমারি কী কম্পোজিট হতে পারে · FK কলামে NULL থাকতে পারে · ইন্ডিপেন্ডেন্স দুই ধরনের · ডিগ্রি ও কার্ডিনালিটি অদল-বদল · DROP বনাম DELETE বনাম TRUNCATE।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">সব কৌশল একসাথে</span> আয়তক্ষেত্র এন্টিটি, ডিম্ব অ্যাট্রিবিউট, হীরক সম্পর্ক, আন্ডারলাইন কী · ডাবল রেক্টাঙ্গল ওয়াক, ডটেড এলিপস ডেরাইভড · এক বিভাগ, অনেক ছাত্র ⇒ অনেক পাশে FK · M:N-এ নিজস্ব টেবিল · সুপারকী ⊇ ক্যান্ডিডেট ⊇ প্রাইমারি · এ-নটিটি = PK-তে NULL নেই, রে-ফারেনশিয়াল = FK মিলতে হবে।</div>
+    <figure class="doodle"><svg viewBox="0 0 290 122" width="156">
+      <g class="w">
+        <rect x="14" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="14" y="46" width="122" height="26" rx="8" class="ink-g fill-g"/>
+        <rect x="14" y="82" width="122" height="26" rx="8" class="ink-r fill-r"/>
+        <rect x="154" y="10" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="46" width="122" height="26" rx="8" class="ink fill-b"/>
+        <rect x="154" y="82" width="122" height="26" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M138,23 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,59 H150" marker-end="url(#ahb)"/>
+        <path class="ink" d="M138,95 H150" marker-end="url(#ahb)"/>
+      </g>
+      <text x="75" y="28" text-anchor="middle" class="bn s" style="font-size:17px">এক্সটার্নাল</text>
+      <text x="75" y="64" text-anchor="middle" class="bn g s" style="font-size:17px">কনসেপচুয়াল</text>
+      <text x="75" y="100" text-anchor="middle" class="bn r s" style="font-size:17px">ইন্টার্নাল</text>
+      <text style="font-size:17px" x="215" y="28" text-anchor="middle" class="bn s">ভিউ</text>
+      <text style="font-size:17px" x="215" y="64" text-anchor="middle" class="bn s">টেবিল</text>
+      <text x="215" y="100" text-anchor="middle" class="bn k s" style="font-size:17px">ফাইল</text>
+    </svg><figcaption>তিন স্তর, এক অর্থ</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">সমাধানকৃত উদাহরণ ✍ এক ডিজাইন, তিনটি রিলেশন</span> "বিভাগ ১:N ছাত্র, ছাত্র M:N কোর্স।" → <code>Student</code>-এ <b>dept_id</b> FK (N পাশে); আলাদা <code>Enrolls(student_id, course_code)</code> তৈরি হয়, কারণ M:N-এ একটি FK চলে না। "কয়টি রিলেশন?" → <span class="circ">৩</span>।</div>
+  <div class="pg-no">১১</div>
+</section>
+
+<!-- ============ SHEET 12: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>DBMS · ধারণা ও ডেটা মডেল</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলনী MCQ (পরীক্ষার ধরনে, ১০ নম্বর)</h2><span class="tag g">আগে চেষ্টা করো, তারপর দেখো</span>
+  <div class="mcq-set">
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">১.</span>ডেটাবেস সিস্টেমের অংশ:<ol class="opts"><li>শুধু DBMS</li><li>শুধু ডেটাবেস</li><li>DB + DBMS + অ্যাপ + ব্যবহারকারী</li><li>শুধু ডেটা ফাইল</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">২.</span>স্কিমা ও ইনস্ট্যান্স:<ol class="opts"><li>স্কিমা = কাঠামো</li><li>স্কিমা = এখনকার ডেটা</li><li>দুটোই ফাইলে</li><li>ইনস্ট্যান্স = ব্লুপ্রিন্ট</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৩.</span>কোড না বদলে B+ ট্রি ইনডেক্স যোগ করা:<ol class="opts"><li>লজিক্যাল ইন্ডিপেন্ডেন্স</li><li>ফিজিক্যাল ইন্ডিপেন্ডেন্স</li><li>এক্সটার্নাল স্তর</li><li>স্কিমা পরিবর্তন</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৪.</span>চেনের নোটেশনে ওয়াক এন্টিটি সেট আঁকা হয়:<ol class="opts"><li>হীরক</li><li>ডিম্বাকৃতি</li><li>ডটেড ডিম্ব</li><li>ডাবল রেক্টাঙ্গল</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৫.</span>বিভাগ ১:N কর্মচারী কীভাবে ম্যাপ হয়:<ol class="opts"><li>বিভাগের PK কর্মচারীতে FK</li><li>কর্মচারীর PK বিভাগে FK</li><li>দুটো এক টেবিলে</li><li>তৃতীয় টেবিল</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৬.</span>ছাত্র ↔ কোর্স M:N-এ নিজস্ব রিলেশন লাগে কারণ:<ol class="opts"><li>অনেক অ্যাট্রিবিউট</li><li>একটি FK যথেষ্ট নয়</li><li>লিঙ্ক দুই টেবিলে থাকে না</li><li>দুটি ইনডেক্স লাগে</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৭.</span>ফরেন কী মূলত বাধ্যতামূলক করে:<ol class="opts"><li>এনটিটি ইন্টেগ্রিটি</li><li>ডেটা এনক্রিপশন</li><li>রেফারেনশিয়াল ইন্টেগ্রিটি</li><li>দ্রুত সাজানো</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৮.</span>কোনটি কম্পোজিট কী?<ol class="opts"><li>id</li><li>(StudentID, CourseID)</li><li>name</li><li>পুরো সারি</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">৯.</span>ট্রিগার প্রসিডিউর থেকে আলাদা কারণ:<ol class="opts"><li>Java লাগে</li><li>ডেটা বদলাতে পারে না</li><li>অ্যাপ ডাকে</li><li>DBMS-ই চালায়</li></ol></div>
+    <div class="mcq" style="line-height:4.6mm;font-size:11.5pt"><span class="qn">১০.</span>কোন কমান্ড কাঠামো ও ডেটা দুটোই মোছে?<ol class="opts"><li>DELETE</li><li>TRUNCATE</li><li>ALTER</li><li>DROP</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-গ · ২-ক · ৩-খ · ৪-ঘ · ৫-ক · ৬-খ · ৭-গ · ৮-খ · ৯-ঘ · ১০-ঘ</div>
+  <div class="wq small"><span class="lbl">লিখিত প্রশ্ন</span> ডেটাবেস সিস্টেমের সংজ্ঞা দাও এবং স্কিমা ও ইনস্ট্যান্সের পার্থক্য বলো। ত্রি-স্তরের আর্কিটেকচার ও দুটি ধরনের ডেটা ইন্ডিপেন্ডেন্স ব্যাখ্যা করো। চেনের E-R নোটেশনসহ ওয়াক এন্টিটি সেটসহ চিত্র আঁকো এবং ১:১, ১:N ও M:N কীভাবে রিলেশনে ম্যাপ হয় দেখাও। সবশেষে বলো কনস্ট্রেইন্ট ও ট্রিগার কী কাজে লাগে। <i class="mk">১০ নম্বর</i></div>
+  <ol class="steps small" style="margin-top:1mm;line-height:5.6mm">
+    <li><b>সংজ্ঞা (১)</b> — ডেটাবেস = ডেটা; DBMS = পরিচালনার সফটওয়্যার; ডেটাবেস সিস্টেম = ডেটাবেস + DBMS + অ্যাপ্লিকেশন + ব্যবহারকারী + হার্ডওয়্যার। <b>স্কিমা</b> = ব্লুপ্রিন্ট, ডেটা ডিকশনারিতে থাকে; <b>ইনস্ট্যান্স</b> = এই মুহূর্তের সারি। <i class="mk">১</i></li>
+    <li><b>তিন স্তর (২)</b> — <b>এক্সটার্নাল</b> (ব্যবহারকারীর ভিউ, প্রতি অ্যাপে একটি), <b>কনসেপচুয়াল</b> (সব ডেটার যৌক্তিক কাঠামো: টেবিল, রিলেশন, কনস্ট্রেইন্ট), <b>ইন্টার্নাল</b> (ফিজিক্যাল স্টোরেজ: ফাইল, পেজ, ব্লক, ইনডেক্স)। মান: ANSI/SPARC। <i class="mk">২</i></li>
+    <li><b>ডেটা ইন্ডিপেন্ডেন্স (২)</b> — <b>লজিক্যাল</b>: কনসেপচুয়াল স্কিমা বদলাও, এক্সটার্নাল ভিউ ও প্রোগ্রাম অপরিবর্তিত। <b>ফিজিক্যাল</b>: ইন্টার্নাল স্কিমা (ইনডেক্স, পেজ বিন্যাস) বদলাও, কনসেপচুয়াল স্কিমা ও প্রোগ্রাম অপরিবর্তিত। <i class="mk">২</i></li>
+    <li><b>E-R নোটেশন (২)</b> — এন্টিটি = আয়তক্ষেত্র (ওয়াক = <b>ডাবল রেক্টাঙ্গল</b>), অ্যাট্রিবিউট = ডিম্ব (কী <b>আন্ডারলাইন</b>, ডেরাইভড <b>ডটেড</b>), সম্পর্ক = <b>হীরক</b> (আইডেন্টিফাইং = ডাবল হীরক), কার্ডিনালিটি ১/N/M। <i class="mk">২</i></li>
+    <li><b>ম্যাপিং (২)</b> — <b>১:১</b> ও <b>১:N</b>: নতুন রিলেশন নয়; "এক" পাশের প্রাইমারি কী অন্য / "অনেক" পাশে ফরেন কী। <b>M:N</b>: একটি FK চলে না, তাই জাংশন রিলেশন। <i class="mk">২</i></li>
+    <li><b>কনস্ট্রেইন্ট ও ট্রিগার (১)</b> — ঘোষিত নিয়ম (NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, DEFAULT) <b>এনটিটি ইন্টেগ্রিটি</b> (PK কখনো NULL নয়) ও <b>রেফারেনশিয়াল ইন্টেগ্রিটি</b> (FK মিলতে হবে) রক্ষা করে; ট্রিগার হলো ঘটনায় স্বয়ংক্রিয়ভাবে চলা সংরক্ষিত যৌক্তিকতা। <i class="mk">১</i></li>
+  </ol>
+  <h3 style="line-height:6mm">পরীক্ষার আগে ✓</h3>
+  <div class="cols tiny" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);line-height:5.4mm">
+    <ul class="tick">
+      <li>ডেটাবেস, DBMS, সিস্টেম আলাদা করতে পারি</li>
+      <li>তিন স্তর ক্রমে বলতে পারি</li>
+      <li>ইন্ডিপেন্ডেন্সের দুই ধরনের নাম বলতে পারি</li>
+    </ul>
+    <ul class="tick">
+      <li>চেনের সব প্রতীক মুখস্থে আঁকতে পারি</li>
+      <li>M:N-এ টেবিল লাগার কারণ বলতে পারি</li>
+      <li>ছয় কনস্ট্রেইন্ট, DROP বনাম TRUNCATE বলতে পারি</li>
+    </ul>
+  </div>
+  <div class="pg-no">১২</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>
