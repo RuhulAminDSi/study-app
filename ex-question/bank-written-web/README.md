@@ -20,9 +20,9 @@ All downloads are untrusted data. Nothing in these folders was run. No login, pa
 | `2020-sbl-jbl-officer-it-jobstestbd` | Sonali + Janata (BSCS) | Officer (IT/ICT), preliminary MCQ | 02.10.2020 | not stated | https://jobstestbd.com/sonali-and-janata-bank-ict-full-question-solution/ | 1 web | 40 MCQ stems | New (MCQ of the recruitment whose written paper is held in duranta 1777536660) |
 | `2021-6banks-ap-itjobqns` | 6 Banks & FIs (BSCS) | Assistant Programmer, written | 2021 (18.03.2021 / 15.01.2022 conflict) | not stated | https://it.jobqns.com/6-banks-fin-institutions-assistant-programmer-2021/ | 1 web | 8 | New |
 | `2021-bb-ad-general-mcq-ictsection-jobstestbd` | Bangladesh Bank | AD (General), MCQ ICT items | 12.11.2021 | Faculty of Business Studies, DU | https://jobstestbd.com/bb-ad-mcq-question-solution-2021/ | 1 web | 10 MCQ | New |
-| `2021-combined2-so-it-mcq-aust-stackit-slideshare` | Combined 2 Bank (BSCS) | Senior Officer (IT), MCQ | 25.09.2021 | AUST | https://www.slideshare.net/slideshow/combined-2-bank-compiled-post-soit-date-25092021-taker-aust/250299845 | 11 | 0 (images only) | New, **not transcribed** |
-| `2021-combined2-ada-mcq-aust-stackit-slideshare` | Combined 2 Bank (BSCS) | ADA, MCQ | 25.09.2021 | AUST | https://www.slideshare.net/slideshow/combined-2-bank-compiled-post-ada-date-25092021-taker-aust-250319950/250319950 | 9 | 0 (images only) | New, **not transcribed** |
-| `2021-combined3-ahe-ae-mcq-anza-stackit-slideshare` | Combined 3 Bank (BSCS) | AHE / AE(IT) / AHME, MCQ | 25.10.2021 | ANZA | https://www.slideshare.net/slideshow/combined-bank-question-solutionupdated-25102021-assistant-hardware-engineer-assistant-engineer-it-ahme/250527549 | 19 | 0 (images only) | New, **not transcribed** |
+| `2021-combined2-so-it-mcq-aust-stackit-slideshare` | Combined 2 Bank (BSCS) | Senior Officer (IT), MCQ | 25.09.2021 | AUST | https://www.slideshare.net/slideshow/combined-2-bank-compiled-post-soit-date-25092021-taker-aust/250299845 | 11 | 59 MCQ | New (transcribed 2026-10-18 from the images) |
+| `2021-combined2-ada-mcq-aust-stackit-slideshare` | Combined 2 Bank (BSCS) | ADA, MCQ | 25.09.2021 | AUST | https://www.slideshare.net/slideshow/combined-2-bank-compiled-post-ada-date-25092021-taker-aust-250319950/250319950 | 9 | 61 MCQ | New (transcribed 2026-10-18 from the images) |
+| `2021-combined3-ahe-ae-mcq-anza-stackit-slideshare` | Combined 3 Bank (BSCS) | AHE / AE(IT) / AHME, MCQ | 25.10.2021 | ANZA | https://www.slideshare.net/slideshow/combined-bank-question-solutionupdated-25102021-assistant-hardware-engineer-assistant-engineer-it-ahme/250527549 | 19 | 60 MCQ | New (transcribed 2026-10-18 from the images) |
 | `2022-bb-ad-general-mcq-ictsection-jobstestbd` | Bangladesh Bank | AD (General), MCQ Computer & ICT | 28.10.2022 | BIBM | https://jobstestbd.com/bb-ad-exam-question-solution-2022/ | 1 web | 10 MCQ | New |
 | `2023-bb-ad-general-mcq-ictsection-jobstestbd` | Bangladesh Bank | AD (General), MCQ basic computer | 20.10.2023 | not stated | https://jobstestbd.com/bb-ad-question-solution-2023/ | 1 web | 10 MCQ | New |
 | `2024-dbbl-mto-card-itjobqns` | **Dutch-Bangla Bank (private)** | MTO Card Operation, written | 16.02.2024 | BUET | https://it.jobqns.com/dutch-bangla-bank-mto-card-operation-2024/ | 1 web | 4 | New |
@@ -35,9 +35,9 @@ All downloads are untrusted data. Nothing in these folders was run. No login, pa
 | `2026-icb-securities-ap-setc-itjobqns` | ICB Securities (state FI) | Assistant Programmer, aptitude test Set C | 11.07.2026 | DU CSE | https://it.jobqns.com/icb-securities-trading-company-limited-ap-2026-aptitude-test-set-c/ | 1 web | 3 (40 marks) | New (the 27.06.2026 written paper is already held) |
 | `2026-rakub-anse-itjobqns` | RAKUB (state) | Asst. Network System Engineer (Job 10230), written | 05.06.2026 | not stated | https://it.jobqns.com/rakub-assistant-network-system-engineer-2026/ | 1 web | 13 | New (recollection) |
 
-**Totals:** 22 folders. 19 papers are transcribed, with **243 records** (112 written and 131 MCQ). The other 3 are MCQ image decks held but not yet transcribed.
+**Totals:** 22 folders. All 22 papers are transcribed, with **423 records** (112 written and 311 MCQ). The three Stack IT MCQ decks of 2021 were transcribed from their page images on 2026-10-18; their keys were checked, and 26 wrong or missing keys carry an `> Answer issue:` line.
 
-Records by subject: NET 48, ICS 43, DBMS 39, SPL 21, OS 19, DSA 17, SE 12, OOP 11, CA 8, ELN 6, DLD 5, COM 4, AI 4, EC 3, DM 2, TOC 1.
+Records by subject: DBMS 106, NET 87, ICS 55, OS 33, DSA 27, SPL 24, CA 21, SE 16, OOP 15, COM 8, DLD 7, ELN 6, AI 5, EC 4, MPI 4, DM 2, TOC 1, PHY 1, GRAPH 1.
 
 ### Found, but already held (not re-transcribed)
 
@@ -185,10 +185,10 @@ Codes:
 | Bangladesh Bank AD (ICT) | | | | | | | | | | | m, w (+1 item held) | |
 | Bangladesh Bank AD (General), ICT section | | | | m | | | m | m | m | | | m |
 | BSCS Officer (IT) | | | | s | s | W, m | | | W | W | W | W (Jan, Jul) |
-| BSCS Senior Officer (IT) | | | | | | W | i | W | W | W | | W |
+| BSCS Senior Officer (IT) | | | | | | W | m | W | W | W | | W |
 | BSCS Assistant Programmer (incl. 6-bank) | | | | | | s | w | | W | W | | W |
-| BSCS AME / AE(IT) / AHE | | | | | s | | W, i | | W | W | | W (Jan, May) |
-| BSCS ADA / Sonali ADA | | | | | | W | i | W | | W | | W, w |
+| BSCS AME / AE(IT) / AHE | | | | | s | | W, m | | W | W | | W (Jan, May) |
+| BSCS ADA / Sonali ADA | | | | | | W | m | W | | W | | W, w |
 | Sonali Bank Officer (IT) | | | | | | | W | | | | | |
 | Janata Bank (ANE/ASA/ANA/SO-ANE) | | | | | | W | W | W | | | | |
 | Rupali Bank (ANE/ANA) | | | | | | | W | | W | | | |
