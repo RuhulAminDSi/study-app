@@ -221,7 +221,7 @@ export const EXTRA = {
   // Added 2026-10-16 for the duranta.app and web collections (Bangla wording, newer topics).
   AI: [
     R(/generative|\bllm|large language|chatbot|gpt|prompt|transformer|hallucinat|\brag\b/i, 'Generative AI & LLMs'),
-    R(/supervised|unsupervised|reinforcement|machine learning|মেশিন লার্নিং|overfit|decision tree|regression|classification|clustering|model.*(validat|reliab)|data mining|federated|deep learning/i, 'Machine learning'),
+    R(/supervised|unsupervised|reinforcement|machine learning|মেশিন লার্নিং|overfit|decision tree|regression|classification|clustering|model.*(validat|reliab)|data mining|federated|deep learning|confusion matrix|precision|recall|f1.score/i, 'Machine learning'),
     R(/neural|\bann\b|\bbnn\b|perceptron|backprop|\brnn\b|\bcnn\b|lstm/i, 'Neural networks'),
     R(/search|heuristic|a\*|a"|minimax|ম্যাক্সিমাম|adversarial|hill climbing|bfs|dfs|depth-first/i, 'Search techniques'),
     R(/agent|এজেন্ট/i, 'Types of intelligent agents'),

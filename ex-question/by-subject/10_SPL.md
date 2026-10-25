@@ -2,7 +2,7 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 432 (from 500 records: Written 429, MCQ 59, Viva 12)
+- **Distinct questions:** 436 (from 504 records: Written 433, MCQ 59, Viva 12)
 - **Exams it appears in:** 162
 - **Corrections to printed answers:** 12
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
@@ -11,20 +11,20 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
-| 1 | [Output tracing](#output-tracing) | 43 | 72 | 0 |
-| 2 | [Programs & programming basics](#programs--programming-basics) | 35 | 74 | 5 |
+| 1 | [Output tracing](#output-tracing) | 43 | 73 | 0 |
+| 2 | [Programs & programming basics](#programs--programming-basics) | 35 | 75 | 5 |
 | 3 | [Recursion & classic programs](#recursion--classic-programs) | 25 | 30 | 0 |
 | 4 | [Control flow & loops](#control-flow--loops) | 24 | 37 | 0 |
 | 5 | [Data types, variables & operators](#data-types-variables--operators) | 22 | 39 | 4 |
 | 6 | [Arrays & matrices](#arrays--matrices) | 21 | 32 | 0 |
-| 7 | [Series & summation programs](#series--summation-programs) | 18 | 30 | 0 |
+| 7 | [Series & summation programs](#series--summation-programs) | 18 | 31 | 0 |
 | 8 | [Pointers & dynamic memory](#pointers--dynamic-memory) | 16 | 21 | 1 |
 | 9 | [Strings](#strings) | 15 | 24 | 0 |
 | 10 | [Other](#other) | 14 | 17 | 0 |
 | 11 | [Compiler, interpreter & linker](#compiler-interpreter--linker) | 12 | 13 | 1 |
 | 12 | [Call by value vs reference](#call-by-value-vs-reference) | 11 | 9 | 0 |
 | 13 | [Structure & union](#structure--union) | 11 | 16 | 1 |
-| 14 | [Functions & library](#functions--library) | 7 | 7 | 0 |
+| 14 | [Functions & library](#functions--library) | 7 | 8 | 0 |
 | 15 | [Input / output functions](#input--output-functions) | 4 | 5 | 0 |
 | 16 | [File handling](#file-handling) | 3 | 4 | 0 |
 | 17 | [Errors & debugging](#errors--debugging) | 1 | 2 | 0 |
@@ -35,7 +35,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 
 1. **Differences between 'Call by Value' and 'Call by Reference'.**  
    Asked in (5): 17th NTRCA ICT (2023); BPSC ADA 2022; BPSC AP 2022; BPSC AP 2023; PSB AP 2018  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming · duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2 — see [G3489](#g3489)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming · duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2 — see [G3537](#g3537)
 2. **What do you mean by recursion? Calculate factorial function using recursion with C programming code.**  
    Asked in (5): 45th BCS ICT (2024); BPSC ANE 2020; BPSC AP 2020; BPSC AP 2022; Milk Vita AM(CSE) 2023  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 · duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2 — see [G1043](#g1043)
@@ -47,7 +47,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 · duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2 — see [G1042](#g1042)
 5. **কম্পাইলার এবং ইন্টারপ্রিটারের মধ্যে পার্থক্য লিখুন।**  
    Asked in (3): 15th NTRCA Computer Operation (2019); 16th NTRCA CSE (2019); SPARRSO TO(IT) 2021  
-   Source: duranta.app question bank (coaching compilation of the question paper) — exam paper — 4. Bangladesh Space Research and Remote Sensing Organization (SPARRSO), Technical Officer-IT, 03-12-2021; exam taker not printed; Written; Time: 1.5 hour; Marks: 70 [বাংলা-১০ নম্বর, ইংরেজি-১০ নম্বর, গণিত-১০ নম্বর, সাধারণ জ্ঞান-৫ নম্বর, টেকনিক্যাল-৩৫ নম্বর]; pp. 6-7 · Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট · Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College) — see [G4212](#g4212)
+   Source: duranta.app question bank (coaching compilation of the question paper) — exam paper — 4. Bangladesh Space Research and Remote Sensing Organization (SPARRSO), Technical Officer-IT, 03-12-2021; exam taker not printed; Written; Time: 1.5 hour; Marks: 70 [বাংলা-১০ নম্বর, ইংরেজি-১০ নম্বর, গণিত-১০ নম্বর, সাধারণ জ্ঞান-৫ নম্বর, টেকনিক্যাল-৩৫ নম্বর]; pp. 6-7 · Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট · Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College) — see [G4260](#g4260)
 6. **Local variable এবং Global variable এর মধ্যে পার্থক্য লিখুন।**  
    Asked in (2): 17th NTRCA CSE (2023); 17th NTRCA ICT (2023)  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming · duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G1031](#g1031)
@@ -65,13 +65,13 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G1087](#g1087)
 11. **উদাহরণসহ recursion ব্যাখ্যা করুন ও Parameter Passing ব্যাখ্যা করুন।**  
    Asked in (2): 15th NTRCA ICT; 17th NTRCA ICT (2023)  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G2007](#g2007)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G2055](#g2055)
 12. **C প্রোগ্রামিং ল্যাংগুয়েজে user defined function এবং library function এর পার্থক্য লিখুন।**  
    Asked in (2): 17th NTRCA; 17th NTRCA ICT (2023)  
-   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued) · duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2104](#g2104)
+   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued) · duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2152](#g2152)
 13. **C প্রোগ্রামিং ল্যাঙ্গুয়েজে Structure এবং Union এর মধ্যে পার্থক্য কী? উদাহরণসহ লিখুন।**  
    Asked in (2): 16th NTRCA; 16th NTRCA ICT  
-   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued) · duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2159](#g2159)
+   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued) · duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2207](#g2207)
 14. **Define problem solving technique. Write the differences between structured programming and object-oriented programming.**  
    Asked in (1): 45th BCS CSE (2024)  
    Source: 45th BCS Written (CSE-971) (2024-01-31) — see [G0007](#g0007)
@@ -205,9 +205,9 @@ Write a program in any language to find the sum of rows and columns of a m x n m
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q37 — [bit to exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md) · [image](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.jpg)
 
-<a id="g1873"></a>
+<a id="g1921"></a>
 
-### Write the output of the following C code segment: unsigned int a = 3, b = 9; printf("a <<… <sub>G1873</sub>
+### Write the output of the following C code segment: unsigned int a = 3, b = 9; printf("a <<… <sub>G1921</sub>
 
 *Written*
 
@@ -217,9 +217,9 @@ Write the output of the following C code segment: unsigned int a = 3, b = 9; pri
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q5 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g2221"></a>
+<a id="g2269"></a>
 
-### Find the output from the following: take input and looks the output: Suppose Input: 6789 … <sub>G2221</sub>
+### Find the output from the following: take input and looks the output: Suppose Input: 6789 … <sub>G2269</sub>
 
 *Written*
 
@@ -229,9 +229,9 @@ Find the output from the following: take input and looks the output: Suppose Inp
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BGDCL Assistant Manager (CSE) 15.03.2024, Q3 — [duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md](../duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md)
 
-<a id="g2263"></a>
+<a id="g2311"></a>
 
-### A C program is given. You have to write the output of the program when the value of a = 8… <sub>G2263</sub>
+### A C program is given. You have to write the output of the program when the value of a = 8… <sub>G2311</sub>
 
 *Written*
 
@@ -241,9 +241,9 @@ A C program is given. You have to write the output of the program when the value
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q1(a) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
 
-<a id="g2942"></a>
+<a id="g2990"></a>
 
-### Find the output of the following snip chat (code below) #include<stdio.h> int main() { in… <sub>G2942</sub>
+### Find the output of the following snip chat (code below) #include<stdio.h> int main() { in… <sub>G2990</sub>
 
 *Written*
 
@@ -253,9 +253,9 @@ Find the output of the following snip chat (code below) #include<stdio.h> int ma
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 8. Dhaka Mass Transit Company Limited (DMTCL), Assistant Engineer (ICT), 27.01.2023; Exam Taker: MIST; Time: 1hour; Mark:100; Dept: 56, Non-Dept-MCQ (44*1=44); pp. 12-13, Q9 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2943"></a>
+<a id="g2991"></a>
 
-### What is the output of this program? [DESCO AE 22] What is the output of this program? int… <sub>G2943</sub>
+### What is the output of this program? [DESCO AE 22] What is the output of this program? int… <sub>G2991</sub>
 
 *Written*
 
@@ -265,9 +265,9 @@ What is the output of this program? [DESCO AE 22] What is the output of this pro
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 9. Dhaka Electric Supply Company Ltd. (DESCO)-2022, Assistant Engineer-IT, 10-09-2022; exam taker not printed; Marks: 100; Time: 2.00 Hours; pp. 13-15 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2947"></a>
+<a id="g2995"></a>
 
-### Write down the output of this program <sub>G2947</sub>
+### Write down the output of this program <sub>G2995</sub>
 
 *Written*
 
@@ -277,9 +277,9 @@ Write down the output of this program
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 9. Dhaka Electric Supply Company Ltd. (DESCO)-2022, Assistant Engineer-IT, 10-09-2022; exam taker not printed; Marks: 100; Time: 2.00 Hours; pp. 13-15 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2958"></a>
+<a id="g3006"></a>
 
-### Find out output of this program for ( int i= 5 ; i>=1;i--){ for( int j=1;j<=i;j++){ print… <sub>G2958</sub>
+### Find out output of this program for ( int i= 5 ; i>=1;i--){ for( int j=1;j<=i;j++){ print… <sub>G3006</sub>
 
 *Written*
 
@@ -289,9 +289,9 @@ Find out output of this program for ( int i= 5 ; i>=1;i--){ for( int j=1;j<=i;j+
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3101"></a>
+<a id="g3149"></a>
 
-### Write C/C++/Java program to reverse digit in a number? Sample input: 220 Sample output: 0… <sub>G3101</sub>
+### Write C/C++/Java program to reverse digit in a number? Sample input: 220 Sample output: 0… <sub>G3149</sub>
 
 *Written*
 
@@ -301,9 +301,9 @@ Write C/C++/Java program to reverse digit in a number? Sample input: 220 Sample 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3196"></a>
+<a id="g3244"></a>
 
-### Given a python code, find its output with complexity. <sub>G3196</sub>
+### Given a python code, find its output with complexity. <sub>G3244</sub>
 
 *Written*
 
@@ -313,9 +313,9 @@ Given a python code, find its output with complexity.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — RAKUB — ANSE (2 post) 2023 — 03.11.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (15×10) — pages 34–35, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3208"></a>
+<a id="g3256"></a>
 
-### Find out output, analyze time and space complexity? int main() { int n; cout<<"Enter valu… <sub>G3208</sub>
+### Find out output, analyze time and space complexity? int main() { int n; cout<<"Enter valu… <sub>G3256</sub>
 
 *Written*
 
@@ -325,9 +325,9 @@ Find out output, analyze time and space complexity? int main() { int n; cout<<"E
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q19 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3222"></a>
+<a id="g3270"></a>
 
-### Find out the output of the following program: #inc1ude<stdio.h> int fun (int i){ if(I<=Ø)… <sub>G3222</sub>
+### Find out the output of the following program: #inc1ude<stdio.h> int fun (int i){ if(I<=Ø)… <sub>G3270</sub>
 
 *Written*
 
@@ -337,9 +337,9 @@ Find out the output of the following program: #inc1ude<stdio.h> int fun (int i){
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3256"></a>
+<a id="g3304"></a>
 
-### Write a program in any language to find the sum of rows and columns of in x it matrix, wh… <sub>G3256</sub>
+### Write a program in any language to find the sum of rows and columns of in x it matrix, wh… <sub>G3304</sub>
 
 *Written*
 
@@ -349,9 +349,9 @@ Write a program in any language to find the sum of rows and columns of in x it m
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q17 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3257"></a>
+<a id="g3305"></a>
 
-### Write a program in any language-to find the prime numbers between 1 to n, where a is take… <sub>G3257</sub>
+### Write a program in any language-to find the prime numbers between 1 to n, where a is take… <sub>G3305</sub>
 
 *Written*
 
@@ -361,9 +361,9 @@ Write a program in any language-to find the prime numbers between 1 to n, where 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q(unnumbered 1) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3414"></a>
+<a id="g3462"></a>
 
-### What is the output of the following code? int main (){ int a=1; printf("%d%d%d", ++a, a, … <sub>G3414</sub>
+### What is the output of the following code? int main (){ int a=1; printf("%d%d%d", ++a, a, … <sub>G3462</sub>
 
 *Written*
 
@@ -373,9 +373,9 @@ What is the output of the following code? int main (){ int a=1; printf("%d%d%d",
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager (ICT) 26.08.2022, 2 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3579"></a>
+<a id="g3627"></a>
 
-### a. Write a program that will output 'EXAM' 100 times. You can use pseudo code or any prog… <sub>G3579</sub>
+### a. Write a program that will output 'EXAM' 100 times. You can use pseudo code or any prog… <sub>G3627</sub>
 
 *Written*
 
@@ -385,9 +385,9 @@ a. Write a program that will output 'EXAM' 100 times. You can use pseudo code or
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16, Q7(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4018"></a>
+<a id="g4066"></a>
 
-### Output: Unsign int i = 10; if(i>-1) cout <<“Yes”; else cout<<“No”; <sub>G4018</sub>
+### Output: Unsign int i = 10; if(i>-1) cout <<“Yes”; else cout<<“No”; <sub>G4066</sub>
 
 *Written*
 
@@ -397,9 +397,9 @@ Output: Unsign int i = 10; if(i>-1) cout <<“Yes”; else cout<<“No”;
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q6 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g4106"></a>
+<a id="g4154"></a>
 
-### What is the output of the following C code? (ক) 2 (খ) 3 (গ) undefined behaviour (ঘ) Compi… <sub>G4106</sub>
+### What is the output of the following C code? (ক) 2 (খ) 3 (গ) undefined behaviour (ঘ) Compi… <sub>G4154</sub>
 
 *MCQ*
 
@@ -409,9 +409,9 @@ What is the output of the following C code? (ক) 2 (খ) 3 (গ) undefined beha
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q168 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4563"></a>
+<a id="g4611"></a>
 
-### Find output- int fun(int *p) { *p = *p + 10; return *p; } int main() { int x = 5; cout <<… <sub>G4563</sub>
+### Find output- int fun(int *p) { *p = *p + 10; return *p; } int main() { int x = 5; cout <<… <sub>G4611</sub>
 
 *MCQ*
 
@@ -421,9 +421,9 @@ Find output- int fun(int *p) { *p = *p + 10; return *p; } int main() { int x = 5
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ1 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4564"></a>
+<a id="g4612"></a>
 
-### Find output int main() { int x = 3, y = 2; if (x == 3) y = 2; else y = 3; cout << x << " … <sub>G4564</sub>
+### Find output int main() { int x = 3, y = 2; if (x == 3) y = 2; else y = 3; cout << x << " … <sub>G4612</sub>
 
 *MCQ*
 
@@ -433,9 +433,9 @@ Find output int main() { int x = 3, y = 2; if (x == 3) y = 2; else y = 3; cout <
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ2 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4871"></a>
+<a id="g4919"></a>
 
-### C programming output problem. (Incomplete Question) <sub>G4871</sub>
+### C programming output problem. (Incomplete Question) <sub>G4919</sub>
 
 *Written*
 
@@ -445,9 +445,9 @@ C programming output problem. (Incomplete Question)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023, Q10 — [telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md](../telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md)
 
-<a id="g4875"></a>
+<a id="g4923"></a>
 
-### Print the output: #include <stdio.h> int main() { int arr[a] = {5,3,2,1,4}; int b[] = {66… <sub>G4875</sub>
+### Print the output: #include <stdio.h> int main() { int arr[a] = {5,3,2,1,4}; int b[] = {66… <sub>G4923</sub>
 
 *Written*
 
@@ -457,9 +457,9 @@ Print the output: #include <stdio.h> int main() { int arr[a] = {5,3,2,1,4}; int 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BSCPLC Assistant Manager (Engineering) 13.12.2024, Q4(b) — [telecom-web/2024-bscplc-am-engineering-scribd-973052916/bscplc-am-engineering-2024.md](../telecom-web/2024-bscplc-am-engineering-scribd-973052916/bscplc-am-engineering-2024.md)
 
-<a id="g5121"></a>
+<a id="g5169"></a>
 
-### Write the output of the following i) Int foo(int x, int y) { if(x==0) Return y Return foo… <sub>G5121</sub>
+### Write the output of the following i) Int foo(int x, int y) { if(x==0) Return y Return foo… <sub>G5169</sub>
 
 *Written*
 
@@ -469,9 +469,9 @@ Write the output of the following i) Int foo(int x, int y) { if(x==0) Return y R
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Programmer, 22/02/2025 (suggestion), W7 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g5176"></a>
+<a id="g5224"></a>
 
-### Output Problem #include <iostream> #include <string> #include <cctype> using namespace st… <sub>G5176</sub>
+### Output Problem #include <iostream> #include <string> #include <cctype> using namespace st… <sub>G5224</sub>
 
 *Written*
 
@@ -554,9 +554,9 @@ After compilation and execution, what will be output in the following code: *(co
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q28 — [bit to exabyte/19_bte-g2-p05-c-programming-q26-28.md](../bit%20to%20exabyte/19_bte-g2-p05-c-programming-q26-28.md) · [image](../bit%20to%20exabyte/19_bte-g2-p05-c-programming-q26-28.jpg)
 
-<a id="g2614"></a>
+<a id="g2662"></a>
 
-### What is the output? #include <stdio.h> int main() { printf("%c", 100); return 0; } a. 100… <sub>G2614</sub>
+### What is the output? #include <stdio.h> int main() { printf("%c", 100); return 0; } a. 100… <sub>G2662</sub>
 
 *MCQ*
 
@@ -566,9 +566,9 @@ What is the output? #include <stdio.h> int main() { printf("%c", 100); return 0;
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Programming / C++ / OOP Q12 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3010"></a>
+<a id="g3058"></a>
 
-### Find the sum of the digits of a number until the sum is reduced to a single digit. Sample… <sub>G3010</sub>
+### Find the sum of the digits of a number until the sum is reduced to a single digit. Sample… <sub>G3058</sub>
 
 *Written*
 
@@ -578,9 +578,9 @@ Find the sum of the digits of a number until the sum is reduced to a single digi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — BSCS Combined 3 Bank (Sonali, Janata, Rakub) — Post: SO (Written) — 16-11-2020 — Exam taker: not printed — marks not printed — pages 6–8, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3017"></a>
+<a id="g3065"></a>
 
-### Find the Output of the below program-- (i) Integer a = new Integer(33); Integer b = new I… <sub>G3017</sub>
+### Find the Output of the below program-- (i) Integer a = new Integer(33); Integer b = new I… <sub>G3065</sub>
 
 *Written*
 
@@ -590,9 +590,9 @@ Find the Output of the below program-- (i) Integer a = new Integer(33); Integer 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Assistant Database Administrator (ADA) – SBL — 14.12.2020 — Exam taker: not printed — 10*16 marks + 2*20 marks = 200 — pages 8–9, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3056"></a>
+<a id="g3104"></a>
 
-### Find the output of the following program. <sub>G3056</sub>
+### Find the output of the following program. <sub>G3104</sub>
 
 *Written*
 
@@ -602,9 +602,9 @@ Find the output of the following program.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3803"></a>
+<a id="g3851"></a>
 
-### String compare code in C given, write the output. <sub>G3803</sub>
+### String compare code in C given, write the output. <sub>G3851</sub>
 
 *Written*
 
@@ -614,9 +614,9 @@ String compare code in C given, write the output.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q5 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3804"></a>
+<a id="g3852"></a>
 
-### Code snippet in C given, will it compile? If it compiles, what will be output? <sub>G3804</sub>
+### Code snippet in C given, will it compile? If it compiles, what will be output? <sub>G3852</sub>
 
 *Written*
 
@@ -626,9 +626,9 @@ Code snippet in C given, will it compile? If it compiles, what will be output?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q6 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3841"></a>
+<a id="g3889"></a>
 
-### Given a C code using pointers. Explain if there is any problem with this code. If not the… <sub>G3841</sub>
+### Given a C code using pointers. Explain if there is any problem with this code. If not the… <sub>G3889</sub>
 
 *Written*
 
@@ -638,9 +638,9 @@ Given a C code using pointers. Explain if there is any problem with this code. I
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q16 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g3865"></a>
+<a id="g3913"></a>
 
-### Considering the following definition of the function, named “bitwise”, what will be retur… <sub>G3865</sub>
+### Considering the following definition of the function, named “bitwise”, what will be retur… <sub>G3913</sub>
 
 *MCQ*
 
@@ -650,9 +650,9 @@ Considering the following definition of the function, named “bitwise”, what 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q13 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3873"></a>
+<a id="g3921"></a>
 
-### What will be the output of the following code snippet? int calc(int x) { if (x >= 50) x =… <sub>G3873</sub>
+### What will be the output of the following code snippet? int calc(int x) { if (x >= 50) x =… <sub>G3921</sub>
 
 *MCQ*
 
@@ -662,9 +662,9 @@ What will be the output of the following code snippet? int calc(int x) { if (x >
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q21 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3955"></a>
+<a id="g4003"></a>
 
-### What is the output of the following code segment: string cars[4] = {"Volvo", "BMW", "Ford… <sub>G3955</sub>
+### What is the output of the following code segment: string cars[4] = {"Volvo", "BMW", "Ford… <sub>G4003</sub>
 
 *MCQ*
 
@@ -674,9 +674,9 @@ What is the output of the following code segment: string cars[4] = {"Volvo", "BM
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q3 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3967"></a>
+<a id="g4015"></a>
 
-### What will be the output of the following C code? #include<stdio.h> int main() { register … <sub>G3967</sub>
+### What will be the output of the following C code? #include<stdio.h> int main() { register … <sub>G4015</sub>
 
 *MCQ*
 
@@ -686,9 +686,9 @@ What will be the output of the following C code? #include<stdio.h> int main() { 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q15 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3976"></a>
+<a id="g4024"></a>
 
-### What will be the output of the following C code? #include<stdio.h> int mul(int a, int b, … <sub>G3976</sub>
+### What will be the output of the following C code? #include<stdio.h> int mul(int a, int b, … <sub>G4024</sub>
 
 *MCQ*
 
@@ -699,9 +699,9 @@ What will be the output of the following C code? #include<stdio.h> int mul(int a
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q24 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 - **Correction:** assigning `mul` (three parameters) to a two-parameter function pointer is an incompatible-pointer assignment, and calling it is undefined behaviour; the printed number is one run's garbage. The defensible choice is (b) The code is incorrect.
 
-<a id="g3980"></a>
+<a id="g4028"></a>
 
-### What will be the output of the following C code? #include<stdio.h> int main() { int x; in… <sub>G3980</sub>
+### What will be the output of the following C code? #include<stdio.h> int main() { int x; in… <sub>G4028</sub>
 
 *MCQ*
 
@@ -711,9 +711,9 @@ What will be the output of the following C code? #include<stdio.h> int main() { 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q28 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3981"></a>
+<a id="g4029"></a>
 
-### What will be the output of the following pseudocode? Integer a, b Set a = 15, b = 7 a = a… <sub>G3981</sub>
+### What will be the output of the following pseudocode? Integer a, b Set a = 15, b = 7 a = a… <sub>G4029</sub>
 
 *MCQ*
 
@@ -723,9 +723,9 @@ What will be the output of the following pseudocode? Integer a, b Set a = 15, b 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q29 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g4000"></a>
+<a id="g4048"></a>
 
-### What will be the output of the following C code? #include<stdio.h> void main() { int k = … <sub>G4000</sub>
+### What will be the output of the following C code? #include<stdio.h> void main() { int k = … <sub>G4048</sub>
 
 *MCQ*
 
@@ -735,9 +735,9 @@ What will be the output of the following C code? #include<stdio.h> void main() {
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q48 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g4485"></a>
+<a id="g4533"></a>
 
-### Which is the correct output? int i=4; printf("%d %d", ++i, i++); printf("%d", i++); (a) 4… <sub>G4485</sub>
+### Which is the correct output? int i=4; printf("%d %d", ++i, i++); printf("%d", i++); (a) 4… <sub>G4533</sub>
 
 *MCQ*
 
@@ -747,9 +747,9 @@ Which is the correct output? int i=4; printf("%d %d", ++i, i++); printf("%d", i+
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ17 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4494"></a>
+<a id="g4542"></a>
 
-### Which is the correct output? int a=100; int *p=&a+2; *p=22; printf("%d", a); (a) 100 (b) … <sub>G4494</sub>
+### Which is the correct output? int a=100; int *p=&a+2; *p=22; printf("%d", a); (a) 100 (b) … <sub>G4542</sub>
 
 *MCQ*
 
@@ -759,9 +759,9 @@ Which is the correct output? int a=100; int *p=&a+2; *p=22; printf("%d", a); (a)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ26 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4498"></a>
+<a id="g4546"></a>
 
-### Find the correct output: int a=10, b=20; a^=b; b^=a; a^=b; printf("%d %d", a, b); (a) 20 … <sub>G4498</sub>
+### Find the correct output: int a=10, b=20; a^=b; b^=a; a^=b; printf("%d %d", a, b); (a) 20 … <sub>G4546</sub>
 
 *MCQ*
 
@@ -771,9 +771,9 @@ Find the correct output: int a=10, b=20; a^=b; b^=a; a^=b; printf("%d %d", a, b)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ30 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4687"></a>
+<a id="g4735"></a>
 
-### After compilation and execution, what will be output in the following code: int main() { … <sub>G4687</sub>
+### After compilation and execution, what will be output in the following code: int main() { … <sub>G4735</sub>
 
 *Written*
 
@@ -783,9 +783,9 @@ After compilation and execution, what will be output in the following code: int 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DPDC 2020 (items tagged "[DPDC 2020]"), Programming item 10 — [power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md](../power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md)
 
-<a id="g4805"></a>
+<a id="g4853"></a>
 
-### Write a function sumdigits to find output like below Input: 123 Output: 6 #include <stdio… <sub>G4805</sub>
+### Write a function sumdigits to find output like below Input: 123 Output: 6 #include <stdio… <sub>G4853</sub>
 
 *Written*
 
@@ -821,9 +821,9 @@ int a=0, b=1, c=2; *((a) ? &b : &a) = a ? b : c; printf a, b, c.
   - BCC Assistant Programmer Written Test (2017), Q5 — [BUET JOB/08_ccc-ap-2017-c-and-sql.md](../BUET%20JOB/08_ccc-ap-2017-c-and-sql.md) · [image](../BUET%20JOB/08_ccc-ap-2017-c-and-sql.jpg)
 - **Correction:** Printed output is on a page not in the set. Correct: 2, 1, 2.
 
-<a id="g2770"></a>
+<a id="g2818"></a>
 
-### Consider the following code snippet in a C like Programming language – int a = 5, b = 18,… <sub>G2770</sub>
+### Consider the following code snippet in a C like Programming language – int a = 5, b = 18,… <sub>G2818</sub>
 
 *Written*
 
@@ -833,9 +833,9 @@ Consider the following code snippet in a C like Programming language – int a =
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 1 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4658"></a>
+<a id="g4706"></a>
 
-### Write the output of the following program #define MAX(A,B) ((A)>(B)) ? A:B void main(){ i… <sub>G4658</sub>
+### Write the output of the following program #define MAX(A,B) ((A)>(B)) ? A:B void main(){ i… <sub>G4706</sub>
 
 *Written*
 
@@ -846,9 +846,9 @@ Write the output of the following program #define MAX(A,B) ((A)>(B)) ? A:B void 
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q3 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 - **Correction:** as recalled it does not compile (`max` is not the macro `MAX`). With `MAX`, the expansion is `((++i)>(++j)) ? ++i:++j`: i becomes 2, j becomes 3, the test is false, and `++j` makes it 4, so it prints **4**, not 3.
 
-<a id="g4660"></a>
+<a id="g4708"></a>
 
-### Write the output of the following program int sum(int val){ static int myResult=0; myResu… <sub>G4660</sub>
+### Write the output of the following program int sum(int val){ static int myResult=0; myResu… <sub>G4708</sub>
 
 *Written*
 
@@ -858,9 +858,9 @@ Write the output of the following program int sum(int val){ static int myResult=
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q5 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g4667"></a>
+<a id="g4715"></a>
 
-### Program analyzing and writing output <sub>G4667</sub>
+### Program analyzing and writing output <sub>G4715</sub>
 
 *Written*
 
@@ -870,9 +870,9 @@ Program analyzing and writing output
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q10 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g4711"></a>
+<a id="g4759"></a>
 
-### Suppose an array is {4,5,6,7}. Write a C program that will output -{4,5},{4,6},{4,7},{5,6… <sub>G4711</sub>
+### Suppose an array is {4,5,6,7}. Write a C program that will output -{4,5},{4,6},{4,7},{5,6… <sub>G4759</sub>
 
 *Written*
 
@@ -882,9 +882,9 @@ Suppose an array is {4,5,6,7}. Write a C program that will output -{4,5},{4,6},{
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NWPGCL Assistant Engineer (CSE) (year not printed), Q1 — [power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md](../power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md)
 
-<a id="g4714"></a>
+<a id="g4762"></a>
 
-### Find output- [code not on the page] <sub>G4714</sub>
+### Find output- [code not on the page] <sub>G4762</sub>
 
 *Written*
 
@@ -894,9 +894,9 @@ Find output- [code not on the page]
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NWPGCL Assistant Engineer (CSE) (year not printed), Q4 — [power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md](../power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md)
 
-<a id="g4812"></a>
+<a id="g4860"></a>
 
-### Find the output of the following program #include<stdio.h> #define N 7 int main() { Char … <sub>G4812</sub>
+### Find the output of the following program #include<stdio.h> #define N 7 int main() { Char … <sub>G4860</sub>
 
 *Written*
 
@@ -943,9 +943,21 @@ What would happen to X in this expression: x+=15; (assuming the value of X is 5)
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q30 — [bit to exabyte/20_bte-g2-p06-c-programming-q29-33.md](../bit%20to%20exabyte/20_bte-g2-p06-c-programming-q29-33.md) · [image](../bit%20to%20exabyte/20_bte-g2-p06-c-programming-q29-33.jpg)
 
-<a id="g2001"></a>
+<a id="g1840"></a>
 
-### output of the following code. #include<stdio.h> int main() { int a =3 , b= 10 ; if(a>b) p… <sub>G2001</sub>
+### Type casting; output-tracing problems <sub>G1840</sub>
+
+*Written*
+
+Type casting; output-tracing problems
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q95 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g2049"></a>
+
+### output of the following code. #include<stdio.h> int main() { int a =3 , b= 10 ; if(a>b) p… <sub>G2049</sub>
 
 *Written*
 
@@ -958,9 +970,9 @@ output of the following code. #include<stdio.h> int main() { int a =3 , b= 10 ; 
   - duranta.app question bank (coaching compilation of the question paper) — Dutch Bangla Bank — Assistant Network/Hardware Engineer — 05/03/19 — Exam Taker: BUET — Time 1:30 Hours — Marks distribution: 20 (non_dept) + 65 (dept.) = 85 — pages 1–2, Q7 — [duranta/1707373769-dbbl-2019-written/1707373769.md](../duranta/1707373769-dbbl-2019-written/1707373769.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -05 (suggestion), Set-05 Q7 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 
-<a id="g2602"></a>
+<a id="g2650"></a>
 
-### Output of the following code : #include<stdio.h> int main() { int i = 0 ; int n = 0; whil… <sub>G2602</sub>
+### Output of the following code : #include<stdio.h> int main() { int i = 0 ; int n = 0; whil… <sub>G2650</sub>
 
 *Written*
 
@@ -973,9 +985,9 @@ Output of the following code : #include<stdio.h> int main() { int i = 0 ; int n 
   - duranta.app question bank (coaching compilation of the question paper) — Dutch Bangla Bank — Assistant Network/Hardware Engineer — 05/03/19 — Exam Taker: BUET — Time 1:30 Hours — Marks distribution: 20 (non_dept) + 65 (dept.) = 85 — pages 1–2, Q8 — [duranta/1707373769-dbbl-2019-written/1707373769.md](../duranta/1707373769-dbbl-2019-written/1707373769.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -05 (suggestion), Set-05 Q8 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 
-<a id="g5060"></a>
+<a id="g5108"></a>
 
-### Programming Task: Write a Python function that accepts a list of transaction amounts (pos… <sub>G5060</sub>
+### Programming Task: Write a Python function that accepts a list of transaction amounts (pos… <sub>G5108</sub>
 
 *Written*
 
@@ -985,9 +997,9 @@ Programming Task: Write a Python function that accepts a list of transaction amo
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), C2 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5089"></a>
+<a id="g5137"></a>
 
-### Programming Task: Write a C or Python program to validate a user login by checking: - Use… <sub>G5089</sub>
+### Programming Task: Write a C or Python program to validate a user login by checking: - Use… <sub>G5137</sub>
 
 *Written*
 
@@ -1025,9 +1037,9 @@ Write an algorithm to check whether a number is prime or not.
   - NSDA Assistant Programmer (2022-03-04), Q1 — [PETROBANGLA/16_sha-channel-capacity-nsda.md](../PETROBANGLA/16_sha-channel-capacity-nsda.md) · [image](../PETROBANGLA/16_sha-channel-capacity-nsda.jpg)
 - **Printed answer:** Count divisors in 2..num/2; prime if count is 0 (steps after STEP 5 are on a page not in the folder)
 
-<a id="g1883"></a>
+<a id="g1931"></a>
 
-### Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 250001-500000… <sub>G1883</sub>
+### Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 250001-500000… <sub>G1931</sub>
 
 *Written*
 
@@ -1037,9 +1049,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Assistant Manager (ICT) 12/01/2024, Q1(a) — [duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md](../duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md)
 
-<a id="g2085"></a>
+<a id="g2133"></a>
 
-### অনুবাদক প্রোগ্রাম কী? এর কাজসমূহ উল্লেখ করুন। <sub>G2085</sub>
+### অনুবাদক প্রোগ্রাম কী? এর কাজসমূহ উল্লেখ করুন। <sub>G2133</sub>
 
 *Written*
 
@@ -1049,9 +1061,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৩ অথবা (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2095"></a>
+<a id="g2143"></a>
 
-### প্রোগ্রাম ফ্লোচার্টের প্রতীকগুলো অর্থসহ লিখুন। <sub>G2095</sub>
+### প্রোগ্রাম ফ্লোচার্টের প্রতীকগুলো অর্থসহ লিখুন। <sub>G2143</sub>
 
 *Written*
 
@@ -1061,9 +1073,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৬ অথবা — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2097"></a>
+<a id="g2145"></a>
 
-### আয়তক্ষেত্রের ক্ষেত্রফল নির্ণয়ের জন্য ফ্লোচার্ট অঙ্কন করুন। <sub>G2097</sub>
+### আয়তক্ষেত্রের ক্ষেত্রফল নির্ণয়ের জন্য ফ্লোচার্ট অঙ্কন করুন। <sub>G2145</sub>
 
 *Written*
 
@@ -1073,9 +1085,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৭ অথবা — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2138"></a>
+<a id="g2186"></a>
 
-### অনুবাদক প্রোগ্রাম বলতে কী বুঝেন? কম্পাইলার ও ইন্টারপ্রেটারের পার্থক্য লিখুন। <sub>G2138</sub>
+### অনুবাদক প্রোগ্রাম বলতে কী বুঝেন? কম্পাইলার ও ইন্টারপ্রেটারের পার্থক্য লিখুন। <sub>G2186</sub>
 
 *Written*
 
@@ -1085,9 +1097,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৫। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2156"></a>
+<a id="g2204"></a>
 
-### সুডোকোড কী? তিনটি সংখ্যার মধ্যে বড় সংখ্যা নির্ণয়ের ফ্লোচার্ট অংকন করুন। <sub>G2156</sub>
+### সুডোকোড কী? তিনটি সংখ্যার মধ্যে বড় সংখ্যা নির্ণয়ের ফ্লোচার্ট অংকন করুন। <sub>G2204</sub>
 
 *Written*
 
@@ -1097,9 +1109,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১৩। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2205"></a>
+<a id="g2253"></a>
 
-### ১ থেকে ১০০ পর্যন্ত নাম্বার প্রদর্শনের ফ্লোচার্ট আক। <sub>G2205</sub>
+### ১ থেকে ১০০ পর্যন্ত নাম্বার প্রদর্শনের ফ্লোচার্ট আক। <sub>G2253</sub>
 
 *Written*
 
@@ -1110,9 +1122,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q2 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
 - **Correction:** with i=i+2 and the test i<100 the chart prints only the odd numbers 1–99; it needs i=i+1 and the test i<=100.
 
-<a id="g2215"></a>
+<a id="g2263"></a>
 
-### ৩ সংখার মধ্যে বড় সংখ্যা নির্ণয়ের ফ্লোচার্ট (Draw a flowchart to find largest number amo… <sub>G2215</sub>
+### ৩ সংখার মধ্যে বড় সংখ্যা নির্ণয়ের ফ্লোচার্ট (Draw a flowchart to find largest number amo… <sub>G2263</sub>
 
 *Written*
 
@@ -1122,9 +1134,9 @@ Salary Range and Tax Calculation are given. Salary Range | Tax 0-250000 | 0 2500
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q5 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 
-<a id="g2239"></a>
+<a id="g2287"></a>
 
-### Write C code x - x^3/3! + x^5/5! - x^7/7!............ <sub>G2239</sub>
+### Write C code x - x^3/3! + x^5/5! - x^7/7!............ <sub>G2287</sub>
 
 *Written*
 
@@ -1134,9 +1146,9 @@ Write C code x - x^3/3! + x^5/5! - x^7/7!............
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — PGCB Assistant Engineer (CSE) 17.05.2024, Q2 — [duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md](../duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md)
 
-<a id="g2713"></a>
+<a id="g2761"></a>
 
-### ১ থেকে ১০০ পর্যন্ত সংখ্যার যোগ করার সি প্রোগ্রাম লিখ। <sub>G2713</sub>
+### ১ থেকে ১০০ পর্যন্ত সংখ্যার যোগ করার সি প্রোগ্রাম লিখ। <sub>G2761</sub>
 
 *Written*
 
@@ -1147,9 +1159,9 @@ Write C code x - x^3/3! + x^5/5! - x^7/7!............
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued), Q41 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ৬ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g2753"></a>
+<a id="g2801"></a>
 
-### LEGV8 আর্কিটেকচার বলতে কী বোঝায়? একটি 8086 প্রসেসরের কোড সেগমেন্ট 4000H এবং ইনস্ট্রাকশন … <sub>G2753</sub>
+### LEGV8 আর্কিটেকচার বলতে কী বোঝায়? একটি 8086 প্রসেসরের কোড সেগমেন্ট 4000H এবং ইনস্ট্রাকশন … <sub>G2801</sub>
 
 *Written*
 
@@ -1159,9 +1171,9 @@ LEGV8 আর্কিটেকচার বলতে কী বোঝায়? 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ৫ (খ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2754"></a>
+<a id="g2802"></a>
 
-### রিকার্সন মেথড ব্যবহার করে ফ্যাক্টোরিয়েল নম্বর বাহির করার একটি প্রোগ্রাম লিখুন। <sub>G2754</sub>
+### রিকার্সন মেথড ব্যবহার করে ফ্যাক্টোরিয়েল নম্বর বাহির করার একটি প্রোগ্রাম লিখুন। <sub>G2802</sub>
 
 *Written*
 
@@ -1171,9 +1183,9 @@ LEGV8 আর্কিটেকচার বলতে কী বোঝায়? 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ২য় অংশ, নম্বর ২০*৫=১০০ (pp. 8–9), ১। (ক) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2755"></a>
+<a id="g2803"></a>
 
-### তৃতীয় কোনো ভেরিয়েবল ব্যবহার না করে দুইটি সংখ্যাকে সোয়াপ করার একটি C প্রোগ্রাম লিখুন। <sub>G2755</sub>
+### তৃতীয় কোনো ভেরিয়েবল ব্যবহার না করে দুইটি সংখ্যাকে সোয়াপ করার একটি C প্রোগ্রাম লিখুন। <sub>G2803</sub>
 
 *Written*
 
@@ -1183,9 +1195,9 @@ LEGV8 আর্কিটেকচার বলতে কী বোঝায়? 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ২য় অংশ, নম্বর ২০*৫=১০০ (pp. 8–9), ১ (খ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2941"></a>
+<a id="g2989"></a>
 
-### Write a C Program upper case to lower case conversion. <sub>G2941</sub>
+### Write a C Program upper case to lower case conversion. <sub>G2989</sub>
 
 *Written*
 
@@ -1195,9 +1207,9 @@ Write a C Program upper case to lower case conversion.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 8. Dhaka Mass Transit Company Limited (DMTCL), Assistant Engineer (ICT), 27.01.2023; Exam Taker: MIST; Time: 1hour; Mark:100; Dept: 56, Non-Dept-MCQ (44*1=44); pp. 12-13, Q8 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3084"></a>
+<a id="g3132"></a>
 
-### Difference between High level language low level languages with some example? <sub>G3084</sub>
+### Difference between High level language low level languages with some example? <sub>G3132</sub>
 
 *Written*
 
@@ -1207,9 +1219,9 @@ Difference between High level language low level languages with some example?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3115"></a>
+<a id="g3163"></a>
 
-### Write a C/C++/Java program to identify the class of an IP address. <sub>G3115</sub>
+### Write a C/C++/Java program to identify the class of an IP address. <sub>G3163</sub>
 
 *Written*
 
@@ -1219,9 +1231,9 @@ Write a C/C++/Java program to identify the class of an IP address.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3315"></a>
+<a id="g3363"></a>
 
-### Draw or describe a Flowchart to determine the largest of three distinct numbers (A, B, C)… <sub>G3315</sub>
+### Draw or describe a Flowchart to determine the largest of three distinct numbers (A, B, C)… <sub>G3363</sub>
 
 *Written*
 
@@ -1231,9 +1243,9 @@ Draw or describe a Flowchart to determine the largest of three distinct numbers 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3425"></a>
+<a id="g3473"></a>
 
-### Binary to Decimal conversion program (c/c++). <sub>G3425</sub>
+### Binary to Decimal conversion program (c/c++). <sub>G3473</sub>
 
 *Written*
 
@@ -1243,9 +1255,9 @@ Binary to Decimal conversion program (c/c++).
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 01/02/2025, 3 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g4224"></a>
+<a id="g4272"></a>
 
-### দুইটি সংখ্যার গ.সা.গু নির্ণয়ের জন্য ফ্লোচার্ট অঙ্কন করুন ও অ্যালগরিদম লিখুন। <sub>G4224</sub>
+### দুইটি সংখ্যার গ.সা.গু নির্ণয়ের জন্য ফ্লোচার্ট অঙ্কন করুন ও অ্যালগরিদম লিখুন। <sub>G4272</sub>
 
 *Written*
 
@@ -1255,9 +1267,9 @@ Binary to Decimal conversion program (c/c++).
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন লিখিত (স্কুল পর্যায়) — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি (আইসিটি), বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) — 12.07.2024, ৬। — [ntrca-written-web/18-313-school-ict/18-313-school-ict.md](../ntrca-written-web/18-313-school-ict/18-313-school-ict.md)
 
-<a id="g4239"></a>
+<a id="g4287"></a>
 
-### তিনটি সংখ্যার মধ্যে ছোট সংখ্যা বের করার জন্য অ্যালগরিদম ও সি ভাষায় প্রোগ্রাম লিখুন। <sub>G4239</sub>
+### তিনটি সংখ্যার মধ্যে ছোট সংখ্যা বের করার জন্য অ্যালগরিদম ও সি ভাষায় প্রোগ্রাম লিখুন। <sub>G4287</sub>
 
 *Written*
 
@@ -1267,9 +1279,9 @@ Binary to Decimal conversion program (c/c++).
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন পরীক্ষা (স্কুল সমপর্যায়-২) — ট্রেড ইন্সট্রাক্টর, কম্পিউটার ও তথ্যপ্রযুক্তি (লিখিত) — 12.07.2024, ১৩। — [ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md](../ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md)
 
-<a id="g4533"></a>
+<a id="g4581"></a>
 
-### Which one is the High-Level Programing language? <sub>G4533</sub>
+### Which one is the High-Level Programing language? <sub>G4581</sub>
 
 *MCQ*
 
@@ -1279,9 +1291,9 @@ Which one is the High-Level Programing language?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ95 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)
 
-<a id="g4560"></a>
+<a id="g4608"></a>
 
-### Write a program that check a number is prime number. <sub>G4560</sub>
+### Write a program that check a number is prime number. <sub>G4608</sub>
 
 *Written*
 
@@ -1291,9 +1303,9 @@ Write a program that check a number is prime number.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ICB Asset Management Company Ltd — Assistant Programmer — 2024 (date not printed) — Exam taker: FBS, DU (as labelled by IT Job QnS; unverified) — Non-tech 50 + Tech 50, Q8 — [bank-written-web/2024-icb-amcl-ap-itjobqns/icb-amcl-ap-2024.md](../bank-written-web/2024-icb-amcl-ap-itjobqns/icb-amcl-ap-2024.md)
 
-<a id="g4621"></a>
+<a id="g4669"></a>
 
-### Which of the following is a high-level programming language? A) Machine code B) C++ C) As… <sub>G4621</sub>
+### Which of the following is a high-level programming language? A) Machine code B) C++ C) As… <sub>G4669</sub>
 
 *MCQ*
 
@@ -1304,9 +1316,9 @@ Which of the following is a high-level programming language? A) Machine code B) 
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT section (Q91–100) — 17 July 2026 — Exam taker: not stated — 100 MCQ × 1 mark, 1 hour, MCQ97 — [bank-written-web/2026-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2026-ict.md](../bank-written-web/2026-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2026-ict.md)
 - **Correction:** C (option D) is also a high-level language; the item has two correct options.
 
-<a id="g2915"></a>
+<a id="g2963"></a>
 
-### ৫) কয়েকটি উচ্চস্তরের প্রোগ্রামিং ল্যাঙ্গুয়েজের নাম লিখ। <sub>G2915</sub>
+### ৫) কয়েকটি উচ্চস্তরের প্রোগ্রামিং ল্যাঙ্গুয়েজের নাম লিখ। <sub>G2963</sub>
 
 *Written*
 
@@ -1316,9 +1328,9 @@ Which of the following is a high-level programming language? A) Machine code B) 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 4. Bangladesh Space Research and Remote Sensing Organization (SPARRSO), Technical Officer-IT, 03-12-2021; exam taker not printed; Written; Time: 1.5 hour; Marks: 70 [বাংলা-১০ নম্বর, ইংরেজি-১০ নম্বর, গণিত-১০ নম্বর, সাধারণ জ্ঞান-৫ নম্বর, টেকনিক্যাল-৩৫ নম্বর]; pp. 6-7, Q5 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2997"></a>
+<a id="g3045"></a>
 
-### Write a program that check a number is Armstrong or not. <sub>G2997</sub>
+### Write a program that check a number is Armstrong or not. <sub>G3045</sub>
 
 *Written*
 
@@ -1328,9 +1340,9 @@ Write a program that check a number is Armstrong or not.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4152"></a>
+<a id="g4200"></a>
 
-### অ্যালগরিদম ও ফ্লোচার্ট কী? তিনটি সংখ্যার মধ্যে বড় সংখ্যাটি নির্ণয়ের অ্যালগরিদম লিখুন। <sub>G4152</sub>
+### অ্যালগরিদম ও ফ্লোচার্ট কী? তিনটি সংখ্যার মধ্যে বড় সংখ্যাটি নির্ণয়ের অ্যালগরিদম লিখুন। <sub>G4200</sub>
 
 *Written*
 
@@ -1340,9 +1352,9 @@ Write a program that check a number is Armstrong or not.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৩(ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4164"></a>
+<a id="g4212"></a>
 
-### প্রোগ্রামের ভাষার সংখ্যা লিখুন। উচ্চতর ভাষার সুবিধা ও অসুবিধাগুলো লিখুন। <sub>G4164</sub>
+### প্রোগ্রামের ভাষার সংখ্যা লিখুন। উচ্চতর ভাষার সুবিধা ও অসুবিধাগুলো লিখুন। <sub>G4212</sub>
 
 *Written*
 
@@ -1352,9 +1364,9 @@ Write a program that check a number is Armstrong or not.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৫(ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4213"></a>
+<a id="g4261"></a>
 
-### কোডিং এর সময় সংঘটিত ভুলসমূহ উদাহরণসহ ব্যাখ্যা করুণ। <sub>G4213</sub>
+### কোডিং এর সময় সংঘটিত ভুলসমূহ উদাহরণসহ ব্যাখ্যা করুণ। <sub>G4261</sub>
 
 *Written*
 
@@ -1364,9 +1376,9 @@ Write a program that check a number is Armstrong or not.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৯ অথবা — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4271"></a>
+<a id="g4319"></a>
 
-### Write a c program to find max price from 20 items. <sub>G4271</sub>
+### Write a c program to find max price from 20 items. <sub>G4319</sub>
 
 *Written*
 
@@ -1376,9 +1388,9 @@ Write a c program to find max price from 20 items.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Programmer — 25.10.2019 — Exam taker: IBA (as printed by the coaching banner; unverified) — Marks 200, Time 1.30 h, MCQ 64×1.25 = 80, Written 120 (dept 100, non-dept 20) — pages 1–2 (partial), Q1 — [bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md](../bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md)
 
-<a id="g4302"></a>
+<a id="g4350"></a>
 
-### Which type of going following is generated when the program is being executed <sub>G4302</sub>
+### Which type of going following is generated when the program is being executed <sub>G4350</sub>
 
 *MCQ*
 
@@ -1388,9 +1400,9 @@ Which type of going following is generated when the program is being executed
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ51 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4308"></a>
+<a id="g4356"></a>
 
-### Which one is the first high level programming language <sub>G4308</sub>
+### Which one is the first high level programming language <sub>G4356</sub>
 
 *MCQ*
 
@@ -1400,9 +1412,9 @@ Which one is the first high level programming language
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ57 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4321"></a>
+<a id="g4369"></a>
 
-### At Programming language requires users to follow certain rules of——- <sub>G4321</sub>
+### At Programming language requires users to follow certain rules of——- <sub>G4369</sub>
 
 *MCQ*
 
@@ -1412,9 +1424,9 @@ At Programming language requires users to follow certain rules of——-
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ70 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4322"></a>
+<a id="g4370"></a>
 
-### The process of making object code from one system worked on another type of system is cal… <sub>G4322</sub>
+### The process of making object code from one system worked on another type of system is cal… <sub>G4370</sub>
 
 *MCQ*
 
@@ -1424,9 +1436,9 @@ The process of making object code from one system worked on another type of syst
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ71 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4327"></a>
+<a id="g4375"></a>
 
-### Object code is the ——-language file that falls the CPU what to do <sub>G4327</sub>
+### Object code is the ——-language file that falls the CPU what to do <sub>G4375</sub>
 
 *MCQ*
 
@@ -1436,9 +1448,9 @@ Object code is the ——-language file that falls the CPU what to do
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ76 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4328"></a>
+<a id="g4376"></a>
 
-### ——–Is natural language statements that look like programming code <sub>G4328</sub>
+### ——–Is natural language statements that look like programming code <sub>G4376</sub>
 
 *MCQ*
 
@@ -1448,9 +1460,9 @@ Object code is the ——-language file that falls the CPU what to do
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ77 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4696"></a>
+<a id="g4744"></a>
 
-### Phython Program <sub>G4696</sub>
+### Phython Program <sub>G4744</sub>
 
 *Written*
 
@@ -1460,9 +1472,9 @@ Phython Program
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — PGCB SAE (Computer) 24.12.2020, Q7 — [power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md](../power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md)
 
-<a id="g4726"></a>
+<a id="g4774"></a>
 
-### C programme out determination. <sub>G4726</sub>
+### C programme out determination. <sub>G4774</sub>
 
 *Written*
 
@@ -1509,9 +1521,9 @@ Draw or describe a flowchart to find the largest of three distinct numbers A, B,
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অ্যালগরিদম, ফ্লোচার্ট ও সি প্রোগ্রামিং কোড, Q30 — [18th NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md) · [image](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.jpg)
 
-<a id="g2039"></a>
+<a id="g2087"></a>
 
-### ইনপুটকৃত কোনো সংখ্যার ফ্যাক্টোরিয়াল বের করার এলগরিদম লিখুন, ফ্লোচার্ট অংকন করুন এবং C ভা… <sub>G2039</sub>
+### ইনপুটকৃত কোনো সংখ্যার ফ্যাক্টোরিয়াল বের করার এলগরিদম লিখুন, ফ্লোচার্ট অংকন করুন এবং C ভা… <sub>G2087</sub>
 
 *Written*
 
@@ -1521,9 +1533,9 @@ Draw or describe a flowchart to find the largest of three distinct numbers A, B,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ১ অথবা (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2061"></a>
+<a id="g2109"></a>
 
-### প্রোগ্রাম উন্নয়নের ধাপসমূহের বর্ণনা লিখুন। <sub>G2061</sub>
+### প্রোগ্রাম উন্নয়নের ধাপসমূহের বর্ণনা লিখুন। <sub>G2109</sub>
 
 *Written*
 
@@ -1533,9 +1545,9 @@ Draw or describe a flowchart to find the largest of three distinct numbers A, B,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫ অথবা (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2067"></a>
+<a id="g2115"></a>
 
-### পয়েন্টার কী? প্রোগ্রামে পয়েন্টার ব্যবহারের প্রয়োজনীয়তা লিখুন। পয়েন্টার ডিক্লায়ার কর… <sub>G2067</sub>
+### পয়েন্টার কী? প্রোগ্রামে পয়েন্টার ব্যবহারের প্রয়োজনীয়তা লিখুন। পয়েন্টার ডিক্লায়ার কর… <sub>G2115</sub>
 
 *Written*
 
@@ -1545,9 +1557,9 @@ Draw or describe a flowchart to find the largest of three distinct numbers A, B,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৭ অথবা — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2161"></a>
+<a id="g2209"></a>
 
-### a * x ^ 2 + bx + c = 0 সমীকরণটির x চলকের মান নির্ণয়ের জন্য C প্রোগ্রামিং ল্যাঙ্গুয়েজে এ… <sub>G2161</sub>
+### a * x ^ 2 + bx + c = 0 সমীকরণটির x চলকের মান নির্ণয়ের জন্য C প্রোগ্রামিং ল্যাঙ্গুয়েজে এ… <sub>G2209</sub>
 
 *Written*
 
@@ -1557,9 +1569,9 @@ a * x ^ 2 + bx + c = 0 সমীকরণটির x চলকের মান �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ১ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g4116"></a>
+<a id="g4164"></a>
 
-### তিনটি সংখ্যার মধ্যে বৃহত্তম সংখ্যা নির্ণয়ের অ্যালগোরিদম লিখুন, ফ্লোচার্ট অংকন করুন এবং '… <sub>G4116</sub>
+### তিনটি সংখ্যার মধ্যে বৃহত্তম সংখ্যা নির্ণয়ের অ্যালগোরিদম লিখুন, ফ্লোচার্ট অংকন করুন এবং '… <sub>G4164</sub>
 
 *Written*
 
@@ -1569,9 +1581,9 @@ a * x ^ 2 + bx + c = 0 সমীকরণটির x চলকের মান �
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ১ অথবা (খ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4659"></a>
+<a id="g4707"></a>
 
-### Write a program in any programming language to find maximum number from given three numbe… <sub>G4659</sub>
+### Write a program in any programming language to find maximum number from given three numbe… <sub>G4707</sub>
 
 *Written*
 
@@ -1581,9 +1593,9 @@ Write a program in any programming language to find maximum number from given th
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q4 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g4778"></a>
+<a id="g4826"></a>
 
-### Teletalk er number 015******** diye ekti programming code likhte hobe. (a programming cod… <sub>G4778</sub>
+### Teletalk er number 015******** diye ekti programming code likhte hobe. (a programming cod… <sub>G4826</sub>
 
 *Written*
 
@@ -1855,9 +1867,21 @@ C কে স্ট্রাকচারাল / স্ট্রাকচার�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued), Q51 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2385"></a>
+<a id="g1846"></a>
 
-### Why do we need the synchronization feature in a programming language? <sub>G2385</sub>
+### C program: star pyramid pattern <sub>G1846</sub>
+
+*Written*
+
+C program: star pyramid pattern
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q105 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g2433"></a>
+
+### Why do we need the synchronization feature in a programming language? <sub>G2433</sub>
 
 *Written*
 
@@ -1868,9 +1892,9 @@ Why do we need the synchronization feature in a programming language?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2387"></a>
+<a id="g2435"></a>
 
-### Write a program to draw a triangle using "*" sign? <sub>G2387</sub>
+### Write a program to draw a triangle using "*" sign? <sub>G2435</sub>
 
 *Written*
 
@@ -1881,9 +1905,9 @@ Write a program to draw a triangle using "*" sign?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2392"></a>
+<a id="g2440"></a>
 
-### Write a program in C/C++ to identify the largest number of given three numbers. <sub>G2392</sub>
+### Write a program in C/C++ to identify the largest number of given three numbers. <sub>G2440</sub>
 
 *Written*
 
@@ -1894,9 +1918,9 @@ Write a program in C/C++ to identify the largest number of given three numbers.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2401"></a>
+<a id="g2449"></a>
 
-### C program to compute the value of Xn. <sub>G2401</sub>
+### C program to compute the value of Xn. <sub>G2449</sub>
 
 *Written*
 
@@ -1973,9 +1997,9 @@ Write a program with a recursive function that returns the sum of the digits of 
 - **Source:**
   - Question paper, Q1(খ) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g2107"></a>
+<a id="g2155"></a>
 
-### প্রথম দশটি Fibonacci number প্রদর্শনের জন্য একটি C program লিখুন। <sub>G2107</sub>
+### প্রথম দশটি Fibonacci number প্রদর্শনের জন্য একটি C program লিখুন। <sub>G2155</sub>
 
 *Written*
 
@@ -1985,9 +2009,9 @@ Write a program with a recursive function that returns the sum of the digits of 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), [১] অথবা (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2249"></a>
+<a id="g2297"></a>
 
-### Write recursive function for the given scenario: for (int i=1,i<n;i++){ For ( int j=0 ; j… <sub>G2249</sub>
+### Write recursive function for the given scenario: for (int i=1,i<n;i++){ For ( int j=0 ; j… <sub>G2297</sub>
 
 *Written*
 
@@ -1997,9 +2021,9 @@ Write recursive function for the given scenario: for (int i=1,i<n;i++){ For ( in
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024, Q1(a) — [duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md](../duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md)
 
-<a id="g3126"></a>
+<a id="g3174"></a>
 
-### Write a recursive function that returns a Boolean after taking a string as parameter to c… <sub>G3126</sub>
+### Write a recursive function that returns a Boolean after taking a string as parameter to c… <sub>G3174</sub>
 
 *Written*
 
@@ -2009,9 +2033,9 @@ Write a recursive function that returns a Boolean after taking a string as param
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3529"></a>
+<a id="g3577"></a>
 
-### Write down a recursive function to find out the sum of all digits of an integer. 5 <sub>G3529</sub>
+### Write down a recursive function to find out the sum of all digits of an integer. 5 <sub>G3577</sub>
 
 *Written*
 
@@ -2021,9 +2045,9 @@ Write down a recursive function to find out the sum of all digits of an integer.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, CS Q13 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3602"></a>
+<a id="g3650"></a>
 
-### Write a C program to find the sum of digits of an integer number using "recursion" <sub>G3602</sub>
+### Write a C program to find the sum of digits of an integer number using "recursion" <sub>G3650</sub>
 
 *Written*
 
@@ -2045,9 +2069,9 @@ Write a C program to find nth Fibonacci number using Recursion.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q33 — [bit to exabyte/20_bte-g2-p06-c-programming-q29-33.md](../bit%20to%20exabyte/20_bte-g2-p06-c-programming-q29-33.md) · [image](../bit%20to%20exabyte/20_bte-g2-p06-c-programming-q29-33.jpg)
 
-<a id="g2450"></a>
+<a id="g2498"></a>
 
-### 0 থেকে n সংখ্যক সংখ্যা পর্যন্ত Fibonacci Series দেখার জন্য প্রোগ্রাম লিখুন। <sub>G2450</sub>
+### 0 থেকে n সংখ্যক সংখ্যা পর্যন্ত Fibonacci Series দেখার জন্য প্রোগ্রাম লিখুন। <sub>G2498</sub>
 
 *Written*
 
@@ -2057,9 +2081,9 @@ Write a C program to find nth Fibonacci number using Recursion.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 10 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2706"></a>
+<a id="g2754"></a>
 
-### What is recursive function? Give an example of recursive function. <sub>G2706</sub>
+### What is recursive function? Give an example of recursive function. <sub>G2754</sub>
 
 *Written*
 
@@ -2069,9 +2093,9 @@ What is recursive function? Give an example of recursive function.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 10 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g4735"></a>
+<a id="g4783"></a>
 
-### Recursion কি? Recursion পদ্ধতিতে একটি Integer সংখ্যার Factorial নির্ণয়ের জন্য C-Language… <sub>G4735</sub>
+### Recursion কি? Recursion পদ্ধতিতে একটি Integer সংখ্যার Factorial নির্ণয়ের জন্য C-Language… <sub>G4783</sub>
 
 *Written*
 
@@ -2105,9 +2129,9 @@ Recursion কি? Recursion পদ্ধতিতে একটি Integer সং
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued), Q47 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2009"></a>
+<a id="g2057"></a>
 
-### উদাহরণসহ recursion ব্যাখ্যা করুন। <sub>G2009</sub>
+### উদাহরণসহ recursion ব্যাখ্যা করুন। <sub>G2057</sub>
 
 *Written*
 
@@ -2117,9 +2141,9 @@ Recursion কি? Recursion পদ্ধতিতে একটি Integer সং
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ১ অথবা (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2824"></a>
+<a id="g2872"></a>
 
-### using recursion. Write a program in C language or in Java to calculate the factorial of a… <sub>G2824</sub>
+### using recursion. Write a program in C language or in Java to calculate the factorial of a… <sub>G2872</sub>
 
 *Written*
 
@@ -2129,9 +2153,9 @@ using recursion. Write a program in C language or in Java to calculate the facto
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 6 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2841"></a>
+<a id="g2889"></a>
 
-### How do recursion and iteration exhibit different impacts in terms of stack usage and memo… <sub>G2841</sub>
+### How do recursion and iteration exhibit different impacts in terms of stack usage and memo… <sub>G2889</sub>
 
 *Written*
 
@@ -2141,9 +2165,9 @@ How do recursion and iteration exhibit different impacts in terms of stack usage
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 1 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2842"></a>
+<a id="g2890"></a>
 
-### Write a recursive C function to find out GCD of two integers. Using that function, explai… <sub>G2842</sub>
+### Write a recursive C function to find out GCD of two integers. Using that function, explai… <sub>G2890</sub>
 
 *Written*
 
@@ -2153,9 +2177,9 @@ Write a recursive C function to find out GCD of two integers. Using that functio
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 1 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3755"></a>
+<a id="g3803"></a>
 
-### Write a function that takes an integer number and separate each digit. You must have to u… <sub>G3755</sub>
+### Write a function that takes an integer number and separate each digit. You must have to u… <sub>G3803</sub>
 
 *Written*
 
@@ -2213,9 +2237,9 @@ Write a function that takes an integer number and separate each digit. You must 
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অ্যালগরিদম, ফ্লোচার্ট ও সি প্রোগ্রামিং কোড, Q33 — [18th NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md) · [image](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.jpg)
 
-<a id="g1827"></a>
+<a id="g1875"></a>
 
-### Write a C program to find GCD of two numbers using functions. Let, num1 = 20; num2 = 15; … <sub>G1827</sub>
+### Write a C program to find GCD of two numbers using functions. Let, num1 = 20; num2 = 15; … <sub>G1875</sub>
 
 *Written*
 
@@ -2225,9 +2249,9 @@ Write a C program to find GCD of two numbers using functions. Let, num1 = 20; nu
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q43 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g2386"></a>
+<a id="g2434"></a>
 
-### Write a program to implement the Fibonacci sequence without use a recursive function. <sub>G2386</sub>
+### Write a program to implement the Fibonacci sequence without use a recursive function. <sub>G2434</sub>
 
 *Written*
 
@@ -2238,9 +2262,9 @@ Write a program to implement the Fibonacci sequence without use a recursive func
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2388"></a>
+<a id="g2436"></a>
 
-### Write down a recursive function to find out number of digits in an integer number(n). Dra… <sub>G2388</sub>
+### Write down a recursive function to find out number of digits in an integer number(n). Dra… <sub>G2436</sub>
 
 *Written*
 
@@ -2251,9 +2275,9 @@ Write down a recursive function to find out number of digits in an integer numbe
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2394"></a>
+<a id="g2442"></a>
 
-### Write a program in C/Java to find out the factorial of a number using recursion. Also wri… <sub>G2394</sub>
+### Write a program in C/Java to find out the factorial of a number using recursion. Also wri… <sub>G2442</sub>
 
 *Written*
 
@@ -2264,9 +2288,9 @@ Write a program in C/Java to find out the factorial of a number using recursion.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g4549"></a>
+<a id="g4597"></a>
 
-### Write a C Program to generate the Fibonacci series n number of times. <sub>G4549</sub>
+### Write a C Program to generate the Fibonacci series n number of times. <sub>G4597</sub>
 
 *Written*
 
@@ -2292,9 +2316,9 @@ Write a C/C++ program for binary search.
   - Petrobangla Assistant Manager (IT) (BUET) (2022-09-16), Q1 — [PETROBANGLA/13_grammar-viva-and-written-q1-3.md](../PETROBANGLA/13_grammar-viva-and-written-q1-3.md) · [image](../PETROBANGLA/13_grammar-viva-and-written-q1-3.jpg)
 - **Printed answer:** Cross-reference only: [See BPSC, Workshop Maintenance Engineer (CSE), Exam: 2021]
 
-<a id="g2607"></a>
+<a id="g2655"></a>
 
-### In C++, The library function exit () causes an exit from— ক) a block of statement খ) a lo… <sub>G2607</sub>
+### In C++, The library function exit () causes an exit from— ক) a block of statement খ) a lo… <sub>G2655</sub>
 
 *MCQ*
 
@@ -2304,9 +2328,9 @@ In C++, The library function exit () causes an exit from— ক) a block of stat
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Programming / C++ / OOP Q5 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2965"></a>
+<a id="g3013"></a>
 
-### Difference between while loop and do while loop <sub>G2965</sub>
+### Difference between while loop and do while loop <sub>G3013</sub>
 
 *Written*
 
@@ -2316,9 +2340,9 @@ Difference between while loop and do while loop
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3242"></a>
+<a id="g3290"></a>
 
-### Write appropriate program for client in any language which is using database and client c… <sub>G3242</sub>
+### Write appropriate program for client in any language which is using database and client c… <sub>G3290</sub>
 
 *Written*
 
@@ -2328,9 +2352,9 @@ Write appropriate program for client in any language which is using database and
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q18 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3419"></a>
+<a id="g3467"></a>
 
-### Supposed (x<0)? 10:15: If x=5, then which one is the correct answer: (a) 10 (b) 15 (c) 0 … <sub>G3419</sub>
+### Supposed (x<0)? 10:15: If x=5, then which one is the correct answer: (a) 10 (b) 15 (c) 0 … <sub>G3467</sub>
 
 *MCQ*
 
@@ -2340,9 +2364,9 @@ Supposed (x<0)? 10:15: If x=5, then which one is the correct answer: (a) 10 (b) 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager (ICT) 26.08.2022, 11 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3521"></a>
+<a id="g3569"></a>
 
-### Distinguish between break and continue in a PM loop. Give suitable examples. 5 <sub>G3521</sub>
+### Distinguish between break and continue in a PM loop. Give suitable examples. 5 <sub>G3569</sub>
 
 *Written*
 
@@ -2352,9 +2376,9 @@ Distinguish between break and continue in a PM loop. Give suitable examples. 5
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, CS Q5 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3643"></a>
+<a id="g3691"></a>
 
-### (a) Write down a program is any high level language to read an integer and display a patt… <sub>G3643</sub>
+### (a) Write down a program is any high level language to read an integer and display a patt… <sub>G3691</sub>
 
 *Written*
 
@@ -2364,9 +2388,9 @@ Distinguish between break and continue in a PM loop. Give suitable examples. 5
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q6(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4057"></a>
+<a id="g4105"></a>
 
-### Which loop is an exit-controlled loop? (ক) for loop (খ) while loop (গ) do while loop (ঘ) … <sub>G4057</sub>
+### Which loop is an exit-controlled loop? (ক) for loop (খ) while loop (গ) do while loop (ঘ) … <sub>G4105</sub>
 
 *MCQ*
 
@@ -2376,9 +2400,9 @@ Which loop is an exit-controlled loop? (ক) for loop (খ) while loop (গ) do 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q119 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4073"></a>
+<a id="g4121"></a>
 
-### What does the 'continue' statement do inside a loop? (ক) exits the loop entirely (খ) term… <sub>G4073</sub>
+### What does the 'continue' statement do inside a loop? (ক) exits the loop entirely (খ) term… <sub>G4121</sub>
 
 *MCQ*
 
@@ -2388,9 +2412,9 @@ What does the 'continue' statement do inside a loop? (ক) exits the loop entire
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q135 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4556"></a>
+<a id="g4604"></a>
 
-### Difference between while and do while loop. <sub>G4556</sub>
+### Difference between while and do while loop. <sub>G4604</sub>
 
 *Written*
 
@@ -2474,9 +2498,9 @@ What is the basic difference between looping and branching?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q14 — [bit to exabyte/17_bte-g2-p03-c-programming-q06-23.md](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.md) · [image](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.jpg)
 
-<a id="g2456"></a>
+<a id="g2504"></a>
 
-### IF-ELSE ব্যবহার করে একটি ত্রিভুজের ক্ষেত্রফল নির্ণয়ের প্রোগ্রাম লিখ। <sub>G2456</sub>
+### IF-ELSE ব্যবহার করে একটি ত্রিভুজের ক্ষেত্রফল নির্ণয়ের প্রোগ্রাম লিখ। <sub>G2504</sub>
 
 *Written*
 
@@ -2486,9 +2510,9 @@ IF-ELSE ব্যবহার করে একটি ত্রিভুজের
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 1 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2906"></a>
+<a id="g2954"></a>
 
-### Write the code for second highest maximum from given three number (83, 40, 3) in c/c++ pr… <sub>G2906</sub>
+### Write the code for second highest maximum from given three number (83, 40, 3) in c/c++ pr… <sub>G2954</sub>
 
 *Written*
 
@@ -2499,9 +2523,9 @@ Write the code for second highest maximum from given three number (83, 40, 3) in
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 2. বাংলাদেশ সমরাস্ত্র কারখানা: (BOF)-2021, Assistant Engineer; (EEE/ME/CSE), 06-03-2021; exam taker not printed; Full Mark: 100 [Non-40, Department-60]; pp. 2-4 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 - **Correction:** the printed code finds the **largest** (83), not the second highest (40); it also has `Int`, `pirintf` and curly quotes, so it does not compile.
 
-<a id="g3041"></a>
+<a id="g3089"></a>
 
-### Write a java program for a cricket player. The program should accept the details from use… <sub>G3041</sub>
+### Write a java program for a cricket player. The program should accept the details from use… <sub>G3089</sub>
 
 *Written*
 
@@ -2511,9 +2535,9 @@ Write a java program for a cricket player. The program should accept the details
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 07 — Assistant System Administrator (ASA)-JBL — 01.12.2021 — Exam taker: not printed — IT: 15*10 marks + Non - IT: 4*10 marks + GK: 2*5 marks — pages 12–14, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3054"></a>
+<a id="g3102"></a>
 
-### Write a program to find summation for a number until it's become single digit <sub>G3054</sub>
+### Write a program to find summation for a number until it's become single digit <sub>G3102</sub>
 
 *Written*
 
@@ -2523,9 +2547,9 @@ Write a program to find summation for a number until it's become single digit
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3991"></a>
+<a id="g4039"></a>
 
-### The term ‘%i’ is used for _____ data type too. (a) char (b) int (c) none of the above (d)… <sub>G3991</sub>
+### The term ‘%i’ is used for _____ data type too. (a) char (b) int (c) none of the above (d)… <sub>G4039</sub>
 
 *MCQ*
 
@@ -2535,9 +2559,9 @@ The term ‘%i’ is used for _____ data type too. (a) char (b) int (c) none of 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q39 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g4215"></a>
+<a id="g4263"></a>
 
-### উদাহরণসহ i++ এবং ++i এর মধ্যে পার্থক্য লিখুন। নেস্টেড ইফ (Nested if) কী? <sub>G4215</sub>
+### উদাহরণসহ i++ এবং ++i এর মধ্যে পার্থক্য লিখুন। নেস্টেড ইফ (Nested if) কী? <sub>G4263</sub>
 
 *Written*
 
@@ -2559,9 +2583,9 @@ The term ‘%i’ is used for _____ data type too. (a) char (b) int (c) none of 
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — থিওরি ও কনসেপচুয়াল প্রশ্নাবলি, Q15 — [18th NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md) · [image](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.jpg)
 
-<a id="g1906"></a>
+<a id="g1954"></a>
 
-### Write a Program of basic calculator operation function using switch statement (+.-,*,/) <sub>G1906</sub>
+### Write a Program of basic calculator operation function using switch statement (+.-,*,/) <sub>G1954</sub>
 
 *Written*
 
@@ -2571,9 +2595,9 @@ Write a Program of basic calculator operation function using switch statement (+
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 19. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g2040"></a>
+<a id="g2088"></a>
 
-### do-while loop এর ফ্লোচার্ট অংকন করুন। <sub>G2040</sub>
+### do-while loop এর ফ্লোচার্ট অংকন করুন। <sub>G2088</sub>
 
 *Written*
 
@@ -2583,9 +2607,9 @@ do-while loop এর ফ্লোচার্ট অংকন করুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ১ অথবা (খ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2060"></a>
+<a id="g2108"></a>
 
-### FOR. Loop এর গঠন ব্যাখ্যা করুন। <sub>G2060</sub>
+### FOR. Loop এর গঠন ব্যাখ্যা করুন। <sub>G2108</sub>
 
 *Written*
 
@@ -2595,9 +2619,9 @@ FOR. Loop এর গঠন ব্যাখ্যা করুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫ (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2160"></a>
+<a id="g2208"></a>
 
-### লুপ কী? প্রবাহচিত্রসহ do-while এবং while এর গঠন ব্যাখ্যা করুন। <sub>G2160</sub>
+### লুপ কী? প্রবাহচিত্রসহ do-while এবং while এর গঠন ব্যাখ্যা করুন। <sub>G2208</sub>
 
 *Written*
 
@@ -2607,9 +2631,9 @@ FOR. Loop এর গঠন ব্যাখ্যা করুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ১ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g3744"></a>
+<a id="g3792"></a>
 
-### Define types of processor for the following language: python,c/c++,java <sub>G3744</sub>
+### Define types of processor for the following language: python,c/c++,java <sub>G3792</sub>
 
 *Written*
 
@@ -2631,9 +2655,9 @@ Define types of processor for the following language: python,c/c++,java
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অ্যালগরিদম, ফ্লোচার্ট ও সি প্রোগ্রামিং কোড, Q38 — [18th NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md) · [image](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.jpg)
 
-<a id="g2376"></a>
+<a id="g2424"></a>
 
-### Write a Program of basic calculator operation function using switch statement (+.-,*,/) u… <sub>G2376</sub>
+### Write a Program of basic calculator operation function using switch statement (+.-,*,/) u… <sub>G2424</sub>
 
 *Written*
 
@@ -2644,9 +2668,9 @@ Write a Program of basic calculator operation function using switch statement (+
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2384"></a>
+<a id="g2432"></a>
 
-### Write a program to check if a given number is prime or not? <sub>G2384</sub>
+### Write a program to check if a given number is prime or not? <sub>G2432</sub>
 
 *Written*
 
@@ -2657,9 +2681,9 @@ Write a program to check if a given number is prime or not?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2390"></a>
+<a id="g2438"></a>
 
-### Is it possible to convert all "if-else" code into "switch" code block? Give an example. <sub>G2390</sub>
+### Is it possible to convert all "if-else" code into "switch" code block? Give an example. <sub>G2438</sub>
 
 *Written*
 
@@ -2670,9 +2694,9 @@ Is it possible to convert all "if-else" code into "switch" code block? Give an e
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2396"></a>
+<a id="g2444"></a>
 
-### Write down a pseudocode to generate all possible permutation for a given word. <sub>G2396</sub>
+### Write down a pseudocode to generate all possible permutation for a given word. <sub>G2444</sub>
 
 *Written*
 
@@ -2683,9 +2707,9 @@ Write down a pseudocode to generate all possible permutation for a given word.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g3503"></a>
+<a id="g3551"></a>
 
-### Write a C function for the following: (a) Determine whether a given number is prime or no… <sub>G3503</sub>
+### Write a C function for the following: (a) Determine whether a given number is prime or no… <sub>G3551</sub>
 
 *Written*
 
@@ -2695,9 +2719,9 @@ Write a C function for the following: (a) Determine whether a given number is pr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q10(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3506"></a>
+<a id="g3554"></a>
 
-### Write a C function for the following: (d) Determine even or odd numbers <sub>G3506</sub>
+### Write a C function for the following: (d) Determine even or odd numbers <sub>G3554</sub>
 
 *Written*
 
@@ -2707,9 +2731,9 @@ Write a C function for the following: (d) Determine even or odd numbers
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q10(d) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4551"></a>
+<a id="g4599"></a>
 
-### Write a program that takes input for date, month, and year, and verifies if the given dat… <sub>G4551</sub>
+### Write a program that takes input for date, month, and year, and verifies if the given dat… <sub>G4599</sub>
 
 *Written*
 
@@ -2720,9 +2744,9 @@ Write a program that takes input for date, month, and year, and verifies if the 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Dutch-Bangla Bank PLC (private) — MTO Card Operation — 16.02.2024 — Exam taker: BUET (as labelled by IT Job QnS; unverified) — MCQ 20 + Dept 80, Q3 — [bank-written-web/2024-dbbl-mto-card-itjobqns/dbbl-mto-card-2024.md](../bank-written-web/2024-dbbl-mto-card-itjobqns/dbbl-mto-card-2024.md)
 
-<a id="g5197"></a>
+<a id="g5245"></a>
 
-### include<stdio.h> Void main() { int I = 0 ; if(i==0) {printf("hello") ; break;}} ক. hello … <sub>G5197</sub>
+### include<stdio.h> Void main() { int I = 0 ; if(i==0) {printf("hello") ; break;}} ক. hello … <sub>G5245</sub>
 
 *MCQ*
 
@@ -2846,9 +2870,9 @@ C ভাষায় ব্যবহৃত বিভিন্ন ধরনের
 - **Source:**
   - Question paper, Q1(ক) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g2395"></a>
+<a id="g2443"></a>
 
-### (b) What is the difference between sizeof 'c'+1 and sizeof('c'+1)? 5 <sub>G2395</sub>
+### (b) What is the difference between sizeof 'c'+1 and sizeof('c'+1)? 5 <sub>G2443</sub>
 
 *Written*
 
@@ -2860,9 +2884,9 @@ C ভাষায় ব্যবহৃত বিভিন্ন ধরনের
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q3(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g2477"></a>
+<a id="g2525"></a>
 
-### ইউজার হতে 10 টি Integer Data Input করে যে Data গুলো 5 দ্বারা বিভাজ্য তাদের গড় মান নির্ণয… <sub>G2477</sub>
+### ইউজার হতে 10 টি Integer Data Input করে যে Data গুলো 5 দ্বারা বিভাজ্য তাদের গড় মান নির্ণয… <sub>G2525</sub>
 
 *Written*
 
@@ -2872,9 +2896,9 @@ C ভাষায় ব্যবহৃত বিভিন্ন ধরনের
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ৭ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2539"></a>
+<a id="g2587"></a>
 
-### Given two integers, A and B as input. Write a program to compute LCN of A and B. <sub>G2539</sub>
+### Given two integers, A and B as input. Write a program to compute LCN of A and B. <sub>G2587</sub>
 
 *Written*
 
@@ -2885,9 +2909,9 @@ Given two integers, A and B as input. Write a program to compute LCN of A and B.
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Programmer 2023 — Exam date 3.2.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour — marks as printed: 80 MCQ (1 Hour); Written: 9 Subjective Question (150) + Math 4 (20) + Focus (10) + B/E (20) — pages 1–5, Q3 — [duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md](../duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md)
   - duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3221"></a>
+<a id="g3269"></a>
 
-### Write a program in C/java to print Floyd's Triangle. N is given by user input the Floyd's… <sub>G3221</sub>
+### Write a program in C/java to print Floyd's Triangle. N is given by user input the Floyd's… <sub>G3269</sub>
 
 *Written*
 
@@ -2897,9 +2921,9 @@ Write a program in C/java to print Floyd's Triangle. N is given by user input th
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3519"></a>
+<a id="g3567"></a>
 
-### Write down a C program to check whether a given integer is a prime number.5 <sub>G3519</sub>
+### Write down a C program to check whether a given integer is a prime number.5 <sub>G3567</sub>
 
 *Written*
 
@@ -2909,9 +2933,9 @@ Write down a C program to check whether a given integer is a prime number.5
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, CS Q3 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4041"></a>
+<a id="g4089"></a>
 
-### In C, to retain the values of variables between function calls, we should use: (ক) auto (… <sub>G4041</sub>
+### In C, to retain the values of variables between function calls, we should use: (ক) auto (… <sub>G4089</sub>
 
 *MCQ*
 
@@ -2921,9 +2945,9 @@ In C, to retain the values of variables between function calls, we should use: (
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q103 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4769"></a>
+<a id="g4817"></a>
 
-### Which language is directly understood by the computer without translating? ক machine lang… <sub>G4769</sub>
+### Which language is directly understood by the computer without translating? ক machine lang… <sub>G4817</sub>
 
 *MCQ*
 
@@ -2933,9 +2957,9 @@ Which language is directly understood by the computer without translating? ক m
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries/departments (general pool), Assistant Programmer (9th grade) — Screening MCQ, 21.09.2022 — Exam taker: BPSC — 1 hour — 100 marks (−0.50 per wrong answer) — technical items only, Q33 — [ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md](../ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md)
 
-<a id="g5158"></a>
+<a id="g5206"></a>
 
-### Write a C program to take input a set of integers from command line. Print the summation … <sub>G5158</sub>
+### Write a C program to take input a set of integers from command line. Print the summation … <sub>G5206</sub>
 
 *Written*
 
@@ -2945,9 +2969,9 @@ Write a C program to take input a set of integers from command line. Print the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Dhaka Power Distribution Company Limited — AM ICT (Exam Controller), 27/06/2025 (BUET) (suggestion), Q5 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g2612"></a>
+<a id="g2660"></a>
 
-### C programming invalid variable name? a. Average b. No#of-students c. Xzy d. y23z <sub>G2612</sub>
+### C programming invalid variable name? a. Average b. No#of-students c. Xzy d. y23z <sub>G2660</sub>
 
 *MCQ*
 
@@ -2957,9 +2981,9 @@ C programming invalid variable name? a. Average b. No#of-students c. Xzy d. y23z
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Programming / C++ / OOP Q10 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2976"></a>
+<a id="g3024"></a>
 
-### An employee's total weekly pay is calculated by multiplying the hourly wage and number of… <sub>G2976</sub>
+### An employee's total weekly pay is calculated by multiplying the hourly wage and number of… <sub>G3024</sub>
 
 *Written*
 
@@ -2969,9 +2993,9 @@ An employee's total weekly pay is calculated by multiplying the hourly wage and 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(F) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3855"></a>
+<a id="g3903"></a>
 
-### In the below code snippet, what is the value of x right before the return statement? int … <sub>G3855</sub>
+### In the below code snippet, what is the value of x right before the return statement? int … <sub>G3903</sub>
 
 *MCQ*
 
@@ -2981,9 +3005,9 @@ In the below code snippet, what is the value of x right before the return statem
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q3 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4319"></a>
+<a id="g4367"></a>
 
-### A—— translate file of program source code into machine language <sub>G4319</sub>
+### A—— translate file of program source code into machine language <sub>G4367</sub>
 
 *MCQ*
 
@@ -2993,9 +3017,9 @@ A—— translate file of program source code into machine language
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ68 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4749"></a>
+<a id="g4797"></a>
 
-### নিচের কোনটি Invalid Variable mean? Average / No# of- student / xyz / y23x Printed answer:… <sub>G4749</sub>
+### নিচের কোনটি Invalid Variable mean? Average / No# of- student / xyz / y23x Printed answer:… <sub>G4797</sub>
 
 *MCQ*
 
@@ -3005,9 +3029,9 @@ A—— translate file of program source code into machine language
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 7 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
 
-<a id="g4752"></a>
+<a id="g4800"></a>
 
-### C কী ধরনের প্রোগ্রামিং ভাষা- Low Level language / Mid Level Language / High Level languag… <sub>G4752</sub>
+### C কী ধরনের প্রোগ্রামিং ভাষা- Low Level language / Mid Level Language / High Level languag… <sub>G4800</sub>
 
 *MCQ*
 
@@ -3018,9 +3042,9 @@ C কী ধরনের প্রোগ্রামিং ভাষা- Low Lev
   - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 12 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
 - **Correction:** Bangladeshi exam keys usually expect "Mid Level Language" for C; strictly C is a high-level language with low-level features. The site's key and the common coaching key differ.
 
-<a id="g4780"></a>
+<a id="g4828"></a>
 
-### Which of the following errors is generated when rules of a programming language is violat… <sub>G4780</sub>
+### Which of the following errors is generated when rules of a programming language is violat… <sub>G4828</sub>
 
 *MCQ*
 
@@ -3109,9 +3133,9 @@ What are local and global variables?
   - NTRCA 17th registration viva 2023 (2023) (viva), Q4 — [VIVA/04_ntrca-keywords-and-dbms-keys.md](../VIVA/04_ntrca-keywords-and-dbms-keys.md) · [image](../VIVA/04_ntrca-keywords-and-dbms-keys.jpg)
 - **Printed answer:** Local: defined inside a function/block, accessible only there; global: defined at program start (outside functions), accessible everywhere
 
-<a id="g4991"></a>
+<a id="g5039"></a>
 
-### Programming এ কি টাইপের Variable থাকতে পারে? <sub>G4991</sub>
+### Programming এ কি টাইপের Variable থাকতে পারে? <sub>G5039</sub>
 
 *Viva*
 
@@ -3195,9 +3219,9 @@ C ভাষার বিভিন্ন প্রকার Operator (Unary, Bina
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — থিওরি ও কনসেপচুয়াল প্রশ্নাবলি, Q13 — [18th NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md) · [image](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.jpg)
 
-<a id="g2391"></a>
+<a id="g2439"></a>
 
-### Write a program in C/C++ to perform binary search on a list of integer numbers. <sub>G2391</sub>
+### Write a program in C/C++ to perform binary search on a list of integer numbers. <sub>G2439</sub>
 
 *Written*
 
@@ -3208,9 +3232,9 @@ Write a program in C/C++ to perform binary search on a list of integer numbers.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g5193"></a>
+<a id="g5241"></a>
 
-### Assuming int is of 4 bytes .What is the size of int arr[15] ? ক. 15 খ. 19 গ. 60 ঘ. 11 <sub>G5193</sub>
+### Assuming int is of 4 bytes .What is the size of int arr[15] ? ক. 15 খ. 19 গ. 60 ঘ. 11 <sub>G5241</sub>
 
 *MCQ*
 
@@ -3311,9 +3335,9 @@ Write a program in any language that takes two matrices A and B as inputs ensure
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q38 — [bit to exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md) · [image](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.jpg)
 
-<a id="g1964"></a>
+<a id="g2012"></a>
 
-### 1-D array কীভাবে initialize করা যায়? একটা ফাংশন-এ কীভাবে array আমরা pass করতে পারি? <sub>G1964</sub>
+### 1-D array কীভাবে initialize করা যায়? একটা ফাংশন-এ কীভাবে array আমরা pass করতে পারি? <sub>G2012</sub>
 
 *Written*
 
@@ -3325,9 +3349,9 @@ Write a program in any language that takes two matrices A and B as inputs ensure
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2105"></a>
+<a id="g2153"></a>
 
-### এমন একটি C program লিখুন যা একটি array তৈরি করে কতগুলো ডেটা রাখবে, তারপর ফলাফল হিসেবে ডেট… <sub>G2105</sub>
+### এমন একটি C program লিখুন যা একটি array তৈরি করে কতগুলো ডেটা রাখবে, তারপর ফলাফল হিসেবে ডেট… <sub>G2153</sub>
 
 *Written*
 
@@ -3337,9 +3361,9 @@ Write a program in any language that takes two matrices A and B as inputs ensure
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), [১] (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2322"></a>
+<a id="g2370"></a>
 
-### Write a function which receives an array of integers as parameter and print the numbers d… <sub>G2322</sub>
+### Write a function which receives an array of integers as parameter and print the numbers d… <sub>G2370</sub>
 
 *Written*
 
@@ -3350,9 +3374,9 @@ Write a function which receives an array of integers as parameter and print the 
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q14 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2606"></a>
+<a id="g2654"></a>
 
-### Assuming an int is of 4 bytes, What is the size of “int array[15]”? ক) 15 খ) 19 গ) 11 ঘ) … <sub>G2606</sub>
+### Assuming an int is of 4 bytes, What is the size of “int array[15]”? ক) 15 খ) 19 গ) 11 ঘ) … <sub>G2654</sub>
 
 *MCQ*
 
@@ -3362,9 +3386,9 @@ Assuming an int is of 4 bytes, What is the size of “int array[15]”? ক) 15 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Programming / C++ / OOP Q4 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2724"></a>
+<a id="g2772"></a>
 
-### Python এ Array Lists এর মধ্যে মূল পার্থক্য লিখুন। <sub>G2724</sub>
+### Python এ Array Lists এর মধ্যে মূল পার্থক্য লিখুন। <sub>G2772</sub>
 
 *Written*
 
@@ -3374,9 +3398,9 @@ Python এ Array Lists এর মধ্যে মূল পার্থক্য
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১৭ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g2931"></a>
+<a id="g2979"></a>
 
-### Write a C program using array, here N is the Number of total students. Take the input and… <sub>G2931</sub>
+### Write a C program using array, here N is the Number of total students. Take the input and… <sub>G2979</sub>
 
 *Written*
 
@@ -3386,9 +3410,9 @@ Write a C program using array, here N is the Number of total students. Take the 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 7. Bangladesh Ordnance Factory (BOF) -2022, Assistant Programmer and Assistant Maintenance Engineer; date not printed (2022); exam taker not printed; Total Marks: 100.00 (Non- Technical: 40, Technical: 60); Written; Time: 90.00 Minutes (1.5 Hours); pp. 10-12 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3180"></a>
+<a id="g3228"></a>
 
-### Write a program in any language that takes two Matrix A & B as input. Ensure your code ha… <sub>G3180</sub>
+### Write a program in any language that takes two Matrix A & B as input. Ensure your code ha… <sub>G3228</sub>
 
 *Written*
 
@@ -3398,9 +3422,9 @@ Write a program in any language that takes two Matrix A & B as input. Ensure you
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3465"></a>
+<a id="g3513"></a>
 
-### Suppose an array contain data 1 to 10 randomly. One of them replace with 0. Write c/c++ p… <sub>G3465</sub>
+### Suppose an array contain data 1 to 10 randomly. One of them replace with 0. Write c/c++ p… <sub>G3513</sub>
 
 *Written*
 
@@ -3410,9 +3434,9 @@ Suppose an array contain data 1 to 10 randomly. One of them replace with 0. Writ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 6 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3618"></a>
+<a id="g3666"></a>
 
-### a) Suppose you are working with an array of size 10. It contains all the numbers from 1 t… <sub>G3618</sub>
+### a) Suppose you are working with an array of size 10. It contains all the numbers from 1 t… <sub>G3666</sub>
 
 *Written*
 
@@ -3422,9 +3446,9 @@ a) Suppose you are working with an array of size 10. It contains all the numbers
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-খ Q4(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4603"></a>
+<a id="g4651"></a>
 
-### Write the pseudocode/ program (in any language) to print the common element between two a… <sub>G4603</sub>
+### Write the pseudocode/ program (in any language) to print the common element between two a… <sub>G4651</sub>
 
 *Written*
 
@@ -3434,9 +3458,9 @@ Write the pseudocode/ program (in any language) to print the common element betw
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — Written — 07.02.2025 — Exam taker: not stated (coaching labels FBS / DU; unverified) — marks not printed — recollection, R2 — [bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md](../bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md)
 
-<a id="g2608"></a>
+<a id="g2656"></a>
 
-### When you pass an array as an argument to a function, what actually gets passed? A. All th… <sub>G2608</sub>
+### When you pass an array as an argument to a function, what actually gets passed? A. All th… <sub>G2656</sub>
 
 *MCQ*
 
@@ -3446,9 +3470,9 @@ When you pass an array as an argument to a function, what actually gets passed? 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Programming / C++ / OOP Q6 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2903"></a>
+<a id="g2951"></a>
 
-### Write the difference between structure and array. <sub>G2903</sub>
+### Write the difference between structure and array. <sub>G2951</sub>
 
 *Written*
 
@@ -3458,9 +3482,9 @@ Write the difference between structure and array.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 2. বাংলাদেশ সমরাস্ত্র কারখানা: (BOF)-2021, Assistant Engineer; (EEE/ME/CSE), 06-03-2021; exam taker not printed; Full Mark: 100 [Non-40, Department-60]; pp. 2-4 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3988"></a>
+<a id="g4036"></a>
 
-### Consider an array of float. Calculate the difference between the address of the1st and 4t… <sub>G3988</sub>
+### Consider an array of float. Calculate the difference between the address of the1st and 4t… <sub>G4036</sub>
 
 *MCQ*
 
@@ -3482,9 +3506,9 @@ Write a C/C++/Java program that reports whether an integer array is ascending, d
 - **Source:**
   - BUET MSc in CSE (2026-10-03), Q4 — [BUET JOB/38_buet-msc-cse-questions-1-9.md](../BUET%20JOB/38_buet-msc-cse-questions-1-9.md) · [image](../BUET%20JOB/38_buet-msc-cse-questions-1-9.jpg); [BUET JOB/23_buet-msc-cse-questions-1-9.md](../BUET%20JOB/23_buet-msc-cse-questions-1-9.md) · [image](../BUET%20JOB/23_buet-msc-cse-questions-1-9.jpg)
 
-<a id="g2158"></a>
+<a id="g2206"></a>
 
-### একটি Array-তে পাঁচটি সংখ্যা ইনপুট হিসেবে নিয়ে তাদের গড় বের করার জন্য C প্রোগামিং ল্যাঙ্… <sub>G2158</sub>
+### একটি Array-তে পাঁচটি সংখ্যা ইনপুট হিসেবে নিয়ে তাদের গড় বের করার জন্য C প্রোগামিং ল্যাঙ্… <sub>G2206</sub>
 
 *Written*
 
@@ -3494,9 +3518,9 @@ Write a C/C++/Java program that reports whether an integer array is ascending, d
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ১। ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g1820"></a>
+<a id="g1868"></a>
 
-### Write a C program that accepts N integers and performs the following operations: Display … <sub>G1820</sub>
+### Write a C program that accepts N integers and performs the following operations: Display … <sub>G1868</sub>
 
 *Written*
 
@@ -3506,9 +3530,9 @@ Write a C program that accepts N integers and performs the following operations:
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q38 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g2375"></a>
+<a id="g2423"></a>
 
-### Write Pseudocode to implement Enqueue and Dequeue operation array of C. [BCS – 36th(ICT)] <sub>G2375</sub>
+### Write Pseudocode to implement Enqueue and Dequeue operation array of C. [BCS – 36th(ICT)] <sub>G2423</sub>
 
 *Written*
 
@@ -3519,9 +3543,9 @@ Write Pseudocode to implement Enqueue and Dequeue operation array of C. [BCS –
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2377"></a>
+<a id="g2425"></a>
 
-### Write a C function for the following: (a) Determine whether a given number is prime or no… <sub>G2377</sub>
+### Write a C function for the following: (a) Determine whether a given number is prime or no… <sub>G2425</sub>
 
 *Written*
 
@@ -3532,9 +3556,9 @@ Write a C function for the following: (a) Determine whether a given number is pr
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2383"></a>
+<a id="g2431"></a>
 
-### What is the main difference between structure and array in C programming? Explain with ex… <sub>G2383</sub>
+### What is the main difference between structure and array in C programming? Explain with ex… <sub>G2431</sub>
 
 *Written*
 
@@ -3545,9 +3569,9 @@ What is the main difference between structure and array in C programming? Explai
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2400"></a>
+<a id="g2448"></a>
 
-### Write a C Program to multiply two matrices . <sub>G2400</sub>
+### Write a C Program to multiply two matrices . <sub>G2448</sub>
 
 *Written*
 
@@ -3558,9 +3582,9 @@ Write a C Program to multiply two matrices .
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2402"></a>
+<a id="g2450"></a>
 
-### Write a Program in C/C++/Java to search an element in an array using binary search <sub>G2402</sub>
+### Write a Program in C/C++/Java to search an element in an array using binary search <sub>G2450</sub>
 
 *Written*
 
@@ -3571,9 +3595,9 @@ Write a Program in C/C++/Java to search an element in an array using binary sear
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g3504"></a>
+<a id="g3552"></a>
 
-### Write a C function for the following: (b) Print the following matrix using for loop. 1 22… <sub>G3504</sub>
+### Write a C function for the following: (b) Print the following matrix using for loop. 1 22… <sub>G3552</sub>
 
 *Written*
 
@@ -3583,9 +3607,9 @@ Write a C function for the following: (b) Print the following matrix using for l
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q10(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3505"></a>
+<a id="g3553"></a>
 
-### Write a C function for the following: (c) Find the largest number within the array of N e… <sub>G3505</sub>
+### Write a C function for the following: (c) Find the largest number within the array of N e… <sub>G3553</sub>
 
 *Written*
 
@@ -3595,9 +3619,9 @@ Write a C function for the following: (c) Find the largest number within the arr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q10(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g5033"></a>
+<a id="g5081"></a>
 
-### Write a simple program (C or Python) to find the largest number in an integer array. (Sho… <sub>G5033</sub>
+### Write a simple program (C or Python) to find the largest number in an integer array. (Sho… <sub>G5081</sub>
 
 *Written*
 
@@ -3607,9 +3631,9 @@ Write a simple program (C or Python) to find the largest number in an integer ar
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper I) (suggestion), C4 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5199"></a>
+<a id="g5247"></a>
 
-### When you pass an array as an argument to a function, what actually gets passed? ক. All th… <sub>G5199</sub>
+### When you pass an array as an argument to a function, what actually gets passed? ক. All th… <sub>G5247</sub>
 
 *MCQ*
 
@@ -3645,9 +3669,9 @@ Write a program from the following series: $e^x = 1 + \frac{x}{1!} + \frac{x^2}{
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q40 — [bit to exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md) · [image](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.jpg)
 
-<a id="g1965"></a>
+<a id="g2013"></a>
 
-### একটি C program লিখুন যা একটি 5-digit সংখ্যার সকল digit-এর যোগফল নিরূপণ করতে পারে। এই prog… <sub>G1965</sub>
+### একটি C program লিখুন যা একটি 5-digit সংখ্যার সকল digit-এর যোগফল নিরূপণ করতে পারে। এই prog… <sub>G2013</sub>
 
 *Written*
 
@@ -3659,9 +3683,9 @@ Write a program from the following series: $e^x = 1 + \frac{x}{1!} + \frac{x^2}{
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2134"></a>
+<a id="g2182"></a>
 
-### কী ওয়ার্ড কাকে বলে? ১+৩+৫+.............+১০০ পর্যন্ত সকল বিজোড় পূর্ণ সংখ্যার যোগফল বের ক… <sub>G2134</sub>
+### কী ওয়ার্ড কাকে বলে? ১+৩+৫+.............+১০০ পর্যন্ত সকল বিজোড় পূর্ণ সংখ্যার যোগফল বের ক… <sub>G2182</sub>
 
 *Written*
 
@@ -3671,9 +3695,9 @@ Write a program from the following series: $e^x = 1 + \frac{x}{1!} + \frac{x^2}{
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৩ (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2552"></a>
+<a id="g2600"></a>
 
-### Write a C Program to determine the sum of the score from the following table.If the alpha… <sub>G2552</sub>
+### Write a C Program to determine the sum of the score from the following table.If the alpha… <sub>G2600</sub>
 
 *Written*
 
@@ -3683,9 +3707,9 @@ Write a C Program to determine the sum of the score from the following table.If 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Directorate of Food, Ministry of Food (DG Food), Assistant Programmer — Practical Test, 17.01.2022 — Exam Taker: BCC — time not printed — marks not printed ("Score : 30", "Score: 7" printed in header) — page 1, Q1 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g3220"></a>
+<a id="g3268"></a>
 
-### Write a e/java program that calculate the given series sum: 1+2+4+7+11+……..+n_th term. <sub>G3220</sub>
+### Write a e/java program that calculate the given series sum: 1+2+4+7+11+……..+n_th term. <sub>G3268</sub>
 
 *Written*
 
@@ -3695,9 +3719,9 @@ Write a e/java program that calculate the given series sum: 1+2+4+7+11+……..+
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3235"></a>
+<a id="g3283"></a>
 
-### Write a program from the following series: e^x= 1 + x/1 + x^2/2! + x^3/3! +…… [Combined B… <sub>G3235</sub>
+### Write a program from the following series: e^x= 1 + x/1 + x^2/2! + x^3/3! +…… [Combined B… <sub>G3283</sub>
 
 *Written*
 
@@ -3707,9 +3731,9 @@ Write a program from the following series: e^x= 1 + x/1 + x^2/2! + x^3/3! +…�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3271"></a>
+<a id="g3319"></a>
 
-### Write a structured program (in C or Python) that takes an integer input n and prints the … <sub>G3271</sub>
+### Write a structured program (in C or Python) that takes an integer input n and prints the … <sub>G3319</sub>
 
 *Written*
 
@@ -3719,9 +3743,9 @@ Write a structured program (in C or Python) that takes an integer input n and pr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3550"></a>
+<a id="g3598"></a>
 
-### c. Write a program in C that sum of digits of a number.4 <sub>G3550</sub>
+### c. Write a program in C that sum of digits of a number.4 <sub>G3598</sub>
 
 *Written*
 
@@ -3731,9 +3755,9 @@ c. Write a program in C that sum of digits of a number.4
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q7(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3554"></a>
+<a id="g3602"></a>
 
-### Write a Program in C programming language that prints summation of the following series: … <sub>G3554</sub>
+### Write a Program in C programming language that prints summation of the following series: … <sub>G3602</sub>
 
 *Written*
 
@@ -3743,9 +3767,9 @@ Write a Program in C programming language that prints summation of the following
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 35 — মৎস্য ও প্রাণীসম্পদ অধিদপ্তরের ইন্সট্রাক্টর কম্পিউটার সায়েন্স — তারিখঃ ২০.০৬.২০২৩ — exam taker not printed — time and total not printed — pages 10–13, Q2 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g5143"></a>
+<a id="g5191"></a>
 
-### Write a program that takes a single alphanumeric string as input. The string may contain … <sub>G5143</sub>
+### Write a program that takes a single alphanumeric string as input. The string may contain … <sub>G5191</sub>
 
 *Written*
 
@@ -3755,9 +3779,9 @@ Write a program that takes a single alphanumeric string as input. The string may
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Jamuna Oil Company Limited — Junior Officer (IT & MIS), 23/05/2025 (BUET) (suggestion), Q6 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g2457"></a>
+<a id="g2505"></a>
 
-### ১ থেকে ১০০ পর্যন্ত সংখ্যা থেকে জোড় সংখ্যা গুলোর যোগফল নির্ণয়ের একটি প্রোগ্রাম লিখ? <sub>G2457</sub>
+### ১ থেকে ১০০ পর্যন্ত সংখ্যা থেকে জোড় সংখ্যা গুলোর যোগফল নির্ণয়ের একটি প্রোগ্রাম লিখ? <sub>G2505</sub>
 
 *Written*
 
@@ -3767,9 +3791,9 @@ Write a program that takes a single alphanumeric string as input. The string may
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 2 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g4165"></a>
+<a id="g4213"></a>
 
-### 'সি' প্রোগ্রামিং ভাষায় ১ থেকে N-তম সংখ্যার যোগফল বের করার জন্য একটি প্রোগ্রাম লিখুন। <sub>G4165</sub>
+### 'সি' প্রোগ্রামিং ভাষায় ১ থেকে N-তম সংখ্যার যোগফল বের করার জন্য একটি প্রোগ্রাম লিখুন। <sub>G4213</sub>
 
 *Written*
 
@@ -3779,9 +3803,9 @@ Write a program that takes a single alphanumeric string as input. The string may
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৫(খ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4194"></a>
+<a id="g4242"></a>
 
-### অ্যারে প্রসেসর কী? 1 + 1/2 + 1/3 + ⋯ + 1/N ধারাটির যোগফল নির্ণয়ের জন্য সি ভাষায় একটি প্… <sub>G4194</sub>
+### অ্যারে প্রসেসর কী? 1 + 1/2 + 1/3 + ⋯ + 1/N ধারাটির যোগফল নির্ণয়ের জন্য সি ভাষায় একটি প্… <sub>G4242</sub>
 
 *Written*
 
@@ -3791,9 +3815,9 @@ Write a program that takes a single alphanumeric string as input. The string may
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৩ অথবা (গ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4708"></a>
+<a id="g4756"></a>
 
-### Write a c/c++ program up to series n: 1/(2X3) + 2/(3X4) + 3/(4X5) + ⋯ <sub>G4708</sub>
+### Write a c/c++ program up to series n: 1/(2X3) + 2/(3X4) + 3/(4X5) + ⋯ <sub>G4756</sub>
 
 *Written*
 
@@ -3827,9 +3851,9 @@ Write a program in C++ to calculate the sum of the series: 1+(1+2)+(1+2+3)+....+
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued), Q49 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2062"></a>
+<a id="g2110"></a>
 
-### 1² + 2² + 3² + ............ + N² ধারাটির যোগফল বের করার প্রোগ্রাম লিখুন (User defined fun… <sub>G2062</sub>
+### 1² + 2² + 3² + ............ + N² ধারাটির যোগফল বের করার প্রোগ্রাম লিখুন (User defined fun… <sub>G2110</sub>
 
 *Written*
 
@@ -3839,9 +3863,9 @@ Write a program in C++ to calculate the sum of the series: 1+(1+2)+(1+2+3)+....+
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫ অথবা (খ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g4821"></a>
+<a id="g4869"></a>
 
-### Write a program to find out the minimum number from a series. <sub>G4821</sub>
+### Write a program to find out the minimum number from a series. <sub>G4869</sub>
 
 *Written*
 
@@ -3935,9 +3959,21 @@ Write a C program to sum of the series $(1 - 0) + (2 - 1) + (4 - 2) + \cdots + (
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q2 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
 
-<a id="g2381"></a>
+<a id="g1847"></a>
 
-### Write down a program to find sum of diagonal elements of a two dimensional matrix <sub>G2381</sub>
+### C program: sum of series 1 + 11 + 111 + ... up to N <sub>G1847</sub>
+
+*Written*
+
+C program: sum of series 1 + 11 + 111 + ... up to N
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q106 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g2429"></a>
+
+### Write down a program to find sum of diagonal elements of a two dimensional matrix <sub>G2429</sub>
 
 *Written*
 
@@ -3948,9 +3984,9 @@ Write down a program to find sum of diagonal elements of a two dimensional matri
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2382"></a>
+<a id="g2430"></a>
 
-### Write down a function in C Programming language, that will take an nxn matrix as paramete… <sub>G2382</sub>
+### Write down a function in C Programming language, that will take an nxn matrix as paramete… <sub>G2430</sub>
 
 *Written*
 
@@ -3961,9 +3997,9 @@ Write down a function in C Programming language, that will take an nxn matrix as
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2389"></a>
+<a id="g2437"></a>
 
-### Write down a function to compute the sum of the row a nxn matrix of integer. <sub>G2389</sub>
+### Write down a function to compute the sum of the row a nxn matrix of integer. <sub>G2437</sub>
 
 *Written*
 
@@ -3974,9 +4010,9 @@ Write down a function to compute the sum of the row a nxn matrix of integer.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2581"></a>
+<a id="g2629"></a>
 
-### Write a C program to sum of the series (1-0)+(2-1)+(4-2)+…………+(2^n – n +1) <sub>G2581</sub>
+### Write a C program to sum of the series (1-0)+(2-1)+(4-2)+…………+(2^n – n +1) <sub>G2629</sub>
 
 *Written*
 
@@ -4026,9 +4062,9 @@ Pointer কী? Pointer ব্যবহারের সুবিধাসমূ�
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q21 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
 
-<a id="g2106"></a>
+<a id="g2154"></a>
 
-### Pointer কী? Pointer ব্যবহারের সুবিধাগুলো লিখুন। <sub>G2106</sub>
+### Pointer কী? Pointer ব্যবহারের সুবিধাগুলো লিখুন। <sub>G2154</sub>
 
 *Written*
 
@@ -4038,9 +4074,9 @@ Pointer কী? Pointer ব্যবহারের সুবিধাগুল�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), [১] অথবা (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g3082"></a>
+<a id="g3130"></a>
 
-### Describe Dynamic memory allocation in programming in C. <sub>G3082</sub>
+### Describe Dynamic memory allocation in programming in C. <sub>G3130</sub>
 
 *Written*
 
@@ -4050,9 +4086,9 @@ Describe Dynamic memory allocation in programming in C.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4033"></a>
+<a id="g4081"></a>
 
-### Which one below declares a function pointer (f) pointing to a function taking an int and … <sub>G4033</sub>
+### Which one below declares a function pointer (f) pointing to a function taking an int and … <sub>G4081</sub>
 
 *MCQ*
 
@@ -4099,9 +4135,9 @@ What is file pointer in C?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q23 — [bit to exabyte/17_bte-g2-p03-c-programming-q06-23.md](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.md) · [image](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.jpg)
 
-<a id="g2610"></a>
+<a id="g2658"></a>
 
-### What is the following declaration for? int (*a)[10]; A. Pointer to an array of 10 integer… <sub>G2610</sub>
+### What is the following declaration for? int (*a)[10]; A. Pointer to an array of 10 integer… <sub>G2658</sub>
 
 *MCQ*
 
@@ -4111,9 +4147,9 @@ What is the following declaration for? int (*a)[10]; A. Pointer to an array of 1
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Programming / C++ / OOP Q8 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3863"></a>
+<a id="g3911"></a>
 
-### Let p be a pointer to float that is pointing to the first element of an array of floats. … <sub>G3863</sub>
+### Let p be a pointer to float that is pointing to the first element of an array of floats. … <sub>G3911</sub>
 
 *MCQ*
 
@@ -4123,9 +4159,9 @@ Let p be a pointer to float that is pointing to the first element of an array of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q11 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3975"></a>
+<a id="g4023"></a>
 
-### Which of the following is the correct syntax to pass a Function Pointer as an argument? (… <sub>G3975</sub>
+### Which of the following is the correct syntax to pass a Function Pointer as an argument? (… <sub>G4023</sub>
 
 *MCQ*
 
@@ -4159,9 +4195,9 @@ Which of the following is the correct syntax to pass a Function Pointer as an ar
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — থিওরি ও কনসেপচুয়াল প্রশ্নাবলি, Q17 — [18th NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md) · [image](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.jpg)
 
-<a id="g1938"></a>
+<a id="g1986"></a>
 
-### How does dynamic memory allocation help in managing data . <sub>G1938</sub>
+### How does dynamic memory allocation help in managing data . <sub>G1986</sub>
 
 *Written*
 
@@ -4171,9 +4207,9 @@ How does dynamic memory allocation help in managing data .
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 3.(a) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
 
-<a id="g2840"></a>
+<a id="g2888"></a>
 
-### In the case of C programming, how does pointer arithmetic behave? Illustrate with an exam… <sub>G2840</sub>
+### In the case of C programming, how does pointer arithmetic behave? Illustrate with an exam… <sub>G2888</sub>
 
 *Written*
 
@@ -4183,9 +4219,9 @@ In the case of C programming, how does pointer arithmetic behave? Illustrate wit
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 1.(a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3775"></a>
+<a id="g3823"></a>
 
-### 5 short questions related to pointer arithmetic of C, this included multidimensional arra… <sub>G3775</sub>
+### 5 short questions related to pointer arithmetic of C, this included multidimensional arra… <sub>G3823</sub>
 
 *Written*
 
@@ -4195,9 +4231,9 @@ In the case of C programming, how does pointer arithmetic behave? Illustrate wit
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q5 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-<a id="g4958"></a>
+<a id="g5006"></a>
 
-### Sir: Pointer কী? <sub>G4958</sub>
+### Sir: Pointer কী? <sub>G5006</sub>
 
 *Viva*
 
@@ -4233,9 +4269,9 @@ Array ও Pointer এর মধ্যে উদাহরণসহ পার্�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued), Q18 — [18th NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md) · [image](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.jpg)
 
-<a id="g5203"></a>
+<a id="g5251"></a>
 
-### What is the following declaration for? int (*a)[10]; ক. Pointer to an array of 10 integer… <sub>G5203</sub>
+### What is the following declaration for? int (*a)[10]; ক. Pointer to an array of 10 integer… <sub>G5251</sub>
 
 *MCQ*
 
@@ -4283,9 +4319,9 @@ Write a function that replaces each letter with the next letter (case preserved,
 - **Source:**
   - ICB Securities Trading Company Limited Assistant Programmer (2026-06-27), Q1 — [Exam_ICB_Securities_Assistant_Programmer_2026-06-27.md](../Exam_ICB_Securities_Assistant_Programmer_2026-06-27.md) · [image](../Exam_ICB_Securities_Assistant_Programmer_2026-06-27.jpg)
 
-<a id="g2934"></a>
+<a id="g2982"></a>
 
-### Write a java program to counting the vowel and consonant into a given strings. <sub>G2934</sub>
+### Write a java program to counting the vowel and consonant into a given strings. <sub>G2982</sub>
 
 *Written*
 
@@ -4295,9 +4331,9 @@ Write a java program to counting the vowel and consonant into a given strings.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 7. Bangladesh Ordnance Factory (BOF) -2022, Assistant Programmer and Assistant Maintenance Engineer; date not printed (2022); exam taker not printed; Total Marks: 100.00 (Non- Technical: 40, Technical: 60); Written; Time: 90.00 Minutes (1.5 Hours); pp. 10-12 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3675"></a>
+<a id="g3723"></a>
 
-### Consider the following Java program and determine the integer value printed by the execut… <sub>G3675</sub>
+### Consider the following Java program and determine the integer value printed by the execut… <sub>G3723</sub>
 
 *Written*
 
@@ -4307,9 +4343,9 @@ Consider the following Java program and determine the integer value printed by t
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12, Q18 — [duranta/1785328629-so-it-job-id-25104/1785328629.md](../duranta/1785328629-so-it-job-id-25104/1785328629.md)
 
-<a id="g5149"></a>
+<a id="g5197"></a>
 
-### Check a given integer is palindrome or not <sub>G5149</sub>
+### Check a given integer is palindrome or not <sub>G5197</sub>
 
 *Written*
 
@@ -4319,9 +4355,9 @@ Check a given integer is palindrome or not
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering & Technology — AP (Exam Controller), 21/06/2025 (suggestion), Q1 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g5159"></a>
+<a id="g5207"></a>
 
-### Write C/ Java Function to convert given String to Integers without using a library functi… <sub>G5159</sub>
+### Write C/ Java Function to convert given String to Integers without using a library functi… <sub>G5207</sub>
 
 *Written*
 
@@ -4343,9 +4379,9 @@ Write a C program to find the length of a String without using function strlen()
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q42 — [bit to exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.md) · [image](../bit%20to%20exabyte/21_bte-g2-p07-c-q34-42-oop-q01.jpg)
 
-<a id="g3023"></a>
+<a id="g3071"></a>
 
-### Given an IP4 address String, write C/C++/JAVA code to show the class the IP address belon… <sub>G3023</sub>
+### Given an IP4 address String, write C/C++/JAVA code to show the class the IP address belon… <sub>G3071</sub>
 
 *Written*
 
@@ -4355,9 +4391,9 @@ Given an IP4 address String, write C/C++/JAVA code to show the class the IP addr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — Assistant Network Engineer (ANE) – RBL [ANE RBL 2021 CTI] — 16.03.2021 — Exam taker: CTI (from the printed tag) — 10*16 marks +2*20 marks = 200 — pages 10–11, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3446"></a>
+<a id="g3494"></a>
 
-### Find the Reverse function for the following input : one positive and other is negative in… <sub>G3446</sub>
+### Find the Reverse function for the following input : one positive and other is negative in… <sub>G3494</sub>
 
 *Written*
 
@@ -4367,9 +4403,9 @@ Find the Reverse function for the following input : one positive and other is ne
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 9 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3843"></a>
+<a id="g3891"></a>
 
-### Write a function to reverse a string without using global variable. <sub>G3843</sub>
+### Write a function to reverse a string without using global variable. <sub>G3891</sub>
 
 *Written*
 
@@ -4404,9 +4440,9 @@ Write a C program to reverse an integer.
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued), Q48 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2826"></a>
+<a id="g2874"></a>
 
-### An integer number can be reversed by separating the digits and placing them into another … <sub>G2826</sub>
+### An integer number can be reversed by separating the digits and placing them into another … <sub>G2874</sub>
 
 *Written*
 
@@ -4416,9 +4452,9 @@ An integer number can be reversed by separating the digits and placing them into
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 6 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3725"></a>
+<a id="g3773"></a>
 
-### Write down a method in c++to reverse a char array. You are not permitted to use temp arra… <sub>G3725</sub>
+### Write down a method in c++to reverse a char array. You are not permitted to use temp arra… <sub>G3773</sub>
 
 *Written*
 
@@ -4464,9 +4500,9 @@ Write a C program to replace a specified character in a string with another char
 - **Source:**
   - Bit to Exabyte Model Test 01, 2 Oct 2026 (coaching mock, not a real paper) — Bit to Exabyte Model Test 01 (2026-10-02), Q6 — [model test/01_bte-model-test-01-2026-10-02.md](../model%20test/01_bte-model-test-01-2026-10-02.md) · [image](../model%20test/01_bte-model-test-01-2026-10-02.jpg)
 
-<a id="g1847"></a>
+<a id="g1895"></a>
 
-### Common String Problems in C — Problem 1 — Count Vowels, Consonants, Digits and Spaces: Wr… <sub>G1847</sub>
+### Common String Problems in C — Problem 1 — Count Vowels, Consonants, Digits and Spaces: Wr… <sub>G1895</sub>
 
 *Written*
 
@@ -4476,9 +4512,9 @@ Common String Problems in C — Problem 1 — Count Vowels, Consonants, Digits a
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 03: Strings in C (book pages 473–486), String problem 1 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1848"></a>
+<a id="g1896"></a>
 
-### Advanced String Problem — Frequency Analysis: calculate the frequency of every character … <sub>G1848</sub>
+### Advanced String Problem — Frequency Analysis: calculate the frequency of every character … <sub>G1896</sub>
 
 *Written*
 
@@ -4488,9 +4524,9 @@ Advanced String Problem — Frequency Analysis: calculate the frequency of every
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 03: Strings in C (book pages 473–486), String problem 2 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g2378"></a>
+<a id="g2426"></a>
 
-### Write down a program in C/C to reverse a string <sub>G2378</sub>
+### Write down a program in C/C to reverse a string <sub>G2426</sub>
 
 *Written*
 
@@ -4501,9 +4537,9 @@ Write down a program in C/C to reverse a string
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2380"></a>
+<a id="g2428"></a>
 
-### Write down a program to find length of a string without using any library function. <sub>G2380</sub>
+### Write down a program to find length of a string without using any library function. <sub>G2428</sub>
 
 *Written*
 
@@ -4514,9 +4550,9 @@ Write down a program to find length of a string without using any library functi
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2398"></a>
+<a id="g2446"></a>
 
-### Write down a C function to sort a list of strings in alphabetic order . <sub>G2398</sub>
+### Write down a C function to sort a list of strings in alphabetic order . <sub>G2446</sub>
 
 *Written*
 
@@ -4529,9 +4565,9 @@ Write down a C function to sort a list of strings in alphabetic order .
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g5131"></a>
+<a id="g5179"></a>
 
-### Reversing a string without using any built-in library functions can be done manually usin… <sub>G5131</sub>
+### Reversing a string without using any built-in library functions can be done manually usin… <sub>G5179</sub>
 
 *Written*
 
@@ -4544,9 +4580,9 @@ Reversing a string without using any built-in library functions can be done manu
 
 ## Other
 
-<a id="g4212"></a>
+<a id="g4260"></a>
 
-### কম্পাইলার এবং ইন্টারপ্রিটারের মধ্যে পার্থক্য লিখুন। <sub>G4212</sub>
+### কম্পাইলার এবং ইন্টারপ্রিটারের মধ্যে পার্থক্য লিখুন। <sub>G4260</sub>
 
 *Written*
 
@@ -4558,9 +4594,9 @@ Reversing a string without using any built-in library functions can be done manu
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ২ অথবা (গ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৯ — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g1884"></a>
+<a id="g1932"></a>
 
-### (Same salary/tax table) b. From the three employee salary find the highest tax paying emp… <sub>G1884</sub>
+### (Same salary/tax table) b. From the three employee salary find the highest tax paying emp… <sub>G1932</sub>
 
 *Written*
 
@@ -4570,9 +4606,9 @@ Reversing a string without using any built-in library functions can be done manu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Assistant Manager (ICT) 12/01/2024, Q1(b) — [duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md](../duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md)
 
-<a id="g2096"></a>
+<a id="g2144"></a>
 
-### দুটি সংখ্যার গ.সা.গু নির্ণয়ের জন্য অ্যালগরিদম লিখুন। <sub>G2096</sub>
+### দুটি সংখ্যার গ.সা.গু নির্ণয়ের জন্য অ্যালগরিদম লিখুন। <sub>G2144</sub>
 
 *Written*
 
@@ -4582,9 +4618,9 @@ Reversing a string without using any built-in library functions can be done manu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৭। — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2103"></a>
+<a id="g2151"></a>
 
-### অ্যালগরিদম কী? অ্যালগরিদমের বৈশিষ্ট্যগুলো লিখুন। <sub>G2103</sub>
+### অ্যালগরিদম কী? অ্যালগরিদমের বৈশিষ্ট্যগুলো লিখুন। <sub>G2151</sub>
 
 *Written*
 
@@ -4594,9 +4630,9 @@ Reversing a string without using any built-in library functions can be done manu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ১০ অথবা — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2135"></a>
+<a id="g2183"></a>
 
-### চলক কী? স্থানীয় চলক ও সার্বজনীন চলকের মধ্যে পার্থক্য লিখুন। <sub>G2135</sub>
+### চলক কী? স্থানীয় চলক ও সার্বজনীন চলকের মধ্যে পার্থক্য লিখুন। <sub>G2183</sub>
 
 *Written*
 
@@ -4606,9 +4642,9 @@ Reversing a string without using any built-in library functions can be done manu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৩ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2952"></a>
+<a id="g3000"></a>
 
-### Count number of digits in a given number. <sub>G2952</sub>
+### Count number of digits in a given number. <sub>G3000</sub>
 
 *Written*
 
@@ -4618,9 +4654,9 @@ Count number of digits in a given number.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 10. Bangladesh Krira Shikkha Protishtan (BKSP), Assistant Programmer, 04-12-2022; exam taker not printed; Total Marks: 30; Time: 45 Minute; p. 16 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2953"></a>
+<a id="g3001"></a>
 
-### N সংখ্যক নাম্বার কিবোর্ড থেকে নিয়ে সবচেয়ে বড় এবং ছোট টা প্রিন্ট করো। <sub>G2953</sub>
+### N সংখ্যক নাম্বার কিবোর্ড থেকে নিয়ে সবচেয়ে বড় এবং ছোট টা প্রিন্ট করো। <sub>G3001</sub>
 
 *Written*
 
@@ -4630,9 +4666,9 @@ N সংখ্যক নাম্বার কিবোর্ড থেকে �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 10. Bangladesh Krira Shikkha Protishtan (BKSP), Assistant Programmer, 04-12-2022; exam taker not printed; Total Marks: 30; Time: 45 Minute; p. 16 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3181"></a>
+<a id="g3229"></a>
 
-### What is platform-independent software? Give an example. <sub>G3181</sub>
+### What is platform-independent software? Give an example. <sub>G3229</sub>
 
 *Written*
 
@@ -4642,9 +4678,9 @@ What is platform-independent software? Give an example.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3712"></a>
+<a id="g3760"></a>
 
-### What is JDBC? Explain the steps required to connect a Java application to a MySQL databas… <sub>G3712</sub>
+### What is JDBC? Explain the steps required to connect a Java application to a MySQL databas… <sub>G3760</sub>
 
 *Written*
 
@@ -4654,9 +4690,9 @@ What is JDBC? Explain the steps required to connect a Java application to a MySQ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, Q6.10 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g2458"></a>
+<a id="g2506"></a>
 
-### তিনটি সংখ্যার মধ্যে বড় সংখ্যা নির্ণয়ের Algorithm লিখ। <sub>G2458</sub>
+### তিনটি সংখ্যার মধ্যে বড় সংখ্যা নির্ণয়ের Algorithm লিখ। <sub>G2506</sub>
 
 *Written*
 
@@ -4666,9 +4702,9 @@ What is JDBC? Explain the steps required to connect a Java application to a MySQ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 3 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g4167"></a>
+<a id="g4215"></a>
 
-### অনুবাদক সফটওয়্যার কী? এর প্রকারভেদ আলোচনা করুন। <sub>G4167</sub>
+### অনুবাদক সফটওয়্যার কী? এর প্রকারভেদ আলোচনা করুন। <sub>G4215</sub>
 
 *Written*
 
@@ -4678,9 +4714,9 @@ What is JDBC? Explain the steps required to connect a Java application to a MySQ
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৫ অথবা (ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4301"></a>
+<a id="g4349"></a>
 
-### Which of the following language does not need any translation <sub>G4301</sub>
+### Which of the following language does not need any translation <sub>G4349</sub>
 
 *MCQ*
 
@@ -4690,9 +4726,9 @@ Which of the following language does not need any translation
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ50 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g2005"></a>
+<a id="g2053"></a>
 
-### আমি কী ৩২৬৭৮ মান সংরক্ষণ করতে ‘in+’ ডাটা টাইপ ব্যবহার করতে পারি? না পারলে কেন? <sub>G2005</sub>
+### আমি কী ৩২৬৭৮ মান সংরক্ষণ করতে ‘in+’ ডাটা টাইপ ব্যবহার করতে পারি? না পারলে কেন? <sub>G2053</sub>
 
 *Written*
 
@@ -4702,9 +4738,9 @@ Which of the following language does not need any translation
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ১ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2006"></a>
+<a id="g2054"></a>
 
-### ‘++a’ এবং `a++’ অভিব্যক্তি দুটির মধ্যে পার্থক্য কী? উদাহরণসহ ব্যাখ্যা করুন। <sub>G2006</sub>
+### ‘++a’ এবং `a++’ অভিব্যক্তি দুটির মধ্যে পার্থক্য কী? উদাহরণসহ ব্যাখ্যা করুন। <sub>G2054</sub>
 
 *Written*
 
@@ -4714,9 +4750,9 @@ Which of the following language does not need any translation
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ১ (গ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2064"></a>
+<a id="g2112"></a>
 
-### ফাংশন প্রেটোটাইপ ও ওভারলোড ফাংশন বলতে কি বুঝায়? <sub>G2064</sub>
+### ফাংশন প্রেটোটাইপ ও ওভারলোড ফাংশন বলতে কি বুঝায়? <sub>G2112</sub>
 
 *Written*
 
@@ -4726,9 +4762,9 @@ Which of the following language does not need any translation
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৬। — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g4117"></a>
+<a id="g4165"></a>
 
-### Call-by-Reference এবং Call-by-Value বলতে কী বুঝেন? <sub>G4117</sub>
+### Call-by-Reference এবং Call-by-Value বলতে কী বুঝেন? <sub>G4165</sub>
 
 *Written*
 
@@ -4738,9 +4774,9 @@ Call-by-Reference এবং Call-by-Value বলতে কী বুঝেন?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ২(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4141"></a>
+<a id="g4189"></a>
 
-### ক্যান কনভারশন বলতে কী বুঝেন? ক্যান কনভারশন এর পার্শ্বপ্রতিক্রিয়া (Side Effects) সমূহ লিখ… <sub>G4141</sub>
+### ক্যান কনভারশন বলতে কী বুঝেন? ক্যান কনভারশন এর পার্শ্বপ্রতিক্রিয়া (Side Effects) সমূহ লিখ… <sub>G4189</sub>
 
 *Written*
 
@@ -4764,9 +4800,9 @@ Distinguish between Compiler and Interpreter with example.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q6 — [bit to exabyte/17_bte-g2-p03-c-programming-q06-23.md](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.md) · [image](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.jpg)
 
-<a id="g2393"></a>
+<a id="g2441"></a>
 
-### (a) How does a compiler handle comments in source code? 5 <sub>G2393</sub>
+### (a) How does a compiler handle comments in source code? 5 <sub>G2441</sub>
 
 *Written*
 
@@ -4778,9 +4814,9 @@ Distinguish between Compiler and Interpreter with example.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q3(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g2615"></a>
+<a id="g2663"></a>
 
-### A computer program that converts an entire program into machine language is called a/an; … <sub>G2615</sub>
+### A computer program that converts an entire program into machine language is called a/an; … <sub>G2663</sub>
 
 *MCQ*
 
@@ -4790,9 +4826,9 @@ A computer program that converts an entire program into machine language is call
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Programming / C++ / OOP Q13 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3283"></a>
+<a id="g3331"></a>
 
-### Explain the difference between compiler and interpreter. [BSCS AP (SB & Janata Bank) 26] … <sub>G3283</sub>
+### Explain the difference between compiler and interpreter. [BSCS AP (SB & Janata Bank) 26] … <sub>G3331</sub>
 
 *Written*
 
@@ -4802,9 +4838,9 @@ Explain the difference between compiler and interpreter. [BSCS AP (SB & Janata B
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3509"></a>
+<a id="g3557"></a>
 
-### (a) What are the tasks of linker and loader? Describe briefly using examples. 5 <sub>G3509</sub>
+### (a) What are the tasks of linker and loader? Describe briefly using examples. 5 <sub>G3557</sub>
 
 *Written*
 
@@ -4814,9 +4850,9 @@ Explain the difference between compiler and interpreter. [BSCS AP (SB & Janata B
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q4(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4554"></a>
+<a id="g4602"></a>
 
-### Write difference between compiler and interpreter. <sub>G4554</sub>
+### Write difference between compiler and interpreter. <sub>G4602</sub>
 
 *Written*
 
@@ -4826,9 +4862,9 @@ Write difference between compiler and interpreter.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ICB Asset Management Company Ltd — Assistant Programmer — 2024 (date not printed) — Exam taker: FBS, DU (as labelled by IT Job QnS; unverified) — Non-tech 50 + Tech 50, Q2 — [bank-written-web/2024-icb-amcl-ap-itjobqns/icb-amcl-ap-2024.md](../bank-written-web/2024-icb-amcl-ap-itjobqns/icb-amcl-ap-2024.md)
 
-<a id="g4761"></a>
+<a id="g4809"></a>
 
-### Which of the following pairs of statements are not treated as identical by the compiler? … <sub>G4761</sub>
+### Which of the following pairs of statements are not treated as identical by the compiler? … <sub>G4809</sub>
 
 *MCQ*
 
@@ -4838,9 +4874,9 @@ Which of the following pairs of statements are not treated as identical by the c
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 11 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
 
-<a id="g4781"></a>
+<a id="g4829"></a>
 
-### The systems software that creates the final executable file is: (options not given; print… <sub>G4781</sub>
+### The systems software that creates the final executable file is: (options not given; print… <sub>G4829</sub>
 
 *MCQ*
 
@@ -4863,9 +4899,9 @@ Write down the role of a linker.
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q10 — [bit to exabyte/17_bte-g2-p03-c-programming-q06-23.md](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.md) · [image](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.jpg)
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q29 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g2772"></a>
+<a id="g2820"></a>
 
-### What is Just in Time (JIT) compiler? How does it support machine independent programming? <sub>G2772</sub>
+### What is Just in Time (JIT) compiler? How does it support machine independent programming? <sub>G2820</sub>
 
 *Written*
 
@@ -4901,9 +4937,9 @@ Which translator is used for a C program?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — থিওরি ও কনসেপচুয়াল প্রশ্নাবলি, Q5 — [18th NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md) · [image](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.jpg)
 
-<a id="g2397"></a>
+<a id="g2445"></a>
 
-### (j) Differentiate between interpreter and compiler. <sub>G2397</sub>
+### (j) Differentiate between interpreter and compiler. <sub>G2445</sub>
 
 *Written*
 
@@ -4917,9 +4953,9 @@ Which translator is used for a C program?
 
 ## Call by value vs reference
 
-<a id="g3489"></a>
+<a id="g3537"></a>
 
-### Differences between 'Call by Value' and 'Call by Reference'. <sub>G3489</sub>
+### Differences between 'Call by Value' and 'Call by Reference'. <sub>G3537</sub>
 
 *Written · marked important in the Bit to Exabyte book*
 
@@ -4930,9 +4966,9 @@ Differences between 'Call by Value' and 'Call by Reference'.
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q16 — [bit to exabyte/17_bte-g2-p03-c-programming-q06-23.md](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.md) · [image](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q1(h) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g2007"></a>
+<a id="g2055"></a>
 
-### উদাহরণসহ recursion ব্যাখ্যা করুন ও Parameter Passing ব্যাখ্যা করুন। <sub>G2007</sub>
+### উদাহরণসহ recursion ব্যাখ্যা করুন ও Parameter Passing ব্যাখ্যা করুন। <sub>G2055</sub>
 
 *Written*
 
@@ -4955,9 +4991,9 @@ Write a simple program in C to swap two integer values using 'Call by value'.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q15 — [bit to exabyte/17_bte-g2-p03-c-programming-q06-23.md](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.md) · [image](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.jpg)
 
-<a id="g1872"></a>
+<a id="g1920"></a>
 
-### Write a C code segment of swapping two numbers without using a third variable. <sub>G1872</sub>
+### Write a C code segment of swapping two numbers without using a third variable. <sub>G1920</sub>
 
 *Written*
 
@@ -4967,9 +5003,9 @@ Write a C code segment of swapping two numbers without using a third variable.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q4 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g3457"></a>
+<a id="g3505"></a>
 
-### Two scenario given. Write the name of scenario. Call by value/ call by name/ call by refe… <sub>G3457</sub>
+### Two scenario given. Write the name of scenario. Call by value/ call by name/ call by refe… <sub>G3505</sub>
 
 *Written*
 
@@ -4979,9 +5015,9 @@ Two scenario given. Write the name of scenario. Call by value/ call by name/ cal
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 26.11.2021, 8 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3875"></a>
+<a id="g3923"></a>
 
-### In the below code snippet, assume that the layout of structure does not have any padding,… <sub>G3875</sub>
+### In the below code snippet, assume that the layout of structure does not have any padding,… <sub>G3923</sub>
 
 *MCQ*
 
@@ -5003,9 +5039,9 @@ Parameter Passing কী? Call by Value এবং Call by Reference এর ম�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — সি প্রোগ্রামিং (continued), Q23 — [18th NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.md) · [image](../18th%20NTCRA/02_ntrca-qbank-p02-c-functions-programs-q18-40.jpg)
 
-<a id="g2004"></a>
+<a id="g2052"></a>
 
-### Call by Value এবং Call by Reference এর মধ্যে পার্থক্য কী? <sub>G2004</sub>
+### Call by Value এবং Call by Reference এর মধ্যে পার্থক্য কী? <sub>G2052</sub>
 
 *Written*
 
@@ -5015,9 +5051,9 @@ Call by Value এবং Call by Reference এর মধ্যে পার্থ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ১। (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2769"></a>
+<a id="g2817"></a>
 
-### Mention two basic differences between 'call by value' and 'call by Reference'. Write a pr… <sub>G2769</sub>
+### Mention two basic differences between 'call by value' and 'call by Reference'. Write a pr… <sub>G2817</sub>
 
 *Written*
 
@@ -5029,9 +5065,9 @@ Mention two basic differences between 'call by value' and 'call by Reference'. W
 
 ## Structure & union
 
-<a id="g2159"></a>
+<a id="g2207"></a>
 
-### C প্রোগ্রামিং ল্যাঙ্গুয়েজে Structure এবং Union এর মধ্যে পার্থক্য কী? উদাহরণসহ লিখুন। <sub>G2159</sub>
+### C প্রোগ্রামিং ল্যাঙ্গুয়েজে Structure এবং Union এর মধ্যে পার্থক্য কী? উদাহরণসহ লিখুন। <sub>G2207</sub>
 
 *Written*
 
@@ -5055,9 +5091,9 @@ Define problem solving technique. Write the differences between structured progr
   - 45th BCS Written (CSE-971) (2024-01-31), Q19(a) — [BCS/08_machine-learning-and-problem-solving.md](../BCS/08_machine-learning-and-problem-solving.md) · [image](../BCS/08_machine-learning-and-problem-solving.jpg); [BCS/13_structured-vs-oop-and-arrays.md](../BCS/13_structured-vs-oop-and-arrays.md) · [image](../BCS/13_structured-vs-oop-and-arrays.jpg)
 - **Printed answer:** Problem solving = systematic approach (understand, divide & conquer, algorithm, data structures, code, test, optimize, document); procedural is function-based/top-down, OOP is object-based/bottom-up with overloading and data emphasis.
 
-<a id="g1963"></a>
+<a id="g2011"></a>
 
-### Problem solving technique এর সংজ্ঞা দিন। Structured programming এবং object-oriented progr… <sub>G1963</sub>
+### Problem solving technique এর সংজ্ঞা দিন। Structured programming এবং object-oriented progr… <sub>G2011</sub>
 
 *Written*
 
@@ -5069,9 +5105,9 @@ Problem solving technique এর সংজ্ঞা দিন। Structured prog
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g3087"></a>
+<a id="g3135"></a>
 
-### What is nested structure in C programming? Explain with example. <sub>G3087</sub>
+### What is nested structure in C programming? Explain with example. <sub>G3135</sub>
 
 *Written*
 
@@ -5081,9 +5117,9 @@ What is nested structure in C programming? Explain with example.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3302"></a>
+<a id="g3350"></a>
 
-### What is programming? Give 4 example. Difference between structured and OOP programming. [… <sub>G3302</sub>
+### What is programming? Give 4 example. Difference between structured and OOP programming. [… <sub>G3350</sub>
 
 *Written*
 
@@ -5093,9 +5129,9 @@ What is programming? Give 4 example. Difference between structured and OOP progr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — Sonali Bank PLC — Assistant Database Administrator — Written Exam Question — 09/01/2026 — Exam taker: not printed — marks not printed — pages 55–56, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2374"></a>
+<a id="g2422"></a>
 
-### What is a structured programming language? Explain with an example. <sub>G2374</sub>
+### What is a structured programming language? Explain with an example. <sub>G2422</sub>
 
 *Written*
 
@@ -5123,9 +5159,9 @@ What are the main objectives of structured programming? Write two advantages of 
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q8 — [bit to exabyte/17_bte-g2-p03-c-programming-q06-23.md](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.md) · [image](../bit%20to%20exabyte/17_bte-g2-p03-c-programming-q06-23.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 1. বাংলাদেশ মহাকাশ গবেষণা ও দূর অনুধাবন প্রতিষ্ঠান (SPARRSO), Assistant Engineer, 13-03-2020; exam taker not printed; time not printed; Exam Pattern: [Non-Dept =30, Dept. 5*8=40]; pp. 1-2 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g1957"></a>
+<a id="g2005"></a>
 
-### What is structured programming ? with example . <sub>G1957</sub>
+### What is structured programming ? with example . <sub>G2005</sub>
 
 *Written*
 
@@ -5135,9 +5171,9 @@ What is structured programming ? with example .
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 8.(a) — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 
-<a id="g1958"></a>
+<a id="g2006"></a>
 
-### Write a C program to store information using structures with dynamically memory allocatio… <sub>G1958</sub>
+### Write a C program to store information using structures with dynamically memory allocatio… <sub>G2006</sub>
 
 *Written*
 
@@ -5149,9 +5185,9 @@ Write a C program to store information using structures with dynamically memory 
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2613"></a>
+<a id="g2661"></a>
 
-### In C programming, which keyword is used to come out from a loop structure? a. break b. if… <sub>G2613</sub>
+### In C programming, which keyword is used to come out from a loop structure? a. break b. if… <sub>G2661</sub>
 
 *MCQ*
 
@@ -5161,9 +5197,9 @@ In C programming, which keyword is used to come out from a loop structure? a. br
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Programming / C++ / OOP Q11 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2071"></a>
+<a id="g2119"></a>
 
-### Structure ও Union এর বর্ণনা লিখুন। Structure ও Union ডিক্লায়ার করার পদ্ধতি লিখুন। <sub>G2071</sub>
+### Structure ও Union এর বর্ণনা লিখুন। Structure ও Union ডিক্লায়ার করার পদ্ধতি লিখুন। <sub>G2119</sub>
 
 *Written*
 
@@ -5173,9 +5209,9 @@ Structure ও Union এর বর্ণনা লিখুন। Structure ও U
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৯ অথবা — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2843"></a>
+<a id="g2891"></a>
 
-### Explain differences between structure and union with examples. <sub>G2843</sub>
+### Explain differences between structure and union with examples. <sub>G2891</sub>
 
 *Written*
 
@@ -5185,9 +5221,9 @@ Explain differences between structure and union with examples.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 1 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4115"></a>
+<a id="g4163"></a>
 
-### সংজ্ঞা দিন : (i) প্রোগ্রাম; (ii) Identifier; (iii) Structured language. <sub>G4115</sub>
+### সংজ্ঞা দিন : (i) প্রোগ্রাম; (ii) Identifier; (iii) Structured language. <sub>G4163</sub>
 
 *Written*
 
@@ -5197,9 +5233,9 @@ Explain differences between structure and union with examples.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ১ অথবা (ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4118"></a>
+<a id="g4166"></a>
 
-### Union ঘোষণা (Declare) করার নিয়ম লিখুন। <sub>G4118</sub>
+### Union ঘোষণা (Declare) করার নিয়ম লিখুন। <sub>G4166</sub>
 
 *Written*
 
@@ -5221,9 +5257,9 @@ Structured Programming & Object-Oriented Programming (OOP) এর মধ্য�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — থিওরি ও কনসেপচুয়াল প্রশ্নাবলি, Q1 — [18th NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.md) · [image](../18th%20NTCRA/01_ntrca-qbank-p01-c-theory-q01-17.jpg)
 
-<a id="g2379"></a>
+<a id="g2427"></a>
 
-### Describe different types of loop structure in C/C++".[ <sub>G2379</sub>
+### Describe different types of loop structure in C/C++".[ <sub>G2427</sub>
 
 *Written*
 
@@ -5236,9 +5272,9 @@ Describe different types of loop structure in C/C++".[
 
 ## Functions & library
 
-<a id="g2104"></a>
+<a id="g2152"></a>
 
-### C প্রোগ্রামিং ল্যাংগুয়েজে user defined function এবং library function এর পার্থক্য লিখুন। <sub>G2104</sub>
+### C প্রোগ্রামিং ল্যাংগুয়েজে user defined function এবং library function এর পার্থক্য লিখুন। <sub>G2152</sub>
 
 *Written*
 
@@ -5261,9 +5297,9 @@ Write about the syntax of function.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q5 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g3703"></a>
+<a id="g3751"></a>
 
-### Python function. <sub>G3703</sub>
+### Python function. <sub>G3751</sub>
 
 *MCQ*
 
@@ -5273,9 +5309,9 @@ Python function.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 27 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3957"></a>
+<a id="g4005"></a>
 
-### Which function in the following expression will be called first? a = func3(6)-func2(4,5)/… <sub>G3957</sub>
+### Which function in the following expression will be called first? a = func3(6)-func2(4,5)/… <sub>G4005</sub>
 
 *MCQ*
 
@@ -5285,9 +5321,9 @@ Which function in the following expression will be called first? a = func3(6)-fu
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q5 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g2823"></a>
+<a id="g2871"></a>
 
-### Illustrate the difference between 'Call-by-value' and 'Call-by-reference' in a function w… <sub>G2823</sub>
+### Illustrate the difference between 'Call-by-value' and 'Call-by-reference' in a function w… <sub>G2871</sub>
 
 *Written*
 
@@ -5297,9 +5333,9 @@ Illustrate the difference between 'Call-by-value' and 'Call-by-reference' in a f
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 6) (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3727"></a>
+<a id="g3775"></a>
 
-### Write down a function that will check whether a year is leap year or not. <sub>G3727</sub>
+### Write down a function that will check whether a year is leap year or not. <sub>G3775</sub>
 
 *Written*
 
@@ -5309,9 +5345,21 @@ Write down a function that will check whether a year is leap year or not.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q12 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g2399"></a>
+<a id="g1825"></a>
 
-### What is the purpose of header file in c Programming Language. <sub>G2399</sub>
+### Header files and library functions; C uppercase to lowercase <sub>G1825</sub>
+
+*Written*
+
+Header files and library functions; C uppercase to lowercase
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q71 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g2447"></a>
+
+### What is the purpose of header file in c Programming Language. <sub>G2447</sub>
 
 *Written*
 
@@ -5336,9 +5384,9 @@ What is the difference of the following: getc (), getchar (), getch () and getch
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — C Programming, Q1 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g2756"></a>
+<a id="g2804"></a>
 
-### পার্থক্য লিখুন: (i) getc () (ii) getchar() (iii) getch() (iv) getche () <sub>G2756</sub>
+### পার্থক্য লিখুন: (i) getc () (ii) getchar() (iii) getch() (iv) getche () <sub>G2804</sub>
 
 *Written*
 
@@ -5348,9 +5396,9 @@ What is the difference of the following: getc (), getchar (), getch () and getch
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ২য় অংশ, নম্বর ২০*৫=১০০ (pp. 8–9), ১ (গ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3219"></a>
+<a id="g3267"></a>
 
-### Write a c/java program that show prime number between 1 to n. n is given by user input. <sub>G3219</sub>
+### Write a c/java program that show prime number between 1 to n. n is given by user input. <sub>G3267</sub>
 
 *Written*
 
@@ -5360,9 +5408,9 @@ Write a c/java program that show prime number between 1 to n. n is given by user
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3304"></a>
+<a id="g3352"></a>
 
-### ATM pin code flow chart (user input define). decision take (successful, failure). [SBPLC … <sub>G3304</sub>
+### ATM pin code flow chart (user input define). decision take (successful, failure). [SBPLC … <sub>G3352</sub>
 
 *Written*
 
@@ -5400,9 +5448,9 @@ Write a Python function that takes a filename and prints its first 10 lines.
 - **Printed answer:** with open("datafile") as myfile: head = [next(myfile) for x in xrange(10)]; print head
 - **Correction:** Not a function, hard-codes the file name, uses Python 2 (xrange, print statement), and fails on files with fewer than 10 lines. E.g. def head(fn): with open(fn) as f: for line in itertools.islice(f, 10): print(line, end='').
 
-<a id="g4676"></a>
+<a id="g4724"></a>
 
-### A file called myfile.txt contains a list of days and power shortage of that day like this… <sub>G4676</sub>
+### A file called myfile.txt contains a list of days and power shortage of that day like this… <sub>G4724</sub>
 
 *Written*
 
@@ -5412,9 +5460,9 @@ A file called myfile.txt contains a list of days and power shortage of that day 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPDB Assistant Engineer (CSE) 2018, Q1 — [power-sector-web/2018-bpdb-ae-cse-scribd-384369493/bpdb-ae-cse-2018.md](../power-sector-web/2018-bpdb-ae-cse-scribd-384369493/bpdb-ae-cse-2018.md)
 
-<a id="g4638"></a>
+<a id="g4686"></a>
 
-### A file student.txt contains records in the format: StudentID Name Marks1 Marks2 Marks3 Ma… <sub>G4638</sub>
+### A file student.txt contains records in the format: StudentID Name Marks1 Marks2 Marks3 Ma… <sub>G4686</sub>
 
 *Written*
 
@@ -5424,9 +5472,9 @@ A file student.txt contains records in the format: StudentID Name Marks1 Marks2 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ICB Securities Trading Company Limited — Assistant Programmer — Aptitude test, Set C — 11-July-2026 — Exam taker: DU CSE (as labelled by IT Job QnS; unverified) — Marks 40, 60 minutes, Q1 — [bank-written-web/2026-icb-securities-ap-setc-itjobqns/icb-securities-ap-2026-setc.md](../bank-written-web/2026-icb-securities-ap-setc-itjobqns/icb-securities-ap-2026-setc.md)
 
-<a id="g1849"></a>
+<a id="g1897"></a>
 
-### Programming (File Handling) – Complete Question (15 Marks). A text file named students.tx… <sub>G1849</sub>
+### Programming (File Handling) – Complete Question (15 Marks). A text file named students.tx… <sub>G1897</sub>
 
 *Written*
 
@@ -5438,9 +5486,9 @@ Programming (File Handling) – Complete Question (15 Marks). A text file named 
 
 ## Errors & debugging
 
-<a id="g4652"></a>
+<a id="g4700"></a>
 
-### Difference between Compile time error & Runtime Error <sub>G4652</sub>
+### Difference between Compile time error & Runtime Error <sub>G4700</sub>
 
 *Written*
 

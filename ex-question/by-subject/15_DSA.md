@@ -2,7 +2,7 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 402 (from 462 records: Study note 1, Written 361, MCQ 85, Viva 15)
+- **Distinct questions:** 407 (from 467 records: Study note 1, Written 366, MCQ 85, Viva 15)
 - **Exams it appears in:** 133
 - **Corrections to printed answers:** 17
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
@@ -12,15 +12,15 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
 | 1 | [Sorting](#sorting) | 44 | 61 | 1 |
-| 2 | [Trees & traversals](#trees--traversals) | 43 | 70 | 2 |
-| 3 | [Linked list](#linked-list) | 25 | 33 | 7 |
+| 2 | [Trees & traversals](#trees--traversals) | 43 | 71 | 2 |
+| 3 | [Linked list](#linked-list) | 25 | 34 | 7 |
 | 4 | [Stack & queue](#stack--queue) | 24 | 38 | 3 |
-| 5 | [Algorithm design (greedy, DP, D&C, NP)](#algorithm-design-greedy-dp-dc-np) | 24 | 30 | 0 |
+| 5 | [Algorithm design (greedy, DP, D&C, NP)](#algorithm-design-greedy-dp-dc-np) | 24 | 31 | 0 |
 | 6 | [Searching](#searching) | 24 | 25 | 1 |
 | 7 | [Graph algorithms](#graph-algorithms) | 23 | 33 | 0 |
-| 8 | [Heap](#heap) | 22 | 27 | 0 |
+| 8 | [Heap](#heap) | 22 | 28 | 0 |
 | 9 | [Other](#other) | 18 | 28 | 0 |
-| 10 | [Complexity analysis](#complexity-analysis) | 11 | 11 | 0 |
+| 10 | [Complexity analysis](#complexity-analysis) | 11 | 12 | 0 |
 | 11 | [Data structure basics](#data-structure-basics) | 11 | 11 | 0 |
 | 12 | [Algorithm basics](#algorithm-basics) | 10 | 10 | 0 |
 | 13 | [Arrays](#arrays) | 8 | 12 | 1 |
@@ -48,7 +48,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure · duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G1312](#g1312)
 6. **Difference between depth first and breadth first search.**  
    Asked in (2): 17th NTRCA CSE (2023); BPSC AP 2022  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure · duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2 — see [G3501](#g3501)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure · duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2 — see [G3549](#g3549)
 7. **Differentiate divide-and-conquer and dynamic programming.**  
    Asked in (2): BCC AP 2021; WZPGCL AE(CSE) 2023  
    Source: BCC Assistant Programmer (BUET) (2021-02-12) · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming — see [G1094](#g1094)
@@ -63,7 +63,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure — see [G1331](#g1331)
 11. **Stack ও Queue এর মধ্যে পার্থক্য লিখুন।**  
    Asked in (2): 18th NTRCA College ICT (2024); BCPCL JI 2019  
-   Source: Question paper · duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019 — see [G2460](#g2460)
+   Source: Question paper · duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019 — see [G2508](#g2508)
 12. **ডাটা স্ট্রাকচার কী? Linear এবং non-linear data structures উদাহরণসহ ব্যাখ্যা করুন।**  
    Asked in (2): 15th NTRCA ICT; 17th NTRCA ICT (2023)  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G1274](#g1274)
@@ -78,19 +78,19 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G1330](#g1330)
 16. **Explain the logic of "Bubble Sort". Why is it considered inefficient for large datasets compared to Merge Sort? [BSCS AP 26] [DS]**  
    Asked in (2): Bank (name cut off) AP; Combined Bank AP 2026  
-   Source: Bank (name cut off, 'B... Ltd') Assistant Programmer Written · duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57 — see [G3314](#g3314)
+   Source: Bank (name cut off, 'B... Ltd') Assistant Programmer Written · duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57 — see [G3362](#g3362)
 17. **The term push and pop are related to the- d. The step-by-step instruction that solve a problem is called:**  
    Asked in (2): BREB 2019; PKB Programmer 2019  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure — see [G1336](#g1336)
 18. **Array vs linked list.**  
    Asked in (1): DUET AP 2025 · viva mentions: 1  
-   Source: Bank IT viva (compiled from candidates' viva experiences) · duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 01/02/2025 — see [G3423](#g3423)
+   Source: Bank IT viva (compiled from candidates' viva experiences) · duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 01/02/2025 — see [G3471](#g3471)
 19. **Draw a Weighted graph from following adjacency representation of graph.**  
    Asked in (2): BUET M.Sc. April 2017; BUET M.Sc. May 2016  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure — see [G1307](#g1307)
 20. **Illustrate singly linked list, doubly linked list and circular linked list with diagram.**  
    Asked in (2): 37th BCS; BNPS AP 2017  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11) — see [G1939](#g1939)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11) — see [G1987](#g1987)
 
 ## Coaching "standard pattern" topics (not counted)
 
@@ -116,9 +116,9 @@ Topics the Bit to Exabyte question book lists as its standard pattern for this s
 
 ## Sorting
 
-<a id="g3314"></a>
+<a id="g3362"></a>
 
-### Explain the logic of "Bubble Sort". Why is it considered inefficient for large datasets c… <sub>G3314</sub>
+### Explain the logic of "Bubble Sort". Why is it considered inefficient for large datasets c… <sub>G3362</sub>
 
 *Written*
 
@@ -244,9 +244,9 @@ Write down the Pseudo code of quick sort algorithm through recursive algorithm. 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q57 — [bit to exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md) · [image](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.jpg)
 
-<a id="g1973"></a>
+<a id="g2021"></a>
 
-### একটি algorithm এর time complexity এর সংজ্ঞা দিন। কেন Quicksort এর worst-case complexity Q… <sub>G1973</sub>
+### একটি algorithm এর time complexity এর সংজ্ঞা দিন। কেন Quicksort এর worst-case complexity Q… <sub>G2021</sub>
 
 *Written*
 
@@ -257,9 +257,9 @@ Write down the Pseudo code of quick sort algorithm through recursive algorithm. 
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৩ (গ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1978"></a>
+<a id="g2026"></a>
 
-### n-সংখ্যক উপাত্তকে সাজানোর জন্য divide and conquer strategy ব্যবহার করে Merge sort Algorit… <sub>G1978</sub>
+### n-সংখ্যক উপাত্তকে সাজানোর জন্য divide and conquer strategy ব্যবহার করে Merge sort Algorit… <sub>G2026</sub>
 
 *Written*
 
@@ -269,9 +269,9 @@ n-সংখ্যক উপাত্তকে সাজানোর জন্য
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৫। (ক) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
 
-<a id="g2115"></a>
+<a id="g2163"></a>
 
-### অ্যালগরিদমের complexity বলতে কী বোঝায়? কয়েকটি sorting algorithin এর complexity উল্লেখ ক… <sub>G2115</sub>
+### অ্যালগরিদমের complexity বলতে কী বোঝায়? কয়েকটি sorting algorithin এর complexity উল্লেখ ক… <sub>G2163</sub>
 
 *Written*
 
@@ -281,9 +281,9 @@ n-সংখ্যক উপাত্তকে সাজানোর জন্য
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৫ অথবা (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2266"></a>
+<a id="g2314"></a>
 
-### In a quicksort algorithm taking first element as a pivot element. Now Analyze the time co… <sub>G2266</sub>
+### In a quicksort algorithm taking first element as a pivot element. Now Analyze the time co… <sub>G2314</sub>
 
 *Written*
 
@@ -293,9 +293,9 @@ In a quicksort algorithm taking first element as a pivot element. Now Analyze th
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q2(b) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
 
-<a id="g2321"></a>
+<a id="g2369"></a>
 
-### What is the worst-case time and space complexity of quicksort algorithm. Explain how this… <sub>G2321</sub>
+### What is the worst-case time and space complexity of quicksort algorithm. Explain how this… <sub>G2369</sub>
 
 *Written*
 
@@ -306,9 +306,9 @@ What is the worst-case time and space complexity of quicksort algorithm. Explain
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q13 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2647"></a>
+<a id="g2695"></a>
 
-### Quick sort algorithm is an example of –– ক) Greedy approach খ) Improved binary search গ) … <sub>G2647</sub>
+### Quick sort algorithm is an example of –– ক) Greedy approach খ) Improved binary search গ) … <sub>G2695</sub>
 
 *MCQ*
 
@@ -318,9 +318,9 @@ Quick sort algorithm is an example of –– ক) Greedy approach খ) Improved 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Data Structures and Algorithms Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2968"></a>
+<a id="g3016"></a>
 
-### Write down selection sort algorithm. Find out best case, average case, worst case time co… <sub>G2968</sub>
+### Write down selection sort algorithm. Find out best case, average case, worst case time co… <sub>G3016</sub>
 
 *Written*
 
@@ -330,9 +330,9 @@ Write down selection sort algorithm. Find out best case, average case, worst cas
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3112"></a>
+<a id="g3160"></a>
 
-### Write properties that are suited to you for me the divide and conquer whether dynamic pro… <sub>G3112</sub>
+### Write properties that are suited to you for me the divide and conquer whether dynamic pro… <sub>G3160</sub>
 
 *Written*
 
@@ -342,9 +342,9 @@ Write properties that are suited to you for me the divide and conquer whether dy
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3267"></a>
+<a id="g3315"></a>
 
-### Explain the Quick Sort algorithm with a sotable example. Under what conditions does Quick… <sub>G3267</sub>
+### Explain the Quick Sort algorithm with a sotable example. Under what conditions does Quick… <sub>G3315</sub>
 
 *Written*
 
@@ -354,9 +354,9 @@ Explain the Quick Sort algorithm with a sotable example. Under what conditions d
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3312"></a>
+<a id="g3360"></a>
 
-### Describe step-by-step how Binary Search locates a target value in a sorted array Why does… <sub>G3312</sub>
+### Describe step-by-step how Binary Search locates a target value in a sorted array Why does… <sub>G3360</sub>
 
 *Written*
 
@@ -366,9 +366,9 @@ Describe step-by-step how Binary Search locates a target value in a sorted array
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3434"></a>
+<a id="g3482"></a>
 
-### Bubble Sort কী? এর Best, Average এবং Worst Case Time Complexity লিখ। <sub>G3434</sub>
+### Bubble Sort কী? এর Best, Average এবং Worst Case Time Complexity লিখ। <sub>G3482</sub>
 
 *Written*
 
@@ -378,9 +378,9 @@ Bubble Sort কী? এর Best, Average এবং Worst Case Time Complexity �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer (Computer) 15/05/2026, 3 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3510"></a>
+<a id="g3558"></a>
 
-### (b) The complexity of merge sort is T(n) = 2T (n/2) + n. Explain how the above equation i… <sub>G3510</sub>
+### (b) The complexity of merge sort is T(n) = 2T (n/2) + n. Explain how the above equation i… <sub>G3558</sub>
 
 *Written*
 
@@ -392,9 +392,9 @@ Bubble Sort কী? এর Best, Average এবং Worst Case Time Complexity �
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q54 — [bit to exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md) · [image](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q4(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3625"></a>
+<a id="g3673"></a>
 
-### a) Why is Merge Sort preferred over Quick Sort in certain applications, despite having hi… <sub>G3625</sub>
+### a) Why is Merge Sort preferred over Quick Sort in certain applications, despite having hi… <sub>G3673</sub>
 
 *Written*
 
@@ -404,9 +404,9 @@ a) Why is Merge Sort preferred over Quick Sort in certain applications, despite 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-খ Q8(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3626"></a>
+<a id="g3674"></a>
 
-### b) Suppose you have a list of items: 41, 25, 87, 57, 80, 79, 19, 36, 42, 7. using Quick S… <sub>G3626</sub>
+### b) Suppose you have a list of items: 41, 25, 87, 57, 80, 79, 19, 36, 42, 7. using Quick S… <sub>G3674</sub>
 
 *Written*
 
@@ -416,9 +416,9 @@ b) Suppose you have a list of items: 41, 25, 87, 57, 80, 79, 19, 36, 42, 7. usin
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-খ Q8(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3676"></a>
+<a id="g3724"></a>
 
-### An array contains one million sorted integers. Which searching algorithm would you choose… <sub>G3676</sub>
+### An array contains one million sorted integers. Which searching algorithm would you choose… <sub>G3724</sub>
 
 *Written*
 
@@ -428,9 +428,9 @@ An array contains one million sorted integers. Which searching algorithm would y
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12, Q19 — [duranta/1785328629-so-it-job-id-25104/1785328629.md](../duranta/1785328629-so-it-job-id-25104/1785328629.md)
 
-<a id="g4111"></a>
+<a id="g4159"></a>
 
-### ____ sort uses a divide and conquer approach? (ক) Insertion (খ) Quick (গ) Bubble (ঘ) Sele… <sub>G4111</sub>
+### ____ sort uses a divide and conquer approach? (ক) Insertion (খ) Quick (গ) Bubble (ঘ) Sele… <sub>G4159</sub>
 
 *MCQ*
 
@@ -440,9 +440,9 @@ ____ sort uses a divide and conquer approach? (ক) Insertion (খ) Quick (গ) 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q173 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4558"></a>
+<a id="g4606"></a>
 
-### You are given a sorted array of integers. Write an algorithm using Binary Search to searc… <sub>G4558</sub>
+### You are given a sorted array of integers. Write an algorithm using Binary Search to searc… <sub>G4606</sub>
 
 *Written*
 
@@ -452,9 +452,9 @@ You are given a sorted array of integers. Write an algorithm using Binary Search
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ICB Asset Management Company Ltd — Assistant Programmer — 2024 (date not printed) — Exam taker: FBS, DU (as labelled by IT Job QnS; unverified) — Non-tech 50 + Tech 50, Q6 — [bank-written-web/2024-icb-amcl-ap-itjobqns/icb-amcl-ap-2024.md](../bank-written-web/2024-icb-amcl-ap-itjobqns/icb-amcl-ap-2024.md)
 
-<a id="g4590"></a>
+<a id="g4638"></a>
 
-### What are the advantages of Linear Search over Binary Search? (a) The array is ordered (b)… <sub>G4590</sub>
+### What are the advantages of Linear Search over Binary Search? (a) The array is ordered (b)… <sub>G4638</sub>
 
 *MCQ*
 
@@ -464,9 +464,9 @@ What are the advantages of Linear Search over Binary Search? (a) The array is or
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ37 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4597"></a>
+<a id="g4645"></a>
 
-### Which sorting algorithm guarantees O(n log n) time complexity in the worst case? (a) Quic… <sub>G4597</sub>
+### Which sorting algorithm guarantees O(n log n) time complexity in the worst case? (a) Quic… <sub>G4645</sub>
 
 *MCQ*
 
@@ -476,9 +476,9 @@ Which sorting algorithm guarantees O(n log n) time complexity in the worst case?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ45 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g5103"></a>
+<a id="g5151"></a>
 
-### One array {4, 3, 2, 1, 5} is given, which should be applied between (bubble/insertion/sel… <sub>G5103</sub>
+### One array {4, 3, 2, 1, 5} is given, which should be applied between (bubble/insertion/sel… <sub>G5151</sub>
 
 *Written*
 
@@ -488,9 +488,9 @@ One array {4, 3, 2, 1, 5} is given, which should be applied between (bubble/inse
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Chemical Industries Corporation (BCIC) — Assistant Programmer, 14/02/2025 (BUET) (suggestion), Q4 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g5140"></a>
+<a id="g5188"></a>
 
-### Apply the Merge Sort algorithm using the divide and conquer approach to sort the followin… <sub>G5140</sub>
+### Apply the Merge Sort algorithm using the divide and conquer approach to sort the followin… <sub>G5188</sub>
 
 *Written*
 
@@ -560,9 +560,9 @@ Given a sequence, S= {1, 2, 3, 8, 15, 10}; which of the following algorithms wil
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q72f — [bit to exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.md](../bit%20to%20exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.md) · [image](../bit%20to%20exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.jpg)
 
-<a id="g2445"></a>
+<a id="g2493"></a>
 
-### Selection sort টেকনিক ব্যবহার করে নিম্নোক্ত ডাটা গুলোকে সর্টিং করুন। ৫০,৯০,২৩,১২,৭২,১০, ২৫ <sub>G2445</sub>
+### Selection sort টেকনিক ব্যবহার করে নিম্নোক্ত ডাটা গুলোকে সর্টিং করুন। ৫০,৯০,২৩,১২,৭২,১০, ২৫ <sub>G2493</sub>
 
 *Written*
 
@@ -572,9 +572,9 @@ Selection sort টেকনিক ব্যবহার করে নিম্�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 05 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2983"></a>
+<a id="g3031"></a>
 
-### Insertion sort is a simple sorting algorithm. Write a program to sort some given numbers … <sub>G2983</sub>
+### Insertion sort is a simple sorting algorithm. Write a program to sort some given numbers … <sub>G3031</sub>
 
 *Written*
 
@@ -584,9 +584,9 @@ Insertion sort is a simple sorting algorithm. Write a program to sort some given
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(N) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3018"></a>
+<a id="g3066"></a>
 
-### Write a pseudocode to marge two sorted arrays into a new sorted array. <sub>G3018</sub>
+### Write a pseudocode to marge two sorted arrays into a new sorted array. <sub>G3066</sub>
 
 *Written*
 
@@ -596,9 +596,9 @@ Write a pseudocode to marge two sorted arrays into a new sorted array.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Assistant Database Administrator (ADA) – SBL — 14.12.2020 — Exam taker: not printed — 10*16 marks + 2*20 marks = 200 — pages 8–9, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3071"></a>
+<a id="g3119"></a>
 
-### Given a sorted array of X (n no of elements) and Y (m no of elements) and the new array o… <sub>G3071</sub>
+### Given a sorted array of X (n no of elements) and Y (m no of elements) and the new array o… <sub>G3119</sub>
 
 *Written*
 
@@ -609,9 +609,9 @@ Given a sorted array of X (n no of elements) and Y (m no of elements) and the ne
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q56 — [suggestion based on previous yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Assistant Hardware Engineer (AHE) - SBL, JBL, RBL [AHE SBL, JBL, RBL 2021 CTI] — 24.12.2021 — Exam taker: CTI (from the printed tag) — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks — pages 15–17, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4451"></a>
+<a id="g4499"></a>
 
-### The binary search algorithm is used to search for a given item when items are sorted. If … <sub>G4451</sub>
+### The binary search algorithm is used to search for a given item when items are sorted. If … <sub>G4499</sub>
 
 *MCQ*
 
@@ -621,9 +621,9 @@ The binary search algorithm is used to search for a given item when items are so
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ42 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
-<a id="g4484"></a>
+<a id="g4532"></a>
 
-### Which is correct characteristic of selection sort? (a) Time complexity O(n) (b) Should us… <sub>G4484</sub>
+### Which is correct characteristic of selection sort? (a) Time complexity O(n) (b) Should us… <sub>G4532</sub>
 
 *MCQ*
 
@@ -633,9 +633,9 @@ Which is correct characteristic of selection sort? (a) Time complexity O(n) (b) 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ16 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4502"></a>
+<a id="g4550"></a>
 
-### Which is correct for Merge sort? (a) Time Complexity, O(n^3) (b) Time Complexity, O(n log… <sub>G4502</sub>
+### Which is correct for Merge sort? (a) Time Complexity, O(n^3) (b) Time Complexity, O(n log… <sub>G4550</sub>
 
 *MCQ*
 
@@ -645,9 +645,9 @@ Which is correct for Merge sort? (a) Time Complexity, O(n^3) (b) Time Complexity
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ34 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4682"></a>
+<a id="g4730"></a>
 
-### There are 2 arrays X and Y. X is in ascending order Y is in descending order. Merge these… <sub>G4682</sub>
+### There are 2 arrays X and Y. X is in ascending order Y is in descending order. Merge these… <sub>G4730</sub>
 
 *Written*
 
@@ -694,9 +694,9 @@ Describe step by step how binary search locates a target value in a sorted array
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা স্ট্রাকচার, অ্যালগরিদম ও অপ্টিমাইজেশন (Data Structure & Algorithms), Q79 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৪। (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g1948"></a>
+<a id="g1996"></a>
 
-### What is merge sort and how it works ? <sub>G1948</sub>
+### What is merge sort and how it works ? <sub>G1996</sub>
 
 *Written*
 
@@ -706,9 +706,9 @@ What is merge sort and how it works ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 8.(c) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
 
-<a id="g2418"></a>
+<a id="g2466"></a>
 
-### Write a Sorting Algorithm to sort “n” number always in O(nlogn) time <sub>G2418</sub>
+### Write a Sorting Algorithm to sort “n” number always in O(nlogn) time <sub>G2466</sub>
 
 *Written*
 
@@ -719,9 +719,9 @@ Write a Sorting Algorithm to sort “n” number always in O(nlogn) time
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 1. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2853"></a>
+<a id="g2901"></a>
 
-### For the following values, show step-by-step operations of the quick sort Algorithm. 145, … <sub>G2853</sub>
+### For the following values, show step-by-step operations of the quick sort Algorithm. 145, … <sub>G2901</sub>
 
 *Written*
 
@@ -731,9 +731,9 @@ For the following values, show step-by-step operations of the quick sort Algorit
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 4 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3730"></a>
+<a id="g3778"></a>
 
-### verify list is sorted(procedure writing) <sub>G3730</sub>
+### verify list is sorted(procedure writing) <sub>G3778</sub>
 
 *Written*
 
@@ -743,9 +743,9 @@ verify list is sorted(procedure writing)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q15 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3776"></a>
+<a id="g3824"></a>
 
-### Using pointer insert a number in a sorted list, it was forbidden to use array notation li… <sub>G3776</sub>
+### Using pointer insert a number in a sorted list, it was forbidden to use array notation li… <sub>G3824</sub>
 
 *Written*
 
@@ -755,9 +755,9 @@ Using pointer insert a number in a sorted list, it was forbidden to use array no
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q6 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-<a id="g4661"></a>
+<a id="g4709"></a>
 
-### Divide and Conquer method is used in (a) Merge Sort (b) Bubble Sort (c) Quick Sort (d) Bo… <sub>G4661</sub>
+### Divide and Conquer method is used in (a) Merge Sort (b) Bubble Sort (c) Quick Sort (d) Bo… <sub>G4709</sub>
 
 *MCQ*
 
@@ -843,9 +843,9 @@ Big-O Notation কী? অ্যালগরিদমের Time ও Space Compl
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — Data Structure & Algorithms (continued), Q88 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1822"></a>
+<a id="g1870"></a>
 
-### Write the name of the fastest sorting algorithm. What would be the complexity of an alrea… <sub>G1822</sub>
+### Write the name of the fastest sorting algorithm. What would be the complexity of an alrea… <sub>G1870</sub>
 
 *Written*
 
@@ -855,9 +855,9 @@ Write the name of the fastest sorting algorithm. What would be the complexity of
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q40 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g5133"></a>
+<a id="g5181"></a>
 
-### Merge Sort <sub>G5133</sub>
+### Merge Sort <sub>G5181</sub>
 
 *Written*
 
@@ -1107,9 +1107,9 @@ Binary Tree কী? Binary Tree Traversing এর পদ্ধতিসমূহ
 - **Source:**
   - Question paper, Q5(ক) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g1879"></a>
+<a id="g1927"></a>
 
-### What is binary search tree. Write an example of it. <sub>G1879</sub>
+### What is binary search tree. Write an example of it. <sub>G1927</sub>
 
 *Written*
 
@@ -1119,9 +1119,9 @@ What is binary search tree. Write an example of it.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q12 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g1980"></a>
+<a id="g2028"></a>
 
-### ধরুন একটি sum of subset problem এ n = 4 ,w=(w 1 ,w 2 , 3, 4) = (11, 13, 24, 6) এবং m = 30… <sub>G1980</sub>
+### ধরুন একটি sum of subset problem এ n = 4 ,w=(w 1 ,w 2 , 3, 4) = (11, 13, 24, 6) এবং m = 30… <sub>G2028</sub>
 
 *Written*
 
@@ -1132,9 +1132,9 @@ What is binary search tree. Write an example of it.
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৫ (গ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2112"></a>
+<a id="g2160"></a>
 
-### Binary Search tree উহার অপারেশনগুলো বর্ণনা করুন। <sub>G2112</sub>
+### Binary Search tree উহার অপারেশনগুলো বর্ণনা করুন। <sub>G2160</sub>
 
 *Written*
 
@@ -1144,9 +1144,9 @@ Binary Search tree উহার অপারেশনগুলো বর্ণ�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৪ অথবা (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2217"></a>
+<a id="g2265"></a>
 
-### ট্রি এর তিনটি বাস্তব উদাহরণ।(Give real example of tree) <sub>G2217</sub>
+### ট্রি এর তিনটি বাস্তব উদাহরণ।(Give real example of tree) <sub>G2265</sub>
 
 *Written*
 
@@ -1156,9 +1156,9 @@ Binary Search tree উহার অপারেশনগুলো বর্ণ�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q7 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 
-<a id="g2238"></a>
+<a id="g2286"></a>
 
-### a) Insert the data into BST from given Nodes b) Print the tree in post order traversal of… <sub>G2238</sub>
+### a) Insert the data into BST from given Nodes b) Print the tree in post order traversal of… <sub>G2286</sub>
 
 *Written*
 
@@ -1169,9 +1169,9 @@ a) Insert the data into BST from given Nodes b) Print the tree in post order tra
   - duranta.app question bank (coaching compilation of the question paper) — PGCB Assistant Engineer (CSE) 17.05.2024, Q1 — [duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md](../duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md)
 - **Correction:** inserting 10, 100, 30, 20, 500, 40 in that order gives root 10 → right 100 → (left 30 → left 20, right 40; right 500); its post order is 20 40 30 500 100 10. The printed post order only matches the printed (wrongly built) tree.
 
-<a id="g2250"></a>
+<a id="g2298"></a>
 
-### If a complete binary tree is a proper binary tree, then prove that number of leaf node is… <sub>G2250</sub>
+### If a complete binary tree is a proper binary tree, then prove that number of leaf node is… <sub>G2298</sub>
 
 *Written*
 
@@ -1181,9 +1181,9 @@ If a complete binary tree is a proper binary tree, then prove that number of lea
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024, Q1(b) — [duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md](../duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md)
 
-<a id="g2265"></a>
+<a id="g2313"></a>
 
-### You are given a binary tree (a, b,c,d,e,f,g,h,i) nodes. The post order of the binary tree… <sub>G2265</sub>
+### You are given a binary tree (a, b,c,d,e,f,g,h,i) nodes. The post order of the binary tree… <sub>G2313</sub>
 
 *Written*
 
@@ -1193,9 +1193,9 @@ You are given a binary tree (a, b,c,d,e,f,g,h,i) nodes. The post order of the bi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q2(a) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
 
-<a id="g2475"></a>
+<a id="g2523"></a>
 
-### X= (a²-5b)* (7a+b³) এক্সপ্রেশনটিকে Tree 'স্ট্র্যাকচারে অঙ্কন করুন? <sub>G2475</sub>
+### X= (a²-5b)* (7a+b³) এক্সপ্রেশনটিকে Tree 'স্ট্র্যাকচারে অঙ্কন করুন? <sub>G2523</sub>
 
 *Written*
 
@@ -1205,9 +1205,9 @@ X= (a²-5b)* (7a+b³) এক্সপ্রেশনটিকে Tree 'স্ট
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ৫ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g3134"></a>
+<a id="g3182"></a>
 
-### Construct a binary tree from the given preorder and post-order sequence. Preorder travers… <sub>G3134</sub>
+### Construct a binary tree from the given preorder and post-order sequence. Preorder travers… <sub>G3182</sub>
 
 *Written*
 
@@ -1217,9 +1217,9 @@ Construct a binary tree from the given preorder and post-order sequence. Preorde
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3462"></a>
+<a id="g3510"></a>
 
-### A tree has been given print it post order [tree not printed] <sub>G3462</sub>
+### A tree has been given print it post order [tree not printed] <sub>G3510</sub>
 
 *Written*
 
@@ -1229,9 +1229,9 @@ A tree has been given print it post order [tree not printed]
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 2 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3513"></a>
+<a id="g3561"></a>
 
-### (b) Draw a binary tree of 15 elements and list out the elements in (i) Preorder (ii) In o… <sub>G3513</sub>
+### (b) Draw a binary tree of 15 elements and list out the elements in (i) Preorder (ii) In o… <sub>G3561</sub>
 
 *Written*
 
@@ -1241,9 +1241,9 @@ A tree has been given print it post order [tree not printed]
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q6(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3674"></a>
+<a id="g3722"></a>
 
-### Define the following terms used in tree data structures: (i) Tree (ii) Leaf Node (iii) In… <sub>G3674</sub>
+### Define the following terms used in tree data structures: (i) Tree (ii) Leaf Node (iii) In… <sub>G3722</sub>
 
 *Written*
 
@@ -1253,9 +1253,9 @@ Define the following terms used in tree data structures: (i) Tree (ii) Leaf Node
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12, Q17 — [duranta/1785328629-so-it-job-id-25104/1785328629.md](../duranta/1785328629-so-it-job-id-25104/1785328629.md)
 
-<a id="g3689"></a>
+<a id="g3737"></a>
 
-### Which traversal of a Binary Search Tree (BST) returns the elements in ascending order? <sub>G3689</sub>
+### Which traversal of a Binary Search Tree (BST) returns the elements in ascending order? <sub>G3737</sub>
 
 *MCQ*
 
@@ -1265,9 +1265,9 @@ Which traversal of a Binary Search Tree (BST) returns the elements in ascending 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 13 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3690"></a>
+<a id="g3738"></a>
 
-### What are the different tree traversal methods? <sub>G3690</sub>
+### What are the different tree traversal methods? <sub>G3738</sub>
 
 *MCQ*
 
@@ -1277,9 +1277,9 @@ What are the different tree traversal methods?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 14 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4069"></a>
+<a id="g4117"></a>
 
-### Using ____ order we can delete tree nodes in such a way that a child node is deleted befo… <sub>G4069</sub>
+### Using ____ order we can delete tree nodes in such a way that a child node is deleted befo… <sub>G4117</sub>
 
 *MCQ*
 
@@ -1289,9 +1289,9 @@ Using ____ order we can delete tree nodes in such a way that a child node is del
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q131 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4078"></a>
+<a id="g4126"></a>
 
-### In an array-based implementation of a complete binary tree, what is the index of the left… <sub>G4078</sub>
+### In an array-based implementation of a complete binary tree, what is the index of the left… <sub>G4126</sub>
 
 *MCQ*
 
@@ -1301,9 +1301,9 @@ In an array-based implementation of a complete binary tree, what is the index of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q140 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g5163"></a>
+<a id="g5211"></a>
 
-### You have designed a binary tree. You have to traverse (right, Left and Root). Now Travers… <sub>G5163</sub>
+### You have designed a binary tree. You have to traverse (right, Left and Root). Now Travers… <sub>G5211</sub>
 
 *Written*
 
@@ -1362,9 +1362,9 @@ Maximum how many nodes can be placed in a binary Tree of N levels?
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q48 — [suggestion based on previous yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 06 — Assistant Network Engineer (ANE) – RBL [ANE RBL 2021 CTI] — 16.03.2021 — Exam taker: CTI (from the printed tag) — 10*16 marks +2*20 marks = 200 — pages 10–11, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2653"></a>
+<a id="g2701"></a>
 
-### Complete Binary Tree এর height যদি n হয়, তাহলে সর্বোচ্চ কতটি node থাকবে? A. n B. 2n C. 2… <sub>G2653</sub>
+### Complete Binary Tree এর height যদি n হয়, তাহলে সর্বোচ্চ কতটি node থাকবে? A. n B. 2n C. 2… <sub>G2701</sub>
 
 *MCQ*
 
@@ -1374,9 +1374,9 @@ Complete Binary Tree এর height যদি n হয়, তাহলে সর
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33, Data Structures and Algorithms Q7 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2655"></a>
+<a id="g2703"></a>
 
-### What is the time complexity of binary search tree (average case)? A. O(n) B. O(n log₂n) C… <sub>G2655</sub>
+### What is the time complexity of binary search tree (average case)? A. O(n) B. O(n log₂n) C… <sub>G2703</sub>
 
 *MCQ*
 
@@ -1387,9 +1387,9 @@ What is the time complexity of binary search tree (average case)? A. O(n) B. O(n
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Data Structures and Algorithms Q9 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Data Structures and Algorithms Q13 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2991"></a>
+<a id="g3039"></a>
 
-### Explain operation of Binary Search Tree. <sub>G2991</sub>
+### Explain operation of Binary Search Tree. <sub>G3039</sub>
 
 *Written*
 
@@ -1399,9 +1399,9 @@ Explain operation of Binary Search Tree.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3006"></a>
+<a id="g3054"></a>
 
-### Answer the following question – In-order: 10, 20, 40, 50, 60, 70, 90, 100 Pre-order: 50, … <sub>G3006</sub>
+### Answer the following question – In-order: 10, 20, 40, 50, 60, 70, 90, 100 Pre-order: 50, … <sub>G3054</sub>
 
 *Written*
 
@@ -1411,9 +1411,9 @@ Answer the following question – In-order: 10, 20, 40, 50, 60, 70, 90, 100 Pre-
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Assistant Network Engineer (ANE) – JBL — 12.11.2020 — Exam taker: not printed — IT: 10*16 marks + Non IT: 2*20 marks - 200 marks — pages 4–6, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3016"></a>
+<a id="g3064"></a>
 
-### Construct Binary Search Tree (BST) for the following sequence of numbers-- 4, 7, 5, 1, 3,… <sub>G3016</sub>
+### Construct Binary Search Tree (BST) for the following sequence of numbers-- 4, 7, 5, 1, 3,… <sub>G3064</sub>
 
 *Written*
 
@@ -1423,9 +1423,9 @@ Construct Binary Search Tree (BST) for the following sequence of numbers-- 4, 7,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Assistant Database Administrator (ADA) – SBL — 14.12.2020 — Exam taker: not printed — 10*16 marks + 2*20 marks = 200 — pages 8–9, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3021"></a>
+<a id="g3069"></a>
 
-### Write a procedure sum Nodes (*root) to find out summation of all nodes of that tree. <sub>G3021</sub>
+### Write a procedure sum Nodes (*root) to find out summation of all nodes of that tree. <sub>G3069</sub>
 
 *Written*
 
@@ -1435,9 +1435,9 @@ Write a procedure sum Nodes (*root) to find out summation of all nodes of that t
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — Assistant Network Engineer (ANE) – RBL [ANE RBL 2021 CTI] — 16.03.2021 — Exam taker: CTI (from the printed tag) — 10*16 marks +2*20 marks = 200 — pages 10–11, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3441"></a>
+<a id="g3489"></a>
 
-### Determine inorder and postorder travelsal for the following tree . [tree not printed] <sub>G3441</sub>
+### Determine inorder and postorder travelsal for the following tree . [tree not printed] <sub>G3489</sub>
 
 *Written*
 
@@ -1447,9 +1447,9 @@ Determine inorder and postorder travelsal for the following tree . [tree not pri
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 4 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3866"></a>
+<a id="g3914"></a>
 
-### Given the following trees, which of the following is true ? [Figure: four trees (i)-(iv) … <sub>G3866</sub>
+### Given the following trees, which of the following is true ? [Figure: four trees (i)-(iv) … <sub>G3914</sub>
 
 *MCQ*
 
@@ -1459,9 +1459,9 @@ Given the following trees, which of the following is true ? [Figure: four trees 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q14 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4528"></a>
+<a id="g4576"></a>
 
-### Which searching algorithm can take O(1) time to find a data from a list? (a) Tree search … <sub>G4528</sub>
+### Which searching algorithm can take O(1) time to find a data from a list? (a) Tree search … <sub>G4576</sub>
 
 *MCQ*
 
@@ -1471,9 +1471,9 @@ Which searching algorithm can take O(1) time to find a data from a list? (a) Tre
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ60 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4691"></a>
+<a id="g4739"></a>
 
-### Max hip from binary tree <sub>G4691</sub>
+### Max hip from binary tree <sub>G4739</sub>
 
 *Written*
 
@@ -1483,9 +1483,9 @@ Max hip from binary tree
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — PGCB SAE (Computer) 24.12.2020, Q2 — [power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md](../power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md)
 
-<a id="g4709"></a>
+<a id="g4757"></a>
 
-### Example 05: Maximum and Minimum no of Nodes for a binary tree of height 7 where the root … <sub>G4709</sub>
+### Example 05: Maximum and Minimum no of Nodes for a binary tree of height 7 where the root … <sub>G4757</sub>
 
 *Written*
 
@@ -1508,9 +1508,9 @@ Example 11: Draw a B+ tree using the indexes- 12, 14, 19, 30, 21, 22, 13, 34, 18
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q32 — [bit to exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md) · [image](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.jpg)
 
-<a id="g1911"></a>
+<a id="g1959"></a>
 
-### Make a binary search tree using following numbers :28/25/30/15/100/105 <sub>G1911</sub>
+### Make a binary search tree using following numbers :28/25/30/15/100/105 <sub>G1959</sub>
 
 *Written*
 
@@ -1521,9 +1521,9 @@ Make a binary search tree using following numbers :28/25/30/15/100/105
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 24. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2017"></a>
+<a id="g2065"></a>
 
-### *[Figure: binary tree — root 1; children of 1: 2 (left) and 3 (right); children of 2: 4 (… <sub>G2017</sub>
+### *[Figure: binary tree — root 1; children of 1: 2 (left) and 3 (right); children of 2: 4 (… <sub>G2065</sub>
 
 *Written*
 
@@ -1533,9 +1533,9 @@ Make a binary search tree using following numbers :28/25/30/15/100/105
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৪ (গ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2784"></a>
+<a id="g2832"></a>
 
-### Construct an expression tree for the following expression: (a+b)/(a*b-c)+d <sub>G2784</sub>
+### Construct an expression tree for the following expression: (a+b)/(a*b-c)+d <sub>G2832</sub>
 
 *Written*
 
@@ -1545,9 +1545,9 @@ Construct an expression tree for the following expression: (a+b)/(a*b-c)+d
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 4 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2851"></a>
+<a id="g2899"></a>
 
-### For the frequencies given below, construct a Huffman Tree and compute Average Code Length… <sub>G2851</sub>
+### For the frequencies given below, construct a Huffman Tree and compute Average Code Length… <sub>G2899</sub>
 
 *Written*
 
@@ -1557,9 +1557,9 @@ For the frequencies given below, construct a Huffman Tree and compute Average Co
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 4. (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3761"></a>
+<a id="g3809"></a>
 
-### Pre order and in order sequence are given for a binary tree. Draw the binary tree? <sub>G3761</sub>
+### Pre order and in order sequence are given for a binary tree. Draw the binary tree? <sub>G3809</sub>
 
 *Written*
 
@@ -1681,9 +1681,21 @@ B+ Tree Data Structure কী? ডেটাবেজ ইনডেক্সিং
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা স্ট্রাকচার, অ্যালগরিদম ও অপ্টিমাইজেশন (Data Structure & Algorithms), Q73 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
 
-<a id="g1823"></a>
+<a id="g1824"></a>
 
-### Construct a Binary Search Tree (BST) by inserting the following keys in order: 50, 30, 70… <sub>G1823</sub>
+### B+ tree of order 3; B-tree vs B+ tree <sub>G1824</sub>
+
+*Written*
+
+B+ tree of order 3; B-tree vs B+ tree
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q69 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g1871"></a>
+
+### Construct a Binary Search Tree (BST) by inserting the following keys in order: 50, 30, 70… <sub>G1871</sub>
 
 *Written*
 
@@ -1693,9 +1705,9 @@ Construct a Binary Search Tree (BST) by inserting the following keys in order: 5
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q41 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1824"></a>
+<a id="g1872"></a>
 
-### Construct the Binary Tree from Given Traversals — Preorder + Inorder: Construct the binar… <sub>G1824</sub>
+### Construct the Binary Tree from Given Traversals — Preorder + Inorder: Construct the binar… <sub>G1872</sub>
 
 *Written*
 
@@ -1705,9 +1717,9 @@ Construct the Binary Tree from Given Traversals — Preorder + Inorder: Construc
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q41 exercise 1 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1825"></a>
+<a id="g1873"></a>
 
-### Construct the Binary Tree from Given Traversals — Postorder + Inorder: Construct the bina… <sub>G1825</sub>
+### Construct the Binary Tree from Given Traversals — Postorder + Inorder: Construct the bina… <sub>G1873</sub>
 
 *Written*
 
@@ -1717,9 +1729,9 @@ Construct the Binary Tree from Given Traversals — Postorder + Inorder: Constru
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q41 exercise 2 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g4261"></a>
+<a id="g4309"></a>
 
-### What is Binary Search Tree? Complexity of BST best and worst case. <sub>G4261</sub>
+### What is Binary Search Tree? Complexity of BST best and worst case. <sub>G4309</sub>
 
 *Written*
 
@@ -1761,9 +1773,9 @@ Linked List কী? উদাহরণসহ বর্ণনা করুন।
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q7 — [bit to exabyte/47_bte-g2-p33-data-structure-q01-14.md](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.md) · [image](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৪ অথবা (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g3423"></a>
+<a id="g3471"></a>
 
-### Array vs linked list. <sub>G3423</sub>
+### Array vs linked list. <sub>G3471</sub>
 
 *Written*
 
@@ -1776,9 +1788,9 @@ Array vs linked list.
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 01/02/2025, 1 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 - **Printed answer:** Array: Stores elements in contiguous memory and supports fast random access; Linked List: Stores elements using nodes connected by pointers, allowing dynamic memory allocation
 
-<a id="g1939"></a>
+<a id="g1987"></a>
 
-### Illustrate singly linked list, doubly linked list and circular linked list with diagram. <sub>G1939</sub>
+### Illustrate singly linked list, doubly linked list and circular linked list with diagram. <sub>G1987</sub>
 
 *Written · marked important in the Bit to Exabyte book*
 
@@ -1852,9 +1864,9 @@ Linked list কী? উহার প্রকারভেদ চিত্রস�
 - **Source:**
   - Question paper, Q4(ক) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g1972"></a>
+<a id="g2020"></a>
 
-### Array এর পরিবর্তে linked list ব্যবহারের সুবিধাগুলো ও অসুবিধাগুলো লিখুন। <sub>G1972</sub>
+### Array এর পরিবর্তে linked list ব্যবহারের সুবিধাগুলো ও অসুবিধাগুলো লিখুন। <sub>G2020</sub>
 
 *Written*
 
@@ -1865,9 +1877,9 @@ Array এর পরিবর্তে linked list ব্যবহারের �
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৩ (খ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1974"></a>
+<a id="g2022"></a>
 
-### Sorted linked list এ কী Binary search apply করা সম্ভব কিনা? আপনার উত্তরের সপক্ষে উদাহরণসহ… <sub>G1974</sub>
+### Sorted linked list এ কী Binary search apply করা সম্ভব কিনা? আপনার উত্তরের সপক্ষে উদাহরণসহ… <sub>G2022</sub>
 
 *Written*
 
@@ -1878,9 +1890,9 @@ Sorted linked list এ কী Binary search apply করা সম্ভব ক�
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৩ (ঘ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2319"></a>
+<a id="g2367"></a>
 
-### Explain the difference between a singly linked list and a doubly linked list. <sub>G2319</sub>
+### Explain the difference between a singly linked list and a doubly linked list. <sub>G2367</sub>
 
 *Written*
 
@@ -1891,9 +1903,9 @@ Explain the difference between a singly linked list and a doubly linked list.
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q11 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2649"></a>
+<a id="g2697"></a>
 
-### Which of the following data structures follows the LIFO principle? ক) Stack খ) Linked lis… <sub>G2649</sub>
+### Which of the following data structures follows the LIFO principle? ক) Stack খ) Linked lis… <sub>G2697</sub>
 
 *MCQ*
 
@@ -1903,9 +1915,9 @@ Which of the following data structures follows the LIFO principle? ক) Stack �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Data Structures and Algorithms Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3512"></a>
+<a id="g3560"></a>
 
-### (a) Compare array and singly linked list with necessary diagram. 3 <sub>G3512</sub>
+### (a) Compare array and singly linked list with necessary diagram. 3 <sub>G3560</sub>
 
 *Written*
 
@@ -1915,9 +1927,9 @@ Which of the following data structures follows the LIFO principle? ক) Stack �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q6(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3687"></a>
+<a id="g3735"></a>
 
-### What is the time complexity of inserting an element at the beginning of a singly linked l… <sub>G3687</sub>
+### What is the time complexity of inserting an element at the beginning of a singly linked l… <sub>G3735</sub>
 
 *MCQ*
 
@@ -1927,9 +1939,9 @@ What is the time complexity of inserting an element at the beginning of a singly
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 11 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3688"></a>
+<a id="g3736"></a>
 
-### What is the time complexity of inserting and deleting the first element of a linked list? <sub>G3688</sub>
+### What is the time complexity of inserting and deleting the first element of a linked list? <sub>G3736</sub>
 
 *MCQ*
 
@@ -1939,9 +1951,9 @@ What is the time complexity of inserting and deleting the first element of a lin
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 12 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4022"></a>
+<a id="g4070"></a>
 
-### Algorithm for checking loop in singly linked list <sub>G4022</sub>
+### Algorithm for checking loop in singly linked list <sub>G4070</sub>
 
 *Written*
 
@@ -1951,9 +1963,9 @@ Algorithm for checking loop in singly linked list
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q10 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g4071"></a>
+<a id="g4119"></a>
 
-### A priority queue is best-implemented using a: (ক) Stack (খ) Linked list (গ) array (ঘ) heap <sub>G4071</sub>
+### A priority queue is best-implemented using a: (ক) Stack (খ) Linked list (গ) array (ঘ) heap <sub>G4119</sub>
 
 *MCQ*
 
@@ -1963,9 +1975,9 @@ A priority queue is best-implemented using a: (ক) Stack (খ) Linked list (গ
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q133 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4110"></a>
+<a id="g4158"></a>
 
-### To solve a problem using recursion we should use a: (ক) Linked list (খ) stack (গ) queue (… <sub>G4110</sub>
+### To solve a problem using recursion we should use a: (ক) Linked list (খ) stack (গ) queue (… <sub>G4158</sub>
 
 *MCQ*
 
@@ -1975,9 +1987,9 @@ To solve a problem using recursion we should use a: (ক) Linked list (খ) stac
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q172 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4598"></a>
+<a id="g4646"></a>
 
-### What is the worst case time complexity of inserting n elements into an empty linked list,… <sub>G4598</sub>
+### What is the worst case time complexity of inserting n elements into an empty linked list,… <sub>G4646</sub>
 
 *MCQ*
 
@@ -1987,9 +1999,9 @@ What is the worst case time complexity of inserting n elements into an empty lin
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ46 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4600"></a>
+<a id="g4648"></a>
 
-### What is the best way to implement priority queue? (a) Array (b) Linked List (c) Heap (d) … <sub>G4600</sub>
+### What is the best way to implement priority queue? (a) Array (b) Linked List (c) Heap (d) … <sub>G4648</sub>
 
 *MCQ*
 
@@ -2029,9 +2041,9 @@ For which data structure operations, Linked List is better than Array? (Insert, 
   - Question paper found on the web (see the folder README for the URL) — NESCO Assistant Manager (ICT) 31.12.2021, Q4(b)(i) — [power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md](../power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md)
 - **Correction:** a binary tree of height 7 needs at least **8** nodes (a chain of 8); 1 node has height 0. The maximum, 255, is correct.
 
-<a id="g2449"></a>
+<a id="g2497"></a>
 
-### Array/Linked List ব্যবহার করে Largest number বের করার ফাংশন লিখুন। <sub>G2449</sub>
+### Array/Linked List ব্যবহার করে Largest number বের করার ফাংশন লিখুন। <sub>G2497</sub>
 
 *Written*
 
@@ -2041,9 +2053,9 @@ Array/Linked List ব্যবহার করে Largest number বের ক�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 09 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g3830"></a>
+<a id="g3878"></a>
 
-### Enqueue and Dequeue using single linked list in O(1) time. <sub>G3830</sub>
+### Enqueue and Dequeue using single linked list in O(1) time. <sub>G3878</sub>
 
 *Written*
 
@@ -2053,9 +2065,9 @@ Enqueue and Dequeue using single linked list in O(1) time.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q5 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g1947"></a>
+<a id="g1995"></a>
 
-### Why we use stack ? Difference between array and linked list ? <sub>G1947</sub>
+### Why we use stack ? Difference between array and linked list ? <sub>G1995</sub>
 
 *Written*
 
@@ -2065,9 +2077,9 @@ Why we use stack ? Difference between array and linked list ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 8.(b) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
 
-<a id="g2016"></a>
+<a id="g2064"></a>
 
-### উদাহরণসহ Array এবং Linked List এর মধ্যে পার্থক্য লিখুন। <sub>G2016</sub>
+### উদাহরণসহ Array এবং Linked List এর মধ্যে পার্থক্য লিখুন। <sub>G2064</sub>
 
 *Written*
 
@@ -2078,9 +2090,9 @@ Why we use stack ? Difference between array and linked list ?
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা স্ট্রাকচার, অ্যালগরিদম ও অপ্টিমাইজেশন (Data Structure & Algorithms), Q69 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৪ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g3740"></a>
+<a id="g3788"></a>
 
-### Implement stack using single linked list.(Write down pseudo-code only) <sub>G3740</sub>
+### Implement stack using single linked list.(Write down pseudo-code only) <sub>G3788</sub>
 
 *Written*
 
@@ -2090,9 +2102,9 @@ Implement stack using single linked list.(Write down pseudo-code only)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q25 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3784"></a>
+<a id="g3832"></a>
 
-### Implement a queue by linked list , write the procedures of enqueue and dequeue and determ… <sub>G3784</sub>
+### Implement a queue by linked list , write the procedures of enqueue and dequeue and determ… <sub>G3832</sub>
 
 *Written*
 
@@ -2145,9 +2157,21 @@ Can Divide and Conquer be applied to Linked Lists?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p14 Q6 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p14)
 - **Printed answer:** Yes, but not efficiently for searching because linked lists don't support direct access. It is commonly used for algorithms like Merge Sort on linked lists
 
-<a id="g2417"></a>
+<a id="g1812"></a>
 
-### What is linear data structure ? Why we use stack ? Difference between array and linked li… <sub>G2417</sub>
+### Linked list vs array; types of linked list; insertion pseudocode <sub>G1812</sub>
+
+*Written*
+
+Linked list vs array; types of linked list; insertion pseudocode
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q32 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g2465"></a>
+
+### What is linear data structure ? Why we use stack ? Difference between array and linked li… <sub>G2465</sub>
 
 *Written*
 
@@ -2159,9 +2183,9 @@ What is linear data structure ? Why we use stack ? Difference between array and 
 
 ## Stack & queue
 
-<a id="g2460"></a>
+<a id="g2508"></a>
 
-### Stack ও Queue এর মধ্যে পার্থক্য লিখুন। <sub>G2460</sub>
+### Stack ও Queue এর মধ্যে পার্থক্য লিখুন। <sub>G2508</sub>
 
 *Written*
 
@@ -2209,9 +2233,9 @@ Write down the difference between Stack and Queue.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q12 — [bit to exabyte/47_bte-g2-p33-data-structure-q01-14.md](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.md) · [image](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.jpg)
 
-<a id="g3224"></a>
+<a id="g3272"></a>
 
-### Difference between stack and queue also writes its two uses. <sub>G3224</sub>
+### Difference between stack and queue also writes its two uses. <sub>G3272</sub>
 
 *Written*
 
@@ -2221,9 +2245,9 @@ Difference between stack and queue also writes its two uses.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3313"></a>
+<a id="g3361"></a>
 
-### You have two stacks. Explain the logic required to implement a Queue (FIFO) using only th… <sub>G3313</sub>
+### You have two stacks. Explain the logic required to implement a Queue (FIFO) using only th… <sub>G3361</sub>
 
 *Written*
 
@@ -2233,9 +2257,9 @@ You have two stacks. Explain the logic required to implement a Queue (FIFO) usin
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3669"></a>
+<a id="g3717"></a>
 
-### Why is a Circular Queue preferred over a Linear Queue in many operating systems? Explain … <sub>G3669</sub>
+### Why is a Circular Queue preferred over a Linear Queue in many operating systems? Explain … <sub>G3717</sub>
 
 *Written*
 
@@ -2245,9 +2269,9 @@ Why is a Circular Queue preferred over a Linear Queue in many operating systems?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12, Q11 — [duranta/1785328629-so-it-job-id-25104/1785328629.md](../duranta/1785328629-so-it-job-id-25104/1785328629.md)
 
-<a id="g4059"></a>
+<a id="g4107"></a>
 
-### For BFS of a graph, we should use: (ক) queue (খ) Stack (গ) priority queue (ঘ) stack <sub>G4059</sub>
+### For BFS of a graph, we should use: (ক) queue (খ) Stack (গ) priority queue (ঘ) stack <sub>G4107</sub>
 
 *MCQ*
 
@@ -2257,9 +2281,9 @@ For BFS of a graph, we should use: (ক) queue (খ) Stack (গ) priority queue 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q121 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4085"></a>
+<a id="g4133"></a>
 
-### The space complexity of a recursive algorithm is mainly due to: (ক) Input size (খ) Output… <sub>G4085</sub>
+### The space complexity of a recursive algorithm is mainly due to: (ক) Input size (খ) Output… <sub>G4133</sub>
 
 *MCQ*
 
@@ -2269,9 +2293,9 @@ The space complexity of a recursive algorithm is mainly due to: (ক) Input size
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q147 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4566"></a>
+<a id="g4614"></a>
 
-### Which data structure is preferred for Priority Queue? (a) Heap Tree (b) Graph (c) Stack (… <sub>G4566</sub>
+### Which data structure is preferred for Priority Queue? (a) Heap Tree (b) Graph (c) Stack (… <sub>G4614</sub>
 
 *MCQ*
 
@@ -2281,9 +2305,9 @@ Which data structure is preferred for Priority Queue? (a) Heap Tree (b) Graph (c
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ4 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4583"></a>
+<a id="g4631"></a>
 
-### Which data structure is best suited for implementing a scheduler in an operating system? … <sub>G4583</sub>
+### Which data structure is best suited for implementing a scheduler in an operating system? … <sub>G4631</sub>
 
 *MCQ*
 
@@ -2293,9 +2317,9 @@ Which data structure is best suited for implementing a scheduler in an operating
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ21 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4588"></a>
+<a id="g4636"></a>
 
-### Which of the following is an application of Queue data structure? (a) Expression evaluati… <sub>G4588</sub>
+### Which of the following is an application of Queue data structure? (a) Expression evaluati… <sub>G4636</sub>
 
 *MCQ*
 
@@ -2305,9 +2329,9 @@ Which of the following is an application of Queue data structure? (a) Expression
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ35 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4599"></a>
+<a id="g4647"></a>
 
-### Which one of the following is an application of Stack Data Structure? (a) Managing functi… <sub>G4599</sub>
+### Which one of the following is an application of Stack Data Structure? (a) Managing functi… <sub>G4647</sub>
 
 *MCQ*
 
@@ -2317,9 +2341,9 @@ Which one of the following is an application of Stack Data Structure? (a) Managi
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ47 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4756"></a>
+<a id="g4804"></a>
 
-### A stack is also called- Last In First Out / First Last Out / Last In Last Out / First In … <sub>G4756</sub>
+### A stack is also called- Last In First Out / First Last Out / Last In Last Out / First In … <sub>G4804</sub>
 
 *MCQ*
 
@@ -2329,9 +2353,9 @@ A stack is also called- Last In First Out / First Last Out / Last In Last Out / 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 5 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
 
-<a id="g5100"></a>
+<a id="g5148"></a>
 
-### Implement a queue using two stack code where enqueue and dequeue is possible. <sub>G5100</sub>
+### Implement a queue using two stack code where enqueue and dequeue is possible. <sub>G5148</sub>
 
 *Written*
 
@@ -2366,9 +2390,9 @@ Stack এর operation গুলি সংক্ষেপে বর্ণনা 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q13 — [bit to exabyte/47_bte-g2-p33-data-structure-q01-14.md](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.md) · [image](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.jpg)
 
-<a id="g1961"></a>
+<a id="g2009"></a>
 
-### Suppose a circular array QUEUE has 6 memory locations.what are the values of front and RE… <sub>G1961</sub>
+### Suppose a circular array QUEUE has 6 memory locations.what are the values of front and RE… <sub>G2009</sub>
 
 *Written*
 
@@ -2379,9 +2403,9 @@ Suppose a circular array QUEUE has 6 memory locations.what are the values of fro
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 10. — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 - **Correction:** the printed snapshots delete from the rear (A C D F → A C), which is stack behaviour. For a circular queue of 6 cells (1-based), deletions remove A, C then D, F: FRONT = 1, REAR = 3 → REAR = 4 → FRONT = 3 → K, L, M go to cells 5, 6, 1 so REAR = 1 → FRONT = 5 → R goes to cell 2. Final FRONT = 5, REAR = 2 (queue holds K, L, M, R).
 
-<a id="g2446"></a>
+<a id="g2494"></a>
 
-### Stack এর ক্ষেত্রে Data PUSH করার Procedure লিখুন। <sub>G2446</sub>
+### Stack এর ক্ষেত্রে Data PUSH করার Procedure লিখুন। <sub>G2494</sub>
 
 *Written*
 
@@ -2391,9 +2415,9 @@ Stack এর ক্ষেত্রে Data PUSH করার Procedure লিখ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 06 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2659"></a>
+<a id="g2707"></a>
 
-### Which is known as LIFO data structure? a. Queue b. Stack c. File d. None <sub>G2659</sub>
+### Which is known as LIFO data structure? a. Queue b. Stack c. File d. None <sub>G2707</sub>
 
 *MCQ*
 
@@ -2403,9 +2427,9 @@ Which is known as LIFO data structure? a. Queue b. Stack c. File d. None
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Data Structures and Algorithms Q14 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2973"></a>
+<a id="g3021"></a>
 
-### Queue is an abstract data structure. A queue is open at both its ends. One end is always … <sub>G2973</sub>
+### Queue is an abstract data structure. A queue is open at both its ends. One end is always … <sub>G3021</sub>
 
 *Written*
 
@@ -2416,9 +2440,9 @@ Queue is an abstract data structure. A queue is open at both its ends. One end i
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q14 — [bit to exabyte/47_bte-g2-p33-data-structure-q01-14.md](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.md) · [image](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(C) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3440"></a>
+<a id="g3488"></a>
 
-### Implement a queue using two stack. Is it possible to implement queue using one stack? <sub>G3440</sub>
+### Implement a queue using two stack. Is it possible to implement queue using one stack? <sub>G3488</sub>
 
 *Written*
 
@@ -2428,9 +2452,9 @@ Implement a queue using two stack. Is it possible to implement queue using one s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 3 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g4519"></a>
+<a id="g4567"></a>
 
-### In the priority queue, insertion and deletion take place at (a) Front and rear end (b) On… <sub>G4519</sub>
+### In the priority queue, insertion and deletion take place at (a) Front and rear end (b) On… <sub>G4567</sub>
 
 *MCQ*
 
@@ -2464,9 +2488,9 @@ Why do we use stack?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q15 — [bit to exabyte/48_bte-g2-p34-data-structure-q15-30-trees.md](../bit%20to%20exabyte/48_bte-g2-p34-data-structure-q15-30-trees.md) · [image](../bit%20to%20exabyte/48_bte-g2-p34-data-structure-q15-30-trees.jpg)
 
-<a id="g1890"></a>
+<a id="g1938"></a>
 
-### What are the main functionality of “prority Queue”? How to implement these functions by u… <sub>G1890</sub>
+### What are the main functionality of “prority Queue”? How to implement these functions by u… <sub>G1938</sub>
 
 *Written*
 
@@ -2477,9 +2501,9 @@ What are the main functionality of “prority Queue”? How to implement these f
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 2. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1895"></a>
+<a id="g1943"></a>
 
-### Write Pseudocode to implement Enqueue and Dequeue operation array of C. <sub>G1895</sub>
+### Write Pseudocode to implement Enqueue and Dequeue operation array of C. <sub>G1943</sub>
 
 *Written*
 
@@ -2489,9 +2513,9 @@ Write Pseudocode to implement Enqueue and Dequeue operation array of C.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 8. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g2895"></a>
+<a id="g2943"></a>
 
-### Explain the differences between stack and queue data structures in terms of their: operat… <sub>G2895</sub>
+### Explain the differences between stack and queue data structures in terms of their: operat… <sub>G2943</sub>
 
 *Written*
 
@@ -2501,9 +2525,9 @@ Explain the differences between stack and queue data structures in terms of thei
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 8. (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3753"></a>
+<a id="g3801"></a>
 
-### Write a pseudo code for heapsort algorithm using stack? You do not need to implement stac… <sub>G3753</sub>
+### Write a pseudo code for heapsort algorithm using stack? You do not need to implement stac… <sub>G3801</sub>
 
 *Written*
 
@@ -2513,9 +2537,9 @@ Write a pseudo code for heapsort algorithm using stack? You do not need to imple
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017, Q9 — [buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md](../buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md)
 
-<a id="g3754"></a>
+<a id="g3802"></a>
 
-### Write a pseudo code to identify a given sequence is palindrome or not using stack and que… <sub>G3754</sub>
+### Write a pseudo code to identify a given sequence is palindrome or not using stack and que… <sub>G3802</sub>
 
 *Written*
 
@@ -2603,9 +2627,9 @@ Minimum number of queues to implement stack is \_\_\_\_\_\_\_\_\_
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা স্ট্রাকচার, অ্যালগরিদম ও অপ্টিমাইজেশন (Data Structure & Algorithms), Q68 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
 
-<a id="g2415"></a>
+<a id="g2463"></a>
 
-### Suppose a circular array QUEUE has 6 memory locations. What are the values of front and R… <sub>G2415</sub>
+### Suppose a circular array QUEUE has 6 memory locations. What are the values of front and R… <sub>G2463</sub>
 
 *Written*
 
@@ -2615,9 +2639,9 @@ Suppose a circular array QUEUE has 6 memory locations. What are the values of fr
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g5181"></a>
+<a id="g5229"></a>
 
-### Circular Queue is also known as- ক. Ring buffer খ. Square buffer গ. Rectangle buffer ঘ. C… <sub>G5181</sub>
+### Circular Queue is also known as- ক. Ring buffer খ. Square buffer গ. Rectangle buffer ঘ. C… <sub>G5229</sub>
 
 *MCQ*
 
@@ -2706,9 +2730,9 @@ Greedy Method ও Dynamic Algorithm এর মধ্যে পার্থক্
 - **Source:**
   - Question paper, Q5(খ) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g1981"></a>
+<a id="g2029"></a>
 
-### নিম্নলিখিত term গুলোর সংজ্ঞা দিন: Backtracking, NP, NP-Hard and NP complete problem. <sub>G1981</sub>
+### নিম্নলিখিত term গুলোর সংজ্ঞা দিন: Backtracking, NP, NP-Hard and NP complete problem. <sub>G2029</sub>
 
 *Written*
 
@@ -2718,9 +2742,9 @@ Greedy Method ও Dynamic Algorithm এর মধ্যে পার্থক্
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৫ (ঘ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
 
-<a id="g2422"></a>
+<a id="g2470"></a>
 
-### Define the following terms with example: Backtracking, NP, NP-Hard, and NP-complete probl… <sub>G2422</sub>
+### Define the following terms with example: Backtracking, NP, NP-Hard, and NP-complete probl… <sub>G2470</sub>
 
 *Written · marked important in the Bit to Exabyte book*
 
@@ -2731,9 +2755,9 @@ Define the following terms with example: Backtracking, NP, NP-Hard, and NP-compl
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q37 — [bit to exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md) · [image](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.jpg)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g3300"></a>
+<a id="g3348"></a>
 
-### What is Dyanamic programming? dynamic programming property's.... [SBPLC ADA 26] <sub>G3300</sub>
+### What is Dyanamic programming? dynamic programming property's.... [SBPLC ADA 26] <sub>G3348</sub>
 
 *Written*
 
@@ -2743,9 +2767,9 @@ What is Dyanamic programming? dynamic programming property's.... [SBPLC ADA 26]
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — Sonali Bank PLC — Assistant Database Administrator — Written Exam Question — 09/01/2026 — Exam taker: not printed — marks not printed — pages 55–56, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3461"></a>
+<a id="g3509"></a>
 
-### Where do we use Dynamic Programming? <sub>G3461</sub>
+### Where do we use Dynamic Programming? <sub>G3509</sub>
 
 *Written*
 
@@ -2755,9 +2779,9 @@ Where do we use Dynamic Programming?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 1 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3511"></a>
+<a id="g3559"></a>
 
-### (b) Does greedy algorithm always achieve optimal solution? If not, when does greedy appro… <sub>G3511</sub>
+### (b) Does greedy algorithm always achieve optimal solution? If not, when does greedy appro… <sub>G3559</sub>
 
 *Written*
 
@@ -2768,9 +2792,9 @@ Where do we use Dynamic Programming?
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q38 — [bit to exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md) · [image](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q5(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3576"></a>
+<a id="g3624"></a>
 
-### b. What are the differences and similarities 5 between 'Dynamic Programming' and 'Greedy … <sub>G3576</sub>
+### b. What are the differences and similarities 5 between 'Dynamic Programming' and 'Greedy … <sub>G3624</sub>
 
 *Written*
 
@@ -2780,9 +2804,9 @@ b. What are the differences and similarities 5 between 'Dynamic Programming' and
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16, Q5(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4064"></a>
+<a id="g4112"></a>
 
-### In Huffman coding, the algorithm repeatedly picks two nodes and merges those. These two n… <sub>G4064</sub>
+### In Huffman coding, the algorithm repeatedly picks two nodes and merges those. These two n… <sub>G4112</sub>
 
 *MCQ*
 
@@ -2829,9 +2853,9 @@ What is time complexity of Huffman coding?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q72b — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
 
-<a id="g3856"></a>
+<a id="g3904"></a>
 
-### The length of a Huffman code for the message "effervescence" is (a) 39 bits (b) 104 bits … <sub>G3856</sub>
+### The length of a Huffman code for the message "effervescence" is (a) 39 bits (b) 104 bits … <sub>G3904</sub>
 
 *MCQ*
 
@@ -2841,9 +2865,9 @@ The length of a Huffman code for the message "effervescence" is (a) 39 bits (b) 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q4 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4209"></a>
+<a id="g4257"></a>
 
-### Greedy অ্যালগরিদম উদাহরণসহ ব্যাখ্যা করুণ। <sub>G4209</sub>
+### Greedy অ্যালগরিদম উদাহরণসহ ব্যাখ্যা করুণ। <sub>G4257</sub>
 
 *Written*
 
@@ -2853,9 +2877,9 @@ Greedy অ্যালগরিদম উদাহরণসহ ব্যাখ�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৭ অথবা — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4470"></a>
+<a id="g4518"></a>
 
-### Which of the following technique uses memoization? (a) Greedy algorithms (b) Dynamic Prog… <sub>G4470</sub>
+### Which of the following technique uses memoization? (a) Greedy algorithms (b) Dynamic Prog… <sub>G4518</sub>
 
 *MCQ*
 
@@ -2877,9 +2901,9 @@ What are the advantages of IDA* algorithm?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q72 — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
 
-<a id="g1892"></a>
+<a id="g1940"></a>
 
-### Describe “Huffman’s” Algorithm. <sub>G1892</sub>
+### Describe “Huffman’s” Algorithm. <sub>G1940</sub>
 
 *Written*
 
@@ -2890,9 +2914,9 @@ Describe “Huffman’s” Algorithm.
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 4. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1913"></a>
+<a id="g1961"></a>
 
-### Explain NP-hard and NP complete with example. <sub>G1913</sub>
+### Explain NP-hard and NP complete with example. <sub>G1961</sub>
 
 *Written*
 
@@ -2903,9 +2927,9 @@ Explain NP-hard and NP complete with example.
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 26. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2173"></a>
+<a id="g2221"></a>
 
-### Greedy Algorithmm কাকে বলে? দুটি এমন সমস্যা বর্ণনা করুন যা Greedy Algorithm দিয়ে সমাধান … <sub>G2173</sub>
+### Greedy Algorithmm কাকে বলে? দুটি এমন সমস্যা বর্ণনা করুন যা Greedy Algorithm দিয়ে সমাধান … <sub>G2221</sub>
 
 *Written*
 
@@ -2916,9 +2940,9 @@ Greedy Algorithmm কাকে বলে? দুটি এমন সমস্য
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — Data Structure & Algorithms (continued), Q84 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৫ (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2175"></a>
+<a id="g2223"></a>
 
-### Divide and Conquer technique কী? দুটি এমন সমস্যা বর্ণনা করুন Divide and Conquer technique… <sub>G2175</sub>
+### Divide and Conquer technique কী? দুটি এমন সমস্যা বর্ণনা করুন Divide and Conquer technique… <sub>G2223</sub>
 
 *Written*
 
@@ -2928,9 +2952,9 @@ Divide and Conquer technique কী? দুটি এমন সমস্যা �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৫ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2423"></a>
+<a id="g2471"></a>
 
-### Write down about Divide and conquer algorithm.What are the differences between divide and… <sub>G2423</sub>
+### Write down about Divide and conquer algorithm.What are the differences between divide and… <sub>G2471</sub>
 
 *Written*
 
@@ -2941,9 +2965,9 @@ Write down about Divide and conquer algorithm.What are the differences between d
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 28. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2790"></a>
+<a id="g2838"></a>
 
-### What are the required properties to apply dynamic programming? Consider you are given a s… <sub>G2790</sub>
+### What are the required properties to apply dynamic programming? Consider you are given a s… <sub>G2838</sub>
 
 *Written*
 
@@ -2953,9 +2977,9 @@ What are the required properties to apply dynamic programming? Consider you are 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 6 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2836"></a>
+<a id="g2884"></a>
 
-### Discuss the significance of NP-Complete problems with examples. <sub>G2836</sub>
+### Discuss the significance of NP-Complete problems with examples. <sub>G2884</sub>
 
 *Written*
 
@@ -2965,9 +2989,9 @@ Discuss the significance of NP-Complete problems with examples.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 9 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4134"></a>
+<a id="g4182"></a>
 
-### Divide and Conquer অ্যালগোরিদমটি ব্যাখ্যা করুন। <sub>G4134</sub>
+### Divide and Conquer অ্যালগোরিদমটি ব্যাখ্যা করুন। <sub>G4182</sub>
 
 *Written*
 
@@ -2989,9 +3013,21 @@ Divide and Conquer কৌশল কী? এই কৌশলের মাধ্�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — Data Structure & Algorithms (continued), Q85 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1818"></a>
+<a id="g1843"></a>
 
-### Compare P, NP, NP-Complete, and NP-Hard with suitable examples.(গুরুত্বপূর্ণ) <sub>G1818</sub>
+### Knapsack with greedy and DP; Tower of Hanoi for 3 disks <sub>G1843</sub>
+
+*Written*
+
+Knapsack with greedy and DP; Tower of Hanoi for 3 disks
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q99 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g1866"></a>
+
+### Compare P, NP, NP-Complete, and NP-Hard with suitable examples.(গুরুত্বপূর্ণ) <sub>G1866</sub>
 
 *Written*
 
@@ -3067,9 +3103,9 @@ Explain Algorithm of Binary search.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q51 — [bit to exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md) · [image](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.jpg)
 
-<a id="g2648"></a>
+<a id="g2696"></a>
 
-### What is the worst-case time complexity of linear search algorithm? ক) O(1) খ) O(n) গ) O(l… <sub>G2648</sub>
+### What is the worst-case time complexity of linear search algorithm? ক) O(1) খ) O(n) গ) O(l… <sub>G2696</sub>
 
 *MCQ*
 
@@ -3079,9 +3115,9 @@ What is the worst-case time complexity of linear search algorithm? ক) O(1) খ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Data Structures and Algorithms Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3467"></a>
+<a id="g3515"></a>
 
-### BAERA store a set of object. Now write the best data structure which is appropriate for s… <sub>G3467</sub>
+### BAERA store a set of object. Now write the best data structure which is appropriate for s… <sub>G3515</sub>
 
 *Written*
 
@@ -3091,9 +3127,9 @@ BAERA store a set of object. Now write the best data structure which is appropri
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 7(b) — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3543"></a>
+<a id="g3591"></a>
 
-### d. Write a Binary search algorithm and explain with an example. 4 <sub>G3543</sub>
+### d. Write a Binary search algorithm and explain with an example. 4 <sub>G3591</sub>
 
 *Written*
 
@@ -3103,9 +3139,9 @@ d. Write a Binary search algorithm and explain with an example. 4
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q4(d) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3603"></a>
+<a id="g3651"></a>
 
-### Write down the Pseudo Code for recursive binary search algorithm. Use the following funct… <sub>G3603</sub>
+### Write down the Pseudo Code for recursive binary search algorithm. Use the following funct… <sub>G3651</sub>
 
 *Written*
 
@@ -3115,9 +3151,9 @@ Write down the Pseudo Code for recursive binary search algorithm. Use the follow
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-ক Q7 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4868"></a>
+<a id="g4916"></a>
 
-### Binary search using recursive function. <sub>G4868</sub>
+### Binary search using recursive function. <sub>G4916</sub>
 
 *Written*
 
@@ -3164,9 +3200,9 @@ The complexity of Binary search algorithm is-
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q72e — [bit to exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.md](../bit%20to%20exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.md) · [image](../bit%20to%20exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.jpg)
 
-<a id="g2469"></a>
+<a id="g2517"></a>
 
-### Linear Search এর তুলনায় Binary Search এর সুবিধা লিখ ? Binary Search এর সীমাবদ্ধ লিখ? <sub>G2469</sub>
+### Linear Search এর তুলনায় Binary Search এর সুবিধা লিখ ? Binary Search এর সীমাবদ্ধ লিখ? <sub>G2517</sub>
 
 *Written*
 
@@ -3176,9 +3212,9 @@ Linear Search এর তুলনায় Binary Search এর সুবিধ�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 14 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2999"></a>
+<a id="g3047"></a>
 
-### Linear Search (Searching Algorithm) which is used to find whether a given number is prese… <sub>G2999</sub>
+### Linear Search (Searching Algorithm) which is used to find whether a given number is prese… <sub>G3047</sub>
 
 *Written*
 
@@ -3188,9 +3224,9 @@ Linear Search (Searching Algorithm) which is used to find whether a given number
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3800"></a>
+<a id="g3848"></a>
 
-### Write the time complexity of binary searches. <sub>G3800</sub>
+### Write the time complexity of binary searches. <sub>G3848</sub>
 
 *Written*
 
@@ -3200,9 +3236,9 @@ Write the time complexity of binary searches.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q2 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g4446"></a>
+<a id="g4494"></a>
 
-### The Average-case Time Complexity of the binary search algorithm is (a) O(n/2 log n) (b) O… <sub>G4446</sub>
+### The Average-case Time Complexity of the binary search algorithm is (a) O(n/2 log n) (b) O… <sub>G4494</sub>
 
 *MCQ*
 
@@ -3212,9 +3248,9 @@ The Average-case Time Complexity of the binary search algorithm is (a) O(n/2 log
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ37 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
-<a id="g4477"></a>
+<a id="g4525"></a>
 
-### In binary search, what is the average number of comparisons required to search an element… <sub>G4477</sub>
+### In binary search, what is the average number of comparisons required to search an element… <sub>G4525</sub>
 
 *MCQ*
 
@@ -3224,9 +3260,9 @@ In binary search, what is the average number of comparisons required to search a
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ9 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4686"></a>
+<a id="g4734"></a>
 
-### [garbled Bangla] array , array binary search step [garbled Bangla] time complexity <sub>G4686</sub>
+### [garbled Bangla] array , array binary search step [garbled Bangla] time complexity <sub>G4734</sub>
 
 *Written*
 
@@ -3236,9 +3272,9 @@ In binary search, what is the average number of comparisons required to search a
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DPDC 2020 (items tagged "[DPDC 2020]"), DSA item 5 — [power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md](../power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md)
 
-<a id="g4699"></a>
+<a id="g4747"></a>
 
-### You want to search a specific number x in an array A. A containing 220 numbers stored in … <sub>G4699</sub>
+### You want to search a specific number x in an array A. A containing 220 numbers stored in … <sub>G4747</sub>
 
 *Written*
 
@@ -3249,9 +3285,9 @@ You want to search a specific number x in an array A. A containing 220 numbers s
   - Question paper found on the web (see the folder README for the URL) — APSCL Assistant Manager (MIS/IICT) 12.11.2021, Q(b) — [power-sector-web/2021-apscl-am-mis-carrierbd/apscl-am-mis-2021.md](../power-sector-web/2021-apscl-am-mis-carrierbd/apscl-am-mis-2021.md)
 - **Correction:** the printed loop is "Repeat until low>=high", which stops before checking the last remaining element; it should repeat while low <= high.
 
-<a id="g2170"></a>
+<a id="g2218"></a>
 
-### Binary Search (বাইনারি সার্চ) কিভাবে করা হয়? উদাহরণসহ দেখান। <sub>G2170</sub>
+### Binary Search (বাইনারি সার্চ) কিভাবে করা হয়? উদাহরণসহ দেখান। <sub>G2218</sub>
 
 *Written*
 
@@ -3261,9 +3297,9 @@ Binary Search (বাইনারি সার্চ) কিভাবে কর�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৪ (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g3785"></a>
+<a id="g3833"></a>
 
-### How can you search a number in O(1) average complexity <sub>G3785</sub>
+### How can you search a number in O(1) average complexity <sub>G3833</sub>
 
 *Written*
 
@@ -3273,9 +3309,9 @@ How can you search a number in O(1) average complexity
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q16 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-<a id="g4663"></a>
+<a id="g4711"></a>
 
-### Binary search worst time complexity is (a) O(n) (b) O(1) (c) O(log n) (d) O(n^2) <sub>G4663</sub>
+### Binary search worst time complexity is (a) O(n) (b) O(1) (c) O(log n) (d) O(n^2) <sub>G4711</sub>
 
 *MCQ*
 
@@ -3313,9 +3349,9 @@ Linear Search এবং Binary Search-এর মধ্যে পার্থক�
 
 ## Graph algorithms
 
-<a id="g3501"></a>
+<a id="g3549"></a>
 
-### Difference between depth first and breadth first search. <sub>G3501</sub>
+### Difference between depth first and breadth first search. <sub>G3549</sub>
 
 *Written*
 
@@ -3454,9 +3490,9 @@ Give the best-case and worst-case complexity of binary search, quick sort and de
 - **Printed answer:** Binary search O(1)/O(log n); quicksort O(n)/O(n^2); DFS O(V+E)
 - **Correction:** Quicksort best case is O(n log n), not O(n).
 
-<a id="g1880"></a>
+<a id="g1928"></a>
 
-### Write preorder and postorder representations of the following graph: [binary tree: F is r… <sub>G1880</sub>
+### Write preorder and postorder representations of the following graph: [binary tree: F is r… <sub>G1928</sub>
 
 *Written*
 
@@ -3466,9 +3502,9 @@ Write preorder and postorder representations of the following graph: [binary tre
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q13 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g2651"></a>
+<a id="g2699"></a>
 
-### In which of the following graphs can we apply topological sort? ক) Undirected Cyclic grap… <sub>G2651</sub>
+### In which of the following graphs can we apply topological sort? ক) Undirected Cyclic grap… <sub>G2699</sub>
 
 *MCQ*
 
@@ -3478,9 +3514,9 @@ In which of the following graphs can we apply topological sort? ক) Undirected 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Data Structures and Algorithms Q5 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2949"></a>
+<a id="g2997"></a>
 
-### What is Spanning tree? Find the minimum spanning tree from the given graph. <sub>G2949</sub>
+### What is Spanning tree? Find the minimum spanning tree from the given graph. <sub>G2997</sub>
 
 *Written*
 
@@ -3490,9 +3526,9 @@ What is Spanning tree? Find the minimum spanning tree from the given graph.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 9. Dhaka Electric Supply Company Ltd. (DESCO)-2022, Assistant Engineer-IT, 10-09-2022; exam taker not printed; Marks: 100; Time: 2.00 Hours; pp. 13-15 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3166"></a>
+<a id="g3214"></a>
 
-### Write a paragraph for the following sequence & analyze the complexity of the program: 1,2… <sub>G3166</sub>
+### Write a paragraph for the following sequence & analyze the complexity of the program: 1,2… <sub>G3214</sub>
 
 *Written*
 
@@ -3502,9 +3538,9 @@ Write a paragraph for the following sequence & analyze the complexity of the pro
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — Officer IT- Combined Bank — 14.10.2023 — Job ID: 10152 — Exam taker: BIBM — IT: 150 marks + Non IT: 40 marks + GK: 10 marks = 200 marks — pages 32–33, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3523"></a>
+<a id="g3571"></a>
 
-### Compare BFS and DFS with respect to completeness, time and space complexity.5 <sub>G3523</sub>
+### Compare BFS and DFS with respect to completeness, time and space complexity.5 <sub>G3571</sub>
 
 *Written*
 
@@ -3538,9 +3574,9 @@ Example 16: S1, S2, S3, S4, S5 are five nodes and a value on lines denotes the c
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q44 — [bit to exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md) · [image](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.jpg)
 
-<a id="g3827"></a>
+<a id="g3875"></a>
 
-### For a graph representation where vertices are 100 edges are more than 300 which will be p… <sub>G3827</sub>
+### For a graph representation where vertices are 100 edges are more than 300 which will be p… <sub>G3875</sub>
 
 *Written*
 
@@ -3550,9 +3586,9 @@ For a graph representation where vertices are 100 edges are more than 300 which 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q2 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g3860"></a>
+<a id="g3908"></a>
 
-### You are given the following complete binary tree. The children of the node with index k a… <sub>G3860</sub>
+### You are given the following complete binary tree. The children of the node with index k a… <sub>G3908</sub>
 
 *MCQ*
 
@@ -3562,9 +3598,9 @@ You are given the following complete binary tree. The children of the node with 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q8 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3861"></a>
+<a id="g3909"></a>
 
-### You are performing a depth-first traversal in a graph, where for a vertex v, d[v] is the … <sub>G3861</sub>
+### You are performing a depth-first traversal in a graph, where for a vertex v, d[v] is the … <sub>G3909</sub>
 
 *MCQ*
 
@@ -3574,9 +3610,9 @@ You are performing a depth-first traversal in a graph, where for a vertex v, d[v
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q9 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4332"></a>
+<a id="g4380"></a>
 
-### Topological sorting for Directed Acyclie Graph (DAG) is a linear ordering of vertices suc… <sub>G4332</sub>
+### Topological sorting for Directed Acyclie Graph (DAG) is a linear ordering of vertices suc… <sub>G4380</sub>
 
 *Written*
 
@@ -3586,9 +3622,9 @@ Topological sorting for Directed Acyclie Graph (DAG) is a linear ordering of ver
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 6 Banks & Financial Institutions (BSCS) — Assistant Programmer — 2021 (date conflicting: 18/03/2021 on the MCQ page; 15-01-2022 in the site's analysis page) — Exam taker: not stated — recollection (8 items), Q1 — [bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md](../bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md)
 
-<a id="g4662"></a>
+<a id="g4710"></a>
 
-### Dynamic programming approach is used to solve (a) Dijkstra algorithm (b) Kruskal's Algori… <sub>G4662</sub>
+### Dynamic programming approach is used to solve (a) Dijkstra algorithm (b) Kruskal's Algori… <sub>G4710</sub>
 
 *MCQ*
 
@@ -3670,9 +3706,9 @@ C/C++ Program for topological sorting of DAG in a linear ordering of vertices su
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q45 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g1819"></a>
+<a id="g1867"></a>
 
-### Define Breadth-First Search (BFS) and Depth-First Search (DFS). State one application of … <sub>G1819</sub>
+### Define Breadth-First Search (BFS) and Depth-First Search (DFS). State one application of … <sub>G1867</sub>
 
 *Written*
 
@@ -3682,9 +3718,9 @@ Define Breadth-First Search (BFS) and Depth-First Search (DFS). State one applic
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q37 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g2419"></a>
+<a id="g2467"></a>
 
-### What is minimum spanning tree ? [BCS – 36th(ICT)] <sub>G2419</sub>
+### What is minimum spanning tree ? [BCS – 36th(ICT)] <sub>G2467</sub>
 
 *Written*
 
@@ -3694,9 +3730,9 @@ What is minimum spanning tree ? [BCS – 36th(ICT)]
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2420"></a>
+<a id="g2468"></a>
 
-### Breadth-first search (BFS) এবং Depth-first search (DFS) এর পার্থক্যগুলো লিখুন। কী কী ধরনে… <sub>G2420</sub>
+### Breadth-first search (BFS) এবং Depth-first search (DFS) এর পার্থক্যগুলো লিখুন। কী কী ধরনে… <sub>G2468</sub>
 
 *Written*
 
@@ -3707,9 +3743,9 @@ Breadth-first search (BFS) এবং Depth-first search (DFS) এর পার�
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2421"></a>
+<a id="g2469"></a>
 
-### Explain how to Bellman Ford Algorithm can identify a negative cycle of a graph. [BCS – 36… <sub>G2421</sub>
+### Explain how to Bellman Ford Algorithm can identify a negative cycle of a graph. [BCS – 36… <sub>G2469</sub>
 
 *Written*
 
@@ -3784,9 +3820,9 @@ Example 03: Given item- 40, 45, 80, 90, 50, 70. Draw Heap and Binary search tree
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q28 — [bit to exabyte/48_bte-g2-p34-data-structure-q15-30-trees.md](../bit%20to%20exabyte/48_bte-g2-p34-data-structure-q15-30-trees.md) · [image](../bit%20to%20exabyte/48_bte-g2-p34-data-structure-q15-30-trees.jpg)
 
-<a id="g2114"></a>
+<a id="g2162"></a>
 
-### Heap data structure কী? কোন ক্ষেত্রে Heap ব্যবহার করা হয়? <sub>G2114</sub>
+### Heap data structure কী? কোন ক্ষেত্রে Heap ব্যবহার করা হয়? <sub>G2162</sub>
 
 *Written*
 
@@ -3796,9 +3832,9 @@ Heap data structure কী? কোন ক্ষেত্রে Heap ব্যব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৫ অথবা (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2320"></a>
+<a id="g2368"></a>
 
-### Describe and estimate the costs of procedure to insert a new item into an existing binary… <sub>G2320</sub>
+### Describe and estimate the costs of procedure to insert a new item into an existing binary… <sub>G2368</sub>
 
 *Written*
 
@@ -3809,9 +3845,9 @@ Describe and estimate the costs of procedure to insert a new item into an existi
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q12 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2538"></a>
+<a id="g2586"></a>
 
-### Example 18: Given an adjacency list representation for a complete binary tree on 7 vertic… <sub>G2538</sub>
+### Example 18: Given an adjacency list representation for a complete binary tree on 7 vertic… <sub>G2586</sub>
 
 *Written*
 
@@ -3822,9 +3858,9 @@ Example 18: Given an adjacency list representation for a complete binary tree on
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q45 — [bit to exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.md) · [image](../bit%20to%20exabyte/50_bte-g2-p36-data-structure-q44-58-algorithms.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Programmer 2023 — Exam date 3.2.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour — marks as printed: 80 MCQ (1 Hour); Written: 9 Subjective Question (150) + Math 4 (20) + Focus (10) + B/E (20) — pages 1–5, Q2 — [duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md](../duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md)
 
-<a id="g2650"></a>
+<a id="g2698"></a>
 
-### If we have a very small amount of additional memory, but a large number of items to sort,… <sub>G2650</sub>
+### If we have a very small amount of additional memory, but a large number of items to sort,… <sub>G2698</sub>
 
 *MCQ*
 
@@ -3834,9 +3870,9 @@ If we have a very small amount of additional memory, but a large number of items
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Data Structures and Algorithms Q4 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2938"></a>
+<a id="g2986"></a>
 
-### Heap Building. <sub>G2938</sub>
+### Heap Building. <sub>G2986</sub>
 
 *Written*
 
@@ -3846,9 +3882,9 @@ Heap Building.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 8. Dhaka Mass Transit Company Limited (DMTCL), Assistant Engineer (ICT), 27.01.2023; Exam Taker: MIST; Time: 1hour; Mark:100; Dept: 56, Non-Dept-MCQ (44*1=44); pp. 12-13, Q3 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3153"></a>
+<a id="g3201"></a>
 
-### Max Heap [a-j] shows after each operation. Also, show which value will be returned when t… <sub>G3153</sub>
+### Max Heap [a-j] shows after each operation. Also, show which value will be returned when t… <sub>G3201</sub>
 
 *Written*
 
@@ -3858,9 +3894,9 @@ Max Heap [a-j] shows after each operation. Also, show which value will be return
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 1 — Combined 5 Bank — 03.02.2023 — post not printed — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 26–28, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4049"></a>
+<a id="g4097"></a>
 
-### For a n-element min-Heap: (ক) the smallest element can be found anywhere in the heap (খ) … <sub>G4049</sub>
+### For a n-element min-Heap: (ক) the smallest element can be found anywhere in the heap (খ) … <sub>G4097</sub>
 
 *MCQ*
 
@@ -3870,9 +3906,9 @@ For a n-element min-Heap: (ক) the smallest element can be found anywhere in th
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q111 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4602"></a>
+<a id="g4650"></a>
 
-### Convert the array (56,33,48,29,99,12 and 344) into min heap. <sub>G4602</sub>
+### Convert the array (56,33,48,29,99,12 and 344) into min heap. <sub>G4650</sub>
 
 *Written*
 
@@ -3882,9 +3918,9 @@ Convert the array (56,33,48,29,99,12 and 344) into min heap.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — Written — 07.02.2025 — Exam taker: not stated (coaching labels FBS / DU; unverified) — marks not printed — recollection, R1 — [bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md](../bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md)
 
-<a id="g5162"></a>
+<a id="g5210"></a>
 
-### Write the complexities for the given sorting algorithm: (table: Quicksort, Merge Sort, He… <sub>G5162</sub>
+### Write the complexities for the given sorting algorithm: (table: Quicksort, Merge Sort, He… <sub>G5210</sub>
 
 *Written*
 
@@ -3932,9 +3968,9 @@ Advantage and complexity of Marge sort, Heap sort, Insertion sort.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q64 — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
 
-<a id="g2660"></a>
+<a id="g2708"></a>
 
-### Max number in max heap is located where? a. Leaf b. Root c. Outside d. Internal <sub>G2660</sub>
+### Max number in max heap is located where? a. Leaf b. Root c. Outside d. Internal <sub>G2708</sub>
 
 *MCQ*
 
@@ -3944,9 +3980,9 @@ Max number in max heap is located where? a. Leaf b. Root c. Outside d. Internal
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Data Structures and Algorithms Q15 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3458"></a>
+<a id="g3506"></a>
 
-### Given full max heapify code. Find the output. (Sample Question given) <sub>G3458</sub>
+### Given full max heapify code. Find the output. (Sample Question given) <sub>G3506</sub>
 
 *Written*
 
@@ -3956,9 +3992,9 @@ Given full max heapify code. Find the output. (Sample Question given)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 26.11.2021, 9 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3799"></a>
+<a id="g3847"></a>
 
-### Draw the maximum heap structure from a given array. <sub>G3799</sub>
+### Draw the maximum heap structure from a given array. <sub>G3847</sub>
 
 *Written*
 
@@ -3968,9 +4004,9 @@ Draw the maximum heap structure from a given array.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q1 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3857"></a>
+<a id="g3905"></a>
 
-### Consider a binary max-heap implemented using an array. Which one of the following arrays … <sub>G3857</sub>
+### Consider a binary max-heap implemented using an array. Which one of the following arrays … <sub>G3905</sub>
 
 *MCQ*
 
@@ -3980,9 +4016,9 @@ Consider a binary max-heap implemented using an array. Which one of the followin
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q5 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g2172"></a>
+<a id="g2220"></a>
 
-### Heap কিভাবে ক কাজ করে? উদাহরণসহ দেখান। <sub>G2172</sub>
+### Heap কিভাবে ক কাজ করে? উদাহরণসহ দেখান। <sub>G2220</sub>
 
 *Written*
 
@@ -3992,9 +4028,9 @@ Heap কিভাবে ক কাজ করে? উদাহরণসহ দে
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৫। (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2785"></a>
+<a id="g2833"></a>
 
-### Construct a min-heap for the following array of numbers. | index | 0 | 1 | 2 | 3 | 4 | 5 … <sub>G2785</sub>
+### Construct a min-heap for the following array of numbers. | index | 0 | 1 | 2 | 3 | 4 | 5 … <sub>G2833</sub>
 
 *Written*
 
@@ -4004,9 +4040,9 @@ Construct a min-heap for the following array of numbers. | index | 0 | 1 | 2 | 3
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 4 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3719"></a>
+<a id="g3767"></a>
 
-### Implement max heap sort for the following numbers. 4, 3, 7, 1, 8, 5 <sub>G3719</sub>
+### Implement max heap sort for the following numbers. 4, 3, 7, 1, 8, 5 <sub>G3767</sub>
 
 *Written*
 
@@ -4052,6 +4088,18 @@ Construct a Min Heap by inserting the following elements in order: 35, 12, 43, 8
 - **Source:**
   - Bit to Exabyte Model Test 01, 2 Oct 2026 (coaching mock, not a real paper) — Bit to Exabyte Model Test 01 (2026-10-02), Q7 — [model test/01_bte-model-test-01-2026-10-02.md](../model%20test/01_bte-model-test-01-2026-10-02.md) · [image](../model%20test/01_bte-model-test-01-2026-10-02.jpg)
 
+<a id="g1819"></a>
+
+### Max heap insertion of 88, 100, 65 <sub>G1819</sub>
+
+*Written*
+
+Max heap insertion of 88, 100, 65
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q59 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
 ## Other
 
 <a id="g1336"></a>
@@ -4066,9 +4114,9 @@ The term push and pop are related to the- d. The step-by-step instruction that s
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q72c — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg); [bit to exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.md](../bit%20to%20exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.md) · [image](../bit%20to%20exabyte/52_bte-g2-p38-ds-mcq-d-p-cache-q01-03.jpg)
 
-<a id="g2132"></a>
+<a id="g2180"></a>
 
-### উদাহরণসহ কুইক সর্ট অ্যালগরিদম লিখুন। <sub>G2132</sub>
+### উদাহরণসহ কুইক সর্ট অ্যালগরিদম লিখুন। <sub>G2180</sub>
 
 *Written*
 
@@ -4079,9 +4127,9 @@ The term push and pop are related to the- d. The step-by-step instruction that s
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা স্ট্রাকচার, অ্যালগরিদম ও অপ্টিমাইজেশন (Data Structure & Algorithms), Q81 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ২। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2133"></a>
+<a id="g2181"></a>
 
-### ডেটা স্ট্রাকচার বলতে কী বুঝেন? স্ট্যাক ও কিউ ডেটা স্ট্রাকচার বর্ণনা করুন। <sub>G2133</sub>
+### ডেটা স্ট্রাকচার বলতে কী বুঝেন? স্ট্যাক ও কিউ ডেটা স্ট্রাকচার বর্ণনা করুন। <sub>G2181</sub>
 
 *Written*
 
@@ -4091,9 +4139,9 @@ The term push and pop are related to the- d. The step-by-step instruction that s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ২ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2262"></a>
+<a id="g2310"></a>
 
-### Write a program to findout an expression is ended correctly or not. Input: ((a+b)+(a-b) O… <sub>G2262</sub>
+### Write a program to findout an expression is ended correctly or not. Input: ((a+b)+(a-b) O… <sub>G2310</sub>
 
 *Written*
 
@@ -4104,9 +4152,9 @@ Write a program to findout an expression is ended correctly or not. Input: ((a+b
   - duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024, Q5(b) — [duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md](../duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md)
 - **Correction:** as printed, "((a+b)+(a-b)" has an unclosed "(", so it is **Not matched** (the printed program itself prints "Not matched" for it); the intended sample was probably "((a+b)+(a-b))".
 
-<a id="g2537"></a>
+<a id="g2585"></a>
 
-### Consider a hash table of size 13 string entities with integer keys. Suppose the hash func… <sub>G2537</sub>
+### Consider a hash table of size 13 string entities with integer keys. Suppose the hash func… <sub>G2585</sub>
 
 *Written*
 
@@ -4117,9 +4165,9 @@ Consider a hash table of size 13 string entities with integer keys. Suppose the 
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Programmer 2023 — Exam date 3.2.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour — marks as printed: 80 MCQ (1 Hour); Written: 9 Subjective Question (150) + Math 4 (20) + Focus (10) + B/E (20) — pages 1–5, Q1 — [duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md](../duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md)
   - duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3145"></a>
+<a id="g3193"></a>
 
-### Write a reverse string without using extra memory, reverse in place <sub>G3145</sub>
+### Write a reverse string without using extra memory, reverse in place <sub>G3193</sub>
 
 *Written*
 
@@ -4129,9 +4177,9 @@ Write a reverse string without using extra memory, reverse in place
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3152"></a>
+<a id="g3200"></a>
 
-### How hashing is done for a particular set of numbers with the hashing function f(x)=x mod … <sub>G3152</sub>
+### How hashing is done for a particular set of numbers with the hashing function f(x)=x mod … <sub>G3200</sub>
 
 *Written*
 
@@ -4141,9 +4189,9 @@ How hashing is done for a particular set of numbers with the hashing function f(
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3646"></a>
+<a id="g3694"></a>
 
-### (b) What is hash table? What are the advantages of using hash table. <sub>G3646</sub>
+### (b) What is hash table? What are the advantages of using hash table. <sub>G3694</sub>
 
 *Written*
 
@@ -4153,9 +4201,9 @@ How hashing is done for a particular set of numbers with the hashing function f(
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q8(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4238"></a>
+<a id="g4286"></a>
 
-### বাইনারি সার্চ অ্যালগরিদমটি বর্ণনা করুন। <sub>G4238</sub>
+### বাইনারি সার্চ অ্যালগরিদমটি বর্ণনা করুন। <sub>G4286</sub>
 
 *Written*
 
@@ -4165,9 +4213,9 @@ How hashing is done for a particular set of numbers with the hashing function f(
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন পরীক্ষা (স্কুল সমপর্যায়-২) — ট্রেড ইন্সট্রাক্টর, কম্পিউটার ও তথ্যপ্রযুক্তি (লিখিত) — 12.07.2024, ১২। — [ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md](../ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md)
 
-<a id="g2914"></a>
+<a id="g2962"></a>
 
-### একটি অ্যারে এর মধ্যে ইনপুট সমূহ দেওয়া আছে। বাইনারি ট্রি অংকন করুন্ ইনপুট: অ্যারে [] = {4… <sub>G2914</sub>
+### একটি অ্যারে এর মধ্যে ইনপুট সমূহ দেওয়া আছে। বাইনারি ট্রি অংকন করুন্ ইনপুট: অ্যারে [] = {4… <sub>G2962</sub>
 
 *Written*
 
@@ -4177,9 +4225,9 @@ How hashing is done for a particular set of numbers with the hashing function f(
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 3. Bangladesh Ordnance Factory (BOF), Sub Assistant Engineer (Computer), 20-03-2021; exam taker not printed; Total Marks: 100 [Non-technical: 40: Technical: 60]; Department: 5 × 10 = 50; pp. 4-6, Q8 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3008"></a>
+<a id="g3056"></a>
 
-### Write a C/C++ program to check balanced parenthesis in an Expression. <sub>G3008</sub>
+### Write a C/C++ program to check balanced parenthesis in an Expression. <sub>G3056</sub>
 
 *Written*
 
@@ -4189,9 +4237,9 @@ Write a C/C++ program to check balanced parenthesis in an Expression.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Assistant Network Engineer (ANE) – JBL — 12.11.2020 — Exam taker: not printed — IT: 10*16 marks + Non IT: 2*20 marks - 200 marks — pages 4–6, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3020"></a>
+<a id="g3068"></a>
 
-### Program for nth Catalan number using DP. <sub>G3020</sub>
+### Program for nth Catalan number using DP. <sub>G3068</sub>
 
 *Written*
 
@@ -4201,9 +4249,9 @@ Program for nth Catalan number using DP.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Assistant Database Administrator (ADA) – SBL — 14.12.2020 — Exam taker: not printed — 10*16 marks + 2*20 marks = 200 — pages 8–9, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3867"></a>
+<a id="g3915"></a>
 
-### Let A be a 30 × 35 matrix, B be a 35 × 15 matrix and C is a 15 × 5 matrix. Then the minim… <sub>G3867</sub>
+### Let A be a 30 × 35 matrix, B be a 35 × 15 matrix and C is a 15 × 5 matrix. Then the minim… <sub>G3915</sub>
 
 *MCQ*
 
@@ -4213,9 +4261,9 @@ Let A be a 30 × 35 matrix, B be a 35 × 15 matrix and C is a 15 × 5 matrix. Th
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q15 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3876"></a>
+<a id="g3924"></a>
 
-### Which of the following is true for a group of growth functions? (a) n<logn (b) 2^n > n^10… <sub>G3876</sub>
+### Which of the following is true for a group of growth functions? (a) n<logn (b) 2^n > n^10… <sub>G3924</sub>
 
 *MCQ*
 
@@ -4225,9 +4273,9 @@ Which of the following is true for a group of growth functions? (a) n<logn (b) 2
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q24 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4204"></a>
+<a id="g4252"></a>
 
-### উদাহরনসহ বাবল সর্টের অ্যালগরিদম লিখুন। <sub>G4204</sub>
+### উদাহরনসহ বাবল সর্টের অ্যালগরিদম লিখুন। <sub>G4252</sub>
 
 *Written*
 
@@ -4237,9 +4285,9 @@ Which of the following is true for a group of growth functions? (a) n<logn (b) 2
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৫ অথবা (খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4205"></a>
+<a id="g4253"></a>
 
-### লিংকড লিস্ট কি? <sub>G4205</sub>
+### লিংকড লিস্ট কি? <sub>G4253</sub>
 
 *Written*
 
@@ -4249,9 +4297,9 @@ Which of the following is true for a group of growth functions? (a) n<logn (b) 2
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৫ অথবা (গ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4333"></a>
+<a id="g4381"></a>
 
-### Write a C/C++ program to check Balanced parentheses in an Expression. <sub>G4333</sub>
+### Write a C/C++ program to check Balanced parentheses in an Expression. <sub>G4381</sub>
 
 *Written*
 
@@ -4261,9 +4309,9 @@ Write a C/C++ program to check Balanced parentheses in an Expression.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 6 Banks & Financial Institutions (BSCS) — Assistant Programmer — 2021 (date conflicting: 18/03/2021 on the MCQ page; 15-01-2022 in the site's analysis page) — Exam taker: not stated — recollection (8 items), Q2 — [bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md](../bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md)
 
-<a id="g4335"></a>
+<a id="g4383"></a>
 
-### Given n jobs starting time n[] and duration d[], print maximum number of jobs that don't … <sub>G4335</sub>
+### Given n jobs starting time n[] and duration d[], print maximum number of jobs that don't … <sub>G4383</sub>
 
 *Written*
 
@@ -4286,9 +4334,9 @@ Given n jobs starting time n[] and duration d[], print maximum number of jobs th
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা স্ট্রাকচার, অ্যালগরিদম ও অপ্টিমাইজেশন (Data Structure & Algorithms), Q80 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৪ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2021"></a>
+<a id="g2069"></a>
 
-### Hashing বলতে কি বোঝায়? Hash ফাংশন গঠনের জন্যে যে কোনো তিনটি পদ্ধতি বিস্তারিত লিখুন। <sub>G2021</sub>
+### Hashing বলতে কি বোঝায়? Hash ফাংশন গঠনের জন্যে যে কোনো তিনটি পদ্ধতি বিস্তারিত লিখুন। <sub>G2069</sub>
 
 *Written*
 
@@ -4298,9 +4346,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৫ অথবা — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2041"></a>
+<a id="g2089"></a>
 
-### স্ট্যাক ও কিউ ডাটা স্ট্রাকচারের উদাহরনসহ বর্ণনা লিখুন। উহাদের মধ্যে পার্থক্য লিখুন। <sub>G2041</sub>
+### স্ট্যাক ও কিউ ডাটা স্ট্রাকচারের উদাহরনসহ বর্ণনা লিখুন। উহাদের মধ্যে পার্থক্য লিখুন। <sub>G2089</sub>
 
 *Written*
 
@@ -4310,9 +4358,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ২। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2042"></a>
+<a id="g2090"></a>
 
-### অ্যারে এর মৌলিক অপারেশনগুলো লিখুন। <sub>G2042</sub>
+### অ্যারে এর মৌলিক অপারেশনগুলো লিখুন। <sub>G2090</sub>
 
 *Written*
 
@@ -4322,9 +4370,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ২ (খ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2043"></a>
+<a id="g2091"></a>
 
-### লিংকড লিস্ট ডাটা স্ট্রাকচারের অসুবিধাগুলো লিখুন। <sub>G2043</sub>
+### লিংকড লিস্ট ডাটা স্ট্রাকচারের অসুবিধাগুলো লিখুন। <sub>G2091</sub>
 
 *Written*
 
@@ -4334,9 +4382,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ২ (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2070"></a>
+<a id="g2118"></a>
 
-### বাইনারী সার্চিং অ্যালগরিদম উদাহরণসহ ব্যাখ্যা করুন। <sub>G2070</sub>
+### বাইনারী সার্চিং অ্যালগরিদম উদাহরণসহ ব্যাখ্যা করুন। <sub>G2118</sub>
 
 *Written*
 
@@ -4347,9 +4395,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটা স্ট্রাকচার, অ্যালগরিদম ও অপ্টিমাইজেশন (Data Structure & Algorithms), Q78 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৯। — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2171"></a>
+<a id="g2219"></a>
 
-### সিলেকশন সর্ট পদ্ধতির অ্যালগরিদম লিখুন। <sub>G2171</sub>
+### সিলেকশন সর্ট পদ্ধতির অ্যালগরিদম লিখুন। <sub>G2219</sub>
 
 *Written*
 
@@ -4359,9 +4407,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৪ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2174"></a>
+<a id="g2222"></a>
 
-### লিনিয়ার সার্চিং কী? উহার সুবিধা ও অসুবিধা ব্যাখ্যা করুন। <sub>G2174</sub>
+### লিনিয়ার সার্চিং কী? উহার সুবিধা ও অসুবিধা ব্যাখ্যা করুন। <sub>G2222</sub>
 
 *Written*
 
@@ -4371,9 +4419,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৫ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g4124"></a>
+<a id="g4172"></a>
 
-### ডাটা স্ট্রাকচারের অপারেশনসমূহ লিখুন। <sub>G4124</sub>
+### ডাটা স্ট্রাকচারের অপারেশনসমূহ লিখুন। <sub>G4172</sub>
 
 *Written*
 
@@ -4383,9 +4431,9 @@ Hashing বলতে কি বোঝায়? Hash ফাংশন গঠন�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৩(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g2416"></a>
+<a id="g2464"></a>
 
-### How does dynamic memory allocation help in managing data. [BCS – 37th(ICT)] <sub>G2416</sub>
+### How does dynamic memory allocation help in managing data. [BCS – 37th(ICT)] <sub>G2464</sub>
 
 *Written*
 
@@ -4410,9 +4458,9 @@ Which runs the fastest? (O(log n) / O(n) / O(n log n) / O(√n))
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q7 — [BCS/54_qpsk-bpsk-8086-addressing.md](../BCS/54_qpsk-bpsk-8086-addressing.md) · [image](../BCS/54_qpsk-bpsk-8086-addressing.jpg); [BCS/40_big-o-firewall-scheduling-shannon-hartley.md](../BCS/40_big-o-firewall-scheduling-shannon-hartley.md) · [image](../BCS/40_big-o-firewall-scheduling-shannon-hartley.jpg)
 - **Printed answer:** (ক) O(log n)
 
-<a id="g3131"></a>
+<a id="g3179"></a>
 
-### Determine the time complexity of a given function (nested loop). for (11; 1 < п/2; 1++){ … <sub>G3131</sub>
+### Determine the time complexity of a given function (nested loop). for (11; 1 < п/2; 1++){ … <sub>G3179</sub>
 
 *Written*
 
@@ -4422,9 +4470,9 @@ Determine the time complexity of a given function (nested loop). for (11; 1 < п
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3165"></a>
+<a id="g3213"></a>
 
-### Find the complexity and output of the following code: Int F(n) { If n == Ø return Ø; if n… <sub>G3165</sub>
+### Find the complexity and output of the following code: Int F(n) { If n == Ø return Ø; if n… <sub>G3213</sub>
 
 *Written*
 
@@ -4434,9 +4482,9 @@ Find the complexity and output of the following code: Int F(n) { If n == Ø retu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — Officer IT- Combined Bank — 14.10.2023 — Job ID: 10152 — Exam taker: BIBM — IT: 150 marks + Non IT: 40 marks + GK: 10 marks = 200 marks — pages 32–33, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4051"></a>
+<a id="g4099"></a>
 
-### What will be the time complexity of the following algorithm: (ক) O(n) (খ) O(log n) (গ) O(… <sub>G4051</sub>
+### What will be the time complexity of the following algorithm: (ক) O(n) (খ) O(log n) (গ) O(… <sub>G4099</sub>
 
 *MCQ*
 
@@ -4446,9 +4494,9 @@ What will be the time complexity of the following algorithm: (ক) O(n) (খ) O(
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q113 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g2698"></a>
+<a id="g2746"></a>
 
-### What is linear and Non-linear data structure? Write an example of data structure which re… <sub>G2698</sub>
+### What is linear and Non-linear data structure? Write an example of data structure which re… <sub>G2746</sub>
 
 *Written*
 
@@ -4458,9 +4506,9 @@ What is linear and Non-linear data structure? Write an example of data structure
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 2 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g2974"></a>
+<a id="g3022"></a>
 
-### There are no well-defined standards for writing algorithms. Efficiency of an algorithm de… <sub>G2974</sub>
+### There are no well-defined standards for writing algorithms. Efficiency of an algorithm de… <sub>G3022</sub>
 
 *Written*
 
@@ -4471,9 +4519,9 @@ There are no well-defined standards for writing algorithms. Efficiency of an alg
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q63 — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(D) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2990"></a>
+<a id="g3038"></a>
 
-### Discuss Complexity factor of algorithm. <sub>G2990</sub>
+### Discuss Complexity factor of algorithm. <sub>G3038</sub>
 
 *Written*
 
@@ -4483,9 +4531,9 @@ Discuss Complexity factor of algorithm.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3871"></a>
+<a id="g3919"></a>
 
-### Algorithm A solves a problems of size n by dividing it into seven subproblems of size n/2… <sub>G3871</sub>
+### Algorithm A solves a problems of size n by dividing it into seven subproblems of size n/2… <sub>G3919</sub>
 
 *MCQ*
 
@@ -4495,9 +4543,9 @@ Algorithm A solves a problems of size n by dividing it into seven subproblems of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q19 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4493"></a>
+<a id="g4541"></a>
 
-### The Θ notation in asymptotic evaluation represents (a) Best case (b) Base case (c) Averag… <sub>G4493</sub>
+### The Θ notation in asymptotic evaluation represents (a) Best case (b) Base case (c) Averag… <sub>G4541</sub>
 
 *MCQ*
 
@@ -4507,9 +4555,9 @@ The Θ notation in asymptotic evaluation represents (a) Best case (b) Base case 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ25 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g1912"></a>
+<a id="g1960"></a>
 
-### What is Big-O ,Big-Omega ,Big theta ? <sub>G1912</sub>
+### What is Big-O ,Big-Omega ,Big theta ? <sub>G1960</sub>
 
 *Written*
 
@@ -4520,9 +4568,9 @@ What is Big-O ,Big-Omega ,Big theta ?
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 25. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2789"></a>
+<a id="g2837"></a>
 
-### Analyze the time and space complexity of the following code snippet: for i in N: for j in… <sub>G2789</sub>
+### Analyze the time and space complexity of the following code snippet: for i in N: for j in… <sub>G2837</sub>
 
 *Written*
 
@@ -4531,6 +4579,18 @@ Analyze the time and space complexity of the following code snippet: for i in N:
 - **Asked in (1):** 46th BCS CSE
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 6 (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
+
+<a id="g1820"></a>
+
+### Time complexity of nested loops, O(n^2 log n) <sub>G1820</sub>
+
+*Written*
+
+Time complexity of nested loops, O(n^2 log n)
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q60 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
 
 ## Data structure basics
 
@@ -4547,9 +4607,9 @@ Analyze the time and space complexity of the following code snippet: for i in N:
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q2 — [bit to exabyte/47_bte-g2-p33-data-structure-q01-14.md](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.md) · [image](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৪। (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g3085"></a>
+<a id="g3133"></a>
 
-### Difference LIFO and FIFO in data structure? <sub>G3085</sub>
+### Difference LIFO and FIFO in data structure? <sub>G3133</sub>
 
 *Written*
 
@@ -4559,9 +4619,9 @@ Difference LIFO and FIFO in data structure?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3466"></a>
+<a id="g3514"></a>
 
-### Which data structure is used for the accept BAERA request, where each request attached wi… <sub>G3466</sub>
+### Which data structure is used for the accept BAERA request, where each request attached wi… <sub>G3514</sub>
 
 *Written*
 
@@ -4571,9 +4631,9 @@ Which data structure is used for the accept BAERA request, where each request at
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 7(a) — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g5139"></a>
+<a id="g5187"></a>
 
-### Write the names of three linear and three non-linear data structures. Also, mention which… <sub>G5139</sub>
+### Write the names of three linear and three non-linear data structures. Also, mention which… <sub>G5187</sub>
 
 *Written*
 
@@ -4595,9 +4655,9 @@ Difference between linear and nonlinear data structure.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q3 — [bit to exabyte/47_bte-g2-p33-data-structure-q01-14.md](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.md) · [image](../bit%20to%20exabyte/47_bte-g2-p33-data-structure-q01-14.jpg)
 
-<a id="g2444"></a>
+<a id="g2492"></a>
 
-### Linear Data structure এবং Non Linear Data Structure বলতে কি বুঝায় ? <sub>G2444</sub>
+### Linear Data structure এবং Non Linear Data Structure বলতে কি বুঝায় ? <sub>G2492</sub>
 
 *Written*
 
@@ -4607,9 +4667,9 @@ Linear Data structure এবং Non Linear Data Structure বলতে কি �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 04 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g4695"></a>
+<a id="g4743"></a>
 
-### Data Structure Related <sub>G4695</sub>
+### Data Structure Related <sub>G4743</sub>
 
 *Written*
 
@@ -4619,9 +4679,9 @@ Data Structure Related
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — PGCB SAE (Computer) 24.12.2020, Q6 — [power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md](../power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md)
 
-<a id="g4698"></a>
+<a id="g4746"></a>
 
-### Assume that you dealing with a set new element sup-request by an online portal at APSCL w… <sub>G4698</sub>
+### Assume that you dealing with a set new element sup-request by an online portal at APSCL w… <sub>G4746</sub>
 
 *Written*
 
@@ -4631,9 +4691,9 @@ Assume that you dealing with a set new element sup-request by an online portal a
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — APSCL Assistant Manager (MIS/IICT) 12.11.2021, Q(a) — [power-sector-web/2021-apscl-am-mis-carrierbd/apscl-am-mis-2021.md](../power-sector-web/2021-apscl-am-mis-carrierbd/apscl-am-mis-2021.md)
 
-<a id="g1946"></a>
+<a id="g1994"></a>
 
-### What is linear data structure ? <sub>G1946</sub>
+### What is linear data structure ? <sub>G1994</sub>
 
 *Written*
 
@@ -4643,9 +4703,9 @@ What is linear data structure ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 8.(a) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
 
-<a id="g2782"></a>
+<a id="g2830"></a>
 
-### Differentiate between linear and non-linear data structures. Explain their use cases. <sub>G2782</sub>
+### Differentiate between linear and non-linear data structures. Explain their use cases. <sub>G2830</sub>
 
 *Written*
 
@@ -4669,9 +4729,9 @@ Differentiate between linear and non-linear data structures. Explain their use c
 
 ## Algorithm basics
 
-<a id="g2220"></a>
+<a id="g2268"></a>
 
-### You have given two 16*16 metrics but your processor support 8*8 matrices how can you mult… <sub>G2220</sub>
+### You have given two 16*16 metrics but your processor support 8*8 matrices how can you mult… <sub>G2268</sub>
 
 *Written*
 
@@ -4681,9 +4741,9 @@ You have given two 16*16 metrics but your processor support 8*8 matrices how can
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BGDCL Assistant Manager (CSE) 15.03.2024, Q2 — [duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md](../duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md)
 
-<a id="g3472"></a>
+<a id="g3520"></a>
 
-### Many power requests come from users for certain time frame (start time and end time) we h… <sub>G3472</sub>
+### Many power requests come from users for certain time frame (start time and end time) we h… <sub>G3520</sub>
 
 *Written*
 
@@ -4693,9 +4753,9 @@ Many power requests come from users for certain time frame (start time and end t
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 7+5 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3575"></a>
+<a id="g3623"></a>
 
-### a. Why do we need algorithm analysis? 5 <sub>G3575</sub>
+### a. Why do we need algorithm analysis? 5 <sub>G3623</sub>
 
 *Written*
 
@@ -4705,9 +4765,9 @@ a. Why do we need algorithm analysis? 5
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16, Q5(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4544"></a>
+<a id="g4592"></a>
 
-### What is the name given to the sequence of steps which a computer follows? ক. Instructions… <sub>G4544</sub>
+### What is the name given to the sequence of steps which a computer follows? ক. Instructions… <sub>G4592</sub>
 
 *MCQ*
 
@@ -4729,9 +4789,9 @@ Algorithm কি? Algorithm প্রকাশের তিনটি পদ্�
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q71 — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
 
-<a id="g2705"></a>
+<a id="g2753"></a>
 
-### Write an algorithm for m, (a, b) and m₁ (p. q). Then matrix multiplication (m-m,"m₂) <sub>G2705</sub>
+### Write an algorithm for m, (a, b) and m₁ (p. q). Then matrix multiplication (m-m,"m₂) <sub>G2753</sub>
 
 *Written*
 
@@ -4741,9 +4801,9 @@ Write an algorithm for m, (a, b) and m₁ (p. q). Then matrix multiplication (m-
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 9 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g3829"></a>
+<a id="g3877"></a>
 
-### Bellman-Ford Algorithm with negative weight... <sub>G3829</sub>
+### Bellman-Ford Algorithm with negative weight... <sub>G3877</sub>
 
 *Written*
 
@@ -4753,9 +4813,9 @@ Bellman-Ford Algorithm with negative weight...
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q4 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g4681"></a>
+<a id="g4729"></a>
 
-### In a country with n regions. The country can have maximum k hours of load shedding. A reg… <sub>G4681</sub>
+### In a country with n regions. The country can have maximum k hours of load shedding. A reg… <sub>G4729</sub>
 
 *Written*
 
@@ -4777,9 +4837,9 @@ What is a parameterized algorithm and how does it improve code reusability and e
 - **Source:**
   - BUET MSc in CSE (2026-10-03), Q11 — [BUET JOB/37_buet-msc-cse-questions-10-13.md](../BUET%20JOB/37_buet-msc-cse-questions-10-13.md) · [image](../BUET%20JOB/37_buet-msc-cse-questions-10-13.jpg); [BUET MSC/01_buet-msc-questions-10-14.md](../BUET%20MSC/01_buet-msc-questions-10-14.md) · [image](../BUET%20MSC/01_buet-msc-questions-10-14.jpg)
 
-<a id="g3771"></a>
+<a id="g3819"></a>
 
-### A strange question stating that if an algorithm needs 21 steps for a 7×7 matrix multiplic… <sub>G3771</sub>
+### A strange question stating that if an algorithm needs 21 steps for a 7×7 matrix multiplic… <sub>G3819</sub>
 
 *Written*
 
@@ -4818,9 +4878,9 @@ Write int equilibrium(int arr[], int n) returning an index where the sum of lowe
   - BPDB Assistant Engineer (CSE) (BUET) (2023-02-24), Q14 — [BUET JOB/16_inclusion-exclusion-and-equilibrium.md](../BUET%20JOB/16_inclusion-exclusion-and-equilibrium.md) · [image](../BUET%20JOB/16_inclusion-exclusion-and-equilibrium.jpg); [BUET JOB/12_equilibrium-index-biwta-subnet.md](../BUET%20JOB/12_equilibrium-index-biwta-subnet.md) · [image](../BUET%20JOB/12_equilibrium-index-biwta-subnet.jpg); [BUET JOB/31_bpdb-protocols-sql-algorithms.md](../BUET%20JOB/31_bpdb-protocols-sql-algorithms.md) · [image](../BUET%20JOB/31_bpdb-protocols-sql-algorithms.jpg)
 - **Printed answer:** O(n²) C++ solution computing left and right sums for each i; returns 3 for the example.
 
-<a id="g2230"></a>
+<a id="g2278"></a>
 
-### You have an array with n elements Write a program in any language to find to kth smallest… <sub>G2230</sub>
+### You have an array with n elements Write a program in any language to find to kth smallest… <sub>G2278</sub>
 
 *Written*
 
@@ -4830,9 +4890,9 @@ You have an array with n elements Write a program in any language to find to kth
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024, Q3 — [duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md](../duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md)
 
-<a id="g3463"></a>
+<a id="g3511"></a>
 
-### An array with N size that contain 1 to n random order but unfortunately one value of repl… <sub>G3463</sub>
+### An array with N size that contain 1 to n random order but unfortunately one value of repl… <sub>G3511</sub>
 
 *Written*
 
@@ -4842,9 +4902,9 @@ An array with N size that contain 1 to n random order but unfortunately one valu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 3-4 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g2654"></a>
+<a id="g2702"></a>
 
-### Array data structure এ কোন ধরনের ডেটা রাখা হয়? A. একই ধরনের সকল ডেটা B. বিভিন্ন ধরনের ডে… <sub>G2654</sub>
+### Array data structure এ কোন ধরনের ডেটা রাখা হয়? A. একই ধরনের সকল ডেটা B. বিভিন্ন ধরনের ডে… <sub>G2702</sub>
 
 *MCQ*
 
@@ -4854,9 +4914,9 @@ Array data structure এ কোন ধরনের ডেটা রাখা হ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33, Data Structures and Algorithms Q8 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2658"></a>
+<a id="g2706"></a>
 
-### Which data is kept in array data structure? a. Various type data b. Pointer data c. Class… <sub>G2658</sub>
+### Which data is kept in array data structure? a. Various type data b. Pointer data c. Class… <sub>G2706</sub>
 
 *MCQ*
 
@@ -4866,9 +4926,9 @@ Which data is kept in array data structure? a. Various type data b. Pointer data
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Data Structures and Algorithms Q12 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g4334"></a>
+<a id="g4382"></a>
 
-### We are given an array of integers and a range, we need to find whether the subarray which… <sub>G4334</sub>
+### We are given an array of integers and a range, we need to find whether the subarray which… <sub>G4382</sub>
 
 *Written*
 
@@ -4878,9 +4938,9 @@ We are given an array of integers and a range, we need to find whether the subar
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 6 Banks & Financial Institutions (BSCS) — Assistant Programmer — 2021 (date conflicting: 18/03/2021 on the MCQ page; 15-01-2022 in the site's analysis page) — Exam taker: not stated — recollection (8 items), Q3 — [bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md](../bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md)
 
-<a id="g2783"></a>
+<a id="g2831"></a>
 
-### (b) Consider a 2-D array, A stored with row-major organization. If its base address start… <sub>G2783</sub>
+### (b) Consider a 2-D array, A stored with row-major organization. If its base address start… <sub>G2831</sub>
 
 *Written*
 
@@ -4890,9 +4950,9 @@ We are given an array of integers and a range, we need to find whether the subar
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 4 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4808"></a>
+<a id="g4856"></a>
 
-### Find the smallest and second smallest elements in an array. <sub>G4808</sub>
+### Find the smallest and second smallest elements in an array. <sub>G4856</sub>
 
 *Written*
 
@@ -4928,9 +4988,9 @@ Write a pseudocode or a program using any high-level language to find the common
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q37 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g4550"></a>
+<a id="g4598"></a>
 
-### Write a program that take input an array with positive and negative number and rearrange … <sub>G4550</sub>
+### Write a program that take input an array with positive and negative number and rearrange … <sub>G4598</sub>
 
 *Written*
 
@@ -4955,9 +5015,9 @@ Explain: Infix, Prefix, Postfix notation.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q66 — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
 
-<a id="g2313"></a>
+<a id="g2361"></a>
 
-### Convert the infix expression P = 12/(7-3)+2 to postfix expression and evaluate it. <sub>G2313</sub>
+### Convert the infix expression P = 12/(7-3)+2 to postfix expression and evaluate it. <sub>G2361</sub>
 
 *Written*
 
@@ -4968,9 +5028,9 @@ Convert the infix expression P = 12/(7-3)+2 to postfix expression and evaluate i
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q3 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3527"></a>
+<a id="g3575"></a>
 
-### Convert the following prefix notation into an equivalent postfix notation: 5 /*A + BCD <sub>G3527</sub>
+### Convert the following prefix notation into an equivalent postfix notation: 5 /*A + BCD <sub>G3575</sub>
 
 *Written*
 
@@ -4992,9 +5052,9 @@ Describe infix conversion method.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q67 — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
 
-<a id="g2656"></a>
+<a id="g2704"></a>
 
-### নিচের কোনটি একটি valid Postfix expression? A. ab(c+d) B. abc+de-+ C. +ab D. a+b-c <sub>G2656</sub>
+### নিচের কোনটি একটি valid Postfix expression? A. ab(c+d) B. abc+de-+ C. +ab D. a+b-c <sub>G2704</sub>
 
 *MCQ*
 
@@ -5004,9 +5064,9 @@ Describe infix conversion method.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33, Data Structures and Algorithms Q10 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g4506"></a>
+<a id="g4554"></a>
 
-### What is the postfix expression of the string a+(b-c)*d? (a) abc-d*+ (b) abcd-*+ (c) ad*bc… <sub>G4506</sub>
+### What is the postfix expression of the string a+(b-c)*d? (a) abc-d*+ (b) abcd-*+ (c) ad*bc… <sub>G4554</sub>
 
 *MCQ*
 
@@ -5016,9 +5076,9 @@ What is the postfix expression of the string a+(b-c)*d? (a) abc-d*+ (b) abcd-*+ 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ38 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g2852"></a>
+<a id="g2900"></a>
 
-### With the help of a stack, convert the following Infix Expression to Postfix Expression. S… <sub>G2852</sub>
+### With the help of a stack, convert the following Infix Expression to Postfix Expression. S… <sub>G2900</sub>
 
 *Written*
 
@@ -5040,9 +5100,9 @@ Polish Notation কী ও কত প্রকার? নিচের Infix Nota
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — Data Structure & Algorithms (continued), Q87 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g5194"></a>
+<a id="g5242"></a>
 
-### The postfix form of A*B+C/D is ? ক. *AB/CD+ খ. AB*CD/+ গ. A*BC+/D ঘ. ABCD+/* <sub>G5194</sub>
+### The postfix form of A*B+C/D is ? ক. *AB/CD+ খ. AB*CD/+ গ. A*BC+/D ঘ. ABCD+/* <sub>G5242</sub>
 
 *MCQ*
 
@@ -5067,9 +5127,9 @@ Tower of Hanoi সমস্যাটি সমাধানের জন্যে
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q69 — [bit to exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.md) · [image](../bit%20to%20exabyte/51_bte-g2-p37-data-structure-q59-72-sorting-mcq.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৫। (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g4757"></a>
+<a id="g4805"></a>
 
-### Which of the following algorithms can not be designed without recursion? Fibonacci series… <sub>G4757</sub>
+### Which of the following algorithms can not be designed without recursion? Fibonacci series… <sub>G4805</sub>
 
 *MCQ*
 
@@ -5079,9 +5139,9 @@ Which of the following algorithms can not be designed without recursion? Fibonac
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 6 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
 
-<a id="g2977"></a>
+<a id="g3025"></a>
 
-### Usually, recursion involves a function Write a recursive algorithm to find the factorial … <sub>G2977</sub>
+### Usually, recursion involves a function Write a recursive algorithm to find the factorial … <sub>G3025</sub>
 
 *Written*
 

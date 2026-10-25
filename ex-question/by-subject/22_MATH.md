@@ -66,10 +66,10 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bank (name cut off, 'B... Ltd') Assistant Programmer Written — see [G0888](#g0888)
 11. **In a survey of 500 people, it was found that 50 do not read The Observer and 25 do not read Ittefaq. Moreover, 10 people read neither of the two newspapers. If…**  
    Asked in (1): 36th BCS (2016)  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Part C — Math (book pages 507–514; general mathematics) — see [G1855](#g1855)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Part C — Math (book pages 507–514; general mathematics) — see [G1903](#g1903)
 12. **A person walked from Gulistan to Gulshan at a speed of 4 km/h. After some time, he returned to Gulistan walking at a speed of 5 km/h. On the return journey, it…**  
    Asked in (1): 10th BCS  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Part C — Math (book pages 507–514; general mathematics) — see [G1861](#g1861)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Part C — Math (book pages 507–514; general mathematics) — see [G1909](#g1909)
 
 ## Coaching "standard pattern" topics (not counted)
 
@@ -159,9 +159,9 @@ Same data: find the probability that a failed request came from server Y.
 
 ## Probability & Bayes theorem
 
-<a id="g1855"></a>
+<a id="g1903"></a>
 
-### In a survey of 500 people, it was found that 50 do not read The Observer and 25 do not re… <sub>G1855</sub>
+### In a survey of 500 people, it was found that 50 do not read The Observer and 25 do not re… <sub>G1903</sub>
 
 *Written*
 
@@ -171,9 +171,9 @@ In a survey of 500 people, it was found that 50 do not read The Observer and 25 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Part C — Math (book pages 507–514; general mathematics), Math practice 1 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1851"></a>
+<a id="g1899"></a>
 
-### A factory produces 70% of its products from Machine A and 30% from Machine B. The defect … <sub>G1851</sub>
+### A factory produces 70% of its products from Machine A and 30% from Machine B. The defect … <sub>G1899</sub>
 
 *Written*
 
@@ -183,9 +183,9 @@ A factory produces 70% of its products from Machine A and 30% from Machine B. Th
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), MATH-01 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1852"></a>
+<a id="g1900"></a>
 
-### প্রশ্ন — একটি কারখানায়— মোট পণ্যের 70% তৈরি হয় Machine A দিয়ে। মোট পণ্যের 30% তৈরি হয়… <sub>G1852</sub>
+### প্রশ্ন — একটি কারখানায়— মোট পণ্যের 70% তৈরি হয় Machine A দিয়ে। মোট পণ্যের 30% তৈরি হয়… <sub>G1900</sub>
 
 *Written*
 
@@ -195,9 +195,9 @@ A factory produces 70% of its products from Machine A and 30% from Machine B. Th
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), MATH-02 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1853"></a>
+<a id="g1901"></a>
 
-### In a Bangladesh Bank office, there are 6 Assistant Directors (ADs) and 4 Deputy Directors… <sub>G1853</sub>
+### In a Bangladesh Bank office, there are 6 Assistant Directors (ADs) and 4 Deputy Directors… <sub>G1901</sub>
 
 *Written*
 
@@ -207,9 +207,9 @@ In a Bangladesh Bank office, there are 6 Assistant Directors (ADs) and 4 Deputy 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), MATH-03 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1854"></a>
+<a id="g1902"></a>
 
-### A bank processes 60% of its online transactions through Server A and 40% through Server B… <sub>G1854</sub>
+### A bank processes 60% of its online transactions through Server A and 40% through Server B… <sub>G1902</sub>
 
 *Written*
 
@@ -219,9 +219,9 @@ A bank processes 60% of its online transactions through Server A and 40% through
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), MATH-04 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1856"></a>
+<a id="g1904"></a>
 
-### Among 100 students of class eleven in a college, 30 play football, 40 play cricket, and 2… <sub>G1856</sub>
+### Among 100 students of class eleven in a college, 30 play football, 40 play cricket, and 2… <sub>G1904</sub>
 
 *Written*
 
@@ -231,9 +231,9 @@ Among 100 students of class eleven in a college, 30 play football, 40 play crick
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 2 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1857"></a>
+<a id="g1905"></a>
 
-### Out of 250 examinees in Mathematics and Statistics, 25 failed in Statistics and 45 failed… <sub>G1857</sub>
+### Out of 250 examinees in Mathematics and Statistics, 25 failed in Statistics and 45 failed… <sub>G1905</sub>
 
 *Written*
 
@@ -243,9 +243,9 @@ Out of 250 examinees in Mathematics and Statistics, 25 failed in Statistics and 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 3 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1858"></a>
+<a id="g1906"></a>
 
-### A box contains 5 red, 7 blue, and 3 green balls. If 3 balls are drawn at random one after… <sub>G1858</sub>
+### A box contains 5 red, 7 blue, and 3 green balls. If 3 balls are drawn at random one after… <sub>G1906</sub>
 
 *Written*
 
@@ -255,9 +255,9 @@ A box contains 5 red, 7 blue, and 3 green balls. If 3 balls are drawn at random 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 4 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1859"></a>
+<a id="g1907"></a>
 
-### One container contains 2 white and 3 black balls, and another container contains 3 white … <sub>G1859</sub>
+### One container contains 2 white and 3 black balls, and another container contains 3 white … <sub>G1907</sub>
 
 *Written*
 
@@ -267,9 +267,9 @@ One container contains 2 white and 3 black balls, and another container contains
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 5 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1860"></a>
+<a id="g1908"></a>
 
-### One vessel contains 5 red and 4 white balls, and another vessel contains 3 red and 6 whit… <sub>G1860</sub>
+### One vessel contains 5 red and 4 white balls, and another vessel contains 3 red and 6 whit… <sub>G1908</sub>
 
 *Written*
 
@@ -352,9 +352,9 @@ A man rows at 12 km/h in still water; rowing upstream takes three times as long 
 
 ## Speed, time & distance
 
-<a id="g1861"></a>
+<a id="g1909"></a>
 
-### A person walked from Gulistan to Gulshan at a speed of 4 km/h. After some time, he return… <sub>G1861</sub>
+### A person walked from Gulistan to Gulshan at a speed of 4 km/h. After some time, he return… <sub>G1909</sub>
 
 *Written*
 
@@ -366,9 +366,9 @@ A person walked from Gulistan to Gulshan at a speed of 4 km/h. After some time, 
 
 ## Work, time & wages
 
-<a id="g1864"></a>
+<a id="g1912"></a>
 
-### 5 men earn as much as 9 women, and 6 women earn as much as 10 boys. If a boy earns 12.50 … <sub>G1864</sub>
+### 5 men earn as much as 9 women, and 6 women earn as much as 10 boys. If a boy earns 12.50 … <sub>G1912</sub>
 
 *Written*
 
@@ -378,9 +378,9 @@ A person walked from Gulistan to Gulshan at a speed of 4 km/h. After some time, 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 10 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1865"></a>
+<a id="g1913"></a>
 
-### Working 8 hours a day, 50 people can complete a piece of work in 12 days. Working how man… <sub>G1865</sub>
+### Working 8 hours a day, 50 people can complete a piece of work in 12 days. Working how man… <sub>G1913</sub>
 
 *Written*
 
@@ -390,9 +390,9 @@ Working 8 hours a day, 50 people can complete a piece of work in 12 days. Workin
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 11 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1866"></a>
+<a id="g1914"></a>
 
-### If 8 men working 7 hours a day can complete a piece of work in 12 days, in how many days … <sub>G1866</sub>
+### If 8 men working 7 hours a day can complete a piece of work in 12 days, in how many days … <sub>G1914</sub>
 
 *Written*
 
@@ -404,9 +404,9 @@ If 8 men working 7 hours a day can complete a piece of work in 12 days, in how m
 
 ## Equations & mensuration
 
-<a id="g1862"></a>
+<a id="g1910"></a>
 
-### If the length of a rectangle is decreased by 5 meters and the breadth is increased by 3 m… <sub>G1862</sub>
+### If the length of a rectangle is decreased by 5 meters and the breadth is increased by 3 m… <sub>G1910</sub>
 
 *Written*
 
@@ -416,9 +416,9 @@ If the length of a rectangle is decreased by 5 meters and the breadth is increas
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 8 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1863"></a>
+<a id="g1911"></a>
 
-### The area of a rectangle is 24 square meters. The length and breadth of another rectangle … <sub>G1863</sub>
+### The area of a rectangle is 24 square meters. The length and breadth of another rectangle … <sub>G1911</sub>
 
 *Written*
 
@@ -430,9 +430,9 @@ The area of a rectangle is 24 square meters. The length and breadth of another r
 
 ## Simple & compound interest
 
-<a id="g1868"></a>
+<a id="g1916"></a>
 
-### What will be the difference between the simple interest and compound interest on 5,000 ta… <sub>G1868</sub>
+### What will be the difference between the simple interest and compound interest on 5,000 ta… <sub>G1916</sub>
 
 *Written*
 
@@ -442,9 +442,9 @@ What will be the difference between the simple interest and compound interest on
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 14 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1869"></a>
+<a id="g1917"></a>
 
-### A certain principal amounts to 28,000 taka with simple interest in 3 years, and 30,000 ta… <sub>G1869</sub>
+### A certain principal amounts to 28,000 taka with simple interest in 3 years, and 30,000 ta… <sub>G1917</sub>
 
 *Written*
 
@@ -456,9 +456,9 @@ A certain principal amounts to 28,000 taka with simple interest in 3 years, and 
 
 ## Mixtures & alligation
 
-<a id="g1870"></a>
+<a id="g1918"></a>
 
-### In a 60-liter mixture of milk and water, the concentration of milk is 70%. How much water… <sub>G1870</sub>
+### In a 60-liter mixture of milk and water, the concentration of milk is 70%. How much water… <sub>G1918</sub>
 
 *Written*
 
@@ -468,9 +468,9 @@ In a 60-liter mixture of milk and water, the concentration of milk is 70%. How m
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Math (book pages 507–514; general mathematics), Math practice 16 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
 
-<a id="g1871"></a>
+<a id="g1919"></a>
 
-### A chemist has two acid solutions: Solution A contains 20% acid and Solution B contains 50… <sub>G1871</sub>
+### A chemist has two acid solutions: Solution A contains 20% acid and Solution B contains 50… <sub>G1919</sub>
 
 *Written*
 
@@ -496,9 +496,9 @@ Given x + 1/x = 17/4, find x − 1/x.
 
 ## Pipes & cisterns
 
-<a id="g1867"></a>
+<a id="g1915"></a>
 
-### A cistern has three pipes. The cistern is filled by the 1st and 2nd pipes in 12 and 18 mi… <sub>G1867</sub>
+### A cistern has three pipes. The cistern is filled by the 1st and 2nd pipes in 12 and 18 mi… <sub>G1915</sub>
 
 *Written*
 

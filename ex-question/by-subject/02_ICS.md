@@ -2,7 +2,7 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 485 (from 535 records: Written 307, MCQ 113, Viva 115)
+- **Distinct questions:** 487 (from 537 records: Written 309, MCQ 113, Viva 115)
 - **Exams it appears in:** 117
 - **Corrections to printed answers:** 9
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
@@ -15,14 +15,14 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | 2 | [Web technology (HTML, CSS, JS)](#web-technology-html-css-js) | 33 | 78 | 13 |
 | 3 | [Other](#other) | 28 | 101 | 31 |
 | 4 | [Hardware & peripherals](#hardware--peripherals) | 22 | 47 | 12 |
-| 5 | [Memory](#memory) | 15 | 29 | 5 |
+| 5 | [Memory](#memory) | 15 | 30 | 5 |
 | 6 | [Computer generations & types](#computer-generations--types) | 14 | 26 | 1 |
 | 7 | [Emerging technology](#emerging-technology) | 13 | 27 | 10 |
 | 8 | [Software types](#software-types) | 13 | 14 | 2 |
 | 9 | [Data representation & units](#data-representation--units) | 8 | 13 | 2 |
 | 10 | [BIOS & booting](#bios--booting) | 4 | 7 | 0 |
 | 11 | [ICT, policy & society](#ict-policy--society) | 4 | 7 | 2 |
-| 12 | [MS Office / Excel](#ms-office--excel) | 4 | 4 | 0 |
+| 12 | [MS Office / Excel](#ms-office--excel) | 4 | 5 | 0 |
 | 13 | [Banking IT & digital finance](#banking-it--digital-finance) | 3 | 6 | 2 |
 | 14 | [Internet & e-mail](#internet--e-mail) | 1 | 6 | 4 |
 | 15 | [Mobile & Android](#mobile--android) | 0 | 7 | 0 |
@@ -51,13 +51,13 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Discrete Math and Web Engineering · duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G1245](#g1245)
 7. **Discuss server maintenance best practices, including routine tasks like cleaning, monitoring, and applying security patches. How do these practices contribute …**  
    Asked in (2): Rupali Bank ANA 2023; Rupali Bank ANE 2023  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cloud computing · Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions · duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37 — see [G3206](#g3206)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cloud computing · Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions · duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37 — see [G3254](#g3254)
 8. **CSS Box Model এ 'Padding' এবং 'Margin' এরিয়ার মধ্যে পার্থক্য লিখুন।**  
    Asked in (2): 15th NTRCA ICT; 17th NTRCA ICT (2023)  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Discrete Math and Web Engineering · Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ওয়েব টেকনোলজি ও ইন্টারনেট (Web Technology & Internet) · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G1679](#g1679)
 9. **নিম্নোক্ত উপাদানগুলোসহ একটি HTML page লিখুন। Hyperlink, Ordered list, Unordered list, Form (Tent box, Check box, Option, Button).**  
    Asked in (2): 15th NTRCA ICT; 17th NTRCA ICT (2023)  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Discrete Math and Web Engineering · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G2023](#g2023)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Discrete Math and Web Engineering · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G2071](#g2071)
 10. **Which software architecture would you recommend for a system monitoring a third-party cloud service through APIs?**  
    Asked in (1): BSCL AE(CSE) 2026  
    Source: Bangladesh Satellite Company PLC Assistant Engineer (CSE) (2026-08-21) — see [G0287](#g0287)
@@ -145,9 +145,9 @@ Define a virtual machine with a neat diagram, explain the working of VM. What ar
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Maintenance Engineer — 04.02.2023 — exam taker not printed (BIBM per `BANK/`) — time and marks not printed — pages 1–3, Q7 — [duranta/1737542359-bangladesh-bank-ame-ad-ict-2023/1737542359.md](../duranta/1737542359-bangladesh-bank-ame-ad-ict-2023/1737542359.md)
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Bangladesh Bank — Assistant Maintenance Engineer — 04.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 30–32, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3206"></a>
+<a id="g3254"></a>
 
-### Discuss server maintenance best practices, including routine tasks like cleaning, monitor… <sub>G3206</sub>
+### Discuss server maintenance best practices, including routine tasks like cleaning, monitor… <sub>G3254</sub>
 
 *Written*
 
@@ -336,9 +336,9 @@ What are the key hardware components that makes up a typical server, and how do 
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q27 — [suggestion based on previous yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.md](../suggestion%20based%20on%20previous%20yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.md) · [image](../suggestion%20based%20on%20previous%20yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2549"></a>
+<a id="g2597"></a>
 
-### Explain IaaS, PaaS and SaaS in cloud computing. <sub>G2549</sub>
+### Explain IaaS, PaaS and SaaS in cloud computing. <sub>G2597</sub>
 
 *Written*
 
@@ -351,9 +351,9 @@ Explain IaaS, PaaS and SaaS in cloud computing.
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Bangladesh Bank — Assistant Maintenance Engineer — 04.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 30–32, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 - **Printed answer:** IaaS: on-demand compute/storage/network; PaaS: platform services (DB, queues) for building apps; SaaS: ready end-user applications
 
-<a id="g2570"></a>
+<a id="g2618"></a>
 
-### What is the difference between vertical and horizontal scaling? What is auto scaling and … <sub>G2570</sub>
+### What is the difference between vertical and horizontal scaling? What is auto scaling and … <sub>G2618</sub>
 
 *Written*
 
@@ -364,9 +364,9 @@ What is the difference between vertical and horizontal scaling? What is auto sca
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion), Set-01 Q5 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion), Q5 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g2572"></a>
+<a id="g2620"></a>
 
-### What are the main components of Kubernetes architecture? <sub>G2572</sub>
+### What are the main components of Kubernetes architecture? <sub>G2620</sub>
 
 *Written*
 
@@ -377,9 +377,9 @@ What are the main components of Kubernetes architecture?
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion), Set-01 Q7 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion), Q7 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g2573"></a>
+<a id="g2621"></a>
 
-### What is a hypervisor? What are the different types of hypervisors? Provide some examples? <sub>G2573</sub>
+### What is a hypervisor? What are the different types of hypervisors? Provide some examples? <sub>G2621</sub>
 
 *Written*
 
@@ -390,9 +390,9 @@ What is a hypervisor? What are the different types of hypervisors? Provide some 
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion), Set-01 Q8 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion), Q8 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g3169"></a>
+<a id="g3217"></a>
 
-### Scenario-based descriptive question for server-related problems (How do you handle those … <sub>G3169</sub>
+### Scenario-based descriptive question for server-related problems (How do you handle those … <sub>G3217</sub>
 
 *Written*
 
@@ -402,9 +402,9 @@ Scenario-based descriptive question for server-related problems (How do you hand
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — Officer IT- Combined Bank — 14.10.2023 — Job ID: 10152 — Exam taker: BIBM — IT: 150 marks + Non IT: 40 marks + GK: 10 marks = 200 marks — pages 32–33, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3189"></a>
+<a id="g3237"></a>
 
-### Write about Hypervisor. <sub>G3189</sub>
+### Write about Hypervisor. <sub>G3237</sub>
 
 *Written*
 
@@ -414,9 +414,9 @@ Write about Hypervisor.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — RAKUB — ANSE (2 post) 2023 — 03.11.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (15×10) — pages 34–35, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3216"></a>
+<a id="g3264"></a>
 
-### You want to host a new banking solution for your organization in data center. Describe th… <sub>G3216</sub>
+### You want to host a new banking solution for your organization in data center. Describe th… <sub>G3264</sub>
 
 *Written*
 
@@ -426,9 +426,9 @@ You want to host a new banking solution for your organization in data center. De
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — Senior Officer (AHE/AME) — Job ID: 10165 (5 post) — 24.11.2023 — Exam taker: not printed — Total Marks-200, Time: 02 Hours (10:30 am-12:30 pm) — pages 37–39, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3217"></a>
+<a id="g3265"></a>
 
-### Describe the typical web application deployment architecture, and explain how they intera… <sub>G3217</sub>
+### Describe the typical web application deployment architecture, and explain how they intera… <sub>G3265</sub>
 
 *Written*
 
@@ -438,9 +438,9 @@ Describe the typical web application deployment architecture, and explain how th
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — Senior Officer (AHE/AME) — Job ID: 10165 (5 post) — 24.11.2023 — Exam taker: not printed — Total Marks-200, Time: 02 Hours (10:30 am-12:30 pm) — pages 37–39, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3237"></a>
+<a id="g3285"></a>
 
-### What should be checked before buying servers? [Combined Bank ADA 2024] <sub>G3237</sub>
+### What should be checked before buying servers? [Combined Bank ADA 2024] <sub>G3285</sub>
 
 *Written*
 
@@ -450,9 +450,9 @@ What should be checked before buying servers? [Combined Bank ADA 2024]
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3247"></a>
+<a id="g3295"></a>
 
-### To maintain a data center cooling system sometimes we need a generator. Which type of gen… <sub>G3247</sub>
+### To maintain a data center cooling system sometimes we need a generator. Which type of gen… <sub>G3295</sub>
 
 *Written*
 
@@ -462,9 +462,9 @@ To maintain a data center cooling system sometimes we need a generator. Which ty
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — Combined 3 Bank (10199) — Assistant Maintenance engineer/Assistant Engineer IT 2024 — 24.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 42–44, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3250"></a>
+<a id="g3298"></a>
 
-### Your bank wants to transform your full data center into a cloud. Now sketch your strategy… <sub>G3250</sub>
+### Your bank wants to transform your full data center into a cloud. Now sketch your strategy… <sub>G3298</sub>
 
 *Written*
 
@@ -475,9 +475,9 @@ Your bank wants to transform your full data center into a cloud. Now sketch your
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cloud computing, Q8 — [bit to exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md) · [image](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 11 — Combined 3 Bank (10199) — Assistant Maintenance engineer/Assistant Engineer IT 2024 — 24.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 42–44, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3258"></a>
+<a id="g3306"></a>
 
-### Let you procure a microfinance application and host it in your office's data center. What… <sub>G3258</sub>
+### Let you procure a microfinance application and host it in your office's data center. What… <sub>G3306</sub>
 
 *Written*
 
@@ -488,9 +488,9 @@ Let you procure a microfinance application and host it in your office's data cen
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cyber Security And Cloud Computing, Big Data, Data Mining, Q5 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q(unnumbered 2) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3259"></a>
+<a id="g3307"></a>
 
-### What do you understand about the IT disaster recovery plan? Describe your approach to dis… <sub>G3259</sub>
+### What do you understand about the IT disaster recovery plan? Describe your approach to dis… <sub>G3307</sub>
 
 *Written*
 
@@ -500,9 +500,9 @@ What do you understand about the IT disaster recovery plan? Describe your approa
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q(unnumbered 3) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3284"></a>
+<a id="g3332"></a>
 
-### What is cloud computing? Mention its service models. [BSCS AP (SB & Janata Bank) 26] 10 <sub>G3284</sub>
+### What is cloud computing? Mention its service models. [BSCS AP (SB & Janata Bank) 26] 10 <sub>G3332</sub>
 
 *Written*
 
@@ -512,9 +512,9 @@ What is cloud computing? Mention its service models. [BSCS AP (SB & Janata Bank)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3289"></a>
+<a id="g3337"></a>
 
-### Define Virtualization. Explain the role of the Hypervisor and the difference between a Vi… <sub>G3289</sub>
+### Define Virtualization. Explain the role of the Hypervisor and the difference between a Vi… <sub>G3337</sub>
 
 *Written*
 
@@ -524,9 +524,9 @@ Define Virtualization. Explain the role of the Hypervisor and the difference bet
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3381"></a>
+<a id="g3429"></a>
 
-### Describe SaaS, PaaS, IaaS <sub>G3381</sub>
+### Describe SaaS, PaaS, IaaS <sub>G3429</sub>
 
 *Written*
 
@@ -537,9 +537,9 @@ Describe SaaS, PaaS, IaaS
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 8. Dhaka Mass Transit Company Limited (DMTCL), Assistant Engineer (ICT), 27.01.2023; Exam Taker: MIST; Time: 1hour; Mark:100; Dept: 56, Non-Dept-MCQ (44*1=44); pp. 12-13, Q6 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q13 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3470"></a>
+<a id="g3518"></a>
 
-### Decision tree for playing football in different situations (weather-cloudy, sunny, rainy … <sub>G3470</sub>
+### Decision tree for playing football in different situations (weather-cloudy, sunny, rainy … <sub>G3518</sub>
 
 *Written*
 
@@ -549,9 +549,9 @@ Decision tree for playing football in different situations (weather-cloudy, sunn
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 7+3 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3475"></a>
+<a id="g3523"></a>
 
-### Distinguish between Preventive and Corrective maintenance with a real-world example for e… <sub>G3475</sub>
+### Distinguish between Preventive and Corrective maintenance with a real-world example for e… <sub>G3523</sub>
 
 *Written*
 
@@ -561,9 +561,9 @@ Distinguish between Preventive and Corrective maintenance with a real-world exam
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS), Assistant Maintenance Engineer/Assistant Engineer (IT) — Exam Date 08/05/2026 — exam taker not printed — time not printed — 15 questions, total marks 200 (Q1–Q6: 15 marks each) — pages 1–10, Q2 — [duranta/1783405234-bscs-ame-ae-it/1783405234.md](../duranta/1783405234-bscs-ame-ae-it/1783405234.md)
 
-<a id="g3480"></a>
+<a id="g3528"></a>
 
-### Mapreduce,hadoop (repeat previous) Assumption of the question are: "A financial instituti… <sub>G3480</sub>
+### Mapreduce,hadoop (repeat previous) Assumption of the question are: "A financial instituti… <sub>G3528</sub>
 
 *Written*
 
@@ -573,9 +573,9 @@ Mapreduce,hadoop (repeat previous) Assumption of the question are: "A financial 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS), Assistant Maintenance Engineer/Assistant Engineer (IT) — Exam Date 08/05/2026 — exam taker not printed — time not printed — 15 questions, total marks 200 (Q1–Q6: 15 marks each) — pages 1–10, Q7 — [duranta/1783405234-bscs-ame-ae-it/1783405234.md](../duranta/1783405234-bscs-ame-ae-it/1783405234.md)
 
-<a id="g3492"></a>
+<a id="g3540"></a>
 
-### What do you mean by national data center? <sub>G3492</sub>
+### What do you mean by national data center? <sub>G3540</sub>
 
 *Written*
 
@@ -586,9 +586,9 @@ What do you mean by national data center?
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cloud computing, Q13 — [bit to exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md) · [image](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q2(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3532"></a>
+<a id="g3580"></a>
 
-### a. What is cloud computing? How it is different from traditional computing methods? <sub>G3532</sub>
+### a. What is cloud computing? How it is different from traditional computing methods? <sub>G3580</sub>
 
 *Written*
 
@@ -598,9 +598,9 @@ a. What is cloud computing? How it is different from traditional computing metho
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q1(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3542"></a>
+<a id="g3590"></a>
 
-### c. What is a virtual machine, what is its purpose in computing? 2 <sub>G3542</sub>
+### c. What is a virtual machine, what is its purpose in computing? 2 <sub>G3590</sub>
 
 *Written*
 
@@ -610,9 +610,9 @@ c. What is a virtual machine, what is its purpose in computing? 2
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q4(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3586"></a>
+<a id="g3634"></a>
 
-### Write short notes on DNS, Cloud server and Fewall. 8 <sub>G3586</sub>
+### Write short notes on DNS, Cloud server and Fewall. 8 <sub>G3634</sub>
 
 *Written*
 
@@ -622,9 +622,9 @@ Write short notes on DNS, Cloud server and Fewall. 8
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q5 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3653"></a>
+<a id="g3701"></a>
 
-### What is Cloud Computing? Mention its advantages. <sub>G3653</sub>
+### What is Cloud Computing? Mention its advantages. <sub>G3701</sub>
 
 *Written*
 
@@ -634,9 +634,9 @@ What is Cloud Computing? Mention its advantages.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NPCBL Engineer (Cyber Security Analyst) 11.07.2026, 4 — [duranta/1783762106-npcbl-sae-csa/1783762106.md](../duranta/1783762106-npcbl-sae-csa/1783762106.md)
 
-<a id="g3673"></a>
+<a id="g3721"></a>
 
-### A startup company wants to launch a new web application. They do not want to manage any u… <sub>G3673</sub>
+### A startup company wants to launch a new web application. They do not want to manage any u… <sub>G3721</sub>
 
 *Written*
 
@@ -646,9 +646,9 @@ A startup company wants to launch a new web application. They do not want to man
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12, Q16 — [duranta/1785328629-so-it-job-id-25104/1785328629.md](../duranta/1785328629-so-it-job-id-25104/1785328629.md)
 
-<a id="g3711"></a>
+<a id="g3759"></a>
 
-### A physical server has 32 CPU cores, 96 GB RAM, and 4 TB storage. Each virtual machine (VM… <sub>G3711</sub>
+### A physical server has 32 CPU cores, 96 GB RAM, and 4 TB storage. Each virtual machine (VM… <sub>G3759</sub>
 
 *Written*
 
@@ -658,9 +658,9 @@ A physical server has 32 CPU cores, 96 GB RAM, and 4 TB storage. Each virtual ma
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, Q6.9 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4582"></a>
+<a id="g4630"></a>
 
-### What does HTTP Status Code 500 indicate? (a) Bad Request (b) Unauthorized Access (c) Inte… <sub>G4582</sub>
+### What does HTTP Status Code 500 indicate? (a) Bad Request (b) Unauthorized Access (c) Inte… <sub>G4630</sub>
 
 *MCQ*
 
@@ -670,9 +670,9 @@ What does HTTP Status Code 500 indicate? (a) Bad Request (b) Unauthorized Access
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ20 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4593"></a>
+<a id="g4641"></a>
 
-### What is Docker Hub and Docker? (a) Docker is a container platform, and Docker Hub is a cl… <sub>G4593</sub>
+### What is Docker Hub and Docker? (a) Docker is a container platform, and Docker Hub is a cl… <sub>G4641</sub>
 
 *MCQ*
 
@@ -682,9 +682,9 @@ What is Docker Hub and Docker? (a) Docker is a container platform, and Docker Hu
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ40 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4626"></a>
+<a id="g4674"></a>
 
-### Preventive and Corrective Maintenance - Data Center [site's expanded wording, assumed: A … <sub>G4626</sub>
+### Preventive and Corrective Maintenance - Data Center [site's expanded wording, assumed: A … <sub>G4674</sub>
 
 *Written*
 
@@ -694,9 +694,9 @@ Preventive and Corrective Maintenance - Data Center [site's expanded wording, as
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Combined Bank (BSCS) — Assistant Database Administrator (based year 2023) — 08-May-2026 — Exam taker: not stated — marks not printed — candidates' recollection (14 items), Q2 (b) — [bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md](../bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md)
 
-<a id="g4630"></a>
+<a id="g4678"></a>
 
-### Http code- mobile phone upload not affirmation [site's expanded wording, assumed: A mobil… <sub>G4630</sub>
+### Http code- mobile phone upload not affirmation [site's expanded wording, assumed: A mobil… <sub>G4678</sub>
 
 *Written*
 
@@ -706,9 +706,9 @@ Http code- mobile phone upload not affirmation [site's expanded wording, assumed
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Combined Bank (BSCS) — Assistant Database Administrator (based year 2023) — 08-May-2026 — Exam taker: not stated — marks not printed — candidates' recollection (14 items), Q7 (g) — [bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md](../bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md)
 
-<a id="g4633"></a>
+<a id="g4681"></a>
 
-### Cloud Vendor or bank fault; legally vs technically [site's expanded wording, assumed: A b… <sub>G4633</sub>
+### Cloud Vendor or bank fault; legally vs technically [site's expanded wording, assumed: A b… <sub>G4681</sub>
 
 *Written*
 
@@ -766,9 +766,9 @@ Big data বলতে কি বুঝায়? Big data এর বৈশিষ
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cloud computing, Q7 — [bit to exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.md) · [image](../bit%20to%20exabyte/26_bte-g2-p12-security-q27-37-cloud-bigdata-q01-07.jpg); [bit to exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md) · [image](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.jpg)
 
-<a id="g2902"></a>
+<a id="g2950"></a>
 
-### Write the three basic functions of cloud services? <sub>G2902</sub>
+### Write the three basic functions of cloud services? <sub>G2950</sub>
 
 *Written*
 
@@ -778,9 +778,9 @@ Write the three basic functions of cloud services?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 2. বাংলাদেশ সমরাস্ত্র কারখানা: (BOF)-2021, Assistant Engineer; (EEE/ME/CSE), 06-03-2021; exam taker not printed; Full Mark: 100 [Non-40, Department-60]; pp. 2-4 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g4399"></a>
+<a id="g4447"></a>
 
-### Which of these is not a common reason a business chooses to go with a data center colocat… <sub>G4399</sub>
+### Which of these is not a common reason a business chooses to go with a data center colocat… <sub>G4447</sub>
 
 *MCQ*
 
@@ -790,9 +790,9 @@ Which of these is not a common reason a business chooses to go with a data cente
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ89 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
 
-<a id="g4420"></a>
+<a id="g4468"></a>
 
-### .NET can be used in the following (a) Development of Desktop Applications (b) Development… <sub>G4420</sub>
+### .NET can be used in the following (a) Development of Desktop Applications (b) Development… <sub>G4468</sub>
 
 *MCQ*
 
@@ -802,9 +802,9 @@ Which of these is not a common reason a business chooses to go with a data cente
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ11 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
-<a id="g4425"></a>
+<a id="g4473"></a>
 
-### Java Virtual Machine (a) Acts as a full-fledged hypervisor (b) Converts byte codes to Ope… <sub>G4425</sub>
+### Java Virtual Machine (a) Acts as a full-fledged hypervisor (b) Converts byte codes to Ope… <sub>G4473</sub>
 
 *MCQ*
 
@@ -814,9 +814,9 @@ Java Virtual Machine (a) Acts as a full-fledged hypervisor (b) Converts byte cod
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ16 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
-<a id="g4507"></a>
+<a id="g4555"></a>
 
-### Which one is not a layer of cloud computing? (a) Computing as a service (CaaS) (b) Infras… <sub>G4507</sub>
+### Which one is not a layer of cloud computing? (a) Computing as a service (CaaS) (b) Infras… <sub>G4555</sub>
 
 *MCQ*
 
@@ -838,9 +838,9 @@ Explain the component of Data Center.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Cloud computing, Q14 — [bit to exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md) · [image](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.jpg)
 
-<a id="g2737"></a>
+<a id="g2785"></a>
 
-### An increasing number of organizations in industry and business sectors adopt" cloud compu… <sub>G2737</sub>
+### An increasing number of organizations in industry and business sectors adopt" cloud compu… <sub>G2785</sub>
 
 *Written*
 
@@ -1093,9 +1093,9 @@ What are the benefits of Cloud Computing?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p29 Q21 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p29)
 - **Printed answer:** Cloud computing offers scalability, cost savings, high availability, flexibility, remote access, automatic updates, and disaster recovery support
 
-<a id="g4959"></a>
+<a id="g5007"></a>
 
-### Sir: ধরো তোমার data center ঢাকায়, কিন্তু তুমি খুলনায় Disaster Recovery চাইছো। কী কী করো? <sub>G4959</sub>
+### Sir: ধরো তোমার data center ঢাকায়, কিন্তু তুমি খুলনায় Disaster Recovery চাইছো। কী কী করো? <sub>G5007</sub>
 
 *Viva*
 
@@ -1106,9 +1106,9 @@ Sir: ধরো তোমার data center ঢাকায়, কিন্তু �
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J9 Combined Bank Officer (IT) 2019, 6.10.19, Bangladesh Bank HO (viva), A9-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4978"></a>
+<a id="g5026"></a>
 
-### ৪. Big Data কী? <sub>G4978</sub>
+### ৪. Big Data কী? <sub>G5026</sub>
 
 *Viva*
 
@@ -1119,9 +1119,9 @@ Sir: ধরো তোমার data center ঢাকায়, কিন্তু �
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J13 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" A (viva), A13-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4993"></a>
+<a id="g5041"></a>
 
-### Cloud computing কি? টাইপগুলো বলুন। <sub>G4993</sub>
+### Cloud computing কি? টাইপগুলো বলুন। <sub>G5041</sub>
 
 *Viva*
 
@@ -1132,9 +1132,9 @@ Cloud computing কি? টাইপগুলো বলুন।
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J14 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" B (viva), A14-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4994"></a>
+<a id="g5042"></a>
 
-### বাংলাদেশে Financial Institution গুলোর কি Cloud ব্যাবহারের অনুমতি আছে? থাকলে সুবিধা, অসুবি… <sub>G4994</sub>
+### বাংলাদেশে Financial Institution গুলোর কি Cloud ব্যাবহারের অনুমতি আছে? থাকলে সুবিধা, অসুবি… <sub>G5042</sub>
 
 *Viva*
 
@@ -1182,9 +1182,9 @@ Difference between SAS and SATA. Which one is best server?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — আধুনিক প্রযুক্তি ও আর্টিফিশিয়াল ইন্টেলিজেন্স, Q213 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
-<a id="g2351"></a>
+<a id="g2399"></a>
 
-### Write short notes on following: 1) Digital signature 2) Cloud computing 3) Blockchain 4) … <sub>G2351</sub>
+### Write short notes on following: 1) Digital signature 2) Cloud computing 3) Blockchain 4) … <sub>G2399</sub>
 
 *Written*
 
@@ -1195,9 +1195,9 @@ Write short notes on following: 1) Digital signature 2) Cloud computing 3) Block
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46 BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), coaching not named, no time/marks scheme printed, pp. 1-5 — [duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md](../duranta/1732800614-46th-bcs-written-suggestions-part1/1732800614.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2593"></a>
+<a id="g2641"></a>
 
-### Cloud computing is the on-demand availability of computer system resources, especially da… <sub>G2593</sub>
+### Cloud computing is the on-demand availability of computer system resources, especially da… <sub>G2641</sub>
 
 *Written*
 
@@ -1207,9 +1207,9 @@ Cloud computing is the on-demand availability of computer system resources, espe
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -03 (suggestion), Set-03 Q7 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 
-<a id="g3350"></a>
+<a id="g3398"></a>
 
-### What is a server? <sub>G3350</sub>
+### What is a server? <sub>G3398</sub>
 
 *Written*
 
@@ -1220,9 +1220,9 @@ What is a server?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q1 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3351"></a>
+<a id="g3399"></a>
 
-### Difference between Server and Client. <sub>G3351</sub>
+### Difference between Server and Client. <sub>G3399</sub>
 
 *Written*
 
@@ -1232,9 +1232,9 @@ Difference between Server and Client.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3352"></a>
+<a id="g3400"></a>
 
-### Why are servers more reliable than PCs? <sub>G3352</sub>
+### Why are servers more reliable than PCs? <sub>G3400</sub>
 
 *Written*
 
@@ -1244,9 +1244,9 @@ Why are servers more reliable than PCs?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3353"></a>
+<a id="g3401"></a>
 
-### What is a DNS Server? <sub>G3353</sub>
+### What is a DNS Server? <sub>G3401</sub>
 
 *Written*
 
@@ -1256,9 +1256,9 @@ What is a DNS Server?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3354"></a>
+<a id="g3402"></a>
 
-### Difference between Web Server and Application Server. <sub>G3354</sub>
+### Difference between Web Server and Application Server. <sub>G3402</sub>
 
 *Written*
 
@@ -1268,9 +1268,9 @@ Difference between Web Server and Application Server.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3355"></a>
+<a id="g3403"></a>
 
-### Explain Client-Server Architecture. <sub>G3355</sub>
+### Explain Client-Server Architecture. <sub>G3403</sub>
 
 *Written*
 
@@ -1281,9 +1281,9 @@ Explain Client-Server Architecture.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q3 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3358"></a>
+<a id="g3406"></a>
 
-### Why is SSD preferred in servers? <sub>G3358</sub>
+### Why is SSD preferred in servers? <sub>G3406</sub>
 
 *Written*
 
@@ -1293,9 +1293,9 @@ Why is SSD preferred in servers?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3366"></a>
+<a id="g3414"></a>
 
-### What is a hypervisor? <sub>G3366</sub>
+### What is a hypervisor? <sub>G3414</sub>
 
 *MCQ*
 
@@ -1306,9 +1306,9 @@ What is a hypervisor?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q7 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3367"></a>
+<a id="g3415"></a>
 
-### Difference between Type-1 and Type-2 Hypervisor. <sub>G3367</sub>
+### Difference between Type-1 and Type-2 Hypervisor. <sub>G3415</sub>
 
 *Written*
 
@@ -1318,9 +1318,9 @@ Difference between Type-1 and Type-2 Hypervisor.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3368"></a>
+<a id="g3416"></a>
 
-### Difference among IaaS, PaaS, SaaS. <sub>G3368</sub>
+### Difference among IaaS, PaaS, SaaS. <sub>G3416</sub>
 
 *Written*
 
@@ -1330,9 +1330,9 @@ Difference among IaaS, PaaS, SaaS.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3369"></a>
+<a id="g3417"></a>
 
-### What is Hybrid Cloud? <sub>G3369</sub>
+### What is Hybrid Cloud? <sub>G3417</sub>
 
 *Written*
 
@@ -1342,9 +1342,9 @@ What is Hybrid Cloud?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3371"></a>
+<a id="g3419"></a>
 
-### Name three cloud service providers. <sub>G3371</sub>
+### Name three cloud service providers. <sub>G3419</sub>
 
 *Written*
 
@@ -1354,9 +1354,9 @@ Name three cloud service providers.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3375"></a>
+<a id="g3423"></a>
 
-### Types of servers. <sub>G3375</sub>
+### Types of servers. <sub>G3423</sub>
 
 *MCQ*
 
@@ -1366,9 +1366,9 @@ Types of servers.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q2 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3378"></a>
+<a id="g3426"></a>
 
-### Type-1 vs Type-2 Hypervisor. <sub>G3378</sub>
+### Type-1 vs Type-2 Hypervisor. <sub>G3426</sub>
 
 *MCQ*
 
@@ -1378,9 +1378,9 @@ Type-1 vs Type-2 Hypervisor.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q8 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3379"></a>
+<a id="g3427"></a>
 
-### Data center tier classifications. <sub>G3379</sub>
+### Data center tier classifications. <sub>G3427</sub>
 
 *MCQ*
 
@@ -1390,9 +1390,9 @@ Data center tier classifications.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q10 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3380"></a>
+<a id="g3428"></a>
 
-### Characteristics of cloud computing. <sub>G3380</sub>
+### Characteristics of cloud computing. <sub>G3428</sub>
 
 *MCQ*
 
@@ -1402,9 +1402,9 @@ Characteristics of cloud computing.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q12 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3382"></a>
+<a id="g3430"></a>
 
-### Public Cloud vs Private Cloud. <sub>G3382</sub>
+### Public Cloud vs Private Cloud. <sub>G3430</sub>
 
 *Written*
 
@@ -1415,9 +1415,9 @@ Public Cloud vs Private Cloud.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q14 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3491"></a>
+<a id="g3539"></a>
 
-### (a) Describe briefly the Cloud based Database. <sub>G3491</sub>
+### (a) Describe briefly the Cloud based Database. <sub>G3539</sub>
 
 *Written*
 
@@ -1427,9 +1427,9 @@ Public Cloud vs Private Cloud.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q2(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3494"></a>
+<a id="g3542"></a>
 
-### (b) Write short note on i) Web Server ii) ISP iii) Router iv) Search engine <sub>G3494</sub>
+### (b) Write short note on i) Web Server ii) ISP iii) Router iv) Search engine <sub>G3542</sub>
 
 *Written*
 
@@ -1439,9 +1439,9 @@ Public Cloud vs Private Cloud.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q5(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g5015"></a>
+<a id="g5063"></a>
 
-### What is Cloud Computing? Mention its types. <sub>G5015</sub>
+### What is Cloud Computing? Mention its types. <sub>G5063</sub>
 
 *Written*
 
@@ -1451,9 +1451,9 @@ What is Cloud Computing? Mention its types.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper I) (suggestion), A3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5021"></a>
+<a id="g5069"></a>
 
-### What is Virtualization? Mention two hypervisors. <sub>G5021</sub>
+### What is Virtualization? Mention two hypervisors. <sub>G5069</sub>
 
 *Written*
 
@@ -1463,9 +1463,9 @@ What is Virtualization? Mention two hypervisors.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper I) (suggestion), A11 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5045"></a>
+<a id="g5093"></a>
 
-### Mention two examples of PaaS providers. <sub>G5045</sub>
+### Mention two examples of PaaS providers. <sub>G5093</sub>
 
 *Written*
 
@@ -1475,9 +1475,9 @@ Mention two examples of PaaS providers.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A6 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5049"></a>
+<a id="g5097"></a>
 
-### Define 'Hot Standby' in server context. <sub>G5049</sub>
+### Define 'Hot Standby' in server context. <sub>G5097</sub>
 
 *Written*
 
@@ -1487,9 +1487,9 @@ Define 'Hot Standby' in server context.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A10 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5075"></a>
+<a id="g5123"></a>
 
-### What is Docker? Why is containerization popular? <sub>G5075</sub>
+### What is Docker? Why is containerization popular? <sub>G5123</sub>
 
 *Written*
 
@@ -1499,9 +1499,9 @@ What is Docker? Why is containerization popular?
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A8 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5078"></a>
+<a id="g5126"></a>
 
-### Define Big Data. Mention any two Big Data technologies. <sub>G5078</sub>
+### Define Big Data. Mention any two Big Data technologies. <sub>G5126</sub>
 
 *Written*
 
@@ -1511,9 +1511,9 @@ Define Big Data. Mention any two Big Data technologies.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A11 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5206"></a>
+<a id="g5254"></a>
 
-### Cloud computing is a ___ system and it is necessarily unidirectional in nature. ক. Statel… <sub>G5206</sub>
+### Cloud computing is a ___ system and it is necessarily unidirectional in nature. ক. Statel… <sub>G5254</sub>
 
 *MCQ*
 
@@ -1523,9 +1523,9 @@ Cloud computing is a ___ system and it is necessarily unidirectional in nature. 
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q72 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
-<a id="g5212"></a>
+<a id="g5260"></a>
 
-### Which of the following cloud concept is related to pooling and sharing of resources? ক. P… <sub>G5212</sub>
+### Which of the following cloud concept is related to pooling and sharing of resources? ক. P… <sub>G5260</sub>
 
 *MCQ*
 
@@ -1577,9 +1577,9 @@ CSS Box Model এ 'Padding' এবং 'Margin' এরিয়ার মধ্�
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ওয়েব টেকনোলজি ও ইন্টারনেট (Web Technology & Internet), Q153 — [18th NTCRA/08_ntrca-qbank-p08-se-testing-web-q138-157.md](../18th%20NTCRA/08_ntrca-qbank-p08-se-testing-web-q138-157.md) · [image](../18th%20NTCRA/08_ntrca-qbank-p08-se-testing-web-q138-157.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৬ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2023"></a>
+<a id="g2071"></a>
 
-### নিম্নোক্ত উপাদানগুলোসহ একটি HTML page লিখুন। Hyperlink, Ordered list, Unordered list, For… <sub>G2023</sub>
+### নিম্নোক্ত উপাদানগুলোসহ একটি HTML page লিখুন। Hyperlink, Ordered list, Unordered list, For… <sub>G2071</sub>
 
 *Written*
 
@@ -1662,9 +1662,9 @@ CSS কী? CSS এর প্রকারভেদসমূহ উদাহর�
 - **Source:**
   - Question paper, Q6(খ) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g2116"></a>
+<a id="g2164"></a>
 
-### Static ও Dynamic ওয়েবসাইটের মধ্যে পার্থক্য লিখুন। <sub>G2116</sub>
+### Static ও Dynamic ওয়েবসাইটের মধ্যে পার্থক্য লিখুন। <sub>G2164</sub>
 
 *Written*
 
@@ -1674,9 +1674,9 @@ Static ও Dynamic ওয়েবসাইটের মধ্যে পার�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৬ (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2117"></a>
+<a id="g2165"></a>
 
-### নিচের লিস্টটি তৈরি করার জন্য HTML কোড লিখুন: 1. Fruits (a) Mango (b) Orange 2. Vegetables… <sub>G2117</sub>
+### নিচের লিস্টটি তৈরি করার জন্য HTML কোড লিখুন: 1. Fruits (a) Mango (b) Orange 2. Vegetables… <sub>G2165</sub>
 
 *Written*
 
@@ -1686,9 +1686,9 @@ Static ও Dynamic ওয়েবসাইটের মধ্যে পার�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৬ অথবা (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2718"></a>
+<a id="g2766"></a>
 
-### নিচের এইচটিএমএল কোড এর আউটপুট লিখুন? [এক্সামে এটা ছিলোনা, সিম্পল জন্য একটা কোড ছিলো, আউটপ… <sub>G2718</sub>
+### নিচের এইচটিএমএল কোড এর আউটপুট লিখুন? [এক্সামে এটা ছিলোনা, সিম্পল জন্য একটা কোড ছিলো, আউটপ… <sub>G2766</sub>
 
 *Written*
 
@@ -1698,9 +1698,9 @@ Static ও Dynamic ওয়েবসাইটের মধ্যে পার�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১১ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g3276"></a>
+<a id="g3324"></a>
 
-### What are SOAP and RESTful APIs in web services? State one main difference between SOAP an… <sub>G3276</sub>
+### What are SOAP and RESTful APIs in web services? State one main difference between SOAP an… <sub>G3324</sub>
 
 *Written*
 
@@ -1710,9 +1710,9 @@ What are SOAP and RESTful APIs in web services? State one main difference betwee
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q19 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3481"></a>
+<a id="g3529"></a>
 
-### Http status code <sub>G3481</sub>
+### Http status code <sub>G3529</sub>
 
 *Written*
 
@@ -1722,9 +1722,9 @@ Http status code
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS), Assistant Maintenance Engineer/Assistant Engineer (IT) — Exam Date 08/05/2026 — exam taker not printed — time not printed — 15 questions, total marks 200 (Q1–Q6: 15 marks each) — pages 1–10, Q8 — [duranta/1783405234-bscs-ame-ae-it/1783405234.md](../duranta/1783405234-bscs-ame-ae-it/1783405234.md)
 
-<a id="g3544"></a>
+<a id="g3592"></a>
 
-### a. Suppose you are browsing www.psc.gov.bd. Please list the protocols (along with their c… <sub>G3544</sub>
+### a. Suppose you are browsing www.psc.gov.bd. Please list the protocols (along with their c… <sub>G3592</sub>
 
 *Written*
 
@@ -1734,9 +1734,9 @@ a. Suppose you are browsing www.psc.gov.bd. Please list the protocols (along wit
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q5(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4576"></a>
+<a id="g4624"></a>
 
-### Which of the following is NOT a web server? (a) Apache Tomcat (b) PHP (c) Jetty <sub>G4576</sub>
+### Which of the following is NOT a web server? (a) Apache Tomcat (b) PHP (c) Jetty <sub>G4624</sub>
 
 *MCQ*
 
@@ -1746,9 +1746,9 @@ Which of the following is NOT a web server? (a) Apache Tomcat (b) PHP (c) Jetty
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ14 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4759"></a>
+<a id="g4807"></a>
 
-### Which of the following will not be treated as a cloud service? A VM rented from open base… <sub>G4759</sub>
+### Which of the following will not be treated as a cloud service? A VM rented from open base… <sub>G4807</sub>
 
 *MCQ*
 
@@ -1758,9 +1758,9 @@ Which of the following will not be treated as a cloud service? A VM rented from 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 9 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
 
-<a id="g5122"></a>
+<a id="g5170"></a>
 
-### Create 3 table in Oracle DB All data where given Then you are asked to show a single web … <sub>G5122</sub>
+### Create 3 table in Oracle DB All data where given Then you are asked to show a single web … <sub>G5170</sub>
 
 *Written*
 
@@ -1770,9 +1770,9 @@ Create 3 table in Oracle DB All data where given Then you are asked to show a si
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Programmer, 22/02/2025 (suggestion), P1 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g5129"></a>
+<a id="g5177"></a>
 
-### Create a webpage and deploy this page into the server and run it with apache server. <sub>G5129</sub>
+### Create a webpage and deploy this page into the server and run it with apache server. <sub>G5177</sub>
 
 *Written*
 
@@ -1782,9 +1782,9 @@ Create a webpage and deploy this page into the server and run it with apache ser
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion), P3 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g5157"></a>
+<a id="g5205"></a>
 
-### A Content Management System (CMS) allows users to write blog posts. Assume that the blog … <sub>G5157</sub>
+### A Content Management System (CMS) allows users to write blog posts. Assume that the blog … <sub>G5205</sub>
 
 *Written*
 
@@ -1867,9 +1867,9 @@ HTML ও CSS কী?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Discrete Math and Web Engineering, Q16 — [bit to exabyte/45_bte-g2-p31-web-q10-19-mpi-q01-02.md](../bit%20to%20exabyte/45_bte-g2-p31-web-q10-19-mpi-q01-02.md) · [image](../bit%20to%20exabyte/45_bte-g2-p31-web-q10-19-mpi-q01-02.jpg)
 
-<a id="g3009"></a>
+<a id="g3057"></a>
 
-### Just indicate which statement will be true/false. (i) A user requests a web page that con… <sub>G3009</sub>
+### Just indicate which statement will be true/false. (i) A user requests a web page that con… <sub>G3057</sub>
 
 *Written*
 
@@ -1879,9 +1879,9 @@ Just indicate which statement will be true/false. (i) A user requests a web page
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — BSCS Combined 3 Bank (Sonali, Janata, Rakub) — Post: SO (Written) — 16-11-2020 — Exam taker: not printed — marks not printed — pages 6–8, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3407"></a>
+<a id="g3455"></a>
 
-### Which is better CSS <sub>G3407</sub>
+### Which is better CSS <sub>G3455</sub>
 
 *Written*
 
@@ -1891,9 +1891,9 @@ Which is better CSS
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 2020, 1 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3408"></a>
+<a id="g3456"></a>
 
-### HTML code to make table structure <sub>G3408</sub>
+### HTML code to make table structure <sub>G3456</sub>
 
 *Written*
 
@@ -1903,9 +1903,9 @@ HTML code to make table structure
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 2020, 2 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3449"></a>
+<a id="g3497"></a>
 
-### Write the difference between == and === in javascript. <sub>G3449</sub>
+### Write the difference between == and === in javascript. <sub>G3497</sub>
 
 *Written*
 
@@ -1915,9 +1915,9 @@ Write the difference between == and === in javascript.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 12 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g4243"></a>
+<a id="g4291"></a>
 
-### —–make easier to find visited web page later <sub>G4243</sub>
+### —–make easier to find visited web page later <sub>G4291</sub>
 
 *MCQ*
 
@@ -1927,9 +1927,9 @@ Write the difference between == and === in javascript.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ71 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4250"></a>
+<a id="g4298"></a>
 
-### In address bar, the 1st page of a website <sub>G4250</sub>
+### In address bar, the 1st page of a website <sub>G4298</sub>
 
 *MCQ*
 
@@ -1939,9 +1939,9 @@ In address bar, the 1st page of a website
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ78 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4251"></a>
+<a id="g4299"></a>
 
-### URL stands for <sub>G4251</sub>
+### URL stands for <sub>G4299</sub>
 
 *MCQ*
 
@@ -1951,9 +1951,9 @@ URL stands for
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ79 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4278"></a>
+<a id="g4326"></a>
 
-### What is SOAP? <sub>G4278</sub>
+### What is SOAP? <sub>G4326</sub>
 
 *Written*
 
@@ -1963,9 +1963,9 @@ What is SOAP?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Programmer — 25.10.2019 — Exam taker: IBA (as printed by the coaching banner; unverified) — Marks 200, Time 1.30 h, MCQ 64×1.25 = 80, Written 120 (dept 100, non-dept 20) — pages 1–2 (partial), Q9 — [bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md](../bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md)
 
-<a id="g4284"></a>
+<a id="g4332"></a>
 
-### Query for retrieving UNCOMMON Name from Name column of two given tables Table 1: ASP.NET,… <sub>G4284</sub>
+### Query for retrieving UNCOMMON Name from Name column of two given tables Table 1: ASP.NET,… <sub>G4332</sub>
 
 *Written*
 
@@ -1975,9 +1975,9 @@ Query for retrieving UNCOMMON Name from Name column of two given tables Table 1:
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q5 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4317"></a>
+<a id="g4365"></a>
 
-### The newest version of HTML is <sub>G4317</sub>
+### The newest version of HTML is <sub>G4365</sub>
 
 *MCQ*
 
@@ -1987,9 +1987,9 @@ The newest version of HTML is
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ66 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4702"></a>
+<a id="g4750"></a>
 
-### Write a JavaScript function for validate a phone number of 10 digits with no comma, no sp… <sub>G4702</sub>
+### Write a JavaScript function for validate a phone number of 10 digits with no comma, no sp… <sub>G4750</sub>
 
 *Written*
 
@@ -1999,9 +1999,9 @@ Write a JavaScript function for validate a phone number of 10 digits with no com
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NESCO Assistant Manager (ICT) 31.12.2021, Q1(b)(i) — [power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md](../power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md)
 
-<a id="g4703"></a>
+<a id="g4751"></a>
 
-### Why use CSS in website. <sub>G4703</sub>
+### Why use CSS in website. <sub>G4751</sub>
 
 *Written*
 
@@ -2011,9 +2011,9 @@ Why use CSS in website.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NESCO Assistant Manager (ICT) 31.12.2021, Q1(b)(ii) — [power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md](../power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md)
 
-<a id="g4741"></a>
+<a id="g4789"></a>
 
-### কোন প্রতিষ্ঠানের Web page development এ HTML এবং CSS এর ভূমিকা কি? শুধুমাত্র HTML এবং CSS… <sub>G4741</sub>
+### কোন প্রতিষ্ঠানের Web page development এ HTML এবং CSS এর ভূমিকা কি? শুধুমাত্র HTML এবং CSS… <sub>G4789</sub>
 
 *Written*
 
@@ -2023,9 +2023,9 @@ Why use CSS in website.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — ICT Division (ICT Ministry), Assistant Programmer (59 posts) — Written, 2021 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q8(ক) — [ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md](../ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md)
 
-<a id="g4742"></a>
+<a id="g4790"></a>
 
-### PHP কি? Web Development এ Java Script এর প্রয়োজনীয়তা সম্পর্কে বিবরণ দিন। <sub>G4742</sub>
+### PHP কি? Web Development এ Java Script এর প্রয়োজনীয়তা সম্পর্কে বিবরণ দিন। <sub>G4790</sub>
 
 *Written*
 
@@ -2035,9 +2035,9 @@ PHP কি? Web Development এ Java Script এর প্রয়োজনী�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — ICT Division (ICT Ministry), Assistant Programmer (59 posts) — Written, 2021 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q8(খ) — [ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md](../ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md)
 
-<a id="g4792"></a>
+<a id="g4840"></a>
 
-### Once a website is designed & developed, what are the steps to make it live online. <sub>G4792</sub>
+### Once a website is designed & developed, what are the steps to make it live online. <sub>G4840</sub>
 
 *Written*
 
@@ -2096,9 +2096,9 @@ What is closure in JavaScript? Explain with an example?
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ওয়েব টেকনোলজি ও ইন্টারনেট (Web Technology & Internet), Q157 — [18th NTCRA/08_ntrca-qbank-p08-se-testing-web-q138-157.md](../18th%20NTCRA/08_ntrca-qbank-p08-se-testing-web-q138-157.md) · [image](../18th%20NTCRA/08_ntrca-qbank-p08-se-testing-web-q138-157.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৬। ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2022"></a>
+<a id="g2070"></a>
 
-### ফর্ম জমা দেয়ার পদ্ধতি GET এবং POST এর মধ্যে পার্থক্য কী? কখন কোন পদ্ধতি ব্যবহার করতে হয়… <sub>G2022</sub>
+### ফর্ম জমা দেয়ার পদ্ধতি GET এবং POST এর মধ্যে পার্থক্য কী? কখন কোন পদ্ধতি ব্যবহার করতে হয়… <sub>G2070</sub>
 
 *Written*
 
@@ -2108,9 +2108,9 @@ What is closure in JavaScript? Explain with an example?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৬। (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2177"></a>
+<a id="g2225"></a>
 
-### ওয়েবসাইট কী? লিনিয়ার সিকুয়েন্স ওয়েব স্ট্রাকচার এবং ট্রি ওয়েব১+২+২=৫ স্ট্রাকচার সচিত্… <sub>G2177</sub>
+### ওয়েবসাইট কী? লিনিয়ার সিকুয়েন্স ওয়েব স্ট্রাকচার এবং ট্রি ওয়েব১+২+২=৫ স্ট্রাকচার সচিত্… <sub>G2225</sub>
 
 *Written*
 
@@ -2120,9 +2120,9 @@ What is closure in JavaScript? Explain with an example?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৬ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2178"></a>
+<a id="g2226"></a>
 
-### নিচের টেবিলটি তৈরি করার জন্য HTML কোড লিখুন: | Customer Name | Product Name | | | Product… <sub>G2178</sub>
+### নিচের টেবিলটি তৈরি করার জন্য HTML কোড লিখুন: | Customer Name | Product Name | | | Product… <sub>G2226</sub>
 
 *Written*
 
@@ -2132,9 +2132,9 @@ What is closure in JavaScript? Explain with an example?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৬ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2739"></a>
+<a id="g2787"></a>
 
-### Explain the role of CSS Media Queries and the Viewport Meta Tag in creating responsive ap… <sub>G2739</sub>
+### Explain the role of CSS Media Queries and the Viewport Meta Tag in creating responsive ap… <sub>G2787</sub>
 
 *Written*
 
@@ -2285,9 +2285,9 @@ Which SEO tools do you know?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p35 Q4 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p35)
 - **Printed answer:** Popular SEO tools include Google Search Console, Google Analytics, Ahrefs, SEMrush, Moz, and Screaming Frog
 
-<a id="g2556"></a>
+<a id="g2604"></a>
 
-### খাদ্য অধিদপ্তর এর ওয়েবসাইট দেখেছেন? কি কি দেখলেন? <sub>G2556</sub>
+### খাদ্য অধিদপ্তর এর ওয়েবসাইট দেখেছেন? কি কি দেখলেন? <sub>G2604</sub>
 
 *Viva*
 
@@ -2298,9 +2298,9 @@ Which SEO tools do you know?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V1 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g4885"></a>
+<a id="g4933"></a>
 
-### ৮। Rest API সম্পর্কে কি কি জানো? <sub>G4885</sub>
+### ৮। Rest API সম্পর্কে কি কি জানো? <sub>G4933</sub>
 
 *Viva*
 
@@ -2311,9 +2311,9 @@ Which SEO tools do you know?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Bank Assistant Programmer viva (based on 2019 circular) (viva), V6 — [viva-web/bank-2019-optimal-ap-viva/optimal-ap-2019.md](../viva-web/bank-2019-optimal-ap-viva/optimal-ap-2019.md)
 
-<a id="g4942"></a>
+<a id="g4990"></a>
 
-### 11. আমাদের ওয়েবসাইট এ CBS এর সাথে কানেক্ট, ওয়েবসাইট এ শুধু লোগো দেখা যাচ্ছে আর কিছু দেখ… <sub>G4942</sub>
+### 11. আমাদের ওয়েবসাইট এ CBS এর সাথে কানেক্ট, ওয়েবসাইট এ শুধু লোগো দেখা যাচ্ছে আর কিছু দেখ… <sub>G4990</sub>
 
 *Viva*
 
@@ -2446,9 +2446,9 @@ Cross-Site Scripting (XSS) আক্রমণ বলতে কী বোঝা�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ওয়েব টেকনোলজি ও ইন্টারনেট (Web Technology & Internet), Q158 — [18th NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.md](../18th%20NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.md) · [image](../18th%20NTCRA/09_ntrca-qbank-p09-xss-os-networking-q158-177.jpg)
 
-<a id="g2484"></a>
+<a id="g2532"></a>
 
-### 6. Class diagram of online shopping website. [BUET MSC 19] <sub>G2484</sub>
+### 6. Class diagram of online shopping website. [BUET MSC 19] <sub>G2532</sub>
 
 *Written*
 
@@ -2458,9 +2458,9 @@ Cross-Site Scripting (XSS) আক্রমণ বলতে কী বোঝা�
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29, Q6 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g2485"></a>
+<a id="g2533"></a>
 
-### 8. State diagram for the above website [BUET MSC 19] <sub>G2485</sub>
+### 8. State diagram for the above website [BUET MSC 19] <sub>G2533</sub>
 
 *Written*
 
@@ -2470,9 +2470,9 @@ Cross-Site Scripting (XSS) আক্রমণ বলতে কী বোঝা�
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29, Q8 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g2505"></a>
+<a id="g2553"></a>
 
-### What are the steps to create a new host in a web application deployment? How are they inv… <sub>G2505</sub>
+### What are the steps to create a new host in a web application deployment? How are they inv… <sub>G2553</sub>
 
 *Written*
 
@@ -2482,9 +2482,9 @@ What are the steps to create a new host in a web application deployment? How are
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g2510"></a>
+<a id="g2558"></a>
 
-### Create a complete information form in html.(Web Programming) <sub>G2510</sub>
+### Create a complete information form in html.(Web Programming) <sub>G2558</sub>
 
 *Written*
 
@@ -2494,9 +2494,9 @@ Create a complete information form in html.(Web Programming)
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g2970"></a>
+<a id="g3018"></a>
 
-### Write a JavaScript function to validate an email. <sub>G2970</sub>
+### Write a JavaScript function to validate an email. <sub>G3018</sub>
 
 *Written*
 
@@ -2508,9 +2508,9 @@ Write a JavaScript function to validate an email.
 
 ## Other
 
-<a id="g3551"></a>
+<a id="g3599"></a>
 
-### Write short notes on the followings:10 a. e-Governance <sub>G3551</sub>
+### Write short notes on the followings:10 a. e-Governance <sub>G3599</sub>
 
 *Written*
 
@@ -2520,9 +2520,9 @@ Write short notes on the followings:10 a. e-Governance
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q8(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3560"></a>
+<a id="g3608"></a>
 
-### b. What is the fundamental difference between fourth industrial revolution and the other … <sub>G3560</sub>
+### b. What is the fundamental difference between fourth industrial revolution and the other … <sub>G3608</sub>
 
 *Written*
 
@@ -2532,9 +2532,9 @@ b. What is the fundamental difference between fourth industrial revolution and t
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 35 — মৎস্য ও প্রাণীসম্পদ অধিদপ্তরের ইন্সট্রাক্টর কম্পিউটার সায়েন্স — তারিখঃ ২০.০৬.২০২৩ — exam taker not printed — time and total not printed — pages 10–13, Q5(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3582"></a>
+<a id="g3630"></a>
 
-### Name and define the components of a computer system. 3. <sub>G3582</sub>
+### Name and define the components of a computer system. 3. <sub>G3630</sub>
 
 *Written*
 
@@ -2544,9 +2544,9 @@ Name and define the components of a computer system. 3.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q1 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3587"></a>
+<a id="g3635"></a>
 
-### Differentiate between traditional and electronic payment systems. 2 <sub>G3587</sub>
+### Differentiate between traditional and electronic payment systems. 2 <sub>G3635</sub>
 
 *Written*
 
@@ -2556,9 +2556,9 @@ Differentiate between traditional and electronic payment systems. 2
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q6 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3588"></a>
+<a id="g3636"></a>
 
-### Describe different types of electronic payment system. 2. <sub>G3588</sub>
+### Describe different types of electronic payment system. 2. <sub>G3636</sub>
 
 *Written*
 
@@ -2568,9 +2568,9 @@ Describe different types of electronic payment system. 2.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q7 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3593"></a>
+<a id="g3641"></a>
 
-### Describe the challenges to application of MIS in Bangladesh. <sub>G3593</sub>
+### Describe the challenges to application of MIS in Bangladesh. <sub>G3641</sub>
 
 *Written*
 
@@ -2580,9 +2580,9 @@ Describe the challenges to application of MIS in Bangladesh.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q12 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3686"></a>
+<a id="g3734"></a>
 
-### Video compression method name <sub>G3686</sub>
+### Video compression method name <sub>G3734</sub>
 
 *MCQ*
 
@@ -2592,9 +2592,9 @@ Video compression method name
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 10 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3701"></a>
+<a id="g3749"></a>
 
-### Which camera is commonly used in banks for surveillance? <sub>G3701</sub>
+### Which camera is commonly used in banks for surveillance? <sub>G3749</sub>
 
 *MCQ*
 
@@ -2604,9 +2604,9 @@ Which camera is commonly used in banks for surveillance?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 25 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4237"></a>
+<a id="g4285"></a>
 
-### চিত্রসহ একটি Ink Jet প্রিন্টারের কার্যপ্রণালি বর্ণনা করুন। <sub>G4237</sub>
+### চিত্রসহ একটি Ink Jet প্রিন্টারের কার্যপ্রণালি বর্ণনা করুন। <sub>G4285</sub>
 
 *Written*
 
@@ -2616,9 +2616,9 @@ Which camera is commonly used in banks for surveillance?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন পরীক্ষা (স্কুল সমপর্যায়-২) — ট্রেড ইন্সট্রাক্টর, কম্পিউটার ও তথ্যপ্রযুক্তি (লিখিত) — 12.07.2024, ১১। — [ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md](../ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md)
 
-<a id="g4537"></a>
+<a id="g4585"></a>
 
-### One Tera Byte equal to how many bytes? <sub>G4537</sub>
+### One Tera Byte equal to how many bytes? <sub>G4585</sub>
 
 *MCQ*
 
@@ -2629,9 +2629,9 @@ One Tera Byte equal to how many bytes?
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer & ICT" section (Q91–100) — 28 October 2022 — Exam taker: BIBM (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, 100 marks, MCQ99 — [bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md](../bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md)
 - **Correction:** 1 TB = 10^12 bytes in SI units (2^40 = 1,099,511,627,776 bytes in binary units); the options are not printed.
 
-<a id="g4540"></a>
+<a id="g4588"></a>
 
-### Which of the following is considered to measure the printing quality? ক. ppm খ. dpi গ. cp… <sub>G4540</sub>
+### Which of the following is considered to measure the printing quality? ক. ppm খ. dpi গ. cp… <sub>G4588</sub>
 
 *MCQ*
 
@@ -2641,9 +2641,9 @@ Which of the following is considered to measure the printing quality? ক. ppm �
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Basic computer knowledge" section (Q91–100) — 20 October 2023 — Exam taker: not stated — 100 MCQ, 1 hour, 100 marks, MCQ92 — [bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md](../bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md)
 
-<a id="g4546"></a>
+<a id="g4594"></a>
 
-### In MS-Word, which of the following shortcut keys are used for aligning text to center? ক.… <sub>G4546</sub>
+### In MS-Word, which of the following shortcut keys are used for aligning text to center? ক.… <sub>G4594</sub>
 
 *MCQ*
 
@@ -2653,9 +2653,9 @@ In MS-Word, which of the following shortcut keys are used for aligning text to c
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Basic computer knowledge" section (Q91–100) — 20 October 2023 — Exam taker: not stated — 100 MCQ, 1 hour, 100 marks, MCQ98 — [bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md](../bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md)
 
-<a id="g4547"></a>
+<a id="g4595"></a>
 
-### What will be the result of the formula =Min (Average (B1, B2), Product (B3:B4)) where val… <sub>G4547</sub>
+### What will be the result of the formula =Min (Average (B1, B2), Product (B3:B4)) where val… <sub>G4595</sub>
 
 *MCQ*
 
@@ -2665,9 +2665,9 @@ What will be the result of the formula =Min (Average (B1, B2), Product (B3:B4)) 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Basic computer knowledge" section (Q91–100) — 20 October 2023 — Exam taker: not stated — 100 MCQ, 1 hour, 100 marks, MCQ99 — [bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md](../bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md)
 
-<a id="g4623"></a>
+<a id="g4671"></a>
 
-### The keyboard keys ‘Shift’, ‘Ctrl’, and ‘Alt’ are called – A) Function Key B) Numeric Key … <sub>G4623</sub>
+### The keyboard keys ‘Shift’, ‘Ctrl’, and ‘Alt’ are called – A) Function Key B) Numeric Key … <sub>G4671</sub>
 
 *MCQ*
 
@@ -2677,9 +2677,9 @@ The keyboard keys ‘Shift’, ‘Ctrl’, and ‘Alt’ are called – A) Funct
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT section (Q91–100) — 17 July 2026 — Exam taker: not stated — 100 MCQ × 1 mark, 1 hour, MCQ99 — [bank-written-web/2026-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2026-ict.md](../bank-written-web/2026-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2026-ict.md)
 
-<a id="g4766"></a>
+<a id="g4814"></a>
 
-### Which technology is used in compact Disk(CD) Mechanical / Laser / Electrical / Electro ma… <sub>G4766</sub>
+### Which technology is used in compact Disk(CD) Mechanical / Laser / Electrical / Electro ma… <sub>G4814</sub>
 
 *MCQ*
 
@@ -2690,9 +2690,9 @@ Which technology is used in compact Disk(CD) Mechanical / Laser / Electrical / E
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Introduction to Computer Systems Q50 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries/departments (general pool), Assistant Programmer (9th grade) — Screening MCQ, 21.09.2022 — Exam taker: BPSC — 1 hour — 100 marks (−0.50 per wrong answer) — technical items only, Q21 — [ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md](../ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md)
 
-<a id="g4770"></a>
+<a id="g4818"></a>
 
-### Which one of the following file format is not a video file format? ক .AVI খ .MOV গ .JPEG … <sub>G4770</sub>
+### Which one of the following file format is not a video file format? ক .AVI খ .MOV গ .JPEG … <sub>G4818</sub>
 
 *MCQ*
 
@@ -2702,9 +2702,9 @@ Which one of the following file format is not a video file format? ক .AVI খ 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries/departments (general pool), Assistant Programmer (9th grade) — Screening MCQ, 21.09.2022 — Exam taker: BPSC — 1 hour — 100 marks (−0.50 per wrong answer) — technical items only, Q38 — [ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md](../ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md)
 
-<a id="g4854"></a>
+<a id="g4902"></a>
 
-### bit এর সংখ্যার বিচারে নিচের কোন ক্রমটি সঠিক? (a) byte>GB>KB>TB (b) byte>KB>GB>TB (c) byte… <sub>G4854</sub>
+### bit এর সংখ্যার বিচারে নিচের কোন ক্রমটি সঠিক? (a) byte>GB>KB>TB (b) byte>KB>GB>TB (c) byte… <sub>G4902</sub>
 
 *MCQ*
 
@@ -2714,9 +2714,9 @@ bit এর সংখ্যার বিচারে নিচের কোন �
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ26 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4864"></a>
+<a id="g4912"></a>
 
-### নিচের কোনটি image ফাইলের extension হিসাবে ব্যবহৃত হয়? (a) .docx (b) .xls (c) .jpg (d) উপ… <sub>G4864</sub>
+### নিচের কোনটি image ফাইলের extension হিসাবে ব্যবহৃত হয়? (a) .docx (b) .xls (c) .jpg (d) উপ… <sub>G4912</sub>
 
 *MCQ*
 
@@ -2726,9 +2726,9 @@ bit এর সংখ্যার বিচারে নিচের কোন �
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022, MCQ44 — [telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md](../telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md)
 
-<a id="g4879"></a>
+<a id="g4927"></a>
 
-### Computer Speed Depends on which of the Following Criteria? <sub>G4879</sub>
+### Computer Speed Depends on which of the Following Criteria? <sub>G4927</sub>
 
 *Written*
 
@@ -2738,9 +2738,9 @@ Computer Speed Depends on which of the Following Criteria?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (IT) 05.04.2024, Q1(b) — [telecom-web/2024-btcl-jam-it-jobqns/btcl-jam-it-2024.md](../telecom-web/2024-btcl-jam-it-jobqns/btcl-jam-it-2024.md)
 
-<a id="g5124"></a>
+<a id="g5172"></a>
 
-### What is the total number of bits in IPv6? What do the following acronyms stand for? DIMM,… <sub>G5124</sub>
+### What is the total number of bits in IPv6? What do the following acronyms stand for? DIMM,… <sub>G5172</sub>
 
 *Written*
 
@@ -2750,9 +2750,9 @@ What is the total number of bits in IPv6? What do the following acronyms stand f
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion), Q10 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g3448"></a>
+<a id="g3496"></a>
 
-### Write three difference between Post and Get method. <sub>G3448</sub>
+### Write three difference between Post and Get method. <sub>G3496</sub>
 
 *Written*
 
@@ -2762,9 +2762,9 @@ Write three difference between Post and Get method.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 11 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3934"></a>
+<a id="g3982"></a>
 
-### Given a 3D triangle with coordinate points A(3, 4, 1), B(6, 4, 2), C(5, 6, 3). What are t… <sub>G3934</sub>
+### Given a 3D triangle with coordinate points A(3, 4, 1), B(6, 4, 2), C(5, 6, 3). What are t… <sub>G3982</sub>
 
 *MCQ*
 
@@ -2774,9 +2774,9 @@ Given a 3D triangle with coordinate points A(3, 4, 1), B(6, 4, 2), C(5, 6, 3). W
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q7 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3940"></a>
+<a id="g3988"></a>
 
-### Given a homogeneous point (1, 2, 3). What will be the new coordinate of the point if a ro… <sub>G3940</sub>
+### Given a homogeneous point (1, 2, 3). What will be the new coordinate of the point if a ro… <sub>G3988</sub>
 
 *MCQ*
 
@@ -2786,9 +2786,9 @@ Given a homogeneous point (1, 2, 3). What will be the new coordinate of the poin
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q13 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4150"></a>
+<a id="g4198"></a>
 
-### হার্ডডিস্ক কী? হার্ডডিস্ক ও ফ্লপি ডিস্কের মধ্যে পার্থক্য লিখুন। <sub>G4150</sub>
+### হার্ডডিস্ক কী? হার্ডডিস্ক ও ফ্লপি ডিস্কের মধ্যে পার্থক্য লিখুন। <sub>G4198</sub>
 
 *Written*
 
@@ -2798,9 +2798,9 @@ Given a homogeneous point (1, 2, 3). What will be the new coordinate of the poin
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ২ অথবা (ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4159"></a>
+<a id="g4207"></a>
 
-### MIDI কী? চিত্রসহ সিডি রমের গঠন বর্ণনা করুন। <sub>G4159</sub>
+### MIDI কী? চিত্রসহ সিডি রমের গঠন বর্ণনা করুন। <sub>G4207</sub>
 
 *Written*
 
@@ -2810,9 +2810,9 @@ MIDI কী? চিত্রসহ সিডি রমের গঠন বর্
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৪(খ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4175"></a>
+<a id="g4223"></a>
 
-### ইলেকট্রনিক ফান্ড ট্রান্সফার ও রিজারভেশন সিস্টেম সম্পর্কে বর্ণনা করুন। <sub>G4175</sub>
+### ইলেকট্রনিক ফান্ড ট্রান্সফার ও রিজারভেশন সিস্টেম সম্পর্কে বর্ণনা করুন। <sub>G4223</sub>
 
 *Written*
 
@@ -2822,9 +2822,9 @@ MIDI কী? চিত্রসহ সিডি রমের গঠন বর্
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৮ অথবা — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4179"></a>
+<a id="g4227"></a>
 
-### নন-ইম্প্যাক্ট প্রিন্টার বলতে কী বুঝেন? লেজার প্রিন্টারের মূলনীতি ব্যাখ্যা করুন। <sub>G4179</sub>
+### নন-ইম্প্যাক্ট প্রিন্টার বলতে কী বুঝেন? লেজার প্রিন্টারের মূলনীতি ব্যাখ্যা করুন। <sub>G4227</sub>
 
 *Written*
 
@@ -2834,9 +2834,9 @@ MIDI কী? চিত্রসহ সিডি রমের গঠন বর্
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ১০ অথবা — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4244"></a>
+<a id="g4292"></a>
 
-### Full name of DVD <sub>G4244</sub>
+### Full name of DVD <sub>G4292</sub>
 
 *MCQ*
 
@@ -2846,9 +2846,9 @@ Full name of DVD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ72 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4245"></a>
+<a id="g4293"></a>
 
-### Shortcut key of reviewing a text <sub>G4245</sub>
+### Shortcut key of reviewing a text <sub>G4293</sub>
 
 *MCQ*
 
@@ -2859,9 +2859,9 @@ Shortcut key of reviewing a text
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ73 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 - **Correction:** no standard "review" shortcut is Ctrl+Q in MS Word (Ctrl+Q removes paragraph formatting; spelling/grammar review is F7). The stem is a fragment, so the intended item is unclear.
 
-<a id="g4246"></a>
+<a id="g4294"></a>
 
-### Both input and Output device <sub>G4246</sub>
+### Both input and Output device <sub>G4294</sub>
 
 *MCQ*
 
@@ -2871,9 +2871,9 @@ Both input and Output device
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ74 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4248"></a>
+<a id="g4296"></a>
 
-### You can include…….buy using <sub>G4248</sub>
+### You can include…….buy using <sub>G4296</sub>
 
 *MCQ*
 
@@ -2883,9 +2883,9 @@ You can include…….buy using
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ76 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4252"></a>
+<a id="g4300"></a>
 
-### OTG cable is not related to <sub>G4252</sub>
+### OTG cable is not related to <sub>G4300</sub>
 
 *MCQ*
 
@@ -2895,9 +2895,9 @@ OTG cable is not related to
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ80 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4298"></a>
+<a id="g4346"></a>
 
-### Which one is true for RFID <sub>G4298</sub>
+### Which one is true for RFID <sub>G4346</sub>
 
 *MCQ*
 
@@ -2907,9 +2907,9 @@ Which one is true for RFID
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ47 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4305"></a>
+<a id="g4353"></a>
 
-### Who is one is the modifier key of the keyboard <sub>G4305</sub>
+### Who is one is the modifier key of the keyboard <sub>G4353</sub>
 
 *MCQ*
 
@@ -2919,9 +2919,9 @@ Who is one is the modifier key of the keyboard
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ54 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4307"></a>
+<a id="g4355"></a>
 
-### Which operation does F1 key perform for all types of applications <sub>G4307</sub>
+### Which operation does F1 key perform for all types of applications <sub>G4355</sub>
 
 *MCQ*
 
@@ -2931,9 +2931,9 @@ Which operation does F1 key perform for all types of applications
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ56 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4324"></a>
+<a id="g4372"></a>
 
-### The job of——- is to translate the array of docs into text <sub>G4324</sub>
+### The job of——- is to translate the array of docs into text <sub>G4372</sub>
 
 *MCQ*
 
@@ -2943,9 +2943,9 @@ The job of——- is to translate the array of docs into text
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ73 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4325"></a>
+<a id="g4373"></a>
 
-### Yah bar code reader emits—– <sub>G4325</sub>
+### Yah bar code reader emits—– <sub>G4373</sub>
 
 *MCQ*
 
@@ -2955,9 +2955,9 @@ Yah bar code reader emits—–
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ74 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4326"></a>
+<a id="g4374"></a>
 
-### In a Plasma display, gas is electrified by grid of— <sub>G4326</sub>
+### In a Plasma display, gas is electrified by grid of— <sub>G4374</sub>
 
 *MCQ*
 
@@ -2967,9 +2967,9 @@ In a Plasma display, gas is electrified by grid of—
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ75 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4331"></a>
+<a id="g4379"></a>
 
-### In a spreadsheet——- can help you make sense of a worksheet contains <sub>G4331</sub>
+### In a spreadsheet——- can help you make sense of a worksheet contains <sub>G4379</sub>
 
 *MCQ*
 
@@ -2979,9 +2979,9 @@ In a spreadsheet——- can help you make sense of a worksheet contains
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ80 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4341"></a>
+<a id="g4389"></a>
 
-### What function key does F3 stand for in most computers? <sub>G4341</sub>
+### What function key does F3 stand for in most computers? <sub>G4389</sub>
 
 *MCQ*
 
@@ -2991,9 +2991,9 @@ What function key does F3 stand for in most computers?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT items (Q71–80 of the "GK & ICT" section) — 12 November 2021 — Exam taker: Faculty of Business Studies, DU (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, MCQ73 — [bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md](../bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md)
 
-<a id="g4345"></a>
+<a id="g4393"></a>
 
-### Which key can be used to display the save-as box in MS word? <sub>G4345</sub>
+### Which key can be used to display the save-as box in MS word? <sub>G4393</sub>
 
 *MCQ*
 
@@ -3003,9 +3003,9 @@ Which key can be used to display the save-as box in MS word?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT items (Q71–80 of the "GK & ICT" section) — 12 November 2021 — Exam taker: Faculty of Business Studies, DU (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, MCQ77 — [bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md](../bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md)
 
-<a id="g4348"></a>
+<a id="g4396"></a>
 
-### Which one of the following is an extension of the Video file format in computer? <sub>G4348</sub>
+### Which one of the following is an extension of the Video file format in computer? <sub>G4396</sub>
 
 *MCQ*
 
@@ -3015,9 +3015,9 @@ Which one of the following is an extension of the Video file format in computer?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT items (Q71–80 of the "GK & ICT" section) — 12 November 2021 — Exam taker: Faculty of Business Studies, DU (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, MCQ80 — [bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md](../bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md)
 
-<a id="g4430"></a>
+<a id="g4478"></a>
 
-### In which year were chips used inside the computer for the first time? (a) 1964 (b) 1974 (… <sub>G4430</sub>
+### In which year were chips used inside the computer for the first time? (a) 1964 (b) 1974 (… <sub>G4478</sub>
 
 *MCQ*
 
@@ -3027,9 +3027,9 @@ In which year were chips used inside the computer for the first time? (a) 1964 (
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ21 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
-<a id="g4508"></a>
+<a id="g4556"></a>
 
-### Which of the following is not a true statement? (a) Deleted file can be found in recycle … <sub>G4508</sub>
+### Which of the following is not a true statement? (a) Deleted file can be found in recycle … <sub>G4556</sub>
 
 *MCQ*
 
@@ -3039,9 +3039,9 @@ Which of the following is not a true statement? (a) Deleted file can be found in
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ40 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4525"></a>
+<a id="g4573"></a>
 
-### What is the best way to protect your hard drive data? (a) Regular backup (b) Run a regula… <sub>G4525</sub>
+### What is the best way to protect your hard drive data? (a) Regular backup (b) Run a regula… <sub>G4573</sub>
 
 *MCQ*
 
@@ -3051,9 +3051,9 @@ What is the best way to protect your hard drive data? (a) Regular backup (b) Run
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ57 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4729"></a>
+<a id="g4777"></a>
 
-### Optical disk কীভাবে data Read/Write করে বর্ণনা করুন। <sub>G4729</sub>
+### Optical disk কীভাবে data Read/Write করে বর্ণনা করুন। <sub>G4777</sub>
 
 *Written*
 
@@ -3063,9 +3063,9 @@ Optical disk কীভাবে data Read/Write করে বর্ণনা ক
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — non-cadre Assistant Network Engineer (ANE) — Written, 2020 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q2(i) — [ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md](../ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md)
 
-<a id="g4793"></a>
+<a id="g4841"></a>
 
-### difference between Quantum computer & Normal Computer. <sub>G4793</sub>
+### difference between Quantum computer & Normal Computer. <sub>G4841</sub>
 
 *Written*
 
@@ -3075,9 +3075,9 @@ difference between Quantum computer & Normal Computer.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive 08.11.2019, Q4(c) — [telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md](../telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md)
 
-<a id="g1908"></a>
+<a id="g1956"></a>
 
-### How can a optical mouse work ? <sub>G1908</sub>
+### How can a optical mouse work ? <sub>G1956</sub>
 
 *Written*
 
@@ -3087,9 +3087,9 @@ How can a optical mouse work ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 21. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g2038"></a>
+<a id="g2086"></a>
 
-### তিনটি গুরুত্বপূর্ণ ক্ষেত্রে হাইব্রিড কম্পিউটারের ব্যবহার উল্লেখ করুন। <sub>G2038</sub>
+### তিনটি গুরুত্বপূর্ণ ক্ষেত্রে হাইব্রিড কম্পিউটারের ব্যবহার উল্লেখ করুন। <sub>G2086</sub>
 
 *Written*
 
@@ -3099,9 +3099,9 @@ How can a optical mouse work ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ১ (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2065"></a>
+<a id="g2113"></a>
 
-### ই-কমার্স ও ই-বিজনেস এর মধ্যে পার্থক্য লিখুন। ই-গভর্নেন্স সম্পর্কে লিখুন। <sub>G2065</sub>
+### ই-কমার্স ও ই-বিজনেস এর মধ্যে পার্থক্য লিখুন। ই-গভর্নেন্স সম্পর্কে লিখুন। <sub>G2113</sub>
 
 *Written*
 
@@ -3111,9 +3111,9 @@ How can a optical mouse work ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৬ অথবা — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2735"></a>
+<a id="g2783"></a>
 
-### In web technology what do the following status code categories represent? Give some speci… <sub>G2735</sub>
+### In web technology what do the following status code categories represent? Give some speci… <sub>G2783</sub>
 
 *Written*
 
@@ -3123,9 +3123,9 @@ In web technology what do the following status code categories represent? Give s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariate (BSCS), Assistant Engineer (IT)/ Assistant Maintenance Engineer – Grade 9 — Exam Date 24/01/2026 — exam taker not printed — time not printed — 16 questions, marks in brackets (total not printed) — pages 1–3, Q5(i) — [duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md](../duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md)
 
-<a id="g2857"></a>
+<a id="g2905"></a>
 
-### একটি Computer এর কার্যপ্রণালীর ধাপগুলো কী বীর প্রতি থাপের কাজ কর্ণর বরুন।। <sub>G2857</sub>
+### একটি Computer এর কার্যপ্রণালীর ধাপগুলো কী বীর প্রতি থাপের কাজ কর্ণর বরুন।। <sub>G2905</sub>
 
 *Written*
 
@@ -3135,9 +3135,9 @@ In web technology what do the following status code categories represent? Give s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), ৬। ক) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4716"></a>
+<a id="g4764"></a>
 
-### নিচের কোনটি ইউটিলিটি সফ্‌টওয়্যার? উইন্ডোজ / ওরাকল / এন্টি ভাইরাস / মাইক্রোসফ্‌ট ওয়ার্ড … <sub>G4716</sub>
+### নিচের কোনটি ইউটিলিটি সফ্‌টওয়্যার? উইন্ডোজ / ওরাকল / এন্টি ভাইরাস / মাইক্রোসফ্‌ট ওয়ার্ড … <sub>G4764</sub>
 
 *MCQ*
 
@@ -3147,9 +3147,9 @@ In web technology what do the following status code categories represent? Give s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries, Assistant Maintenance Engineer — Screening MCQ, 20.04.2017 — Exam taker: BPSC (per page title) — 100 MCQ — Computer & ICT items (site order), SA-ICT 1 — [ministry-ap-web/2017-bpsc-ame-various-ministries-mcq/bpsc-ame-2017-mcq.md](../ministry-ap-web/2017-bpsc-ame-various-ministries-mcq/bpsc-ame-2017-mcq.md)
 
-<a id="g4717"></a>
+<a id="g4765"></a>
 
-### ১ মেগাবাইট = কত কিলোবাইট? ১০০০ / ৫১২ / ১০২৬ / ১০২৪ Printed answer: ১০২৪ <sub>G4717</sub>
+### ১ মেগাবাইট = কত কিলোবাইট? ১০০০ / ৫১২ / ১০২৬ / ১০২৪ Printed answer: ১০২৪ <sub>G4765</sub>
 
 *MCQ*
 
@@ -3159,9 +3159,9 @@ In web technology what do the following status code categories represent? Give s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries, Assistant Maintenance Engineer — Screening MCQ, 20.04.2017 — Exam taker: BPSC (per page title) — 100 MCQ — Computer & ICT items (site order), SA-ICT 2 — [ministry-ap-web/2017-bpsc-ame-various-ministries-mcq/bpsc-ame-2017-mcq.md](../ministry-ap-web/2017-bpsc-ame-various-ministries-mcq/bpsc-ame-2017-mcq.md)
 
-<a id="g3377"></a>
+<a id="g3425"></a>
 
-### What is virtualization? <sub>G3377</sub>
+### What is virtualization? <sub>G3425</sub>
 
 *MCQ*
 
@@ -3174,9 +3174,9 @@ What is virtualization?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - Viva questions recalled by candidates (counted apart from written exams) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 (viva) — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3397"></a>
+<a id="g3445"></a>
 
-### SCADA কী? <sub>G3397</sub>
+### SCADA কী? <sub>G3445</sub>
 
 *Written*
 
@@ -3188,9 +3188,9 @@ SCADA কী?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - Viva questions recalled by candidates (counted apart from written exams) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 (viva) — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3398"></a>
+<a id="g3446"></a>
 
-### PLC এর কাজ কী? <sub>G3398</sub>
+### PLC এর কাজ কী? <sub>G3446</sub>
 
 *Written*
 
@@ -3202,9 +3202,9 @@ PLC এর কাজ কী?
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - Viva questions recalled by candidates (counted apart from written exams) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 (viva) — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g4888"></a>
+<a id="g4936"></a>
 
-### ১১। GET & POST মেথডের পার্থক্য কি? <sub>G4888</sub>
+### ১১। GET & POST মেথডের পার্থক্য কি? <sub>G4936</sub>
 
 *Viva*
 
@@ -3215,9 +3215,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Bank Assistant Programmer viva (based on 2019 circular) (viva), V9 — [viva-web/bank-2019-optimal-ap-viva/optimal-ap-2019.md](../viva-web/bank-2019-optimal-ap-viva/optimal-ap-2019.md)
 
-<a id="g4890"></a>
+<a id="g4938"></a>
 
-### ১৩। BACH & BACPs এর পূর্নরুপ বলো। <sub>G4890</sub>
+### ১৩। BACH & BACPs এর পূর্নরুপ বলো। <sub>G4938</sub>
 
 *Viva*
 
@@ -3228,9 +3228,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Bank Assistant Programmer viva (based on 2019 circular) (viva), V11 — [viva-web/bank-2019-optimal-ap-viva/optimal-ap-2019.md](../viva-web/bank-2019-optimal-ap-viva/optimal-ap-2019.md)
 
-<a id="g4912"></a>
+<a id="g4960"></a>
 
-### 1. Bangla QR কী? এর কাজ এবং Qr এর full form কী? <sub>G4912</sub>
+### 1. Bangla QR কী? এর কাজ এবং Qr এর full form কী? <sub>G4960</sub>
 
 *Viva*
 
@@ -3241,9 +3241,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J1 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A1-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4923"></a>
+<a id="g4971"></a>
 
-### 5. আপনাকে ল্যাব সেটাপের দায়িত্ব দিলাম কিভাবে করবেন? <sub>G4923</sub>
+### 5. আপনাকে ল্যাব সেটাপের দায়িত্ব দিলাম কিভাবে করবেন? <sub>G4971</sub>
 
 *Viva*
 
@@ -3254,9 +3254,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4924"></a>
+<a id="g4972"></a>
 
-### 6. ল্যাবে কি কি ডিভাইস ইউজ করবেন? <sub>G4924</sub>
+### 6. ল্যাবে কি কি ডিভাইস ইউজ করবেন? <sub>G4972</sub>
 
 *Viva*
 
@@ -3267,9 +3267,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4928"></a>
+<a id="g4976"></a>
 
-### 10.Fronted problem হলে কিভাবে বুঝতে পারবেন। এর সলুশন কি? <sub>G4928</sub>
+### 10.Fronted problem হলে কিভাবে বুঝতে পারবেন। এর সলুশন কি? <sub>G4976</sub>
 
 *Viva*
 
@@ -3280,9 +3280,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J4 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A4-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4929"></a>
+<a id="g4977"></a>
 
-### 1. ডাটা সেন্টার কি? <sub>G4929</sub>
+### 1. ডাটা সেন্টার কি? <sub>G4977</sub>
 
 *Viva*
 
@@ -3293,9 +3293,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4930"></a>
+<a id="g4978"></a>
 
-### 2. ডাটা সেন্টারের মেঝে থেকে ডিভাইস গুলো কেনো উঁচুতে রাখা হয়? <sub>G4930</sub>
+### 2. ডাটা সেন্টারের মেঝে থেকে ডিভাইস গুলো কেনো উঁচুতে রাখা হয়? <sub>G4978</sub>
 
 *Viva*
 
@@ -3306,9 +3306,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4931"></a>
+<a id="g4979"></a>
 
-### 4. ডাটা সেন্টারের টায়ার কয়টি? <sub>G4931</sub>
+### 4. ডাটা সেন্টারের টায়ার কয়টি? <sub>G4979</sub>
 
 *Viva*
 
@@ -3319,9 +3319,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V3 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4932"></a>
+<a id="g4980"></a>
 
-### 5. টায়ার ৩ এবং টায়ার ৪ ডাটা সেন্টারের মধ্যে পার্থক্য কি? <sub>G4932</sub>
+### 5. টায়ার ৩ এবং টায়ার ৪ ডাটা সেন্টারের মধ্যে পার্থক্য কি? <sub>G4980</sub>
 
 *Viva*
 
@@ -3332,9 +3332,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4933"></a>
+<a id="g4981"></a>
 
-### 6. বাংলাদেশ ব্যাংকের ডাটা সেন্টার কত টায়ার? <sub>G4933</sub>
+### 6. বাংলাদেশ ব্যাংকের ডাটা সেন্টার কত টায়ার? <sub>G4981</sub>
 
 *Viva*
 
@@ -3345,9 +3345,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4934"></a>
+<a id="g4982"></a>
 
-### 7. ৪ টায়ার ডাটা সেন্টার বাংলাদেশে কোথায় আছে? <sub>G4934</sub>
+### 7. ৪ টায়ার ডাটা সেন্টার বাংলাদেশে কোথায় আছে? <sub>G4982</sub>
 
 *Viva*
 
@@ -3358,9 +3358,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4935"></a>
+<a id="g4983"></a>
 
-### ৪. বেসরকারি পর্যায়ে ৪ টায়ার ডাটা সেন্টার কোনটা? <sub>G4935</sub>
+### ৪. বেসরকারি পর্যায়ে ৪ টায়ার ডাটা সেন্টার কোনটা? <sub>G4983</sub>
 
 *Viva*
 
@@ -3371,9 +3371,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4938"></a>
+<a id="g4986"></a>
 
-### 11.DC, DR এর কাজ কি? <sub>G4938</sub>
+### 11.DC, DR এর কাজ কি? <sub>G4986</sub>
 
 *Viva*
 
@@ -3384,9 +3384,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V10 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4939"></a>
+<a id="g4987"></a>
 
-### 13. 8 টায়ার ডাটা সেন্টারের আপস্ট্রিম আর ডাউনটাইম কত? <sub>G4939</sub>
+### 13. 8 টায়ার ডাটা সেন্টারের আপস্ট্রিম আর ডাউনটাইম কত? <sub>G4987</sub>
 
 *Viva*
 
@@ -3397,9 +3397,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V11 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4941"></a>
+<a id="g4989"></a>
 
-### 10. এই যে দেখতেছেন প্রিন্টার টা, আমি গতকাল এইটা পিসির সাথে কানেক্ট করে গেছি, কিন্তু আজ এস… <sub>G4941</sub>
+### 10. এই যে দেখতেছেন প্রিন্টার টা, আমি গতকাল এইটা পিসির সাথে কানেক্ট করে গেছি, কিন্তু আজ এস… <sub>G4989</sub>
 
 *Viva*
 
@@ -3410,9 +3410,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4947"></a>
+<a id="g4995"></a>
 
-### 16.ডাটা এবং ইনফরমেশন কী? ২ টার মধ্যে পার্থক্য কী? <sub>G4947</sub>
+### 16.ডাটা এবং ইনফরমেশন কী? ২ টার মধ্যে পার্থক্য কী? <sub>G4995</sub>
 
 *Viva*
 
@@ -3423,9 +3423,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V8 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4948"></a>
+<a id="g4996"></a>
 
-### ৬। সোনালী ব্যাংক কোন সফটওয়্যার ইউজ করে এর কাজ কি? <sub>G4948</sub>
+### ৬। সোনালী ব্যাংক কোন সফটওয়্যার ইউজ করে এর কাজ কি? <sub>G4996</sub>
 
 *Viva*
 
@@ -3436,9 +3436,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J7 Combined Bank Senior Officer (IT) 2026, Job ID 10225, Board 4 (viva), A7-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4949"></a>
+<a id="g4997"></a>
 
-### ৯। কম্পিউটার সেট আপ কিভাবে করবেন একটা ল্যাব <sub>G4949</sub>
+### ৯। কম্পিউটার সেট আপ কিভাবে করবেন একটা ল্যাব <sub>G4997</sub>
 
 *Viva*
 
@@ -3449,9 +3449,9 @@ PLC এর কাজ কী?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J7 Combined Bank Senior Officer (IT) 2026, Job ID 10225, Board 4 (viva), A7-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4956"></a>
+<a id="g5004"></a>
 
-### Sir: Virtualization বলতে কী বুঝো? <sub>G4956</sub>
+### Sir: Virtualization বলতে কী বুঝো? <sub>G5004</sub>
 
 *Viva*
 
@@ -3462,9 +3462,9 @@ Sir: Virtualization বলতে কী বুঝো?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J9 Combined Bank Officer (IT) 2019, 6.10.19, Bangladesh Bank HO (viva), A9-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4969"></a>
+<a id="g5017"></a>
 
-### বোর্ড: বাংলাদেশে যে অনলাইন ট্রান্সজেকশন গুলো হয় গুলো কি কিছু বলেন। <sub>G4969</sub>
+### বোর্ড: বাংলাদেশে যে অনলাইন ট্রান্সজেকশন গুলো হয় গুলো কি কিছু বলেন। <sub>G5017</sub>
 
 *Viva*
 
@@ -3475,9 +3475,9 @@ Sir: Virtualization বলতে কী বুঝো?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4971"></a>
+<a id="g5019"></a>
 
-### বোর্ড: ই পেমেন্ট মার্কেট বাংলাদেশ এ আছে? <sub>G4971</sub>
+### বোর্ড: ই পেমেন্ট মার্কেট বাংলাদেশ এ আছে? <sub>G5019</sub>
 
 *Viva*
 
@@ -3488,9 +3488,9 @@ Sir: Virtualization বলতে কী বুঝো?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V3 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4972"></a>
+<a id="g5020"></a>
 
-### বোর্ড: সরকার যদি ক্যাশলেস ব্যাংকিং সিস্টেম করে তাহলে কি লাভ? কিভাবে রেভিনিও বাড়বে। ও লাভব… <sub>G4972</sub>
+### বোর্ড: সরকার যদি ক্যাশলেস ব্যাংকিং সিস্টেম করে তাহলে কি লাভ? কিভাবে রেভিনিও বাড়বে। ও লাভব… <sub>G5020</sub>
 
 *Viva*
 
@@ -3501,9 +3501,9 @@ Sir: Virtualization বলতে কী বুঝো?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V4 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4973"></a>
+<a id="g5021"></a>
 
-### বোর্ড: অফিসের কোনো পিসির পাওয়ার না আসলে কি কি সমস্যা হতে পারে মনে করেন? <sub>G4973</sub>
+### বোর্ড: অফিসের কোনো পিসির পাওয়ার না আসলে কি কি সমস্যা হতে পারে মনে করেন? <sub>G5021</sub>
 
 *Viva*
 
@@ -3514,9 +3514,9 @@ Sir: Virtualization বলতে কী বুঝো?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V5 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4974"></a>
+<a id="g5022"></a>
 
-### বোর্ড: ডাটা সেন্টার কি ও কি কি থাকে? <sub>G4974</sub>
+### বোর্ড: ডাটা সেন্টার কি ও কি কি থাকে? <sub>G5022</sub>
 
 *Viva*
 
@@ -3527,9 +3527,9 @@ Sir: Virtualization বলতে কী বুঝো?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4995"></a>
+<a id="g5043"></a>
 
-### acha varote o bangladeshe totho projukti nia law ase. Ai ain nia ki jno? … bollo amn law … <sub>G4995</sub>
+### acha varote o bangladeshe totho projukti nia law ase. Ai ain nia ki jno? … bollo amn law … <sub>G5043</sub>
 
 *Viva*
 
@@ -3540,9 +3540,9 @@ acha varote o bangladeshe totho projukti nia law ase. Ai ain nia ki jno? … bol
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — 34th BCS account (6), board Somor Chandra, Marketing (DU) (viva), A1-V1 — [viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md](../viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md)
 
-<a id="g5000"></a>
+<a id="g5048"></a>
 
-### আইসিটি বলতে তুমি কী বুঝ? আইসিটি সম্পর্কে তোমার ধারণা কী? <sub>G5000</sub>
+### আইসিটি বলতে তুমি কী বুঝ? আইসিটি সম্পর্কে তোমার ধারণা কী? <sub>G5048</sub>
 
 *Viva*
 
@@ -3553,9 +3553,9 @@ acha varote o bangladeshe totho projukti nia law ase. Ai ain nia ki jno? … bol
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — 37th BCS candidate A (marine engineering, first choice foreign affairs, viva in English) (viva), A1-V1 — [viva-web/bcs-2017-ekushey-37th-viva/ekushey-37th-bcs-viva.md](../viva-web/bcs-2017-ekushey-37th-viva/ekushey-37th-bcs-viva.md)
 
-<a id="g5001"></a>
+<a id="g5049"></a>
 
-### আইটির নেগেটিভ প্রভাব বলতে কী বুঝেন? <sub>G5001</sub>
+### আইটির নেগেটিভ প্রভাব বলতে কী বুঝেন? <sub>G5049</sub>
 
 *Viva*
 
@@ -3579,9 +3579,9 @@ Tail of an answer on JDK vs JRE (question on previous page).
   - Paper not shown on the source sheet, Viva (question cut off) — [VIVA/05_jdk-android-and-java-viva.md](../VIVA/05_jdk-android-and-java-viva.md) · [image](../VIVA/05_jdk-android-and-java-viva.jpg)
 - **Printed answer:** JDK is for developers to build Java software and contains the JRE; the JRE (Java Runtime Environment) is needed on client machines to run Java programs
 
-<a id="g2511"></a>
+<a id="g2559"></a>
 
-### How to find the optimization loading time your application as a web developer. <sub>G2511</sub>
+### How to find the optimization loading time your application as a web developer. <sub>G2559</sub>
 
 *Written*
 
@@ -3591,9 +3591,9 @@ How to find the optimization loading time your application as a web developer.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g2516"></a>
+<a id="g2564"></a>
 
-### Web- caching, is it available for every user request? Why or why not? <sub>G2516</sub>
+### Web- caching, is it available for every user request? Why or why not? <sub>G2564</sub>
 
 *Written*
 
@@ -3603,9 +3603,9 @@ Web- caching, is it available for every user request? Why or why not?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g2527"></a>
+<a id="g2575"></a>
 
-### 1. What is cookie? What is its purpose? [NTMC 2022- AE] <sub>G2527</sub>
+### 1. What is cookie? What is its purpose? [NTMC 2022- AE] <sub>G2575</sub>
 
 *Written*
 
@@ -3615,9 +3615,9 @@ Web- caching, is it available for every user request? Why or why not?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29, Q1 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g3356"></a>
+<a id="g3404"></a>
 
-### Difference between 2-Tier and 3-Tier Architecture. <sub>G3356</sub>
+### Difference between 2-Tier and 3-Tier Architecture. <sub>G3404</sub>
 
 *Written*
 
@@ -3628,9 +3628,9 @@ Difference between 2-Tier and 3-Tier Architecture.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q4 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3365"></a>
+<a id="g3413"></a>
 
-### Difference between Tier III and Tier IV. <sub>G3365</sub>
+### Difference between Tier III and Tier IV. <sub>G3413</sub>
 
 *Written*
 
@@ -3640,9 +3640,9 @@ Difference between Tier III and Tier IV.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3370"></a>
+<a id="g3418"></a>
 
-### What is AWS? <sub>G3370</sub>
+### What is AWS? <sub>G3418</sub>
 
 *Written*
 
@@ -3652,9 +3652,9 @@ What is AWS?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3372"></a>
+<a id="g3420"></a>
 
-### Difference between NAS and SAN. <sub>G3372</sub>
+### Difference between NAS and SAN. <sub>G3420</sub>
 
 *Written*
 
@@ -3664,9 +3664,9 @@ Difference between NAS and SAN.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3373"></a>
+<a id="g3421"></a>
 
-### Difference between Incremental and Differential Backup. <sub>G3373</sub>
+### Difference between Incremental and Differential Backup. <sub>G3421</sub>
 
 *Written*
 
@@ -3676,9 +3676,9 @@ Difference between Incremental and Differential Backup.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3383"></a>
+<a id="g3431"></a>
 
-### NAS vs SAN. <sub>G3383</sub>
+### NAS vs SAN. <sub>G3431</sub>
 
 *MCQ*
 
@@ -3688,9 +3688,9 @@ NAS vs SAN.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q15 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3386"></a>
+<a id="g3434"></a>
 
-### Backup types. <sub>G3386</sub>
+### Backup types. <sub>G3434</sub>
 
 *MCQ*
 
@@ -3700,9 +3700,9 @@ Backup types.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3387"></a>
+<a id="g3435"></a>
 
-### RPO and RTO. <sub>G3387</sub>
+### RPO and RTO. <sub>G3435</sub>
 
 *MCQ*
 
@@ -3712,9 +3712,9 @@ RPO and RTO.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q19 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3495"></a>
+<a id="g3543"></a>
 
-### (a) How can you define loT? What are the basic components of loT? <sub>G3495</sub>
+### (a) How can you define loT? What are the basic components of loT? <sub>G3543</sub>
 
 *Written*
 
@@ -3724,9 +3724,9 @@ RPO and RTO.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q6(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g5050"></a>
+<a id="g5098"></a>
 
-### What is JSON? (short) <sub>G5050</sub>
+### What is JSON? (short) <sub>G5098</sub>
 
 *Written*
 
@@ -3736,9 +3736,9 @@ What is JSON? (short)
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A11 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5077"></a>
+<a id="g5125"></a>
 
-### What is “Failover”? Explain with a banking example. <sub>G5077</sub>
+### What is “Failover”? Explain with a banking example. <sub>G5125</sub>
 
 *Written*
 
@@ -3748,9 +3748,9 @@ What is “Failover”? Explain with a banking example.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A10 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5217"></a>
+<a id="g5265"></a>
 
-### The process of laying out a document with text, graphics, headlines and photographs is in… <sub>G5217</sub>
+### The process of laying out a document with text, graphics, headlines and photographs is in… <sub>G5265</sub>
 
 *MCQ*
 
@@ -3835,9 +3835,9 @@ What is the function of GPU?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q20 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g2078"></a>
+<a id="g2126"></a>
 
-### সিপিইউ কী? সিপিইউ এর সংগঠন বর্ণনা করুন। <sub>G2078</sub>
+### সিপিইউ কী? সিপিইউ এর সংগঠন বর্ণনা করুন। <sub>G2126</sub>
 
 *Written*
 
@@ -3847,9 +3847,9 @@ What is the function of GPU?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ২। (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2569"></a>
+<a id="g2617"></a>
 
-### What are the steps to deploy a web and backend microservice in a Docker environment? How … <sub>G2569</sub>
+### What are the steps to deploy a web and backend microservice in a Docker environment? How … <sub>G2617</sub>
 
 *Written*
 
@@ -3860,9 +3860,9 @@ What are the steps to deploy a web and backend microservice in a Docker environm
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion), Set-01 Q4 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion), Q4 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g3183"></a>
+<a id="g3231"></a>
 
-### Business Intelligence Model based question. <sub>G3183</sub>
+### Business Intelligence Model based question. <sub>G3231</sub>
 
 *Written*
 
@@ -3872,9 +3872,9 @@ Business Intelligence Model based question.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3681"></a>
+<a id="g3729"></a>
 
-### In Microsoft Excel, every formula starts with which symbol? <sub>G3681</sub>
+### In Microsoft Excel, every formula starts with which symbol? <sub>G3729</sub>
 
 *MCQ*
 
@@ -3884,9 +3884,9 @@ In Microsoft Excel, every formula starts with which symbol?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 4 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3699"></a>
+<a id="g3747"></a>
 
-### Which printer is generally used at a bank cash counter? <sub>G3699</sub>
+### Which printer is generally used at a bank cash counter? <sub>G3747</sub>
 
 *MCQ*
 
@@ -3896,9 +3896,9 @@ Which printer is generally used at a bank cash counter?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 23 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3700"></a>
+<a id="g3748"></a>
 
-### Which type of printer is commonly used in banks and offices? <sub>G3700</sub>
+### Which type of printer is commonly used in banks and offices? <sub>G3748</sub>
 
 *MCQ*
 
@@ -3908,9 +3908,9 @@ Which type of printer is commonly used in banks and offices?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 24 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4635"></a>
+<a id="g4683"></a>
 
-### API Gateway? Backened [site's expanded wording, assumed: A bank is migrating from a monol… <sub>G4635</sub>
+### API Gateway? Backened [site's expanded wording, assumed: A bank is migrating from a monol… <sub>G4683</sub>
 
 *Written*
 
@@ -3944,9 +3944,9 @@ How does an interrupt can be enabled? What are the steps that occur when an inte
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q26 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g2596"></a>
+<a id="g2644"></a>
 
-### What is the importance of application framework in web application development? <sub>G2596</sub>
+### What is the importance of application framework in web application development? <sub>G2644</sub>
 
 *Written*
 
@@ -3957,9 +3957,9 @@ What is the importance of application framework in web application development?
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -04 (suggestion), Set-04 Q3 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Maintenance Engineer (AME) — 21.09.2019 — Exam taker: BUET (as printed by the coaching banner; unverified) — Marks 150, Time 1.30 h, answer all — pages 1–5, Q3 — [bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md](../bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md)
 
-<a id="g2979"></a>
+<a id="g3027"></a>
 
-### RFID has huge applications in business, especially in supply chain management and toll co… <sub>G2979</sub>
+### RFID has huge applications in business, especially in supply chain management and toll co… <sub>G3027</sub>
 
 *Written*
 
@@ -3969,9 +3969,9 @@ RFID has huge applications in business, especially in supply chain management an
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(J) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3072"></a>
+<a id="g3120"></a>
 
-### Difference between Impact and Non-Impact Printers. <sub>G3072</sub>
+### Difference between Impact and Non-Impact Printers. <sub>G3120</sub>
 
 *Written*
 
@@ -3981,9 +3981,9 @@ Difference between Impact and Non-Impact Printers.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Assistant Hardware Engineer (AHE) - SBL, JBL, RBL [AHE SBL, JBL, RBL 2021 CTI] — 24.12.2021 — Exam taker: CTI (from the printed tag) — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks — pages 15–17, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3450"></a>
+<a id="g3498"></a>
 
-### Put (tick marks left of the questions) : Which is not static in c ? Which is faster memor… <sub>G3450</sub>
+### Put (tick marks left of the questions) : Which is not static in c ? Which is faster memor… <sub>G3498</sub>
 
 *MCQ*
 
@@ -3993,9 +3993,9 @@ Put (tick marks left of the questions) : Which is not static in c ? Which is fas
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 13 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g4241"></a>
+<a id="g4289"></a>
 
-### Which device may be used for primary input of OCR <sub>G4241</sub>
+### Which device may be used for primary input of OCR <sub>G4289</sub>
 
 *MCQ*
 
@@ -4005,9 +4005,9 @@ Which device may be used for primary input of OCR
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Computer" section (Q69–80) — 6 July 2018 — Exam taker: Arts Faculty, DU (as stated by jobstestbd; unverified) — 1 hour, MCQ69 — [bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md](../bank-written-web/2018-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2018-ict.md)
 
-<a id="g4297"></a>
+<a id="g4345"></a>
 
-### Which one is not contained in MICR code <sub>G4297</sub>
+### Which one is not contained in MICR code <sub>G4345</sub>
 
 *MCQ*
 
@@ -4017,9 +4017,9 @@ Which one is not contained in MICR code
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ46 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4419"></a>
+<a id="g4467"></a>
 
-### ----helps prevent power surges. (a) Surge suppressor (b) Surge protector (c) UPS system (… <sub>G4419</sub>
+### ----helps prevent power surges. (a) Surge suppressor (b) Surge protector (c) UPS system (… <sub>G4467</sub>
 
 *MCQ*
 
@@ -4029,9 +4029,9 @@ Which one is not contained in MICR code
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ10 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
-<a id="g4481"></a>
+<a id="g4529"></a>
 
-### Which would you do first when troubleshooting a faulty monitor? (a) Check its connections… <sub>G4481</sub>
+### Which would you do first when troubleshooting a faulty monitor? (a) Check its connections… <sub>G4529</sub>
 
 *MCQ*
 
@@ -4041,9 +4041,9 @@ Which would you do first when troubleshooting a faulty monitor? (a) Check its co
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ13 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4787"></a>
+<a id="g4835"></a>
 
-### In MICR,C stands for—? (options not given; printed answer: Character) <sub>G4787</sub>
+### In MICR,C stands for—? (options not given; printed answer: Character) <sub>G4835</sub>
 
 *MCQ*
 
@@ -4293,9 +4293,9 @@ Write down the online and offline UPS.
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q8 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
 
-<a id="g2576"></a>
+<a id="g2624"></a>
 
-### What is the difference between SSD and SATA in terms of: (i) Interface (ii) Speed (iii) R… <sub>G2576</sub>
+### What is the difference between SSD and SATA in terms of: (i) Interface (ii) Speed (iii) R… <sub>G2624</sub>
 
 *Written*
 
@@ -4305,9 +4305,9 @@ What is the difference between SSD and SATA in terms of: (i) Interface (ii) Spee
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion), Set-01 Q11 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 
-<a id="g3374"></a>
+<a id="g3422"></a>
 
-### What is Disaster Recovery? <sub>G3374</sub>
+### What is Disaster Recovery? <sub>G3422</sub>
 
 *Written*
 
@@ -4317,9 +4317,9 @@ What is Disaster Recovery?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g3384"></a>
+<a id="g3432"></a>
 
-### UPS and PDU functions. <sub>G3384</sub>
+### UPS and PDU functions. <sub>G3432</sub>
 
 *MCQ*
 
@@ -4329,9 +4329,9 @@ UPS and PDU functions.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18, Q16 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g5066"></a>
+<a id="g5114"></a>
 
-### Discuss Disaster Recovery Planning for a bank: RTO, RPO, alternate site types (cold, warm… <sub>G5066</sub>
+### Discuss Disaster Recovery Planning for a bank: RTO, RPO, alternate site types (cold, warm… <sub>G5114</sub>
 
 *Written*
 
@@ -4341,9 +4341,9 @@ Discuss Disaster Recovery Planning for a bank: RTO, RPO, alternate site types (c
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), E2 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5094"></a>
+<a id="g5142"></a>
 
-### Explain Business Continuity Plan (BCP) steps for a bank during a major system outage. <sub>G5094</sub>
+### Explain Business Continuity Plan (BCP) steps for a bank during a major system outage. <sub>G5142</sub>
 
 *Written*
 
@@ -4355,9 +4355,9 @@ Explain Business Continuity Plan (BCP) steps for a bank during a major system ou
 
 ## Memory
 
-<a id="g3211"></a>
+<a id="g3259"></a>
 
-### What is digital banking and how does it differ from traditional banking? How can digital … <sub>G3211</sub>
+### What is digital banking and how does it differ from traditional banking? How can digital … <sub>G3259</sub>
 
 *Written*
 
@@ -4367,9 +4367,9 @@ What is digital banking and how does it differ from traditional banking? How can
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — Senior Officer (AHE/AME) — Job ID: 10165 (5 post) — 24.11.2023 — Exam taker: not printed — Total Marks-200, Time: 02 Hours (10:30 am-12:30 pm) — pages 37–39, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3515"></a>
+<a id="g3563"></a>
 
-### (a) Define electronic payment system (EPS) with necessary diagram. Name 5 type of EPS. 5 <sub>G3515</sub>
+### (a) Define electronic payment system (EPS) with necessary diagram. Name 5 type of EPS. 5 <sub>G3563</sub>
 
 *Written*
 
@@ -4379,9 +4379,9 @@ What is digital banking and how does it differ from traditional banking? How can
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 33 — বিভিন্ন মন্ত্রণালয়, বিভাগ, অধিদপ্তরের সহকারী প্রোগ্রামার — তারিখ ১৯.০৭.২০২৩ — exam taker not printed — সময় ৪.০০ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 2–5, Q8(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3541"></a>
+<a id="g3589"></a>
 
-### b. What is World Wide Web and how does it differ from the internet? 2 <sub>G3541</sub>
+### b. What is World Wide Web and how does it differ from the internet? 2 <sub>G3589</sub>
 
 *Written*
 
@@ -4391,9 +4391,9 @@ b. What is World Wide Web and how does it differ from the internet? 2
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q4(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4774"></a>
+<a id="g4822"></a>
 
-### Which one of the following is not a web browser? Firefox / Facebook / Chrome / Safari Pri… <sub>G4774</sub>
+### Which one of the following is not a web browser? Firefox / Facebook / Chrome / Safari Pri… <sub>G4822</sub>
 
 *MCQ*
 
@@ -4403,9 +4403,9 @@ Which one of the following is not a web browser? Firefox / Facebook / Chrome / S
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries/departments (general pool), Assistant Programmer (9th grade) — Screening MCQ, 21.09.2022 — Exam taker: BPSC — 1 hour — 100 marks (−0.50 per wrong answer) — technical items only, Q64 — [ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md](../ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md)
 
-<a id="g4775"></a>
+<a id="g4823"></a>
 
-### A computer has main memory of 960 Kb. What is the exact number of bytes contained in this… <sub>G4775</sub>
+### A computer has main memory of 960 Kb. What is the exact number of bytes contained in this… <sub>G4823</sub>
 
 *MCQ*
 
@@ -4415,9 +4415,9 @@ A computer has main memory of 960 Kb. What is the exact number of bytes containe
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries/departments (general pool), Assistant Programmer (9th grade) — Screening MCQ, 21.09.2022 — Exam taker: BPSC — 1 hour — 100 marks (−0.50 per wrong answer) — technical items only, Q65 — [ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md](../ministry-ap-web/2022-bpsc-ap-screening-mcq-slideshare/bpsc-ap-2022-screening.md)
 
-<a id="g4862"></a>
+<a id="g4910"></a>
 
-### নিচের কোনটি Browser নয়? (a) Chrome (b) Firefox (c) Facebook (d) Safari (printed answer: (… <sub>G4862</sub>
+### নিচের কোনটি Browser নয়? (a) Chrome (b) Firefox (c) Facebook (d) Safari (printed answer: (… <sub>G4910</sub>
 
 *MCQ*
 
@@ -4452,9 +4452,9 @@ Typical মাইক্রোকম্পিউটারে কী কী বা
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q21 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g2300"></a>
+<a id="g2348"></a>
 
-### কোন বৈশিষ্ট্যের কারণে RAM স্থায়ী স্মৃতি স্টোরেজ হিসেবে ব্যবহার অনুপযোগী? <sub>G2300</sub>
+### কোন বৈশিষ্ট্যের কারণে RAM স্থায়ী স্মৃতি স্টোরেজ হিসেবে ব্যবহার অনুপযোগী? <sub>G2348</sub>
 
 *MCQ*
 
@@ -4464,9 +4464,9 @@ Typical মাইক্রোকম্পিউটারে কী কী বা
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 27 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g3948"></a>
+<a id="g3996"></a>
 
-### Given a triangle with points (1, 1), (0, 0) and (1, 0). If shear parameter 2 is applied o… <sub>G3948</sub>
+### Given a triangle with points (1, 1), (0, 0) and (1, 0). If shear parameter 2 is applied o… <sub>G3996</sub>
 
 *MCQ*
 
@@ -4476,9 +4476,9 @@ Given a triangle with points (1, 1), (0, 0) and (1, 0). If shear parameter 2 is 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q21 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3952"></a>
+<a id="g4000"></a>
 
-### Given two points P1(0, 0, 0) and P2(2, 2, 0) which of the following is the plane equation… <sub>G3952</sub>
+### Given two points P1(0, 0, 0) and P2(2, 2, 0) which of the following is the plane equation… <sub>G4000</sub>
 
 *MCQ*
 
@@ -4488,9 +4488,9 @@ Given two points P1(0, 0, 0) and P2(2, 2, 0) which of the following is the plane
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q25 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4368"></a>
+<a id="g4416"></a>
 
-### EDSAC কম্পিউটার এ ডাটা সংরক্ষণের জন্য কি ধরণের মেমরি ব্যবহার হত? (What kind of memory did… <sub>G4368</sub>
+### EDSAC কম্পিউটার এ ডাটা সংরক্ষণের জন্য কি ধরণের মেমরি ব্যবহার হত? (What kind of memory did… <sub>G4416</sub>
 
 *MCQ*
 
@@ -4500,9 +4500,9 @@ EDSAC কম্পিউটার এ ডাটা সংরক্ষণের �
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ39 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
 
-<a id="g4433"></a>
+<a id="g4481"></a>
 
-### SSDs are more durable than HDDs in extreme and harsh environments because (a) They don't … <sub>G4433</sub>
+### SSDs are more durable than HDDs in extreme and harsh environments because (a) They don't … <sub>G4481</sub>
 
 *MCQ*
 
@@ -4512,9 +4512,9 @@ SSDs are more durable than HDDs in extreme and harsh environments because (a) Th
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ24 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
-<a id="g4743"></a>
+<a id="g4791"></a>
 
-### মেইন মেমরী কোনটি? RAM / ROM / HDD / Floppy Printed answer: RAM <sub>G4743</sub>
+### মেইন মেমরী কোনটি? RAM / ROM / HDD / Floppy Printed answer: RAM <sub>G4791</sub>
 
 *MCQ*
 
@@ -4524,9 +4524,9 @@ SSDs are more durable than HDDs in extreme and harsh environments because (a) Th
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DoICT (Department of ICT), Assistant Programmer — MCQ (screening), 24.12.2021 per listing (26-12-2021 per URL), 2020 circular — Exam taker: not shown — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 1 — [ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md](../ministry-ap-web/2021-doict-ap-mcq/doict-ap-2020-mcq.md)
 
-<a id="g4833"></a>
+<a id="g4881"></a>
 
-### কোন বৈশিষ্ট্যের কারণে RAM স্থায়ী স্মৃতি স্টোরেজ হিসেবে ব্যবহার অনুপযোগী? (options not gi… <sub>G4833</sub>
+### কোন বৈশিষ্ট্যের কারণে RAM স্থায়ী স্মৃতি স্টোরেজ হিসেবে ব্যবহার অনুপযোগী? (options not gi… <sub>G4881</sub>
 
 *MCQ*
 
@@ -4536,9 +4536,9 @@ SSDs are more durable than HDDs in extreme and harsh environments because (a) Th
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ27 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g2051"></a>
+<a id="g2099"></a>
 
-### RAM ও ROM এর পার্থক্য লিখুন। <sub>G2051</sub>
+### RAM ও ROM এর পার্থক্য লিখুন। <sub>G2099</sub>
 
 *Written*
 
@@ -4548,9 +4548,9 @@ RAM ও ROM এর পার্থক্য লিখুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৩ অথবা (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g4674"></a>
+<a id="g4722"></a>
 
-### When we browse internet, browser store some data in the computer. We are talking about (a… <sub>G4674</sub>
+### When we browse internet, browser store some data in the computer. We are talking about (a… <sub>G4722</sub>
 
 *MCQ*
 
@@ -4642,9 +4642,21 @@ What is EPROM?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কম্পিউটার সংগঠন ও মেমোরি আর্কিটেকচার, Q191 — [18th NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md) · [image](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.jpg)
 
-<a id="g2512"></a>
+<a id="g1826"></a>
 
-### What is CLR? Define the components of. NET Framework. <sub>G2512</sub>
+### Types of ROM; SRAM vs DRAM <sub>G1826</sub>
+
+*Written*
+
+Types of ROM; SRAM vs DRAM
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q73 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g2560"></a>
+
+### What is CLR? Define the components of. NET Framework. <sub>G2560</sub>
 
 *Written*
 
@@ -4654,9 +4666,9 @@ What is CLR? Define the components of. NET Framework.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g2513"></a>
+<a id="g2561"></a>
 
-### What is. Net Framework? Write the components of. NET Framework? <sub>G2513</sub>
+### What is. Net Framework? Write the components of. NET Framework? <sub>G2561</sub>
 
 *Written*
 
@@ -4666,9 +4678,9 @@ What is. Net Framework? Write the components of. NET Framework?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — Software Engineering Question Pattern (NTRCA, BUET M.Sc., job exams, BCS), Duranta Career & Skills Academy, no time/marks scheme, pp. 1-29 — [duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md](../duranta/1734830068-software-engineering-question-pattern-ntrca-msc-job-exam-bcs/1734830068.md)
 
-<a id="g3357"></a>
+<a id="g3405"></a>
 
-### What is ECC RAM? <sub>G3357</sub>
+### What is ECC RAM? <sub>G3405</sub>
 
 *Written*
 
@@ -4678,9 +4690,9 @@ What is ECC RAM?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Server), Server/Data Center related Job Exam Suggestions, CSE Career Master Guide, no exam/date/marks, pp. 11-18 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g4262"></a>
+<a id="g4310"></a>
 
-### Write down the components of .NET Framework. <sub>G4262</sub>
+### Write down the components of .NET Framework. <sub>G4310</sub>
 
 *Written*
 
@@ -4691,9 +4703,9 @@ Write down the components of .NET Framework.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q14 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g5093"></a>
+<a id="g5141"></a>
 
-### What is ICT Governance? Explain COBIT Framework and its relevance in banking. <sub>G5093</sub>
+### What is ICT Governance? Explain COBIT Framework and its relevance in banking. <sub>G5141</sub>
 
 *Written*
 
@@ -4703,9 +4715,9 @@ What is ICT Governance? Explain COBIT Framework and its relevance in banking.
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), E1 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g5221"></a>
+<a id="g5269"></a>
 
-### Information, a combination of graphics, text, sound, video and animation is called- ক. Mu… <sub>G5221</sub>
+### Information, a combination of graphics, text, sound, video and animation is called- ক. Mu… <sub>G5269</sub>
 
 *MCQ*
 
@@ -4741,9 +4753,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q5 — [bit to exabyte/15_bte-g2-p01-computer-fundamentals-q01-17.md](../bit%20to%20exabyte/15_bte-g2-p01-computer-fundamentals-q01-17.md) · [image](../bit%20to%20exabyte/15_bte-g2-p01-computer-fundamentals-q01-17.jpg)
 
-<a id="g2074"></a>
+<a id="g2122"></a>
 
-### গঠন ও ক্রিয়ানীতি অনুসারে কম্পিউটারের শ্রেণিবিভাগ আলোচনা করুন। <sub>G2074</sub>
+### গঠন ও ক্রিয়ানীতি অনুসারে কম্পিউটারের শ্রেণিবিভাগ আলোচনা করুন। <sub>G2122</sub>
 
 *Written*
 
@@ -4753,9 +4765,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ১। (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2075"></a>
+<a id="g2123"></a>
 
-### ২য় প্রজন্মের কম্পিউটারের বৈশিষ্ট্যগুলো লিখুন। <sub>G2075</sub>
+### ২য় প্রজন্মের কম্পিউটারের বৈশিষ্ট্যগুলো লিখুন। <sub>G2123</sub>
 
 *Written*
 
@@ -4765,9 +4777,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ১ (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2076"></a>
+<a id="g2124"></a>
 
-### সুপার কম্পিউটার ও মেইনফ্রেম কম্পিউটার সম্পর্কে আলোচনা করুন। <sub>G2076</sub>
+### সুপার কম্পিউটার ও মেইনফ্রেম কম্পিউটার সম্পর্কে আলোচনা করুন। <sub>G2124</sub>
 
 *Written*
 
@@ -4777,9 +4789,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ১ অথবা (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2077"></a>
+<a id="g2125"></a>
 
-### অ্যানালগ ও ডিজিটাল কম্পিউটারের মধ্যে পার্থক্য লিখুন। <sub>G2077</sub>
+### অ্যানালগ ও ডিজিটাল কম্পিউটারের মধ্যে পার্থক্য লিখুন। <sub>G2125</sub>
 
 *Written*
 
@@ -4789,9 +4801,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ১ অথবা (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2079"></a>
+<a id="g2127"></a>
 
-### কম্পিউটার কীভাবে কাজ করে? ব্যাখ্যা করুন। <sub>G2079</sub>
+### কম্পিউটার কীভাবে কাজ করে? ব্যাখ্যা করুন। <sub>G2127</sub>
 
 *Written*
 
@@ -4801,9 +4813,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ২ (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2080"></a>
+<a id="g2128"></a>
 
-### কম্পিউটার স্মৃতি বলতে কী বোঝায়? কম্পিউটার স্মৃতির শ্রেণিবিভাগ আলোচনা করুন। <sub>G2080</sub>
+### কম্পিউটার স্মৃতি বলতে কী বোঝায়? কম্পিউটার স্মৃতির শ্রেণিবিভাগ আলোচনা করুন। <sub>G2128</sub>
 
 *Written*
 
@@ -4813,9 +4825,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ২ অথবা (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2130"></a>
+<a id="g2178"></a>
 
-### কম্পিউটার কী? চিত্রসহ একটি মাইক্রো কম্পিউটারের প্রধান সাংগঠনিক অংশগুলো ব্যাখ্যা করুন। <sub>G2130</sub>
+### কম্পিউটার কী? চিত্রসহ একটি মাইক্রো কম্পিউটারের প্রধান সাংগঠনিক অংশগুলো ব্যাখ্যা করুন। <sub>G2178</sub>
 
 *Written*
 
@@ -4825,9 +4837,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2147"></a>
+<a id="g2195"></a>
 
-### ই-কমার্স কী? বিক্রয়কেন্দ্র ও লেনদেনের প্রকৃতি অনুযায়ী ই-কমার্সের শ্রেণিবিভাগ আলোচনা করু… <sub>G2147</sub>
+### ই-কমার্স কী? বিক্রয়কেন্দ্র ও লেনদেনের প্রকৃতি অনুযায়ী ই-কমার্সের শ্রেণিবিভাগ আলোচনা করু… <sub>G2195</sub>
 
 *Written*
 
@@ -4837,9 +4849,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৯। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2204"></a>
+<a id="g2252"></a>
 
-### কম্পিউটার শব্দের অর্থ কী? (ক) হিসাবকারী যন্ত্র (খ) গণনাকারী যন্ত্র (গ) পরীক্ষার যন্ত্র (ঘ… <sub>G2204</sub>
+### কম্পিউটার শব্দের অর্থ কী? (ক) হিসাবকারী যন্ত্র (খ) গণনাকারী যন্ত্র (গ) পরীক্ষার যন্ত্র (ঘ… <sub>G2252</sub>
 
 *MCQ*
 
@@ -4849,9 +4861,9 @@ What are the components of a Micro-computer system?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — প্রিলিমিনারি টেস্ট (বাংলা, ইংরেজি, সাধারণ গণিত ও সাধারণ জ্ঞান), বিষয় কোড : ৪০০, কলেজ পর্যায়, সেট-জবা / সেট কোড-৩ (pp. 1–3), ৪১। — [duranta/1710606589-18th-ntrca-prelim-2018/1710606589.md](../duranta/1710606589-18th-ntrca-prelim-2018/1710606589.md)
 
-<a id="g3584"></a>
+<a id="g3632"></a>
 
-### Describe the classification of computer software. Differentiate between system and applic… <sub>G3584</sub>
+### Describe the classification of computer software. Differentiate between system and applic… <sub>G3632</sub>
 
 *Written*
 
@@ -4861,9 +4873,9 @@ Describe the classification of computer software. Differentiate between system a
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q3 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4219"></a>
+<a id="g4267"></a>
 
-### কম্পিউটার প্রজন্ম বলতে কী বোঝায়? কম্পিউটারের বিভিন্ন প্রজন্মের বৈশিষ্ট্য বর্ণনা করুন। <sub>G4219</sub>
+### কম্পিউটার প্রজন্ম বলতে কী বোঝায়? কম্পিউটারের বিভিন্ন প্রজন্মের বৈশিষ্ট্য বর্ণনা করুন। <sub>G4267</sub>
 
 *Written*
 
@@ -4873,9 +4885,9 @@ Describe the classification of computer software. Differentiate between system a
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন লিখিত (স্কুল পর্যায়) — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি (আইসিটি), বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) — 12.07.2024, ১। — [ntrca-written-web/18-313-school-ict/18-313-school-ict.md](../ntrca-written-web/18-313-school-ict/18-313-school-ict.md)
 
-<a id="g4542"></a>
+<a id="g4590"></a>
 
-### Webcam is a type of ___ device in a computer system. ক. System খ. Analogue গ. Input ঘ. Ou… <sub>G4542</sub>
+### Webcam is a type of ___ device in a computer system. ক. System খ. Analogue গ. Input ঘ. Ou… <sub>G4590</sub>
 
 *MCQ*
 
@@ -4898,9 +4910,9 @@ What are the building blocks of a digital computer? Describe each unit briefly w
   - 38th BCS Written (2018), Q3(a) — [BCS/19_pcm-and-computer-building-blocks.md](../BCS/19_pcm-and-computer-building-blocks.md) · [image](../BCS/19_pcm-and-computer-building-blocks.jpg); [BCS/28_computer-system-components-pipelining-question.md](../BCS/28_computer-system-components-pipelining-question.md) · [image](../BCS/28_computer-system-components-pipelining-question.jpg)
 - **Printed answer:** Input unit, CPU (memory unit, control unit, ALU with arithmetic and logic sections), output unit and secondary storage, with each unit's functions.
 
-<a id="g1955"></a>
+<a id="g2003"></a>
 
-### What is the block diagram of digital computer .describe each unit briefly. <sub>G1955</sub>
+### What is the block diagram of digital computer .describe each unit briefly. <sub>G2003</sub>
 
 *Written*
 
@@ -4910,9 +4922,9 @@ What is the block diagram of digital computer .describe each unit briefly.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 6.(a) — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 
-<a id="g4142"></a>
+<a id="g4190"></a>
 
-### কম্পিউটারের প্রজন্ম বলতে কী বুঝেন? ২য়, ৩য় ও ৫ম প্রজন্মের কম্পিউটারের চারটি করে বৈশিষ্ট্… <sub>G4142</sub>
+### কম্পিউটারের প্রজন্ম বলতে কী বুঝেন? ২য়, ৩য় ও ৫ম প্রজন্মের কম্পিউটারের চারটি করে বৈশিষ্ট্… <sub>G4190</sub>
 
 *Written*
 
@@ -4922,9 +4934,9 @@ What is the block diagram of digital computer .describe each unit briefly.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ১(ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4180"></a>
+<a id="g4228"></a>
 
-### আকার আকৃতি ও ক্ষমতার ভিত্তিতে ডিজিটাল কম্পিউটারের প্রকারভেদ আলোচনা করুন। <sub>G4180</sub>
+### আকার আকৃতি ও ক্ষমতার ভিত্তিতে ডিজিটাল কম্পিউটারের প্রকারভেদ আলোচনা করুন। <sub>G4228</sub>
 
 *Written*
 
@@ -4935,9 +4947,9 @@ What is the block diagram of digital computer .describe each unit briefly.
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কম্পিউটার সংগঠন ও মেমোরি আর্কিটেকচার, Q193 — [18th NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md) · [image](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.jpg)
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১(ক) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4689"></a>
+<a id="g4737"></a>
 
-### In an excel sheet cell A1, A2, A3, A4 contains the value of power generation by four plan… <sub>G4689</sub>
+### In an excel sheet cell A1, A2, A3, A4 contains the value of power generation by four plan… <sub>G4737</sub>
 
 *Written*
 
@@ -4947,9 +4959,9 @@ In an excel sheet cell A1, A2, A3, A4 contains the value of power generation by 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NESCO AM (ICT) 2018 (items tagged "[NESCO AM (ICT) 2018]"), Office item 5 — [power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md](../power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md)
 
-<a id="g2036"></a>
+<a id="g2084"></a>
 
-### মাইক্রোকম্পিউটারের সংগঠন ব্লক চিত্রসহ বর্ণনা করুন। <sub>G2036</sub>
+### মাইক্রোকম্পিউটারের সংগঠন ব্লক চিত্রসহ বর্ণনা করুন। <sub>G2084</sub>
 
 *Written*
 
@@ -4959,9 +4971,9 @@ In an excel sheet cell A1, A2, A3, A4 contains the value of power generation by 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ১। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g4112"></a>
+<a id="g4160"></a>
 
-### কম্পিউটার প্রজন্ম কী? প্রতি প্রজন্মের দুটি করে বৈশিষ্ট্য লিখুন। <sub>G4112</sub>
+### কম্পিউটার প্রজন্ম কী? প্রতি প্রজন্মের দুটি করে বৈশিষ্ট্য লিখুন। <sub>G4160</sub>
 
 *Written*
 
@@ -4971,9 +4983,9 @@ In an excel sheet cell A1, A2, A3, A4 contains the value of power generation by 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ১(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4673"></a>
+<a id="g4721"></a>
 
-### Microprocessor is used first in which generation computers? (a) Second Generation (b) Thi… <sub>G4673</sub>
+### Microprocessor is used first in which generation computers? (a) Second Generation (b) Thi… <sub>G4721</sub>
 
 *MCQ*
 
@@ -5036,9 +5048,9 @@ Cells A1:A4 hold the power generation of four plants. Write a function in A5 to 
 
 ## Emerging technology
 
-<a id="g1881"></a>
+<a id="g1929"></a>
 
-### Write down about Blockchain. <sub>G1881</sub>
+### Write down about Blockchain. <sub>G1929</sub>
 
 *Written*
 
@@ -5048,9 +5060,9 @@ Write down about Blockchain.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q14 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g2081"></a>
+<a id="g2129"></a>
 
-### আধুনিক জীবনে ইন্টারনেটের প্রয়োগ আলোচনা করুন। <sub>G2081</sub>
+### আধুনিক জীবনে ইন্টারনেটের প্রয়োগ আলোচনা করুন। <sub>G2129</sub>
 
 *Written*
 
@@ -5060,9 +5072,9 @@ Write down about Blockchain.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ২ অথবা (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2131"></a>
+<a id="g2179"></a>
 
-### ন্যানোটেকনোলজী কী? এর প্রয়োগ ও ব্যবহার সম্পর্কে আলোচনা করুন। <sub>G2131</sub>
+### ন্যানোটেকনোলজী কী? এর প্রয়োগ ও ব্যবহার সম্পর্কে আলোচনা করুন। <sub>G2179</sub>
 
 *Written*
 
@@ -5072,9 +5084,9 @@ Write down about Blockchain.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g3173"></a>
+<a id="g3221"></a>
 
-### What is blockchain? How it works, benefits of blockchain? Usage of blockchain. <sub>G3173</sub>
+### What is blockchain? How it works, benefits of blockchain? Usage of blockchain. <sub>G3221</sub>
 
 *Written*
 
@@ -5084,9 +5096,9 @@ What is blockchain? How it works, benefits of blockchain? Usage of blockchain.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3255"></a>
+<a id="g3303"></a>
 
-### What is Saas and multi-tenant architecture? How are they related? What are the advantages… <sub>G3255</sub>
+### What is Saas and multi-tenant architecture? How are they related? What are the advantages… <sub>G3303</sub>
 
 *Written*
 
@@ -5096,9 +5108,9 @@ What is Saas and multi-tenant architecture? How are they related? What are the a
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3075"></a>
+<a id="g3123"></a>
 
-### Write down the different types of e-commerce. <sub>G3075</sub>
+### Write down the different types of e-commerce. <sub>G3123</sub>
 
 *Written*
 
@@ -5108,9 +5120,9 @@ Write down the different types of e-commerce.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Assistant Hardware Engineer (AHE) - SBL, JBL, RBL [AHE SBL, JBL, RBL 2021 CTI] — 24.12.2021 — Exam taker: CTI (from the printed tag) — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks — pages 15–17, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4216"></a>
+<a id="g4264"></a>
 
-### বাংলাদেশের প্রথম ইন্টারনেট সার্চ ইঞ্জিন কোনটি? (ক) পিপীলিকা (খ) দোয়েল (গ) পদ্মা (ঘ) অনুসন… <sub>G4216</sub>
+### বাংলাদেশের প্রথম ইন্টারনেট সার্চ ইঞ্জিন কোনটি? (ক) পিপীলিকা (খ) দোয়েল (গ) পদ্মা (ঘ) অনুসন… <sub>G4264</sub>
 
 *MCQ*
 
@@ -5120,9 +5132,9 @@ Write down the different types of e-commerce.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৬তম বেসরকারি প্রভাষক নিবন্ধন প্রিলিমিনারি টেস্ট (কলেজ পর্যায়) — সাধারণ জ্ঞান অংশের কম্পিউটার ও তথ্যপ্রযুক্তি MCQ — 30.08.2019, 1. — [ntrca-written-web/16-college-prelim-ict-mcq/16-college-prelim-ict-mcq.md](../ntrca-written-web/16-college-prelim-ict-mcq/16-college-prelim-ict-mcq.md)
 
-<a id="g4309"></a>
+<a id="g4357"></a>
 
-### Which one is the first search engine <sub>G4309</sub>
+### Which one is the first search engine <sub>G4357</sub>
 
 *MCQ*
 
@@ -5132,9 +5144,9 @@ Which one is the first search engine
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ58 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4346"></a>
+<a id="g4394"></a>
 
-### Which of the following is not an internet search engine? <sub>G4346</sub>
+### Which of the following is not an internet search engine? <sub>G4394</sub>
 
 *MCQ*
 
@@ -5144,9 +5156,9 @@ Which of the following is not an internet search engine?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT items (Q71–80 of the "GK & ICT" section) — 12 November 2021 — Exam taker: Faculty of Business Studies, DU (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, MCQ78 — [bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md](../bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md)
 
-<a id="g4688"></a>
+<a id="g4736"></a>
 
-### What is E-Commerce? What are the types of E-commerce? <sub>G4688</sub>
+### What is E-Commerce? What are the types of E-commerce? <sub>G4736</sub>
 
 *Written*
 
@@ -5156,9 +5168,9 @@ What is E-Commerce? What are the types of E-commerce?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NESCO AM (ICT) 2018 (items tagged "[NESCO AM (ICT) 2018]"), E-commerce item 2 — [power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md](../power-sector-web/2020-dpdc-nesco-ict-itjobexam-scribd-693327151/power-items.md)
 
-<a id="g4733"></a>
+<a id="g4781"></a>
 
-### E-Commerce কী? E-Commerce-এর প্রকারভেদ উল্লেখ করুন। Search engine কী? এর কয়েকটি উদাহরণ দ… <sub>G4733</sub>
+### E-Commerce কী? E-Commerce-এর প্রকারভেদ উল্লেখ করুন। Search engine কী? এর কয়েকটি উদাহরণ দ… <sub>G4781</sub>
 
 *Written*
 
@@ -5168,9 +5180,9 @@ E-Commerce কী? E-Commerce-এর প্রকারভেদ উল্লে
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — non-cadre Assistant Network Engineer (ANE) — Written, 2020 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, (i) E-Commerce — [ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md](../ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md)
 
-<a id="g4734"></a>
+<a id="g4782"></a>
 
-### IR 4.0 বলতে কি বুঝায়? IR 4.0 এর গুরুত্বপূর্ণ উপাদানগুলো লিখুন। <sub>G4734</sub>
+### IR 4.0 বলতে কি বুঝায়? IR 4.0 এর গুরুত্বপূর্ণ উপাদানগুলো লিখুন। <sub>G4782</sub>
 
 *Written*
 
@@ -5180,9 +5192,9 @@ IR 4.0 বলতে কি বুঝায়? IR 4.0 এর গুরুত্�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — ICT Division (ICT Ministry), Assistant Programmer (59 posts) — Written, 2021 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q1(ক) — [ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md](../ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md)
 
-<a id="g1935"></a>
+<a id="g1983"></a>
 
-### Difference between E-Commerce and M-commerce <sub>G1935</sub>
+### Difference between E-Commerce and M-commerce <sub>G1983</sub>
 
 *Written*
 
@@ -5193,9 +5205,9 @@ Difference between E-Commerce and M-commerce
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 2.(a) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1936"></a>
+<a id="g1984"></a>
 
-### What are barriers of E-Commerce ? <sub>G1936</sub>
+### What are barriers of E-Commerce ? <sub>G1984</sub>
 
 *Written*
 
@@ -5306,9 +5318,9 @@ What is Smart Contract?
 - **Printed answer:** A Smart Contract is a self-executing digital contract where terms are automatically enforced using blockchain technolog
 - **Correction:** Source text is cut off mid-word ("blockchain technolog").
 
-<a id="g2563"></a>
+<a id="g2611"></a>
 
-### IOT ব্যবহারে কি সুবিধা হবে <sub>G2563</sub>
+### IOT ব্যবহারে কি সুবিধা হবে <sub>G2611</sub>
 
 *Viva*
 
@@ -5319,9 +5331,9 @@ IOT ব্যবহারে কি সুবিধা হবে
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V-iot2 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g4915"></a>
+<a id="g4963"></a>
 
-### 4. IoT কী? Room এ IOT এর কোন ডিভাইস আছে কিনা? <sub>G4915</sub>
+### 4. IoT কী? Room এ IOT এর কোন ডিভাইস আছে কিনা? <sub>G4963</sub>
 
 *Viva*
 
@@ -5368,9 +5380,9 @@ IoT (Internet of Things) এবং চতুর্থ শিল্প বিপ�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — আধুনিক প্রযুক্তি ও আর্টিফিশিয়াল ইন্টেলিজেন্স, Q212 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
-<a id="g5198"></a>
+<a id="g5246"></a>
 
-### Baidu is one kind of- ক. Search Engine খ. Book store গ. Payment ঘ. operating <sub>G5198</sub>
+### Baidu is one kind of- ক. Search Engine খ. Book store গ. Payment ঘ. operating <sub>G5246</sub>
 
 *MCQ*
 
@@ -5406,9 +5418,9 @@ What is platform independent software discuss with example?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q18 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g2082"></a>
+<a id="g2130"></a>
 
-### সিস্টেম সফটওয়্যার কী? বিভিন্ন প্রকার সিস্টেম সফটওয়্যার সম্পর্কে আলোচনা করুন। <sub>G2082</sub>
+### সিস্টেম সফটওয়্যার কী? বিভিন্ন প্রকার সিস্টেম সফটওয়্যার সম্পর্কে আলোচনা করুন। <sub>G2130</sub>
 
 *Written*
 
@@ -5418,9 +5430,9 @@ What is platform independent software discuss with example?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৩। (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2721"></a>
+<a id="g2769"></a>
 
-### সিস্টেম সফটওয়্যার কাকে বলে? উদাহরণসহ লিখ। <sub>G2721</sub>
+### সিস্টেম সফটওয়্যার কাকে বলে? উদাহরণসহ লিখ। <sub>G2769</sub>
 
 *Written*
 
@@ -5430,9 +5442,9 @@ What is platform independent software discuss with example?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১৪ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g4218"></a>
+<a id="g4266"></a>
 
-### দৃষ্টিহীনদের জন্য আবিষ্কৃত বাংলার প্রথম সফটওয়্যার (ক) আইলিশ (খ) আইসাইট (গ) আইডট (ঘ) আইলা… <sub>G4218</sub>
+### দৃষ্টিহীনদের জন্য আবিষ্কৃত বাংলার প্রথম সফটওয়্যার (ক) আইলিশ (খ) আইসাইট (গ) আইডট (ঘ) আইলা… <sub>G4266</sub>
 
 *MCQ*
 
@@ -5454,9 +5466,9 @@ Software বলতে কী বোঝায়? উদাহরণসহ System
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q19 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g2694"></a>
+<a id="g2742"></a>
 
-### Some program exist for computers use to help it manage its tasks and devices, which are c… <sub>G2694</sub>
+### Some program exist for computers use to help it manage its tasks and devices, which are c… <sub>G2742</sub>
 
 *MCQ*
 
@@ -5466,9 +5478,9 @@ Some program exist for computers use to help it manage its tasks and devices, wh
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Introduction to Computer Systems Q7 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2978"></a>
+<a id="g3026"></a>
 
-### Make a list of banking software used in Bangladesh. List the essential features for succe… <sub>G2978</sub>
+### Make a list of banking software used in Bangladesh. List the essential features for succe… <sub>G3026</sub>
 
 *Written*
 
@@ -5478,9 +5490,9 @@ Make a list of banking software used in Bangladesh. List the essential features 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(I) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4144"></a>
+<a id="g4192"></a>
 
-### হার্ডওয়্যার ও সফটওয়্যারের মধ্যে পার্থক্য লিখুন। <sub>G4144</sub>
+### হার্ডওয়্যার ও সফটওয়্যারের মধ্যে পার্থক্য লিখুন। <sub>G4192</sub>
 
 *Written*
 
@@ -5542,9 +5554,9 @@ Why is Python so popular?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কম্পিউটার সংগঠন ও মেমোরি আর্কিটেকচার, Q196 — [18th NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.md) · [image](../18th%20NTCRA/10_ntrca-qbank-p10-networking-architecture-q178-196.jpg)
 
-<a id="g5191"></a>
+<a id="g5239"></a>
 
-### Some program exist for computers use to help it manage it takes and devices, which are ca… <sub>G5191</sub>
+### Some program exist for computers use to help it manage it takes and devices, which are ca… <sub>G5239</sub>
 
 *MCQ*
 
@@ -5556,9 +5568,9 @@ Some program exist for computers use to help it manage it takes and devices, whi
 
 ## Data representation & units
 
-<a id="g2094"></a>
+<a id="g2142"></a>
 
-### ডেটা প্রসেসিং পদ্ধতি আলোচনা করুন। <sub>G2094</sub>
+### ডেটা প্রসেসিং পদ্ধতি আলোচনা করুন। <sub>G2142</sub>
 
 *Written*
 
@@ -5568,9 +5580,9 @@ Some program exist for computers use to help it manage it takes and devices, whi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৬। — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2711"></a>
+<a id="g2759"></a>
 
-### MB ও Mbps এর মধ্যে পার্থক্য লিখুন। <sub>G2711</sub>
+### MB ও Mbps এর মধ্যে পার্থক্য লিখুন। <sub>G2759</sub>
 
 *Written*
 
@@ -5580,9 +5592,9 @@ MB ও Mbps এর মধ্যে পার্থক্য লিখুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ৪ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g2749"></a>
+<a id="g2797"></a>
 
-### সাধারণ স্টোরেজ ডিভাইসগুলোর শ্রেণিবিন্যাস করুন এবং আলোচনা করুন। সলিড স্ট্যাট ডিভাইস বলতে ক… <sub>G2749</sub>
+### সাধারণ স্টোরেজ ডিভাইসগুলোর শ্রেণিবিন্যাস করুন এবং আলোচনা করুন। সলিড স্ট্যাট ডিভাইস বলতে ক… <sub>G2797</sub>
 
 *Written*
 
@@ -5592,9 +5604,9 @@ MB ও Mbps এর মধ্যে পার্থক্য লিখুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ৩ (গ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3083"></a>
+<a id="g3131"></a>
 
-### Difference between data and information? <sub>G3083</sub>
+### Difference between data and information? <sub>G3131</sub>
 
 *Written*
 
@@ -5604,9 +5616,9 @@ Difference between data and information?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4767"></a>
+<a id="g4815"></a>
 
-### Which one of the following processes is the main task for the computer in mapping the geo… <sub>G4767</sub>
+### Which one of the following processes is the main task for the computer in mapping the geo… <sub>G4815</sub>
 
 *MCQ*
 
@@ -5655,9 +5667,9 @@ Meaning of GPS?
   - BCC Assistant Programmer (BUET) (2021-02-12), MCQ 9 — [BUET JOB/10_stages-osi-model-bcc-mcq.md](../BUET%20JOB/10_stages-osi-model-bcc-mcq.md) · [image](../BUET%20JOB/10_stages-osi-model-bcc-mcq.jpg)
 - **Printed answer:** b (Global Positioning System)
 
-<a id="g2998"></a>
+<a id="g3046"></a>
 
-### Ergonomics is study of characteristics of iteration. How to measure quality of sitting go… <sub>G2998</sub>
+### Ergonomics is study of characteristics of iteration. How to measure quality of sitting go… <sub>G3046</sub>
 
 *Written*
 
@@ -5667,9 +5679,9 @@ Ergonomics is study of characteristics of iteration. How to measure quality of s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4426"></a>
+<a id="g4474"></a>
 
-### What is the typical speed of USB version 3.0? (a) 4.8 Gbits per second (b) 610 MBps (c) 6… <sub>G4426</sub>
+### What is the typical speed of USB version 3.0? (a) 4.8 Gbits per second (b) 610 MBps (c) 6… <sub>G4474</sub>
 
 *MCQ*
 
@@ -5707,9 +5719,9 @@ What is ASCII code?
   - BPSC viva 2023 (2023) (viva), Viva (VIVA-20) — [VIVA/07_osi-deadlock-and-ascii-viva.md](../VIVA/07_osi-deadlock-and-ascii-viva.md) · [image](../VIVA/07_osi-deadlock-and-ascii-viva.jpg)
 - **Printed answer:** American Standard Code for Information Interchange; 7-bit code for 128 characters (letters, digits, operators, special symbols)
 
-<a id="g5211"></a>
+<a id="g5259"></a>
 
-### MIRC means- ক. Magnetic Ink Character Reader খ. Magnetic Ink Code Reader গ. Magnetic Ink … <sub>G5211</sub>
+### MIRC means- ক. Magnetic Ink Character Reader খ. Magnetic Ink Code Reader গ. Magnetic Ink … <sub>G5259</sub>
 
 *MCQ*
 
@@ -5746,9 +5758,9 @@ What is BIOS?
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q17 — [bit to exabyte/15_bte-g2-p01-computer-fundamentals-q01-17.md](../bit%20to%20exabyte/15_bte-g2-p01-computer-fundamentals-q01-17.md) · [image](../bit%20to%20exabyte/15_bte-g2-p01-computer-fundamentals-q01-17.jpg)
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q20 — [suggestion based on previous yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.md](../suggestion%20based%20on%20previous%20yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.md) · [image](../suggestion%20based%20on%20previous%20yr/03_petrobangla-ane-q15-23-firewall-switching-disk-scheduling.jpg)
 
-<a id="g4861"></a>
+<a id="g4909"></a>
 
-### BIOS দিয়ে কি বোঝানো হয়? (a) Basic Input / Output System (b) Basic Interrupt / Output Syst… <sub>G4861</sub>
+### BIOS দিয়ে কি বোঝানো হয়? (a) Basic Input / Output System (b) Basic Interrupt / Output Syst… <sub>G4909</sub>
 
 *MCQ*
 
@@ -5758,9 +5770,9 @@ BIOS দিয়ে কি বোঝানো হয়? (a) Basic Input / Output Sys
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022, MCQ40 — [telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md](../telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md)
 
-<a id="g4499"></a>
+<a id="g4547"></a>
 
-### Which is wrong statement for BIOS of a computer? (a) Connect microprocessor and I/O (b) M… <sub>G4499</sub>
+### Which is wrong statement for BIOS of a computer? (a) Connect microprocessor and I/O (b) M… <sub>G4547</sub>
 
 *MCQ*
 
@@ -5770,9 +5782,9 @@ Which is wrong statement for BIOS of a computer? (a) Connect microprocessor and 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ31 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4511"></a>
+<a id="g4559"></a>
 
-### Most PCs give a single beep on bootup to indicate that the hardware is ok. If you do not … <sub>G4511</sub>
+### Most PCs give a single beep on bootup to indicate that the hardware is ok. If you do not … <sub>G4559</sub>
 
 *MCQ*
 
@@ -5782,9 +5794,9 @@ Most PCs give a single beep on bootup to indicate that the hardware is ok. If yo
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ43 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
-<a id="g4524"></a>
+<a id="g4572"></a>
 
-### How can you clear CMOS password? (a) Changing motherboard's jumper setting (b) Formatting… <sub>G4524</sub>
+### How can you clear CMOS password? (a) Changing motherboard's jumper setting (b) Formatting… <sub>G4572</sub>
 
 *MCQ*
 
@@ -5809,9 +5821,9 @@ Describe the booting process in windows system.
 
 ## ICT, policy & society
 
-<a id="g2762"></a>
+<a id="g2810"></a>
 
-### সংজ্ঞা লিখুন: (i) ক্লাউড কম্পিউটিং (ii) ফ্রিল্যান্সিং (iii) সিস্টেম জীবন চক্র। <sub>G2762</sub>
+### সংজ্ঞা লিখুন: (i) ক্লাউড কম্পিউটিং (ii) ফ্রিল্যান্সিং (iii) সিস্টেম জীবন চক্র। <sub>G2810</sub>
 
 *Written*
 
@@ -5821,9 +5833,9 @@ Describe the booting process in windows system.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ২য় অংশ, নম্বর ২০*৫=১০০ (pp. 8–9), ৩ (গ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3552"></a>
+<a id="g3600"></a>
 
-### Write short notes on the followings:10 b. Smart Bangladesh <sub>G3552</sub>
+### Write short notes on the followings:10 b. Smart Bangladesh <sub>G3600</sub>
 
 *Written*
 
@@ -5833,9 +5845,9 @@ Write short notes on the followings:10 b. Smart Bangladesh
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, ICT Q8(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3596"></a>
+<a id="g3644"></a>
 
-### Describe the current challenges to building a Digital Bangladesh. 2 <sub>G3596</sub>
+### Describe the current challenges to building a Digital Bangladesh. 2 <sub>G3644</sub>
 
 *Written*
 
@@ -5845,9 +5857,9 @@ Describe the current challenges to building a Digital Bangladesh. 2
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q15 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3943"></a>
+<a id="g3991"></a>
 
-### In orthographic projection, the object is placed with one of its faces with ___________ t… <sub>G3943</sub>
+### In orthographic projection, the object is placed with one of its faces with ___________ t… <sub>G3991</sub>
 
 *MCQ*
 
@@ -5857,9 +5869,9 @@ In orthographic projection, the object is placed with one of its faces with ____
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P4-Q16 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4913"></a>
+<a id="g4961"></a>
 
-### 2. ICT and IT এর মধ্যে পার্থক্য কি? <sub>G4913</sub>
+### 2. ICT and IT এর মধ্যে পার্থক্য কি? <sub>G4961</sub>
 
 *Viva*
 
@@ -5870,9 +5882,9 @@ In orthographic projection, the object is placed with one of its faces with ____
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J1 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A1-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4999"></a>
+<a id="g5047"></a>
 
-### 22. What is ICT? <sub>G4999</sub>
+### 22. What is ICT? <sub>G5047</sub>
 
 *Viva*
 
@@ -5883,9 +5895,9 @@ In orthographic projection, the object is placed with one of its faces with ____
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — BCS account 118, 26/04/2015, board Wazed sir, Accounting (viva), A3-V1 — [viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md](../viva-web/bcs-2015-idoc-34th-real-viva/bcs-real-viva-34th.md)
 
-<a id="g5037"></a>
+<a id="g5085"></a>
 
-### Explain the role of ICT in modern banking. Provide examples of how ICT improves customer … <sub>G5037</sub>
+### Explain the role of ICT in modern banking. Provide examples of how ICT improves customer … <sub>G5085</sub>
 
 *Written*
 
@@ -5897,9 +5909,9 @@ Explain the role of ICT in modern banking. Provide examples of how ICT improves 
 
 ## MS Office / Excel
 
-<a id="g2219"></a>
+<a id="g2267"></a>
 
-### excel এর vlookup ফর্মুলা ব্যাখ্যা কর। (Explain vlookup formulae in excel) <sub>G2219</sub>
+### excel এর vlookup ফর্মুলা ব্যাখ্যা কর। (Explain vlookup formulae in excel) <sub>G2267</sub>
 
 *Written*
 
@@ -5909,9 +5921,9 @@ excel এর vlookup ফর্মুলা ব্যাখ্যা কর। (E
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q9 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 
-<a id="g4548"></a>
+<a id="g4596"></a>
 
-### In MS-Excel, ‘#Name?’ error occurs when – ক. Function name is wrong খ. Argument is wrong … <sub>G4548</sub>
+### In MS-Excel, ‘#Name?’ error occurs when – ক. Function name is wrong খ. Argument is wrong … <sub>G4596</sub>
 
 *MCQ*
 
@@ -5934,9 +5946,9 @@ MS-Excel এর IF Function ব্যবহার করে A1, B1, C1 থেক
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Computer Fundamentals and Computer Architecture, Q24 — [bit to exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.md) · [image](../bit%20to%20exabyte/16_bte-g2-p02-architecture-q18-26-c-q01-05.jpg)
 
-<a id="g4342"></a>
+<a id="g4390"></a>
 
-### User developed instructions for Excel are called? <sub>G4342</sub>
+### User developed instructions for Excel are called? <sub>G4390</sub>
 
 *MCQ*
 
@@ -5946,11 +5958,23 @@ User developed instructions for Excel are called?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT items (Q71–80 of the "GK & ICT" section) — 12 November 2021 — Exam taker: Faculty of Business Studies, DU (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, MCQ74 — [bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md](../bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md)
 
+<a id="g1853"></a>
+
+### MS Excel: IF, SUMIFS, COUNTIFS, AVERAGEIFS, VLOOKUP, HLOOKUP, XLOOKUP, UNIQUE, sort and f… <sub>G1853</sub>
+
+*Written*
+
+MS Excel: IF, SUMIFS, COUNTIFS, AVERAGEIFS, VLOOKUP, HLOOKUP, XLOOKUP, UNIQUE, sort and filter
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Aptitude Q04 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
 ## Banking IT & digital finance
 
-<a id="g3179"></a>
+<a id="g3227"></a>
 
-### Difference between Digital Banking System and Traditional Banking System. <sub>G3179</sub>
+### Difference between Digital Banking System and Traditional Banking System. <sub>G3227</sub>
 
 *Written*
 
@@ -5960,9 +5984,9 @@ Difference between Digital Banking System and Traditional Banking System.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3218"></a>
+<a id="g3266"></a>
 
-### For a digital banking solution, describe the steps one should take to comply information … <sub>G3218</sub>
+### For a digital banking solution, describe the steps one should take to comply information … <sub>G3266</sub>
 
 *Written*
 
@@ -5972,9 +5996,9 @@ For a digital banking solution, describe the steps one should take to comply inf
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — Senior Officer (AHE/AME) — Job ID: 10165 (5 post) — 24.11.2023 — Exam taker: not printed — Total Marks-200, Time: 02 Hours (10:30 am-12:30 pm) — pages 37–39, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3246"></a>
+<a id="g3294"></a>
 
-### Describe the transformative power of ICT with ten innovative for the online banking syste… <sub>G3246</sub>
+### Describe the transformative power of ICT with ten innovative for the online banking syste… <sub>G3294</sub>
 
 *Written*
 
@@ -5984,9 +6008,9 @@ Describe the transformative power of ICT with ten innovative for the online bank
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — Combined 3 Bank (10199) — Assistant Maintenance engineer/Assistant Engineer IT 2024 — 24.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 42–44, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4970"></a>
+<a id="g5018"></a>
 
-### বোর্ড: CBS টা কি? <sub>G4970</sub>
+### বোর্ড: CBS টা কি? <sub>G5018</sub>
 
 *Viva*
 
@@ -5997,9 +6021,9 @@ Describe the transformative power of ICT with ten innovative for the online bank
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J11 Combined Bank Officer (IT), Job ID 10209, 07.02.2026, Bangladesh Bank HO (viva), A11-V2 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4977"></a>
+<a id="g5025"></a>
 
-### -ওদের Core banking solution এর নাম কী <sub>G4977</sub>
+### -ওদের Core banking solution এর নাম কী <sub>G5025</sub>
 
 *Viva*
 
@@ -6010,9 +6034,9 @@ Describe the transformative power of ICT with ten innovative for the online bank
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J12 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), Board 3, CSE candidate (viva), A12-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g5038"></a>
+<a id="g5086"></a>
 
-### What is a Core Banking System (CBS)? Describe a high-level CBS architecture and key compo… <sub>G5038</sub>
+### What is a Core Banking System (CBS)? Describe a high-level CBS architecture and key compo… <sub>G5086</sub>
 
 *Written*
 

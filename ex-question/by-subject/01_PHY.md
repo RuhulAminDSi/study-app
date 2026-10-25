@@ -33,60 +33,60 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025) — see [G0126](#g0126)
 5. **Which of the following statement holds true for the divergence of electric and magnetic flux densities? ক) Both are zero খ) These are zero for static flux dens…**  
    Asked in (1): BPSC AME 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2680](#g2680)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2728](#g2728)
 6. **ইলেকট্রিক ফিল্ড এবং ম্যাগনেটিক ফিল্ডের মধ্যে পার্থক্য উল্লেখ করুন। শূন্যের মধ্যে দুইটি চার্জ যথাক্রমে Q₁=5nc এবং Q₂ = 12nc এর মধ্যকার দূরত্ব 7µm. 21 কর্তৃক Q₂ …**  
    Asked in (1): 45th BCS ICT (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8) — see [G2742](#g2742)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8) — see [G2790](#g2790)
 7. **গাউস সূত্রটি লিখুন এবং বর্ণনা করুন। (i) স্ট্যাটিক EM ফিল্ড এবং (ii) টাইম-ভেরিং EM ফিল্ড-এর উপর ম্যাক্সওয়েল সমীকরণের ডিফারেনসিয়েল এবং ইন্টিগ্রাল সমীকরণ লিখুন।**  
    Asked in (1): 45th BCS ICT (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8) — see [G2743](#g2743)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8) — see [G2791](#g2791)
 8. **ফেজ ভেলোসিটি এবং গ্রুপ ভেলোসিটি বলতে কী বোঝায়? এই দুইটির মধ্যে পার্থক্য লিখুন।**  
    Asked in (1): 45th BCS ICT (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8) — see [G2747](#g2747)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8) — see [G2795](#g2795)
 9. **কোন পরিবাহীর তারের ব্যাস দ্বিগুণ এবং দৈর্ঘ্য চারগুণ করা হলে উহার রোধ কত হবে? (a) অর্ধেক (b) দ্বিগুণ (c) চারগুণ (d) একই থাকবে**  
    Asked in (1): BDCCL AM(Transmission) 2022  
-   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4837](#g4837)
+   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4885](#g4885)
 10. **১ পিকো ফ্যারাডে = কত ফ্যারাডে? (a) 10^-9 (b) 10^-10 (c) 10^-11 (d) 10^-12**  
    Asked in (1): BDCCL AM(Transmission) 2022  
-   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4840](#g4840)
+   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4888](#g4888)
 11. **ইনডাক্টরের ইনডাক্টেন্স নিম্নের কোনটির উপর নির্ভর করেনা? (a) ব্যবহৃত কোরের প্রস্থচ্ছেদের ক্ষেত্রফল (b) ব্যবহৃত তারের প্যাঁচ সংখ্যা (c) ব্যবহৃত তারের গুরুত্ব (d)…**  
    Asked in (1): BDCCL AM(Transmission) 2022  
-   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4847](#g4847)
+   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4895](#g4895)
 12. **নিচের কোন সেলটি শুষ্ক কিন্তু পুনরায় চার্জযোগ্য? (a) নিকেল-ক্যাডমিয়াম (b) মার্কারি (c) লোড এসিড (d) সোলার**  
    Asked in (1): BDCCL AM(Transmission) 2022  
-   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4848](#g4848)
+   Source: Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022 — see [G4896](#g4896)
 13. **একটি ঘরে ব্যবহৃত বৈদ্যুতিক যন্ত্রপাতি কিভাবে লাগানো থাকে? (a) শ্রেণী সংযোগে (b) শ্রেণী এবং সমান্তরাল উভয় সংযোগেই (c) সমান্তরাল সংযোগে (d) T-সংযোগে**  
    Asked in (1): BTCL JAM 2022  
-   Source: Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022 — see [G4857](#g4857)
+   Source: Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022 — see [G4905](#g4905)
 14. **কোন পদার্থ দিয়ে ইনসুলেটর তৈরি করা হয়? (a) স্টীল (b) কপার (c) পোরসেলিন (d) অ্যালুমিনিয়াম**  
    Asked in (1): BTCL JAM 2022  
-   Source: Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022 — see [G4860](#g4860)
+   Source: Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022 — see [G4908](#g4908)
 15. **বর্তনীতে তড়িৎ প্রবাহ সৃষ্টি করে কোনটি?**  
    Asked in (1): BTRC AD(Technical) 2019  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019 — see [G2294](#g2294)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019 — see [G2342](#g2342)
 16. **একটি তেজস্ক্রিয় মৌলের অর্ধায়ু ২০০ বছর। মৌলটির ৭৫% ক্ষয় হতে কত বছর লাগবে?**  
    Asked in (1): BTRC AD(Technical) 2019  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019 — see [G2298](#g2298)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019 — see [G2346](#g2346)
 17. **At absolute zero temperature, semiconductor behaves as a/an K. Good conductor L. Superconductor M. Insulator N. Variable resistor**  
    Asked in (1): BPSC AME 2019  
-   Source: duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34 — see [G2687](#g2687)
+   Source: duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34 — see [G2735](#g2735)
 18. **When a beam of light travels through media of two different densities, if the angle of incidence is greater than the critical angle ------- occurs. (a) Refract…**  
    Asked in (1): Combined Bank SO(IT) 2021  
-   Source: Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs — see [G4437](#g4437)
+   Source: Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs — see [G4485](#g4485)
 19. **The measured equivalent DC Resistance between two line for the HT winding of a 11/0.415kv 200kva, 3φ Δ-Y Conductor distribution Transformer is 6 ohm at 20 °C. …**  
    Asked in (1): BTCL AM(Technical) 2021  
-   Source: Question paper found on the web (see the folder README for the URL) — BTCL Assistant Manager (Technical) 05.02.2021 — see [G4799](#g4799)
+   Source: Question paper found on the web (see the folder README for the URL) — BTCL Assistant Manager (Technical) 05.02.2021 — see [G4847](#g4847)
 20. **একটি বাল্বে '60W-220V' লেখা আছে। বাল্বটির রোধ কত ওহম? (options not given; printed answer: 806.67)**  
    Asked in (1): BTRC SAD 2021  
-   Source: Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021 — see [G4825](#g4825)
+   Source: Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021 — see [G4873](#g4873)
 
 ## All questions by topic
 
 ## Other
 
-<a id="g2742"></a>
+<a id="g2790"></a>
 
-### ইলেকট্রিক ফিল্ড এবং ম্যাগনেটিক ফিল্ডের মধ্যে পার্থক্য উল্লেখ করুন। শূন্যের মধ্যে দুইটি চা… <sub>G2742</sub>
+### ইলেকট্রিক ফিল্ড এবং ম্যাগনেটিক ফিল্ডের মধ্যে পার্থক্য উল্লেখ করুন। শূন্যের মধ্যে দুইটি চা… <sub>G2790</sub>
 
 *Written*
 
@@ -96,9 +96,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ১। (ক) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2743"></a>
+<a id="g2791"></a>
 
-### গাউস সূত্রটি লিখুন এবং বর্ণনা করুন। (i) স্ট্যাটিক EM ফিল্ড এবং (ii) টাইম-ভেরিং EM ফিল্ড-এ… <sub>G2743</sub>
+### গাউস সূত্রটি লিখুন এবং বর্ণনা করুন। (i) স্ট্যাটিক EM ফিল্ড এবং (ii) টাইম-ভেরিং EM ফিল্ড-এ… <sub>G2791</sub>
 
 *Written*
 
@@ -108,9 +108,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ১ (খ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2747"></a>
+<a id="g2795"></a>
 
-### ফেজ ভেলোসিটি এবং গ্রুপ ভেলোসিটি বলতে কী বোঝায়? এই দুইটির মধ্যে পার্থক্য লিখুন। <sub>G2747</sub>
+### ফেজ ভেলোসিটি এবং গ্রুপ ভেলোসিটি বলতে কী বোঝায়? এই দুইটির মধ্যে পার্থক্য লিখুন। <sub>G2795</sub>
 
 *Written*
 
@@ -120,9 +120,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ৩। (ক) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4837"></a>
+<a id="g4885"></a>
 
-### কোন পরিবাহীর তারের ব্যাস দ্বিগুণ এবং দৈর্ঘ্য চারগুণ করা হলে উহার রোধ কত হবে? (a) অর্ধেক (… <sub>G4837</sub>
+### কোন পরিবাহীর তারের ব্যাস দ্বিগুণ এবং দৈর্ঘ্য চারগুণ করা হলে উহার রোধ কত হবে? (a) অর্ধেক (… <sub>G4885</sub>
 
 *MCQ*
 
@@ -132,9 +132,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ5 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4840"></a>
+<a id="g4888"></a>
 
-### ১ পিকো ফ্যারাডে = কত ফ্যারাডে? (a) 10^-9 (b) 10^-10 (c) 10^-11 (d) 10^-12 <sub>G4840</sub>
+### ১ পিকো ফ্যারাডে = কত ফ্যারাডে? (a) 10^-9 (b) 10^-10 (c) 10^-11 (d) 10^-12 <sub>G4888</sub>
 
 *MCQ*
 
@@ -144,9 +144,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ8 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4847"></a>
+<a id="g4895"></a>
 
-### ইনডাক্টরের ইনডাক্টেন্স নিম্নের কোনটির উপর নির্ভর করেনা? (a) ব্যবহৃত কোরের প্রস্থচ্ছেদের ক… <sub>G4847</sub>
+### ইনডাক্টরের ইনডাক্টেন্স নিম্নের কোনটির উপর নির্ভর করেনা? (a) ব্যবহৃত কোরের প্রস্থচ্ছেদের ক… <sub>G4895</sub>
 
 *MCQ*
 
@@ -156,9 +156,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ15 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4848"></a>
+<a id="g4896"></a>
 
-### নিচের কোন সেলটি শুষ্ক কিন্তু পুনরায় চার্জযোগ্য? (a) নিকেল-ক্যাডমিয়াম (b) মার্কারি (c) লোড… <sub>G4848</sub>
+### নিচের কোন সেলটি শুষ্ক কিন্তু পুনরায় চার্জযোগ্য? (a) নিকেল-ক্যাডমিয়াম (b) মার্কারি (c) লোড… <sub>G4896</sub>
 
 *MCQ*
 
@@ -168,9 +168,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ16 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4857"></a>
+<a id="g4905"></a>
 
-### একটি ঘরে ব্যবহৃত বৈদ্যুতিক যন্ত্রপাতি কিভাবে লাগানো থাকে? (a) শ্রেণী সংযোগে (b) শ্রেণী এব… <sub>G4857</sub>
+### একটি ঘরে ব্যবহৃত বৈদ্যুতিক যন্ত্রপাতি কিভাবে লাগানো থাকে? (a) শ্রেণী সংযোগে (b) শ্রেণী এব… <sub>G4905</sub>
 
 *MCQ*
 
@@ -180,9 +180,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022, MCQ33 — [telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md](../telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md)
 
-<a id="g4860"></a>
+<a id="g4908"></a>
 
-### কোন পদার্থ দিয়ে ইনসুলেটর তৈরি করা হয়? (a) স্টীল (b) কপার (c) পোরসেলিন (d) অ্যালুমিনিয়াম <sub>G4860</sub>
+### কোন পদার্থ দিয়ে ইনসুলেটর তৈরি করা হয়? (a) স্টীল (b) কপার (c) পোরসেলিন (d) অ্যালুমিনিয়াম <sub>G4908</sub>
 
 *MCQ*
 
@@ -192,9 +192,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022, MCQ36 — [telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md](../telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md)
 
-<a id="g2294"></a>
+<a id="g2342"></a>
 
-### বর্তনীতে তড়িৎ প্রবাহ সৃষ্টি করে কোনটি? <sub>G2294</sub>
+### বর্তনীতে তড়িৎ প্রবাহ সৃষ্টি করে কোনটি? <sub>G2342</sub>
 
 *MCQ*
 
@@ -204,9 +204,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 21 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2298"></a>
+<a id="g2346"></a>
 
-### একটি তেজস্ক্রিয় মৌলের অর্ধায়ু ২০০ বছর। মৌলটির ৭৫% ক্ষয় হতে কত বছর লাগবে? <sub>G2298</sub>
+### একটি তেজস্ক্রিয় মৌলের অর্ধায়ু ২০০ বছর। মৌলটির ৭৫% ক্ষয় হতে কত বছর লাগবে? <sub>G2346</sub>
 
 *MCQ*
 
@@ -216,9 +216,9 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 25 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2687"></a>
+<a id="g2735"></a>
 
-### At absolute zero temperature, semiconductor behaves as a/an K. Good conductor L. Supercon… <sub>G2687</sub>
+### At absolute zero temperature, semiconductor behaves as a/an K. Good conductor L. Supercon… <sub>G2735</sub>
 
 *MCQ*
 
@@ -228,9 +228,9 @@ At absolute zero temperature, semiconductor behaves as a/an K. Good conductor L.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Basic Electronics Question 12 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g4799"></a>
+<a id="g4847"></a>
 
-### The measured equivalent DC Resistance between two line for the HT winding of a 11/0.415kv… <sub>G4799</sub>
+### The measured equivalent DC Resistance between two line for the HT winding of a 11/0.415kv… <sub>G4847</sub>
 
 *Written*
 
@@ -240,9 +240,9 @@ The measured equivalent DC Resistance between two line for the HT winding of a 1
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Manager (Technical) 05.02.2021, Q4 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4825"></a>
+<a id="g4873"></a>
 
-### একটি বাল্বে '60W-220V' লেখা আছে। বাল্বটির রোধ কত ওহম? (options not given; printed answer:… <sub>G4825</sub>
+### একটি বাল্বে '60W-220V' লেখা আছে। বাল্বটির রোধ কত ওহম? (options not given; printed answer:… <sub>G4873</sub>
 
 *MCQ*
 
@@ -252,9 +252,9 @@ The measured equivalent DC Resistance between two line for the HT winding of a 1
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ19 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g4826"></a>
+<a id="g4874"></a>
 
-### 33 Q register সার্কিটে 2-A তড়িৎ প্রবাহ চালিত হলে রেজিস্ট্রারের ভোল্টেজ কত? (options not … <sub>G4826</sub>
+### 33 Q register সার্কিটে 2-A তড়িৎ প্রবাহ চালিত হলে রেজিস্ট্রারের ভোল্টেজ কত? (options not … <sub>G4874</sub>
 
 *MCQ*
 
@@ -264,9 +264,9 @@ The measured equivalent DC Resistance between two line for the HT winding of a 1
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ20 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g4827"></a>
+<a id="g4875"></a>
 
-### বর্তনীতে তড়িৎ প্রবাহ সৃষ্টি করে কোনটি? (options not given; printed answer: ইলেক্ট্রনের প… <sub>G4827</sub>
+### বর্তনীতে তড়িৎ প্রবাহ সৃষ্টি করে কোনটি? (options not given; printed answer: ইলেক্ট্রনের প… <sub>G4875</sub>
 
 *MCQ*
 
@@ -276,9 +276,9 @@ The measured equivalent DC Resistance between two line for the HT winding of a 1
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ21 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g4828"></a>
+<a id="g4876"></a>
 
-### ১০০ ওয়াটের একটি বৈদ্যুতিক বাতি প্রতিদিন ৭ ঘণ্টা জ্বালালে ২০২০ সালের ফেব্রুয়ারি মাসে কত … <sub>G4828</sub>
+### ১০০ ওয়াটের একটি বৈদ্যুতিক বাতি প্রতিদিন ৭ ঘণ্টা জ্বালালে ২০২০ সালের ফেব্রুয়ারি মাসে কত … <sub>G4876</sub>
 
 *MCQ*
 
@@ -288,9 +288,9 @@ The measured equivalent DC Resistance between two line for the HT winding of a 1
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ22 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g4831"></a>
+<a id="g4879"></a>
 
-### একটি তেজস্ক্রিয় মৌলের অর্ধায়ু ২০০ বছর। মৌলটির ৭৫% ক্ষয় হতে কত বছর লাগবে? (options not … <sub>G4831</sub>
+### একটি তেজস্ক্রিয় মৌলের অর্ধায়ু ২০০ বছর। মৌলটির ৭৫% ক্ষয় হতে কত বছর লাগবে? (options not … <sub>G4879</sub>
 
 *MCQ*
 
@@ -301,9 +301,9 @@ The measured equivalent DC Resistance between two line for the HT winding of a 1
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ25 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 - **Correction:** 75% decayed leaves 25% = (1/2)², i.e. two half-lives = **400 years**.
 
-<a id="g2874"></a>
+<a id="g2922"></a>
 
-### Define phase velocity ang group velocity. Explain the relationship between phase velocity… <sub>G2874</sub>
+### Define phase velocity ang group velocity. Explain the relationship between phase velocity… <sub>G2922</sub>
 
 *Written*
 
@@ -341,9 +341,9 @@ State and explain Gauss's law. Write Maxwell's equations in differential and int
 - **Source:**
   - 45th BCS Written Technical Cadre (ICT-281) (2024-01-31), Q27(b) — [BCS/06_45th-bcs-physics-logic-questions.md](../BCS/06_45th-bcs-physics-logic-questions.md) · [image](../BCS/06_45th-bcs-physics-logic-questions.jpg)
 
-<a id="g2680"></a>
+<a id="g2728"></a>
 
-### Which of the following statement holds true for the divergence of electric and magnetic f… <sub>G2680</sub>
+### Which of the following statement holds true for the divergence of electric and magnetic f… <sub>G2728</sub>
 
 *MCQ*
 
@@ -354,9 +354,9 @@ Which of the following statement holds true for the divergence of electric and m
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Basic Electronics Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 - **Correction:** ঘ) It is zero for magnetic flux densities — div B = 0 always, while div D = ρv; the printed খ is wrong.
 
-<a id="g2805"></a>
+<a id="g2853"></a>
 
-### Explain the photoelectric effect and its significance in quantum theory <sub>G2805</sub>
+### Explain the photoelectric effect and its significance in quantum theory <sub>G2853</sub>
 
 *Written*
 
@@ -366,9 +366,9 @@ Explain the photoelectric effect and its significance in quantum theory
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 1) (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2873"></a>
+<a id="g2921"></a>
 
-### Write down the Maxwell’s equations in integral form and explain their physical interpreta… <sub>G2873</sub>
+### Write down the Maxwell’s equations in integral form and explain their physical interpreta… <sub>G2921</sub>
 
 *Written*
 
@@ -406,9 +406,9 @@ Relation between velocity v, frequency f and wavelength λ: (v = f/λ / v = λ/f
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q80 — [BCS/57_write-ahead-logging-random-search.md](../BCS/57_write-ahead-logging-random-search.md) · [image](../BCS/57_write-ahead-logging-random-search.jpg)
 - **Printed answer:** (গ) v = fλ
 
-<a id="g4437"></a>
+<a id="g4485"></a>
 
-### When a beam of light travels through media of two different densities, if the angle of in… <sub>G4437</sub>
+### When a beam of light travels through media of two different densities, if the angle of in… <sub>G4485</sub>
 
 *MCQ*
 
@@ -419,9 +419,9 @@ When a beam of light travels through media of two different densities, if the an
   - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ28 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 - **Correction:** key a (refraction) contradicts the sheet's own explanation; above the critical angle the ray is totally internally reflected, option (c) Reflection.
 
-<a id="g2806"></a>
+<a id="g2854"></a>
 
-### Derive the equation for the de Broglie wavelength of a particle <sub>G2806</sub>
+### Derive the equation for the de Broglie wavelength of a particle <sub>G2854</sub>
 
 *Written*
 
