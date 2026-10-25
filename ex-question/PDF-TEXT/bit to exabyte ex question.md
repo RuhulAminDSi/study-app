@@ -11,7 +11,7 @@
 
 | PDF pages | Printed pages | Content | Where it is transcribed |
 |---|---|---|---|
-| 1–8 | 1–8 | Question index: Part B Q01–Q120, Part C descriptive chapters, math, aptitude, BCS sets | `../Standard Pattern/01–05_super-ict-index-*.md` (same index, photographed) |
+| 1–8 | 1–8 | Question index: Part B Q01–Q120, Part C descriptive chapters, math, aptitude, BCS sets | `../Standard Pattern/01–08_super-ict-index-*.md` (same index, photographed) |
 | 9–61 | 9–61 | QUESTIONS BANK (PREVIOUS ALL YEARS), chapter by chapter, every question with its exam tags | `../bit to exabyte/15_*.md` to `71_*.md` (the same pages, photographed; all 688 numbered questions are there: 684 matched one by one, 4 Bangla-only lines checked by count) |
 | 62–70 | 1–9 (solutions) | Answers Q01 (OSI), Q02 (AMAT), Q03 (SQL table; its sub-questions are cut off) | `../bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md` |
 | 71–104 | 106–139 | Answers Q34–Q45 | same |
