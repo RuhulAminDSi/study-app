@@ -2,7 +2,7 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 48 (from 48 records: Study note 1, Written 29, MCQ 18)
+- **Distinct questions:** 49 (from 49 records: Study note 1, Written 30, MCQ 18)
 - **Exams it appears in:** 25
 - **Corrections to printed answers:** 2
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
@@ -12,7 +12,7 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
 | 1 | [Other](#other) | 10 | 10 | 0 |
-| 2 | [Finite automata](#finite-automata) | 9 | 14 | 0 |
+| 2 | [Finite automata](#finite-automata) | 9 | 15 | 0 |
 | 3 | [Grammars & languages](#grammars--languages) | 9 | 12 | 0 |
 | 4 | [Compiler phases](#compiler-phases) | 6 | 9 | 0 |
 | 5 | [Computability & complexity](#computability--complexity) | 3 | 3 | 0 |
@@ -32,55 +32,55 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Petrobangla Assistant Engineer (2022-12-16) — see [G0836](#g0836)
 4. **Problem A can be reduced to problem B in polynomial time, which problem is harder and why?**  
    Asked in (1): Titas Gas AE(CSE) 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024 — see [G2186](#g2186)
+   Source: duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024 — see [G2251](#g2251)
 5. **Construct FA on {0, 1} which accepts even number of 1's and even number of 0's?**  
    Asked in (1): JBL ANE 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20 — see [G3037](#g3037)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20 — see [G3102](#g3102)
 6. **Draw DFA of a string with at least two b's.**  
    Asked in (1): Combined Bank SO(IT) 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25 — see [G3073](#g3073)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25 — see [G3138](#g3138)
 7. **Consider the grammar: E → E + E | E * E | id Show that the grammar is ambiguous for the string: id + id * idT**  
    Asked in (1): Combined Bank SO(IT) 2026  
-   Source: duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12 — see [G3612](#g3612)
+   Source: duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12 — see [G3677](#g3677)
 8. **Why pumping lemma is only used for negative proofing?**  
    Asked in (1): BUET M.Sc. April 2024  
-   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024 — see [G3949](#g3949)
+   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024 — see [G4014](#g4014)
 9. **Predictive parsing cell entry in A ->∞ and A->∈. Describe it in terms of First and Follow.**  
    Asked in (1): BUET M.Sc. April 2024  
-   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024 — see [G3956](#g3956)
+   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024 — see [G4021](#g4021)
 10. **Define P and NP classes. Differentiate between approximation and heuristic algorithm.**  
    Asked in (1): BUET M.Sc. April 2024  
-   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024 — see [G3959](#g3959)
+   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024 — see [G4024](#g4024)
 11. **What output will be generated by the compiler after lexical and syntax analyses, respectively? (ক) Tokens and a parse tree (খ) A parse tree and tokens (গ) A Sy…**  
    Asked in (1): 49th BCS CSE (2025)  
-   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G3987](#g3987)
+   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4052](#g4052)
 12. **Which optimization technique is not used for eliminating redundant codes? (ক) Dead code elimination (খ) Partial redundancy elimination (গ) Common subexpression…**  
    Asked in (1): 49th BCS CSE (2025)  
-   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4014](#g4014)
+   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4079](#g4079)
 13. **Which phase in the compiler design performs data type checking? A. Lexical analysis (খ) Syntax analysis (গ) Semantic analysis (ঘ) Code generation**  
    Asked in (1): 49th BCS CSE (2025)  
-   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4018](#g4018)
+   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4083](#g4083)
 14. **Which one is true for a DFA? (ক) DFA can have ε-transitions (খ) DFA accepts all context-free languages (গ) DFA accepts regular languages (ঘ) DFA can have multi…**  
    Asked in (1): 49th BCS CSE (2025)  
-   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4028](#g4028)
+   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4093](#g4093)
 15. **Pushdown automata (PDA) is equivalent in power to: (ক) regular expressions (খ) context-free grammars (গ) context-sensitive grammars (ঘ) Turing machines**  
    Asked in (1): 49th BCS CSE (2025)  
-   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4035](#g4035)
+   Source: Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025 — see [G4100](#g4100)
 16. **Travelling Salesperson Problem is an example of - Polynomial -time / Np-Complete / NP / NP- Hard Printed answer: NP- Hard**  
    Asked in (1): BPSC AME 2022  
-   Source: Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order) — see [G4515](#g4515)
+   Source: Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order) — see [G4760](#g4760)
 17. **Define a context-free grammar with examples.**  
    Asked in (1): PGCB AE(CSE) 2021  
    Source: PGCB Assistant Engineer (CSE) (BUET) (2021-09-30) — see [G0178](#g0178)
 18. **Draw a DFA diagram to identify all the valid file names. Note that a file name can be a non- empty string starting with underscore or alphanumeric only.**  
    Asked in (1): JBL ASA 2021  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 07 — Assistant System Administrator (ASA)-JBL — 01.12.2021 — Exam taker: not printed — IT: 15*10 marks + Non - IT: 4*10 marks + GK: 2*5 marks — pages 12–14 — see [G2974](#g2974)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 07 — Assistant System Administrator (ASA)-JBL — 01.12.2021 — Exam taker: not printed — IT: 15*10 marks + Non - IT: 4*10 marks + GK: 2*5 marks — pages 12–14 — see [G3039](#g3039)
 19. **Why left empty strings have to be eliminated to build a parser**  
    Asked in (1): BUET M.Sc. October 2018  
-   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018 — see [G3736](#g3736)
+   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018 — see [G3801](#g3801)
 20. **Draw DFA of words ending with two a’s only, that is ‘aa’ for grammar {a,b}**  
    Asked in (1): BUET M.Sc. October 2018  
-   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018 — see [G3737](#g3737)
+   Source: Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018 — see [G3802](#g3802)
 
 ## Coaching "standard pattern" topics (not counted)
 
@@ -94,9 +94,9 @@ Topics the Bit to Exabyte question book lists as its standard pattern for this s
 
 ## Other
 
-<a id="g2186"></a>
+<a id="g2251"></a>
 
-### Problem A can be reduced to problem B in polynomial time, which problem is harder and why? <sub>G2186</sub>
+### Problem A can be reduced to problem B in polynomial time, which problem is harder and why? <sub>G2251</sub>
 
 *Written*
 
@@ -106,9 +106,9 @@ Problem A can be reduced to problem B in polynomial time, which problem is harde
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024, Q1(c) — [duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md](../duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md)
 
-<a id="g3037"></a>
+<a id="g3102"></a>
 
-### Construct FA on {0, 1} which accepts even number of 1's and even number of 0's? <sub>G3037</sub>
+### Construct FA on {0, 1} which accepts even number of 1's and even number of 0's? <sub>G3102</sub>
 
 *Written*
 
@@ -118,9 +118,9 @@ Construct FA on {0, 1} which accepts even number of 1's and even number of 0's?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3949"></a>
+<a id="g4014"></a>
 
-### Why pumping lemma is only used for negative proofing? <sub>G3949</sub>
+### Why pumping lemma is only used for negative proofing? <sub>G4014</sub>
 
 *Written*
 
@@ -130,9 +130,9 @@ Why pumping lemma is only used for negative proofing?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q2 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g4014"></a>
+<a id="g4079"></a>
 
-### Which optimization technique is not used for eliminating redundant codes? (ক) Dead code e… <sub>G4014</sub>
+### Which optimization technique is not used for eliminating redundant codes? (ক) Dead code e… <sub>G4079</sub>
 
 *MCQ*
 
@@ -142,9 +142,9 @@ Which optimization technique is not used for eliminating redundant codes? (ক) 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q141 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g3779"></a>
+<a id="g3844"></a>
 
-### Elimination of left recursion. <sub>G3779</sub>
+### Elimination of left recursion. <sub>G3844</sub>
 
 *Written*
 
@@ -154,9 +154,9 @@ Elimination of left recursion.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q19 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g3818"></a>
+<a id="g3883"></a>
 
-### Which one of the following is (are) not true? (i) A basic block is a sequence of instruct… <sub>G3818</sub>
+### Which one of the following is (are) not true? (i) A basic block is a sequence of instruct… <sub>G3883</sub>
 
 *MCQ*
 
@@ -166,9 +166,9 @@ Which one of the following is (are) not true? (i) A basic block is a sequence of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q6 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4122"></a>
+<a id="g4187"></a>
 
-### পার্সিং কী? টপ ডাউন পার্সিং ও বটম আপ পার্সিং সম্পর্কে লিখুন। <sub>G4122</sub>
+### পার্সিং কী? টপ ডাউন পার্সিং ও বটম আপ পার্সিং সম্পর্কে লিখুন। <sub>G4187</sub>
 
 *Written*
 
@@ -178,9 +178,9 @@ Which one of the following is (are) not true? (i) A basic block is a sequence of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ২(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g2001"></a>
+<a id="g2066"></a>
 
-### Code generation ও Code optimization কী? Code generation এর প্রধান কাজগুলো কী কী? <sub>G2001</sub>
+### Code generation ও Code optimization কী? Code generation এর প্রধান কাজগুলো কী কী? <sub>G2066</sub>
 
 *Written*
 
@@ -190,9 +190,9 @@ Code generation ও Code optimization কী? Code generation এর প্র�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৭। — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2746"></a>
+<a id="g2811"></a>
 
-### Distinguish between Mealy and Moore machines <sub>G2746</sub>
+### Distinguish between Mealy and Moore machines <sub>G2811</sub>
 
 *Written*
 
@@ -202,9 +202,9 @@ Distinguish between Mealy and Moore machines
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 2 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3680"></a>
+<a id="g3745"></a>
 
-### Why intermediate code generator is required between syntax analysis and semantic analysis? <sub>G3680</sub>
+### Why intermediate code generator is required between syntax analysis and semantic analysis? <sub>G3745</sub>
 
 *Written*
 
@@ -216,9 +216,9 @@ Why intermediate code generator is required between syntax analysis and semantic
 
 ## Finite automata
 
-<a id="g3073"></a>
+<a id="g3138"></a>
 
-### Draw DFA of a string with at least two b's. <sub>G3073</sub>
+### Draw DFA of a string with at least two b's. <sub>G3138</sub>
 
 *Written*
 
@@ -228,9 +228,9 @@ Draw DFA of a string with at least two b's.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4028"></a>
+<a id="g4093"></a>
 
-### Which one is true for a DFA? (ক) DFA can have ε-transitions (খ) DFA accepts all context-f… <sub>G4028</sub>
+### Which one is true for a DFA? (ক) DFA can have ε-transitions (খ) DFA accepts all context-f… <sub>G4093</sub>
 
 *MCQ*
 
@@ -240,9 +240,9 @@ Which one is true for a DFA? (ক) DFA can have ε-transitions (খ) DFA accepts
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q155 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4035"></a>
+<a id="g4100"></a>
 
-### Pushdown automata (PDA) is equivalent in power to: (ক) regular expressions (খ) context-fr… <sub>G4035</sub>
+### Pushdown automata (PDA) is equivalent in power to: (ক) regular expressions (খ) context-fr… <sub>G4100</sub>
 
 *MCQ*
 
@@ -252,9 +252,9 @@ Pushdown automata (PDA) is equivalent in power to: (ক) regular expressions (�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q162 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g2974"></a>
+<a id="g3039"></a>
 
-### Draw a DFA diagram to identify all the valid file names. Note that a file name can be a n… <sub>G2974</sub>
+### Draw a DFA diagram to identify all the valid file names. Note that a file name can be a n… <sub>G3039</sub>
 
 *Written*
 
@@ -264,9 +264,9 @@ Draw a DFA diagram to identify all the valid file names. Note that a file name c
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 07 — Assistant System Administrator (ASA)-JBL — 01.12.2021 — Exam taker: not printed — IT: 15*10 marks + Non - IT: 4*10 marks + GK: 2*5 marks — pages 12–14, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3737"></a>
+<a id="g3802"></a>
 
-### Draw DFA of words ending with two a’s only, that is ‘aa’ for grammar {a,b} <sub>G3737</sub>
+### Draw DFA of words ending with two a’s only, that is ‘aa’ for grammar {a,b} <sub>G3802</sub>
 
 *Written*
 
@@ -276,9 +276,9 @@ Draw DFA of words ending with two a’s only, that is ‘aa’ for grammar {a,b}
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q4 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3770"></a>
+<a id="g3835"></a>
 
-### Construct NFA that accepts binary strings having odd number of 1's or even number of 0's. <sub>G3770</sub>
+### Construct NFA that accepts binary strings having odd number of 1's or even number of 0's. <sub>G3835</sub>
 
 *Written*
 
@@ -288,9 +288,9 @@ Construct NFA that accepts binary strings having odd number of 1's or even numbe
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q10 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g3813"></a>
+<a id="g3878"></a>
 
-### What language does the following deterministic finite automaton (DFA) accept? [Figure: st… <sub>G3813</sub>
+### What language does the following deterministic finite automaton (DFA) accept? [Figure: st… <sub>G3878</sub>
 
 *MCQ*
 
@@ -300,9 +300,9 @@ What language does the following deterministic finite automaton (DFA) accept? [F
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q1 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3830"></a>
+<a id="g3895"></a>
 
-### Which regular expression describes the language that the following non-deterministic fini… <sub>G3830</sub>
+### Which regular expression describes the language that the following non-deterministic fini… <sub>G3895</sub>
 
 *MCQ*
 
@@ -312,9 +312,9 @@ Which regular expression describes the language that the following non-determini
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q18 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3832"></a>
+<a id="g3897"></a>
 
-### Which of the following is not true about Turing machines? (a) There are languages that ca… <sub>G3832</sub>
+### Which of the following is not true about Turing machines? (a) There are languages that ca… <sub>G3897</sub>
 
 *MCQ*
 
@@ -324,9 +324,9 @@ Which of the following is not true about Turing machines? (a) There are language
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q20 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4273"></a>
+<a id="g4338"></a>
 
-### State diagram of DFA using binary strings having 0 with multiple of 3 on input {0,1}. Als… <sub>G4273</sub>
+### State diagram of DFA using binary strings having 0 with multiple of 3 on input {0,1}. Als… <sub>G4338</sub>
 
 *Written*
 
@@ -336,9 +336,9 @@ State diagram of DFA using binary strings having 0 with multiple of 3 on input {
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 6 Banks & Financial Institutions (BSCS) — Assistant Programmer — 2021 (date conflicting: 18/03/2021 on the MCQ page; 15-01-2022 in the site's analysis page) — Exam taker: not stated — recollection (8 items), Q8 — [bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md](../bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md)
 
-<a id="g1844"></a>
+<a id="g1909"></a>
 
-### Explain the functionality of a push down automata <sub>G1844</sub>
+### Explain the functionality of a push down automata <sub>G1909</sub>
 
 *Written*
 
@@ -348,9 +348,9 @@ Explain the functionality of a push down automata
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 22. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g2828"></a>
+<a id="g2893"></a>
 
-### Explain the difference between Deterministic Finite Automata (DFA) and Non-Deterministic … <sub>G2828</sub>
+### Explain the difference between Deterministic Finite Automata (DFA) and Non-Deterministic … <sub>G2893</sub>
 
 *Written*
 
@@ -360,9 +360,9 @@ Explain the difference between Deterministic Finite Automata (DFA) and Non-Deter
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 7 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g1775"></a>
+<a id="g1774"></a>
 
-### State diagram of DFA using binary strings having 0 with multiple of 3. <sub>G1775</sub>
+### State diagram of DFA using binary strings having 0 with multiple of 3. <sub>G1774</sub>
 
 *Written*
 
@@ -372,9 +372,21 @@ State diagram of DFA using binary strings having 0 with multiple of 3.
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q39 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g2366"></a>
+<a id="g1828"></a>
 
-### Explain the functionality of a push down automata. [BCS – 36th(ICT)] <sub>G2366</sub>
+### Differentiate between Deterministic Finite Automata (DFA) and Nondeterministic Finite Aut… <sub>G1828</sub>
+
+*Written*
+
+Differentiate between Deterministic Finite Automata (DFA) and Nondeterministic Finite Automata (NFA). OR Differentiate between Regular Language and Context-Free Language (CFL).
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q44 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g2431"></a>
+
+### Explain the functionality of a push down automata. [BCS – 36th(ICT)] <sub>G2431</sub>
 
 *Written*
 
@@ -412,9 +424,9 @@ Bangla grammar and literature MCQs (transcription partly garbled).
   - Petrobangla Assistant Engineer (2022-12-16), MCQ 7–9, 11–12 — [PETROBANGLA/14_mcq-assistant-engineer-cloud.md](../PETROBANGLA/14_mcq-assistant-engineer-cloud.md) · [image](../PETROBANGLA/14_mcq-assistant-engineer-cloud.jpg)
 - **Printed answer:** 7: ঘ; 8: ঘ (অধিকরণে শূন্য); 9: গ; 11: ঘ; 12: ঘ
 
-<a id="g3612"></a>
+<a id="g3677"></a>
 
-### Consider the grammar: E → E + E | E * E | id Show that the grammar is ambiguous for the s… <sub>G3612</sub>
+### Consider the grammar: E → E + E | E * E | id Show that the grammar is ambiguous for the s… <sub>G3677</sub>
 
 *Written*
 
@@ -438,9 +450,9 @@ Define a context-free grammar with examples.
 - **Printed answer:** CFG = (N, T, P, S) with productions N → (N ∪ T)*; three example grammars.
 - **Correction:** The second example ({S, a, b}, {a, b}, P, S) lists a and b as both non-terminals and terminals, which breaks N ∩ T = ∅; it should be ({S}, {a, b}, P, S). The definition also misprints 'does have' for 'does not have' a context.
 
-<a id="g3819"></a>
+<a id="g3884"></a>
 
-### Which of the following context-free grammars (CFG) generates all palindromes over the bin… <sub>G3819</sub>
+### Which of the following context-free grammars (CFG) generates all palindromes over the bin… <sub>G3884</sub>
 
 *MCQ*
 
@@ -450,9 +462,9 @@ Which of the following context-free grammars (CFG) generates all palindromes ove
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q7 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3820"></a>
+<a id="g3885"></a>
 
-### In certain programming languages, an identifier consists of a letter following by any num… <sub>G3820</sub>
+### In certain programming languages, an identifier consists of a letter following by any num… <sub>G3885</sub>
 
 *MCQ*
 
@@ -462,9 +474,9 @@ In certain programming languages, an identifier consists of a letter following b
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q8 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3826"></a>
+<a id="g3891"></a>
 
-### Which of the following regular expressions describe the set of all binary strings contain… <sub>G3826</sub>
+### Which of the following regular expressions describe the set of all binary strings contain… <sub>G3891</sub>
 
 *MCQ*
 
@@ -474,9 +486,9 @@ Which of the following regular expressions describe the set of all binary string
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q14 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3833"></a>
+<a id="g3898"></a>
 
-### Eliminate left-recursion from the grammar: S → Sab | SBb | bSs | s (a) S → bSsT | sT, T →… <sub>G3833</sub>
+### Eliminate left-recursion from the grammar: S → Sab | SBb | bSs | s (a) S → bSsT | sT, T →… <sub>G3898</sub>
 
 *MCQ*
 
@@ -498,9 +510,9 @@ Ten fill-in-the-blank items choosing the correct form (would have succeeded / wi
 - **Source:**
   - Bank (name cut off, 'B... Ltd') Assistant Programmer Written, Q20 (A–J) — [Exam_Bank_Assistant_Programmer_Written.md](../Exam_Bank_Assistant_Programmer_Written.md) · [image](../Exam_Bank_Assistant_Programmer_Written.jpg)
 
-<a id="g3673"></a>
+<a id="g3738"></a>
 
-### CFG(odd length pallindrome) <sub>G3673</sub>
+### CFG(odd length pallindrome) <sub>G3738</sub>
 
 *Written*
 
@@ -510,9 +522,9 @@ CFG(odd length pallindrome)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q23 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3686"></a>
+<a id="g3751"></a>
 
-### Write the regular expression which takes one or more alphanumeric character followed by e… <sub>G3686</sub>
+### Write the regular expression which takes one or more alphanumeric character followed by e… <sub>G3751</sub>
 
 *Written*
 
@@ -522,9 +534,9 @@ Write the regular expression which takes one or more alphanumeric character foll
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017, Q7 — [buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md](../buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md)
 
-<a id="g3727"></a>
+<a id="g3792"></a>
 
-### Context Free Grammar of Even length non empty palindromes comprising of { a , b , c } <sub>G3727</sub>
+### Context Free Grammar of Even length non empty palindromes comprising of { a , b , c } <sub>G3792</sub>
 
 *Written*
 
@@ -549,9 +561,9 @@ How many tokens does the lexical analyzer generate for the C statement Power=bpd
   - BPDB Assistant Engineer (CSE) (BUET) (2023-02-24), Q1 — [BUET JOB/01_bpdb-ae-jfet-and-tokens.md](../BUET%20JOB/01_bpdb-ae-jfet-and-tokens.md) · [image](../BUET%20JOB/01_bpdb-ae-jfet-and-tokens.jpg); [BUET JOB/20_bpdb-tokens-and-linux-users.md](../BUET%20JOB/20_bpdb-tokens-and-linux-users.md) · [image](../BUET%20JOB/20_bpdb-tokens-and-linux-users.jpg); [BUET MSC/02_bpdb-assistant-engineer-questions-1-9.md](../BUET%20MSC/02_bpdb-assistant-engineer-questions-1-9.md) · [image](../BUET%20MSC/02_bpdb-assistant-engineer-questions-1-9.jpg)
 - **Printed answer:** 11 tokens (Power, =, bpdb, *, (, nuclear, +, coal, +, hydro, )).
 
-<a id="g3956"></a>
+<a id="g4021"></a>
 
-### Predictive parsing cell entry in A ->∞ and A->∈. Describe it in terms of First and Follow. <sub>G3956</sub>
+### Predictive parsing cell entry in A ->∞ and A->∈. Describe it in terms of First and Follow. <sub>G4021</sub>
 
 *Written*
 
@@ -561,9 +573,9 @@ Predictive parsing cell entry in A ->∞ and A->∈. Describe it in terms of Fir
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q9 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g3987"></a>
+<a id="g4052"></a>
 
-### What output will be generated by the compiler after lexical and syntax analyses, respecti… <sub>G3987</sub>
+### What output will be generated by the compiler after lexical and syntax analyses, respecti… <sub>G4052</sub>
 
 *MCQ*
 
@@ -573,9 +585,9 @@ What output will be generated by the compiler after lexical and syntax analyses,
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q114 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4018"></a>
+<a id="g4083"></a>
 
-### Which phase in the compiler design performs data type checking? A. Lexical analysis (খ) S… <sub>G4018</sub>
+### Which phase in the compiler design performs data type checking? A. Lexical analysis (খ) S… <sub>G4083</sub>
 
 *MCQ*
 
@@ -585,9 +597,9 @@ Which phase in the compiler design performs data type checking? A. Lexical analy
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q145 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g3736"></a>
+<a id="g3801"></a>
 
-### Why left empty strings have to be eliminated to build a parser <sub>G3736</sub>
+### Why left empty strings have to be eliminated to build a parser <sub>G3801</sub>
 
 *Written*
 
@@ -597,9 +609,9 @@ Why left empty strings have to be eliminated to build a parser
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q3 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3828"></a>
+<a id="g3893"></a>
 
-### Which of the following correctly portrays the number of states in the parsing tables for … <sub>G3828</sub>
+### Which of the following correctly portrays the number of states in the parsing tables for … <sub>G3893</sub>
 
 *MCQ*
 
@@ -609,9 +621,9 @@ Which of the following correctly portrays the number of states in the parsing ta
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q16 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3836"></a>
+<a id="g3901"></a>
 
-### Which of the following statements is (are) true for lexical analyzer? (i) Checks every ch… <sub>G3836</sub>
+### Which of the following statements is (are) true for lexical analyzer? (i) Checks every ch… <sub>G3901</sub>
 
 *MCQ*
 
@@ -621,9 +633,9 @@ Which of the following statements is (are) true for lexical analyzer? (i) Checks
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q24 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g2723"></a>
+<a id="g2788"></a>
 
-### Compare and Contrast among lexical analysis, syntax analysis and semantic analysis. <sub>G2723</sub>
+### Compare and Contrast among lexical analysis, syntax analysis and semantic analysis. <sub>G2788</sub>
 
 *Written*
 
@@ -647,9 +659,9 @@ Coaching course outline, classes 28-32: compiler design and theory of computatio
 
 ## Computability & complexity
 
-<a id="g3959"></a>
+<a id="g4024"></a>
 
-### Define P and NP classes. Differentiate between approximation and heuristic algorithm. <sub>G3959</sub>
+### Define P and NP classes. Differentiate between approximation and heuristic algorithm. <sub>G4024</sub>
 
 *Written*
 
@@ -659,9 +671,9 @@ Define P and NP classes. Differentiate between approximation and heuristic algor
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q12 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g4515"></a>
+<a id="g4760"></a>
 
-### Travelling Salesperson Problem is an example of - Polynomial -time / Np-Complete / NP / N… <sub>G4515</sub>
+### Travelling Salesperson Problem is an example of - Polynomial -time / Np-Complete / NP / N… <sub>G4760</sub>
 
 *MCQ*
 
@@ -672,9 +684,9 @@ Travelling Salesperson Problem is an example of - Polynomial -time / Np-Complete
   - Question paper found on the web (see the folder README for the URL) — BPSC — various ministries (general pool), Assistant Maintenance Engineer — Screening MCQ, 24.05.2022 — Exam taker: BPSC (not shown on page) — 100 MCQ — Computer & ICT items 1–15 (site order), SA-ICT 10 — [ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md](../ministry-ap-web/2022-bpsc-ame-various-ministries-mcq/bpsc-ame-2022-mcq.md)
 - **Correction:** the optimisation TSP is NP-hard; its decision version is NP-complete, so both "NP-Complete" and "NP-Hard" are defensible.
 
-<a id="g3777"></a>
+<a id="g3842"></a>
 
-### Draw relationship diagram for P, NP, NP hard and Np complete. <sub>G3777</sub>
+### Draw relationship diagram for P, NP, NP hard and Np complete. <sub>G3842</sub>
 
 *Written*
 

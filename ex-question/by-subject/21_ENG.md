@@ -176,9 +176,9 @@ Make sentences with judicious, condone, fabricate, accentuate, multifaceted with
 
 ## Other
 
-<a id="g1798"></a>
+<a id="g1797"></a>
 
-### Write an essay on Artificial Intelligence and human civilization. <sub>G1798</sub>
+### Write an essay on Artificial Intelligence and human civilization. <sub>G1797</sub>
 
 *Written*
 
@@ -188,9 +188,9 @@ Write an essay on Artificial Intelligence and human civilization.
 - **Source:**
   - Bit to Exabyte Model Test 01, 2 Oct 2026 (coaching mock, not a real paper) — Bit to Exabyte Model Test 01 (2026-10-02), Q1 — [model test/01_bte-model-test-01-2026-10-02.md](../model%20test/01_bte-model-test-01-2026-10-02.md) · [image](../model%20test/01_bte-model-test-01-2026-10-02.jpg)
 
-<a id="g1800"></a>
+<a id="g1799"></a>
 
-### নিচের অনুচ্ছেদটি ইংরেজিতে অনুবাদ করুন: <sub>G1800</sub>
+### নিচের অনুচ্ছেদটি ইংরেজিতে অনুবাদ করুন: <sub>G1799</sub>
 
 *Written*
 

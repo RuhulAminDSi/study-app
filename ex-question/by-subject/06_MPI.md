@@ -2,8 +2,8 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 87 (from 105 records: Written 75, MCQ 26, Viva 4)
-- **Exams it appears in:** 46
+- **Distinct questions:** 91 (from 109 records: Written 75, MCQ 30, Viva 4)
+- **Exams it appears in:** 48
 - **Corrections to printed answers:** 4
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
@@ -11,13 +11,13 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
-| 1 | [8086 architecture & segmentation](#8086-architecture--segmentation) | 18 | 31 | 0 |
+| 1 | [8086 architecture & segmentation](#8086-architecture--segmentation) | 19 | 32 | 0 |
 | 2 | [Microprocessor basics & instructions](#microprocessor-basics--instructions) | 16 | 24 | 4 |
 | 3 | [Microprocessor vs microcontroller](#microprocessor-vs-microcontroller) | 10 | 7 | 0 |
-| 4 | [Other](#other) | 8 | 9 | 0 |
-| 5 | [Processor generations (8085, 80386, Pentium)](#processor-generations-8085-80386-pentium) | 5 | 6 | 0 |
-| 6 | [Assembly language](#assembly-language) | 4 | 6 | 0 |
-| 7 | [Addressing modes](#addressing-modes) | 4 | 4 | 0 |
+| 4 | [Other](#other) | 9 | 10 | 0 |
+| 5 | [Assembly language](#assembly-language) | 5 | 7 | 0 |
+| 6 | [Processor generations (8085, 80386, Pentium)](#processor-generations-8085-80386-pentium) | 5 | 6 | 0 |
+| 7 | [Addressing modes](#addressing-modes) | 5 | 5 | 0 |
 
 ## Most-asked questions
 
@@ -31,7 +31,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor — see [G1267](#g1267)
 3. **a. What are the differences between 'Microprocessor' and 'Micro-Controller'? 5**  
    Asked in (2): BUET M.Sc. April 2017; Parliament Secretariat Programmer 2023  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16 · Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017 — see [G3693](#g3693)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16 · Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017 — see [G3758](#g3758)
 4. **Write down advantages of microcontroller over microprocessor.**  
    Asked in (2): BUET M.Sc. May 2016; BUET M.Sc. October 2015  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor · Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016 — see [G1273](#g1273)
@@ -67,22 +67,22 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor — see [G1268](#g1268)
 15. **Assembly language কী? এর বৈশিষ্ট্যগুলো লিখুন। একটি Assembly language program লিখুন যা দুটি সংখ্যার যোগফল ও গুণফল নিরূপণ করতে পারে।**  
    Asked in (1): 45th BCS CSE (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1901](#g1901)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1966](#g1966)
 16. **Intel 8086 microprocessor এর block diagram আঁকুন। 8086 microprocessor এর বৈশিষ্ট্যগুলো লিখুন।**  
    Asked in (1): 45th BCS CSE (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1910](#g1910)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1975](#g1975)
 17. **Microprocessor addressing mode কেন দরকার? 8086 microprocessor এর জন্য উদাহরণসহ immediate addressing mode এবং indexed addressing mode ব্যাখ্যা করুন।**  
    Asked in (1): 45th BCS CSE (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1911](#g1911)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1976](#g1976)
 18. **Interrupt এর উদাহরণসহ সংজ্ঞা দিন। যদি processor এর গতি ১-৮ GHz হয় তবে এর time period কত হবে ?**  
    Asked in (1): 45th BCS CSE (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1912](#g1912)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — see [G1977](#g1977)
 19. **মাইক্রোকম্পিউটার এর উপাদান গুলো নাম সহ আর্কিটেকচার অংকন। (Draw a microcomputer architecture figuring out its components)**  
    Asked in (1): BTCL JAM 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04) — see [G2151](#g2151)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04) — see [G2216](#g2216)
 20. **8086 microprocessor এর figure দিয়ে different parts এর নাম লিখতে বলছিলো। You have to find out ALU, BU,EU,Internal BUS, [figure: 8086 internal block diagram wit…**  
    Asked in (1): BGDCL AM(CSE) 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BGDCL Assistant Manager (CSE) 15.03.2024 — see [G2161](#g2161)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BGDCL Assistant Manager (CSE) 15.03.2024 — see [G2226](#g2226)
 
 ## Coaching "standard pattern" topics (not counted)
 
@@ -146,9 +146,9 @@ Why is memory segmentation needed in 8086 microprocessor? What is the technique 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q9 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g1910"></a>
+<a id="g1975"></a>
 
-### Intel 8086 microprocessor এর block diagram আঁকুন। 8086 microprocessor এর বৈশিষ্ট্যগুলো লি… <sub>G1910</sub>
+### Intel 8086 microprocessor এর block diagram আঁকুন। 8086 microprocessor এর বৈশিষ্ট্যগুলো লি… <sub>G1975</sub>
 
 *Written*
 
@@ -160,9 +160,9 @@ Intel 8086 microprocessor এর block diagram আঁকুন। 8086 microproc
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1911"></a>
+<a id="g1976"></a>
 
-### Microprocessor addressing mode কেন দরকার? 8086 microprocessor এর জন্য উদাহরণসহ immediate … <sub>G1911</sub>
+### Microprocessor addressing mode কেন দরকার? 8086 microprocessor এর জন্য উদাহরণসহ immediate … <sub>G1976</sub>
 
 *Written*
 
@@ -174,9 +174,9 @@ Microprocessor addressing mode কেন দরকার? 8086 microprocessor �
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2161"></a>
+<a id="g2226"></a>
 
-### 8086 microprocessor এর figure দিয়ে different parts এর নাম লিখতে বলছিলো। You have to find… <sub>G2161</sub>
+### 8086 microprocessor এর figure দিয়ে different parts এর নাম লিখতে বলছিলো। You have to find… <sub>G2226</sub>
 
 *Written*
 
@@ -186,9 +186,9 @@ Microprocessor addressing mode কেন দরকার? 8086 microprocessor �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BGDCL Assistant Manager (CSE) 15.03.2024, Q7 — [duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md](../duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md)
 
-<a id="g2370"></a>
+<a id="g2435"></a>
 
-### নিম্নলিখিত 8086 program status word এর অর্থ লিখুন। | S | Z | AC | P | CY | |---|---|---|-… <sub>G2370</sub>
+### নিম্নলিখিত 8086 program status word এর অর্থ লিখুন। | S | Z | AC | P | CY | |---|---|---|-… <sub>G2435</sub>
 
 *Written*
 
@@ -200,9 +200,9 @@ Microprocessor addressing mode কেন দরকার? 8086 microprocessor �
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2371"></a>
+<a id="g2436"></a>
 
-### 8086 mucroprocessor এর memory segmentation কেন প্রয়োজন? 16-bit microprocessor-এ 20-bit p… <sub>G2371</sub>
+### 8086 mucroprocessor এর memory segmentation কেন প্রয়োজন? 16-bit microprocessor-এ 20-bit p… <sub>G2436</sub>
 
 *Written*
 
@@ -214,9 +214,9 @@ Microprocessor addressing mode কেন দরকার? 8086 microprocessor �
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2407"></a>
+<a id="g2472"></a>
 
-### Intel 8085 ও Intel 8086 মাইক্রোপ্রসেসরের সর্বোচ্চ ফিজিক্যাল মেমোরি ক্যাপাসিটি কত এবং কেন? <sub>G2407</sub>
+### Intel 8085 ও Intel 8086 মাইক্রোপ্রসেসরের সর্বোচ্চ ফিজিক্যাল মেমোরি ক্যাপাসিটি কত এবং কেন? <sub>G2472</sub>
 
 *Written*
 
@@ -226,9 +226,9 @@ Intel 8085 ও Intel 8086 মাইক্রোপ্রসেসরের স�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ২ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2408"></a>
+<a id="g2473"></a>
 
-### Flag Register কী? Intel 8086 মাইক্রোপ্রসেসরের [cut off as printed] <sub>G2408</sub>
+### Flag Register কী? Intel 8086 মাইক্রোপ্রসেসরের [cut off as printed] <sub>G2473</sub>
 
 *Written*
 
@@ -238,9 +238,9 @@ Flag Register কী? Intel 8086 মাইক্রোপ্রসেসরে�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ৩ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2687"></a>
+<a id="g2752"></a>
 
-### মাইক্রোপ্রসেসর এবং মাইক্রোকন্ট্রোলারের মধ্যে পার্থক্য দেখান। 8085 এবং 8086 মাইক্রোপ্রসেসর… <sub>G2687</sub>
+### মাইক্রোপ্রসেসর এবং মাইক্রোকন্ট্রোলারের মধ্যে পার্থক্য দেখান। 8085 এবং 8086 মাইক্রোপ্রসেসর… <sub>G2752</sub>
 
 *Written*
 
@@ -250,9 +250,9 @@ Flag Register কী? Intel 8086 মাইক্রোপ্রসেসরে�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ৫। (ক) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3359"></a>
+<a id="g3424"></a>
 
-### Status and Control flag of 8086. <sub>G3359</sub>
+### Status and Control flag of 8086. <sub>G3424</sub>
 
 *Written*
 
@@ -262,9 +262,9 @@ Status and Control flag of 8086.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 01/02/2025, 2 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3617"></a>
+<a id="g3682"></a>
 
-### 8086 microprocessor koto bit? <sub>G3617</sub>
+### 8086 microprocessor koto bit? <sub>G3682</sub>
 
 *MCQ*
 
@@ -274,9 +274,9 @@ Status and Control flag of 8086.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 6 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3970"></a>
+<a id="g4035"></a>
 
-### After RESET, 8086 starts from memory location: (ক) FFFF0H (খ) 0FFFFH (গ) 00000H (ঘ) 00001H <sub>G3970</sub>
+### After RESET, 8086 starts from memory location: (ক) FFFF0H (খ) 0FFFFH (গ) 00000H (ঘ) 00001H <sub>G4035</sub>
 
 *MCQ*
 
@@ -286,9 +286,9 @@ After RESET, 8086 starts from memory location: (ক) FFFF0H (খ) 0FFFFH (গ) 0
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — ICT (281), question paper 2 (Q101–200), 10.10.2025, Q178 — [bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md](../bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md)
 
-<a id="g4010"></a>
+<a id="g4075"></a>
 
-### Intel 8086 (16 bit) microprocessor has a _____ bit address bus. (ক) 8 (খ) 16 (গ) 20 (ঘ) 32 <sub>G4010</sub>
+### Intel 8086 (16 bit) microprocessor has a _____ bit address bus. (ক) 8 (খ) 16 (গ) 20 (ঘ) 32 <sub>G4075</sub>
 
 *MCQ*
 
@@ -298,9 +298,9 @@ Intel 8086 (16 bit) microprocessor has a _____ bit address bus. (ক) 8 (খ) 16
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q137 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4611"></a>
+<a id="g4856"></a>
 
-### নিচের 8086 মাইক্রোপ্রসেসর এর আর্কিটেকচার ডায়াগ্রাম থেকে Part-A, Part-B এবং Part-C এর নাম… <sub>G4611</sub>
+### নিচের 8086 মাইক্রোপ্রসেসর এর আর্কিটেকচার ডায়াগ্রাম থেকে Part-A, Part-B এবং Part-C এর নাম… <sub>G4856</sub>
 
 *Written*
 
@@ -322,9 +322,9 @@ What is the difference between 8-bit (8085) and 16-bit (8086) microprocessor?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q14 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g2604"></a>
+<a id="g2669"></a>
 
-### How many 16-bit registers are present in Intel 8086 microprocessor? a. 4 b. 8 c. 14 d. 16 <sub>G2604</sub>
+### How many 16-bit registers are present in Intel 8086 microprocessor? a. 4 b. 8 c. 14 d. 16 <sub>G2669</sub>
 
 *MCQ*
 
@@ -334,9 +334,9 @@ How many 16-bit registers are present in Intel 8086 microprocessor? a. 4 b. 8 c.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Microprocessor and Interfacing Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2605"></a>
+<a id="g2670"></a>
 
-### Intel 8086 মাইক্রোপ্রসেসরের Address Bus এর প্রস্থ কত? A. 8-bit B. 16-bit C. 20-bit D. 32-… <sub>G2605</sub>
+### Intel 8086 মাইক্রোপ্রসেসরের Address Bus এর প্রস্থ কত? A. 8-bit B. 16-bit C. 20-bit D. 32-… <sub>G2670</sub>
 
 *MCQ*
 
@@ -346,9 +346,9 @@ Intel 8086 মাইক্রোপ্রসেসরের Address Bus এর �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33, Microprocessor and Interfacing Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3838"></a>
+<a id="g3903"></a>
 
-### Which of the following is an example of register relative addressing in an 8086 microproc… <sub>G3838</sub>
+### Which of the following is an example of register relative addressing in an 8086 microproc… <sub>G3903</sub>
 
 *MCQ*
 
@@ -358,9 +358,9 @@ Which of the following is an example of register relative addressing in an 8086 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q1 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3841"></a>
+<a id="g3906"></a>
 
-### Which of the following pairs represents hardware interrupt in an 8086 microprocessor? (a)… <sub>G3841</sub>
+### Which of the following pairs represents hardware interrupt in an 8086 microprocessor? (a)… <sub>G3906</sub>
 
 *MCQ*
 
@@ -370,9 +370,9 @@ Which of the following pairs represents hardware interrupt in an 8086 microproce
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q4 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3846"></a>
+<a id="g3911"></a>
 
-### In an 8086 microprocessor, a memory location pointed by a segment address of 2000H and of… <sub>G3846</sub>
+### In an 8086 microprocessor, a memory location pointed by a segment address of 2000H and of… <sub>G3911</sub>
 
 *MCQ*
 
@@ -381,6 +381,18 @@ In an 8086 microprocessor, a memory location pointed by a segment address of 200
 - **Asked in (1):** BUET M.Sc. April 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q9 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
+
+<a id="g4486"></a>
+
+### Which one is not the flag of the 8086 Microprocessor? (a) Carry Flag (b) Parity Flag (c) … <sub>G4486</sub>
+
+*MCQ*
+
+Which one is not the flag of the 8086 Microprocessor? (a) Carry Flag (b) Parity Flag (c) Zero Flag (d) State Flag
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ18 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
 
 <a id="g1271"></a>
 
@@ -394,9 +406,9 @@ Describe addressing mode of 8086 Microprocessors.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q15 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g1836"></a>
+<a id="g1901"></a>
 
-### Describe the architecture of Intel 8086 Micrprocessor. <sub>G1836</sub>
+### Describe the architecture of Intel 8086 Micrprocessor. <sub>G1901</sub>
 
 *Written*
 
@@ -407,9 +419,9 @@ Describe the architecture of Intel 8086 Micrprocessor.
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 14. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2749"></a>
+<a id="g2814"></a>
 
-### For the 8086 microprocessors, write the full name of the following registers SP, BP, SI, … <sub>G2749</sub>
+### For the 8086 microprocessors, write the full name of the following registers SP, BP, SI, … <sub>G2814</sub>
 
 *Written*
 
@@ -419,9 +431,9 @@ For the 8086 microprocessors, write the full name of the following registers SP,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 3 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2789"></a>
+<a id="g2854"></a>
 
-### Discuss the roles of different segment registers and offset registers of 8086 microproces… <sub>G2789</sub>
+### Discuss the roles of different segment registers and offset registers of 8086 microproces… <sub>G2854</sub>
 
 *Written*
 
@@ -431,9 +443,9 @@ Discuss the roles of different segment registers and offset registers of 8086 mi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 5. (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2790"></a>
+<a id="g2855"></a>
 
-### How are the byte and word data read from odd addresses and even addresses of 8086 micropr… <sub>G2790</sub>
+### How are the byte and word data read from odd addresses and even addresses of 8086 micropr… <sub>G2855</sub>
 
 *Written*
 
@@ -443,9 +455,9 @@ How are the byte and word data read from odd addresses and even addresses of 808
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 5 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2791"></a>
+<a id="g2856"></a>
 
-### What is the flag register in 80867 Discuss how flags' are affected for signed and unsigne… <sub>G2791</sub>
+### What is the flag register in 80867 Discuss how flags' are affected for signed and unsigne… <sub>G2856</sub>
 
 *Written*
 
@@ -455,9 +467,9 @@ What is the flag register in 80867 Discuss how flags' are affected for signed an
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 5 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2818"></a>
+<a id="g2883"></a>
 
-### Define addressing modes in microprocessors. Describe any four addressing modes used in th… <sub>G2818</sub>
+### Define addressing modes in microprocessors. Describe any four addressing modes used in th… <sub>G2883</sub>
 
 *Written*
 
@@ -483,9 +495,9 @@ After RESET, the 8086 starts from memory location: (a) FFFFFH (b) FFFFH (c) 0000
 
 ## Microprocessor basics & instructions
 
-<a id="g3693"></a>
+<a id="g3758"></a>
 
-### a. What are the differences between 'Microprocessor' and 'Micro-Controller'? 5 <sub>G3693</sub>
+### a. What are the differences between 'Microprocessor' and 'Micro-Controller'? 5 <sub>G3758</sub>
 
 *Written*
 
@@ -522,9 +534,9 @@ Which 8255 PPI mode allows handshake I/O? (Mode 0 / Mode 1 / Mode 2 / None)
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q25 — [BCS/34_maximum-power-transfer-sql-8255-ppi.md](../BCS/34_maximum-power-transfer-sql-8255-ppi.md) · [image](../BCS/34_maximum-power-transfer-sql-8255-ppi.jpg)
 - **Printed answer:** (খ) Mode 1 (strobed I/O)
 
-<a id="g3973"></a>
+<a id="g4038"></a>
 
-### MOV AX, BX: (ক) copies content of AX to BX (খ) copies content of BX to AX (গ) erases cont… <sub>G3973</sub>
+### MOV AX, BX: (ক) copies content of AX to BX (খ) copies content of BX to AX (গ) erases cont… <sub>G4038</sub>
 
 *MCQ*
 
@@ -573,9 +585,9 @@ What is Microprocessor? Explain basic component of Microprocessor.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q12 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g2606"></a>
+<a id="g2671"></a>
 
-### Microprocessor এ ALU কোন ইউনিটের অধীনে কাজ করে? A. Fetch unit B. Control unit C. Processi… <sub>G2606</sub>
+### Microprocessor এ ALU কোন ইউনিটের অধীনে কাজ করে? A. Fetch unit B. Control unit C. Processi… <sub>G2671</sub>
 
 *MCQ*
 
@@ -585,9 +597,9 @@ Microprocessor এ ALU কোন ইউনিটের অধীনে কাজ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33, Microprocessor and Interfacing Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2861"></a>
+<a id="g2926"></a>
 
-### Microprocessor এর function সমূহ লিখ? <sub>G2861</sub>
+### Microprocessor এর function সমূহ লিখ? <sub>G2926</sub>
 
 *Written*
 
@@ -597,9 +609,9 @@ Microprocessor এর function সমূহ লিখ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 6. Bangladesh Telecommunication Regulatory Commission (BTRC), Deputy Assistant Director (DAD), 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 9-10, Q6 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3751"></a>
+<a id="g3816"></a>
 
-### Pin diagram of a microprocessor given, name it with reasons. <sub>G3751</sub>
+### Pin diagram of a microprocessor given, name it with reasons. <sub>G3816</sub>
 
 *Written*
 
@@ -609,9 +621,9 @@ Pin diagram of a microprocessor given, name it with reasons.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q18 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3839"></a>
+<a id="g3904"></a>
 
-### What will the contents of register AL look like after the following instructions are exec… <sub>G3839</sub>
+### What will the contents of register AL look like after the following instructions are exec… <sub>G3904</sub>
 
 *MCQ*
 
@@ -621,9 +633,9 @@ What will the contents of register AL look like after the following instructions
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q2 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3849"></a>
+<a id="g3914"></a>
 
-### Which of the following is not a feature of a microprocessor? (a) Built-in debugger progra… <sub>G3849</sub>
+### Which of the following is not a feature of a microprocessor? (a) Built-in debugger progra… <sub>G3914</sub>
 
 *MCQ*
 
@@ -633,9 +645,9 @@ Which of the following is not a feature of a microprocessor? (a) Built-in debugg
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q12 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3895"></a>
+<a id="g3960"></a>
 
-### Which of the following sequence that a microprocessor follows? (a) Fetch, decode, execute… <sub>G3895</sub>
+### Which of the following sequence that a microprocessor follows? (a) Fetch, decode, execute… <sub>G3960</sub>
 
 *MCQ*
 
@@ -645,9 +657,9 @@ Which of the following sequence that a microprocessor follows? (a) Fetch, decode
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q8 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3914"></a>
+<a id="g3979"></a>
 
-### The maximum addressing capacity of a microprocessor that uses 16-bit database & 32-bit ad… <sub>G3914</sub>
+### The maximum addressing capacity of a microprocessor that uses 16-bit database & 32-bit ad… <sub>G3979</sub>
 
 *MCQ*
 
@@ -657,9 +669,9 @@ The maximum addressing capacity of a microprocessor that uses 16-bit database & 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q27 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3943"></a>
+<a id="g4008"></a>
 
-### Which of the following is NOT the components of a microprocessor? (a) ALU (b) Register Ar… <sub>G3943</sub>
+### Which of the following is NOT the components of a microprocessor? (a) ALU (b) Register Ar… <sub>G4008</sub>
 
 *MCQ*
 
@@ -693,9 +705,9 @@ Difference between microprocessor and micro-controller.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q16 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g1840"></a>
+<a id="g1905"></a>
 
-### What is interrupt Controller? <sub>G1840</sub>
+### What is interrupt Controller? <sub>G1905</sub>
 
 *Written*
 
@@ -705,9 +717,9 @@ What is interrupt Controller?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 18. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g4424"></a>
+<a id="g4669"></a>
 
-### Describe different part of given microprocessor block diagram <sub>G4424</sub>
+### Describe different part of given microprocessor block diagram <sub>G4669</sub>
 
 *Written*
 
@@ -853,9 +865,9 @@ What exactly is a microcontroller? What distinguishes a microprocessor from a mi
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q8 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g2387"></a>
+<a id="g2452"></a>
 
-### Microcontroller এবং Microprocessor এর মধ্যে Hardware Related পার্থক্য গুলো লিখুন। <sub>G2387</sub>
+### Microcontroller এবং Microprocessor এর মধ্যে Hardware Related পার্থক্য গুলো লিখুন। <sub>G2452</sub>
 
 *Written*
 
@@ -881,9 +893,9 @@ Which signal can a sensor send to a microcontroller when it detects a gas leak?
 
 ## Other
 
-<a id="g2151"></a>
+<a id="g2216"></a>
 
-### মাইক্রোকম্পিউটার এর উপাদান গুলো নাম সহ আর্কিটেকচার অংকন। (Draw a microcomputer architectu… <sub>G2151</sub>
+### মাইক্রোকম্পিউটার এর উপাদান গুলো নাম সহ আর্কিটেকচার অংকন। (Draw a microcomputer architectu… <sub>G2216</sub>
 
 *Written*
 
@@ -893,9 +905,9 @@ Which signal can a sensor send to a microcontroller when it detects a gas leak?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q6 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 
-<a id="g2647"></a>
+<a id="g2712"></a>
 
-### মাইক্রোপ্রসেসর ও মাইক্রো কন্ট্রোলার এর ৩ টি পার্থক্য লিখুন। <sub>G2647</sub>
+### মাইক্রোপ্রসেসর ও মাইক্রো কন্ট্রোলার এর ৩ টি পার্থক্য লিখুন। <sub>G2712</sub>
 
 *Written*
 
@@ -905,9 +917,9 @@ Which signal can a sensor send to a microcontroller when it detects a gas leak?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ৫ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g4043"></a>
+<a id="g4108"></a>
 
-### A 16-bit address bus can address a maximum of ______ KB memory. (ক) 16 (খ) 32 (গ) 64 (ঘ) … <sub>G4043</sub>
+### A 16-bit address bus can address a maximum of ______ KB memory. (ক) 16 (খ) 32 (গ) 64 (ঘ) … <sub>G4108</sub>
 
 *MCQ*
 
@@ -917,9 +929,9 @@ A 16-bit address bus can address a maximum of ______ KB memory. (ক) 16 (খ) 3
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q170 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g2236"></a>
+<a id="g2301"></a>
 
-### In a Memory-mapped I/O system, which one is not present? <sub>G2236</sub>
+### In a Memory-mapped I/O system, which one is not present? <sub>G2301</sub>
 
 *MCQ*
 
@@ -929,9 +941,9 @@ In a Memory-mapped I/O system, which one is not present?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 28 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2396"></a>
+<a id="g2461"></a>
 
-### Flag Register কি? DMA Controller এর কাজ লিখ ? <sub>G2396</sub>
+### Flag Register কি? DMA Controller এর কাজ লিখ ? <sub>G2461</sub>
 
 *Written*
 
@@ -941,9 +953,9 @@ Flag Register কি? DMA Controller এর কাজ লিখ ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 6 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g3897"></a>
+<a id="g3962"></a>
 
-### What is the content of Stack Pointer (SP)? (a) Address of the current instruction (b) Add… <sub>G3897</sub>
+### What is the content of Stack Pointer (SP)? (a) Address of the current instruction (b) Add… <sub>G3962</sub>
 
 *MCQ*
 
@@ -953,9 +965,21 @@ What is the content of Stack Pointer (SP)? (a) Address of the current instructio
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q10 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g4589"></a>
+<a id="g4479"></a>
 
-### In a Memory-mapped I/O system, which one is not present? (options not given; printed answ… <sub>G4589</sub>
+### The address bus flow in (a) Unidirectional (b) Bidirectional (c) Multidirectional (d) Cir… <sub>G4479</sub>
+
+*MCQ*
+
+The address bus flow in (a) Unidirectional (b) Bidirectional (c) Multidirectional (d) Circular
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ11 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4834"></a>
+
+### In a Memory-mapped I/O system, which one is not present? (options not given; printed answ… <sub>G4834</sub>
 
 *MCQ*
 
@@ -966,9 +990,9 @@ In a Memory-mapped I/O system, which one is not present? (options not given; pri
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ28 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 - **Correction:** in memory-mapped I/O the devices are reached with ordinary memory instructions (LDA, STA, MOV); the instructions that are **not used** are the dedicated I/O instructions **IN/OUT**. The options are not given, so the printed key cannot be checked against them, but LDA is used, not absent.
 
-<a id="g2817"></a>
+<a id="g2882"></a>
 
-### How does DMA increase system concurrency? List the data transfer modes of 8237 DMA contro… <sub>G2817</sub>
+### How does DMA increase system concurrency? List the data transfer modes of 8237 DMA contro… <sub>G2882</sub>
 
 *Written*
 
@@ -978,9 +1002,9 @@ How does DMA increase system concurrency? List the data transfer modes of 8237 D
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 4 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4766"></a>
+<a id="g5011"></a>
 
-### Design PLC logic for Platform Screen Doors (PSD) <sub>G4766</sub>
+### Design PLC logic for Platform Screen Doors (PSD) <sub>G5011</sub>
 
 *Written*
 
@@ -989,6 +1013,95 @@ Design PLC logic for Platform Screen Doors (PSD)
 - **Asked in (0):** no dated exam tag on the source
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — DMTCL 2025 Written Exam Suggestion, Engineering & Telecommunication (suggestion), B-3 — [model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md](../model-test-web/daudbd-dmtcl-2025-suggestion/dmtcl-2025-suggestion.md)
+
+## Assembly language
+
+<a id="g0010"></a>
+
+### What is assembly language? Write its features. Write a program in assembly language to ad… <sub>G0010</sub>
+
+*Written*
+
+What is assembly language? Write its features. Write a program in assembly language to add and multiply two numbers.
+
+- **Asked in (1):** 45th BCS CSE (2024)
+- **Source:**
+  - 45th BCS Written (CSE-971) (2024-01-31), Q19(d) — [BCS/04_assembly-number-systems-boolean.md](../BCS/04_assembly-number-systems-boolean.md) · [image](../BCS/04_assembly-number-systems-boolean.jpg)
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q18 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
+- **Printed answer:** Low-level symbolic form of machine language (mnemonics, symbolic operands); x86 NASM program: mov eax,[n1]; add eax,[n2]; then imul eax,[n2]; exit via int 0x80.
+
+<a id="g1966"></a>
+
+### Assembly language কী? এর বৈশিষ্ট্যগুলো লিখুন। একটি Assembly language program লিখুন যা দুট… <sub>G1966</sub>
+
+*Written*
+
+Assembly language কী? এর বৈশিষ্ট্যগুলো লিখুন। একটি Assembly language program লিখুন যা দুটি সংখ্যার যোগফল ও গুণফল নিরূপণ করতে পারে।
+
+- **Asked in (1):** 45th BCS CSE (2024)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ১ (ঘ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2451"></a>
+
+### Assembly Language Instructions এর ক্ষেত্রে নিম্নোক্ত Instructions গুলোর কাজ লিখুন। ADC, X… <sub>G2451</sub>
+
+*Written*
+
+Assembly Language Instructions এর ক্ষেত্রে নিম্নোক্ত Instructions গুলোর কাজ লিখুন। ADC, XCHG, POP, JNZ
+
+- **Asked in (1):** NWPGCL JAM 2020
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 11 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
+
+<a id="g3821"></a>
+
+### Assembly code <sub>G3821</sub>
+
+*Written*
+
+Assembly code
+
+- **Asked in (1):** BUET M.Sc. October 2018
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q23 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
+
+<a id="g3831"></a>
+
+### Write assembly code for Push and Pop using given instructions [ mov a,b add a,b add a,k]. <sub>G3831</sub>
+
+*Written*
+
+Write assembly code for Push and Pop using given instructions [ mov a,b add a,b add a,k].
+
+- **Asked in (1):** BUET M.Sc. May 2019
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q6 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
+
+<a id="g3845"></a>
+
+### Given an assembly code, what is its limitations? [beq a,b,c neq x,y,z] <sub>G3845</sub>
+
+*Written*
+
+Given an assembly code, what is its limitations? [beq a,b,c neq x,y,z]
+
+- **Asked in (1):** BUET M.Sc. May 2019
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q20 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
+
+<a id="g4465"></a>
+
+### Consider the following program fragment in assembly language: mov ax, 0h mov cx, 0Ah dolo… <sub>G4465</sub>
+
+*MCQ*
+
+Consider the following program fragment in assembly language: mov ax, 0h mov cx, 0Ah doloop: dec ax loop doloop What is the value of ax and cx registers after the completion of the doloop? (a) ax=FFF5h and cx=0h (b) ax=FFF6h and cx=0h (c) ax=FFF7h and cx=0Ah (d) ax=FFF5h and cx=0Ah
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ57 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
 
 ## Processor generations (8085, 80386, Pentium)
 
@@ -1004,9 +1117,9 @@ Difference between 32 bit Microprocessor and 64 bit Microprocessor with example.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q11 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g1912"></a>
+<a id="g1977"></a>
 
-### Interrupt এর উদাহরণসহ সংজ্ঞা দিন। যদি processor এর গতি ১-৮ GHz হয় তবে এর time period কত … <sub>G1912</sub>
+### Interrupt এর উদাহরণসহ সংজ্ঞা দিন। যদি processor এর গতি ১-৮ GHz হয় তবে এর time period কত … <sub>G1977</sub>
 
 *Written*
 
@@ -1017,9 +1130,9 @@ Interrupt এর উদাহরণসহ সংজ্ঞা দিন। যদ
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৪ (ঙ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g4038"></a>
+<a id="g4103"></a>
 
-### Intel 8085 microprocessor is a _____ bit microprocessor. (ক) 8 (খ) 16 (গ) 32 (ঘ) 64 <sub>G4038</sub>
+### Intel 8085 microprocessor is a _____ bit microprocessor. (ক) 8 (খ) 16 (গ) 32 (ঘ) 64 <sub>G4103</sub>
 
 *MCQ*
 
@@ -1029,9 +1142,9 @@ Intel 8085 microprocessor is a _____ bit microprocessor. (ক) 8 (খ) 16 (গ) 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q165 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4171"></a>
+<a id="g4236"></a>
 
-### 8085µp এর আর্কিটেকচার অঙ্কন করে বর্ণনা করুন। <sub>G4171</sub>
+### 8085µp এর আর্কিটেকচার অঙ্কন করে বর্ণনা করুন। <sub>G4236</sub>
 
 *Written*
 
@@ -1053,9 +1166,9 @@ What are the advantages of the 80386 microprocessor over the 80286?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q5 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
 
-<a id="g3718"></a>
+<a id="g3783"></a>
 
-### Advantages of AVR-XXXX (forgot the number) over 80386 <sub>G3718</sub>
+### Advantages of AVR-XXXX (forgot the number) over 80386 <sub>G3783</sub>
 
 *Written*
 
@@ -1065,88 +1178,11 @@ Advantages of AVR-XXXX (forgot the number) over 80386
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q14 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-## Assembly language
-
-<a id="g0010"></a>
-
-### What is assembly language? Write its features. Write a program in assembly language to ad… <sub>G0010</sub>
-
-*Written*
-
-What is assembly language? Write its features. Write a program in assembly language to add and multiply two numbers.
-
-- **Asked in (1):** 45th BCS CSE (2024)
-- **Source:**
-  - 45th BCS Written (CSE-971) (2024-01-31), Q19(d) — [BCS/04_assembly-number-systems-boolean.md](../BCS/04_assembly-number-systems-boolean.md) · [image](../BCS/04_assembly-number-systems-boolean.jpg)
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Microprocessor, Q18 — [bit to exabyte/46_bte-g2-p32-microprocessor-q02-18.md](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.md) · [image](../bit%20to%20exabyte/46_bte-g2-p32-microprocessor-q02-18.jpg)
-- **Printed answer:** Low-level symbolic form of machine language (mnemonics, symbolic operands); x86 NASM program: mov eax,[n1]; add eax,[n2]; then imul eax,[n2]; exit via int 0x80.
-
-<a id="g1901"></a>
-
-### Assembly language কী? এর বৈশিষ্ট্যগুলো লিখুন। একটি Assembly language program লিখুন যা দুট… <sub>G1901</sub>
-
-*Written*
-
-Assembly language কী? এর বৈশিষ্ট্যগুলো লিখুন। একটি Assembly language program লিখুন যা দুটি সংখ্যার যোগফল ও গুণফল নিরূপণ করতে পারে।
-
-- **Asked in (1):** 45th BCS CSE (2024)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ১ (ঘ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g2386"></a>
-
-### Assembly Language Instructions এর ক্ষেত্রে নিম্নোক্ত Instructions গুলোর কাজ লিখুন। ADC, X… <sub>G2386</sub>
-
-*Written*
-
-Assembly Language Instructions এর ক্ষেত্রে নিম্নোক্ত Instructions গুলোর কাজ লিখুন। ADC, XCHG, POP, JNZ
-
-- **Asked in (1):** NWPGCL JAM 2020
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 11 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
-
-<a id="g3756"></a>
-
-### Assembly code <sub>G3756</sub>
-
-*Written*
-
-Assembly code
-
-- **Asked in (1):** BUET M.Sc. October 2018
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q23 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
-
-<a id="g3766"></a>
-
-### Write assembly code for Push and Pop using given instructions [ mov a,b add a,b add a,k]. <sub>G3766</sub>
-
-*Written*
-
-Write assembly code for Push and Pop using given instructions [ mov a,b add a,b add a,k].
-
-- **Asked in (1):** BUET M.Sc. May 2019
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q6 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
-
-<a id="g3780"></a>
-
-### Given an assembly code, what is its limitations? [beq a,b,c neq x,y,z] <sub>G3780</sub>
-
-*Written*
-
-Given an assembly code, what is its limitations? [beq a,b,c neq x,y,z]
-
-- **Asked in (1):** BUET M.Sc. May 2019
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q20 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
-
 ## Addressing modes
 
-<a id="g3208"></a>
+<a id="g3273"></a>
 
-### Explain the difference between direct, immediate, and register addressing modes the 12th … <sub>G3208</sub>
+### Explain the difference between direct, immediate, and register addressing modes the 12th … <sub>G3273</sub>
 
 *Written*
 
@@ -1156,9 +1192,9 @@ Explain the difference between direct, immediate, and register addressing modes 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q16 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3368"></a>
+<a id="g3433"></a>
 
-### নিচের Instruction গুলোর Addressing Mode লিখঃ * MOV AX, BX * MOV AX, [SI] * MOV AX, 006H *… <sub>G3368</sub>
+### নিচের Instruction গুলোর Addressing Mode লিখঃ * MOV AX, BX * MOV AX, [SI] * MOV AX, 006H *… <sub>G3433</sub>
 
 *Written*
 
@@ -1168,9 +1204,9 @@ Explain the difference between direct, immediate, and register addressing modes 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer (Computer) 15/05/2026, 2 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g4002"></a>
+<a id="g4067"></a>
 
-### Which one is not an addressing mode? (ক) Immediate (খ) Direct (গ) Indirect (ঘ) Sequential <sub>G4002</sub>
+### Which one is not an addressing mode? (ক) Immediate (খ) Direct (গ) Indirect (ঘ) Sequential <sub>G4067</sub>
 
 *MCQ*
 
@@ -1180,9 +1216,21 @@ Which one is not an addressing mode? (ক) Immediate (খ) Direct (গ) Indirect
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q129 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g2721"></a>
+<a id="g4510"></a>
 
-### What is an addressing mode? Describe the following addressing modes: (i) Immediate (ii) D… <sub>G2721</sub>
+### In which addressing mode, the effective address of the operand is generated by adding a c… <sub>G4510</sub>
+
+*MCQ*
+
+In which addressing mode, the effective address of the operand is generated by adding a constant value to the contents of the register? (a) Absolute mode (b) Indirect mode (c) Immediate mode (d) Index mode
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ42 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g2786"></a>
+
+### What is an addressing mode? Describe the following addressing modes: (i) Immediate (ii) D… <sub>G2786</sub>
 
 *Written*
 

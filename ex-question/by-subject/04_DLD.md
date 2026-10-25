@@ -2,9 +2,9 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 297 (from 337 records: Written 282, MCQ 45, Study note 3, Worked example 2, Viva 5)
-- **Exams it appears in:** 110
-- **Corrections to printed answers:** 16
+- **Distinct questions:** 300 (from 340 records: Written 283, MCQ 47, Study note 3, Worked example 2, Viva 5)
+- **Exams it appears in:** 111
+- **Corrections to printed answers:** 17
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -12,11 +12,11 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
 | 1 | [Logic gates & universal gates](#logic-gates--universal-gates) | 37 | 51 | 0 |
-| 2 | [Number systems & codes](#number-systems--codes) | 34 | 70 | 1 |
-| 3 | [Boolean algebra & simplification](#boolean-algebra--simplification) | 34 | 53 | 1 |
+| 2 | [Number systems & codes](#number-systems--codes) | 35 | 71 | 1 |
+| 3 | [Boolean algebra & simplification](#boolean-algebra--simplification) | 35 | 54 | 1 |
 | 4 | [K-map](#k-map) | 31 | 41 | 0 |
 | 5 | [Combinational circuits](#combinational-circuits) | 27 | 38 | 2 |
-| 6 | [Sequential circuits (flip-flops, counters)](#sequential-circuits-flip-flops-counters) | 23 | 32 | 0 |
+| 6 | [Sequential circuits (flip-flops, counters)](#sequential-circuits-flip-flops-counters) | 23 | 33 | 0 |
 | 7 | [Other](#other) | 10 | 12 | 1 |
 
 ## Most-asked questions
@@ -25,7 +25,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 
 1. **What is the difference between Latch and Flip-flop?**  
    Asked in (5): 36th BCS (2016); BB AME 2017; BPSC AP 2021; BWDB AP 2018; SPCBL AME 2021  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32) — see [G1834](#g1834)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32) — see [G1899](#g1899)
 2. **Simplify F(A,B,C,D) = Σm(0,3,5,7,8,10,11,12,13,14,15) using a 4-variable K-map.**  
    Asked in (4): 46th BCS ICT; Combined Bank AME 2026; Combined Bank AME/AE(IT) 2026(Jan); Combined Bank SO(IT) 2026  
    Source: Bank AME 08.05.2026; Bank SO IT 25.07.2026; 46th BCS ICT (2026-05-08) · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariate (BSCS), Assistant Engineer (IT)/ Assistant Maintenance Engineer – Grade 9 — Exam Date 24/01/2026 — exam taker not printed — time not printed — 16 questions, marks in brackets (total not printed) — pages 1–3 · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12 — see [G0325](#g0325)
@@ -34,7 +34,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: BPDM AE(CSE) 10.05.2024; Teletalk AM(IT) 2023 (2024-05-10) · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — k_map · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics — see [G0319](#g0319)
 4. **What is a Universal Gate? Prove that the NAND Gate is a Universal Gate. [BSCS AP 26] [DLD]**  
    Asked in (3): Bank (name cut off) AP; Combined Bank AP 2026; SPCBL AME 2021  
-   Source: Bank (name cut off, 'B... Ltd') Assistant Programmer Written · duranta.app question bank (coaching compilation of the question paper) — 09 — The Security Printing Corporation (Bangladesh) Ltd — Assistant Maintenance Engineer — 08-12-2021 — Exam taker: CTI — Written, Time 2 Hours, marks not printed — page 14 · duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57 — see [G2980](#g2980)
+   Source: Bank (name cut off, 'B... Ltd') Assistant Programmer Written · duranta.app question bank (coaching compilation of the question paper) — 09 — The Security Printing Corporation (Bangladesh) Ltd — Assistant Maintenance Engineer — 08-12-2021 — Exam taker: CTI — Written, Time 2 Hours, marks not printed — page 14 · duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57 — see [G3045](#g3045)
 5. **Simplify F = Σm(0,2,6,7,8,10,14,15) using a 4-variable K-map (same function as Q47).**  
    Asked in (2): BPSC AP 2023; BPSC AP 2026  
    Source: BPSC AP (2023-07-19) · BPSC AP (2026-07-19) — see [G0320](#g0320)
@@ -43,7 +43,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Janata Bank ANE 2020; BPSC Network Engineer 21.05.2025 (2020) — see [G0322](#g0322)
 7. **ডিকোডার কী? একটি 3-to-8 লাইন ডিকোডারের সত্যক সারণী ও বর্তনী অংকন করুন।**  
    Asked in (2): 13th NTRCA CSE (2016); 17th NTRCA CSE (2023)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2) · Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper) — see [G4063](#g4063)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2) · Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper) — see [G4128](#g4128)
 8. **Simplify the following Boolean function using K-map and implement it using NAND gates only: F (A, B, C, D) = (3,5,7,9,11,13,14,15). Show the simplification ste…**  
    Asked in (2): 47th BCS ICT; Combined Bank SO(AME) 2021  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — k_map · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics · duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off) — see [G0969](#g0969)
@@ -98,9 +98,9 @@ Topics the Bit to Exabyte question book lists as its standard pattern for this s
 
 ## Logic gates & universal gates
 
-<a id="g2980"></a>
+<a id="g3045"></a>
 
-### What is a Universal Gate? Prove that the NAND Gate is a Universal Gate. [BSCS AP 26] [DLD] <sub>G2980</sub>
+### What is a Universal Gate? Prove that the NAND Gate is a Universal Gate. [BSCS AP 26] [DLD] <sub>G3045</sub>
 
 *Written*
 
@@ -225,9 +225,9 @@ Define basic logical operations with examples. (AND, OR, NOT)
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q37 — [bit to exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md) · [image](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.jpg)
 
-<a id="g2025"></a>
+<a id="g2090"></a>
 
-### মৌলিক লজিক গেইটসমূহ সত্যক সারণীসহ বর্ণনা করুন। <sub>G2025</sub>
+### মৌলিক লজিক গেইটসমূহ সত্যক সারণীসহ বর্ণনা করুন। <sub>G2090</sub>
 
 *Written*
 
@@ -237,9 +237,9 @@ Define basic logical operations with examples. (AND, OR, NOT)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৫। (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2026"></a>
+<a id="g2091"></a>
 
-### সত্যক সারণী কী? উদাহরণসহ লিখুন। <sub>G2026</sub>
+### সত্যক সারণী কী? উদাহরণসহ লিখুন। <sub>G2091</sub>
 
 *Written*
 
@@ -249,9 +249,9 @@ Define basic logical operations with examples. (AND, OR, NOT)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৫ (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2027"></a>
+<a id="g2092"></a>
 
-### NOR গেইটের সাহায্যে নট, অর এবং অ্যান্ড গেইটের বাস্তবায়ন দেখান। <sub>G2027</sub>
+### NOR গেইটের সাহায্যে নট, অর এবং অ্যান্ড গেইটের বাস্তবায়ন দেখান। <sub>G2092</sub>
 
 *Written*
 
@@ -261,9 +261,9 @@ NOR গেইটের সাহায্যে নট, অর এবং অ্�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৫ অথবা (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2077"></a>
+<a id="g2142"></a>
 
-### EX - OR গেইট সত্যক সারণিসহ বর্ণনা করুন। <sub>G2077</sub>
+### EX - OR গেইট সত্যক সারণিসহ বর্ণনা করুন। <sub>G2142</sub>
 
 *Written*
 
@@ -273,9 +273,9 @@ EX - OR গেইট সত্যক সারণিসহ বর্ণনা �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৬ (গ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2183"></a>
+<a id="g2248"></a>
 
-### F1 = A+B F2 = AB Create the functions using NAND and NOR gate <sub>G2183</sub>
+### F1 = A+B F2 = AB Create the functions using NAND and NOR gate <sub>G2248</sub>
 
 *Written*
 
@@ -285,9 +285,9 @@ F1 = A+B F2 = AB Create the functions using NAND and NOR gate
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — PGCB Assistant Engineer (CSE) 17.05.2024, Q8 — [duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md](../duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md)
 
-<a id="g2409"></a>
+<a id="g2474"></a>
 
-### NAND গেট ব্যবহার করে OR গেট তৈরি করার লজিক ডায়াগ্রাম ডায়াগ্রাম অংকন করুন? <sub>G2409</sub>
+### NAND গেট ব্যবহার করে OR গেট তৈরি করার লজিক ডায়াগ্রাম ডায়াগ্রাম অংকন করুন? <sub>G2474</sub>
 
 *Written*
 
@@ -297,9 +297,9 @@ NAND গেট ব্যবহার করে OR গেট তৈরি কর�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ৪ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2551"></a>
+<a id="g2616"></a>
 
-### The logic gate that will have a low output when any one of its inputs is High is... ক) NA… <sub>G2551</sub>
+### The logic gate that will have a low output when any one of its inputs is High is... ক) NA… <sub>G2616</sub>
 
 *MCQ*
 
@@ -309,9 +309,9 @@ The logic gate that will have a low output when any one of its inputs is High is
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Digital Systems / Logic / Circuits Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2679"></a>
+<a id="g2744"></a>
 
-### ইউনিভার্সেল গেট বলতে কী বোঝায়? FAB + CD + E সমীকরণের উপর NAND গেট প্রতিস্থাপন করুন। <sub>G2679</sub>
+### ইউনিভার্সেল গেট বলতে কী বোঝায়? FAB + CD + E সমীকরণের উপর NAND গেট প্রতিস্থাপন করুন। <sub>G2744</sub>
 
 *Written*
 
@@ -321,9 +321,9 @@ The logic gate that will have a low output when any one of its inputs is High is
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ২। ক) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2895"></a>
+<a id="g2960"></a>
 
-### X-OR and X-NOR gate truth table diagram <sub>G2895</sub>
+### X-OR and X-NOR gate truth table diagram <sub>G2960</sub>
 
 *Written*
 
@@ -333,9 +333,9 @@ X-OR and X-NOR gate truth table diagram
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3148"></a>
+<a id="g3213"></a>
 
-### Describe the important characteristics of digital ICs (Integrated Circuits). <sub>G3148</sub>
+### Describe the important characteristics of digital ICs (Integrated Circuits). <sub>G3213</sub>
 
 *Written*
 
@@ -345,9 +345,9 @@ Describe the important characteristics of digital ICs (Integrated Circuits).
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — Senior Officer (AHE/AME) — Job ID: 10165 (5 post) — 24.11.2023 — Exam taker: not printed — Total Marks-200, Time: 02 Hours (10:30 am-12:30 pm) — pages 37–39, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3350"></a>
+<a id="g3415"></a>
 
-### Implementation the following two Boolean functions using NAND gate only. (a) F = A + (B' … <sub>G3350</sub>
+### Implementation the following two Boolean functions using NAND gate only. (a) F = A + (B' … <sub>G3415</sub>
 
 *Written*
 
@@ -357,9 +357,9 @@ Implementation the following two Boolean functions using NAND gate only. (a) F =
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager (ICT) 26.08.2022, 3 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3362"></a>
+<a id="g3427"></a>
 
-### F = (w,x,y,z)={3,5,7,9,10,13,14,15) Simplify using karun map and design output using gate… <sub>G3362</sub>
+### F = (w,x,y,z)={3,5,7,9,10,13,14,15) Simplify using karun map and design output using gate… <sub>G3427</sub>
 
 *Written*
 
@@ -369,9 +369,9 @@ F = (w,x,y,z)={3,5,7,9,10,13,14,15) Simplify using karun map and design output u
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 01/02/2025, 5 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3497"></a>
+<a id="g3562"></a>
 
-### b. Simplify the following Boolean expression using NAND gates only: (A + B) (C + D) 5 <sub>G3497</sub>
+### b. Simplify the following Boolean expression using NAND gates only: (A + B) (C + D) 5 <sub>G3562</sub>
 
 *Written*
 
@@ -381,9 +381,9 @@ b. Simplify the following Boolean expression using NAND gates only: (A + B) (C +
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 35 — মৎস্য ও প্রাণীসম্পদ অধিদপ্তরের ইন্সট্রাক্টর কম্পিউটার সায়েন্স — তারিখঃ ২০.০৬.২০২৩ — exam taker not printed — time and total not printed — pages 10–13, Q6(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3520"></a>
+<a id="g3585"></a>
 
-### What are the universal gates? Draw AND, OR and NOT gates by using universal gates. <sub>G3520</sub>
+### What are the universal gates? Draw AND, OR and NOT gates by using universal gates. <sub>G3585</sub>
 
 *Written*
 
@@ -393,9 +393,9 @@ What are the universal gates? Draw AND, OR and NOT gates by using universal gate
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q4 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3564"></a>
+<a id="g3629"></a>
 
-### (c) Compare TTL and CMOS logic family in terms of (i) Speed (ii) Noise and (iii) Power co… <sub>G3564</sub>
+### (c) Compare TTL and CMOS logic family in terms of (i) Speed (ii) Noise and (iii) Power co… <sub>G3629</sub>
 
 *Written*
 
@@ -405,9 +405,9 @@ What are the universal gates? Draw AND, OR and NOT gates by using universal gate
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q1(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3642"></a>
+<a id="g3707"></a>
 
-### Draw the circuit schematic diagrams to build an Exclusive-OR (XOR) logic function using o… <sub>G3642</sub>
+### Draw the circuit schematic diagrams to build an Exclusive-OR (XOR) logic function using o… <sub>G3707</sub>
 
 *Written*
 
@@ -417,9 +417,9 @@ Draw the circuit schematic diagrams to build an Exclusive-OR (XOR) logic functio
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, Q6.5 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4157"></a>
+<a id="g4222"></a>
 
-### মৌলিক গেইট কী? NAND এবং NOR গেইটকে কেন সার্বজনীন গেইট বলা হয় ব্যাখ্যা করুন। <sub>G4157</sub>
+### মৌলিক গেইট কী? NAND এবং NOR গেইটকে কেন সার্বজনীন গেইট বলা হয় ব্যাখ্যা করুন। <sub>G4222</sub>
 
 *Written*
 
@@ -429,9 +429,9 @@ Draw the circuit schematic diagrams to build an Exclusive-OR (XOR) logic functio
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন লিখিত (স্কুল পর্যায়) — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি (আইসিটি), বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) — 12.07.2024, ৪। — [ntrca-written-web/18-313-school-ict/18-313-school-ict.md](../ntrca-written-web/18-313-school-ict/18-313-school-ict.md)
 
-<a id="g4161"></a>
+<a id="g4226"></a>
 
-### X = ĀBC + AB̄C + ABC̄ + ABC সমীকরণটির সরলীকৃত মান NAND এবং NOR গেইট দ্বারা বাস্তবায়ন করু… <sub>G4161</sub>
+### X = ĀBC + AB̄C + ABC̄ + ABC সমীকরণটির সরলীকৃত মান NAND এবং NOR গেইট দ্বারা বাস্তবায়ন করু… <sub>G4226</sub>
 
 *Written*
 
@@ -441,9 +441,9 @@ X = ĀBC + AB̄C + ABC̄ + ABC সমীকরণটির সরলীকৃত
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন লিখিত (স্কুল পর্যায়) — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি (আইসিটি), বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) — 12.07.2024, ১০। — [ntrca-written-web/18-313-school-ict/18-313-school-ict.md](../ntrca-written-web/18-313-school-ict/18-313-school-ict.md)
 
-<a id="g4320"></a>
+<a id="g4565"></a>
 
-### Which one is a Universal Logic Gate? (a) NAND (b) AND (c) OR (d) NOT <sub>G4320</sub>
+### Which one is a Universal Logic Gate? (a) NAND (b) AND (c) OR (d) NOT <sub>G4565</sub>
 
 *MCQ*
 
@@ -552,9 +552,9 @@ Make NAND gate using NOR gate.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q43 — [bit to exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md) · [image](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.jpg)
 
-<a id="g1886"></a>
+<a id="g1951"></a>
 
-### Draw the circuit diagram for the simplified equation by using basic gates. Calculate the … <sub>G1886</sub>
+### Draw the circuit diagram for the simplified equation by using basic gates. Calculate the … <sub>G1951</sub>
 
 *Written*
 
@@ -564,9 +564,9 @@ Draw the circuit diagram for the simplified equation by using basic gates. Calcu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 4.(c) — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 
-<a id="g1887"></a>
+<a id="g1952"></a>
 
-### Draw the circuit for simplified equation by using only NOR gate . <sub>G1887</sub>
+### Draw the circuit for simplified equation by using only NOR gate . <sub>G1952</sub>
 
 *Written*
 
@@ -576,9 +576,9 @@ Draw the circuit for simplified equation by using only NOR gate .
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 4.(d) — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 
-<a id="g2400"></a>
+<a id="g2465"></a>
 
-### X-OR gate এর logic এবং Truth Table দেখাও। <sub>G2400</sub>
+### X-OR gate এর logic এবং Truth Table দেখাও। <sub>G2465</sub>
 
 *Written*
 
@@ -588,9 +588,9 @@ X-OR gate এর logic এবং Truth Table দেখাও।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 10 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g3761"></a>
+<a id="g3826"></a>
 
-### F1=A+B and F2=AB. (a) Use the minimum NAND gate for F1 and F2 and (b) Use the minimum NOT… <sub>G3761</sub>
+### F1=A+B and F2=AB. (a) Use the minimum NAND gate for F1 and F2 and (b) Use the minimum NOT… <sub>G3826</sub>
 
 *Written*
 
@@ -600,9 +600,9 @@ F1=A+B and F2=AB. (a) Use the minimum NAND gate for F1 and F2 and (b) Use the mi
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q1 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g4090"></a>
+<a id="g4155"></a>
 
-### মৌলিক লজিক গেইটসমূহ চিত্রসহ বর্ণনা করুন। <sub>G4090</sub>
+### মৌলিক লজিক গেইটসমূহ চিত্রসহ বর্ণনা করুন। <sub>G4155</sub>
 
 *Written*
 
@@ -612,9 +612,9 @@ F1=A+B and F2=AB. (a) Use the minimum NAND gate for F1 and F2 and (b) Use the mi
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৩ অথবা (ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4093"></a>
+<a id="g4158"></a>
 
-### ন্যান্ড গেইট কী? প্রমাণ করুন যে, (i) \overline{A+B} · \overline{Ā+B} = 0 ; (ii) A + ĀB + … <sub>G4093</sub>
+### ন্যান্ড গেইট কী? প্রমাণ করুন যে, (i) \overline{A+B} · \overline{Ā+B} = 0 ; (ii) A + ĀB + … <sub>G4158</sub>
 
 *Written*
 
@@ -624,9 +624,9 @@ F1=A+B and F2=AB. (a) Use the minimum NAND gate for F1 and F2 and (b) Use the mi
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৪(ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4097"></a>
+<a id="g4162"></a>
 
-### NAND গেইটের সার্বজনীনতা প্রমাণ করুন। <sub>G4097</sub>
+### NAND গেইটের সার্বজনীনতা প্রমাণ করুন। <sub>G4162</sub>
 
 *Written*
 
@@ -637,9 +637,9 @@ NAND গেইটের সার্বজনীনতা প্রমাণ ক
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডিজিটাল লজিক ও সার্কিট ডিজাইন, Q197 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৪ অথবা (খ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4136"></a>
+<a id="g4201"></a>
 
-### সার্বজনীন গেইট কাকে বলে? সার্বজনীন গেইটের সাবজনীনতা প্রমাণ করুণ। <sub>G4136</sub>
+### সার্বজনীন গেইট কাকে বলে? সার্বজনীন গেইটের সাবজনীনতা প্রমাণ করুণ। <sub>G4201</sub>
 
 *Written*
 
@@ -649,9 +649,9 @@ NAND গেইটের সার্বজনীনতা প্রমাণ ক
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৫(খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g1981"></a>
+<a id="g2046"></a>
 
-### X-NOR gate এর আউটপুটকে NAND gate এর সাহায্যে বাস্তবায়ন করুন। <sub>G1981</sub>
+### X-NOR gate এর আউটপুটকে NAND gate এর সাহায্যে বাস্তবায়ন করুন। <sub>G2046</sub>
 
 *Written*
 
@@ -661,9 +661,9 @@ X-NOR gate এর আউটপুটকে NAND gate এর সাহায্�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৩। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2709"></a>
+<a id="g2774"></a>
 
-### Explain properties of universal gates. How an XOR gate can be implemented using NAND gate… <sub>G2709</sub>
+### Explain properties of universal gates. How an XOR gate can be implemented using NAND gate… <sub>G2774</sub>
 
 *Written*
 
@@ -673,9 +673,9 @@ Explain properties of universal gates. How an XOR gate can be implemented using 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 2 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2781"></a>
+<a id="g2846"></a>
 
-### For determining 2's complement of 4-bit binary numbers, design a combinational logic circ… <sub>G2781</sub>
+### For determining 2's complement of 4-bit binary numbers, design a combinational logic circ… <sub>G2846</sub>
 
 *Written*
 
@@ -685,9 +685,9 @@ For determining 2's complement of 4-bit binary numbers, design a combinational l
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 2 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4062"></a>
+<a id="g4127"></a>
 
-### সার্বজনীন গেট কী? NOR গেটের সার্বজনীনতা প্রমাণ করুন। <sub>G4062</sub>
+### সার্বজনীন গেট কী? NOR গেটের সার্বজনীনতা প্রমাণ করুন। <sub>G4127</sub>
 
 *Written*
 
@@ -710,9 +710,9 @@ Which gate is known as the 'anticoincidence' gate? (Stem and options are on a pr
   - Paper not shown on the source sheet, MCQ (number not shown) — [BCS/30_hospital-primary-key-transistor-alpha-beta.md](../BCS/30_hospital-primary-key-transistor-alpha-beta.md) · [image](../BCS/30_hospital-primary-key-transistor-alpha-beta.jpg)
 - **Printed answer:** XOR: the output is HIGH only when the inputs differ.
 
-<a id="g2535"></a>
+<a id="g2600"></a>
 
-### How can you implement And and Or gate using CMOS NAND AND NOR gate .?? <sub>G2535</sub>
+### How can you implement And and Or gate using CMOS NAND AND NOR gate .?? <sub>G2600</sub>
 
 *Written*
 
@@ -899,9 +899,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q13 — [bit to exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.md](../bit%20to%20exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.md) · [image](../bit%20to%20exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.jpg)
 
-<a id="g1902"></a>
+<a id="g1967"></a>
 
-### (E)16 সংখ্যার decimal, octal এবং binary রূপ লিখুন। নিম্নলিখিত Hexadecimal sequence এর পরব… <sub>G1902</sub>
+### (E)16 সংখ্যার decimal, octal এবং binary রূপ লিখুন। নিম্নলিখিত Hexadecimal sequence এর পরব… <sub>G1967</sub>
 
 *Written*
 
@@ -912,9 +912,9 @@ BCD Addition: $00010011 + 00100110$
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ২. (ক) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2021"></a>
+<a id="g2086"></a>
 
-### সংখ্যা পদ্ধতির ভিত্তি বলতে কী বোঝায়? পজিশনাল ও নন-পজিশনাল সংখ্যা পদ্ধতি উদাহরণসহ আলোচনা … <sub>G2021</sub>
+### সংখ্যা পদ্ধতির ভিত্তি বলতে কী বোঝায়? পজিশনাল ও নন-পজিশনাল সংখ্যা পদ্ধতি উদাহরণসহ আলোচনা … <sub>G2086</sub>
 
 *Written*
 
@@ -924,9 +924,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৪। (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2022"></a>
+<a id="g2087"></a>
 
-### (৫৩.৬২)১০ সংখ্যাকে অক্টালে প্রকাশ করুন। <sub>G2022</sub>
+### (৫৩.৬২)১০ সংখ্যাকে অক্টালে প্রকাশ করুন। <sub>G2087</sub>
 
 *Written*
 
@@ -936,9 +936,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৪ (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2023"></a>
+<a id="g2088"></a>
 
-### ২-এর পরিপূরক পদ্ধতি কী? ২-এর পরিপূরক পদ্ধতি ব্যবহার করে (-১৩)১০ থেকে (৯)১০ বিয়োগ করুন। <sub>G2023</sub>
+### ২-এর পরিপূরক পদ্ধতি কী? ২-এর পরিপূরক পদ্ধতি ব্যবহার করে (-১৩)১০ থেকে (৯)১০ বিয়োগ করুন। <sub>G2088</sub>
 
 *Written*
 
@@ -948,9 +948,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৪ অথবা (ক) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2024"></a>
+<a id="g2089"></a>
 
-### বাইনারি সংখ্যা পদ্ধতি ও বিসিডি কোডের তুলনামূলক আলোচনা করুন। <sub>G2024</sub>
+### বাইনারি সংখ্যা পদ্ধতি ও বিসিডি কোডের তুলনামূলক আলোচনা করুন। <sub>G2089</sub>
 
 *Written*
 
@@ -960,9 +960,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৪ অথবা (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2033"></a>
+<a id="g2098"></a>
 
-### কোড কী? ASCII কোডের বৈশিষ্ট্যগুলো লিখুন। <sub>G2033</sub>
+### কোড কী? ASCII কোডের বৈশিষ্ট্যগুলো লিখুন। <sub>G2098</sub>
 
 *Written*
 
@@ -972,9 +972,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৮। — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2035"></a>
+<a id="g2100"></a>
 
-### (BF)১৬ এবং (৫৫)৮ সংখ্যা দুটি যোগ করুন এবং ফলাফল হেক্সাডেসিমেলে প্রকাশ করুন। <sub>G2035</sub>
+### (BF)১৬ এবং (৫৫)৮ সংখ্যা দুটি যোগ করুন এবং ফলাফল হেক্সাডেসিমেলে প্রকাশ করুন। <sub>G2100</sub>
 
 *Written*
 
@@ -984,9 +984,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৯। — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2075"></a>
+<a id="g2140"></a>
 
-### (৯০ – ৭৫)১০ সংখ্যাটিকে বাইনারি ও হেক্সাডেসিমেলে রূপান্তর করুন। <sub>G2075</sub>
+### (৯০ – ৭৫)১০ সংখ্যাটিকে বাইনারি ও হেক্সাডেসিমেলে রূপান্তর করুন। <sub>G2140</sub>
 
 *Written*
 
@@ -996,9 +996,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৬। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2078"></a>
+<a id="g2143"></a>
 
-### ২ এর পরিপূরক পদ্ধতি ব্যবহার করে (১০৮)৮ থেকে (৭৮)১৬ বিয়োগ করুন। <sub>G2078</sub>
+### ২ এর পরিপূরক পদ্ধতি ব্যবহার করে (১০৮)৮ থেকে (৭৮)১৬ বিয়োগ করুন। <sub>G2143</sub>
 
 *Written*
 
@@ -1008,9 +1008,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৭ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2141"></a>
+<a id="g2206"></a>
 
-### (CDAB)16 কে অক্টাল এ রূপান্তর কর। <sub>G2141</sub>
+### (CDAB)16 কে অক্টাল এ রূপান্তর কর। <sub>G2206</sub>
 
 *Written*
 
@@ -1020,9 +1020,9 @@ BCD Addition: $00010011 + 00100110$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q3 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
 
-<a id="g2147"></a>
+<a id="g2212"></a>
 
-### ৫৫ থেকে ২৭ ২'s complement এর মাধ্যমে বিয়োগ (Subtract from 55 to 27 using 2's complement) <sub>G2147</sub>
+### ৫৫ থেকে ২৭ ২'s complement এর মাধ্যমে বিয়োগ (Subtract from 55 to 27 using 2's complement) <sub>G2212</sub>
 
 *Written*
 
@@ -1033,9 +1033,9 @@ BCD Addition: $00010011 + 00100110$
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q2 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 - **Correction:** 55 − 27 = 28. In 8 bits: 00110111 + 11100101 (2's complement of 27) = 1 00011100; drop the carry → 00011100 = +28. (If the wording means 27 − 55, the result is −28 = 11100100, but the printed working does not show that.)
 
-<a id="g2247"></a>
+<a id="g2312"></a>
 
-### You are required to convert a 32 bit digital number to an analogue voltage over the volta… <sub>G2247</sub>
+### You are required to convert a 32 bit digital number to an analogue voltage over the volta… <sub>G2312</sub>
 
 *Written*
 
@@ -1047,9 +1047,9 @@ You are required to convert a 32 bit digital number to an analogue voltage over 
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 - **Correction:** the printed answer uses 12 bits although the question says 32 bits, and its unit conversion is wrong (0.00080586 V = 0.806 mV, not 0.0806 mV). For a 32-bit DAC: 3.3 / 2^32 ≈ 7.68 × 10⁻¹⁰ V (≈ 0.77 nV; 3.3 / (2^32 − 1) gives the same to three figures). If the paper meant 12 bits: 3.3 / 4096 ≈ 0.806 mV.
 
-<a id="g2552"></a>
+<a id="g2617"></a>
 
-### Which of the following numbers is the next sequence number of 77(8) in Octal? ক) 88 খ) 80… <sub>G2552</sub>
+### Which of the following numbers is the next sequence number of 77(8) in Octal? ক) 88 খ) 80… <sub>G2617</sub>
 
 *MCQ*
 
@@ -1059,9 +1059,9 @@ Which of the following numbers is the next sequence number of 77(8) in Octal? �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Digital Systems / Logic / Circuits Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2683"></a>
+<a id="g2748"></a>
 
-### 39-B816 কে ডিসিম্যালে (দশমিক) রূপান্তর করুন। 1100101001-1100110110 এর মধ্যে পার্থক্য লিখু… <sub>G2683</sub>
+### 39-B816 কে ডিসিম্যালে (দশমিক) রূপান্তর করুন। 1100101001-1100110110 এর মধ্যে পার্থক্য লিখু… <sub>G2748</sub>
 
 *Written*
 
@@ -1071,9 +1071,9 @@ Which of the following numbers is the next sequence number of 77(8) in Octal? �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ৩ (খ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2886"></a>
+<a id="g2951"></a>
 
-### Convert decimal (1741) to hexadecimal? <sub>G2886</sub>
+### Convert decimal (1741) to hexadecimal? <sub>G2951</sub>
 
 *Written*
 
@@ -1083,9 +1083,9 @@ Convert decimal (1741) to hexadecimal?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 9. Dhaka Electric Supply Company Ltd. (DESCO)-2022, Assistant Engineer-IT, 10-09-2022; exam taker not printed; Marks: 100; Time: 2.00 Hours; pp. 13-15 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2902"></a>
+<a id="g2967"></a>
 
-### Conversion. i.decimal number 9 base number, ii.octal number to decimal number. ii.octal n… <sub>G2902</sub>
+### Conversion. i.decimal number 9 base number, ii.octal number to decimal number. ii.octal n… <sub>G2967</sub>
 
 *Written*
 
@@ -1095,9 +1095,9 @@ Conversion. i.decimal number 9 base number, ii.octal number to decimal number. i
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3563"></a>
+<a id="g3628"></a>
 
-### (b) Represent - 25 in 8 bit binary using 2's complement. <sub>G3563</sub>
+### (b) Represent - 25 in 8 bit binary using 2's complement. <sub>G3628</sub>
 
 *Written*
 
@@ -1107,9 +1107,9 @@ Conversion. i.decimal number 9 base number, ii.octal number to decimal number. i
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q1(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3965"></a>
+<a id="g4030"></a>
 
-### In modulo-2 operation, ____ give the same result. (ক) Addition & division (খ) Addition & … <sub>G3965</sub>
+### In modulo-2 operation, ____ give the same result. (ক) Addition & division (খ) Addition & … <sub>G4030</sub>
 
 *MCQ*
 
@@ -1119,9 +1119,9 @@ In modulo-2 operation, ____ give the same result. (ক) Addition & division (খ
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — ICT (281), question paper 2 (Q101–200), 10.10.2025, Q111 — [bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md](../bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md)
 
-<a id="g4158"></a>
+<a id="g4223"></a>
 
-### ২-এর পরিপূরক পদ্ধতি কী? ২-এর পরিপূরক পদ্ধতি ব্যবহার করে $(-১৫)_{১০}$ থেকে $(+২১)_{১০}$ বি… <sub>G4158</sub>
+### ২-এর পরিপূরক পদ্ধতি কী? ২-এর পরিপূরক পদ্ধতি ব্যবহার করে $(-১৫)_{১০}$ থেকে $(+২১)_{১০}$ বি… <sub>G4223</sub>
 
 *Written*
 
@@ -1132,9 +1132,9 @@ In modulo-2 operation, ____ give the same result. (ক) Addition & division (খ
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q6 — [bit to exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.md](../bit%20to%20exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.md) · [image](../bit%20to%20exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.jpg)
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন লিখিত (স্কুল পর্যায়) — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি (আইসিটি), বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) — 12.07.2024, ৫। — [ntrca-written-web/18-313-school-ict/18-313-school-ict.md](../ntrca-written-web/18-313-school-ict/18-313-school-ict.md)
 
-<a id="g4160"></a>
+<a id="g4225"></a>
 
-### (৯D·AB৬)১৬ ও (৩০৬·৫১)১০ যোগ করুন এবং ফলাফল বাইনারীতে প্রকাশ করুন। (১১০১০১) কোন সংখ্যা পদ্… <sub>G4160</sub>
+### (৯D·AB৬)১৬ ও (৩০৬·৫১)১০ যোগ করুন এবং ফলাফল বাইনারীতে প্রকাশ করুন। (১১০১০১) কোন সংখ্যা পদ্… <sub>G4225</sub>
 
 *Written*
 
@@ -1144,9 +1144,9 @@ In modulo-2 operation, ____ give the same result. (ক) Addition & division (খ
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন লিখিত (স্কুল পর্যায়) — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি (আইসিটি), বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) — 12.07.2024, ৮। — [ntrca-written-web/18-313-school-ict/18-313-school-ict.md](../ntrca-written-web/18-313-school-ict/18-313-school-ict.md)
 
-<a id="g4164"></a>
+<a id="g4229"></a>
 
-### 2's কমপ্লিমেন্ট পদ্ধতিতে (5)10 হতে (7)10 বিয়োগ করুন। <sub>G4164</sub>
+### 2's কমপ্লিমেন্ট পদ্ধতিতে (5)10 হতে (7)10 বিয়োগ করুন। <sub>G4229</sub>
 
 *Written*
 
@@ -1156,9 +1156,9 @@ In modulo-2 operation, ____ give the same result. (ক) Addition & division (খ
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন পরীক্ষা (স্কুল সমপর্যায়-২) — ট্রেড ইন্সট্রাক্টর, কম্পিউটার ও তথ্যপ্রযুক্তি (লিখিত) — 12.07.2024, ২। — [ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md](../ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md)
 
-<a id="g4165"></a>
+<a id="g4230"></a>
 
-### K-ম্যাপ ব্যবহার করে সরল করুন: Y = ABCD + AB̄CD + ĀBD + CD̄ + ĀB̄CD <sub>G4165</sub>
+### K-ম্যাপ ব্যবহার করে সরল করুন: Y = ABCD + AB̄CD + ĀBD + CD̄ + ĀB̄CD <sub>G4230</sub>
 
 *Written*
 
@@ -1168,9 +1168,9 @@ K-ম্যাপ ব্যবহার করে সরল করুন: Y = AB
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৮তম শিক্ষক নিবন্ধন পরীক্ষা (স্কুল সমপর্যায়-২) — ট্রেড ইন্সট্রাক্টর, কম্পিউটার ও তথ্যপ্রযুক্তি (লিখিত) — 12.07.2024, ৩। — [ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md](../ntrca-written-web/18-school2-ict-trade-instructor/18-school2-ict-trade-instructor.md)
 
-<a id="g4324"></a>
+<a id="g4569"></a>
 
-### What is the 2’s complement of (67)₁₀ (a) 01000011 (b) 01000011 <sub>G4324</sub>
+### What is the 2’s complement of (67)₁₀ (a) 01000011 (b) 01000011 <sub>G4569</sub>
 
 *MCQ*
 
@@ -1180,9 +1180,9 @@ What is the 2’s complement of (67)₁₀ (a) 01000011 (b) 01000011
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ7 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4598"></a>
+<a id="g4843"></a>
 
-### বিসিডি কোডে বিট সংখ্যা কত? (a) ১ (b) ২ (c) ৮ (d) ৪ <sub>G4598</sub>
+### বিসিডি কোডে বিট সংখ্যা কত? (a) ১ (b) ২ (c) ৮ (d) ৪ <sub>G4843</sub>
 
 *MCQ*
 
@@ -1192,9 +1192,9 @@ What is the 2’s complement of (67)₁₀ (a) 01000011 (b) 01000011
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ11 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4599"></a>
+<a id="g4844"></a>
 
-### বাইনারি পদ্ধতির যোগে 1+1+1 = কত? (a) 10 (b) 11 (c) 101 (d) 111 <sub>G4599</sub>
+### বাইনারি পদ্ধতির যোগে 1+1+1 = কত? (a) 10 (b) 11 (c) 101 (d) 111 <sub>G4844</sub>
 
 *MCQ*
 
@@ -1265,9 +1265,9 @@ Simply the following function: $ABCD + \bar{A}BD + A\bar{B}\bar{C}D$
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q27 — [bit to exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.md](../bit%20to%20exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.md) · [image](../bit%20to%20exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.jpg)
 
-<a id="g2376"></a>
+<a id="g2441"></a>
 
-### (1111001101011)2, কে অক্টাল ও হেক্সাডেসিম্যালে রূপান্তর করুন। <sub>G2376</sub>
+### (1111001101011)2, কে অক্টাল ও হেক্সাডেসিম্যালে রূপান্তর করুন। <sub>G2441</sub>
 
 *Written*
 
@@ -1277,9 +1277,9 @@ Simply the following function: $ABCD + \bar{A}BD + A\bar{B}\bar{C}D$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 01 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2405"></a>
+<a id="g2470"></a>
 
-### (539)10 Decimal Number কে Hexa-Decimal এবং Octal Number এ রূপান্তর কর। <sub>G2405</sub>
+### (539)10 Decimal Number কে Hexa-Decimal এবং Octal Number এ রূপান্তর কর। <sub>G2470</sub>
 
 *Written*
 
@@ -1289,9 +1289,9 @@ Simply the following function: $ABCD + \bar{A}BD + A\bar{B}\bar{C}D$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 15 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2555"></a>
+<a id="g2620"></a>
 
-### 10000000 এর 2's Complement মান কত (8-bit)? A. 0 B. 128 C. -128 D. 256 <sub>G2555</sub>
+### 10000000 এর 2's Complement মান কত (8-bit)? A. 0 B. 128 C. -128 D. 256 <sub>G2620</sub>
 
 *MCQ*
 
@@ -1301,9 +1301,9 @@ Simply the following function: $ABCD + \bar{A}BD + A\bar{B}\bar{C}D$
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33, Digital Systems / Logic / Circuits Q5 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2917"></a>
+<a id="g2982"></a>
 
-### There are different number systems. (i) Convert (10010.101)2=(?)10 (ii) Convert (543)10 =… <sub>G2917</sub>
+### There are different number systems. (i) Convert (10010.101)2=(?)10 (ii) Convert (543)10 =… <sub>G2982</sub>
 
 *Written*
 
@@ -1313,9 +1313,9 @@ There are different number systems. (i) Convert (10010.101)2=(?)10 (ii) Convert 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(M) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3896"></a>
+<a id="g3961"></a>
 
-### If the message bit is 111 then the Even-parity bit will be: (a) 1111 (b) 1 (c) 0 (d) None <sub>G3896</sub>
+### If the message bit is 111 then the Even-parity bit will be: (a) 1111 (b) 1 (c) 0 (d) None <sub>G3961</sub>
 
 *MCQ*
 
@@ -1325,9 +1325,9 @@ If the message bit is 111 then the Even-parity bit will be: (a) 1111 (b) 1 (c) 0
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q9 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3899"></a>
+<a id="g3964"></a>
 
-### Which of the following format is usually used to store data? (a) Decimal (b) BCD (c) Octa… <sub>G3899</sub>
+### Which of the following format is usually used to store data? (a) Decimal (b) BCD (c) Octa… <sub>G3964</sub>
 
 *MCQ*
 
@@ -1337,9 +1337,9 @@ Which of the following format is usually used to store data? (a) Decimal (b) BCD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q12 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3918"></a>
+<a id="g3983"></a>
 
-### 2’s complement of 00000000 is: (a) 11111111 (b) 10000000 (c) 00000000 (d) 00000001 <sub>G3918</sub>
+### 2’s complement of 00000000 is: (a) 11111111 (b) 10000000 (c) 00000000 (d) 00000001 <sub>G3983</sub>
 
 *MCQ*
 
@@ -1349,9 +1349,9 @@ Which of the following format is usually used to store data? (a) Decimal (b) BCD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q31 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g4092"></a>
+<a id="g4157"></a>
 
-### কোড কী? BCD কোড, ASCII কোড, EBCDIC কোড এর বর্ণনা করুন। <sub>G4092</sub>
+### কোড কী? BCD কোড, ASCII কোড, EBCDIC কোড এর বর্ণনা করুন। <sub>G4157</sub>
 
 *Written*
 
@@ -1361,9 +1361,9 @@ Which of the following format is usually used to store data? (a) Decimal (b) BCD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৩ অথবা (গ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4105"></a>
+<a id="g4170"></a>
 
-### ২-এর পরিপূরক পদ্ধতি ব্যবহার করে (৩২)১০ থেকে (১৮)১০ বিয়োগ করুন। <sub>G4105</sub>
+### ২-এর পরিপূরক পদ্ধতি ব্যবহার করে (৩২)১০ থেকে (১৮)১০ বিয়োগ করুন। <sub>G4170</sub>
 
 *Written*
 
@@ -1373,9 +1373,9 @@ Which of the following format is usually used to store data? (a) Decimal (b) BCD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৬ — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4108"></a>
+<a id="g4173"></a>
 
-### (73·75)10 কে বাইনারী ও হেক্সাডেসিমেলে প্রকাশ করুন। <sub>G4108</sub>
+### (73·75)10 কে বাইনারী ও হেক্সাডেসিমেলে প্রকাশ করুন। <sub>G4173</sub>
 
 *Written*
 
@@ -1385,9 +1385,9 @@ Which of the following format is usually used to store data? (a) Decimal (b) BCD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৭ অথবা — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4123"></a>
+<a id="g4188"></a>
 
-### প্যারিটি বিট কী? (90.625)10 কে বাইনারি এবং (AB.C)16 কে দশমিক সংখ্যায় প্রকাশ করুন। <sub>G4123</sub>
+### প্যারিটি বিট কী? (90.625)10 কে বাইনারি এবং (AB.C)16 কে দশমিক সংখ্যায় প্রকাশ করুন। <sub>G4188</sub>
 
 *Written*
 
@@ -1397,9 +1397,9 @@ Which of the following format is usually used to store data? (a) Decimal (b) BCD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ২ অথবা (ক) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4124"></a>
+<a id="g4189"></a>
 
-### (3D.4C)16 এবং (514.6)8 কে বাইনারি সংখ্যায় পরিবর্তন করে যোগ করুন এবং যোগফল হেক্সাডেসিমালে… <sub>G4124</sub>
+### (3D.4C)16 এবং (514.6)8 কে বাইনারি সংখ্যায় পরিবর্তন করে যোগ করুন এবং যোগফল হেক্সাডেসিমালে… <sub>G4189</sub>
 
 *Written*
 
@@ -1409,9 +1409,9 @@ Which of the following format is usually used to store data? (a) Decimal (b) BCD
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ২ অথবা (খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4279"></a>
+<a id="g4344"></a>
 
-### The ASCII code of ‘C’ is? <sub>G4279</sub>
+### The ASCII code of ‘C’ is? <sub>G4344</sub>
 
 *MCQ*
 
@@ -1421,9 +1421,22 @@ The ASCII code of ‘C’ is?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT items (Q71–80 of the "GK & ICT" section) — 12 November 2021 — Exam taker: Faculty of Business Studies, DU (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, MCQ76 — [bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md](../bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md)
 
-<a id="g4500"></a>
+<a id="g4513"></a>
 
-### 'b'এর ASCII Value কত? 66 / 98 / 3000 / 1 Printed answer: 98 <sub>G4500</sub>
+### Suppose you have an 8-bit binary number N. Which of the following operations does not cha… <sub>G4513</sub>
+
+*MCQ*
+
+Suppose you have an 8-bit binary number N. Which of the following operations does not change its lower 4 bits? (a) An exclusive logical sum of N with 0Fh (b) A negative logical product of N with 0Fh (c) A logical product of N with 0Fh (d) A logical sum of N with 0Fh
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ45 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+- **Correction:** key b (NAND with 0Fh), which inverts the lower 4 bits. AND with 0Fh (a logical product) keeps the lower 4 bits and clears the upper 4, option (c); XOR flips them and OR sets them to 1.
+
+<a id="g4745"></a>
+
+### 'b'এর ASCII Value কত? 66 / 98 / 3000 / 1 Printed answer: 98 <sub>G4745</sub>
 
 *MCQ*
 
@@ -1445,9 +1458,9 @@ Convert $(2345)_{10}$ to hexadecimal and $(ABCD)_{16}$ to octal number.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q10 — [bit to exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.md](../bit%20to%20exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.md) · [image](../bit%20to%20exabyte/54_bte-g2-p40-digital-electronics-q01-15-number-systems.jpg)
 
-<a id="g2004"></a>
+<a id="g2069"></a>
 
-### (456)₈ ও (2D)₁₆ কে বাইনারি পদ্ধতিতে যোগ করুন। যোগফলকে দশমিকে প্রকাশ করুন। <sub>G2004</sub>
+### (456)₈ ও (2D)₁₆ কে বাইনারি পদ্ধতিতে যোগ করুন। যোগফলকে দশমিকে প্রকাশ করুন। <sub>G2069</sub>
 
 *Written*
 
@@ -1457,9 +1470,9 @@ Convert $(2345)_{10}$ to hexadecimal and $(ABCD)_{16}$ to octal number.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৮ অথবা — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2708"></a>
+<a id="g2773"></a>
 
-### Convert the numbers (16A.6)₁₆ and (72.3)₈ in binary format and show their summation in He… <sub>G2708</sub>
+### Convert the numbers (16A.6)₁₆ and (72.3)₈ in binary format and show their summation in He… <sub>G2773</sub>
 
 *Written*
 
@@ -1469,9 +1482,9 @@ Convert the numbers (16A.6)₁₆ and (72.3)₈ in binary format and show their 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 2 (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2810"></a>
+<a id="g2875"></a>
 
-### Convert decimal number 250.5 to base 3 and base 7. Round the answers keeping three digits… <sub>G2810</sub>
+### Convert decimal number 250.5 to base 3 and base 7. Round the answers keeping three digits… <sub>G2875</sub>
 
 *Written*
 
@@ -1481,9 +1494,9 @@ Convert decimal number 250.5 to base 3 and base 7. Round the answers keeping thr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 1 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4055"></a>
+<a id="g4120"></a>
 
-### (১০১১০·১১)২ কে হেক্সাডেসিমালে এবং (AB·4C)16 কে বাইনারীতে রূপান্তর করুন। <sub>G4055</sub>
+### (১০১১০·১১)২ কে হেক্সাডেসিমালে এবং (AB·4C)16 কে বাইনারীতে রূপান্তর করুন। <sub>G4120</sub>
 
 *Written*
 
@@ -1493,9 +1506,9 @@ Convert decimal number 250.5 to base 3 and base 7. Round the answers keeping thr
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ২(ঘ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4671"></a>
+<a id="g4916"></a>
 
-### 5. Binary এবং decimal কী? 3 কে বাইনারিতে কত বলবেন? <sub>G4671</sub>
+### 5. Binary এবং decimal কী? 3 কে বাইনারিতে কত বলবেন? <sub>G4916</sub>
 
 *Viva*
 
@@ -1519,9 +1532,9 @@ In a modulo-2 operation, ____ give the same result: (a) addition & division (b) 
   - Paper not shown on the source sheet, MCQ 35 — [BCS/32_8086-reset-thrashing-mov-modulo-2.md](../BCS/32_8086-reset-thrashing-mov-modulo-2.md) · [image](../BCS/32_8086-reset-thrashing-mov-modulo-2.jpg)
 - **Correction:** The answer is not printed on this page. The correct answer is (d) subtraction & addition, since both are XOR.
 
-<a id="g1720"></a>
+<a id="g1719"></a>
 
-### ২-এর পরিপূরক (2's Complement) এর নিয়ম লিখুন এবং ২-এর পরিপূরক ব্যবহার করে বাইনারি বিয়োগ … <sub>G1720</sub>
+### ২-এর পরিপূরক (2's Complement) এর নিয়ম লিখুন এবং ২-এর পরিপূরক ব্যবহার করে বাইনারি বিয়োগ … <sub>G1719</sub>
 
 *Written*
 
@@ -1531,9 +1544,9 @@ In a modulo-2 operation, ____ give the same result: (a) addition & division (b) 
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডিজিটাল লজিক ও সার্কিট ডিজাইন, Q199 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
-<a id="g1721"></a>
+<a id="g1720"></a>
 
-### সংখ্যা পদ্ধতির রূপান্তর (Hexadecimal, Binary, Octal, Decimal) এবং হেক্সাডেসিমাল পদ্ধতিতে … <sub>G1721</sub>
+### সংখ্যা পদ্ধতির রূপান্তর (Hexadecimal, Binary, Octal, Decimal) এবং হেক্সাডেসিমাল পদ্ধতিতে … <sub>G1720</sub>
 
 *Written*
 
@@ -1543,9 +1556,9 @@ In a modulo-2 operation, ____ give the same result: (a) addition & division (b) 
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডিজিটাল লজিক ও সার্কিট ডিজাইন, Q200 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
-<a id="g3437"></a>
+<a id="g3502"></a>
 
-### Design a circuit that counts the number of 1's presence in 3-inputs A, B and C. Its outpu… <sub>G3437</sub>
+### Design a circuit that counts the number of 1's presence in 3-inputs A, B and C. Its outpu… <sub>G3502</sub>
 
 *Written*
 
@@ -1557,9 +1570,9 @@ Design a circuit that counts the number of 1's presence in 3-inputs A, B and C. 
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q9(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q9(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4955"></a>
+<a id="g5200"></a>
 
-### (B12)16+(5CA)16=? ক. (10DC)16 খ. (AFDC)16 গ. (IFDC)16 ঘ. (EIDC)16 <sub>G4955</sub>
+### (B12)16+(5CA)16=? ক. (10DC)16 খ. (AFDC)16 গ. (IFDC)16 ঘ. (EIDC)16 <sub>G5200</sub>
 
 *MCQ*
 
@@ -1569,9 +1582,9 @@ Design a circuit that counts the number of 1's presence in 3-inputs A, B and C. 
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — Govt Job Care BD — BPSc Assistant Programmer Final Model Test (suggestion), Q56 — [model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md](../model-test-web/scribd-govtjobcarebd-ap-final-model-test/ap-final-model-test.md)
 
-<a id="g4974"></a>
+<a id="g5219"></a>
 
-### What is the largest decimal value that can be represented by 12 bits? ক. 1024 খ. 2048 গ. … <sub>G4974</sub>
+### What is the largest decimal value that can be represented by 12 bits? ক. 1024 খ. 2048 গ. … <sub>G5219</sub>
 
 *MCQ*
 
@@ -1709,9 +1722,9 @@ Logic Circuit of Boolean algebra: $Q = \bar{C} + \bar{A}B + BC(B + C)$; Where ou
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q30 — [bit to exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.md](../bit%20to%20exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.md) · [image](../bit%20to%20exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.jpg)
 
-<a id="g1903"></a>
+<a id="g1968"></a>
 
-### Boolean function কী? নিচের Boolean function-কে কীভাবে সহজীকরণ করা যেতে পারে? F = A’B' C +… <sub>G1903</sub>
+### Boolean function কী? নিচের Boolean function-কে কীভাবে সহজীকরণ করা যেতে পারে? F = A’B' C +… <sub>G1968</sub>
 
 *Written*
 
@@ -1722,9 +1735,9 @@ Boolean function কী? নিচের Boolean function-কে কীভাব
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ২ (খ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2028"></a>
+<a id="g2093"></a>
 
-### যদি F = X̄Y + XYZ̄ হয়, তবে প্রমাণ করুন যে, F. F̄ = 0 . <sub>G2028</sub>
+### যদি F = X̄Y + XYZ̄ হয়, তবে প্রমাণ করুন যে, F. F̄ = 0 . <sub>G2093</sub>
 
 *Written*
 
@@ -1734,9 +1747,9 @@ Boolean function কী? নিচের Boolean function-কে কীভাব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৫ অথবা (খ) — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2037"></a>
+<a id="g2102"></a>
 
-### NOT[(A+C̄)(B̄+D)] সমীকরণটি সরল করুন এবং যুক্তি বর্তনী অঙ্কন করুন। (the whole product is o… <sub>G2037</sub>
+### NOT[(A+C̄)(B̄+D)] সমীকরণটি সরল করুন এবং যুক্তি বর্তনী অঙ্কন করুন। (the whole product is o… <sub>G2102</sub>
 
 *Written*
 
@@ -1746,9 +1759,9 @@ NOT[(A+C̄)(B̄+D)] সমীকরণটি সরল করুন এবং �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ১০। — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g2076"></a>
+<a id="g2141"></a>
 
-### সরল করুন: Ā B̄ C + A B̄ C̄ + ABC <sub>G2076</sub>
+### সরল করুন: Ā B̄ C + A B̄ C̄ + ABC <sub>G2141</sub>
 
 *Written*
 
@@ -1758,9 +1771,9 @@ NOT[(A+C̄)(B̄+D)] সমীকরণটি সরল করুন এবং �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৬ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2365"></a>
+<a id="g2430"></a>
 
-### (A+B) V(not A) V (notC) এর truth table নির্ণয় করুন। <sub>G2365</sub>
+### (A+B) V(not A) V (notC) এর truth table নির্ণয় করুন। <sub>G2430</sub>
 
 *Written*
 
@@ -1771,9 +1784,9 @@ NOT[(A+C̄)(B̄+D)] সমীকরণটি সরল করুন এবং �
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ২ (ঘ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g3164"></a>
+<a id="g3229"></a>
 
-### Truth Table from the following circuit: <sub>G3164</sub>
+### Truth Table from the following circuit: <sub>G3229</sub>
 
 *Written*
 
@@ -1783,9 +1796,9 @@ Truth Table from the following circuit:
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3168"></a>
+<a id="g3233"></a>
 
-### Logic Circuit of Olean algebra: Q = C + AB+BC(B+C); Where output Q and input (A, B, C)=(0… <sub>G3168</sub>
+### Logic Circuit of Olean algebra: Q = C + AB+BC(B+C); Where output Q and input (A, B, C)=(0… <sub>G3233</sub>
 
 *Written*
 
@@ -1795,9 +1808,9 @@ Logic Circuit of Olean algebra: Q = C + AB+BC(B+C); Where output Q and input (A,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3184"></a>
+<a id="g3249"></a>
 
-### Draw logic circuit for the Boolean Expression Q= (A'B + BC (B+C)')' and find value of Q w… <sub>G3184</sub>
+### Draw logic circuit for the Boolean Expression Q= (A'B + BC (B+C)')' and find value of Q w… <sub>G3249</sub>
 
 *Written*
 
@@ -1807,9 +1820,9 @@ Draw logic circuit for the Boolean Expression Q= (A'B + BC (B+C)')' and find val
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — Combined 3 Bank (10199) — Assistant Maintenance engineer/Assistant Engineer IT 2024 — 24.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 42–44, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3227"></a>
+<a id="g3292"></a>
 
-### Construct a Truth Table for a system that triggers an Alarm (Output 1) if (Motion is Dete… <sub>G3227</sub>
+### Construct a Truth Table for a system that triggers an Alarm (Output 1) if (Motion is Dete… <sub>G3292</sub>
 
 *Written*
 
@@ -1820,9 +1833,9 @@ Construct a Truth Table for a system that triggers an Alarm (Output 1) if (Motio
   - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
   - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q16 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3370"></a>
+<a id="g3435"></a>
 
-### (iii) DeMorgan's Duality Formula লিখ এবং উদাহরণ দাও। <sub>G3370</sub>
+### (iii) DeMorgan's Duality Formula লিখ এবং উদাহরণ দাও। <sub>G3435</sub>
 
 *Written*
 
@@ -1832,9 +1845,9 @@ Construct a Truth Table for a system that triggers an Alarm (Output 1) if (Motio
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer (Computer) 15/05/2026, 4 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3408"></a>
+<a id="g3473"></a>
 
-### A Boolean expression given simplify it: yz+xz+xyz <sub>G3408</sub>
+### A Boolean expression given simplify it: yz+xz+xyz <sub>G3473</sub>
 
 *Written*
 
@@ -1844,9 +1857,9 @@ A Boolean expression given simplify it: yz+xz+xyz
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 28/07/2023, 7+6 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g4027"></a>
+<a id="g4092"></a>
 
-### Which of the following is the simplified version of boolean function F = Y̲ (X + X̲Y)? (ক… <sub>G4027</sub>
+### Which of the following is the simplified version of boolean function F = Y̲ (X + X̲Y)? (ক… <sub>G4092</sub>
 
 *MCQ*
 
@@ -1856,9 +1869,9 @@ Which of the following is the simplified version of boolean function F = Y̲ (X 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q154 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4359"></a>
+<a id="g4604"></a>
 
-### Given a logical function, find out the truth table of AB· (A+B).C <sub>G4359</sub>
+### Given a logical function, find out the truth table of AB· (A+B).C <sub>G4604</sub>
 
 *Written*
 
@@ -1980,9 +1993,9 @@ Draw a truth table that satisfies the above-mentioned equation. $Y = \bar{A}\bar
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q28 — [bit to exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.md](../bit%20to%20exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.md) · [image](../bit%20to%20exabyte/55_bte-g2-p41-digital-electronics-q15-34-boolean-gates.jpg)
 
-<a id="g1884"></a>
+<a id="g1949"></a>
 
-### Consider the following algebraic equation : Y = AB’CD’ +ABC’+A’BD+AB’CD. Draw the truth t… <sub>G1884</sub>
+### Consider the following algebraic equation : Y = AB’CD’ +ABC’+A’BD+AB’CD. Draw the truth t… <sub>G1949</sub>
 
 *Written*
 
@@ -1992,9 +2005,9 @@ Consider the following algebraic equation : Y = AB’CD’ +ABC’+A’BD+AB’C
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 4.(a) — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 
-<a id="g2377"></a>
+<a id="g2442"></a>
 
-### f(a, b, c, d) = a'b'c'd' + a'b'c'd + a'bc'd + ab'cd' কে কারনুম্যাপ এর সাহায্যে Simplify ক… <sub>G2377</sub>
+### f(a, b, c, d) = a'b'c'd' + a'b'c'd + a'bc'd + ab'cd' কে কারনুম্যাপ এর সাহায্যে Simplify ক… <sub>G2442</sub>
 
 *Written*
 
@@ -2004,9 +2017,9 @@ f(a, b, c, d) = a'b'c'd' + a'b'c'd + a'bc'd + ab'cd' কে কারনুম�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 02 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g3389"></a>
+<a id="g3454"></a>
 
-### Given traffic light truth table for red, yellow, green. Find Boolean function <sub>G3389</sub>
+### Given traffic light truth table for red, yellow, green. Find Boolean function <sub>G3454</sub>
 
 *Written*
 
@@ -2016,9 +2029,9 @@ Given traffic light truth table for red, yellow, green. Find Boolean function
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 26.11.2021, 5 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3744"></a>
+<a id="g3809"></a>
 
-### Minimize function of the given logic cirsuit. <sub>G3744</sub>
+### Minimize function of the given logic cirsuit. <sub>G3809</sub>
 
 *Written*
 
@@ -2028,9 +2041,9 @@ Minimize function of the given logic cirsuit.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q11 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3745"></a>
+<a id="g3810"></a>
 
-### Truth table given. Find out which circuit it refers to. <sub>G3745</sub>
+### Truth table given. Find out which circuit it refers to. <sub>G3810</sub>
 
 *Written*
 
@@ -2040,9 +2053,9 @@ Truth table given. Find out which circuit it refers to.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q12 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3844"></a>
+<a id="g3909"></a>
 
-### A majority circuit is a combinational circuit whose output is equal to 1 if the input var… <sub>G3844</sub>
+### A majority circuit is a combinational circuit whose output is equal to 1 if the input var… <sub>G3909</sub>
 
 *MCQ*
 
@@ -2052,9 +2065,9 @@ A majority circuit is a combinational circuit whose output is equal to 1 if the 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q7 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3854"></a>
+<a id="g3919"></a>
 
-### What will be the simplified form of the following Boolean expression in terms of the mini… <sub>G3854</sub>
+### What will be the simplified form of the following Boolean expression in terms of the mini… <sub>G3919</sub>
 
 *MCQ*
 
@@ -2064,9 +2077,9 @@ What will be the simplified form of the following Boolean expression in terms of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q17 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4107"></a>
+<a id="g4172"></a>
 
-### নিচের সমীকরণটি সরল করুন ও বর্তনী অংকন করুন : S = ĀB̄Cᵢ + ĀBC̄ᵢ + AB̄C̄ᵢ + ABCᵢ <sub>G4107</sub>
+### নিচের সমীকরণটি সরল করুন ও বর্তনী অংকন করুন : S = ĀB̄Cᵢ + ĀBC̄ᵢ + AB̄C̄ᵢ + ABCᵢ <sub>G4172</sub>
 
 *Written*
 
@@ -2076,9 +2089,9 @@ What will be the simplified form of the following Boolean expression in terms of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৭ — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4132"></a>
+<a id="g4197"></a>
 
-### বুলিয়ান অ্যালজেবরার সাহায্যে সরল করুন: \overline{x + ȳ(x + z)} <sub>G4132</sub>
+### বুলিয়ান অ্যালজেবরার সাহায্যে সরল করুন: \overline{x + ȳ(x + z)} <sub>G4197</sub>
 
 *Written*
 
@@ -2088,9 +2101,9 @@ What will be the simplified form of the following Boolean expression in terms of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৪ অথবা (ক) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4133"></a>
+<a id="g4198"></a>
 
-### প্রমান করুন: \overline{A⊕B} = AB + ĀB̄ <sub>G4133</sub>
+### প্রমান করুন: \overline{A⊕B} = AB + ĀB̄ <sub>G4198</sub>
 
 *Written*
 
@@ -2100,9 +2113,9 @@ What will be the simplified form of the following Boolean expression in terms of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৪ অথবা (খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4134"></a>
+<a id="g4199"></a>
 
-### মিনটার্ম কী? কারনু ম্যাপের সাহায্যে সরল করুন: ĀB̄C̄ + ĀB + ABC̄ + AC. <sub>G4134</sub>
+### মিনটার্ম কী? কারনু ম্যাপের সাহায্যে সরল করুন: ĀB̄C̄ + ĀB + ABC̄ + AC. <sub>G4199</sub>
 
 *Written*
 
@@ -2112,9 +2125,9 @@ What will be the simplified form of the following Boolean expression in terms of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৪ অথবা (গ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4135"></a>
+<a id="g4200"></a>
 
-### তিনটি চলকের ডী-মরগ্যান উপপাদ্য দুইটি লিখুন এবং সত্যক সারিণির সাহায্যে প্রমাণ করুণ। <sub>G4135</sub>
+### তিনটি চলকের ডী-মরগ্যান উপপাদ্য দুইটি লিখুন এবং সত্যক সারিণির সাহায্যে প্রমাণ করুণ। <sub>G4200</sub>
 
 *Written*
 
@@ -2124,9 +2137,21 @@ What will be the simplified form of the following Boolean expression in terms of
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৫(ক) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4480"></a>
+<a id="g4512"></a>
 
-### K- map £x,y,z =(0,2,4,6,7) simplify. <sub>G4480</sub>
+### The simplified form of the Boolean expression (A+B+AB)(A+C) is (a) A + B + C (b) AB + BC … <sub>G4512</sub>
+
+*MCQ*
+
+The simplified form of the Boolean expression (A+B+AB)(A+C) is (a) A + B + C (b) AB + BC (c) A + BC (d) AC + B
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ44 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4725"></a>
+
+### K- map £x,y,z =(0,2,4,6,7) simplify. <sub>G4725</sub>
 
 *Written*
 
@@ -2149,9 +2174,9 @@ K- map £x,y,z =(0,2,4,6,7) simplify.
   - BUET MSc in CSE (2026-10-03), Q13 — [BUET JOB/37_buet-msc-cse-questions-10-13.md](../BUET%20JOB/37_buet-msc-cse-questions-10-13.md) · [image](../BUET%20JOB/37_buet-msc-cse-questions-10-13.jpg); [BUET MSC/01_buet-msc-questions-10-14.md](../BUET%20MSC/01_buet-msc-questions-10-14.md) · [image](../BUET%20MSC/01_buet-msc-questions-10-14.jpg)
 - **Correction:** No answer printed. D = A ⊕ B ⊕ C (minterms 1, 2, 4, 7).
 
-<a id="g1982"></a>
+<a id="g2047"></a>
 
-### AB + BC (B + C) ফাংশনটি সরল করুন এবং সরলীকৃত অংশের লজিক সার্কিট অংকন করুন। <sub>G1982</sub>
+### AB + BC (B + C) ফাংশনটি সরল করুন এবং সরলীকৃত অংশের লজিক সার্কিট অংকন করুন। <sub>G2047</sub>
 
 *Written*
 
@@ -2161,9 +2186,9 @@ AB + BC (B + C) ফাংশনটি সরল করুন এবং সরল
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৩ (খ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2710"></a>
+<a id="g2775"></a>
 
-### Simplify the following circuit: F = A'B'C + AB'C + ABC' + ABC <sub>G2710</sub>
+### Simplify the following circuit: F = A'B'C + AB'C + ABC' + ABC <sub>G2775</sub>
 
 *Written*
 
@@ -2173,9 +2198,9 @@ Simplify the following circuit: F = A'B'C + AB'C + ABC' + ABC
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 2 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2743"></a>
+<a id="g2808"></a>
 
-### State and prove De Morgan's theorem using Boolean algebra <sub>G2743</sub>
+### State and prove De Morgan's theorem using Boolean algebra <sub>G2808</sub>
 
 *Written*
 
@@ -2185,9 +2210,9 @@ State and prove De Morgan's theorem using Boolean algebra
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 2) (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2814"></a>
+<a id="g2879"></a>
 
-### Define Boolean algebra. State its fundamental laws and illustrate how these laws are appl… <sub>G2814</sub>
+### Define Boolean algebra. State its fundamental laws and illustrate how these laws are appl… <sub>G2879</sub>
 
 *Written*
 
@@ -2197,9 +2222,9 @@ Define Boolean algebra. State its fundamental laws and illustrate how these laws
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 3 (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4072"></a>
+<a id="g4137"></a>
 
-### কারনৌ ম্যাপের সাহায্যে সরল করুন : F(A, B, C, D) = Σ(2, 4, 6, 7, 10, 12, 14, 15). <sub>G4072</sub>
+### কারনৌ ম্যাপের সাহায্যে সরল করুন : F(A, B, C, D) = Σ(2, 4, 6, 7, 10, 12, 14, 15). <sub>G4137</sub>
 
 *Written*
 
@@ -2223,9 +2248,9 @@ What is Boolean Logic?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p31 Q15 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p31)
 - **Printed answer:** Boolean Logic is a system of logic based on two values: True (1) and False (0). It uses operations like AND, OR, and NOT to make logical decisions
 
-<a id="g1719"></a>
+<a id="g1718"></a>
 
-### তিন চলকের ডি-মরগ্যান উপপাদ্য দুইটি লিখুন এবং Truth Table এর সাহায্যে প্রমাণ করুন। <sub>G1719</sub>
+### তিন চলকের ডি-মরগ্যান উপপাদ্য দুইটি লিখুন এবং Truth Table এর সাহায্যে প্রমাণ করুন। <sub>G1718</sub>
 
 *Written*
 
@@ -2377,9 +2402,9 @@ Simplify $F(A,B,C,D) = ACD + AB + \overline{D} + AC\overline{D}$ using K-map and
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — k_map, Q7 — [bit to exabyte/08_bte-p008-kmap-q01-09-sql-q01.md](../bit%20to%20exabyte/08_bte-p008-kmap-q01-09-sql-q01.md) · [image](../bit%20to%20exabyte/08_bte-p008-kmap-q01-09-sql-q01.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q22 — [bit to exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.md](../bit%20to%20exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.md) · [image](../bit%20to%20exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.jpg)
 
-<a id="g2170"></a>
+<a id="g2235"></a>
 
-### Sum of min terms given F(A,B,C,D) = ∑(0,2,5,7,8,9,10,13,15) Now find simplest form using … <sub>G2170</sub>
+### Sum of min terms given F(A,B,C,D) = ∑(0,2,5,7,8,9,10,13,15) Now find simplest form using … <sub>G2235</sub>
 
 *Written*
 
@@ -2390,9 +2415,9 @@ Sum of min terms given F(A,B,C,D) = ∑(0,2,5,7,8,9,10,13,15) Now find simplest 
   - duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024, Q6 — [duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md](../duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md)
 - **Correction:** minterm 9 (AB'C'D) is not covered. Correct minimum: F = BD + B'D' + AC'D (or BD + B'D' + AB'C').
 
-<a id="g3071"></a>
+<a id="g3136"></a>
 
-### Minimize the boolean expression using the K-map, F-Y-A'B'CA'BC+A'BC'D + ABC'D + ABCD' + A… <sub>G3071</sub>
+### Minimize the boolean expression using the K-map, F-Y-A'B'CA'BC+A'BC'D + ABC'D + ABCD' + A… <sub>G3136</sub>
 
 *Written*
 
@@ -2402,9 +2427,9 @@ Minimize the boolean expression using the K-map, F-Y-A'B'CA'BC+A'BC'D + ABC'D + 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3452"></a>
+<a id="g3517"></a>
 
-### Minimize the following function using K-Map: 5 F (A, B, C, D) = Σ (0, 1, 7, 8, 13,15) <sub>G3452</sub>
+### Minimize the following function using K-Map: 5 F (A, B, C, D) = Σ (0, 1, 7, 8, 13,15) <sub>G3517</sub>
 
 *Written*
 
@@ -2414,9 +2439,9 @@ Minimize the following function using K-Map: 5 F (A, B, C, D) = Σ (0, 1, 7, 8, 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, CS Q1 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3551"></a>
+<a id="g3616"></a>
 
-### b) Use the Karnaugh Map to simplify the following function. f(A,B,C)=A'B'C'+A'B'C+A'BC'+A… <sub>G3551</sub>
+### b) Use the Karnaugh Map to simplify the following function. f(A,B,C)=A'B'C'+A'B'C+A'BC'+A… <sub>G3616</sub>
 
 *Written*
 
@@ -2426,9 +2451,9 @@ b) Use the Karnaugh Map to simplify the following function. f(A,B,C)=A'B'C'+A'B'
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-খ Q2(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3562"></a>
+<a id="g3627"></a>
 
-### (a) Consider the following logic circuit. [Figure: logic circuit, inputs A, B, C; interme… <sub>G3562</sub>
+### (a) Consider the following logic circuit. [Figure: logic circuit, inputs A, B, C; interme… <sub>G3627</sub>
 
 *Written*
 
@@ -2438,9 +2463,9 @@ b) Use the Karnaugh Map to simplify the following function. f(A,B,C)=A'B'C'+A'B'
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q1(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4620"></a>
+<a id="g4865"></a>
 
-### Minimize the following function in SOP minimal form using K-map. (function not given on t… <sub>G4620</sub>
+### Minimize the following function in SOP minimal form using K-map. (function not given on t… <sub>G4865</sub>
 
 *Written*
 
@@ -2450,9 +2475,9 @@ Minimize the following function in SOP minimal form using K-map. (function not g
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023, Q1 — [telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md](../telecom-web/2023-teletalk-am-it-jobqns/teletalk-am-it-2023.md)
 
-<a id="g4903"></a>
+<a id="g5148"></a>
 
-### In a 3-input logic circuit (inputs A, B, and C), the output F is 1 if at least two or all… <sub>G4903</sub>
+### In a 3-input logic circuit (inputs A, B, and C), the output F is 1 if at least two or all… <sub>G5148</sub>
 
 *Written*
 
@@ -2514,9 +2539,9 @@ Simplify the equation by using K-map: $f(A,B,C) = \overline{ABC} + \overline{A}B
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — k_map, Q9 — [bit to exabyte/08_bte-p008-kmap-q01-09-sql-q01.md](../bit%20to%20exabyte/08_bte-p008-kmap-q01-09-sql-q01.md) · [image](../bit%20to%20exabyte/08_bte-p008-kmap-q01-09-sql-q01.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q24 — [bit to exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.md](../bit%20to%20exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.md) · [image](../bit%20to%20exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.jpg)
 
-<a id="g1885"></a>
+<a id="g1950"></a>
 
-### Simplify the equation using K-map . <sub>G1885</sub>
+### Simplify the equation using K-map . <sub>G1950</sub>
 
 *Written*
 
@@ -2526,9 +2551,9 @@ Simplify the equation using K-map .
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 4.(b) — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 
-<a id="g2839"></a>
+<a id="g2904"></a>
 
-### Draw the k-map for the equation. F=A'B'C'+A'B'CD'+A'BCD'+A'BCD+AB'C'D+AB'CD+ABCD'+ABCD <sub>G2839</sub>
+### Draw the k-map for the equation. F=A'B'C'+A'B'CD'+A'BCD'+A'BCD+AB'C'D+AB'CD+ABCD'+ABCD <sub>G2904</sub>
 
 *Written*
 
@@ -2538,9 +2563,9 @@ Draw the k-map for the equation. F=A'B'C'+A'B'CD'+A'BCD'+A'BCD+AB'C'D+AB'CD+ABCD
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 2. বাংলাদেশ সমরাস্ত্র কারখানা: (BOF)-2021, Assistant Engineer; (EEE/ME/CSE), 06-03-2021; exam taker not printed; Full Mark: 100 [Non-40, Department-60]; pp. 2-4 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2937"></a>
+<a id="g3002"></a>
 
-### Simplify the following Boolean function using k-map and draw the logic circuit. F=A'B'C' … <sub>G2937</sub>
+### Simplify the following Boolean function using k-map and draw the logic circuit. F=A'B'C' … <sub>G3002</sub>
 
 *Written*
 
@@ -2550,9 +2575,9 @@ Simplify the following Boolean function using k-map and draw the logic circuit. 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Assistant Network Engineer (ANE) – JBL — 12.11.2020 — Exam taker: not printed — IT: 10*16 marks + Non IT: 2*20 marks - 200 marks — pages 4–6, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2950"></a>
+<a id="g3015"></a>
 
-### 7 segment display, a segment consists of BCD code that represent by ABCD, a segment is on… <sub>G2950</sub>
+### 7 segment display, a segment consists of BCD code that represent by ABCD, a segment is on… <sub>G3015</sub>
 
 *Written*
 
@@ -2562,9 +2587,9 @@ Simplify the following Boolean function using k-map and draw the logic circuit. 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — BSCS Combined 3 Bank (Sonali, Janata, Rakub) — Post: SO (Written) — 16-11-2020 — Exam taker: not printed — marks not printed — pages 6–8, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3004"></a>
+<a id="g3069"></a>
 
-### Simplify the following Boolean function using k-map. F(A, B, C, D) = 2 (3,4,5,7,9,13,14,1… <sub>G3004</sub>
+### Simplify the following Boolean function using k-map. F(A, B, C, D) = 2 (3,4,5,7,9,13,14,1… <sub>G3069</sub>
 
 *Written*
 
@@ -2574,9 +2599,9 @@ Simplify the following Boolean function using k-map. F(A, B, C, D) = 2 (3,4,5,7,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Assistant Hardware Engineer (AHE) - SBL, JBL, RBL [AHE SBL, JBL, RBL 2021 CTI] — 24.12.2021 — Exam taker: CTI (from the printed tag) — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks — pages 15–17, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3944"></a>
+<a id="g4009"></a>
 
-### Assume A̅, B̅, C̅ and D̅ represent the complements of A, B, C, and D, respectively. Now i… <sub>G3944</sub>
+### Assume A̅, B̅, C̅ and D̅ represent the complements of A, B, C, and D, respectively. Now i… <sub>G4009</sub>
 
 *MCQ*
 
@@ -2640,9 +2665,9 @@ Simplify F = A'B'C + AB'C + ABC' + ABC using a 3-variable K-map.
   - 46th BCS CSE, Q127 — [DLD/03_q127-3variable-kmap.md](../DLD/03_q127-3variable-kmap.md) · [image](../DLD/03_q127-3variable-kmap.jpg)
 - **Printed answer:** F = B'C + AB (solved algebraically)
 
-<a id="g1983"></a>
+<a id="g2048"></a>
 
-### মিনটার্ম কি? K-Map এর সাহায্যে নিচের সমীকরণটির সরল করুন:-- F (A, B, C, D) = A B C +A BD +… <sub>G1983</sub>
+### মিনটার্ম কি? K-Map এর সাহায্যে নিচের সমীকরণটির সরল করুন:-- F (A, B, C, D) = A B C +A BD +… <sub>G2048</sub>
 
 *Written*
 
@@ -2652,9 +2677,9 @@ Simplify F = A'B'C + AB'C + ABC' + ABC using a 3-variable K-map.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৩ (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2742"></a>
+<a id="g2807"></a>
 
-### Minimize the following function using the Karnaugh map method, (A,B,C,D) - Π (2, 3. 7, 12… <sub>G2742</sub>
+### Minimize the following function using the Karnaugh map method, (A,B,C,D) - Π (2, 3. 7, 12… <sub>G2807</sub>
 
 *Written*
 
@@ -2664,9 +2689,9 @@ Minimize the following function using the Karnaugh map method, (A,B,C,D) - Π (2
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 1 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3670"></a>
+<a id="g3735"></a>
 
-### Kmap <sub>G3670</sub>
+### Kmap <sub>G3735</sub>
 
 *Written*
 
@@ -2676,9 +2701,9 @@ Kmap
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q20 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3697"></a>
+<a id="g3762"></a>
 
-### Find the canonical sum of product of a function using K-Map? [ Function look like this A{… <sub>G3697</sub>
+### Find the canonical sum of product of a function using K-Map? [ Function look like this A{… <sub>G3762</sub>
 
 *Written*
 
@@ -2738,9 +2763,9 @@ POS form: OR (sum) terms are formed first, then ANDed together; example F = (A+B
 - **Source:**
   - Paper not shown on the source sheet, POS = Product of Sums — [DLD/09_sop-pos-representation.md](../DLD/09_sop-pos-representation.md) · [image](../DLD/09_sop-pos-representation.jpg)
 
-<a id="g1726"></a>
+<a id="g1725"></a>
 
-### কার্নো ম্যাপ (K-Map) কী? নিচের সমীকরণগুলো সরলীকরণ করুন: - `F(A,B,C,D) = Σ(0, 1, 2, 5, 7, … <sub>G1726</sub>
+### কার্নো ম্যাপ (K-Map) কী? নিচের সমীকরণগুলো সরলীকরণ করুন: - `F(A,B,C,D) = Σ(0, 1, 2, 5, 7, … <sub>G1725</sub>
 
 *Written*
 
@@ -2750,9 +2775,9 @@ POS form: OR (sum) terms are formed first, then ANDed together; example F = (A+B
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডিজিটাল লজিক ও সার্কিট ডিজাইন, Q205 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
-<a id="g2364"></a>
+<a id="g2429"></a>
 
-### Consider the following algebraic equation : Y = AB'CD' +ABC'+A'BD+AB'CD [BCS – 38th(ICT)]… <sub>G2364</sub>
+### Consider the following algebraic equation : Y = AB'CD' +ABC'+A'BD+AB'CD [BCS – 38th(ICT)]… <sub>G2429</sub>
 
 *Written*
 
@@ -2764,9 +2789,9 @@ Consider the following algebraic equation : Y = AB'CD' +ABC'+A'BD+AB'CD [BCS –
 
 ## Combinational circuits
 
-<a id="g4063"></a>
+<a id="g4128"></a>
 
-### ডিকোডার কী? একটি 3-to-8 লাইন ডিকোডারের সত্যক সারণী ও বর্তনী অংকন করুন। <sub>G4063</sub>
+### ডিকোডার কী? একটি 3-to-8 লাইন ডিকোডারের সত্যক সারণী ও বর্তনী অংকন করুন। <sub>G4128</sub>
 
 *Written*
 
@@ -2840,9 +2865,9 @@ Design a $5 \times 32$ decoder with four $3 \times 8$ decoders and a $2 \times 4
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q52 — [bit to exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.md](../bit%20to%20exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.md) · [image](../bit%20to%20exabyte/57_bte-g2-p43-digital-q52-kmap-q16-24.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q4 (second) — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
 
-<a id="g2146"></a>
+<a id="g2211"></a>
 
-### ৪বিট অ্যাডার দিয়ে ৪ বিট সাবট্রাক্টর ডিজাইন। (Design 4 bit Subtractor using 4 bit Adder) <sub>G2146</sub>
+### ৪বিট অ্যাডার দিয়ে ৪ বিট সাবট্রাক্টর ডিজাইন। (Design 4 bit Subtractor using 4 bit Adder) <sub>G2211</sub>
 
 *Written*
 
@@ -2852,9 +2877,9 @@ Design a $5 \times 32$ decoder with four $3 \times 8$ decoders and a $2 \times 4
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q1 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 
-<a id="g2187"></a>
+<a id="g2252"></a>
 
-### A 4*1 MUX is given, write down its expression in SOM form. <sub>G2187</sub>
+### A 4*1 MUX is given, write down its expression in SOM form. <sub>G2252</sub>
 
 *Written*
 
@@ -2864,9 +2889,9 @@ A 4*1 MUX is given, write down its expression in SOM form.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024, Q2(a) — [duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md](../duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md)
 
-<a id="g2680"></a>
+<a id="g2745"></a>
 
-### চারটি 3×8 ডিকোডার এবং একটি 2x4 ডিকোডার নিয়ে একটি 5x32 ডিকোডার অংকন করুন। <sub>G2680</sub>
+### চারটি 3×8 ডিকোডার এবং একটি 2x4 ডিকোডার নিয়ে একটি 5x32 ডিকোডার অংকন করুন। <sub>G2745</sub>
 
 *Written*
 
@@ -2876,9 +2901,9 @@ A 4*1 MUX is given, write down its expression in SOM form.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ২ (খ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2681"></a>
+<a id="g2746"></a>
 
-### F(A, B, C, D) - (0, 5, 6, 8, 13, 14) প্রতিস্থাপন করুন MUX ব্যবহার করে। <sub>G2681</sub>
+### F(A, B, C, D) - (0, 5, 6, 8, 13, 14) প্রতিস্থাপন করুন MUX ব্যবহার করে। <sub>G2746</sub>
 
 *Written*
 
@@ -2888,9 +2913,9 @@ F(A, B, C, D) - (0, 5, 6, 8, 13, 14) প্রতিস্থাপন করু
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ১ম অংশ (pp. 7–8), ২ (গ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2894"></a>
+<a id="g2959"></a>
 
-### Full adder circuit and diagram <sub>G2894</sub>
+### Full adder circuit and diagram <sub>G2959</sub>
 
 *Written*
 
@@ -2900,9 +2925,9 @@ Full adder circuit and diagram
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2897"></a>
+<a id="g2962"></a>
 
-### 3 into 8 encoder logic diagrams <sub>G2897</sub>
+### 3 into 8 encoder logic diagrams <sub>G2962</sub>
 
 *Written*
 
@@ -2912,9 +2937,9 @@ Full adder circuit and diagram
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3496"></a>
+<a id="g3561"></a>
 
-### a. Describe the differences between combinational and sequential circuits with necessary … <sub>G3496</sub>
+### a. Describe the differences between combinational and sequential circuits with necessary … <sub>G3561</sub>
 
 *Written*
 
@@ -2924,9 +2949,9 @@ a. Describe the differences between combinational and sequential circuits with n
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 35 — মৎস্য ও প্রাণীসম্পদ অধিদপ্তরের ইন্সট্রাক্টর কম্পিউটার সায়েন্স — তারিখঃ ২০.০৬.২০২৩ — exam taker not printed — time and total not printed — pages 10–13, Q6(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3535"></a>
+<a id="g3600"></a>
 
-### Design a full adder using two half adders and an OR gate. <sub>G3535</sub>
+### Design a full adder using two half adders and an OR gate. <sub>G3600</sub>
 
 *Written*
 
@@ -2936,9 +2961,9 @@ Design a full adder using two half adders and an OR gate.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-ক Q3 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3960"></a>
+<a id="g4025"></a>
 
-### Build XOR with 2 to 4 decoder and NOR gate <sub>G3960</sub>
+### Build XOR with 2 to 4 decoder and NOR gate <sub>G4025</sub>
 
 *Written*
 
@@ -2948,9 +2973,9 @@ Build XOR with 2 to 4 decoder and NOR gate
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q13 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g4915"></a>
+<a id="g5160"></a>
 
-### Design a traffic light system, when there is Sunlight, It will OFF and No Sunlight, It wi… <sub>G4915</sub>
+### Design a traffic light system, when there is Sunlight, It will OFF and No Sunlight, It wi… <sub>G5160</sub>
 
 *Written*
 
@@ -2972,9 +2997,9 @@ Draw the logic diagram of Half-Adder the truth table of Full-Adder and use half 
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q45 — [bit to exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md) · [image](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.jpg)
 
-<a id="g2389"></a>
+<a id="g2454"></a>
 
-### 4:1 MUX এর লজিক ডায়াগ্রাম ডিজাইন করুন এবং Selection Line দুটির কাজ লিখুন। <sub>G2389</sub>
+### 4:1 MUX এর লজিক ডায়াগ্রাম ডিজাইন করুন এবং Selection Line দুটির কাজ লিখুন। <sub>G2454</sub>
 
 *Written*
 
@@ -2984,9 +3009,9 @@ Draw the logic diagram of Half-Adder the truth table of Full-Adder and use half 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 14 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2638"></a>
+<a id="g2703"></a>
 
-### Main Difference between Combinational and Sequential circuit? <sub>G2638</sub>
+### Main Difference between Combinational and Sequential circuit? <sub>G2703</sub>
 
 *Written*
 
@@ -2996,9 +3021,9 @@ Main Difference between Combinational and Sequential circuit?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 7 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g2935"></a>
+<a id="g3000"></a>
 
-### Draw a Full Adder circuit using two half adders. <sub>G2935</sub>
+### Draw a Full Adder circuit using two half adders. <sub>G3000</sub>
 
 *Written*
 
@@ -3008,9 +3033,9 @@ Draw a Full Adder circuit using two half adders.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2960"></a>
+<a id="g3025"></a>
 
-### (i) Design 7 segment display decoder to find logic expression of sum of product for 2 bit… <sub>G2960</sub>
+### (i) Design 7 segment display decoder to find logic expression of sum of product for 2 bit… <sub>G3025</sub>
 
 *Written*
 
@@ -3020,9 +3045,9 @@ Draw a Full Adder circuit using two half adders.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — Assistant Network Engineer (ANE) – RBL [ANE RBL 2021 CTI] — 16.03.2021 — Exam taker: CTI (from the printed tag) — 10*16 marks +2*20 marks = 200 — pages 10–11, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3840"></a>
+<a id="g3905"></a>
 
-### What will be output function F (X, Y, Z) in the sum-of-minterms form? Assume X as the mos… <sub>G3840</sub>
+### What will be output function F (X, Y, Z) in the sum-of-minterms form? Assume X as the mos… <sub>G3905</sub>
 
 *MCQ*
 
@@ -3032,9 +3057,9 @@ What will be output function F (X, Y, Z) in the sum-of-minterms form? Assume X a
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q3 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3862"></a>
+<a id="g3927"></a>
 
-### Consider the following truth table for a 4-input priority encoder. What is the priority o… <sub>G3862</sub>
+### Consider the following truth table for a 4-input priority encoder. What is the priority o… <sub>G3927</sub>
 
 *MCQ*
 
@@ -3044,9 +3069,9 @@ Consider the following truth table for a 4-input priority encoder. What is the p
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q25 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3922"></a>
+<a id="g3987"></a>
 
-### Suppose you have many 4/1 MUXes. You need a 16/1 MUX. How many 4/1 MUX youare required to… <sub>G3922</sub>
+### Suppose you have many 4/1 MUXes. You need a 16/1 MUX. How many 4/1 MUX youare required to… <sub>G3987</sub>
 
 *MCQ*
 
@@ -3056,9 +3081,9 @@ Suppose you have many 4/1 MUXes. You need a 16/1 MUX. How many 4/1 MUX youare re
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q35 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3929"></a>
+<a id="g3994"></a>
 
-### If we apply 0001 to a to the input of a seven-segment decoder then what will be the outpu… <sub>G3929</sub>
+### If we apply 0001 to a to the input of a seven-segment decoder then what will be the outpu… <sub>G3994</sub>
 
 *MCQ*
 
@@ -3068,9 +3093,9 @@ If we apply 0001 to a to the input of a seven-segment decoder then what will be 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q42 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3942"></a>
+<a id="g4007"></a>
 
-### In priority encoder: (a) first bit is considered don’t care (b) higher priority bit is co… <sub>G3942</sub>
+### In priority encoder: (a) first bit is considered don’t care (b) higher priority bit is co… <sub>G4007</sub>
 
 *MCQ*
 
@@ -3080,9 +3105,9 @@ In priority encoder: (a) first bit is considered don’t care (b) higher priorit
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q55 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g4091"></a>
+<a id="g4156"></a>
 
-### অ্যাডার কী? দুটি হাফ অ্যাডারের সাহায্যে একটি ফুল অ্যাডারের বর্তনী গঠন করুন। <sub>G4091</sub>
+### অ্যাডার কী? দুটি হাফ অ্যাডারের সাহায্যে একটি ফুল অ্যাডারের বর্তনী গঠন করুন। <sub>G4156</sub>
 
 *Written*
 
@@ -3092,9 +3117,9 @@ In priority encoder: (a) first bit is considered don’t care (b) higher priorit
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৩ অথবা (খ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4146"></a>
+<a id="g4211"></a>
 
-### হাফ এডার এর সাহায্যে ফুল এডারের বাস্তবায়ন করুণ। <sub>G4146</sub>
+### হাফ এডার এর সাহায্যে ফুল এডারের বাস্তবায়ন করুণ। <sub>G4211</sub>
 
 *Written*
 
@@ -3116,9 +3141,9 @@ Draw a full adder that is made of two half adder and find out the function of ou
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q46 — [bit to exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md) · [image](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.jpg)
 
-<a id="g1833"></a>
+<a id="g1898"></a>
 
-### Design a 4 bit binary adder using 1-Bit full adder circuit. <sub>G1833</sub>
+### Design a 4 bit binary adder using 1-Bit full adder circuit. <sub>G1898</sub>
 
 *Written*
 
@@ -3129,9 +3154,9 @@ Design a 4 bit binary adder using 1-Bit full adder circuit.
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 11. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2007"></a>
+<a id="g2072"></a>
 
-### Half adder এর লজিক সার্কিট অংকন করুন ও সত্যক সারণি অংকন করুন। <sub>G2007</sub>
+### Half adder এর লজিক সার্কিট অংকন করুন ও সত্যক সারণি অংকন করুন। <sub>G2072</sub>
 
 *Written*
 
@@ -3141,9 +3166,9 @@ Half adder এর লজিক সার্কিট অংকন করুন �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ১০। — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2815"></a>
+<a id="g2880"></a>
 
-### What are combinational and sequential logic circuits? Explain the design procedure of a f… <sub>G2815</sub>
+### What are combinational and sequential logic circuits? Explain the design procedure of a f… <sub>G2880</sub>
 
 *Written*
 
@@ -3153,9 +3178,9 @@ What are combinational and sequential logic circuits? Explain the design procedu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 3 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3669"></a>
+<a id="g3734"></a>
 
-### 2*4 decoder using only basic gates(AND,OR,NOT) <sub>G3669</sub>
+### 2*4 decoder using only basic gates(AND,OR,NOT) <sub>G3734</sub>
 
 *Written*
 
@@ -3165,9 +3190,9 @@ What are combinational and sequential logic circuits? Explain the design procedu
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q19 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g4562"></a>
+<a id="g4807"></a>
 
-### Design 4x1 MUX with two selection line & 4 input (A,B,C,D). <sub>G4562</sub>
+### Design 4x1 MUX with two selection line & 4 input (A,B,C,D). <sub>G4807</sub>
 
 *Written*
 
@@ -3207,9 +3232,9 @@ How many outputs does an encoder with 10 inputs have?
 - **Printed answer:** Outputs = 2^n, so 2^10 = 1024
 - **Correction:** Wrong (that is decoder logic, and reversed). An encoder with 2^n inputs has n outputs; 10 inputs (decimal-to-BCD) need ceil(log2 10) = 4 outputs.
 
-<a id="g1722"></a>
+<a id="g1721"></a>
 
-### লজিক সার্কিট কাকে বলে? হাফ অ্যাডার (Half Adder) এর সাহায্যে ফুল অ্যাডার (Full Adder) সার্… <sub>G1722</sub>
+### লজিক সার্কিট কাকে বলে? হাফ অ্যাডার (Half Adder) এর সাহায্যে ফুল অ্যাডার (Full Adder) সার্… <sub>G1721</sub>
 
 *Written*
 
@@ -3219,9 +3244,9 @@ How many outputs does an encoder with 10 inputs have?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডিজিটাল লজিক ও সার্কিট ডিজাইন, Q201 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
-<a id="g1724"></a>
+<a id="g1723"></a>
 
-### এনকোডার ও ডিকোডার কী? 3×8 লাইন ডিকোডারের এবং 8×3 লাইন এনকোডারের সত্যক সারণি ও লজিক বর্তনী… <sub>G1724</sub>
+### এনকোডার ও ডিকোডার কী? 3×8 লাইন ডিকোডারের এবং 8×3 লাইন এনকোডারের সত্যক সারণি ও লজিক বর্তনী… <sub>G1723</sub>
 
 *Written*
 
@@ -3233,9 +3258,9 @@ How many outputs does an encoder with 10 inputs have?
 
 ## Sequential circuits (flip-flops, counters)
 
-<a id="g1834"></a>
+<a id="g1899"></a>
 
-### What is the difference between Latch and Flip-flop? <sub>G1834</sub>
+### What is the difference between Latch and Flip-flop? <sub>G1899</sub>
 
 *Written*
 
@@ -3311,9 +3336,9 @@ Show the differences between clocked J-K flip-flop and clocked D-flip-flop.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q47 — [bit to exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md) · [image](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.jpg)
 
-<a id="g1904"></a>
+<a id="g1969"></a>
 
-### (+55)10 এর 2's complement লিখুন। J-K flip-flop এবং clocked D-flip-flop এব পার্থক্যগুলো দে… <sub>G1904</sub>
+### (+55)10 এর 2's complement লিখুন। J-K flip-flop এবং clocked D-flip-flop এব পার্থক্যগুলো দে… <sub>G1969</sub>
 
 *Written*
 
@@ -3324,9 +3349,9 @@ Show the differences between clocked J-K flip-flop and clocked D-flip-flop.
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ২ (গ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2204"></a>
+<a id="g2269"></a>
 
-### A traffic signal cycles from GREEN to YELLOW, YELLOW to RED and RED to GREEN. In each cyc… <sub>G2204</sub>
+### A traffic signal cycles from GREEN to YELLOW, YELLOW to RED and RED to GREEN. In each cyc… <sub>G2269</sub>
 
 *Written*
 
@@ -3336,9 +3361,9 @@ A traffic signal cycles from GREEN to YELLOW, YELLOW to RED and RED to GREEN. In
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q4(a) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
 
-<a id="g4017"></a>
+<a id="g4082"></a>
 
-### The main difference between a latch (L) and a flip flop (FF) is: (ক) FF is level-triggere… <sub>G4017</sub>
+### The main difference between a latch (L) and a flip flop (FF) is: (ক) FF is level-triggere… <sub>G4082</sub>
 
 *MCQ*
 
@@ -3348,9 +3373,9 @@ The main difference between a latch (L) and a flip flop (FF) is: (ক) FF is lev
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q144 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4170"></a>
+<a id="g4235"></a>
 
-### চিত্রসহ J-K Flip Flop এর Truth table উল্লেখপূর্বক বর্ণনা করুন। <sub>G4170</sub>
+### চিত্রসহ J-K Flip Flop এর Truth table উল্লেখপূর্বক বর্ণনা করুন। <sub>G4235</sub>
 
 *Written*
 
@@ -3372,9 +3397,9 @@ R-S Flip-flop এর সত্যক সারণি ও বৈশিষ্ট�
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q49 — [bit to exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md) · [image](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.jpg)
 
-<a id="g2378"></a>
+<a id="g2443"></a>
 
-### MOD-6 বাইনারি কাউন্টারের Block Diagram অংকন করুন. <sub>G2378</sub>
+### MOD-6 বাইনারি কাউন্টারের Block Diagram অংকন করুন. <sub>G2443</sub>
 
 *Written*
 
@@ -3384,9 +3409,9 @@ MOD-6 বাইনারি কাউন্টারের Block Diagram অং�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 03 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2402"></a>
+<a id="g2467"></a>
 
-### Latch এবং Flip Flop এর মধ্যে পার্থক্য কী? De-Morgan's theorem দুটি লিখ। <sub>G2402</sub>
+### Latch এবং Flip Flop এর মধ্যে পার্থক্য কী? De-Morgan's theorem দুটি লিখ। <sub>G2467</sub>
 
 *Written*
 
@@ -3396,9 +3421,9 @@ Latch এবং Flip Flop এর মধ্যে পার্থক্য কী
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BCPCL Junior Instructor 27-12-2019, 12 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2554"></a>
+<a id="g2619"></a>
 
-### Which circuit can store 1 bit of data? a. Register b. Encoder c. Decoder d. Flip-flop <sub>G2554</sub>
+### Which circuit can store 1 bit of data? a. Register b. Encoder c. Decoder d. Flip-flop <sub>G2619</sub>
 
 *MCQ*
 
@@ -3408,9 +3433,9 @@ Which circuit can store 1 bit of data? a. Register b. Encoder c. Decoder d. Flip
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Digital Systems / Logic / Circuits Q4 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2637"></a>
+<a id="g2702"></a>
 
-### Difference between Register and Latch? <sub>G2637</sub>
+### Difference between Register and Latch? <sub>G2702</sub>
 
 *Written*
 
@@ -3420,9 +3445,9 @@ Difference between Register and Latch?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 6 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g3395"></a>
+<a id="g3460"></a>
 
-### Design an asynchronous counter using any flip flop. <sub>G3395</sub>
+### Design an asynchronous counter using any flip flop. <sub>G3460</sub>
 
 *Written*
 
@@ -3432,9 +3457,9 @@ Design an asynchronous counter using any flip flop.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 26.11.2021, 13 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3852"></a>
+<a id="g3917"></a>
 
-### What is the next state equation for A(t+1) for the following circuit? [Figure: JK flip-fl… <sub>G3852</sub>
+### What is the next state equation for A(t+1) for the following circuit? [Figure: JK flip-fl… <sub>G3917</sub>
 
 *MCQ*
 
@@ -3444,9 +3469,9 @@ What is the next state equation for A(t+1) for the following circuit? [Figure: J
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P3-Q15 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3894"></a>
+<a id="g3959"></a>
 
-### Difference between Latch and Flipflop is: (a) Flipflop has a clock but Latch doesn’t have… <sub>G3894</sub>
+### Difference between Latch and Flipflop is: (a) Flipflop has a clock but Latch doesn’t have… <sub>G3959</sub>
 
 *MCQ*
 
@@ -3456,9 +3481,9 @@ Difference between Latch and Flipflop is: (a) Flipflop has a clock but Latch doe
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q7 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3906"></a>
+<a id="g3971"></a>
 
-### A D flip-flop is having three inputs D, CLK, and CLR Which input is asynchronous: (a) D (… <sub>G3906</sub>
+### A D flip-flop is having three inputs D, CLK, and CLR Which input is asynchronous: (a) D (… <sub>G3971</sub>
 
 *MCQ*
 
@@ -3468,9 +3493,9 @@ A D flip-flop is having three inputs D, CLK, and CLR Which input is asynchronous
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q19 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3920"></a>
+<a id="g3985"></a>
 
-### How to convert a JK Flipflip to T Flipflop ? (a) by adding an NOT Gate (b) by adding an A… <sub>G3920</sub>
+### How to convert a JK Flipflip to T Flipflop ? (a) by adding an NOT Gate (b) by adding an A… <sub>G3985</sub>
 
 *MCQ*
 
@@ -3480,9 +3505,9 @@ How to convert a JK Flipflip to T Flipflop ? (a) by adding an NOT Gate (b) by ad
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q33 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3924"></a>
+<a id="g3989"></a>
 
-### In a Johnson counter : (a) the output of the first flipflop is connected to the input of … <sub>G3924</sub>
+### In a Johnson counter : (a) the output of the first flipflop is connected to the input of … <sub>G3989</sub>
 
 *MCQ*
 
@@ -3492,9 +3517,9 @@ In a Johnson counter : (a) the output of the first flipflop is connected to the 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q37 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g3940"></a>
+<a id="g4005"></a>
 
-### Advantage of JK Flip-flop over SR Flipflop is: (a) It is faster than SR (b) It has no for… <sub>G3940</sub>
+### Advantage of JK Flip-flop over SR Flipflop is: (a) It is faster than SR (b) It has no for… <sub>G4005</sub>
 
 *MCQ*
 
@@ -3516,9 +3541,9 @@ Draw logic diagram of MOD-12 up counter using only T Flip flop.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Digital Electronics, Q50 — [bit to exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.md) · [image](../bit%20to%20exabyte/56_bte-g2-p42-digital-electronics-q35-51-gates-adders-flipflops.jpg)
 
-<a id="g1828"></a>
+<a id="g1893"></a>
 
-### How to convert a J-K Flip Flop to a T Flip Flop ? <sub>G1828</sub>
+### How to convert a J-K Flip Flop to a T Flip Flop ? <sub>G1893</sub>
 
 *Written*
 
@@ -3529,9 +3554,9 @@ How to convert a J-K Flip Flop to a T Flip Flop ?
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 5. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1984"></a>
+<a id="g2049"></a>
 
-### কাউন্টার কি? একটি 3 bit-Ripple Counter এর গঠন বর্ণনা করুন। <sub>G1984</sub>
+### কাউন্টার কি? একটি 3 bit-Ripple Counter এর গঠন বর্ণনা করুন। <sub>G2049</sub>
 
 *Written*
 
@@ -3541,9 +3566,9 @@ How to convert a J-K Flip Flop to a T Flip Flop ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৩ অথবা (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g1992"></a>
+<a id="g2057"></a>
 
-### Flip-flop কী? একটি S-R Flip-flop এর গঠন সত্যক সারণিসহ বর্ণনা করুন। <sub>G1992</sub>
+### Flip-flop কী? একটি S-R Flip-flop এর গঠন সত্যক সারণিসহ বর্ণনা করুন। <sub>G2057</sub>
 
 *Written*
 
@@ -3553,9 +3578,9 @@ Flip-flop কী? একটি S-R Flip-flop এর গঠন সত্যক �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৪ অথবা (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2711"></a>
+<a id="g2776"></a>
 
-### Draw the circuit diagram of a mod-12 ripple counter and explain its operation. <sub>G2711</sub>
+### Draw the circuit diagram of a mod-12 ripple counter and explain its operation. <sub>G2776</sub>
 
 *Written*
 
@@ -3565,9 +3590,9 @@ Draw the circuit diagram of a mod-12 ripple counter and explain its operation.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 2 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2745"></a>
+<a id="g2810"></a>
 
-### Explain the race-around condition in Flip-Flops and discuss how it can be resolved. <sub>G2745</sub>
+### Explain the race-around condition in Flip-Flops and discuss how it can be resolved. <sub>G2810</sub>
 
 *Written*
 
@@ -3577,9 +3602,9 @@ Explain the race-around condition in Flip-Flops and discuss how it can be resolv
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 2 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3682"></a>
+<a id="g3747"></a>
 
-### Draw a logic diagram of MOD-12 Up counter using only T FF? <sub>G3682</sub>
+### Draw a logic diagram of MOD-12 Up counter using only T FF? <sub>G3747</sub>
 
 *Written*
 
@@ -3589,9 +3614,9 @@ Draw a logic diagram of MOD-12 Up counter using only T FF?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017, Q3 — [buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md](../buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md)
 
-<a id="g3724"></a>
+<a id="g3789"></a>
 
-### Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops <sub>G3724</sub>
+### Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops <sub>G3789</sub>
 
 *Written*
 
@@ -3601,9 +3626,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q20 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-<a id="g1725"></a>
+<a id="g1724"></a>
 
-### ফ্লিপ-ফ্লপ (Flip-Flop) কাকে বলে? R-S, Master-Slave এবং D Flip-Flop সম্পর্কে আলোচনা করুন। <sub>G1725</sub>
+### ফ্লিপ-ফ্লপ (Flip-Flop) কাকে বলে? R-S, Master-Slave এবং D Flip-Flop সম্পর্কে আলোচনা করুন। <sub>G1724</sub>
 
 *Written*
 
@@ -3613,9 +3638,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডিজিটাল লজিক ও সার্কিট ডিজাইন, Q204 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
-<a id="g1727"></a>
+<a id="g1726"></a>
 
-### রিপল কাউন্টার কাকে বলে? MOD-6/10, Synchronous ও Asynchronous কাউন্টারের সার্কিট অঙ্কনপূর্… <sub>G1727</sub>
+### রিপল কাউন্টার কাকে বলে? MOD-6/10, Synchronous ও Asynchronous কাউন্টারের সার্কিট অঙ্কনপূর্… <sub>G1726</sub>
 
 *Written*
 
@@ -3625,11 +3650,23 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডিজিটাল লজিক ও সার্কিট ডিজাইন, Q206 — [18th NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.md) · [image](../18th%20NTCRA/11_ntrca-qbank-p11-digital-logic-ai-q197-213.jpg)
 
+<a id="g1816"></a>
+
+### What is the difference between synchronous and asynchronous counters? Design a MOD-6 coun… <sub>G1816</sub>
+
+*Written*
+
+What is the difference between synchronous and asynchronous counters? Design a MOD-6 counter using flip-flops (explain logic steps).
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q34 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
 ## Other
 
-<a id="g2036"></a>
+<a id="g2101"></a>
 
-### কোন যুক্তিতে ১ + ১ = ১ এবং ১ + ১ = ১০ হয়? ব্যাখ্যা করুন। <sub>G2036</sub>
+### কোন যুক্তিতে ১ + ১ = ১ এবং ১ + ১ = ১০ হয়? ব্যাখ্যা করুন। <sub>G2101</sub>
 
 *Written*
 
@@ -3639,9 +3676,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার শিক্ষা, বিষয় কোড : ৩১৩, পদের নাম: সহকারী শিক্ষক (তথ্য ও যোগাযোগ প্রযুক্তি) (pp. 1–2), ৯ অথবা — [duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md](../duranta/1707459059-17th-ntrca-asst-teacher-ict-written/1707459059.md)
 
-<a id="g4597"></a>
+<a id="g4842"></a>
 
-### নিম্নের কোন লজিক অপারেশনটি সঠিক? (a) A + A = 1 (b) A A = 0 (c) A + 1 = 1 (d) A + 1 = 0 <sub>G4597</sub>
+### নিম্নের কোন লজিক অপারেশনটি সঠিক? (a) A + A = 1 (b) A A = 0 (c) A + 1 = 1 (d) A + 1 = 0 <sub>G4842</sub>
 
 *MCQ*
 
@@ -3651,9 +3688,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ10 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g2553"></a>
+<a id="g2618"></a>
 
-### 10101111 OR 00110011 = ? a. 10111111 b. 00100011 c. 01010101 d. 111111111 <sub>G2553</sub>
+### 10101111 OR 00110011 = ? a. 10111111 b. 00100011 c. 01010101 d. 111111111 <sub>G2618</sub>
 
 *MCQ*
 
@@ -3663,9 +3700,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Digital Systems / Logic / Circuits Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g4142"></a>
+<a id="g4207"></a>
 
-### রিপল কাউন্টার কী? একটি তিন বিটের এসিনক্রোনাস আপ রিপল কাউন্টারের গঠন লিখুন। <sub>G4142</sub>
+### রিপল কাউন্টার কী? একটি তিন বিটের এসিনক্রোনাস আপ রিপল কাউন্টারের গঠন লিখুন। <sub>G4207</sub>
 
 *Written*
 
@@ -3675,9 +3712,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৬ অথবা — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4210"></a>
+<a id="g4275"></a>
 
-### (12345) base 10 to (?) base 8. <sub>G4210</sub>
+### (12345) base 10 to (?) base 8. <sub>G4275</sub>
 
 *Written*
 
@@ -3687,9 +3724,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Programmer — 25.10.2019 — Exam taker: IBA (as printed by the coaching banner; unverified) — Marks 200, Time 1.30 h, MCQ 64×1.25 = 80, Written 120 (dept 100, non-dept 20) — pages 1–2 (partial), Q5 — [bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md](../bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md)
 
-<a id="g2129"></a>
+<a id="g2194"></a>
 
-### মাল্টিপ্লেক্সার কী? চিত্রসহ একটি মাল্টিপ্লেক্সারের গঠন ও কাজ বর্ণনা করুন। <sub>G2129</sub>
+### মাল্টিপ্লেক্সার কী? চিত্রসহ একটি মাল্টিপ্লেক্সারের গঠন ও কাজ বর্ণনা করুন। <sub>G2194</sub>
 
 *Written*
 
@@ -3699,9 +3736,9 @@ Convert a 100 MHz clock to 50 MHz and 25 MHz by only using D flip-flops
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ১০ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g3653"></a>
+<a id="g3718"></a>
 
-### Multiply the following two 2 digit numbers with only three 1 bit multiplication. 16 x 35 … <sub>G3653</sub>
+### Multiply the following two 2 digit numbers with only three 1 bit multiplication. 16 x 35 … <sub>G3718</sub>
 
 *Written*
 
@@ -3711,9 +3748,9 @@ Multiply the following two 2 digit numbers with only three 1 bit multiplication.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q1 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3723"></a>
+<a id="g3788"></a>
 
-### A very easy K Map with don't cares <sub>G3723</sub>
+### A very easy K Map with don't cares <sub>G3788</sub>
 
 *Written*
 
@@ -3723,9 +3760,9 @@ A very easy K Map with don't cares
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q19 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-<a id="g4054"></a>
+<a id="g4119"></a>
 
-### ĀBC + AB̄C + ABC̄ + ABC এর যুক্তি বর্তনী অংকন করুন। <sub>G4054</sub>
+### ĀBC + AB̄C + ABC̄ + ABC এর যুক্তি বর্তনী অংকন করুন। <sub>G4119</sub>
 
 *Written*
 
@@ -3735,9 +3772,9 @@ A very easy K Map with don't cares
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ২(গ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4073"></a>
+<a id="g4138"></a>
 
-### কাউন্টার কী? একটি ৩-বিট রিপল কাউন্টার বর্ণনা করুন। <sub>G4073</sub>
+### কাউন্টার কী? একটি ৩-বিট রিপল কাউন্টার বর্ণনা করুন। <sub>G4138</sub>
 
 *Written*
 
@@ -3747,9 +3784,9 @@ A very easy K Map with don't cares
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৫ অথবা (খ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4423"></a>
+<a id="g4668"></a>
 
-### Fill out the table from given circuit <sub>G4423</sub>
+### Fill out the table from given circuit <sub>G4668</sub>
 
 *Written*
 
@@ -3759,9 +3796,9 @@ Fill out the table from given circuit
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q11 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g4669"></a>
+<a id="g4914"></a>
 
-### 3. Number কয় ধরণের হয়? <sub>G4669</sub>
+### 3. Number কয় ধরণের হয়? <sub>G4914</sub>
 
 *Viva*
 
