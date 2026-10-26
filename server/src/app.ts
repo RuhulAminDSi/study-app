@@ -23,6 +23,21 @@ import { adminExamKitsRouter, publicExamKitsRouter } from "./routes/examKits.js"
 import { adminMockTestsRouter } from "./routes/adminMockTests.js";
 import { candidateExamsRouter } from "./routes/candidateExams.js";
 
+/**
+ * Browser HTTP cache for the built frontend (the service worker, pwa/sw.js, adds the device cache on top).
+ * Vite's /assets/* names carry a content hash, so they never change; pages and /sw.js must be revalidated
+ * on every load so a deploy reaches readers at once; fonts are stable. Everything else (notes, landing
+ * images) keeps express's default: revalidate with ETag/Last-Modified, which is a cheap 304.
+ */
+function staticCacheHeaders(root: string) {
+  return (res: express.Response, filePath: string) => {
+    const rel = path.relative(root, filePath).split(path.sep).join("/");
+    if (rel.startsWith("assets/")) res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    else if (rel.endsWith(".html") || rel === "sw.js") res.setHeader("Cache-Control", "no-cache");
+    else if (rel.startsWith("fonts/")) res.setHeader("Cache-Control", "public, max-age=2592000");
+  };
+}
+
 export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "authRateLimitMax">> = {}) {
   const settings = { ...config, ...overrides };
   const isProduction = settings.isProduction;
@@ -32,8 +47,9 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
 
   app.use(cors({ origin: "*", credentials: true }));
   app.use(express.json({ limit: "10mb" }));
-  app.use("/uploads", express.static(path.resolve(config.uploadDir)));
-  if (isProduction) app.use(express.static(frontendDist));
+  // Uploads get a fresh uuid name each time (routes/files.ts), so a URL's bytes never change.
+  app.use("/uploads", express.static(path.resolve(config.uploadDir), { immutable: true, maxAge: "365d" }));
+  if (isProduction) app.use(express.static(frontendDist, { setHeaders: staticCacheHeaders(frontendDist) }));
 
   app.use("/api/auth/login", createAuthLimiter(settings.authRateLimitMax));
   app.use("/api/auth/sign-in", createAuthLimiter(settings.authRateLimitMax), signInRouter);
@@ -65,10 +81,10 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   if (isProduction) {
     // "/" is the landing page; the Study Hub SPA lives under /study-hub/.
     app.get(["/study-hub", "/study-hub/*"], (_req, res) => {
-      res.sendFile(path.join(frontendDist, "study-hub", "index.html"));
+      res.sendFile(path.join(frontendDist, "study-hub", "index.html"), { headers: { "Cache-Control": "no-cache" } });
     });
     app.get("*", (_req, res) => {
-      res.sendFile(path.join(frontendDist, "index.html"));
+      res.sendFile(path.join(frontendDist, "index.html"), { headers: { "Cache-Control": "no-cache" } });
     });
   }
 

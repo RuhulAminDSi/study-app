@@ -1,10 +1,12 @@
-import { createReadStream, statSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { createReadStream, readFileSync, statSync } from 'node:fs'
 import { extname, join, normalize, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+const SW_TEMPLATE = fileURLToPath(new URL('./pwa/sw.js', import.meta.url))
 const NOTES_DIR = fileURLToPath(new URL('./public/notes', import.meta.url))
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8', '.json': 'application/json; charset=utf-8', '.md': 'text/markdown; charset=utf-8',
@@ -49,8 +51,29 @@ function serveNotes(): Plugin {
   }
 }
 
+/**
+ * Build only: emits /sw.js (the device cache, see pwa/sw.js) with this build's version and the list of its
+ * hashed files, so a new deploy installs a new worker and the old build's files are dropped from the cache.
+ */
+function serviceWorker(): Plugin {
+  return {
+    name: 'service-worker',
+    apply: 'build',
+    enforce: 'post',
+    generateBundle(_options, bundle) {
+      const assets = Object.keys(bundle).filter(f => f.startsWith('assets/')).map(f => `/${f}`).sort()
+      const template = readFileSync(SW_TEMPLATE, 'utf8')
+      const version = createHash('sha256').update(template).update(assets.join('\n')).digest('hex').slice(0, 12)
+      const source = template
+        .replace('__BUILD_VERSION__', JSON.stringify(version))
+        .replace('__BUILD_ASSETS__', JSON.stringify(assets))
+      this.emitFile({ type: 'asset', fileName: 'sw.js', source })
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react(), tailwindcss(), serveNotes()],
+  plugins: [react(), tailwindcss(), serveNotes(), serviceWorker()],
   // Two pages: "/" is the static landing page, "/study-hub/" is the Study Hub app.
   build: {
     rollupOptions: {

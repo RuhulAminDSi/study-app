@@ -383,3 +383,12 @@ if (!reduceMotion.matches && 'IntersectionObserver' in window) {
   watch('.section-head, .tour-tabs, .tour-stage, #exams-note, .final-inner, .faq', 'reveal')
   watch('#exams-list, #subjects-list, #features-list, #roadmap-list', 'reveal-list')
 }
+
+/* ---- Device cache ------------------------------------------------------ */
+// The same worker as Study Hub (pwa/sw.js, see src/pwa.ts): a returning visitor gets this page and the app
+// from the device. Production builds only; dev has no /sw.js.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {})
+  })
+}

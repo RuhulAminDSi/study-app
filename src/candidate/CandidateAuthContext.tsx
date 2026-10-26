@@ -7,6 +7,7 @@ import {
   type PublicCandidate,
 } from './candidateApi'
 import { readStoredToken } from '../utils/storedToken'
+import { clearApiCache } from '../public/apiCache'
 
 interface CandidateAuthValue {
   token: string | null
@@ -39,6 +40,7 @@ export function CandidateAuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(() => {
+    clearApiCache()
     localStorage.removeItem(CANDIDATE_TOKEN_KEY)
     localStorage.removeItem(CANDIDATE_USER_KEY)
     setToken(null)
