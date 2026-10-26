@@ -301,6 +301,10 @@ export interface Translations {
   pdfOpenNewTab: string
   pdfPreviewTitle: string
   pdfNoPreview: string
+  pdfZoomIn: string
+  pdfZoomOut: string
+  pdfZoomFit: string
+  pdfZoomLabel: string
   pdfLanguage: string
   pdfPages: string
   pdfFileSize: string

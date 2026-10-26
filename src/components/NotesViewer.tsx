@@ -66,7 +66,7 @@ interface FileInfo {
 }
 
 /** One document (note or handwritten note): details panel (when open) and the embedded preview. */
-function DocumentView({ file, meta, lang, ui, t, title, detailsId, detailsOpen, closeDetails }: {
+function DocumentView({ file, meta, lang, ui, t, title, detailsId, detailsOpen, closeDetails, zoom, setZoom }: {
   file: FileInfo
   meta: NotesMeta | null
   lang: Lang
@@ -76,6 +76,8 @@ function DocumentView({ file, meta, lang, ui, t, title, detailsId, detailsOpen, 
   detailsId: string
   detailsOpen: boolean
   closeDetails: () => void
+  zoom: number
+  setZoom: (zoom: number) => void
 }) {
   const [page, setPage] = useState(1)
   const [coverOk, setCoverOk] = useState(true)
@@ -147,6 +149,10 @@ function DocumentView({ file, meta, lang, ui, t, title, detailsId, detailsOpen, 
             title={`${t.pdfPreviewTitle}: ${title}`}
             loadingLabel={t.notesWebLoading}
             failed={() => setMode('fallback')}
+            zoom={zoom}
+            setZoom={setZoom}
+            labels={{ zoom: t.pdfZoomLabel, zoomIn: t.pdfZoomIn, zoomOut: t.pdfZoomOut, zoomFit: t.pdfZoomFit }}
+            formatPercent={pct => `${localDigits(String(pct), ui)}%`}
           />
         ) : (
           <div className="nv-fallback">
@@ -175,6 +181,8 @@ export default function NotesViewer({ slug, dir, lang, title }: Props) {
   const hasWeb = WEB_VIEW_SLUGS.has(slug)
   const [view, setView] = useState<View>(hasWeb ? 'web' : 'note')
   const [detailsOpen, setDetailsOpen] = useState(false)
+  // Zoom of the pdf.js pages (touch devices), shared by the note and handwritten views.
+  const [zoom, setZoom] = useState(1)
   const [meta, setMeta] = useState<NotesMeta | null>(null)
   const base = `/notes/${dir ? `${dir}/` : ''}${slug}/${slug}.${lang}`
 
@@ -276,6 +284,8 @@ export default function NotesViewer({ slug, dir, lang, title }: Props) {
           detailsId={detailsId}
           detailsOpen={detailsOpen}
           closeDetails={() => setDetailsOpen(false)}
+          zoom={zoom}
+          setZoom={setZoom}
         />
       ) : (
         <NoteWebView key={base} src={`${base}.html`} lang={lang} title={title} pdfHref={files.note.href} t={t} />
