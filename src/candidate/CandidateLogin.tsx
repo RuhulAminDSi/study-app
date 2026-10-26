@@ -36,9 +36,9 @@ export default function CandidateLogin({ next }: { next?: string }) {
   // panel stays here instead, so they can sign in with an admin account.
   useEffect(() => {
     if (wantsAdmin(next)) {
-      if (adminAuth.isAuthenticated) navigate(destination('admin', next))
+      if (adminAuth.isAuthenticated) navigate(destination('admin', next), { replace: true })
     } else if (candidateAuth.isSignedIn) {
-      navigate(destination('candidate', next))
+      navigate(destination('candidate', next), { replace: true })
     }
   }, [candidateAuth.isSignedIn, adminAuth.isAuthenticated, next])
 
@@ -51,10 +51,10 @@ export default function CandidateLogin({ next }: { next?: string }) {
       const res = await candidateApi.signIn(identifier, password)
       if (res.kind === 'admin') {
         adminAuth.login(res.token, res.user)
-        navigate(destination('admin', next))
+        navigate(destination('admin', next), { replace: true })
       } else {
         candidateAuth.signIn(res.token, res.candidate)
-        navigate(destination('candidate', next))
+        navigate(destination('candidate', next), { replace: true })
       }
     } catch (err) {
       if (err instanceof ApiError) {

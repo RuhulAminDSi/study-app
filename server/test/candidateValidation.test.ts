@@ -8,7 +8,7 @@ describe("validateRegistration", () => {
     const r = validateRegistration({ ...valid, fullName: "  Rahim   Uddin ", email: " Rahim@Example.COM " });
     expect(r).toEqual({
       ok: true,
-      value: { fullName: "Rahim Uddin", email: "rahim@example.com", password: "secret-123", phone: null, targetPostId: null },
+      value: { fullName: "Rahim Uddin", email: "rahim@example.com", password: "secret-123", phone: null, targetPostId: null, preferredLanguage: "en" },
     });
   });
 

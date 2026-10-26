@@ -18,7 +18,7 @@ export default function CandidateSignup({ next }: { next?: string }) {
 
   // Already signed in (e.g. a bookmarked login link): go straight to Study Hub.
   useEffect(() => {
-    if (auth.isSignedIn) navigate(next ?? '')
+    if (auth.isSignedIn) navigate(next ?? '', { replace: true })
   }, [auth.isSignedIn, next])
   const [form, setForm] = useState<FormState>(EMPTY)
   const [error, setError] = useState('')
@@ -46,7 +46,7 @@ export default function CandidateSignup({ next }: { next?: string }) {
         preferredLanguage: language,
       })
       auth.signIn(token, candidate)
-      navigate(next ?? '')
+      navigate(next ?? '', { replace: true })
     } catch (err) {
       if (err instanceof ApiError) {
         setFieldErrors(err.fields)

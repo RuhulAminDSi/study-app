@@ -15,6 +15,20 @@ async function register(body: object = signup, app = createApp()) {
 }
 
 describe("POST /api/candidate/auth/register", () => {
+  it("stores the language the candidate signed up in", async () => {
+    const res = await register({ ...signup, preferredLanguage: "bn" });
+    expect(res.status).toBe(201);
+    expect(res.body.candidate.preferredLanguage).toBe("bn");
+    const { rows } = await pool.query("SELECT preferred_language FROM candidates WHERE id = $1", [res.body.candidate.id]);
+    expect(rows[0].preferred_language).toBe("bn");
+  });
+
+  it("rejects an unknown sign-up language", async () => {
+    const res = await register({ ...signup, preferredLanguage: "fr" });
+    expect(res.status).toBe(400);
+    expect(res.body.fields).toEqual({ preferredLanguage: "language_invalid" });
+  });
+
   it("creates an account and returns a candidate-kind token", async () => {
     const res = await register();
     expect(res.status).toBe(201);
@@ -24,7 +38,7 @@ describe("POST /api/candidate/auth/register", () => {
       email: "rahim@example.com",
       phone: null,
       targetPostId: null,
-      preferredLanguage: "bn",
+      preferredLanguage: "en",
     });
     expect(jwt.decode(res.body.token)).toMatchObject({ kind: "candidate", id: res.body.candidate.id });
     expect(JSON.stringify(res.body)).not.toContain("password");

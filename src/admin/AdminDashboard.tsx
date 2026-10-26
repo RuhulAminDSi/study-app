@@ -10,6 +10,8 @@ import AdminLessons from './AdminLessons'
 import AdminCandidates from './AdminCandidates'
 import AdminAnnouncements from './AdminAnnouncements'
 import AdminMedia from './AdminMedia'
+import AdminExams from './AdminExams'
+import ExamEditor from './ExamEditor'
 import LessonEditor from './LessonEditor'
 import { canLeave } from './navGuard'
 import { CONTENT_MANAGEMENT } from '../features'
@@ -21,7 +23,7 @@ interface AdminDashboardProps {
   onBack: () => void
 }
 
-type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'announcements' | 'media' | 'candidates'
+type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'announcements' | 'media' | 'exams' | 'candidates'
 
 interface NavItem { key: AdminView; label: keyof Translations; subtitle: keyof Translations; icon: IconName }
 
@@ -38,6 +40,7 @@ const navGroups: { label?: keyof Translations; items: NavItem[] }[] = [
       ] : []),
     ],
   },
+  { label: 'adminNavAssessment', items: [{ key: 'exams', label: 'adminExams', subtitle: 'adminSubExams', icon: 'exams' }] },
   { label: 'adminNavPeople', items: [{ key: 'candidates', label: 'adminCandidates', subtitle: 'adminSubCandidates', icon: 'candidates' }] },
 ]
 const navItems = navGroups.flatMap(g => g.items)
@@ -59,6 +62,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
   const [viewPart, itemId] = (route.adminView ?? '').split('/')
   const view: AdminView = validViews.includes(viewPart as AdminView) ? (viewPart as AdminView) : 'dashboard'
   const editingLesson = CONTENT_MANAGEMENT && view === 'lessons' && itemId ? itemId : null
+  const editingExam = view === 'exams' && itemId ? itemId : null
   const current = navItems.find(item => item.key === view)!
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -90,7 +94,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
       <div className="admin-layout">
         <aside className={`adm-sidebar${mobileOpen ? ' open' : ''}`} aria-label="Admin">
           <div className="adm-brand">
-            <span className="adm-brand-mark" aria-hidden="true">SH</span>
+            <span className="adm-brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="22" height="22"><path d="M7.5 23.5H17.5a3.5 3.5 0 0 0 0-7H13.5a3.5 3.5 0 0 1 0-7H19.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /><circle cx="23.5" cy="9.5" r="2.6" fill="currentColor" /></svg></span>
             <div className="adm-brand-text">
               <strong>{t.studyHub}</strong>
               <span>{t.adminConsole}</span>
@@ -139,8 +143,8 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
               <Icon name="menu" size={18} />
             </button>
             <div className="adm-topbar-title">
-              <h2>{editingLesson ? t.edEditLesson : t[current.label]}</h2>
-              <p>{editingLesson ? t.adminSubEditor : t[current.subtitle]}</p>
+              <h2>{editingLesson ? t.edEditLesson : editingExam ? (editingExam === 'new' ? t.axNew : t.axEdit) : t[current.label]}</h2>
+              <p>{editingLesson ? t.adminSubEditor : editingExam ? t.axSubEditor : t[current.subtitle]}</p>
             </div>
             <div className="adm-topbar-actions">
               <button type="button" className="adm-icon-btn" title={isDark ? t.lightMode : t.darkMode} aria-label={isDark ? t.lightMode : t.darkMode}
@@ -165,6 +169,9 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
               : <AdminLessons language={appState.language} />)}
             {view === 'announcements' && <AdminAnnouncements language={appState.language} />}
             {view === 'media' && <AdminMedia language={appState.language} />}
+            {view === 'exams' && (editingExam
+              ? <ExamEditor key={editingExam} id={editingExam} language={appState.language} onExit={() => go('exams')} />
+              : <AdminExams language={appState.language} />)}
             {view === 'candidates' && <AdminCandidates language={appState.language} />}
           </main>
         </div>

@@ -10,9 +10,16 @@ export default function ContentStatus() {
   if (state.loading) {
     return (
       <main className="main-content">
-        <div className="content-status" role="status" aria-live="polite">
-          <span className="content-status-spinner" aria-hidden="true" />
-          <p className="content-status-desc">{t.loadingLessons}</p>
+        {/* A skeleton of the dashboard; the text stays for screen readers. */}
+        <div className="sp-skeleton" role="status" aria-live="polite">
+          <span className="sr-only">{t.loadingLessons}</span>
+          <div className="sp-skel sp-skel-head" aria-hidden="true" />
+          <div className="sp-skel-row" aria-hidden="true">
+            <div className="sp-skel" /><div className="sp-skel" /><div className="sp-skel" /><div className="sp-skel" />
+          </div>
+          <div className="sp-skel-grid" aria-hidden="true">
+            <div className="sp-skel" /><div className="sp-skel" /><div className="sp-skel" /><div className="sp-skel" />
+          </div>
         </div>
       </main>
     )

@@ -103,7 +103,8 @@ export default function MainContent() {
   }
 
   return (
-    <main className="main-content has-reader-bar">
+    // Keyed on the lesson so its entrance (motion.css) plays again on every lesson change.
+    <main key={lesson.id} className="main-content has-reader-bar">
       <>
         <div className="lesson-header">
           <div className="lesson-meta">

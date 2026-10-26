@@ -187,7 +187,7 @@ export default function ExamKit({ slug, language, t }: { slug: string; language:
         </section>
       )}
 
-      <button type="button" className="ek-quiz" disabled>{t.ekQuizSoon}</button>
+      <a className="ek-quiz" href={`#/exams/practice?lesson=${slug}`}>{t.ekPractise}</a>
     </div>
   )
 }

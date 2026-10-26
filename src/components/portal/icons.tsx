@@ -18,6 +18,13 @@ const PATHS = {
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
   close: 'M6 6l12 12M18 6 6 18',
   pin: 'M7 3h10v18l-5-3.5L7 21z',
+  exam: 'M9 3.5h6v3H9zM7 5H5v16h14V5h-2M8.5 13.5l2.5 2.5 4.5-5',
+  flag: 'M5 21V4M5 4h12l-2.5 4 2.5 4H5',
+  target: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM12 11.5v1',
+  chart: 'M5 20v-8M12 20V5M19 20v-5M3 20h18',
+  refresh: 'M20 11a8 8 0 0 0-14.9-3.5L3 9M3 4v5h5M4 13a8 8 0 0 0 14.9 3.5L21 15M21 20v-5h-5',
+  grid: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
+  eraser: 'M8 20h12M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L12 18H7z',
 }
 
 export type IconName = keyof typeof PATHS

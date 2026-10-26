@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>টিউরিং মেশিন ও গণনাযোগ্যতা: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (ah red, ahb blue, ahg green, ahp purple) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>তারিখ: ১৪.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>✎ টপার নোটস</span></div>
+  <h1 class="title"><span class="u">টিউরিং মেশিন ও গণনাযোগ্যতা তত্ত্ব</span></h1>
+  <p class="subtitle">৭-টাপল · কনফিগারেশন ⊢ · aⁿbⁿ গণনা · ভেরিয়েন্ট ও সিটি থিসিস · হাল্টিং সমস্যা · রিডাকশন · রাইসের উপপাদ্য · আরই ও শ্রেণিবিন্যাস: ১১ পাতায়</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="410">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="bn k l">টিউরিং মেশিন</text><text x="320" y="172" text-anchor="middle" class="bn r s">টপিক মাইন্ড ম্যাপ</text>
+      <text x="140" y="65" text-anchor="middle" class="bn s">টেপ · হেড · কন্ট্রোল</text>
+      <text x="320" y="41" text-anchor="middle" class="bn r w6">হাল্টিং সমস্যা ★</text>
+      <text x="500" y="65" text-anchor="middle" class="bn s">কনফিগারেশন ⊢</text>
+      <text x="96" y="155" text-anchor="middle" class="bn r w6">রাইসের উপপাদ্য ★</text>
+      <text x="544" y="155" text-anchor="middle" class="bn r w6">আরই ও শ্রেণিবিন্যাস ★</text>
+      <text x="140" y="245" text-anchor="middle" class="bn g">ভেরিয়েন্ট · সিটি থিসিস</text>
+      <text x="320" y="271" text-anchor="middle" class="bn r w6">aⁿbⁿ গণনা ★</text>
+      <text x="500" y="245" text-anchor="middle" class="bn g">রিডাকশন</text>
+    </svg>
+    <figcaption>↑ পুরো টপিক এক পাতায়: লাল = বেশি আসে, সবুজ = পদ্ধতি / প্রয়োগ</figcaption>
+  </figure>
+  <div class="sticky" style="font-size:10.5pt"><b>হাই-ইল্ড তালিকা</b><br>① TM = ৭-টাপল (Q, Σ, Γ, δ, q₀, B, F)<br>② কনফিগারেশন = বাম, অবস্থা, ডান<br>③ হাল্টিং সমস্যা অসিদ্ধান্তযোগ্য, তবু আরই<br>④ মাল্টি-টেপ = গতি, ক্ষমতা নয়<br>⑤ রাইস: L(M)-এর অ-সামান্য বৈশিষ্ট্য<br>⑥ রেগুলার ⊂ সিএফ ⊂ সিএস ⊂ রিকার্সিভ ⊂ আরই</div>
+  <h3>সিলেবাসের যে অংশ</h3>
+  <p class="small">"…<span class="hl">Turing Machines: basic machines, configuration, computing with Turing machines</span>." এই পুরো লাইনটিই এই নোটবুক, সঙ্গে গণনাযোগ্যতার ফলাফলগুলো যেগুলো পরীক্ষায় বারবার আসে।</p>
+  <div class="tipbox blk small"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span> = মূল শব্দ · <span class="circ">লাল বৃত্ত</span> = মুখস্থ · <span class="purple"><b>বেগুনি</b></span> = কৌশল · <span class="red"><b>লাল</b></span> = ফাঁদ · <span class="green"><b>সবুজ</b></span> = উদাহরণ</div>
+  <h3>সূচিপত্র</h3>
+  <div class="cols small">
+    <ul class="tick"><li>টিউরিং মেশিন কী ……… পৃ. ২</li><li>কনফিগারেশন ও ⊢ ……… পৃ. ৩</li><li>টিএম দিয়ে গণনা: aⁿbⁿ ……… পৃ. ৪</li><li>ভেরিয়েন্ট, সিটি থিসিস, এলবিএ ……… পৃ. ৫</li><li>সিদ্ধান্তযোগ্য · আধা · অসিদ্ধান্তযোগ্য ……… পৃ. ৬</li></ul>
+    <ul class="tick"><li>হাল্টিং সমস্যা ……… পৃ. ৭</li><li>রিডাকশন ও রাইসের উপপাদ্য ……… পৃ. ৮</li><li>আরই, কো-আরই ও শ্রেণিবিন্যাস ……… পৃ. ৯</li><li>রাতের পাতা ……… পৃ. ১০</li><li>অনুশীলন MCQ + লিখিত ……… পৃ. ১১</li></ul>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- ============ SHEET 2: what a Turing machine is ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>৭-টাপল</span></div>
+  <h2><span class="no">১</span>টিউরিং মেশিন কী</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def small"><span class="lbl">সংজ্ঞা</span> <b>টিউরিং মেশিন (Turing machine, TM)</b> হলো সবচেয়ে শক্তিশালী গণনা মডেল: একটি <span class="hl">সসীম কন্ট্রোল ইউনিট</span> চালায় পড়া-লেখা হেডকে কোষে বিভক্ত <span class="hl">সীমাহীন টেপের</span> উপর দিয়ে। টেপের শেষ নেই, তাই TM যেকোনো অ্যালগরিদম অনুকরণ করতে পারে — আর ঠিক <span class="circ">রিকার্সিভলি এনিউমারেবল</span> ভাষাই চিনতে পারে।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">৭-টাপল M = (Q, Σ, Γ, δ, q₀, B, F)</h3>
+      <table class="hand small">
+        <tr><th class="l">অংশ</th><th class="l">কী</th><th class="l">এই মেশিনে</th></tr>
+        <tr><td class="l"><b>Q</b></td><td class="l"><b>অবস্থা</b>র সসীম সেট</td><td class="l">Q = {q₀, q₁, q₂}</td></tr>
+        <tr><td class="l"><b>Σ</b></td><td class="l"><b>ইনপুট</b> অ্যালফাবেট; B ∉ Σ</td><td class="l">Σ = {0, 1}</td></tr>
+        <tr><td class="l"><b>Γ</b></td><td class="l"><b>টেপ</b> অ্যালফাবেট; Σ ⊆ Γ, B ∈ Γ</td><td class="l">Γ = {0, 1, B}</td></tr>
+        <tr><td class="l"><b>δ</b></td><td class="l"><b>Q × Γ → Q × Γ × {L, R, S}</b></td><td class="l">δ(q₀, 0) = (q₁, 1, R)</td></tr>
+        <tr><td class="l"><b>q₀</b></td><td class="l"><b>শুরু অবস্থা</b>, q₀ ∈ Q</td><td class="l">q₀</td></tr>
+        <tr><td class="l"><b>B</b></td><td class="l"><b>ফাঁকা প্রতীক</b>, B ∈ Γ \ Σ</td><td class="l">B</td></tr>
+        <tr><td class="l"><b>F</b></td><td class="l"><b>গ্রহণকারী</b> অবস্থার সেট, F ⊆ Q</td><td class="l">F = {q₂}</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 200" width="316">
+      <g class="w">
+        <rect x="10" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="46" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="82" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="118" y="68" width="34" height="30" rx="4" class="ink-r fill-r"/>
+        <rect x="154" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="190" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="226" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="262" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <path class="ink-k" d="M121,42 L153,42 L137,64 Z"/>
+        <rect x="10" y="118" width="286" height="52" rx="10" class="ink-p fill-p"/>
+        <path class="ink-g" d="M137,118 V70"/>
+        <path class="ink" d="M18,52 H4" marker-end="url(#ah)"/>
+        <path class="ink" d="M292,52 H306" marker-end="url(#ah)"/>
+      </g>
+      <text x="27" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="63" y="89" text-anchor="middle" class="k w6">0</text>
+      <text x="99" y="89" text-anchor="middle" class="k w6">1</text>
+      <text x="135" y="89" text-anchor="middle" class="r w6">0</text>
+      <text x="171" y="89" text-anchor="middle" class="k w6">1</text>
+      <text x="207" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="243" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="279" y="89" text-anchor="middle" class="k w6">…</text>
+      <text x="137" y="36" text-anchor="middle" class="bn r w6">হেড</text>
+      <text x="63" y="140" text-anchor="middle" class="k l">q₂</text>
+      <text x="190" y="140" text-anchor="middle" class="bn p w6">কন্ট্রোল ইউনিট</text>
+      <text x="190" y="160" text-anchor="middle" class="bn s">পড়ে · লেখে · চলে</text>
+      <text x="170" y="192" text-anchor="middle" class="bn s">টেপ উভয় দিকে অসীম</text>
+    </svg><figcaption>স্বাক্ষরের ছবি: টেপ, হেড, সসীম কন্ট্রোল</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">ট্রানজিশন ফরম্যাট</span> <b>δ(অবস্থা, পড়া প্রতীক) = (নতুন অবস্থা, লেখা প্রতীক, দিক)</b>। তাই <b>δ(q₀, 0) = (q₁, 1, R)</b> পড়ে: <i>q₀ অবস্থায় 0 পড়ে → 1 লেখ, ডানে যাও, q₁-এ ঢোকো</i>। <span class="hl">এক ট্রানজিশন = এক ধাপ</span> — পুরো মেশিন এই ছক আর ৭-টাপল, আর কিছু নয়।</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>সাধারণ</b> রূপে হেড <b>তিন</b> দিকে চলতে পারে: {<b>L</b>, <b>R</b>, <b>S</b>}, যেখানে <b>S</b> = না গিয়ে লিখে থেকে যাওয়া। কিছু বইয়ে শুধু {L, R} আছে; সেই দ্বিমুখী মেশিনও সর্বজনীন, তবে {L, R}-কে সাধারণ সংজ্ঞা বললে নম্বর কমে।</div>
+  </div>
+  <div class="trick small"><span class="lbl">মনে রাখার কৌশল</span> "Q-অবস্থা, Σ-ইনপুট, Γ-টেপ, δ-ধাপ, q₀-শুরু, B-ফাঁকা, F-চূড়ান্ত" — কেবল <span class="hl">টেপ</span>-ই সীমাহীন, তাই মেমরি আসে অবস্থান থেকে।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- ============ SHEET 3: configuration ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>কনফিগারেশন ⊢</span></div>
+  <h2><span class="no">২</span>কনফিগারেশন: তাৎক্ষণিক বর্ণনা</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def small"><span class="lbl">সংজ্ঞা</span> <b>তাৎক্ষণিক বর্ণনা</b> (instantaneous description, ID) লেখে মেশিনের এক মুহূর্তের <b>সম্পূর্ণ</b> অবস্থা, আকারে <b>(u, q, v)</b>: <b>u</b> = হেডের <span class="hl">বামে</span> টেপের বিষয়বস্তু, <b>q</b> = বর্তমান অবস্থা, <b>v</b> = হেড থেকে <span class="hl">ডানে</span> থাকা বিষয়বস্তু, আর হেড স্ক্যান করছে <span class="circ">v-এর প্রথম প্রতীক</span>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">সংকেত</th><th class="l">যা পড়ায়</th></tr>
+        <tr><td class="l">(u, q, v)</td><td class="l">টেপ … u <b>q</b> v …, হেড v-এর প্রথম প্রতীকে</td></tr>
+        <tr><td class="l">(u, q, v) ⊢ (u′, q′, v′)</td><td class="l">মেশিন <b>একটি</b> ধাপ এগোয়</td></tr>
+        <tr><td class="l">(u, q, v) ⊢* (u′, q′, v′)</td><td class="l"><b>শূন্য বা তার বেশি</b> ধাপ — পৌঁছানো যায়</td></tr>
+        <tr><td class="l">q₀w</td><td class="l">w ইনপুটে চালানোর <b>শুরু কনফিগারেশন</b></td></tr>
+      </table>
+      <div class="ex small" style="margin-top:2mm"><span class="lbl">সমাধানকৃত সরণ ✍</span>
+        <div class="code" style="margin-top:0">(010, q₂, 11)  ⊢  (0101, q₃, 1)      যদি  δ(q₂, 1) = (q₃, 1, R)
+
+টেপ ... 0 1 0 [1] 1 ...
+        u = 010  ^q₂   v = 11</div>
+        <p class="small">হেড ছিল ডান ব্লকের প্রথম <b>1</b>-এর উপর; δ বলছে <b>1</b> লেখ, <b>R</b> দিকে যাও, <b>q₃</b>-এ যাও — তাই লেখা <b>1</b>টি <b>u</b>-তে ঢুকে যায়, অবস্থা বদলায়, আর পরের প্রতীকই হয় <b>v</b>-এর হেড।</p>
+      </div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 158" width="296">
+      <g class="w">
+        <rect x="8" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="42" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="76" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="110" y="54" width="32" height="28" rx="4" class="ink-r fill-r"/>
+        <rect x="144" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="178" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="212" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <path class="ink-k" d="M112,30 L142,30 L127,51 Z"/>
+        <path class="ink-g" d="M8,104 H108"/>
+        <path class="ink" d="M110,104 H244"/>
+      </g>
+      <text x="24" y="73" text-anchor="middle" class="k w6">0</text>
+      <text x="58" y="73" text-anchor="middle" class="k w6">1</text>
+      <text x="92" y="73" text-anchor="middle" class="k w6">0</text>
+      <text x="126" y="73" text-anchor="middle" class="r w6">1</text>
+      <text x="160" y="73" text-anchor="middle" class="k w6">1</text>
+      <text x="194" y="73" text-anchor="middle" class="k w6">B</text>
+      <text x="228" y="73" text-anchor="middle" class="k w6">B</text>
+      <text x="127" y="24" text-anchor="middle" class="r w6">q₂</text>
+      <text x="58" y="122" text-anchor="middle" class="g w6">u = 010</text>
+      <text x="177" y="122" text-anchor="middle" class="k w6">v = 11 …</text>
+      <text x="160" y="146" text-anchor="middle" class="bn p s">… 0 1 0  q₂  1 1 …</text>
+    </svg><figcaption>ID (010, q₂, 11): হেড v-এর প্রথম প্রতীকে</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> হেডের নিচের প্রতীকটি <b>v</b>-এর, কখনো <b>u</b>-র নয়। (01, q₂, 011) লিখা <span class="red"><b>ভুল</b></span>, যদিও একই টেপ বর্ণিত হচ্ছে। আর <b>⊢</b> মানে এক ধাপ, <b>⊢*</b> মানে অনেক ধাপ — দুটো বদলালে ট্রেসের অর্থই বদলে যায়।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>বাম · অবস্থা · ডান</b> — আর হেড "পড়ার" অংশের। (u, q, v) লিখতে লিখতে জোরে বলে ফেলো, তাহলে হেডের অবস্থান কখনো সরে যায় না।</div>
+  </div>
+  <div class="sumbox small"><span class="lbl">ID-র গুরুত্ব</span> TM-এর আলাদা ইনপুট টেপ বা মেমরি নেই, তাই টেপই <b>পুরো</b> কনফিগারেশন — একই ID-এ দুই চলা সদস্য হলে চিরকাল একই আচরণ করে। ঠিক এভারই <span class="hl">মেশিন লুপ করে প্রমাণ</span> হয়: পুনরাবৃত্ত ID পৌঁছে গেলেই বাকিটা নিয়মিত।</div>
+  <div class="mnote purple">⊢* মানে পৌঁছানো — "যেতে পারে", কখনো "এক ধাপে যায়" নয়</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- ============ SHEET 4: computing with TMs ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>aⁿbⁿ গণনা</span></div>
+  <h2><span class="no">৩</span>টিউরিং মেশিন দিয়ে গণনা: aⁿbⁿ মেশিন</h2><span class="tag">লিখিত প্রিয়</span>
+  <div class="ex small"><span class="lbl">সমাধানকৃত মেশিন ✍ L = {aⁿ bⁿ | n ≥ 0}</span>
+    <div class="code" style="margin-top:0">Q = {q0, q1, q2, q3, q4}    Sigma = {a, b}    Gamma = {a, b, X, Y, B}
+শুরু q0 (একটি a চিহ্নিত করে, ডানে খোঁজে)   গ্রহণ F = {q4}</div>
+    <table class="hand small">
+      <tr><th class="l">δ(অবস্থা, প্রতীক)</th><th class="l">এই সরণটি কী করে</th></tr>
+      <tr><td class="l">δ(q₀, a) = (q₁, X, R)</td><td class="l"><b>প্রথম</b> a-কে <b>X</b> চিহ্নিত, ডানে</td></tr>
+      <tr><td class="l">δ(q₁, a) = (q₁, a, R)</td><td class="l">বাকি a-গুলো এড়ানো</td></tr>
+      <tr><td class="l">δ(q₁, Y) = (q₁, Y, R)</td><td class="l">চিহ্নিত b-গুলো এড়ানো</td></tr>
+      <tr><td class="l">δ(q₁, b) = (q₂, Y, L)</td><td class="l">ওই b-কে <b>Y</b> চিহ্নিত (এক জোড়া), বামে</td></tr>
+      <tr><td class="l">δ(q₂, Y) = (q₂, Y, L)</td><td class="l">ফেরার পথে Y এড়ানো</td></tr>
+      <tr><td class="l">δ(q₂, a) = (q₂, a, L)</td><td class="l">ফেরার পথে a এড়ানো</td></tr>
+      <tr><td class="l">δ(q₂, X) = (q₀, X, R)</td><td class="l">প্রথম X মিলল ⇒ জোড়া শেষ, আবার শুরু</td></tr>
+      <tr><td class="l">δ(q₀, Y) = (q₃, Y, R)</td><td class="l">আর a নেই ⇒ সব মিলেছে, b যাচাই</td></tr>
+      <tr><td class="l">δ(q₃, Y) = (q₃, Y, R)</td><td class="l">Y-গুলো এড়ানো</td></tr>
+      <tr><td class="l">δ(q₃, B) = (q₄, B, R)</td><td class="l">ফাঁকা, কোনো b বাকি নেই ⇒ <b>গ্রহণ</b></td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 340px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">"aabb"-এর উপর চালনা</h3>
+      <div class="code" style="margin-top:0">শুরু   B a a b b B
+ধাপ ১  B X a b b B   প্রথম a চিহ্নিত
+ধাপ ২  B X a Y b B   একটি b-এর সাথে মেলানো
+ধাপ ৩  B X a Y b B   X পৌঁছে, আবার শুরু
+ধাপ ৪  B X X Y b B   দ্বিতীয় a চিহ্নিত
+ধাপ ৫  B X X Y Y B   আরেকটি b-এর সাথে মেলানো
+ধাপ ৬  B X X Y Y B   সব a মিলেছে
+গ্রহণ  B X X Y Y B   q4-এ থামে</div>
+      <p class="small">প্রতি round trip-এ এটি <b>একটি a-কে একটি b-এর সাথে</b> মেলায়, তারপর ফিরে আসে। <b>ab</b> বা <b>ba</b>-তে চালালে কখনো গ্রহণ করে না।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 210" width="330">
+      <g class="w">
+        <rect x="8" y="24" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="24" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="76" y="24" width="32" height="26" rx="4" class="ink fill-b"/><rect x="110" y="24" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="144" y="24" width="32" height="26" rx="4" class="ink fill-b"/><rect x="178" y="24" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="8" y="70" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="70" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="76" y="70" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="110" y="70" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="144" y="70" width="32" height="26" rx="4" class="ink fill-b"/><rect x="178" y="70" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="8" y="116" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="116" width="32" height="26" rx="4" class="ink-r fill-r"/>
+        <rect x="76" y="116" width="32" height="26" rx="4" class="ink fill-b"/><rect x="110" y="116" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="144" y="116" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="178" y="116" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="8" y="162" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/>
+        <rect x="76" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="110" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/>
+        <rect x="144" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="178" y="162" width="32" height="26" rx="4" class="ink-g fill-g"/>
+        <path class="ink-k" d="M80,58 L106,58 L93,72 Z"/>
+        <path class="ink-k" d="M146,104 L172,104 L159,118 Z"/>
+        <path class="ink-k" d="M46,150 L72,150 L59,164 Z"/>
+      </g>
+      <text x="24" y="43" text-anchor="middle" class="k w6">B</text><text x="58" y="43" text-anchor="middle" class="k w6">a</text>
+      <text x="92" y="43" text-anchor="middle" class="k w6">a</text><text x="126" y="43" text-anchor="middle" class="k w6">b</text>
+      <text x="160" y="43" text-anchor="middle" class="k w6">b</text><text x="194" y="43" text-anchor="middle" class="k w6">B</text>
+      <text x="24" y="89" text-anchor="middle" class="k w6">B</text><text x="58" y="89" text-anchor="middle" class="r w6">X</text>
+      <text x="92" y="89" text-anchor="middle" class="k w6">a</text><text x="126" y="89" text-anchor="middle" class="k w6">b</text>
+      <text x="160" y="89" text-anchor="middle" class="k w6">b</text><text x="194" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="24" y="135" text-anchor="middle" class="k w6">B</text><text x="58" y="135" text-anchor="middle" class="r w6">X</text>
+      <text x="92" y="135" text-anchor="middle" class="k w6">a</text><text x="126" y="135" text-anchor="middle" class="r w6">Y</text>
+      <text x="160" y="135" text-anchor="middle" class="k w6">b</text><text x="194" y="135" text-anchor="middle" class="k w6">B</text>
+      <text x="24" y="181" text-anchor="middle" class="k w6">B</text><text x="58" y="181" text-anchor="middle" class="r w6">X</text>
+      <text x="92" y="181" text-anchor="middle" class="r w6">X</text><text x="126" y="181" text-anchor="middle" class="r w6">Y</text>
+      <text x="160" y="181" text-anchor="middle" class="r w6">Y</text><text x="194" y="181" text-anchor="middle" class="g w6">B</text>
+      <text x="252" y="43" text-anchor="middle" class="bn p s">শুরু · q₀</text>
+      <text x="252" y="89" text-anchor="middle" class="bn p s">এক জোড়া</text>
+      <text x="252" y="135" text-anchor="middle" class="bn p s">ফিরে আসা</text>
+      <text x="252" y="181" text-anchor="middle" class="bn p s">গ্রহণ · q₄</text>
+    </svg><figcaption>"aabb" জোড়া ধরে চিহ্নিত, তারপর গ্রহণ</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> এই ছকে কোনো <b>বর্জন-সরণ নেই</b> — নেই δ(q₀, B), নেই δ(q₃, a)। <b>abab</b>-এর মতো সদস্য নয় এমন স্ট্রিং দিলে সেটি পরিষ্কারভাবে বর্জন করে না, বরং <b>অসংজ্ঞায়িত</b> সরণে পড়ে যায়। সম্পূর্ণ মেশিনে একটি বর্জন অবস্থা <b>q_rej</b> যোগ করে δ(q₃, a) → q_rej ও δ(q₁, B) → q_rej দিতে হয়।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>"চিহ্নিত, খোঁজ, মেলাও, ফিরে এসো"</b> — q₀ চিহ্নিত করে, q₁ b খোঁজে, q₂ ফেরে, q₃ যাচাই করে, q₄ গ্রহণ করে। X a চিহ্নিত করে, Y b চিহ্নিত করে।</div>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- ============ SHEET 5: variants and Church-Turing ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>ভেরিয়েন্ট ও সিটি</span></div>
+  <h2><span class="no">৪</span>টিউরিং মেশিনের ভেরিয়েন্ট ও চার্চ-টিউরিং থিসিস</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="sumbox small"><span class="lbl">সমতা (হাই-ইল্ড)</span> নিচের প্রতিটি ভেরিয়েন্ট এক-টেপ নির্ধারিত TM-এর সঙ্গে <span class="circ">ঠিক একই শ্রেণির ভাষা</span> চিনে, সবচেয়ে খারাপ ক্ষেত্রে <b>বহুপদী</b> ধীরতা — মাল্টি-টেপ মেশিনের খরচ সর্বোচ্চ <span class="circ">বর্গীয়</span>। <b>অতিরিক্ত টেপ কেনা হয় <span class="hl">গতি ও সুবিধার জন্য, ক্ষমতার জন্য নয়</span>।</b></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">ভেরিয়েন্ট</th><th class="l">কী যোগ করে</th></tr>
+        <tr><td class="l"><b>মাল্টি-টেপ টিএম</b></td><td class="l">একাধিক টেপ — ইনপুট, কাজ, আউটপুট</td></tr>
+        <tr><td class="l"><b>ননডিটারমিনিস্টিক টিএম</b></td><td class="l">প্রতি অবস্থায় একাধিক সরণ; <b>কোনো একটি</b> শাখা গ্রহণ করলেই গ্রহণ</td></tr>
+        <tr><td class="l"><b>মাল্টি-হেড টিএম</b></td><td class="l"><b>এক</b> টেপে একাধিক হেড</td></tr>
+        <tr><td class="l"><b>অফলাইন টিএম</b></td><td class="l">শুধু-পড়া ইনপুট টেপ + কাজের টেপ + আউটপুট</td></tr>
+        <tr><td class="l"><b>এলবিএ (LBA)</b></td><td class="l">প্রান্তচিহ্নে সীমাবদ্ধ ননডিটারমিনিস্টিক টিএম</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 178" width="300">
+      <g class="w">
+        <rect x="100" y="10" width="30" height="24" rx="4" class="ink fill-b"/><rect x="134" y="10" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="168" y="10" width="30" height="24" rx="4" class="ink fill-b"/><rect x="202" y="10" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="236" y="10" width="30" height="24" rx="4" class="ink fill-b"/><rect x="270" y="10" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="100" y="50" width="30" height="24" rx="4" class="ink fill-b"/><rect x="134" y="50" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="168" y="50" width="30" height="24" rx="4" class="ink fill-b"/><rect x="202" y="50" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="236" y="50" width="30" height="24" rx="4" class="ink fill-b"/><rect x="270" y="50" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="100" y="90" width="30" height="24" rx="4" class="ink fill-b"/><rect x="134" y="90" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="168" y="90" width="30" height="24" rx="4" class="ink fill-b"/><rect x="202" y="90" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="236" y="90" width="30" height="24" rx="4" class="ink fill-b"/><rect x="270" y="90" width="30" height="24" rx="4" class="ink fill-b"/>
+        <path class="ink-k" d="M170,-2 L194,-2 L182,8 Z"/>
+        <path class="ink-k" d="M204,38 L228,38 L216,48 Z"/>
+        <path class="ink-k" d="M138,78 L162,78 L150,88 Z"/>
+      </g>
+      <text x="115" y="27" text-anchor="middle" class="k w6">a</text><text x="149" y="27" text-anchor="middle" class="k w6">b</text>
+      <text x="183" y="27" text-anchor="middle" class="k w6">B</text><text x="217" y="27" text-anchor="middle" class="k w6">B</text>
+      <text x="251" y="27" text-anchor="middle" class="k w6">B</text><text x="285" y="27" text-anchor="middle" class="k w6">B</text>
+      <text x="115" y="67" text-anchor="middle" class="r w6">X</text><text x="149" y="67" text-anchor="middle" class="k w6">Y</text>
+      <text x="183" y="67" text-anchor="middle" class="k w6">Y</text><text x="217" y="67" text-anchor="middle" class="k w6">B</text>
+      <text x="251" y="67" text-anchor="middle" class="k w6">B</text><text x="285" y="67" text-anchor="middle" class="k w6">B</text>
+      <text x="115" y="107" text-anchor="middle" class="k w6">B</text><text x="149" y="107" text-anchor="middle" class="g w6">1</text>
+      <text x="183" y="107" text-anchor="middle" class="g w6">0</text><text x="217" y="107" text-anchor="middle" class="k w6">B</text>
+      <text x="251" y="107" text-anchor="middle" class="k w6">B</text><text x="285" y="107" text-anchor="middle" class="k w6">B</text>
+      <text x="46" y="27" text-anchor="middle" class="bn p w6">টেপ১</text>
+      <text x="46" y="67" text-anchor="middle" class="bn p w6">টেপ২</text>
+      <text x="46" y="107" text-anchor="middle" class="bn p w6">টেপ৩</text>
+      <rect x="8" y="132" width="304" height="36" rx="10" class="ink-g fill-g"/>
+      <text x="160" y="156" text-anchor="middle" class="bn g w6">৩ টেপ ≡ ১ টেপ · একই ভাষা</text>
+    </svg><figcaption>মাল্টি-টেপ মেশিন: তিন হেড, তিন টেপ, এক ভাষা-শ্রেণি</figcaption></figure>
+  </div>
+  <div class="def small"><span class="lbl">লিনিয়ার বাউন্ডেড অটোমাটন (LBA)</span> একটি ননডিটারমিনিস্টিক টিএম নিয়ে নাও, তার টেপের দুই প্রান্তে <b>⊢</b> ও <b>⊣</b> বসাও, যাতে টেপে শুধু ইনপুট আর দুটি চিহ্নই থাকে (<b>|w| + 2</b> কোষ)। হেড সেই সীমার ভিতরে দুদিকেই চলতে পারে, কিন্তু <b>বাইরে যেতে পারে না</b>। এটি ঠিক <span class="circ">কনটেক্সট-সেনসিটিভ (টাইপ-১)</span> ভাষাগুলো চেনে — শ্রেণিবিন্যাসের সিএস স্তর এখান থেকেই আসে।</div>
+  <div class="sumbox small"><span class="lbl">চার্চ-টিউরিং থিসিস</span> <span class="circ">টিউরিং-গণনাযোগ্য ⇔ অ্যালগরিদমিক্যালি গণনাযোগ্য</span>: যেকোনো অ্যালগরিদমে গণনাযোগ্য যা কিছু তা একটি টিউরিং মেশিনেও গণনা করা যায়, আর উল্টো। এই থিসিসই TM ব্যবহার করে "গণনাযোগ্য" ভাবনার অনুমতি দেয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> "মাল্টি-টেপ টিএম এক-টেপ টিএমের চেয়ে বেশি শক্তিশালী" — এটাই প্রচলিত ভুল অপশন। অতিরিক্ত টেপ কেবল <b>সুবিধা</b>, এক টেপে সর্বোচ্চ <b>বর্গীয়</b> ধীরতা। আর ননডিটারমিনিস্টিক টিএম গ্রহণ করে তখনই যখন <b>কোনো একটি</b> শাখা গ্রহণ করে, সব নয়।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> ভেরিয়েন্টগুলো মেশিনকে উদার করার চারটি উপায় — বেশি টেপ, বেশি বেছে নেওয়া, বেশি হেড, আলাদা I/O। উদারতা বদলায় <b>কত দ্রুতে</b>, কখনো <b>কী চিনতে পারে</b> তা নয়।</div>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- ============ SHEET 6: decidable / semi / undecidable ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>সিদ্ধান্তযোগ্য?</span></div>
+  <h2><span class="no">৫</span>সিদ্ধান্তযোগ্য, আধা-সিদ্ধান্তযোগ্য, অসিদ্ধান্তযোগ্য</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def small"><span class="lbl">প্রেক্ষাপট</span> একটি <b>সমস্যা</b> প্রতিটি ইনপুটের জন্য হ্যাঁ-না প্রশ্ন করে — অসীম উদাহরণের জন্য। "তিনটি উদাহরণে হ্যাঁ" দিয়ে কিছু সিদ্ধান্ত হয় না, তাই সমস্যাকে ভাগ করা হয় <b>উত্তর-দেওয়া মেশিনকে কী করতে দেওয়া হবে</b> তা দেখে: সবকিছুতে থামতে হবে, নাকি না-উদাহরণে সেটি চিরতরে লুপ করতে পারে।</div>
+  <table class="hand small">
+    <tr><th class="l">শ্রেণি</th><th class="l">মেশিনটি কী করে</th><th class="l">উদাহরণ</th></tr>
+    <tr><td class="l"><b>সিদ্ধান্তযোগ্য</b> (রিকার্সিভ)</td><td class="l"><b>প্রতিটি</b> ইনপুটে থেমে হ্যাঁ বা না বলে</td><td class="l">সর্টিং, সার্চিং, PDA দিয়ে {aⁿbⁿ}</td></tr>
+    <tr><td class="l"><b>আধা-সিদ্ধান্তযোগ্য</b> (আরই)</td><td class="l"><b>হ্যাঁ</b>-তে থেমে বলে; না-উদাহরণে <b>লুপ</b> করতে পারে</td><td class="l">হাল্টিং সমস্যা, হ্যাঁ-উদাহরণগুলোতে</td></tr>
+    <tr><td class="l"><b>অসিদ্ধান্তযোগ্য</b></td><td class="l">উত্তর দেওয়ার <span class="red"><b>কোনো</b></span> অ্যালগরিদম নেই</td><td class="l">হাল্টিং; ফাঁকা-টেপ হাল্টিং; টিএম সমতা</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">আদর্শ নির্মাণ</span> কোনো আরই ভাষা <b>গ্রহণ</b> করতে কিছুই উল্টোতে হয় না: w-তে M চালাও, M গ্রহণ করলেই গ্রহণ করো। কোনো ভাষা <b>সিদ্ধান্ত</b> করতে একটি বর্জন অবস্থা যোগ করে <b>সব</b> অসংজ্ঞায়িত সরণকে সেখানে পাঠাও — তাহলে মেশিন সবকিছুতেই থামে। সিদ্ধান্তযোগ্য আরই-এর একটি কঠোর উপসেট।</div>
+      <div class="trick small" style="margin-top:2mm"><span class="lbl">মনে রাখার কৌশল</span> <b>ডিসাইডার</b> দু-দিকী মেশিন: সে "না"-ও বলতে পারে। <b>রিকানাইজার</b> এক-দিকী: শুধু নিশ্চিত করে। একটি বর্জন অবস্থা যোগ করাই পুরো পার্থক্য।</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 162" width="296">
+      <g class="w">
+        <rect x="8" y="16" width="118" height="36" rx="10" class="ink fill-b"/>
+        <rect x="8" y="66" width="118" height="36" rx="10" class="ink fill-b"/>
+        <rect x="188" y="41" width="124" height="36" rx="10" class="ink-g fill-g"/>
+        <path class="ink-g" d="M130,34 L184,51"/>
+        <path class="ink-g" d="M130,84 L184,67"/>
+      </g>
+      <text x="67" y="32" text-anchor="middle" class="k w6 bn">L-এর জন্য M</text>
+      <text x="67" y="46" text-anchor="middle" class="bn s">L চেনে</text>
+      <text x="67" y="82" text-anchor="middle" class="k w6 bn">L′ এর জন্য M′</text>
+      <text x="67" y="96" text-anchor="middle" class="bn s">L′ চেনে</text>
+      <text x="250" y="57" text-anchor="middle" class="bn g w6">বারবার</text>
+      <text x="250" y="72" text-anchor="middle" class="bn g w6">একটি করে ধাপ</text>
+      <text x="160" y="126" text-anchor="middle" class="k w6 bn">L ও L′ দুটোই আরই ⇒ L রিকার্সিভ</text>
+      <text x="160" y="146" text-anchor="middle" class="bn g s">ঠিক একটিই গ্রহণ করবে</text>
+    </svg><figcaption>L ও তার কমপ্লিমেন্ট দুটোই আরই ⇒ ডিসাইডার আছে</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">শেষ ছবিটি সত্য কেন</span> যদি <b>L</b> ও <b>L′ = Σ* \ L</b> দুটোই আরই হয়, তাদের দুই রিকানাইজার পাশাপাশি চালাও, একবারে একটি করে এক ধাপ করে। প্রতিটি ইনপুটে M ও M′-এর <b>ঠিক একটিই</b> ঘরোরা পর্যন্ত গ্রহণ করবে — কমপ্লিমেন্টের সম্পর্কই কোনো পলায় না। যে আগে গ্রহণ করে সে-ই উত্তর ঠিক করে, আর অন্যটি তখনই গ্রহণ করবে। ওই মেশিন সবকিছুতেই থামে, তাই <span class="circ">L রিকার্সিভ</span>।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>অসিদ্ধান্তযোগ্য মানে "কঠিন" বা "ধীর" নয়</b> — মানে <b>কোনো অ্যালগরিদম একেবারে নেই</b>। আর "আধা-সিদ্ধান্তযোগ্য" দাবিটি কর্মক্ষমতার হালকা বক্তব্য নয়: হাল্টিং সমস্যার হ্যাঁ-পক্ষে নিখুঁত পদ্ধতি আছে, তবু সেটি অসিদ্ধান্তযোগ্য।</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">প্রচলিত ভুল ধারণা</span> "প্রতিটি গণনাযোগ্য ফাংশনের একটি টিএম আছে" — কথাটি অর্ধেক সত্য। বাকি অর্ধেক হলো, প্রতিটি <b>অগণনাযোগ্য</b> ফাংশনের প্রমাণিতভাবে কোনো টিএম নেই — টিএম হাল্টিং সিদ্ধান্ত করতে, সব গণনাযোগ্য বাস্তব সংখ্যা গুনতে, কিংবা দুই প্রোগ্রাম একই আচরণ করে কি না বলতে পারে না।</div>
+  </div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- ============ SHEET 7: the halting problem ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>হাল্টিং সমস্যা</span></div>
+  <h2><span class="no">৬</span>হাল্টিং সমস্যা (Halting Problem)</h2><span class="tag">সবচেয়ে বিখ্যাত</span>
+  <div class="def small"><span class="lbl">সমস্যা</span> একটি টিউরিং মেশিন <b>M</b> ও একটি ইনপুট স্ট্রিং <b>w</b> দেওয়া আছে, সিদ্ধান্ত করো <b>M</b> w-তে থামে কিনা — লেখা হয় H(M, w) = হ্যাঁ বা না। প্রোগ্রামের ক্ষেত্রে একই প্রশ্ন: <b>P</b> ও <b>I</b> দিলে <b>P</b> কি <b>I</b>-তে থামে?</div>
+  <div class="sumbox small"><span class="lbl">উপপাদ্য (টিউরিং, ১৯৩৬)</span> হাল্টিং সমস্যা <span class="circ">অসিদ্ধান্তযোগ্য</span> — সব M ও w-এর জন্য কোনো অ্যালগরিদম উত্তর দিতে পারে না। তবু এটি <span class="circ">রিকার্সিভলি এনিউমারেবল</span>: w-তে M চালাও, M কখনো থামলে হ্যাঁ বলো। না-উদাহরণে কোনো উত্তর আসে না — এটাই "আধা-সিদ্ধান্তযোগ্য"ের অর্থ।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.25fr) 300px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">বিরোধিতার মাধ্যমে প্রমাণ</h3>
+      <ol class="steps small" style="margin-top:0">
+        <li><b>ধরো</b> একটি ডিসাইডার <b>H(M, w)</b> আছে যা সবসময় থেমে সবসময় সঠিক উত্তর দেয়।</li>
+        <li><b>D(M) বানাও</b>: এমন একটি মেশিন যা M-কে ইনপুট M দিয়ে চালায় এবং <b>H(M, M)</b>-কে জিজ্ঞেস করে।</li>
+        <li><b>H বলল "থামে"</b>, তাহলে D <span class="red"><b>চিরতরে লুপ করে</b></span>।</li>
+        <li><b>H বলল "লুপ করে"</b>, তাহলে D <span class="red"><b>সঙ্গে সঙ্গে থেমে</b></span> যায়।</li>
+        <li><b>D-কে তার নিজের বর্ণনায় চালাও:</b> D(D)। H বলল D থামে, D লুপ করে; H বলল D লুপ করে, D থেমে যায়। <span class="circ">H-এর যেকোনো উত্তরই ভুল।</span></li>
+      </ol>
+      <p class="small">মেশিনটি H-কে তার নিজের প্রশ্নের উত্তর দিতে বাধ্য করে, তাই H যেকোনো দিক থেকেই খণ্টিত — অথচ H প্রতিটি জোড়ায় সঠিক ছিল বলে ধরা হয়েছিল। যে কৌশলটি এটা করে তা হলো <span class="hl">ডায়াগোনাল</span>: সমাধানকারীকে তার নিজের উপরেই চালাও।</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 168" width="296">
+      <g class="w">
+        <rect x="8" y="26" width="128" height="42" rx="10" class="ink fill-b"/>
+        <rect x="184" y="26" width="128" height="42" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M140,47 L180,47" marker-end="url(#ahb)"/>
+      </g>
+      <text x="72" y="44" text-anchor="middle" class="bn k w6">ধরা হয়েছে</text>
+      <text x="72" y="61" text-anchor="middle" class="k w6 bn">ডিসাইডার H</text>
+      <text x="248" y="44" text-anchor="middle" class="bn r w6">D জিজ্ঞেস</text>
+      <text x="248" y="61" text-anchor="middle" class="r w6">H(D, D)</text>
+      <text x="160" y="16" text-anchor="middle" class="bn p s">D চালানো হচ্ছে নিজের বর্ণনায়</text>
+      <text x="160" y="94" text-anchor="middle" class="bn g w6">H বলল থামবে ⇒ D লুপ করে</text>
+      <text x="160" y="114" text-anchor="middle" class="bn r w6">H বলল লুপ করবে ⇒ D থামে</text>
+      <path class="ink" d="M30,128 H290"/>
+      <text x="160" y="150" text-anchor="middle" class="bn k w6">H যা-ই বলুক, ভুল</text>
+    </svg><figcaption>ডায়াগোনাল: D(D) যেকোনো দিক থেকেই H-কে খণ্টায়</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)">
+    <div>
+      <h3 style="margin-top:0">এর মূল্য কত</h3>
+      <ul class="tick small">
+        <li><b>কোনো সাধারণ প্রোগ্রাম বিশ্লেষক নেই</b> — আটকে থাকা লুপ আর ধীর গণনা কখনোই আলাদা করা যায় না।</li>
+        <li><b>নিখুঁত ডিবাগার নেই</b> — লিন্টার প্রমাণ করতে পারে না যে ফাংশন সব ইনপুটে শেষ হয়।</li>
+        <li><b>সর্বজনীন কালেক্টর নেই</b> — "এই মানটা কি এখনো পৌঁছানো যায়?" সাধারণভাবে অসিদ্ধান্তযোগ্য।</li>
+        <li>যেকোনো সমস্যা যদি "এটা কি থামে?" <span class="hl">প্রকাশ করতে</span> পারে, সেটিও অসম্ভবতা উত্তরাধিকার করে।</li>
+      </ul>
+    </div>
+    <div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> হাল্টিং সমস্যা "অসীম হওয়ার জন্য" অসিদ্ধান্তযোগ্য নয় — অনেক অসীম সমস্যা (সর্টিং, {aⁿbⁿ} সদস্যপতা) একদম সিদ্ধান্তযোগ্য। এটি অসিদ্ধান্তযোগ্য <b>ডায়াগোনালের</b> কারণে, আকারের কারণে নয়।</div>
+      <div class="trick small" style="margin-top:2mm"><span class="lbl">মনে রাখার কৌশল</span> উল্টে ভাবো। D H-এর অনুমানের <b>ঠিক উল্টো</b> কাজ করে, তাই H নিজের উত্তরেই ধরা পড়ে। "প্রত্যাশ কর, তারপর উল্টোটা কর" — পুরো প্রমাণটাই এটুকু।</div>
+    </div>
+  </div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- ============ SHEET 8: reduction and Rice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>রিডাকশন ও রাইস</span></div>
+  <h2><span class="no">৭</span>রিডাকশন ও রাইসের উপপাদ্য</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def small"><span class="lbl">সংজ্ঞা</span> সমস্যা <b>A</b> সমস্যা <b>B</b>-তে <b>মেনি-ওয়ান রিডিউস</b> করে, লেখা <b>A ≤ B</b>, যদি এমন একটি গণনাযোগ্য ফাংশন f থাকে যাতে প্রতিটি ইনপুট <b>w</b>-এর জন্য <span class="circ">w ∈ A ⇔ f(w) ∈ B</span>। সহজ ভাষায় — B-এর সমাধান পেলে তাকে f(w) দিয়ে A-ও সমাধান করা যায়। অসিদ্ধান্তযোগ্যতার প্রমাণের মূল হাতিয়ার এটাই।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.15fr) 280px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">যদি</th><th class="l">তাহলে</th></tr>
+        <tr><td class="l">A <b>অসিদ্ধান্তযোগ্য</b> এবং A ≤ B</td><td class="l"><b>B-ও অসিদ্ধান্তযোগ্য</b></td></tr>
+        <tr><td class="l">B <b>সিদ্ধান্তযোগ্য</b> এবং A ≤ B</td><td class="l"><b>A-ও সিদ্ধান্তযোগ্য</b></td></tr>
+      </table>
+      <h3 style="margin-top:2mm">যে রিডাকশনগুলো আসলে জিজ্ঞেস করা হয়</h3>
+      <table class="hand small">
+        <tr><th class="l">সমস্যা A</th><th class="l">যেখানে রিডিউস হয়</th></tr>
+        <tr><td class="l">M, w-তে হাল্টিং</td><td class="l"><b>ফাঁকা টেপে</b> হাল্টিং — আগে w লিখে দাও</td></tr>
+        <tr><td class="l">M, w-তে হাল্টিং</td><td class="l">M কি <b>কখনো q₅-এ পৌঁছায়</b> — q₅-কে হল্ট অবস্থা বানাও</td></tr>
+        <tr><td class="l">M, w-তে হাল্টিং</td><td class="l"><b>দুটি টিএম সমতা</b> — M-কে অনুকরণ করে N চালাও</td></tr>
+        <tr><td class="l">CFG <b>অ্যাম্বিগুয়াস</b></td><td class="l">ফাঁকা-টেপ হাল্টিং, তাই অসিদ্ধান্তযোগ্য</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 148" width="280">
+      <g class="w">
+        <rect x="8" y="38" width="112" height="46" rx="12" class="ink-r fill-r"/>
+        <rect x="180" y="38" width="112" height="46" rx="12" class="ink fill-b"/>
+        <path class="ink" d="M124,61 L176,61" marker-end="url(#ahb)"/>
+      </g>
+      <text x="64" y="58" text-anchor="middle" class="bn r w6">সমস্যা A</text>
+      <text x="64" y="75" text-anchor="middle" class="bn r s">অসিদ্ধান্তযোগ্য</text>
+      <text x="236" y="58" text-anchor="middle" class="bn k w6">সমস্যা B</text>
+      <text x="236" y="75" text-anchor="middle" class="bn k s">ধরা হলো সিদ্ধান্তযোগ্য</text>
+      <text x="150" y="50" text-anchor="middle" class="p w6">f</text>
+      <text x="150" y="112" text-anchor="middle" class="bn k w6">A ≤ B, A অসিদ্ধান্তযোগ্য</text>
+      <text x="150" y="132" text-anchor="middle" class="bn r w6">⇒ B-ও অসিদ্ধান্তযোগ্য</text>
+    </svg><figcaption>রিডাকশন: B সমাধান করলে A ফ্রি</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">রাইসের উপপাদ্য</span> টিউরিং মেশিন দ্বারা চেনা <b>ভাষাগুলোর</b> যেকোনো <span class="circ">অ-সামান্য বৈশিষ্ট্য</span> P-কে ধরো। তাহলে <b>P অসিদ্ধান্তযোগ্য</b>। ঠিক বলা যাক: <b>P</b> হলো <b>L(M)</b>-এর — অর্থাৎ M যে স্ট্রিংগুলো গ্রহণ করে সেই <i>সেটের</i> — বৈশিষ্ট্য, M-এর বর্ণনার নয়। <b>অ-সামান্য</b> মানে কোনো মেশিনের ভাষায় আছে আবার কোনো মেশিনের ভাষায় নেই।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3 style="margin-top:0">অসিদ্ধান্তযোগ্য — L(M)-এর বৈশিষ্ট্য</h3>
+      <ul class="tick small">
+        <li><b>L(M) কি খালি</b>? · <b>সসীম</b>? · <b>রেগুলার</b>?</li>
+        <li><b>L(M) = Σ*</b> কি?</li>
+        <li><b>M ও N কি একই ভাষা</b> চেনে?</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">সিদ্ধান্তযোগ্য — মেশিনের বৈশিষ্ট্য</h3>
+      <ul class="tick small">
+        <li>M কি কখনো <b>q₅ অবস্থায়</b> পৌঁছায়?</li>
+        <li>M কি <b>১০০ ধাপের</b> মধ্যে থামে?</li>
+        <li>M-এর কতগুলো <b>অবস্থা</b> আছে?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> রাইসের উপপাদ্য <b>ভাষার</b> বৈশিষ্ট্য নিয়ে। "M-এর ঠিক ৭টি অবস্থা আছে কি?" — গণনা করেই সিদ্ধান্ত। "L(M) কি অসীম?" — <b>অসিদ্ধান্তযোগ্য</b>, তাই রিডাকশনে <b>ইনপুটটিকে মেশিনের ভিতরেই ঢোকাতে হয়</b>।</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">মনে রাখার কৌশল</span> <b>রাইস প্রশ্ন করে স্ট্রিং-সেটকে, মেশিনকে নয়।</b> প্রশ্নে <span class="hl">L(M)</span> বসাও, তারপর ভাবো — এটি কি অ-সামান্য?</div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- ============ SHEET 9: RE languages and the hierarchy ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>আরই ও শ্রেণিবিন্যাস</span></div>
+  <h2><span class="no">৮</span>আরই ভাষা, কো-আরই ও শ্রেণিবিন্যাস</h2><span class="tag">হাই-ইল্ড</span>
+  <div class="def small"><span class="lbl">আরই ভাষা</span> যে ভাষা কোনো টিউরিং মেশিন <b>গ্রহণ</b> করে — সমতুল্যভাবে, যার সদস্য প্রতিটিকে একটি আধা-সিদ্ধান্ত পদ্ধতি ঘরোরার মধ্যেই নিশ্চিত করে। সদস্য নয় এমন স্ট্রিং কখনো পৌঁছাতে হয় না: মেশিন তার উপর চিরতরে লুপ করতে পারে। প্রতিটি <span class="hl">সিদ্ধান্তযোগ্য</span> ভাষাই আরই; কিছু আরই ভাষা সিদ্ধান্তযোগ্য নয়।</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 340px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">আরই-এর বন্ধতার পূর্ণ ছক</h3>
+      <table class="hand small">
+        <tr><th class="l">ক্রিয়া</th><th class="l">আরই বদ্ধ?</th></tr>
+        <tr><td class="l">ইউনিয়ন L₁ ∪ L₂</td><td class="l"><span class="circ">হ্যাঁ</span> — নতুন শুরু অবস্থা, একটি শাখা অনুমান</td></tr>
+        <tr><td class="l">কনক্যাটেনেশন L₁L₂</td><td class="l"><span class="circ">হ্যাঁ</span> — আগে M₁, তারপর M₂</td></tr>
+        <tr><td class="l">ক্লিন স্টার L*</td><td class="l"><span class="circ">হ্যাঁ</span> — ভাগের বিন্দু অনুমান</td></tr>
+        <tr><td class="l">ইন্টারসেকশন L₁ ∩ L₂</td><td class="l"><span class="circ">হ্যাঁ</span> — দুই মেশিন বারবার চালাও</td></tr>
+        <tr><td class="l">কমপ্লিমেন্ট L′</td><td class="l"><span class="red"><b>না</b></span> — রিকানাইজার লুপ করতে পারে</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 258" width="330">
+      <g class="w">
+        <rect x="10" y="8" width="320" height="226" rx="14" class="ink-k fill-y"/>
+        <rect x="34" y="36" width="272" height="182" rx="12" class="ink fill-b"/>
+        <rect x="58" y="64" width="224" height="138" rx="12" class="ink-p fill-p"/>
+        <rect x="82" y="92" width="176" height="94" rx="12" class="ink-g fill-g"/>
+        <rect x="106" y="120" width="128" height="50" rx="10" class="ink-r fill-r"/>
+      </g>
+      <text x="170" y="27" text-anchor="middle" class="bn k l">আরই</text>
+      <text x="170" y="55" text-anchor="middle" class="bn k w6">রিকার্সিভ · সিদ্ধান্তযোগ্য</text>
+      <text x="170" y="83" text-anchor="middle" class="bn k w6">কনটেক্সট-সেনসিটিভ</text>
+      <text x="170" y="111" text-anchor="middle" class="bn k w6">কনটেক্সট-ফ্রি</text>
+      <text x="170" y="151" text-anchor="middle" class="bn k l">রেগুলার</text>
+      <text x="170" y="250" text-anchor="middle" class="bn g s">রেগুলার ⊂ সিএফ ⊂ সিএস ⊂ রিকার্সিভ ⊂ আরই</text>
+    </svg><figcaption>শ্রেণিবিন্যাস — প্রতিটি বাক্স উপরেরটার ভিতরে</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3 style="margin-top:0">প্রতি শ্রেণির একটি উদাহরণ</h3>
+      <table class="hand small">
+        <tr><th class="l">শ্রেণি</th><th class="l">উদাহরণ</th></tr>
+        <tr><td class="l">রেগুলার</td><td class="l">{w \| w 00 দিয়ে শেষ হয়}</td></tr>
+        <tr><td class="l">কনটেক্সট-ফ্রি</td><td class="l">{aⁿbⁿ \| n ≥ 0} — একটি স্ট্যাক</td></tr>
+        <tr><td class="l">কনটেক্সট-সেনসিটিভ</td><td class="l">{aⁿbⁿcⁿ \| n ≥ 1} — সীমিত টেপ</td></tr>
+        <tr><td class="l">রিকার্সিভ</td><td class="l">{w#w \| w ∈ {0,1}*} — কপি করে মিলিয়ে দেখা</td></tr>
+        <tr><td class="l">আরই</td><td class="l">হাল্টিং সমস্যা (হ্যাঁ-উদাহরণ)</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">আরই বনাম কো-আরই</span> <b>কো-আরই</b> = আরই ভাষার <b>কমপ্লিমেন্টের</b> শ্রেণি — সমস্যা যেগুলোর উত্তর মেশিন কেবল <b>না</b>-পক্ষে নিশ্চিত করে। হাল্টিং সমস্যা আরই কিন্তু কো-আরই <b>নয়</b>; দুটোই হলে পাতা ৬-এর সমান্তরাল যুক্তিতে সেটি সিদ্ধান্তযোগ্য হয়ে যেত, কিন্তু তা নয়।</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">পরীক্ষার ফাঁদ</span> "আরই কমপ্লিমেন্টে বদ্ধ" — এটি <b>মিথ্যা</b>, আর সেই একটি তথ্য থেকেই আরও তিনটি ব্যাখ্যা করা যায়: সব আরই ভাষা সিদ্ধান্তযোগ্য নয়, সব আরই ভাষা কো-আরই নয়, আর কিছু ভাষা <b>দুটোই নয়</b>। <b>L ও L′ দুটোই আরই</b> হলে L <span class="circ">রিকার্সিভ</span>।</div>
+      <div class="trick small" style="margin-top:2mm"><span class="lbl">মনে রাখার কৌশল</span> প্রতিটি স্তর ঠিক <b>একটি করে বেশি সম্পদ</b> কেনে: অটোমাটন → একটি গণনা, স্ট্যাক → একটি নেস্টিং, এলবিএ → সীমিত টেপ, টিএম → <b>সীমাহীন</b> টেপ।</div>
+    </div>
+  </div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>রিভিশন ১</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">পরীক্ষার আগের রাতের পাতা</span></h1>
+  <div class="sumbox"><span class="lbl">তথ্যপাত</span>
+    <div class="fgrid small">
+      <p>TM = <b>(Q, Σ, Γ, δ, q₀, B, F)</b></p><p>δ : Q × Γ → Q × Γ × {L, R, S}</p>
+      <p>δ(q, x) = (q′, y, D)</p><p>হেড v-এর <b>প্রথম প্রতীক</b> স্ক্যান করে</p>
+      <p>ID = (u, q, v) — বাম, অবস্থা, ডান</p><p>⊢ = এক ধাপ · ⊢* = শূন্য বা তার বেশি</p>
+      <p>টেপ উভয় দিকে <b>অসীম</b></p><p>Q, Σ, Γ সসীম · B ∉ Σ</p>
+      <p>{aⁿbⁿ} মেশিন: q₀..q₄, চিহ্ন X, Y</p><p>গ্রহণ: δ(q₃, B) = (q₄, B, R)</p>
+      <p>মাল্টি-টেপ = একই ক্ষমতা, ≤ বর্গীয়</p><p>অফলাইন টিএম = শুধু-পড়া ইনপুট + কাজ</p>
+      <p>এলবিএ = ননডিটারমিনিস্টিক টিএম, |w|+2</p><p>এলবিএ চেনে <b>সিএস</b> ভাষা</p>
+      <p>চার্চ-টিউরিং: টিউরিং-গণনাযোগ্য ⇔ গণনাযোগ্য</p><p>সিদ্ধান্তযোগ্য সবসময় থামে; আধা শুধু হ্যাঁতে</p>
+      <p>হাল্টিং সমস্যা <b>অসিদ্ধান্তযোগ্য</b> (টিউরিং, ১৯৩৬)</p><p>…তবু সেটি <b>রিকার্সিভলি এনিউমারেবল</b></p>
+      <p>D(M): H(M,M) থামে বললে লুপ, নয়তে থামে</p><p>ফাঁকা-টেপ হাল্টিং ≤ হাল্টিং</p>
+      <p>Rice: <b>L(M)</b>-এর অ-সামান্য বৈশিষ্ট্য</p><p>অ-সামান্য = কারো আছে, কারো নেই</p>
+      <p>বদ্ধ: ∪, কনক্যাটেনেশন, *, ∩</p><p>কমপ্লিমেন্টে <b>বদ্ধ নয়</b></p>
+      <p>L ও L′ দুটোই আরই ⇒ L রিকার্সিভ</p><p>হাল্টিং আরই, কো-আরই নয়</p>
+      <p>রেগুলার ⊂ সিএফ ⊂ সিএস ⊂ রিকার্সিভ ⊂ আরই</p><p>{aⁿbⁿcⁿ} = সিএস, সিএফ নয়</p>
+    </div>
+  </div>
+  <h3>MCQ-র জন্য শীর্ষ ১২ এক-লাইনের উত্তর</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>TM = <b>৭-টাপল</b>; PDA ৫, CFG ৪</li>
+      <li>কনফিগারেশন = <b>বাম, অবস্থা, ডান</b></li>
+      <li>হেডের কোষ শুরু হয় <b>v</b>-তে, u-তে শেষ নয়</li>
+      <li>হাল্টিং সমস্যা = <b>অসিদ্ধান্তযোগ্য</b> (১৯৩৬)</li>
+      <li>হাল্টিং সমস্যা = <b>আরই</b> — শুধু হ্যাঁ-পক্ষ</li>
+      <li>মাল্টি-টেপ ≠ বেশি শক্তিশালী, শুধু দ্রুত</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>এলবিএ = সীমিত-টেপ ননডিটারমিনিস্টিক টিএম ⇒ <b>সিএস</b></li>
+      <li>চার্চ-টিউরিং: টিএম = অ্যালগরিদম</li>
+      <li>A ≤ B থাকলে A অসিদ্ধান্তযোগ্য হলে B-ও তাই</li>
+      <li>রাইস <b>L(M)</b> নিয়ে, মেশিন নিয়ে নয়</li>
+      <li>আরই ∩ আরই = আরই, কিন্তু আরই′ <b>নয়</b></li>
+      <li>L ও L′ দুটোই আরই ⇒ <b>রিকার্সিভ</b></li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">শীর্ষ ফাঁদ</span> "মাল্টি-টেপ বেশি শক্তিশালী" ভুল অপশন · সাধারণ δ-তে <b>S</b> (একই জায়গায়) আছে, শুধু L ও R নয় · ID (01, q, 011) ভাগ করা ভুল · অসিদ্ধান্তযোগ্য মানে ধীর নয়, মানে <b>কোনো অ্যালগরিদম নেই</b> · রাইস ভাষা নিয়ে, বর্ণনা নিয়ে নয় · aⁿbⁿ-এর ছকে সাধারণত <b>কোনো বর্জন-সরণ থাকে না</b>।</div>
+  <div class="trick small"><span class="lbl">সব কৌশল একসাথে</span> "Q, Σ, Γ, δ, q₀, B, F" · "বাম · অবস্থা · ডান, হেড পড়ার অংশের" · "চিহ্নিত, খোঁজ, মেলাও, ফিরে এসো" · "ডিসাইডার দু-দিকী, রিকানাইজার এক-দিকী" · "প্রত্যাশ কর, তারপর উল্টোটা কর" · <span class="hl">রাইস প্রশ্ন করে L(M)-কে</span>।</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="500">
+    <g class="w">
+      <rect x="14" y="18" width="140" height="48" rx="12" class="ink fill-b"/>
+      <rect x="190" y="18" width="140" height="48" rx="12" class="ink-r fill-r"/>
+      <rect x="366" y="18" width="140" height="48" rx="12" class="ink-g fill-g"/>
+      <path class="ink-p" d="M154,42 H186" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M330,42 H362" marker-end="url(#ahp)"/>
+    </g>
+    <text x="84" y="40" text-anchor="middle" class="bn k w6">টিএম মডেল</text>
+    <text x="84" y="58" text-anchor="middle" class="bn s">টেপ · হেড · ৭-টাপল</text>
+    <text x="260" y="40" text-anchor="middle" class="bn r w6">সিদ্ধান্তযোগ্য?</text>
+    <text x="260" y="58" text-anchor="middle" class="bn s">সব ইনপুটে থামে</text>
+    <text x="436" y="40" text-anchor="middle" class="bn g w6">হাল্টিং সমস্যা</text>
+    <text x="436" y="58" text-anchor="middle" class="bn s">এটি ব্যর্থ হওয়ার প্রমাণ</text>
+    <text x="170" y="13" text-anchor="middle" class="bn p s">জিজ্ঞেস করা হয়</text>
+    <text x="346" y="13" text-anchor="middle" class="bn p s">উত্তর দেয়</text>
+    <text x="260" y="100" text-anchor="middle" class="bn g s">প্রশ্ন কখনো ক্ষমতা নয় — সিদ্ধান্তযোগ্যতা</text>
+  </svg><figcaption>এক মডেল, এক প্রশ্ন, এক বিখ্যাত না-উত্তর</figcaption></figure>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · টিউরিং মেশিন ও গণনাযোগ্যতা</span><span>রিভিশন ২: অনুশীলন</span></div>
+  <h2><span class="no">✓</span>অনুশীলন MCQ (পরীক্ষার ধাঁচে, ১০ নম্বর)</h2><span class="tag g">আগে নিজে করো, পরে মেলাও</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">১.</span>টিউরিং মেশিন কতগুলো অংশের টাপল?<ol class="opts"><li>5</li><li>7</li><li>8</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">২.</span>δ-তে হেড কোন দিকে যেতে পারে?<ol class="opts"><li>শুধু L</li><li>L বা R</li><li>L, R বা S</li><li>যেকোনো দিকে</li></ol></div>
+    <div class="mcq"><span class="qn">৩.</span>(u, q, v)-তে হেড কোনটি স্ক্যান করে?<ol class="opts"><li>u-এর শেষ</li><li>v-এর মাঝ</li><li>ফাঁকা কোষ</li><li>v-এর প্রথম</li></ol></div>
+    <div class="mcq"><span class="qn">৪.</span>মাল্টি-টেপ টিএম চেনে:<ol class="opts"><li>একই ভাষা</li><li>আরও ভাষা</li><li>শুধু রেগুলার</li><li>কিছুই নয়</li></ol></div>
+    <div class="mcq"><span class="qn">৫.</span>হাল্টিং সমস্যা কোনটি?<ol class="opts"><li>সিদ্ধান্তযোগ্য</li><li>সিমুলেশনে</li><li>অসিদ্ধা., আরই</li><li>রেগুলার</li></ol></div>
+    <div class="mcq"><span class="qn">৬.</span>রাইসের উপপাদ্য কীসের বৈশিষ্ট্য নিয়ে?<ol class="opts"><li>মেশিনের</li><li>L(M)-এর</li><li>অবস্থার</li><li>টেপের</li></ol></div>
+    <div class="mcq"><span class="qn">৭.</span>|w|+2 টেপে সীমাবদ্ধ ননডিটারমিনিস্টিক টিএম:<ol class="opts"><li>মাল্টি-হেড টিএম</li><li>অফলাইন টিএম</li><li>ফিনিট অটোমাটন</li><li>একটি এলবিএ</li></ol></div>
+    <div class="mcq"><span class="qn">৮.</span>আরই ভাষা কোন ক্রিয়ায় বদ্ধ?<ol class="opts"><li>কমপ্লিমেন্ট</li><li>∪, concat, *, ∩</li><li>শুধু ইন্টারসেকশন</li><li>কোনোটিই নয়</li></ol></div>
+    <div class="mcq"><span class="qn">৯.</span>L ও তার কমপ্লিমেন্ট দুটোই আরই ⇒ L:<ol class="opts"><li>শুধু রেগুলার</li><li>আরই নয়</li><li>রিকার্সিভ</li><li>কনটেক্সট-ফ্রি</li></ol></div>
+    <div class="mcq"><span class="qn">১০.</span>{aⁿ bⁿ cⁿ | n ≥ 1} কোন শ্রেণিতে?<ol class="opts"><li>কনটেক্সট-সেনসিটিভ</li><li>রেগুলার</li><li>কনটেক্সট-ফ্রি</li><li>কোনো শ্রেণিতে নয়</li></ol></div>
+  </div>
+  <div class="anskey">উত্তরমালা → ১-খ · ২-গ · ৩-ঘ · ৪-ক · ৫-গ · ৬-খ · ৭-ঘ · ৮-খ · ৯-গ · ১০-ক</div>
+
+  <div class="wq"><span class="lbl">লিখিত প্রশ্ন</span> বিরোধিতার মাধ্যমে প্রমাণ করো যে হাল্টিং সমস্যা অসিদ্ধান্তযোগ্য। তারপর ফাঁকা-টেপ হাল্টিংকে তার উপর রিডিউস করো, আর আরও দুটি সমস্যার নাম দাও যেগুলো এই অসিদ্ধান্তযোগ্যতা উত্তরাধিকার করে। <i class="mk">১০ নম্বর</i></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)">
+    <div class="ex small" style="margin-top:0"><span class="lbl">মডেল উত্তর ✍</span>
+      <ol class="steps small">
+        <li><b>বলো ও ধরো</b> <i class="mk">2</i> — H(M, w): M w-তে থামে কি? ধরো H প্রতিটি জোড়ায় সঠিক।</li>
+        <li><b>D বানাও</b> <i class="mk">2</i> — D(M) H(M, M)-কে জিজ্ঞেস করে এবং ঠিক <b>উল্টো</b>টা করে।</li>
+        <li><b>বিরোধ</b> <i class="mk">2</i> — D(D)-তে D হু-যা H বলেছিল তার উল্টোটা করে।</li>
+        <li><b>রিডাকশন</b> <i class="mk">2</i> — M′ নিজের ফাঁকা টেপে w লিখে তারপর M(w) অনুকরণ করে; তাই ফাঁকা-টেপ হাল্টিং ≤ হাল্টিং, অসিদ্ধান্তযোগ্য।</li>
+        <li><b>আরও দুটি</b> <i class="mk">2</i> — স্টেট-এন্ট্রি (q₅-কে হল্ট অবস্থা বানাও) · টিএম সমতা (M-কে অনুকরণ করে N চালাও)।</li>
+      </ol></div>
+    <div>
+      <h3>পরীক্ষার আগে যাচাই ✓</h3>
+      <ul class="tick small">
+        <li>৭-টাপল ও δ ফরম্যাট মেমরি থেকে লিখতে পারি</li>
+        <li>তাৎক্ষণিক বর্ণনা ভাগ ও জোড়া লাগাতে পারি</li>
+        <li>হাল্টিং প্রমাণ পাঁচ ধাপে বলতে পারি</li>
+        <li>রাইসের উপপাদ্য L(M)-এর ব্যাপারে বলতে পারি</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

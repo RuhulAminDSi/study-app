@@ -2,12 +2,17 @@ import { useMemo } from 'react'
 import { useApp, useAppDispatch, type OrderedLesson } from '../context/AppContext'
 import { useProgress } from '../context/progress'
 import { translations } from '../data/translations'
-import type { PublicView } from '../router'
-import Icon from './portal/icons'
-import { chapterTitle, lessonTitle, noteSets, num } from './portal/portalData'
+import type { ExamRoute, ExamTab, PublicView } from '../router'
+import type { Translations } from '../types'
+import Icon, { type IconName } from './portal/icons'
+import { chapterTitle, lessonTitle, noteSetOf, noteSets, num } from './portal/portalData'
 import './portal/portal.css'
 
+/** What a lesson is: a regular lesson, a revision note set (notes:apply `add` mode) or a solved-past-questions set. */
+type LessonKind = 'lesson' | 'revision' | 'pyq'
+
 interface GroupedMenu {
+  kind: LessonKind
   menuLabelEn: string
   menuLabelBn: string | null
   lessons: OrderedLesson[]
@@ -20,6 +25,15 @@ interface GroupedChapter {
   total: number
 }
 
+function kindOf(o: OrderedLesson): LessonKind {
+  if (noteSetOf(o, 'en')?.isPyq) return 'pyq'
+  if (o.lesson.content_en.includes('data-notes-kind="revision"')) return 'revision'
+  return 'lesson'
+}
+
+const KIND_ORDER: LessonKind[] = ['lesson', 'revision', 'pyq']
+
+/** Groups each chapter's lessons by section; revision notes and solved past questions get their own groups after the lessons. */
 function groupByChapter(orderedLessons: OrderedLesson[]): GroupedChapter[] {
   const map = new Map<string, GroupedChapter>()
 
@@ -29,22 +43,48 @@ function groupByChapter(orderedLessons: OrderedLesson[]): GroupedChapter[] {
       chapter = { chapterId: o.chapterId, first: o, menus: [], total: 0 }
       map.set(o.chapterId, chapter)
     }
-    let menu = chapter.menus.find(m => m.menuLabelEn === o.menuLabelEn)
+    const kind = kindOf(o)
+    let menu = chapter.menus.find(m => m.kind === kind && (kind !== 'lesson' || m.menuLabelEn === o.menuLabelEn))
     if (!menu) {
-      menu = { menuLabelEn: o.menuLabelEn, menuLabelBn: o.menuLabelBn, lessons: [] }
+      menu = { kind, menuLabelEn: o.menuLabelEn, menuLabelBn: o.menuLabelBn, lessons: [] }
       chapter.menus.push(menu)
     }
     menu.lessons.push(o)
     chapter.total++
   }
 
-  return Array.from(map.values())
+  const chapters = Array.from(map.values())
+  for (const c of chapters) c.menus.sort((a, b) => KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind))
+  return chapters
+}
+
+const KIND_LABEL: Record<Exclude<LessonKind, 'lesson'>, keyof Translations> = {
+  revision: 'navGroupRevision',
+  pyq: 'navGroupPyq',
+}
+
+/** Each exam tab is its own side-menu entry: the question bank, practice sets, timed tests and results. */
+const EXAM_LINKS: { tab: ExamTab; label: keyof Translations; icon: IconName }[] = [
+  { tab: 'bank', label: 'qbTab', icon: 'book' },
+  { tab: 'practice', label: 'exTabPractice', icon: 'target' },
+  { tab: 'mock', label: 'exTabMock', icon: 'clock' },
+  { tab: 'model', label: 'exTabModel', icon: 'exam' },
+  { tab: 'results', label: 'exTabResults', icon: 'chart' },
+]
+
+interface PageLink {
+  key: string
+  active: boolean
+  href: string
+  label: string
+  icon: IconName
+  count?: number
 }
 
 const lessonHref = (o: OrderedLesson) => `#/chapter/${o.chapterId}/lesson/${o.lesson.id}`
 
-/** The portal's side menu: page links (dashboard, notes, past questions), then the subject → lesson tree. */
-export default function Sidebar({ view }: { view: PublicView }) {
+/** The portal's side menu: study pages, practice & exam pages, then the subject → lesson tree. */
+export default function Sidebar({ view, exam }: { view: PublicView; exam?: ExamRoute }) {
   const state = useApp()
   const dispatch = useAppDispatch()
   const progress = useProgress()
@@ -59,13 +99,32 @@ export default function Sidebar({ view }: { view: PublicView }) {
   if (state.loading) return <aside className="sidebar portal-sidebar" />
 
   const close = () => dispatch({ type: 'CLOSE_SIDEBAR' })
+  // A chapter's only section of lessons is just "Lessons"; several keep their own names.
+  const menuLabel = (chapter: GroupedChapter, menu: GroupedMenu): string => {
+    if (menu.kind !== 'lesson') return t[KIND_LABEL[menu.kind]] as string
+    if (chapter.menus.filter(m => m.kind === 'lesson').length === 1) return t.navGroupLessons
+    return lang === 'bn' && menu.menuLabelBn ? menu.menuLabelBn : menu.menuLabelEn
+  }
   const currentLesson = view === 'lesson' ? state.orderedLessons[state.currentIndex] : undefined
   const pyqCount = sets.filter(s => s.isPyq).length
 
-  const pages: { view: PublicView; href: string; label: string; icon: 'dashboard' | 'notes' | 'pyq'; count?: number }[] = [
-    { view: 'dashboard', href: '#/', label: t.navDashboard, icon: 'dashboard' },
-    { view: 'notes', href: '#/notes', label: t.navNotes, icon: 'notes', count: sets.length - pyqCount },
-    { view: 'pyq', href: '#/pyq', label: t.navPyq, icon: 'pyq', count: pyqCount },
+  const studyPages: PageLink[] = [
+    { key: 'dashboard', active: view === 'dashboard', href: '#/', label: t.navDashboard, icon: 'dashboard' },
+    { key: 'notes', active: view === 'notes', href: '#/notes', label: t.navNotes, icon: 'notes', count: sets.length - pyqCount },
+    { key: 'pyq', active: view === 'pyq', href: '#/pyq', label: t.navPyq, icon: 'pyq', count: pyqCount },
+  ]
+  // A test's instructions, attempt and result pages belong to no tab, so none is highlighted there.
+  const examTab = view === 'exams' && exam?.page === 'home' ? (exam.tab ?? 'bank') : undefined
+  const examPages: PageLink[] = EXAM_LINKS.map(x => ({
+    key: x.tab,
+    active: examTab === x.tab,
+    href: x.tab === 'bank' ? '#/exams' : `#/exams?tab=${x.tab}`,
+    label: t[x.label] as string,
+    icon: x.icon,
+  }))
+  const groups = [
+    { key: 'study', label: t.navStudy, pages: studyPages },
+    { key: 'practice', label: t.navPractice, pages: examPages },
   ]
 
   return (
@@ -74,18 +133,20 @@ export default function Sidebar({ view }: { view: PublicView }) {
           itself and lay the overlay over the menu items, swallowing every tap. */}
       {state.sidebarOpen && <div className="sidebar-overlay" onClick={close} />}
       <aside className={`sidebar portal-sidebar ${state.sidebarOpen ? 'open' : ''}`}>
-        <nav aria-label={t.navMenu}>
-          <div className="ps-label">{t.navMenu}</div>
-          {pages.map(p => (
-            <a key={p.view} href={p.href} onClick={close}
-              className={`ps-link ${view === p.view ? 'active' : ''}`}
-              aria-current={view === p.view ? 'page' : undefined}>
-              <Icon name={p.icon} />
-              <span className="ps-link-text">{p.label}</span>
-              {p.count !== undefined && p.count > 0 && <span className="ps-count">{num(p.count, lang)}</span>}
-            </a>
-          ))}
-        </nav>
+        {groups.map(g => (
+          <nav key={g.key} aria-label={g.label} className="ps-group">
+            <div className="ps-label">{g.label}</div>
+            {g.pages.map(p => (
+              <a key={p.key} href={p.href} onClick={close}
+                className={`ps-link ${p.active ? 'active' : ''}`}
+                aria-current={p.active ? 'page' : undefined}>
+                <Icon name={p.icon} />
+                <span className="ps-link-text">{p.label}</span>
+                {p.count !== undefined && p.count > 0 && <span className="ps-count">{num(p.count, lang)}</span>}
+              </a>
+            ))}
+          </nav>
+        ))}
 
         <nav aria-label={t.navSubjects} className="ps-subjects">
           <div className="ps-label">{t.navSubjects}</div>
@@ -112,7 +173,7 @@ export default function Sidebar({ view }: { view: PublicView }) {
                     {chapter.menus.map((menu, mi) => (
                       <div key={mi}>
                         {chapter.menus.length > 1 && (
-                          <div className="ps-menu-label">{lang === 'bn' && menu.menuLabelBn ? menu.menuLabelBn : menu.menuLabelEn}</div>
+                          <div className={`ps-menu-label ps-kind-${menu.kind}`}>{menuLabel(chapter, menu)}</div>
                         )}
                         {menu.lessons.map((o) => {
                           const active = currentLesson?.lesson.id === o.lesson.id

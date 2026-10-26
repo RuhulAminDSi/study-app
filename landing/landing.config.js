@@ -1,6 +1,6 @@
 /*
  * ============================================================================
- *  Study Hub landing page: CENTRAL CONFIG
+ *  StudyPath landing page: CENTRAL CONFIG
  *  Edit this file to change where CTAs go, the subjects, and every piece of
  *  text on the page. `text.bn` and `text.en` hold the two languages: `ui` is
  *  the fixed page copy (keys match data-i18n attributes in index.html), the
@@ -9,22 +9,23 @@
  * ============================================================================
  */
 export default {
-  /* ---- Study Hub destination ------------------------------------------- */
-  // Every CTA on the page uses this one value. Study Hub is served from
+  /* ---- StudyPath destination ------------------------------------------- */
+  // Every CTA on the page uses this one value. StudyPath is served from
   // study-hub/index.html (hash-routed: "/study-hub/#/..."); "/" is this page.
-  // Study Hub needs a candidate account: a signed-out visitor's CTAs go to
+  // StudyPath needs a candidate account: a signed-out visitor's CTAs go to
   // its login screen (LOGIN_HASH) instead, and sign-up goes to SIGNUP_HASH.
   STUDY_HUB_URL: '/study-hub/',
   LOGIN_HASH: '#/login',
   SIGNUP_HASH: '#/signup',
 
-  // false = open Study Hub in the same tab (default), true = new tab.
+  // false = open StudyPath in the same tab (default), true = new tab.
   OPEN_IN_NEW_TAB: false,
 
-  // Subject deep links. Study Hub has no slug route yet, so subject cards
-  // link to STUDY_HUB_URL until the router supports "#/subject/<slug>".
-  // Flip to true once that route exists.
-  DEEP_LINKS_ENABLED: false,
+  // Subject deep links: each subject card opens its chapter in StudyPath
+  // ("#/subject/<slug>"; the router matches the slug's leading chapter number).
+  // Signed out, the card goes to the login screen and comes back to the subject.
+  // false = every subject card opens the StudyPath dashboard instead.
+  DEEP_LINKS_ENABLED: true,
   deepLink(slug) {
     return `${this.STUDY_HUB_URL}#/subject/${slug}`
   },
@@ -32,10 +33,10 @@ export default {
   /* ---- Language -------------------------------------------------------- */
   // Used until the visitor presses the language button. index.html is written
   // in English to match. The choice is stored under 'studyhub_language', which
-  // Study Hub also reads, so both open in the language last picked.
+  // StudyPath also reads, so both open in the language last picked.
   DEFAULT_LANG: 'en',
 
-  /* ---- Subjects: mirrors the Study Hub sidebar ------------------------- */
+  /* ---- Subjects: mirrors the StudyPath sidebar ------------------------- */
   // slug = the chapter folder name used by the notes pipeline; pyq = a
   // solved-past-questions note set is published for this subject.
   subjects: [
@@ -66,7 +67,7 @@ export default {
     facebook: '', // PLACEHOLDER: page URL; hidden while empty
     youtube: '', // PLACEHOLDER: channel URL; hidden while empty
   },
-  copyrightName: 'Study Hub',
+  copyrightName: 'StudyPath',
 
   /* ======================================================================
    *  TEXT, per language
@@ -75,15 +76,15 @@ export default {
     /* ------------------------------ বাংলা ------------------------------ */
     bn: {
       ui: {
-        metaTitle: 'Study Hub | সরকারি আইটি চাকরির প্রস্তুতি: BCS, ব্যাংক ও আইসিটি পদ',
+        metaTitle: 'StudyPath | সরকারি আইটি চাকরির প্রস্তুতি: BCS, ব্যাংক ও আইসিটি পদ',
         metaDesc: 'সরকারি আইটি চাকরির প্রস্তুতি এক জায়গায়: BCS কম্পিউটার/আইসিটি, ব্যাংকের Assistant Programmer ও Officer (IT), টেলিকম ও সরকারি প্রতিষ্ঠানের আইটি পদের জন্য ১৯টি টেকনিক্যাল বিষয়ের পাঠ, রিভিশন নোট ও বিগত প্রশ্নের সমাধান। অ্যাকাউন্ট খুলে পড়া শুরু করুন।',
         skip: 'মূল অংশে যান',
-        brandAria: 'Study Hub, পাতার শুরুতে যান',
+        brandAria: 'StudyPath, পাতার শুরুতে যান',
         navAria: 'প্রধান',
         navFeatures: 'ফিচার',
         navSubjects: 'বিষয়সমূহ',
         navExams: 'পরীক্ষা',
-        navHow: 'যেভাবে কাজ করে',
+        navRoadmap: 'রোডম্যাপ',
         navFaq: 'প্রশ্নোত্তর',
         themeToLight: 'লাইট মোডে যান',
         themeToDark: 'ডার্ক মোডে যান',
@@ -94,53 +95,57 @@ export default {
         ctaNav: 'পড়া শুরু করুন',
         signIn: 'সাইন ইন',
         signUp: 'সাইন আপ',
-        openHub: 'Study Hub খুলুন',
-        heroEyebrow: 'সরকারি আইটি চাকরির প্রস্তুতি',
-        heroTitleA: 'আইটি পদের পুরো টেকনিক্যাল সিলেবাস, ',
-        heroTitleB: 'এক জায়গায় গোছানো',
+        openHub: 'StudyPath খুলুন',
+        heroTitle: 'সরকারি আইটি পদের টেকনিক্যাল সিলেবাস, বিষয় ধরে গোছানো',
         heroLead: 'BCS-এর কম্পিউটার ও আইসিটি পদ, ব্যাংকের Assistant Programmer ও Officer (IT), টেলিকম ও সরকারি প্রতিষ্ঠানের আইটি নিয়োগ পরীক্ষার জন্য ১৯টি বিষয়ের পাঠ, রিভিশন নোট আর বিগত প্রশ্নের সমাধান।',
-        heroCta: 'Study Hub-এ পড়া শুরু করুন',
-        heroSecondary: 'বিষয়গুলো দেখুন',
-        heroNote: 'সহজ সাইন আপ · বাংলা ও ইংরেজি · মোবাইলে পড়ার উপযোগী',
-        mockAria: 'Study Hub-এর সাইডবার ও পাঠের পাতার নমুনা',
-        mockTitle: 'ডেটাবেস ম্যানেজমেন্ট সিস্টেমের পরিচিতি',
-        mockCard: 'মূল বিষয়',
-        mockPrev: '← আগের পাঠ',
-        mockNext: 'পরের পাঠ →',
+        heroCta: 'পড়া শুরু করুন',
+        heroSecondary: '১৯টি বিষয় দেখুন',
+        slipSubject: 'ডেটাবেস সিস্টেম',
+        slipKind: 'লিখিত প্রশ্ন',
+        slipAsked: '৩টি নিয়োগ পরীক্ষায় এসেছে',
+        slipAnswer: 'মডেল উত্তর দেখুন',
+        slipSource: 'সূত্র:',
         statsAria: 'এক নজরে',
-        examsEyebrow: 'কাদের জন্য',
         examsTitle: 'যেসব নিয়োগ পরীক্ষার প্রস্তুতিতে কাজে লাগবে',
         examsDesc: 'বিভিন্ন সরকারি ও রাষ্ট্রায়ত্ত প্রতিষ্ঠানের আইটি পদের টেকনিক্যাল অংশের সিলেবাস প্রায় একই বিষয়গুলো ঘিরে।',
-        examsNote: 'Study Hub কোনো নিয়োগকারী প্রতিষ্ঠানের সঙ্গে যুক্ত নয়। সর্বশেষ বিজ্ঞপ্তি ও সিলেবাস সংশ্লিষ্ট প্রতিষ্ঠানের ওয়েবসাইটে মিলিয়ে নিন।',
-        subjectsEyebrow: 'বিষয়সমূহ',
-        subjectsTitle: 'Study Hub-এর ১৯টি টেকনিক্যাল বিষয়',
-        subjectsDesc: 'Study Hub-এর সাইডবারে যে ক্রমে আছে, এখানেও সেই ক্রমে। যেকোনো বিষয়ে চাপ দিয়ে পড়া শুরু করুন।',
+        examsNote: 'StudyPath কোনো নিয়োগকারী প্রতিষ্ঠানের সঙ্গে যুক্ত নয়। সর্বশেষ বিজ্ঞপ্তি ও সিলেবাস সংশ্লিষ্ট প্রতিষ্ঠানের ওয়েবসাইটে মিলিয়ে নিন।',
+        subjectsTitle: '১৯টি টেকনিক্যাল বিষয়',
+        subjectsDesc: 'StudyPath-এর সাইডবারের ক্রমেই সাজানো। যেকোনো বিষয়ে চাপ দিয়ে পড়া শুরু করুন।',
         pyqBadge: 'বিগত প্রশ্নের সমাধান',
-        featuresEyebrow: 'কেন Study Hub',
-        featuresTitle: 'পড়ায় মন দিন, বাকিটা গোছানো আছে',
-        howEyebrow: 'যেভাবে কাজ করে',
+        tourTitle: 'ভেতরে কী আছে, দেখে নিন',
+        tourDesc: 'সাইন ইন করা একজন পাঠক StudyPath-এ যা দেখেন, তার কয়েকটি স্ক্রিন।',
+        tourAria: 'StudyPath-এর অংশগুলো',
         howTitle: 'তিন ধাপে শুরু',
-        roadmapEyebrow: 'প্রস্তুতির রোডম্যাপ',
-        roadmapTitle: 'একটি নমুনা প্রস্তুতি-পথ',
+        roadmapTitle: 'প্রস্তুতির একটি প্রস্তাবিত ক্রম',
         roadmapDesc: 'এটি একটি পরামর্শমাত্র, কোনো অফিশিয়াল সিলেবাস নয়। আপনার পরীক্ষার বিজ্ঞপ্তি ও হাতে থাকা সময় অনুযায়ী ক্রম বদলে নিন।',
-        roadmapStep: 'ধাপ {n}: ',
-        faqEyebrow: 'প্রশ্নোত্তর',
         faqTitle: 'সাধারণ প্রশ্ন',
         finalTitle: 'আজই একটি বিষয় দিয়ে শুরু করুন',
         finalDesc: 'প্রতিদিন একটি করে পাঠ শেষ করলেও কয়েক মাসে পুরো টেকনিক্যাল সিলেবাস একবার ঘুরে আসা যায়।',
-        finalCta: 'Study Hub খুলুন',
-        footerAbout: 'সরকারি আইটি চাকরির টেকনিক্যাল প্রস্তুতির জন্য পাঠ, রিভিশন নোট ও বিগত প্রশ্নের সমাধান। কোনো নিয়োগকারী প্রতিষ্ঠানের সঙ্গে যুক্ত নয়।',
+        finalCta: 'পড়া শুরু করুন',
+        footerAbout: 'সরকারি আইটি চাকরির টেকনিক্যাল প্রস্তুতির জন্য পাঠ, রিভিশন নোট ও বিগত প্রশ্নের সমাধান, বাংলা ও ইংরেজিতে।',
         footerNavAria: 'ফুটার',
-        footerPages: 'পাতা',
+        footerStudy: 'পড়াশোনা',
+        footerAccount: 'অ্যাকাউন্ট',
+        footerHelp: 'সহায়তা',
+        footerCreate: 'অ্যাকাউন্ট খুলুন',
+        footerFine: 'BPSC, কোনো ব্যাংক বা নিয়োগকারী প্রতিষ্ঠানের সঙ্গে যুক্ত নয়।',
         footerRoadmap: 'রোডম্যাপ',
         footerContact: 'যোগাযোগ',
         backToTop: 'উপরে ফিরুন',
       },
+      heroPoints: ['বাংলা ও ইংরেজিতে পড়া যায়', 'মোবাইলে পড়ার উপযোগী', 'প্রতিটি বিগত প্রশ্নে পরীক্ষার নাম ও সূত্র'],
+      // Model answer for the hero's past question (ACID). Keep it short and exam-accurate.
+      acid: [
+        { term: 'Atomicity', desc: 'ট্রানজ্যাকশনের সব অপারেশন একসঙ্গে সম্পন্ন হয়, নয়তো একটিও হয় না।' },
+        { term: 'Consistency', desc: 'ট্রানজ্যাকশন ডেটাবেসকে এক বৈধ অবস্থা থেকে আরেক বৈধ অবস্থায় নেয়; সব কনস্ট্রেইন্ট বজায় থাকে।' },
+        { term: 'Isolation', desc: 'একসঙ্গে চলা ট্রানজ্যাকশনগুলো একে অপরের অসম্পূর্ণ (uncommitted) পরিবর্তন দেখে না।' },
+        { term: 'Durability', desc: 'কমিট হওয়া পরিবর্তন সিস্টেম ক্র্যাশ বা বিদ্যুৎ বিভ্রাটের পরেও টিকে থাকে।' },
+      ],
       // Only verifiable numbers. Recount when content changes.
       stats: [
         { value: '১৯', label: 'টেকনিক্যাল বিষয়' },
         { value: '৯০+', label: 'রিভিশন নোট সেট' }, // counted from public/notes on 2026-10-15
-        { value: 'বাংলা + English', label: 'দুই ভাষায় পাঠ' },
+        { value: '২', label: 'ভাষা: বাংলা ও ইংরেজি' },
         { value: '৭', label: 'বিগত প্রশ্নের সমাধান সেট' },
       ],
       exams: [
@@ -151,13 +156,42 @@ export default {
         { title: 'BUET ও বিশ্ববিদ্যালয়-আয়োজিত পরীক্ষা', tag: 'বিভিন্ন প্রতিষ্ঠানের আইটি নিয়োগ', desc: 'যেসব নিয়োগ পরীক্ষার প্রশ্ন BUET বা অন্য বিশ্ববিদ্যালয় প্রণয়ন করে।' },
         { title: 'NTRCA ও শিক্ষকতা', tag: 'আইসিটি প্রভাষক ও শিক্ষক নিবন্ধন', desc: 'কম্পিউটার ও আইসিটি বিষয়ের শিক্ষক নিবন্ধন ও নিয়োগ পরীক্ষা।' },
       ],
-      // icon = key into ICONS in landing.js
+      // The tour: one tab per screen. img = public/landing/tour-<img>.webp (+ -800.webp), screenshots
+      // of StudyPath; url = the label in the frame's address bar.
+      tour: [
+        {
+          img: 'lesson', url: 'studypath / lesson', tab: 'পাঠ',
+          title: 'সিলেবাসের ক্রমে প্রতিটি পাঠ',
+          desc: 'সাইডবার থেকে বিষয় বেছে ক্রম অনুযায়ী পাঠ পড়ুন। প্রতিটি পাঠ ওয়েবে, টাইপ করা PDF বা হাতে-লেখা ধাঁচের PDF হিসেবে খোলা যায়।',
+          points: ['বিষয় → পাঠের সাইডবারে আপনার অগ্রগতি', 'আগের ও পরের পাঠ এক চাপে', 'সব পাঠ জুড়ে সার্চ'],
+          alt: 'StudyPath-এর একটি পাঠ: Functional Dependencies ও Normalization, বাঁয়ে বিষয়ের সাইডবার',
+        },
+        {
+          img: 'notes', url: 'studypath / revision-notes', tab: 'রিভিশন নোট',
+          title: 'পরীক্ষার আগের রাতের জন্য রিভিশন নোট',
+          desc: 'পাঠভিত্তিক নোট: মূল শব্দ হাইলাইট করা, মুখস্থ রাখার বিষয় চিহ্নিত, প্রথম পাতায় পুরো টপিকের মাইন্ড ম্যাপ।',
+          points: ['টাইপ করা ও হাতে-লেখা ধাঁচের PDF', 'ডাউনলোড করে অফলাইনে পড়া যায়', 'নাম বা বিষয় দিয়ে খোঁজা যায়'],
+          alt: 'StudyPath-এর রিভিশন নোটের তালিকা, প্রতিটি নোটের প্রচ্ছদসহ',
+        },
+        {
+          img: 'pyq', url: 'studypath / past-questions', tab: 'বিগত প্রশ্ন',
+          title: 'সমাধানসহ বিগত প্রশ্ন, সূত্রসহ',
+          desc: 'BCS, ব্যাংক, NTRCA, BPSC ও BUET-প্রণীত পরীক্ষার প্রশ্ন, টপিক ধরে সাজানো এবং ধাপে ধাপে সমাধান করা। প্রতিটি প্রশ্নে লেখা আছে কোন কোন পরীক্ষায় এসেছিল।',
+          points: ['প্রতিটি প্রশ্নে পরীক্ষার নাম', 'যুক্তিসহ সমাধান', 'এখন ৭টি বিষয়ে, আরও যোগ হচ্ছে'],
+          alt: 'StudyPath-এ ডেটাবেসের একটি সমাধান করা বিগত প্রশ্ন: SQL কোড, কোন পরীক্ষায় এসেছিল এবং ব্যাখ্যা',
+        },
+        {
+          img: 'dashboard', url: 'studypath / dashboard', tab: 'ড্যাশবোর্ড',
+          title: 'যেখানে থেমেছিলেন, সেখান থেকে শুরু',
+          desc: 'ড্যাশবোর্ডে দেখা যায় সর্বশেষ কোন পাঠ পড়েছেন, সিলেবাসের কতটা খোলা হয়েছে এবং প্রতিটি বিষয়ের অগ্রগতি।',
+          points: ['এক চাপে আবার পড়া শুরু', 'প্রতিটি বিষয়ের অগ্রগতি', 'সম্প্রতি দেখা পাঠ'],
+          alt: 'StudyPath-এর ড্যাশবোর্ড: সর্বশেষ পড়া পাঠ, অগ্রগতির বৃত্ত ও বিষয়ের তালিকা',
+        },
+      ],
+      // Shown in a row under the tour. icon = key into ICONS in landing.js
       features: [
         { icon: 'door', title: 'এক অ্যাকাউন্টে সব', desc: 'একবার ইমেইল দিয়ে সাইন আপ করলেই সব প্রকাশিত পাঠ, রিভিশন নোট ও বিগত প্রশ্নের সেট খুলে যায়।' },
-        { icon: 'sidebar', title: 'সাইডবারে গোছানো সিলেবাস', desc: 'বিষয় → অধ্যায় → পাঠ ক্রমে সাজানো। আগের ও পরের পাঠে এক ক্লিকে যাওয়া যায়, আছে সার্চ।' },
         { icon: 'lang', title: 'বাংলা ও ইংরেজি', desc: 'পাঠগুলো দুই ভাষায় পড়া যায়। টেকনিক্যাল শব্দ ইংরেজিতেই রাখা, যেমনটা পরীক্ষায় আসে।' },
-        { icon: 'note', title: 'রিভিশন নোট', desc: 'পাঠভিত্তিক হাতে-লেখা ধাঁচের নোট ও টাইপ করা নোট, PDF হিসেবে ডাউনলোড করা যায়।' },
-        { icon: 'history', title: 'বিগত সালের প্রশ্নের সমাধান', desc: 'কয়েকটি বিষয়ে সমাধানসহ বিগত প্রশ্ন, প্রতিটির সঙ্গে কোন পরীক্ষায় এসেছিল তা উল্লেখ করা।' },
         { icon: 'phone', title: 'মোবাইলে স্বচ্ছন্দ', desc: 'ফোনেই পড়ার উপযোগী লেআউট, সঙ্গে ডার্ক ও লাইট মোড।' },
       ],
       steps: [
@@ -174,30 +208,30 @@ export default {
         { title: 'রিভিশন ও অনুশীলন', desc: 'রিভিশন নোট ও বিগত প্রশ্ন দিয়ে দুর্বল অংশ খুঁজে আবার পড়ুন। বাংলা, ইংরেজি, গণিত ও সাধারণ জ্ঞানের প্রস্তুতি আলাদাভাবে চালিয়ে যান।', subjects: [] },
       ],
       faq: [
-        { q: 'Study Hub ব্যবহার করতে কি অ্যাকাউন্ট লাগে?', a: 'হ্যাঁ। পাঠ ও নোট পড়তে একটি Study Hub অ্যাকাউন্ট লাগে: নাম, ইমেইল ও একটি পাসওয়ার্ড দিয়ে সাইন আপ করুন।' },
+        { q: 'StudyPath ব্যবহার করতে কি অ্যাকাউন্ট লাগে?', a: 'হ্যাঁ। পাঠ ও নোট পড়তে একটি StudyPath অ্যাকাউন্ট লাগে: নাম, ইমেইল ও একটি পাসওয়ার্ড দিয়ে সাইন আপ করুন।' },
         // PLACEHOLDER: confirm the pricing statement (both languages) before going live.
-        { q: 'এটি কি বিনামূল্যে?', a: 'হ্যাঁ, বর্তমানে Study Hub-এর সব প্রকাশিত পাঠ ও রিভিশন নোট বিনামূল্যে পড়া যায়।' },
+        { q: 'এটি কি বিনামূল্যে?', a: 'হ্যাঁ, বর্তমানে StudyPath-এর সব প্রকাশিত পাঠ ও রিভিশন নোট বিনামূল্যে পড়া যায়।' },
         { q: 'কোন কোন পরীক্ষার প্রস্তুতিতে কাজে লাগবে?', a: 'BCS-এর কম্পিউটার ও আইসিটি সংশ্লিষ্ট পদ, ব্যাংকের Assistant Programmer ও Officer (IT), টেলিকম, বিদ্যুৎ ও জ্বালানি খাত এবং অন্যান্য সরকারি প্রতিষ্ঠানের আইটি পদের টেকনিক্যাল অংশের জন্য।' },
         { q: 'কনটেন্ট কি সর্বশেষ সিলেবাস অনুযায়ী?', a: 'বিষয়গুলো সরকারি আইটি নিয়োগ পরীক্ষার প্রচলিত সিলেবাস ও বিগত প্রশ্ন দেখে সাজানো। তবে প্রতিটি পরীক্ষার সিলেবাস আলাদা হতে পারে, তাই আপনার বিজ্ঞপ্তির সিলেবাসের সঙ্গে মিলিয়ে নিন।' },
-        { q: 'বাংলা, ইংরেজি, গণিত, সাধারণ জ্ঞান কি আছে?', a: 'বর্তমানে Study Hub-এ মূলত ১৯টি টেকনিক্যাল বিষয় রয়েছে। সাধারণ অংশগুলোর প্রস্তুতি আলাদাভাবে নিতে হবে।' },
+        { q: 'বাংলা, ইংরেজি, গণিত, সাধারণ জ্ঞান কি আছে?', a: 'বর্তমানে StudyPath-এ মূলত ১৯টি টেকনিক্যাল বিষয় রয়েছে। সাধারণ অংশগুলোর প্রস্তুতি আলাদাভাবে নিতে হবে।' },
         { q: 'মোবাইলে পড়া বা নোট ডাউনলোড করা যায়?', a: 'হ্যাঁ। পুরো সাইট মোবাইলে পড়ার উপযোগী, আর রিভিশন নোটগুলো PDF হিসেবে ডাউনলোড করা যায়। যে ফোনে PDF সরাসরি খোলে না, সেখানে ডাউনলোড বাটন দেখানো হয়।' },
         { q: 'বিগত সালের প্রশ্ন কোথায় পাব?', a: 'কয়েকটি বিষয়ে (ইলেকট্রনিক্স, নেটওয়ার্কিং, ডেটা স্ট্রাকচার, ডেটাবেস, সফটওয়্যার ইঞ্জিনিয়ারিং, অপারেটিং সিস্টেম, AI) সংশ্লিষ্ট অধ্যায়ে সমাধানসহ বিগত প্রশ্নের নোট আছে। প্রতিটি প্রশ্নের সঙ্গে কোন পরীক্ষায় এসেছিল তা লেখা। আরও বিষয় যোগ হচ্ছে।' },
-        { q: 'Study Hub কি চাকরির নিশ্চয়তা দেয়?', a: 'না। Study Hub পড়ার একটি সহায়ক মাধ্যম। কোনো নিয়োগ বা ফলাফলের নিশ্চয়তা দেয় না।' },
+        { q: 'StudyPath কি চাকরির নিশ্চয়তা দেয়?', a: 'না। StudyPath পড়ার একটি সহায়ক মাধ্যম। কোনো নিয়োগ বা ফলাফলের নিশ্চয়তা দেয় না।' },
       ],
     },
 
     /* ------------------------------ English ---------------------------- */
     en: {
       ui: {
-        metaTitle: 'Study Hub | Govt IT Job Preparation in Bangladesh: BCS, Bank and ICT Posts',
+        metaTitle: 'StudyPath | Govt IT Job Preparation in Bangladesh: BCS, Bank and ICT Posts',
         metaDesc: 'Govt IT job preparation in one place: lessons, revision notes and solved past questions across 19 technical subjects for BCS computer/ICT posts, bank Assistant Programmer and Officer (IT) roles, and IT posts at telecom and government organisations. Sign up and start reading.',
         skip: 'Skip to main content',
-        brandAria: 'Study Hub, go to the top of the page',
+        brandAria: 'StudyPath, go to the top of the page',
         navAria: 'Main',
         navFeatures: 'Features',
         navSubjects: 'Subjects',
         navExams: 'Exams',
-        navHow: 'How it works',
+        navRoadmap: 'Roadmap',
         navFaq: 'FAQ',
         themeToLight: 'Switch to light mode',
         themeToDark: 'Switch to dark mode',
@@ -208,52 +242,55 @@ export default {
         ctaNav: 'Start studying',
         signIn: 'Sign in',
         signUp: 'Sign up',
-        openHub: 'Open Study Hub',
-        heroEyebrow: 'Govt IT job preparation',
-        heroTitleA: 'The full technical syllabus for IT posts, ',
-        heroTitleB: 'organised in one place',
+        openHub: 'Open StudyPath',
+        heroTitle: 'The technical syllabus for govt IT posts, organised subject by subject',
         heroLead: 'Lessons, revision notes and solved past questions across 19 subjects for BCS computer and ICT posts, bank Assistant Programmer and Officer (IT) roles, and IT recruitment exams at telecom and government organisations.',
-        heroCta: 'Start studying on Study Hub',
-        heroSecondary: 'See the subjects',
-        heroNote: 'Quick sign-up · Bangla and English · Works on mobile',
-        mockAria: 'A preview of the Study Hub sidebar and lesson page',
-        mockTitle: 'Introduction to Database Management Systems',
-        mockCard: 'Key points',
-        mockPrev: '← Previous',
-        mockNext: 'Next →',
+        heroCta: 'Start studying',
+        heroSecondary: 'See the 19 subjects',
+        slipSubject: 'Database Systems',
+        slipKind: 'Written question',
+        slipAsked: 'Asked in 3 recruitment exams',
+        slipAnswer: 'Show the model answer',
+        slipSource: 'Source:',
         statsAria: 'At a glance',
-        examsEyebrow: "Who it's for",
         examsTitle: 'Recruitment exams it helps you prepare for',
         examsDesc: 'The technical syllabus for IT posts at government and state-owned organisations covers largely the same subjects.',
-        examsNote: 'Study Hub is not affiliated with any recruiting organisation. Always check the latest circular and syllabus on the organisation’s own website.',
-        subjectsEyebrow: 'Subjects',
-        subjectsTitle: 'The 19 technical subjects in Study Hub',
-        subjectsDesc: 'Listed in the same order as the Study Hub sidebar. Pick any subject to start reading.',
+        examsNote: 'StudyPath is not affiliated with any recruiting organisation. Always check the latest circular and syllabus on the organisation’s own website.',
+        subjectsTitle: 'The 19 technical subjects',
+        subjectsDesc: 'In the same order as the StudyPath sidebar. Pick any subject to start reading.',
         pyqBadge: 'Solved past questions',
-        featuresEyebrow: 'Why Study Hub',
-        featuresTitle: 'Focus on studying. The rest is organised for you.',
-        howEyebrow: 'How it works',
+        tourTitle: 'See what you will study with',
+        tourDesc: 'Screens from StudyPath as a signed-in reader sees them.',
+        tourAria: 'Parts of StudyPath',
         howTitle: 'Get started in three steps',
-        roadmapEyebrow: 'Preparation roadmap',
-        roadmapTitle: 'A sample preparation path',
+        roadmapTitle: 'A suggested preparation path',
         roadmapDesc: 'This is a suggestion, not an official syllabus. Adjust the order to your exam circular and the time you have.',
-        roadmapStep: 'Step {n}: ',
-        faqEyebrow: 'FAQ',
         faqTitle: 'Frequently asked questions',
         finalTitle: 'Start with one subject today',
         finalDesc: 'Even one lesson a day takes you through the whole technical syllabus once within a few months.',
-        finalCta: 'Open Study Hub',
-        footerAbout: 'Lessons, revision notes and solved past questions for the technical part of govt IT job exams. Not affiliated with any recruiting organisation.',
+        finalCta: 'Start studying',
+        footerAbout: 'Lessons, revision notes and solved past questions for the technical part of govt IT job exams, in Bangla and English.',
         footerNavAria: 'Footer',
-        footerPages: 'Pages',
+        footerStudy: 'Study',
+        footerAccount: 'Account',
+        footerHelp: 'Help',
+        footerCreate: 'Create an account',
+        footerFine: 'Not affiliated with BPSC, any bank or any recruiting organisation.',
         footerRoadmap: 'Roadmap',
         footerContact: 'Contact',
         backToTop: 'Back to top',
       },
+      heroPoints: ['Read in Bangla or English', 'Made for reading on a phone', 'Every past question names its exams and source'],
+      acid: [
+        { term: 'Atomicity', desc: 'All operations of a transaction complete, or none of them do.' },
+        { term: 'Consistency', desc: 'A transaction takes the database from one valid state to another, keeping every constraint.' },
+        { term: 'Isolation', desc: 'Concurrent transactions do not see each other’s uncommitted changes.' },
+        { term: 'Durability', desc: 'Once committed, changes survive a crash or power failure.' },
+      ],
       stats: [
         { value: '19', label: 'Technical subjects' },
         { value: '90+', label: 'Revision note sets' },
-        { value: 'Bangla + English', label: 'Lessons in two languages' },
+        { value: '2', label: 'Languages: Bangla and English' },
         { value: '7', label: 'Solved past-question sets' },
       ],
       exams: [
@@ -264,12 +301,39 @@ export default {
         { title: 'BUET and university-set exams', tag: 'IT recruitment across organisations', desc: 'Recruitment exams whose questions are set by BUET or another university.' },
         { title: 'NTRCA and teaching', tag: 'ICT lecturer and teacher registration', desc: 'Teacher registration and recruitment exams for computer and ICT subjects.' },
       ],
+      tour: [
+        {
+          img: 'lesson', url: 'studypath / lesson', tab: 'Lessons',
+          title: 'Every lesson, in syllabus order',
+          desc: 'Pick a subject from the sidebar and read its lessons in order. Each lesson opens on the web, as a typed PDF or as a handwritten-style PDF.',
+          points: ['A subject → lesson sidebar that shows your progress', 'Previous and next lesson one tap away', 'Search across every lesson'],
+          alt: 'A StudyPath lesson on functional dependencies and normalization, with the subject sidebar on the left',
+        },
+        {
+          img: 'notes', url: 'studypath / revision-notes', tab: 'Revision notes',
+          title: 'Revision notes for the night before',
+          desc: 'Lesson-wise notes with the key terms highlighted, must-memorise points marked and a mind map of the whole topic on page one.',
+          points: ['Typed and handwritten-style PDFs', 'Download them and read offline', 'Filter by title or subject'],
+          alt: 'The StudyPath revision notes library, with a cover for each note set',
+        },
+        {
+          img: 'pyq', url: 'studypath / past-questions', tab: 'Past questions',
+          title: 'Past questions, solved and sourced',
+          desc: 'Questions from BCS, bank, NTRCA, BPSC and BUET-set papers, grouped by topic and solved step by step. Each one lists the exams it was asked in.',
+          points: ['The exams named on every question', 'Worked answers that show the reasoning', '7 subjects so far, more being added'],
+          alt: 'A solved database past question in StudyPath: the SQL code, the exams it was asked in and the explanation',
+        },
+        {
+          img: 'dashboard', url: 'studypath / dashboard', tab: 'Dashboard',
+          title: 'Pick up where you left off',
+          desc: 'The dashboard shows the last lesson you read, how much of the syllabus you have opened and your progress in each subject.',
+          points: ['Continue reading in one tap', 'Progress for each subject', 'Recently viewed lessons'],
+          alt: 'The StudyPath dashboard: the last lesson read, a progress ring and the list of subjects',
+        },
+      ],
       features: [
         { icon: 'door', title: 'One account, everything in one place', desc: 'Sign up once with your email to open every published lesson, revision note and past-question set.' },
-        { icon: 'sidebar', title: 'Syllabus organised in a sidebar', desc: 'Arranged as subject → chapter → lesson, with one-click previous and next lessons and a search.' },
         { icon: 'lang', title: 'Bangla and English', desc: 'Lessons can be read in both languages, with technical terms kept in English as they appear in exams.' },
-        { icon: 'note', title: 'Revision notes', desc: 'Lesson-wise handwritten-style and typed notes, downloadable as PDFs.' },
-        { icon: 'history', title: 'Solved past questions', desc: 'Past questions with solutions for several subjects, each naming the exams it was asked in.' },
         { icon: 'phone', title: 'Comfortable on mobile', desc: 'A layout made for reading on a phone, with dark and light modes.' },
       ],
       steps: [
@@ -285,14 +349,14 @@ export default {
         { title: 'Revision and practice', desc: 'Use revision notes and past questions to find weak areas and reread them. Keep preparing Bangla, English, mathematics and general knowledge separately.', subjects: [] },
       ],
       faq: [
-        { q: 'Do I need an account to use Study Hub?', a: 'Yes. Reading the lessons and notes needs a Study Hub account: sign up with your name, email and a password.' },
-        { q: 'Is it free?', a: 'Yes. All published lessons and revision notes on Study Hub are currently free to read.' },
+        { q: 'Do I need an account to use StudyPath?', a: 'Yes. Reading the lessons and notes needs a StudyPath account: sign up with your name, email and a password.' },
+        { q: 'Is it free?', a: 'Yes. All published lessons and revision notes on StudyPath are currently free to read.' },
         { q: 'Which exams does it help with?', a: 'The technical part of BCS computer and ICT posts, bank Assistant Programmer and Officer (IT) roles, telecom, power and energy sector posts, and IT posts at other government organisations.' },
         { q: 'Is the content up to date with the latest syllabus?', a: 'The subjects follow the usual syllabus and past questions of govt IT recruitment exams. Syllabi differ between exams, so check yours against the syllabus in your circular.' },
-        { q: 'Does it cover Bangla, English, mathematics and general knowledge?', a: 'Study Hub currently focuses on 19 technical subjects. Prepare the general sections separately.' },
+        { q: 'Does it cover Bangla, English, mathematics and general knowledge?', a: 'StudyPath currently focuses on 19 technical subjects. Prepare the general sections separately.' },
         { q: 'Can I read on mobile or download the notes?', a: 'Yes. The whole site works on mobile, and revision notes can be downloaded as PDFs. On phones that cannot open PDFs inline, a download button is shown instead.' },
         { q: 'Where are the past questions?', a: 'Several subjects (electronics, networking, data structures, databases, software engineering, operating systems and AI) have a solved past-question note set in their chapter. Every question lists the exams it was asked in. More subjects are being added.' },
-        { q: 'Does Study Hub guarantee a job?', a: 'No. Study Hub is a study aid and does not guarantee any recruitment or result.' },
+        { q: 'Does StudyPath guarantee a job?', a: 'No. StudyPath is a study aid and does not guarantee any recruitment or result.' },
       ],
     },
   },

@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { ADMIN_UNAUTHORIZED_EVENT } from '../admin/api'
+import { readStoredToken } from '../utils/storedToken'
+import { clearApiCache } from '../public/apiCache'
 
 interface AuthUser {
   id: string
@@ -19,7 +21,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('admin_token'))
+  const [token, setToken] = useState<string | null>(() => readStoredToken('admin_token', 'admin_user'))
   const [user, setUser] = useState<AuthUser | null>(() => {
     const raw = localStorage.getItem('admin_user')
     return raw ? JSON.parse(raw) : null
@@ -42,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = () => {
+    clearApiCache()
     persistToken(null)
     persistUser(null)
     setToken(null)
@@ -50,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const onUnauthorized = () => {
+      clearApiCache()
       localStorage.removeItem('admin_token')
       localStorage.removeItem('admin_user')
       setToken(null)

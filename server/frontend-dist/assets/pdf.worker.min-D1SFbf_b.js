@@ -1,0 +1,1 @@
+var e=`/assets/pdf.worker.min-BGUT02Us.mjs`;export{e as default};
