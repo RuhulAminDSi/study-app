@@ -1,3 +1,4 @@
+import { ADMIN_UNAUTHORIZED_EVENT } from '../admin/api'
 import { CANDIDATE_TOKEN_KEY, CANDIDATE_UNAUTHORIZED_EVENT } from '../candidate/candidateApi'
 
 export interface PublicChapter {
@@ -39,16 +40,14 @@ export interface PublicLesson {
 }
 
 /** Study content needs a signed-in reader: a candidate, or an admin previewing the portal. */
-function readerToken(): string | null {
-  return localStorage.getItem(CANDIDATE_TOKEN_KEY) || localStorage.getItem('admin_token')
-}
-
 async function publicFetch<T>(path: string): Promise<T> {
-  const token = readerToken()
+  const candidateToken = localStorage.getItem(CANDIDATE_TOKEN_KEY)
+  const token = candidateToken || localStorage.getItem('admin_token')
   const res = await fetch(`/api/public${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} })
-  if (res.status === 401 && localStorage.getItem(CANDIDATE_TOKEN_KEY)) {
-    // Expired or revoked session: sign out, which sends the reader back to the login screen.
-    window.dispatchEvent(new Event(CANDIDATE_UNAUTHORIZED_EVENT))
+  if (res.status === 401 && token) {
+    // Expired or revoked session: sign out whoever sent the token (an admin previewing the portal too),
+    // which sends the reader back to the login screen instead of a dashboard that keeps failing.
+    window.dispatchEvent(new Event(candidateToken ? CANDIDATE_UNAUTHORIZED_EVENT : ADMIN_UNAUTHORIZED_EVENT))
   }
   if (!res.ok) throw new Error(`Public API error: ${res.statusText}`)
   return res.json()

@@ -6,6 +6,7 @@ import {
   candidateApi,
   type PublicCandidate,
 } from './candidateApi'
+import { readStoredToken } from '../utils/storedToken'
 
 interface CandidateAuthValue {
   token: string | null
@@ -27,7 +28,7 @@ function readStoredCandidate(): PublicCandidate | null {
 }
 
 export function CandidateAuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem(CANDIDATE_TOKEN_KEY))
+  const [token, setToken] = useState<string | null>(() => readStoredToken(CANDIDATE_TOKEN_KEY, CANDIDATE_USER_KEY))
   const [candidate, setCandidate] = useState<PublicCandidate | null>(readStoredCandidate)
 
   const signIn = useCallback((newToken: string, newCandidate: PublicCandidate) => {
