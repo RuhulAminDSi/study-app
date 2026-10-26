@@ -1,7 +1,10 @@
 /*
  * StudyPath service worker: keeps what a reader has opened on their device, so a page loaded once opens
  * again instantly (and offline). Built by the `service-worker` plugin in vite.config.ts, which replaces
- * the two build placeholders below (version, every hashed file in this build); not registered in dev.
+ * the build placeholders below (version, every hashed file in this build, dev mode).
+ *
+ * The dev server (`npm run dev`, also reached through tunnels) gets the same file with DEV true: there it
+ * only keeps notes, PDFs, uploads and fonts, never pages or Vite's source modules, so HMR is unaffected.
  *
  *   pages (/, /study-hub/)       network first (4 s), cached copy when slow or offline  -> sp-pages-<version>
  *   /assets/* (hashed, immutable) cache first; files from older builds pruned on activate -> sp-assets
@@ -11,6 +14,7 @@
  */
 const VERSION = __BUILD_VERSION__
 const BUILD_ASSETS = new Set(__BUILD_ASSETS__)
+const DEV = __DEV__
 
 const PAGES = `sp-pages-${VERSION}`
 const ASSETS = 'sp-assets'
@@ -25,7 +29,7 @@ self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const pages = await caches.open(PAGES)
     const assets = await caches.open(ASSETS)
-    for (const url of PAGE_URLS) {
+    for (const url of DEV ? [] : PAGE_URLS) {
       try {
         const res = await fetch(url, { cache: 'reload' })
         if (!res.ok) continue
@@ -63,6 +67,7 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return
   const path = url.pathname
   if (path.startsWith('/api/') || path === '/sw.js') return
+  if (DEV && !/^\/(notes|uploads|fonts)\//.test(path) && !path.endsWith('.pdf')) return
 
   if (path.endsWith('.pdf')) return event.respondWith(pdf(event))
   if (req.headers.has('range')) return

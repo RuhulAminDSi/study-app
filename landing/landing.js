@@ -386,8 +386,8 @@ if (!reduceMotion.matches && 'IntersectionObserver' in window) {
 
 /* ---- Device cache ------------------------------------------------------ */
 // The same worker as Study Hub (pwa/sw.js, see src/pwa.ts): a returning visitor gets this page and the app
-// from the device. Production builds only; dev has no /sw.js.
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+// from the device (in dev, only notes, PDFs and fonts).
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => {})
   })

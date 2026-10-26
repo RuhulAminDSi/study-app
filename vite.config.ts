@@ -34,16 +34,27 @@ function serveNotes(): Plugin {
         }
         if (!file.startsWith(NOTES_DIR + sep)) return next()
         let size: number
+        let mtime: Date
         try {
           const st = statSync(file)
           if (!st.isFile()) return next()
           size = st.size
+          mtime = st.mtime
         } catch {
           return next()
         }
+        // Revalidated on every load, but an unchanged file answers 304, so a revisit doesn't download
+        // the PDF again (and the service worker, pwa/sw.js, serves it from the device without asking).
+        const etag = `W/"${size.toString(16)}-${mtime.getTime().toString(16)}"`
+        res.setHeader('ETag', etag)
+        res.setHeader('Last-Modified', mtime.toUTCString())
+        res.setHeader('Cache-Control', 'no-cache')
+        if (req.headers['if-none-match'] === etag) {
+          res.statusCode = 304
+          return res.end()
+        }
         res.setHeader('Content-Type', MIME[extname(file).toLowerCase()] ?? 'application/octet-stream')
         res.setHeader('Content-Length', size)
-        res.setHeader('Cache-Control', 'no-cache')
         if (req.method === 'HEAD') return res.end()
         createReadStream(file).on('error', next).pipe(res)
       })
@@ -51,23 +62,35 @@ function serveNotes(): Plugin {
   }
 }
 
+/** pwa/sw.js with its placeholders filled; the version changes with the worker's code and the file list. */
+function swSource(assets: string[], dev: boolean): string {
+  const template = readFileSync(SW_TEMPLATE, 'utf8')
+  const version = createHash('sha256').update(template).update(assets.join('\n')).update(String(dev)).digest('hex').slice(0, 12)
+  return template
+    .replace('__BUILD_VERSION__', JSON.stringify(version))
+    .replace('__BUILD_ASSETS__', JSON.stringify(assets))
+    .replace('__DEV__', String(dev))
+}
+
 /**
- * Build only: emits /sw.js (the device cache, see pwa/sw.js) with this build's version and the list of its
- * hashed files, so a new deploy installs a new worker and the old build's files are dropped from the cache.
+ * /sw.js, the device cache (pwa/sw.js). A build emits it with the version and the list of hashed files, so a
+ * new deploy installs a new worker and drops the old build's files. The dev server serves it in dev mode,
+ * which caches only notes, PDFs, uploads and fonts.
  */
 function serviceWorker(): Plugin {
   return {
     name: 'service-worker',
-    apply: 'build',
     enforce: 'post',
+    configureServer(server) {
+      server.middlewares.use('/sw.js', (_req, res) => {
+        res.setHeader('Content-Type', 'text/javascript; charset=utf-8')
+        res.setHeader('Cache-Control', 'no-cache')
+        res.end(swSource([], true))
+      })
+    },
     generateBundle(_options, bundle) {
       const assets = Object.keys(bundle).filter(f => f.startsWith('assets/')).map(f => `/${f}`).sort()
-      const template = readFileSync(SW_TEMPLATE, 'utf8')
-      const version = createHash('sha256').update(template).update(assets.join('\n')).digest('hex').slice(0, 12)
-      const source = template
-        .replace('__BUILD_VERSION__', JSON.stringify(version))
-        .replace('__BUILD_ASSETS__', JSON.stringify(assets))
-      this.emitFile({ type: 'asset', fileName: 'sw.js', source })
+      this.emitFile({ type: 'asset', fileName: 'sw.js', source: swSource(assets, false) })
     },
   }
 }
