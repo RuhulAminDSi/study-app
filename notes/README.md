@@ -287,7 +287,7 @@ Reading the remaining work:
 | 1 | `dm1` | Set Theory, Relations & Functions | — | no manifest entry |
 | 2 | `dm2` | Graph Theory, Propositional & Predicate Calculus | — | no manifest entry |
 | 3 | `dm3` | Mathematical Reasoning: Induction, Contradiction & Recursion | — | no manifest entry |
-| 4 | `dm4` | Counting, Inclusion-Exclusion, Recurrence & Algebraic Structures | — | no manifest entry |
+| 4 | `dm4` | Counting, Inclusion-Exclusion, Recurrence & Algebraic Structures | ✅ | manifest entry added |
 | **13-Graphs** | | `13-*` (no folder) | | |
 | 1 | `gr1` | Simple Graphs, Digraphs, Subgraphs, Vertex-Degrees, Walks, Paths & Cycles | — | no manifest entry |
 | 2 | `gr2` | Trees, Spanning Trees, Distance, Complementary Graphs, Cut-Vertex, Bridges, k-Connected | — | no manifest entry |

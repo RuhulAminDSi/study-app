@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Turing Machines &amp; Computability: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (ah red, ahb blue, ahg green, ahp purple) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Date: 14.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Turing Machines &amp; Computability Theory</span></h1>
+  <p class="subtitle">7-tuple · configuration ⊢ · computing aⁿbⁿ · halting problem · reduction · Rice · RE &amp; hierarchy: in 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="410">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="104" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">TM &amp; computability</text><text x="320" y="172" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle" class="s">Tape, head, control</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Halting problem ★</text>
+      <text x="500" y="65" text-anchor="middle" class="s">Configuration ⊢</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Rice's theorem ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">RE &amp; hierarchy ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Variants · CT thesis</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Computing aⁿbⁿ ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">Reduction</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / applied</figcaption>
+  </figure>
+  <div class="sticky" style="font-size:10.5pt"><b>High-yield list</b><br>① TM = 7-tuple (Q, Σ, Γ, δ, q₀, B, F)<br>② config = left, state, right; ⊢ = one move<br>③ halting problem undecidable (1936), yet RE<br>④ multi-tape = speed, never power<br>⑤ Rice: non-trivial property of <b>L(M)</b><br>⑥ Regular ⊂ CF ⊂ CS ⊂ Recursive ⊂ RE</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"…<span class="hl">Turing Machines: basic machines, configuration, computing with Turing machines</span>." That whole line is this notebook, plus the computability results the exam keeps asking about.</p>
+  <div class="tipbox blk small"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise · <span class="purple"><b>purple</b></span> = trick · <span class="red"><b>red</b></span> = trap · <span class="green"><b>green</b></span> = example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>What a Turing machine is ……… p. 2</li><li>Configuration &amp; the move ⊢ ……… p. 3</li><li>Computing with TMs: the aⁿbⁿ machine ……… p. 4</li><li>Variants, Church-Turing, LBAs ……… p. 5</li><li>Decidable · semi · undecidable ……… p. 6</li></ul>
+    <ul class="tick"><li>The halting problem ……… p. 7</li><li>Reduction and Rice's theorem ……… p. 8</li><li>RE, Co-RE &amp; the hierarchy ……… p. 9</li><li>Night-before sheet ……… p. 10</li><li>Practice MCQs + written ……… p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: what a Turing machine is ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>The 7-tuple</span></div>
+  <h2><span class="no">1</span>What a Turing Machine Is</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> A <b>Turing machine (TM)</b> is the most powerful computational model: a <span class="hl">finite control unit</span> driving a read/write head over an <span class="hl">unbounded tape</span> divided into cells. The tape has no end, so a TM can simulate <b>any</b> algorithm — and it recognises exactly the <span class="circ">recursively enumerable</span> languages.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">The 7-tuple M = (Q, Σ, Γ, δ, q₀, B, F)</h3>
+      <table class="hand small">
+        <tr><th class="l">Part</th><th class="l">Is</th><th class="l">In this machine</th></tr>
+        <tr><td class="l"><b>Q</b></td><td class="l">finite set of <b>states</b></td><td class="l">Q = {q₀, q₁, q₂}</td></tr>
+        <tr><td class="l"><b>Σ</b></td><td class="l"><b>input</b> alphabet; B ∉ Σ</td><td class="l">Σ = {0, 1}</td></tr>
+        <tr><td class="l"><b>Γ</b></td><td class="l"><b>tape</b> alphabet; Σ ⊆ Γ, B ∈ Γ</td><td class="l">Γ = {0, 1, B}</td></tr>
+        <tr><td class="l"><b>δ</b></td><td class="l"><b>Q × Γ → Q × Γ × {L, R, S}</b></td><td class="l">δ(q₀, 0) = (q₁, 1, R)</td></tr>
+        <tr><td class="l"><b>q₀</b></td><td class="l">the <b>start state</b>, q₀ ∈ Q</td><td class="l">q₀</td></tr>
+        <tr><td class="l"><b>B</b></td><td class="l">the <b>blank symbol</b>, B ∈ Γ \ Σ</td><td class="l">B</td></tr>
+        <tr><td class="l"><b>F</b></td><td class="l">set of <b>accepting</b> states, F ⊆ Q</td><td class="l">F = {q₂}</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 200" width="316">
+      <g class="w">
+        <rect x="10" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="46" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="82" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="118" y="68" width="34" height="30" rx="4" class="ink-r fill-r"/>
+        <rect x="154" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="190" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="226" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <rect x="262" y="68" width="34" height="30" rx="4" class="ink fill-b"/>
+        <path class="ink-k" d="M121,42 L153,42 L137,64 Z"/>
+        <rect x="10" y="118" width="286" height="52" rx="10" class="ink-p fill-p"/>
+        <path class="ink-g" d="M137,118 V70"/>
+        <path class="ink" d="M18,52 H4" marker-end="url(#ah)"/>
+        <path class="ink" d="M292,52 H306" marker-end="url(#ah)"/>
+      </g>
+      <text x="27" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="63" y="89" text-anchor="middle" class="k w6">0</text>
+      <text x="99" y="89" text-anchor="middle" class="k w6">1</text>
+      <text x="135" y="89" text-anchor="middle" class="r w6">0</text>
+      <text x="171" y="89" text-anchor="middle" class="k w6">1</text>
+      <text x="207" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="243" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="279" y="89" text-anchor="middle" class="k w6">…</text>
+      <text x="137" y="36" text-anchor="middle" class="r w6">head</text>
+      <text x="63" y="140" text-anchor="middle" class="k l">q₂</text>
+      <text x="190" y="140" text-anchor="middle" class="p w6">control unit</text>
+      <text x="190" y="160" text-anchor="middle" class="s">reads · writes · moves</text>
+      <text x="170" y="192" text-anchor="middle" class="s">tape is infinite in both directions</text>
+    </svg><figcaption>the signature picture: tape, head, finite control</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">Transition format</span> <b>δ(state, symbol read) = (new state, symbol written, direction)</b>. So <b>δ(q₀, 0) = (q₁, 1, R)</b> reads: <i>while in q₀, reading 0, write 1, move Right, enter q₁</i>. <span class="hl">One transition = one step</span> — the whole machine is this table plus the 7-tuple.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The <b>general</b> form lets δ move the head <b>three</b> ways: {<b>L</b>, <b>R</b>, <b>S</b>} where <b>S</b> = stay and write without moving. Some books print only {L, R}; that two-way machine is still universal, but calling {L, R} the general definition loses a mark.</div>
+  </div>
+  <div class="trick small"><span class="lbl">Memory trick</span> "Q-states, Σ-input, Γ-tape, δ-steps, q₀-start, B-blank, F-final" — only the <span class="hl">tape</span> is unbounded, so memory comes from position.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: configuration ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Configuration ⊢</span></div>
+  <h2><span class="no">2</span>Configuration: the Instantaneous Description</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> An <b>instantaneous description</b> (ID) records the machine's <b>complete</b> state at one instant, written <b>(u, q, v)</b>: <b>u</b> = tape contents <span class="hl">left</span> of the head, <b>q</b> = the current state, <b>v</b> = contents <span class="hl">from the head rightwards</span>, with the head scanning the <span class="circ">first symbol of v</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Notation</th><th class="l">Reads as</th></tr>
+        <tr><td class="l">(u, q, v)</td><td class="l">tape … u <b>q</b> v …, head on the first symbol of v</td></tr>
+        <tr><td class="l">(u, q, v) ⊢ (u′, q′, v′)</td><td class="l">the machine makes <b>one</b> move</td></tr>
+        <tr><td class="l">(u, q, v) ⊢* (u′, q′, v′)</td><td class="l"><b>zero or more</b> moves — reachability</td></tr>
+        <tr><td class="l">q₀w</td><td class="l">the <b>start configuration</b> of the run on input w</td></tr>
+      </table>
+      <div class="ex small" style="margin-top:2mm"><span class="lbl">Worked move ✍</span>
+        <div class="code" style="margin-top:0">(010, q₂, 11)  ⊢  (0101, q₃, 1)      if  δ(q₂, 1) = (q₃, 1, R)
+
+tape ... 0 1 0 [1] 1 ...
+          u = 010  ^q₂   v = 11</div>
+        <p class="small">The head was on the first <b>1</b> of the right block; δ says write <b>1</b>, move <b>R</b>, go to <b>q₃</b> — so the written <b>1</b> slides into <b>u</b>, the state changes, and the next symbol becomes the head of <b>v</b>.</p>
+      </div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 158" width="296">
+      <g class="w">
+        <rect x="8" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="42" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="76" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="110" y="54" width="32" height="28" rx="4" class="ink-r fill-r"/>
+        <rect x="144" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="178" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <rect x="212" y="54" width="32" height="28" rx="4" class="ink fill-b"/>
+        <path class="ink-k" d="M112,30 L142,30 L127,51 Z"/>
+        <path class="ink-g" d="M8,104 H108"/>
+        <path class="ink" d="M110,104 H244"/>
+      </g>
+      <text x="24" y="73" text-anchor="middle" class="k w6">0</text>
+      <text x="58" y="73" text-anchor="middle" class="k w6">1</text>
+      <text x="92" y="73" text-anchor="middle" class="k w6">0</text>
+      <text x="126" y="73" text-anchor="middle" class="r w6">1</text>
+      <text x="160" y="73" text-anchor="middle" class="k w6">1</text>
+      <text x="194" y="73" text-anchor="middle" class="k w6">B</text>
+      <text x="228" y="73" text-anchor="middle" class="k w6">B</text>
+      <text x="127" y="24" text-anchor="middle" class="r w6">q₂</text>
+      <text x="58" y="122" text-anchor="middle" class="g w6">u = 010</text>
+      <text x="177" y="122" text-anchor="middle" class="k w6">v = 11 …</text>
+      <text x="160" y="146" text-anchor="middle" class="p s">… 0 1 0  q₂  1 1 …</text>
+    </svg><figcaption>the ID (010, q₂, 11): head on the first symbol of v</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The symbol under the head belongs to <b>v</b>, never to <b>u</b>. Splitting as (01, q₂, 011) is <span class="red"><b>wrong</b></span> even though the same tape is described. And <b>⊢</b> is one step while <b>⊢*</b> is many: swapping them changes the meaning of a trace completely.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>left · state · right</b> — and the head "belongs" to the right-hand part. Say it aloud while writing (u, q, v) and the placement never slips.</div>
+  </div>
+  <div class="sumbox small"><span class="lbl">Why the ID matters</span> A TM has no separate input tape and no separate memory, so the tape <b>is</b> the whole configuration — two runs sharing an ID behave identically forever. That is exactly how you <span class="hl">prove a machine loops</span>: reach a repeated ID and the rest is periodic.</div>
+  <div class="mnote purple">⊢* means reachability — "can get there", never "gets there in one move"</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: computing with TMs ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Computing aⁿbⁿ</span></div>
+  <h2><span class="no">3</span>Computing with Turing Machines: the aⁿbⁿ Machine</h2><span class="tag">written favourite</span>
+  <div class="ex small"><span class="lbl">Worked machine ✍ L = {aⁿ bⁿ | n ≥ 0}</span>
+    <div class="code" style="margin-top:0">Q = {q0, q1, q2, q3, q4}    Sigma = {a, b}    Gamma = {a, b, X, Y, B}
+start q0 (marks an a, hunts right)   accepting F = {q4}</div>
+    <table class="hand small">
+      <tr><th class="l">δ(state, symbol)</th><th class="l">What that move does</th></tr>
+      <tr><td class="l">δ(q₀, a) = (q₁, X, R)</td><td class="l">mark the <b>first</b> a as <b>X</b>, move right</td></tr>
+      <tr><td class="l">δ(q₁, a) = (q₁, a, R)</td><td class="l">skip the remaining a's</td></tr>
+      <tr><td class="l">δ(q₁, Y) = (q₁, Y, R)</td><td class="l">skip the marked b's</td></tr>
+      <tr><td class="l">δ(q₁, b) = (q₂, Y, L)</td><td class="l">mark that b as <b>Y</b> (one match), move left</td></tr>
+      <tr><td class="l">δ(q₂, Y) = (q₂, Y, L)</td><td class="l">skip Y's on the way back</td></tr>
+      <tr><td class="l">δ(q₂, a) = (q₂, a, L)</td><td class="l">skip a's on the way back</td></tr>
+      <tr><td class="l">δ(q₂, X) = (q₀, X, R)</td><td class="l">first X reached ⇒ pair complete, restart</td></tr>
+      <tr><td class="l">δ(q₀, Y) = (q₃, Y, R)</td><td class="l">no a left ⇒ all matched, check the b's</td></tr>
+      <tr><td class="l">δ(q₃, Y) = (q₃, Y, R)</td><td class="l">skip the Y's</td></tr>
+      <tr><td class="l">δ(q₃, B) = (q₄, B, R)</td><td class="l">blank reached, no loose b ⇒ <b>accept</b></td></tr>
+    </table>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 340px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">Execution on "aabb"</h3>
+      <div class="code" style="margin-top:0">start   B a a b b B
+step 1  B X a b b B   mark the first a
+step 2  B X a Y b B   match it with a b
+step 3  B X a Y b B   head reached X, restart
+step 4  B X X Y b B   mark the second a
+step 5  B X X Y Y B   match it with a b
+step 6  B X X Y Y B   all a's matched
+accept  B X X Y Y B   halt in q4</div>
+      <p class="small">It crosses out <b>one a with one b</b> per round trip, then rewinds. Run it on <b>ab</b> or <b>ba</b> and it never accepts.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 210" width="330">
+      <g class="w">
+        <rect x="8" y="24" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="24" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="76" y="24" width="32" height="26" rx="4" class="ink fill-b"/><rect x="110" y="24" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="144" y="24" width="32" height="26" rx="4" class="ink fill-b"/><rect x="178" y="24" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="8" y="70" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="70" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="76" y="70" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="110" y="70" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="144" y="70" width="32" height="26" rx="4" class="ink fill-b"/><rect x="178" y="70" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="8" y="116" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="116" width="32" height="26" rx="4" class="ink-r fill-r"/>
+        <rect x="76" y="116" width="32" height="26" rx="4" class="ink fill-b"/><rect x="110" y="116" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="144" y="116" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="178" y="116" width="32" height="26" rx="4" class="ink fill-b"/>
+        <rect x="8" y="162" width="32" height="26" rx="4" class="ink fill-b"/><rect x="42" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/>
+        <rect x="76" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="110" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/>
+        <rect x="144" y="162" width="32" height="26" rx="4" class="ink-r fill-r"/><rect x="178" y="162" width="32" height="26" rx="4" class="ink-g fill-g"/>
+        <path class="ink-k" d="M80,58 L106,58 L93,72 Z"/>
+        <path class="ink-k" d="M146,104 L172,104 L159,118 Z"/>
+        <path class="ink-k" d="M46,150 L72,150 L59,164 Z"/>
+      </g>
+      <text x="24" y="43" text-anchor="middle" class="k w6">B</text><text x="58" y="43" text-anchor="middle" class="k w6">a</text>
+      <text x="92" y="43" text-anchor="middle" class="k w6">a</text><text x="126" y="43" text-anchor="middle" class="k w6">b</text>
+      <text x="160" y="43" text-anchor="middle" class="k w6">b</text><text x="194" y="43" text-anchor="middle" class="k w6">B</text>
+      <text x="24" y="89" text-anchor="middle" class="k w6">B</text><text x="58" y="89" text-anchor="middle" class="r w6">X</text>
+      <text x="92" y="89" text-anchor="middle" class="k w6">a</text><text x="126" y="89" text-anchor="middle" class="k w6">b</text>
+      <text x="160" y="89" text-anchor="middle" class="k w6">b</text><text x="194" y="89" text-anchor="middle" class="k w6">B</text>
+      <text x="24" y="135" text-anchor="middle" class="k w6">B</text><text x="58" y="135" text-anchor="middle" class="r w6">X</text>
+      <text x="92" y="135" text-anchor="middle" class="k w6">a</text><text x="126" y="135" text-anchor="middle" class="r w6">Y</text>
+      <text x="160" y="135" text-anchor="middle" class="k w6">b</text><text x="194" y="135" text-anchor="middle" class="k w6">B</text>
+      <text x="24" y="181" text-anchor="middle" class="k w6">B</text><text x="58" y="181" text-anchor="middle" class="r w6">X</text>
+      <text x="92" y="181" text-anchor="middle" class="r w6">X</text><text x="126" y="181" text-anchor="middle" class="r w6">Y</text>
+      <text x="160" y="181" text-anchor="middle" class="r w6">Y</text><text x="194" y="181" text-anchor="middle" class="g w6">B</text>
+      <text x="252" y="43" text-anchor="middle" class="p s">start · q₀</text>
+      <text x="252" y="89" text-anchor="middle" class="p s">one pair</text>
+      <text x="252" y="135" text-anchor="middle" class="p s">rewind</text>
+      <text x="252" y="181" text-anchor="middle" class="p s">accept · q₄</text>
+    </svg><figcaption>"aabb" marked up pair by pair, then accepted</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> This table has <b>no rejecting transition</b> — there is no δ(q₀, B) and no δ(q₃, a). Feed it a non-member such as <b>abab</b> and it falls into an <b>undefined</b> transition instead of rejecting. A complete machine adds a rejecting state <b>q_rej</b> with δ(q₃, a) → q_rej and δ(q₁, B) → q_rej.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"mark, hunt, match, rewind"</b> — q₀ marks, q₁ hunts the b, q₂ rewinds, q₃ verifies, q₄ accepts. X marks a's, Y marks b's.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: variants and Church-Turing ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Variants &amp; CT thesis</span></div>
+  <h2><span class="no">4</span>Variants of the TM and the Church-Turing Thesis</h2><span class="tag">high-yield</span>
+  <div class="sumbox small"><span class="lbl">Equivalence (high-yield)</span> <span class="circ">Every variant below recognises exactly the same class of languages</span> as a single-tape deterministic TM, with at worst a <b>polynomial</b> slowdown — a multi-tape machine costs at most a <span class="circ">quadratic</span> factor. <b>Extra tapes buy <span class="hl">speed and convenience, never power</span>.</b></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 320px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Variant</th><th class="l">What it adds</th></tr>
+        <tr><td class="l"><b>Multi-tape TM</b></td><td class="l">several tapes — input, work, output</td></tr>
+        <tr><td class="l"><b>Non-deterministic TM</b></td><td class="l">several moves per state; accepts if <b>some</b> branch does</td></tr>
+        <tr><td class="l"><b>Multi-head TM</b></td><td class="l">several heads on <b>one</b> tape</td></tr>
+        <tr><td class="l"><b>Offline TM</b></td><td class="l">read-only input tape + work tapes + output</td></tr>
+        <tr><td class="l"><b>LBA</b></td><td class="l">nondeterministic TM bounded by end markers</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 178" width="300">
+      <g class="w">
+        <rect x="100" y="10" width="30" height="24" rx="4" class="ink fill-b"/><rect x="134" y="10" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="168" y="10" width="30" height="24" rx="4" class="ink fill-b"/><rect x="202" y="10" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="236" y="10" width="30" height="24" rx="4" class="ink fill-b"/><rect x="270" y="10" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="100" y="50" width="30" height="24" rx="4" class="ink fill-b"/><rect x="134" y="50" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="168" y="50" width="30" height="24" rx="4" class="ink fill-b"/><rect x="202" y="50" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="236" y="50" width="30" height="24" rx="4" class="ink fill-b"/><rect x="270" y="50" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="100" y="90" width="30" height="24" rx="4" class="ink fill-b"/><rect x="134" y="90" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="168" y="90" width="30" height="24" rx="4" class="ink fill-b"/><rect x="202" y="90" width="30" height="24" rx="4" class="ink fill-b"/>
+        <rect x="236" y="90" width="30" height="24" rx="4" class="ink fill-b"/><rect x="270" y="90" width="30" height="24" rx="4" class="ink fill-b"/>
+        <path class="ink-k" d="M170,-2 L194,-2 L182,8 Z"/>
+        <path class="ink-k" d="M204,38 L228,38 L216,48 Z"/>
+        <path class="ink-k" d="M138,78 L162,78 L150,88 Z"/>
+      </g>
+      <text x="115" y="27" text-anchor="middle" class="k w6">a</text><text x="149" y="27" text-anchor="middle" class="k w6">b</text>
+      <text x="183" y="27" text-anchor="middle" class="k w6">B</text><text x="217" y="27" text-anchor="middle" class="k w6">B</text>
+      <text x="251" y="27" text-anchor="middle" class="k w6">B</text><text x="285" y="27" text-anchor="middle" class="k w6">B</text>
+      <text x="115" y="67" text-anchor="middle" class="r w6">X</text><text x="149" y="67" text-anchor="middle" class="k w6">Y</text>
+      <text x="183" y="67" text-anchor="middle" class="k w6">Y</text><text x="217" y="67" text-anchor="middle" class="k w6">B</text>
+      <text x="251" y="67" text-anchor="middle" class="k w6">B</text><text x="285" y="67" text-anchor="middle" class="k w6">B</text>
+      <text x="115" y="107" text-anchor="middle" class="k w6">B</text><text x="149" y="107" text-anchor="middle" class="g w6">1</text>
+      <text x="183" y="107" text-anchor="middle" class="g w6">0</text><text x="217" y="107" text-anchor="middle" class="k w6">B</text>
+      <text x="251" y="107" text-anchor="middle" class="k w6">B</text><text x="285" y="107" text-anchor="middle" class="k w6">B</text>
+      <text x="46" y="27" text-anchor="middle" class="p w6">t₁ input</text>
+      <text x="46" y="67" text-anchor="middle" class="p w6">t₂ work</text>
+      <text x="46" y="107" text-anchor="middle" class="p w6">t₃ out</text>
+      <rect x="8" y="132" width="304" height="36" rx="10" class="ink-g fill-g"/>
+      <text x="160" y="156" text-anchor="middle" class="g w6">3 tapes ≡ 1 tape · same languages</text>
+    </svg><figcaption>a multi-tape machine: three heads, three tapes, one language class</figcaption></figure>
+  </div>
+  <div class="def small"><span class="lbl">Linear bounded automaton (LBA)</span> Take a nondeterministic TM and cut its tape off with end markers <b>⊢</b> and <b>⊣</b>, so the tape holds only the input plus the markers (<b>|w| + 2</b> cells). The head moves both ways inside that span but <b>cannot leave</b>. It accepts exactly the <span class="circ">context-sensitive (Type-1)</span> languages — this is where the CS layer of the hierarchy comes from.</div>
+  <div class="sumbox small"><span class="lbl">Church-Turing thesis</span> <span class="circ">Turing-computable ⇔ algorithmically computable</span>: every function computable by any algorithm can be computed by a TM, and vice versa. It is the licence to reason about "computable" using TMs.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> "Multi-tape TM is more powerful" is the classic wrong option — extra tapes are a <b>convenience</b>, at most <b>quadratic</b> slowdown on one tape. And a nondeterministic TM accepts iff <b>some</b> branch accepts, not all.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> The variants are the four ways to be generous with a machine — more tapes, more choices, more heads, separated I/O. Generosity changes <b>how fast</b>, never <b>what is recognisable</b>.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: decidable / semi / undecidable ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Decidable?</span></div>
+  <h2><span class="no">5</span>Decidable, Semi-Decidable, Undecidable</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">The setting</span> A <b>problem</b> asks a yes/no question about <b>every</b> input — infinitely many instances. Saying "yes to these three examples" settles nothing, so a problem is classified by <b>what its answering machine is allowed to do</b>: must it halt on everything, or may it run forever on the no-instances?</div>
+  <table class="hand small">
+    <tr><th class="l">Class</th><th class="l">What the machine does</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Decidable</b> (recursive)</td><td class="l">halts on <b>every</b> input, says yes or no</td><td class="l">sorting, searching, {aⁿbⁿ} by a PDA</td></tr>
+    <tr><td class="l"><b>Semi-decidable</b> (r.e. / RE)</td><td class="l">halts and says <b>yes</b>; may <b>loop</b> on a no-instance</td><td class="l">the halting problem, on its yes-instances</td></tr>
+    <tr><td class="l"><b>Undecidable</b></td><td class="l"><span class="red"><b>no</b></span> algorithm answers it at all</td><td class="l">halting; blank-tape halting; TM equivalence</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">The standard construction</span> To <b>accept</b> an RE language, flip nothing: simulate M on w and accept when M accepts. To <b>decide</b> one, add a rejecting state and route <b>every</b> undefined transition there — then the machine halts on everything. Decidable is a strict subfamily of RE.</div>
+      <div class="trick small" style="margin-top:2mm"><span class="lbl">Memory trick</span> A <b>decider</b> is a two-way machine: it can say no. A <b>recogniser</b> is one-way: it only confirms. Adding a reject state is the whole difference.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 162" width="296">
+      <g class="w">
+        <rect x="8" y="16" width="118" height="36" rx="10" class="ink fill-b"/>
+        <rect x="8" y="66" width="118" height="36" rx="10" class="ink fill-b"/>
+        <rect x="188" y="41" width="124" height="36" rx="10" class="ink-g fill-g"/>
+        <path class="ink-g" d="M130,34 L184,51"/>
+        <path class="ink-g" d="M130,84 L184,67"/>
+      </g>
+      <text x="67" y="32" text-anchor="middle" class="k w6">M for L</text>
+      <text x="67" y="46" text-anchor="middle" class="s">recognises L</text>
+      <text x="67" y="82" text-anchor="middle" class="k w6">M′ for L′</text>
+      <text x="67" y="96" text-anchor="middle" class="s">recognises L′</text>
+      <text x="250" y="57" text-anchor="middle" class="g w6">alternate</text>
+      <text x="250" y="72" text-anchor="middle" class="g w6">one step each</text>
+      <text x="160" y="126" text-anchor="middle" class="k w6">L and L′ both RE ⇒ L recursive</text>
+      <text x="160" y="146" text-anchor="middle" class="g s">exactly one of them must accept</text>
+    </svg><figcaption>L and its complement both RE ⇒ a decider exists</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">Why that last diagram is true</span> If <b>L</b> and <b>L′ = Σ* \ L</b> are both RE, run their two recognisers in parallel, alternating one step of each. For every input <b>exactly one</b> of M and M′ must eventually accept — the complement relation guarantees no escape. Whichever accepts first settles the answer, and the other must accept eventually. That machine halts on everything, so <span class="circ">L is recursive</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <b>Undecidable does not mean "hard" or "slow"</b> — it means <b>no algorithm exists at all</b>. "Semi-decidable" is not a milder performance claim: the halting problem has a perfect yes-side procedure and is still undecidable.</div>
+    <div class="tipbox small" style="margin-top:0"><span class="lbl">Common misconception</span> "Every computable function has a TM" is only half the statement. The other half is that every <b>non-computable</b> one provably has none — a TM cannot decide halting, count every computable real, or tell whether two programs behave alike.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: the halting problem ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Halting problem</span></div>
+  <h2><span class="no">6</span>The Halting Problem</h2><span class="tag">the classic</span>
+  <div class="def small"><span class="lbl">Problem</span> Given a Turing machine <b>M</b> and an input string <b>w</b>, decide whether <b>M</b> halts on <b>w</b> — written H(M, w) = yes or no. For programs the same question is: given <b>P</b> and <b>I</b>, does <b>P</b> stop on <b>I</b>?</div>
+  <div class="sumbox small"><span class="lbl">Theorem (Turing, 1936)</span> The halting problem is <span class="circ">undecidable</span> — no algorithm answers it for all M and w. It is nonetheless <span class="circ">recursively enumerable</span>: simulate M on w, and if M ever halts, say yes. A no-instance never produces an answer, which is exactly what "semi-decidable" means.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.25fr) 300px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">Proof by contradiction</h3>
+      <ol class="steps small" style="margin-top:0">
+        <li><b>Assume</b> a decider <b>H(M, w)</b> exists that always halts and always answers correctly.</li>
+        <li><b>Build D(M)</b>: a machine that runs M on input M and asks <b>H(M, M)</b>.</li>
+        <li>If <b>H says "halts"</b>, D <span class="red"><b>loops forever</b></span>.</li>
+        <li>If <b>H says "loops"</b>, D <span class="red"><b>halts immediately</b></span>.</li>
+        <li><b>Run D on its own description:</b> D(D). If H said D halts, D loops; if H said D loops, D halts. <span class="circ">Either answer from H is wrong.</span></li>
+      </ol>
+      <p class="small">The machine makes H answer its own question about itself, so H is refuted either way — and H was assumed correct on <b>every</b> pair. The trick that does it is the <span class="hl">diagonal</span>: run the supposed solver on the solver.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 168" width="296">
+      <g class="w">
+        <rect x="8" y="26" width="128" height="42" rx="10" class="ink fill-b"/>
+        <rect x="184" y="26" width="128" height="42" rx="10" class="ink-r fill-r"/>
+        <path class="ink" d="M140,47 L180,47" marker-end="url(#ahb)"/>
+      </g>
+      <text x="72" y="44" text-anchor="middle" class="k w6">assumed</text>
+      <text x="72" y="61" text-anchor="middle" class="k w6">decider H</text>
+      <text x="248" y="44" text-anchor="middle" class="r w6">D asks</text>
+      <text x="248" y="61" text-anchor="middle" class="r w6">H(D, D)</text>
+      <text x="160" y="16" text-anchor="middle" class="p s">D is run on its own description</text>
+      <text x="160" y="94" text-anchor="middle" class="g w6">H says halt ⇒ D loops</text>
+      <text x="160" y="114" text-anchor="middle" class="r w6">H says loop ⇒ D halts</text>
+      <path class="ink" d="M30,128 H290"/>
+      <text x="160" y="150" text-anchor="middle" class="k w6">whichever H says, it is wrong</text>
+    </svg><figcaption>the diagonal: D(D) refutes H either way</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)">
+    <div>
+      <h3 style="margin-top:0">What it costs you</h3>
+      <ul class="tick small">
+        <li><b>No general program analyser</b> — no tool can always tell a stuck loop from a slow computation.</li>
+        <li><b>No perfect debugger</b> — a linter cannot prove a function terminates for every input.</li>
+        <li><b>No all-purpose collector</b> — "is this value still reachable?" is undecidable in general.</li>
+        <li>Anything that can <span class="hl">express</span> "does this stop?" inherits the impossibility.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The halting problem is not "undecidable because it is infinite" — many infinite problems (sorting, {aⁿbⁿ} membership) are perfectly decidable. It is undecidable because of the <b>diagonal</b>: a logical obstruction, not a size one.</div>
+      <div class="trick small" style="margin-top:2mm"><span class="lbl">Memory trick</span> Flip it. D does the <b>opposite</b> of what H predicts, so H is captured by its own answer. "Predict, then do the opposite" is the whole argument.</div>
+    </div>
+  </div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: reduction and Rice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Reduction &amp; Rice</span></div>
+  <h2><span class="no">7</span>Reduction and Rice's Theorem</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> Problem <b>A</b> <b>many-one reduces</b> to problem <b>B</b>, written <b>A ≤ B</b>, if there is a computable function f such that for every input <b>w</b>: <span class="circ">w ∈ A ⇔ f(w) ∈ B</span>. In words — if you had a solver for B you could solve A by feeding it f(w). This is the workhorse of undecidability proofs.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.15fr) 280px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">If</th><th class="l">Then</th></tr>
+        <tr><td class="l">A is <b>undecidable</b> and A ≤ B</td><td class="l"><b>B is undecidable</b></td></tr>
+        <tr><td class="l">B is <b>decidable</b> and A ≤ B</td><td class="l"><b>A is decidable</b></td></tr>
+      </table>
+      <h3 style="margin-top:2mm">Reductions you will actually be asked for</h3>
+      <table class="hand small">
+        <tr><th class="l">Problem A</th><th class="l">Reduces to</th></tr>
+        <tr><td class="l">Halting M on w</td><td class="l">halting on the <b>blank tape</b> — write w first</td></tr>
+        <tr><td class="l">Halting M on w</td><td class="l">does M ever <b>reach q₅</b> — make q₅ the halt state</td></tr>
+        <tr><td class="l">Halting M on w</td><td class="l">are <b>two TMs equivalent</b> — simulate M then N</td></tr>
+        <tr><td class="l">CFG <b>ambiguity</b></td><td class="l">blank-tape halting, hence undecidable</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 148" width="280">
+      <g class="w">
+        <rect x="8" y="38" width="112" height="46" rx="12" class="ink-r fill-r"/>
+        <rect x="180" y="38" width="112" height="46" rx="12" class="ink fill-b"/>
+        <path class="ink" d="M124,61 L176,61" marker-end="url(#ahb)"/>
+      </g>
+      <text x="64" y="58" text-anchor="middle" class="r w6">problem A</text>
+      <text x="64" y="75" text-anchor="middle" class="r s">undecidable</text>
+      <text x="236" y="58" text-anchor="middle" class="k w6">problem B</text>
+      <text x="236" y="75" text-anchor="middle" class="k s">suppose decided</text>
+      <text x="150" y="50" text-anchor="middle" class="p w6">f</text>
+      <text x="150" y="112" text-anchor="middle" class="k w6">A ≤ B, A undecidable</text>
+      <text x="150" y="132" text-anchor="middle" class="r w6">⇒ B undecidable too</text>
+    </svg><figcaption>reduction: solve B, get A for free</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">Rice's theorem</span> Let <b>P</b> be any <span class="circ">non-trivial property of the languages</span> recognised by Turing machines. Then <b>P is undecidable</b>. Precisely: <b>P</b> is a property of <b>L(M)</b> — the <i>set of strings</i> M accepts — not of M's description. <b>Non-trivial</b> means <b>some</b> machine's language has it and <b>some</b> does not.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3 style="margin-top:0">Undecidable — properties of L(M)</h3>
+      <ul class="tick small">
+        <li>Is <b>L(M) empty</b>?  ·  <b>finite</b>?  ·  <b>regular</b>?</li>
+        <li>Is <b>L(M) = Σ*</b>?</li>
+        <li>Do <b>M and N</b> recognise the same language?</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Decidable — properties of the machine</h3>
+      <ul class="tick small">
+        <li>Does M ever <b>reach state q₅</b>?</li>
+        <li>Does M <b>halt within 100 steps</b>?</li>
+        <li>How many <b>states</b> does M have?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Rice is about a property of the <b>language</b>. "Does M have 7 states?" is decidable by counting. "Is <b>L(M) infinite?</b>" is not — so to reduce, <b>encode the input into the machine</b>.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Rice asks about the set of strings, not the machine.</b> Write the question with <span class="hl">L(M)</span> in it, then ask whether it is non-trivial.</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: RE languages and the hierarchy ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>RE &amp; hierarchy</span></div>
+  <h2><span class="no">8</span>RE Languages, Co-RE and the Hierarchy</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">RE language</span> A language some Turing machine <b>accepts</b> — equivalently, one for which a semi-decision procedure eventually confirms every member. A non-member need never be reached: the machine may loop on it forever. Every <span class="hl">decidable</span> language is RE; some RE languages are not decidable.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 340px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">Closure properties of RE</h3>
+      <table class="hand small">
+        <tr><th class="l">Operation</th><th class="l">RE closed?</th></tr>
+        <tr><td class="l">union L₁ ∪ L₂</td><td class="l"><span class="circ">yes</span> — new start state, guess a branch</td></tr>
+        <tr><td class="l">concatenation L₁L₂</td><td class="l"><span class="circ">yes</span> — run M₁, then M₂</td></tr>
+        <tr><td class="l">Kleene star L*</td><td class="l"><span class="circ">yes</span> — guess the split points</td></tr>
+        <tr><td class="l">intersection L₁ ∩ L₂</td><td class="l"><span class="circ">yes</span> — alternate the two machines</td></tr>
+        <tr><td class="l">complement L′</td><td class="l"><span class="red"><b>no</b></span> — the recogniser may loop</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 258" width="330">
+      <g class="w">
+        <rect x="10" y="8" width="320" height="226" rx="14" class="ink-k fill-y"/>
+        <rect x="34" y="36" width="272" height="182" rx="12" class="ink fill-b"/>
+        <rect x="58" y="64" width="224" height="138" rx="12" class="ink-p fill-p"/>
+        <rect x="82" y="92" width="176" height="94" rx="12" class="ink-g fill-g"/>
+        <rect x="106" y="120" width="128" height="50" rx="10" class="ink-r fill-r"/>
+      </g>
+      <text x="170" y="27" text-anchor="middle" class="k l">r.e. (RE)</text>
+      <text x="170" y="55" text-anchor="middle" class="k w6">recursive · decidable</text>
+      <text x="170" y="83" text-anchor="middle" class="k w6">context-sensitive</text>
+      <text x="170" y="111" text-anchor="middle" class="k w6">context-free</text>
+      <text x="170" y="151" text-anchor="middle" class="k l">regular</text>
+      <text x="170" y="250" text-anchor="middle" class="g s">Regular ⊂ CF ⊂ CS ⊂ Recursive ⊂ RE</text>
+    </svg><figcaption>the class hierarchy — each box nests inside the one above</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div>
+      <h3 style="margin-top:0">One example per class</h3>
+      <table class="hand small">
+        <tr><th class="l">Class</th><th class="l">Example</th></tr>
+        <tr><td class="l">Regular</td><td class="l">{w \| w ends with 00}</td></tr>
+        <tr><td class="l">Context-free</td><td class="l">{aⁿbⁿ \| n ≥ 0} — one stack</td></tr>
+        <tr><td class="l">Context-sensitive</td><td class="l">{aⁿbⁿcⁿ \| n ≥ 1} — bounded tape</td></tr>
+        <tr><td class="l">Recursive</td><td class="l">{w#w \| w ∈ {0,1}*} — copy and compare</td></tr>
+        <tr><td class="l">r.e.</td><td class="l">the halting problem (yes-instances)</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">RE vs Co-RE</span> <b>Co-RE</b> = the <b>complements</b> of RE languages — problems a machine settles only on their <b>no</b>-instances. The halting problem is RE but <b>not</b> Co-RE; were it both, the parallel argument on sheet 6 would make it decidable, and it is not.</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> "RE is closed under complement" is <b>false</b>, and that one fact explains three others: not every RE language is decidable, not every RE language is Co-RE, and some are <b>neither</b>. If <b>L and L′ are both RE</b>, L is <span class="circ">recursive</span>.</div>
+      <div class="trick small" style="margin-top:2mm"><span class="lbl">Memory trick</span> Each layer buys exactly <b>one more resource</b>: automaton → one counter, stack → one nest, LBA → a bounded tape, TM → an <b>unbounded</b> tape.</div>
+    </div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>TM = <b>(Q, Σ, Γ, δ, q₀, B, F)</b></p><p>δ : Q × Γ → Q × Γ × {L, R, S}</p>
+      <p>δ(q, x) = (q′, y, D)</p><p>head scans the <b>first symbol of v</b></p>
+      <p>ID = (u, q, v) — left, state, right</p><p>⊢ = one move · ⊢* = zero or more</p>
+      <p>Tape infinite <b>both</b> directions</p><p>Q, Σ, Γ finite · B ∉ Σ</p>
+      <p>{aⁿbⁿ} machine: q₀..q₄, marks X, Y</p><p>accept on δ(q₃, B) = (q₄, B, R)</p>
+      <p>Multi-tape = same power, ≤ quadratic</p><p>Offline TM = read-only input + work</p>
+      <p>LBA = nondet TM, tape = |w| + 2</p><p>LBA accepts the <b>CS</b> languages</p>
+      <p>Church-Turing: TM-computable ⇔ computable</p><p>Decidable halts always; semi on yes only</p>
+      <p>Halting problem <b>undecidable</b> (Turing, 1936)</p><p>…but it <b>is</b> recursively enumerable</p>
+      <p>D(M): if H(M,M) halts, loop; else halt</p><p>Blank-tape halting ≤ halting</p>
+      <p>Rice: non-trivial property of <b>L(M)</b></p><p>Non-trivial = some yes, some no</p>
+      <p>RE closed: ∪, concat, *, ∩</p><p>RE <b>not</b> closed under complement</p>
+      <p>L and L′ both RE ⇒ L recursive</p><p>Halting is RE but not Co-RE</p>
+      <p>Regular ⊂ CF ⊂ CS ⊂ Recursive ⊂ RE</p><p>{aⁿbⁿcⁿ} = CS, not CF</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>A TM is a <b>7-tuple</b>; a PDA 5, a CFG 4</li>
+      <li>Configuration = <b>(left, state, right)</b></li>
+      <li>The head's cell starts <b>v</b>, never ends u</li>
+      <li>Halting problem = <b>undecidable</b> (Turing, 1936)</li>
+      <li>Halting problem = <b>RE</b> — yes-side only</li>
+      <li>Multi-tape ≠ more powerful, only faster</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>LBA = bounded-tape nondet TM ⇒ <b>CS</b></li>
+      <li>Church-Turing: TM = algorithm</li>
+      <li>A ≤ B makes B undecidable when A is</li>
+      <li>Rice is about <b>L(M)</b>, not the machine</li>
+      <li>RE ∩ RE = RE, but RE′ <b>not</b> RE</li>
+      <li>L and L′ both RE ⇒ <b>recursive</b></li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> "Multi-tape is more powerful" is the wrong option · the general δ allows <b>S</b> (stay), not just L and R · splitting an ID as (01, q, 011) is wrong · undecidable ≠ slow, it means <b>no algorithm exists</b> · Rice asks about the <b>language</b>, not the diagram · the aⁿbⁿ table as usually printed has <b>no rejecting transition</b>.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "Q, Σ, Γ, δ, q₀, B, F" · "left · state · right, head belongs to the right" · "mark, hunt, match, rewind" · "decider = two-way, recogniser = one-way" · "predict, then do the opposite" · <span class="hl">Rice asks about L(M)</span>.</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="500">
+    <g class="w">
+      <rect x="14" y="18" width="140" height="48" rx="12" class="ink fill-b"/>
+      <rect x="190" y="18" width="140" height="48" rx="12" class="ink-r fill-r"/>
+      <rect x="366" y="18" width="140" height="48" rx="12" class="ink-g fill-g"/>
+      <path class="ink-p" d="M154,42 H186" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M330,42 H362" marker-end="url(#ahp)"/>
+    </g>
+    <text x="84" y="40" text-anchor="middle" class="k w6">TM model</text>
+    <text x="84" y="58" text-anchor="middle" class="s">tape · head · 7-tuple</text>
+    <text x="260" y="40" text-anchor="middle" class="r w6">is it decidable?</text>
+    <text x="260" y="58" text-anchor="middle" class="s">halts on every input</text>
+    <text x="436" y="40" text-anchor="middle" class="g w6">halting problem</text>
+    <text x="436" y="58" text-anchor="middle" class="s">the proof that it fails</text>
+    <text x="170" y="13" text-anchor="middle" class="p s">asked of</text>
+    <text x="346" y="13" text-anchor="middle" class="p s">answered by</text>
+    <text x="260" y="100" text-anchor="middle" class="g s">power is never the question — decidability is</text>
+  </svg><figcaption>one model, one question, one famous negative answer</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Turing Machines &amp; Computability</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A Turing machine has how many parts?<ol class="opts"><li>5</li><li>7</li><li>8</li><li>4</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>In δ, the head may move:<ol class="opts"><li>L only</li><li>L or R</li><li>L, R or S</li><li>either way</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>In (u, q, v) the head scans the:<ol class="opts"><li>end of u</li><li>middle of v</li><li>a blank cell</li><li>first of v</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>A multi-tape TM recognises:<ol class="opts"><li>the same languages</li><li>more languages</li><li>only regular ones</li><li>nothing decidable</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>The halting problem is:<ol class="opts"><li>decidable, slow</li><li>by simulation</li><li>undecidable, r.e.</li><li>regular</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Rice's theorem concerns properties of:<ol class="opts"><li>the machine</li><li>L(M)</li><li>the states</li><li>the tape</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>A nondet TM bounded to |w|+2 is:<ol class="opts"><li>a multi-head TM</li><li>an offline TM</li><li>a finite automaton</li><li>an LBA</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>RE languages are closed under:<ol class="opts"><li>complement</li><li>∪, concat, *, ∩</li><li>intersection only</li><li>none of these</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>L and its complement both RE ⇒ L is:<ol class="opts"><li>only regular</li><li>not RE</li><li>recursive</li><li>context-free</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>{aⁿ bⁿ cⁿ | n ≥ 1} belongs to:<ol class="opts"><li>context-sensitive</li><li>regular</li><li>context-free</li><li>no class</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-d · 4-a · 5-c · 6-b · 7-d · 8-b · 9-c · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Prove by contradiction that the halting problem is undecidable. Then reduce blank-tape halting to it, and name two more problems that inherit undecidability. <i class="mk">10 marks</i></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Model answer ✍</span>
+      <ol class="steps small">
+        <li><b>State it and assume a decider H</b> <i class="mk">2</i> — H(M, w): does M halt on w? Assume H is right on every pair.</li>
+        <li><b>Build D</b> <i class="mk">2</i> — D(M) asks H(M, M) and does the <b>opposite</b>.</li>
+        <li><b>Contradict</b> <i class="mk">2</i> — on D(D), D does the other thing than H said.</li>
+        <li><b>Reduce</b> <i class="mk">2</i> — M′ writes w on its own blank tape, then simulates M(w); blank-tape halting ≤ halting, undecidable.</li>
+        <li><b>Two more</b> <i class="mk">2</i> — state-entry (make q₅ the halt state) · TM equivalence (simulate M then N).</li>
+      </ol></div>
+    <div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can write the 7-tuple and δ format from memory</li>
+        <li>Can split and join an instantaneous description</li>
+        <li>Can reproduce the halting proof in five steps</li>
+        <li>Can state Rice's theorem about L(M), not the machine</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

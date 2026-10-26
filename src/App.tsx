@@ -9,36 +9,50 @@ import Dashboard from './components/portal/Dashboard'
 import NotesLibrary from './components/portal/NotesLibrary'
 import CandidateLogin from './candidate/CandidateLogin'
 import CandidateSignup from './candidate/CandidateSignup'
-import { useRoute, navigate, type PublicView as View } from './router'
+import ExamsPage from './exam/ExamsPage'
+import ExamInstructions from './exam/ExamInstructions'
+import ExamSession from './exam/ExamSession'
+import ExamResult from './exam/ExamResult'
+import { useRoute, navigate, type ExamRoute, type PublicView as View } from './router'
 import './index.css'
 
 // The admin panel (and its rich-text editor) loads only when an admin opens it, not for every reader.
 const AdminDashboard = lazy(() => import('./admin/AdminDashboard'))
 
-function PublicView({ view }: { view: View }) {
+function PublicView({ view, exam }: { view: View; exam?: ExamRoute }) {
   const state = useApp()
+  const examPage = exam?.page
 
-  // Switching pages (dashboard, libraries, reader) starts at the top.
+  // Switching pages (dashboard, libraries, reader, exam screens) starts at the top.
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [view])
+  }, [view, examPage, exam?.id])
 
   return (
     <div className={`app-bg ${state.theme}`}>
       <Navbar onAdminClick={() => navigate('admin')} />
-      <Sidebar view={view} />
+      {/* A test in progress gets the whole width: no side menu to wander off into. */}
+      {examPage !== 'attempt' && <Sidebar view={view} exam={exam} />}
       {view === 'dashboard' && <Dashboard />}
       {(view === 'notes' || view === 'pyq') && <NotesLibrary key={view} kind={view} />}
       {view === 'lesson' && <MainContent />}
+      {view === 'exams' && exam && <ExamView exam={exam} />}
     </div>
   )
+}
+
+function ExamView({ exam }: { exam: ExamRoute }) {
+  if (exam.page === 'test' && exam.id) return <ExamInstructions key={exam.id} id={exam.id} />
+  if (exam.page === 'attempt' && exam.id) return <ExamSession key={exam.id} id={exam.id} />
+  if ((exam.page === 'result' || exam.page === 'review') && exam.id) return <ExamResult key={exam.id} id={exam.id} review={exam.page === 'review'} />
+  return <ExamsPage tab={exam.tab} lesson={exam.lesson} />
 }
 
 function AdminRoute() {
   const auth = useAuth()
 
   useEffect(() => {
-    if (!auth.isAuthenticated) navigate('login?next=admin')
+    if (!auth.isAuthenticated) navigate('login?next=admin', { replace: true })
   }, [auth.isAuthenticated])
   if (!auth.isAuthenticated) return null
 
@@ -52,7 +66,7 @@ function AdminRoute() {
 /** The old admin sign-in URL (`#/admin/login`) now opens the one sign-in page, heading for the admin panel. */
 function LoginRoute() {
   useEffect(() => {
-    navigate('login?next=admin')
+    navigate('login?next=admin', { replace: true })
   }, [])
   return null
 }
@@ -80,7 +94,7 @@ function SignInRequired({ children }: { children: ReactNode }) {
   const [requested] = useState(() => window.location.hash.replace(/^#\//, '').split('?')[0])
   useEffect(() => {
     if (readerId) return
-    navigate(requested ? `login?next=${encodeURIComponent(requested)}` : 'login')
+    navigate(requested ? `login?next=${encodeURIComponent(requested)}` : 'login', { replace: true })
   }, [readerId, requested])
   return readerId ? <>{children}</> : null
 }
@@ -94,7 +108,7 @@ function AppShell() {
         <ReaderAppProvider>
           {route.type === 'public' && (
             <SignInRequired>
-              <PublicView view={route.view ?? 'dashboard'} />
+              <PublicView view={route.view ?? 'dashboard'} exam={route.exam} />
             </SignInRequired>
           )}
           {route.type === 'admin' && <AdminRoute />}

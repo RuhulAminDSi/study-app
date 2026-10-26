@@ -1,11 +1,14 @@
 import request from "supertest";
 import { describe, it, expect } from "vitest";
 import { createApp } from "../src/app";
+import { createAdmin } from "./helpers/auth";
 
 describe("unexpected server errors", () => {
   it("return a generic message instead of internal details", async () => {
     // A malformed UUID makes PostgreSQL throw ("invalid input syntax for type uuid").
-    const res = await request(createApp()).get("/api/public/chapters/not-a-uuid");
+    const res = await request(createApp())
+      .get("/api/public/chapters/not-a-uuid")
+      .set("Authorization", `Bearer ${(await createAdmin()).token}`);
     expect(res.status).toBe(500);
     expect(res.body).toEqual({ error: "Something went wrong on our side. Please try again.", code: "internal_error" });
   });

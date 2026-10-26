@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Counting, Inclusion-Exclusion, Recurrence &amp; Algebraic Structures: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Date: 15.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Counting &amp; Algebraic Structures</span></h1>
+  <p class="subtitle">Inclusion–exclusion · derangements · recurrences · groups &amp; rings: 11 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 250" width="640">
+      <g class="w">
+        <ellipse cx="320" cy="124" rx="98" ry="40" class="ink-k fill-y"/>
+        <path class="ink" d="M244,110 L176,60 M244,138 L176,188 M320,86 L320,44 M396,110 L464,60 M396,138 L464,188 M320,162 L320,204 M222,124 L182,124 M418,124 L458,124"/>
+        <rect x="68" y="38" width="164" height="44" rx="14" class="ink fill-b"/>
+        <rect x="238" y="10" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="38" width="164" height="44" rx="14" class="ink fill-b"/>
+        <rect x="20" y="102" width="160" height="44" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="102" width="160" height="44" rx="14" class="ink-r fill-r"/>
+        <rect x="68" y="168" width="164" height="44" rx="14" class="ink fill-b"/>
+        <rect x="238" y="204" width="164" height="38" rx="14" class="ink-r fill-r"/>
+        <rect x="416" y="168" width="164" height="44" rx="14" class="ink fill-b"/>
+      </g>
+      <text x="320" y="120" text-anchor="middle" class="k l">COUNT · PIE</text><text x="320" y="145" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="150" y="55" text-anchor="middle" class="s">OR adds · AND multiplies</text><text x="150" y="71" text-anchor="middle" class="s">2ⁿ subsets</text>
+      <text x="320" y="35" text-anchor="middle" class="r w6">nPr = n!/(n−r)! ★</text>
+      <text x="498" y="55" text-anchor="middle" class="s">pigeonhole: k + 1</text><text x="498" y="71" text-anchor="middle" class="s">guarantees a clash</text>
+      <text x="100" y="119" text-anchor="middle" class="r w6">PIE: + − + − ★</text><text x="100" y="135" text-anchor="middle" class="r w6">1..100 by 3 or 5</text>
+      <text x="544" y="119" text-anchor="middle" class="r w6">D₄ = 9</text><text x="544" y="135" text-anchor="middle" class="r w6">derangements ★</text>
+      <text x="150" y="185" text-anchor="middle" class="s">char. equation</text><text x="150" y="201" text-anchor="middle" class="s">assume aₙ = rⁿ</text>
+      <text x="320" y="228" text-anchor="middle" class="r w6">|H| divides |G| ★</text>
+      <text x="498" y="185" text-anchor="middle" class="s">fields: ℚ ℝ ℂ</text><text x="498" y="201" text-anchor="middle" class="s">ℤ₆ is not a field</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, blue = definitions</figcaption>
+  </figure>
+  <div class="sticky" style="width:84mm"><b>High-yield list</b><br>① Addition = <b>OR</b>, multiplication = <b>AND</b><br>② n! arrangements, <b>0! = 1</b>, subsets = <b>2ⁿ</b><br>③ <sup>n</sup>P<sub>r</sub> = n!/(n−r)!, <sup>n</sup>C<sub>r</sub> = n!/[r!(n−r)!]<br>④ <span class="circ">nCr = nPr / r!</span><br>⑤ LEVEL ⇒ 5!/(2!·2!) = <b>30</b><br>⑥ |A ∪ B| = |A|+|B|−|A∩B|; 3-set adds the triple back<br>⑦ 1..100 by 3 or 5 = 33+20−6 = <b>47</b><br>⑧ Pigeonhole on months ⇒ <b>13</b><br>⑨ Dₙ = n!(1−1+1/2!−1/3!+…); <b>D₄ = 9</b><br>⑩ Fib. ⇒ r² − r − 1 = 0; a(n) = a(n−1)+6a(n−2) ⇒ r = 3, −2<br>⑪ Lagrange: <b>|H| divides |G|</b><br>⑫ Field = commutative ring, every non-zero invertible</div>
+  <h3>Syllabus coverage</h3>
+  <p class="tiny">"… Mathematical reasoning: induction, contradiction and recursion; <span class="hl">Counting; Principles of inclusion and exclusion; Recurrence relations; Algebraic structures: rings and groups</span>." Those four items are this notebook; sets, relations, induction and graph theory belong to other lessons of the chapter.</p>
+  <div class="tipbox blk tiny"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">circle</span> = memorise · <span class="purple">purple</span> = trick · <span class="red">red</span> = trap · <span class="green">green</span> = example</div>
+  <h3>Contents</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>Counting principles &amp; pigeonhole … p. 2</li><li>Permutations &amp; combinations … p. 3</li><li>Inclusion–exclusion … p. 4</li></ul>
+    <ul class="tick"><li>PIE in depth &amp; derangements … p. 5</li><li>Recurrence &amp; characteristic eq. … pp. 6–7</li><li>Groups &amp; Lagrange … p. 8 · Rings &amp; fields … p. 9</li><li>Night-before p. 10 · Practice p. 11</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: counting principles ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Counting principles</span></div>
+  <h2><span class="no">1</span>Counting Principles, Subsets &amp; Pigeonhole</h2><span class="tag">foundation ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> <span class="hl">Counting</span> (combinatorics) is the study of <b>how many</b> ways a collection of objects can be selected, arranged or distributed. <b>n! = n(n−1)···1</b> counts the ways of putting n distinct objects in a row, and <span class="circ">0! = 1</span> — the one empty arrangement.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Principle</th><th class="l">Exact statement</th><th class="l">Use it when</th></tr>
+    <tr><td class="l"><b>Addition (Sum)</b></td><td class="l">a task is done in m ways <b>or</b> n ways, never both ⇒ <b>m + n</b></td><td class="l">the cases are <b>mutually exclusive</b></td></tr>
+    <tr><td class="l"><b>Multiplication (Product)</b></td><td class="l">a task needs m ways <b>and</b> then n ways ⇒ <b>m × n</b></td><td class="l">the stages happen <b>one after another</b></td></tr>
+    <tr><td class="l"><b>Bijection</b></td><td class="l">two sets have the same size iff a <b>one-to-one pairing</b> exists</td><td class="l">you can <b>rename</b> one set as the other</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,268px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="266">
+      <g class="w">
+        <rect x="16" y="14" width="86" height="34" rx="8" class="ink fill-b"/>
+        <rect x="16" y="62" width="86" height="34" rx="8" class="ink fill-b"/>
+        <rect x="16" y="110" width="86" height="34" rx="8" class="ink fill-b"/>
+        <circle cx="152" cy="31" r="8" class="ink-r fill-r"/><circle cx="152" cy="79" r="8" class="ink-r fill-r"/>
+        <circle cx="152" cy="127" r="8" class="ink fill-y"/>
+        <path class="ink-r" d="M108,31 L138,31" marker-end="url(#ah)"/>
+        <path class="ink-r" d="M108,79 L138,79" marker-end="url(#ah)"/>
+        <path class="ink-g" d="M108,127 L138,127" marker-end="url(#ahg)"/>
+        <rect x="204" y="60" width="88" height="36" rx="9" class="ink-r fill-r"/>
+      </g>
+      <text x="59" y="36" text-anchor="middle" class="k s">Jan</text><text x="59" y="84" text-anchor="middle" class="k s">Feb</text><text x="59" y="132" text-anchor="middle" class="k s">Mar</text>
+      <text x="248" y="83" text-anchor="middle" class="r w6 s">4 into 3</text>
+      <text x="152" y="166" text-anchor="middle" class="s k">more birds than holes ⇒ a clash</text>
+    </svg><figcaption>pigeonhole: objects &gt; boxes forces a collision</figcaption></figure>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">The pigeonhole principle (Dirichlet)</span> Put n objects into k boxes. <span class="circ">If n &gt; k, at least one box holds two or more.</span> A "guarantee" question therefore answers <span class="hl">n = k + 1</span>, and some box gets at least <b>⌈n/k⌉</b>.</div>
+      <div class="ex tiny"><span class="lbl">Worked example ✍ birthdays</span> Months are the boxes, k = 12. With 12 students every one <b>could</b> be born in a different month; with <b>13</b> a repeat is forced ⇒ <span class="circ">13</span>. The day version needs k = 366 and gives 367.</div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>O</b>R <b>A</b>dds, <b>A</b>ND <b>M</b>ultiplies." Read the word joining the two conditions: <b>or</b> means add the two counts, "must happen together" means multiply.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Addition needs <b>disjoint</b> cases; overlapping ones need inclusion–exclusion (sheet 4). (ii) <span class="circ">n! counts order</span> — 5 people in 5 chairs is 5! = <b>120</b>; 720 is 6!, the trap. (iii) 0! = <b>1</b>. (iv) For a pigeonhole guarantee, "12 months" is <b>not</b> the answer.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ subsets and power sets</span> A set with n elements has exactly <b>2ⁿ subsets</b>, because every element is independently in or out. It has <b>2ⁿ − 1</b> proper subsets and <b>2ⁿ − 1</b> non-empty subsets — the two counts coincide. A 5-element set therefore has 32, 31 and 31. <span class="circ">Splitting a set into two labelled parts is also 2ⁿ.</span></div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> Binary representation of a k-bit string has <b>2ᵏ</b> values, and the addition principle is literally how address ranges are summed: a /24 block has 2⁸ = <b>256</b> addresses, and after the network and broadcast addresses are reserved <b>254</b> remain for hosts. Choosing a bitmask with n set bits out of 32 is <sup>32</sup>C<sub>n</sub>, which is why subnet masks are counted that way. Pigeonhole reappears in hashing: n keys in m buckets forces a collision as soon as <b>n &gt; m</b>, which is the entire reason hash tables have a load factor.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: permutations and combinations ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>nPr vs nCr</span></div>
+  <h2><span class="no">2</span>Permutations &amp; Combinations</h2><span class="tag">most tested ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> An <span class="hl">arrangement</span> of r objects chosen from n distinct objects, <b>in which order matters</b>, is a <b>permutation</b>: <b><sup>n</sup>P<sub>r</sub> = n! / (n − r)!</b>. When order <b>does not</b> matter it is a <b>combination</b>: <b><sup>n</sup>C<sub>r</sub> = n! / [r! (n − r)!]</b>. Each combination generates exactly r! orderings of its members, so <span class="circ"><sup>n</sup>C<sub>r</sub> = <sup>n</sup>P<sub>r</sub> / r!</span>, and <sup>n</sup>C<sub>r</sub> = <sup>n</sup>C<sub>n−r</sub>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,258px);align-items:start">
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Question type</th><th class="l">Tool</th><th class="l">Watch out</th></tr>
+        <tr><td class="l">seating, ranking, lining up, codes without repetition</td><td class="l"><b><sup>n</sup>P<sub>r</sub></b></td><td class="l">order matters</td></tr>
+        <tr><td class="l">committee, team, hand of cards, choose r dates</td><td class="l"><b><sup>n</sup>C<sub>r</sub></b></td><td class="l">order irrelevant</td></tr>
+        <tr><td class="l">select all r, then arrange them</td><td class="l"><b><sup>n</sup>C<sub>r</sub> · r!</b></td><td class="l">gives back <sup>n</sup>P<sub>r</sub></td></tr>
+        <tr><td class="l">objects repeated p, q, … times</td><td class="l"><b>n! / (p! q! …)</b></td><td class="l">divide by <b>every</b> repeat</td></tr>
+        <tr><td class="l">circular seating of n people</td><td class="l"><b>(n − 1)!</b></td><td class="l">rotations are identical</td></tr>
+      </table>
+      <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>P</b>ermutation <b>P</b>ositions — order is a position, so it counts; <b>C</b>ombination is a <b>C</b>ommunity — no chair, no order." Divide the permutation answer by <b>r!</b> to strip the order off: that is the size of the error.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 168" width="256">
+      <g class="w">
+        <circle cx="150" cy="80" r="16" class="ink-k fill-y"/>
+        <path class="ink" d="M135,70 L100,40 M165,70 L200,40 M135,90 L100,122 M165,90 L200,122 M150,96 L150,128 M150,64 L150,32"/>
+        <rect x="44" y="18" width="92" height="30" rx="10" class="ink fill-b"/>
+        <rect x="164" y="18" width="92" height="30" rx="10" class="ink-r fill-r"/>
+        <rect x="44" y="110" width="92" height="30" rx="10" class="ink-r fill-r"/>
+        <rect x="164" y="110" width="92" height="30" rx="10" class="ink fill-b"/>
+      </g>
+      <text x="150" y="86" text-anchor="middle" class="k w6">A B</text>
+      <text x="90" y="38" text-anchor="middle" class="s">AB · BA</text>
+      <text x="210" y="38" text-anchor="middle" class="r s">6P2 = 30</text>
+      <text x="90" y="130" text-anchor="middle" class="r s">6C2 = 15</text>
+      <text x="210" y="130" text-anchor="middle" class="s">AB once</text>
+      <text x="150" y="164" text-anchor="middle" class="s g">30 ÷ 2! = 15 — committee</text>
+    </svg><figcaption>two chosen from six: order on, order off</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked examples ✍</span> <b>(a)</b> Committee of 2 from 6: order irrelevant ⇒ <sup>6</sup>C<sub>2</sub> = 15. <b>30</b> = <sup>6</sup>P<sub>2</sub> counts <b>ordered</b> pairs, the standard distractor. <b>(b)</b> 5 books, 2 chosen and placed: <sup>5</sup>P<sub>2</sub> = 20; "which two" alone is <sup>5</sup>C<sub>2</sub> = 10. <b>(c)</b> 5 people in 5 chairs = 5! = <b>120</b>; round a table (5−1)! = 24.</div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ letters with repeats</span> <b>LEVEL</b>: 5 letters, L twice and E twice, so distinct arrangements = <b>5!/(2!·2!) = 120/4 = <span class="circ">30</span></b>. Divide once per repeated letter in <b>BOOKKEEPER</b>, and check the quotient is a <b>whole number</b>.</div>
+  </div>
+  <div class="exam tiny"><span class="lbl">Exam trap</span> (i) <sup>n</sup>C<sub>r</sub> = <sup>n</sup>P<sub>r</sub>/<b>r!</b>, not /n!. (ii) At r = n the combination is 1 and the permutation is n!. (iii) "Round a table" removes rotations, so divide by n. (iv) Two identical coins <b>are</b> indistinguishable; two people who merely look alike are not. (v) A password is a permutation even when digits repeat.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: inclusion-exclusion ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Inclusion–exclusion</span></div>
+  <h2><span class="no">3</span>Principle of Inclusion–Exclusion (PIE)</h2><span class="tag">every MCQ uses it ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> The <span class="hl">principle of inclusion–exclusion</span> counts the elements of a union of overlapping sets. For two sets <b>|A ∪ B| = |A| + |B| − |A ∩ B|</b>: adding the two sizes counts the overlap twice, so subtract it once. For three sets <b>|A ∪ B ∪ C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|</b> — the triple was added once and subtracted three times, so it must be <span class="circ">added back once</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,266px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 176" width="264">
+      <g class="w">
+        <circle cx="112" cy="66" r="50" class="ink fill-b"/>
+        <circle cx="176" cy="66" r="50" class="ink fill-b"/>
+        <circle cx="144" cy="106" r="50" class="ink fill-b"/>
+        <ellipse cx="144" cy="76" rx="28" ry="20" class="ink-r fill-r"/>
+      </g>
+      <text x="86" y="54" text-anchor="middle" class="k w6">A</text>
+      <text x="204" y="54" text-anchor="middle" class="k w6">B</text>
+      <text x="144" y="146" text-anchor="middle" class="k w6">C</text>
+      <text x="144" y="81" text-anchor="middle" class="r w6 s">ABC</text>
+      <text x="66" y="106" text-anchor="middle" class="s k">A∩B</text>
+      <text x="222" y="106" text-anchor="middle" class="s k">B∩C</text>
+      <text x="54" y="144" text-anchor="middle" class="s k">A∩C</text>
+      <text x="150" y="172" text-anchor="middle" class="r s">+ |ABC| puts the triple back</text>
+    </svg><figcaption>subtract each pairwise overlap, add the triple back</figcaption></figure>
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Quantity you want</th><th class="l">Formula</th></tr>
+        <tr><td class="l"><b>none</b> of the sets</td><td class="l">|U| − |A ∪ B ∪ C|</td></tr>
+        <tr><td class="l"><b>exactly one</b> set</td><td class="l">Σ|single| − 2 Σ|pair| + 3 |triple|</td></tr>
+        <tr><td class="l"><b>at least one</b></td><td class="l">|U| − |A′ ∩ B′ ∩ C′|</td></tr>
+        <tr><td class="l"><b>at least two</b></td><td class="l">Σ|pair| − 2 |triple|</td></tr>
+      </table>
+      <div class="sumbox tiny"><span class="lbl">General alternating form</span> |A₁ ∪ … ∪ Aₙ| = Σ|Aᵢ| − Σ|Aᵢ∩Aⱼ| + Σ|Aᵢ∩Aⱼ∩Aₖ| − ⋯ + (−1)<sup>n−1</sup>Σ<em>all</em> Aᵢ. The signs strictly alternate <b>+</b>, <b>−</b>, <b>+</b>, <b>−</b>; the k-th term combines <b>k</b> sets at a time.</div>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ integers 1 to 100 divisible by 3 or by 5</span> Let A = multiples of 3, B = multiples of 5. |A| = ⌊100/3⌋ = <b>33</b>, |B| = ⌊100/5⌋ = <b>20</b>, A ∩ B = multiples of 15 so |A ∩ B| = ⌊100/15⌋ = <b>6</b>. Hence <b>|A ∪ B| = 33 + 20 − 6 = <span class="circ">47</span></b>. Trap options: 33 alone, 53 = 33 + 20 with no subtraction, 41 = 33 + 20 − 12.</div>
+  <div class="ex tiny"><span class="lbl">Worked example ✍ none of three subjects</span> 100 students; 45 read M, 40 read P, 35 read C; 15 read M and P, 10 read P and C, 12 read M and C; 5 read all three. |M ∪ P ∪ C| = 45 + 40 + 35 − 15 − 10 − 12 + 5 = 120 − 37 + 5 = <b>88</b>, so those reading <b>none</b> = 100 − 88 = <span class="circ">12</span>. Forgetting to add the 5 back gives 17, the standard wrong option.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>P</b>lus the singles, <b>m</b>inus the pairs, <b>p</b>lus the triples", then keep flipping the sign. An element in exactly <b>k</b> sets must finish counted once, and the alternating sum 1 − (k−1) + (k−2 choose 2) − ⋯ = (1 − 1)<sup>k</sup> = 0 guarantees it.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) "At least one" is a <b>union</b>; "none" is its complement. (ii) The triple intersection is added <b>once</b> — dropping it is the commonest error. (iii) Write the six pairwise terms out before substituting. (iv) A universal set of size n is <b>assumed</b> unless stated.</div>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ exactly one subject</span> In the class above, exactly <b>one</b> subject = 45 + 40 + 35 − 2(15 + 10 + 12) + 3(5) = 120 − 74 + 15 = <b>61</b>. Exactly <b>two</b> = 15 + 10 + 12 − 3(5) = <b>22</b>, and 61 + 22 + 5 = 88 with the 12 outside making 100 — a useful internal check.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Counting by complements — the habit that saves time</span> When a question says <span class="hl">at least one</span>, compute <b>none</b> and subtract, because the "none" count is always the easier one. "Not both" = total − both; "at least one of each kind" = total − (no A) − (no B) + (no A and no B).</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: PIE in depth and derangements ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>PIE in depth</span></div>
+  <h2><span class="no">4</span>PIE in Depth &amp; Derangements</h2><span class="tag">difficulty 3 favourite ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">derangement</span> of n objects is a permutation in which <b>no object is in its own place</b>. Let Dₙ count them. Inclusion–exclusion applied to the n events "object i is in its place" gives <span class="circ">Dₙ = n! (1 − 1/1! + 1/2! − 1/3! + ⋯ + (−1)ⁿ/n!)</span>, and an equivalent two-step recurrence is <b>Dₙ = (n − 1)(Dₙ₋₁ + Dₙ₋₂)</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,268px);align-items:start">
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">n</th><th class="l">n!</th><th class="l">Dₙ by the formula</th><th class="l">Dₙ by (n−1)(Dₙ₋₁+Dₙ₋₂)</th></tr>
+        <tr><td class="l">1</td><td class="l">1</td><td class="l">0</td><td class="l">—</td></tr>
+        <tr><td class="l">2</td><td class="l">2</td><td class="l">1</td><td class="l">1 × (1 + 0) = 1</td></tr>
+        <tr><td class="l">3</td><td class="l">6</td><td class="l">2</td><td class="l">2 × (1 + 1) = 2</td></tr>
+        <tr><td class="l">4</td><td class="l">24</td><td class="l"><b>9</b></td><td class="l">3 × (2 + 1) = 9</td></tr>
+        <tr><td class="l">5</td><td class="l">120</td><td class="l">44</td><td class="l">4 × (9 + 2) = 44</td></tr>
+        <tr><td class="l">6</td><td class="l">720</td><td class="l">265</td><td class="l">5 × (44 + 9) = 265</td></tr>
+      </table>
+      <div class="ex tiny"><span class="lbl">Worked example ✍ four letters into four addressed envelopes</span> D₄ = 4! (1 − 1 + 1/2 − 1/6 + 1/24) = 0 + 24/2 − 24/6 + 24/24 = 0 + 12 − 4 + 1 = <span class="circ">9</span>. Quick route: D₄ = 3(D₃ + D₂) = 3 × (2 + 1) = <b>9</b>. Near misses: 6, 11, 23.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 176" width="266">
+      <g class="w">
+        <rect x="10" y="10" width="58" height="146" rx="8" class="ink-k fill-y"/>
+        <rect x="232" y="10" width="58" height="146" rx="8" class="ink-k fill-y"/>
+        <path class="ink" d="M38,34 L262,34 M38,76 L262,76 M38,118 L262,118 M38,146 L262,146"/>
+        <path class="ink-r" d="M32,28 L44,40 M268,28 L256,40" style="stroke-width:3"/>
+        <path class="ink-g" d="M70,34 L230,76 M70,76 L230,34 M70,76 L230,118 M70,118 L230,76 M70,118 L230,146 M70,146 L230,118" marker-end="url(#ahg)"/>
+      </g>
+      <text x="39" y="172" text-anchor="middle" class="k s">letters</text>
+      <text x="261" y="172" text-anchor="middle" class="k s">envelopes</text>
+      <text x="150" y="26" text-anchor="middle" class="r w6 s">the diagonal is forbidden</text>
+      <text x="150" y="148" text-anchor="middle" class="g w6 s">only 9 of 4! = 24</text>
+    </svg><figcaption>the red cross kills the four fixed points</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="def tiny" style="margin-top:0"><span class="lbl">How to read the derangement formula</span> Start from all <b>n!</b> arrangements and apply PIE to the "in its place" events: subtract the arrangements with a specified letter home, add back the pairs that are both home, subtract the triples, and so on to the n-th sign. The events are symmetric, so each k-fold intersection contains <b>(n−k)!</b> arrangements — that is exactly where the 1/k! terms come from.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) The first two terms <b>cancel</b>: n! − n!/1! = 0. (ii) D₁ = <b>0</b>, which is why the recurrence needs two seeds. (iii) For n ≥ 2, Dₙ is never more than <b>n!/2</b>. (iv) "No two letters adjacent" is a different PIE problem with blocks, and the plain formula will not give it.</div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">IT link</span> A spell checker or a firewall rule base avoids double counting: a packet rejected by several rules must be subtracted back into the "rejected at least once" count. The same arithmetic decides how many inputs a <b>k-of-n</b> threshold circuit accepts.</div>
+  <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ a derangement variant</span> "Nobody in place, and A must not be first." Split on where A goes: it can go to position 2 or 3, and each branch contributes D₃ + D₂ = 3, so the answer is 2 × 3 = <b>6</b>. This case split on one object is the standard attack on any restricted-arrangement question. <span class="hl">Stirling numbers</span> S(n, k) — partitions of n objects into k non-empty unordered groups — refine this further: S(n, 2) = 2ⁿ⁻¹ − 1.</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: recurrence relations, basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Recurrence basics</span></div>
+  <h2><span class="no">5</span>Recurrence Relations: Definition &amp; Types</h2><span class="tag">written favourite ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">recurrence relation</span> is an equation expressing <b>aₙ</b> in terms of a fixed number of its <b>preceding terms</b>. The number of preceding terms used is the <b>order</b>: aₙ = aₙ₋₁ + 6aₙ₋₂ is of <b>order 2</b>. The independent values are the <b>initial conditions</b>, and <span class="circ">a recurrence of order k needs exactly k initial values</span> to fix the whole sequence.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,256px);align-items:start">
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Classification</th><th class="l">Test</th><th class="l">Example</th></tr>
+        <tr><td class="l"><b>Linear</b></td><td class="l">aₙ appears to the <b>first power</b> only</td><td class="l">aₙ = 2aₙ₋₁ + 3</td></tr>
+        <tr><td class="l"><b>Non-linear</b></td><td class="l">aₙ multiplied by itself or to a variable power</td><td class="l">aₙ = aₙ₋₁², &nbsp; aₙ = n·aₙ₋₁</td></tr>
+        <tr><td class="l"><b>Homogeneous</b></td><td class="l">no term depending on <b>n alone</b></td><td class="l">aₙ = aₙ₋₁ + aₙ₋₂</td></tr>
+        <tr><td class="l"><b>Non-homogeneous</b></td><td class="l">a term such as 3, n or 2ⁿ appears</td><td class="l">aₙ = 2aₙ₋₁ + n</td></tr>
+        <tr><td class="l"><b>Order 1 / order 2</b></td><td class="l">one / two preceding terms</td><td class="l">aₙ = 2aₙ₋₁ + 1 / Fibonacci</td></tr>
+        <tr><td class="l"><b>Constant coefficients</b></td><td class="l">the multipliers of aₙ₋₁, aₙ₋₂ … do not vary with n</td><td class="l">aₙ = 3aₙ₋₁ − 2aₙ₋₂</td></tr>
+      </table>
+      <div class="sumbox tiny"><span class="lbl">The three solving methods</span> <b>1. Iteration</b> — write a₁, a₂, a₃ … and read the pattern. <b>2. <span class="hl">Characteristic equation</span></b> — for a linear homogeneous relation with constant coefficients; the standard method and the one that carries marks. <b>3. Generating function</b> — replace aₙ by A(x) = Σ aₙxⁿ, multiply by xⁿ and sum, then read off a rational function whose coefficient expansion is the sequence.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 150" width="254">
+      <g class="w">
+        <circle cx="44" cy="72" r="23" class="ink-k fill-y"/>
+        <circle cx="150" cy="72" r="23" class="ink fill-b"/>
+        <circle cx="256" cy="72" r="23" class="ink-r fill-r"/>
+        <path class="ink-g" d="M70,72 L122,72" marker-end="url(#ahg)"/>
+        <path class="ink-g" d="M176,72 L228,72" marker-end="url(#ahg)"/>
+      </g>
+      <text x="44" y="78" text-anchor="middle" class="k w6">a₀</text>
+      <text x="150" y="78" text-anchor="middle" class="k w6">a₁</text>
+      <text x="256" y="78" text-anchor="middle" class="r w6">a₂</text>
+      <text x="44" y="122" text-anchor="middle" class="s k">seed</text>
+      <text x="150" y="122" text-anchor="middle" class="s k">seed 2</text>
+      <text x="256" y="122" text-anchor="middle" class="s r">forced</text>
+      <text x="96" y="22" text-anchor="middle" class="s g">+3</text>
+      <text x="202" y="22" text-anchor="middle" class="s g">+3</text>
+      <text x="150" y="144" text-anchor="middle" class="s k">order 2 needs two seeds</text>
+    </svg><figcaption>iteration: each arrow is one application, never a division</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ iteration</span> aₙ = aₙ₋₁ + 3 with a₀ = 2 gives 5, 8, 11 — each step adds the <b>same</b> 3, so aₙ = <b>2 + 3n</b>. For aₙ = 2aₙ₋₁ + 3 with a₀ = 1 the values 5, 13, 29 <b>double then add 3</b>, which is not geometric, so shift: set bₙ = aₙ + 3, then bₙ = 2bₙ₋₁ and <b>aₙ = 4·2ⁿ − 3</b>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) "Homogeneous" is about the <b>n-dependent term</b> — aₙ = n·aₙ₋₁ is non-homogeneous. (ii) Order counts the <b>highest lag</b>, so aₙ = aₙ₋₂ is still order 2. (iii) Iteration is only a legal written method if the closed form is then <b>proved</b> by induction. (iv) A repeated root needs the extra n factor (see sheet 7).</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: characteristic equation ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Characteristic equation</span></div>
+  <h2><span class="no">6</span>Characteristic-Equation Method</h2><span class="tag">the standard method ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Method</span> For <b>aₙ = c₁aₙ₋₁ + c₂aₙ₋₂ + ⋯ + c<sub>k</sub>aₙ₋ₖ</b> substitute the trial solution <b>aₙ = rⁿ</b>. Dividing by r<sup>n−k</sup> gives the <span class="hl">characteristic equation</span> <b>r<sup>k</sup> − c₁r<sup>k−1</sup> − c₂r<sup>k−2</sup> − ⋯ − c<sub>k</sub> = 0</b>. Each <b>distinct</b> root rᵢ contributes Aᵢrᵢⁿ; a root repeated m times contributes rⁿ(A + Bn + ⋯). The constants come from the initial conditions.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,256px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 142" width="254">
+      <g class="w">
+        <path class="ink-k" d="M16,90 H288 M40,18 V118"/>
+        <path class="ink-r" d="M40,90 C112,90 128,38 168,32" marker-end="url(#ah)"/>
+        <path class="ink" d="M40,90 C198,90 210,104 246,104" marker-end="url(#ahb)"/>
+        <path class="ink" d="M168,32 V90 M246,104 V90"/>
+        <path class="ink-g" d="M98,90 V56" style="stroke-dasharray:4 3"/>
+      </g>
+      <text x="168" y="26" text-anchor="middle" class="r w6 s">r₁ = 3</text>
+      <text x="248" y="98" text-anchor="middle" class="k w6 s">r₂ = −2</text>
+      <text x="102" y="52" text-anchor="middle" class="g s">|r₁|</text>
+      <text x="150" y="116" text-anchor="middle" class="s k">a root is where the curve meets the axis</text>
+      <text x="150" y="138" text-anchor="middle" class="r s">aₙ = A·3ⁿ + B·(−2)ⁿ</text>
+    </svg><figcaption>each root gives one term of the general solution</figcaption></figure>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍ a(n) = a(n−1) + 6a(n−2), a₀ = 2, a₁ = 1</span> <b>Step 1 — type.</b> Order 2, linear, homogeneous, constant coefficients ⇒ the characteristic method applies.
+      <b>Step 2 — characteristic equation.</b> Put aₙ = rⁿ: rⁿ = rⁿ⁻¹ + 6rⁿ⁻² ⇒ <b>r² = r + 6 ⇒ r² − r − 6 = 0 ⇒ (r − 3)(r + 2) = 0</b>, so r₁ = 3, r₂ = −2, distinct.
+      <b>Step 3 — general solution.</b> <b>aₙ = A·3ⁿ + B·(−2)ⁿ</b>.
+      <b>Step 4 — initial conditions.</b> n = 0: A + B = 2. n = 1: 3A − 2B = 1. Twice the first plus the second gives 5A = 5 ⇒ A = 1, and B = 1.
+      <b>Step 5 — check.</b> <b>aₙ = 3ⁿ + (−2)ⁿ</b>. From the recurrence a₂ = 1 + 6·2 = <b>13</b>, and the formula gives 9 + 4 = 13 ✓. a₃ = 13 + 6·1 = <b>19</b>, and the formula gives 27 − 8 = 19 ✓.</div>
+  </div>
+  <div class="cols">
+    <table class="hand tiny" style="margin-top:0;width:100%">
+      <tr><th class="l">Recurrence</th><th class="l">Characteristic equation</th><th class="l">Roots</th></tr>
+      <tr><td class="l">Fibonacci Fₙ = Fₙ₋₁ + Fₙ₋₂</td><td class="l">r² − r − 1 = 0</td><td class="l">(1 ± √5)/2</td></tr>
+      <tr><td class="l">aₙ = aₙ₋₁ + 6aₙ₋₂</td><td class="l">r² − r − 6 = 0</td><td class="l">3, −2</td></tr>
+      <tr><td class="l">aₙ = 2aₙ₋₁ + aₙ₋₂</td><td class="l">r² − 2r − 1 = 0</td><td class="l">1 ± √2</td></tr>
+      <tr><td class="l">aₙ = 3aₙ₋₁ (order 1)</td><td class="l">r − 3 = 0</td><td class="l">3</td></tr>
+      <tr><td class="l">aₙ = 2aₙ₋₁ − aₙ₋₂ (double root)</td><td class="l">(r − 1)² = 0</td><td class="l">1 twice ⇒ A + Bn</td></tr>
+    </table>
+    <div>
+      <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Two sequences worth memorising</span> <b>Arithmetic</b> — aₙ = aₙ₋₁ + d, giving <b>aₙ = a + nd</b>, with Σ<sub>k=1</sub>ⁿaₖ = n/2·(2a + (n−1)d). <b>Geometric</b> — aₙ = r·aₙ₋₁, giving <b>aₙ = a·rⁿ</b>, with Σ<sub>k=1</sub>ⁿaₖ = a(rⁿ − 1)/(r − 1) for r ≠ 1.</div>
+      <div class="exam tiny"><span class="lbl">Exam trap</span> (i) Fibonacci's characteristic equation is <b>r² − r − 1 = 0</b>; r² − r + 1 = 0 is the classic slip. (ii) Move everything to one side first: aₙ = aₙ₋₁ + 6aₙ₋₂ gives r² − r − 6, <b>not</b> r² − r + 6. (iii) A repeated root needs (A + Bn)rⁿ, never Arⁿ. (iv) Order 2 means <b>two</b> seeds.</div>
+    </div>
+  </div>
+  <div class="tipbox tiny"><span class="lbl">Where recurrences earn their keep</span> Master-s Theorem analyses divide-and-conquer algorithms. For T(n) = 2T(n/2) + n: a = 2, b = 2, so n<sup>log_b a</sup> = n, and f(n) = n is Θ(n) — <b>case 2</b>, giving <b>T(n) = Θ(n log n)</b>. Case 1 is when f(n) dominates (merge sort), case 3 when it is polynomially smaller (binary search). Fibonacci is the cost of naive recursion, so an app reporting "how many calls" is solving a recurrence. Dynamic-programming tables (edit distance, coin change) are the same idea written bottom-up.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: groups ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Groups &amp; Lagrange</span></div>
+  <h2><span class="no">7</span>Semigroups, Groups &amp; Lagrange's Theorem</h2><span class="tag">axioms asked directly ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">binary operation</span> * on a set G assigns to every ordered pair (a, b) exactly one element of G. The four <b>group axioms</b> are <b>closure</b> (a*b ∈ G), <b>associativity</b> ((a*b)*c = a*(b*c)), <b>identity</b> (∃e with a*e = e*a = a) and <b>inverse</b> (∀a, ∃a⁻¹ with a*a⁻¹ = e). Add <b>a*b = b*a</b> and the group is <b>Abelian</b>. <span class="circ">Associativity and commutativity are different properties.</span></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,254px);align-items:start">
+    <div>
+      <table class="hand tiny" style="margin-top:0;width:100%">
+        <tr><th class="l">Structure</th><th class="l">What it adds</th></tr>
+        <tr><td class="l"><b>Semigroup</b></td><td class="l">closure + associativity only</td></tr>
+        <tr><td class="l"><b>Monoid</b></td><td class="l">a semigroup with an identity element</td></tr>
+        <tr><td class="l"><b>Group</b></td><td class="l">a monoid in which every element has an inverse</td></tr>
+        <tr><td class="l"><b>Abelian group</b></td><td class="l">a group that is also commutative</td></tr>
+        <tr><td class="l"><b>Cyclic group</b></td><td class="l">generated by one element g: {g⁰, g¹, …}</td></tr>
+        <tr><td class="l"><b>Subgroup H ≤ G</b></td><td class="l">a subset that is itself a group under the same operation</td></tr>
+      </table>
+      <div class="sumbox tiny"><span class="lbl">Lagrange's theorem</span> Let H be a subgroup of a finite group G. Then <span class="circ">|H| divides |G|</span>, and |G| = |H| × (number of distinct cosets). In words: <b>the order of a subgroup must divide the order of the group</b>, and the cosets cut G into equal pieces. Corollary: a group of prime order p has <b>no non-trivial proper subgroup</b>.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 170" width="252">
+      <g class="w">
+        <rect x="14" y="6" width="272" height="144" rx="10" class="ink-k fill-y"/>
+        <rect x="32" y="24" width="236" height="108" rx="10" class="ink fill-b"/>
+        <rect x="50" y="40" width="200" height="74" rx="10" class="ink-r fill-r"/>
+        <rect x="70" y="54" width="160" height="44" rx="10" class="ink-g fill-g"/>
+        <path class="ink-p" d="M216,66 L248,66" marker-end="url(#ahp)"/>
+      </g>
+      <text x="150" y="20" text-anchor="middle" class="k s">group G</text>
+      <text x="150" y="38" text-anchor="middle" class="k s">Abelian group</text>
+      <text x="150" y="54" text-anchor="middle" class="r s">group</text>
+      <text x="150" y="72" text-anchor="middle" class="g s">monoid</text>
+      <text x="150" y="90" text-anchor="middle" class="g w6">semigroup</text>
+      <text x="150" y="140" text-anchor="middle" class="s k">each box keeps every outer axiom</text>
+      <text x="150" y="166" text-anchor="middle" class="p s">cosets of H tile G, |H| each</text>
+    </svg><figcaption>one axiom per step; cosets cut the group evenly</figcaption></figure>
+  </div>
+  <div class="cols">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Worked example ✍</span> <b>(ℤ, +)</b> is an <b>Abelian group</b>: closure, associativity, identity <b>0</b>, inverse <b>−a</b>, commutative. <b>(ℤ₆, +)</b> is a <span class="circ">cyclic</span> Abelian group of order 6 generated by 1; by Lagrange it has subgroups of order 1, 2 and 3 only. <b>(ℚ*, ×)</b> is an Abelian group with identity 1, but <b>(ℤ*, ×)</b> is not, since 2 has no inverse in ℤ.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> (i) Lagrange is <b>necessity, not sufficiency</b>: 4 divides 12, but a group of order 12 need not contain a subgroup of order 4 (A₄ does not). (ii) In (ℤ₆, +) the element 2 has order 3 and 3 has order 2. (iii) A <b>semigroup has no identity</b>. (iv) Closure is not automatic: on ℤ the operation − is <b>not</b> closed, since 1 − 2 = −1 ∉ ℤ.</div>
+  </div>
+  <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Order of an element, two groups to recognise, and the crypto link</span> The <b>order of g</b> is the least positive k with g<sup>k</sup> = e; in ℤₙ it is n/gcd(n, g), so ord(2) in ℤ₆ is 3 and ord(3) is 2. The <span class="hl">symmetric group Sₙ</span> of all permutations of n objects is a group of order n! — not Abelian for n ≥ 3, because composition reverses order. The <b>alternating group Aₙ</b> is the subgroup of even permutations and has order n!/2, exactly as Lagrange demands. Every public-key cipher is a group in disguise: encryption is an element of a finite group, decryption is its inverse, and security means nobody can compute that inverse without the private key. RSA works in ℤₙ*, of order φ(n).</div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: rings ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Rings &amp; fields</span></div>
+  <h2><span class="no">8</span>Rings, Integral Domains &amp; Fields</h2><span class="tag">classification table ★</span>
+  <div class="def tiny" style="margin-top:0"><span class="lbl">Definition</span> A <span class="hl">ring</span> (R, +, ×) has two binary operations: (R, +) is an <b>Abelian group</b>, (R, ×) is a <b>semigroup</b> (closed and associative, identity not required), and multiplication <b>distributes</b> over addition both ways. Add a multiplicative identity 1 and it is a <b>ring with unity</b>; add commutativity of × and it is <b>commutative</b>; add "no zero divisors" and it is an <b>integral domain</b>; add "every non-zero element is invertible" and it is a <b>field</b>.</div>
+  <table class="hand tiny" style="width:100%">
+    <tr><th class="l">Set with operations</th><th class="l">Abelian group?</th><th class="l">Ring with unity?</th><th class="l">Integral domain?</th><th class="l">Field?</th></tr>
+    <tr><td class="l">(ℤ, +, ×)</td><td class="l">yes, under +</td><td class="l"><b>yes</b></td><td class="l"><b>yes</b></td><td class="l"><b>no</b></td></tr>
+    <tr><td class="l">(ℚ, +, ×)</td><td class="l">yes, under +</td><td class="l"><b>yes</b></td><td class="l"><b>yes</b></td><td class="l"><b>yes</b></td></tr>
+    <tr><td class="l">(ℝ, +, ×)</td><td class="l">yes, under +</td><td class="l"><b>yes</b></td><td class="l"><b>yes</b></td><td class="l"><b>yes</b></td></tr>
+    <tr><td class="l">(ℂ, +, ×)</td><td class="l">yes, under +</td><td class="l"><b>yes</b></td><td class="l"><b>yes</b></td><td class="l"><b>yes</b></td></tr>
+    <tr><td class="l">(ℤ₆, +, ×)</td><td class="l">yes, under +</td><td class="l"><b>yes</b></td><td class="l"><b>no</b></td><td class="l"><b>no</b></td></tr>
+    <tr><td class="l">M₂(ℝ), matrix + and ×</td><td class="l">yes, under +</td><td class="l"><b>yes</b></td><td class="l"><b>no</b></td><td class="l"><b>no</b></td></tr>
+    <tr><td class="l">GL(n), × only</td><td class="l">yes; Abelian only n ≤ 2</td><td class="l">n/a</td><td class="l">n/a</td><td class="l">n/a</td></tr>
+  </table>
+  <div class="sumbox tiny"><span class="lbl">Why each row reads that way</span> <b>ℤ</b> fails only the field test: 2 has no inverse in ℤ. <b>ℚ</b>, <b>ℝ</b> and <b>ℂ</b> are fields — 1/z is the conjugate of z scaled by |z|². <b>ℤ₆</b> has zero divisors (2·3 = 0) and <b>M₂(ℝ)</b> contains a zero matrix, so neither is a domain; <span class="hl">GL(n)</span> is settled by the <b>determinant</b>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,252px) minmax(0,1fr);align-items:start">
+    <figure class="doodle"><svg viewBox="0 0 300 190" width="250">
+      <g class="w">
+        <rect x="10" y="6" width="280" height="178" rx="10" class="ink-k fill-y"/>
+        <rect x="26" y="30" width="248" height="142" rx="10" class="ink fill-b"/>
+        <rect x="44" y="54" width="212" height="102" rx="10" class="ink-r fill-r"/>
+        <rect x="62" y="78" width="176" height="62" rx="10" class="ink-g fill-g"/>
+      </g>
+      <text x="150" y="24" text-anchor="middle" class="k s">ring</text>
+      <text x="150" y="48" text-anchor="middle" class="k s">ring with unity</text>
+      <text x="150" y="72" text-anchor="middle" class="r s">commutative ring</text>
+      <text x="150" y="102" text-anchor="middle" class="g s">integral domain</text>
+      <text x="150" y="128" text-anchor="middle" class="g w6">field</text>
+      <text x="150" y="170" text-anchor="middle" class="s k">ℚ ⊂ ℝ ⊂ ℂ are all four</text>
+    </svg><figcaption>each inner box adds exactly one condition</figcaption></figure>
+    <div>
+      <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>G</b>roup = <b>one</b> operation, and it must have an <b>I</b>nverse; <b>R</b>ing = <b>two</b> operations, and multiplication need <b>not</b> have one." Read the hierarchy downward as <b>F</b>ield → <b>I</b>ntegral <b>D</b>omain → <b>C</b>ommutative ring → ring → semigroup: the extra letters are exactly the extra conditions.</div>
+      <div class="exam tiny"><span class="lbl">Exam trap</span> (i) A <b>ring need not have an identity</b> — that is the whole difference between "ring" and "ring with unity". (ii) ℤ is an integral domain but <span class="red"><b>not</b> a field</span>: only ±1 are units. (iii) 6 being composite is not why ℤ₆ fails; the zero divisors are. (iv) Every ring is an <b>Abelian group under +</b>.</div>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Applications</span> <b>Cryptography.</b> RSA works in ℤₙ under multiplication: the public key uses e with gcd(e, φ(n)) = 1, the private key d with ed ≡ 1 mod φ(n). <b>Elliptic-curve cryptography</b> swaps that multiplicative group for the points on a curve — still a group, with far smaller keys. <b>Coding theory</b> builds linear codes as subgroups of ℤ₂ⁿ, measured by minimum Hamming distance: correcting t errors needs d ≥ 2t + 1. <b>Computer algebra</b> works over fields so a non-zero polynomial has at most its degree many roots, which is what makes gcd and integration terminate.</div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid tiny">
+      <p>OR adds, AND multiplies</p><p>n! arrangements; <b>0! = 1</b></p>
+      <p>n-element set ⇒ <b>2ⁿ</b> subsets</p><p>Proper subsets = 2ⁿ − 1</p>
+      <p>Pigeonhole: n &gt; k ⇒ a clash</p><p>Guarantee needs <b>k + 1</b></p>
+      <p>Months ⇒ <b>13</b>; days ⇒ 367</p><p><sup>n</sup>P<sub>r</sub> = n!/(n−r)!</p>
+      <p><sup>n</sup>C<sub>r</sub> = n!/[r!(n−r)!]</p><p><span class="circ">nCr = nPr/r!</span></p>
+      <p>nCr = nC<sub>n−r</sub></p><p>Repeats: n!/(p! q! …)</p>
+      <p>LEVEL ⇒ 5!/(2!2!) = <b>30</b></p><p>Round a table ⇒ (n−1)!</p>
+      <p>|A ∪ B| = |A|+|B|−|A∩B|</p><p>3-set: add the triple back</p>
+      <p>1..100 by 3 or 5 = <b>47</b></p><p>None of three = <b>12</b></p>
+      <p>Dₙ = n!(1−1+1/2!−1/3!+…)</p><p><b>D₄ = 9</b>, D₅ = 44, D₆ = 265</p>
+      <p>Dₙ = (n−1)(Dₙ₋₁+Dₙ₋₂)</p><p>Order k ⇒ k seeds</p>
+      <p>Arithmetic aₙ = a + nd</p><p>Geometric aₙ = a·rⁿ</p>
+      <p>Fibonacci ⇒ r² − r − 1 = 0</p><p>a(n)=a(n−1)+6a(n−2) ⇒ r = 3, −2</p>
+      <p>Solution aₙ = <b>3ⁿ + (−2)ⁿ</b></p><p>a₂ = 13, a₃ = 19 ✓</p>
+      <p>Repeated root ⇒ (A + Bn)rⁿ</p><p>Lagrange: |H| <b>divides</b> |G|</p>
+      <p>Semigroup ⊂ monoid ⊂ group</p><p>Field = commutative ring + inverses</p>
+      <p>ℤ is a domain, <b>not</b> a field</p><p>ℤ₆ has zero divisors</p>
+      <p>M₂(ℝ) is a ring, not a domain</p><p>GL(n) under × is a group</p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols tiny">
+    <ol class="num">
+      <li>Order matters ⇒ <b>nPr</b>, not nCr</li>
+      <li><b>nCr = nPr / r!</b></li>
+      <li>Three-set PIE <b>adds</b> the triple back</li>
+      <li>"At least one" is a <b>union</b></li>
+      <li>Derangements: <b>D₄ = 9</b></li>
+      <li>Pigeonhole guarantee = <b>holes + 1</b></li>
+    </ol>
+    <ol class="num" start="7">
+      <li>Homogeneous ⇒ no <b>n-only</b> term</li>
+      <li>Fibonacci ⇒ <b>r² − r − 1 = 0</b></li>
+      <li>Order 2 ⇒ <b>two</b> initial conditions</li>
+      <li>Lagrange is <b>necessity only</b></li>
+      <li>A ring need <b>not</b> have 1</li>
+      <li>ℤ is a domain, <b>not</b> a field</li>
+    </ol>
+  </div>
+  <div class="exam tiny"><span class="lbl">Top traps</span> "5 people in 5 chairs = 720" (that is 6!) · reading a committee question as ordered, so 30 instead of 15 · forgetting the + |A∩B∩C| term and getting 17 instead of 12 · answering "12 months" to a pigeonhole guarantee question · forgetting the 2!·2! divisor and getting 120 for LEVEL · treating Dₙ as n! − n · writing r² − r + 6 for a(n) = a(n−1) + 6a(n−2) · using one seed for an order-2 recurrence · quoting Lagrange as "every divisor appears" · calling ℤ a field.</div>
+  <figure class="doodle"><svg viewBox="0 0 520 96" width="486">
+    <g class="w">
+      <rect x="8" y="8" width="240" height="68" rx="10" class="ink-g fill-g"/>
+      <rect x="272" y="8" width="240" height="68" rx="10" class="ink-r fill-r"/>
+      <path class="ink-r" d="M256,42 L266,42" marker-end="url(#ah)"/>
+    </g>
+    <text x="128" y="36" text-anchor="middle" class="g w6 l">COUNT RIGHT</text>
+    <text x="128" y="53" text-anchor="middle" class="g s">nCr = nPr/r! · PIE signs alternate</text>
+    <text x="128" y="69" text-anchor="middle" class="g s">char. equation · Lagrange</text>
+    <text x="392" y="36" text-anchor="middle" class="r w6 l">COUNT WRONG</text>
+    <text x="392" y="53" text-anchor="middle" class="r s">720 for 5! · 30 for a committee</text>
+    <text x="392" y="69" text-anchor="middle" class="r s">12 for pigeonhole · ℤ a field</text>
+    <text x="260" y="92" text-anchor="middle" class="p s">every wrong option in the bank is one of these</text>
+  </svg><figcaption>the whole lesson reduces to eight numbers and four traps</figcaption></figure>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>Discrete Maths · Counting &amp; Algebraic Structures</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>5 people in a row of 5 chairs:<ol class="opts"><li>120</li><li>720</li><li>60</li><li>24</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>A committee of 2 from 6 people:<ol class="opts"><li>30</li><li>15</li><li>12</li><li>36</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Integers 1..100 divisible by 3 or 5:<ol class="opts"><li>53</li><li>41</li><li>47</li><li>33</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Students to guarantee two born in one month:<ol class="opts"><li>12</li><li>24</li><li>366</li><li>13</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Distinct arrangements of LEVEL:<ol class="opts"><li>30</li><li>60</li><li>120</li><li>20</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Four letters into four envelopes, none correct:<ol class="opts"><li>11</li><li>23</li><li>6</li><li>9</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>100 students, 45 M / 40 P / 35 C, 15 MP / 10 PC / 12 MC, 5 all — study none:<ol class="opts"><li>17</li><li>12</li><li>22</li><li>7</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>Subsets of a 5-element set:<ol class="opts"><li>31</li><li>16</li><li>32</li><li>25</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Characteristic equation of Fibonacci:<ol class="opts"><li>r² − r − 1 = 0</li><li>r² + r − 1 = 0</li><li>r² − r + 1 = 0</li><li>r² − 2r − 1 = 0</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>A group of order 12 must have a subgroup of order:<ol class="opts"><li>5</li><li>7</li><li>4</li><li>8</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-a · 2-b · 3-c · 4-d · 5-a · 6-d · 7-b · 8-c · 9-a · 10-c</div>
+  <div class="wq"><span class="lbl">Written question</span> (i) Solve a(n) = a(n−1) + 6a(n−2), n ≥ 2, a(0) = 2, a(1) = 1, verifying at n = 2, 3. (ii) How many integers 1..100 are divisible by 3 or 5, and by neither? (iii) Classify (ℤ, +, ×), (ℤ₆, +, ×), M₂(ℝ), (ℚ, +, ×). (iv) State Lagrange's theorem and list the possible subgroup orders of a group of order 12. <i class="mk">10</i></div>
+  <ol class="steps tiny" style="margin-top:1mm">
+    <li><b>Recurrence (3)</b> — aₙ = rⁿ gives r² − r − 6 = 0 ⇒ r = 3, −2. Then A + B = 2 and 3A − 2B = 1 ⇒ A = B = 1, so <span class="circ">aₙ = 3ⁿ + (−2)ⁿ</span>. Check a₂ = 13 = 9 + 4 ✓, a₃ = 19 = 27 − 8 ✓. <i class="mk">3</i></li>
+    <li><b>Inclusion–exclusion (2)</b> — 33 + 20 − 6 ⇒ <b>47</b> by 3 or 5, <b>53</b> by neither. <i class="mk">2</i></li>
+    <li><b>Classification (3)</b> — ℤ: domain, <span class="circ">not</span> a field. ℤ₆ and M₂(ℝ): rings with unity with zero divisors, so neither domain nor field. ℚ: all four. Every ring is an <b>Abelian group under +</b>. <i class="mk">3</i></li>
+    <li><b>Lagrange (2)</b> — <b>|H| divides |G|</b>; for |G| = 12 the orders are <b>1, 2, 3, 4, 6, 12</b>, necessary only. <i class="mk">2</i></li>
+  </ol>
+  <h3>Before the exam ✓</h3>
+  <div class="cols tiny">
+    <ul class="tick"><li>Decide nPr vs nCr from the word "order"</li><li>Write out the six pairwise PIE terms</li></ul>
+    <ul class="tick"><li>Build the characteristic equation before any algebra</li><li>"Field = domain + every non-zero invertible"</li></ul>
+  </div>
+  <div class="pg-no">11</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

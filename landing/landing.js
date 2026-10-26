@@ -46,7 +46,12 @@ const isSignedIn = validToken('candidate_token', 'candidate') || validToken('adm
 // Signed out, every "start studying" link opens the login screen (which comes back to Study Hub).
 const hubHref = isSignedIn ? C.STUDY_HUB_URL : C.STUDY_HUB_URL + C.LOGIN_HASH
 const targetAttrs = C.OPEN_IN_NEW_TAB ? ' target="_blank" rel="noopener"' : ''
-const subjectUrl = (slug) => (isSignedIn && C.DEEP_LINKS_ENABLED ? C.deepLink(slug) : hubHref)
+// A subject card opens that subject; signed out, it goes through the login screen and back (?next=).
+const subjectUrl = (slug) => {
+  if (!C.DEEP_LINKS_ENABLED) return hubHref
+  const link = C.deepLink(slug)
+  return isSignedIn ? link : `${C.STUDY_HUB_URL}${C.LOGIN_HASH}?next=${link.split('#/')[1]}`
+}
 const subjectByNo = new Map(C.subjects.map((s) => [s.no, s]))
 
 const openInTab = (a) => {
@@ -80,6 +85,7 @@ const ICONS = {
   note: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/>',
   history: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
   phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
 }
 const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ''}</svg>`
 
@@ -109,16 +115,25 @@ function render() {
     if (v !== undefined) el.setAttribute('aria-label', v)
   })
 
+  $('#hero-points').innerHTML = T.heroPoints
+    .map((p) => `<li>${icon('check')}${esc(p)}</li>`)
+    .join('')
+
+  // Model answer for the hero's past question; the terms stay in English as exams print them.
+  $('#slip-answer').innerHTML = T.acid
+    .map((a, i) => `<div style="--i:${i}"><dt lang="en">${esc(a.term)}</dt><dd>${esc(a.desc)}</dd></div>`)
+    .join('')
+
   $('#stats-list').innerHTML = T.stats
     .map((s) => `<li><strong>${esc(s.value)}</strong><span>${esc(s.label)}</span></li>`)
     .join('')
 
   $('#exams-list').innerHTML = T.exams
     .map(
-      (e) => `<li class="card">
+      (e, i) => `<li class="exam" style="--i:${i}">
         <h3>${esc(e.title)}</h3>
-        <p class="tag">${esc(e.tag)}</p>
-        <p>${esc(e.desc)}</p>
+        <p class="exam-posts">${esc(e.tag)}</p>
+        <p class="exam-desc">${esc(e.desc)}</p>
       </li>`,
     )
     .join('')
@@ -126,24 +141,29 @@ function render() {
   // In English the subject name is the heading; in Bangla the English name stays as a subtitle.
   $('#subjects-list').innerHTML = C.subjects
     .map(
-      (s) => `<li><a class="subject" href="${esc(subjectUrl(s.slug))}"${targetAttrs}>
+      (s, i) => `<li style="--i:${i}"><a class="subject" href="${esc(subjectUrl(s.slug))}"${targetAttrs}>
         <span class="subject-no">${digits(s.no)}</span>
         <span class="subject-text">
           <span class="subject-bn"${lang === 'en' ? ' lang="en"' : ''}>${esc(lang === 'en' ? s.en : s.bn)}</span>
           ${lang === 'bn' ? `<span class="subject-en" lang="en">${esc(s.en)}</span>` : ''}
           ${s.pyq ? `<span class="badge">${esc(ui.pyqBadge)}</span>` : ''}
         </span>
-        <span class="subject-go" aria-hidden="true">→</span>
       </a></li>`,
     )
     .join('')
 
+  $('#tour-tabs').innerHTML = T.tour
+    .map(
+      (t, i) => `<button class="tour-tab" type="button" role="tab" id="tour-tab-${i}" aria-controls="tour-panel">${esc(t.tab)}</button>`,
+    )
+    .join('')
+  showTour(tourIdx, false)
+
   $('#features-list').innerHTML = T.features
     .map(
-      (f) => `<li class="card feature">
-        <span class="feature-icon">${icon(f.icon)}</span>
-        <h3>${esc(f.title)}</h3>
-        <p>${esc(f.desc)}</p>
+      (f, i) => `<li class="extra" style="--i:${i}">
+        <span class="extra-icon">${icon(f.icon)}</span>
+        <div><h3>${esc(f.title)}</h3><p>${esc(f.desc)}</p></div>
       </li>`,
     )
     .join('')
@@ -165,10 +185,10 @@ function render() {
         .filter(Boolean)
         .map((s) => `<a class="chip" href="${esc(subjectUrl(s.slug))}"${targetAttrs} lang="en">${esc(s.en)}</a>`)
         .join('')
-      return `<li class="road-step">
+      return `<li class="road-step" style="--i:${i}">
         <span class="road-dot" aria-hidden="true">${digits(i + 1)}</span>
         <div class="road-body">
-          <h3>${esc(ui.roadmapStep.replace('{n}', digits(i + 1)))}${esc(r.title)}</h3>
+          <h3>${esc(r.title)}</h3>
           <p>${esc(r.desc)}</p>
           ${chips ? `<div class="chips">${chips}</div>` : ''}
         </div>
@@ -187,6 +207,57 @@ function render() {
   syncThemeBtn()
   syncMenuBtn()
 }
+
+/* ---- Tour: one screen of StudyPath per tab --------------------------- */
+let tourIdx = 0
+const tourImg = $('#tour-img')
+const shot = (name, size) => `/landing/tour-${name}${size ? '-' + size : ''}.webp`
+function showTour(i, focus) {
+  const n = T.tour.length
+  tourIdx = (i + n) % n
+  const t = T.tour[tourIdx]
+  document.querySelectorAll('.tour-tab').forEach((b, j) => {
+    const on = j === tourIdx
+    b.setAttribute('aria-selected', String(on))
+    b.tabIndex = on ? 0 : -1
+    if (on && focus) b.focus()
+  })
+  $('#tour-panel').setAttribute('aria-labelledby', `tour-tab-${tourIdx}`)
+  $('#tour-copy').innerHTML = `<h3>${esc(t.title)}</h3><p>${esc(t.desc)}</p>
+    <ul>${t.points.map((p) => `<li>${icon('check')}${esc(p)}</li>`).join('')}</ul>`
+  $('#tour-url').textContent = t.url
+  const src = shot(t.img)
+  if (!tourImg.src.endsWith(src)) {
+    tourImg.classList.remove('swap')
+    void tourImg.offsetWidth // restart the fade
+    tourImg.classList.add('swap')
+    tourImg.srcset = `${shot(t.img, 800)} 800w, ${src} 1280w`
+    tourImg.src = src
+  }
+  tourImg.alt = t.alt
+}
+$('#tour-tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('.tour-tab')
+  if (b) showTour([...b.parentNode.children].indexOf(b), false)
+})
+// Arrow keys move between tabs (the WAI-ARIA tabs pattern); Home/End jump to the ends.
+$('#tour-tabs').addEventListener('keydown', (e) => {
+  const step = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 1, ArrowUp: -1 }[e.key]
+  if (step) showTour(tourIdx + step, true)
+  else if (e.key === 'Home') showTour(0, true)
+  else if (e.key === 'End') showTour(T.tour.length - 1, true)
+  else return
+  e.preventDefault()
+})
+// Fetch the other screens once the page is idle, so switching tabs is instant.
+addEventListener('load', () =>
+  setTimeout(() => {
+    const big = matchMedia('(min-width: 960px)').matches
+    C.text.en.tour.forEach((t) => {
+      new Image().src = shot(t.img, big ? '' : 800)
+    })
+  }, 1500),
+)
 
 $('#lang-toggle').addEventListener('click', () => {
   lang = lang === 'bn' ? 'en' : 'bn'
@@ -236,12 +307,12 @@ const themeBtn = $('#theme-toggle')
 function syncThemeBtn() {
   const dark = root.getAttribute('data-theme') !== 'light'
   themeBtn.setAttribute('aria-label', dark ? T.ui.themeToLight : T.ui.themeToDark)
-  document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#0d0d0d' : '#f5f5f5')
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#0f1522' : '#f4f6fa')
 }
 themeBtn.addEventListener('click', () => {
   const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light'
   root.setAttribute('data-theme', next)
-  store.set('landing_theme', next)
+  store.set('studyhub_theme', next) // shared with Study Hub
   syncThemeBtn()
 })
 
@@ -268,6 +339,9 @@ toTopBtn.addEventListener('click', toTop)
 let ticking = false
 const syncToTop = () => {
   toTopBtn.hidden = window.scrollY < 600
+  // The ring around the button shows how far down the page the reader is.
+  const max = document.documentElement.scrollHeight - window.innerHeight
+  toTopBtn.style.setProperty('--progress', `${max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0}%`)
   ticking = false
 }
 window.addEventListener(
@@ -284,3 +358,28 @@ window.addEventListener(
 render()
 syncToTop()
 root.classList.remove('lang-pending')
+
+/* ---- Scroll reveal --------------------------------------------------- */
+// Sections ease in once as they reach the viewport. Skipped for reduced motion and old browsers,
+// so the page is never left with hidden content.
+if (!reduceMotion.matches && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue
+        e.target.classList.add('in')
+        io.unobserve(e.target)
+      }
+    },
+    { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+  )
+  const watch = (sel, cls) =>
+    document.querySelectorAll(sel).forEach((el) => {
+      // Already on screen at load (e.g. a deep link): leave it visible.
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.9) return
+      el.classList.add(cls)
+      io.observe(el)
+    })
+  watch('.section-head, .tour-tabs, .tour-stage, #exams-note, .final-inner, .faq', 'reveal')
+  watch('#exams-list, #subjects-list, #features-list, #roadmap-list', 'reveal-list')
+}

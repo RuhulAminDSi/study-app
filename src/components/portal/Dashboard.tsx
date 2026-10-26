@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, type CSSProperties } from 'react'
 import { useApp } from '../../context/AppContext'
 import type { OrderedLesson } from '../../context/AppContext'
 import { useProgress } from '../../context/progress'
@@ -87,7 +87,7 @@ export default function Dashboard() {
         </section>
 
         <ul className="pd-stats">
-          {stats.map(s => {
+          {stats.map((s, i) => {
             const body = (
               <>
                 <span className="pd-stat-icon"><Icon name={s.icon} /></span>
@@ -98,7 +98,7 @@ export default function Dashboard() {
               </>
             )
             return (
-              <li key={s.label}>
+              <li key={s.label} style={{ '--i': i } as CSSProperties}>
                 {s.href ? <a className="pd-stat link" href={s.href}>{body}</a> : <div className="pd-stat">{body}</div>}
               </li>
             )
@@ -111,12 +111,12 @@ export default function Dashboard() {
               <h2 id="pd-subjects-title">{t.navSubjects}</h2>
             </div>
             <ul className="pd-subjects">
-              {subjects.map(s => {
+              {subjects.map((s, i) => {
                 const seen = s.lessons.filter(o => opened.has(o.lesson.id)).length
                 const next = s.lessons.find(o => !opened.has(o.lesson.id)) ?? s.lessons[0]
                 const action = seen === 0 ? t.dashOpen : seen === s.lessons.length ? t.dashReview : t.dashResume
                 return (
-                  <li key={s.chapterId}>
+                  <li key={s.chapterId} style={{ '--i': i } as CSSProperties}>
                     <a className="pd-subject" href={lessonHref(next)}>
                       <div className="pd-subject-top">
                         <span className="pd-subject-num">{num(s.number, lang)}</span>

@@ -12,12 +12,15 @@ export class AdminApiError extends Error {
   status: number
   code?: string
   fields: Record<string, string>
+  /** The whole error body, for routes that add details (e.g. a test's readiness `problems`). */
+  body: Record<string, unknown>
 
   constructor(status: number, body: { error?: string; code?: string; fields?: Record<string, string> }) {
     super(body.error || 'API request failed')
     this.status = status
     this.code = body.code ?? (status >= 500 ? 'internal_error' : undefined)
     this.fields = body.fields ?? {}
+    this.body = body
   }
 }
 

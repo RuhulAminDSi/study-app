@@ -4,7 +4,7 @@ import { config } from "./config.js";
 const app = createApp();
 
 app.listen(config.port, () => {
-  console.log(`⭐ StudyHub API running on http://localhost:${config.port}`);
+  console.log(`⭐ StudyPath API running on http://localhost:${config.port}`);
 
   // Run migrations after the server starts (non-blocking), as before.
   import("./db/migrate.js")

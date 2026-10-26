@@ -21,7 +21,7 @@
   --adm-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   --adm-shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.6);
   --adm-radius: 12px;
-  --adm-on-accent: #111;
+  --adm-on-accent: var(--on-accent);
 }
 
 .light-theme {
@@ -194,7 +194,8 @@
 
 .adm-content {
   width: 100%;
-  max-width: 1320px;
+  max-width: 1920px;
+  margin: 0 auto;
   padding: 1.75rem 2rem 3rem;
 }
 
@@ -615,7 +616,7 @@ button.adm-kpi:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(-
   word-break: break-word;
 }
 .admin-preview-content ul { margin: 0.5rem 0; padding-left: 1.25rem; font-size: 0.85rem; line-height: 1.6; color: var(--adm-text-2); list-style: disc; }
-.admin-code-block { font-family: 'Fira Code', Consolas, monospace !important; background: #1a1a2e !important; color: #e2e8f0 !important; }
+.admin-code-block { font-family: 'StudyPath Bangla', 'Fira Code', Consolas, monospace !important; background: #1a1a2e !important; color: #e2e8f0 !important; }
 
 .admin-loading { padding: 2rem; text-align: center; color: var(--adm-text-3); }
 
@@ -791,3 +792,77 @@ button.adm-kpi:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(-
   .adm-toast { min-width: 0; max-width: none; }
   .adm-pager { flex-direction: column; gap: 0.4rem; }
 }
+
+/* ==================== Motion & polish ====================
+   Each admin screen eases in when it opens; KPI tiles and cards lift on hover; the primary
+   button matches the portal's gradient. Off under prefers-reduced-motion. */
+@keyframes adm-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.adm-screen { animation: adm-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.adm-kpis > * { animation: adm-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.adm-kpis > :nth-child(2) { animation-delay: 0.05s; }
+.adm-kpis > :nth-child(3) { animation-delay: 0.1s; }
+.adm-kpis > :nth-child(4) { animation-delay: 0.15s; }
+.adm-kpis > :nth-child(n + 5) { animation-delay: 0.2s; }
+.adm-kpi,
+.adm-card {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+}
+.adm-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--adm-shadow-lg);
+}
+.adm-btn.primary {
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dim) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 8px 18px -10px color-mix(in srgb, var(--accent) 80%, transparent);
+  transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.adm-btn.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dim) 100%);
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+}
+.adm-nav-item {
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .adm-screen,
+  .adm-kpis > * {
+    animation: none;
+  }
+  .adm-kpi:hover,
+  .adm-btn.primary:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* ==================== Colour (palette tokens --tone-* from src/colors.css) ==================== */
+/* One colour family per nav group, a second shade for its second item. */
+.adm-nav-group:nth-of-type(4n + 1) .adm-nav-item { --c: var(--tone-blue); }
+.adm-nav-group:nth-of-type(4n + 2) .adm-nav-item { --c: var(--tone-violet); }
+.adm-nav-group:nth-of-type(4n + 2) .adm-nav-item:nth-of-type(even) { --c: var(--tone-teal); }
+.adm-nav-group:nth-of-type(4n + 3) .adm-nav-item { --c: var(--tone-amber); }
+.adm-nav-group:nth-of-type(4n + 3) .adm-nav-item:nth-of-type(even) { --c: var(--tone-orange); }
+.adm-nav-group:nth-of-type(4n + 4) .adm-nav-item { --c: var(--tone-rose); }
+.adm-nav-group:nth-of-type(4n + 4) .adm-nav-item:nth-of-type(even) { --c: var(--tone-cyan); }
+.adm-nav-item svg { color: var(--c, currentColor); opacity: 1; }
+.adm-nav-item:hover { background: color-mix(in srgb, var(--c, var(--accent)) 9%, transparent); }
+.adm-nav-item.active { background: color-mix(in srgb, var(--c, var(--accent)) var(--tint, 14%), transparent); color: var(--c, var(--accent)); }
+.adm-nav-item.active::before { background: var(--c, var(--accent)); }
+.adm-nav-heading { color: var(--tone-violet, var(--adm-text-3)); }
+
+.adm-kpis > :nth-child(4n + 1) { --c: var(--tone-blue); }
+.adm-kpis > :nth-child(4n + 2) { --c: var(--tone-green); }
+.adm-kpis > :nth-child(4n + 3) { --c: var(--tone-violet); }
+.adm-kpis > :nth-child(4n + 4) { --c: var(--tone-amber); }
+.adm-kpi {
+  border-top: 3px solid var(--c, var(--accent));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c, var(--accent)) 9%, transparent), transparent 65%), var(--adm-surface, var(--bg-card));
+}
+button.adm-kpi:hover { border-color: var(--c, var(--accent)); }
+.adm-kpi .adm-progress > * { background: var(--c, var(--accent)); }
+.adm-kpi-icon { background: color-mix(in srgb, var(--c, var(--accent)) var(--tint-strong, 22%), transparent); color: var(--c, var(--accent)); }
+.adm-kpi-value:not([class*='tone-']) { color: var(--c, inherit); }
+.adm-brand-text { background: var(--brand-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }

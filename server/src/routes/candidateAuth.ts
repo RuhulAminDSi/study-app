@@ -39,10 +39,10 @@ candidateAuthRouter.post("/register", asyncHandler(async (req, res) => {
   const passwordHash = await bcrypt.hash(input.password, config.bcryptRounds);
   try {
     const { rows } = await pool.query(
-      `INSERT INTO candidates (full_name, email, phone, password_hash, target_post_id)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO candidates (full_name, email, phone, password_hash, target_post_id, preferred_language)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING ${CANDIDATE_COLUMNS}`,
-      [input.fullName, input.email, input.phone, passwordHash, input.targetPostId],
+      [input.fullName, input.email, input.phone, passwordHash, input.targetPostId, input.preferredLanguage],
     );
     sendSession(res, 201, toPublicCandidate(rows[0]));
   } catch (err) {

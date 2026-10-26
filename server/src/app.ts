@@ -3,7 +3,7 @@ import cors from "cors";
 import path from "path";
 import { config, type AppConfig } from "./config.js";
 import { pool } from "./db/pool.js";
-import { adminRequired, adminRoleRequired, candidateRequired, readerRequired } from "./middleware/auth.js";
+import { adminRequired, adminRoleRequired, candidateRequired, examTakerRequired, readerRequired } from "./middleware/auth.js";
 import { createAuthLimiter } from "./middleware/rateLimit.js";
 import { asyncHandler } from "./http/asyncHandler.js";
 import authRoutes from "./routes/auth.js";
@@ -20,6 +20,8 @@ import { UUID_RE } from "./validation/taxonomy.js";
 import { adminQuestionsRouter } from "./routes/adminQuestions.js";
 import { announcementsRouter, LIVE_ANNOUNCEMENTS_SQL } from "./routes/announcements.js";
 import { adminExamKitsRouter, publicExamKitsRouter } from "./routes/examKits.js";
+import { adminMockTestsRouter } from "./routes/adminMockTests.js";
+import { candidateExamsRouter } from "./routes/candidateExams.js";
 
 export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "authRateLimitMax">> = {}) {
   const settings = { ...config, ...overrides };
@@ -43,6 +45,7 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   app.use("/api/dashboard", adminRequired, dashboardRoutes);
   app.use("/api/candidate/auth", createAuthLimiter(settings.authRateLimitMax), candidateAuthRouter);
   app.use("/api/candidate/me", candidateRequired, candidateMeRouter);
+  app.use("/api/candidate", examTakerRequired, candidateExamsRouter);
   app.use("/api/subjects", adminRequired, subjectsRouter);
   app.use("/api/topics", adminRequired, topicsRouter);
   app.use("/api/exam-tags", adminRequired, examTagsRouter);
@@ -50,6 +53,7 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   app.use("/api/questions", adminRequired, adminQuestionsRouter);
   app.use("/api/announcements", adminRequired, announcementsRouter);
   app.use("/api/exam-kits", adminRequired, adminExamKitsRouter);
+  app.use("/api/mock-tests", adminRequired, adminMockTestsRouter);
   app.use("/api/candidates", adminRequired, adminRoleRequired("super_admin", "admin"), adminCandidatesRouter);
 
   app.get("/api/health", (_req, res) => {

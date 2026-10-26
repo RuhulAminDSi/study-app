@@ -153,7 +153,11 @@ function buildOrderedLessons(
 }
 
 /** Index of the lesson a route points at: the exact lesson, or a chapter's first lesson; -1 if none. */
-function lessonIndexFor(orderedLessons: OrderedLesson[], route: RouteInfo): number {
+function lessonIndexFor(orderedLessons: OrderedLesson[], route: RouteInfo, chapters: PublicChapter[]): number {
+  if (route.chapterNumber) {
+    const chapter = chapters.find(c => c.chapter_number === route.chapterNumber)
+    return chapter ? orderedLessons.findIndex(o => o.chapterId === chapter.id) : -1
+  }
   if (!route.chapterId) return -1
   if (route.lessonId) {
     return orderedLessons.findIndex(o => o.chapterId === route.chapterId && o.lesson.id === route.lessonId)
@@ -182,9 +186,12 @@ export function AppProvider({ children, enabled = true }: { children: ReactNode;
 
         const orderedLessons = buildOrderedLessons(chapters, menus, allLessons)
 
-        const currentIndex = Math.max(0, lessonIndexFor(orderedLessons, parseHash()))
+        const route = parseHash()
+        const currentIndex = Math.max(0, lessonIndexFor(orderedLessons, route, chapters))
 
         dispatch({ type: 'INIT', chapters, menus, orderedLessons, currentIndex, loadFailed: false })
+        // A subject link names no chapter id up front, so open its chapter in the side menu now.
+        if (route.chapterNumber) dispatch({ type: 'GO_TO', index: currentIndex })
       } catch (err) {
         console.error('Failed to load public data:', err)
         dispatch({ type: 'INIT', chapters: [], menus: [], orderedLessons: [], currentIndex: 0, loadFailed: true })
@@ -224,7 +231,8 @@ export function AppProvider({ children, enabled = true }: { children: ReactNode;
     if (!state.loading && state.orderedLessons.length > 0) {
       const current = state.orderedLessons[state.currentIndex]
       if (current) {
-        navigateToLesson(current.chapterId, current.lesson.id)
+        // A subject or chapter-only link is a redirect: replace it, so Back leaves the reader.
+        navigateToLesson(current.chapterId, current.lesson.id, { replace: !route.lessonId })
       }
     }
   }, [state.currentIndex, state.loading, state.orderedLessons])
@@ -233,16 +241,17 @@ export function AppProvider({ children, enabled = true }: { children: ReactNode;
     const onHashChange = () => {
       const route = parseHash()
       if (route.type !== 'public') return
-      const idx = lessonIndexFor(state.orderedLessons, route)
+      const idx = lessonIndexFor(state.orderedLessons, route, state.chapters)
       if (idx >= 0) {
         dispatch({ type: 'GO_TO', index: idx })
-        // A chapter-only link has no lesson in the URL yet; the sync effect won't fire if the index is unchanged.
-        if (!route.lessonId) navigateToLesson(route.chapterId!, state.orderedLessons[idx].lesson.id)
+        // A chapter-only or subject link has no lesson in the URL yet; the sync effect won't fire if the index is unchanged.
+        const target = state.orderedLessons[idx]
+        if (!route.lessonId) navigateToLesson(target.chapterId, target.lesson.id, { replace: true })
       }
     }
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
-  }, [state.orderedLessons])
+  }, [state.orderedLessons, state.chapters])
 
   return (
     <AppContext.Provider value={state}>

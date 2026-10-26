@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const onUnauthorized = () => {
-      localStorage.removeItem('admin_token')
+        localStorage.removeItem('admin_token')
       localStorage.removeItem('admin_user')
       setToken(null)
       setUser(null)

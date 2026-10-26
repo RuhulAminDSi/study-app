@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Context-Free Languages &amp; CFG: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters + arrowheads (ah red, ahb blue, ahg green, ahp purple) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>Date: 13.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title"><span class="u">Context-Free Languages &amp; CFG</span></h1>
+  <p class="subtitle">CFL · CFG 4-tuple · derivations · ambiguity · CNF/GNF · pumping lemma · PDA: in 10 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="560">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">CFL &amp; CFG</text><text x="320" y="170" text-anchor="middle" class="r s">topic mind-map</text>
+      <text x="140" y="65" text-anchor="middle" class="s">CFL &amp; closure</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">CFG 4-tuple ★</text>
+      <text x="500" y="65" text-anchor="middle" class="s">Derivations</text>
+      <text x="96" y="155" text-anchor="middle" class="r w6">Ambiguity ★</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">CNF &amp; GNF ★</text>
+      <text x="140" y="245" text-anchor="middle" class="g">Simplification</text>
+      <text x="320" y="271" text-anchor="middle" class="r w6">Pumping lemma ★</text>
+      <text x="500" y="245" text-anchor="middle" class="g">CFG ↔ PDA, uses</text>
+    </svg>
+    <figcaption>↑ the whole topic on one page: red = high-yield, green = method / applied</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① CFG = 4-tuple (V, Σ, P, S)<br>② one variable on every left side = CF<br>③ S → aSb | ε gives aⁿbⁿ with <b>n ≥ 0</b><br>④ CNF = A → BC or A → a; GNF = A → aα<br>⑤ CFL closed under ∪, concat, * — <b>not</b> ∩ · but CFL ∩ regular = CFL</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Language theory; Finite automata: …pushdown automata; <span class="hl">Context free languages</span>; <span class="hl">Context free grammars</span>; Turing Machines: basic machines, configuration, computing with Turing machines." This notebook carries the <span class="hl">context-free languages and grammars</span>; the PDA was in the automata lesson, Turing machines come next.</p>
+  <div class="tipbox blk small"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Context-free languages ……… p. 2</li><li>The CFG 4-tuple ……… p. 3</li><li>Derivations, parse trees, ambiguity ……… p. 4</li><li>Worked grammar: balanced parentheses ……… p. 5</li><li>Simplifying a CFG: CNF &amp; GNF ……… p. 6</li></ul>
+    <ul class="tick"><li>Pumping lemma, CYK, step counts ……… p. 7</li><li>CFG ↔ PDA and applications ……… p. 8</li><li>Night-before sheet ……… p. 9</li><li>Practice MCQs + written ……… p. 10</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: CFLs and closure ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>CFL</span></div>
+  <h2><span class="no">1</span>Context-Free Languages</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> A language is <b>context-free</b> when a <span class="hl">context-free grammar</span> can <span class="hl">generate</span> it and a <span class="hl">pushdown automaton</span> can recognise it — Chomsky <b>Type 2</b>. A stack holds one nested structure at a time, and no more.</div>
+  <table class="hand small">
+    <tr><th class="l">Context-free language</th><th class="l">What it says</th><th class="l">Grammar</th></tr>
+    <tr><td class="l">{aⁿ bⁿ | n ≥ 0}</td><td class="l">as many a's as b's</td><td class="l">S → aSb | ε</td></tr>
+    <tr><td class="l">{w wᴿ | w ∈ {a,b}*}</td><td class="l">every palindrome over {a,b}</td><td class="l">S → aSa | bSb | a | b | ε</td></tr>
+    <tr><td class="l">{aⁿ bᵐ cᵐ | n,m ≥ 0}</td><td class="l">one free block, then two matched</td><td class="l">S → AB · A → aA|ε · B → bBc|ε</td></tr>
+    <tr><td class="l">{ (ⁿ )ⁿ | n ≥ 0 }</td><td class="l">balanced parentheses</td><td class="l">S → (S) | SS | ε</td></tr>
+    <tr><td class="l">{aⁿ bⁿ cⁿ}</td><td class="l"><span class="red"><b>not</b> context-free</span></td><td class="l">needs two stacks</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:center">
+    <div>
+      <h3>Closure properties — the whole table</h3>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Operation on languages</th><th class="l">CFL closed?</th></tr>
+        <tr><td class="l">union</td><td class="l"><span class="circ">yes</span></td></tr>
+        <tr><td class="l">concatenation</td><td class="l"><span class="circ">yes</span></td></tr>
+        <tr><td class="l">Kleene star</td><td class="l"><span class="circ">yes</span></td></tr>
+        <tr><td class="l">complement</td><td class="l"><span class="red"><b>no</b></span></td></tr>
+        <tr><td class="l">intersection</td><td class="l"><span class="red"><b>no</b></span></td></tr>
+        <tr><td class="l">intersection with a <b>regular</b> language</td><td class="l"><span class="circ">yes</span></td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 146" width="296">
+      <g class="w">
+        <rect x="10" y="26" width="140" height="76" rx="12" class="ink-k fill-y"/>
+        <rect x="30" y="36" width="100" height="16" rx="4" class="ink fill-b"/>
+        <rect x="30" y="58" width="100" height="16" rx="4" class="ink fill-b"/>
+        <rect x="30" y="80" width="100" height="16" rx="4" class="ink fill-b"/>
+        <rect x="190" y="26" width="140" height="76" rx="12" class="ink-p fill-p"/>
+        <rect x="210" y="36" width="44" height="16" rx="4" class="ink fill-b"/>
+        <rect x="210" y="58" width="44" height="16" rx="4" class="ink fill-b"/>
+        <rect x="210" y="80" width="44" height="16" rx="4" class="ink fill-b"/>
+        <rect x="266" y="36" width="44" height="16" rx="4" class="ink-r fill-r"/>
+        <rect x="266" y="58" width="44" height="16" rx="4" class="ink-r fill-r"/>
+        <rect x="266" y="80" width="44" height="16" rx="4" class="ink-r fill-r"/>
+      </g>
+      <text x="170" y="16" text-anchor="middle" class="r w6">a PDA has exactly one stack</text>
+      <text x="80" y="116" text-anchor="middle" class="k s">one stack = one balance</text>
+      <text x="80" y="134" text-anchor="middle" class="g s">aⁿ bⁿ ✓</text>
+      <text x="260" y="116" text-anchor="middle" class="p s">two stacks / a tape</text>
+      <text x="260" y="134" text-anchor="middle" class="r s">aⁿ bⁿ cⁿ ✗</text>
+    </svg><figcaption>one stack counts one balance, so aⁿbⁿcⁿ is out of reach</figcaption></figure>
+  </div>
+  <div class="def small"><span class="lbl">Why each answer</span> union: a new start symbol chooses either grammar · concatenation: S₁ → S₂, then L₂'s rules · star: S → SS | ε, then L's rules · complement: flipping the final states of a PDA yields no CFG · intersection with a regular language: run the PDA, then the finite automaton on top.</div>
+  <div class="exam small"><span class="lbl">Exam trap</span> "Not closed under intersection" needs its proof: L₁ = <b>{aⁿ bⁿ cᵐ}</b> and L₂ = <b>{aᵐ bⁿ cⁿ}</b> are context-free, but L₁ ∩ L₂ = <b>{aⁿ bⁿ cⁿ}</b> is <span class="circ">not</span>. So "not closed under ∩" means <b>not in general</b> — yet CFL ∩ <b>regular</b> is always a CFL.</div>
+  <div class="trick small"><span class="lbl">Memory trick</span> Regular = <b>∪ ∩ ¬ *</b> · CFL = <b>∪ · *</b>. The only closure regular languages have that CFLs lack is <b>intersection</b>.</div>
+  <div class="code tiny" style="margin-top:1mm">aⁿ bᵐ cᵐ :  S -&gt; A B ,   A -&gt; a A | e ,   B -&gt; b B c | e
+"aabbcc" :  S =&gt; AB =&gt; aAB =&gt; aaAB =&gt; aaB =&gt; aabBc =&gt; aabbBcc =&gt; aabbcc</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: CFG 4-tuple ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>CFG 4-tuple</span></div>
+  <h2><span class="no">2</span>Context-Free Grammar: the 4-Tuple</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Definition</span> A <b>context-free grammar</b> is G = (<b>V</b>, <b>Σ</b>, <b>P</b>, <b>S</b>) — variables, terminals, productions, start symbol. It generates L(G) by repeatedly replacing a variable with the right-hand side of one of its productions. It is context-free exactly when <span class="circ">exactly one variable on the left</span>: nothing ever sits beside it.</div>
+  <table class="hand small">
+    <tr><th class="l">Part</th><th class="l">Is</th><th class="l">In the example G</th></tr>
+    <tr><td class="l"><b>V</b></td><td class="l">finite set of <b>variables</b>; S ∈ V</td><td class="l">V = {S, A, B}</td></tr>
+    <tr><td class="l"><b>Σ</b></td><td class="l">finite set of <b>terminals</b>; V ∩ Σ = ∅</td><td class="l">Σ = {a, b}</td></tr>
+    <tr><td class="l"><b>P</b></td><td class="l">set of <b>productions</b> A → α, α ∈ (V ∪ Σ)*</td><td class="l">P = { S → aSb, S → ε }</td></tr>
+    <tr><td class="l"><b>S</b></td><td class="l">the <b>start symbol</b>, S ∈ V</td><td class="l">S = S</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 290px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">The grammar for {aⁿ bⁿ | n ≥ 0}</h3>
+      <div class="code" style="margin-top:0">G = ( {S}, {a, b}, P, S )
+P = { S -&gt; a S b ,  S -&gt; e }
+
+leftmost derivation of "aaabbb":
+S =&gt; aSb =&gt; aaSbb =&gt; aaaSbbb =&gt; aaabbb</div>
+      <p class="small">Each use of <b>S → aSb</b> <span class="hl">wraps one more a on the left and one b on the right</span>; <b>S → ε</b> stops it. After n uses you have <b>aⁿbⁿ</b>, and n = 0 gives <b>ε</b> — so the language is <span class="circ">{aⁿ bⁿ | n ≥ 0}</span>, <b>not</b> n ≥ 1.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 320 146" width="286">
+      <g class="w">
+        <rect x="10" y="14" width="112" height="30" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="54" width="112" height="30" rx="8" class="ink-r fill-r"/>
+        <rect x="10" y="94" width="112" height="30" rx="8" class="ink-r fill-r"/>
+        <path class="ink-g" d="M122,29 H158 M122,69 H158 M122,109 H158"/>
+        <rect x="160" y="8" width="152" height="128" rx="12" class="ink-g fill-g"/>
+      </g>
+      <text x="66" y="34" text-anchor="middle" class="k s">A → BC</text>
+      <text x="66" y="74" text-anchor="middle" class="k s">S → ε</text>
+      <text x="66" y="114" text-anchor="middle" class="k s">E → E + T</text>
+      <text x="236" y="34" text-anchor="middle" class="g w6">LHS = 1 variable</text>
+      <text x="236" y="56" text-anchor="middle" class="k s">RHS = anything</text>
+      <text x="236" y="82" text-anchor="middle" class="g s">⇒ context-free ✓</text>
+      <text x="236" y="110" text-anchor="middle" class="r s">LHS = A + B</text>
+      <text x="236" y="130" text-anchor="middle" class="r s">⇒ not context-free ✗</text>
+    </svg><figcaption>the whole definition in one picture: one variable on the left</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <table class="hand small" style="margin-top:0">
+      <tr><th class="l">Notation</th><th class="l">Means</th></tr>
+      <tr><td class="l">a, b, 0, 1</td><td class="l"><b>terminal</b> — a real character</td></tr>
+      <tr><td class="l">S, A, T</td><td class="l"><b>variable</b> — a placeholder to replace</td></tr>
+      <tr><td class="l">A → α</td><td class="l">a <b>production</b></td></tr>
+      <tr><td class="l">A ⇒ β</td><td class="l">one <b>derivation</b> step</td></tr>
+      <tr><td class="l">A ⇒* w</td><td class="l">zero or more steps, w all terminals</td></tr>
+      <tr><td class="l">ε</td><td class="l">the empty string, |ε| = 0</td></tr>
+    </table>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Four letters in order: <b>V</b>ariables, the <b>Σ</b>ymbols they sit on, the <b>P</b>roductions, the <b>S</b>tart — "V–Σ–P–S".</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> The condition sits on the <b>left</b>, never on the right. <span class="mono">A → aSb</span> is context-free; <span class="mono">AB → aSb</span> is not, whatever its right side looks like.</div>
+      <div class="tipbox small" style="margin-top:2mm"><span class="lbl">IT link</span> Every programming language ships a CFG in <b>BNF</b> as the <span class="hl">definition</span> of its syntax; a parser generator turns that grammar into the tables that validate a program.</div>
+    </div>
+  </div>
+  <div class="mnote green">V ∩ Σ = ∅ — a variable is never also a terminal, so the four parts never collide</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: derivations, parse trees, ambiguity ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>Derivations</span></div>
+  <h2><span class="no">3</span>Derivations, Parse Trees and Ambiguity</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Derivation</span> Start from <b>S</b>, replacing one variable at a time until only terminals remain. A <span class="hl">leftmost</span> derivation always replaces the leftmost remaining variable, a <b>rightmost</b> one the rightmost. Both reach the same string — only the <b>order of work</b> differs, which is why parsers are built leftmost.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 265px;align-items:start">
+    <div class="code" style="margin-top:0">LEFTMOST          RIGHTMOST
+S                  S
+S =&gt; aSb         S =&gt; aSb
+S =&gt; aaSbb       S =&gt; aSbb
+S =&gt; aaaSbbb     S =&gt; aaSbb
+S =&gt; aaabbb      S =&gt; aaabbb</div>
+    <figure class="doodle"><svg viewBox="0 0 300 200" width="255">
+      <g class="w">
+        <circle cx="150" cy="18" r="13" class="ink-k"/>
+        <circle cx="150" cy="58" r="13" class="ink-k"/>
+        <circle cx="150" cy="98" r="13" class="ink-k"/>
+        <circle cx="150" cy="138" r="13" class="ink-k"/>
+        <path class="ink" d="M142,29 L110,54 M150,31 V45 M158,29 L190,54 M142,69 L128,94 M150,71 V85 M158,69 L172,94 M142,109 L140,134 M150,111 V125 M158,109 L160,134 M150,151 V170"/>
+      </g>
+      <text x="150" y="22" text-anchor="middle" class="k w6">S</text>
+      <text x="150" y="62" text-anchor="middle" class="k w6">S</text>
+      <text x="150" y="102" text-anchor="middle" class="k w6">S</text>
+      <text x="150" y="142" text-anchor="middle" class="k w6">S</text>
+      <text x="104" y="64" text-anchor="middle" class="r s">a</text>
+      <text x="196" y="64" text-anchor="middle" class="r s">b</text>
+      <text x="122" y="104" text-anchor="middle" class="r s">a</text>
+      <text x="178" y="104" text-anchor="middle" class="r s">b</text>
+      <text x="136" y="144" text-anchor="middle" class="r s">a</text>
+      <text x="164" y="144" text-anchor="middle" class="r s">b</text>
+      <text x="150" y="182" text-anchor="middle" class="k s">ε</text>
+      <text x="28" y="112" text-anchor="middle" class="g s">yields</text>
+      <text x="28" y="128" text-anchor="middle" class="g s">aaabbb</text>
+    </svg><figcaption>parse tree of S ⇒ aSb ⇒ aaSbb ⇒ aaaSbbb ⇒ aaabbb</figcaption></figure>
+  </div>
+  <div class="sumbox small"><span class="lbl">Parse tree = the derivation, drawn</span> Every variable is a node; every applied production is a node whose children are that rule's right-hand symbols, left to right. <span class="hl">leaves read left to right</span> give the derived string, so <span class="circ">leaves = the string</span> — and for n terminals the tree has exactly <b>n − 1</b> internal nodes.</div>
+  <h3 style="margin-top:2mm">Ambiguity: two trees for one string</h3>
+  <div class="def small" style="margin-top:0"><span class="lbl">Definition</span> A grammar is <b>ambiguous</b> if <b>some</b> string has <span class="hl">two or more distinct leftmost derivations</span> — equivalently two parse trees. One bad string is enough.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked example ✍ the classic ambiguous grammar</span>
+      <div class="code" style="margin-top:0">E -&gt; E + E | E * E | id
+
+tree 1: (id+id)*id          tree 2: id+(id*id)
+        *                          +
+       / \                        / \
+      +   id                    id   *
+     / \                            / \
+   id   id                        id  id</div>
+      <p class="small">Same four terminals, two groupings — so <b>id+id*id</b> is ambiguous. Fixing it needs one extra level per operator: <b>E → E + T | T</b>, <b>T → T * F | F</b>, <b>F → id</b>.</p>
+    </div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "Ambiguous = <b>a</b>lternative tree". If one string can be <b>built two ways</b>, the parser cannot know what was meant.</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> Ambiguity has nothing to do with ε-productions, with the number of variables, or with an infinite language. And it is not nondeterminism: a PDA is nondeterministic on <b>every</b> CFL.</div>
+    </div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: balanced parentheses ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>Worked grammar</span></div>
+  <h2><span class="no">4</span>Worked Grammar: Balanced Parentheses</h2><span class="tag">written favourite</span>
+  <div class="def small"><span class="lbl">Definition</span> The language of <b>balanced</b> parentheses over Σ = { (, ) } is { (ⁿ )ⁿ | n ≥ 0 }: every ( is closed by a later ), and the nesting is proper. It is context-free, and it is what the pushdown automaton from the automata lesson accepts by pushing on ( and popping on ).</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 265px;align-items:start">
+    <div>
+      <h3 style="margin-top:0">The grammar</h3>
+      <div class="code" style="margin-top:0">V = {S},  Sigma = { ( , ) },  S = S
+P = { S -&gt; SS ,      two groups side by side
+      S -&gt; (S) ,      one group inside another
+      S -&gt; e }        the empty group
+
+leftmost derivation of "(())()":
+S =&gt; SS =&gt; (S)S =&gt; ((S))S =&gt; (())S =&gt; (())(S) =&gt; (())()</div>
+      <p class="small">Read it as a proof of acceptance: every ( is closed by exactly one ), and no ) comes first. The converse holds too — <b>S → SS</b> builds the first group and appends the rest, <b>S → (S)</b> takes care of one nesting level.</p>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 300 164" width="260">
+      <g class="w">
+        <circle cx="150" cy="18" r="13" class="ink-k"/>
+        <circle cx="95" cy="58" r="12" class="ink-k"/>
+        <circle cx="205" cy="58" r="12" class="ink-k"/>
+        <circle cx="95" cy="98" r="12" class="ink-k"/>
+        <circle cx="205" cy="98" r="12" class="ink-k"/>
+        <path class="ink" d="M140,29 L103,50 M160,29 L197,50 M86,67 L61,94 M95,70 V86 M104,67 L129,94 M196,67 L171,94 M205,70 V86 M214,67 L239,94 M95,110 V134 M205,110 V134"/>
+      </g>
+      <text x="150" y="22" text-anchor="middle" class="k w6">S</text>
+      <text x="95" y="62" text-anchor="middle" class="k s">S</text>
+      <text x="205" y="62" text-anchor="middle" class="k s">S</text>
+      <text x="95" y="102" text-anchor="middle" class="k s">S</text>
+      <text x="205" y="102" text-anchor="middle" class="k s">S</text>
+      <text x="55" y="104" text-anchor="middle" class="r s">(</text>
+      <text x="135" y="104" text-anchor="middle" class="r s">)</text>
+      <text x="165" y="104" text-anchor="middle" class="r s">(</text>
+      <text x="245" y="104" text-anchor="middle" class="r s">)</text>
+      <text x="95" y="150" text-anchor="middle" class="k s">ε</text>
+      <text x="205" y="150" text-anchor="middle" class="k s">ε</text>
+    </svg><figcaption>parse tree of (())(): two sibling groups, each empty inside</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Production</th><th class="l">The idea it encodes</th><th class="l">Strings it can finish</th></tr>
+        <tr><td class="l">S → ε</td><td class="l">the base case: the empty group</td><td class="l">ε, and only ε</td></tr>
+        <tr><td class="l">S → (S)</td><td class="l">wrap <b>one</b> group in one pair</td><td class="l">( ), ( () ), ( (()) ) …</td></tr>
+        <tr><td class="l">S → SS</td><td class="l">concatenate two balanced groups</td><td class="l">()(), (())(), (()()) …</td></tr>
+      </table>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> Write <b>S → SS</b>, never <b>S → SS | SS</b>. The order of alternatives is irrelevant — a CFG's productions are a <b>set</b>, not a program: any rule may fire at any step. This is also why {aⁿbⁿcⁿ} cannot be built this way: one stack cannot close one bracket while a second count is still open.</div>
+    </div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>SS = side by side, (S) = inside, ε = nothing.</b> The same three-rule shape builds balanced <b>{}</b>, balanced <b>[ ]</b>, and — with a third pair — balanced <b>{ } [ ]</b>.</div>
+      <div class="tipbox small" style="margin-top:2mm"><span class="lbl">IT link</span> An editor's bracket matcher is a PDA: push on an opening symbol, pop on the matching one, refuse to pop an empty stack. In a compiler the same grammar becomes the parser's production rules.</div>
+    </div>
+  </div>
+  <div class="code" style="font-size:11pt;line-height:6mm">input:  (  (  )  )  (  )
+stack:  Z0 -&gt; Z0 -&gt; (Z0 -&gt; ((Z0 -&gt; (Z0 -&gt; Z0 -&gt; (Z0 -&gt; Z0   (accept)</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: simplification, CNF, GNF ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>CNF &amp; GNF</span></div>
+  <h2><span class="no">5</span>Simplifying a CFG: CNF and GNF</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <ol class="steps small" style="margin-top:0">
+        <li><b>Remove useless symbols:</b> the <b>non-generating</b> variables, then the <b>unreachable</b> ones.</li>
+        <li><b>Remove ε-productions</b> A → ε: find every <b>nullable</b> variable and drop its ε-rule.</li>
+        <li><b>Remove unit productions</b> A → B by copying B's productions in their place (repeat — chains occur).</li>
+        <li><b>Convert to Chomsky Normal Form</b> — what CYK and the parser generators demand.</li>
+        <li><b>Convert to Greibach Normal Form</b>, where every rule starts with a terminal.</li>
+      </ol>
+      <table class="hand small">
+        <tr><th class="l">Normal form</th><th class="l">Every production is</th><th class="l">Buys</th></tr>
+        <tr><td class="l"><b>CNF</b></td><td class="l"><span class="circ">A → BC</span> or <span class="circ">A → a</span>; S → ε only when ε ∈ L</td><td class="l">CYK, yacc/bison</td></tr>
+        <tr><td class="l"><b>GNF</b></td><td class="l"><span class="circ">A → aα</span></td><td class="l">one-symbol prediction</td></tr>
+        <tr><td class="l">right-linear</td><td class="l">A → aB</td><td class="l">a <b>regular</b> Type 3 grammar</td></tr>
+      </table>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 190" width="296">
+      <g class="w">
+        <rect x="8" y="12" width="118" height="52" rx="12" class="ink fill-b"/>
+        <rect x="156" y="12" width="166" height="52" rx="12" class="ink-r fill-r"/>
+        <path class="ink" d="M126,38 H152"/>
+        <path class="ink-g" d="M239,64 V98"/>
+        <rect x="8" y="100" width="314" height="66" rx="12" class="ink-g fill-g"/>
+      </g>
+      <text x="67" y="36" text-anchor="middle" class="k w6">S → aSb | ε</text>
+      <text x="67" y="54" text-anchor="middle" class="s">original</text>
+      <text x="239" y="34" text-anchor="middle" class="r w6">S → ASB | ε</text>
+      <text x="239" y="52" text-anchor="middle" class="r s">3 symbols on the right ✗</text>
+      <text x="110" y="124" text-anchor="middle" class="k w6">S → AX | ε</text>
+      <text x="110" y="146" text-anchor="middle" class="k w6">X → SB</text>
+      <text x="238" y="124" text-anchor="middle" class="k w6">A → a , B → b</text>
+      <text x="238" y="146" text-anchor="middle" class="g s">2 symbols each ✓</text>
+      <text x="165" y="182" text-anchor="middle" class="g s">CNF allows only A → BC or A → a</text>
+    </svg><figcaption>where the naive CNF conversion goes wrong, and the fix</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked conversion ✍ S → aSb | ε into CNF</span>
+    <div class="code" style="margin-top:0">original   S -&gt; a S b | e
+step 1     wrap the left terminal, then the right:  S -&gt; A S B
+step 2     THREE symbols on the right, so split the tail:
+           S -&gt; A X   ,   X -&gt; S B   ,   A -&gt; a   ,   B -&gt; b
+result     S -&gt; A X | e ,  X -&gt; S B ,  A -&gt; a ,  B -&gt; b</div>
+    <p class="small"><b>Why S → ε survives:</b> CNF allows it only when ε ∈ L <b>and</b> S appears on no right-hand side. Here S <b>does</b>, inside <b>X → SB</b>, so the strictly correct form adds a fresh start symbol <b>S₀ → S</b> and keeps the other four rules.</p>
+  </div>
+  <div class="cols">
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> <span class="mono">S → ASB</span> is <b>not</b> CNF — exactly <b>two</b> variables or <b>one</b> terminal, never three symbols. And <span class="mono">A → aα</span> is <b>Greibach</b>, not CNF.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>CNF = two or one, GNF = starts with a terminal.</b> Count the right-hand symbols: 2 or 1 ⇒ CNF; "a then variables" ⇒ GNF; "aB" ⇒ regular.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: pumping lemma, CYK, step counts ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>Pumping lemma</span></div>
+  <h2><span class="no">6</span>Pumping Lemma for CFLs, CYK and Step Counts</h2><span class="tag">high-yield</span>
+  <div class="def small"><span class="lbl">Pumping lemma for context-free languages</span> If L is context-free then some length <b>p</b> exists such that every s ∈ L with |s| ≥ p splits as <b>s = uvxyz</b> with <span class="hl">|vxy| ≤ p</span>, <span class="hl">|vy| ≥ 1</span> and <span class="hl">uvⁱxyⁱz ∈ L for every i ≥ 0</span>. Read it as: inside a short window lies a balanced piece that may be repeated as often as you like. Like the regular version it is a <b>disproof</b> tool only.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Condition</th><th class="l">Says</th></tr>
+        <tr><td class="l">|vxy| ≤ p</td><td class="l">the pumpable window is <b>short</b></td></tr>
+        <tr><td class="l">|vy| ≥ 1</td><td class="l">v and y together are <b>non-empty</b></td></tr>
+        <tr><td class="l">uvⁱxyⁱz ∈ L, ∀i ≥ 0</td><td class="l">v and y repeat <b>together</b></td></tr>
+      </table>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> The regular lemma pumps <b>xyⁿz</b>; the CFL lemma pumps <b>uvⁱxyⁱz</b> — <b>two</b> exponents, and they are <b>equal</b>. Writing u(vxy)ⁿz is wrong. And satisfying the lemma never proves a language <b>is</b> context-free.</div>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 340 136" width="296">
+      <g class="w">
+        <rect x="8" y="30" width="44" height="40" rx="8" class="ink fill-b"/>
+        <rect x="56" y="30" width="64" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="124" y="30" width="52" height="40" rx="8" class="ink fill-b"/>
+        <rect x="180" y="30" width="64" height="40" rx="8" class="ink-r fill-r"/>
+        <rect x="248" y="30" width="84" height="40" rx="8" class="ink fill-b"/>
+        <path class="ink-g" d="M56,76 V84 H244 V76"/>
+        <path class="ink-r" d="M56,100 V108 H120 V100 M180,100 V108 H244 V100"/>
+      </g>
+      <text x="170" y="18" text-anchor="middle" class="k w6">s = u v x y z</text>
+      <text x="30" y="56" text-anchor="middle" class="k w6">u</text>
+      <text x="88" y="56" text-anchor="middle" class="r w6">v</text>
+      <text x="150" y="56" text-anchor="middle" class="k w6">x</text>
+      <text x="212" y="56" text-anchor="middle" class="r w6">y</text>
+      <text x="290" y="56" text-anchor="middle" class="k w6">z</text>
+      <text x="150" y="100" text-anchor="middle" class="g s">vxy: |vxy| ≤ p</text>
+      <text x="150" y="126" text-anchor="middle" class="r s">|vy| ≥ 1, pumped together</text>
+    </svg><figcaption>the five-piece split of the pumping lemma for CFLs</figcaption></figure>
+  </div>
+  <div class="ex small"><span class="lbl">Worked disproof ✍ {aⁿ bⁿ cⁿ | n ≥ 0} is not context-free</span>
+    <p class="small">Take pumping length p and s = <b>aᵖbᵖcᵖ</b>. Every decomposition with |vxy| ≤ p and |vy| ≥ 1 puts y wholly inside the <b>a-block</b> (y = aᵏ, k ≥ 1) or wholly inside the <b>b-block</b> (y = bᵏ). Pumping y alone breaks the match, and pumping v and y <b>together</b> cannot restore it, because they sit in different blocks. The condition fails ⇒ <span class="circ">L is not context-free</span>. In one line: it needs three simultaneous counts, and one stack holds one.</p>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="sumbox small" style="margin-top:0"><span class="lbl">CYK and the step count</span> <b>CYK</b> decides membership for a <b>fixed CNF</b> grammar in <span class="circ">O(n³)</span> time (O(n³·|G|) in general): a bottom-up table over O(n²) substrings, trying O(n) split points each. In CNF a string of length <b>n ≥ 1</b> takes exactly <span class="circ">2n − 1</span> steps — <b>n − 1</b> of A → BC to turn one variable into n variables, then <b>n</b> of A → a.</div>
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>"n − 1 splits, then n terminals = 2n − 1 altogether"</b> — and <b>CYK is cubic</b>: three nested loops over substrings, split points and rules.</div>
+  </div>
+  <div class="mnote purple">Unlike the regular lemma, the CFL lemma has no way to prove context-freeness — only to deny it</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: CFG to PDA and applications ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>CFG ↔ PDA</span></div>
+  <h2><span class="no">7</span>CFG ↔ PDA and Where CFGs Are Used</h2><span class="tag">written favourite</span>
+  <div class="sumbox small"><span class="lbl">Equivalence theorem (high-yield)</span> <span class="circ">context-free ⇔ some PDA</span>. "If" is trivial — read the grammar as a leftmost derivation. "Only if" is the surprise: the PDA's <b>states become variables</b>, so the machine writes its own grammar.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+    <div>
+      <ol class="steps small" style="margin-top:0">
+        <li><b>Push the start symbol</b> S on the stack above the bottom marker Z₀.</li>
+        <li>If the <b>stack top is a variable</b> A with A → α in P, pop A and push α in <b>reverse</b> order.</li>
+        <li>If the <b>stack top is a terminal</b> a, match it with the next input symbol: equal → pop and advance; unequal → reject.</li>
+        <li>Accept when the input is exhausted <b>and</b> only Z₀ is left on the stack.</li>
+        <li>Reverse direction: a variable <b>[pXq]</b> for every state pair p, q and stack symbol X, <b>[pXq] → a</b> per transition, <b>S₀ → [q₀ Z₀ q]</b> per accepting state q.</li>
+      </ol>
+    </div>
+    <figure class="doodle"><svg viewBox="0 0 330 202" width="296">
+      <g class="w">
+        <rect x="10" y="10" width="310" height="42" rx="10" class="ink fill-y"/>
+        <path class="ink-r" d="M100,52 V74"/>
+        <rect x="10" y="76" width="310" height="54" rx="10" class="ink fill-b"/>
+        <path class="ink-g" d="M230,130 V154"/>
+        <rect x="10" y="156" width="310" height="36" rx="10" class="ink-g fill-g"/>
+      </g>
+      <text x="165" y="30" text-anchor="middle" class="k w6">P :  S → a S b | ε</text>
+      <text x="165" y="45" text-anchor="middle" class="s">the grammar drives the stack</text>
+      <text x="165" y="96" text-anchor="middle" class="k w6">stack: Z₀ → S Z₀ → a S b Z₀</text>
+      <text x="165" y="116" text-anchor="middle" class="s">pop the top variable, push the right side reversed</text>
+      <text x="165" y="180" text-anchor="middle" class="g s">input consumed, only Z₀ left ⇒ accept</text>
+    </svg><figcaption>CFG → PDA: the grammar literally drives the stack</figcaption></figure>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)">
+    <div>
+      <table class="hand small" style="margin-top:0">
+        <tr><th class="l">Application</th><th class="l">How the CFG is used</th></tr>
+        <tr><td class="l"><b>Programming languages</b></td><td class="l">C, Java, Pascal syntax is defined in BNF/EBNF — the grammar <b>is</b> the definition</td></tr>
+        <tr><td class="l"><b>Compilers</b></td><td class="l"><span class="hl">parser generators</span> (yacc, bison, ANTLR) read the grammar and emit the tables</td></tr>
+        <tr><td class="l"><b>Markup languages</b></td><td class="l">XML / HTML nesting is a CFG; the validator is a PDA over the tag stream</td></tr>
+        <tr><td class="l"><b>Natural language</b></td><td class="l">sentence structure as a grammar; parsing opens every NLP pipeline</td></tr>
+        <tr><td class="l"><b>Query languages</b></td><td class="l">SQL's <span class="mono">SELECT … WHERE …</span> is a recursive-descent grammar</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> Push the <b>start symbol</b>, replace the <b>top of stack</b>, accept on a <b>bare stack</b>. The reverse conversion names its variables <b>[pXq]</b> — "from p, on X, to q".</div>
+      <div class="exam small" style="margin-top:2mm"><span class="lbl">Exam trap</span> In CFG → PDA the right-hand side is pushed <b>reversed</b>: the stack is last-in-first-out. Push α in written order and the PDA builds the string <b>backwards</b>.</div>
+      <div class="tipbox small" style="margin-top:2mm"><span class="lbl">IT link</span> Bracket matching, <span class="mono">if</span>/<span class="mono">for</span> nesting checks and JSON validation are the same PDA of sheet 5.</div>
+    </div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: night-before sheet ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>CFL = made by a CFG, read by a PDA</p><p>CFL is Chomsky <b>Type 2</b></p>
+      <p>CFG = <b>(V, Σ, P, S)</b></p><p>CF ⇔ one variable per left side</p>
+      <p>V ∩ Σ = ∅; S ∈ V; P ⊆ V × (V ∪ Σ)*</p><p>A ⇒ one step · A ⇒* w · ε = empty</p>
+      <p>S → aSb | ε ⇒ <b>{aⁿ bⁿ | n ≥ 0}</b></p><p>S → aSa | bSb | a | b | ε ⇒ palindromes</p>
+      <p>S → SS | (S) | ε ⇒ balanced brackets</p><p>Leftmost = leftmost variable first</p>
+      <p>Parse-tree leaves = the string</p><p>Ambiguous ⇔ ≥ 2 leftmost derivations</p>
+      <p>E → E+E | E*E | id is ambiguous</p><p>Closed: ∪, concatenation, Kleene star</p>
+      <p>Not closed: ∩ and complement</p><p>but CFL ∩ <b>regular</b> <b>is</b> a CFL</p>
+      <p>{aⁿbⁿcᵐ} ∩ {aᵐbⁿcⁿ} = {aⁿbⁿcⁿ} = not CF</p><p>CNF: A → BC or A → a (+ S → ε)</p>
+      <p>GNF: A → aα · A → aB = regular</p><p>CFL pumping: s = <b>uvxyz</b>, |vxy| ≤ p, |vy| ≥ 1</p>
+      <p>uvⁱxyⁱz ∈ L ∀ i ≥ 0 — equal exponents</p><p>CYK on a fixed CNF grammar: <b>O(n³)</b></p>
+      <p>CNF derivation of length n ≥ 1: <b>2n − 1</b></p><p>CFG ⇔ PDA; PDA → CFG uses <b>[pXq]</b></p>
+    </div>
+  </div>
+  <h3>Top 12 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>CFG = 4-tuple, PDA = 7-tuple</li>
+      <li>One variable on the left = context-free</li>
+      <li>S → aSb | ε gives <b>n ≥ 0</b>, ε included</li>
+      <li>Type-3 grammars generate <b>regular</b> languages</li>
+      <li>CFL closed under ∪ · * — <b>not</b> ∩</li>
+      <li>CNF allows <b>only</b> A → BC or A → a</li>
+    </ol>
+    <ol class="num" start="7">
+      <li>A → aα is <b>Greibach</b>, A → aB is right-linear</li>
+      <li>Ambiguous = one string, two leftmost derivations</li>
+      <li>The CFL lemma splits into <b>five</b> pieces uvxyz</li>
+      <li>CYK is <b>cubic</b> in the input length</li>
+      <li>The CNF step count is <b>2n − 1</b></li>
+      <li>CFL ∩ regular is still a CFL</li>
+    </ol>
+  </div>
+  <div class="exam small"><span class="lbl">Top traps</span> a three-symbol right-hand side is <b>not</b> CNF · "not closed under intersection" needs the regular-language qualification · the CFL pumping lemma pumps v and y with the <b>same</b> exponent · satisfying a pumping lemma never proves context-freeness · a PDA pushes a production's right side in <b>reverse</b> order · an n ≥ 0 language contains ε.</div>
+  <div class="trick small"><span class="lbl">All tricks together</span> "V–Σ–P–S, four parts" · "one variable on the left is the whole definition" · "SS = side by side, (S) = inside, ε = nothing" · "leaves read left to right = the string" · "CNF = two or one, GNF = starts with a terminal" · "five pieces, two exponents" · "n − 1 splits plus n terminals = 2n − 1".</div>
+  <figure class="doodle"><svg viewBox="0 0 520 108" width="500">
+    <g class="w">
+      <rect x="14" y="18" width="140" height="48" rx="12" class="ink fill-b"/>
+      <rect x="190" y="18" width="140" height="48" rx="12" class="ink-r fill-r"/>
+      <rect x="366" y="18" width="140" height="48" rx="12" class="ink-g fill-g"/>
+      <path class="ink-p" d="M154,42 H186" marker-end="url(#ahp)"/>
+      <path class="ink-p" d="M330,42 H362" marker-end="url(#ahp)"/>
+    </g>
+    <text x="84" y="40" text-anchor="middle" class="k w6">CFL</text>
+    <text x="84" y="58" text-anchor="middle" class="s">a set of strings</text>
+    <text x="260" y="40" text-anchor="middle" class="r w6">CFG in CNF</text>
+    <text x="260" y="58" text-anchor="middle" class="s">A → BC or A → a</text>
+    <text x="436" y="40" text-anchor="middle" class="g w6">parser</text>
+    <text x="436" y="58" text-anchor="middle" class="s">CYK / yacc</text>
+    <text x="170" y="13" text-anchor="middle" class="p s">described by</text>
+    <text x="346" y="13" text-anchor="middle" class="p s">decided by</text>
+    <text x="260" y="100" text-anchor="middle" class="g s">every step down = one more algorithm you can be asked about</text>
+  </svg><figcaption>same language, three descriptions — all interchangeable</figcaption></figure>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ToC · Context-Free Languages &amp; CFG</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A CFG is a tuple of how many parts?<ol class="opts"><li>3</li><li>4</li><li>5</li><li>7</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>In CNF every production has the form:<ol class="opts"><li>A → aα</li><li>A → aB</li><li>A→BC or A→a</li><li>any α, |α| ≤ 2</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>Type-3 grammars generate:<ol class="opts"><li>context-free</li><li>context-sens.</li><li>regular</li><li>r. enum.</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>CFLs are <b>NOT</b> closed under:<ol class="opts"><li>union</li><li>concat.</li><li>Kleene star</li><li>intersect.</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>S → aSb | ε generates:<ol class="opts"><li>{aⁿbⁿ | n ≥ 1}</li><li>{aⁿbⁿ | n ≥ 0}</li><li>(ab)*</li><li>a*b*</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>A grammar is ambiguous when:<ol class="opts"><li>2+ trees, 1 string</li><li>has ε-rule</li><li>infinite lang.</li><li>&gt;1 variable</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>CYK decides membership in:<ol class="opts"><li>O(n)</li><li>O(n log n)</li><li>O(n²)</li><li>O(n³)</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>In CNF, deriving length n ≥ 1 takes:<ol class="opts"><li>n steps</li><li>2n − 1 steps</li><li>2n steps</li><li>n² steps</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>{aⁿ bⁿ cⁿ | n ≥ 1} is:<ol class="opts"><li>regular</li><li>context-free</li><li>neither, not CF</li><li>both</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>CFL ∩ a <b>regular</b> language is:<ol class="opts"><li>always a CFL</li><li>no guarantee</li><li>never a CFL</li><li>regular lang.</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-b · 2-c · 3-c · 4-d · 5-b · 6-a · 7-d · 8-b · 9-c · 10-a</div>
+
+  <div class="wq"><span class="lbl">Written question</span> Write a CFG for all palindromes over {a, b}; derive <span class="mono">abba</span> and <span class="mono">aba</span> leftmost; say why it is context-free but not regular. <i class="mk">10 marks</i></div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Model answer ✍</span>
+      <ol class="steps small">
+        <li><b>Grammar</b> <i class="mk">3</i> — G = ({S}, {a,b}, P, S), P = { <b>S → aSa | bSb | a | b | ε</b> }: wrap both ends, finish the middle.</li>
+        <li><b>Derivations</b> <i class="mk">3</i> — abba: S ⇒ aSa ⇒ abSba ⇒ <b>abba</b> · aba: S ⇒ aSa ⇒ <b>aba</b>.</li>
+        <li><b>Why context-free</b> <i class="mk">2</i> — one variable per left side; an NPDA pushes the first half, <b>guesses</b> the middle and pops the second.</li>
+        <li><b>Why not regular</b> <i class="mk">2</i> — with pumping length p, w = aᵖ b aᵖ splits with y = aᵏ in the <b>first</b> block, so xy²z is not a palindrome.</li>
+      </ol></div>
+    <div>
+      <div class="sumbox small" style="margin-top:0"><span class="lbl">Template to memorise</span> palindromes <b>S → aSa | bSb | a | b | ε</b> · brackets <b>S → SS | (S) | ε</b> · "wrap the ends, finish the middle".</div>
+      <h3>Before the exam ✓</h3>
+      <ul class="tick small">
+        <li>Can write the 4-tuple (V, Σ, P, S) from memory</li>
+        <li>Can give a grammar for aⁿbⁿ, palindromes, balanced brackets</li>
+        <li>Can convert a small grammar into CNF correctly</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg-no">10</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>

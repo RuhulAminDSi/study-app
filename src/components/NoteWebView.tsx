@@ -110,6 +110,7 @@ export default function NoteWebView({ src, lang, title, pdfHref, t }: {
   const [tocOpen, setTocOpen] = useState(false)
   const tocId = useId()
   const articleRef = useRef<HTMLElement>(null)
+  const tocListRef = useRef<HTMLOListElement>(null)
 
   useEffect(() => {
     if (cache.has(src)) return
@@ -151,6 +152,17 @@ export default function NoteWebView({ src, lang, title, pdfHref, t }: {
     window.addEventListener('scroll', update, { passive: true })
     return () => window.removeEventListener('scroll', update)
   }, [note])
+
+  // Keep the highlighted entry visible when the rail scrolls on its own (wide layouts only).
+  useEffect(() => {
+    const list = tocListRef.current
+    const item = list?.querySelector<HTMLElement>('.is-active')
+    if (!list || !item || list.scrollHeight <= list.clientHeight) return
+    const box = list.getBoundingClientRect()
+    const at = item.getBoundingClientRect()
+    if (at.top < box.top) list.scrollTop -= box.top - at.top + 8
+    else if (at.bottom > box.bottom) list.scrollTop += at.bottom - box.bottom + 8
+  }, [active])
 
   const jump = (id: string) => {
     setTocOpen(false)
@@ -194,7 +206,7 @@ export default function NoteWebView({ src, lang, title, pdfHref, t }: {
               <span className="nw-toc-current">{note.sections.find(s => s.id === active)?.title ?? note.sections[0].title}</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
             </button>
-            <ol id={tocId}>
+            <ol id={tocId} ref={tocListRef}>
               {note.sections.map((s, i) => (
                 <li key={s.id}>
                   <button

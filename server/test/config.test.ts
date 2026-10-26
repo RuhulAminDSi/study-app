@@ -20,6 +20,14 @@ describe("loadConfig", () => {
     expect(cfg.bcryptRounds).toBe(12);
   });
 
+  it("lets admins take exams outside production only, unless EXAM_ADMIN_PREVIEW says otherwise", () => {
+    const prod = { NODE_ENV: "production", JWT_SECRET: "s".repeat(40) };
+    expect(loadConfig({}).examAdminPreview).toBe(true);
+    expect(loadConfig(prod).examAdminPreview).toBe(false);
+    expect(loadConfig({ ...prod, EXAM_ADMIN_PREVIEW: "true" }).examAdminPreview).toBe(true);
+    expect(loadConfig({ EXAM_ADMIN_PREVIEW: "false" }).examAdminPreview).toBe(false);
+  });
+
   it("refuses placeholder or short JWT secrets in production", () => {
     for (const secret of ["dev-secret", "change-me-to-a-long-random-string", "too-short-secret"]) {
       expect(() => loadConfig({ NODE_ENV: "production", JWT_SECRET: secret })).toThrow(/JWT_SECRET/);

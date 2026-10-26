@@ -24,7 +24,10 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <a className="navbar-brand" href="/">{t.studyHub}</a>
+        <a className="navbar-brand" href="/">
+          <svg className="navbar-brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)" /><path d="M7.5 23.5H17.5a3.5 3.5 0 0 0 0-7H13.5a3.5 3.5 0 0 1 0-7H19.5" fill="none" stroke="var(--on-accent)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /><circle cx="23.5" cy="9.5" r="2.6" fill="var(--on-accent)" /></svg>
+          <span className="navbar-brand-text">{t.studyHub}</span>
+        </a>
 
         <div className="navbar-search-mobile">
           <input
@@ -61,7 +64,7 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
             <button className="language-toggle" onClick={() => {
               candidateAuth.signOut()
               window.location.href = '/'
-            }}>{t.signOut}</button>
+            }} title={t.signOut} aria-label={t.signOut}><SignOutIcon /><span className="navbar-signout-text">{t.signOut}</span></button>
           </>
         ) : adminAuth.user ? (
           // An admin previewing the portal (Study Hub needs an account, so nobody else gets here).
@@ -70,7 +73,7 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
             <button className="language-toggle" onClick={() => {
               adminAuth.logout()
               window.location.href = '/'
-            }}>{t.signOut}</button>
+            }} title={t.signOut} aria-label={t.signOut}><SignOutIcon /><span className="navbar-signout-text">{t.signOut}</span></button>
           </>
         ) : null}
         {/* Only a signed-in admin sees the way into the admin panel. */}
@@ -81,6 +84,15 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
         )}
       </div>
     </nav>
+  )
+}
+
+/** Shown instead of the "Sign out" label on narrow screens (motion.css). */
+function SignOutIcon() {
+  return (
+    <svg className="navbar-signout-icon" width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+    </svg>
   )
 }
 

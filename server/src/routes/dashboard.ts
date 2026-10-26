@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { pool } from "../db/pool.js";
+import { asyncHandler } from "../http/asyncHandler.js";
 
 const router = Router();
 
-router.get("/stats", async (_req, res) => {
+router.get("/stats", asyncHandler(async (_req, res) => {
   const [chapters, lessons, menus] = await Promise.all([
     pool.query("SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE is_published)::int AS published FROM chapters"),
     pool.query("SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE is_published)::int AS published FROM lessons"),
@@ -18,6 +19,6 @@ router.get("/stats", async (_req, res) => {
     total_side_menus: menus.rows[0].total,
     active_side_menus: menus.rows[0].active,
   });
-});
+}));
 
 export default router;

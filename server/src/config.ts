@@ -12,6 +12,11 @@ export interface AppConfig {
   /** Max login/register requests per IP per 15 minutes. */
   authRateLimitMax: number;
   bcryptRounds: number;
+  /**
+   * Testing aid: admins may take exams in Study Hub through a linked preview candidate. On in development, off in
+   * production unless EXAM_ADMIN_PREVIEW=true; EXAM_ADMIN_PREVIEW=false turns it off anywhere.
+   */
+  examAdminPreview: boolean;
 }
 
 /** Values shipped in docs/examples; using one in production would let anyone forge tokens. */
@@ -35,6 +40,7 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
     trustProxy: env.TRUST_PROXY ? env.TRUST_PROXY === "true" : isProduction,
     authRateLimitMax: Number(env.AUTH_RATE_LIMIT_MAX) || 10,
     bcryptRounds: Number(env.BCRYPT_ROUNDS) || 12,
+    examAdminPreview: env.EXAM_ADMIN_PREVIEW ? env.EXAM_ADMIN_PREVIEW === "true" : !isProduction,
   };
 }
 
