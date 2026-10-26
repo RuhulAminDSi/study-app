@@ -1,6 +1,6 @@
 import { useApp, useAppDispatch } from '../context/AppContext'
 import { translations } from '../data/translations'
-import { navigateToLesson } from '../router'
+import { navigate, navigateToLesson } from '../router'
 import { useCandidateAuth } from '../candidate/CandidateAuthContext'
 import { useAuth } from '../context/AuthContext'
 import '../candidate/candidate.css'
@@ -16,6 +16,14 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
   const candidateAuth = useCandidateAuth()
   const adminAuth = useAuth()
 
+  // End every session and show the login page. Navigating first (in the same batch) keeps the sign-in
+  // gate from sending the reader to the login page with a `next` back to where they were.
+  const signOut = () => {
+    navigate('login', { replace: true })
+    candidateAuth.signOut()
+    adminAuth.logout()
+  }
+
   return (
     <nav className="navbar">
       <div className="navbar-top">
@@ -24,7 +32,7 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <a className="navbar-brand" href="/">
+        <a className="navbar-brand" href="#/">
           <svg className="navbar-brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)" /><path d="M7.5 23.5H17.5a3.5 3.5 0 0 0 0-7H13.5a3.5 3.5 0 0 1 0-7H19.5" fill="none" stroke="var(--on-accent)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /><circle cx="23.5" cy="9.5" r="2.6" fill="var(--on-accent)" /></svg>
           <span className="navbar-brand-text">{t.studyHub}</span>
         </a>
@@ -61,19 +69,13 @@ export default function Navbar({ onAdminClick }: NavbarProps) {
         {candidateAuth.candidate ? (
           <>
             <span className="navbar-user" title={candidateAuth.candidate.email}>{candidateAuth.candidate.fullName}</span>
-            <button className="language-toggle" onClick={() => {
-              candidateAuth.signOut()
-              window.location.href = '/'
-            }} title={t.signOut} aria-label={t.signOut}><SignOutIcon /><span className="navbar-signout-text">{t.signOut}</span></button>
+            <button className="language-toggle" onClick={signOut} title={t.signOut} aria-label={t.signOut}><SignOutIcon /><span className="navbar-signout-text">{t.signOut}</span></button>
           </>
         ) : adminAuth.user ? (
           // An admin previewing the portal (Study Hub needs an account, so nobody else gets here).
           <>
             <span className="navbar-user" title={adminAuth.user.email}>{adminAuth.user.username}</span>
-            <button className="language-toggle" onClick={() => {
-              adminAuth.logout()
-              window.location.href = '/'
-            }} title={t.signOut} aria-label={t.signOut}><SignOutIcon /><span className="navbar-signout-text">{t.signOut}</span></button>
+            <button className="language-toggle" onClick={signOut} title={t.signOut} aria-label={t.signOut}><SignOutIcon /><span className="navbar-signout-text">{t.signOut}</span></button>
           </>
         ) : null}
         {/* Only a signed-in admin sees the way into the admin panel. */}

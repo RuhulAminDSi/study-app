@@ -11,7 +11,9 @@ import './candidate.css'
 type FormState = { fullName: string; email: string; phone: string; password: string; confirm: string }
 const EMPTY: FormState = { fullName: '', email: '', phone: '', password: '', confirm: '' }
 
-export default function CandidateSignup({ next }: { next?: string }) {
+export default function CandidateSignup({ next: asked }: { next?: string }) {
+  // A candidate account can't open the admin panel, so a `next` pointing there leads to the dashboard.
+  const next = asked === 'admin' || asked?.startsWith('admin/') ? undefined : asked
   const { language } = useApp()
   const t = translations[language]
   const auth = useCandidateAuth()
@@ -60,7 +62,7 @@ export default function CandidateSignup({ next }: { next?: string }) {
   }
 
   const fieldError = (name: string) => (fieldErrors[name] ? errorText(t, fieldErrors[name], fieldErrors[name]) : undefined)
-  const loginHref = `#/login${next ? `?next=${encodeURIComponent(next)}` : ''}`
+  const loginHref = `#/login${asked ? `?next=${encodeURIComponent(asked)}` : ''}`
 
   return (
     <main className="cand-auth">
