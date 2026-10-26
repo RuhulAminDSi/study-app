@@ -61,6 +61,13 @@ export default defineConfig({
     },
   },
   server: {
+    // Allow public tunnels to the dev server: Cloudflare quick tunnels, ngrok free domains and Tailscale Funnel.
+    allowedHosts: ['.trycloudflare.com', '.ngrok-free.app', '.ngrok-free.dev', '.ts.net'],
+    // Transform Study Hub's module graph at start-up, so the first visitor after a restart (often over a
+    // tunnel) isn't the one who waits for every file to be compiled on demand.
+    warmup: {
+      clientFiles: ['./src/main.tsx', './src/exam/*.tsx', './src/components/portal/*.tsx'],
+    },
     watch: {
       ignored: ['**/public/notes/**', '**/notes/pdf/**', '**/notes/snap/**'],
     },
