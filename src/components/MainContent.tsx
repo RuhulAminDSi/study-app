@@ -8,18 +8,21 @@ import ContentStatus from './ContentStatus'
 import ExamKit from './ExamKit'
 import Icon from './portal/icons'
 import { fetchExamKitIndex } from '../public/publicApi'
+import { fill, num } from './portal/portalData'
 
 type LessonTab = 'note' | 'kit'
 const TAB_KEY = 'studyhub_lesson_tab'
 
-/** Lesson slugs that have a published Exam Kit; fetched once per page load. */
-let kitIndex: Promise<Set<string>> | null = null
-function loadKitIndex(): Promise<Set<string>> {
+/** Lesson slugs that have a published Exam Kit, with how often the exams asked them; fetched once per page load. */
+let kitIndex: Promise<Map<string, number | null>> | null = null
+function loadKitIndex(): Promise<Map<string, number | null>> {
   kitIndex ??= fetchExamKitIndex()
-    .then(list => new Set(list.map(k => k.slug)))
-    .catch(() => { kitIndex = null; return new Set<string>() })
+    .then(list => new Map(list.map(k => [k.slug, k.asked])))
+    .catch(() => { kitIndex = null; return new Map<string, number | null>() })
   return kitIndex
 }
+
+const notesSlug = (html: string) => html.match(/data-notes="([a-z0-9-]+)"/)?.[1] ?? null
 
 function savedTab(): LessonTab {
   try { return localStorage.getItem(TAB_KEY) === 'kit' ? 'kit' : 'note' } catch { return 'note' }
@@ -65,8 +68,8 @@ export default function MainContent() {
   }, [state.loading, current])
 
   // The note marker names the lesson's slug (data-notes="…"); that slug keys its Exam Kit.
-  const slug = current?.lesson.content_en.match(/data-notes="([a-z0-9-]+)"/)?.[1] ?? null
-  const [kitSlugs, setKitSlugs] = useState<Set<string>>(new Set())
+  const slug = current ? notesSlug(current.lesson.content_en) : null
+  const [kitSlugs, setKitSlugs] = useState<Map<string, number | null>>(new Map())
   const [tab, setTab] = useState<LessonTab>(savedTab)
   useEffect(() => {
     let live = true
@@ -93,6 +96,12 @@ export default function MainContent() {
   const prev = isFirst ? undefined : state.orderedLessons[state.currentIndex - 1]
   const next = isLast ? undefined : state.orderedLessons[state.currentIndex + 1]
   const titleOf = (l: typeof lesson) => (state.language === 'bn' && l.title_bn ? l.title_bn : l.title_en)
+  // Past-question links: the subject's solved PYQ sets (same chapter) and this lesson's Exam Kit list.
+  const isPyqLesson = !!slug?.startsWith('pyq-')
+  const pyqSets = isPyqLesson ? [] : state.orderedLessons.filter(o =>
+    o.chapterId === current.chapterId && notesSlug(o.lesson.content_en)?.startsWith('pyq-'))
+  const kitAsked = hasKit && slug ? kitSlugs.get(slug) : undefined
+  const showPyqLinks = !isPyqLesson && (pyqSets.length > 0 || (hasKit && !showKit))
 
   const handlePrev = () => {
     if (prev) navigateToLesson(prev.chapterId, prev.lesson.id)
@@ -117,6 +126,31 @@ export default function MainContent() {
           </div>
           <h1 className="lesson-title">{lessonTitle}</h1>
         </div>
+
+        {showPyqLinks && (
+          <nav className="pyq-links" aria-label={t.pyqLinksTitle}>
+            <span className="pyq-links-label">
+              <Icon name="pyq" />
+              {t.pyqLinksTitle}
+            </span>
+            <div className="pyq-links-list">
+              {hasKit && !showKit && (
+                <button type="button" className="pyq-link pyq-link-kit" onClick={() => { chooseTab('kit'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+                  <span className="pyq-link-title">{t.pyqLinkKit}</span>
+                  <span className="pyq-link-meta">{kitAsked ? fill(t.pyqLinkKitMeta, { n: num(kitAsked, state.language) }) : t.tabExamKit}</span>
+                  <Icon name="chevron" />
+                </button>
+              )}
+              {pyqSets.map(o => (
+                <a key={o.lesson.id} className="pyq-link" href={`#/chapter/${o.chapterId}/lesson/${o.lesson.id}`}>
+                  <span className="pyq-link-title">{titleOf(o.lesson)}</span>
+                  <span className="pyq-link-meta">{t.pyqLinkSetMeta}</span>
+                  <Icon name="chevron" />
+                </a>
+              ))}
+            </div>
+          </nav>
+        )}
 
         {hasKit && (
           <div className="lesson-tabs" role="tablist" aria-label={lessonTitle}>

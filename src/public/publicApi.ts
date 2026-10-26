@@ -154,6 +154,8 @@ export interface ExamKitData {
   traps: Bi[]
   writtenPlan: { question: Bi; askedIn: string[]; skeleton: { en: string[]; bn: string[] }; marks: Partial<Record<'5' | '10' | '20', Bi>> }[]
   viva: { q: Bi; a: Bi }[]
+  topics?: { name: string; overview: Bi; points: Bi[]; examples: { question: Bi; working: Bi; answer: Bi }[] }[]
+  solutions?: Record<string, { answer: Bi; example?: Bi }>
   facts: string[]
   factsResolved?: { id: string; en: string; bn: string; asOf: string; status: string; sources: string[] }[]
   sources: { url: string; title: string; accessed: string }[]

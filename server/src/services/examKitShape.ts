@@ -20,6 +20,10 @@ export interface ExamKit {
   traps: Bi[];
   writtenPlan: { question: Bi; askedIn: string[]; skeleton: { en: string[]; bn: string[] }; marks: Partial<Record<"5" | "10" | "20", Bi>> }[];
   viva: { q: Bi; a: Bi }[];
+  /** in-depth explainers for the most-asked topics; `name` matches a heat.topClusters name */
+  topics?: { name: string; overview: Bi; points: Bi[]; examples: { question: Bi; working: Bi; answer: Bi }[] }[];
+  /** worked answers for the past questions, keyed by asked[].group (authored, so kit-asked.mjs leaves them alone) */
+  solutions?: Record<string, { answer: Bi; example?: Bi }>;
   facts: string[];
   sources: { url: string; title: string; accessed: string }[];
 }
@@ -77,6 +81,18 @@ export function checkKit(kit: ExamKit, file: string, ctx: KitCheckContext): stri
   list("asked", kit.asked ?? [], (x, i) => {
     if (!x?.question || !Array.isArray(x.sources) || !x.sources.length) at(`asked[${i}] needs the question and its sources`);
   });
+  list("topics", kit.topics ?? [], (x, i) => {
+    if (!x?.name || !isBi(x?.overview)) at(`topics[${i}] needs a name and an overview in en and bn`);
+    if (!Array.isArray(x?.points) || x.points.some((pt) => !isBi(pt))) at(`topics[${i}].points must be en/bn pairs`);
+    if (!Array.isArray(x?.examples) || x.examples.some((e) => !isBi(e?.question) || !isBi(e?.working) || !isBi(e?.answer))) {
+      at(`topics[${i}].examples each need question, working and answer in en and bn`);
+    }
+  });
+  const groups = new Set((kit.asked ?? []).map((a) => a.group));
+  for (const [g, x] of Object.entries(kit.solutions ?? {})) {
+    if (!groups.has(g)) at(`solutions.${g} has no past question in asked`);
+    if (!isBi(x?.answer) || (x.example !== undefined && !isBi(x.example))) at(`solutions.${g} needs an answer (and any example) in en and bn`);
+  }
   list("sources", kit.sources, (x, i) => { if (!/^https?:\/\//.test(x?.url ?? "") && !x?.url?.startsWith("ex-question/")) at(`sources[${i}].url must be a URL or an ex-question/ path`); });
 
   const today = ctx.today ?? new Date();
