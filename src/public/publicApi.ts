@@ -177,10 +177,10 @@ export interface ExamKitIndexEntry {
 }
 
 /** Published kits; the reader shows the Exam Kit tab only for lessons listed here. */
-export function fetchExamKitIndex(): Promise<ExamKitIndexEntry[]> {
-  return cachedPublicFetch<ExamKitIndexEntry[]>('/exam-kits')
+export function fetchExamKitIndex(onFresh?: (data: ExamKitIndexEntry[]) => void): Promise<ExamKitIndexEntry[]> {
+  return cachedPublicFetch<ExamKitIndexEntry[]>('/exam-kits', onFresh)
 }
 
-export function fetchExamKit(slug: string): Promise<ExamKitResponse> {
-  return cachedPublicFetch<ExamKitResponse>(`/exam-kits/${encodeURIComponent(slug)}`)
+export function fetchExamKit(slug: string, onFresh?: (data: ExamKitResponse) => void): Promise<ExamKitResponse> {
+  return cachedPublicFetch<ExamKitResponse>(`/exam-kits/${encodeURIComponent(slug)}`, onFresh)
 }

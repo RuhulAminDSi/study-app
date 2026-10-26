@@ -60,7 +60,9 @@ export default function ExamKit({ slug, language, t }: { slug: string; language:
   // the parent keys this component by slug, so a new lesson starts from fresh state
   useEffect(() => {
     let live = true
-    fetchExamKit(slug).then(k => { if (live) setKit(k) }).catch(() => { if (live) setFailed(true) })
+    // the device copy shows first; a newer copy from the server replaces it when it arrives
+    const show = (k: ExamKitResponse) => { if (live) setKit(k) }
+    fetchExamKit(slug, show).then(show).catch(() => { if (live) setFailed(true) })
     return () => { live = false }
   }, [slug])
 

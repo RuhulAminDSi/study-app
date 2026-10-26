@@ -14,10 +14,18 @@ type LessonTab = 'note' | 'kit'
 const TAB_KEY = 'studyhub_lesson_tab'
 
 /** Lesson slugs that have a published Exam Kit, with how often the exams asked them; fetched once per page load. */
-let kitIndex: Promise<Map<string, number | null>> | null = null
-function loadKitIndex(): Promise<Map<string, number | null>> {
-  kitIndex ??= fetchExamKitIndex()
-    .then(list => new Map(list.map(k => [k.slug, k.asked])))
+type KitIndex = Map<string, number | null>
+const toIndex = (list: { slug: string; asked: number | null }[]): KitIndex => new Map(list.map(k => [k.slug, k.asked]))
+let kitIndex: Promise<KitIndex> | null = null
+// a newer list from the server (the device copy shows first) reaches the mounted reader through this listener
+let onFreshIndex: ((index: KitIndex) => void) | null = null
+function loadKitIndex(): Promise<KitIndex> {
+  kitIndex ??= fetchExamKitIndex(list => {
+    const fresh = toIndex(list)
+    kitIndex = Promise.resolve(fresh)
+    onFreshIndex?.(fresh)
+  })
+    .then(toIndex)
     .catch(() => { kitIndex = null; return new Map<string, number | null>() })
   return kitIndex
 }
@@ -69,12 +77,13 @@ export default function MainContent() {
 
   // The note marker names the lesson's slug (data-notes="…"); that slug keys its Exam Kit.
   const slug = current ? notesSlug(current.lesson.content_en) : null
-  const [kitSlugs, setKitSlugs] = useState<Map<string, number | null>>(new Map())
+  const [kitSlugs, setKitSlugs] = useState<KitIndex>(new Map())
   const [tab, setTab] = useState<LessonTab>(savedTab)
   useEffect(() => {
     let live = true
+    onFreshIndex = s => { if (live) setKitSlugs(s) }
     loadKitIndex().then(s => { if (live) setKitSlugs(s) })
-    return () => { live = false }
+    return () => { live = false; onFreshIndex = null }
   }, [])
   const hasKit = !!slug && kitSlugs.has(slug)
   const showKit = hasKit && tab === 'kit'
