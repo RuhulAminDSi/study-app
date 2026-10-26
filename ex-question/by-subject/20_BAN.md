@@ -80,9 +80,9 @@ Ten Bangla MCQs (Q9 options cut off; tail of one item and Q10 on the next page; 
 
 ## Other
 
-<a id="g1799"></a>
+<a id="g1798"></a>
 
-### বাংলাদেশের অর্থনৈতিক উন্নয়নে নীল অর্থনীতির ভূমিকা সম্পর্কে একটি রচনা লিখুন। <sub>G1799</sub>
+### বাংলাদেশের অর্থনৈতিক উন্নয়নে নীল অর্থনীতির ভূমিকা সম্পর্কে একটি রচনা লিখুন। <sub>G1798</sub>
 
 *Written*
 

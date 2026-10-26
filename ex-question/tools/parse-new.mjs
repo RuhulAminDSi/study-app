@@ -232,9 +232,10 @@ function subjectTable(md) {
 
 // ---------- Downloaded collections: duranta.app question bank, BUET M.Sc. papers from the web ----------
 // Each <name>.records.json sidecar sits next to its <name>.md transcription in <dir>/<folder>/; exam records
-// carry one exam tag, suggestion records none, so suggestions never add to a count.
-for (const dir of ['duranta', 'buet-msc-web', 'bcs-written-web', 'ntrca-written-web', 'bank-written-web', 'power-sector-web', 'ministry-ap-web', 'telecom-web', 'viva-web', 'model-test-web']) {
-  const SUBJECTS = new Set(['PHY', 'ICS', 'EC', 'DLD', 'ELN', 'MPI', 'CA', 'COM', 'NET', 'SPL', 'OOP', 'DM', 'GRAPH', 'TOC', 'DSA', 'DBMS', 'SE', 'OS', 'AI']);
+// carry one exam tag, suggestion records none, so suggestions never add to a count. 'bit to exabyte' holds the
+// sidecar for the book's PDF excerpt (super-ict-solutions-pdf/); its photographed pages are parsed above.
+for (const dir of ['bit to exabyte', 'duranta','buet-msc-web', 'bcs-written-web', 'ntrca-written-web', 'bank-written-web', 'power-sector-web', 'ministry-ap-web', 'telecom-web', 'viva-web', 'model-test-web']) {
+  const SUBJECTS = new Set(['PHY', 'ICS', 'EC', 'DLD', 'ELN', 'MPI', 'CA', 'COM', 'NET', 'SPL', 'OOP', 'DM', 'GRAPH', 'TOC', 'DSA', 'DBMS', 'SE', 'OS', 'AI', 'MATH']);
   let folders = [];
   try { folders = readdirSync(join(ROOT, dir), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort(); } catch { /* folder not downloaded */ }
   for (const folder of folders) {
@@ -254,8 +255,10 @@ for (const dir of ['duranta', 'buet-msc-web', 'bcs-written-web', 'ntrca-written-
         for (let j = i - 1; j >= 0 && j >= i - 12; j--) {
           const q = norm(lines[j].replace(/^\s*(\*\*)?(Q?\d+[.)]?|\([a-zক-ঙ]\)|[a-z][.)])\s*/i, ''));
           if (q.length < 12 || /^>/.test(lines[j].trim())) continue;
-          const key = q.slice(0, 30);
-          const hit = recs.find((r) => r.question && norm(r.question).includes(key));
+          // the longest prefix first: two stems that open the same way ("Which one of the following is
+          // false with …") share their first 30 characters
+          const has = (key) => recs.find((r) => r.question && norm(r.question).includes(key));
+          const hit = has(q.slice(0, 80)) ?? has(q.slice(0, 30));
           if (hit) { issues.set(hit, m[1].trim()); break; }
         }
       });
@@ -266,7 +269,7 @@ for (const dir of ['duranta', 'buet-msc-web', 'bcs-written-web', 'ntrca-written-
       const isExam = r.doc_type === 'exam';
       // viva questions are counted apart from written exams (viva_mentions), so they carry no exam tag
       const isViva = r.kind === 'viva';
-      const origin = dir === 'duranta' ? 'duranta' : 'web';
+      const origin = dir === 'duranta' ? 'duranta' : dir === 'bit to exabyte' ? 'book' : 'web';
       add({ source: isViva ? 'viva-compilation' : isExam ? origin : `${origin}-suggestion`, pages: [`${dir}/${folder}/${md}`], label: r.label,
         chapter: r.md_anchor ?? folder, subject: override(r.question, r.subject), question: r.question,
         raw_tags: isExam && !isViva && r.exam ? [r.exam] : [], marks: r.marks ?? null, kind: ['mcq', 'viva'].includes(r.kind) ? r.kind : 'written',

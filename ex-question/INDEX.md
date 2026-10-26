@@ -2,34 +2,34 @@
 
 Photographed question and solution sheets (BCS, NTRCA, BPSC, bank, BUET-run recruitment exams, BUET M.Sc. admission tests, vivas), the Bit to Exabyte question books and suggestion sheets, with a Markdown transcription next to every image (original image names in `image-rename-log.csv`). Text extracted from the PDFs is in `PDF-TEXT/`. `by-subject/` regroups every question by syllabus subject and topic, ranks topics and questions by how many exams asked them, and shows for every question **which exams asked it and which source it was taken from**. Data: `by-subject/questions.json` (every record), `by-subject/frequency.json` (one entry per distinct question), `exam-tags.json` (exam-name normalisation), `by-subject/pattern-topics.json` (coaching topic index). Rebuild with `node tools/parse-new.mjs && node tools/build-exam-tags.mjs && node tools/merge.mjs && node tools/render.mjs`. The handwritten revision notebooks built from these questions are catalogued in [HANDWRITTEN-NOTES.md](HANDWRITTEN-NOTES.md).
 
-Total: 5771 records → 4976 distinct questions, 299 exams, 202 printed answers corrected.
+Total: 6068 records → 5269 distinct questions, 303 exams, 228 printed answers corrected.
 
 ## By subject
 
 | # | Subject | Distinct questions | Records | Written | MCQ | Viva | Exams | Most-asked topic | Corrections |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | [Basic Physics](by-subject/01_PHY.md) | 27 | 27 | 10 | 17 | 0 | 11 | Other | 3 |
-| 2 | [Introduction to Computer Systems](by-subject/02_ICS.md) | 470 | 520 | 307 | 98 | 115 | 114 | Cloud, data centre & servers | 9 |
-| 3 | [Electrical Circuits](by-subject/03_EC.md) | 51 | 51 | 20 | 31 | 0 | 20 | Other | 4 |
-| 4 | [Digital Logic Design](by-subject/04_DLD.md) | 297 | 337 | 282 | 45 | 5 | 110 | Logic gates & universal gates | 16 |
+| 1 | [Basic Physics](by-subject/01_PHY.md) | 28 | 28 | 10 | 18 | 0 | 12 | Other | 4 |
+| 2 | [Introduction to Computer Systems](by-subject/02_ICS.md) | 487 | 537 | 309 | 113 | 115 | 117 | Cloud, data centre & servers | 9 |
+| 3 | [Electrical Circuits](by-subject/03_EC.md) | 52 | 52 | 20 | 32 | 0 | 21 | Other | 4 |
+| 4 | [Digital Logic Design](by-subject/04_DLD.md) | 301 | 341 | 284 | 47 | 5 | 111 | Logic gates & universal gates | 17 |
 | 5 | [Basic Electronics](by-subject/05_ELN.md) | 94 | 97 | 45 | 50 | 2 | 29 | Other | 4 |
-| 6 | [Microprocessor and Interfacing](by-subject/06_MPI.md) | 87 | 105 | 75 | 26 | 4 | 46 | 8086 architecture & segmentation | 4 |
-| 7 | [Computer Architecture](by-subject/07_CA.md) | 173 | 193 | 149 | 41 | 2 | 98 | Cache memory | 5 |
-| 8 | [Communication Theory](by-subject/08_COM.md) | 195 | 209 | 147 | 39 | 14 | 74 | Multiplexing (TDM, FDM, WDM) | 10 |
-| 9 | [Computer Networking and Security](by-subject/09_NET.md) | 1021 | 1241 | 889 | 139 | 189 | 217 | IP addressing & subnetting | 39 |
-| 10 | [Structured Programming (C)](by-subject/10_SPL.md) | 424 | 492 | 424 | 56 | 12 | 161 | Output tracing | 12 |
-| 11 | [Object Oriented Programming](by-subject/11_OOP.md) | 204 | 228 | 176 | 26 | 26 | 86 | Polymorphism, overloading & overriding | 9 |
+| 6 | [Microprocessor and Interfacing](by-subject/06_MPI.md) | 92 | 110 | 76 | 30 | 4 | 48 | 8086 architecture & segmentation | 4 |
+| 7 | [Computer Architecture](by-subject/07_CA.md) | 191 | 211 | 156 | 52 | 2 | 101 | Cache memory | 9 |
+| 8 | [Communication Theory](by-subject/08_COM.md) | 201 | 215 | 147 | 45 | 14 | 77 | Multiplexing (TDM, FDM, WDM) | 11 |
+| 9 | [Computer Networking and Security](by-subject/09_NET.md) | 1073 | 1295 | 908 | 174 | 189 | 220 | IP addressing & subnetting | 43 |
+| 10 | [Structured Programming (C)](by-subject/10_SPL.md) | 436 | 504 | 433 | 59 | 12 | 162 | Output tracing | 12 |
+| 11 | [Object Oriented Programming](by-subject/11_OOP.md) | 209 | 233 | 178 | 29 | 26 | 88 | Polymorphism, overloading & overriding | 10 |
 | 12 | [Discrete Mathematics](by-subject/12_DM.md) | 63 | 68 | 54 | 14 | 0 | 32 | Other | 1 |
-| 13 | [Graph Theory](by-subject/13_GRAPH.md) | 49 | 51 | 40 | 11 | 0 | 32 | Graph types & properties | 3 |
-| 14 | [Theory of Computation](by-subject/14_TOC.md) | 48 | 48 | 29 | 18 | 0 | 25 | Other | 2 |
-| 15 | [Data Structures and Algorithms](by-subject/15_DSA.md) | 386 | 446 | 355 | 75 | 15 | 131 | Trees & traversals | 17 |
-| 16 | [Database Systems](by-subject/16_DBMS.md) | 458 | 541 | 449 | 44 | 48 | 157 | SQL queries | 21 |
-| 17 | [Software Engineering](by-subject/17_SE.md) | 302 | 402 | 338 | 31 | 33 | 104 | Testing & quality assurance | 7 |
-| 18 | [Operating System](by-subject/18_OS.md) | 367 | 449 | 385 | 54 | 2 | 131 | Memory management & paging | 19 |
-| 19 | [Artificial Intelligence](by-subject/19_AI.md) | 126 | 131 | 80 | 33 | 18 | 43 | Machine learning | 2 |
+| 13 | [Graph Theory](by-subject/13_GRAPH.md) | 51 | 53 | 41 | 12 | 0 | 33 | Graph types & properties | 3 |
+| 14 | [Theory of Computation](by-subject/14_TOC.md) | 50 | 50 | 31 | 18 | 0 | 25 | Other | 2 |
+| 15 | [Data Structures and Algorithms](by-subject/15_DSA.md) | 407 | 467 | 366 | 85 | 15 | 133 | Sorting | 17 |
+| 16 | [Database Systems](by-subject/16_DBMS.md) | 544 | 629 | 471 | 110 | 48 | 160 | SQL queries | 31 |
+| 17 | [Software Engineering](by-subject/17_SE.md) | 310 | 410 | 342 | 35 | 33 | 107 | Testing & quality assurance | 7 |
+| 18 | [Operating System](by-subject/18_OS.md) | 396 | 478 | 397 | 71 | 2 | 134 | Memory management & paging | 23 |
+| 19 | [Artificial Intelligence](by-subject/19_AI.md) | 129 | 134 | 82 | 34 | 18 | 44 | Machine learning | 2 |
 | 20 | [Bangla](by-subject/20_BAN.md) | 4 | 4 | 1 | 3 | 0 | 2 | সমাস, বানান, প্রতিশব্দ, কারক-বিভক্তি, বিদেশি শব্দ, সাহিত্য, যুক্তবর্ণ, বাক্য | 1 |
 | 21 | [English](by-subject/21_ENG.md) | 13 | 13 | 8 | 5 | 0 | 6 | Idioms, narration, spelling, articles, prepositions | 2 |
-| 22 | [Mathematics](by-subject/22_MATH.md) | 11 | 11 | 8 | 3 | 0 | 5 | Logarithms, indices, vectors, trigonometry, mensuration, probability, combinations | 3 |
+| 22 | [Mathematics](by-subject/22_MATH.md) | 32 | 32 | 29 | 3 | 0 | 7 | Logarithms, indices, vectors, trigonometry, mensuration, probability, combinations | 3 |
 | 23 | [General Knowledge](by-subject/23_GK.md) | 106 | 107 | 4 | 5 | 96 | 4 | Current affairs, currency, antonym, DC current | 9 |
 
 ## Most-asked questions (all subjects)
@@ -37,40 +37,40 @@ Total: 5771 records → 4976 distinct questions, 299 exams, 202 printed answers 
 | # | Subject | Question | Exams | Asked in | Source |
 |---|---|---|---|---|---|
 | 1 | SE | Difference between White Box testing and Black Box testing. Give examples of both type of… | 8 | 17th NTRCA ICT (2023); BARC Programmer 2023; BPSC AP 2021; BPSC SAE 2021; EPB Programmer 2018; ICB AP 2017; PSB Programmer 2018; Teletalk AM(IT) 2023 | [G1230](by-subject/17_SE.md#g1230) |
-| 2 | OOP | Explain Method overloading and Method overriding with example . | 8 | 17th NTRCA ICT (2023); 36th BCS (2016); BPSC AME 2021; BPSC AP 2023; Combined Bank AHE 2021; Combined Bank SO(AME) 2021; NU AP 2020; RAKUB Programmer 2021 | [G2340](by-subject/11_OOP.md#g2340) |
-| 3 | NET | What is SQL Injection? How to Prevent against SQL Injection Attacks? | 7 | 46th BCS CSE; BTV AP 2019; RAKUB ME 2021; RAKUB Programmer 2021; SGFL AE(IT) 2023; SPCBL AME 2021; SPCBL SAE 2022 | [G3014](by-subject/09_NET.md#g3014) |
-| 4 | SPL | Differences between 'Call by Value' and 'Call by Reference'. | 5 | 17th NTRCA ICT (2023); BPSC ADA 2022; BPSC AP 2022; BPSC AP 2023; PSB AP 2018 | [G3424](by-subject/10_SPL.md#g3424) |
+| 2 | OOP | Explain Method overloading and Method overriding with example . | 8 | 17th NTRCA ICT (2023); 36th BCS (2016); BPSC AME 2021; BPSC AP 2023; Combined Bank AHE 2021; Combined Bank SO(AME) 2021; NU AP 2020; RAKUB Programmer 2021 | [G2453](by-subject/11_OOP.md#g2453) |
+| 3 | NET | What is SQL Injection? How to Prevent against SQL Injection Attacks? | 7 | 46th BCS CSE; BTV AP 2019; RAKUB ME 2021; RAKUB Programmer 2021; SGFL AE(IT) 2023; SPCBL AME 2021; SPCBL SAE 2022 | [G3127](by-subject/09_NET.md#g3127) |
+| 4 | SPL | Differences between 'Call by Value' and 'Call by Reference'. | 5 | 17th NTRCA ICT (2023); BPSC ADA 2022; BPSC AP 2022; BPSC AP 2023; PSB AP 2018 | [G3537](by-subject/10_SPL.md#g3537) |
 | 5 | SPL | What do you mean by recursion? Calculate factorial function using recursion with C progra… | 5 | 45th BCS ICT (2024); BPSC ANE 2020; BPSC AP 2020; BPSC AP 2022; Milk Vita AM(CSE) 2023 | [G1043](by-subject/10_SPL.md#g1043) |
 | 6 | DSA | Differentiate between Linked list and Array? | 5 | 17th NTRCA ICT (2023); BNPS AP 2017; BPSC AP 2021; BPSC AP 2023; BPSC ME 2021 | [G1277](by-subject/15_DSA.md#g1277) |
 | 7 | NET | Differentiate between IPv4 and IPv6. | 5 | BMA AE 2021; BPSC AME 2021; BREB AGM(IT) 2021; RAKUB ANSE 2023; WZPGCL AE(CSE) 2023 | [G0560](by-subject/09_NET.md#g0560) |
 | 8 | SPL | Distinguish between Compiler and Interpreter with example. | 5 | 40th BCS (2020); BCC Programmer 2019; BPSC ADA 2022; BPSC AP 2022; PGCB SAE 2021 | [G1033](by-subject/10_SPL.md#g1033) |
 | 9 | NET | Given IP address 192.168.1.50, Subnet Mask: 255.255.255.240. Find the valid IP range. Als… | 4 | BIWTA AE(CSE) 2023; BPDB AE(CSE) 2024; BTCL AME 2023; NWPGCL AM(ICT) 2024 | [G0167](by-subject/09_NET.md#g0167) |
-| 10 | NET | c. Explain the difference between symmetric and asymmetric encryption and give example. 4 | 4 | BPSC SAE 2021; NPCBL ET(Soft) 2023; Parliament Secretariat SAE 2023; WZPGCL AE(CSE) 2023 | [G3472](by-subject/09_NET.md#g3472) |
+| 10 | NET | c. Explain the difference between symmetric and asymmetric encryption and give example. 4 | 4 | BPSC SAE 2021; NPCBL ET(Soft) 2023; Parliament Secretariat SAE 2023; WZPGCL AE(CSE) 2023 | [G3585](by-subject/09_NET.md#g3585) |
 | 11 | NET | 3-way handshake protocol for TCP connection using diagram. | 4 | BCIC AP 2022; BGDCL AE(CSE) 2021; BRICM AME 2024; Sonali Bank Officer(IT) 2021 | [G1451](by-subject/09_NET.md#g1451) |
 | 12 | SPL | Difference between Array and Structure data type. | 4 | BOF AE(CSE) 2021; BPSC AE 2022; BPSC AP 2021; BPSC AP 2022 | [G1042](by-subject/10_SPL.md#g1042) |
 | 13 | NET | Differentiate between TCP and UDP. | 4 | 37th BCS; 45th BCS CSE (2024); BPSC AP 2021; Combined Bank SO(IT) 2024 | [G1474](by-subject/09_NET.md#g1474) |
-| 14 | DLD | What is the difference between Latch and Flip-flop? | 5 | 36th BCS (2016); BB AME 2017; BPSC AP 2021; BWDB AP 2018; SPCBL AME 2021 | [G1834](by-subject/04_DLD.md#g1834) |
+| 14 | DLD | What is the difference between Latch and Flip-flop? | 5 | 36th BCS (2016); BB AME 2017; BPSC AP 2021; BWDB AP 2018; SPCBL AME 2021 | [G1947](by-subject/04_DLD.md#g1947) |
 | 15 | DLD | Simplify F(A,B,C,D) = Σm(0,3,5,7,8,10,11,12,13,14,15) using a 4-variable K-map. | 4 | 46th BCS ICT; Combined Bank AME 2026; Combined Bank AME/AE(IT) 2026(Jan); Combined Bank SO(IT) 2026 | [G0325](by-subject/04_DLD.md#g0325) |
 | 16 | ICS | What is the difference between System Software and Application Software? | 4 | 45th BCS General (Sci & Tech) (2024); BB AME 2016; MM AP 2017; NPCBL JAM 2022 | [G1014](by-subject/02_ICS.md#g1014) |
-| 17 | DBMS | Analyze the output of the following SQL. Select department_name, AVG(salary) As average_s… | 3 | Combined Bank Officer(IT) 2023; Rupali Bank ANA 2023; Rupali Bank ANE 2023 | [G3140](by-subject/16_DBMS.md#g3140) |
+| 17 | DBMS | Analyze the output of the following SQL. Select department_name, AVG(salary) As average_s… | 3 | Combined Bank Officer(IT) 2023; Rupali Bank ANA 2023; Rupali Bank ANE 2023 | [G3253](by-subject/16_DBMS.md#g3253) |
 | 18 | DLD | Simplify F(A,B,C,D) = Σm(2,8,9,11,13,15) using a 4-variable K-map. | 3 | BCIC AP 2022; BPDB AE(CSE) 2024; Teletalk AM(IT) 2023 | [G0319](by-subject/04_DLD.md#g0319) |
 | 19 | NET | Routing Table - supernet - CIDR nation [site's expanded wording, assumed: An ISP has been… | 3 | BRICM AME 2024; Combined Bank ADA 2026; Combined Bank Officer(IT) 2026 | [G0909](by-subject/09_NET.md#g0909) |
 | 20 | NET | Write down the top 10 cyber-attack. | 3 | Combined Bank AME/AHE 2023; Combined Bank Officer(IT) 2023; Combined Bank SO(IT) 2023 | [G1105](by-subject/09_NET.md#g1105) |
-| 21 | NET | Difference between HTTP and HTTPS. | 3 | MGMCL AM(ICT) 2022; PGCB AE(CSE) 2024; RAKUB ANSE 2023 | [G1494](by-subject/09_NET.md#g1494) |
-| 22 | DBMS | Explain Primary key, Candidate key, and Foreign key. | 3 | 36th BCS (2016); SPCBL AME 2021; Teletalk AM(IT) 2023 | [G4625](by-subject/16_DBMS.md#g4625) |
-| 23 | NET | কম্পিউটার থেকে কম্পিউটারে তথ্য আদান-প্রদানের প্রযুক্তিকে কী বলা হয়? (ক) ই-মেইল (খ) ইন্টার… | 4 | 13th NTRCA School-2 Prelim (2016); 14th NTRCA College Prelim (2017); 15th NTRCA College Prelim (2019); 18th NTRCA School Prelim (2024) | [G4162](by-subject/09_NET.md#g4162) |
+| 21 | NET | Difference between HTTP and HTTPS. | 3 | MGMCL AM(ICT) 2022; PGCB AE(CSE) 2024; RAKUB ANSE 2023 | [G1493](by-subject/09_NET.md#g1493) |
+| 22 | DBMS | Explain Primary key, Candidate key, and Foreign key. | 3 | 36th BCS (2016); SPCBL AME 2021; Teletalk AM(IT) 2023 | [G4918](by-subject/16_DBMS.md#g4918) |
+| 23 | NET | কম্পিউটার থেকে কম্পিউটারে তথ্য আদান-প্রদানের প্রযুক্তিকে কী বলা হয়? (ক) ই-মেইল (খ) ইন্টার… | 4 | 13th NTRCA School-2 Prelim (2016); 14th NTRCA College Prelim (2017); 15th NTRCA College Prelim (2019); 18th NTRCA School Prelim (2024) | [G4275](by-subject/09_NET.md#g4275) |
 | 24 | DBMS | What are the ACID properties of transaction to ensure data reliability and integrity? | 3 | BBL AM(ICT) 2019; BPSC AP 2023; Milk Vita AM(CSE) 2023 | [G0951](by-subject/16_DBMS.md#g0951) |
-| 25 | SE | Write down the SDLC steps with Explain. | 3 | BPSC ANE 2020; BRICM AME 2024; EGCB SAE(ICT) 2023 | [G2133](by-subject/17_SE.md#g2133) |
-| 26 | OS | Swapping কী? Internal এবং External Fragmentation এর মধ্যে পার্থক্য লিখুন। | 3 | 15th NTRCA ICT; 17th NTRCA ICT (2023); 18th NTRCA College ICT (2024) | [G1747](by-subject/18_OS.md#g1747) |
-| 27 | OS | What is deadlock in operating system (OS)? What are the four necessary and sufficient con… | 3 | 46th BCS CSE; BPSC AP 2023; Milk Vita AM(CSE) 2023 | [G2729](by-subject/18_OS.md#g2729) |
-| 28 | SE | What is the difference between black box and white box testing? | 3 | 45th BCS ICT (2024); 46th BCS ICT; Teletalk AM(IT) 2023 | [G2762](by-subject/17_SE.md#g2762) |
+| 25 | SE | Write down the SDLC steps with Explain. | 3 | BPSC ANE 2020; BRICM AME 2024; EGCB SAE(ICT) 2023 | [G2246](by-subject/17_SE.md#g2246) |
+| 26 | OS | Swapping কী? Internal এবং External Fragmentation এর মধ্যে পার্থক্য লিখুন। | 3 | 15th NTRCA ICT; 17th NTRCA ICT (2023); 18th NTRCA College ICT (2024) | [G1746](by-subject/18_OS.md#g1746) |
+| 27 | OS | What is deadlock in operating system (OS)? What are the four necessary and sufficient con… | 3 | 46th BCS CSE; BPSC AP 2023; Milk Vita AM(CSE) 2023 | [G2842](by-subject/18_OS.md#g2842) |
+| 28 | SE | What is the difference between black box and white box testing? | 3 | 45th BCS ICT (2024); 46th BCS ICT; Teletalk AM(IT) 2023 | [G2875](by-subject/17_SE.md#g2875) |
 | 29 | NET | Explain TCP/IP model and its protocol and device. | 3 | BRICM AME 2024; RAKUB NSE 2021; SPARRSO 2020 | [G1475](by-subject/09_NET.md#g1475) |
-| 30 | NET | What is OSI Model? Write all layer name sequence should be top to bottom or bottom to top. | 3 | BTRC SAD 2021; DESCO AE 2023; RAKUB NSE 2021 | [G1487](by-subject/09_NET.md#g1487) |
-| 31 | DLD | What is a Universal Gate? Prove that the NAND Gate is a Universal Gate. [BSCS AP 26] [DLD] | 3 | Bank (name cut off) AP; Combined Bank AP 2026; SPCBL AME 2021 | [G2980](by-subject/04_DLD.md#g2980) |
-| 32 | SE | Explain the concept of the Software Development Life Cycle (SDLC) and describe its main p… | 3 | 40th BCS (2020); Bank (name cut off) AP; Combined Bank AP 2026 | [G3243](by-subject/17_SE.md#g3243) |
+| 30 | NET | What is OSI Model? Write all layer name sequence should be top to bottom or bottom to top. | 3 | BTRC SAD 2021; DESCO AE 2023; RAKUB NSE 2021 | [G1486](by-subject/09_NET.md#g1486) |
+| 31 | DLD | What is a Universal Gate? Prove that the NAND Gate is a Universal Gate. [BSCS AP 26] [DLD] | 3 | Bank (name cut off) AP; Combined Bank AP 2026; SPCBL AME 2021 | [G3093](by-subject/04_DLD.md#g3093) |
+| 32 | SE | Explain the concept of the Software Development Life Cycle (SDLC) and describe its main p… | 3 | 40th BCS (2020); Bank (name cut off) AP; Combined Bank AP 2026 | [G3356](by-subject/17_SE.md#g3356) |
 | 33 | NET | What is CIA Triad? | 2 | EGCB SAE(ICT) 2023; Teletalk AM(IT) 2023 | [G0612](by-subject/09_NET.md#g0612) |
-| 34 | OOP | Friend Function কী? Friend Function-এর বৈশিষ্ট্য এবং সুবিধা ও অসুবিধাগুলো লিখুন। | 3 | 16th NTRCA; 16th NTRCA ICT; 18th NTRCA College ICT (2024) | [G2098](by-subject/11_OOP.md#g2098) |
-| 35 | SPL | কম্পাইলার এবং ইন্টারপ্রিটারের মধ্যে পার্থক্য লিখুন। | 3 | 15th NTRCA Computer Operation (2019); 16th NTRCA CSE (2019); SPARRSO TO(IT) 2021 | [G4147](by-subject/10_SPL.md#g4147) |
+| 34 | OOP | Friend Function কী? Friend Function-এর বৈশিষ্ট্য এবং সুবিধা ও অসুবিধাগুলো লিখুন। | 3 | 16th NTRCA; 16th NTRCA ICT; 18th NTRCA College ICT (2024) | [G2211](by-subject/11_OOP.md#g2211) |
+| 35 | SPL | কম্পাইলার এবং ইন্টারপ্রিটারের মধ্যে পার্থক্য লিখুন। | 3 | 15th NTRCA Computer Operation (2019); 16th NTRCA CSE (2019); SPARRSO TO(IT) 2021 | [G4260](by-subject/10_SPL.md#g4260) |
 | 36 | COM | FDM এবং TDM এর পার্থক্য লিখুন। | 2 | 17th NTRCA CSE (2023); 17th NTRCA ICT (2023) | [G1430](by-subject/08_COM.md#g1430) |
 | 37 | DLD | Simplify F = Σm(0,2,6,7,8,10,14,15) using a 4-variable K-map (same function as Q47). | 2 | BPSC AP 2023; BPSC AP 2026 | [G0320](by-subject/04_DLD.md#g0320) |
 | 38 | DSA | Linked List কী? উদাহরণসহ বর্ণনা করুন। | 2 | 17th NTRCA CSE (2023); 17th NTRCA ICT (2023) | [G1278](by-subject/15_DSA.md#g1278) |
@@ -86,11 +86,14 @@ Total: 5771 records → 4976 distinct questions, 299 exams, 202 printed answers 
 | 45th BCS CSE (2024) | bcs | 76 | DSA 15, DLD 12, MPI 10, NET 10, AI 6, SPL 6, COM 4, SE 4, DBMS 3, GRAPH 2, OS 2, CA 1, OOP 1 |
 | 49th BCS CSE (2025) | bcs | 73 | DSA 10, NET 9, OS 8, DBMS 7, CA 6, DM 5, TOC 5, AI 4, MPI 4, SPL 4, COM 3, SE 3, DLD 2, OOP 2, GRAPH 1 |
 | 17th NTRCA ICT (2023) | ntrca | 66 | DSA 10, OS 10, SPL 9, DBMS 8, ICS 7, NET 7, SE 6, OOP 4, COM 2, AI 1, CA 1, GRAPH 1 |
+| Combined Bank ADA 2021 | bank | 61 | DBMS 48, NET 3, OS 3, COM 2, ICS 2, CA 1, OOP 1, SE 1 |
 | BUET IICT April 2021 | admission | 60 | DLD 12, EC 12, NET 12, SPL 10, CA 7, MPI 4, OOP 2, COM 1 |
+| Combined Bank AHE/AE(IT) 2021 | bank | 60 | NET 12, DBMS 11, DSA 8, ICS 7, OS 5, CA 4, MPI 3, SPL 3, DLD 2, OOP 2, COM 1, GRAPH 1, SE 1 |
+| Combined Bank SO(IT) 2021 | bank | 59 | NET 20, OS 9, DBMS 7, CA 6, ICS 6, COM 3, DSA 2, SE 2, AI 1, EC 1, MPI 1, PHY 1 |
 | Combined Bank Officer(IT) 2020 | bank | 56 | ICS 12, NET 9, SPL 9, DBMS 5, OS 5, DSA 4, SE 4, AI 3, CA 2, COM 1, DLD 1, OOP 1 |
 | BPSC AP 2022 | bpsc | 55 | ELN 8, ICS 8, NET 8, SPL 8, DBMS 4, EC 4, OOP 4, DSA 3, OS 3, CA 2, COM 1, DLD 1, DM 1 |
 | 17th NTRCA CSE (2023) | ntrca | 54 | DSA 9, ICS 7, SPL 7, OS 6, DLD 5, NET 5, OOP 4, AI 3, SE 3, DBMS 2, COM 1, DM 1, GRAPH 1 |
-| 36th BCS (2016) | bcs | 48 | DSA 8, DBMS 5, OS 5, NET 4, OOP 4, SE 4, DLD 3, GRAPH 3, AI 2, CA 2, DM 2, MPI 2, COM 1, ICS 1, SPL 1, TOC 1 |
+| 36th BCS (2016) | bcs | 49 | DSA 8, DBMS 5, OS 5, NET 4, OOP 4, SE 4, DLD 3, GRAPH 3, AI 2, CA 2, DM 2, MPI 2, COM 1, ICS 1, MATH 1, SPL 1, TOC 1 |
 | BB AD(ICT) 2025 | bank | 48 | NET 10, DSA 9, DBMS 7, ELN 4, DLD 3, ICS 3, OS 3, SPL 3, EC 2, OOP 2, SE 2 |
 | Petrobangla AM(CSE) 2024 | public-body | 47 | DBMS 8, DSA 6, OS 5, SE 4, SPL 4, COM 3, DLD 3, OOP 3, BAN 2, ENG 2, GK 2, MATH 2, NET 2, ICS 1 |
 | 15th NTRCA ICT | ntrca | 45 | DBMS 9, OS 7, SPL 6, DSA 5, OOP 4, COM 3, GRAPH 3, ICS 3, SE 3, NET 2 |
@@ -341,6 +344,7 @@ Total: 5771 records → 4976 distinct questions, 299 exams, 202 printed answers 
 | PGCL SAE 2021 | public-body | 2 | DBMS 1, NET 1 |
 | SGFL AGE 2021 | public-body | 2 | DLD 1, NET 1 |
 | SPARRSO TO(IT) 2021 | public-body | 2 | SPL 2 |
+| 10th BCS | bcs | 1 | MATH 1 |
 | 13th NTRCA School-2 Prelim (2016) | ntrca | 1 | NET 1 |
 | 14th NTRCA College Prelim (2017) | ntrca | 1 | NET 1 |
 | 15th NTRCA College Prelim (2019) | ntrca | 1 | NET 1 |
@@ -603,6 +607,9 @@ Total: 5771 records → 4976 distinct questions, 299 exams, 202 printed answers 
 - [sbl-jbl-officer-it-2020-mcq.md](bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md) — DBMS, AI, CA, ICS, NET, SPL, OS, SE
 - [6banks-ap-2021.md](bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md) — DSA, OOP, DBMS, TOC
 - [bb-ad-general-2021-ict.md](bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md) — NET, OS, ICS, ELN, DLD, CA
+- [combined2-ada-2021-mcq.md](bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md) — DBMS, OS, COM, SE, ICS, CA, OOP, NET
+- [combined2-so-it-2021-mcq.md](bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md) — NET, OS, DBMS, ICS, EC, COM, PHY, CA, DSA, AI, SE, MPI
+- [combined3-ahe-ae-2021-mcq.md](bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md) — OS, DSA, NET, CA, DBMS, MPI, ICS, SPL, OOP, GRAPH, COM, DLD, SE
 - [bb-ad-general-2022-ict.md](bank-written-web/2022-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2022-ict.md) — NET, OS, CA, SPL, COM, ICS
 - [bb-ad-general-2023-ict.md](bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md) — OS, ICS, DBMS, DSA, NET
 - [dbbl-mto-card-2024.md](bank-written-web/2024-dbbl-mto-card-itjobqns/dbbl-mto-card-2024.md) — SPL, DSA, NET
@@ -693,6 +700,8 @@ Total: 5771 records → 4976 distinct questions, 299 exams, 202 printed answers 
 - [69_bte-g2-p55-networking-q31-50-vlan-ports-nat.md](bit%20to%20exabyte/69_bte-g2-p55-networking-q31-50-vlan-ports-nat.md) — NET
 - [70_bte-g2-p56-networking-q51-59-routing.md](bit%20to%20exabyte/70_bte-g2-p56-networking-q51-59-routing.md) — NET
 - [71_bte-g2-p57-banking-it-q01-03.md](bit%20to%20exabyte/71_bte-g2-p57-banking-it-q01-03.md) — SE
+- [super-ict-index-gaps.md](bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md) — OS, NET, CA, DBMS, DSA, SE, OOP, AI, DLD, SPL, ICS, TOC, MPI, GRAPH
+- [super-ict-solutions.md](bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md) — NET, CA, DBMS, DLD, SE, DSA, SPL, TOC, OS, MATH
 
 ### buet-msc-web
 

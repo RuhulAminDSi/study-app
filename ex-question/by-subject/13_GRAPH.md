@@ -2,8 +2,8 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 49 (from 51 records: Written 40, MCQ 11)
-- **Exams it appears in:** 32
+- **Distinct questions:** 51 (from 53 records: Written 41, MCQ 12)
+- **Exams it appears in:** 33
 - **Corrections to printed answers:** 3
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
@@ -11,9 +11,9 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
-| 1 | [Graph types & properties](#graph-types--properties) | 13 | 16 | 0 |
+| 1 | [Graph types & properties](#graph-types--properties) | 13 | 17 | 0 |
 | 2 | [Paths, Euler & Hamilton](#paths-euler--hamilton) | 12 | 16 | 0 |
-| 3 | [Trees & spanning trees](#trees--spanning-trees) | 10 | 10 | 0 |
+| 3 | [Trees & spanning trees](#trees--spanning-trees) | 11 | 11 | 0 |
 | 4 | [Other](#other) | 7 | 7 | 0 |
 
 ## Most-asked questions
@@ -22,7 +22,7 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 
 1. **Find the minimum spanning tree of the following graph using Prim's algorithm: *[Graph figure, undirected, edges as drawn: a–b 4, a–h 8, b–c 8, c–d 7, d–e 9, d–…**  
    Asked in (2): 46th BCS CSE; JBL ANE 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13) · duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20 — see [G2726](#g2726)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13) · duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20 — see [G2839](#g2839)
 2. **Number of edges in the complete bipartite graph K(m,n)? (mn / m+n / m²+n² / m!n!)**  
    Asked in (1): 49th BCS ICT (2025)  
    Source: 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025) — see [G0057](#g0057)
@@ -46,40 +46,40 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Petrobangla Assistant Manager (IT) (BUET) (2022-09-16) — see [G0829](#g0829)
 9. **Breadth-first search (BFS) এবং Depth-first search (DFS) এর পার্থক্যগুলো লিখুন। কী কী ধরনের problems এর জন্য BFS DFS এর থেকে ভালো?**  
    Asked in (1): 45th BCS CSE (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) — see [G1906](#g1906)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) — see [G2019](#g2019)
 10. **Feasible solution এবং Optimal solution এর সংজ্ঞা দিন। একটি graph এর single-source shortest path তৈরি করার জন্য greedy algorithm-টি লিখুন।**  
    Asked in (1): 45th BCS CSE (2024)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) — see [G1914](#g1914)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3) — see [G2027](#g2027)
 11. **BFS ও DFS এর পার্থক্য লিখুন।**  
    Asked in (1): 17th NTRCA ICT (2023)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2046](#g2046)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2159](#g2159)
 12. **নিম্নে বর্ণিত Adjacency ম্যাট্রিক্স A এবং B এর জন্য লেখচিত্র অংকন করুন। | 0 1 0 1 0 | | 1 0 0 1 0 | | 1 3 0 0 | (i) A = | 0 0 0 1 1 | (ii) B = | 3 0 1 1 | | 1 …**  
    Asked in (1): 17th NTRCA CSE (2023)  
-   Source: duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2) — see [G2071](#g2071)
+   Source: duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2) — see [G2184](#g2184)
 13. **Shortest path বের করা ১ থেকে ৬ এ যাবার। [directed graph: 1->2 9, 1->3 4, 3->2 4, 2->4 12, 2->5 5, 3->5 13, 5->4 3, 4->6 2, 5->6 15]**  
    Asked in (1): BTCL JAM 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 — see [G2145](#g2145)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 — see [G2258](#g2258)
 14. **নোড সংখ্যা N হলে edge সংখ্যা কত হবে। (What is the number of edge if node is N)**  
    Asked in (1): BTCL JAM 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04) — see [G2153](#g2153)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04) — see [G2266](#g2266)
 15. **Which of the following search algorithm requires less memory? ক) Optimal Search খ) Breadth-First Search গ) Depth-First Search ঘ) Linear Search**  
    Asked in (1): BPSC AME 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2587](#g2587)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2700](#g2700)
 16. **Find the shortest path from A to all nodes using the Dijkstra algorithm?**  
    Asked in (1): JBL ANE 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20 — see [G3033](#g3033)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20 — see [G3146](#g3146)
 17. **Write the adjacency matrix and adjacency list for the following graph, Also, calculate the in-degree and out-degrees of all vertices in the graph.**  
    Asked in (1): JBL ANA 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23 — see [G3046](#g3046)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23 — see [G3159](#g3159)
 18. **Is Bellman ford a greedy algorithm? Can all pair shortest paths (with negative cycles) be done in O (V3)?**  
    Asked in (1): Combined Bank ADA 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26 — see [G3077](#g3077)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26 — see [G3190](#g3190)
 19. **Consider two stander representations of a directed graph, the adjacency list solved more efficiently adjacency than in the adjacency matrix representations and…**  
    Asked in (1): Combined Bank 2023  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 1 — Combined 5 Bank — 03.02.2023 — post not printed — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 26–28 — see [G3093](#g3093)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 1 — Combined 5 Bank — 03.02.2023 — post not printed — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 26–28 — see [G3206](#g3206)
 20. **Give an adjacency-list representation for a complete binary tree on 7 vertices. Give an equivalent adjacency-matrix representation. Assume that vertices are nu…**  
    Asked in (1): BB AP 2023  
-   Source: duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30 — see [G3095](#g3095)
+   Source: duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30 — see [G3208](#g3208)
 
 ## Coaching "standard pattern" topics (not counted)
 
@@ -118,9 +118,9 @@ The characteristic polynomial of the adjacency matrix is used to study: (chromat
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q15 — [BCS/59_blockchain-polynomial-suffix-tree.md](../BCS/59_blockchain-polynomial-suffix-tree.md) · [image](../BCS/59_blockchain-polynomial-suffix-tree.jpg)
 - **Printed answer:** (খ) Graph spectra (eigenvalues of A)
 
-<a id="g3046"></a>
+<a id="g3159"></a>
 
-### Write the adjacency matrix and adjacency list for the following graph, Also, calculate th… <sub>G3046</sub>
+### Write the adjacency matrix and adjacency list for the following graph, Also, calculate th… <sub>G3159</sub>
 
 *Written*
 
@@ -130,9 +130,9 @@ Write the adjacency matrix and adjacency list for the following graph, Also, cal
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3093"></a>
+<a id="g3206"></a>
 
-### Consider two stander representations of a directed graph, the adjacency list solved more … <sub>G3093</sub>
+### Consider two stander representations of a directed graph, the adjacency list solved more … <sub>G3206</sub>
 
 *Written*
 
@@ -142,9 +142,9 @@ Consider two stander representations of a directed graph, the adjacency list sol
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 1 — Combined 5 Bank — 03.02.2023 — post not printed — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 26–28, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3201"></a>
+<a id="g3314"></a>
 
-### Determine whether the following pair of graphs are isomorphic, and justify your answer in… <sub>G3201</sub>
+### Determine whether the following pair of graphs are isomorphic, and justify your answer in… <sub>G3314</sub>
 
 *Written*
 
@@ -154,9 +154,9 @@ Determine whether the following pair of graphs are isomorphic, and justify your 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3991"></a>
+<a id="g4104"></a>
 
-### The chromatic index of a bipartite graph with at least one edge is: (ক) 1 (খ) 2 (গ) 3 (ঘ)… <sub>G3991</sub>
+### The chromatic index of a bipartite graph with at least one edge is: (ক) 1 (খ) 2 (গ) 3 (ঘ)… <sub>G4104</sub>
 
 *MCQ*
 
@@ -191,9 +191,9 @@ What is a strongly connected graph?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Data Structure, Q41 — [bit to exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.md) · [image](../bit%20to%20exabyte/49_bte-g2-p35-data-structure-q31-43-graphs-algorithms.jpg)
 
-<a id="g2592"></a>
+<a id="g2705"></a>
 
-### Which is represented by graph? a. Queue b. Stack c. Adjacency list d. Pointer <sub>G2592</sub>
+### Which is represented by graph? a. Queue b. Stack c. Adjacency list d. Pointer <sub>G2705</sub>
 
 *MCQ*
 
@@ -203,9 +203,9 @@ Which is represented by graph? a. Queue b. Stack c. Adjacency list d. Pointer
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Data Structures and Algorithms Q11 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3805"></a>
+<a id="g3918"></a>
 
-### An upazilla map represents N villages which is actually a planar graph. The 8 vertices of… <sub>G3805</sub>
+### An upazilla map represents N villages which is actually a planar graph. The 8 vertices of… <sub>G3918</sub>
 
 *MCQ*
 
@@ -215,9 +215,9 @@ An upazilla map represents N villages which is actually a planar graph. The 8 ve
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q18 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3807"></a>
+<a id="g3920"></a>
 
-### Let G = (V,E) be a graph where V={a,b,c,d,e,f,g,h,i,j,k}. If S={a,c,g,h,k} is a maximum i… <sub>G3807</sub>
+### Let G = (V,E) be a graph where V={a,b,c,d,e,f,g,h,i,j,k}. If S={a,c,g,h,k} is a maximum i… <sub>G3920</sub>
 
 *MCQ*
 
@@ -227,9 +227,9 @@ Let G = (V,E) be a graph where V={a,b,c,d,e,f,g,h,i,j,k}. If S={a,c,g,h,k} is a 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q20 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g1954"></a>
+<a id="g2067"></a>
 
-### Node A থেকে শুরু করে নিম্নোক্ত গ্রাফটির DFS Traversal লিখুন। *[Figure: undirected graph, … <sub>G1954</sub>
+### Node A থেকে শুরু করে নিম্নোক্ত গ্রাফটির DFS Traversal লিখুন। *[Figure: undirected graph, … <sub>G2067</sub>
 
 *Written*
 
@@ -239,9 +239,9 @@ Node A থেকে শুরু করে নিম্নোক্ত গ্র
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৪ অথবা (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2770"></a>
+<a id="g2883"></a>
 
-### Write down the algorithm for Breadth-First Search (BFS) in graph traversal. <sub>G2770</sub>
+### Write down the algorithm for Breadth-First Search (BFS) in graph traversal. <sub>G2883</sub>
 
 *Written*
 
@@ -251,9 +251,9 @@ Write down the algorithm for Breadth-First Search (BFS) in graph traversal.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 9 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2825"></a>
+<a id="g2938"></a>
 
-### prove that a graph G is chordal if and only if minimum separator of G is a clique. <sub>G2825</sub>
+### prove that a graph G is chordal if and only if minimum separator of G is a clique. <sub>G2938</sub>
 
 *Written*
 
@@ -263,9 +263,9 @@ prove that a graph G is chordal if and only if minimum separator of G is a cliqu
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 6 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2826"></a>
+<a id="g2939"></a>
 
-### Define complement of a graph. Prove that for any graph of six vertices, either the graph … <sub>G2826</sub>
+### Define complement of a graph. Prove that for any graph of six vertices, either the graph … <sub>G2939</sub>
 
 *Written*
 
@@ -275,9 +275,9 @@ Define complement of a graph. Prove that for any graph of six vertices, either t
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 6 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3657"></a>
+<a id="g3770"></a>
 
-### Draw a weighted graph using the following adjacency matrix. 0 1 2 3 0 0 1 1 0 1 0 0 0 0 2… <sub>G3657</sub>
+### Draw a weighted graph using the following adjacency matrix. 0 1 2 3 0 0 1 1 0 1 0 0 0 0 2… <sub>G3770</sub>
 
 *Written*
 
@@ -286,6 +286,18 @@ Draw a weighted graph using the following adjacency matrix. 0 1 2 3 0 0 1 1 0 1 
 - **Asked in (1):** BUET M.Sc. May 2016
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q7 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
+
+<a id="g1850"></a>
+
+### Bipartite graph and its condition <sub>G1850</sub>
+
+*Written*
+
+Bipartite graph and its condition
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q115 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
 
 ## Paths, Euler & Hamilton
 
@@ -341,9 +353,9 @@ How do you find single-source shortest paths in a graph with negative weights, j
 - **Printed answer:** Bellman-Ford: V−1 relaxation passes suffice since a shortest simple path has ≤ V−1 edges; example graph 0→1(1),1→2(−1),2→3(−1),3→0(−1) has a negative cycle
 - **Correction:** Never states the detection step: after V−1 passes run one more relaxation pass; if any distance still decreases, a negative cycle is reachable from the source (shortest paths undefined). Complexity O(VE) also missing.
 
-<a id="g1914"></a>
+<a id="g2027"></a>
 
-### Feasible solution এবং Optimal solution এর সংজ্ঞা দিন। একটি graph এর single-source shortes… <sub>G1914</sub>
+### Feasible solution এবং Optimal solution এর সংজ্ঞা দিন। একটি graph এর single-source shortes… <sub>G2027</sub>
 
 *Written*
 
@@ -353,9 +365,9 @@ Feasible solution এবং Optimal solution এর সংজ্ঞা দিন
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৫ (খ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
 
-<a id="g2145"></a>
+<a id="g2258"></a>
 
-### Shortest path বের করা ১ থেকে ৬ এ যাবার। [directed graph: 1->2 9, 1->3 4, 3->2 4, 2->4 12,… <sub>G2145</sub>
+### Shortest path বের করা ১ থেকে ৬ এ যাবার। [directed graph: 1->2 9, 1->3 4, 3->2 4, 2->4 12,… <sub>G2258</sub>
 
 *Written*
 
@@ -365,9 +377,9 @@ Shortest path বের করা ১ থেকে ৬ এ যাবার। [d
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q7 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
 
-<a id="g3033"></a>
+<a id="g3146"></a>
 
-### Find the shortest path from A to all nodes using the Dijkstra algorithm? <sub>G3033</sub>
+### Find the shortest path from A to all nodes using the Dijkstra algorithm? <sub>G3146</sub>
 
 *Written*
 
@@ -377,9 +389,9 @@ Find the shortest path from A to all nodes using the Dijkstra algorithm?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3077"></a>
+<a id="g3190"></a>
 
-### Is Bellman ford a greedy algorithm? Can all pair shortest paths (with negative cycles) be… <sub>G3077</sub>
+### Is Bellman ford a greedy algorithm? Can all pair shortest paths (with negative cycles) be… <sub>G3190</sub>
 
 *Written*
 
@@ -389,9 +401,9 @@ Is Bellman ford a greedy algorithm? Can all pair shortest paths (with negative c
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3534"></a>
+<a id="g3647"></a>
 
-### Write an algorithm to detect a cycle in a directed graph. <sub>G3534</sub>
+### Write an algorithm to detect a cycle in a directed graph. <sub>G3647</sub>
 
 *Written*
 
@@ -426,9 +438,9 @@ Which algorithm finds single-source shortest paths in a weighted graph, and whic
   - BUET MSc in CSE (2026-10-03), Q12 — [BUET JOB/37_buet-msc-cse-questions-10-13.md](../BUET%20JOB/37_buet-msc-cse-questions-10-13.md) · [image](../BUET%20JOB/37_buet-msc-cse-questions-10-13.jpg); [BUET MSC/01_buet-msc-questions-10-14.md](../BUET%20MSC/01_buet-msc-questions-10-14.md) · [image](../BUET%20MSC/01_buet-msc-questions-10-14.jpg)
 - **Correction:** No answer printed. Dijkstra; Bellman-Ford.
 
-<a id="g1850"></a>
+<a id="g1963"></a>
 
-### Explain how to Bellman Ford Algorithm can identify a negative cycle of a graph. <sub>G1850</sub>
+### Explain how to Bellman Ford Algorithm can identify a negative cycle of a graph. <sub>G1963</sub>
 
 *Written*
 
@@ -438,9 +450,9 @@ Explain how to Bellman Ford Algorithm can identify a negative cycle of a graph.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 29. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g2827"></a>
+<a id="g2940"></a>
 
-### Define a graph and explain the concepts of degree, path, cycle and connectedness in an un… <sub>G2827</sub>
+### Define a graph and explain the concepts of degree, path, cycle and connectedness in an un… <sub>G2940</sub>
 
 *Written*
 
@@ -450,9 +462,9 @@ Define a graph and explain the concepts of degree, path, cycle and connectedness
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 7. (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2829"></a>
+<a id="g2942"></a>
 
-### Consider the following undirected weighted graph: The shortest route is A- 1. Vertices: A… <sub>G2829</sub>
+### Consider the following undirected weighted graph: The shortest route is A- 1. Vertices: A… <sub>G2942</sub>
 
 *Written*
 
@@ -475,9 +487,9 @@ Shortest-path question from S1 to S4 on a 5-vertex graph (stem on the preceding 
   - Paper not shown on the source sheet, Q3 — [BCS/16_shortest-path-sql-boolean-truth-table.md](../BCS/16_shortest-path-sql-boolean-truth-table.md) · [image](../BCS/16_shortest-path-sql-boolean-truth-table.jpg)
 - **Printed answer:** Shortest S1→S4 paths: S1→S3→S4, S1→S5→S4 or S1→S2→S4; cost = 2.
 
-<a id="g4889"></a>
+<a id="g5182"></a>
 
-### BFS shortest path <sub>G4889</sub>
+### BFS shortest path <sub>G5182</sub>
 
 *Written*
 
@@ -490,9 +502,9 @@ BFS shortest path
 
 ## Trees & spanning trees
 
-<a id="g2726"></a>
+<a id="g2839"></a>
 
-### Find the minimum spanning tree of the following graph using Prim's algorithm: *[Graph fig… <sub>G2726</sub>
+### Find the minimum spanning tree of the following graph using Prim's algorithm: *[Graph fig… <sub>G2839</sub>
 
 *Written*
 
@@ -516,9 +528,9 @@ A tree with K leaves has at least how many vertices? (K / K−1 / K+1 / 2K)
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q78 — [BCS/53_bfs-injective-functions-tree-leaves.md](../BCS/53_bfs-injective-functions-tree-leaves.md) · [image](../BCS/53_bfs-injective-functions-tree-leaves.jpg); [BCS/57_write-ahead-logging-random-search.md](../BCS/57_write-ahead-logging-random-search.md) · [image](../BCS/57_write-ahead-logging-random-search.jpg)
 - **Printed answer:** (গ) K + 1 (star tree)
 
-<a id="g3095"></a>
+<a id="g3208"></a>
 
-### Give an adjacency-list representation for a complete binary tree on 7 vertices. Give an e… <sub>G3095</sub>
+### Give an adjacency-list representation for a complete binary tree on 7 vertices. Give an e… <sub>G3208</sub>
 
 *Written*
 
@@ -528,9 +540,9 @@ Give an adjacency-list representation for a complete binary tree on 7 vertices. 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3580"></a>
+<a id="g3693"></a>
 
-### (a) Apply the Krushkal's algorithm for the following graph to find out the cost of the Mi… <sub>G3580</sub>
+### (a) Apply the Krushkal's algorithm for the following graph to find out the cost of the Mi… <sub>G3693</sub>
 
 *Written*
 
@@ -540,9 +552,9 @@ Give an adjacency-list representation for a complete binary tree on 7 vertices. 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q7(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g2968"></a>
+<a id="g3081"></a>
 
-### Let's assume G - (V, E) be an undirected graph. Write an algorithm to find the minimum-co… <sub>G2968</sub>
+### Let's assume G - (V, E) be an undirected graph. Write an algorithm to find the minimum-co… <sub>G3081</sub>
 
 *Written*
 
@@ -552,9 +564,9 @@ Let's assume G - (V, E) be an undirected graph. Write an algorithm to find the m
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 07 — Assistant System Administrator (ASA)-JBL — 01.12.2021 — Exam taker: not printed — IT: 15*10 marks + Non - IT: 4*10 marks + GK: 2*5 marks — pages 12–14, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2995"></a>
+<a id="g3108"></a>
 
-### Finding Shortest Spanning tree using Kruskal's Algorithm from the following graph. <sub>G2995</sub>
+### Finding Shortest Spanning tree using Kruskal's Algorithm from the following graph. <sub>G3108</sub>
 
 *Written*
 
@@ -564,9 +576,21 @@ Finding Shortest Spanning tree using Kruskal's Algorithm from the following grap
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g1832"></a>
+<a id="g4538"></a>
 
-### What are the differences between Graph & Tree ? What is Hamiltonian Graph ? <sub>G1832</sub>
+### Suppose you have a complete undirected graph with 4 nodes. What is the maximum number of … <sub>G4538</sub>
+
+*MCQ*
+
+Suppose you have a complete undirected graph with 4 nodes. What is the maximum number of minimum spanning trees you can form? (a) 4 (b) 8 (c) 16 (d) 1
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ22 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g1945"></a>
+
+### What are the differences between Graph & Tree ? What is Hamiltonian Graph ? <sub>G1945</sub>
 
 *Written*
 
@@ -577,9 +601,9 @@ What are the differences between Graph & Tree ? What is Hamiltonian Graph ?
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 10. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1849"></a>
+<a id="g1962"></a>
 
-### What is minimum spanning tree ? <sub>G1849</sub>
+### What is minimum spanning tree ? <sub>G1962</sub>
 
 *Written*
 
@@ -589,9 +613,9 @@ What is minimum spanning tree ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 27. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g1955"></a>
+<a id="g2068"></a>
 
-### দেখান যে, n সংখ্যক vertex এর একটি tree এর ঠিক n - 1 সংখ্যক edge আছে। <sub>G1955</sub>
+### দেখান যে, n সংখ্যক vertex এর একটি tree এর ঠিক n - 1 সংখ্যক edge আছে। <sub>G2068</sub>
 
 *Written*
 
@@ -601,9 +625,9 @@ What is minimum spanning tree ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৫ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2785"></a>
+<a id="g2898"></a>
 
-### Write an algorithm to find out the second bestruinimum spanning tree (MST) from a graph <sub>G2785</sub>
+### Write an algorithm to find out the second bestruinimum spanning tree (MST) from a graph <sub>G2898</sub>
 
 *Written*
 
@@ -615,9 +639,9 @@ Write an algorithm to find out the second bestruinimum spanning tree (MST) from 
 
 ## Other
 
-<a id="g1906"></a>
+<a id="g2019"></a>
 
-### Breadth-first search (BFS) এবং Depth-first search (DFS) এর পার্থক্যগুলো লিখুন। কী কী ধরনে… <sub>G1906</sub>
+### Breadth-first search (BFS) এবং Depth-first search (DFS) এর পার্থক্যগুলো লিখুন। কী কী ধরনে… <sub>G2019</sub>
 
 *Written*
 
@@ -627,9 +651,9 @@ Breadth-first search (BFS) এবং Depth-first search (DFS) এর পার�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৩. (ক) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
 
-<a id="g2046"></a>
+<a id="g2159"></a>
 
-### BFS ও DFS এর পার্থক্য লিখুন। <sub>G2046</sub>
+### BFS ও DFS এর পার্থক্য লিখুন। <sub>G2159</sub>
 
 *Written*
 
@@ -639,9 +663,9 @@ BFS ও DFS এর পার্থক্য লিখুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৪ (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2071"></a>
+<a id="g2184"></a>
 
-### নিম্নে বর্ণিত Adjacency ম্যাট্রিক্স A এবং B এর জন্য লেখচিত্র অংকন করুন। | 0 1 0 1 0 | | 1… <sub>G2071</sub>
+### নিম্নে বর্ণিত Adjacency ম্যাট্রিক্স A এবং B এর জন্য লেখচিত্র অংকন করুন। | 0 1 0 1 0 | | 1… <sub>G2184</sub>
 
 *Written*
 
@@ -651,9 +675,9 @@ BFS ও DFS এর পার্থক্য লিখুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ৪। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2153"></a>
+<a id="g2266"></a>
 
-### নোড সংখ্যা N হলে edge সংখ্যা কত হবে। (What is the number of edge if node is N) <sub>G2153</sub>
+### নোড সংখ্যা N হলে edge সংখ্যা কত হবে। (What is the number of edge if node is N) <sub>G2266</sub>
 
 *Written*
 
@@ -663,9 +687,9 @@ BFS ও DFS এর পার্থক্য লিখুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q8 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 
-<a id="g2587"></a>
+<a id="g2700"></a>
 
-### Which of the following search algorithm requires less memory? ক) Optimal Search খ) Breadt… <sub>G2587</sub>
+### Which of the following search algorithm requires less memory? ক) Optimal Search খ) Breadt… <sub>G2700</sub>
 
 *MCQ*
 
@@ -675,9 +699,9 @@ Which of the following search algorithm requires less memory? ক) Optimal Searc
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Data Structures and Algorithms Q6 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g4145"></a>
+<a id="g4258"></a>
 
-### ইলুমিনেশন ও শ্যাডিং কী? ইলুমিনেশন এর প্রধান দুইটি অংশ এবং বিভিন্ন প্রকার লাইটিং সোর্স বর্… <sub>G4145</sub>
+### ইলুমিনেশন ও শ্যাডিং কী? ইলুমিনেশন এর প্রধান দুইটি অংশ এবং বিভিন্ন প্রকার লাইটিং সোর্স বর্… <sub>G4258</sub>
 
 *Written*
 
@@ -687,9 +711,9 @@ Which of the following search algorithm requires less memory? ক) Optimal Searc
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৮ — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g1953"></a>
+<a id="g2066"></a>
 
-### BFS অ্যালগরিদম উদাহরণসহ ব্যাখ্যা করুন। <sub>G1953</sub>
+### BFS অ্যালগরিদম উদাহরণসহ ব্যাখ্যা করুন। <sub>G2066</sub>
 
 *Written*
 

@@ -46,51 +46,51 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bangladesh Bank Assistant Maintenance Engineer (BIBM) (2023-02-04) — see [G0870](#g0870)
 8. **Which Transformer is used in compute**  
    Asked in (1): BRICM AME 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BRICM (Bangladesh Reference Institute for Chemical Measurements), Assistant Maintenance Engineer — Written, 24 Feb 2024 — see [G2134](#g2134)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BRICM (Bangladesh Reference Institute for Chemical Measurements), Assistant Maintenance Engineer — Written, 24 Feb 2024 — see [G2247](#g2247)
 9. **What is the name of AC current to DC current**  
    Asked in (1): BRICM AME 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BRICM (Bangladesh Reference Institute for Chemical Measurements), Assistant Maintenance Engineer — Written, 24 Feb 2024 — see [G2135](#g2135)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BRICM (Bangladesh Reference Institute for Chemical Measurements), Assistant Maintenance Engineer — Written, 24 Feb 2024 — see [G2248](#g2248)
 10. **If v1= 1v and v2 = 2 v, find v0 in the op amp circuit: [stage A inverting: v1, 2k in, 6k feedback -> a; stage B inverting: v2, 4k in, 8k feedback -> b; stage C…**  
    Asked in (1): BRPL AM(ICT) 2024  
-   Source: duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024 — see [G2164](#g2164)
+   Source: duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024 — see [G2277](#g2277)
 11. **Describe cut off, saturation and active region of operation of a transistor with diagram. Explain the working principal of ab n-channel JFET with various value…**  
    Asked in (1): BB AME 2023  
-   Source: duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Maintenance Engineer — 04.02.2023 — exam taker not printed (BIBM per `BANK/`) — time and marks not printed — pages 1–3 · duranta.app question bank (coaching compilation of the question paper) — 03 — Bangladesh Bank — Assistant Maintenance Engineer — 04.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 30–32 — see [G2480](#g2480)
+   Source: duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Maintenance Engineer — 04.02.2023 — exam taker not printed (BIBM per `BANK/`) — time and marks not printed — pages 1–3 · duranta.app question bank (coaching compilation of the question paper) — 03 — Bangladesh Bank — Assistant Maintenance Engineer — 04.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 30–32 — see [G2593](#g2593)
 12. **Draw the I-V characteristics of a diode and an NPN transistor.**  
    Asked in (1): BUET ICT Cell AHE 2025  
-   Source: duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion) · Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion) — see [G2501](#g2501)
+   Source: duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion) · Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion) — see [G2614](#g2614)
 13. **The rating of fuse is expressed as ............... ক) Ampere-hours খ) Ampere-volts গ) KWH ঘ) Amperes**  
    Asked in (1): BPSC AP 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2607](#g2607)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2720](#g2720)
 14. **A loss-less transmission line has L=8.5 nH/m and C=300 pF/m. What is the characteristic impedance? ক) 50Ω খ) 5.32Ω গ) 8.92Ω ঘ) 4.32Ω**  
    Asked in (1): BPSC AP 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2608](#g2608)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2721](#g2721)
 15. **The total change entering a terminal given by q=5tsin(4πt) mC. What is the current at t=0.5S? ক) 3.142 mA খ) 31.42 mA গ) 28.37 mA ঘ) 8.34 mA**  
    Asked in (1): BPSC AP 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2609](#g2609)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2722](#g2722)
 16. **A nuclear power plant is invariably used as a ....... plant. ক) Peak load খ) Base load গ) Standby ঘ) Spinning reserve**  
    Asked in (1): BPSC AP 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2610](#g2610)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2723](#g2723)
 17. **Which configuration of Bipolar Junction Transistor is known as voltage follower? ক) Common collector খ) Common base গ) Common emitter ঘ) None of them**  
    Asked in (1): BPSC AP 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2613](#g2613)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2726](#g2726)
 18. **Generally the gain of a transistor amplifier falls at high frequency due to the ক) Internal capacitance of the device খ) coupling capacitor at the input গ) Ski…**  
    Asked in (1): BPSC AME 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2614](#g2614)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2727](#g2727)
 19. **A voltage source supplies a constant signal (0-40kHz) to an RC low-pass filter. Maximum voltage is at... ক) 10 kHz খ) 40 kHz গ) 18 kHz ঘ) DC**  
    Asked in (1): BPSC AP 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2616](#g2616)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34 — see [G2729](#g2729)
 20. **When a step signal input is applied to an op-amp integrator, the output will be... ক) A Ramp খ) A sinusoidal wave গ) A Rectangular Wave ঘ) A triangular wave wi…**  
    Asked in (1): BPSC AME 2022  
-   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2617](#g2617)
+   Source: duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34 — see [G2730](#g2730)
 
 ## All questions by topic
 
 ## Other
 
-<a id="g2134"></a>
+<a id="g2247"></a>
 
-### Which Transformer is used in compute <sub>G2134</sub>
+### Which Transformer is used in compute <sub>G2247</sub>
 
 *Written*
 
@@ -100,9 +100,9 @@ Which Transformer is used in compute
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BRICM (Bangladesh Reference Institute for Chemical Measurements), Assistant Maintenance Engineer — Written, 24 Feb 2024, Q6 — [duranta/1708869322-bricm-exam-2024/1708869322.md](../duranta/1708869322-bricm-exam-2024/1708869322.md)
 
-<a id="g2135"></a>
+<a id="g2248"></a>
 
-### What is the name of AC current to DC current <sub>G2135</sub>
+### What is the name of AC current to DC current <sub>G2248</sub>
 
 *Written*
 
@@ -112,9 +112,9 @@ What is the name of AC current to DC current
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BRICM (Bangladesh Reference Institute for Chemical Measurements), Assistant Maintenance Engineer — Written, 24 Feb 2024, Q7 — [duranta/1708869322-bricm-exam-2024/1708869322.md](../duranta/1708869322-bricm-exam-2024/1708869322.md)
 
-<a id="g2607"></a>
+<a id="g2720"></a>
 
-### The rating of fuse is expressed as ............... ক) Ampere-hours খ) Ampere-volts গ) KWH… <sub>G2607</sub>
+### The rating of fuse is expressed as ............... ক) Ampere-hours খ) Ampere-volts গ) KWH… <sub>G2720</sub>
 
 *MCQ*
 
@@ -124,9 +124,9 @@ The rating of fuse is expressed as ............... ক) Ampere-hours খ) Ampere
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Electrical Circuits Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2608"></a>
+<a id="g2721"></a>
 
-### A loss-less transmission line has L=8.5 nH/m and C=300 pF/m. What is the characteristic i… <sub>G2608</sub>
+### A loss-less transmission line has L=8.5 nH/m and C=300 pF/m. What is the characteristic i… <sub>G2721</sub>
 
 *MCQ*
 
@@ -136,9 +136,9 @@ A loss-less transmission line has L=8.5 nH/m and C=300 pF/m. What is the charact
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Electrical Circuits Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2609"></a>
+<a id="g2722"></a>
 
-### The total change entering a terminal given by q=5tsin(4πt) mC. What is the current at t=0… <sub>G2609</sub>
+### The total change entering a terminal given by q=5tsin(4πt) mC. What is the current at t=0… <sub>G2722</sub>
 
 *MCQ*
 
@@ -148,9 +148,9 @@ The total change entering a terminal given by q=5tsin(4πt) mC. What is the curr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Electrical Circuits Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2610"></a>
+<a id="g2723"></a>
 
-### A nuclear power plant is invariably used as a ....... plant. ক) Peak load খ) Base load গ)… <sub>G2610</sub>
+### A nuclear power plant is invariably used as a ....... plant. ক) Peak load খ) Base load গ)… <sub>G2723</sub>
 
 *MCQ*
 
@@ -160,9 +160,9 @@ A nuclear power plant is invariably used as a ....... plant. ক) Peak load খ)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Electrical Circuits Q4 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2616"></a>
+<a id="g2729"></a>
 
-### A voltage source supplies a constant signal (0-40kHz) to an RC low-pass filter. Maximum v… <sub>G2616</sub>
+### A voltage source supplies a constant signal (0-40kHz) to an RC low-pass filter. Maximum v… <sub>G2729</sub>
 
 *MCQ*
 
@@ -172,9 +172,9 @@ A voltage source supplies a constant signal (0-40kHz) to an RC low-pass filter. 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Basic Electronics Q4 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2618"></a>
+<a id="g2731"></a>
 
-### The transfer function of an LTI system is given as 1/(s+2). What is the value of its impu… <sub>G2618</sub>
+### The transfer function of an LTI system is given as 1/(s+2). What is the value of its impu… <sub>G2731</sub>
 
 *MCQ*
 
@@ -184,9 +184,9 @@ The transfer function of an LTI system is given as 1/(s+2). What is the value of
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Basic Electronics Q6 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2619"></a>
+<a id="g2732"></a>
 
-### A 4-pole 50Hz induction motor is running at 1300rpm. The speed of stator magnetic field w… <sub>G2619</sub>
+### A 4-pole 50Hz induction motor is running at 1300rpm. The speed of stator magnetic field w… <sub>G2732</sub>
 
 *MCQ*
 
@@ -196,9 +196,9 @@ A 4-pole 50Hz induction motor is running at 1300rpm. The speed of stator magneti
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Basic Electronics Q7 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2620"></a>
+<a id="g2733"></a>
 
-### For successful operation of two single-phase transformers connected in parallel, the most… <sub>G2620</sub>
+### For successful operation of two single-phase transformers connected in parallel, the most… <sub>G2733</sub>
 
 *MCQ*
 
@@ -208,9 +208,9 @@ For successful operation of two single-phase transformers connected in parallel,
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Basic Electronics Q8 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2621"></a>
+<a id="g2734"></a>
 
-### The applied voltage of a certain transformer is increased by 50%, while the frequency is … <sub>G2621</sub>
+### The applied voltage of a certain transformer is increased by 50%, while the frequency is … <sub>G2734</sub>
 
 *MCQ*
 
@@ -220,9 +220,9 @@ The applied voltage of a certain transformer is increased by 50%, while the freq
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Basic Electronics Q9 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g4593"></a>
+<a id="g4886"></a>
 
-### একটি সুষম সাইন তরঙ্গের পিক-টু-পিক ভোল্টেজ ২০ ভোল্ট হলে- (a) তরঙ্গটির গড়মান ১০ ভোল্ট (b) ত… <sub>G4593</sub>
+### একটি সুষম সাইন তরঙ্গের পিক-টু-পিক ভোল্টেজ ২০ ভোল্ট হলে- (a) তরঙ্গটির গড়মান ১০ ভোল্ট (b) ত… <sub>G4886</sub>
 
 *MCQ*
 
@@ -232,9 +232,9 @@ The applied voltage of a certain transformer is increased by 50%, while the freq
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ6 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4594"></a>
+<a id="g4887"></a>
 
-### নন-ইনভার্টিং অপারেশনাল অ্যাম্প্লিফায়ারের ইনপুট রেজিস্টেন্স ১০ কিলো ওহম এবং ফিডব্যাক রেজিস… <sub>G4594</sub>
+### নন-ইনভার্টিং অপারেশনাল অ্যাম্প্লিফায়ারের ইনপুট রেজিস্টেন্স ১০ কিলো ওহম এবং ফিডব্যাক রেজিস… <sub>G4887</sub>
 
 *MCQ*
 
@@ -244,9 +244,9 @@ The applied voltage of a certain transformer is increased by 50%, while the freq
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ7 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4596"></a>
+<a id="g4889"></a>
 
-### পাইজোইলেকট্রিক ইফেক্টের কারণ কি? (a) ক্রিস্টাল উপর ম্যাগনেটিক ফিল্ডের প্রভাব (b) দুটি ক্র… <sub>G4596</sub>
+### পাইজোইলেকট্রিক ইফেক্টের কারণ কি? (a) ক্রিস্টাল উপর ম্যাগনেটিক ফিল্ডের প্রভাব (b) দুটি ক্র… <sub>G4889</sub>
 
 *MCQ*
 
@@ -256,9 +256,9 @@ The applied voltage of a certain transformer is increased by 50%, while the freq
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ9 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4606"></a>
+<a id="g4899"></a>
 
-### ফুল-ওয়েভ রেক্টিফায়ারের কর্মদক্ষতা কত? (a) ৪০.৬% (b) ৮১.২% (c) ৯১.৬% (d) ১০০% <sub>G4606</sub>
+### ফুল-ওয়েভ রেক্টিফায়ারের কর্মদক্ষতা কত? (a) ৪০.৬% (b) ৮১.২% (c) ৯১.৬% (d) ১০০% <sub>G4899</sub>
 
 *MCQ*
 
@@ -268,9 +268,9 @@ The applied voltage of a certain transformer is increased by 50%, while the freq
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ19 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4613"></a>
+<a id="g4906"></a>
 
-### পাওয়ার ফ্যাক্টর কি? (a) ভোল্টেজ এবং কারেন্টের কৌণিক পার্থক্যের কোসাইন (b) ভোল্টেজ এবং কার… <sub>G4613</sub>
+### পাওয়ার ফ্যাক্টর কি? (a) ভোল্টেজ এবং কারেন্টের কৌণিক পার্থক্যের কোসাইন (b) ভোল্টেজ এবং কার… <sub>G4906</sub>
 
 *MCQ*
 
@@ -280,9 +280,9 @@ The applied voltage of a certain transformer is increased by 50%, while the freq
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022, MCQ34 — [telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md](../telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md)
 
-<a id="g4614"></a>
+<a id="g4907"></a>
 
-### একটি ডায়োডের সংকেতিক চিত্রে দেখানো তীর চিহ্নটি কী নির্দেশ করে? (a) গ্রাউন্ড (b) ইলেকট্রন … <sub>G4614</sub>
+### একটি ডায়োডের সংকেতিক চিত্রে দেখানো তীর চিহ্নটি কী নির্দেশ করে? (a) গ্রাউন্ড (b) ইলেকট্রন … <sub>G4907</sub>
 
 *MCQ*
 
@@ -292,9 +292,9 @@ The applied voltage of a certain transformer is increased by 50%, while the freq
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Junior Assistant Manager (Technical) 08.04.2022, MCQ35 — [telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md](../telecom-web/2022-btcl-jam-technical-jobqns/btcl-jam-technical-2022.md)
 
-<a id="g2221"></a>
+<a id="g2334"></a>
 
-### What is 3dB? How can you tom a converter into an inverter. <sub>G2221</sub>
+### What is 3dB? How can you tom a converter into an inverter. <sub>G2334</sub>
 
 *Written*
 
@@ -304,9 +304,9 @@ What is 3dB? How can you tom a converter into an inverter.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q1 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2231"></a>
+<a id="g2344"></a>
 
-### নিচের কোন ইলেকট্রনিক্স যন্ত্র AC থেকে DC তৈরি করতে পারে? <sub>G2231</sub>
+### নিচের কোন ইলেকট্রনিক্স যন্ত্র AC থেকে DC তৈরি করতে পারে? <sub>G2344</sub>
 
 *MCQ*
 
@@ -316,9 +316,9 @@ What is 3dB? How can you tom a converter into an inverter.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 23 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2237"></a>
+<a id="g2350"></a>
 
-### সিলিকনের সাথে কোন পদার্থ যোগ করলে তা p-টাইপে পরিণত হয়? <sub>G2237</sub>
+### সিলিকনের সাথে কোন পদার্থ যোগ করলে তা p-টাইপে পরিণত হয়? <sub>G2350</sub>
 
 *MCQ*
 
@@ -328,9 +328,9 @@ What is 3dB? How can you tom a converter into an inverter.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 29 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2241"></a>
+<a id="g2354"></a>
 
-### How are the AC powers converted to DC powers? <sub>G2241</sub>
+### How are the AC powers converted to DC powers? <sub>G2354</sub>
 
 *Written*
 
@@ -340,9 +340,9 @@ How are the AC powers converted to DC powers?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Deputy Assistant Director (Technical) April 05, 2019, Q4(c) — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2611"></a>
+<a id="g2724"></a>
 
-### The concept on which Superposition theorem is based on- K. reciprocity L. duality M. non-… <sub>G2611</sub>
+### The concept on which Superposition theorem is based on- K. reciprocity L. duality M. non-… <sub>G2724</sub>
 
 *MCQ*
 
@@ -352,9 +352,9 @@ The concept on which Superposition theorem is based on- K. reciprocity L. dualit
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Electrical Circuits Question 9 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2612"></a>
+<a id="g2725"></a>
 
-### A load is connected to a network. At the terminal to which the load is connected, Rth = 1… <sub>G2612</sub>
+### A load is connected to a network. At the terminal to which the load is connected, Rth = 1… <sub>G2725</sub>
 
 *MCQ*
 
@@ -364,9 +364,9 @@ A load is connected to a network. At the terminal to which the load is connected
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Electrical Circuits Question 16 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2854"></a>
+<a id="g2967"></a>
 
-### Write down the different between HVAC & HVDC characteristic error? <sub>G2854</sub>
+### Write down the different between HVAC & HVDC characteristic error? <sub>G2967</sub>
 
 *Written*
 
@@ -376,9 +376,9 @@ Write down the different between HVAC & HVDC characteristic error?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 5. Bangladesh Telecommunication Regulatory Commission (BTRC), Assistant Director, 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 7-9 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2855"></a>
+<a id="g2968"></a>
 
-### The voltage across the capacitor, as shown in the figure, is expressed as Vc(t) = A, sin(… <sub>G2855</sub>
+### The voltage across the capacitor, as shown in the figure, is expressed as Vc(t) = A, sin(… <sub>G2968</sub>
 
 *Written*
 
@@ -388,9 +388,9 @@ The voltage across the capacitor, as shown in the figure, is expressed as Vc(t) 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 5. Bangladesh Telecommunication Regulatory Commission (BTRC), Assistant Director, 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 7-9 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2856"></a>
+<a id="g2969"></a>
 
-### Find the power factor from as shown in the figure? <sub>G2856</sub>
+### Find the power factor from as shown in the figure? <sub>G2969</sub>
 
 *Written*
 
@@ -400,9 +400,9 @@ Find the power factor from as shown in the figure?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 5. Bangladesh Telecommunication Regulatory Commission (BTRC), Assistant Director, 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 7-9 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2858"></a>
+<a id="g2971"></a>
 
-### নিচের সার্কিট হতে 3Ω resistance এবং Voltage drop নির্ণয় কর? <sub>G2858</sub>
+### নিচের সার্কিট হতে 3Ω resistance এবং Voltage drop নির্ণয় কর? <sub>G2971</sub>
 
 *Written*
 
@@ -412,9 +412,9 @@ Find the power factor from as shown in the figure?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 6. Bangladesh Telecommunication Regulatory Commission (BTRC), Deputy Assistant Director (DAD), 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 9-10, Q3 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2860"></a>
+<a id="g2973"></a>
 
-### নিচের CKT হতে Vφ,I_d এবং মোট current নির্ণয় কর? <sub>G2860</sub>
+### নিচের CKT হতে Vφ,I_d এবং মোট current নির্ণয় কর? <sub>G2973</sub>
 
 *Written*
 
@@ -424,9 +424,9 @@ Find the power factor from as shown in the figure?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 6. Bangladesh Telecommunication Regulatory Commission (BTRC), Deputy Assistant Director (DAD), 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 9-10, Q5 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2864"></a>
+<a id="g2977"></a>
 
-### High pass Band pass filer এর frequency response curve মধ্যে পার্থক্য লিখ? <sub>G2864</sub>
+### High pass Band pass filer এর frequency response curve মধ্যে পার্থক্য লিখ? <sub>G2977</sub>
 
 *Written*
 
@@ -436,9 +436,9 @@ High pass Band pass filer এর frequency response curve মধ্যে পা
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 6. Bangladesh Telecommunication Regulatory Commission (BTRC), Deputy Assistant Director (DAD), 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 9-10, Q9 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2978"></a>
+<a id="g3091"></a>
 
-### Write the difference between analog and digital circuits. <sub>G2978</sub>
+### Write the difference between analog and digital circuits. <sub>G3091</sub>
 
 *Written*
 
@@ -448,9 +448,9 @@ Write the difference between analog and digital circuits.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — The Security Printing Corporation (Bangladesh) Ltd — Assistant Maintenance Engineer — 08-12-2021 — Exam taker: CTI — Written, Time 2 Hours, marks not printed — page 14, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4204"></a>
+<a id="g4317"></a>
 
-### How can you implement AND gate & OR gate using CMOS NAND & NOR gate? <sub>G4204</sub>
+### How can you implement AND gate & OR gate using CMOS NAND & NOR gate? <sub>G4317</sub>
 
 *Written*
 
@@ -460,9 +460,9 @@ How can you implement AND gate & OR gate using CMOS NAND & NOR gate?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Maintenance Engineer (AME) — 21.09.2019 — Exam taker: BUET (as printed by the coaching banner; unverified) — Marks 150, Time 1.30 h, answer all — pages 1–5, Q9 — [bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md](../bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md)
 
-<a id="g4278"></a>
+<a id="g4391"></a>
 
-### Chips are made up of millions of tiny parts/ switches known as? <sub>G4278</sub>
+### Chips are made up of millions of tiny parts/ switches known as? <sub>G4391</sub>
 
 *MCQ*
 
@@ -472,9 +472,9 @@ Chips are made up of millions of tiny parts/ switches known as?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, ICT items (Q71–80 of the "GK & ICT" section) — 12 November 2021 — Exam taker: Faculty of Business Studies, DU (as stated by jobstestbd; unverified) — 100 MCQ, 1 hour, MCQ75 — [bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md](../bank-written-web/2021-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2021-ict.md)
 
-<a id="g4541"></a>
+<a id="g4834"></a>
 
-### The base emitter voltage is usually—-supply voltage. (options not given; printed answer: … <sub>G4541</sub>
+### The base emitter voltage is usually—-supply voltage. (options not given; printed answer: … <sub>G4834</sub>
 
 *MCQ*
 
@@ -484,9 +484,9 @@ The base emitter voltage is usually—-supply voltage. (options not given; print
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive 08.11.2019, MCQ37 — [telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md](../telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md)
 
-<a id="g4543"></a>
+<a id="g4836"></a>
 
-### The cutoff frequency of an op amp equals the unity-gain frequency divided by ……. (options… <sub>G4543</sub>
+### The cutoff frequency of an op amp equals the unity-gain frequency divided by ……. (options… <sub>G4836</sub>
 
 *MCQ*
 
@@ -496,9 +496,9 @@ The cutoff frequency of an op amp equals the unity-gain frequency divided by …
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive 08.11.2019, MCQ40 — [telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md](../telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md)
 
-<a id="g4551"></a>
+<a id="g4844"></a>
 
-### Find R_ab? [Figure: a - 25 Ω - node X; X-Y 10 Ω; Y-Z 20 Ω; X-Z 30 Ω; Y to b-rail 5 Ω; Z t… <sub>G4551</sub>
+### Find R_ab? [Figure: a - 25 Ω - node X; X-Y 10 Ω; Y-Z 20 Ω; X-Z 30 Ω; Y to b-rail 5 Ω; Z t… <sub>G4844</sub>
 
 *Written*
 
@@ -508,9 +508,9 @@ Find R_ab? [Figure: a - 25 Ω - node X; X-Y 10 Ω; Y-Z 20 Ω; X-Z 30 Ω; Y to b-
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Manager (Technical) 05.02.2021, Q1 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4552"></a>
+<a id="g4845"></a>
 
-### Determine the load impedance Z_L that maximizes the average power drawn from the circuit … <sub>G4552</sub>
+### Determine the load impedance Z_L that maximizes the average power drawn from the circuit … <sub>G4845</sub>
 
 *Written*
 
@@ -520,9 +520,9 @@ Determine the load impedance Z_L that maximizes the average power drawn from the
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Manager (Technical) 05.02.2021, Q2 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4590"></a>
+<a id="g4883"></a>
 
-### সিলিকনের সাথে কোন পদার্থ যোগ করলে তা p-টাইপে পরিণত হয়? (options not given; printed answe… <sub>G4590</sub>
+### সিলিকনের সাথে কোন পদার্থ যোগ করলে তা p-টাইপে পরিণত হয়? (options not given; printed answe… <sub>G4883</sub>
 
 *MCQ*
 
@@ -532,9 +532,9 @@ Determine the load impedance Z_L that maximizes the average power drawn from the
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ29 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g2668"></a>
+<a id="g2781"></a>
 
-### What is the main disadvantage of a fuse compared to a Circuit Breaker? <sub>G2668</sub>
+### What is the main disadvantage of a fuse compared to a Circuit Breaker? <sub>G2781</sub>
 
 *Written*
 
@@ -544,9 +544,9 @@ What is the main disadvantage of a fuse compared to a Circuit Breaker?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariate (BSCS), Assistant Engineer (IT)/ Assistant Maintenance Engineer – Grade 9 — Exam Date 24/01/2026 — exam taker not printed — time not printed — 16 questions, marks in brackets (total not printed) — pages 1–3, Q4(ii) — [duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md](../duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md)
 
-<a id="g2669"></a>
+<a id="g2782"></a>
 
-### You need to protect a small heater rated at 2.4 kW connected to a 240 V single-phase supp… <sub>G2669</sub>
+### You need to protect a small heater rated at 2.4 kW connected to a 240 V single-phase supp… <sub>G2782</sub>
 
 *Written*
 
@@ -556,9 +556,9 @@ You need to protect a small heater rated at 2.4 kW connected to a 240 V single-p
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariate (BSCS), Assistant Engineer (IT)/ Assistant Maintenance Engineer – Grade 9 — Exam Date 24/01/2026 — exam taker not printed — time not printed — 16 questions, marks in brackets (total not printed) — pages 1–3, Q4(iii) — [duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md](../duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md)
 
-<a id="g2782"></a>
+<a id="g2895"></a>
 
-### Describe advantages of using CMOS over TTL in modern VLSI design. <sub>G2782</sub>
+### Describe advantages of using CMOS over TTL in modern VLSI design. <sub>G2895</sub>
 
 *Written*
 
@@ -568,9 +568,9 @@ Describe advantages of using CMOS over TTL in modern VLSI design.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 8 — 47th BCS, Computer Science, Subject Code: 971, Full Marks 200, Time: 4 Hours (pp. 16–17), 2 (d) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4705"></a>
+<a id="g4998"></a>
 
-### ১০। ups আর ips কীভাবে কাজ করে।রিয়েল লাইফ উদাহরণ <sub>G4705</sub>
+### ১০। ups আর ips কীভাবে কাজ করে।রিয়েল লাইফ উদাহরণ <sub>G4998</sub>
 
 *Viva*
 
@@ -609,9 +609,9 @@ Working principle of a tunnel diode: (quantum mechanical tunneling / Zener break
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q64 — [BCS/60_tunnel-diode-hill-climbing.md](../BCS/60_tunnel-diode-hill-climbing.md) · [image](../BCS/60_tunnel-diode-hill-climbing.jpg)
 - **Printed answer:** (ক) Quantum mechanical tunneling
 
-<a id="g2501"></a>
+<a id="g2614"></a>
 
-### Draw the I-V characteristics of a diode and an NPN transistor. <sub>G2501</sub>
+### Draw the I-V characteristics of a diode and an NPN transistor. <sub>G2614</sub>
 
 *Written*
 
@@ -622,9 +622,9 @@ Draw the I-V characteristics of a diode and an NPN transistor.
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion), Set-01 Q1 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Hardware Engineer, ICT Cell, 12/04/2025 (suggestion), Q1 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g3640"></a>
+<a id="g3753"></a>
 
-### Explain the working principle of a PN junction diode. Draw its symbol and describe the di… <sub>G3640</sub>
+### Explain the working principle of a PN junction diode. Draw its symbol and describe the di… <sub>G3753</sub>
 
 *Written*
 
@@ -634,9 +634,9 @@ Explain the working principle of a PN junction diode. Draw its symbol and descri
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, Q6.3 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4322"></a>
+<a id="g4615"></a>
 
-### What is the Work of a Rectifier? (a) Converts DC to AC (b) Converts AC to DC (c) Stores E… <sub>G4322</sub>
+### What is the Work of a Rectifier? (a) Converts DC to AC (b) Converts AC to DC (c) Stores E… <sub>G4615</sub>
 
 *MCQ*
 
@@ -646,9 +646,9 @@ What is the Work of a Rectifier? (a) Converts DC to AC (b) Converts AC to DC (c)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ5 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4326"></a>
+<a id="g4619"></a>
 
-### Zener diode is a ______ conducting device. (a) Unidirectional (b) Bidirectional (c) Multi… <sub>G4326</sub>
+### Zener diode is a ______ conducting device. (a) Unidirectional (b) Bidirectional (c) Multi… <sub>G4619</sub>
 
 *MCQ*
 
@@ -658,9 +658,9 @@ Zener diode is a ______ conducting device. (a) Unidirectional (b) Bidirectional 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ9 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4333"></a>
+<a id="g4626"></a>
 
-### What should be true for a Zener Diode? (a) Reverse bias for amplifying (b) Operates in fo… <sub>G4333</sub>
+### What should be true for a Zener Diode? (a) Reverse bias for amplifying (b) Operates in fo… <sub>G4626</sub>
 
 *MCQ*
 
@@ -670,9 +670,9 @@ What should be true for a Zener Diode? (a) Reverse bias for amplifying (b) Opera
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ16 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4356"></a>
+<a id="g4649"></a>
 
-### Which device is needed to convert AC to DC? (a) Transformer (b) Rectifier (c) Inverter (d… <sub>G4356</sub>
+### Which device is needed to convert AC to DC? (a) Transformer (b) Rectifier (c) Inverter (d… <sub>G4649</sub>
 
 *MCQ*
 
@@ -682,9 +682,9 @@ Which device is needed to convert AC to DC? (a) Transformer (b) Rectifier (c) In
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ49 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4604"></a>
+<a id="g4897"></a>
 
-### একটি ডায়োডে ডিপ্লেশন লেয়ার কখন তৈরি হয়? (a) ফরওয়ার্ড বায়াস করলে (b) রিভার্স বায়াস ক… <sub>G4604</sub>
+### একটি ডায়োডে ডিপ্লেশন লেয়ার কখন তৈরি হয়? (a) ফরওয়ার্ড বায়াস করলে (b) রিভার্স বায়াস ক… <sub>G4897</sub>
 
 *MCQ*
 
@@ -694,9 +694,9 @@ Which device is needed to convert AC to DC? (a) Transformer (b) Rectifier (c) In
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ17 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4605"></a>
+<a id="g4898"></a>
 
-### ব্রেকডাউন ঘটলে জিনার ডায়োডের ক্ষেত্রে কোনটি প্রায় অপরিবর্তিত থাকে? (a) ভোল্টেজ (b) কারে… <sub>G4605</sub>
+### ব্রেকডাউন ঘটলে জিনার ডায়োডের ক্ষেত্রে কোনটি প্রায় অপরিবর্তিত থাকে? (a) ভোল্টেজ (b) কারে… <sub>G4898</sub>
 
 *MCQ*
 
@@ -706,9 +706,9 @@ Which device is needed to convert AC to DC? (a) Transformer (b) Rectifier (c) In
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ18 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4929"></a>
+<a id="g5222"></a>
 
-### Determine the current passing through a 10 kΩ resistor. Assume a forward voltage drop of … <sub>G4929</sub>
+### Determine the current passing through a 10 kΩ resistor. Assume a forward voltage drop of … <sub>G5222</sub>
 
 *Written*
 
@@ -718,9 +718,9 @@ Determine the current passing through a 10 kΩ resistor. Assume a forward voltag
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Dhaka WASA — Assistant Maintenance Engineer (Network), 04.07.2025 (BUET) (suggestion), Q6 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g2209"></a>
+<a id="g2322"></a>
 
-### In solid-state drive data is saved to a pool NAND flash. NAND itself is made up of what a… <sub>G2209</sub>
+### In solid-state drive data is saved to a pool NAND flash. NAND itself is made up of what a… <sub>G2322</sub>
 
 *Written*
 
@@ -730,9 +730,9 @@ In solid-state drive data is saved to a pool NAND flash. NAND itself is made up 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director 19/02/2021, Q5.3 — [duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md](../duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md)
 
-<a id="g2212"></a>
+<a id="g2325"></a>
 
-### How does laser diode differ from LED? What is the function of diode ? <sub>G2212</sub>
+### How does laser diode differ from LED? What is the function of diode ? <sub>G2325</sub>
 
 *Written*
 
@@ -742,9 +742,9 @@ How does laser diode differ from LED? What is the function of diode ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director 19/02/2021, Q5.6 — [duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md](../duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md)
 
-<a id="g2234"></a>
+<a id="g2347"></a>
 
-### ট্রানজিস্টরের সাথে ডায়োড বা রেজিস্টর এবং ক্যাপাসিটর দিয়ে তৈরি পুর্ণাঙ্গ সার্কিটকে বলে? <sub>G2234</sub>
+### ট্রানজিস্টরের সাথে ডায়োড বা রেজিস্টর এবং ক্যাপাসিটর দিয়ে তৈরি পুর্ণাঙ্গ সার্কিটকে বলে? <sub>G2347</sub>
 
 *MCQ*
 
@@ -754,9 +754,9 @@ How does laser diode differ from LED? What is the function of diode ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 26 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2859"></a>
+<a id="g2972"></a>
 
-### Full Wave Diode Bridge Rectifier এবং Ripple Factor বের কর। <sub>G2859</sub>
+### Full Wave Diode Bridge Rectifier এবং Ripple Factor বের কর। <sub>G2972</sub>
 
 *Written*
 
@@ -766,9 +766,9 @@ Full Wave Diode Bridge Rectifier এবং Ripple Factor বের কর।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 6. Bangladesh Telecommunication Regulatory Commission (BTRC), Deputy Assistant Director (DAD), 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 9-10, Q4 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g4537"></a>
+<a id="g4830"></a>
 
-### When the diode current is large, the bias is—-. (options not given; printed answer: rever… <sub>G4537</sub>
+### When the diode current is large, the bias is—-. (options not given; printed answer: rever… <sub>G4830</sub>
 
 *MCQ*
 
@@ -779,9 +779,9 @@ When the diode current is large, the bias is—-. (options not given; printed an
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive 08.11.2019, MCQ33 — [telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md](../telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md)
 - **Correction:** a large diode current flows only under **forward** bias; under reverse bias only a tiny leakage current flows.
 
-<a id="g4539"></a>
+<a id="g4832"></a>
 
-### The capacitance of a varactor diode increases when reverse voltage across it—-. (options … <sub>G4539</sub>
+### The capacitance of a varactor diode increases when reverse voltage across it—-. (options … <sub>G4832</sub>
 
 *MCQ*
 
@@ -791,9 +791,9 @@ The capacitance of a varactor diode increases when reverse voltage across it—-
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive 08.11.2019, MCQ35 — [telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md](../telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md)
 
-<a id="g4540"></a>
+<a id="g4833"></a>
 
-### The reverse current in diode consists of minority carrier current and—current. (options n… <sub>G4540</sub>
+### The reverse current in diode consists of minority carrier current and—current. (options n… <sub>G4833</sub>
 
 *MCQ*
 
@@ -804,9 +804,9 @@ The reverse current in diode consists of minority carrier current and—current.
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive 08.11.2019, MCQ36 — [telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md](../telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md)
 - **Correction:** the reverse current is the minority-carrier (saturation) current plus the **surface-leakage** current; there is no forward current under reverse bias.
 
-<a id="g4553"></a>
+<a id="g4846"></a>
 
-### Sketch the time Variation of output voltage(VoVst) for given input voltage Vi. Assume Vz … <sub>G4553</sub>
+### Sketch the time Variation of output voltage(VoVst) for given input voltage Vi. Assume Vz … <sub>G4846</sub>
 
 *Written*
 
@@ -816,9 +816,9 @@ Sketch the time Variation of output voltage(VoVst) for given input voltage Vi. A
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Manager (Technical) 05.02.2021, Q3 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4584"></a>
+<a id="g4877"></a>
 
-### নিচের কোন ইলেকট্রনিক্স যন্ত্র AC থেকে DC তৈরি করতে পারে? (options not given; printed answ… <sub>G4584</sub>
+### নিচের কোন ইলেকট্রনিক্স যন্ত্র AC থেকে DC তৈরি করতে পারে? (options not given; printed answ… <sub>G4877</sub>
 
 *MCQ*
 
@@ -828,9 +828,9 @@ Sketch the time Variation of output voltage(VoVst) for given input voltage Vi. A
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ23 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g4587"></a>
+<a id="g4880"></a>
 
-### ট্রানজিস্টরের সাথে ডায়োড বা রেজিস্টর এবং ক্যাপাসিটর দিয়ে তৈরি পুর্ণাঙ্গ সার্কিটকে বলে? … <sub>G4587</sub>
+### ট্রানজিস্টরের সাথে ডায়োড বা রেজিস্টর এবং ক্যাপাসিটর দিয়ে তৈরি পুর্ণাঙ্গ সার্কিটকে বলে? … <sub>G4880</sub>
 
 *MCQ*
 
@@ -840,9 +840,9 @@ Sketch the time Variation of output voltage(VoVst) for given input voltage Vi. A
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTRC Sub Assistant Director (Technical) 19.02.2021, MCQ26 — [telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md](../telecom-web/2021-btrc-sad-technical-jobstestbd/btrc-sad-technical-2021.md)
 
-<a id="g2812"></a>
+<a id="g2925"></a>
 
-### What is a PN junction diode? Explain its V-I characteristics under forward bias and rever… <sub>G2812</sub>
+### What is a PN junction diode? Explain its V-I characteristics under forward bias and rever… <sub>G2925</sub>
 
 *Written*
 
@@ -852,9 +852,9 @@ What is a PN junction diode? Explain its V-I characteristics under forward bias 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 2 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2813"></a>
+<a id="g2926"></a>
 
-### A half-wave rectifier uses a diode with a forward resistance of 500 and is connected to a… <sub>G2813</sub>
+### A half-wave rectifier uses a diode with a forward resistance of 500 and is connected to a… <sub>G2926</sub>
 
 *Written*
 
@@ -864,9 +864,9 @@ A half-wave rectifier uses a diode with a forward resistance of 500 and is conne
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 2 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2513"></a>
+<a id="g2626"></a>
 
-### Circuit Math Calculation : Amp 20v & Frequency 1KHz (Then bla bla don't remember) [sketch… <sub>G2513</sub>
+### Circuit Math Calculation : Amp 20v & Frequency 1KHz (Then bla bla don't remember) [sketch… <sub>G2626</sub>
 
 *Written*
 
@@ -876,9 +876,9 @@ Circuit Math Calculation : Amp 20v & Frequency 1KHz (Then bla bla don't remember
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -01 (suggestion), Set-01 Q13 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 
-<a id="g4943"></a>
+<a id="g5236"></a>
 
-### A filter having a single continuous transmission band with neither the upper not the lowe… <sub>G4943</sub>
+### A filter having a single continuous transmission band with neither the upper not the lowe… <sub>G5236</sub>
 
 *MCQ*
 
@@ -941,9 +941,9 @@ Explain the working principle of an n-channel JFET for various values of V_GS an
 - **Source:**
   - Bangladesh Bank Assistant Maintenance Engineer (BIBM) (2023-02-04), Q10 (part 2) — [BANK/03_jfet-regions-of-operation.md](../BANK/03_jfet-regions-of-operation.md) · [image](../BANK/03_jfet-regions-of-operation.jpg)
 
-<a id="g2480"></a>
+<a id="g2593"></a>
 
-### Describe cut off, saturation and active region of operation of a transistor with diagram.… <sub>G2480</sub>
+### Describe cut off, saturation and active region of operation of a transistor with diagram.… <sub>G2593</sub>
 
 *Written*
 
@@ -954,9 +954,9 @@ Describe cut off, saturation and active region of operation of a transistor with
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Maintenance Engineer — 04.02.2023 — exam taker not printed (BIBM per `BANK/`) — time and marks not printed — pages 1–3, Q2 — [duranta/1737542359-bangladesh-bank-ame-ad-ict-2023/1737542359.md](../duranta/1737542359-bangladesh-bank-ame-ad-ict-2023/1737542359.md)
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Bangladesh Bank — Assistant Maintenance Engineer — 04.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 30–32, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2613"></a>
+<a id="g2726"></a>
 
-### Which configuration of Bipolar Junction Transistor is known as voltage follower? ক) Commo… <sub>G2613</sub>
+### Which configuration of Bipolar Junction Transistor is known as voltage follower? ক) Commo… <sub>G2726</sub>
 
 *MCQ*
 
@@ -966,9 +966,9 @@ Which configuration of Bipolar Junction Transistor is known as voltage follower?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Basic Electronics Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2614"></a>
+<a id="g2727"></a>
 
-### Generally the gain of a transistor amplifier falls at high frequency due to the ক) Intern… <sub>G2614</sub>
+### Generally the gain of a transistor amplifier falls at high frequency due to the ক) Intern… <sub>G2727</sub>
 
 *MCQ*
 
@@ -978,9 +978,9 @@ Generally the gain of a transistor amplifier falls at high frequency due to the 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Basic Electronics Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3163"></a>
+<a id="g3276"></a>
 
-### Justify "Invention of Transistor changed the world." <sub>G3163</sub>
+### Justify "Invention of Transistor changed the world." <sub>G3276</sub>
 
 *Written*
 
@@ -990,9 +990,9 @@ Justify "Invention of Transistor changed the world."
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3967"></a>
+<a id="g4080"></a>
 
-### The relation between α, β in the transistor is: (ক) β = α / (1 + α) (খ) β = 1 − α (গ) α =… <sub>G3967</sub>
+### The relation between α, β in the transistor is: (ক) β = α / (1 + α) (খ) β = 1 − α (গ) α =… <sub>G4080</sub>
 
 *MCQ*
 
@@ -1002,9 +1002,9 @@ The relation between α, β in the transistor is: (ক) β = α / (1 + α) (খ)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — ICT (281), question paper 2 (Q101–200), 10.10.2025, Q117 — [bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md](../bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md)
 
-<a id="g4607"></a>
+<a id="g4900"></a>
 
-### বাইপোলার জাংশন ট্রানজিস্টরের- (a) মাঝের লেয়ারটি সর্বদা N টাইপ (b) ইমিটার লেয়ার সবচেয়ে … <sub>G4607</sub>
+### বাইপোলার জাংশন ট্রানজিস্টরের- (a) মাঝের লেয়ারটি সর্বদা N টাইপ (b) ইমিটার লেয়ার সবচেয়ে … <sub>G4900</sub>
 
 *MCQ*
 
@@ -1014,9 +1014,9 @@ The relation between α, β in the transistor is: (ক) β = α / (1 + α) (খ)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BDCCL Assistant Manager (Transmission) 2022, MCQ20 — [telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md](../telecom-web/2022-bdccl-am-transmission-jobqns/bdccl-am-transmission-2022.md)
 
-<a id="g4925"></a>
+<a id="g5218"></a>
 
-### N-Channel MOS operating in the linear region. Calculate the current passing through the c… <sub>G4925</sub>
+### N-Channel MOS operating in the linear region. Calculate the current passing through the c… <sub>G5218</sub>
 
 *Written*
 
@@ -1026,9 +1026,9 @@ N-Channel MOS operating in the linear region. Calculate the current passing thro
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Dhaka WASA — Assistant Maintenance Engineer (Network), 04.07.2025 (BUET) (suggestion), Q2 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g2232"></a>
+<a id="g2345"></a>
 
-### n-p-n ট্রানজিস্টর p অংশটি কি? <sub>G2232</sub>
+### n-p-n ট্রানজিস্টর p অংশটি কি? <sub>G2345</sub>
 
 *MCQ*
 
@@ -1038,9 +1038,9 @@ n-p-n ট্রানজিস্টর p অংশটি কি?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, MCQ 24 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g4585"></a>
+<a id="g4878"></a>
 
-### n-p-n ট্রানজিস্টর p অংশটি কি? (options not given; printed answer: বিবর্ধক; correct: base) <sub>G4585</sub>
+### n-p-n ট্রানজিস্টর p অংশটি কি? (options not given; printed answer: বিবর্ধক; correct: base) <sub>G4878</sub>
 
 *MCQ*
 
@@ -1093,9 +1093,9 @@ Explain the working principle of an n-channel JFET and its operating regions (cu
 
 ## Amplifiers & op-amps
 
-<a id="g2164"></a>
+<a id="g2277"></a>
 
-### If v1= 1v and v2 = 2 v, find v0 in the op amp circuit: [stage A inverting: v1, 2k in, 6k … <sub>G2164</sub>
+### If v1= 1v and v2 = 2 v, find v0 in the op amp circuit: [stage A inverting: v1, 2k in, 6k … <sub>G2277</sub>
 
 *Written*
 
@@ -1105,9 +1105,9 @@ If v1= 1v and v2 = 2 v, find v0 in the op amp circuit: [stage A inverting: v1, 2
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024, Q2 — [duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md](../duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md)
 
-<a id="g2617"></a>
+<a id="g2730"></a>
 
-### When a step signal input is applied to an op-amp integrator, the output will be... ক) A R… <sub>G2617</sub>
+### When a step signal input is applied to an op-amp integrator, the output will be... ক) A R… <sub>G2730</sub>
 
 *MCQ*
 
@@ -1117,9 +1117,9 @@ When a step signal input is applied to an op-amp integrator, the output will be.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Basic Electronics Q5 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2213"></a>
+<a id="g2326"></a>
 
-### একটি অপারেশন Amplifier প্রধান প্রধান বৈশিষ্ট্য কি কি ? এসি পাওয়ার কিভাবে ডিসি পাওয়ারে র… <sub>G2213</sub>
+### একটি অপারেশন Amplifier প্রধান প্রধান বৈশিষ্ট্য কি কি ? এসি পাওয়ার কিভাবে ডিসি পাওয়ারে র… <sub>G2326</sub>
 
 *Written*
 
@@ -1129,9 +1129,9 @@ When a step signal input is applied to an op-amp integrator, the output will be.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Deputy Assistant Director 19/02/2021, Dept Q1 — [duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md](../duranta/1720852216-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720852216.md)
 
-<a id="g2239"></a>
+<a id="g2352"></a>
 
-### State the major features of an Operational Amplifier. Using an OA, Draw a differential ci… <sub>G2239</sub>
+### State the major features of an Operational Amplifier. Using an OA, Draw a differential ci… <sub>G2352</sub>
 
 *Written*
 
@@ -1141,9 +1141,9 @@ State the major features of an Operational Amplifier. Using an OA, Draw a differ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Deputy Assistant Director (Technical) April 05, 2019, Q4(a) — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
 
-<a id="g2852"></a>
+<a id="g2965"></a>
 
-### Write the classification, output diagram, sinusoidal wave form of Power amplifier. [BTRC … <sub>G2852</sub>
+### Write the classification, output diagram, sinusoidal wave form of Power amplifier. [BTRC … <sub>G2965</sub>
 
 *Written*
 
@@ -1153,9 +1153,9 @@ Write the classification, output diagram, sinusoidal wave form of Power amplifie
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 5. Bangladesh Telecommunication Regulatory Commission (BTRC), Assistant Director, 10-12-2021; exam taker not printed; Time: 1 hour; Marks: 80 [MCQ-30; Written-50]; pp. 7-9 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2947"></a>
+<a id="g3060"></a>
 
-### Find the Vout of the opAmp (1=5volt,0=0volt) <sub>G2947</sub>
+### Find the Vout of the opAmp (1=5volt,0=0volt) <sub>G3060</sub>
 
 *Written*
 
@@ -1165,9 +1165,9 @@ Find the Vout of the opAmp (1=5volt,0=0volt)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — BSCS Combined 3 Bank (Sonali, Janata, Rakub) — Post: SO (Written) — 16-11-2020 — Exam taker: not printed — marks not printed — pages 6–8, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4555"></a>
+<a id="g4848"></a>
 
-### Find Vo/Vin [Figure: op-amp; Vin - 10 kΩ - node with 10 kΩ to ground feeding the + input;… <sub>G4555</sub>
+### Find Vo/Vin [Figure: op-amp; Vin - 10 kΩ - node with 10 kΩ to ground feeding the + input;… <sub>G4848</sub>
 
 *Written*
 
@@ -1179,9 +1179,9 @@ Find Vo/Vin [Figure: op-amp; Vin - 10 kΩ - node with 10 kΩ to ground feeding t
 
 ## Semiconductors & components
 
-<a id="g2224"></a>
+<a id="g2337"></a>
 
-### Va321 is IC? Advantages of IC over discrete component circuit. Why do ICs need small powe… <sub>G2224</sub>
+### Va321 is IC? Advantages of IC over discrete component circuit. Why do ICs need small powe… <sub>G2337</sub>
 
 *Written*
 
@@ -1192,9 +1192,9 @@ Va321 is IC? Advantages of IC over discrete component circuit. Why do ICs need s
   - duranta.app question bank (coaching compilation of the question paper) — BTRC Assistant Director (Technical) April 05, 2019, Q4 — [duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md](../duranta/1720853431-bangladesh-telecommunication-regulatory-authority-ad-dad-tec/1720853431.md)
   - duranta.app question bank (coaching compilation of the question paper) — 1 — Bangladesh Telecommunication Regulatory Commission, Post Name: Assistant Director (Technical) — Exam Date: April 05, 2019 — exam taker not printed — time and marks not printed — page 31 (cut off after MCQ 12 of 30), W4 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4538"></a>
+<a id="g4831"></a>
 
-### What causes holes in a intrinsic semiconductor at room temperature. (options not given; p… <sub>G4538</sub>
+### What causes holes in a intrinsic semiconductor at room temperature. (options not given; p… <sub>G4831</sub>
 
 *MCQ*
 
@@ -1204,9 +1204,9 @@ What causes holes in a intrinsic semiconductor at room temperature. (options not
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Teletalk Executive 08.11.2019, MCQ34 — [telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md](../telecom-web/2019-teletalk-executive-jobstestbd/teletalk-executive-2019.md)
 
-<a id="g4947"></a>
+<a id="g5240"></a>
 
-### At absolute zero temperature, semiconductor behaves as a/an- <sub>G4947</sub>
+### At absolute zero temperature, semiconductor behaves as a/an- <sub>G5240</sub>
 
 *MCQ*
 

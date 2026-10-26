@@ -5,7 +5,7 @@ const R = (re, name) => [re, name];
 export const CLUSTERS = {
   NET: [
     R(/bank (network|wan)|network (architecture|diagram|design) for|enterprise .*network|commercial bank network/i, 'Bank / enterprise network design'),
-    R(/subnet|\/\d\d\b|cidr|vlsm|broadcast address|network address|valid host|usable (host|ip)|class ?[abc]\b|classful|private ip|public ip|static ip|127\.0\.0\.1|localhost|routing table|ip address|ip range|ipv4 address/i, 'IP addressing & subnetting'),
+    R(/subnet|\/\d\d\b|cidr|vlsm|broadcast address|network address|valid host|usable (host|ip)|class ?[abc]\b|classful|private ip|public ip|static ip|127\.0\.0\.1|localhost|routing table|ip address|ip range|ipv4 address|logical address/i, 'IP addressing & subnetting'),
     R(/ipv6/i, 'IPv4 vs IPv6'),
     R(/\bosi\b|tcp\/ip model|tcp\/ip layer|tcp\/ip protocol suite|layers? of|mac layer|network layer and the support/i, 'OSI & TCP/IP models'),
     R(/handshake|tcp and udp|tcp vs udp|\budp\b|flow.control|congestion|sequence number/i, 'TCP, UDP & congestion control'),
@@ -91,6 +91,8 @@ export const CLUSTERS = {
     R(/call by|parameter passing|swap/i, 'Call by value vs reference'),
     R(/recurs|factorial|fibonacci|gcd|lcm|ল\.সা\.গু/i, 'Recursion & classic programs'),
     R(/series|sum of|যোগফল|গুণফল|ধারা/i, 'Series & summation programs'),
+    R(/file handling|fopen|fscanf|\b\w+\.txt\b/i, 'File handling'),
+    R(/reverse the array|integers into an array/i, 'Arrays & matrices'),
     R(/string|strlen|palindrome|reverse/i, 'Strings'),
     R(/array|matrix|matrices/i, 'Arrays & matrices'),
     R(/structure|union/i, 'Structure & union'),
@@ -219,7 +221,7 @@ export const EXTRA = {
   // Added 2026-10-16 for the duranta.app and web collections (Bangla wording, newer topics).
   AI: [
     R(/generative|\bllm|large language|chatbot|gpt|prompt|transformer|hallucinat|\brag\b/i, 'Generative AI & LLMs'),
-    R(/supervised|unsupervised|reinforcement|machine learning|মেশিন লার্নিং|overfit|decision tree|regression|classification|clustering|model.*(validat|reliab)|data mining|federated|deep learning/i, 'Machine learning'),
+    R(/supervised|unsupervised|reinforcement|machine learning|মেশিন লার্নিং|overfit|decision tree|regression|classification|clustering|model.*(validat|reliab)|data mining|federated|deep learning|confusion matrix|precision|recall|f1.score/i, 'Machine learning'),
     R(/neural|\bann\b|\bbnn\b|perceptron|backprop|\brnn\b|\bcnn\b|lstm/i, 'Neural networks'),
     R(/search|heuristic|a\*|a"|minimax|ম্যাক্সিমাম|adversarial|hill climbing|bfs|dfs|depth-first/i, 'Search techniques'),
     R(/agent|এজেন্ট/i, 'Types of intelligent agents'),
@@ -266,6 +268,17 @@ export const EXTRA = {
     R(/coulomb|electric|magnetic|field|charge/i, 'Electricity & magnetism'),
     R(/wave|frequency|light|optics|quantum|relativity|schr/i, 'Waves & modern physics'),
   ],
+  // general mathematics (Bit to Exabyte math and aptitude sections); kept to these word problems so the older
+  // MATH records stay on their original topics
+  MATH: [
+    R(/probability|সম্ভাবনা|bayes|defective|randomly selected|at random/i, 'Probability & Bayes theorem'),
+    R(/km\/h|speed|distance/i, 'Speed, time & distance'),
+    R(/pipe|cistern/i, 'Pipes & cisterns'),
+    R(/hours a day|piece of work|earn as much|earn daily/i, 'Work, time & wages'),
+    R(/simple interest|compound interest|principal/i, 'Simple & compound interest'),
+    R(/mixture|concentration|acid solution/i, 'Mixtures & alligation'),
+    R(/rectangle|length and breadth/i, 'Equations & mensuration'),
+  ],
 };
 // Further second-pass rules for subjects that already have an EXTRA list (appended, so earlier rules still win).
 EXTRA.ICS.push(
@@ -300,6 +313,8 @@ EXTRA.COM.push(
 export function cluster(subject, text, oldTopic) {
   const rules = CLUSTERS[subject];
   const hay = `${oldTopic ?? ''} ${text}`;
+  // older MATH records keep their hand-written topics (several are mixed MCQ sets)
+  if (subject === 'MATH' && oldTopic) return oldTopic;
   if (rules) for (const [re, name] of rules) if (re.test(hay)) return name;
   for (const [re, name] of EXTRA[subject] ?? []) if (re.test(hay)) return name;
   return oldTopic && !rules ? oldTopic : 'Other';

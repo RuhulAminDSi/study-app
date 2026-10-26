@@ -28,6 +28,7 @@ const SOURCE_NOTE = {
   web: 'Question paper found on the web (see the folder README for the URL)',
   'viva-compilation': 'Viva questions recalled by candidates (counted apart from written exams)',
   'web-suggestion': 'Web suggestion or sample sheet (not a dated paper)',
+  'book-suggestion': 'Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed)',
 };
 const subjOverride = (text, s) => {
   for (const [re, x] of OVERRIDES) if (re.test(text)) return x;
@@ -151,7 +152,7 @@ for (const members of Object.values(groups)) {
     asked_in: counted.map((k) => examByKey[k]?.name ?? k).sort(),
     also_in: other.map((k) => examByKey[k]?.name ?? k).sort(),
     viva_mentions: vivas,
-    in_coaching: [...new Set(members.filter((m) => ['suggestion', 'model-test', 'ntrca-bank', 'book', 'duranta-suggestion', 'web-suggestion'].includes(m.origin) && !m.exams.length).map((m) => m.source))],
+    in_coaching: [...new Set(members.filter((m) => ['suggestion', 'model-test', 'ntrca-bank', 'book', 'duranta-suggestion', 'web-suggestion', 'book-suggestion'].includes(m.origin) && !m.exams.length).map((m) => m.source))],
     highlighted: members.some((m) => m.highlight),
     records: members.map((m) => m.id),
     pages: [...new Set(members.flatMap((m) => m.pages))],

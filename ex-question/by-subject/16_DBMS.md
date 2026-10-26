@@ -2,28 +2,28 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 458 (from 541 records: Written 449, MCQ 44, Viva 48)
-- **Exams it appears in:** 157
-- **Corrections to printed answers:** 21
+- **Distinct questions:** 544 (from 629 records: Written 471, MCQ 110, Viva 48)
+- **Exams it appears in:** 160
+- **Corrections to printed answers:** 31
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
 
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
-| 1 | [SQL queries](#sql-queries) | 94 | 174 | 9 |
-| 2 | [Keys](#keys) | 30 | 40 | 10 |
-| 3 | [ER model & relationships](#er-model--relationships) | 28 | 44 | 0 |
-| 4 | [DBMS concepts & architecture](#dbms-concepts--architecture) | 24 | 51 | 13 |
-| 5 | [Transactions & ACID](#transactions--acid) | 19 | 24 | 1 |
-| 6 | [Normalization](#normalization) | 15 | 25 | 2 |
-| 7 | [Indexing, B+ tree & hashing](#indexing-b-tree--hashing) | 15 | 20 | 0 |
-| 8 | [Other](#other) | 14 | 32 | 5 |
-| 9 | [Views, triggers & procedures](#views-triggers--procedures) | 8 | 17 | 6 |
-| 10 | [SQL command types](#sql-command-types) | 6 | 7 | 0 |
-| 11 | [Distributed DB, NoSQL & backup](#distributed-db-nosql--backup) | 5 | 8 | 0 |
-| 12 | [Concurrency control & recovery](#concurrency-control--recovery) | 5 | 12 | 2 |
-| 13 | [Data warehouse & mining](#data-warehouse--mining) | 3 | 4 | 0 |
+| 1 | [SQL queries](#sql-queries) | 97 | 205 | 9 |
+| 2 | [Keys](#keys) | 32 | 43 | 10 |
+| 3 | [ER model & relationships](#er-model--relationships) | 31 | 53 | 0 |
+| 4 | [DBMS concepts & architecture](#dbms-concepts--architecture) | 26 | 58 | 13 |
+| 5 | [Transactions & ACID](#transactions--acid) | 21 | 35 | 1 |
+| 6 | [Normalization](#normalization) | 17 | 30 | 2 |
+| 7 | [Indexing, B+ tree & hashing](#indexing-b-tree--hashing) | 17 | 25 | 0 |
+| 8 | [Other](#other) | 15 | 35 | 5 |
+| 9 | [Views, triggers & procedures](#views-triggers--procedures) | 9 | 20 | 6 |
+| 10 | [Concurrency control & recovery](#concurrency-control--recovery) | 7 | 17 | 2 |
+| 11 | [Distributed DB, NoSQL & backup](#distributed-db-nosql--backup) | 6 | 10 | 0 |
+| 12 | [SQL command types](#sql-command-types) | 6 | 7 | 0 |
+| 13 | [Data warehouse & mining](#data-warehouse--mining) | 4 | 6 | 0 |
 
 ## Most-asked questions
 
@@ -31,10 +31,10 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 
 1. **Analyze the output of the following SQL. Select department_name, AVG(salary) As average_salary From employee e JOIN department d ON e.department_id = d.departm…**  
    Asked in (3): Combined Bank Officer(IT) 2023; Rupali Bank ANA 2023; Rupali Bank ANE 2023  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL · Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions · duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37 — see [G3140](#g3140)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL · Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions · duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37 — see [G3253](#g3253)
 2. **Explain Primary key, Candidate key, and Foreign key.**  
    Asked in (3): 36th BCS (2016); SPCBL AME 2021; Teletalk AM(IT) 2023 · viva mentions: 3  
-   Source: Bank IT viva (compiled from candidates' viva experiences) · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 · duranta.app question bank (coaching compilation of the question paper) — 09 — The Security Printing Corporation (Bangladesh) Ltd — Assistant Maintenance Engineer — 08-12-2021 — Exam taker: CTI — Written, Time 2 Hours, marks not printed — page 14 · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 · Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023 — see [G4625](#g4625)
+   Source: Bank IT viva (compiled from candidates' viva experiences) · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 · duranta.app question bank (coaching compilation of the question paper) — 09 — The Security Printing Corporation (Bangladesh) Ltd — Assistant Maintenance Engineer — 08-12-2021 — Exam taker: CTI — Written, Time 2 Hours, marks not printed — page 14 · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 · Question paper found on the web (see the folder README for the URL) — Teletalk Assistant Manager (IT) 2023 — see [G4918](#g4918)
 3. **What are the ACID properties of transaction to ensure data reliability and integrity?**  
    Asked in (3): BBL AM(ICT) 2019; BPSC AP 2023; Milk Vita AM(CSE) 2023  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL — see [G0951](#g0951)
@@ -46,10 +46,10 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G0949](#g0949)
 6. **ডাটাবেস ট্রান্সেকশনের ACID Properties সম্পর্কে লিখুন।**  
    Asked in (2): 15th NTRCA ICT; 17th NTRCA ICT (2023)  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G1961](#g1961)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID · Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL · duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5) — see [G2074](#g2074)
 7. **Which is known as database aggregate function? a. where b. sum c. select d. from**  
    Asked in (2): DoICT ANE 2019; DoICT AP 2020  
-   Source: duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33 · duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33 — see [G2580](#g2580)
+   Source: duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33 · duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33 — see [G2693](#g2693)
 8. **Which is not a command/keyword in SQL? (REMOVE / ORDER BY / SELECT / WHERE)**  
    Asked in (1): 49th BCS ICT (2025)  
    Source: 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025) — see [G0075](#g0075)
@@ -111,9 +111,9 @@ Topics the Bit to Exabyte question book lists as its standard pattern for this s
 
 ## SQL queries
 
-<a id="g3140"></a>
+<a id="g3253"></a>
 
-### Analyze the output of the following SQL. Select department_name, AVG(salary) As average_s… <sub>G3140</sub>
+### Analyze the output of the following SQL. Select department_name, AVG(salary) As average_s… <sub>G3253</sub>
 
 *Written*
 
@@ -127,9 +127,9 @@ Analyze the output of the following SQL. Select department_name, AVG(salary) As 
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q72 — [suggestion based on previous yr/09_petrobangla-ane-q65-72-char-varchar-tdm-repeats.md](../suggestion%20based%20on%20previous%20yr/09_petrobangla-ane-q65-72-char-varchar-tdm-repeats.md) · [image](../suggestion%20based%20on%20previous%20yr/09_petrobangla-ane-q65-72-char-varchar-tdm-repeats.jpg); [suggestion based on previous yr/10_petrobangla-ane-q72-73-sql-server-maintenance.md](../suggestion%20based%20on%20previous%20yr/10_petrobangla-ane-q72-73-sql-server-maintenance.md) · [image](../suggestion%20based%20on%20previous%20yr/10_petrobangla-ane-q72-73-sql-server-maintenance.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2580"></a>
+<a id="g2693"></a>
 
-### Which is known as database aggregate function? a. where b. sum c. select d. from <sub>G2580</sub>
+### Which is known as database aggregate function? a. where b. sum c. select d. from <sub>G2693</sub>
 
 *MCQ*
 
@@ -368,9 +368,9 @@ From an Employee table. Write SQL statement statement according to the following
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q3 — [bit to exabyte/09_bte-p009-sql-q01-05.md](../bit%20to%20exabyte/09_bte-p009-sql-q01-05.md) · [image](../bit%20to%20exabyte/09_bte-p009-sql-q01-05.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q16 — [bit to exabyte/29_bte-g2-p15-database-sql-q15-20.md](../bit%20to%20exabyte/29_bte-g2-p15-database-sql-q15-20.md) · [image](../bit%20to%20exabyte/29_bte-g2-p15-database-sql-q15-20.jpg)
 
-<a id="g1821"></a>
+<a id="g1934"></a>
 
-### (Schema as in Q2) (a) Select person name who bought American category product <sub>G1821</sub>
+### (Schema as in Q2) (a) Select person name who bought American category product <sub>G1934</sub>
 
 *Written*
 
@@ -380,9 +380,9 @@ From an Employee table. Write SQL statement statement according to the following
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Assistant Manager (ICT) 12/01/2024, Q2(a) — [duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md](../duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md)
 
-<a id="g2143"></a>
+<a id="g2256"></a>
 
-### একটি mySQL database এর ডাটা ব্যাক আপ ওঁ ব্যাক আপ করা ডাটা রিস্টোর করার কমান্ড লিখ। <sub>G2143</sub>
+### একটি mySQL database এর ডাটা ব্যাক আপ ওঁ ব্যাক আপ করা ডাটা রিস্টোর করার কমান্ড লিখ। <sub>G2256</sub>
 
 *Written*
 
@@ -392,9 +392,9 @@ From an Employee table. Write SQL statement statement according to the following
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024, Q5 — [duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md](../duranta/1713450345-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713450345.md)
 
-<a id="g2148"></a>
+<a id="g2261"></a>
 
-### Department (dept_id,Salary, Dept_name) Employee(dept_id, emp_name) যাদের স্যালারির গড় ৫০… <sub>G2148</sub>
+### Department (dept_id,Salary, Dept_name) Employee(dept_id, emp_name) যাদের স্যালারির গড় ৫০… <sub>G2261</sub>
 
 *Written*
 
@@ -404,9 +404,9 @@ Department (dept_id,Salary, Dept_name) Employee(dept_id, emp_name) যাদে�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BTCL Junior Assistant Manager (Technical) 05.04.2024 (Set-04), Q3 — [duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md](../duranta/1713711956-bangladesh-telecommunications-company-limited-btcl-jam-techn/1713711956.md)
 
-<a id="g2158"></a>
+<a id="g2271"></a>
 
-### Employee & department table given. (i) Write the employee name who got same salary named … <sub>G2158</sub>
+### Employee & department table given. (i) Write the employee name who got same salary named … <sub>G2271</sub>
 
 *Written*
 
@@ -416,9 +416,9 @@ Employee & department table given. (i) Write the employee name who got same sala
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BGDCL Assistant Manager (CSE) 15.03.2024, Q5(i) — [duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md](../duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md)
 
-<a id="g2159"></a>
+<a id="g2272"></a>
 
-### Employee & department table given. (ii) Write the employee's name who's average salary is… <sub>G2159</sub>
+### Employee & department table given. (ii) Write the employee's name who's average salary is… <sub>G2272</sub>
 
 *Written*
 
@@ -428,9 +428,9 @@ Employee & department table given. (ii) Write the employee's name who's average 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BGDCL Assistant Manager (CSE) 15.03.2024, Q5(ii) — [duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md](../duranta/1713750743-bakhrabad-gas-distribution-company-limited-bgdcl-am-cse/1713750743.md)
 
-<a id="g2196"></a>
+<a id="g2309"></a>
 
-### Write query to find out supliers name who supplies 'wheel' at least cost. Suppliers (sid,… <sub>G2196</sub>
+### Write query to find out supliers name who supplies 'wheel' at least cost. Suppliers (sid,… <sub>G2309</sub>
 
 *Written*
 
@@ -440,9 +440,9 @@ Write query to find out supliers name who supplies 'wheel' at least cost. Suppli
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Titas Gas Assistant Engineer (CSE) 24/05/2024, Q5(a) — [duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md](../duranta/1716661561-titas-gas-transmission-and-distribution-company-limited-tgtd/1716661561.md)
 
-<a id="g2202"></a>
+<a id="g2315"></a>
 
-### Employee (empno, PK, empname, monthlysalary, deptno, FK, mqrnd(FK)) Department(deptno, de… <sub>G2202</sub>
+### Employee (empno, PK, empname, monthlysalary, deptno, FK, mqrnd(FK)) Department(deptno, de… <sub>G2315</sub>
 
 *Written*
 
@@ -452,9 +452,9 @@ Employee (empno, PK, empname, monthlysalary, deptno, FK, mqrnd(FK)) Department(d
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q3(a) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
 
-<a id="g2258"></a>
+<a id="g2371"></a>
 
-### Consider you are given a database of a pet society with the following relations: Animals … <sub>G2258</sub>
+### Consider you are given a database of a pet society with the following relations: Animals … <sub>G2371</sub>
 
 *Written*
 
@@ -465,9 +465,9 @@ Consider you are given a database of a pet society with the following relations:
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q15 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2411"></a>
+<a id="g2524"></a>
 
-### Employee টেবিল হতে যে সকল কর্মচারীদের বেতন 30000 টাকার বেশি তাদের নাম ও পদবী আলাদা করার S… <sub>G2411</sub>
+### Employee টেবিল হতে যে সকল কর্মচারীদের বেতন 30000 টাকার বেশি তাদের নাম ও পদবী আলাদা করার S… <sub>G2524</sub>
 
 *Written*
 
@@ -477,9 +477,9 @@ Employee টেবিল হতে যে সকল কর্মচারীদ�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer 2022, ৬ — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2488"></a>
+<a id="g2601"></a>
 
-### Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Position) 1) wr… <sub>G2488</sub>
+### Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Position) 1) wr… <sub>G2601</sub>
 
 *Written*
 
@@ -489,9 +489,9 @@ Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Positi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Directorate of Food, Ministry of Food (DG Food), Assistant Programmer — Practical Test, 17.01.2022 — Exam Taker: BCC — time not printed — marks not printed ("Score : 30", "Score: 7" printed in header) — page 1, SQL 1 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g2489"></a>
+<a id="g2602"></a>
 
-### Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Position) 2) Co… <sub>G2489</sub>
+### Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Position) 2) Co… <sub>G2602</sub>
 
 *Written*
 
@@ -501,9 +501,9 @@ Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Positi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Directorate of Food, Ministry of Food (DG Food), Assistant Programmer — Practical Test, 17.01.2022 — Exam Taker: BCC — time not printed — marks not printed ("Score : 30", "Score: 7" printed in header) — page 1, SQL 2 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g2490"></a>
+<a id="g2603"></a>
 
-### Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Position) 3) Se… <sub>G2490</sub>
+### Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Position) 3) Se… <sub>G2603</sub>
 
 *Written*
 
@@ -513,9 +513,9 @@ Applicant (Applicant id, Applicant Name, Date of birth, Gender, Division, Positi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Directorate of Food, Ministry of Food (DG Food), Assistant Programmer — Practical Test, 17.01.2022 — Exam Taker: BCC — time not printed — marks not printed ("Score : 30", "Score: 7" printed in header) — page 1, SQL 3 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g2576"></a>
+<a id="g2689"></a>
 
-### To remove a relational table from SQL database, we use ....... ক) Delete খ) Purge গ) Remo… <sub>G2576</sub>
+### To remove a relational table from SQL database, we use ....... ক) Delete খ) Purge গ) Remo… <sub>G2689</sub>
 
 *MCQ*
 
@@ -525,9 +525,9 @@ To remove a relational table from SQL database, we use ....... ক) Delete খ) 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Database Management Systems (DBMS) Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2651"></a>
+<a id="g2764"></a>
 
-### Create a table in MySQL to a person ID, Last Name, First Name, age.ID, and are not NULL. … <sub>G2651</sub>
+### Create a table in MySQL to a person ID, Last Name, First Name, age.ID, and are not NULL. … <sub>G2764</sub>
 
 *Written*
 
@@ -537,9 +537,9 @@ Create a table in MySQL to a person ID, Last Name, First Name, age.ID, and are n
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ৯ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g2872"></a>
+<a id="g2985"></a>
 
-### Query for Employee table (Approx.) <sub>G2872</sub>
+### Query for Employee table (Approx.) <sub>G2985</sub>
 
 *Written*
 
@@ -549,9 +549,9 @@ Query for Employee table (Approx.)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 8. Dhaka Mass Transit Company Limited (DMTCL), Assistant Engineer (ICT), 27.01.2023; Exam Taker: MIST; Time: 1hour; Mark:100; Dept: 56, Non-Dept-MCQ (44*1=44); pp. 12-13, Q2 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g2889"></a>
+<a id="g3002"></a>
 
-### ২ টা টেবিল দেওয়া ছিল। সেগুলো থেকে ২টা কুয়েরি করতে বলছে (জয়েনিং এর)। <sub>G2889</sub>
+### ২ টা টেবিল দেওয়া ছিল। সেগুলো থেকে ২টা কুয়েরি করতে বলছে (জয়েনিং এর)। <sub>G3002</sub>
 
 *Written*
 
@@ -561,9 +561,9 @@ Query for Employee table (Approx.)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 10. Bangladesh Krira Shikkha Protishtan (BKSP), Assistant Programmer, 04-12-2022; exam taker not printed; Total Marks: 30; Time: 45 Minute; p. 16 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3060"></a>
+<a id="g3173"></a>
 
-### Give SQL for the following queries - Worker (worker-id, worker-name, hourly-rate, skill-t… <sub>G3060</sub>
+### Give SQL for the following queries - Worker (worker-id, worker-name, hourly-rate, skill-t… <sub>G3173</sub>
 
 *Written*
 
@@ -573,9 +573,9 @@ Give SQL for the following queries - Worker (worker-id, worker-name, hourly-rate
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3074"></a>
+<a id="g3187"></a>
 
-### Four queries (table's client, salesman, sale, order etc.) (Unable to collect this questio… <sub>G3074</sub>
+### Four queries (table's client, salesman, sale, order etc.) (Unable to collect this questio… <sub>G3187</sub>
 
 *Written*
 
@@ -585,9 +585,9 @@ Four queries (table's client, salesman, sale, order etc.) (Unable to collect thi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3083"></a>
+<a id="g3196"></a>
 
-### Some marks are given in MARKS(id, mark) table, write a query to show the grades(F.A.C etc… <sub>G3083</sub>
+### Some marks are given in MARKS(id, mark) table, write a query to show the grades(F.A.C etc… <sub>G3196</sub>
 
 *Written*
 
@@ -597,9 +597,9 @@ Some marks are given in MARKS(id, mark) table, write a query to show the grades(
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3099"></a>
+<a id="g3212"></a>
 
-### Analysis of following code: SELECT department-name, AVG(salary) as average-salary FROM em… <sub>G3099</sub>
+### Analysis of following code: SELECT department-name, AVG(salary) as average-salary FROM em… <sub>G3212</sub>
 
 *Written*
 
@@ -609,9 +609,9 @@ Analysis of following code: SELECT department-name, AVG(salary) as average-salar
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — Officer IT- Combined Bank — 14.10.2023 — Job ID: 10152 — Exam taker: BIBM — IT: 150 marks + Non IT: 40 marks + GK: 10 marks = 200 marks — pages 32–33, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3132"></a>
+<a id="g3245"></a>
 
-### Given a SQL query, write what is the Question for this query. <sub>G3132</sub>
+### Given a SQL query, write what is the Question for this query. <sub>G3245</sub>
 
 *Written*
 
@@ -621,9 +621,9 @@ Given a SQL query, write what is the Question for this query.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — RAKUB — ANSE (2 post) 2023 — 03.11.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (15×10) — pages 34–35, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3158"></a>
+<a id="g3271"></a>
 
-### Create table Department ( DeptCode int, DeptName Varchar (2Ø), Location varchar (2Ø) ) Cr… <sub>G3158</sub>
+### Create table Department ( DeptCode int, DeptName Varchar (2Ø), Location varchar (2Ø) ) Cr… <sub>G3271</sub>
 
 *Written*
 
@@ -633,9 +633,9 @@ Create table Department ( DeptCode int, DeptName Varchar (2Ø), Location varchar
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3171"></a>
+<a id="g3284"></a>
 
-### Difference between MS Access and MS FoxPro in SQL or Oracle. [Combined Bank ADA 2024] <sub>G3171</sub>
+### Difference between MS Access and MS FoxPro in SQL or Oracle. [Combined Bank ADA 2024] <sub>G3284</sub>
 
 *Written*
 
@@ -645,9 +645,9 @@ Difference between MS Access and MS FoxPro in SQL or Oracle. [Combined Bank ADA 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3175"></a>
+<a id="g3288"></a>
 
-### Database program with base and high-level language (SQL) to find out the interest rate fr… <sub>G3175</sub>
+### Database program with base and high-level language (SQL) to find out the interest rate fr… <sub>G3288</sub>
 
 *Written*
 
@@ -657,9 +657,9 @@ Database program with base and high-level language (SQL) to find out the interes
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q16 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3195"></a>
+<a id="g3308"></a>
 
-### Let a database has two tables, Customers and Orders. The following figure shows the parti… <sub>G3195</sub>
+### Let a database has two tables, Customers and Orders. The following figure shows the parti… <sub>G3308</sub>
 
 *Written*
 
@@ -669,9 +669,9 @@ Let a database has two tables, Customers and Orders. The following figure shows 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q(unnumbered 4) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3209"></a>
+<a id="g3322"></a>
 
-### Consider the following relation: [Combined Bank Officer (IT) 25] (10 Marks) Sales(sales i… <sub>G3209</sub>
+### Consider the following relation: [Combined Bank Officer (IT) 25] (10 Marks) Sales(sales i… <sub>G3322</sub>
 
 *Written*
 
@@ -681,9 +681,9 @@ Consider the following relation: [Combined Bank Officer (IT) 25] (10 Marks) Sale
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q17 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3231"></a>
+<a id="g3344"></a>
 
-### You have table EMPLOYEES (ID, Name, DeptID) and table DEPARTMENTS (Dept, DeptName). Write… <sub>G3231</sub>
+### You have table EMPLOYEES (ID, Name, DeptID) and table DEPARTMENTS (Dept, DeptName). Write… <sub>G3344</sub>
 
 *Written*
 
@@ -693,9 +693,9 @@ You have table EMPLOYEES (ID, Name, DeptID) and table DEPARTMENTS (Dept, DeptNam
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — BSCS (Sonali & Janata Bank PLC) — Assistant Programmer / Officer (IT) — 03/01/2026 — Exam taker: not printed — Time: 09-12; Written: 200 Marks — pages 52–55, Q20 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3351"></a>
+<a id="g3464"></a>
 
-### Write down the SQL command into the following two: (a) Find out the all information of em… <sub>G3351</sub>
+### Write down the SQL command into the following two: (a) Find out the all information of em… <sub>G3464</sub>
 
 *Written*
 
@@ -705,9 +705,9 @@ Write down the SQL command into the following two: (a) Find out the all informat
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager (ICT) 26.08.2022, 4(a) — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3352"></a>
+<a id="g3465"></a>
 
-### Write down the SQL command into the following two: (b) Update employee name 'Mr. X' in Em… <sub>G3352</sub>
+### Write down the SQL command into the following two: (b) Update employee name 'Mr. X' in Em… <sub>G3465</sub>
 
 *Written*
 
@@ -717,9 +717,9 @@ Write down the SQL command into the following two: (b) Update employee name 'Mr.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager (ICT) 26.08.2022, 4(b) — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3544"></a>
+<a id="g3657"></a>
 
-### Given a Patient table in a hospital database below. | Patient ID | Discase Norme | |---|-… <sub>G3544</sub>
+### Given a Patient table in a hospital database below. | Patient ID | Discase Norme | |---|-… <sub>G3657</sub>
 
 *Written*
 
@@ -729,9 +729,9 @@ Given a Patient table in a hospital database below. | Patient ID | Discase Norme
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-ক Q13 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3555"></a>
+<a id="g3668"></a>
 
-### Given the following two tables (Students and Marks) in a database, write down the output … <sub>G3555</sub>
+### Given the following two tables (Students and Marks) in a database, write down the output … <sub>G3668</sub>
 
 *Written*
 
@@ -741,9 +741,9 @@ Given the following two tables (Students and Marks) in a database, write down th
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-খ Q5 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3566"></a>
+<a id="g3679"></a>
 
-### (b) Consider the following database schema employee (employee_name, street, city) works (… <sub>G3566</sub>
+### (b) Consider the following database schema employee (employee_name, street, city) works (… <sub>G3679</sub>
 
 *Written*
 
@@ -753,9 +753,9 @@ Given the following two tables (Students and Marks) in a database, write down th
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q2(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3602"></a>
+<a id="g3715"></a>
 
-### Consider the following relation: Employee(EmpID, Name, Department, Salary) Write an SQL q… <sub>G3602</sub>
+### Consider the following relation: Employee(EmpID, Name, Department, Salary) Write an SQL q… <sub>G3715</sub>
 
 *Written*
 
@@ -765,9 +765,9 @@ Consider the following relation: Employee(EmpID, Name, Department, Salary) Write
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Senior Officer (IT), Grade-9 (Job ID-25104) — 25/07/2026 — Exam taker: not printed — Time 2 hours, Marks 200 (IT: 15×10 = 150) — pages 1–12, Q9 — [duranta/1785328629-so-it-job-id-25104/1785328629.md](../duranta/1785328629-so-it-job-id-25104/1785328629.md)
 
-<a id="g3633"></a>
+<a id="g3746"></a>
 
-### Which SQL query is used to sort student records in descending order (largest to smallest)? <sub>G3633</sub>
+### Which SQL query is used to sort student records in descending order (largest to smallest)? <sub>G3746</sub>
 
 *MCQ*
 
@@ -777,9 +777,9 @@ Which SQL query is used to sort student records in descending order (largest to 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, MCQ 22 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3954"></a>
+<a id="g4067"></a>
 
-### DBMS Query: Number of topic select count(*) group by name 4 more queries <sub>G3954</sub>
+### DBMS Query: Number of topic select count(*) group by name 4 more queries <sub>G4067</sub>
 
 *Written*
 
@@ -789,9 +789,9 @@ DBMS Query: Number of topic select count(*) group by name 4 more queries
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q7 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g4019"></a>
+<a id="g4132"></a>
 
-### Which one below is an example of a NoSQL database? (ক) MySQL (খ) MongoDB (গ) Oracle (ঘ) P… <sub>G4019</sub>
+### Which one below is an example of a NoSQL database? (ক) MySQL (খ) MongoDB (গ) Oracle (ঘ) P… <sub>G4132</sub>
 
 *MCQ*
 
@@ -801,9 +801,9 @@ Which one below is an example of a NoSQL database? (ক) MySQL (খ) MongoDB (�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q146 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4332"></a>
+<a id="g4625"></a>
 
-### Which clause is executed first in an SQL query? (a) WHERE (b) SELECT (c) FROM (d) ORDER BY <sub>G4332</sub>
+### Which clause is executed first in an SQL query? (a) WHERE (b) SELECT (c) FROM (d) ORDER BY <sub>G4625</sub>
 
 *MCQ*
 
@@ -813,9 +813,9 @@ Which clause is executed first in an SQL query? (a) WHERE (b) SELECT (c) FROM (d
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ15 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4334"></a>
+<a id="g4627"></a>
 
-### Which of the following is a DML (Data Manipulation Language) command? (a) CREATE (b) DELE… <sub>G4334</sub>
+### Which of the following is a DML (Data Manipulation Language) command? (a) CREATE (b) DELE… <sub>G4627</sub>
 
 *MCQ*
 
@@ -825,9 +825,9 @@ Which of the following is a DML (Data Manipulation Language) command? (a) CREATE
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ17 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4341"></a>
+<a id="g4634"></a>
 
-### Which of the following is a command of Data Definition Language (DDL)? (a) SELECT (b) INS… <sub>G4341</sub>
+### Which of the following is a command of Data Definition Language (DDL)? (a) SELECT (b) INS… <sub>G4634</sub>
 
 *MCQ*
 
@@ -837,9 +837,9 @@ Which of the following is a command of Data Definition Language (DDL)? (a) SELEC
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ24 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4382"></a>
+<a id="g4675"></a>
 
-### SQL Querry- top 5 hospitals name from accident treatment [site's expanded wording, assume… <sub>G4382</sub>
+### SQL Querry- top 5 hospitals name from accident treatment [site's expanded wording, assume… <sub>G4675</sub>
 
 *Written*
 
@@ -849,9 +849,9 @@ SQL Querry- top 5 hospitals name from accident treatment [site's expanded wordin
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Combined Bank (BSCS) — Assistant Database Administrator (based year 2023) — 08-May-2026 — Exam taker: not stated — marks not printed — candidates' recollection (14 items), Q4 (d) — [bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md](../bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md)
 
-<a id="g4383"></a>
+<a id="g4676"></a>
 
-### SQL Querry error - salary [site's expanded wording, assumed: A developer writes the SQL s… <sub>G4383</sub>
+### SQL Querry error - salary [site's expanded wording, assumed: A developer writes the SQL s… <sub>G4676</sub>
 
 *Written*
 
@@ -861,9 +861,9 @@ SQL Querry error - salary [site's expanded wording, assumed: A developer writes 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Combined Bank (BSCS) — Assistant Database Administrator (based year 2023) — 08-May-2026 — Exam taker: not stated — marks not printed — candidates' recollection (14 items), Q5 (e) — [bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md](../bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md)
 
-<a id="g4386"></a>
+<a id="g4679"></a>
 
-### Why not use nosql(mongoDB) why use RDBMS in Banking? [site's expanded wording, assumed: A… <sub>G4386</sub>
+### Why not use nosql(mongoDB) why use RDBMS in Banking? [site's expanded wording, assumed: A… <sub>G4679</sub>
 
 *Written*
 
@@ -873,9 +873,9 @@ Why not use nosql(mongoDB) why use RDBMS in Banking? [site's expanded wording, a
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Combined Bank (BSCS) — Assistant Database Administrator (based year 2023) — 08-May-2026 — Exam taker: not stated — marks not printed — candidates' recollection (14 items), Q8 (h) — [bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md](../bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md)
 
-<a id="g4387"></a>
+<a id="g4680"></a>
 
-### R1 R2 lossless Join- decomposition database [site's expanded wording, assumed: A relation… <sub>G4387</sub>
+### R1 R2 lossless Join- decomposition database [site's expanded wording, assumed: A relation… <sub>G4680</sub>
 
 *Written*
 
@@ -885,9 +885,9 @@ R1 R2 lossless Join- decomposition database [site's expanded wording, assumed: A
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Combined Bank (BSCS) — Assistant Database Administrator (based year 2023) — 08-May-2026 — Exam taker: not stated — marks not printed — candidates' recollection (14 items), Q9 (i) — [bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md](../bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md)
 
-<a id="g4403"></a>
+<a id="g4696"></a>
 
-### Explain the distinct filtering behaviors of a WHERE clause versus a HAVING clause withing… <sub>G4403</sub>
+### Explain the distinct filtering behaviors of a WHERE clause versus a HAVING clause withing… <sub>G4696</sub>
 
 *Written*
 
@@ -897,9 +897,9 @@ Explain the distinct filtering behaviors of a WHERE clause versus a HAVING claus
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Rajshahi Krishi Unnayan Bank (RAKUB) — Assistant Network System Engineer (Job ID 10230) — 05-Jun-2026 — Exam taker: not stated — marks not printed — recollection (13 items), Q9 — [bank-written-web/2026-rakub-anse-itjobqns/rakub-anse-2026.md](../bank-written-web/2026-rakub-anse-itjobqns/rakub-anse-2026.md)
 
-<a id="g4627"></a>
+<a id="g4920"></a>
 
-### Employees (Employee_id, Name, Salary, Manager_id, Department_id) Department (Department_i… <sub>G4627</sub>
+### Employees (Employee_id, Name, Salary, Manager_id, Department_id) Department (Department_i… <sub>G4920</sub>
 
 *Written*
 
@@ -909,9 +909,9 @@ Employees (Employee_id, Name, Salary, Manager_id, Department_id) Department (Dep
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BSCPLC Assistant Manager (Engineering) 13.12.2024, Q1 — [telecom-web/2024-bscplc-am-engineering-scribd-973052916/bscplc-am-engineering-2024.md](../telecom-web/2024-bscplc-am-engineering-scribd-973052916/bscplc-am-engineering-2024.md)
 
-<a id="g4873"></a>
+<a id="g5166"></a>
 
-### Update a price where current price is less than 1000 <sub>G4873</sub>
+### Update a price where current price is less than 1000 <sub>G5166</sub>
 
 *Written*
 
@@ -921,9 +921,9 @@ Update a price where current price is less than 1000
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Programmer, 22/02/2025 (suggestion), W4 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g4897"></a>
+<a id="g5190"></a>
 
-### SQL Query: Table was given. (a) Write an SQL query to show the top 10 highest marks from … <sub>G4897</sub>
+### SQL Query: Table was given. (a) Write an SQL query to show the top 10 highest marks from … <sub>G5190</sub>
 
 *Written*
 
@@ -933,9 +933,9 @@ SQL Query: Table was given. (a) Write an SQL query to show the top 10 highest ma
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Jamuna Oil Company Limited — Junior Officer (IT & MIS), 23/05/2025 (BUET) (suggestion), Q5 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g4916"></a>
+<a id="g5209"></a>
 
-### Write a SQL query to find full name and region when employee is same region to managers. <sub>G4916</sub>
+### Write a SQL query to find full name and region when employee is same region to managers. <sub>G5209</sub>
 
 *Written*
 
@@ -945,9 +945,9 @@ Write a SQL query to find full name and region when employee is same region to m
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Dhaka Power Distribution Company Limited — AM ICT (Exam Controller), 27/06/2025 (BUET) (suggestion), Q8 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g4933"></a>
+<a id="g5226"></a>
 
-### Employees (emp_id, first_name, last_name, manager_id, salary, department_id) Department (… <sub>G4933</sub>
+### Employees (emp_id, first_name, last_name, manager_id, salary, department_id) Department (… <sub>G5226</sub>
 
 *Written*
 
@@ -1218,9 +1218,9 @@ Write an SQL query to insert a tuple in the table: Employee (ID, Name, Designati
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q32 — [bit to exabyte/13_bte-p013-sql-q22-32.md](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.md) · [image](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q44 — [bit to exabyte/33_bte-g2-p19-database-sql-q36-44.md](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.md) · [image](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.jpg)
 
-<a id="g1805"></a>
+<a id="g1804"></a>
 
-### Database Query: Given two table COURSE (Course_ID, Course_name, Chief_ID) and INSTRUCTOR … <sub>G1805</sub>
+### Database Query: Given two table COURSE (Course_ID, Course_name, Chief_ID) and INSTRUCTOR … <sub>G1804</sub>
 
 *Written*
 
@@ -1232,9 +1232,9 @@ Database Query: Given two table COURSE (Course_ID, Course_name, Chief_ID) and IN
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q36 — [bit to exabyte/32_bte-g2-p18-database-sql-q32-36.md](../bit%20to%20exabyte/32_bte-g2-p18-database-sql-q32-36.md) · [image](../bit%20to%20exabyte/32_bte-g2-p18-database-sql-q32-36.jpg); [bit to exabyte/33_bte-g2-p19-database-sql-q36-44.md](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.md) · [image](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.jpg)
   - Bit to Exabyte Model Test 01, 2 Oct 2026 (coaching mock, not a real paper) — Bit to Exabyte Model Test 01 (2026-10-02), Q8 — [model test/01_bte-model-test-01-2026-10-02.md](../model%20test/01_bte-model-test-01-2026-10-02.md) · [image](../model%20test/01_bte-model-test-01-2026-10-02.jpg)
 
-<a id="g2382"></a>
+<a id="g2495"></a>
 
-### Employee টেবিল থেকে যেসকল Employee এর Salary 2500 থেকে 50000 এর মধ্যে এবং Designation হচ্… <sub>G2382</sub>
+### Employee টেবিল থেকে যেসকল Employee এর Salary 2500 থেকে 50000 এর মধ্যে এবং Designation হচ্… <sub>G2495</sub>
 
 *Written*
 
@@ -1244,9 +1244,9 @@ Employee টেবিল থেকে যেসকল Employee এর Salary 250
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Junior Assistant Manager 17-01-2020, 07 — [duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md](../duranta/1734525457-nwpgcl-jam-ict-2024/1734525457.md)
 
-<a id="g2642"></a>
+<a id="g2755"></a>
 
-### Write an SQL query for 2nd highest score from the table 'T <sub>G2642</sub>
+### Write an SQL query for 2nd highest score from the table 'T <sub>G2755</sub>
 
 *Written*
 
@@ -1256,9 +1256,9 @@ Write an SQL query for 2nd highest score from the table 'T
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 11 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g2916"></a>
+<a id="g3029"></a>
 
-### Main components of SQL are DDL (Data definition Language), DML (Data Manipulation Languag… <sub>G2916</sub>
+### Main components of SQL are DDL (Data definition Language), DML (Data Manipulation Languag… <sub>G3029</sub>
 
 *Written*
 
@@ -1268,9 +1268,9 @@ Main components of SQL are DDL (Data definition Language), DML (Data Manipulatio
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(L) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2940"></a>
+<a id="g3053"></a>
 
-### Answer the following question based on the following table in DBMS- Employee (emp_id, emp… <sub>G2940</sub>
+### Answer the following question based on the following table in DBMS- Employee (emp_id, emp… <sub>G3053</sub>
 
 *Written*
 
@@ -1280,9 +1280,9 @@ Answer the following question based on the following table in DBMS- Employee (em
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Assistant Network Engineer (ANE) – JBL — 12.11.2020 — Exam taker: not printed — IT: 10*16 marks + Non IT: 2*20 marks - 200 marks — pages 4–6, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2948"></a>
+<a id="g3061"></a>
 
-### Write those sql commands. Employees ( ename,street,city),Works (ename, cname, salary, joi… <sub>G2948</sub>
+### Write those sql commands. Employees ( ename,street,city),Works (ename, cname, salary, joi… <sub>G3061</sub>
 
 *Written*
 
@@ -1292,9 +1292,9 @@ Write those sql commands. Employees ( ename,street,city),Works (ename, cname, sa
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 04 — BSCS Combined 3 Bank (Sonali, Janata, Rakub) — Post: SO (Written) — 16-11-2020 — Exam taker: not printed — marks not printed — pages 6–8, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2975"></a>
+<a id="g3088"></a>
 
-### Provide SQL queries for the following statements. Note that a manager is also an employee… <sub>G2975</sub>
+### Provide SQL queries for the following statements. Note that a manager is also an employee… <sub>G3088</sub>
 
 *Written*
 
@@ -1304,9 +1304,9 @@ Provide SQL queries for the following statements. Note that a manager is also an
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 07 — Assistant System Administrator (ASA)-JBL — 01.12.2021 — Exam taker: not printed — IT: 15*10 marks + Non - IT: 4*10 marks + GK: 2*5 marks — pages 12–14, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2990"></a>
+<a id="g3103"></a>
 
-### Comparison and Contrast between and NoSQL Database. <sub>G2990</sub>
+### Comparison and Contrast between and NoSQL Database. <sub>G3103</sub>
 
 *Written*
 
@@ -1316,9 +1316,9 @@ Comparison and Contrast between and NoSQL Database.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2997"></a>
+<a id="g3110"></a>
 
-### Database Query: Four table is given. (table missing). <sub>G2997</sub>
+### Database Query: Four table is given. (table missing). <sub>G3110</sub>
 
 *Written*
 
@@ -1328,9 +1328,9 @@ Database Query: Four table is given. (table missing).
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2998"></a>
+<a id="g3111"></a>
 
-### Write a query for find the publisher name which location is 'Dhaka' and which book is pub… <sub>G2998</sub>
+### Write a query for find the publisher name which location is 'Dhaka' and which book is pub… <sub>G3111</sub>
 
 *Written*
 
@@ -1340,9 +1340,9 @@ Write a query for find the publisher name which location is 'Dhaka' and which bo
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q14 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2999"></a>
+<a id="g3112"></a>
 
-### Write a query to change the type of Book name 'Science' to 'Computer Science' which branc… <sub>G2999</sub>
+### Write a query to change the type of Book name 'Science' to 'Computer Science' which branc… <sub>G3112</sub>
 
 *Written*
 
@@ -1352,9 +1352,9 @@ Write a query to change the type of Book name 'Science' to 'Computer Science' wh
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3348"></a>
+<a id="g3461"></a>
 
-### Database Query to show 2nd highest salary of an employee <sub>G3348</sub>
+### Database Query to show 2nd highest salary of an employee <sub>G3461</sub>
 
 *Written*
 
@@ -1364,9 +1364,9 @@ Database Query to show 2nd highest salary of an employee
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 2020, 7 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3380"></a>
+<a id="g3493"></a>
 
-### Given a table : Employee (dept_id,dept_name,location),Employee(id,dept_id,salary,joining_… <sub>G3380</sub>
+### Given a table : Employee (dept_id,dept_name,location),Employee(id,dept_id,salary,joining_… <sub>G3493</sub>
 
 *Written*
 
@@ -1376,9 +1376,9 @@ Given a table : Employee (dept_id,dept_name,location),Employee(id,dept_id,salary
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 8 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3768"></a>
+<a id="g3881"></a>
 
-### Update sql. Update the price i) rise cost by 10% when cost <500 ; i) less cost by 10% whe… <sub>G3768</sub>
+### Update sql. Update the price i) rise cost by 10% when cost <500 ; i) less cost by 10% whe… <sub>G3881</sub>
 
 *Written*
 
@@ -1388,9 +1388,9 @@ Update sql. Update the price i) rise cost by 10% when cost <500 ; i) less cost b
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q8 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g3814"></a>
+<a id="g3927"></a>
 
-### There are two relations student (id, name, CGPA) and takes(id, course-id, semester) . The… <sub>G3814</sub>
+### There are two relations student (id, name, CGPA) and takes(id, course-id, semester) . The… <sub>G3927</sub>
 
 *MCQ*
 
@@ -1400,9 +1400,9 @@ There are two relations student (id, name, CGPA) and takes(id, course-id, semest
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q2 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3827"></a>
+<a id="g3940"></a>
 
-### The algebra for the SQL "SELECT nid FROM person" is a) σ nid (person) b) π nid (person) c… <sub>G3827</sub>
+### The algebra for the SQL "SELECT nid FROM person" is a) σ nid (person) b) π nid (person) c… <sub>G3940</sub>
 
 *MCQ*
 
@@ -1412,9 +1412,9 @@ The algebra for the SQL "SELECT nid FROM person" is a) σ nid (person) b) π nid
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q15 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4086"></a>
+<a id="g4199"></a>
 
-### কুয়েরি ল্যাংগুয়েজ বলতে কী বুঝেন? SQL এর Clause কয়টি ও কী কী বর্ণনা করুন। <sub>G4086</sub>
+### কুয়েরি ল্যাংগুয়েজ বলতে কী বুঝেন? SQL এর Clause কয়টি ও কী কী বর্ণনা করুন। <sub>G4199</sub>
 
 *Written*
 
@@ -1424,9 +1424,9 @@ The algebra for the SQL "SELECT nid FROM person" is a) σ nid (person) b) π nid
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ২ অথবা (খ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4220"></a>
+<a id="g4333"></a>
 
-### Query to find out even number from given table <sub>G4220</sub>
+### Query to find out even number from given table <sub>G4333</sub>
 
 *Written*
 
@@ -1436,9 +1436,9 @@ Query to find out even number from given table
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q6 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4221"></a>
+<a id="g4334"></a>
 
-### PHOTO/PDF/DOCX Data Type, how to find duplicate data, DDL, DML <sub>G4221</sub>
+### PHOTO/PDF/DOCX Data Type, how to find duplicate data, DDL, DML <sub>G4334</sub>
 
 *Written*
 
@@ -1448,9 +1448,9 @@ PHOTO/PDF/DOCX Data Type, how to find duplicate data, DDL, DML
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q7 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4222"></a>
+<a id="g4335"></a>
 
-### Constraint Definition, Why use constraint, Differ table and column level Constraint <sub>G4222</sub>
+### Constraint Definition, Why use constraint, Differ table and column level Constraint <sub>G4335</sub>
 
 *Written*
 
@@ -1460,9 +1460,9 @@ Constraint Definition, Why use constraint, Differ table and column level Constra
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q8 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4225"></a>
+<a id="g4338"></a>
 
-### How to copy from Parent table to Child Table with 1 column dividing into 3 different colu… <sub>G4225</sub>
+### How to copy from Parent table to Child Table with 1 column dividing into 3 different colu… <sub>G4338</sub>
 
 *Written*
 
@@ -1473,9 +1473,9 @@ How to copy from Parent table to Child Table with 1 column dividing into 3 diffe
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q11 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 - **Correction:** the printed query repeats the alias `Name1` (the second column should be `Name2`), and grouping by `rn % 2` with `FLOOR(rn/2)` only fills three columns when the table has exactly six rows; the general form groups by `rn / 3` and picks `CASE WHEN rn % 3 = 0/1/2`.
 
-<a id="g4226"></a>
+<a id="g4339"></a>
 
-### 5 Queries from HR schema (items printed on the sheet, not stated to be the exam's own): 1… <sub>G4226</sub>
+### 5 Queries from HR schema (items printed on the sheet, not stated to be the exam's own): 1… <sub>G4339</sub>
 
 *Written*
 
@@ -1485,9 +1485,9 @@ How to copy from Parent table to Child Table with 1 column dividing into 3 diffe
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q12 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4227"></a>
+<a id="g4340"></a>
 
-### Which one is not unary operation in relational algebra <sub>G4227</sub>
+### Which one is not unary operation in relational algebra <sub>G4340</sub>
 
 *MCQ*
 
@@ -1497,9 +1497,9 @@ Which one is not unary operation in relational algebra
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ41 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4272"></a>
+<a id="g4385"></a>
 
-### 7. Write SQL command from the following tables. Employee (ename, street, city) Works (ena… <sub>G4272</sub>
+### 7. Write SQL command from the following tables. Employee (ename, street, city) Works (ena… <sub>G4385</sub>
 
 *Written*
 
@@ -1509,9 +1509,203 @@ Which one is not unary operation in relational algebra
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 6 Banks & Financial Institutions (BSCS) — Assistant Programmer — 2021 (date conflicting: 18/03/2021 on the MCQ page; 15-01-2022 in the site's analysis page) — Exam taker: not stated — recollection (8 items), Q6 — [bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md](../bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md)
 
-<a id="g4440"></a>
+<a id="g4399"></a>
 
-### 3 queries from country(name, continent, area, population) to find a city with maximum pop… <sub>G4440</sub>
+### A database can be hacked by (a) Exploiting weak passwords (b) SQL injection (c) Deliverin… <sub>G4399</sub>
+
+*MCQ*
+
+A database can be hacked by (a) Exploiting weak passwords (b) SQL injection (c) Delivering a trojan (d) All of the above
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ6 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4400"></a>
+
+### Which of the following is not a DDL command? (a) ALTER (b) DROP (c) CREATE (d) UPDATE <sub>G4400</sub>
+
+*MCQ*
+
+Which of the following is not a DDL command? (a) ALTER (b) DROP (c) CREATE (d) UPDATE
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ8 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4401"></a>
+
+### Business Intelligence (BI) reporting analyses can be performed using (a) Standard SQL Onl… <sub>G4401</sub>
+
+*MCQ*
+
+Business Intelligence (BI) reporting analyses can be performed using (a) Standard SQL Only (b) Extensions to SQL only (c) OLAP only (d) Both standard SQL and extensions to SQL
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ10 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key a (standard SQL only); BI reporting uses standard SQL and also SQL extensions (OLAP functions such as ROLLUP and CUBE, windowing). The textbook answer (Kroenke, Database Processing) is (d) Both standard SQL and extensions to SQL.
+
+<a id="g4402"></a>
+
+### The SQL statement "Select round (15.326, -1) from table_1" (a) Has syntax error (b) Will … <sub>G4402</sub>
+
+*MCQ*
+
+The SQL statement "Select round (15.326, -1) from table_1" (a) Has syntax error (b) Will return garbage (c) Will return 326 (d) Will return 20
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ12 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4421"></a>
+
+### When three or more AND and OR conditions are combined, it is easier to use the SQL keywor… <sub>G4421</sub>
+
+*MCQ*
+
+When three or more AND and OR conditions are combined, it is easier to use the SQL keyword(s) (a) NOT IN only (b) LIKE only (c) IN only (d) Both IN and NOT IN
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ44 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4422"></a>
+
+### How to select all data from student table starting the name from letter 'r'? (a) Select *… <sub>G4422</sub>
+
+*MCQ*
+
+How to select all data from student table starting the name from letter 'r'? (a) Select * from student where name like 'r%'; (b) Select * from student where name like '%r%'; (c) Select * from student where name like '%r'; (d) Select * from student where name like '_r%';
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ45 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4443"></a>
+
+### How can you generate debugging output from PL/SQL? (a) DBMS_SQL (b) DBMS_OUTPUT (c) DBMS_… <sub>G4443</sub>
+
+*MCQ*
+
+How can you generate debugging output from PL/SQL? (a) DBMS_SQL (b) DBMS_OUTPUT (c) DBMS_PIPE (d) DBMS_LOB
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ81 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4448"></a>
+
+### Which of the following are the five built in functions provided by SQL? (a) COUNT, SUM, A… <sub>G4448</sub>
+
+*MCQ*
+
+Which of the following are the five built in functions provided by SQL? (a) COUNT, SUM, AVG, MAX, MIN (b) SUM, AVG, MIN, MAX, MULT (c) SUM, AVG, MULT, DIV, MIN (d) SUM, AVG, MIN, MAX, NAME
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ91 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4456"></a>
+
+### What does this query do? Select employee_number, name from employees as parent where sala… <sub>G4456</sub>
+
+*MCQ*
+
+What does this query do? Select employee_number, name from employees as parent where salary > (select avg(salary) from employees where department = parent.department) (a) Finds the name and ID of employees who get more than average salaries. (b) Finds the employee's name and ID of those who get more than average salaries of all the departments (c) Finds the name and ID of employees who get more than average salaries of his own department. (d) None
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ99 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4479"></a>
+
+### Which one of the following is a No-SQL Database? (a) MongoDB (b) Casper DB (c) ZBase (d) … <sub>G4479</sub>
+
+*MCQ*
+
+Which one of the following is a No-SQL Database? (a) MongoDB (b) Casper DB (c) ZBase (d) All of the above
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ22 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
+
+<a id="g4480"></a>
+
+### What will be the output of the following SQL "Select ROUND (232.420,-2) AS Round Value"? … <sub>G4480</sub>
+
+*MCQ*
+
+What will be the output of the following SQL "Select ROUND (232.420,-2) AS Round Value"? (a) 240 (b) 200 (c) 233 (d) Syntax error
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ23 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
+
+<a id="g4524"></a>
+
+### Which of the following command is a type of Data Definition language command? (a) Create … <sub>G4524</sub>
+
+*MCQ*
+
+Which of the following command is a type of Data Definition language command? (a) Create (b) Update (c) Delete (d) Select
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ8 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4537"></a>
+
+### Which one is the correct SQL statement to find the second highest mark from STUDENT datab… <sub>G4537</sub>
+
+*MCQ*
+
+Which one is the correct SQL statement to find the second highest mark from STUDENT database that contains the marks of all students? (a) Select MAX(marks) from student where marks not in (select Max(marks) from student) (b) Select max(marks) from student where marks in (select max(marks) from student) (c) Select max(marks) from student (d) Select max(marks) from student where marks not in (select Min(marks) from student)
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ21 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4553"></a>
+
+### How can we prevent SQL injection attack? (a) Show the database error to the users (b) Use… <sub>G4553</sub>
+
+*MCQ*
+
+How can we prevent SQL injection attack? (a) Show the database error to the users (b) Use input validation (c) Use the user input directly (d) Do not remove potential malicious code
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ37 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4557"></a>
+
+### Which of the following is not a function of a database administrator? (a) Database design… <sub>G4557</sub>
+
+*MCQ*
+
+Which of the following is not a function of a database administrator? (a) Database design (b) Backing up the database (c) Query Processing (d) User Coordination
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ41 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4569"></a>
+
+### Which type of JOIN operation in SQL command is used to return rows that do not have match… <sub>G4569</sub>
+
+*MCQ*
+
+Which type of JOIN operation in SQL command is used to return rows that do not have matching values? (a) Natural Join (b) EQUI Join (c) Outer Join (d) All of the above
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ53 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+- **Correction:** the sheet's answer "NON-EQUI JOIN" is not among the options (and a non-equi join still returns matching rows, by a non-equality condition). Rows without a match in the other table are returned by an outer join, option (c).
+
+<a id="g4733"></a>
+
+### 3 queries from country(name, continent, area, population) to find a city with maximum pop… <sub>G4733</sub>
 
 *Written*
 
@@ -1521,9 +1715,9 @@ Which one is not unary operation in relational algebra
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPDB Assistant Engineer (CSE) 2018, Q10 — [power-sector-web/2018-bpdb-ae-cse-scribd-384369493/bpdb-ae-cse-2018.md](../power-sector-web/2018-bpdb-ae-cse-scribd-384369493/bpdb-ae-cse-2018.md)
 
-<a id="g4447"></a>
+<a id="g4740"></a>
 
-### Database quarry Update related <sub>G4447</sub>
+### Database quarry Update related <sub>G4740</sub>
 
 *Written*
 
@@ -1533,9 +1727,9 @@ Database quarry Update related
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — PGCB SAE (Computer) 24.12.2020, Q3 — [power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md](../power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md)
 
-<a id="g4461"></a>
+<a id="g4754"></a>
 
-### SQL Query for list the dept name whose average salary is greater than the average salary … <sub>G4461</sub>
+### SQL Query for list the dept name whose average salary is greater than the average salary … <sub>G4754</sub>
 
 *Written*
 
@@ -1545,9 +1739,9 @@ SQL Query for list the dept name whose average salary is greater than the averag
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NESCO Assistant Manager (ICT) 31.12.2021, Q3(a) — [power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md](../power-sector-web/2021-nesco-am-ict-carrierbd-askunion/nesco-am-ict-2021.md)
 
-<a id="g4473"></a>
+<a id="g4766"></a>
 
-### Query : given two tables and find out average CGPA. <sub>G4473</sub>
+### Query : given two tables and find out average CGPA. <sub>G4766</sub>
 
 *Written*
 
@@ -1596,9 +1790,9 @@ What is the SQL query for showing only the duplicate lists in student (id, name,
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q31 — [bit to exabyte/13_bte-p013-sql-q22-32.md](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.md) · [image](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q43 — [bit to exabyte/33_bte-g2-p19-database-sql-q36-44.md](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.md) · [image](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.jpg)
 
-<a id="g1861"></a>
+<a id="g1974"></a>
 
-### What is SQL? Write down two example of SQL. <sub>G1861</sub>
+### What is SQL? Write down two example of SQL. <sub>G1974</sub>
 
 *Written*
 
@@ -1609,9 +1803,9 @@ What is SQL? Write down two example of SQL.
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 43. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1964"></a>
+<a id="g2077"></a>
 
-### SQL এ DDL, DML এবং DCL এর মধ্যে পার্থক্য লিখুন। <sub>G1964</sub>
+### SQL এ DDL, DML এবং DCL এর মধ্যে পার্থক্য লিখুন। <sub>G2077</sub>
 
 *Written*
 
@@ -1621,9 +1815,9 @@ SQL এ DDL, DML এবং DCL এর মধ্যে পার্থক্য �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৯ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g1966"></a>
+<a id="g2079"></a>
 
-### নিম্নোক্ত টেবিলগুলো হতে (ক), (খ) এবং (গ) এর উত্তর দিন। Restaurent (rid, rname, rcity, pho… <sub>G1966</sub>
+### নিম্নোক্ত টেবিলগুলো হতে (ক), (খ) এবং (গ) এর উত্তর দিন। Restaurent (rid, rname, rcity, pho… <sub>G2079</sub>
 
 *Written*
 
@@ -1633,9 +1827,9 @@ SQL এ DDL, DML এবং DCL এর মধ্যে পার্থক্য �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৯ অথবা — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2125"></a>
+<a id="g2238"></a>
 
-### SQL ব্যবহার করে Student নামে একটি টেবিল তৈরি করুন। টেবিলে std-id, std-name, std-address এ… <sub>G2125</sub>
+### SQL ব্যবহার করে Student নামে একটি টেবিল তৈরি করুন। টেবিলে std-id, std-name, std-address এ… <sub>G2238</sub>
 
 *Written*
 
@@ -1645,9 +1839,9 @@ SQL ব্যবহার করে Student নামে একটি টেব�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৯ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g3671"></a>
+<a id="g3784"></a>
 
-### relational algebra <sub>G3671</sub>
+### relational algebra <sub>G3784</sub>
 
 *Written*
 
@@ -1657,9 +1851,9 @@ relational algebra
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q21 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3715"></a>
+<a id="g3828"></a>
 
-### A huge SQL DDL code including constraints <sub>G3715</sub>
+### A huge SQL DDL code including constraints <sub>G3828</sub>
 
 *Written*
 
@@ -1669,9 +1863,9 @@ A huge SQL DDL code including constraints
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q10 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-<a id="g4408"></a>
+<a id="g4701"></a>
 
-### Which type of JOIN is used to find not matched data from table? <sub>G4408</sub>
+### Which type of JOIN is used to find not matched data from table? <sub>G4701</sub>
 
 *Written*
 
@@ -1681,9 +1875,9 @@ Which type of JOIN is used to find not matched data from table?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q1(i) — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g4409"></a>
+<a id="g4702"></a>
 
-### In which keyword is used for retrieving data from table without duplicate row data? <sub>G4409</sub>
+### In which keyword is used for retrieving data from table without duplicate row data? <sub>G4702</sub>
 
 *Written*
 
@@ -1693,9 +1887,9 @@ In which keyword is used for retrieving data from table without duplicate row da
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q1(ii) — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g4410"></a>
+<a id="g4703"></a>
 
-### What is the output of the following query – SELECT * FROM myTbale WHERE id>0 ORDER BY id … <sub>G4410</sub>
+### What is the output of the following query – SELECT * FROM myTbale WHERE id>0 ORDER BY id … <sub>G4703</sub>
 
 *Written*
 
@@ -1705,9 +1899,9 @@ What is the output of the following query – SELECT * FROM myTbale WHERE id>0 O
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q1(iii) — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g4564"></a>
+<a id="g4857"></a>
 
-### Salesperson (ID, Name, Age, Salary), Customer (ID, Name, City, Industry, Type) Orders (Nu… <sub>G4564</sub>
+### Salesperson (ID, Name, Age, Salary), Customer (ID, Name, City, Industry, Type) Orders (Nu… <sub>G4857</sub>
 
 *Written*
 
@@ -1717,9 +1911,9 @@ Salesperson (ID, Name, Age, Salary), Customer (ID, Name, City, Industry, Type) O
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Engineer (CSE) 2017, Q3 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4570"></a>
+<a id="g4863"></a>
 
-### What is query to display even rows from the employees table? <sub>G4570</sub>
+### What is query to display even rows from the employees table? <sub>G4863</sub>
 
 *Written*
 
@@ -1729,9 +1923,9 @@ What is query to display even rows from the employees table?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Engineer (CSE) 2017, Q9 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4571"></a>
+<a id="g4864"></a>
 
-### How to get distinct records from the employees table without using distinct keyword. <sub>G4571</sub>
+### How to get distinct records from the employees table without using distinct keyword. <sub>G4864</sub>
 
 *Written*
 
@@ -1741,9 +1935,9 @@ How to get distinct records from the employees table without using distinct keyw
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Engineer (CSE) 2017, Q10 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4572"></a>
+<a id="g4865"></a>
 
-### Write an SQL query to print the name of employees having the highest salary in each depar… <sub>G4572</sub>
+### Write an SQL query to print the name of employees having the highest salary in each depar… <sub>G4865</sub>
 
 *Written*
 
@@ -1753,9 +1947,9 @@ Write an SQL query to print the name of employees having the highest salary in e
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Engineer (CSE) 2017, Q11 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4578"></a>
+<a id="g4871"></a>
 
-### Given a database table with some column a) find out the min salary from table b) find out… <sub>G4578</sub>
+### Given a database table with some column a) find out the min salary from table b) find out… <sub>G4871</sub>
 
 *Written*
 
@@ -1765,9 +1959,9 @@ Given a database table with some column a) find out the min salary from table b)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BTCL Assistant Engineer (CSE) 2017, Q17 — [telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md](../telecom-web/2021-btcl-am-technical-stackit-scribd-534777028/btcl-am-2021-ae-cse-2017.md)
 
-<a id="g4579"></a>
+<a id="g4872"></a>
 
-### Probably a SQL query a) show the branch name with the minimum balance b) select all dept_… <sub>G4579</sub>
+### Probably a SQL query a) show the branch name with the minimum balance b) select all dept_… <sub>G4872</sub>
 
 *Written*
 
@@ -1849,9 +2043,9 @@ What are the different types of JOIN?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p26 Q12 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p26)
 - **Printed answer:** Common JOINs are INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL OUTER JOIN, and CROSS JOIN
 
-<a id="g2495"></a>
+<a id="g2608"></a>
 
-### database query find max value <sub>G2495</sub>
+### database query find max value <sub>G2608</sub>
 
 *Viva*
 
@@ -1862,9 +2056,9 @@ database query find max value
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V-maxquery — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g3336"></a>
+<a id="g3449"></a>
 
-### SQL JOIN কত প্রকার? <sub>G3336</sub>
+### SQL JOIN কত প্রকার? <sub>G3449</sub>
 
 *Viva*
 
@@ -1875,9 +2069,9 @@ SQL JOIN কত প্রকার?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 (viva) — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g4691"></a>
+<a id="g4984"></a>
 
-### 9. Drop 3 Delete এর মধ্যে পার্থক্য কি? <sub>G4691</sub>
+### 9. Drop 3 Delete এর মধ্যে পার্থক্য কি? <sub>G4984</sub>
 
 *Viva*
 
@@ -1888,9 +2082,9 @@ SQL JOIN কত প্রকার?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J5 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A5-V8 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4692"></a>
+<a id="g4985"></a>
 
-### 10. Database Table এ Drop আর Delete কোথায় ব্যবহার করা হয়? <sub>G4692</sub>
+### 10. Database Table এ Drop আর Delete কোথায় ব্যবহার করা হয়? <sub>G4985</sub>
 
 *Viva*
 
@@ -1954,9 +2148,9 @@ Given two tables are employee (id, name, salary, dept_id) and department (dept_i
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q30 — [bit to exabyte/13_bte-p013-sql-q22-32.md](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.md) · [image](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q42 — [bit to exabyte/33_bte-g2-p19-database-sql-q36-44.md](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.md) · [image](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.jpg)
 
-<a id="g1646"></a>
+<a id="g1645"></a>
 
-### Query Language কী ও কত প্রকার? SQL-এর বিভিন্ন Clause (GROUP BY, HAVING, ORDER BY) আলোচনা … <sub>G1646</sub>
+### Query Language কী ও কত প্রকার? SQL-এর বিভিন্ন Clause (GROUP BY, HAVING, ORDER BY) আলোচনা … <sub>G1645</sub>
 
 *Written*
 
@@ -1966,9 +2160,9 @@ Query Language কী ও কত প্রকার? SQL-এর বিভিন�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — SQL কুয়েরি ও প্র্যাকটিস সমস্যা, Q119 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1649"></a>
+<a id="g1648"></a>
 
-### SQL স্টেটমেন্ট `DELETE`, `DROP` এবং `TRUNCATE` এর মধ্যকার মূল পার্থক্যগুলো লিখুন। <sub>G1649</sub>
+### SQL স্টেটমেন্ট `DELETE`, `DROP` এবং `TRUNCATE` এর মধ্যকার মূল পার্থক্যগুলো লিখুন। <sub>G1648</sub>
 
 *Written*
 
@@ -1978,9 +2172,9 @@ SQL স্টেটমেন্ট `DELETE`, `DROP` এবং `TRUNCATE` এর 
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — DBMS — SQL (continued), Q122 — [18th NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md) · [image](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.jpg)
 
-<a id="g1651"></a>
+<a id="g1650"></a>
 
-### SQL Join কী? বিভিন্ন প্রকার Join (Inner, Left, Right, Full Outer Join) উদাহরণসহ লিখুন। <sub>G1651</sub>
+### SQL Join কী? বিভিন্ন প্রকার Join (Inner, Left, Right, Full Outer Join) উদাহরণসহ লিখুন। <sub>G1650</sub>
 
 *Written*
 
@@ -1990,9 +2184,9 @@ SQL Join কী? বিভিন্ন প্রকার Join (Inner, Left, Rig
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — DBMS — SQL (continued), Q124 — [18th NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md) · [image](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.jpg)
 
-<a id="g1652"></a>
+<a id="g1651"></a>
 
-### SQL ব্যবহার করে `Student(std_id, std_name, std_address, GPA)` টেবিল তৈরি করুন এবং যে সকল … <sub>G1652</sub>
+### SQL ব্যবহার করে `Student(std_id, std_name, std_address, GPA)` টেবিল তৈরি করুন এবং যে সকল … <sub>G1651</sub>
 
 *Written*
 
@@ -2002,9 +2196,9 @@ SQL ব্যবহার করে `Student(std_id, std_name, std_address, GPA)
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — DBMS — SQL (continued), Q125 — [18th NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md) · [image](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.jpg)
 
-<a id="g1653"></a>
+<a id="g1652"></a>
 
-### প্রদত্ত টেবিল: `Employee(Emp_Id, Emp_Name, Salary, City, Dept)` এবং `Job(Emp_ID, Post, Br… <sub>G1653</sub>
+### প্রদত্ত টেবিল: `Employee(Emp_Id, Emp_Name, Salary, City, Dept)` এবং `Job(Emp_ID, Post, Br… <sub>G1652</sub>
 
 *Written*
 
@@ -2014,9 +2208,9 @@ SQL ব্যবহার করে `Student(std_id, std_name, std_address, GPA)
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — DBMS — SQL (continued), Q126 — [18th NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md) · [image](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.jpg)
 
-<a id="g1654"></a>
+<a id="g1653"></a>
 
-### রেস্টুরেন্ট ডেটাবেজ কুয়েরি: `Restaurant(rid, rname, rcity)`, `Dishes(did, dname, dtype)`… <sub>G1654</sub>
+### রেস্টুরেন্ট ডেটাবেজ কুয়েরি: `Restaurant(rid, rname, rcity)`, `Dishes(did, dname, dtype)`… <sub>G1653</sub>
 
 *Written*
 
@@ -2026,9 +2220,9 @@ SQL ব্যবহার করে `Student(std_id, std_name, std_address, GPA)
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — DBMS — SQL (continued), Q127 — [18th NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md) · [image](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.jpg)
 
-<a id="g1655"></a>
+<a id="g1654"></a>
 
-### টেবিল: `course(course_id, course_name, chief_id)` ও `instructor(instructor_id, course_id,… <sub>G1655</sub>
+### টেবিল: `course(course_id, course_name, chief_id)` ও `instructor(instructor_id, course_id,… <sub>G1654</sub>
 
 *Written*
 
@@ -2038,9 +2232,9 @@ SQL ব্যবহার করে `Student(std_id, std_name, std_address, GPA)
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — DBMS — SQL (continued), Q128 — [18th NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md) · [image](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.jpg)
 
-<a id="g1762"></a>
+<a id="g1761"></a>
 
-### SQL query to find avg salary of all is greater than the salary of each department. Given … <sub>G1762</sub>
+### SQL query to find avg salary of all is greater than the salary of each department. Given … <sub>G1761</sub>
 
 *Written*
 
@@ -2050,9 +2244,9 @@ SQL query to find avg salary of all is greater than the salary of each departmen
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q14 — [suggestion based on previous yr/02_petrobangla-ane-q11-14-c-output-blanks-sql.md](../suggestion%20based%20on%20previous%20yr/02_petrobangla-ane-q11-14-c-output-blanks-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/02_petrobangla-ane-q11-14-c-output-blanks-sql.jpg)
 
-<a id="g1771"></a>
+<a id="g1770"></a>
 
-### Answer the following question based on the following table in DBMS. Actor (actor_id, name… <sub>G1771</sub>
+### Answer the following question based on the following table in DBMS. Actor (actor_id, name… <sub>G1770</sub>
 
 *Written*
 
@@ -2062,9 +2256,9 @@ Answer the following question based on the following table in DBMS. Actor (actor
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q33 — [suggestion based on previous yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.md](../suggestion%20based%20on%20previous%20yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.md) · [image](../suggestion%20based%20on%20previous%20yr/05_petrobangla-ane-q30-34-vlan-satellite-sql-partitions.jpg)
 
-<a id="g1776"></a>
+<a id="g1775"></a>
 
-### Write SQL command from the following tables - i. Employee (ename, street, city) ii. Works… <sub>G1776</sub>
+### Write SQL command from the following tables - i. Employee (ename, street, city) ii. Works… <sub>G1775</sub>
 
 *Written*
 
@@ -2074,9 +2268,9 @@ Write SQL command from the following tables - i. Employee (ename, street, city) 
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q40 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g1777"></a>
+<a id="g1776"></a>
 
-### Find name, street, city who work for First Corporation Bank and earn more than 30000 <sub>G1777</sub>
+### Find name, street, city who work for First Corporation Bank and earn more than 30000 <sub>G1776</sub>
 
 *Written*
 
@@ -2086,9 +2280,9 @@ Find name, street, city who work for First Corporation Bank and earn more than 3
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q41 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g1778"></a>
+<a id="g1777"></a>
 
-### Find name of all employees, who live in the same city and company for which they works. <sub>G1778</sub>
+### Find name of all employees, who live in the same city and company for which they works. <sub>G1777</sub>
 
 *Written*
 
@@ -2098,9 +2292,9 @@ Find name of all employees, who live in the same city and company for which they
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q42 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g1779"></a>
+<a id="g1778"></a>
 
-### Give all employees of First Century Bank 10 percent salary raise <sub>G1779</sub>
+### Give all employees of First Century Bank 10 percent salary raise <sub>G1778</sub>
 
 *Written*
 
@@ -2110,9 +2304,9 @@ Give all employees of First Century Bank 10 percent salary raise
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q43 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g1780"></a>
+<a id="g1779"></a>
 
-### Find the company with payroll less than 100000 <sub>G1780</sub>
+### Find the company with payroll less than 100000 <sub>G1779</sub>
 
 *Written*
 
@@ -2122,9 +2316,9 @@ Find the company with payroll less than 100000
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q44 — [suggestion based on previous yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.md) · [image](../suggestion%20based%20on%20previous%20yr/06_petrobangla-ane-q35-45-delays-dfa-sql-toposort.jpg)
 
-<a id="g1785"></a>
+<a id="g1784"></a>
 
-### Below tables are given - i. Employee (employee_id, name, salary, department) ii. Leave (e… <sub>G1785</sub>
+### Below tables are given - i. Employee (employee_id, name, salary, department) ii. Leave (e… <sub>G1784</sub>
 
 *Written*
 
@@ -2134,9 +2328,9 @@ Below tables are given - i. Employee (employee_id, name, salary, department) ii.
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q50 — [suggestion based on previous yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.jpg)
 
-<a id="g1787"></a>
+<a id="g1786"></a>
 
-### Write query to show all employee's leave count. <sub>G1787</sub>
+### Write query to show all employee's leave count. <sub>G1786</sub>
 
 *Written*
 
@@ -2146,9 +2340,9 @@ Write query to show all employee's leave count.
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q52 — [suggestion based on previous yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.jpg)
 
-<a id="g1788"></a>
+<a id="g1787"></a>
 
-### Write query to show employees who are in 'HR' department and have taken at least 5 leaves. <sub>G1788</sub>
+### Write query to show employees who are in 'HR' department and have taken at least 5 leaves. <sub>G1787</sub>
 
 *Written*
 
@@ -2158,9 +2352,9 @@ Write query to show employees who are in 'HR' department and have taken at least
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q53 — [suggestion based on previous yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.jpg)
 
-<a id="g1795"></a>
+<a id="g1794"></a>
 
-### Given table: i. BRANCH (branch_name, branch_city, assets) ii. CUSTOMER (customer_name, cu… <sub>G1795</sub>
+### Given table: i. BRANCH (branch_name, branch_city, assets) ii. CUSTOMER (customer_name, cu… <sub>G1794</sub>
 
 *Written*
 
@@ -2170,9 +2364,191 @@ Given table: i. BRANCH (branch_name, branch_city, assets) ii. CUSTOMER (customer
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q64 — [suggestion based on previous yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.md](../suggestion%20based%20on%20previous%20yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/08_petrobangla-ane-q57-64-topology-media-osi-crypto-bank-sql.jpg)
 
-<a id="g1938"></a>
+<a id="g1810"></a>
 
-### SQL query to find avg salary of all is greater than the salary of each department .Employ… <sub>G1938</sub>
+### SQL: Book and Author join with country and year filter <sub>G1810</sub>
+
+*Written*
+
+SQL: Book and Author join with country and year filter
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q27 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g1863"></a>
+
+### Read The following table: emp_id, emp_name, salary — 1 Rahim 50000; 2 Karim 70000; 3 Jami… <sub>G1863</sub>
+
+*Written*
+
+Read The following table: emp_id, emp_name, salary — 1 Rahim 50000; 2 Karim 70000; 3 Jamil 90000; 4 Salma 70000. (sub-questions cut off in this PDF; the contents page of the book lists Q03 as "SQL: highest salary, 2nd highest salary, duplicate rows")
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q03 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1878"></a>
+
+### Advanced SQL Problem — Department with Highest Average Salary (tables Employee and Depart… <sub>G1878</sub>
+
+*Written*
+
+Advanced SQL Problem — Department with Highest Average Salary (tables Employee and Department).
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL advanced problem — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1879"></a>
+
+### SQL problem using SELF JOIN. Employee Table (empid, name, managerid, salary): 101 Rahim N… <sub>G1879</sub>
+
+*Written*
+
+SQL problem using SELF JOIN. Employee Table (empid, name, managerid, salary): 101 Rahim NULL 90000; 102 Karim 101 70000; 103 Hasan 101 65000; 104 Jannat 102 50000; 105 Rafi 102 55000; 106 Nila 103 48000. Problem 1: Find the name of every employee along with the name of their manager.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL self join 1 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL self join 2 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL self join 3 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1880"></a>
+
+### SQL (Employee and Department tables): Find the employee who earns the third-highest disti… <sub>G1880</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find the employee who earns the third-highest distinct salary.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 1 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1881"></a>
+
+### SQL (Employee and Department tables): Find all employees whose salary is greater than the… <sub>G1881</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find all employees whose salary is greater than the average salary of their own department.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 2 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1882"></a>
+
+### SQL (Employee and Department tables): Find the department having the highest total salary. <sub>G1882</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find the department having the highest total salary.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 3 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1883"></a>
+
+### SQL (Employee and Department tables): Find the second-highest-paid employee from every de… <sub>G1883</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find the second-highest-paid employee from every department.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 4 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1884"></a>
+
+### SQL (Employee and Department tables): Find employees whose salary is greater than every e… <sub>G1884</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find employees whose salary is greater than every employee in the HR department.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 5 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1885"></a>
+
+### SQL (Employee and Department tables): Find employees whose salary is greater than at leas… <sub>G1885</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find employees whose salary is greater than at least one employee in the Finance department.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 6 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1886"></a>
+
+### SQL (Employee and Department tables): Find departments whose average salary is greater th… <sub>G1886</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find departments whose average salary is greater than the overall company average salary.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 7 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1887"></a>
+
+### SQL (Employee and Department tables): Find the employee with the maximum salary without u… <sub>G1887</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find the employee with the maximum salary without using MAX().
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 8 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1888"></a>
+
+### SQL (Employee and Department tables): Find duplicate employee names. <sub>G1888</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find duplicate employee names.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 9 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1889"></a>
+
+### SQL (Employee and Department tables): Find the top 3 salaries in each department, includi… <sub>G1889</sub>
+
+*Written*
+
+SQL (Employee and Department tables): Find the top 3 salaries in each department, including ties.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Descriptive Chapter 01: SQL (end of chapter, book pages 439–448), SQL practice 10 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g1898"></a>
+
+### Consider the following two tables: Department ( dept_id, dept_name); Employee ( emp_id, n… <sub>G1898</sub>
+
+*Written*
+
+Consider the following two tables: Department ( dept_id, dept_name); Employee ( emp_id, name, dept_id, salary, joining_date); a) Input some tuples into the tables, … (cut off in this PDF; the contents page of the book lists: SQL on Department and Employee: inserts, join, department average, above-average employees)
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part C — Aptitude Test Questions (book pages 515–519), Aptitude Q2 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g2051"></a>
+
+### SQL query to find avg salary of all is greater than the salary of each department .Employ… <sub>G2051</sub>
 
 *Written*
 
@@ -2185,9 +2561,9 @@ SQL query to find avg salary of all is greater than the salary of each departmen
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -05 (suggestion), Set-05 Q10 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 - **Correction:** the printed query is invalid SQL — an aggregate cannot appear in WHERE. A per-department condition on an average goes in HAVING, e.g. `SELECT dept_name, AVG(salary) FROM Employee GROUP BY dept_name HAVING AVG(salary) > (SELECT AVG(salary) FROM Employee);`.
 
-<a id="g3329"></a>
+<a id="g3442"></a>
 
-### WHERE এবং HAVING এর পার্থক্য। <sub>G3329</sub>
+### WHERE এবং HAVING এর পার্থক্য। <sub>G3442</sub>
 
 *Written*
 
@@ -2197,9 +2573,9 @@ WHERE এবং HAVING এর পার্থক্য।
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — NPCBL Engineer (Quality), SQA related Job Exam Suggestions (Engineer (Quality) – Nuclear Power Plant Company Bangladesh Ltd), CSE Career Master Guide, no exam/date/marks, pp. 19-21 — [duranta/1780933203-npcbl-suggestions/1780933203.md](../duranta/1780933203-npcbl-suggestions/1780933203.md)
 
-<a id="g4194"></a>
+<a id="g4307"></a>
 
-### Suppose you've two table (Employee, Department) in a Database and Employee table three ce… <sub>G4194</sub>
+### Suppose you've two table (Employee, Department) in a Database and Employee table three ce… <sub>G4307</sub>
 
 *Written*
 
@@ -2212,9 +2588,9 @@ Suppose you've two table (Employee, Department) in a Database and Employee table
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q41 — [bit to exabyte/33_bte-g2-p19-database-sql-q36-44.md](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.md) · [image](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.jpg)
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q11 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g4366"></a>
+<a id="g4659"></a>
 
-### Write an SQL query to retrieve the department name and the average salary from two tables… <sub>G4366</sub>
+### Write an SQL query to retrieve the department name and the average salary from two tables… <sub>G4659</sub>
 
 *Written*
 
@@ -2225,9 +2601,9 @@ Write an SQL query to retrieve the department name and the average salary from t
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Islami Bank Bangladesh PLC (private) — Quality Assurance (Engineer) — 2025 (date not printed) — Exam taker: not stated — recollection (8 items, 1 not collected), Q2 — [bank-written-web/2025-ibbl-qa-engineer-itjobqns/ibbl-qa-engineer-2025.md](../bank-written-web/2025-ibbl-qa-engineer-itjobqns/ibbl-qa-engineer-2025.md)
 
-<a id="g4367"></a>
+<a id="g4660"></a>
 
-### What are the limitations of dbms and how to related newsql with sql and no sql. <sub>G4367</sub>
+### What are the limitations of dbms and how to related newsql with sql and no sql. <sub>G4660</sub>
 
 *Written*
 
@@ -2238,9 +2614,9 @@ What are the limitations of dbms and how to related newsql with sql and no sql.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Islami Bank Bangladesh PLC (private) — Quality Assurance (Engineer) — 2025 (date not printed) — Exam taker: not stated — recollection (8 items, 1 not collected), Q4 — [bank-written-web/2025-ibbl-qa-engineer-itjobqns/ibbl-qa-engineer-2025.md](../bank-written-web/2025-ibbl-qa-engineer-itjobqns/ibbl-qa-engineer-2025.md)
 
-<a id="g4814"></a>
+<a id="g5107"></a>
 
-### SQL Task: Given a table accounts(account_id INT, customer_id INT, balance DECIMAL, status… <sub>G4814</sub>
+### SQL Task: Given a table accounts(account_id INT, customer_id INT, balance DECIMAL, status… <sub>G5107</sub>
 
 *Written*
 
@@ -2250,9 +2626,9 @@ SQL Task: Given a table accounts(account_id INT, customer_id INT, balance DECIMA
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), C1 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g4852"></a>
+<a id="g5145"></a>
 
-### Which SQL command removes entire table data but keeps structure? A) DROP B) DELETE C) TRU… <sub>G4852</sub>
+### Which SQL command removes entire table data but keeps structure? A) DROP B) DELETE C) TRU… <sub>G5145</sub>
 
 *MCQ*
 
@@ -2262,9 +2638,9 @@ Which SQL command removes entire table data but keeps structure? A) DROP B) DELE
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank Senior Officer (IT) question pattern: sample questions (suggestion), IT-2 — [model-test-web/daudbd-uttara-bank-so-it-pattern/uttara-so-it-pattern.md](../model-test-web/daudbd-uttara-bank-so-it-pattern/uttara-so-it-pattern.md)
 
-<a id="g4890"></a>
+<a id="g5183"></a>
 
-### "There were several tables, and I had to write a query to get the output using JOIN, GROU… <sub>G4890</sub>
+### "There were several tables, and I had to write a query to get the output using JOIN, GROU… <sub>G5183</sub>
 
 *Written*
 
@@ -2277,9 +2653,9 @@ Which SQL command removes entire table data but keeps structure? A) DROP B) DELE
 
 ## Keys
 
-<a id="g4625"></a>
+<a id="g4918"></a>
 
-### Explain Primary key, Candidate key, and Foreign key. <sub>G4625</sub>
+### Explain Primary key, Candidate key, and Foreign key. <sub>G4918</sub>
 
 *Written*
 
@@ -2349,9 +2725,9 @@ Consider the two schema employees (id, first_name, last_name, designation, joini
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q7 — [bit to exabyte/10_bte-p010-sql-q06-13.md](../bit%20to%20exabyte/10_bte-p010-sql-q06-13.md) · [image](../bit%20to%20exabyte/10_bte-p010-sql-q06-13.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q20 — [bit to exabyte/29_bte-g2-p15-database-sql-q15-20.md](../bit%20to%20exabyte/29_bte-g2-p15-database-sql-q15-20.md) · [image](../bit%20to%20exabyte/29_bte-g2-p15-database-sql-q15-20.jpg); [bit to exabyte/30_bte-g2-p16-database-sql-q20-25.md](../bit%20to%20exabyte/30_bte-g2-p16-database-sql-q20-25.md) · [image](../bit%20to%20exabyte/30_bte-g2-p16-database-sql-q20-25.jpg)
 
-<a id="g1813"></a>
+<a id="g1926"></a>
 
-### Differentiate between primary key and foreign key. What is trigger and how it works? <sub>G1813</sub>
+### Differentiate between primary key and foreign key. What is trigger and how it works? <sub>G1926</sub>
 
 *Written*
 
@@ -2361,9 +2737,9 @@ Differentiate between primary key and foreign key. What is trigger and how it wo
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q10 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g2180"></a>
+<a id="g2293"></a>
 
-### Given DB table with Employee (NID, Company_id, Name, Mobile Number), Assume every record … <sub>G2180</sub>
+### Given DB table with Employee (NID, Company_id, Name, Mobile Number), Assume every record … <sub>G2293</sub>
 
 *Written*
 
@@ -2374,9 +2750,9 @@ Given DB table with Employee (NID, Company_id, Name, Mobile Number), Assume ever
   - duranta.app question bank (coaching compilation of the question paper) — PGCB Assistant Engineer (CSE) 17.05.2024, Q6 — [duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md](../duranta/1716050174-power-grid-company-of-bangladesh-assistant-engineer-cse/1716050174.md)
 - **Correction:** there are 12 super keys (all 16 attribute subsets minus the 4 that contain neither NID nor Mobile Number); the printed count drops {NID, Mobile Number}.
 
-<a id="g2575"></a>
+<a id="g2688"></a>
 
-### The key selected from the sets of candidate keys by database design is called----key: ক) … <sub>G2575</sub>
+### The key selected from the sets of candidate keys by database design is called----key: ক) … <sub>G2688</sub>
 
 *MCQ*
 
@@ -2386,9 +2762,9 @@ The key selected from the sets of candidate keys by database design is called---
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Database Management Systems (DBMS) Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2577"></a>
+<a id="g2690"></a>
 
-### Which of the following types of table constraints prevents the entry of duplicate rows? ক… <sub>G2577</sub>
+### Which of the following types of table constraints prevents the entry of duplicate rows? ক… <sub>G2690</sub>
 
 *MCQ*
 
@@ -2398,9 +2774,9 @@ Which of the following types of table constraints prevents the entry of duplicat
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Database Management Systems (DBMS) Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2896"></a>
+<a id="g3009"></a>
 
-### Define RDBMS and Primary key, Candidate key, Super key Foreign key. <sub>G2896</sub>
+### Define RDBMS and Primary key, Candidate key, Super key Foreign key. <sub>G3009</sub>
 
 *Written*
 
@@ -2410,9 +2786,9 @@ Define RDBMS and Primary key, Candidate key, Super key Foreign key.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g3045"></a>
+<a id="g3158"></a>
 
-### Employee (id,first _ name, last _ name…) Primary key: id. City (city – id, city – name …)… <sub>G3045</sub>
+### Employee (id,first _ name, last _ name…) Primary key: id. City (city – id, city – name …)… <sub>G3158</sub>
 
 *Written*
 
@@ -2422,9 +2798,9 @@ Employee (id,first _ name, last _ name…) Primary key: id. City (city – id, c
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 14 — Assistant Network Administrator (ANA) – JBL — 25.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks=200 marks — pages 21–23, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3089"></a>
+<a id="g3202"></a>
 
-### Suppose we have a relational database with five tables. | Table | Primary Key | |---|---|… <sub>G3089</sub>
+### Suppose we have a relational database with five tables. | Table | Primary Key | |---|---|… <sub>G3202</sub>
 
 *Written*
 
@@ -2434,9 +2810,9 @@ Suppose we have a relational database with five tables. | Table | Primary Key | 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 1 — Combined 5 Bank — 03.02.2023 — post not printed — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 26–28, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3096"></a>
+<a id="g3209"></a>
 
-### Write a SQL query return the number of movies which are romantic comedies. Suppose that w… <sub>G3096</sub>
+### Write a SQL query return the number of movies which are romantic comedies. Suppose that w… <sub>G3209</sub>
 
 *Written*
 
@@ -2447,9 +2823,9 @@ Write a SQL query return the number of movies which are romantic comedies. Suppo
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Programmer 2023 — Exam date 3.2.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour — marks as printed: 80 MCQ (1 Hour); Written: 9 Subjective Question (150) + Math 4 (20) + Focus (10) + B/E (20) — pages 1–5, Q4 — [duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md](../duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md)
   - duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3651"></a>
+<a id="g3764"></a>
 
-### An institute wants to create a database table named STUDENT to store student information.… <sub>G3651</sub>
+### An institute wants to create a database table named STUDENT to store student information.… <sub>G3764</sub>
 
 *Written*
 
@@ -2459,9 +2835,9 @@ An institute wants to create a database table named STUDENT to store student inf
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, Q6.14 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g3969"></a>
+<a id="g4082"></a>
 
-### In a hospital, a patient file stores name, disease, date of admission, room number, bed n… <sub>G3969</sub>
+### In a hospital, a patient file stores name, disease, date of admission, room number, bed n… <sub>G4082</sub>
 
 *MCQ*
 
@@ -2473,9 +2849,9 @@ In a hospital, a patient file stores name, disease, date of admission, room numb
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — ICT (281), question paper 2 (Q101–200), 10.10.2025, Q127 — [bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md](../bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md)
 - **Printed answer:** (d) None of the above; a Patient ID is needed.
 
-<a id="g4024"></a>
+<a id="g4137"></a>
 
-### A primary key: (ক) Can have NULL (খ) Uniquely identifies each row (গ) must be a foreign k… <sub>G4024</sub>
+### A primary key: (ক) Can have NULL (খ) Uniquely identifies each row (গ) must be a foreign k… <sub>G4137</sub>
 
 *MCQ*
 
@@ -2485,9 +2861,9 @@ A primary key: (ক) Can have NULL (খ) Uniquely identifies each row (গ) must
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q151 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4384"></a>
+<a id="g4677"></a>
 
-### Given Table - Super Key + primary key [site's expanded wording, assumed: Given the relati… <sub>G4384</sub>
+### Given Table - Super Key + primary key [site's expanded wording, assumed: Given the relati… <sub>G4677</sub>
 
 *Written*
 
@@ -2497,9 +2873,9 @@ Given Table - Super Key + primary key [site's expanded wording, assumed: Given t
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Combined Bank (BSCS) — Assistant Database Administrator (based year 2023) — 08-May-2026 — Exam taker: not stated — marks not printed — candidates' recollection (14 items), Q6 (f) — [bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md](../bank-written-web/2026-combined-ada-itjobqns-recollection/combined-ada-2026.md)
 
-<a id="g4862"></a>
+<a id="g5155"></a>
 
-### [Bangla instruction, garbled in the text layer: it mentions an employee table, insert que… <sub>G4862</sub>
+### [Bangla instruction, garbled in the text layer: it mentions an employee table, insert que… <sub>G5155</sub>
 
 *Written*
 
@@ -2509,9 +2885,9 @@ Given Table - Super Key + primary key [site's expanded wording, assumed: Given t
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Chemical Industries Corporation (BCIC) — Assistant Programmer, 14/02/2025 (BUET) (suggestion), Q8 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g2835"></a>
+<a id="g2948"></a>
 
-### What is the primary key, candidate key, and super key? <sub>G2835</sub>
+### What is the primary key, candidate key, and super key? <sub>G2948</sub>
 
 *Written*
 
@@ -2525,9 +2901,9 @@ What is the primary key, candidate key, and super key?
 - **Printed answer:** A super key must be unique while a candidate key need not be unique
 - **Correction:** Both uniquely identify tuples; the difference is minimality: a candidate key is a minimal super key (no attribute can be removed), whereas a super key may contain extra attributes.
 
-<a id="g2579"></a>
+<a id="g2692"></a>
 
-### Which is represented as uniqueness of a database table? a. Primary key b. Foreign key c. … <sub>G2579</sub>
+### Which is represented as uniqueness of a database table? a. Primary key b. Foreign key c. … <sub>G2692</sub>
 
 *MCQ*
 
@@ -2537,9 +2913,9 @@ Which is represented as uniqueness of a database table? a. Primary key b. Foreig
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT ANE 2019 — Department of ICT, Assistant Network Engineer, 2019 — exam taker not printed — MCQ, marks not printed — 22 MCQs — pages 5–33, Database Management Systems (DBMS) Q6 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2581"></a>
+<a id="g2694"></a>
 
-### কোনটি Database টেবিলে Uniqueness নিশ্চিত করে? A. Relation B. Entity C. Primary key D. For… <sub>G2581</sub>
+### কোনটি Database টেবিলে Uniqueness নিশ্চিত করে? A. Relation B. Entity C. Primary key D. For… <sub>G2694</sub>
 
 *MCQ*
 
@@ -2549,9 +2925,9 @@ Which is represented as uniqueness of a database table? a. Primary key b. Foreig
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DoICT AP 2020 — Department of ICT, Assistant Programmer, 2020 — exam taker not printed — MCQ, marks not printed — 10 MCQs — pages 9–33, Database Management Systems (DBMS) Q8 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2645"></a>
+<a id="g2758"></a>
 
-### What is foreign key? When foreign key is used? <sub>G2645</sub>
+### What is foreign key? When foreign key is used? <sub>G2758</sub>
 
 *Written*
 
@@ -2561,9 +2937,9 @@ What is foreign key? When foreign key is used?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 14 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g2938"></a>
+<a id="g3051"></a>
 
-### Assume we have the following application that models soccer teams, the games they play, a… <sub>G2938</sub>
+### Assume we have the following application that models soccer teams, the games they play, a… <sub>G3051</sub>
 
 *Written*
 
@@ -2573,9 +2949,9 @@ Assume we have the following application that models soccer teams, the games the
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 03 — Assistant Network Engineer (ANE) – JBL — 12.11.2020 — Exam taker: not printed — IT: 10*16 marks + Non IT: 2*20 marks - 200 marks — pages 4–6, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2954"></a>
+<a id="g3067"></a>
 
-### Assume we have the following application that models soccer teams, the games they play, a… <sub>G2954</sub>
+### Assume we have the following application that models soccer teams, the games they play, a… <sub>G3067</sub>
 
 *Written*
 
@@ -2585,9 +2961,9 @@ Assume we have the following application that models soccer teams, the games the
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Assistant Database Administrator (ADA) – SBL — 14.12.2020 — Exam taker: not printed — 10*16 marks + 2*20 marks = 200 — pages 8–9, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3009"></a>
+<a id="g3122"></a>
 
-### The following ER diagram captures important information of a company. Now convert the ER … <sub>G3009</sub>
+### The following ER diagram captures important information of a company. Now convert the ER … <sub>G3122</sub>
 
 *Written*
 
@@ -2597,9 +2973,9 @@ The following ER diagram captures important information of a company. Now conver
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Assistant Hardware Engineer (AHE) - SBL, JBL, RBL [AHE SBL, JBL, RBL 2021 CTI] — 24.12.2021 — Exam taker: CTI (from the printed tag) — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks — pages 15–17, Q12 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4209"></a>
+<a id="g4322"></a>
 
-### A company needs key person for DBMS. What is his/her duty as key person? <sub>G4209</sub>
+### A company needs key person for DBMS. What is his/her duty as key person? <sub>G4322</sub>
 
 *Written*
 
@@ -2609,9 +2985,9 @@ A company needs key person for DBMS. What is his/her duty as key person?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Programmer — 25.10.2019 — Exam taker: IBA (as printed by the coaching banner; unverified) — Marks 200, Time 1.30 h, MCQ 64×1.25 = 80, Written 120 (dept 100, non-dept 20) — pages 1–2 (partial), Q4 — [bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md](../bank-written-web/2019-bb-ap-stackit-slideshare/bb-ap-2019.md)
 
-<a id="g4218"></a>
+<a id="g4331"></a>
 
-### Differ: Primary vs Unique Key, Shared vs Exclusive Lock, Drop vs Drop Purge, Delete vs Tr… <sub>G4218</sub>
+### Differ: Primary vs Unique Key, Shared vs Exclusive Lock, Drop vs Drop Purge, Delete vs Tr… <sub>G4331</sub>
 
 *Written*
 
@@ -2621,9 +2997,45 @@ Differ: Primary vs Unique Key, Shared vs Exclusive Lock, Drop vs Drop Purge, Del
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q4 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4448"></a>
+<a id="g4407"></a>
 
-### Primary and Foreign key related 'Yes'/No <sub>G4448</sub>
+### Referential integrity in a DBMS is a special form of (a) Foreign key (b) Primary key (c) … <sub>G4407</sub>
+
+*MCQ*
+
+Referential integrity in a DBMS is a special form of (a) Foreign key (b) Primary key (c) Assertion (d) Referential constraint
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ22 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4439"></a>
+
+### The maximum number of super keys for the relation schema R(E, F, G, H) with E as the key … <sub>G4439</sub>
+
+*MCQ*
+
+The maximum number of super keys for the relation schema R(E, F, G, H) with E as the key is (a) 5 (b) 6 (c) 7 (d) 8
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ73 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4492"></a>
+
+### Which one of the following statements is true with respect to a Database Management Syste… <sub>G4492</sub>
+
+*MCQ*
+
+Which one of the following statements is true with respect to a Database Management System? (a) Super key and candidate keys are similar (b) Candidate Keys and Unique Keys are similar (c) Unique Keys and Primary keys are similar (d) Candidate Keys and Primary keys are similar
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ35 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
+
+<a id="g4741"></a>
+
+### Primary and Foreign key related 'Yes'/No <sub>G4741</sub>
 
 *Written*
 
@@ -2633,9 +3045,9 @@ Primary and Foreign key related 'Yes'/No
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — PGCB SAE (Computer) 24.12.2020, Q4 — [power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md](../power-sector-web/2020-pgcb-sae-computer-carrierbd/pgcb-sae-computer-2020.md)
 
-<a id="g4494"></a>
+<a id="g4787"></a>
 
-### Relational Database Design এ Primary Key ও Foreign Key বলতে কি বুঝায়? উদাহরণসহ লিখুন। <sub>G4494</sub>
+### Relational Database Design এ Primary Key ও Foreign Key বলতে কি বুঝায়? উদাহরণসহ লিখুন। <sub>G4787</sub>
 
 *Written*
 
@@ -2645,9 +3057,9 @@ Relational Database Design এ Primary Key ও Foreign Key বলতে কি �
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — ICT Division (ICT Ministry), Assistant Programmer (59 posts) — Written, 2021 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q5(খ) — [ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md](../ministry-ap-web/2021-bpsc-ap-ict-ministry-written-itjobexam/ict-ministry-ap-2021-written.md)
 
-<a id="g1960"></a>
+<a id="g2073"></a>
 
-### Primary এবং Super key এর মধ্যে পার্থক্য লিখুন। <sub>G1960</sub>
+### Primary এবং Super key এর মধ্যে পার্থক্য লিখুন। <sub>G2073</sub>
 
 *Written*
 
@@ -2657,9 +3069,9 @@ Primary এবং Super key এর মধ্যে পার্থক্য ল�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৮ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2795"></a>
+<a id="g2908"></a>
 
-### নিচের ব্যাংক ফাটাবেজটি বিবেকনা করুন, যেখানে Underline করার মাধ্যমে Primary Key শেখানো আছে… <sub>G2795</sub>
+### নিচের ব্যাংক ফাটাবেজটি বিবেকনা করুন, যেখানে Underline করার মাধ্যমে Primary Key শেখানো আছে… <sub>G2908</sub>
 
 *Written*
 
@@ -2741,9 +3153,9 @@ What is a Super Key?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p27 Q22 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p27)
 - **Printed answer:** A Super Key is any set of one or more columns that can uniquely identify a record in a table
 
-<a id="g1631"></a>
+<a id="g1630"></a>
 
-### কী (Key) ফিল্ড কী? Primary Key, Foreign Key, Super Key, Composite Primary Key, Alternate … <sub>G1631</sub>
+### কী (Key) ফিল্ড কী? Primary Key, Foreign Key, Super Key, Composite Primary Key, Alternate … <sub>G1630</sub>
 
 *Written*
 
@@ -2753,9 +3165,9 @@ What is a Super Key?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q104 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1642"></a>
+<a id="g1641"></a>
 
-### Private Key ও Public Key এর ব্যাখ্যা এবং Plaintext ও Ciphertext এর পার্থক্য লিখুন। <sub>G1642</sub>
+### Private Key ও Public Key এর ব্যাখ্যা এবং Plaintext ও Ciphertext এর পার্থক্য লিখুন। <sub>G1641</sub>
 
 *Written*
 
@@ -2765,9 +3177,9 @@ Private Key ও Public Key এর ব্যাখ্যা এবং Plaintext �
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q115 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g4192"></a>
+<a id="g4305"></a>
 
-### Difference between Super Key and Unique key? <sub>G4192</sub>
+### Difference between Super Key and Unique key? <sub>G4305</sub>
 
 *Written*
 
@@ -2778,9 +3190,9 @@ Difference between Super Key and Unique key?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q9 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g4785"></a>
+<a id="g5078"></a>
 
-### Define Primary Key and Foreign Key. Provide SQL examples to create two related tables (Em… <sub>G4785</sub>
+### Define Primary Key and Foreign Key. Provide SQL examples to create two related tables (Em… <sub>G5078</sub>
 
 *Written*
 
@@ -2841,9 +3253,9 @@ Product (pname,price,category,maker), Purchase (buyer,seller,stock), Company(cna
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q1 — [bit to exabyte/08_bte-p008-kmap-q01-09-sql-q01.md](../bit%20to%20exabyte/08_bte-p008-kmap-q01-09-sql-q01.md) · [image](../bit%20to%20exabyte/08_bte-p008-kmap-q01-09-sql-q01.jpg); [bit to exabyte/09_bte-p009-sql-q01-05.md](../bit%20to%20exabyte/09_bte-p009-sql-q01-05.md) · [image](../bit%20to%20exabyte/09_bte-p009-sql-q01-05.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q14 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
 
-<a id="g1750"></a>
+<a id="g1749"></a>
 
-### নিম্নের ডেটাবেস অনুযায়ী E-R ডায়াগ্রাম তৈরি করুন : <sub>G1750</sub>
+### নিম্নের ডেটাবেস অনুযায়ী E-R ডায়াগ্রাম তৈরি করুন : <sub>G1749</sub>
 
 *Written*
 
@@ -2853,9 +3265,9 @@ Product (pname,price,category,maker), Purchase (buyer,seller,stock), Company(cna
 - **Source:**
   - Question paper, Q9(খ) — [18th NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md) · [image](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.jpg)
 
-<a id="g1820"></a>
+<a id="g1933"></a>
 
-### Product (pname,price,category,maker) Purchase (buyer,seller,stock) Company(cname,country)… <sub>G1820</sub>
+### Product (pname,price,category,maker) Purchase (buyer,seller,stock) Company(cname,country)… <sub>G1933</sub>
 
 *Written*
 
@@ -2865,9 +3277,9 @@ Product (pname,price,category,maker) Purchase (buyer,seller,stock) Company(cname
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Assistant Manager (ICT) 12/01/2024, Q2 — [duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md](../duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md)
 
-<a id="g2166"></a>
+<a id="g2279"></a>
 
-### Given four table Customer, Product, Employee and Order table Customer(customerID, firstna… <sub>G2166</sub>
+### Given four table Customer, Product, Employee and Order table Customer(customerID, firstna… <sub>G2279</sub>
 
 *Written*
 
@@ -2878,9 +3290,9 @@ Given four table Customer, Product, Employee and Order table Customer(customerID
   - duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024, Q4(i) — [duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md](../duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md)
 - **Correction:** (i) the `NOT EXISTS` tests products *outside* category B, so it does not check "all products of category B" (relational division needs: no category-B product that the customer did not order on that date); (ii) uses `OrderProducts`, `Quantity` and `Price`, which are not in the given schema — it should be `SUM(TotalOder)` from `Order` with `OrderDate BETWEEN '2024-03-15' AND '2024-03-29'`.
 
-<a id="g3044"></a>
+<a id="g3157"></a>
 
-### TV channel, reality show, user, producer, and user eating. Create an ER Diagram using the… <sub>G3044</sub>
+### TV channel, reality show, user, producer, and user eating. Create an ER Diagram using the… <sub>G3157</sub>
 
 *Written*
 
@@ -2890,9 +3302,9 @@ TV channel, reality show, user, producer, and user eating. Create an ER Diagram 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20, Q(unnumbered 3) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3068"></a>
+<a id="g3181"></a>
 
-### ER diagram from the given information. (Unable to collect this question) <sub>G3068</sub>
+### ER diagram from the given information. (Unable to collect this question) <sub>G3181</sub>
 
 *Written*
 
@@ -2902,9 +3314,9 @@ ER diagram from the given information. (Unable to collect this question)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 15 — [Senior Officer (IT)-SBL, BDBL 2022 CTI] — 31.01.2022 — Exam taker: CTI — "5*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks" (as printed, IT figure cut) — pages 23–25, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3075"></a>
+<a id="g3188"></a>
 
-### Draw an ER diagram of BPL (Team, Player, Game, Captain) <sub>G3075</sub>
+### Draw an ER diagram of BPL (Team, Player, Game, Captain) <sub>G3188</sub>
 
 *Written*
 
@@ -2914,9 +3326,9 @@ Draw an ER diagram of BPL (Team, Player, Game, Captain)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3086"></a>
+<a id="g3199"></a>
 
-### Weak entity type VS strong entity type, show example in a ER diagram. <sub>G3086</sub>
+### Weak entity type VS strong entity type, show example in a ER diagram. <sub>G3199</sub>
 
 *Written*
 
@@ -2926,9 +3338,9 @@ Weak entity type VS strong entity type, show example in a ER diagram.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3252"></a>
+<a id="g3365"></a>
 
-### You are designing a database for a Library Explain the relationship between a "Book" tabl… <sub>G3252</sub>
+### You are designing a database for a Library Explain the relationship between a "Book" tabl… <sub>G3365</sub>
 
 *Written*
 
@@ -2938,9 +3350,9 @@ You are designing a database for a Library Explain the relationship between a "B
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3455"></a>
+<a id="g3568"></a>
 
-### Consider the following description of a university :10 There are a number of departments … <sub>G3455</sub>
+### Consider the following description of a university :10 There are a number of departments … <sub>G3568</sub>
 
 *Written*
 
@@ -2950,9 +3362,9 @@ Consider the following description of a university :10 There are a number of dep
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, CS Q4 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3565"></a>
+<a id="g3678"></a>
 
-### (a) Design an ER diagram for a library management systems where (i) A library has multipl… <sub>G3565</sub>
+### (a) Design an ER diagram for a library management systems where (i) A library has multipl… <sub>G3678</sub>
 
 *Written*
 
@@ -2962,9 +3374,9 @@ Consider the following description of a university :10 There are a number of dep
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q2(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4175"></a>
+<a id="g4288"></a>
 
-### DBMS এর সুবিধা ও অসুবিধা লিখুন। একটি ER Model অঙ্কনপূর্বক বিভিন্ন অংশ চিহ্নিত করুন। <sub>G4175</sub>
+### DBMS এর সুবিধা ও অসুবিধা লিখুন। একটি ER Model অঙ্কনপূর্বক বিভিন্ন অংশ চিহ্নিত করুন। <sub>G4288</sub>
 
 *Written*
 
@@ -3014,9 +3426,9 @@ What is a weak entity for data modeling using the entity relationship model find
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q33 — [bit to exabyte/14_bte-p014-sql-q33-weak-entity.md](../bit%20to%20exabyte/14_bte-p014-sql-q33-weak-entity.md) · [image](../bit%20to%20exabyte/14_bte-p014-sql-q33-weak-entity.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q45 — [bit to exabyte/34_bte-g2-p20-database-sql-q45-weak-entity.md](../bit%20to%20exabyte/34_bte-g2-p20-database-sql-q45-weak-entity.md) · [image](../bit%20to%20exabyte/34_bte-g2-p20-database-sql-q45-weak-entity.jpg)
 
-<a id="g2962"></a>
+<a id="g3075"></a>
 
-### A football club has a name, a stadium with a playing ground, and a team made up of player… <sub>G2962</sub>
+### A football club has a name, a stadium with a playing ground, and a team made up of player… <sub>G3075</sub>
 
 *Written*
 
@@ -3026,9 +3438,9 @@ A football club has a name, a stadium with a playing ground, and a team made up 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — Assistant Network Engineer (ANE) – RBL [ANE RBL 2021 CTI] — 16.03.2021 — Exam taker: CTI (from the printed tag) — 10*16 marks +2*20 marks = 200 — pages 10–11, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2963"></a>
+<a id="g3076"></a>
 
-### Below tables are given- Employee (employee_id, name, salary, department) Leave (employee_… <sub>G2963</sub>
+### Below tables are given- Employee (employee_id, name, salary, department) Leave (employee_… <sub>G3076</sub>
 
 *Written*
 
@@ -3038,9 +3450,9 @@ Below tables are given- Employee (employee_id, name, salary, department) Leave (
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 06 — Assistant Network Engineer (ANE) – RBL [ANE RBL 2021 CTI] — 16.03.2021 — Exam taker: CTI (from the printed tag) — 10*16 marks +2*20 marks = 200 — pages 10–11, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2994"></a>
+<a id="g3107"></a>
 
-### Draw a E-R Diagram about Railway Reservations System. Where has a passengers, Terminal, T… <sub>G2994</sub>
+### Draw a E-R Diagram about Railway Reservations System. Where has a passengers, Terminal, T… <sub>G3107</sub>
 
 *Written*
 
@@ -3050,9 +3462,9 @@ Draw a E-R Diagram about Railway Reservations System. Where has a passengers, Te
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 08 — BSCA- Sonali Bank Limited — Officer IT — 11-12-2021 — Exam taker: CTI — Written, Marks 200 [Dept-150; non-50], Time 2 Hours — pages 14–15, Q10 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3386"></a>
+<a id="g3499"></a>
 
-### Draw ER diagram on hostipal Patient(ID,name,age,appointment_time) Doctor(ID,name,speciaiz… <sub>G3386</sub>
+### Draw ER diagram on hostipal Patient(ID,name,age,appointment_time) Doctor(ID,name,speciaiz… <sub>G3499</sub>
 
 *Written*
 
@@ -3062,9 +3474,9 @@ Draw ER diagram on hostipal Patient(ID,name,age,appointment_time) Doctor(ID,name
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 26.11.2021, 1 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3757"></a>
+<a id="g3870"></a>
 
-### E-R diagram <sub>G3757</sub>
+### E-R diagram <sub>G3870</sub>
 
 *Written*
 
@@ -3074,9 +3486,9 @@ E-R diagram
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q24 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g4228"></a>
+<a id="g4341"></a>
 
-### Which one is an entity <sub>G4228</sub>
+### Which one is an entity <sub>G4341</sub>
 
 *MCQ*
 
@@ -3086,9 +3498,93 @@ Which one is an entity
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ42 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g4493"></a>
+<a id="g4398"></a>
 
-### Entity-Relationship (ER) Diagram কেন ব্যবহার করা হয়? একটি উদাহরন এর মাদ্ধ্যমে ব্যাখ্যা ক… <sub>G4493</sub>
+### In a database, a network structure model (a) Allows many to many relationship (b) Is a ph… <sub>G4398</sub>
+
+*MCQ*
+
+In a database, a network structure model (a) Allows many to many relationship (b) Is a physical representation of the data (c) Allows only one to one relationship. (d) Is related to JSON data structure
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ4 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4411"></a>
+
+### Let E1 and E2 be two entities in an E/R diagram with simple single valued attributes. R1 … <sub>G4411</sub>
+
+*MCQ*
+
+Let E1 and E2 be two entities in an E/R diagram with simple single valued attributes. R1 and R2 are two relationships between E1 and E2, where R1 is one to many, and R2 is many to many. R1 and R2 do not have any attributes of their own. What is the minimum number of tables required to represent this situation in the relational model? (a) 2 (b) 3 (c) 4 (d) 5
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ30 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4430"></a>
+
+### A collection of theoretical tools for describing data, relationships among data, data sem… <sub>G4430</sub>
+
+*MCQ*
+
+A collection of theoretical tools for describing data, relationships among data, data semantics and data constraints is referred to as (a) Data Model (b) DBMS (c) Database (d) ER Model
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ55 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4433"></a>
+
+### Which of the following is an appropriate description of the mapping between the relationa… <sub>G4433</sub>
+
+*MCQ*
+
+Which of the following is an appropriate description of the mapping between the relational model and relational database as its implementation? (a) A domain is mapped to a character type or a character string type. (b) A relation is mapped to a table. (c) Attributes and columns are ordered from left to right (d) Neither tuples nor rows have duplicates.
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ61 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4455"></a>
+
+### A star schema has what type of relationship between a dimension and fact table? (a) Many … <sub>G4455</sub>
+
+*MCQ*
+
+A star schema has what type of relationship between a dimension and fact table? (a) Many to many (b) One to one (c) One to many (d) All of the above
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ98 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4500"></a>
+
+### What is the min and max number of tables required to convert an ER diagram with 2 entitie… <sub>G4500</sub>
+
+*MCQ*
+
+What is the min and max number of tables required to convert an ER diagram with 2 entities and 1 relationship between them with partial participation constraints of both entities? (a) Min 1 and max 2 (b) Min 1 and max 3 (c) Min 2 and max 3 (d) Min 2 and max 2
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ43 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
+
+<a id="g4563"></a>
+
+### Consider the following relational database: Order (OrderNumber, OrderDate), Order (OrderN… <sub>G4563</sub>
+
+*MCQ*
+
+Consider the following relational database: Order (OrderNumber, OrderDate), Order (OrderNumber, ProductID, QuantityOrdered), Product (ProductID, Description, Price). [The relationship asked about is not printed.] (a) One to One (b) One to Many (c) Many to Many (d) Many to One
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ47 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4786"></a>
+
+### Entity-Relationship (ER) Diagram কেন ব্যবহার করা হয়? একটি উদাহরন এর মাদ্ধ্যমে ব্যাখ্যা ক… <sub>G4786</sub>
 
 *Written*
 
@@ -3123,9 +3619,9 @@ In a library database, is the Book–Borrower relationship 1-to-1, 1-to-many or 
 - **Source:**
   - Bank (name cut off, 'B... Ltd') Assistant Programmer Written, Q12 — [Exam_Bank_Assistant_Programmer_Written.md](../Exam_Bank_Assistant_Programmer_Written.md) · [image](../Exam_Bank_Assistant_Programmer_Written.jpg)
 
-<a id="g2118"></a>
+<a id="g2231"></a>
 
-### Database এর ক্ষেত্রে E-R Diagram বলতে কী বোঝায়? একটি উদাহরণের মাধ্যমে ব্যাখ্যা করুন। <sub>G2118</sub>
+### Database এর ক্ষেত্রে E-R Diagram বলতে কী বোঝায়? একটি উদাহরণের মাধ্যমে ব্যাখ্যা করুন। <sub>G2231</sub>
 
 *Written*
 
@@ -3135,9 +3631,9 @@ Database এর ক্ষেত্রে E-R Diagram বলতে কী বো�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮। (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2733"></a>
+<a id="g2846"></a>
 
-### Consider the schema - employee (id, name, salary), equipment (id, name, price), hire (emp… <sub>G2733</sub>
+### Consider the schema - employee (id, name, salary), equipment (id, name, price), hire (emp… <sub>G2846</sub>
 
 *Written*
 
@@ -3147,9 +3643,9 @@ Consider the schema - employee (id, name, salary), equipment (id, name, price), 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 8 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2767"></a>
+<a id="g2880"></a>
 
-### In a payroll management system, the salary of everyone working in a company is managed. T… <sub>G2767</sub>
+### In a payroll management system, the salary of everyone working in a company is managed. T… <sub>G2880</sub>
 
 *Written*
 
@@ -3159,9 +3655,9 @@ In a payroll management system, the salary of everyone working in a company is m
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 8 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3672"></a>
+<a id="g3785"></a>
 
-### ERD(constraint) <sub>G3672</sub>
+### ERD(constraint) <sub>G3785</sub>
 
 *Written*
 
@@ -3171,9 +3667,9 @@ ERD(constraint)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q22 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3684"></a>
+<a id="g3797"></a>
 
-### A student can be identified by ID who has attributes name, Address, Grade. A Course can b… <sub>G3684</sub>
+### A student can be identified by ID who has attributes name, Address, Grade. A Course can b… <sub>G3797</sub>
 
 *Written*
 
@@ -3183,9 +3679,9 @@ A student can be identified by ID who has attributes name, Address, Grade. A Cou
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017, Q5 — [buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md](../buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md)
 
-<a id="g3714"></a>
+<a id="g3827"></a>
 
-### ER diagram <sub>G3714</sub>
+### ER diagram <sub>G3827</sub>
 
 *Written*
 
@@ -3195,9 +3691,9 @@ ER diagram
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2017, Q9 — [buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md](../buet-msc-web/2017-10-cse-hackimpossible/buet-msc-cse-2017-10.md)
 
-<a id="g1623"></a>
+<a id="g1622"></a>
 
-### রিলেশনশিপ (Relationship) বলতে কী বোঝায়? দুটি টেবিলের মধ্যে রিলেশন তৈরির পদ্ধতি এবং রিলেশ… <sub>G1623</sub>
+### রিলেশনশিপ (Relationship) বলতে কী বোঝায়? দুটি টেবিলের মধ্যে রিলেশন তৈরির পদ্ধতি এবং রিলেশ… <sub>G1622</sub>
 
 *Written*
 
@@ -3207,9 +3703,9 @@ ER diagram
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q96 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1624"></a>
+<a id="g1623"></a>
 
-### রিলেশনশিপের ডিগ্রি (Degree of Relationship) কাকে বলে ও কত প্রকার? <sub>G1624</sub>
+### রিলেশনশিপের ডিগ্রি (Degree of Relationship) কাকে বলে ও কত প্রকার? <sub>G1623</sub>
 
 *Written*
 
@@ -3219,9 +3715,9 @@ ER diagram
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q97 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1626"></a>
+<a id="g1625"></a>
 
-### Entity ও Entity Set কী? Strong Entity Set এবং Weak Entity Set এর মধ্যে পার্থক্য লিখুন। <sub>G1626</sub>
+### Entity ও Entity Set কী? Strong Entity Set এবং Weak Entity Set এর মধ্যে পার্থক্য লিখুন। <sub>G1625</sub>
 
 *Written*
 
@@ -3231,9 +3727,9 @@ Entity ও Entity Set কী? Strong Entity Set এবং Weak Entity Set এর
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q99 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1627"></a>
+<a id="g1626"></a>
 
-### Attribute কাকে বলে এবং Attribute এর প্রকারভেদ আলোচনা করুন। <sub>G1627</sub>
+### Attribute কাকে বলে এবং Attribute এর প্রকারভেদ আলোচনা করুন। <sub>G1626</sub>
 
 *Written*
 
@@ -3243,9 +3739,9 @@ Attribute কাকে বলে এবং Attribute এর প্রকার�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q100 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1628"></a>
+<a id="g1627"></a>
 
-### E-R Diagram এর উপাদান ও ব্যবহৃত প্রতীকসমূহের সচিত্র বর্ণনা দিন। DFD ও ERD এর তুলনা লিখুন। <sub>G1628</sub>
+### E-R Diagram এর উপাদান ও ব্যবহৃত প্রতীকসমূহের সচিত্র বর্ণনা দিন। DFD ও ERD এর তুলনা লিখুন। <sub>G1627</sub>
 
 *Written*
 
@@ -3255,9 +3751,9 @@ E-R Diagram এর উপাদান ও ব্যবহৃত প্রতী�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q101 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1629"></a>
+<a id="g1628"></a>
 
-### Mapping Cardinalities বিস্তারিত বর্ণনা করুন। <sub>G1629</sub>
+### Mapping Cardinalities বিস্তারিত বর্ণনা করুন। <sub>G1628</sub>
 
 *Written*
 
@@ -3267,9 +3763,9 @@ Mapping Cardinalities বিস্তারিত বর্ণনা করু�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q102 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1630"></a>
+<a id="g1629"></a>
 
-### বাস্তব ডেটাবেজে E-R Diagram অঙ্কন করুন: - Movie Database: `Movie(movie_id, movie_title, r… <sub>G1630</sub>
+### বাস্তব ডেটাবেজে E-R Diagram অঙ্কন করুন: - Movie Database: `Movie(movie_id, movie_title, r… <sub>G1629</sub>
 
 *Written*
 
@@ -3279,9 +3775,9 @@ Mapping Cardinalities বিস্তারিত বর্ণনা করু�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q103 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1753"></a>
+<a id="g1752"></a>
 
-### BCC has many projects each projects have many employees. The projects has project id, pro… <sub>G1753</sub>
+### BCC has many projects each projects have many employees. The projects has project id, pro… <sub>G1752</sub>
 
 *Written*
 
@@ -3291,9 +3787,9 @@ BCC has many projects each projects have many employees. The projects has projec
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q1 — [suggestion based on previous yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.md) · [image](../suggestion%20based%20on%20previous%20yr/01_petrobangla-ane-q01-11-erd-subnet-cables.jpg)
 
-<a id="g1786"></a>
+<a id="g1785"></a>
 
-### Write mapping cardinality between 'Employee' and 'Holiday' table <sub>G1786</sub>
+### Write mapping cardinality between 'Employee' and 'Holiday' table <sub>G1785</sub>
 
 *Written*
 
@@ -3303,9 +3799,33 @@ Write mapping cardinality between 'Employee' and 'Holiday' table
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q51 — [suggestion based on previous yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.md) · [image](../suggestion%20based%20on%20previous%20yr/07_petrobangla-ane-q46-56-bank-network-tdm-tree-vlsm-sql.jpg)
 
-<a id="g2515"></a>
+<a id="g1842"></a>
 
-### BCC has many projects each projects have many employees.The projects has project id ,proj… <sub>G2515</sub>
+### Database relationships; use case diagram; ER diagram for e-commerce <sub>G1842</sub>
+
+*Written*
+
+Database relationships; use case diagram; ER diagram for e-commerce
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q97 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g1877"></a>
+
+### What is an ER Diagram? Draw an ER Diagram for a Library Management System with the follow… <sub>G1877</sub>
+
+*Written*
+
+What is an ER Diagram? Draw an ER Diagram for a Library Management System with the following requirements: a) A library has many books. b) Each book is written by one author. c) Members can borrow multiple books. d) Each borrowing record stores the issue date and return date.
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Part B — Answers of Super ICT 150++ Questions (book pages 1–9, 106–139), Q45 — [bit to exabyte/super-ict-solutions-pdf/super-ict-solutions.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-solutions.md)
+
+<a id="g2628"></a>
+
+### BCC has many projects each projects have many employees.The projects has project id ,proj… <sub>G2628</sub>
 
 *Written*
 
@@ -3315,9 +3835,9 @@ BCC has many projects each projects have many employees.The projects has project
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -02 (suggestion), Set-02 Q2 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 
-<a id="g3423"></a>
+<a id="g3536"></a>
 
-### (g) How can you define E-R model in <sub>G3423</sub>
+### (g) How can you define E-R model in <sub>G3536</sub>
 
 *Written*
 
@@ -3403,9 +3923,9 @@ What is the degree of relation in DBMS?
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q4 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q4 — [bit to exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.md) · [image](../bit%20to%20exabyte/27_bte-g2-p13-cloud-datacenter-q08-15-db-q01-04.jpg)
 
-<a id="g1822"></a>
+<a id="g1935"></a>
 
-### (Schema as in Q2) (b) Find Sum of all product and Sum of All sales product according to c… <sub>G1822</sub>
+### (Schema as in Q2) (b) Find Sum of all product and Sum of All sales product according to c… <sub>G1935</sub>
 
 *Written*
 
@@ -3416,9 +3936,9 @@ What is the degree of relation in DBMS?
   - duranta.app question bank (coaching compilation of the question paper) — NWPGCL Assistant Manager (ICT) 12/01/2024, Q2(b) — [duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md](../duranta/1705173540-nwpgcl-am-ict-mis-2024/1705173540.md)
 - **Correction:** (a) joins the product name to the *seller* (a person) and tests `category` for "American", which is a `Company.country` value; the product bought is the Purchase column `stock`, so the query should join `Purchase.stock = Product.pname` and `Product.maker = Company.cname` with `Company.country = 'American'` (or 'USA'). (b) uses `Purchase.price`, a column that does not exist in the given schema.
 
-<a id="g2059"></a>
+<a id="g2172"></a>
 
-### Data Fragmentation কী? ব্যাখ্যা করুন। <sub>G2059</sub>
+### Data Fragmentation কী? ব্যাখ্যা করুন। <sub>G2172</sub>
 
 *Written*
 
@@ -3428,9 +3948,9 @@ Data Fragmentation কী? ব্যাখ্যা করুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৯। (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2203"></a>
+<a id="g2316"></a>
 
-### (Same schema as Q3) (b) Course contain 2 course offering <sub>G2203</sub>
+### (Same schema as Q3) (b) Course contain 2 course offering <sub>G2316</sub>
 
 *Written*
 
@@ -3440,9 +3960,9 @@ Data Fragmentation কী? ব্যাখ্যা করুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q3(b) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
 
-<a id="g3161"></a>
+<a id="g3274"></a>
 
-### Describe different types of relation in DBMS. <sub>G3161</sub>
+### Describe different types of relation in DBMS. <sub>G3274</sub>
 
 *Written*
 
@@ -3452,9 +3972,9 @@ Describe different types of relation in DBMS.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3166"></a>
+<a id="g3279"></a>
 
-### Database Data Loss based case study type question. [Combined Bank ADA 2024] <sub>G3166</sub>
+### Database Data Loss based case study type question. [Combined Bank ADA 2024] <sub>G3279</sub>
 
 *Written*
 
@@ -3464,9 +3984,9 @@ Database Data Loss based case study type question. [Combined Bank ADA 2024]
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q7 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3371"></a>
+<a id="g3484"></a>
 
-### DESCO System এ Customer Information, Prepaid Meter Information, Payment Information ও Com… <sub>G3371</sub>
+### DESCO System এ Customer Information, Prepaid Meter Information, Payment Information ও Com… <sub>G3484</sub>
 
 *Written*
 
@@ -3476,9 +3996,9 @@ DESCO System এ Customer Information, Prepaid Meter Information, Payment Inform
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DESCO Sub-Assistant Engineer (Computer) 15/05/2026, 5 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3491"></a>
+<a id="g3604"></a>
 
-### b. What is the difference between CHAR and VARCHAR data types? Explain with examples. 4 <sub>G3491</sub>
+### b. What is the difference between CHAR and VARCHAR data types? Explain with examples. 4 <sub>G3604</sub>
 
 *Written*
 
@@ -3488,9 +4008,9 @@ b. What is the difference between CHAR and VARCHAR data types? Explain with exam
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 35 — মৎস্য ও প্রাণীসম্পদ অধিদপ্তরের ইন্সট্রাক্টর কম্পিউটার সায়েন্স — তারিখঃ ২০.০৬.২০২৩ — exam taker not printed — time and total not printed — pages 10–13, Q3(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3512"></a>
+<a id="g3625"></a>
 
-### a. Oracle Database has two data types: CHAR and VARCHAR. What are the differences between… <sub>G3512</sub>
+### a. Oracle Database has two data types: CHAR and VARCHAR. What are the differences between… <sub>G3625</sub>
 
 *Written*
 
@@ -3500,9 +4020,9 @@ a. Oracle Database has two data types: CHAR and VARCHAR. What are the difference
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16, Q6(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3526"></a>
+<a id="g3639"></a>
 
-### Name and define the major tasks that a DBMS enables users to do. 2 <sub>G3526</sub>
+### Name and define the major tasks that a DBMS enables users to do. 2 <sub>G3639</sub>
 
 *Written*
 
@@ -3512,9 +4032,9 @@ Name and define the major tasks that a DBMS enables users to do. 2
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 37 — আইন ও বিচার বিভাগের নিয়ন্ত্রণাধীন আন্তর্জাতিক অপরাধ ট্রাইবুনাল, হার্ডওয়্যার টেকনিশিয়ান (১০ম) গ্রেড — ২০২৪ — exam taker not printed — time and total not printed — pages 16–19, Q10 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4030"></a>
+<a id="g4143"></a>
 
-### Data __ is the ability to modify a schema definition in a level without affecting the nex… <sub>G4030</sub>
+### Data __ is the ability to modify a schema definition in a level without affecting the nex… <sub>G4143</sub>
 
 *MCQ*
 
@@ -3590,9 +4110,9 @@ Design a database of student with the gpa of a university. Find the top 10% gpa 
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q25 — [bit to exabyte/13_bte-p013-sql-q22-32.md](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.md) · [image](../bit%20to%20exabyte/13_bte-p013-sql-q22-32.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q37 — [bit to exabyte/33_bte-g2-p19-database-sql-q36-44.md](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.md) · [image](../bit%20to%20exabyte/33_bte-g2-p19-database-sql-q36-44.jpg)
 
-<a id="g4223"></a>
+<a id="g4336"></a>
 
-### What are the ways for no data loss, describe. <sub>G4223</sub>
+### What are the ways for no data loss, describe. <sub>G4336</sub>
 
 *Written*
 
@@ -3602,9 +4122,9 @@ What are the ways for no data loss, describe.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q9 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4224"></a>
+<a id="g4337"></a>
 
-### What are the roles of Database Engineer <sub>G4224</sub>
+### What are the roles of Database Engineer <sub>G4337</sub>
 
 *Written*
 
@@ -3614,9 +4134,9 @@ What are the roles of Database Engineer
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q10 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g4265"></a>
+<a id="g4378"></a>
 
-### Flat file database are most useful for—— <sub>G4265</sub>
+### Flat file database are most useful for—— <sub>G4378</sub>
 
 *MCQ*
 
@@ -3626,9 +4146,96 @@ Flat file database are most useful for——
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Sonali Bank & Janata Bank (BSCS combined 2 bank) — Officer (IT/ICT) — Preliminary MCQ — 02 October 2020 — Exam taker: not stated — 80 MCQ (technical Q41–80), stems only, MCQ79 — [bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md](../bank-written-web/2020-sbl-jbl-officer-it-jobstestbd/sbl-jbl-officer-it-2020-mcq.md)
 
-<a id="g1998"></a>
+<a id="g4409"></a>
 
-### Data abstraction কী? Data abstraction এর লেভেলগুলো বর্ণনা করুন। <sub>G1998</sub>
+### In Oracle DBMS, LGWR process writes information into (a) Database files (b) Control files… <sub>G4409</sub>
+
+*MCQ*
+
+In Oracle DBMS, LGWR process writes information into (a) Database files (b) Control files (c) Redolog files (d) All of a, b, c
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ26 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4413"></a>
+
+### The packaged procedure that makes data in form permanent in the database is (a) Post (b) … <sub>G4413</sub>
+
+*MCQ*
+
+The packaged procedure that makes data in form permanent in the database is (a) Post (b) Post form (c) Commit form (d) None of a, b, c
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ34 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key d; in Oracle Forms the built-in COMMIT_FORM writes the form's changes and commits them, making them permanent (POST only writes them without a commit), option (c).
+
+<a id="g4418"></a>
+
+### Which one of the following is true for a tuple in a database? (a) A tuple in a database r… <sub>G4418</sub>
+
+*MCQ*
+
+Which one of the following is true for a tuple in a database? (a) A tuple in a database represents a column (b) A tuple in a database represents database schema. (c) A tuple in a database represents a Record (d) A tuple in a database represents a Database topology.
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ41 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4427"></a>
+
+### Which is the Oracle component that contains the memory structures and background processe… <sub>G4427</sub>
+
+*MCQ*
+
+Which is the Oracle component that contains the memory structures and background processes? (a) Instance (b) Server (c) Database (d) Database files
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ50 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** no key printed (the explanation only describes the SGA). An Oracle instance is the SGA memory structures plus the background processes, option (a).
+
+<a id="g4429"></a>
+
+### Data integrity problem in a DBMS is caused due to (a) Missing data (b) Data inconsistency… <sub>G4429</sub>
+
+*MCQ*
+
+Data integrity problem in a DBMS is caused due to (a) Missing data (b) Data inconsistency (c) Data redundancy (d) Security constraints
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ53 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key b names the symptom, not the cause. Data integrity problems arise because the same data is stored in several places (data redundancy), which then lets copies disagree (inconsistency), option (c).
+
+<a id="g4435"></a>
+
+### The application program interface in a two-tier architecture DBMS is provided by (a) Clos… <sub>G4435</sub>
+
+*MCQ*
+
+The application program interface in a two-tier architecture DBMS is provided by (a) Close module connectivity (b) Open module connectivity (c) Open database connectivity (d) Close database connectivity
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ65 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4464"></a>
+
+### In Oracle DBMS, LGWR process is a (a) Foreground Process (b) Background Process (c) High … <sub>G4464</sub>
+
+*MCQ*
+
+In Oracle DBMS, LGWR process is a (a) Foreground Process (b) Background Process (c) High Priority Process (d) Batch Process
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ7 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
+
+<a id="g2111"></a>
+
+### Data abstraction কী? Data abstraction এর লেভেলগুলো বর্ণনা করুন। <sub>G2111</sub>
 
 *Written*
 
@@ -3638,9 +4245,9 @@ Data abstraction কী? Data abstraction এর লেভেলগুলো ব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৫ অথবা (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2119"></a>
+<a id="g2232"></a>
 
-### Relational database model কী? অন্যান্য মডেলের তুলনায় এর সুবিধা-অসুবিধাগুলো উল্লেখ করুন। <sub>G2119</sub>
+### Relational database model কী? অন্যান্য মডেলের তুলনায় এর সুবিধা-অসুবিধাগুলো উল্লেখ করুন। <sub>G2232</sub>
 
 *Written*
 
@@ -3650,9 +4257,9 @@ Relational database model কী? অন্যান্য মডেলের �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮ [(খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2731"></a>
+<a id="g2844"></a>
 
-### What is a DBMS? Explain the advantages and disadvantages of DBMS. <sub>G2731</sub>
+### What is a DBMS? Explain the advantages and disadvantages of DBMS. <sub>G2844</sub>
 
 *Written*
 
@@ -3831,9 +4438,9 @@ What is Database Security?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p27 Q27 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p27)
 - **Printed answer:** Database Security is the practice of protecting databases from unauthorized access, data theft, corruption, and misuse while ensuring confidentiality, integrity, and availability
 
-<a id="g1616"></a>
+<a id="g1615"></a>
 
-### Database ও DBMS কী? Type of DBMS and Core components of a database environment. <sub>G1616</sub>
+### Database ও DBMS কী? Type of DBMS and Core components of a database environment. <sub>G1615</sub>
 
 *Written*
 
@@ -3843,9 +4450,9 @@ Database ও DBMS কী? Type of DBMS and Core components of a database environ
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q89 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1617"></a>
+<a id="g1616"></a>
 
-### Conventional File Processing System (CFPS) বনাম DBMS এর তুলনামূলক পার্থক্য ও ডেটাবেজ ব্যব… <sub>G1617</sub>
+### Conventional File Processing System (CFPS) বনাম DBMS এর তুলনামূলক পার্থক্য ও ডেটাবেজ ব্যব… <sub>G1616</sub>
 
 *Written*
 
@@ -3855,9 +4462,9 @@ Conventional File Processing System (CFPS) বনাম DBMS এর তুলন
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q90 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1618"></a>
+<a id="g1617"></a>
 
-### DBMS এবং RDBMS এর মধ্যকার পার্থক্য লিখুন। <sub>G1618</sub>
+### DBMS এবং RDBMS এর মধ্যকার পার্থক্য লিখুন। <sub>G1617</sub>
 
 *Written*
 
@@ -3867,9 +4474,9 @@ DBMS এবং RDBMS এর মধ্যকার পার্থক্য ল�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q91 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1619"></a>
+<a id="g1618"></a>
 
-### Database 3-tier Architecture চিত্রসহ বিস্তারিত বর্ণনা করুন। <sub>G1619</sub>
+### Database 3-tier Architecture চিত্রসহ বিস্তারিত বর্ণনা করুন। <sub>G1618</sub>
 
 *Written*
 
@@ -3879,9 +4486,9 @@ Database 3-tier Architecture চিত্রসহ বিস্তারিত �
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q92 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1621"></a>
+<a id="g1620"></a>
 
-### Database Schema ও Database Instance কাকে বলে? স্কিমার প্রকারভেদ লিখুন। <sub>G1621</sub>
+### Database Schema ও Database Instance কাকে বলে? স্কিমার প্রকারভেদ লিখুন। <sub>G1620</sub>
 
 *Written*
 
@@ -3891,9 +4498,9 @@ Database Schema ও Database Instance কাকে বলে? স্কিমা
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q94 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1622"></a>
+<a id="g1621"></a>
 
-### Data Model কী ও কত প্রকার? Relational Data Model এর সুবিধা ও অসুবিধাগুলো লিখুন। <sub>G1622</sub>
+### Data Model কী ও কত প্রকার? Relational Data Model এর সুবিধা ও অসুবিধাগুলো লিখুন। <sub>G1621</sub>
 
 *Written*
 
@@ -3903,9 +4510,9 @@ Data Model কী ও কত প্রকার? Relational Data Model এর �
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q95 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1625"></a>
+<a id="g1624"></a>
 
-### Database User, Manager এবং Database Administrator (DBA)-এর দায়িত্ব ও কার্যাবলী লিখুন। <sub>G1625</sub>
+### Database User, Manager এবং Database Administrator (DBA)-এর দায়িত্ব ও কার্যাবলী লিখুন। <sub>G1624</sub>
 
 *Written*
 
@@ -3915,9 +4522,9 @@ Database User, Manager এবং Database Administrator (DBA)-এর দায�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q98 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1639"></a>
+<a id="g1638"></a>
 
-### Heterogeneous এবং Homogeneous Database System কী? <sub>G1639</sub>
+### Heterogeneous এবং Homogeneous Database System কী? <sub>G1638</sub>
 
 *Written*
 
@@ -3927,9 +4534,9 @@ Heterogeneous এবং Homogeneous Database System কী?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q112 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1641"></a>
+<a id="g1640"></a>
 
-### Data Encryption কী? এনক্রিপশনের সুবিধা, প্রকারভেদ এবং প্রচলিত বিভিন্ন এনক্রিপশন অ্যালগরিদ… <sub>G1641</sub>
+### Data Encryption কী? এনক্রিপশনের সুবিধা, প্রকারভেদ এবং প্রচলিত বিভিন্ন এনক্রিপশন অ্যালগরিদ… <sub>G1640</sub>
 
 *Written*
 
@@ -3939,9 +4546,9 @@ Data Encryption কী? এনক্রিপশনের সুবিধা, �
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q114 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1796"></a>
+<a id="g1795"></a>
 
-### An Account members information : name, address are placed into a record file. The data ty… <sub>G1796</sub>
+### An Account members information : name, address are placed into a record file. The data ty… <sub>G1795</sub>
 
 *Written*
 
@@ -3951,9 +4558,9 @@ An Account members information : name, address are placed into a record file. Th
 - **Source:**
   - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q65 — [suggestion based on previous yr/09_petrobangla-ane-q65-72-char-varchar-tdm-repeats.md](../suggestion%20based%20on%20previous%20yr/09_petrobangla-ane-q65-72-char-varchar-tdm-repeats.md) · [image](../suggestion%20based%20on%20previous%20yr/09_petrobangla-ane-q65-72-char-varchar-tdm-repeats.jpg)
 
-<a id="g3433"></a>
+<a id="g3546"></a>
 
-### (a) Explain the difference between a database administrator and a data administrator. <sub>G3433</sub>
+### (a) Explain the difference between a database administrator and a data administrator. <sub>G3546</sub>
 
 *Written*
 
@@ -3963,9 +4570,9 @@ An Account members information : name, address are placed into a record file. Th
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q7(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4823"></a>
+<a id="g5116"></a>
 
-### What are the main responsibilities of a Database Administrator (DBA)? <sub>G4823</sub>
+### What are the main responsibilities of a Database Administrator (DBA)? <sub>G5116</sub>
 
 *Written*
 
@@ -3975,9 +4582,9 @@ What are the main responsibilities of a Database Administrator (DBA)?
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test #3 (suggestion), A1 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g4970"></a>
+<a id="g5263"></a>
 
-### In the hypermedia database information bits are stored in the form of: ক. Cubes খ. Nodes … <sub>G4970</sub>
+### In the hypermedia database information bits are stored in the form of: ক. Cubes খ. Nodes … <sub>G5263</sub>
 
 *MCQ*
 
@@ -4002,9 +4609,9 @@ What are the ACID properties of transaction to ensure data reliability and integ
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q5 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q5 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
 
-<a id="g1961"></a>
+<a id="g2074"></a>
 
-### ডাটাবেস ট্রান্সেকশনের ACID Properties সম্পর্কে লিখুন। <sub>G1961</sub>
+### ডাটাবেস ট্রান্সেকশনের ACID Properties সম্পর্কে লিখুন। <sub>G2074</sub>
 
 *Written*
 
@@ -4029,9 +4636,9 @@ Cascadeless schedules prevent: (deadlocks / aborts / reading uncommitted data / 
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q39 — [BCS/52_cascadeless-schedules-waterfall-model.md](../BCS/52_cascadeless-schedules-waterfall-model.md) · [image](../BCS/52_cascadeless-schedules-waterfall-model.jpg)
 - **Printed answer:** (গ) reading uncommitted data (no cascading rollback)
 
-<a id="g1748"></a>
+<a id="g1747"></a>
 
-### Transaction কী? Transaction Management-এর ACID properties সমূহ বর্ণনা করুন। <sub>G1748</sub>
+### Transaction কী? Transaction Management-এর ACID properties সমূহ বর্ণনা করুন। <sub>G1747</sub>
 
 *Written*
 
@@ -4041,9 +4648,9 @@ Transaction কী? Transaction Management-এর ACID properties সমূহ �
 - **Source:**
   - Question paper, Q8(খ) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g1920"></a>
+<a id="g2033"></a>
 
-### নিম্নলিখিত Transaction হতে inconsistency state ব্যাখ্যা করুন (যদি থাকে)। | T1 | T2 | |---… <sub>G1920</sub>
+### নিম্নলিখিত Transaction হতে inconsistency state ব্যাখ্যা করুন (যদি থাকে)। | T1 | T2 | |---… <sub>G2033</sub>
 
 *Written*
 
@@ -4054,9 +4661,9 @@ Transaction কী? Transaction Management-এর ACID properties সমূহ �
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৬ (গ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g3081"></a>
+<a id="g3194"></a>
 
-### Write a short notes on ACID properties of database. <sub>G3081</sub>
+### Write a short notes on ACID properties of database. <sub>G3194</sub>
 
 *Written*
 
@@ -4066,9 +4673,9 @@ Write a short notes on ACID properties of database.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3174"></a>
+<a id="g3287"></a>
 
-### Given a Case study about Database problem. (which solve is done by : ACID Properties). [C… <sub>G3174</sub>
+### Given a Case study about Database problem. (which solve is done by : ACID Properties). [C… <sub>G3287</sub>
 
 *Written*
 
@@ -4078,9 +4685,9 @@ Given a Case study about Database problem. (which solve is done by : ACID Proper
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3210"></a>
+<a id="g3323"></a>
 
-### Explain the concept of ACID properties in a database transaction. each property Atomicity… <sub>G3210</sub>
+### Explain the concept of ACID properties in a database transaction. each property Atomicity… <sub>G3323</sub>
 
 *Written*
 
@@ -4090,9 +4697,9 @@ Explain the concept of ACID properties in a database transaction. each property 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q18 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3412"></a>
+<a id="g3525"></a>
 
-### What does the Consistency property in ACID guarantee during a bank fund transfer transact… <sub>G3412</sub>
+### What does the Consistency property in ACID guarantee during a bank fund transfer transact… <sub>G3525</sub>
 
 *Written*
 
@@ -4102,9 +4709,9 @@ What does the Consistency property in ACID guarantee during a bank fund transfer
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS), Assistant Maintenance Engineer/Assistant Engineer (IT) — Exam Date 08/05/2026 — exam taker not printed — time not printed — 15 questions, total marks 200 (Q1–Q6: 15 marks each) — pages 1–10, Q4 — [duranta/1783405234-bscs-ame-ae-it/1783405234.md](../duranta/1783405234-bscs-ame-ae-it/1783405234.md)
 
-<a id="g3974"></a>
+<a id="g4087"></a>
 
-### Which one is not an ACID property? (ক) Authenticity (খ) Consistency (গ) Isolation (ঘ) Dur… <sub>G3974</sub>
+### Which one is not an ACID property? (ক) Authenticity (খ) Consistency (গ) Isolation (ঘ) Dur… <sub>G4087</sub>
 
 *MCQ*
 
@@ -4114,9 +4721,9 @@ Which one is not an ACID property? (ক) Authenticity (খ) Consistency (গ) Is
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q101 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4037"></a>
+<a id="g4150"></a>
 
-### Which command can we use to save all transactions? (ক) save point (খ) commit (গ) save (ঘ)… <sub>G4037</sub>
+### Which command can we use to save all transactions? (ক) save point (খ) commit (গ) save (ঘ)… <sub>G4150</sub>
 
 *MCQ*
 
@@ -4126,9 +4733,9 @@ Which command can we use to save all transactions? (ক) save point (খ) commit
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q164 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4323"></a>
+<a id="g4616"></a>
 
-### A to B transfer balance but not sent to B? Which property in ACID is responsible? (a) Ato… <sub>G4323</sub>
+### A to B transfer balance but not sent to B? Which property in ACID is responsible? (a) Ato… <sub>G4616</sub>
 
 *MCQ*
 
@@ -4138,9 +4745,9 @@ A to B transfer balance but not sent to B? Which property in ACID is responsible
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ6 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4351"></a>
+<a id="g4644"></a>
 
-### Which ACID property ensures that a transaction, once committed, will remain permanent eve… <sub>G4351</sub>
+### Which ACID property ensures that a transaction, once committed, will remain permanent eve… <sub>G4644</sub>
 
 *MCQ*
 
@@ -4150,9 +4757,9 @@ Which ACID property ensures that a transaction, once committed, will remain perm
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ43 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g2910"></a>
+<a id="g3023"></a>
 
-### A transaction consists of a sequence of query and/or update statements. SQL statement mus… <sub>G2910</sub>
+### A transaction consists of a sequence of query and/or update statements. SQL statement mus… <sub>G3023</sub>
 
 *Written*
 
@@ -4162,9 +4769,9 @@ A transaction consists of a sequence of query and/or update statements. SQL stat
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(E) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3815"></a>
+<a id="g3928"></a>
 
-### Which one of the following is not included in ACID property of transaction? (a) Isolation… <sub>G3815</sub>
+### Which one of the following is not included in ACID property of transaction? (a) Isolation… <sub>G3928</sub>
 
 *MCQ*
 
@@ -4174,9 +4781,9 @@ Which one of the following is not included in ACID property of transaction? (a) 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q3 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4215"></a>
+<a id="g4328"></a>
 
-### Explain ACID properties in details <sub>G4215</sub>
+### Explain ACID properties in details <sub>G4328</sub>
 
 *Written*
 
@@ -4186,9 +4793,131 @@ Explain ACID properties in details
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q1 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g2766"></a>
+<a id="g4406"></a>
 
-### What are the properties of a transaction? How concurrent transactions are managed? Explai… <sub>G2766</sub>
+### Which one of the following is a failure to a database system? (a) System crash (b) Execut… <sub>G4406</sub>
+
+*MCQ*
+
+Which one of the following is a failure to a database system? (a) System crash (b) Execution failure (c) Transaction failure (d) All of a, b, c
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ20 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4408"></a>
+
+### How can you rollback a committed transaction in any DBMS? (a) Using SQL rollback command … <sub>G4408</sub>
+
+*MCQ*
+
+How can you rollback a committed transaction in any DBMS? (a) Using SQL rollback command (b) Restoring the data from backups (c) Run the transaction again in reverse order (d) All of the Above.
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ24 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key d contradicts the sheet's own explanation ("You cannot roll back a transaction once it has committed"); ROLLBACK cannot undo a commit, so the answer is (b) restoring from backups (or point-in-time recovery).
+
+<a id="g4424"></a>
+
+### Why is set transaction used in an Oracle DBMS? (a) For placing a name on a transaction (b… <sub>G4424</sub>
+
+*MCQ*
+
+Why is set transaction used in an Oracle DBMS? (a) For placing a name on a transaction (b) For committing a transaction (c) For locking a transaction (d) To setup transaction user parameters.
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ47 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4432"></a>
+
+### Which of the following is not a factor in determining the concurrency control behavior of… <sub>G4432</sub>
+
+*MCQ*
+
+Which of the following is not a factor in determining the concurrency control behavior of SQL-Server? (a) Lock Level (b) Transaction isolation level (c) Cursor concurrency setting (d) Locking hints
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ59 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4434"></a>
+
+### In a DBMS, when multiple transaction programs update the same database simultaneously, wh… <sub>G4434</sub>
+
+*MCQ*
+
+In a DBMS, when multiple transaction programs update the same database simultaneously, which of the following is a technology that is used to prevent logical contradictions? (a) Exclusive Control (b) Integrity constraint (c) Normalization (d) Reorganization
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ63 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key b; keeping concurrent updates from producing contradictions is the job of exclusive control (locking), option (a). This is a Japanese IT Engineers Examination item whose official answer is exclusive control; integrity constraints check single values, not concurrent updates.
+
+<a id="g4436"></a>
+
+### Which of the below is responsible for controlling the interaction among simultaneous tran… <sub>G4436</sub>
+
+*MCQ*
+
+Which of the below is responsible for controlling the interaction among simultaneous transactions? (a) Serializable controller (b) Concurrency Control Manager (c) Transportation management system (d) Multiple Access Protocol.
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ67 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4437"></a>
+
+### Of the functions provided by a DBMS, which of the following is a means for achieving prot… <sub>G4437</sub>
+
+*MCQ*
+
+Of the functions provided by a DBMS, which of the following is a means for achieving protection for data confidentiality? (a) Checking referential constraints when the data is updated (b) Managing a transaction that combines a series of processes as a logical unit. (c) Managing the data access rights of users. (d) Placing an exclusive lock on the data before it is updated.
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ69 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4438"></a>
+
+### In strict two phase locking protocol (a) All exclusive mode locks taken by transaction be… <sub>G4438</sub>
+
+*MCQ*
+
+In strict two phase locking protocol (a) All exclusive mode locks taken by transaction be held until transaction commit (b) All exclusive mode locks taken by transaction can be released before transaction commits. (c) All locks can be released before transaction commits. (d) None of these
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ71 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4526"></a>
+
+### Let transaction T1 has obtained a shared mode lock S on data item Q and transaction T2 ha… <sub>G4526</sub>
+
+*MCQ*
+
+Let transaction T1 has obtained a shared mode lock S on data item Q and transaction T2 has obtained an exclusive mode lock X on data item R. Then which of the following statements is true? (a) T1 can read Q but cannot write Q (b) T1 can read and write Q (c) T2 can not read R but can write R (d) T2 can not read and write R
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ10 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4549"></a>
+
+### Which one is not a database transaction property? (a) Atomicity (b) Consistency (c) Durab… <sub>G4549</sub>
+
+*MCQ*
+
+Which one is not a database transaction property? (a) Atomicity (b) Consistency (c) Durability (d) Quality
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ33 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g2879"></a>
+
+### What are the properties of a transaction? How concurrent transactions are managed? Explai… <sub>G2879</sub>
 
 *Written*
 
@@ -4198,9 +4927,9 @@ What are the properties of a transaction? How concurrent transactions are manage
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 7 — 46th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 13–16), 8 (b) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4395"></a>
+<a id="g4688"></a>
 
-### A bank introduces a Digital Gold Banking System that allows customers to maintain both co… <sub>G4395</sub>
+### A bank introduces a Digital Gold Banking System that allows customers to maintain both co… <sub>G4688</sub>
 
 *Written*
 
@@ -4224,9 +4953,9 @@ What are the ACID properties?
   - BPSC viva (viva), Q10 — [VIVA/02_bpsc-oop-and-dbms-viva.md](../VIVA/02_bpsc-oop-and-dbms-viva.md) · [image](../VIVA/02_bpsc-oop-and-dbms-viva.jpg)
 - **Printed answer:** Atomicity, Consistency, Isolation, Durability
 
-<a id="g1643"></a>
+<a id="g1642"></a>
 
-### Database Transaction কী? ট্রানজেকশনের ACID Properties সম্পর্কে বিস্তারিত আলোচনা করুন। <sub>G1643</sub>
+### Database Transaction কী? ট্রানজেকশনের ACID Properties সম্পর্কে বিস্তারিত আলোচনা করুন। <sub>G1642</sub>
 
 *Written*
 
@@ -4236,9 +4965,21 @@ Database Transaction কী? ট্রানজেকশনের ACID Propertie
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q116 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g4786"></a>
+<a id="g1837"></a>
 
-### Write SQL queries for: a) Display all employees whose salary > 40,000. b) Count the numbe… <sub>G4786</sub>
+### ATM transaction architecture; ACID in ATM transactions <sub>G1837</sub>
+
+*Written*
+
+ATM transaction architecture; ACID in ATM transactions
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q92 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g5079"></a>
+
+### Write SQL queries for: a) Display all employees whose salary > 40,000. b) Count the numbe… <sub>G5079</sub>
 
 *Written*
 
@@ -4248,9 +4989,9 @@ Write SQL queries for: a) Display all employees whose salary > 40,000. b) Count 
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper I) (suggestion), C2 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g4787"></a>
+<a id="g5080"></a>
 
-### What is the ACID property in DBMS? Explain Atomicity, Consistency, Isolation and Durabili… <sub>G4787</sub>
+### What is the ACID property in DBMS? Explain Atomicity, Consistency, Isolation and Durabili… <sub>G5080</sub>
 
 *Written*
 
@@ -4260,9 +5001,9 @@ What is the ACID property in DBMS? Explain Atomicity, Consistency, Isolation and
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper I) (suggestion), C3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g4816"></a>
+<a id="g5109"></a>
 
-### DB Design: Design simple table structures for an ATM transaction log. Include fields for … <sub>G4816</sub>
+### DB Design: Design simple table structures for an ATM transaction log. Include fields for … <sub>G5109</sub>
 
 *Written*
 
@@ -4272,9 +5013,9 @@ DB Design: Design simple table structures for an ATM transaction log. Include fi
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), C3 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
-<a id="g4842"></a>
+<a id="g5135"></a>
 
-### SQL Task: Given tables: customers(customer_id, name, phone) transactions(txn_id, customer… <sub>G4842</sub>
+### SQL Task: Given tables: customers(customer_id, name, phone) transactions(txn_id, customer… <sub>G5135</sub>
 
 *Written*
 
@@ -4286,9 +5027,9 @@ SQL Task: Given tables: customers(customer_id, name, phone) transactions(txn_id,
 
 ## Normalization
 
-<a id="g1749"></a>
+<a id="g1748"></a>
 
-### Normalization কী? কত প্রকার ও কী কী? ব্যাখ্যা করুন। <sub>G1749</sub>
+### Normalization কী? কত প্রকার ও কী কী? ব্যাখ্যা করুন। <sub>G1748</sub>
 
 *Written*
 
@@ -4298,9 +5039,9 @@ Normalization কী? কত প্রকার ও কী কী? ব্যা�
 - **Source:**
   - Question paper, Q9(ক) — [18th NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.md) · [image](../18th%20NTCRA/13_ntrca18-lecturer-ict452-paper-p2.jpg)
 
-<a id="g1810"></a>
+<a id="g1923"></a>
 
-### What is database normalization? Write down the types of database normalization. <sub>G1810</sub>
+### What is database normalization? Write down the types of database normalization. <sub>G1923</sub>
 
 *Written*
 
@@ -4310,9 +5051,9 @@ What is database normalization? Write down the types of database normalization.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q7 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g1918"></a>
+<a id="g2031"></a>
 
-### Normalization কী? BCNF উদাহরণসহ আলোচনা করুন। <sub>G1918</sub>
+### Normalization কী? BCNF উদাহরণসহ আলোচনা করুন। <sub>G2031</sub>
 
 *Written*
 
@@ -4323,9 +5064,9 @@ Normalization কী? BCNF উদাহরণসহ আলোচনা করু
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৬। (ক) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1919"></a>
+<a id="g2032"></a>
 
-### Functional dependency এর সংজ্ঞা দিন। ইহার Armstrong's axioms property গুলো লিখুন। <sub>G1919</sub>
+### Functional dependency এর সংজ্ঞা দিন। ইহার Armstrong's axioms property গুলো লিখুন। <sub>G2032</sub>
 
 *Written*
 
@@ -4336,9 +5077,9 @@ Functional dependency এর সংজ্ঞা দিন। ইহার Armstr
   - duranta.app question bank (coaching compilation of the question paper) — ৪৫ তম বিসিএস সাধারণ শিক্ষা (প্রভাষক -তথ্য ও যোগাযোগ প্রযুক্তি) বিষয়ের প্রাসঙ্গিক টেকিক্যাল পদের লিখিত পরীক্ষার প্রশ্ন — কম্পিউটার সায়েন্স, বিষয় কোড – ৯৭১ (pp. 1–3), ৬ (খ) — [duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md](../duranta/1706723189-45th-bcs-lecturer-ict/1706723189.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2578"></a>
+<a id="g2691"></a>
 
-### "There must not be any partial dependency" – Which Normal Form holds this condition? ক) 1… <sub>G2578</sub>
+### "There must not be any partial dependency" – Which Normal Form holds this condition? ক) 1… <sub>G2691</sub>
 
 *MCQ*
 
@@ -4348,9 +5089,9 @@ Functional dependency এর সংজ্ঞা দিন। ইহার Armstr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী রক্ষণাবেক্ষণ প্রকৌশলী ২২ — non-cadre Assistant Maintenance Engineer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 17 MCQs — pages 8–34, Database Management Systems (DBMS) Q4 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3079"></a>
+<a id="g3192"></a>
 
-### Functional dependencies were given, optimize and show candidate/primary keys. (Unable to … <sub>G3079</sub>
+### Functional dependencies were given, optimize and show candidate/primary keys. (Unable to … <sub>G3192</sub>
 
 *Written*
 
@@ -4360,9 +5101,9 @@ Functional dependencies were given, optimize and show candidate/primary keys. (U
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3084"></a>
+<a id="g3197"></a>
 
-### BCNF related question <sub>G3084</sub>
+### BCNF related question <sub>G3197</sub>
 
 *Written*
 
@@ -4372,9 +5113,9 @@ BCNF related question
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q11 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3167"></a>
+<a id="g3280"></a>
 
-### Normalized a database, used containers if needed, draw an ERD Diagram. [Combined Bank ADA… <sub>G3167</sub>
+### Normalized a database, used containers if needed, draw an ERD Diagram. [Combined Bank ADA… <sub>G3280</sub>
 
 *Written*
 
@@ -4384,9 +5125,9 @@ Normalized a database, used containers if needed, draw an ERD Diagram. [Combined
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3513"></a>
+<a id="g3626"></a>
 
-### b. What do you understand by 'Database Normalization'? Why is it necessary to do Normaliz… <sub>G3513</sub>
+### b. What do you understand by 'Database Normalization'? Why is it necessary to do Normaliz… <sub>G3626</sub>
 
 *Written*
 
@@ -4396,9 +5137,9 @@ b. What do you understand by 'Database Normalization'? Why is it necessary to do
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16, Q6(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3543"></a>
+<a id="g3656"></a>
 
-### Explain the differences between Second Normal Form (2NF) and Third Normal Form (3NF) with… <sub>G3543</sub>
+### Explain the differences between Second Normal Form (2NF) and Third Normal Form (3NF) with… <sub>G3656</sub>
 
 *Written*
 
@@ -4408,9 +5149,9 @@ Explain the differences between Second Normal Form (2NF) and Third Normal Form (
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-ক Q12 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3567"></a>
+<a id="g3680"></a>
 
-### (c) Why normalization is required in Database? Write shortly about 3NF. 1+1 <sub>G3567</sub>
+### (c) Why normalization is required in Database? Write shortly about 3NF. 1+1 <sub>G3680</sub>
 
 *Written*
 
@@ -4420,9 +5161,9 @@ Explain the differences between Second Normal Form (2NF) and Third Normal Form (
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q2(c) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4350"></a>
+<a id="g4643"></a>
 
-### Which one makes data access from a database faster? (a) Indexing (b) Normalization (c) De… <sub>G4350</sub>
+### Which one makes data access from a database faster? (a) Indexing (b) Normalization (c) De… <sub>G4643</sub>
 
 *MCQ*
 
@@ -4432,9 +5173,9 @@ Which one makes data access from a database faster? (a) Indexing (b) Normalizati
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ42 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4362"></a>
+<a id="g4655"></a>
 
-### Find the primary key and foreign key after decomposition of the given schema (Branch_name… <sub>G4362</sub>
+### Find the primary key and foreign key after decomposition of the given schema (Branch_name… <sub>G4655</sub>
 
 *Written*
 
@@ -4444,9 +5185,9 @@ Find the primary key and foreign key after decomposition of the given schema (Br
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — Written — 07.02.2025 — Exam taker: not stated (coaching labels FBS / DU; unverified) — marks not printed — recollection, R6 — [bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md](../bank-written-web/2025-bb-adict-written-itjobqns/bb-adict-2025-written.md)
 
-<a id="g2981"></a>
+<a id="g3094"></a>
 
-### DBMS definition and why normalization in database? <sub>G2981</sub>
+### DBMS definition and why normalization in database? <sub>G3094</sub>
 
 *Written*
 
@@ -4456,9 +5197,69 @@ DBMS definition and why normalization in database?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — The Security Printing Corporation (Bangladesh) Ltd — Assistant Maintenance Engineer — 08-12-2021 — Exam taker: CTI — Written, Time 2 Hours, marks not printed — page 14, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4487"></a>
+<a id="g4397"></a>
 
-### DBMS কী? একটি Database কে normalize করার পদ্ধতি গুলো বর্ণনা করুন। <sub>G4487</sub>
+### Which of the following anomalies occur when the database is not normalized? (a) Data Inse… <sub>G4397</sub>
+
+*MCQ*
+
+Which of the following anomalies occur when the database is not normalized? (a) Data Insert (b) Data Update (c) Data delete (d) All of the above
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ2 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4410"></a>
+
+### In a schema with attributes A, B, C, D and E following set of functional dependencies are… <sub>G4410</sub>
+
+*MCQ*
+
+In a schema with attributes A, B, C, D and E following set of functional dependencies are given: A -> B, A -> C, CD -> E, B -> D, E -> A. Which of the following functional dependencies is not implied by the above set? (a) CD -> AC (b) BD -> CD (c) BC -> CD (d) AC -> BC
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ28 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4415"></a>
+
+### Third Normal form is based on the concept of (a) Closure dependency (b) Transitive Depend… <sub>G4415</sub>
+
+*MCQ*
+
+Third Normal form is based on the concept of (a) Closure dependency (b) Transitive Dependency (c) Normal Dependency (d) Functional Dependency
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ38 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4426"></a>
+
+### Needing to assess the validity of assumed referential integrity constraints on foreign ke… <sub>G4426</sub>
+
+*MCQ*
+
+Needing to assess the validity of assumed referential integrity constraints on foreign keys is a(n) ___ of normalization. (a) Advantage (b) disadvantage (c) Either an advantage or disadvantage (d) Neither an advantage nor disadvantage.
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ49 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4535"></a>
+
+### To remove partial dependency from a database, which technique you will use? (a) 1NF (b) 2… <sub>G4535</sub>
+
+*MCQ*
+
+To remove partial dependency from a database, which technique you will use? (a) 1NF (b) 2NF (c) 3NF (d) BCNF
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ19 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g4780"></a>
+
+### DBMS কী? একটি Database কে normalize করার পদ্ধতি গুলো বর্ণনা করুন। <sub>G4780</sub>
 
 *Written*
 
@@ -4468,9 +5269,9 @@ DBMS কী? একটি Database কে normalize করার পদ্ধত
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPSC — non-cadre Assistant Network Engineer (ANE) — Written, 2020 — Exam taker: BPSC (per title) — time and marks not printed — technical part only, Q2(i) (second block) — [ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md](../ministry-ap-web/2020-bpsc-ane-written-itjobexam/bpsc-ane-2020-written.md)
 
-<a id="g1859"></a>
+<a id="g1972"></a>
 
-### What is database normalization? Why 1NF,2NF,3NF and BCNF. <sub>G1859</sub>
+### What is database normalization? Why 1NF,2NF,3NF and BCNF. <sub>G1972</sub>
 
 *Written*
 
@@ -4481,9 +5282,9 @@ What is database normalization? Why 1NF,2NF,3NF and BCNF.
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 40 (second) — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1962"></a>
+<a id="g2075"></a>
 
-### “BCNF is Stricter than 3NF” এই উক্তিটি উদাহরণসহ ব্যাখ্যা করুন। <sub>G1962</sub>
+### “BCNF is Stricter than 3NF” এই উক্তিটি উদাহরণসহ ব্যাখ্যা করুন। <sub>G2075</sub>
 
 *Written*
 
@@ -4493,9 +5294,9 @@ What is database normalization? Why 1NF,2NF,3NF and BCNF.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৮ অথবা (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2734"></a>
+<a id="g2847"></a>
 
-### Compare and contrast among the following normalization: 2NF, 3NF and BCNF. <sub>G2734</sub>
+### Compare and contrast among the following normalization: 2NF, 3NF and BCNF. <sub>G2847</sub>
 
 *Written*
 
@@ -4533,9 +5334,9 @@ Why is Normalization important?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p25 Q9 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p25)
 - **Printed answer:** Normalization eliminates duplicate data, improves consistency, saves storage, and makes database maintenance easier
 
-<a id="g1632"></a>
+<a id="g1631"></a>
 
-### Database Normalization কী? নরমালাইজেশনের প্রয়োজনীয়তা ও প্রকারভেদ (1NF, 2NF, 3NF, BCNF) … <sub>G1632</sub>
+### Database Normalization কী? নরমালাইজেশনের প্রয়োজনীয়তা ও প্রকারভেদ (1NF, 2NF, 3NF, BCNF) … <sub>G1631</sub>
 
 *Written*
 
@@ -4545,9 +5346,9 @@ Database Normalization কী? নরমালাইজেশনের প্র
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q105 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g2523"></a>
+<a id="g2636"></a>
 
-### Find the functional dependency if have then write yes and if no then write no in the belo… <sub>G2523</sub>
+### Find the functional dependency if have then write yes and if no then write no in the belo… <sub>G2636</sub>
 
 *Written*
 
@@ -4557,9 +5358,9 @@ Find the functional dependency if have then write yes and if no then write no in
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -03 (suggestion), Set-03 Q2 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
 
-<a id="g3422"></a>
+<a id="g3535"></a>
 
-### (f) Why do we need database normalization? <sub>G3422</sub>
+### (f) Why do we need database normalization? <sub>G3535</sub>
 
 *Written*
 
@@ -4569,9 +5370,9 @@ Find the functional dependency if have then write yes and if no then write no in
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Unidentified paper (banner on book page 1-110, not in this PDF) — technical part — exam taker, date, marks not shown — pages 1–2, Q1(f) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4191"></a>
+<a id="g4304"></a>
 
-### What do you mean by Database Properties using Normalization? <sub>G4191</sub>
+### What do you mean by Database Properties using Normalization? <sub>G4304</sub>
 
 *Written*
 
@@ -4582,9 +5383,9 @@ What do you mean by Database Properties using Normalization?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q8 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g4775"></a>
+<a id="g5068"></a>
 
-### What is Database Normalization? Explain 1NF and 2NF. <sub>G4775</sub>
+### What is Database Normalization? Explain 1NF and 2NF. <sub>G5068</sub>
 
 *Written*
 
@@ -4621,9 +5422,9 @@ How does indexing improve query performance?
 - **Source:**
   - Bangladesh Satellite Company PLC Assistant Engineer (CSE) (2025-08-23), Q4 — [BUET JOB/34_bscll-ae-and-bba-questions.md](../BUET%20JOB/34_bscll-ae-and-bba-questions.md) · [image](../BUET%20JOB/34_bscll-ae-and-bba-questions.jpg)
 
-<a id="g2057"></a>
+<a id="g2170"></a>
 
-### Indexing এবং Hashing এর পদ্ধতিগুলো বর্ণনা করুন। <sub>G2057</sub>
+### Indexing এবং Hashing এর পদ্ধতিগুলো বর্ণনা করুন। <sub>G2170</sub>
 
 *Written*
 
@@ -4633,9 +5434,9 @@ Indexing এবং Hashing এর পদ্ধতিগুলো বর্ণন
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮ অথবা (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g3196"></a>
+<a id="g3309"></a>
 
-### Briefly describe primary key, foreign key and index in relational database and their rela… <sub>G3196</sub>
+### Briefly describe primary key, foreign key and index in relational database and their rela… <sub>G3309</sub>
 
 *Written*
 
@@ -4645,9 +5446,9 @@ Briefly describe primary key, foreign key and index in relational database and t
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 (second) — Combined 3 Bank (10185) — Senior Officer IT 2024 — 17.05.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 44–47, Q(unnumbered 5) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3465"></a>
+<a id="g3578"></a>
 
-### Compare sparse index and dense îndex in a database system. <sub>G3465</sub>
+### Compare sparse index and dense îndex in a database system. <sub>G3578</sub>
 
 *Written*
 
@@ -4657,9 +5458,9 @@ Compare sparse index and dense îndex in a database system.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 34 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের উপসহকারী মেইনটেন্যান্স ইঞ্জিনিয়ার — পরীক্ষার তারিখঃ ১৭.০৭.২০২৩ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 5–10, CS Q14 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3490"></a>
+<a id="g3603"></a>
 
-### a. Define the term "Indexing" in Databases. What is its major benefit? 6 <sub>G3490</sub>
+### a. Define the term "Indexing" in Databases. What is its major benefit? 6 <sub>G3603</sub>
 
 *Written*
 
@@ -4669,9 +5470,9 @@ a. Define the term "Indexing" in Databases. What is its major benefit? 6
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 35 — মৎস্য ও প্রাণীসম্পদ অধিদপ্তরের ইন্সট্রাক্টর কম্পিউটার সায়েন্স — তারিখঃ ২০.০৬.২০২৩ — exam taker not printed — time and total not printed — pages 10–13, Q3(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g4021"></a>
+<a id="g4134"></a>
 
-### What is the role of an index in a database? (ক) To store large binary objects (খ) To stor… <sub>G4021</sub>
+### What is the role of an index in a database? (ক) To store large binary objects (খ) To stor… <sub>G4134</sub>
 
 *MCQ*
 
@@ -4681,9 +5482,9 @@ What is the role of an index in a database? (ক) To store large binary objects 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q148 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g3387"></a>
+<a id="g3500"></a>
 
-### Delete a specific node (200) from B+ tree & write the result <sub>G3387</sub>
+### Delete a specific node (200) from B+ tree & write the result <sub>G3500</sub>
 
 *Written*
 
@@ -4693,9 +5494,9 @@ Delete a specific node (200) from B+ tree & write the result
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Exam 26.11.2021, 2 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3816"></a>
+<a id="g3929"></a>
 
-### The value of ‘n’ of a B+ tree index is 100. What will be the maximum record pointers for … <sub>G3816</sub>
+### The value of ‘n’ of a B+ tree index is 100. What will be the maximum record pointers for … <sub>G3929</sub>
 
 *MCQ*
 
@@ -4705,9 +5506,9 @@ The value of ‘n’ of a B+ tree index is 100. What will be the maximum record 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P2-Q4 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4216"></a>
+<a id="g4329"></a>
 
-### Index definition, usage of index, Index for PT. <sub>G4216</sub>
+### Index definition, usage of index, Index for PT. <sub>G4329</sub>
 
 *Written*
 
@@ -4717,9 +5518,57 @@ Index definition, usage of index, Index for PT.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q2 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g1860"></a>
+<a id="g4414"></a>
 
-### How hash indexing & B+ Tree indexing? <sub>G1860</sub>
+### Which of the following is correct for the Create index command? (a) Insert index index_na… <sub>G4414</sub>
+
+*MCQ*
+
+Which of the following is correct for the Create index command? (a) Insert index index_name on table_name (b) Insert index index_name on database_name; (c) Create index index_name on database_name; (d) Create index index_name on table_name;
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ36 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4444"></a>
+
+### Database index speeds up (a) Select queries (b) Where clauses (c) Update query (d) Both a… <sub>G4444</sub>
+
+*MCQ*
+
+Database index speeds up (a) Select queries (b) Where clauses (c) Update query (d) Both a and b
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ83 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4445"></a>
+
+### Which of the following index is automatically created by the database server when an obje… <sub>G4445</sub>
+
+*MCQ*
+
+Which of the following index is automatically created by the database server when an object is created? (a) Implicit (b) Single column (c) Unique (d) Composite
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ85 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4545"></a>
+
+### Related records of the different relations can be stored on the same block using which fi… <sub>G4545</sub>
+
+*MCQ*
+
+Related records of the different relations can be stored on the same block using which file organization technique? (a) Heap file organization (b) Sequential file organization (c) Hashing file organization (d) Multi table Clustering file organization
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ29 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g1973"></a>
+
+### How hash indexing & B+ Tree indexing? <sub>G1973</sub>
 
 *Written*
 
@@ -4730,9 +5579,9 @@ How hash indexing & B+ Tree indexing?
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 42. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1991"></a>
+<a id="g2104"></a>
 
-### Indexing ও Hashing কী? Dense index ও Sparse index বর্ণনা করুন। <sub>G1991</sub>
+### Indexing ও Hashing কী? Dense index ও Sparse index বর্ণনা করুন। <sub>G2104</sub>
 
 *Written*
 
@@ -4742,9 +5591,9 @@ Indexing ও Hashing কী? Dense index ও Sparse index বর্ণনা ক
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৪ অথবা (খ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2123"></a>
+<a id="g2236"></a>
 
-### Database এর ক্ষেত্রে indexing এর কার্যকারিতা বর্ণনা করুন। <sub>G2123</sub>
+### Database এর ক্ষেত্রে indexing এর কার্যকারিতা বর্ণনা করুন। <sub>G2236</sub>
 
 *Written*
 
@@ -4754,9 +5603,9 @@ Database এর ক্ষেত্রে indexing এর কার্যকা�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৯ (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g3683"></a>
+<a id="g3796"></a>
 
-### Draw a B+ tree using the indexes- 12,14,19,30,21,22,13,34,18,23,38,40 where n=5? <sub>G3683</sub>
+### Draw a B+ tree using the indexes- 12,14,19,30,21,22,13,34,18,23,38,40 where n=5? <sub>G3796</sub>
 
 *Written*
 
@@ -4766,9 +5615,9 @@ Draw a B+ tree using the indexes- 12,14,19,30,21,22,13,34,18,23,38,40 where n=5?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017, Q4 — [buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md](../buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md)
 
-<a id="g4411"></a>
+<a id="g4704"></a>
 
-### Why indexing is used in database? How hash table works? <sub>G4411</sub>
+### Why indexing is used in database? How hash table works? <sub>G4704</sub>
 
 *Written*
 
@@ -4778,9 +5627,9 @@ Why indexing is used in database? How hash table works?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q1(iv) — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g1633"></a>
+<a id="g1632"></a>
 
-### ডেটাবেজে ইন্ডেক্সিং (Indexing) কী ও এর সুবিধা? Dense Index ও Sparse Index এর মধ্যে পার্থক… <sub>G1633</sub>
+### ডেটাবেজে ইন্ডেক্সিং (Indexing) কী ও এর সুবিধা? Dense Index ও Sparse Index এর মধ্যে পার্থক… <sub>G1632</sub>
 
 *Written*
 
@@ -4790,9 +5639,9 @@ Why indexing is used in database? How hash table works?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q106 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1634"></a>
+<a id="g1633"></a>
 
-### সর্টিং (Sorting) ও ইন্ডেক্সিং (Indexing) এর মধ্যে পার্থক্য লিখুন। <sub>G1634</sub>
+### সর্টিং (Sorting) ও ইন্ডেক্সিং (Indexing) এর মধ্যে পার্থক্য লিখুন। <sub>G1633</sub>
 
 *Written*
 
@@ -4802,9 +5651,9 @@ Why indexing is used in database? How hash table works?
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q107 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1635"></a>
+<a id="g1634"></a>
 
-### Hash Function কী? Static Hashing এবং Dynamic Hashing এর কার্যপদ্ধতি আলোচনা করুন। <sub>G1635</sub>
+### Hash Function কী? Static Hashing এবং Dynamic Hashing এর কার্যপদ্ধতি আলোচনা করুন। <sub>G1634</sub>
 
 *Written*
 
@@ -4814,9 +5663,9 @@ Hash Function কী? Static Hashing এবং Dynamic Hashing এর কার�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q108 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1636"></a>
+<a id="g1635"></a>
 
-### B+ Tree Index Files এর গঠন ও সার্চিং কার্যপদ্ধতি বর্ণনা করুন। <sub>G1636</sub>
+### B+ Tree Index Files এর গঠন ও সার্চিং কার্যপদ্ধতি বর্ণনা করুন। <sub>G1635</sub>
 
 *Written*
 
@@ -4826,9 +5675,21 @@ B+ Tree Index Files এর গঠন ও সার্চিং কার্য�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q109 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g4789"></a>
+<a id="g1813"></a>
 
-### Explain indexing in databases. Why is indexing important in Core Banking Systems (CBS)? <sub>G4789</sub>
+### DBMS keys (primary, candidate, super, foreign, composite); indexing disadvantages <sub>G1813</sub>
+
+*Written*
+
+DBMS keys (primary, candidate, super, foreign, composite); indexing disadvantages
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q33 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g5082"></a>
+
+### Explain indexing in databases. Why is indexing important in Core Banking Systems (CBS)? <sub>G5082</sub>
 
 *Written*
 
@@ -4840,9 +5701,9 @@ Explain indexing in databases. Why is indexing important in Core Banking Systems
 
 ## Other
 
-<a id="g2056"></a>
+<a id="g2169"></a>
 
-### Centralized System ও Client-Server System সম্পর্কে সচিত্র বর্ণনা করুন। <sub>G2056</sub>
+### Centralized System ও Client-Server System সম্পর্কে সচিত্র বর্ণনা করুন। <sub>G2169</sub>
 
 *Written*
 
@@ -4852,9 +5713,9 @@ Centralized System ও Client-Server System সম্পর্কে সচি�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮ (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2058"></a>
+<a id="g2171"></a>
 
-### Speedup এবং Scaleup চিত্রসহ ব্যাখ্যা করুন। <sub>G2058</sub>
+### Speedup এবং Scaleup চিত্রসহ ব্যাখ্যা করুন। <sub>G2171</sub>
 
 *Written*
 
@@ -4864,9 +5725,9 @@ Speedup এবং Scaleup চিত্রসহ ব্যাখ্যা কর�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮ অথবা (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2060"></a>
+<a id="g2173"></a>
 
-### One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব্যাখ্যা করুন। <sub>G2060</sub>
+### One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব্যাখ্যা করুন। <sub>G2173</sub>
 
 *Written*
 
@@ -4876,9 +5737,9 @@ One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৯ (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g2084"></a>
+<a id="g2197"></a>
 
-### রিলেশনশীপ কী? দুটি টেবিলের মধ্যে রিলেশন তৈরির পদ্ধতি আলোচনা করুন। <sub>G2084</sub>
+### রিলেশনশীপ কী? দুটি টেবিলের মধ্যে রিলেশন তৈরির পদ্ধতি আলোচনা করুন। <sub>G2197</sub>
 
 *Written*
 
@@ -4888,9 +5749,9 @@ One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১০। (ক) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2085"></a>
+<a id="g2198"></a>
 
-### কী ফিল্ড কী? প্রাইমারি ও ফরেন কী বলতে কী বুঝায়? ব্যাখ্যা করুন। <sub>G2085</sub>
+### কী ফিল্ড কী? প্রাইমারি ও ফরেন কী বলতে কী বুঝায়? ব্যাখ্যা করুন। <sub>G2198</sub>
 
 *Written*
 
@@ -4900,9 +5761,9 @@ One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১০ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2167"></a>
+<a id="g2280"></a>
 
-### (Same four tables) Find the TotalOrder as Monetary Amount which is ordered between the da… <sub>G2167</sub>
+### (Same four tables) Find the TotalOrder as Monetary Amount which is ordered between the da… <sub>G2280</sub>
 
 *Written*
 
@@ -4912,9 +5773,9 @@ One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BRPL Assistant Manager (ICT) 29.03.2024, Q4(ii) — [duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md](../duranta/1713804982-br-power-generation-company-limited-brpl/1713804982.md)
 
-<a id="g2655"></a>
+<a id="g2768"></a>
 
-### ডাটাবেইজ এর ক্ষেত্রে এগ্রিগেট ফাংশন কি? পাঁচটি এগ্রিগেট ফাংশন এর নাম লিখ। <sub>G2655</sub>
+### ডাটাবেইজ এর ক্ষেত্রে এগ্রিগেট ফাংশন কি? পাঁচটি এগ্রিগেট ফাংশন এর নাম লিখ। <sub>G2768</sub>
 
 *Written*
 
@@ -4924,9 +5785,9 @@ One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ১৩ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g2700"></a>
+<a id="g2813"></a>
 
-### ডাটাবেজ ব্যর্থ হওয়ার কারণ কী? Logical এবং physical ডাটাবেজ ডিজাইন ব্যাখ্যা করুন। <sub>G2700</sub>
+### ডাটাবেজ ব্যর্থ হওয়ার কারণ কী? Logical এবং physical ডাটাবেজ ডিজাইন ব্যাখ্যা করুন। <sub>G2813</sub>
 
 *Written*
 
@@ -4936,9 +5797,9 @@ One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 5 — ৪৫তম বিসিএস, তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড: ২৮১ — ২য় অংশ, নম্বর ২০*৫=১০০ (pp. 8–9), ৪ (গ) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g4039"></a>
+<a id="g4152"></a>
 
-### "Either all of its operations are executed or none."- this refers to: (ক) Consistency (খ)… <sub>G4039</sub>
+### "Either all of its operations are executed or none."- this refers to: (ক) Consistency (খ)… <sub>G4152</sub>
 
 *MCQ*
 
@@ -4948,9 +5809,9 @@ One-to-one এবং One-to-many রিলেশন উদাহরণসহ ব
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q166 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4905"></a>
+<a id="g5198"></a>
 
-### Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the students 2… <sub>G4905</sub>
+### Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the students 2… <sub>G5198</sub>
 
 *Written*
 
@@ -4960,9 +5821,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering & Technology — AP (Exam Controller), 21/06/2025 (suggestion), Q2 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g4082"></a>
+<a id="g4195"></a>
 
-### ডেটাবেজ ম্যানেজমেন্ট সিস্টেমের প্রাথমিক কাজগুলো বর্ণনা করুন। <sub>G4082</sub>
+### ডেটাবেজ ম্যানেজমেন্ট সিস্টেমের প্রাথমিক কাজগুলো বর্ণনা করুন। <sub>G4195</sub>
 
 *Written*
 
@@ -4972,9 +5833,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ২(ক) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4083"></a>
+<a id="g4196"></a>
 
-### রিলেশনশীপ কী? উদাহরণসহ One to Many এবং Many to Many রিলেশন বর্ণনা করুন। <sub>G4083</sub>
+### রিলেশনশীপ কী? উদাহরণসহ One to Many এবং Many to Many রিলেশন বর্ণনা করুন। <sub>G4196</sub>
 
 *Written*
 
@@ -4984,9 +5845,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ২(খ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4084"></a>
+<a id="g4197"></a>
 
-### ডেটাবেজ ইন্ডেক্সিং কী? ইন্ডেক্সিং-এর সুবিধা ও অসুবিধা বর্ণনা করুন। <sub>G4084</sub>
+### ডেটাবেজ ইন্ডেক্সিং কী? ইন্ডেক্সিং-এর সুবিধা ও অসুবিধা বর্ণনা করুন। <sub>G4197</sub>
 
 *Written*
 
@@ -4996,9 +5857,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ২(গ) — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4118"></a>
+<a id="g4231"></a>
 
-### রিলেশনশিপের ডিগ্রি কাকে বলে? উহা কত প্রকার ও কি কি? সংক্ষেপে লিখুন। <sub>G4118</sub>
+### রিলেশনশিপের ডিগ্রি কাকে বলে? উহা কত প্রকার ও কি কি? সংক্ষেপে লিখুন। <sub>G4231</sub>
 
 *Written*
 
@@ -5008,9 +5869,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১ অথবা (ক) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4119"></a>
+<a id="g4232"></a>
 
-### ক্যান্ডিডেট কী ও কম্পোজিট কী কাকে বলে? <sub>G4119</sub>
+### ক্যান্ডিডেট কী ও কম্পোজিট কী কাকে বলে? <sub>G4232</sub>
 
 *Written*
 
@@ -5020,9 +5881,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১ অথবা (খ) — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4141"></a>
+<a id="g4254"></a>
 
-### ডাটাবেজ টিউনিং এবং ডাটা মাইনিং বলতে কী বোঝেন? <sub>G4141</sub>
+### ডাটাবেজ টিউনিং এবং ডাটা মাইনিং বলতে কী বোঝেন? <sub>G4254</sub>
 
 *Written*
 
@@ -5032,9 +5893,45 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৬ — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g1959"></a>
+<a id="g4420"></a>
 
-### একজন ডাটাবেস এডমিন এর কাজ কী? কিছু ডাটাবেস সিস্টেম অ্যাপ্লিকেশনের নাম লিখুন। <sub>G1959</sub>
+### XSLT processors evaluate each statement in the context of the match that has been made. T… <sub>G4420</sub>
+
+*MCQ*
+
+XSLT processors evaluate each statement in the context of the match that has been made. That is, XSLT processors are (a) Context oriented (b) Procedural oriented (c) Object oriented. (d) Relational oriented
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ43 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4428"></a>
+
+### The three different application logic components are. Which of the following? (a) Present… <sub>G4428</sub>
+
+*MCQ*
+
+The three different application logic components are. Which of the following? (a) Presentation, Client and Storage (b) Presentation, Client and processing (c) Presentation, Processing and Storage (d) Presentation, processing and Network
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ51 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4442"></a>
+
+### Which is not the UTL_FILE function? (a) FOPEN() (b) File_Close() (c) FCOPY (d) FFLUSH() <sub>G4442</sub>
+
+*MCQ*
+
+Which is not the UTL_FILE function? (a) FOPEN() (b) File_Close() (c) FCOPY (d) FFLUSH()
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ79 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g2072"></a>
+
+### একজন ডাটাবেস এডমিন এর কাজ কী? কিছু ডাটাবেস সিস্টেম অ্যাপ্লিকেশনের নাম লিখুন। <sub>G2072</sub>
 
 *Written*
 
@@ -5044,9 +5941,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৮। (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g1963"></a>
+<a id="g2076"></a>
 
-### ডাটাবেস ব্যবস্থাপনা সিস্টেমের তিন স্তরবিশিষ্ট আর্কিটেকচার ব্যাখ্যা করুন। <sub>G1963</sub>
+### ডাটাবেস ব্যবস্থাপনা সিস্টেমের তিন স্তরবিশিষ্ট আর্কিটেকচার ব্যাখ্যা করুন। <sub>G2076</sub>
 
 *Written*
 
@@ -5056,9 +5953,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৮ অথবা (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g1987"></a>
+<a id="g2100"></a>
 
-### রিলেশনাল ডাটাবেজ ম্যানেজমেন্ট সিস্টেম কি? ডাটাবেজের বিভিন্ন প্রকার রিলেশনশীপ বর্ণনা করুন। <sub>G1987</sub>
+### রিলেশনাল ডাটাবেজ ম্যানেজমেন্ট সিস্টেম কি? ডাটাবেজের বিভিন্ন প্রকার রিলেশনশীপ বর্ণনা করুন। <sub>G2100</sub>
 
 *Written*
 
@@ -5068,9 +5965,9 @@ Students (id,name,dep) Enrollments(id,grade,course) 1. Print name, name of the s
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৪। (ক) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g1988"></a>
+<a id="g2101"></a>
 
-### GRANT ও REVOKE এর কাজ বর্ণনা করুন। <sub>G1988</sub>
+### GRANT ও REVOKE এর কাজ বর্ণনা করুন। <sub>G2101</sub>
 
 *Written*
 
@@ -5080,9 +5977,9 @@ GRANT ও REVOKE এর কাজ বর্ণনা করুন।
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৪ (খ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
 
-<a id="g2121"></a>
+<a id="g2234"></a>
 
-### Direct বা Random Access ফাইল প্রক্রিয়াকরণ চিত্রসহ বর্ণনা করুন। <sub>G2121</sub>
+### Direct বা Random Access ফাইল প্রক্রিয়াকরণ চিত্রসহ বর্ণনা করুন। <sub>G2234</sub>
 
 *Written*
 
@@ -5092,9 +5989,9 @@ Direct বা Random Access ফাইল প্রক্রিয়াকরণ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2124"></a>
+<a id="g2237"></a>
 
-### সর্টিং এবং ইন্ডেক্সিং এর মধ্যে পার্থক্য লিখুন। <sub>G2124</sub>
+### সর্টিং এবং ইন্ডেক্সিং এর মধ্যে পার্থক্য লিখুন। <sub>G2237</sub>
 
 *Written*
 
@@ -5104,9 +6001,9 @@ Direct বা Random Access ফাইল প্রক্রিয়াকরণ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৯ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2664"></a>
+<a id="g2777"></a>
 
-### Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer? <sub>G2664</sub>
+### Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer? <sub>G2777</sub>
 
 *Written*
 
@@ -5116,9 +6013,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariate (BSCS), Assistant Engineer (IT)/ Assistant Maintenance Engineer – Grade 9 — Exam Date 24/01/2026 — exam taker not printed — time not printed — 16 questions, marks in brackets (total not printed) — pages 1–3, Q3(i) — [duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md](../duranta/1769271736-banker-s-selection-committee-secretariate-bscs-assistant-eng/1769271736.md)
 
-<a id="g4060"></a>
+<a id="g4173"></a>
 
-### ডাটা নরমালাইজেশন বলতে কী বুঝেন? <sub>G4060</sub>
+### ডাটা নরমালাইজেশন বলতে কী বুঝেন? <sub>G4173</sub>
 
 *Written*
 
@@ -5128,9 +6025,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৩(খ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4068"></a>
+<a id="g4181"></a>
 
-### রিলেশনাল অ্যালজেবরা কী? এর মৌলিক অপারেশনসমূহ লিখুন। <sub>G4068</sub>
+### রিলেশনাল অ্যালজেবরা কী? এর মৌলিক অপারেশনসমূহ লিখুন। <sub>G4181</sub>
 
 *Written*
 
@@ -5140,9 +6037,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৪ অথবা (খ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g4070"></a>
+<a id="g4183"></a>
 
-### রিলেশনাল ডাটাবেজ ম্যানেজমেন্ট সিস্টেম কী? বিভিন্ন ধরনের ডাটাবেজ রিলেশনশীপের বর্ণনা দিন। <sub>G4070</sub>
+### রিলেশনাল ডাটাবেজ ম্যানেজমেন্ট সিস্টেম কী? বিভিন্ন ধরনের ডাটাবেজ রিলেশনশীপের বর্ণনা দিন। <sub>G4183</sub>
 
 *Written*
 
@@ -5152,9 +6049,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৫(ক) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
 
-<a id="g2492"></a>
+<a id="g2605"></a>
 
-### ডাটাবেজ নিয়ে প্রাকটিকাল কনসেপ্ট। <sub>G2492</sub>
+### ডাটাবেজ নিয়ে প্রাকটিকাল কনসেপ্ট। <sub>G2605</sub>
 
 *Viva*
 
@@ -5165,9 +6062,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V3 — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g2497"></a>
+<a id="g2610"></a>
 
-### খাদ্যের ওয়েরসাইট তৈরিতে টেবিল কিভাবে সাজানো যেতে পারে কি কি টেবিল হবে <sub>G2497</sub>
+### খাদ্যের ওয়েরসাইট তৈরিতে টেবিল কিভাবে সাজানো যেতে পারে কি কি টেবিল হবে <sub>G2610</sub>
 
 *Viva*
 
@@ -5178,9 +6075,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — Directorate of Food (খাদ্য অধিদপ্তর), Assistant Programmer — Viva experience (ভাইভা অভিজ্ঞতা), 2022 (date not printed) — exam taker not printed — no marks — pages 2–3 (viva), V-tables — [duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md](../duranta/1741131167-directorate-of-food-assistant-programmer-practical-viva-2022/1741131167.md)
 
-<a id="g4672"></a>
+<a id="g4965"></a>
 
-### 3. কয়েকটি ডাটাবেজ Softwere এর নাম বলুন? <sub>G4672</sub>
+### 3. কয়েকটি ডাটাবেজ Softwere এর নাম বলুন? <sub>G4965</sub>
 
 *Viva*
 
@@ -5191,9 +6088,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J2 Combined Bank Officer (IT) 2026, Job ID 10229 (viva), A2-V1 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4700"></a>
+<a id="g4993"></a>
 
-### 14. কয়েকটি ডাটাবেজ এর নাম বল। কোন গুলো স্টাকচার্ড আর কোন গুলো নন- স্টাকচার্ড? <sub>G4700</sub>
+### 14. কয়েকটি ডাটাবেজ এর নাম বল। কোন গুলো স্টাকচার্ড আর কোন গুলো নন- স্টাকচার্ড? <sub>G4993</sub>
 
 *Viva*
 
@@ -5204,9 +6101,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V6 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g4701"></a>
+<a id="g4994"></a>
 
-### 15. তুমি জানো যে ব্যাংক এ ওরাকল ডাটাবেজ ব্যবহার করা হয়, এতো ডাটাবেজ থাকতে আমরা বেশি টাকা… <sub>G4701</sub>
+### 15. তুমি জানো যে ব্যাংক এ ওরাকল ডাটাবেজ ব্যবহার করা হয়, এতো ডাটাবেজ থাকতে আমরা বেশি টাকা… <sub>G4994</sub>
 
 *Viva*
 
@@ -5217,9 +6114,9 @@ Why is "Atomicity" specifically critical for an Inter-Bank Fund Transfer?
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J6 Combined Bank Officer (IT) 2026, Job ID 10229, Board 03, 13/07/2026 (viva), A6-V7 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g3434"></a>
+<a id="g3547"></a>
 
-### (c) What do you mean by the terms: roll back and roll forward? <sub>G3434</sub>
+### (c) What do you mean by the terms: roll back and roll forward? <sub>G3547</sub>
 
 *Written*
 
@@ -5244,9 +6141,9 @@ Consider the employee tables: Create a SQL view that shows the details of Employ
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — sql, Q9 — [bit to exabyte/10_bte-p010-sql-q06-13.md](../bit%20to%20exabyte/10_bte-p010-sql-q06-13.md) · [image](../bit%20to%20exabyte/10_bte-p010-sql-q06-13.jpg)
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q22 — [bit to exabyte/30_bte-g2-p16-database-sql-q20-25.md](../bit%20to%20exabyte/30_bte-g2-p16-database-sql-q20-25.md) · [image](../bit%20to%20exabyte/30_bte-g2-p16-database-sql-q20-25.jpg)
 
-<a id="g3076"></a>
+<a id="g3189"></a>
 
-### What is trigger? When it is used? Write down some advantages of trigger. <sub>G3076</sub>
+### What is trigger? When it is used? Write down some advantages of trigger. <sub>G3189</sub>
 
 *Written*
 
@@ -5256,9 +6153,9 @@ What is trigger? When it is used? Write down some advantages of trigger.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4317"></a>
+<a id="g4610"></a>
 
-### What is trigger, explain with example. Why trigger needed? <sub>G4317</sub>
+### What is trigger, explain with example. Why trigger needed? <sub>G4610</sub>
 
 *Written*
 
@@ -5282,9 +6179,9 @@ Employee(emp_id, emp_name, dept_id, salary), Department(dept_id, dept_name, incr
 - **Printed answer:** CREATE TRIGGER New_EMP ALTER INSERT ON employee FOR EACH ROW UPDATE salary = salary + salary*0.10 WHEN salary > 30000
 - **Correction:** Invalid syntax ('ALTER INSERT', bare UPDATE). E.g. MySQL: CREATE TRIGGER inc_sal BEFORE INSERT ON Employee FOR EACH ROW BEGIN IF NEW.salary > 30000 THEN SET NEW.salary = NEW.salary * 1.10; END IF; END;
 
-<a id="g3769"></a>
+<a id="g3882"></a>
 
-### Fill in the gaps with Trigger sql. <sub>G3769</sub>
+### Fill in the gaps with Trigger sql. <sub>G3882</sub>
 
 *Written*
 
@@ -5294,9 +6191,9 @@ Fill in the gaps with Trigger sql.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q9 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g4217"></a>
+<a id="g4330"></a>
 
-### Define View, Materialized View, Difference btw them and Usage of two. <sub>G4217</sub>
+### Define View, Materialized View, Difference btw them and Usage of two. <sub>G4330</sub>
 
 *Written*
 
@@ -5306,9 +6203,45 @@ Define View, Materialized View, Difference btw them and Usage of two.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — RAKUB — Assistant Database Administrator (ADBA) — Written — 04/12/2020 — Exam taker: not printed — marks per question as printed (IT 145 + Bangla/English focus 40) — pages 1–9, Q3 — [bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md](../bank-written-web/2020-rakub-adba-stackit-slideshare/rakub-adba-2020.md)
 
-<a id="g1965"></a>
+<a id="g4417"></a>
 
-### ডাটাবেস সিস্টেমে View কী? এটি কী কী কাজে লাগে? <sub>G1965</sub>
+### What are the different events in Triggers? (a) Define, Create (b) Drop, Comment (c) Inser… <sub>G4417</sub>
+
+*MCQ*
+
+What are the different events in Triggers? (a) Define, Create (b) Drop, Comment (c) Insert, Update, Delete (d) All of a, b, c
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ40 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4440"></a>
+
+### Oracle materialized views or SNAPSHOTS is used for (a) Hiding data from users (b) Dynamic… <sub>G4440</sub>
+
+*MCQ*
+
+Oracle materialized views or SNAPSHOTS is used for (a) Hiding data from users (b) Dynamic data replication (c) Table Space Reduction (d) Data Abstraction
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ75 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4453"></a>
+
+### Embedded SQL is which of the following? (a) Hard coded SQL statements in a programming la… <sub>G4453</sub>
+
+*MCQ*
+
+Embedded SQL is which of the following? (a) Hard coded SQL statements in a programming language such as Java. (b) The process of making an application capable of generating specific SQL code on the fly. (c) Hard-coded SQL statements in a procedure. (d) Hard coded SQL statements in a trigger
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ96 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g2078"></a>
+
+### ডাটাবেস সিস্টেমে View কী? এটি কী কী কাজে লাগে? <sub>G2078</sub>
 
 *Written*
 
@@ -5318,9 +6251,9 @@ Define View, Materialized View, Difference btw them and Usage of two.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ৯ (গ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2765"></a>
+<a id="g2878"></a>
 
-### Differentiate between stored procedure and trigger in Structural Query Language (SQL). <sub>G2765</sub>
+### Differentiate between stored procedure and trigger in Structural Query Language (SQL). <sub>G2878</sub>
 
 *Written*
 
@@ -5414,9 +6347,9 @@ What is the real-life application of a Database Trigger?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p27 Q24 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p27)
 - **Printed answer:** A trigger can automatically record transaction logs, update account balances, maintain audit trails, or generate notifications after database changes
 
-<a id="g1620"></a>
+<a id="g1619"></a>
 
-### Data Abstraction কী? ডেটা অ্যাবস্ট্রাকশনের বিভিন্ন লেভেল (Physical, Logical, View Level) … <sub>G1620</sub>
+### Data Abstraction কী? ডেটা অ্যাবস্ট্রাকশনের বিভিন্ন লেভেল (Physical, Logical, View Level) … <sub>G1619</sub>
 
 *Written*
 
@@ -5426,9 +6359,9 @@ Data Abstraction কী? ডেটা অ্যাবস্ট্রাকশন
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — ডেটাবেজ থিওরি, আর্কিটেকচার ও মডেল, Q93 — [18th NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.md) · [image](../18th%20NTCRA/05_ntrca-qbank-p05-algorithms-dbms-theory-q84-102.jpg)
 
-<a id="g1648"></a>
+<a id="g1647"></a>
 
-### ডেটাবেজ ভিউ (View) কী? ইহা কী কাজে লাগে এবং Table ও View এর মধ্যে পার্থক্য লিখুন। <sub>G1648</sub>
+### ডেটাবেজ ভিউ (View) কী? ইহা কী কাজে লাগে এবং Table ও View এর মধ্যে পার্থক্য লিখুন। <sub>G1647</sub>
 
 *Written*
 
@@ -5438,9 +6371,9 @@ Data Abstraction কী? ডেটা অ্যাবস্ট্রাকশন
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — SQL কুয়েরি ও প্র্যাকটিস সমস্যা, Q121 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1650"></a>
+<a id="g1649"></a>
 
-### Database Trigger কী এবং ডেটাবেজে ট্রিগারের সুবিধা কী কী? <sub>G1650</sub>
+### Database Trigger কী এবং ডেটাবেজে ট্রিগারের সুবিধা কী কী? <sub>G1649</sub>
 
 *Written*
 
@@ -5449,197 +6382,6 @@ Database Trigger কী এবং ডেটাবেজে ট্রিগার
 - **Asked in (0):** no dated exam tag on the source
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — DBMS — SQL (continued), Q123 — [18th NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.md) · [image](../18th%20NTCRA/07_ntrca-qbank-p07-sql-practice-se-q122-137.jpg)
-
-## SQL command types
-
-<a id="g2055"></a>
-
-### DDL এবং DML এর মধ্যে পার্থক্য লিখুন। <sub>G2055</sub>
-
-*Written*
-
-DDL এবং DML এর মধ্যে পার্থক্য লিখুন।
-
-- **Asked in (1):** 17th NTRCA ICT (2023)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮। (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
-
-<a id="g0957"></a>
-
-### What is DBMS? Write the full meaning of DDL and DML. <sub>G0957</sub>
-
-*Written*
-
-What is DBMS? Write the full meaning of DDL and DML.
-
-- **Asked in (1):** BKKB AP 2017
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q13 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q13 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
-
-<a id="g1858"></a>
-
-### What are the DDL and DML? <sub>G1858</sub>
-
-*Written*
-
-What are the DDL and DML?
-
-- **Asked in (1):** 36th BCS (2016)
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 41. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
-  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
-
-<a id="g1989"></a>
-
-### DDL ও DML সম্পর্কে লিখুন। <sub>G1989</sub>
-
-*Written*
-
-DDL ও DML সম্পর্কে লিখুন।
-
-- **Asked in (1):** 15th NTRCA CSE
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৪ (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
-
-<a id="g4066"></a>
-
-### DDL, DML, 4GL সম্পর্কে বর্ণনা করুন। <sub>G4066</sub>
-
-*Written*
-
-DDL, DML, 4GL সম্পর্কে বর্ণনা করুন।
-
-- **Asked in (1):** 13th NTRCA CSE (2016)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৪(খ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
-
-<a id="g4468"></a>
-
-### What are the difference among DDL,DML and DCL? <sub>G4468</sub>
-
-*Written*
-
-What are the difference among DDL,DML and DCL?
-
-- **Asked in (1):** NWPGCL AE(CSE)
-- **Source:**
-  - Question paper found on the web (see the folder README for the URL) — NWPGCL Assistant Engineer (CSE) (year not printed), Q3 — [power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md](../power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md)
-
-<a id="g1647"></a>
-
-### ডেটাবেজ সাব-ল্যাঙ্গুয়েজ: DDL, DML, DCL, TCL এবং DQL এর সংজ্ঞা, কমান্ড ও পার্থক্য লিখুন। <sub>G1647</sub>
-
-*Written*
-
-ডেটাবেজ সাব-ল্যাঙ্গুয়েজ: DDL, DML, DCL, TCL এবং DQL এর সংজ্ঞা, কমান্ড ও পার্থক্য লিখুন।
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — SQL কুয়েরি ও প্র্যাকটিস সমস্যা, Q120 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
-
-## Distributed DB, NoSQL & backup
-
-<a id="g0952"></a>
-
-### What is distributed database? <sub>G0952</sub>
-
-*Written*
-
-What is distributed database?
-
-- **Asked in (1):** Combined Bank ADA 2022
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q8 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q8 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
-
-<a id="g3082"></a>
-
-### What is the distributed database system? What is the responsibilities of a database admin… <sub>G3082</sub>
-
-*Written*
-
-What is the distributed database system? What is the responsibilities of a database administrator?
-
-- **Asked in (1):** Combined Bank ADA 2022
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3139"></a>
-
-### In the context of data management, what are the primary difference between data replicati… <sub>G3139</sub>
-
-*Written*
-
-In the context of data management, what are the primary difference between data replication and data backup? Provide real-world example of ashen each is employed effectively.
-
-- **Asked in (1):** Rupali Bank ANA 2023
-- **Source:**
-  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q26 — [suggestion based on previous yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.md](../suggestion%20based%20on%20previous%20yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.md) · [image](../suggestion%20based%20on%20previous%20yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.jpg)
-  - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g3176"></a>
-
-### Difference between incremental backup and differential backup. Which is more suitable for… <sub>G3176</sub>
-
-*Written*
-
-Difference between incremental backup and differential backup. Which is more suitable for the banking system? [Combined Bank ADA 2024]
-
-- **Asked in (1):** Combined Bank ADA 2024
-- **Source:**
-  - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q17 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
-
-<a id="g0191"></a>
-
-### Which is an advantage of a distributed database over a centralized one? (software cost/co… <sub>G0191</sub>
-
-*MCQ*
-
-Which is an advantage of a distributed database over a centralized one? (software cost/complexity/slow response/modular growth)
-
-- **Asked in (1):** BCC AP 2021
-- **Source:**
-  - BCC Assistant Programmer (BUET) (2021-02-12), MCQ 8 — [BUET JOB/10_stages-osi-model-bcc-mcq.md](../BUET%20JOB/10_stages-osi-model-bcc-mcq.md) · [image](../BUET%20JOB/10_stages-osi-model-bcc-mcq.jpg)
-- **Printed answer:** d (Modular growth)
-
-<a id="g0956"></a>
-
-### Explain the concept distributed DBMS. What are the features of DBMS? <sub>G0956</sub>
-
-*Written*
-
-Explain the concept distributed DBMS. What are the features of DBMS?
-
-- **Asked in (1):** BB AME 2019
-- **Source:**
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q12 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
-  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q12 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
-
-<a id="g2530"></a>
-
-### What is the distributed DBMS and describe its feature? <sub>G2530</sub>
-
-*Written*
-
-What is the distributed DBMS and describe its feature?
-
-- **Asked in (1):** BB AME 2019
-- **Source:**
-  - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -04 (suggestion), Set-04 Q1 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
-  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Maintenance Engineer (AME) — 21.09.2019 — Exam taker: BUET (as printed by the coaching banner; unverified) — Marks 150, Time 1.30 h, answer all — pages 1–5, Q1 — [bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md](../bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md)
-
-<a id="g1638"></a>
-
-### Database System Architectures: Centralized, Distributed এবং Client-Server ডেটাবেজ সিস্টেম… <sub>G1638</sub>
-
-*Written*
-
-Database System Architectures: Centralized, Distributed এবং Client-Server ডেটাবেজ সিস্টেম সচিত্র বর্ণনা করুন।
-
-- **Asked in (0):** no dated exam tag on the source
-- **Source:**
-  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q111 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
 ## Concurrency control & recovery
 
@@ -5656,9 +6398,9 @@ Write-ahead logging requires: (data first, log later / no redo phase / log recor
   - 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025), Q79 — [BCS/57_write-ahead-logging-random-search.md](../BCS/57_write-ahead-logging-random-search.md) · [image](../BCS/57_write-ahead-logging-random-search.jpg)
 - **Printed answer:** (গ) log record flushed before the data page
 
-<a id="g3966"></a>
+<a id="g4079"></a>
 
-### Strict two-phase locking (S2PL) holds ________ till commit. (ক) All locks (খ) Only read l… <sub>G3966</sub>
+### Strict two-phase locking (S2PL) holds ________ till commit. (ক) All locks (খ) Only read l… <sub>G4079</sub>
 
 *MCQ*
 
@@ -5684,9 +6426,9 @@ Locking protocols are used in DBMS for ____.
   - BPDB Assistant Engineer (CSE) (2021), Q1(iv) — [BUET JOB/36_math-mcq-and-bpdb-2021.md](../BUET%20JOB/36_math-mcq-and-bpdb-2021.md) · [image](../BUET%20JOB/36_math-mcq-and-bpdb-2021.jpg)
 - **Correction:** No answer printed. Expected: concurrency control.
 
-<a id="g2920"></a>
+<a id="g3033"></a>
 
-### When does a Deadlock occur and how do you prevent it in a database? <sub>G2920</sub>
+### When does a Deadlock occur and how do you prevent it in a database? <sub>G3033</sub>
 
 *Written*
 
@@ -5696,9 +6438,9 @@ When does a Deadlock occur and how do you prevent it in a database?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q1 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g2922"></a>
+<a id="g3035"></a>
 
-### Classify the failure of Database Management. <sub>G2922</sub>
+### Classify the failure of Database Management. <sub>G3035</sub>
 
 *Written*
 
@@ -5708,9 +6450,9 @@ Classify the failure of Database Management.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 02 — BSCS Combined 3 Banks ((1) Sonali Bank Limited (2) Bangladesh New Development Bank Limited) — Senior Officer (IT) — 03-11-2020 — Exam taker: not printed — Total Mark 200, Total Time 2.00 Hours — pages 3–4, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3755"></a>
+<a id="g3868"></a>
 
-### Write down the full form of DDL, DML, DCL and TCL. Classify the following commands into D… <sub>G3755</sub>
+### Write down the full form of DDL, DML, DCL and TCL. Classify the following commands into D… <sub>G3868</sub>
 
 *Written*
 
@@ -5720,9 +6462,59 @@ Write down the full form of DDL, DML, DCL and TCL. Classify the following comman
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q22 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g2732"></a>
+<a id="g4404"></a>
 
-### Why do we use a trigger? Write a trigger that inserts the timestamp in another table as s… <sub>G2732</sub>
+### In Oracle to change the DB_BLOCK_SIZE parameter, you need to (a) Re-create the database (… <sub>G4404</sub>
+
+*MCQ*
+
+In Oracle to change the DB_BLOCK_SIZE parameter, you need to (a) Re-create the database (b) Alter the database (c) Move the database to temporary (d) Update the table types of the database
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ16 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key b; DB_BLOCK_SIZE is fixed when the database is created and cannot be changed by ALTER SYSTEM/ALTER DATABASE (the sheet's `alter system set db_block_size=4096 scope=spfile` is rejected). The database has to be re-created, option (a). Other block sizes can only be added per tablespace via DB_nK_CACHE_SIZE.
+
+<a id="g4446"></a>
+
+### GET_BLOCK_PROPERTY is a (a) Restricted procedure (b) Unrestricted procedure (c) Library f… <sub>G4446</sub>
+
+*MCQ*
+
+GET_BLOCK_PROPERTY is a (a) Restricted procedure (b) Unrestricted procedure (c) Library function (d) None of the Above
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ87 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g4452"></a>
+
+### ROLLBACK command is used to undo the changes made by (a) DDL commands (b) TCL commands (c… <sub>G4452</sub>
+
+*MCQ*
+
+ROLLBACK command is used to undo the changes made by (a) DDL commands (b) TCL commands (c) DML Commands. (d) Commit command
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ95 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key d contradicts the sheet's own explanation (ROLLBACK reverts changes "since last COMMIT"); it cannot undo a COMMIT. ROLLBACK undoes uncommitted DML changes, option (c).
+
+<a id="g4530"></a>
+
+### Which one of the following commands is used to restore the database to the last committed… <sub>G4530</sub>
+
+*MCQ*
+
+Which one of the following commands is used to restore the database to the last committed state? (a) Savepoint (b) Rollback (c) Commit (d) None of the Above
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ14 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g2845"></a>
+
+### Why do we use a trigger? Write a trigger that inserts the timestamp in another table as s… <sub>G2845</sub>
 
 *Written*
 
@@ -5760,9 +6552,9 @@ What should be done if the bank database crashes?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p20 Q14 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p20); [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p21)
 - **Printed answer:** First, identify the cause and isolate the problem. Then restore data from backups or switch to the Disaster Recovery Site (DRS) to continue banking operations while recovery is performed
 
-<a id="g1644"></a>
+<a id="g1643"></a>
 
-### Concurrency Control কী? Lock-Based Protocols এবং Timestamp-Based Protocols ব্যাখ্যা করুন। <sub>G1644</sub>
+### Concurrency Control কী? Lock-Based Protocols এবং Timestamp-Based Protocols ব্যাখ্যা করুন। <sub>G1643</sub>
 
 *Written*
 
@@ -5772,9 +6564,9 @@ Concurrency Control কী? Lock-Based Protocols এবং Timestamp-Based Proto
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q117 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g1645"></a>
+<a id="g1644"></a>
 
-### Database Failure কী ও এর শ্রেণিবিভাগ? ফেইলিউর অবস্থা হতে ডেটাবেজ পুনরুদ্ধারে Log-Based Re… <sub>G1645</sub>
+### Database Failure কী ও এর শ্রেণিবিভাগ? ফেইলিউর অবস্থা হতে ডেটাবেজ পুনরুদ্ধারে Log-Based Re… <sub>G1644</sub>
 
 *Written*
 
@@ -5784,9 +6576,21 @@ Database Failure কী ও এর শ্রেণিবিভাগ? ফেই�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q118 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
 
-<a id="g4798"></a>
+<a id="g1851"></a>
 
-### Define Backup and Recovery in DBMS (brief). <sub>G4798</sub>
+### Hadoop; architecture; HDFS block and replica calculations <sub>G1851</sub>
+
+*Written*
+
+Hadoop; architecture; HDFS block and replica calculations
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q117 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g5091"></a>
+
+### Define Backup and Recovery in DBMS (brief). <sub>G5091</sub>
 
 *Written*
 
@@ -5796,11 +6600,227 @@ Define Backup and Recovery in DBMS (brief).
 - **Source:**
   - Web suggestion or sample sheet (not a dated paper) — DaudBD — Uttara Bank PLC Senior Officer (CSE/IT) Model Written Test (Paper II) (suggestion), A4 — [model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md](../model-test-web/daudbd-uttara-bank-so-it-model-written-tests/uttara-so-it-model-written-tests.md)
 
+## Distributed DB, NoSQL & backup
+
+<a id="g0952"></a>
+
+### What is distributed database? <sub>G0952</sub>
+
+*Written*
+
+What is distributed database?
+
+- **Asked in (1):** Combined Bank ADA 2022
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q8 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q8 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
+
+<a id="g3195"></a>
+
+### What is the distributed database system? What is the responsibilities of a database admin… <sub>G3195</sub>
+
+*Written*
+
+What is the distributed database system? What is the responsibilities of a database administrator?
+
+- **Asked in (1):** Combined Bank ADA 2022
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 16 — [ADA-SBL, JBL 2022 CTI] — 01.03.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks = 200 marks — pages 25–26, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3252"></a>
+
+### In the context of data management, what are the primary difference between data replicati… <sub>G3252</sub>
+
+*Written*
+
+In the context of data management, what are the primary difference between data replication and data backup? Provide real-world example of ashen each is employed effectively.
+
+- **Asked in (1):** Rupali Bank ANA 2023
+- **Source:**
+  - Bit to Exabyte, Petrobangla ANE suggested questions (coaching suggestion, not a dated paper) — Petrobangla ANE suggested questions, Q26 — [suggestion based on previous yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.md](../suggestion%20based%20on%20previous%20yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.md) · [image](../suggestion%20based%20on%20previous%20yr/04_petrobangla-ane-q24-29-subnet-ipclass-sql-server.jpg)
+  - duranta.app question bank (coaching compilation of the question paper) — 07 — RUPALI BANK — ANA (5 Post) 2023 — Job ID: 10166 — 04.11.2023 — Exam taker: BIBM — Marks: Focus + GK (15+15+10) + IT (15×10) — pages 35–37, Q13 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g3289"></a>
+
+### Difference between incremental backup and differential backup. Which is more suitable for… <sub>G3289</sub>
+
+*Written*
+
+Difference between incremental backup and differential backup. Which is more suitable for the banking system? [Combined Bank ADA 2024]
+
+- **Asked in (1):** Combined Bank ADA 2024
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — 10 — Combined 3 Bank (10200) — Assistant Database Administrator 2024 — 23.02.2024 — Exam Taker: BIBM — Exam Time: 2 hour; Written: subjective (150) + Math (20) + Focus (10) + B/E + E/B — pages 40–42, Q17 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
+
+<a id="g0191"></a>
+
+### Which is an advantage of a distributed database over a centralized one? (software cost/co… <sub>G0191</sub>
+
+*MCQ*
+
+Which is an advantage of a distributed database over a centralized one? (software cost/complexity/slow response/modular growth)
+
+- **Asked in (1):** BCC AP 2021
+- **Source:**
+  - BCC Assistant Programmer (BUET) (2021-02-12), MCQ 8 — [BUET JOB/10_stages-osi-model-bcc-mcq.md](../BUET%20JOB/10_stages-osi-model-bcc-mcq.md) · [image](../BUET%20JOB/10_stages-osi-model-bcc-mcq.jpg)
+- **Printed answer:** d (Modular growth)
+
+<a id="g0956"></a>
+
+### Explain the concept distributed DBMS. What are the features of DBMS? <sub>G0956</sub>
+
+*Written*
+
+Explain the concept distributed DBMS. What are the features of DBMS?
+
+- **Asked in (1):** BB AME 2019
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q12 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q12 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
+
+<a id="g2643"></a>
+
+### What is the distributed DBMS and describe its feature? <sub>G2643</sub>
+
+*Written*
+
+What is the distributed DBMS and describe its feature?
+
+- **Asked in (1):** BB AME 2019
+- **Source:**
+  - duranta.app question bank (coaching suggestion, not a dated paper) — AHE/ANE Question Set -04 (suggestion), Set-04 Q1 — [duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md](../duranta/1751286806-dawasa-previous-ame-ahe-ane-buet-question/1751286806.md)
+  - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Maintenance Engineer (AME) — 21.09.2019 — Exam taker: BUET (as printed by the coaching banner; unverified) — Marks 150, Time 1.30 h, answer all — pages 1–5, Q1 — [bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md](../bank-written-web/2019-bb-ame-stackit-slideshare/bb-ame-2019.md)
+
+<a id="g4425"></a>
+
+### Your backup strategy includes the use of incremental backups using the export utility. Wh… <sub>G4425</sub>
+
+*MCQ*
+
+Your backup strategy includes the use of incremental backups using the export utility. Which export parameter indicates that an export should be incremental? (a) Direct (b) ExpType (c) INCTYPE (d) None of the above
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ48 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+- **Correction:** key a (DIRECT selects direct-path export, not incremental). In Oracle's original exp utility, INCTYPE=INCREMENTAL (or CUMULATIVE/COMPLETE) makes the export incremental, option (c).
+
+<a id="g4441"></a>
+
+### A distributed database is advantageous over a centralized database system in terms of (a)… <sub>G4441</sub>
+
+*MCQ*
+
+A distributed database is advantageous over a centralized database system in terms of (a) Fast Response (b) Software Complexity (c) Modular Growth (d) Software cost
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ77 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
+
+<a id="g1637"></a>
+
+### Database System Architectures: Centralized, Distributed এবং Client-Server ডেটাবেজ সিস্টেম… <sub>G1637</sub>
+
+*Written*
+
+Database System Architectures: Centralized, Distributed এবং Client-Server ডেটাবেজ সিস্টেম সচিত্র বর্ণনা করুন।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — কী, নরমালাইজেশন, ইনডেক্সিং ও কনকারেন্সি, Q111 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
+
+## SQL command types
+
+<a id="g2168"></a>
+
+### DDL এবং DML এর মধ্যে পার্থক্য লিখুন। <sub>G2168</sub>
+
+*Written*
+
+DDL এবং DML এর মধ্যে পার্থক্য লিখুন।
+
+- **Asked in (1):** 17th NTRCA ICT (2023)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৮। (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
+
+<a id="g0957"></a>
+
+### What is DBMS? Write the full meaning of DDL and DML. <sub>G0957</sub>
+
+*Written*
+
+What is DBMS? Write the full meaning of DDL and DML.
+
+- **Asked in (1):** BKKB AP 2017
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database Management System / DB ACID, Q13 — [bit to exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.md) · [image](../bit%20to%20exabyte/06_bte-p006-dbms-q02-13-deadlock-q01-02.jpg)
+  - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Database and SQL, Q13 — [bit to exabyte/28_bte-g2-p14-database-sql-q05-15.md](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.md) · [image](../bit%20to%20exabyte/28_bte-g2-p14-database-sql-q05-15.jpg)
+
+<a id="g1971"></a>
+
+### What are the DDL and DML? <sub>G1971</sub>
+
+*Written*
+
+What are the DDL and DML?
+
+- **Asked in (1):** 36th BCS (2016)
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 41. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
+  - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
+
+<a id="g2102"></a>
+
+### DDL ও DML সম্পর্কে লিখুন। <sub>G2102</sub>
+
+*Written*
+
+DDL ও DML সম্পর্কে লিখুন।
+
+- **Asked in (1):** 15th NTRCA CSE
+- **Source:**
+  - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–3), ৪ (গ) — [duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md](../duranta/1707458946-15th-ntrca-lecturer-cs-written/1707458946.md)
+
+<a id="g4179"></a>
+
+### DDL, DML, 4GL সম্পর্কে বর্ণনা করুন। <sub>G4179</sub>
+
+*Written*
+
+DDL, DML, 4GL সম্পর্কে বর্ণনা করুন।
+
+- **Asked in (1):** 13th NTRCA CSE (2016)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — ১৩তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার বিজ্ঞান (ঐচ্ছিক), বিষয় কোড : ৪৩১, খ সেট — 2016 (pp. 1–2 of the paper), ৪(খ) — [ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md](../ntrca-written-web/13-431-lecturer-cs-partial/13-431-lecturer-cs-partial.md)
+
+<a id="g4761"></a>
+
+### What are the difference among DDL,DML and DCL? <sub>G4761</sub>
+
+*Written*
+
+What are the difference among DDL,DML and DCL?
+
+- **Asked in (1):** NWPGCL AE(CSE)
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — NWPGCL Assistant Engineer (CSE) (year not printed), Q3 — [power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md](../power-sector-web/2021-nwpgcl-ae-cse-carrierbd/nwpgcl-ae-cse.md)
+
+<a id="g1646"></a>
+
+### ডেটাবেজ সাব-ল্যাঙ্গুয়েজ: DDL, DML, DCL, TCL এবং DQL এর সংজ্ঞা, কমান্ড ও পার্থক্য লিখুন। <sub>G1646</sub>
+
+*Written*
+
+ডেটাবেজ সাব-ল্যাঙ্গুয়েজ: DDL, DML, DCL, TCL এবং DQL এর সংজ্ঞা, কমান্ড ও পার্থক্য লিখুন।
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — SQL কুয়েরি ও প্র্যাকটিস সমস্যা, Q120 — [18th NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.md) · [image](../18th%20NTCRA/06_ntrca-qbank-p06-dbms-keys-sql-q103-121.jpg)
+
 ## Data warehouse & mining
 
-<a id="g3112"></a>
+<a id="g3225"></a>
 
-### Difference between database, data warehouse & data mining with real-world examples. Write… <sub>G3112</sub>
+### Difference between database, data warehouse & data mining with real-world examples. Write… <sub>G3225</sub>
 
 *Written*
 
@@ -5810,9 +6830,9 @@ Difference between database, data warehouse & data mining with real-world exampl
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 05 — Combined 4 Bank — SO IT (222 post) 2023 — Job ID: 10149 — 13.10.2023 — Exam taker: BIBM — Marks: Focus, GK (15+15+10) + IT (150) — pages 33–34, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4298"></a>
+<a id="g4591"></a>
 
-### Which of the following tools is used in business intelligence? ক. OLAP খ. Data Mining গ. … <sub>G4298</sub>
+### Which of the following tools is used in business intelligence? ক. OLAP খ. Data Mining গ. … <sub>G4591</sub>
 
 *MCQ*
 
@@ -5822,9 +6842,33 @@ Which of the following tools is used in business intelligence? ক. OLAP খ. Da
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (General) — Preliminary MCQ, "Basic computer knowledge" section (Q91–100) — 20 October 2023 — Exam taker: not stated — 100 MCQ, 1 hour, 100 marks, MCQ95 — [bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md](../bank-written-web/2023-bb-ad-general-mcq-ictsection-jobstestbd/bb-ad-general-2023-ict.md)
 
-<a id="g2122"></a>
+<a id="g4466"></a>
 
-### Data mining এবং Data warehousing বলতে কী বোঝায়? এদের মধ্যে সম্পর্ক কী? এদের উপকারিতা কী? <sub>G2122</sub>
+### Finding useful pattern from the data in a database is known as (a) Data Visualization (b)… <sub>G4466</sub>
+
+*MCQ*
+
+Finding useful pattern from the data in a database is known as (a) Data Visualization (b) Data Mining (c) Data Analytics (d) All of the above
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ9 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
+
+<a id="g4482"></a>
+
+### Which one of the following statements is false? (a) Data mining is considered as a proces… <sub>G4482</sub>
+
+*MCQ*
+
+Which one of the following statements is false? (a) Data mining is considered as a process of extracting data from large data sets (b) Data warehouse is the process of pooling all the relevant data together. (c) Data warehouse is created with the data generated by Data Mining for future use. (d) None of the above statements is false
+
+- **Asked in (1):** Combined Bank SO(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Senior Officer (IT) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 59 IT MCQs, MCQ25 — [bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md](../bank-written-web/2021-combined2-so-it-mcq-aust-stackit-slideshare/combined2-so-it-2021-mcq.md)
+
+<a id="g2235"></a>
+
+### Data mining এবং Data warehousing বলতে কী বোঝায়? এদের মধ্যে সম্পর্ক কী? এদের উপকারিতা কী? <sub>G2235</sub>
 
 *Written*
 
@@ -5834,9 +6878,9 @@ Data mining এবং Data warehousing বলতে কী বোঝায়? �
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ৯। (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g1640"></a>
+<a id="g1639"></a>
 
-### Data Warehousing, Data Analysis এবং Data Mining কী? এদের পারস্পরিক সম্পর্ক লিখুন। <sub>G1640</sub>
+### Data Warehousing, Data Analysis এবং Data Mining কী? এদের পারস্পরিক সম্পর্ক লিখুন। <sub>G1639</sub>
 
 *Written*
 

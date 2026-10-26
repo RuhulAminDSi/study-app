@@ -2,9 +2,9 @@
 
 Every question from the photographed sheets, books and PDFs in `ex-question/` that belongs to this subject. The same question asked in several exams, or printed in several sources, is shown once. For each question you get **where it was asked** (the exams, with names normalised in `../exam-tags.json`) and **where it was taken from** (each source document, linked to its transcription and image).
 
-- **Distinct questions:** 204 (from 228 records: Written 176, MCQ 26, Viva 26)
-- **Exams it appears in:** 86
-- **Corrections to printed answers:** 9
+- **Distinct questions:** 209 (from 233 records: Written 178, MCQ 29, Viva 26)
+- **Exams it appears in:** 88
+- **Corrections to printed answers:** 10
 - **How counts work:** "Asked in (N)" counts different government/public-sector recruitment exams (BCS, NTRCA, BPSC, state banks, public bodies) and BUET M.Sc. admission tests. Private-bank exams and compiled viva experiences are listed but not counted. Coaching suggestion sheets and model tests never add to the count.
 
 ## Most-asked topics
@@ -12,13 +12,13 @@ Every question from the photographed sheets, books and PDFs in `ex-question/` th
 | # | Topic | Exams | Questions | Viva mentions |
 |---|---|---|---|---|
 | 1 | [Polymorphism, overloading & overriding](#polymorphism-overloading--overriding) | 32 | 43 | 5 |
-| 2 | [Inheritance](#inheritance) | 21 | 30 | 2 |
+| 2 | [Inheritance](#inheritance) | 22 | 32 | 2 |
 | 3 | [Constructors & destructors](#constructors--destructors) | 15 | 19 | 0 |
 | 4 | [Classes & objects](#classes--objects) | 12 | 16 | 3 |
-| 5 | [Java specifics](#java-specifics) | 11 | 25 | 6 |
+| 5 | [Java specifics](#java-specifics) | 11 | 26 | 6 |
 | 6 | [OOP principles](#oop-principles) | 11 | 17 | 4 |
-| 7 | [Other](#other) | 9 | 9 | 0 |
-| 8 | [OOP programs](#oop-programs) | 8 | 9 | 0 |
+| 7 | [Other](#other) | 10 | 10 | 0 |
+| 8 | [OOP programs](#oop-programs) | 9 | 10 | 0 |
 | 9 | [Access specifiers & friend functions](#access-specifiers--friend-functions) | 6 | 7 | 0 |
 | 10 | [OOP vs structured programming](#oop-vs-structured-programming) | 6 | 7 | 2 |
 | 11 | [Encapsulation & abstraction](#encapsulation--abstraction) | 4 | 10 | 2 |
@@ -32,10 +32,10 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
 
 1. **Explain Method overloading and Method overriding with example .**  
    Asked in (8): 17th NTRCA ICT (2023); 36th BCS (2016); BPSC AME 2021; BPSC AP 2023; Combined Bank AHE 2021; Combined Bank SO(AME) 2021; NU AP 2020; RAKUB Programmer 2021  
-   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 · duranta.app question bank (coaching compilation of the question paper) — 10 — Assistant Hardware Engineer (AHE) - SBL, JBL, RBL [AHE SBL, JBL, RBL 2021 CTI] — 24.12.2021 — Exam taker: CTI (from the printed tag) — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks — pages 15–17 — see [G2340](#g2340)
+   Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming · duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32) · duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 · duranta.app question bank (coaching compilation of the question paper) — 10 — Assistant Hardware Engineer (AHE) - SBL, JBL, RBL [AHE SBL, JBL, RBL 2021 CTI] — 24.12.2021 — Exam taker: CTI (from the printed tag) — IT: 15*10 marks + Non IT: 4*10 marks + GK: 2*5 marks — pages 15–17 — see [G2453](#g2453)
 2. **Friend Function কী? Friend Function-এর বৈশিষ্ট্য এবং সুবিধা ও অসুবিধাগুলো লিখুন।**  
    Asked in (3): 16th NTRCA; 16th NTRCA ICT; 18th NTRCA College ICT (2024)  
-   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++) · Question paper · duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2098](#g2098)
+   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++) · Question paper · duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2211](#g2211)
 3. **কী কী ধারণার উপর ভিত্তি করে OOP প্রতিষ্ঠিত? ধারণাগুলো ব্যাখ্যা করুন।**  
    Asked in (2): 17th NTRCA CSE (2023); 17th NTRCA ICT (2023)  
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming · duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G1071](#g1071)
@@ -53,13 +53,13 @@ Ranked by the number of exams, with recent exams (2022 onwards) weighted higher.
    Source: Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming — see [G1074](#g1074)
 8. **Object-Oriented Programming (OOP) বলতে কী বোঝায়? OOP কেন দরকার এবং এর মৌলিক ধারণাগুলো (Pillars) লিখুন।**  
    Asked in (2): 15th NTRCA; 17th NTRCA  
-   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++) — see [G1584](#g1584)
+   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++) — see [G1583](#g1583)
 9. **Class এবং Object কাকে বলে? কীভাবে Object তৈরি করতে হয় এবং এদের মধ্যে উদাহরণসহ পার্থক্য লিখুন।**  
    Asked in (2): 15th NTRCA; 17th NTRCA  
-   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++) — see [G1585](#g1585)
+   Source: Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++) — see [G1584](#g1584)
 10. **Object Oriented Programming-এ Interface কী কাজে লাগে?**  
    Asked in (2): 16th NTRCA ICT; 37th BCS  
-   Source: duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11) · duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2100](#g2100)
+   Source: duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11) · duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3) — see [G2213](#g2213)
 11. **Which declares a pure virtual function in C++? (virtual void f() = 0; / virtual void f(); / void f()=0; / pure virtual f();)**  
    Asked in (1): 49th BCS ICT (2025)  
    Source: 49th BCS written exam 2025 — ICT (281), question paper 2 (100 MCQ) (2025) — see [G0084](#g0084)
@@ -105,9 +105,9 @@ Topics the Bit to Exabyte question book lists as its standard pattern for this s
 
 ## Polymorphism, overloading & overriding
 
-<a id="g2340"></a>
+<a id="g2453"></a>
 
-### Explain Method overloading and Method overriding with example . <sub>G2340</sub>
+### Explain Method overloading and Method overriding with example . <sub>G2453</sub>
 
 *Written*
 
@@ -194,9 +194,9 @@ What is Polymorphism? Java language এর আলোকে ব্যাখ্য
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q12 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
 
-<a id="g1737"></a>
+<a id="g1736"></a>
 
-### Function Overloading কী? উদাহরণসহ ব্যাখ্যা করুন। <sub>G1737</sub>
+### Function Overloading কী? উদাহরণসহ ব্যাখ্যা করুন। <sub>G1736</sub>
 
 *Written*
 
@@ -206,9 +206,9 @@ Function Overloading কী? উদাহরণসহ ব্যাখ্যা �
 - **Source:**
   - Question paper, Q2(খ) — [18th NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.md) · [image](../18th%20NTCRA/12_ntrca18-lecturer-ict452-paper-p1.jpg)
 
-<a id="g2476"></a>
+<a id="g2589"></a>
 
-### Determine overloading method, overridden method and hide super class method? public class… <sub>G2476</sub>
+### Determine overloading method, overridden method and hide super class method? public class… <sub>G2589</sub>
 
 *Written*
 
@@ -219,9 +219,9 @@ Determine overloading method, overridden method and hide super class method? pub
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank, Assistant Programmer 2023 — Exam date 3.2.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour — marks as printed: 80 MCQ (1 Hour); Written: 9 Subjective Question (150) + Math 4 (20) + Focus (10) + B/E (20) — pages 1–5, Q6 — [duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md](../duranta/1737452307-bangladesh-bank-ad-ict-question-pattern-bb-assistant-program/1737452307.md)
 - **Correction:** no answer is printed. As written (Java), `B.m2` and `B.m3` override `A`'s methods; `static m1` and `static m4` in `B` with the same signature as instance methods in `A` are compile errors (a static method cannot hide an instance method), so the intended "hidden" methods only work if `A.m1`/`A.m4` are static. No method here is overloaded.
 
-<a id="g2539"></a>
+<a id="g2652"></a>
 
-### A function having more than one distinct meaning is called .................... function.… <sub>G2539</sub>
+### A function having more than one distinct meaning is called .................... function.… <sub>G2652</sub>
 
 *MCQ*
 
@@ -231,9 +231,9 @@ A function having more than one distinct meaning is called .................... 
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Programming / C++ / OOP Q2 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3097"></a>
+<a id="g3210"></a>
 
-### Determine overloading method, overridden method and hide super class method? <sub>G3097</sub>
+### Determine overloading method, overridden method and hide super class method? <sub>G3210</sub>
 
 *Written*
 
@@ -243,9 +243,9 @@ Determine overloading method, overridden method and hide super class method?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30, Q5 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3160"></a>
+<a id="g3273"></a>
 
-### What is polymorphism? Describe different types or polymorphism. <sub>G3160</sub>
+### What is polymorphism? Describe different types or polymorphism. <sub>G3273</sub>
 
 *Written*
 
@@ -255,9 +255,9 @@ What is polymorphism? Describe different types or polymorphism.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 09 — Combined 5 bank (10198) SBL, BKB, KB, ICB — Assistant programmer 2024 — 09.02.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT:50 + Math+gk: 20); Written 10 Subjective Question (150) + Math 4(20) + Focus(20) + Letter(10) — pages 39–40, Q8 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3502"></a>
+<a id="g3615"></a>
 
-### a. What do you understand by polymorphism? Describe with an example.5 <sub>G3502</sub>
+### a. What do you understand by polymorphism? Describe with an example.5 <sub>G3615</sub>
 
 *Written*
 
@@ -267,9 +267,9 @@ a. What do you understand by polymorphism? Describe with an example.5
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16, Q1(a) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3503"></a>
+<a id="g3616"></a>
 
-### b. What is the difference between 'Method Overloading' and 'Method Overriding? Describe w… <sub>G3503</sub>
+### b. What is the difference between 'Method Overloading' and 'Method Overriding? Describe w… <sub>G3616</sub>
 
 *Written*
 
@@ -279,9 +279,9 @@ b. What is the difference between 'Method Overloading' and 'Method Overriding? D
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 36 — বাংলাদেশ জাতীয় সংসদ সচিবালয়ের কম্পিউটার প্রোগ্রামার — ০৮.০৫.২০২৩ — exam taker not printed — time and total not printed — pages 13–16, Q1(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3533"></a>
+<a id="g3646"></a>
 
-### Explain the concept of polymorphism in object-oriented programming with example. <sub>G3533</sub>
+### Explain the concept of polymorphism in object-oriented programming with example. <sub>G3646</sub>
 
 *Written*
 
@@ -291,9 +291,9 @@ Explain the concept of polymorphism in object-oriented programming with example.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-ক Q1 — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3554"></a>
+<a id="g3667"></a>
 
-### b) What is polymorphism in the context of an object-oriented paradigm? Explain the method… <sub>G3554</sub>
+### b) What is polymorphism in the context of an object-oriented paradigm? Explain the method… <sub>G3667</sub>
 
 *Written*
 
@@ -303,9 +303,9 @@ b) What is polymorphism in the context of an object-oriented paradigm? Explain t
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 38 — খাদ্য মন্ত্রণালয়ের নেটওয়ার্ক/ওয়েবসাইট ম্যানেজার — পরীক্ষার তারিখঃ ২১.০৫.২০২৫ — exam taker not printed — সময় ৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান, টেকনিক্যাল ৮০) — pages 19–24, গ্রুপ-খ Q4(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g3988"></a>
+<a id="g4101"></a>
 
-### Which one is a compile time polymorphism? (ক) Virtual function (খ) Operator overloading (… <sub>G3988</sub>
+### Which one is a compile time polymorphism? (ক) Virtual function (খ) Operator overloading (… <sub>G4101</sub>
 
 *MCQ*
 
@@ -315,9 +315,9 @@ Which one is a compile time polymorphism? (ক) Virtual function (খ) Operator 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — Computer Science (971), question paper 2 (Q101–173 of 200), 10.10.2025, Q115 — [bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md](../bcs-written-web/49th-971-livemcq-cse/49th-bcs-cse-971-paper2.md)
 
-<a id="g4344"></a>
+<a id="g4637"></a>
 
-### Which operator should be preferred to overload as a global function rather than a member … <sub>G4344</sub>
+### Which operator should be preferred to overload as a global function rather than a member … <sub>G4637</sub>
 
 *MCQ*
 
@@ -327,9 +327,9 @@ Which operator should be preferred to overload as a global function rather than 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Bank — Assistant Director (ICT) (Job ID 271, circular 76/2023) — MCQ — 07.02.2025 — Exam taker: FBS (as labelled by IT Job QnS; unverified) — 49 recalled MCQs, MCQ36 — [bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md](../bank-written-web/2025-bb-adict-mcq-itjobqns/bb-adict-2025-mcq.md)
 
-<a id="g4875"></a>
+<a id="g5168"></a>
 
-### Write the operator overloading function in C++ for the following Class Integer { Private … <sub>G4875</sub>
+### Write the operator overloading function in C++ for the following Class Integer { Private … <sub>G5168</sub>
 
 *Written*
 
@@ -363,9 +363,9 @@ Object oriented programming- এর প্রেক্ষিতে function over
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q35 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
 
-<a id="g1897"></a>
+<a id="g2010"></a>
 
-### Why are the overloaded functions int f(int a, int b=5); and int f(int &a); inherently amb… <sub>G1897</sub>
+### Why are the overloaded functions int f(int a, int b=5); and int f(int &a); inherently amb… <sub>G2010</sub>
 
 *Written*
 
@@ -379,9 +379,9 @@ Why are the overloaded functions int f(int a, int b=5); and int f(int &a); inher
 - **Printed answer:** Calling a function with a reference parameter looks the same as calling one with a value parameter. The solver adds that 'int b' should not be in the question.
 - **Correction:** The explanation is incomplete and the solver's remark is wrong. Because of the default argument, the call f(x) with an int lvalue matches both f(int, int=5) and f(int&) equally well, so the compiler cannot choose. The default b=5 is what causes the ambiguity, so it belongs in the question.
 
-<a id="g3794"></a>
+<a id="g3907"></a>
 
-### A class called “X” has the following operator overloading functions: 1) X operator*(X tem… <sub>G3794</sub>
+### A class called “X” has the following operator overloading functions: 1) X operator*(X tem… <sub>G3907</sub>
 
 *MCQ*
 
@@ -391,9 +391,9 @@ A class called “X” has the following operator overloading functions: 1) X op
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q7 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4149"></a>
+<a id="g4262"></a>
 
-### ফাংশন ওভারলোডিং ও অপারেটর ওভারলোডিং বলতে কী বুঝেন? উদাহরণ দিন। <sub>G4149</sub>
+### ফাংশন ওভারলোডিং ও অপারেটর ওভারলোডিং বলতে কী বুঝেন? উদাহরণ দিন। <sub>G4262</sub>
 
 *Written*
 
@@ -403,9 +403,9 @@ A class called “X” has the following operator overloading functions: 1) X op
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ১০ — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g4502"></a>
+<a id="g4795"></a>
 
-### Object oriented Programming এর বৈশিষ্ট্য কোনটি? Polymorphism / Friend Function / Structur… <sub>G4502</sub>
+### Object oriented Programming এর বৈশিষ্ট্য কোনটি? Polymorphism / Friend Function / Structur… <sub>G4795</sub>
 
 *MCQ*
 
@@ -427,9 +427,9 @@ What is compile-time polymorphism? How is it achieved (overloading)? Give a code
 - **Source:**
   - BUET MSc in CSE (2026-10-03), Q5 — [BUET JOB/38_buet-msc-cse-questions-1-9.md](../BUET%20JOB/38_buet-msc-cse-questions-1-9.md) · [image](../BUET%20JOB/38_buet-msc-cse-questions-1-9.jpg); [BUET JOB/23_buet-msc-cse-questions-1-9.md](../BUET%20JOB/23_buet-msc-cse-questions-1-9.md) · [image](../BUET%20JOB/23_buet-msc-cse-questions-1-9.jpg)
 
-<a id="g1593"></a>
+<a id="g1592"></a>
 
-### Method Overloading এবং Method Overriding-এর মধ্যকার পার্থক্য লিখুন। <sub>G1593</sub>
+### Method Overloading এবং Method Overriding-এর মধ্যকার পার্থক্য লিখুন। <sub>G1592</sub>
 
 *Written*
 
@@ -439,9 +439,9 @@ Method Overloading এবং Method Overriding-এর মধ্যকার প�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q61 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g1947"></a>
+<a id="g2060"></a>
 
-### Overloading এবং overriding এর মধ্যে পার্থক্য কী? <sub>G1947</sub>
+### Overloading এবং overriding এর মধ্যে পার্থক্য কী? <sub>G2060</sub>
 
 *Written*
 
@@ -451,9 +451,9 @@ Overloading এবং overriding এর মধ্যে পার্থক্য
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ২ (গ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2706"></a>
+<a id="g2819"></a>
 
-### What is polymorphism? Write a Java program to demonstrate the compile time and run time p… <sub>G2706</sub>
+### What is polymorphism? Write a Java program to demonstrate the compile time and run time p… <sub>G2819</sub>
 
 *Written*
 
@@ -463,9 +463,9 @@ What is polymorphism? Write a Java program to demonstrate the compile time and r
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 6 — 46th BCS Written, Computer Science, Subject Code: 971, Time: 4 hours, Full Marks: 200 (pp. 9–13), 1 (c) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g2760"></a>
+<a id="g2873"></a>
 
-### Differentiate between function overloading and function overriding with examples. <sub>G2760</sub>
+### Differentiate between function overloading and function overriding with examples. <sub>G2873</sub>
 
 *Written*
 
@@ -545,9 +545,9 @@ Difference between Method Overloading and Method Overriding.
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p23 Q28 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p23)
 - **Printed answer:** Overloading: Same method name, different parameters, occurs in the same class; Overriding: Same method signature in parent and child classes to provide a new implementation
 
-<a id="g1590"></a>
+<a id="g1589"></a>
 
-### Polymorphism কী? উদাহরণসহ বিভিন্ন প্রকার Polymorphism আলোচনা করুন। <sub>G1590</sub>
+### Polymorphism কী? উদাহরণসহ বিভিন্ন প্রকার Polymorphism আলোচনা করুন। <sub>G1589</sub>
 
 *Written*
 
@@ -557,9 +557,9 @@ Polymorphism কী? উদাহরণসহ বিভিন্ন প্রক
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q58 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g1591"></a>
+<a id="g1590"></a>
 
-### Compile-time Polymorphism ও Run-time Polymorphism-এর মধ্যে পার্থক্য লিখুন। <sub>G1591</sub>
+### Compile-time Polymorphism ও Run-time Polymorphism-এর মধ্যে পার্থক্য লিখুন। <sub>G1590</sub>
 
 *Written*
 
@@ -569,9 +569,9 @@ Compile-time Polymorphism ও Run-time Polymorphism-এর মধ্যে প�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q59 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g1592"></a>
+<a id="g1591"></a>
 
-### Function Overloading ও Operator Overloading বলতে কী বোঝেন? উদাহরণ দিন। <sub>G1592</sub>
+### Function Overloading ও Operator Overloading বলতে কী বোঝেন? উদাহরণ দিন। <sub>G1591</sub>
 
 *Written*
 
@@ -581,9 +581,9 @@ Function Overloading ও Operator Overloading বলতে কী বোঝে�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q60 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g1594"></a>
+<a id="g1593"></a>
 
-### ফাংশন প্রোটোটাইপ ও ওভারলোডেড ফাংশন বলতে কী বোঝায়? <sub>G1594</sub>
+### ফাংশন প্রোটোটাইপ ও ওভারলোডেড ফাংশন বলতে কী বোঝায়? <sub>G1593</sub>
 
 *Written*
 
@@ -593,9 +593,9 @@ Function Overloading ও Operator Overloading বলতে কী বোঝে�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — OOP (continued), Q63 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
 
-<a id="g2341"></a>
+<a id="g2454"></a>
 
-### What is polymorphism? Distinguish between compile time and runtime polymorphism? <sub>G2341</sub>
+### What is polymorphism? Distinguish between compile time and runtime polymorphism? <sub>G2454</sub>
 
 *Written*
 
@@ -605,9 +605,9 @@ What is polymorphism? Distinguish between compile time and runtime polymorphism?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2344"></a>
+<a id="g2457"></a>
 
-### Object Oriented programming এ method overloading এবং method overriding এর মধ্যে পার্থক্য … <sub>G2344</sub>
+### Object Oriented programming এ method overloading এবং method overriding এর মধ্যে পার্থক্য … <sub>G2457</sub>
 
 *Written*
 
@@ -617,9 +617,9 @@ Object Oriented programming এ method overloading এবং method overriding �
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2345"></a>
+<a id="g2458"></a>
 
-### Explain polymorphism concept of OOP language. <sub>G2345</sub>
+### Explain polymorphism concept of OOP language. <sub>G2458</sub>
 
 *Written*
 
@@ -629,9 +629,9 @@ Explain polymorphism concept of OOP language.
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2346"></a>
+<a id="g2459"></a>
 
-### What is function overloading? describe with example. <sub>G2346</sub>
+### What is function overloading? describe with example. <sub>G2459</sub>
 
 *Written*
 
@@ -693,9 +693,9 @@ How many classes can be used in Hybrid Inheritance?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q9 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
 
-<a id="g2249"></a>
+<a id="g2362"></a>
 
-### Explain how encapsulation and inheritance are advantageous in Object Oriented Programming? <sub>G2249</sub>
+### Explain how encapsulation and inheritance are advantageous in Object Oriented Programming? <sub>G2362</sub>
 
 *Written*
 
@@ -706,9 +706,9 @@ Explain how encapsulation and inheritance are advantageous in Object Oriented Pr
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q4 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q4 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3242"></a>
+<a id="g3355"></a>
 
-### Explain the concept of inheritance in Object-Oriented Programming Name and briefly descri… <sub>G3242</sub>
+### Explain the concept of inheritance in Object-Oriented Programming Name and briefly descri… <sub>G3355</sub>
 
 *Written*
 
@@ -718,9 +718,9 @@ Explain the concept of inheritance in Object-Oriented Programming Name and brief
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 16 — [BSCS AP 26] — Assistant Programmer — 17.01.2026 — Exam taker: BIBM/CTI — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 56–57, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3644"></a>
+<a id="g3757"></a>
 
-### Explain the concepts of Inheritance and Polymorphism in Java. Write a Java program to dem… <sub>G3644</sub>
+### Explain the concepts of Inheritance and Polymorphism in Java. Write a Java program to dem… <sub>G3757</sub>
 
 *Written*
 
@@ -730,9 +730,9 @@ Explain the concepts of Inheritance and Polymorphism in Java. Write a Java progr
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Bank — Banker's Selection Committee Secretariat (BSCS) — Officer (IT), Grade-10 (Job ID-25105) — 31/07/2026 — Exam taker: not printed — Part A MCQ 1 hour; Part B Written 2 hours (IT 15 × 10 = 150) — pages 1–16, Q6.7 — [duranta/1785503716-so-it-job-id-25105/1785503716.md](../duranta/1785503716-so-it-job-id-25105/1785503716.md)
 
-<a id="g4031"></a>
+<a id="g4144"></a>
 
-### In OOP, _____ is used to restrict access to certain details of an object. (ক) Inheritance… <sub>G4031</sub>
+### In OOP, _____ is used to restrict access to certain details of an object. (ক) Inheritance… <sub>G4144</sub>
 
 *MCQ*
 
@@ -783,9 +783,9 @@ Write the definition of Inheritance, Polymorphism with coding example.
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q16 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
   - Question paper found on the web (see the folder README for the URL) — 6 Banks & Financial Institutions (BSCS) — Assistant Programmer — 2021 (date conflicting: 18/03/2021 on the MCQ page; 15-01-2022 in the site's analysis page) — Exam taker: not stated — recollection (8 items), Q7 — [bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md](../bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md)
 
-<a id="g1895"></a>
+<a id="g2008"></a>
 
-### Explain encapsulation and inheritance in details . <sub>G1895</sub>
+### Explain encapsulation and inheritance in details . <sub>G2008</sub>
 
 *Written*
 
@@ -795,9 +795,9 @@ Explain encapsulation and inheritance in details .
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 38th (ICT), Date: 2018 — Time: 3 Hours, Full marks: 200 (pp. 1–18), 8.(d) — [duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md](../duranta/1706697857-38th-bcs-lecturer-ict/1706697857.md)
 
-<a id="g2546"></a>
+<a id="g2659"></a>
 
-### What is default inheritance in C++? A. Public B. Private C. Protected D. Compile time err… <sub>G2546</sub>
+### What is default inheritance in C++? A. Public B. Private C. Protected D. Compile time err… <sub>G2659</sub>
 
 *MCQ*
 
@@ -807,9 +807,9 @@ What is default inheritance in C++? A. Public B. Private C. Protected D. Compile
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Programming / C++ / OOP Q9 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2907"></a>
+<a id="g3020"></a>
 
-### Inheritance is one of important issues for any object oriented programming language. The … <sub>G2907</sub>
+### Inheritance is one of important issues for any object oriented programming language. The … <sub>G3020</sub>
 
 *Written · marked important in the Bit to Exabyte book*
 
@@ -820,9 +820,9 @@ Inheritance is one of important issues for any object oriented programming langu
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q18 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — 01 — BSCS Recruitment 2020, Combine 2 Bank (SB & JB) — Officer IT (Written) — date not printed — Exam taker: not printed — Time 2 Hours, Full Mark 200 — pages 1–3, Q5(B) — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3373"></a>
+<a id="g3486"></a>
 
-### Consider the following Java Program : Public class Rectangle{ Private double length; Priv… <sub>G3373</sub>
+### Consider the following Java Program : Public class Rectangle{ Private double length; Priv… <sub>G3486</sub>
 
 *Written*
 
@@ -832,9 +832,9 @@ Consider the following Java Program : Public class Rectangle{ Private double len
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — BAERA Recruitment Exam 29/01/2021, 1 — [duranta/1782205758-baera-engr-computer/1782205758.md](../duranta/1782205758-baera-engr-computer/1782205758.md)
 
-<a id="g3931"></a>
+<a id="g4044"></a>
 
-### If class C inherits class B. And B has inherited class A. Then while creating the object … <sub>G3931</sub>
+### If class C inherits class B. And B has inherited class A. Then while creating the object … <sub>G4044</sub>
 
 *MCQ*
 
@@ -843,6 +843,18 @@ If class C inherits class B. And B has inherited class A. Then while creating th
 - **Asked in (1):** BUET IICT April 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q44 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
+
+<a id="g4449"></a>
+
+### Which of the following is a technique for hiding the internal implementation details of a… <sub>G4449</sub>
+
+*MCQ*
+
+Which of the following is a technique for hiding the internal implementation details of an object? (a) Encapsulation (b) Polymorphism (c) Inheritance (d) All of a, b & c
+
+- **Asked in (1):** Combined Bank ADA 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 2 Bank — Assistant Database Administrator (ADA) — MCQ — 25.09.2021 — Exam taker: AUST (as printed by Stack IT; unverified) — 61 IT MCQs of 100, MCQ92 — [bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md](../bank-written-web/2021-combined2-ada-mcq-aust-stackit-slideshare/combined2-ada-2021-mcq.md)
 
 <a id="g0871"></a>
 
@@ -856,9 +868,9 @@ Explain inheritance in OOP; name and briefly describe three common types of inhe
 - **Source:**
   - Bank (name cut off, 'B... Ltd') Assistant Programmer Written, Q1 — [Exam_Bank_Assistant_Programmer_Written.md](../Exam_Bank_Assistant_Programmer_Written.md) · [image](../Exam_Bank_Assistant_Programmer_Written.jpg)
 
-<a id="g1589"></a>
+<a id="g1588"></a>
 
-### Inheritance কী? Inheritance-এর বিভিন্ন প্রকারভেদ, সুবিধা ও অসুবিধা আলোচনা করুন। <sub>G1589</sub>
+### Inheritance কী? Inheritance-এর বিভিন্ন প্রকারভেদ, সুবিধা ও অসুবিধা আলোচনা করুন। <sub>G1588</sub>
 
 *Written*
 
@@ -868,9 +880,9 @@ Inheritance কী? Inheritance-এর বিভিন্ন প্রকার�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q57 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g1831"></a>
+<a id="g1944"></a>
 
-### What is Encapsulation, inheritance and Polymorphism ? <sub>G1831</sub>
+### What is Encapsulation, inheritance and Polymorphism ? <sub>G1944</sub>
 
 *Written*
 
@@ -880,9 +892,9 @@ What is Encapsulation, inheritance and Polymorphism ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 9. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g3700"></a>
+<a id="g3813"></a>
 
-### C++ related some 5 MCQ(Protected, private, inheritance etc.) <sub>G3700</sub>
+### C++ related some 5 MCQ(Protected, private, inheritance etc.) <sub>G3813</sub>
 
 *Written*
 
@@ -892,9 +904,9 @@ C++ related some 5 MCQ(Protected, private, inheritance etc.)
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2017, Q22 — [buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md](../buet-msc-web/2017-04-cse-hackimpossible/buet-msc-cse-2017-04.md)
 
-<a id="g4394"></a>
+<a id="g4687"></a>
 
-### Develop a program using object-oriented programming principles. Requirements (a) (4 Marks… <sub>G4394</sub>
+### Develop a program using object-oriented programming principles. Requirements (a) (4 Marks… <sub>G4687</sub>
 
 *Written*
 
@@ -958,9 +970,9 @@ Write a java program based on following conditions: There is one Circle class an
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q39 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
 
-<a id="g1596"></a>
+<a id="g1595"></a>
 
-### Object, Class, Inheritance, Polymorphism, Encapsulation এবং Overridden ফাংশন প্রয়োগ করে … <sub>G1596</sub>
+### Object, Class, Inheritance, Polymorphism, Encapsulation এবং Overridden ফাংশন প্রয়োগ করে … <sub>G1595</sub>
 
 *Written*
 
@@ -970,9 +982,9 @@ Object, Class, Inheritance, Polymorphism, Encapsulation এবং Overridden ফ
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — OOP (continued), Q65 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
 
-<a id="g1806"></a>
+<a id="g1805"></a>
 
-### What is Inheritance in Object-Oriented Programming (OOP)? Why is it used? Which inheritan… <sub>G1806</sub>
+### What is Inheritance in Object-Oriented Programming (OOP)? Why is it used? Which inheritan… <sub>G1805</sub>
 
 *Written*
 
@@ -982,9 +994,21 @@ What is Inheritance in Object-Oriented Programming (OOP)? Why is it used? Which 
 - **Source:**
   - Bit to Exabyte Model Test 01, 2 Oct 2026 (coaching mock, not a real paper) — Bit to Exabyte Model Test 01 (2026-10-02), Q9 — [model test/01_bte-model-test-01-2026-10-02.md](../model%20test/01_bte-model-test-01-2026-10-02.md) · [image](../model%20test/01_bte-model-test-01-2026-10-02.jpg)
 
-<a id="g4188"></a>
+<a id="g1816"></a>
 
-### What do you mean by Polymorphism and Inheritance in OOP. <sub>G4188</sub>
+### Inheritance; multiple inheritance in Java via interfaces <sub>G1816</sub>
+
+*Written*
+
+Inheritance; multiple inheritance in Java via interfaces
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q52 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g4301"></a>
+
+### What do you mean by Polymorphism and Inheritance in OOP. <sub>G4301</sub>
 
 *Written*
 
@@ -995,9 +1019,9 @@ What do you mean by Polymorphism and Inheritance in OOP.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q3 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g4887"></a>
+<a id="g5180"></a>
 
-### There was a small payroll project based on inheritance, overloading, and overriding. The … <sub>G4887</sub>
+### There was a small payroll project based on inheritance, overloading, and overriding. The … <sub>G5180</sub>
 
 *Written*
 
@@ -1008,9 +1032,9 @@ There was a small payroll project based on inheritance, overloading, and overrid
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — IFIC Bank PLC — MTO, 17/05/2025 (practical by BUET) (suggestion), P2 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g4965"></a>
+<a id="g5258"></a>
 
-### What is default of inheritnace in C++? ক. Public খ. Private গ. Protected ঘ. Compile time … <sub>G4965</sub>
+### What is default of inheritnace in C++? ক. Public খ. Private গ. Protected ঘ. Compile time … <sub>G5258</sub>
 
 *MCQ*
 
@@ -1035,9 +1059,9 @@ What is constructor function? Write the properties of it.
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q22 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE/CS/ECE/ETE) 27/05/2023, Q16 — [duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md](../duranta/1704037243-wzpdcl-ae-cse-ece-ete/1704037243.md)
 
-<a id="g2092"></a>
+<a id="g2205"></a>
 
-### Class ও Object কী? Constructors ও Destructors ফাংশনের মধ্যে পার্থক্য লিখুন। <sub>G2092</sub>
+### Class ও Object কী? Constructors ও Destructors ফাংশনের মধ্যে পার্থক্য লিখুন। <sub>G2205</sub>
 
 *Written*
 
@@ -1047,9 +1071,9 @@ Class ও Object কী? Constructors ও Destructors ফাংশনের ম�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: কম্পিউটার বিজ্ঞান, বিষয় কোড : ৪৩১, পদের নাম: প্রভাষক (pp. 1–2), ১৩ (খ) — [duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md](../duranta/1707459159-17th-ntrca-lecturer-cs-written/1707459159.md)
 
-<a id="g2538"></a>
+<a id="g2651"></a>
 
-### Which of the following do not return any value? ক) Constructor function খ) Friend functio… <sub>G2538</sub>
+### Which of the following do not return any value? ক) Constructor function খ) Friend functio… <sub>G2651</sub>
 
 *MCQ*
 
@@ -1059,9 +1083,9 @@ Which of the following do not return any value? ক) Constructor function খ) F
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Programming / C++ / OOP Q1 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g3425"></a>
+<a id="g3538"></a>
 
-### What is the constructor invoked in OOP? <sub>G3425</sub>
+### What is the constructor invoked in OOP? <sub>G3538</sub>
 
 *Written*
 
@@ -1109,9 +1133,9 @@ What is main difference Destructor and constructor with example?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q26 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
 
-<a id="g2544"></a>
+<a id="g2657"></a>
 
-### A constructor is a special type of- A. Class B. Field C. Method D. Property <sub>G2544</sub>
+### A constructor is a special type of- A. Class B. Field C. Method D. Property <sub>G2657</sub>
 
 *MCQ*
 
@@ -1121,9 +1145,9 @@ A constructor is a special type of- A. Class B. Field C. Method D. Property
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — AME-Gen. Pull-2019 — Assistant Maintenance Engineer (general pool), 2019 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 20 MCQs — pages 4–34, Programming / C++ / OOP Q7 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2635"></a>
+<a id="g2748"></a>
 
-### What is constructor function? Write an example of constructor function? <sub>G2635</sub>
+### What is constructor function? Write an example of constructor function? <sub>G2748</sub>
 
 *Written*
 
@@ -1133,9 +1157,9 @@ What is constructor function? Write an example of constructor function?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 4 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g3740"></a>
+<a id="g3853"></a>
 
-### C++ code given, write what is necessary in the class for the code to compile? (Constructo… <sub>G3740</sub>
+### C++ code given, write what is necessary in the class for the code to compile? (Constructo… <sub>G3853</sub>
 
 *Written*
 
@@ -1145,9 +1169,9 @@ C++ code given, write what is necessary in the class for the code to compile? (C
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q7 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3809"></a>
+<a id="g3922"></a>
 
-### Which one of the following option is a valid C++ constructor for class B? class A { priva… <sub>G3809</sub>
+### Which one of the following option is a valid C++ constructor for class B? class A { priva… <sub>G3922</sub>
 
 *MCQ*
 
@@ -1157,9 +1181,9 @@ Which one of the following option is a valid C++ constructor for class B? class 
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q22 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3921"></a>
+<a id="g4034"></a>
 
-### If object is passed by value ______________ (a) Copy constructor is used to copy the valu… <sub>G3921</sub>
+### If object is passed by value ______________ (a) Copy constructor is used to copy the valu… <sub>G4034</sub>
 
 *MCQ*
 
@@ -1169,9 +1193,9 @@ If object is passed by value ______________ (a) Copy constructor is used to copy
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET IICT M.Sc. ICT April 2021 (1 July 2021), Q34 — [buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md](../buet-msc-web/2021-07-iict-msc-ict-itjobexam/buet-iict-msc-ict-2021-07.md)
 
-<a id="g4432"></a>
+<a id="g4725"></a>
 
-### There was a java program where you have to create a class, constructor, setter function, … <sub>G4432</sub>
+### There was a java program where you have to create a class, constructor, setter function, … <sub>G4725</sub>
 
 *Written*
 
@@ -1181,9 +1205,9 @@ There was a java program where you have to create a class, constructor, setter f
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BPDB Assistant Engineer (CSE) 2018, Q2 — [power-sector-web/2018-bpdb-ae-cse-scribd-384369493/bpdb-ae-cse-2018.md](../power-sector-web/2018-bpdb-ae-cse-scribd-384369493/bpdb-ae-cse-2018.md)
 
-<a id="g2823"></a>
+<a id="g2936"></a>
 
-### Define constructor, destructor and copy constructor in Object Oriented Programming. Conte… <sub>G2823</sub>
+### Define constructor, destructor and copy constructor in Object Oriented Programming. Conte… <sub>G2936</sub>
 
 *Written*
 
@@ -1193,9 +1217,9 @@ Define constructor, destructor and copy constructor in Object Oriented Programmi
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 9 — 47th BCS Written, Information and Communication Technology, Subject Code 281, Time 4 hours, Full Marks 200 (pp. 18–19, cut off), 6. (a) — [duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md](../duranta/1775612046-bcs-cse-ict-questions-lecturer-ict/1775612046.md)
 
-<a id="g3661"></a>
+<a id="g3774"></a>
 
-### Write down a program in c++using copy constructor to initialize its member variable from … <sub>G3661</sub>
+### Write down a program in c++using copy constructor to initialize its member variable from … <sub>G3774</sub>
 
 *Written*
 
@@ -1205,9 +1229,9 @@ Write down a program in c++using copy constructor to initialize its member varia
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q11 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g4412"></a>
+<a id="g4705"></a>
 
-### Java Programming: Write a class named Bicycle and create a constructor of its and initial… <sub>G4412</sub>
+### Java Programming: Write a class named Bicycle and create a constructor of its and initial… <sub>G4705</sub>
 
 *Written*
 
@@ -1217,9 +1241,9 @@ Java Programming: Write a class named Bicycle and create a constructor of its an
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — DESCO Assistant Engineer (CSE) 27.05.2016, Q2 — [power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md](../power-sector-web/2016-desco-ae-cse-binaryitc/desco-ae-cse-2016.md)
 
-<a id="g1588"></a>
+<a id="g1587"></a>
 
-### Constructor ও Destructor ফাংশন কাকে বলে? উদাহরণসহ এদের সিনট্যাক্স ও পার্থক্য লিখুন। <sub>G1588</sub>
+### Constructor ও Destructor ফাংশন কাকে বলে? উদাহরণসহ এদের সিনট্যাক্স ও পার্থক্য লিখুন। <sub>G1587</sub>
 
 *Written*
 
@@ -1229,9 +1253,9 @@ Constructor ও Destructor ফাংশন কাকে বলে? উদাহ�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q56 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2347"></a>
+<a id="g2460"></a>
 
-### What is the purpose of contructors and destructors of a class in OOP? <sub>G2347</sub>
+### What is the purpose of contructors and destructors of a class in OOP? <sub>G2460</sub>
 
 *Written*
 
@@ -1241,9 +1265,9 @@ What is the purpose of contructors and destructors of a class in OOP?
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g4957"></a>
+<a id="g5250"></a>
 
-### A constructor is a special type of- ক. Class খ. Field গ. Method ঘ. Property <sub>G4957</sub>
+### A constructor is a special type of- ক. Class খ. Field গ. Method ঘ. Property <sub>G5250</sub>
 
 *MCQ*
 
@@ -1268,9 +1292,9 @@ A constructor is a special type of- ক. Class খ. Field গ. Method ঘ. Prope
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q6 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ২ অথবা (ক) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g1585"></a>
+<a id="g1584"></a>
 
-### Class এবং Object কাকে বলে? কীভাবে Object তৈরি করতে হয় এবং এদের মধ্যে উদাহরণসহ পার্থক্য ল… <sub>G1585</sub>
+### Class এবং Object কাকে বলে? কীভাবে Object তৈরি করতে হয় এবং এদের মধ্যে উদাহরণসহ পার্থক্য ল… <sub>G1584</sub>
 
 *Written*
 
@@ -1280,9 +1304,9 @@ Class এবং Object কাকে বলে? কীভাবে Object তৈ�
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q53 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2253"></a>
+<a id="g2366"></a>
 
-### Suppose we want to develop software for a graphic package and we are given the task to im… <sub>G2253</sub>
+### Suppose we want to develop software for a graphic package and we are given the task to im… <sub>G2366</sub>
 
 *Written*
 
@@ -1293,9 +1317,9 @@ Suppose we want to develop software for a graphic package and we are given the t
   - duranta.app question bank (coaching compilation of the question paper) — Officer (IT) — 04.10.2024 — organisation not printed (= Combined 2 Bank (10184) Officer IT 2024, BIBM, per `1777536660.md`) — Exam taker: not printed — marks not printed — pages 1–10, Q9 — [duranta/1728262949-officer-it/1728262949.md](../duranta/1728262949-officer-it/1728262949.md)
   - duranta.app question bank (coaching compilation of the question paper) — 12 — Combined 2 Bank (10184) — Officer IT 2024 — 04.10.2024 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (IT: 50 + Math+GK: 20); Written: Subjective (150) + Math (20) + Focus (10) + B/E+E/B — pages 47–49, Q9 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3098"></a>
+<a id="g3211"></a>
 
-### public class A{ public void m1 () {} public void m2 () {} public void m3 (int i) {} publi… <sub>G3098</sub>
+### public class A{ public void m1 () {} public void m2 () {} public void m3 (int i) {} publi… <sub>G3211</sub>
 
 *Written*
 
@@ -1305,9 +1329,9 @@ public class A{ public void m1 () {} public void m2 () {} public void m3 (int i)
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 2 — Bangladesh Bank — Assistant Programmer — 03.02.2023 — Exam Taker: BIBM — Exam Time: 1+2 hour; 80 MCQ (1 Hour); Written: 9 Subjective Question (150) +Math 4(20) +Focus (10) +B/E (20) — pages 28–30, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3972"></a>
+<a id="g4085"></a>
 
-### The class in C++ contains: (ক) data only (খ) function only (গ) data and function both (ঘ)… <sub>G3972</sub>
+### The class in C++ contains: (ক) data only (খ) function only (গ) data and function both (ঘ)… <sub>G4085</sub>
 
 *MCQ*
 
@@ -1317,9 +1341,9 @@ The class in C++ contains: (ক) data only (খ) function only (গ) data and fu
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 49th Special BCS (Education) written 2025 — ICT (281), question paper 2 (Q101–200), 10.10.2025, Q191 — [bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md](../bcs-written-web/49th-281-livemcq-ict/49th-bcs-ict-281-paper2.md)
 
-<a id="g4878"></a>
+<a id="g5171"></a>
 
-### Make a python class name BankAccount It has a name and a balance Then we can perform 3 op… <sub>G4878</sub>
+### Make a python class name BankAccount It has a name and a balance Then we can perform 3 op… <sub>G5171</sub>
 
 *Written*
 
@@ -1329,9 +1353,9 @@ Make a python class name BankAccount It has a name and a balance Then we can per
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh University of Engineering and Technology (BUET) — Assistant Programmer, 22/02/2025 (suggestion), P2 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g4932"></a>
+<a id="g5225"></a>
 
-### Class test(){ Int Public: t(int value = 0){} t.getone(value) t.gettwo(value+10)} Int main… <sub>G4932</sub>
+### Class test(){ Int Public: t(int value = 0){} t.getone(value) t.gettwo(value+10)} Int main… <sub>G5225</sub>
 
 *Written*
 
@@ -1341,9 +1365,9 @@ Class test(){ Int Public: t(int value = 0){} t.getone(value) t.gettwo(value+10)}
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Dhaka WASA — Assistant Maintenance Engineer (Network), 04.07.2025 (BUET) (suggestion), Q10 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g3767"></a>
+<a id="g3880"></a>
 
-### Creating object of Inner class. <sub>G3767</sub>
+### Creating object of Inner class. <sub>G3880</sub>
 
 *Written*
 
@@ -1353,9 +1377,9 @@ Creating object of Inner class.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q7 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g1880"></a>
+<a id="g1993"></a>
 
-### How is a member function of a class ? <sub>G1880</sub>
+### How is a member function of a class ? <sub>G1993</sub>
 
 *Written*
 
@@ -1365,9 +1389,9 @@ How is a member function of a class ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 7.(b) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
 
-<a id="g1994"></a>
+<a id="g2107"></a>
 
-### Class ও Object বলতে কি বুঝায়? Class ও Object ডিক্লায়ার করার নিয়ম লিখুন। <sub>G1994</sub>
+### Class ও Object বলতে কি বুঝায়? Class ও Object ডিক্লায়ার করার নিয়ম লিখুন। <sub>G2107</sub>
 
 *Written*
 
@@ -1445,9 +1469,9 @@ Draw a class diagram: token-ring LAN of nodes with unique names, each referring 
   - Paper not shown on the source sheet, Q9 — [BANK/02_class-diagram-and-short-questions.md](../BANK/02_class-diagram-and-short-questions.md) · [image](../BANK/02_class-diagram-and-short-questions.jpg)
 - **Printed answer:** Classes Lan, Node (self-association nextNode), Packet; Workstation and Server specialise Node; Printer and FileServer specialise Server
 
-<a id="g2339"></a>
+<a id="g2452"></a>
 
-### What are objects in C ++? How is a member function of a class? [BCS – 37th (ICT)] <sub>G2339</sub>
+### What are objects in C ++? How is a member function of a class? [BCS – 37th (ICT)] <sub>G2452</sub>
 
 *Written*
 
@@ -1471,9 +1495,9 @@ What syntax is used for calling static methods in class?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q32 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
 
-<a id="g3955"></a>
+<a id="g4068"></a>
 
-### What is functional Interface in java.example? <sub>G3955</sub>
+### What is functional Interface in java.example? <sub>G4068</sub>
 
 *Written*
 
@@ -1483,9 +1507,9 @@ What is functional Interface in java.example?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2024, Q8 — [buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md](../buet-msc-web/2024-04-cse-hackimpossible/buet-msc-cse-2024-04.md)
 
-<a id="g2636"></a>
+<a id="g2749"></a>
 
-### A Java program output: [no program printed] <sub>G2636</sub>
+### A Java program output: [no program printed] <sub>G2749</sub>
 
 *Written*
 
@@ -1495,9 +1519,9 @@ A Java program output: [no program printed]
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Assistant Engineer (CSE) 29-06-2019, 5 — [duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md](../duranta/1766849158-wzpdcl-ae-cse-2019/1766849158.md)
 
-<a id="g3741"></a>
+<a id="g3854"></a>
 
-### Java code given, find length of each string in string list without using for loop. <sub>G3741</sub>
+### Java code given, find length of each string in string list without using for loop. <sub>G3854</sub>
 
 *Written*
 
@@ -1507,9 +1531,9 @@ Java code given, find length of each string in string list without using for loo
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q8 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g3763"></a>
+<a id="g3876"></a>
 
-### java code find output. [ public static void main(string args[]) { String s = new String(“… <sub>G3763</sub>
+### java code find output. [ public static void main(string args[]) { String s = new String(“… <sub>G3876</sub>
 
 *Written*
 
@@ -1519,9 +1543,9 @@ java code find output. [ public static void main(string args[]) { String s = new
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q3 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g3781"></a>
+<a id="g3894"></a>
 
-### Given a Java code using strings, what is the output? <sub>G3781</sub>
+### Given a Java code using strings, what is the output? <sub>G3894</sub>
 
 *Written*
 
@@ -1531,9 +1555,9 @@ Given a Java code using strings, what is the output?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2019, Q21 — [buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md](../buet-msc-web/2019-05-cse-scribd-500733615/buet-msc-cse-2019-05.md)
 
-<a id="g3789"></a>
+<a id="g3902"></a>
 
-### Which of the following is true for X, Y, and Z for the Java statement "public class G<A e… <sub>G3789</sub>
+### Which of the following is true for X, Y, and Z for the Java statement "public class G<A e… <sub>G3902</sub>
 
 *MCQ*
 
@@ -1543,9 +1567,9 @@ Which of the following is true for X, Y, and Z for the Java statement "public cl
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q2 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3804"></a>
+<a id="g3917"></a>
 
-### Which of the following statements can fix the compiler error in the following Java code? … <sub>G3804</sub>
+### Which of the following statements can fix the compiler error in the following Java code? … <sub>G3917</sub>
 
 *MCQ*
 
@@ -1555,9 +1579,9 @@ Which of the following statements can fix the compiler error in the following Ja
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q17 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g3812"></a>
+<a id="g3925"></a>
 
-### Which of the following is a valid declaration of an ArrayList of String in Java? (a) List… <sub>G3812</sub>
+### Which of the following is a valid declaration of an ArrayList of String in Java? (a) List… <sub>G3925</sub>
 
 *MCQ*
 
@@ -1567,9 +1591,9 @@ Which of the following is a valid declaration of an ArrayList of String in Java?
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE April 2021 online MCQ (24 June 2021), P1-Q25 — [buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md](../buet-msc-web/2021-06-cse-online-mcq-itjobexam/buet-msc-cse-2021-06.md)
 
-<a id="g4482"></a>
+<a id="g4775"></a>
 
-### Write java programme take three input and find out factors of it. <sub>G4482</sub>
+### Write java programme take three input and find out factors of it. <sub>G4775</sub>
 
 *Written*
 
@@ -1591,9 +1615,9 @@ Define types of processor for the following language: Python, C, C++, Java.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q41 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
 
-<a id="g1837"></a>
+<a id="g1950"></a>
 
-### What are the differences between C++ and Java Programming Language ? <sub>G1837</sub>
+### What are the differences between C++ and Java Programming Language ? <sub>G1950</sub>
 
 *Written*
 
@@ -1603,9 +1627,9 @@ What are the differences between C++ and Java Programming Language ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 15. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
 
-<a id="g1948"></a>
+<a id="g2061"></a>
 
-### ‘Static’ কীওয়ার্ডটি ব্যাখ্যা করার জন্যে Static variable এবং Static method ব্যবহার করে এক… <sub>G1948</sub>
+### ‘Static’ কীওয়ার্ডটি ব্যাখ্যা করার জন্যে Static variable এবং Static method ব্যবহার করে এক… <sub>G2061</sub>
 
 *Written*
 
@@ -1615,9 +1639,9 @@ What are the differences between C++ and Java Programming Language ?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ২ অথবা (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g3659"></a>
+<a id="g3772"></a>
 
-### Write down a method to find out how many times an object has been instantiated in Java? <sub>G3659</sub>
+### Write down a method to find out how many times an object has been instantiated in Java? <sub>G3772</sub>
 
 *Written*
 
@@ -1628,9 +1652,9 @@ Write down a method to find out how many times an object has been instantiated i
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q40 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE May 2016, Q9 — [buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md](../buet-msc-web/2016-05-cse-scribd-852677045/buet-msc-cse-2016-05.md)
 
-<a id="g3712"></a>
+<a id="g3825"></a>
 
-### Rewrite a java swing code by lambda expressions <sub>G3712</sub>
+### Rewrite a java swing code by lambda expressions <sub>G3825</sub>
 
 *Written*
 
@@ -1737,9 +1761,21 @@ What is the difference among String, String Buffer and String Builder?
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q36 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
 
-<a id="g4193"></a>
+<a id="g1849"></a>
 
-### Suppose you've a method name "totalAmount" and there three properties (transactionName, t… <sub>G4193</sub>
+### JVM vs JRE vs JDK <sub>G1849</sub>
+
+*Written*
+
+JVM vs JRE vs JDK
+
+- **Asked in (0):** no dated exam tag on the source
+- **Source:**
+  - Bit to Exabyte, Super ICT 150++ Questions Book, solved questions and exercises (coaching book, no exam tag printed) — Questions known only from the book's contents page, Q111 (index only) — [bit to exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md](../bit%20to%20exabyte/super-ict-solutions-pdf/super-ict-index-gaps.md)
+
+<a id="g4306"></a>
+
+### Suppose you've a method name "totalAmount" and there three properties (transactionName, t… <sub>G4306</sub>
 
 *Written · marked important in the Bit to Exabyte book*
 
@@ -1751,9 +1787,9 @@ Suppose you've a method name "totalAmount" and there three properties (transacti
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q37 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q10 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g4195"></a>
+<a id="g4308"></a>
 
-### Write the full form of following topics: i. JAR ii. JRE iii. WAR iv. JDK <sub>G4195</sub>
+### Write the full form of following topics: i. JAR ii. JRE iii. WAR iv. JDK <sub>G4308</sub>
 
 *Written*
 
@@ -1764,9 +1800,9 @@ Write the full form of following topics: i. JAR ii. JRE iii. WAR iv. JDK
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q12 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g4365"></a>
+<a id="g4658"></a>
 
-### Write a java code which returns a value <sub>G4365</sub>
+### Write a java code which returns a value <sub>G4658</sub>
 
 *Written*
 
@@ -1792,9 +1828,9 @@ Write a java code which returns a value
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q5 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
   - duranta.app question bank (coaching compilation of the question paper) — ১৭ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ২ (খ) — [duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md](../duranta/1707459097-17th-ntrca-lecturer-ict-written/1707459097.md)
 
-<a id="g1584"></a>
+<a id="g1583"></a>
 
-### Object-Oriented Programming (OOP) বলতে কী বোঝায়? OOP কেন দরকার এবং এর মৌলিক ধারণাগুলো (P… <sub>G1584</sub>
+### Object-Oriented Programming (OOP) বলতে কী বোঝায়? OOP কেন দরকার এবং এর মৌলিক ধারণাগুলো (P… <sub>G1583</sub>
 
 *Written*
 
@@ -1804,9 +1840,9 @@ Object-Oriented Programming (OOP) বলতে কী বোঝায়? OOP �
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q52 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2100"></a>
+<a id="g2213"></a>
 
-### Object Oriented Programming-এ Interface কী কাজে লাগে? <sub>G2100</sub>
+### Object Oriented Programming-এ Interface কী কাজে লাগে? <sub>G2213</sub>
 
 *Written*
 
@@ -1817,9 +1853,9 @@ Object Oriented Programming-এ Interface কী কাজে লাগে?
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 6(a) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ২ অথবা (খ) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g3038"></a>
+<a id="g3151"></a>
 
-### Explain OOP concepts with proper examples? <sub>G3038</sub>
+### Explain OOP concepts with proper examples? <sub>G3151</sub>
 
 *Written*
 
@@ -1829,9 +1865,9 @@ Explain OOP concepts with proper examples?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Assistant Network Engineer (ANE)-JBL — 24.01.2022 — Exam taker: CTI — IT: 15*10 marks + Non IT: 4*10marks + GK: 2*5 marks = 200 marks — pages 19–20, Q6 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3637"></a>
+<a id="g3750"></a>
 
-### Object oriented pogramming based on? <sub>G3637</sub>
+### Object oriented pogramming based on? <sub>G3750</sub>
 
 *MCQ*
 
@@ -1853,9 +1889,9 @@ Object Oriented Programming এর যেকোনো দুটি বৈশি�
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q14 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
 
-<a id="g2843"></a>
+<a id="g2956"></a>
 
-### অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং (OOP) বলতে কি বুঝায়? এর প্রাথমিক নীতি গুলো লিখুন। <sub>G2843</sub>
+### অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং (OOP) বলতে কি বুঝায়? এর প্রাথমিক নীতি গুলো লিখুন। <sub>G2956</sub>
 
 *Written*
 
@@ -1865,9 +1901,9 @@ Object Oriented Programming এর যেকোনো দুটি বৈশি�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 3. Bangladesh Ordnance Factory (BOF), Sub Assistant Engineer (Computer), 20-03-2021; exam taker not printed; Total Marks: 100 [Non-technical: 40: Technical: 60]; Department: 5 × 10 = 50; pp. 4-6, Q2 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g1877"></a>
+<a id="g1990"></a>
 
-### What are the main features of OOP? <sub>G1877</sub>
+### What are the main features of OOP? <sub>G1990</sub>
 
 *Written*
 
@@ -1877,9 +1913,9 @@ What are the main features of OOP?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 6.(b) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
 
-<a id="g1945"></a>
+<a id="g2058"></a>
 
-### অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কী? এটা কেন দরকার? অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং এর মৌল… <sub>G1945</sub>
+### অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কী? এটা কেন দরকার? অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং এর মৌল… <sub>G2058</sub>
 
 *Written*
 
@@ -1889,9 +1925,9 @@ What are the main features of OOP?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ২। (ক) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2099"></a>
+<a id="g2212"></a>
 
-### Object Oriented Programming-এর তিনটি প্রধান মূলনীতি ব্যাখ্যা করুন। <sub>G2099</sub>
+### Object Oriented Programming-এর তিনটি প্রধান মূলনীতি ব্যাখ্যা করুন। <sub>G2212</sub>
 
 *Written*
 
@@ -1901,9 +1937,9 @@ Object Oriented Programming-এর তিনটি প্রধান মূল�
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ২ অথবা (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g2101"></a>
+<a id="g2214"></a>
 
-### Object Oriented Programming-এ method কী? Method কীভাবে ব্যবহৃত হয় আলোচনা করুন। <sub>G2101</sub>
+### Object Oriented Programming-এ method কী? Method কীভাবে ব্যবহৃত হয় আলোচনা করুন। <sub>G2214</sub>
 
 *Written*
 
@@ -1956,9 +1992,9 @@ What are the basic features of OOP?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p23 Q24 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p23)
 - **Printed answer:** The four main features are Encapsulation, Inheritance, Polymorphism, and Abstraction
 
-<a id="g4745"></a>
+<a id="g5038"></a>
 
-### OOP কি? বৈশিষ্ট্য গুলো বলেন। <sub>G4745</sub>
+### OOP কি? বৈশিষ্ট্য গুলো বলেন। <sub>G5038</sub>
 
 *Viva*
 
@@ -1969,9 +2005,9 @@ OOP কি? বৈশিষ্ট্য গুলো বলেন।
 - **Source:**
   - Viva questions recalled by candidates (counted apart from written exams) — J14 Combined Bank IT post (AP/AME/SO/O(IT), unspecified), account "Unknown" B (viva), A14-V3 — [viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md](../viva-web/bank-2026-jobqns-bank-viva/jobqns-bank-viva.md)
 
-<a id="g2343"></a>
+<a id="g2456"></a>
 
-### Object oriented প্রোগ্রামিং এর ৪ টি গুরুত্বপূর্ণ বৈশিষ্ট লিখুন। <sub>G2343</sub>
+### Object oriented প্রোগ্রামিং এর ৪ টি গুরুত্বপূর্ণ বৈশিষ্ট লিখুন। <sub>G2456</sub>
 
 *Written*
 
@@ -1981,9 +2017,9 @@ Object oriented প্রোগ্রামিং এর ৪ টি গুরু
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2348"></a>
+<a id="g2461"></a>
 
-### Write down the three characteristics of Object-Oriented Programming with example. <sub>G2348</sub>
+### Write down the three characteristics of Object-Oriented Programming with example. <sub>G2461</sub>
 
 *Written*
 
@@ -1995,9 +2031,9 @@ Write down the three characteristics of Object-Oriented Programming with example
 
 ## Other
 
-<a id="g2540"></a>
+<a id="g2653"></a>
 
-### Which of the following modifiers cannot be applied to a method in C++? ক) Protected খ) Pr… <sub>G2540</sub>
+### Which of the following modifiers cannot be applied to a method in C++? ক) Protected খ) Pr… <sub>G2653</sub>
 
 *MCQ*
 
@@ -2007,9 +2043,9 @@ Which of the following modifiers cannot be applied to a method in C++? ক) Prot
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — সাধারণ পুলের আওতায় সহকারী প্রোগ্রামার ২২ — non-cadre Assistant Programmer (general pool), 2022 — exam taker not printed (BPSC per document title) — MCQ, marks not printed — 28 MCQs — pages 1–34, Programming / C++ / OOP Q3 — [duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md](../duranta/1758501721-bpsv-non-cadre-cse-q/1758501721.md)
 
-<a id="g2649"></a>
+<a id="g2762"></a>
 
-### অবজেক্ট ওরিয়েন্টেড ডিজাইনের বৈশিষ্ট্য গুলো লিখ। <sub>G2649</sub>
+### অবজেক্ট ওরিয়েন্টেড ডিজাইনের বৈশিষ্ট্য গুলো লিখ। <sub>G2762</sub>
 
 *Written*
 
@@ -2019,9 +2055,9 @@ Which of the following modifiers cannot be applied to a method in C++? ক) Prot
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — WZPDCL Sub-Assistant Engineer (CSE) 27.05.2023, ৭ — [duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md](../duranta/1766849185-wzpdcl-sae-2023-cse/1766849185.md)
 
-<a id="g4112"></a>
+<a id="g4225"></a>
 
-### C++ একটি অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং—ব্যাখ্যা করুন। <sub>G4112</sub>
+### C++ একটি অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং—ব্যাখ্যা করুন। <sub>G4225</sub>
 
 *Written*
 
@@ -2031,9 +2067,9 @@ C++ একটি অবজেক্ট ওরিয়েন্টেড প্�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — ১৫তম শিক্ষক নিবন্ধন লিখিত (প্রভাষক) — বিষয়: কম্পিউটার অপারেশন, বিষয় কোড : ৪৩২, পদের নাম: প্রভাষক (ব্যবসায় ব্যবস্থাপনা ইনস্টিটিউট), Y সেট, ৯ অথবা — [ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md](../ntrca-written-web/15-432-lecturer-computer-operation/15-432-lecturer-computer-operation.md)
 
-<a id="g4143"></a>
+<a id="g4256"></a>
 
-### ইনহেরিট্যান্স, পলিমরফিজম এবং এনক্যাপসুলেশন ব্যাখ্যা করুণ। <sub>G4143</sub>
+### ইনহেরিট্যান্স, পলিমরফিজম এবং এনক্যাপসুলেশন ব্যাখ্যা করুণ। <sub>G4256</sub>
 
 *Written*
 
@@ -2043,9 +2079,21 @@ C++ একটি অবজেক্ট ওরিয়েন্টেড প্�
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — NTRCA 16th Written Examination-2019, Set-R — Computer Science (Subject Code-431), Post: Lecturer (College), ৭ — [ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md](../ntrca-written-web/16-431-lecturer-cs-set-r/16-431-lecturer-cs-set-r.md)
 
-<a id="g1829"></a>
+<a id="g4536"></a>
 
-### Explain Early Binding and Late Binding with example ? <sub>G1829</sub>
+### Find the correct output: System.out.print('D' + 'E' + 'F'); (a) 137 (b) DEF (c) 207 (d) D… <sub>G4536</sub>
+
+*MCQ*
+
+Find the correct output: System.out.print('D' + 'E' + 'F'); (a) 137 (b) DEF (c) 207 (d) D E F
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ20 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+
+<a id="g1942"></a>
+
+### Explain Early Binding and Late Binding with example ? <sub>G1942</sub>
 
 *Written*
 
@@ -2056,9 +2104,9 @@ Explain Early Binding and Late Binding with example ?
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 36th (ICT), Date: 2016 — Time: 3 Hours, Full marks: 200 (pp. 1–32), 6. — [duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md](../duranta/1706697796-36th-bcs-lecturer-ict/1706697796.md)
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g1879"></a>
+<a id="g1992"></a>
 
-### What are objects in C ++? <sub>G1879</sub>
+### What are objects in C ++? <sub>G1992</sub>
 
 *Written*
 
@@ -2068,9 +2116,9 @@ What are objects in C ++?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — Bangladesh Civil Service – 37th (ICT), Date: 2017 — Time: 3 Hours, Full marks: 200 (pp. 1–11), 7.(a) — [duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md](../duranta/1706697836-37th-bcs-lecturer-ict/1706697836.md)
 
-<a id="g1946"></a>
+<a id="g2059"></a>
 
-### উদাহরণসহ ক্লাস এবং অবজেক্ট এর মধ্যে পার্থক্য লিখুন। <sub>G1946</sub>
+### উদাহরণসহ ক্লাস এবং অবজেক্ট এর মধ্যে পার্থক্য লিখুন। <sub>G2059</sub>
 
 *Written*
 
@@ -2080,9 +2128,9 @@ What are objects in C ++?
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৫ তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–5), ২ (খ) — [duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md](../duranta/1707458917-15th-ntrca-lecturer-ict-written/1707458917.md)
 
-<a id="g2097"></a>
+<a id="g2210"></a>
 
-### Object কী? কীভাবে Object তৈরি করতে হয় উদাহরণসহ ব্যাখ্যা করুন। <sub>G2097</sub>
+### Object কী? কীভাবে Object তৈরি করতে হয় উদাহরণসহ ব্যাখ্যা করুন। <sub>G2210</sub>
 
 *Written*
 
@@ -2092,9 +2140,9 @@ Object কী? কীভাবে Object তৈরি করতে হয় উ
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — ১৬তম শিক্ষক নিবন্ধন লিখিত — বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি, বিষয় কোড : ৪৫২, পদের নাম: প্রভাষক (pp. 1–3), ২। (ক) — [duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md](../duranta/1707468692-16th-ntrca-lecturer-ict-written/1707468692.md)
 
-<a id="g4048"></a>
+<a id="g4161"></a>
 
-### C++ প্রোগ্রামিং ভাষায় বিভিন্ন ডাটা টাইপ বর্ণনা করুন। <sub>G4048</sub>
+### C++ প্রোগ্রামিং ভাষায় বিভিন্ন ডাটা টাইপ বর্ণনা করুন। <sub>G4161</sub>
 
 *Written*
 
@@ -2118,9 +2166,9 @@ What is the output of code snippet? *(snippet not printed)*
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q33 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
 
-<a id="g2892"></a>
+<a id="g3005"></a>
 
-### Write c++ program name class student which three attribute name,roll,marks and using get … <sub>G2892</sub>
+### Write c++ program name class student which three attribute name,roll,marks and using get … <sub>G3005</sub>
 
 *Written*
 
@@ -2130,9 +2178,9 @@ Write c++ program name class student which three attribute name,roll,marks and u
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — exam paper — 11. Cadet College, Lecturer (ICT), 10.05.2025; Exam Taker: MIST; time and marks not printed; pp. 16-17 — [duranta/1775695828-mist-pattern/1775695828.md](../duranta/1775695828-mist-pattern/1775695828.md)
 
-<a id="g4856"></a>
+<a id="g5149"></a>
 
-### Implement abstract method where exist interface. A output was given with main function, Y… <sub>G4856</sub>
+### Implement abstract method where exist interface. A output was given with main function, Y… <sub>G5149</sub>
 
 *Written*
 
@@ -2142,9 +2190,9 @@ Implement abstract method where exist interface. A output was given with main fu
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Chemical Industries Corporation (BCIC) — Assistant Programmer, 14/02/2025 (BUET) (suggestion), Q2 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g4867"></a>
+<a id="g5160"></a>
 
-### Write down the difference between structure and class <sub>G4867</sub>
+### Write down the difference between structure and class <sub>G5160</sub>
 
 *Written*
 
@@ -2154,9 +2202,9 @@ Write down the difference between structure and class
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — Bangladesh Chemical Industries Corporation (BCIC) — Assistant Programmer, 14/02/2025 (BUET) (suggestion), Q13 — [model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md](../model-test-web/scribd-buet-pattern-it-questions/buet-pattern-it-questions.md)
 
-<a id="g3347"></a>
+<a id="g3460"></a>
 
-### C++ Program [no task printed] <sub>G3347</sub>
+### C++ Program [no task printed] <sub>G3460</sub>
 
 *Written*
 
@@ -2166,9 +2214,9 @@ C++ Program [no task printed]
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — DUET Assistant Programmer 2020, 6 — [duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md](../duranta/1781868667-nwpgcl-jam-ict-duet-taken-previous-questions/1781868667.md)
 
-<a id="g3748"></a>
+<a id="g3861"></a>
 
-### Write a class to keep data of employees, project and employee info of a company. <sub>G3748</sub>
+### Write a class to keep data of employees, project and employee info of a company. <sub>G3861</sub>
 
 *Written*
 
@@ -2178,9 +2226,9 @@ Write a class to keep data of employees, project and employee info of a company.
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — BUET M.Sc. CSE October 2018, Q15 — [buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md](../buet-msc-web/2018-10-cse-hackimpossible/buet-msc-cse-2018-10.md)
 
-<a id="g4271"></a>
+<a id="g4384"></a>
 
-### Write a C/C++ Program that has a Class Account, Subclass Savings Account, Current Account… <sub>G4271</sub>
+### Write a C/C++ Program that has a Class Account, Subclass Savings Account, Current Account… <sub>G4384</sub>
 
 *Written*
 
@@ -2189,6 +2237,19 @@ Write a C/C++ Program that has a Class Account, Subclass Savings Account, Curren
 - **Asked in (1):** Combined Bank AP 2021
 - **Source:**
   - Question paper found on the web (see the folder README for the URL) — 6 Banks & Financial Institutions (BSCS) — Assistant Programmer — 2021 (date conflicting: 18/03/2021 on the MCQ page; 15-01-2022 in the site's analysis page) — Exam taker: not stated — recollection (8 items), Q5 — [bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md](../bank-written-web/2021-6banks-ap-itjobqns/6banks-ap-2021.md)
+
+<a id="g4540"></a>
+
+### Find the output of the following code: int a=10, b=15; if((a=100)==(b=a)) System.out.prin… <sub>G4540</sub>
+
+*MCQ*
+
+Find the output of the following code: int a=10, b=15; if((a=100)==(b=a)) System.out.print(b+a); else System.out.print(b-a); (a) 100 (b) 200 (c) 0 (d) 3
+
+- **Asked in (1):** Combined Bank AHE/AE(IT) 2021
+- **Source:**
+  - Question paper found on the web (see the folder README for the URL) — Banker Selection Committee — Combined 3 Bank — Assistant Hardware Engineer / Assistant Engineer (IT) / AHME — MCQ — 25.10.2021 — Exam taker: ANZA (as printed by Stack IT; unverified) — 60 IT MCQs, MCQ24 — [bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md](../bank-written-web/2021-combined3-ahe-ae-mcq-anza-stackit-slideshare/combined3-ahe-ae-2021-mcq.md)
+- **Correction:** key a (100). In Java, (a=100) sets a to 100, then (b=a) sets b to 100, so the condition is true and b+a = 200 is printed, option (b).
 
 <a id="g1100"></a>
 
@@ -2202,9 +2263,9 @@ Write a program using any programming language that reads five numbers from keyb
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q38 — [bit to exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.md) · [image](../bit%20to%20exabyte/24_bte-g2-p10-oop-q37-41-security-q01-06.jpg)
 
-<a id="g2824"></a>
+<a id="g2937"></a>
 
-### Write a program in C++ to check whether a given number is prime or not. <sub>G2824</sub>
+### Write a program in C++ to check whether a given number is prime or not. <sub>G2937</sub>
 
 *Written*
 
@@ -2216,9 +2277,9 @@ Write a program in C++ to check whether a given number is prime or not.
 
 ## Access specifiers & friend functions
 
-<a id="g2098"></a>
+<a id="g2211"></a>
 
-### Friend Function কী? Friend Function-এর বৈশিষ্ট্য এবং সুবিধা ও অসুবিধাগুলো লিখুন। <sub>G2098</sub>
+### Friend Function কী? Friend Function-এর বৈশিষ্ট্য এবং সুবিধা ও অসুবিধাগুলো লিখুন। <sub>G2211</sub>
 
 *Written*
 
@@ -2270,9 +2331,9 @@ What are the various Access Specification in C++? Explain their purpose with are
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q13 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
 
-<a id="g2199"></a>
+<a id="g2312"></a>
 
-### You have three access specifiers in java object oriented language. You have to find which… <sub>G2199</sub>
+### You have three access specifiers in java object oriented language. You have to find which… <sub>G2312</sub>
 
 *Written*
 
@@ -2283,9 +2344,9 @@ You have three access specifiers in java object oriented language. You have to f
   - duranta.app question bank (coaching compilation of the question paper) — Petrobangla Assistant Manager (CSE/IT/ICT) 31/05/2024, Q1(b) — [duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md](../duranta/1717249637-bangladesh-oil-gas-and-mineral-corporation-petrobangla-assis/1717249637.md)
 - **Correction:** a postorder alone does not fix a unique binary tree (the HUO copy says so). For the tree the coaching drew, the level-order array is [i, h, g, f, c, d, e, a, b], not [a, b, c, …, i].
 
-<a id="g3579"></a>
+<a id="g3692"></a>
 
-### (b) What is friend function? Given the following class, show how to add a friend function… <sub>G3579</sub>
+### (b) What is friend function? Given the following class, show how to add a friend function… <sub>G3692</sub>
 
 *Written*
 
@@ -2295,9 +2356,9 @@ You have three access specifiers in java object oriented language. You have to f
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 39 — জ্বালানি ও খনিজ সম্পদ বিভাগের আওতাধীন হাইড্রোকার্বন ইউনিটের সহকারী পরিচালক (আইসিটি)-৯ম গ্রেড — পরীক্ষার তারিখঃ ৩০/০৫/২০২৫ — exam taker not printed — সময়ঃ ০৪ ঘণ্টা — পূর্ণমান ২০০ (বাংলা ৪০, English ৪০, সাধারণ জ্ঞান ৪০, টেকনিক্যাল ৮০) — pages 24–30, Q6(b) — [duranta/1783757387-bpsc-non-cadre-questions/1783757387.md](../duranta/1783757387-bpsc-non-cadre-questions/1783757387.md)
 
-<a id="g1595"></a>
+<a id="g1594"></a>
 
-### Access Specifier কী? Public, Private ও Protected এক্সেস স্পেসিফায়ার আলোচনা করুন। <sub>G1595</sub>
+### Access Specifier কী? Public, Private ও Protected এক্সেস স্পেসিফায়ার আলোচনা করুন। <sub>G1594</sub>
 
 *Written*
 
@@ -2345,9 +2406,9 @@ Procedural Oriented ও Object Oriented Programming Languages এর মধ্�
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q17 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
 
-<a id="g1894"></a>
+<a id="g2007"></a>
 
-### State the advantages of object-oriented programming over structured programming. <sub>G1894</sub>
+### State the advantages of object-oriented programming over structured programming. <sub>G2007</sub>
 
 *Written*
 
@@ -2360,9 +2421,9 @@ State the advantages of object-oriented programming over structured programming.
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 - **Printed answer:** Code reuse, encapsulation, design benefits, easier maintenance, higher quality and faster debugging.
 
-<a id="g3005"></a>
+<a id="g3118"></a>
 
-### Difference between Object Oriented Programming and Procedural Oriented Programming. <sub>G3005</sub>
+### Difference between Object Oriented Programming and Procedural Oriented Programming. <sub>G3118</sub>
 
 *Written*
 
@@ -2402,9 +2463,9 @@ Difference between OOP and Structured Programming.
 
 ## Encapsulation & abstraction
 
-<a id="g3207"></a>
+<a id="g3320"></a>
 
-### White a program using any object-oriented language (eg, C++/Java/ Python) represent a Bok… <sub>G3207</sub>
+### White a program using any object-oriented language (eg, C++/Java/ Python) represent a Bok… <sub>G3320</sub>
 
 *Written*
 
@@ -2414,9 +2475,9 @@ White a program using any object-oriented language (eg, C++/Java/ Python) repres
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 13 — Combined Bank — Officer (IT) — 17.10.2025 — Exam taker: BIBM — 80 MCQ (IT:75 + Math+GK: 25); Written: IT Question (150) + Math 4(20) + Focus(10)+B/E(20)=200 marks — pages 49–52, Q15 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4327"></a>
+<a id="g4620"></a>
 
-### Which of the following does NOT achieve encapsulation? (a) Using private access specifier… <sub>G4327</sub>
+### Which of the following does NOT achieve encapsulation? (a) Using private access specifier… <sub>G4620</sub>
 
 *MCQ*
 
@@ -2438,9 +2499,9 @@ Briefly Describe Abstraction, Encapsulation.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q19 — [bit to exabyte/22_bte-g2-p08-oop-q02-19.md](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.md) · [image](../bit%20to%20exabyte/22_bte-g2-p08-oop-q02-19.jpg)
 
-<a id="g1878"></a>
+<a id="g1991"></a>
 
-### How can we solve problem using abstraction? <sub>G1878</sub>
+### How can we solve problem using abstraction? <sub>G1991</sub>
 
 *Written*
 
@@ -2478,9 +2539,9 @@ What is Abstraction?
   - Bank IT viva (compiled from candidates' viva experiences) (viva), Viva p23 Q27 — [PDF-TEXT/Viva Questions Extracted from Viva Experiences.md](../PDF-TEXT/Viva%20Questions%20Extracted%20from%20Viva%20Experiences.md#p23)
 - **Printed answer:** Abstraction hides implementation details and exposes only the essential features to the user
 
-<a id="g1586"></a>
+<a id="g1585"></a>
 
-### Data Abstraction ও Data Encapsulation বলতে কী বোঝায়? উভয়ের মধ্যে পার্থক্য লিখুন। <sub>G1586</sub>
+### Data Abstraction ও Data Encapsulation বলতে কী বোঝায়? উভয়ের মধ্যে পার্থক্য লিখুন। <sub>G1585</sub>
 
 *Written*
 
@@ -2490,9 +2551,9 @@ Data Abstraction ও Data Encapsulation বলতে কী বোঝায়? 
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q54 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g1587"></a>
+<a id="g1586"></a>
 
-### Data Abstraction কী? Data Abstraction-এর বিভিন্ন স্তরগুলো (Levels of Abstraction) বর্ণনা … <sub>G1587</sub>
+### Data Abstraction কী? Data Abstraction-এর বিভিন্ন স্তরগুলো (Levels of Abstraction) বর্ণনা … <sub>G1586</sub>
 
 *Written*
 
@@ -2502,9 +2563,9 @@ Data Abstraction কী? Data Abstraction-এর বিভিন্ন স্ত
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — অবজেক্ট ওরিয়েন্টেড প্রোগ্রামিং কনসেপ্ট (OOP & C++), Q55 — [18th NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.md) · [image](../18th%20NTCRA/03_ntrca-qbank-p03-c-series-oop-q41-62.jpg)
 
-<a id="g2338"></a>
+<a id="g2451"></a>
 
-### What is object-oriented programming? [BCS – 37th(ICT)] What are the main features of OOP?… <sub>G2338</sub>
+### What is object-oriented programming? [BCS – 37th(ICT)] What are the main features of OOP?… <sub>G2451</sub>
 
 *Written*
 
@@ -2514,9 +2575,9 @@ What is object-oriented programming? [BCS – 37th(ICT)] What are the main featu
 - **Source:**
   - duranta.app question bank (coaching suggestion, not a dated paper) — suggestion — 46th & 47th BCS Written Suggestions, CSE 971 & ICT 281 (BPSC technical cadre written), Duranta Career & Skills Academy, no time/marks scheme printed, pp. 1-16 — [duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md](../duranta/1732968747-46th-47th-bcs-written-suggestions-code-971/1732968747.md)
 
-<a id="g2349"></a>
+<a id="g2462"></a>
 
-### What are the different level of data abstraction. What is object oriented programming? <sub>G2349</sub>
+### What are the different level of data abstraction. What is object oriented programming? <sub>G2462</sub>
 
 *Written*
 
@@ -2552,9 +2613,9 @@ Write down the difference between Multitasking and Multiprocessing.
 - **Source:**
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q29 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
 
-<a id="g1597"></a>
+<a id="g1596"></a>
 
-### থ্রেড (Thread) এর সংজ্ঞা দিন। <sub>G1597</sub>
+### থ্রেড (Thread) এর সংজ্ঞা দিন। <sub>G1596</sub>
 
 *Written*
 
@@ -2564,9 +2625,9 @@ Write down the difference between Multitasking and Multiprocessing.
 - **Source:**
   - Bit to Exabyte, NTRCA Computer Science & ICT written question bank — OOP (continued), Q66 — [18th NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.md) · [image](../18th%20NTCRA/04_ntrca-qbank-p04-oop-dsa-q63-83.jpg)
 
-<a id="g3713"></a>
+<a id="g3826"></a>
 
-### Thread in C++ , calculate factorial ( not pthread) <sub>G3713</sub>
+### Thread in C++ , calculate factorial ( not pthread) <sub>G3826</sub>
 
 *Written*
 
@@ -2578,9 +2639,9 @@ Thread in C++ , calculate factorial ( not pthread)
 
 ## Exception handling
 
-<a id="g3012"></a>
+<a id="g3125"></a>
 
-### What is difference between exception and Error in java? TAKSAL - 2022- SAPro. <sub>G3012</sub>
+### What is difference between exception and Error in java? TAKSAL - 2022- SAPro. <sub>G3125</sub>
 
 *Written*
 
@@ -2590,9 +2651,9 @@ What is difference between exception and Error in java? TAKSAL - 2022- SAPro.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q2 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g3013"></a>
+<a id="g3126"></a>
 
-### What is exception handling? Write with an example. <sub>G3013</sub>
+### What is exception handling? Write with an example. <sub>G3126</sub>
 
 *Written*
 
@@ -2602,9 +2663,9 @@ What is exception handling? Write with an example.
 - **Source:**
   - duranta.app question bank (coaching compilation of the question paper) — 11 — The Security Printing Corporation (Bangladesh) Ltd -2022 — Post: Sub – Assistant Engineer — 15-01-2022 — Exam taker: not printed — Total Mark 200, Time 2 Hours — pages 17–18, Q3 — [duranta/1777536660-bank-questions-2020-2026/1777536660.md](../duranta/1777536660-bank-questions-2020-2026/1777536660.md)
 
-<a id="g4214"></a>
+<a id="g4327"></a>
 
-### Suppose, you are implementing "Overdraft Account (OD)" class using java for a banking app… <sub>G4214</sub>
+### Suppose, you are implementing "Overdraft Account (OD)" class using java for a banking app… <sub>G4327</sub>
 
 *Written*
 
@@ -2656,9 +2717,9 @@ Write the difference between throw and throws using Exception handling?
   - Bit to Exabyte, Super ICT 150++ Questions Book (chapter-wise previous questions) — Object oriented Programming, Q27 — [bit to exabyte/23_bte-g2-p09-oop-q20-36.md](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.md) · [image](../bit%20to%20exabyte/23_bte-g2-p09-oop-q20-36.jpg)
   - Question paper found on the web (see the folder README for the URL) — Pubali Bank Ltd (private) — Senior Officer (SD) — 2018 — Exam taker: AUST (as printed by the coaching banner; unverified) — Time 2 h, marks not printed, answer all — pages 1–4, Q1 — [bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md](../bank-written-web/2018-pubali-so-sd-stackit-slideshare/pubali-so-sd-2018.md)
 
-<a id="g2342"></a>
+<a id="g2455"></a>
 
-### What is exception? Explain how it can be used for debugging a program. <sub>G2342</sub>
+### What is exception? Explain how it can be used for debugging a program. <sub>G2455</sub>
 
 *Written*
 
