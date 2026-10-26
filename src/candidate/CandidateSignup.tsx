@@ -67,7 +67,7 @@ export default function CandidateSignup({ next: asked }: { next?: string }) {
   return (
     <main className="cand-auth">
       <form className="cand-auth-card" onSubmit={handleSubmit} noValidate>
-        <a className="cand-back" href="/">← {t.navHome}</a>
+        <a className="cand-back" href={loginHref}>← {t.signIn}</a>
         <h1 className="cand-auth-title">{t.candidateSignupTitle}</h1>
         <p className="cand-auth-desc">{t.candidateSignupDesc}</p>
         {error && <div className="cand-form-error" role="alert">{error}</div>}
