@@ -106,6 +106,24 @@ describe("seedExamKits", () => {
     expect((await pool.query("SELECT count(*)::int AS n FROM exam_kits")).rows[0].n).toBe(0);
   });
 
+  it("refreshes changed content on the same date, publishes a kit that goes from draft to published, and keeps an admin's unpublish", async () => {
+    const draft = kit({ status: "draft" });
+    const { kitsDir, qDir } = dirs([draft]);
+    await seedExamKits(pool, kitsDir, qDir);
+    const file = path.join(kitsDir, "net-ip-firewalls.json");
+    const published = () => pool.query("SELECT is_published FROM exam_kits WHERE slug = 'net-ip-firewalls'").then((r) => r.rows[0].is_published);
+    expect(await seedExamKits(pool, kitsDir, qDir)).toEqual({ added: 0, refreshed: 0 });
+
+    fs.writeFileSync(file, JSON.stringify({ ...draft, status: "published" }));
+    expect(await seedExamKits(pool, kitsDir, qDir)).toEqual({ added: 0, refreshed: 1 });
+    expect(await published()).toBe(true);
+
+    await pool.query("UPDATE exam_kits SET is_published = false WHERE slug = 'net-ip-firewalls'");
+    fs.writeFileSync(file, JSON.stringify({ ...draft, status: "published", lessonTitleEn: "Renamed" }));
+    expect(await seedExamKits(pool, kitsDir, qDir)).toEqual({ added: 0, refreshed: 1 });
+    expect(await published()).toBe(false);
+  });
+
   it("refuses to seed when a kit is invalid", async () => {
     const { kitsDir, qDir } = dirs([kit({ traps: [] })]);
     await expect(seedExamKits(pool, kitsDir, qDir)).rejects.toThrow(/traps has 0/);
