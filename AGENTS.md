@@ -1,110 +1,96 @@
 # AGENTS.md — study-app
 
 ## Agent workflow
-- **Never dispatch subagents in parallel — one at a time, for every task.** No batching, no "these
-  look independent", no "kick them off and review after". Finish and verify one unit of work, then
-  start the next.
-- A cancelled subagent leaves half-written files behind, so parallel dispatch loses N partial jobs
-  instead of 1. Always audit the filesystem after an agent returns; never trust its success report.
-- Prefer doing small work directly over spawning a subagent for it.
+- Run subagents one at a time, never in parallel. A cancelled subagent leaves half-written
+  files behind, so after any agent returns, audit the filesystem; don't trust its report.
+- Prefer doing small work directly over spawning a subagent.
+
+## Layout
+- Two packages, no workspace tooling: root (React + Vite SPA) and `server/` (Express + Postgres,
+  its own `package.json` and `node_modules`). Run `npm install` in both.
+- Frontend entry: `src/main.tsx` → `src/App.tsx`. Routing is hash-based, parsed in `src/router.tsx`
+  (`#/notes`, `#/pyq`, `#/exams…`, `#/chapter/<uuid>/lesson/<uuid>`, `#/admin/…`). No router library.
+- Frontend calls the API via `src/public/publicApi.ts` (`/api/public…`) and the exam code in `src/exam/`.
+- Backend entry: `server/src/index.ts` → `server/src/app.ts`. Config in `server/src/config.ts`.
+  `server/index.ts` is a stale file from an old AI-gateway prototype (imports services that don't exist). Don't edit or run it.
+- Bilingual UI strings: `src/data/translation_en.ts` / `translation_bn.ts`.
+- Seed lesson modules live in `server/data/modules/`; question JSON in `server/data/questions/`.
+- `README.md` is partly out of date (describes the AI gateway and an `.opencode` layout). Trust `package.json` and `src/` over it.
 
 ## Commands
-- `npm run dev` — start Vite dev server
-- `npm run build` — typecheck (`tsc -b`) then build (`vite build`)
-- `npm run lint` — ESLint flat config on all `.ts,tsx`
-- `npx prettier --write src/` — format (no prettierrc; falls back to defaults)
+- Frontend (repo root):
+  - `npm run dev` — Vite dev server only
+  - `npm run build` — `tsc -b` then `vite build`; this is the typecheck gate
+  - `npm run lint` — ESLint flat config, `.ts`/`.tsx`
+  - `npm run dev:all` — Vite plus the API server together
+- Backend (`cd server`):
+  - `npm run dev` — tsx watch on `src/index.ts`
+  - `npm test` — Vitest, integration tests against Postgres; `npx vitest run test/<file>.test.ts` for one file
+  - `npm run notes:apply` — writes note sets into the DB
+  - `npm run check:content` — question/blueprint/kit checks
+- Verification order for a change: `npm run lint` → `npm run build` → relevant `server` tests.
+- No Prettier config in the repo. Don't run a formatter over the whole tree.
+- Frontend has no test runner. Playwright is a devDependency with no test config; don't assume a suite exists.
 
-## Notes pipeline (`notes/`) — lesson-wise commands
-Every stage is a separate command in `.opencode/command/`. **Targets are lesson slugs — a
-chapter is never a valid target**, so no command can sweep a whole chapter and blow the usage
-limit.
+## Server tests need a database
+- `server/test/test-db-url.ts` refuses any DB whose name doesn't end in `_test`. It uses
+  `TEST_DATABASE_URL`, or `DATABASE_URL` with the database renamed to `study_hub_test`.
+- `global-setup.ts` creates the test DB and migrates it on each run. Files run serially (`fileParallelism: false`).
+- Needs `server/.env` (copy from `.env.example`). Never read or print `.env`; it holds real secrets.
+
+## Notes pipeline (`notes/`)
+Each stage is a separate command: `.opencode/command/notes-*.md`, with `notes.md` as a router. The
+same commands also exist under `.claude/commands/`. Targets are **lesson slugs**. A chapter is never
+a valid target. If given a chapter, list its lessons and ask which one. Never loop over a chapter.
 
 | Stage | Command | Script |
 |---|---|---|
-| Author | `/notes-prep <slug>` | `check.mjs` (verify) |
+| Author | `/notes-prep <slug>` | `check.mjs` (runs it itself) |
 | Gate | `/notes-check <slug>` | `node notes/build/check.mjs` |
 | Visual QA | `/notes-qa <slug>.<lang>` | `node notes/build/snap.mjs` |
 | Render | `/notes-render <slug>` | `node notes/build/render.mjs` |
-| Register | `/notes-manifest <slug>` | — |
+| Register | `/notes-manifest <slug>` | writes `server/data/notes/manifest.json` |
 | Publish | `/notes-publish <slug>` | `node notes/build/publish.mjs` |
-| Database | `/notes-apply` | `cd server; cmd /c "npm run notes:apply"` |
+| Database | `/notes-apply` | `cd server; cmd /c "npm run notes:apply"` (`cmd //c` from bash) |
 | All stages | `/notes-ship <slug>` | one lesson only |
 
-- Commands take a slug and resolve the chapter folder themselves: `manifest.json` →
-  `notes/src/*/<slug>.en.html` → seed module. `chapterDir()` in `server/src/db/applyNotes.ts`
-  is the authority for the folder name — never invent one.
-- If given a chapter, list that chapter's lessons with slugs and ask which one. Never loop over
-  a chapter, and never author a second lesson in one invocation.
-- `/notes-prep` runs `check.mjs` itself, so the normal per-lesson loop is six commands.
-- `/notes` with no action only prints the tables — it routes, it does no work.
-- `notes/AUTHORING.md` is the style contract; read it before authoring. `notes/README.md` is the
-  flow guide and holds the lesson-wise breakdown of all 82 seed lessons.
-- Fill target 85-95%, ceiling ~96% (`scrollHeight` includes trailing margin + `padding-bottom`).
-- Fill is not overflow — 88% can still spill sideways; `check.mjs` measures vertical only.
-- Never edit `notes/assets/hw.css`, `public/notes/`, a build script, or `notes/src/` root.
+- Chapter folder: `chapterDir()` in `server/src/db/applyNotes.ts` is the authority. Copy the name
+  from an existing folder under `notes/src/`; never invent one.
+- Read `notes/AUTHORING.md` before authoring. `notes/README.md` has the flow guide.
+- Fill target 85–95%; the ceiling is ~96% (`scrollHeight` includes margin and padding). `check.mjs`
+  measures vertical fill only. It does not catch horizontal overflow or overlap.
+- Never edit `notes/assets/hw.css`, `public/notes/`, a build script, or the `notes/src/` root.
+- `render.mjs` reads only `notes/src/*.html`. `publish.mjs` reads the Markdown. An English-only set
+  publishes 6 files, not 14.
 
-### Notes gotchas that cost real time
+### Notes gotchas (verified)
+- `.ink-b` does not exist in `hw.css`. An unstyled SVG `<path>` renders as a solid black blob. Use `.ink`.
+- Every Bangla SVG `<text>` needs `class="bn …"`. Without it Kalam shows tofu, and the gate still passes.
+- `heading.bn` and `takeaways.bn` are required even when `langs: ["en"]`. Missing ones abort the
+  whole `notes:apply` run before any slug is reported.
+- Don't derive `lessonTitleEn` from the note's `<title>`. Use the explicit slug → seed id map.
+- The last sheet is exempt from the 72% fill floor.
+- Scope scripted edits to one `section.page`. Regexes can produce duplicate `style` attributes that
+  `check.mjs` won't flag.
+- `.circ` must not wrap. Wide tables overflow sideways into neighbouring columns.
+- `.mnote` and `.sticky` are right-floats (42mm / 52mm). Inside a `.cols` column, add
+  `style="float:none;width:auto"`.
+- `langs: ["en"]` hides Bangla without erroring, because `noteLang()` falls back to the first published language.
+- Match the full class attribute when scripting (`class="sticky pink"`, not `class="sticky"`).
+- Grep apply output by exact slug. `pyq-se` doesn't contain `se-`.
+- An existing file isn't evidence it's good. Run `check.mjs` first.
 
-These are verified, not theoretical. Full detail lives in `notes/README.md` §3.
+## TypeScript / React quirks
+- TypeScript ~6.0 with `verbatimModuleSyntax` (use `import type`), `erasableSyntaxOnly` (no enums,
+  namespaces or parameter properties), and `noUnusedLocals`/`noUnusedParameters`.
+- ESLint 9 flat config lives in `eslint.config.js`.
+- Tailwind v4 via `@tailwindcss/vite`. There is no `tailwind.config`. Entry is `@import "tailwindcss"` in `src/index.css`.
+- React 19. State is local `useState`/hooks; there is no global state library.
+- Frontend deploys to Vercel (`.vercel/` is linked). The backend appears to run on Azure App Service
+  (`TRUST_PROXY` comment, `azure-logs*/` folders). Check before assuming either.
 
-- **`.ink-b` does not exist in `hw.css`** — and it is worse than invisible. An unstyled SVG
-  `<path>` defaults to `fill: black; stroke: none`, so it renders as a solid blob. Use `.ink`.
-- **Every Bangla SVG `<text>` needs `class="bn …"`** — Kalam has no Bangla glyphs, so a missing
-  class renders as tofu and still passes every gate.
-- **`heading.bn` and `takeaways.bn` are required even when `langs: ["en"]`.** `applyNotes.ts`
-  calls `viewerHtml(entry, "bn")` unconditionally and indexes `heading[lang]` with no fallback,
-  so a missing one aborts the whole apply with
-  `TypeError: Cannot read properties of undefined (reading 'replace')` before any slug is
-  reported — every slug is left unapplied, not just the new one. Set them to the English values.
-- **Never derive `lessonTitleEn` from the note HTML's `<title>`.** A note heading may be
-  deliberately shorter than the seed title (chapter 17 `se4`), and you get
-  `skipped … no matching lesson`. Use an explicit slug → seed id map into the seed module.
-- **The last sheet is exempt from the 72% fill floor** (`check.mjs` tests `i < fills.length`),
-  so a short closing sheet is legal.
-- **An over-full sheet needs redistribution, not padding.** Split it, then donate a whole
-  section from an adjacent over-full sheet so the donor drops in one move. See README §3.
-- **Scope scripted edits to one `section.page`.** A chapter-wide replace leaks into every
-  sheet. Regexes can also emit a duplicated `style` attribute, which `check.mjs` does not flag.
-- **`.circ` must not wrap** — it is `inline-block` with an ellipse sized to the box, so wrapped
-  text balloons the ellipse over its neighbours. Long phrases get their own `nowrap` line.
-- **Wide tables overflow `minmax(0,1fr)` tracks sideways** into the neighbouring column, not
-  off the sheet, so every vertical measurement stays green.
-- **`figure.doodle svg { overflow: visible }`** — a `<text>` wider than the `viewBox` escapes
-  onto the page instead of being clipped.
-- **`render.mjs` reads only `notes/src/*.html`**, never `notes/md/*.md`. Only `publish.mjs`
-  consumes the Markdown, so a stale `.md` surfaces as a stale `.note.pdf` at publish time.
-- **An EN-only set publishes 6 files, not 14** — no `.bn.html`, no `.bn.md`.
-- **Existing files are not evidence they are good.** An orphan can look complete and fail at
-  143% on one sheet. Run `check.mjs` before deciding no work is needed.
-- **`.mnote` and `.sticky` are right-floats** (`width: 42mm` / `52mm`). Inside a `.cols`
-  column (~90mm) they squeeze the text beside them into a ribbon or overlap the next block.
-  Use them at full page width, or force `style="float:none;width:auto"` inside a column.
-- **Overlap is not overflow.** `check.mjs` measures vertical extent only, so a sheet can read
-  92% and still have unreadable overlapping text. PASS is necessary, never sufficient.
-- **`langs: ["en"]` hides Bangla without erroring.** `noteLang()` falls back to
-  `publishedLangs()[0]`, so every stage still reports success while a Bangla reader gets
-  English. If someone reports "no Bangla in the web", check `langs` in the manifest first.
-- **Once a set goes bilingual, `heading.bn` stops being a fallback and becomes user-visible.**
-  Replace the English placeholder with real Bangla in the same change that removes `langs`.
-- **Match the full class attribute when scripting.** `class="sticky pink"` is not
-  `class="sticky"`, so a regex for the bare form silently misses every modifier variant.
-- **Match the exact punctuation** when doing exact-string edits — an em dash vs a hyphen makes
-  a replacement silently no-op.
-- **`cmd /c` only works from PowerShell.** In a bash shell use `cmd //c`, or `cmd` opens an
-  interactive prompt that prints a banner and runs nothing.
-- **Grep apply output by exact slug.** `pyq-se` has no `se-` substring, so a chapter-prefix
-  filter drops it and you report a registered set as missing.
-
-## Framework & toolchain quirks
-- **Tailwind v4**: no `tailwind.config`, no PostCSS. Configured via `@tailwindcss/vite` plugin. Entry: `@import "tailwindcss"` in `src/index.css`.
-- **TypeScript ~6.0** with `verbatimModuleSyntax: true` (use `import type` for type-only imports) and `erasableSyntaxOnly: true` (no enums, no `namespace`, no `parameter properties`).
-- **ESLint 9 flat config**: edits go in `eslint.config.js`. `noUnusedLocals`/`noUnusedParameters` are on.
-- **React 19**: no router, no state library. Single `App.tsx` handles all state with `useState`.
-- **No test framework** — skip anything that expects jest/vitest/playwright.
-
-## Architecture
-- **Single-page app** (no routing). Entry: `src/main.tsx` → `<App />` in `src/App.tsx` (monolithic, ~774 lines).
-- **Bilingual** (English / Bengali). UI strings: `src/data/translation_en.ts` / `translation_bn.ts`. Lesson content has `*Bn` fields.
-- **Content is static TS** in `src/data/modules/`. No backend, no API calls, no DB. Built into bundle at compile time.
-- **Deployment**: static SPA via Vercel (no Dockerfile, no server config in repo).
-- **No CI, no pre-commit hooks, no codegen, no migrations.**
+## Repo hygiene
+- Root contains many stray artifacts: screenshots, zips, `--outDir/`, `bash.exe.stackdump`, `filelist.txt`.
+  Don't add scratch files to the root. Keep probes in `%TEMP%`.
+- `server/uploads/` holds user uploads. Don't commit or edit them.
+- Don't run `git commit` unless asked.
