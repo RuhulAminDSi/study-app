@@ -8,7 +8,7 @@ import type { ReactNode } from 'react'
  *   "• …" / "- …"                -> bullet list;  "1. …" -> numbered list;  "(i) …" / "(a) …" -> labelled parts
  *   "a | b | c" on 2+ lines      -> table (first row is the header); on one line -> chips
  *   "Exam tip: …", "Answer: …", "Real-world example: …", "Note: …" (and the Bangla labels) -> callouts
- *   "Label: …" with a short label -> the label in bold
+ *   "Label: …" with a short label -> the label in bold;  3+ lines of C/C++/Java/SQL -> a code block, layout kept
  * and, inside any line, marks IPv4/IPv6 addresses, prefixes and binary octets as code and a^b as a power.
  */
 
@@ -26,6 +26,7 @@ type Block =
   | { k: 'p'; lines: string[] }
   | { k: 'h'; text: string }
   | { k: 'diagram'; text: string }
+  | { k: 'code'; text: string }
   | { k: 'steps'; items: Item[] }
   | { k: 'ul'; items: string[] }
   | { k: 'ol'; items: Item[] }
@@ -53,8 +54,43 @@ function calloutOf(line: string): { kind: CalloutKind; label: string; rest: stri
 const structural = (l: string, next?: string) =>
   HEAD.test(l) || STEP.test(l) || BULLET.test(l) || NUMBERED.test(l) || PART.test(l) || !!calloutOf(l) || (isRow(l) && isRow(next ?? ''))
 
+// program and SQL lines: a strong line starts a code run, which then takes indented lines, braces and blank lines
+const CODE_STRONG = /^(?:#include\b|#define\b|(?:public|private|protected|class|struct|interface|import|package|template|using namespace)\b|(?:int|void|char|float|double|long|unsigned|bool|String|static)\s+\**\w+\s*[(=;[,]|(?:CREATE|SELECT|INSERT|UPDATE|DELETE|ALTER|DROP|GRANT|REVOKE|BEGIN|COMMIT|ROLLBACK)(?:\s|;|$))|(?:;|\{|\})\s*(?:\/\*.*\*\/|\/\/.*)?$/
+const CODE_WEAK = /^(?:\s{2,}|\t)\S|^\s*[{}]|^(?:FROM|WHERE|GROUP BY|ORDER BY|HAVING|JOIN|LEFT JOIN|RIGHT JOIN|VALUES|AND|OR|ON|SET|LIMIT|UNION|INTO|WITH|DECLARE|IF|ELSE|ELSIF|THEN|END|AFTER|BEFORE|FOR EACH|RETURNS|CASE|WHEN)\b/
+const FENCE = /^\s*[-─]{6,}\s*$/
+const isCodeLine = (l: string) => !BULLET.test(l) && !STEP.test(l) && !isRow(l) && !l.includes('**') && (CODE_STRONG.test(l) || CODE_WEAK.test(l))
+
+/** Cuts runs of 3+ code lines (blank lines inside a program included) out of the text, so they keep their layout. */
 function parse(text: string): Block[] {
+  const lines = text.split('\n')
   const blocks: Block[] = []
+  let from = 0
+  for (let i = 0; i < lines.length; i++) {
+    if (!CODE_STRONG.test(lines[i]) || !isCodeLine(lines[i])) continue
+    let end = i
+    let count = 0
+    for (let j = i; j < lines.length; j++) {
+      const l = lines[j]
+      if (isCodeLine(l) || FENCE.test(l)) { end = j; if (!FENCE.test(l)) count++ }
+      else if (l.trim() === '' && j + 1 < lines.length && isCodeLine(lines[j + 1])) continue
+      else break
+    }
+    if (count < 3) continue
+    // an opening fence just above the run belongs to it
+    const start = i > 0 && FENCE.test(lines[i - 1]) ? i - 1 : i
+    blocks.push(...parseText(lines.slice(from, start).join('\n')))
+    const code = lines.slice(start, end + 1).filter(l => !FENCE.test(l))
+    blocks.push({ k: 'code', text: code.join('\n') })
+    from = end + 1
+    i = end
+  }
+  blocks.push(...parseText(lines.slice(from).join('\n')))
+  return blocks
+}
+
+function parseText(text: string): Block[] {
+  const blocks: Block[] = []
+  if (!text.trim()) return blocks
   for (const rawChunk of text.split(/\n\s*\n/)) {
     // a text diagram (boxes joined by "|" and "----" lines) is kept as drawn; text around it is parsed as usual
     const raw = rawChunk.split('\n').filter(l => l.trim() !== '')
@@ -62,9 +98,9 @@ function parse(text: string): Block[] {
     if (conn.length >= 2) {
       const from = Math.max(0, conn[0] - 1)
       const to = Math.min(raw.length, conn[conn.length - 1] + 2)
-      if (from > 0) blocks.push(...parse(raw.slice(0, from).join('\n')))
+      if (from > 0) blocks.push(...parseText(raw.slice(0, from).join('\n')))
       blocks.push({ k: 'diagram', text: raw.slice(from, to).join('\n') })
-      if (to < raw.length) blocks.push(...parse(raw.slice(to).join('\n')))
+      if (to < raw.length) blocks.push(...parseText(raw.slice(to).join('\n')))
       continue
     }
     const chunk = raw.join('\n')
@@ -240,6 +276,7 @@ function BlockView({ b }: { b: Block }) {
     }
     case 'h': return <h5 className="kt-h">{inline(b.text)}</h5>
     case 'diagram': return <pre className="kt-diagram">{b.text}</pre>
+    case 'code': return <pre className="kt-diagram kt-src"><code>{b.text}</code></pre>
     case 'steps':
       return (
         <ol className="kt-steps">

@@ -24,8 +24,8 @@ Unmapped clusters: Other (101)
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
 | `dld-boolean-algebra` | 95 | 95 | 37 | 5 | Boolean algebra & simplification (52); K-map (43) | 36 / 14 / 0 | ✓ |
-| `dld-number-systems` | 72 | 64 | 34 | 0 | Number systems & codes (64) | 5 / 1 / 0 | ✓ |
-| `dld-logic-gates` | 51 | 51 | 24 | 1 | Logic gates & universal gates (51) | 5 / 0 / 0 | ✓ |
+| `dld-number-systems` | 72 | 64 | 34 | 0 | Number systems & codes (64) | 40 / 12 / 3 | ✓ |
+| `dld-logic-gates` | 51 | 51 | 24 | 1 | Logic gates & universal gates (51) | 40 / 14 / 3 | ✓ |
 | `dld-combinational` | 38 | 35 | 16 | 1 | Combinational circuits (35) | 5 / 1 / 0 | — |
 | `dld-sequential` | 33 | 34 | 9 | 1 | Sequential circuits (flip-flops, counters) (34) | 5 / 2 / 0 | — |
 
@@ -36,7 +36,7 @@ Unmapped clusters: Other (12)
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
 | `ca-memory-hierarchy` | 101 | 96 | 39 | 11 | Cache memory (64); Memory organisation (29); Storage devices (3) | 41 / 17 / 0 | ✓ |
-| `ca-cpu-organization` | 76 | 71 | 27 | 1 | Pipelining & superscalar (21); Registers, instructions & addressing (20); CPU design & performance (14) | 14 / 4 / 0 | ✓ |
+| `ca-cpu-organization` | 76 | 71 | 27 | 1 | Pipelining & superscalar (21); Registers, instructions & addressing (20); CPU design & performance (14) | 46 / 13 / 0 | ✓ |
 
 Unmapped clusters: Other (14)
 
@@ -58,8 +58,8 @@ Unmapped clusters: Other (79)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `spl-data-types-operators` | 255 | 190 | 78 | 2 | Output tracing (65); Programs & programming basics (49); Data types, variables & operators (29) | 5 / 1 / 2 | ✓ |
-| `spl-preprocessor-pointers-arrays-strings` | 77 | 59 | 25 | 3 | Arrays & matrices (25); Pointers & dynamic memory (18); Strings (16) | 7 / 0 / 4 | ✓ |
+| `spl-data-types-operators` | 255 | 190 | 78 | 2 | Output tracing (65); Programs & programming basics (49); Data types, variables & operators (29) | 37 / 11 / 4 | ✓ |
+| `spl-preprocessor-pointers-arrays-strings` | 77 | 59 | 25 | 3 | Arrays & matrices (25); Pointers & dynamic memory (18); Strings (16) | 46 / 12 / 6 | ✓ |
 | `spl-functions-recursion` | 47 | 47 | 17 | 5 | Recursion & classic programs (26); Call by value vs reference (14); Functions & library (7) | 5 / 0 / 3 | — |
 | `spl-io-files-linking` | 24 | 23 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); File handling (3) | 3 / 0 / 2 | — |
 | `spl-structures-unions-enums` | 16 | 15 | 3 | 1 | Structure & union (15) | 5 / 0 / 0 | — |
@@ -70,8 +70,8 @@ Unmapped clusters: Other (17)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `oop-constructors-inheritance` | 68 | 57 | 19 | 2 | Inheritance (23); Constructors & destructors (16); OOP programs (10) | 10 / 1 / 0 | ✓ |
-| `oop-philosophy-concepts` | 77 | 52 | 17 | 6 | Java specifics (15); OOP principles (14); Classes & objects (12) | 4 / 1 / 1 | ✓ |
+| `oop-constructors-inheritance` | 68 | 57 | 19 | 2 | Inheritance (23); Constructors & destructors (16); OOP programs (10) | 49 / 11 / 3 | ✓ |
+| `oop-philosophy-concepts` | 77 | 52 | 17 | 6 | Java specifics (15); OOP principles (14); Classes & objects (12) | 43 / 11 / 4 | ✓ |
 | `oop-polymorphism-exceptions-threading` | 54 | 45 | 20 | 2 | Polymorphism, overloading & overriding (38); Multithreading (4); Exception handling (3) | 11 / 0 / 2 | — |
 
 Unmapped clusters: Other (10)
@@ -81,9 +81,9 @@ Unmapped clusters: Other (10)
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
 | `dsa-recursion-sorting-hashing` | 112 | 103 | 44 | 3 | Sorting (54); Searching (24); Complexity analysis (11) | 36 / 10 / 2 | ✓ |
-| `dsa-data-representation-adt` | 104 | 94 | 43 | 6 | Linked list (35); Stack & queue (32); Data structure basics (11) | 4 / 1 / 0 | ✓ |
+| `dsa-data-representation-adt` | 104 | 94 | 43 | 6 | Linked list (35); Stack & queue (32); Data structure basics (11) | 36 / 11 / 1 | ✓ |
 | `dsa-tree-workshop` *(new)* | 71 | 61 | 36 | 4 | Trees & traversals (61) | 0 / 4 / 0 | — |
-| `dsa-design-methods-graph-algorithms` | 64 | 56 | 24 | 5 | Algorithm design (greedy, DP, D&C, NP) (30); Graph algorithms (26) | 4 / 3 / 1 | ✓ |
+| `dsa-design-methods-graph-algorithms` | 64 | 56 | 24 | 5 | Algorithm design (greedy, DP, D&C, NP) (30); Graph algorithms (26) | 39 / 11 / 4 | ✓ |
 | `dsa-heaps-btrees` | 28 | 24 | 11 | 0 | Heap (24) | 5 / 1 / 0 | — |
 | `dsa5` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 | `dsa-lower-bound-np-completeness` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
@@ -95,7 +95,7 @@ Unmapped clusters: Other (28)
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
 | `db2` | 232 | 171 | 61 | 2 | SQL queries (154); Views, triggers & procedures (11); SQL command types (6) | 39 / 11 / 20 | ✓ |
-| `db1` | 154 | 111 | 40 | 3 | ER model & relationships (40); Keys (36); DBMS concepts & architecture (35) | 4 / 2 / 0 | ✓ |
+| `db1` | 154 | 111 | 40 | 3 | ER model & relationships (40); Keys (36); DBMS concepts & architecture (35) | 36 / 11 / 2 | ✓ |
 | `db5` | 62 | 51 | 17 | 2 | Transactions & ACID (31); Concurrency control & recovery (11); Distributed DB, NoSQL & backup (9) | 5 / 2 / 0 | — |
 | `db4` | 31 | 24 | 9 | 0 | Indexing, B+ tree & hashing (19); Data warehouse & mining (5) | 3 / 1 / 0 | — |
 | `db3` | 30 | 23 | 10 | 0 | Normalization (23) | 5 / 0 / 0 | — |
@@ -106,8 +106,8 @@ Unmapped clusters: Other (35)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `se-concepts-paradigms-sdlc` | 110 | 70 | 36 | 6 | SDLC models (Waterfall, Agile, Spiral…) (28); SDLC phases (22); Software engineering basics (20) | 4 / 2 / 0 | ✓ |
-| `se-testing-maintenance` | 88 | 66 | 33 | 3 | Testing & quality assurance (66) | 4 / 2 / 0 | ✓ |
+| `se-concepts-paradigms-sdlc` | 110 | 70 | 36 | 6 | SDLC models (Waterfall, Agile, Spiral…) (28); SDLC phases (22); Software engineering basics (20) | 45 / 17 / 0 | ✓ |
+| `se-testing-maintenance` | 88 | 66 | 33 | 3 | Testing & quality assurance (66) | 44 / 15 / 3 | ✓ |
 | `se-waterfall-uml-oo` | 42 | 28 | 16 | 0 | Design, UML & patterns (28) | 5 / 1 / 0 | — |
 | `se-analysis-design` | 22 | 9 | 2 | 1 | Requirements & feasibility (7); Banking IT (1); Information systems & ERP (1) | 3 / 2 / 0 | — |
 | `se-project-management` | 16 | 7 | 3 | 0 | Risk, maintenance & tooling (7) | 5 / 0 / 0 | — |
@@ -119,7 +119,7 @@ Unmapped clusters: Other (32)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `os-process-scheduling` | 105 | 86 | 37 | 5 | Processes & threads (48); CPU scheduling (30); Process synchronization (8) | 6 / 3 / 0 | ✓ |
+| `os-process-scheduling` | 105 | 86 | 37 | 5 | Processes & threads (48); CPU scheduling (30); Process synchronization (8) | 44 / 14 / 3 | ✓ |
 | `os-linux-raid` *(new)* | 104 | 72 | 28 | 0 | Linux commands (53); RAID (19) | 0 / 1 / 0 | — |
 | `os-memory-management` | 66 | 53 | 28 | 2 | Memory management & paging (53) | 6 / 8 / 0 | — |
 | `os-deadlock` | 46 | 43 | 28 | 1 | Deadlock (43) | 4 / 2 / 0 | — |
