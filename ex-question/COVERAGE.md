@@ -108,7 +108,7 @@ Unmapped clusters: Other (35)
 |---|---|---|---|---|---|---|---|
 | `se-concepts-paradigms-sdlc` | 110 | 70 | 36 | 6 | SDLC models (Waterfall, Agile, Spiral…) (28); SDLC phases (22); Software engineering basics (20) | 45 / 17 / 0 | ✓ |
 | `se-testing-maintenance` | 88 | 66 | 33 | 3 | Testing & quality assurance (66) | 44 / 15 / 3 | ✓ |
-| `se-waterfall-uml-oo` | 42 | 28 | 16 | 0 | Design, UML & patterns (28) | 5 / 1 / 0 | ✓ |
+| `se-waterfall-uml-oo` | 42 | 28 | 16 | 0 | Design, UML & patterns (28) | 43 / 14 / 4 | ✓ |
 | `se-analysis-design` | 22 | 9 | 2 | 1 | Requirements & feasibility (7); Banking IT (1); Information systems & ERP (1) | 42 / 13 / 4 | ✓ |
 | `se-project-management` | 16 | 7 | 3 | 0 | Risk, maintenance & tooling (7) | 42 / 11 / 4 | ✓ |
 | `se-grasp-patterns` | 0 | 0 | 0 | 0 | — | 4 / 0 / 0 | — |
