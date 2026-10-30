@@ -98,7 +98,7 @@ Unmapped clusters: Other (28)
 | `db1` | 154 | 111 | 40 | 3 | ER model & relationships (40); Keys (36); DBMS concepts & architecture (35) | 36 / 11 / 2 | ✓ |
 | `db5` | 62 | 51 | 17 | 2 | Transactions & ACID (31); Concurrency control & recovery (11); Distributed DB, NoSQL & backup (9) | 5 / 2 / 0 | ✓ |
 | `db4` | 31 | 24 | 9 | 0 | Indexing, B+ tree & hashing (19); Data warehouse & mining (5) | 3 / 1 / 0 | ✓ |
-| `db3` | 30 | 23 | 10 | 0 | Normalization (23) | 5 / 0 / 0 | ✓ |
+| `db3` | 30 | 23 | 10 | 0 | Normalization (23) | 37 / 11 / 4 | ✓ |
 
 Unmapped clusters: Other (35)
 
