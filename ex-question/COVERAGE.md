@@ -12,10 +12,10 @@ Bank targets per lesson (spec §5.1): MCQ ≥30, written ≥10, programming/SQL/
 | `ics-cloud-datacentre` *(new)* | 113 | 64 | 50 | 4 | Cloud, data centre & servers (64) | 30 / 10 / 2 | ✓ |
 | `ics-web-basics` *(new)* | 78 | 54 | 22 | 4 | Web technology (HTML, CSS, JS) (54) | 30 / 10 / 3 | ✓ |
 | `ics-hardware-architecture` | 84 | 51 | 14 | 0 | Hardware & peripherals (28); Memory (17); BIOS & booting (6) | 39 / 13 / 0 | ✓ |
-| `ics-it-internet` | 46 | 23 | 11 | 0 | Emerging technology (14); ICT, policy & society (4); Banking IT & digital finance (3) | 5 / 0 / 0 | ✓ |
-| `ics-history-computing` | 26 | 22 | 13 | 0 | Computer generations & types (22) | 4 / 0 / 0 | ✓ |
-| `ics-software-os` | 26 | 17 | 6 | 1 | Software types (13); MS Office / Excel (4); Mobile & Android (0) | 4 / 2 / 0 | ✓ |
-| `ics-number-systems` | 13 | 10 | 3 | 0 | Data representation & units (10) | 6 / 1 / 0 | ✓ |
+| `ics-it-internet` | 46 | 23 | 11 | 0 | Emerging technology (14); ICT, policy & society (4); Banking IT & digital finance (3) | 40 / 12 / 0 | ✓ |
+| `ics-history-computing` | 26 | 22 | 13 | 0 | Computer generations & types (22) | 38 / 12 / 0 | ✓ |
+| `ics-software-os` | 26 | 17 | 6 | 1 | Software types (13); MS Office / Excel (4); Mobile & Android (0) | 37 / 12 / 0 | ✓ |
+| `ics-number-systems` | 13 | 10 | 3 | 0 | Data representation & units (10) | 43 / 12 / 0 | ✓ |
 
 Unmapped clusters: Other (101)
 
@@ -26,8 +26,8 @@ Unmapped clusters: Other (101)
 | `dld-boolean-algebra` | 95 | 95 | 37 | 5 | Boolean algebra & simplification (52); K-map (43) | 36 / 14 / 0 | ✓ |
 | `dld-number-systems` | 72 | 64 | 34 | 0 | Number systems & codes (64) | 40 / 12 / 3 | ✓ |
 | `dld-logic-gates` | 51 | 51 | 24 | 1 | Logic gates & universal gates (51) | 40 / 14 / 3 | ✓ |
-| `dld-combinational` | 38 | 35 | 16 | 1 | Combinational circuits (35) | 5 / 1 / 0 | ✓ |
-| `dld-sequential` | 33 | 34 | 9 | 1 | Sequential circuits (flip-flops, counters) (34) | 5 / 2 / 0 | ✓ |
+| `dld-combinational` | 38 | 35 | 16 | 1 | Combinational circuits (35) | 39 / 16 / 3 | ✓ |
+| `dld-sequential` | 33 | 34 | 9 | 1 | Sequential circuits (flip-flops, counters) (34) | 41 / 16 / 4 | ✓ |
 
 Unmapped clusters: Other (12)
 
@@ -49,8 +49,8 @@ Unmapped clusters: Other (14)
 | `net-protocols-datalink` | 186 | 120 | 57 | 7 | Network devices (44); Network topology (22); Transmission media & Ethernet (14) | 41 / 15 / 1 | ✓ |
 | `net-transport-crypto` | 137 | 97 | 50 | 3 | Cryptography & digital signature (60); TCP, UDP & congestion control (37) | 35 / 11 / 0 | ✓ |
 | `net-cyber-attacks` *(new)* | 111 | 71 | 37 | 3 | Cyber attacks & malware (71) | 42 / 15 / 2 | ✓ |
-| `net-routing-congestion` | 58 | 38 | 16 | 2 | Routing & routing protocols (21); Delay, bandwidth & throughput numericals (15); Bank / enterprise network design (2) | 3 / 2 / 0 | ✓ |
-| `net-auth-dns-email` | 48 | 32 | 22 | 3 | Security concepts & authentication (31); Blockchain (1) | 3 / 0 / 0 | ✓ |
+| `net-routing-congestion` | 58 | 38 | 16 | 2 | Routing & routing protocols (21); Delay, bandwidth & throughput numericals (15); Bank / enterprise network design (2) | 45 / 16 / 1 | ✓ |
+| `net-auth-dns-email` | 48 | 32 | 22 | 3 | Security concepts & authentication (31); Blockchain (1) | 38 / 13 / 1 | ✓ |
 
 Unmapped clusters: Other (79)
 
