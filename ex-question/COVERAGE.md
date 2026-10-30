@@ -138,7 +138,7 @@ Unmapped clusters: Other (29)
 | `ai-introduction` | 26 | 12 | 6 | 0 | AI concepts & applications (8); Types of intelligent agents (4) | 36 / 11 / 3 | ✓ |
 | `ai-modern-ml` *(new)* | 11 | 8 | 7 | 0 | Neural networks (5); Generative AI & LLMs (3) | 0 / 0 / 0 | — |
 | `ai-knowledge-representation` | 4 | 3 | 0 | 0 | Knowledge, logic & reasoning (3) | 45 / 12 / 3 | ✓ |
-| `ai-probabilistic-nlp` | 2 | 2 | 2 | 0 | NLP (2) | 3 / 1 / 0 | ✓ |
+| `ai-probabilistic-nlp` | 2 | 2 | 2 | 0 | NLP (2) | 40 / 11 / 4 | ✓ |
 | `ai-ml-applications-regression` | 0 | 0 | 0 | 0 | — | 4 / 0 / 0 | — |
 
 Unmapped clusters: Other (20)
