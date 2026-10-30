@@ -48,7 +48,7 @@ Unmapped clusters: Other (14)
 | `net-application-osi` | 203 | 167 | 77 | 13 | Application & support protocols (DNS, DHCP, NAT, HTTP…) (77); OSI & TCP/IP models (63); Network types & Internet (27) | 44 / 18 / 0 | ✓ |
 | `net-protocols-datalink` | 186 | 120 | 57 | 7 | Network devices (44); Network topology (22); Transmission media & Ethernet (14) | 41 / 15 / 1 | ✓ |
 | `net-transport-crypto` | 137 | 97 | 50 | 3 | Cryptography & digital signature (60); TCP, UDP & congestion control (37) | 35 / 11 / 0 | ✓ |
-| `net-cyber-attacks` *(new)* | 111 | 71 | 37 | 3 | Cyber attacks & malware (71) | 0 / 2 / 0 | ✓ |
+| `net-cyber-attacks` *(new)* | 111 | 71 | 37 | 3 | Cyber attacks & malware (71) | 42 / 15 / 2 | ✓ |
 | `net-routing-congestion` | 58 | 38 | 16 | 2 | Routing & routing protocols (21); Delay, bandwidth & throughput numericals (15); Bank / enterprise network design (2) | 3 / 2 / 0 | ✓ |
 | `net-auth-dns-email` | 48 | 32 | 22 | 3 | Security concepts & authentication (31); Blockchain (1) | 3 / 0 / 0 | ✓ |
 
