@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>ট্রি ওয়ার্কশপ: Build, Traverse, BST ও Heap: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3d9a" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+<!-- SHEET 1: cover -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>তারিখ: ৩০.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি আইটি নিয়োগ পরীক্ষা: রিভিশন নোটবুক</span><span>★ টপার নোটস</span></div>
+  <h1 class="title" style="font-size:22pt"><span class="u">ট্রি ওয়ার্কশপ: Build, Traverse, BST ও Heap</span></h1>
+  <p class="subtitle">Traversal · BST · array রূপ · ট্রি পুনর্গঠন · heap · B-tree: ১১ শিটে পরীক্ষার প্রস্তুতি</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 600 220" width="600">
+      <g class="w">
+        <ellipse cx="300" cy="110" rx="78" ry="30" fill="#fff9e6" stroke="#b8860b" stroke-width="2.2"/>
+        <rect x="10" y="10" width="150" height="46" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+        <rect x="225" y="8" width="150" height="46" rx="6" fill="#ffeaea" stroke="#d32f2f" stroke-width="2"/>
+        <rect x="440" y="10" width="150" height="46" rx="6" fill="#ffeaea" stroke="#d32f2f" stroke-width="2"/>
+        <rect x="10" y="88" width="140" height="46" rx="6" fill="#ffeaea" stroke="#d32f2f" stroke-width="2"/>
+        <rect x="450" y="88" width="140" height="46" rx="6" fill="#ffeaea" stroke="#d32f2f" stroke-width="2"/>
+        <rect x="10" y="164" width="150" height="46" rx="6" fill="#eef6ff" stroke="#1d3f8f" stroke-width="1.5"/>
+        <rect x="225" y="166" width="150" height="46" rx="6" fill="#eef6ff" stroke="#1d3f8f" stroke-width="1.5"/>
+        <rect x="440" y="164" width="150" height="46" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+        <path d="M240,95 L160,50 M300,80 L300,54 M360,95 L440,50 M222,110 L150,110 M378,110 L450,110 M240,125 L160,170 M300,140 L300,166 M360,125 L440,170" stroke="#555" stroke-width="1.4" fill="none"/>
+      </g>
+      <text x="300" y="107" text-anchor="middle" font-weight="bold" font-size="14">Binary Tree</text>
+      <text x="300" y="124" text-anchor="middle" font-size="9" class="bn">প্রতি node-এ ≤ 2 child</text>
+      <text x="85" y="29" text-anchor="middle" font-weight="bold" font-size="11" class="bn">প্রকার ও সূত্র</text>
+      <text x="85" y="46" text-anchor="middle" font-size="9">full · complete</text>
+      <text x="300" y="27" text-anchor="middle" class="r" font-weight="bold" font-size="11">Traversal ★</text>
+      <text x="300" y="44" text-anchor="middle" font-size="9">pre · in · post · level</text>
+      <text x="515" y="29" text-anchor="middle" class="r" font-weight="bold" font-size="11">BST ★</text>
+      <text x="515" y="46" text-anchor="middle" font-size="9">search · insert · delete</text>
+      <text x="80" y="107" text-anchor="middle" class="r bn" font-weight="bold" font-size="11">Array রূপ ★</text>
+      <text x="80" y="124" text-anchor="middle" font-size="9">2i · 2i+1 · ⌊i/2⌋</text>
+      <text x="520" y="107" text-anchor="middle" class="r bn" font-weight="bold" font-size="11">ট্রি পুনর্গঠন ★</text>
+      <text x="520" y="124" text-anchor="middle" font-size="9">pre/post + inorder</text>
+      <text x="85" y="183" text-anchor="middle" font-weight="bold" font-size="11">Heap</text>
+      <text x="85" y="200" text-anchor="middle" font-size="9">max/min · build O(n)</text>
+      <text x="300" y="185" text-anchor="middle" font-weight="bold" font-size="11">B-tree / B+ tree</text>
+      <text x="300" y="202" text-anchor="middle" font-size="9">database index</text>
+      <text x="515" y="183" text-anchor="middle" font-weight="bold" font-size="11">Decision tree</text>
+      <text x="515" y="200" text-anchor="middle" font-size="9">Ω(n log n) sorting</text>
+    </svg>
+  </figure>
+  <div class="tipbox"><span class="lbl">সংকেত</span> <span class="hl">হলুদ</span>=মূল শব্দ · <span class="circ">●</span>=অবশ্যই মুখস্থ · <span class="trick"></span>=স্মৃতি-কৌশল · <span class="exam"></span>=পরীক্ষার ফাঁদ · লাল node = আলোচ্য node</div>
+  <div class="cols" style="margin-top:3mm">
+    <div><b>সূচিপত্র</b><ol style="font-size:8.5pt;margin:0;padding-left:1em">
+      <li>পরিভাষা, প্রকারভেদ ও node সূত্র … পৃ.২</li>
+      <li>Traversal ও expression tree … পৃ.৩</li>
+      <li>BST: search ও insert … পৃ.৪</li>
+      <li>BST: delete (৩টি case) … পৃ.৫</li>
+      <li>Array representation … পৃ.৬</li>
+      <li>ট্রি পুনর্গঠন ১: inorder সহ … পৃ.৭</li>
+      <li>ট্রি পুনর্গঠন ২: pre + post … পৃ.৮</li>
+      <li>এক শিটে heap ও B-tree … পৃ.৯</li>
+      <li>Decision tree lower bound + রাতের আগের শিট … পৃ.১০</li>
+      <li>অনুশীলন MCQ + লিখিত উত্তর … পৃ.১১</li>
+    </ol></div>
+    <div>
+      <div class="tipbox" style="margin-top:0"><span class="lbl">সিলেবাসের যে অংশ</span>
+        “… <b>trees</b> …; Advanced: <b>heaps</b>, Fibonacci heaps, <b>B-trees</b>।” Heap/B-tree-এর গভীর অংশ: <i>Heaps ও B-Trees</i> লেসন।
+      </div>
+      <div class="sticky pink" style="float:none;width:auto;margin-top:2mm"><b>High-yield তালিকা</b><br>
+    ① BST-এর inorder = sorted<br>② Postorder দিয়ে tree মোছা<br>③ 0-indexed left = 2i+1<br>④ সর্বোচ্চ node = 2^(h+1)−1<br>⑤ Full tree: L = I + 1<br>⑥ ২ child → successor<br>⑦ Sorting ≥ Ω(n log n)
+      </div>
+    </div>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- SHEET 2: terminology, types, formulas -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>পরিভাষা · প্রকারভেদ · সূত্র</span></div>
+  <h2><span class="no">১</span> পরিভাষা, Binary Tree-এর প্রকারভেদ ও Node সূত্র <span class="tag">★ MCQ সূত্র</span></h2>
+  <div class="def"><span class="lbl">Tree</span> একটি <span class="hl">hierarchical, non-linear</span> structure: একটি <b>root</b>, কোনো cycle নেই; n node-এ <b>n − 1 edge</b> (file system, HTML DOM)। <span class="hl">Binary tree</span>: প্রতিটি node-এর <b>সর্বোচ্চ ২টি</b> child, <i>left</i> ও <i>right</i> (একা left child ≠ একা right child)।</div>
+  <table class="hand" style="font-size:8pt;width:100%">
+    <tr><th>শব্দ</th><th>অর্থ</th><th>শব্দ</th><th>অর্থ</th></tr>
+    <tr><td>Root</td><td>parent নেই এমন একমাত্র node</td><td><span class="hl">Leaf</span></td><td>কোনো child নেই (external node)</td></tr>
+    <tr><td>Internal node</td><td>≥ ১টি child আছে</td><td>Degree</td><td>child-এর সংখ্যা</td></tr>
+    <tr><td>Depth / level</td><td>root থেকে edge সংখ্যা (root = 0)</td><td><span class="circ">Height</span></td><td>দীর্ঘতম root-to-leaf path-এর edge</td></tr>
+  </table>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 150" width="580">
+      <g class="w"><line x1="49" y1="18" x2="25" y2="50" stroke="#555" stroke-width="1.4"/><line x1="49" y1="18" x2="97" y2="50" stroke="#555" stroke-width="1.4"/><line x1="97" y1="50" x2="73" y2="82" stroke="#555" stroke-width="1.4"/><line x1="97" y1="50" x2="121" y2="82" stroke="#555" stroke-width="1.4"/><circle cx="25" cy="50" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="49" cy="18" r="9" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="73" cy="82" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="97" cy="50" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="121" cy="82" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="25" y="53.24" text-anchor="middle" font-weight="bold" font-size="9">B</text><text x="49" y="21.24" text-anchor="middle" font-weight="bold" font-size="9">A</text><text x="73" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">D</text><text x="97" y="53.24" text-anchor="middle" font-weight="bold" font-size="9">C</text><text x="121" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">E</text>
+      <g class="w"><line x1="192" y1="50" x2="170" y2="82" stroke="#555" stroke-width="1.4"/><line x1="192" y1="50" x2="214" y2="82" stroke="#555" stroke-width="1.4"/><line x1="236" y1="18" x2="192" y2="50" stroke="#555" stroke-width="1.4"/><line x1="236" y1="18" x2="280" y2="50" stroke="#555" stroke-width="1.4"/><line x1="280" y1="50" x2="258" y2="82" stroke="#555" stroke-width="1.4"/><circle cx="170" cy="82" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="192" cy="50" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="214" cy="82" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="236" cy="18" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="258" cy="82" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="280" cy="50" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="170" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">D</text><text x="192" y="53.24" text-anchor="middle" font-weight="bold" font-size="9">B</text><text x="214" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">E</text><text x="236" y="21.24" text-anchor="middle" font-weight="bold" font-size="9">A</text><text x="258" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">F</text><text x="280" y="53.24" text-anchor="middle" font-weight="bold" font-size="9">C</text>
+      <g class="w"><line x1="330" y1="50" x2="310" y2="82" stroke="#555" stroke-width="1.4"/><line x1="330" y1="50" x2="350" y2="82" stroke="#555" stroke-width="1.4"/><line x1="370" y1="18" x2="330" y2="50" stroke="#555" stroke-width="1.4"/><line x1="370" y1="18" x2="410" y2="50" stroke="#555" stroke-width="1.4"/><line x1="410" y1="50" x2="390" y2="82" stroke="#555" stroke-width="1.4"/><line x1="410" y1="50" x2="430" y2="82" stroke="#555" stroke-width="1.4"/><circle cx="310" cy="82" r="9" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="330" cy="50" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="350" cy="82" r="9" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="370" cy="18" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="390" cy="82" r="9" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="410" cy="50" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="430" cy="82" r="9" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/></g><text x="310" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">D</text><text x="330" y="53.24" text-anchor="middle" font-weight="bold" font-size="9">B</text><text x="350" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">E</text><text x="370" y="21.24" text-anchor="middle" font-weight="bold" font-size="9">A</text><text x="390" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">F</text><text x="410" y="53.24" text-anchor="middle" font-weight="bold" font-size="9">C</text><text x="430" y="85.24" text-anchor="middle" font-weight="bold" font-size="9">G</text>
+      <g class="w"><line x1="470" y1="18" x2="548" y2="44" stroke="#555" stroke-width="1.4"/><line x1="496" y1="70" x2="522" y2="96" stroke="#555" stroke-width="1.4"/><line x1="548" y1="44" x2="496" y2="70" stroke="#555" stroke-width="1.4"/><circle cx="470" cy="18" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="496" cy="70" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="522" cy="96" r="9" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="548" cy="44" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="470" y="21.24" text-anchor="middle" font-weight="bold" font-size="9">A</text><text x="496" y="73.24" text-anchor="middle" font-weight="bold" font-size="9">C</text><text x="522" y="99.24" text-anchor="middle" font-weight="bold" font-size="9">D</text><text x="548" y="47.24" text-anchor="middle" font-weight="bold" font-size="9">B</text>
+      <text x="75" y="118" text-anchor="middle" font-weight="bold" font-size="10" class="r">Full / proper</text>
+      <text x="75" y="132" text-anchor="middle" font-size="8.5" class="bn">0 বা 2টি child</text>
+      <text x="225" y="118" text-anchor="middle" font-weight="bold" font-size="10">Complete</text>
+      <text x="225" y="132" text-anchor="middle" font-size="8.5" class="bn">শেষ level বাম থেকে পূর্ণ</text>
+      <text x="370" y="118" text-anchor="middle" font-weight="bold" font-size="10" class="g">Perfect</text>
+      <text x="370" y="132" text-anchor="middle" font-size="8.5" class="bn">সব leaf এক level-এ</text>
+      <text x="510" y="128" text-anchor="middle" font-weight="bold" font-size="10" class="r">Skewed</text>
+      <text x="510" y="142" text-anchor="middle" font-size="8.5" class="bn">প্রতিটিতে 1 child</text>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8.5pt;width:100%">
+    <tr><th>রাশি (height h = edge গণনা, root level 0)</th><th>সূত্র</th><th>যাচাই</th></tr>
+    <tr><td>Height h-এর tree-তে সর্বোচ্চ node (level i-তে ≤ 2^i)</td><td><span class="circ">2^(h+1) − 1</span></td><td>h = 3 → 15</td></tr>
+    <tr><td>N level-এ সর্বোচ্চ node (root = level 1)</td><td>2^N − 1</td><td>N = 4 → 15</td></tr>
+    <tr><td>Height h-এর tree-তে সর্বনিম্ন node</td><td>h + 1 (skewed)</td><td>h = 3 → 4</td></tr>
+    <tr><td>n node-এ সর্বনিম্ন height = complete tree-এর height</td><td><span class="hl">⌊log₂ n⌋</span></td><td>n = 10 → 3</td></tr>
+    <tr><td>Leaf বনাম ২-child node (যেকোনো binary tree)</td><td><span class="hl">n₀ = n₂ + 1</span></td><td>perfect h=2: 4 = 3 + 1</td></tr>
+    <tr><td>I internal node-এর full tree</td><td>L = I + 1, n = 2I + 1</td><td>I = 10 → L = 11</td></tr>
+    <tr><td>n node-এ ভিন্ন আকৃতি (Catalan)</td><td>(2n)! / ((n+1)! n!)</td><td>n = 3 → 5</td></tr>
+  </table>
+  <div class="ex"><span class="lbl">প্রমাণ (লিখিত প্রিয়)</span> <b>Full (proper) binary tree-এ leaf = internal node + ১।</b> ধরি I = internal node, L = leaf। Edge দুইভাবে গুনি: root ছাড়া প্রতিটি node-এর একটি parent edge, তাই edge = I + L − 1; প্রতিটি internal node-এর ২টি child, তাই edge = 2I। অতএব 2I = I + L − 1, অর্থাৎ <span class="circ">L = I + 1</span>। ∎</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>Height-এর রীতি।</b> এখানে height = <b>edge</b> গণনা (একা root = 0)। কিছু বই <b>node</b> গোনে (একা root = 1), তখন “N level” = 2^N − 1। রীতিটি লিখে দিন।</div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> প্রতি level দ্বিগুণ: 1, 2, 4, 8 …, তাই h+1টি পূর্ণ level = “পরের 2-এর ঘাত বিয়োগ ১”। Perfect ⊂ complete ও perfect ⊂ full, কিন্তু full ⇏ complete।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- SHEET 3: traversals -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>Traversal</span></div>
+  <h2><span class="no">২</span> Traversal: Pre, In, Post ও Level Order <span class="tag">★ সর্বাধিক পরীক্ষিত</span></h2>
+  <div class="def"><span class="lbl">Traversal</span> প্রতিটি node একবার visit। ৩টি <b>depth-first</b> order-এর পার্থক্য শুধু <span class="hl">root কখন visit হয়</span>; <b>level order</b> breadth-first (queue)। সবই O(n)।</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 125" width="580">
+      <g class="w"><line x1="48" y1="58" x2="20" y2="98" stroke="#555" stroke-width="1.4"/><line x1="48" y1="58" x2="76" y2="98" stroke="#555" stroke-width="1.4"/><line x1="104" y1="18" x2="48" y2="58" stroke="#555" stroke-width="1.4"/><line x1="104" y1="18" x2="160" y2="58" stroke="#555" stroke-width="1.4"/><line x1="160" y1="58" x2="132" y2="98" stroke="#555" stroke-width="1.4"/><line x1="160" y1="58" x2="188" y2="98" stroke="#555" stroke-width="1.4"/><circle cx="20" cy="98" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="48" cy="58" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="76" cy="98" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="104" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="132" cy="98" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="160" cy="58" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="188" cy="98" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="20" y="101.96" text-anchor="middle" font-weight="bold" font-size="11">4</text><text x="48" y="61.96" text-anchor="middle" font-weight="bold" font-size="11">2</text><text x="76" y="101.96" text-anchor="middle" font-weight="bold" font-size="11">5</text><text x="104" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">1</text><text x="132" y="101.96" text-anchor="middle" font-weight="bold" font-size="11">6</text><text x="160" y="61.96" text-anchor="middle" font-weight="bold" font-size="11">3</text><text x="188" y="101.96" text-anchor="middle" font-weight="bold" font-size="11">7</text>
+      <text x="230" y="22" font-size="11"><tspan font-weight="bold" class="r">Preorder</tspan> (Root L R): 1 2 4 5 3 6 7</text>
+      <text x="230" y="46" font-size="11"><tspan font-weight="bold">Inorder</tspan> (L Root R): 4 2 5 1 6 3 7</text>
+      <text x="230" y="70" font-size="11"><tspan font-weight="bold" class="g">Postorder</tspan> (L R Root): 4 5 2 6 7 3 1</text>
+      <text x="230" y="94" font-size="11"><tspan font-weight="bold" class="p">Level order</tspan> (queue): 1 2 3 4 5 6 7</text>
+      <text x="230" y="116" font-size="9" fill="#d32f2f" class="bn">root 1: pre-তে প্রথমে, in-এ মাঝে, post-এ শেষে</text>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8pt;width:100%">
+    <tr><th>Traversal</th><th>ক্রম</th><th>সাধারণ ব্যবহার</th></tr>
+    <tr><td><span class="hl">Preorder</span></td><td>Root L R</td><td>tree copy / serialise, prefix (Polish) রূপ</td></tr>
+    <tr><td><span class="circ">Inorder</span></td><td>L Root R</td><td>BST-এর key <b>ascending</b> ক্রমে, infix রূপ</td></tr>
+    <tr><td><span class="hl">Postorder</span></td><td>L R Root</td><td>tree <b>delete/free</b>, postfix মূল্যায়ন, folder size</td></tr>
+    <tr><td>Level order</td><td>level ধরে (queue)</td><td>BFS, level-ভিত্তিক print, heap array ক্রম</td></tr>
+  </table>
+  <div class="ex"><span class="lbl">উদাহরণ</span> খালি BST-এ <b>8 3 10 1 6 14 4 7 13</b> insert করে সব ক্রমে traverse করুন, অস্বাভাবিক <b>Right → Left → Root</b> সহ।
+    <div class="cols" style="margin-top:1mm">
+      <figure class="doodle" style="margin:0">
+        <svg viewBox="0 0 250 140" width="250">
+          <g class="w"><line x1="47" y1="54" x2="21" y2="90" stroke="#555" stroke-width="1.4"/><line x1="47" y1="54" x2="99" y2="90" stroke="#555" stroke-width="1.4"/><line x1="99" y1="90" x2="73" y2="126" stroke="#555" stroke-width="1.4"/><line x1="99" y1="90" x2="125" y2="126" stroke="#555" stroke-width="1.4"/><line x1="151" y1="18" x2="47" y2="54" stroke="#555" stroke-width="1.4"/><line x1="151" y1="18" x2="177" y2="54" stroke="#555" stroke-width="1.4"/><line x1="177" y1="54" x2="229" y2="90" stroke="#555" stroke-width="1.4"/><line x1="229" y1="90" x2="203" y2="126" stroke="#555" stroke-width="1.4"/><circle cx="21" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="47" cy="54" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="73" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="99" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="125" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="151" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="177" cy="54" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="203" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="229" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="21" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">1</text><text x="47" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">3</text><text x="73" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">4</text><text x="99" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">6</text><text x="125" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">7</text><text x="151" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">8</text><text x="177" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">10</text><text x="203" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">13</text><text x="229" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">14</text>
+        </svg>
+      </figure>
+      <div style="font-size:9pt">
+        Pre: <b>8 3 1 6 4 7 10 14 13</b><br>
+        In: <span class="hl">1 3 4 6 7 8 10 13 14</span> (sorted ✓)<br>
+        Post: <b>1 4 7 6 3 13 14 10 8</b><br>
+        Level: <b>8 3 10 1 6 14 4 7 13</b><br>
+        R → L → Root: <b>13 14 10 7 4 6 1 3 8</b> <i>(= উল্টো preorder)</i>
+      </div>
+    </div>
+  </div>
+  <div class="cols">
+    <figure class="doodle" style="margin:0">
+      <svg viewBox="0 0 290 140" width="290">
+        <g class="w"><line x1="31" y1="90" x2="12" y2="126" stroke="#555" stroke-width="1.4"/><line x1="31" y1="90" x2="50" y2="126" stroke="#555" stroke-width="1.4"/><line x1="69" y1="54" x2="31" y2="90" stroke="#555" stroke-width="1.4"/><line x1="69" y1="54" x2="107" y2="90" stroke="#555" stroke-width="1.4"/><line x1="107" y1="90" x2="88" y2="126" stroke="#555" stroke-width="1.4"/><line x1="107" y1="90" x2="126" y2="126" stroke="#555" stroke-width="1.4"/><line x1="145" y1="18" x2="69" y2="54" stroke="#555" stroke-width="1.4"/><line x1="145" y1="18" x2="221" y2="54" stroke="#555" stroke-width="1.4"/><line x1="183" y1="90" x2="164" y2="126" stroke="#555" stroke-width="1.4"/><line x1="183" y1="90" x2="202" y2="126" stroke="#555" stroke-width="1.4"/><line x1="221" y1="54" x2="183" y2="90" stroke="#555" stroke-width="1.4"/><line x1="221" y1="54" x2="259" y2="90" stroke="#555" stroke-width="1.4"/><line x1="259" y1="90" x2="240" y2="126" stroke="#555" stroke-width="1.4"/><line x1="259" y1="90" x2="278" y2="126" stroke="#555" stroke-width="1.4"/><circle cx="12" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="31" cy="90" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="50" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="69" cy="54" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="88" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="107" cy="90" r="9" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="126" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="145" cy="18" r="9" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="164" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="183" cy="90" r="9" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="202" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="221" cy="54" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="240" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="259" cy="90" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="278" cy="126" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="12" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">a</text><text x="31" y="93.6" text-anchor="middle" font-weight="bold" font-size="10">^</text><text x="50" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">2</text><text x="69" y="57.6" text-anchor="middle" font-weight="bold" font-size="10">−</text><text x="88" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">5</text><text x="107" y="93.6" text-anchor="middle" font-weight="bold" font-size="10">×</text><text x="126" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">b</text><text x="145" y="21.6" text-anchor="middle" font-weight="bold" font-size="10">×</text><text x="164" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">7</text><text x="183" y="93.6" text-anchor="middle" font-weight="bold" font-size="10">×</text><text x="202" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">a</text><text x="221" y="57.6" text-anchor="middle" font-weight="bold" font-size="10">+</text><text x="240" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">b</text><text x="259" y="93.6" text-anchor="middle" font-weight="bold" font-size="10">^</text><text x="278" y="129.6" text-anchor="middle" font-weight="bold" font-size="10">3</text>
+      </svg>
+    </figure>
+    <div style="font-size:9pt">X = (a² − 5b) × (7a + b³)-এর <b>Expression tree</b>: operator ভেতরে, operand leaf-এ।<br>
+      Prefix (pre): × − ^ a 2 × 5 b + × 7 a ^ b 3<br>
+      Postfix (post): <span class="hl">a 2 ^ 5 b × − 7 a × b 3 ^ +  ×</span></div>
+  </div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>Pre / In / Post = Root কোথায় বসে</b>। Tree-র বাইরের রেখা ধরে ঘুরুন; node-এর <b>বাম</b> পাশে (pre), <b>নিচে</b> (in) বা <b>ডান</b> পাশে (post) লিখুন।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> Parent-এর আগে child delete → <span class="circ">postorder</span>। Inorder sorted হয় <b>শুধু BST-তে</b>।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- SHEET 4: BST search & insert -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>BST: Search ও Insert</span></div>
+  <h2><span class="no">৩</span> Binary Search Tree: Search ও Insert <span class="tag">★ Bank ও PSU লিখিত</span></h2>
+  <div class="def"><span class="lbl">BST property</span> <b>প্রতিটি</b> node-এর জন্য: left subtree-এর সব key <span class="hl">ছোট</span>, right subtree-এর সব key <span class="hl">বড়</span> (duplicate নেই, যদি না “সমান হলে ডানে” জাতীয় নিয়ম বলা হয়)। ফল: <span class="circ">inorder = sorted</span>।</div>
+  <div class="cols">
+<pre class="code">/* search: iterative */
+node* search(node* t, int k) {
+  while (t &amp;&amp; t-&gt;key != k)
+    t = (k &lt; t-&gt;key) ? t-&gt;left
+                     : t-&gt;right;
+  return t;   /* NULL = absent */
+}</pre>
+<pre class="code">/* insert: recursive */
+node* insert(node* t, int k) {
+  if (!t) return newNode(k);
+  if (k &lt; t-&gt;key)
+    t-&gt;left = insert(t-&gt;left, k);
+  else if (k &gt; t-&gt;key)
+    t-&gt;right = insert(t-&gt;right, k);
+  return t;   /* duplicate ignored */
+}</pre>
+  </div>
+  <div class="ex"><span class="lbl">উদাহরণ</span> খালি BST-এ <b>8 3 10 1 6 14 4 7 13</b> insert: প্রতিটি key root থেকে নামে, ছোট হলে বামে, বড় হলে ডানে, যতক্ষণ না খালি link পায়।
+    <figure class="doodle" style="margin:1mm 0 0">
+      <svg viewBox="0 0 580 140" width="580">
+        <g class="w"><line x1="47" y1="52" x2="21" y2="86" stroke="#555" stroke-width="1.4"/><line x1="47" y1="52" x2="99" y2="86" stroke="#555" stroke-width="1.4"/><line x1="99" y1="86" x2="73" y2="120" stroke="#555" stroke-width="1.4"/><line x1="99" y1="86" x2="125" y2="120" stroke="#555" stroke-width="1.4"/><line x1="151" y1="18" x2="47" y2="52" stroke="#555" stroke-width="1.4"/><line x1="151" y1="18" x2="177" y2="52" stroke="#555" stroke-width="1.4"/><line x1="177" y1="52" x2="229" y2="86" stroke="#555" stroke-width="1.4"/><line x1="229" y1="86" x2="203" y2="120" stroke="#555" stroke-width="1.4"/><circle cx="21" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="47" cy="52" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="73" cy="120" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="99" cy="86" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="125" cy="120" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="151" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="177" cy="52" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="203" cy="120" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="229" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="21" y="89.96" text-anchor="middle" font-weight="bold" font-size="11">1</text><text x="47" y="55.96" text-anchor="middle" font-weight="bold" font-size="11">3</text><text x="73" y="123.96" text-anchor="middle" font-weight="bold" font-size="11">4</text><text x="99" y="89.96" text-anchor="middle" font-weight="bold" font-size="11">6</text><text x="125" y="123.96" text-anchor="middle" font-weight="bold" font-size="11">7</text><text x="151" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">8</text><text x="177" y="55.96" text-anchor="middle" font-weight="bold" font-size="11">10</text><text x="203" y="123.96" text-anchor="middle" font-weight="bold" font-size="11">13</text><text x="229" y="89.96" text-anchor="middle" font-weight="bold" font-size="11">14</text>
+        <text x="260" y="20" font-size="9.5">4: 4 &lt; 8, 4 &gt; 3, 4 &lt; 6 → left of 6</text>
+        <text x="260" y="40" font-size="9.5">13: 13 &gt; 8, 13 &gt; 10, 13 &lt; 14 → left of 14</text>
+        <text x="260" y="62" font-size="9.5" class="r bn">search 7: 8, 3, 6, 7 → পাওয়া গেল, 4 তুলনা</text>
+        <text x="260" y="84" font-size="9.5">search 5: 8, 3, 6, 4, then NULL</text>
+        <text x="260" y="104" font-size="9.5" class="bn">→ 4 তুলনার পর পাওয়া যায়নি;</text>
+        <text x="260" y="124" font-size="9.5" class="bn">5 ঠিক ওখানেই insert হবে (4-এর ডানে)</text>
+      </svg>
+    </figure>
+  </div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 110" width="580">
+      <g class="w"><line x1="20" y1="12" x2="42" y2="29" stroke="#555" stroke-width="1.4"/><line x1="42" y1="29" x2="64" y2="46" stroke="#555" stroke-width="1.4"/><line x1="64" y1="46" x2="86" y2="63" stroke="#555" stroke-width="1.4"/><line x1="86" y1="63" x2="108" y2="80" stroke="#555" stroke-width="1.4"/><circle cx="20" cy="12" r="8" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="42" cy="29" r="8" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="64" cy="46" r="8" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="86" cy="63" r="8" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="108" cy="80" r="8" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/></g><text x="20" y="15.24" text-anchor="middle" font-weight="bold" font-size="9">1</text><text x="42" y="32.24" text-anchor="middle" font-weight="bold" font-size="9">2</text><text x="64" y="49.24" text-anchor="middle" font-weight="bold" font-size="9">3</text><text x="86" y="66.24" text-anchor="middle" font-weight="bold" font-size="9">4</text><text x="108" y="83.24" text-anchor="middle" font-weight="bold" font-size="9">5</text>
+      <g class="w"><line x1="180" y1="46" x2="204" y2="74" stroke="#555" stroke-width="1.4"/><line x1="228" y1="18" x2="180" y2="46" stroke="#555" stroke-width="1.4"/><line x1="228" y1="18" x2="252" y2="46" stroke="#555" stroke-width="1.4"/><line x1="252" y1="46" x2="276" y2="74" stroke="#555" stroke-width="1.4"/><circle cx="180" cy="46" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="204" cy="74" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="228" cy="18" r="9" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="252" cy="46" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="276" cy="74" r="9" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="180" y="49.24" text-anchor="middle" font-weight="bold" font-size="9">1</text><text x="204" y="77.24" text-anchor="middle" font-weight="bold" font-size="9">2</text><text x="228" y="21.24" text-anchor="middle" font-weight="bold" font-size="9">3</text><text x="252" y="49.24" text-anchor="middle" font-weight="bold" font-size="9">4</text><text x="276" y="77.24" text-anchor="middle" font-weight="bold" font-size="9">5</text>
+      <text x="10" y="106" font-size="9" class="r">keys 1 2 3 4 5: h = 4</text>
+      <text x="170" y="106" font-size="9" class="g">keys 3 1 4 2 5: h = 2</text>
+      <text x="330" y="22" font-size="9.5" class="bn">প্রতিটি operation <tspan font-weight="bold">O(h)</tspan></text>
+      <text x="330" y="42" font-size="9.5">balanced: h ≈ log₂ n → O(log n)</text>
+      <text x="330" y="62" font-size="9.5" fill="#d32f2f">skewed: h = n − 1 → O(n)</text>
+      <text x="330" y="82" font-size="9.5" class="bn">সমাধান: AVL / red-black tree</text>
+    </svg>
+  </figure>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>“ছোট বামে, বড় ডানে, NULL-এ থামো।”</b> <b>প্রথম</b> key সবসময় root; sorted input-এ BST linked list হয়ে যায়।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> BST নিজে থেকে balanced <b>নয়</b>: search <span class="hl">O(log n)</span> শুধু balanced হলে, worst case-এ <span class="circ">O(n)</span>। Min = সবচেয়ে বামের node, max = সবচেয়ে ডানের।</div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- SHEET 5: BST delete -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>BST: Delete</span></div>
+  <h2><span class="no">৪</span> BST Delete: তিনটি Case <span class="tag">★ লিখিত প্রিয়</span></h2>
+  <ol class="steps">
+    <li><b>Leaf</b>: সরাসরি সরান। 13 delete → 14-এর left child থাকে না।</li>
+    <li><b>একটি child</b>: child-কে parent-এর সাথে যুক্ত করুন। 10 delete → 14 উপরে ওঠে।</li>
+    <li><b>দুটি child</b>: <span class="circ">inorder successor</span> (right subtree-এর সবচেয়ে ছোট key) কপি করুন, তারপর সেই successor delete করুন (তার ≤ ১টি child)। <b>Predecessor</b> (বামের সবচেয়ে বড়) দিয়েও চলে।</li>
+  </ol>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 132" width="580">
+      <g class="w"><line x1="44" y1="42" x2="20" y2="70" stroke="#555" stroke-width="1.4"/><line x1="44" y1="42" x2="92" y2="70" stroke="#555" stroke-width="1.4"/><line x1="92" y1="70" x2="68" y2="98" stroke="#555" stroke-width="1.4"/><line x1="92" y1="70" x2="116" y2="98" stroke="#555" stroke-width="1.4"/><line x1="140" y1="14" x2="44" y2="42" stroke="#555" stroke-width="1.4"/><line x1="140" y1="14" x2="164" y2="42" stroke="#555" stroke-width="1.4"/><line x1="164" y1="42" x2="212" y2="70" stroke="#555" stroke-width="1.4"/><line x1="212" y1="70" x2="188" y2="98" stroke="#555" stroke-width="1.4"/><circle cx="20" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="44" cy="42" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="68" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="92" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="116" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="140" cy="14" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="164" cy="42" r="10" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="188" cy="98" r="10" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="212" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="20" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">1</text><text x="44" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">3</text><text x="68" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">4</text><text x="92" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">6</text><text x="116" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">7</text><text x="140" y="17.6" text-anchor="middle" font-weight="bold" font-size="10">8</text><text x="164" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">10</text><text x="188" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">13</text><text x="212" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">14</text>
+      <g class="w"><line x1="356" y1="42" x2="330" y2="70" stroke="#555" stroke-width="1.4"/><line x1="356" y1="42" x2="408" y2="70" stroke="#555" stroke-width="1.4"/><line x1="408" y1="70" x2="382" y2="98" stroke="#555" stroke-width="1.4"/><line x1="408" y1="70" x2="434" y2="98" stroke="#555" stroke-width="1.4"/><line x1="460" y1="14" x2="356" y2="42" stroke="#555" stroke-width="1.4"/><line x1="460" y1="14" x2="486" y2="42" stroke="#555" stroke-width="1.4"/><circle cx="330" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="356" cy="42" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="382" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="408" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="434" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="460" cy="14" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="486" cy="42" r="10" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/></g><text x="330" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">1</text><text x="356" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">3</text><text x="382" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">4</text><text x="408" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">6</text><text x="434" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">7</text><text x="460" y="17.6" text-anchor="middle" font-weight="bold" font-size="10">8</text><text x="486" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">14</text>
+      <line x1="240" y1="50" x2="315" y2="50" stroke="#d32f2f" stroke-width="2" marker-end="url(#ah)"/>
+      <text x="278" y="42" text-anchor="middle" font-size="9" class="r">delete 13, 10</text>
+      <text x="20" y="128" font-size="9" class="bn">13 = leaf, 10 = এক child</text>
+      <text x="330" y="128" font-size="9" class="bn">14 উপরে ওঠে</text>
+    </svg>
+  </figure>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 132" width="580">
+      <g class="w"><line x1="44" y1="42" x2="20" y2="70" stroke="#555" stroke-width="1.4"/><line x1="44" y1="42" x2="92" y2="70" stroke="#555" stroke-width="1.4"/><line x1="92" y1="70" x2="68" y2="98" stroke="#555" stroke-width="1.4"/><line x1="92" y1="70" x2="116" y2="98" stroke="#555" stroke-width="1.4"/><line x1="140" y1="14" x2="44" y2="42" stroke="#555" stroke-width="1.4"/><line x1="140" y1="14" x2="164" y2="42" stroke="#555" stroke-width="1.4"/><line x1="164" y1="42" x2="212" y2="70" stroke="#555" stroke-width="1.4"/><line x1="212" y1="70" x2="188" y2="98" stroke="#555" stroke-width="1.4"/><circle cx="20" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="44" cy="42" r="10" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="68" cy="98" r="10" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="92" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="116" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="140" cy="14" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="164" cy="42" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="188" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="212" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="20" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">1</text><text x="44" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">3</text><text x="68" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">4</text><text x="92" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">6</text><text x="116" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">7</text><text x="140" y="17.6" text-anchor="middle" font-weight="bold" font-size="10">8</text><text x="164" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">10</text><text x="188" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">13</text><text x="212" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">14</text>
+      <g class="w"><line x1="356" y1="42" x2="330" y2="70" stroke="#555" stroke-width="1.4"/><line x1="356" y1="42" x2="382" y2="70" stroke="#555" stroke-width="1.4"/><line x1="382" y1="70" x2="408" y2="98" stroke="#555" stroke-width="1.4"/><line x1="434" y1="14" x2="356" y2="42" stroke="#555" stroke-width="1.4"/><line x1="434" y1="14" x2="460" y2="42" stroke="#555" stroke-width="1.4"/><line x1="460" y1="42" x2="512" y2="70" stroke="#555" stroke-width="1.4"/><line x1="512" y1="70" x2="486" y2="98" stroke="#555" stroke-width="1.4"/><circle cx="330" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="356" cy="42" r="10" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="382" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="408" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="434" cy="14" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="460" cy="42" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="486" cy="98" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="512" cy="70" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="330" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">1</text><text x="356" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">4</text><text x="382" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">6</text><text x="408" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">7</text><text x="434" y="17.6" text-anchor="middle" font-weight="bold" font-size="10">8</text><text x="460" y="45.6" text-anchor="middle" font-weight="bold" font-size="10">10</text><text x="486" y="101.6" text-anchor="middle" font-weight="bold" font-size="10">13</text><text x="512" y="73.6" text-anchor="middle" font-weight="bold" font-size="10">14</text>
+      <line x1="240" y1="50" x2="315" y2="50" stroke="#d32f2f" stroke-width="2" marker-end="url(#ah)"/>
+      <text x="278" y="42" text-anchor="middle" font-size="9" class="r">delete 3</text>
+      <text x="20" y="128" font-size="9" class="bn">3-এর successor = 4</text>
+      <text x="330" y="128" font-size="9">inorder 1 4 6 7 8 10 13 14 ✓</text>
+    </svg>
+  </figure>
+  <div class="ex"><span class="lbl">উদাহরণ ১</span> <b>Root 8</b> delete: successor = <b>10</b> (left child নেই), তাই 10 উপরে ওঠে ও 14 তার জায়গা নেয় → 10(3(1, 6(4, 7)), 14(13))। Predecessor নিলে <b>7</b> root হয়।</div>
+  <div class="ex"><span class="lbl">উদাহরণ ২: পূর্ণ লিখিত প্রশ্ন</span> (ক) 50, 30, 70, 20, 40, 60, 80 insert। (খ) Postorder লিখুন। (গ) 50 delete করে আবার আঁকুন।
+    <div class="cols" style="margin-top:1mm">
+      <div style="font-size:9pt">(ক) 50 root; 30, 70; তারপর 20, 40 ও 60, 80।<br>
+        (খ) Postorder: <span class="hl">20 40 30 60 80 70 50</span><br>
+        (গ) Successor = <b>60</b>: উপরে কপি, leaf সরান।</div>
+      <figure class="doodle" style="margin:0">
+        <svg viewBox="0 0 290 110" width="290">
+          <g class="w"><line x1="32" y1="48" x2="12" y2="78" stroke="#555" stroke-width="1.4"/><line x1="32" y1="48" x2="52" y2="78" stroke="#555" stroke-width="1.4"/><line x1="72" y1="18" x2="32" y2="48" stroke="#555" stroke-width="1.4"/><line x1="72" y1="18" x2="112" y2="48" stroke="#555" stroke-width="1.4"/><line x1="112" y1="48" x2="92" y2="78" stroke="#555" stroke-width="1.4"/><line x1="112" y1="48" x2="132" y2="78" stroke="#555" stroke-width="1.4"/><circle cx="12" cy="78" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="32" cy="48" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="52" cy="78" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="72" cy="18" r="10" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="92" cy="78" r="10" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="112" cy="48" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="132" cy="78" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="12" y="81.24" text-anchor="middle" font-weight="bold" font-size="9">20</text><text x="32" y="51.24" text-anchor="middle" font-weight="bold" font-size="9">30</text><text x="52" y="81.24" text-anchor="middle" font-weight="bold" font-size="9">40</text><text x="72" y="21.24" text-anchor="middle" font-weight="bold" font-size="9">50</text><text x="92" y="81.24" text-anchor="middle" font-weight="bold" font-size="9">60</text><text x="112" y="51.24" text-anchor="middle" font-weight="bold" font-size="9">70</text><text x="132" y="81.24" text-anchor="middle" font-weight="bold" font-size="9">80</text>
+          <g class="w"><line x1="191" y1="48" x2="170" y2="78" stroke="#555" stroke-width="1.4"/><line x1="191" y1="48" x2="212" y2="78" stroke="#555" stroke-width="1.4"/><line x1="233" y1="18" x2="191" y2="48" stroke="#555" stroke-width="1.4"/><line x1="233" y1="18" x2="254" y2="48" stroke="#555" stroke-width="1.4"/><line x1="254" y1="48" x2="275" y2="78" stroke="#555" stroke-width="1.4"/><circle cx="170" cy="78" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="191" cy="48" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="212" cy="78" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="233" cy="18" r="10" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="254" cy="48" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="275" cy="78" r="10" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="170" y="81.24" text-anchor="middle" font-weight="bold" font-size="9">20</text><text x="191" y="51.24" text-anchor="middle" font-weight="bold" font-size="9">30</text><text x="212" y="81.24" text-anchor="middle" font-weight="bold" font-size="9">40</text><text x="233" y="21.24" text-anchor="middle" font-weight="bold" font-size="9">60</text><text x="254" y="51.24" text-anchor="middle" font-weight="bold" font-size="9">70</text><text x="275" y="81.24" text-anchor="middle" font-weight="bold" font-size="9">80</text>
+          <text x="40" y="106" font-size="8.5" class="bn">আগে</text><text x="190" y="106" font-size="8.5" class="bn">পরে ✓</text>
+        </svg>
+      </figure>
+    </div>
+  </div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> Successor = <b>“একবার ডানে, তারপর পুরো বামে”</b>; predecessor = <b>“একবার বামে, তারপর পুরো ডানে”</b>। শেষে inorder sorted কিনা দেখুন।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> Case ৩-এ successor-এর <b>key</b> কপি হয়; “right child দিয়ে বদলাও” ভুল, যখন সেই child-এর left subtree আছে (3 delete: 6-এর left child 4)।</div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- SHEET 6: array representation -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>Array Representation</span></div>
+  <h2><span class="no">৫</span> Binary Tree-কে Array-তে রাখা <span class="tag">★ লিখিত + BCS MCQ</span></h2>
+  <div class="def"><span class="lbl">Sequential representation</span> Root index 1-এ, তারপর <span class="hl">level order</span>-এ বাম থেকে ডানে position নম্বর। অনুপস্থিত node-এর ঘর খালি থাকে; pointer-এর কাজ করে index-এর হিসাব।</div>
+  <table class="hand" style="font-size:9pt;width:100%">
+    <tr><th></th><th>Root</th><th>i-এর left child</th><th>i-এর right child</th><th>i-এর parent</th></tr>
+    <tr><td><b>1-indexed</b></td><td>1</td><td><span class="circ">2i</span></td><td>2i + 1</td><td>⌊i / 2⌋</td></tr>
+    <tr><td><b>0-indexed</b> (C, Java)</td><td>0</td><td><span class="circ">2i + 1</span></td><td>2i + 2</td><td>⌊(i − 1) / 2⌋</td></tr>
+  </table>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 112" width="580">
+      <g class="w"><line x1="48" y1="54" x2="20" y2="90" stroke="#555" stroke-width="1.4"/><line x1="48" y1="54" x2="76" y2="90" stroke="#555" stroke-width="1.4"/><line x1="104" y1="18" x2="48" y2="54" stroke="#555" stroke-width="1.4"/><line x1="104" y1="18" x2="160" y2="54" stroke="#555" stroke-width="1.4"/><line x1="160" y1="54" x2="132" y2="90" stroke="#555" stroke-width="1.4"/><line x1="160" y1="54" x2="188" y2="90" stroke="#555" stroke-width="1.4"/><circle cx="20" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="48" cy="54" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="76" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="104" cy="18" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="132" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="160" cy="54" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="188" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="20" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">D</text><text x="32" y="80" font-size="8" fill="#1d3f8f">[4]</text><text x="48" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">B</text><text x="60" y="44" font-size="8" fill="#1d3f8f">[2]</text><text x="76" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">E</text><text x="88" y="80" font-size="8" fill="#1d3f8f">[5]</text><text x="104" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">A</text><text x="116" y="8" font-size="8" fill="#1d3f8f">[1]</text><text x="132" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">F</text><text x="144" y="80" font-size="8" fill="#1d3f8f">[6]</text><text x="160" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">C</text><text x="172" y="44" font-size="8" fill="#1d3f8f">[3]</text><text x="188" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">G</text><text x="200" y="80" font-size="8" fill="#1d3f8f">[7]</text>
+      <g class="w">
+        <rect x="250" y="40" width="36" height="28" fill="#eee" stroke="#555"/>
+        <rect x="286" y="40" width="36" height="28" fill="#fff" stroke="#555"/>
+        <rect x="322" y="40" width="36" height="28" fill="#fff" stroke="#555"/>
+        <rect x="358" y="40" width="36" height="28" fill="#ffeaea" stroke="#d32f2f"/>
+        <rect x="394" y="40" width="36" height="28" fill="#fff" stroke="#555"/>
+        <rect x="430" y="40" width="36" height="28" fill="#fff" stroke="#555"/>
+        <rect x="466" y="40" width="36" height="28" fill="#e8f7ee" stroke="#1f8a5c"/>
+        <rect x="502" y="40" width="36" height="28" fill="#e8f7ee" stroke="#1f8a5c"/>
+        <path d="M376,70 C 400,105 460,105 484,70" fill="none" stroke="#1f8a5c" stroke-width="1.4" marker-end="url(#ahg)"/>
+        <path d="M376,70 C 410,125 500,125 520,70" fill="none" stroke="#1f8a5c" stroke-width="1.4" marker-end="url(#ahg)"/>
+      </g>
+      <text x="268" y="59" text-anchor="middle" font-size="11">–</text>
+      <text x="304" y="59" text-anchor="middle" font-size="11" font-weight="bold">A</text>
+      <text x="340" y="59" text-anchor="middle" font-size="11" font-weight="bold">B</text>
+      <text x="376" y="59" text-anchor="middle" font-size="11" font-weight="bold" class="r">C</text>
+      <text x="412" y="59" text-anchor="middle" font-size="11" font-weight="bold">D</text>
+      <text x="448" y="59" text-anchor="middle" font-size="11" font-weight="bold">E</text>
+      <text x="484" y="59" text-anchor="middle" font-size="11" font-weight="bold">F</text>
+      <text x="520" y="59" text-anchor="middle" font-size="11" font-weight="bold">G</text>
+      <text x="268" y="34" text-anchor="middle" font-size="8">0</text><text x="304" y="34" text-anchor="middle" font-size="8">1</text>
+      <text x="340" y="34" text-anchor="middle" font-size="8">2</text><text x="376" y="34" text-anchor="middle" font-size="8">3</text>
+      <text x="412" y="34" text-anchor="middle" font-size="8">4</text><text x="448" y="34" text-anchor="middle" font-size="8">5</text>
+      <text x="484" y="34" text-anchor="middle" font-size="8">6</text><text x="520" y="34" text-anchor="middle" font-size="8">7</text>
+      <text x="250" y="104" font-size="9.5">parent of C = ⌊3/2⌋ = 1 → A</text>
+      <text x="250" y="86" font-size="9.5">C at i = 3: left = 2·3 = 6 → <tspan font-weight="bold">F</tspan>, right = 7 → <tspan font-weight="bold">G</tspan></text>
+    </svg>
+  </figure>
+  <div class="ex"><span class="lbl">উদাহরণ: ফাঁকসহ tree</span> শিট ৪-এর BST: 14 = 10-এর right → 2·3+1 = 7; 13 = 14-এর left → 2·7 = 14।
+    <figure class="doodle" style="margin:1mm 0 0">
+      <svg viewBox="0 0 580 50" width="580">
+        <g class="w"><rect x="10" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="42" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="74" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="106" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="138" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="170" y="16" width="32" height="22" fill="#eee" stroke="#555" stroke-width="1.2"/><rect x="202" y="16" width="32" height="22" fill="#ffeaea" stroke="#555" stroke-width="1.2"/><rect x="234" y="16" width="32" height="22" fill="#eee" stroke="#555" stroke-width="1.2"/><rect x="266" y="16" width="32" height="22" fill="#eee" stroke="#555" stroke-width="1.2"/><rect x="298" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="330" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="362" y="16" width="32" height="22" fill="#eee" stroke="#555" stroke-width="1.2"/><rect x="394" y="16" width="32" height="22" fill="#eee" stroke="#555" stroke-width="1.2"/><rect x="426" y="16" width="32" height="22" fill="#ffeaea" stroke="#555" stroke-width="1.2"/></g><text x="26" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">1</text><text x="26" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">8</text><text x="58" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">2</text><text x="58" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">3</text><text x="90" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">3</text><text x="90" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">10</text><text x="122" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">4</text><text x="122" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">1</text><text x="154" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">5</text><text x="154" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">6</text><text x="186" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">6</text><text x="186" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">–</text><text x="218" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">7</text><text x="218" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">14</text><text x="250" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">8</text><text x="250" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">–</text><text x="282" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">9</text><text x="282" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">–</text><text x="314" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">10</text><text x="314" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">4</text><text x="346" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">11</text><text x="346" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">7</text><text x="378" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">12</text><text x="378" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">–</text><text x="410" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">13</text><text x="410" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">–</text><text x="442" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">14</text><text x="442" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">13</text>
+      </svg>
+    </figure>
+    ৯টি key-তে <b>১৪টি ঘর</b>; n node-এর right-skewed tree-তে লাগে 2ⁿ − 1।
+  </div>
+  <div class="ex"><span class="lbl">উদাহরণ: postorder → array</span> Node a…i, postorder <b>a b f c h d e g i</b>। Tree-কে <b>complete</b> ধরুন (একটি traversal একা অস্পষ্ট): তার position-গুলোর postorder <b>8 9 4 5 2 6 7 3 1</b>, তাই 8 = a, 9 = b, 4 = f, …
+    <figure class="doodle" style="margin:1mm 0 0">
+      <svg viewBox="0 0 580 50" width="580">
+        <g class="w"><rect x="10" y="16" width="32" height="22" fill="#ffeaea" stroke="#555" stroke-width="1.2"/><rect x="42" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="74" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="106" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="138" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="170" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="202" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="234" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/><rect x="266" y="16" width="32" height="22" fill="#fff" stroke="#555" stroke-width="1.2"/></g><text x="26" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">1</text><text x="26" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">i</text><text x="58" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">2</text><text x="58" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">h</text><text x="90" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">3</text><text x="90" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">g</text><text x="122" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">4</text><text x="122" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">f</text><text x="154" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">5</text><text x="154" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">c</text><text x="186" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">6</text><text x="186" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">d</text><text x="218" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">7</text><text x="218" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">e</text><text x="250" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">8</text><text x="250" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">a</text><text x="282" y="12" text-anchor="middle" font-size="8" fill="#1d3f8f">9</text><text x="282" y="30.96" text-anchor="middle" font-size="10" font-weight="bold">b</text>
+        <text x="310" y="28" font-size="9.5">tree i(h(f(a, b), c), g(d, e))</text>
+        <text x="310" y="44" font-size="9.5" class="g">postorder a b f c h d e g i ✓</text>
+      </svg>
+    </figure>
+  </div>
+  <div class="def"><span class="lbl">Array বনাম linked</span> Array: parent <span class="hl">O(1)</span>-এ, complete tree (heap)-এর জন্য আদর্শ, ফাঁকা tree-তে অপচয়। Linked: n + 1টি NULL pointer, যেকোনো আকৃতি।</div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>দ্বিগুণ</b> করলে নিচে-বামে, <b>অর্ধেক</b> করলে উপরে (1-indexed)।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> Indexing পড়ুন! “Zero-based, i-এর left child?” → <span class="circ">2i + 1</span>, 2i নয়। Complete tree-এর leaf (1-indexed): ⌊n/2⌋+1 … n।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- SHEET 7: rebuild I -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>ট্রি পুনর্গঠন ১: Inorder সহ</span></div>
+  <h2><span class="no">৬</span> Inorder + আরেকটি থেকে Tree পুনর্গঠন <span class="tag">★ BUET-ধাঁচের লিখিত</span></h2>
+  <div class="def"><span class="lbl">নিয়ম</span> <b>Preorder</b>-এ root <b>প্রথমে</b>; <b>postorder</b>-এ <b>শেষে</b>। <span class="hl">Inorder</span> বাকিটাকে left ও right subtree-তে ভাগ করে। Recursion চালান। <span class="circ">Inorder + pre বা post</span> = একটিমাত্র tree।</div>
+  <div class="ex"><span class="lbl">উদাহরণ ১: preorder + inorder</span> Inorder: <b>4 2 1 7 5 8 3 6</b> · Preorder: <b>1 2 4 3 5 7 8 6</b>
+    <div class="cols" style="margin-top:1mm">
+      <ol class="steps" style="margin:0">
+        <li>Pre[0] = <b>1</b> = root। Inorder: বামে {4 2}, ডানে {7 5 8 3 6}।</li>
+        <li>বাম: root <b>2</b>; inorder “4 2” → 4 তার <b>left</b>।</li>
+        <li>ডান, pre 3 5 7 8 6: root <b>3</b>; inorder “7 5 8 | 3 | 6”।</li>
+        <li>{7 5 8}, pre 5 7 8: root <b>5</b>, left 7, right 8; 6 হলো 3-এর right।</li>
+      </ol>
+      <figure class="doodle" style="margin:0">
+        <svg viewBox="0 0 250 140" width="250">
+          <g class="w"><line x1="50" y1="54" x2="22" y2="90" stroke="#555" stroke-width="1.4"/><line x1="78" y1="18" x2="50" y2="54" stroke="#555" stroke-width="1.4"/><line x1="78" y1="18" x2="190" y2="54" stroke="#555" stroke-width="1.4"/><line x1="134" y1="90" x2="106" y2="126" stroke="#555" stroke-width="1.4"/><line x1="134" y1="90" x2="162" y2="126" stroke="#555" stroke-width="1.4"/><line x1="190" y1="54" x2="134" y2="90" stroke="#555" stroke-width="1.4"/><line x1="190" y1="54" x2="218" y2="90" stroke="#555" stroke-width="1.4"/><circle cx="22" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="50" cy="54" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="78" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="106" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="134" cy="90" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="162" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="190" cy="54" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="218" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="22" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">4</text><text x="50" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">2</text><text x="78" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">1</text><text x="106" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">7</text><text x="134" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">5</text><text x="162" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">8</text><text x="190" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">3</text><text x="218" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">6</text>
+        </svg>
+      </figure>
+    </div>
+    Pre ✓ ও in ✓ মিলিয়ে নিন; postorder = <span class="hl">4 2 7 8 5 6 3 1</span>।
+  </div>
+  <div class="ex"><span class="lbl">উদাহরণ ২: postorder + inorder</span> Inorder: <b>D B E A F C</b> · Postorder: <b>D E B F C A</b>।
+    <div class="cols" style="margin-top:1mm">
+      <ol class="steps" style="margin:0">
+        <li>Root = শেষটি = <b>A</b>; বামে {D B E}, ডানে {F C}।</li>
+        <li>বামের post “D E B” → root <b>B</b>, D left, E right।</li>
+        <li>Post “F C” → root <b>C</b>; inorder “F C” → F তার <b>left</b>।</li>
+      </ol>
+      <figure class="doodle" style="margin:0">
+        <svg viewBox="0 0 250 100" width="250">
+          <g class="w"><line x1="70" y1="52" x2="40" y2="86" stroke="#555" stroke-width="1.4"/><line x1="70" y1="52" x2="100" y2="86" stroke="#555" stroke-width="1.4"/><line x1="130" y1="18" x2="70" y2="52" stroke="#555" stroke-width="1.4"/><line x1="130" y1="18" x2="190" y2="52" stroke="#555" stroke-width="1.4"/><line x1="190" y1="52" x2="160" y2="86" stroke="#555" stroke-width="1.4"/><circle cx="40" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="70" cy="52" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="100" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="130" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="160" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="190" cy="52" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/></g><text x="40" y="89.96" text-anchor="middle" font-weight="bold" font-size="11">D</text><text x="70" y="55.96" text-anchor="middle" font-weight="bold" font-size="11">B</text><text x="100" y="89.96" text-anchor="middle" font-weight="bold" font-size="11">E</text><text x="130" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">A</text><text x="160" y="89.96" text-anchor="middle" font-weight="bold" font-size="11">F</text><text x="190" y="55.96" text-anchor="middle" font-weight="bold" font-size="11">C</text>
+        </svg>
+      </figure>
+    </div>
+    ফলাফলের preorder: A B D E C F।
+  </div>
+  <div class="ex"><span class="lbl">উদাহরণ ৩: ছাপার ভুলসহ ক্লাসিক</span> Preorder <b>a b d e c f g</b>, কিন্তু inorder মাত্র ৫ অক্ষরের “d e a f g”: inorder-এ ৭টি key-ই থাকতে হবে। <b>d b e a f c g</b> ধরলে tree a(b(d, e), c(f, g)), postorder <span class="hl">d e b f g c a</span>। ধরে নেওয়াটা লিখে দিন।</div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> “<b>Pre/Post দেখায়, In ভাগ করে।</b>” Pre/post বলে <i>কে</i> root; inorder বলে <i>কে কোথায়</i> যাবে।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- SHEET 8: rebuild II -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>ট্রি পুনর্গঠন ২: Pre + Post</span></div>
+  <h2><span class="no">৭</span> Preorder + Postorder, এবং BST শর্টকাট <span class="tag">★ Bank ও BUET</span></h2>
+  <div class="def"><span class="lbl">পদ্ধতি (শুধু full tree)</span> Root = pre[0] = post[শেষ]। Preorder-এর <b>পরের</b> key হলো <b>left</b> subtree-এর root; postorder-এ সেটি পর্যন্ত সব left subtree, বাকিটা right। Recursion চালান।</div>
+  <div class="ex"><span class="lbl">উদাহরণ ১</span> Pre: <b>1 2 4 8 9 5 3 6 7</b> · Post: <b>8 9 4 5 2 6 7 3 1</b>
+    <div class="cols" style="margin-top:1mm">
+      <ol class="steps" style="margin:0">
+        <li>Root 1, পরের key <b>2</b>: post-এ 2 পর্যন্ত → বামে {8 9 4 5 2}, ডানে {6 7 3}।</li>
+        <li>Root 2, পরের key <b>4</b>: post-এ 4 পর্যন্ত → {8 9 4}; 5 হলো 2-এর right।</li>
+        <li>4(8, 9); ডান অংশ 3(6, 7)।</li>
+      </ol>
+      <figure class="doodle" style="margin:0">
+        <svg viewBox="0 0 270 150" width="270">
+          <g class="w"><line x1="48" y1="90" x2="20" y2="126" stroke="#555" stroke-width="1.4"/><line x1="48" y1="90" x2="76" y2="126" stroke="#555" stroke-width="1.4"/><line x1="104" y1="54" x2="48" y2="90" stroke="#555" stroke-width="1.4"/><line x1="104" y1="54" x2="132" y2="90" stroke="#555" stroke-width="1.4"/><line x1="160" y1="18" x2="104" y2="54" stroke="#555" stroke-width="1.4"/><line x1="160" y1="18" x2="216" y2="54" stroke="#555" stroke-width="1.4"/><line x1="216" y1="54" x2="188" y2="90" stroke="#555" stroke-width="1.4"/><line x1="216" y1="54" x2="244" y2="90" stroke="#555" stroke-width="1.4"/><circle cx="20" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="48" cy="90" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="76" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="104" cy="54" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="132" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="160" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="188" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="216" cy="54" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="244" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="20" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">8</text><text x="48" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">4</text><text x="76" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">9</text><text x="104" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">2</text><text x="132" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">5</text><text x="160" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">1</text><text x="188" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">6</text><text x="216" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">3</text><text x="244" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">7</text>
+        </svg>
+      </figure>
+    </div>
+  </div>
+  <div class="ex"><span class="lbl">উদাহরণ ২</span> Pre: <b>1 2 4 5 3 6 8 9 7</b> · Post: <b>4 5 2 8 9 6 7 3 1</b>
+    <div class="cols" style="margin-top:1mm">
+      <ol class="steps" style="margin:0">
+        <li>Root 1, পরের key 2: post-এ 2 পর্যন্ত = {4 5 2} → 2(4, 5)।</li>
+        <li>ডান: pre 3 6 8 9 7 → root 3, পরের key 6 → 6(8, 9); 7 হলো 3-এর right।</li>
+      </ol>
+      <figure class="doodle" style="margin:0">
+        <svg viewBox="0 0 270 150" width="270">
+          <g class="w"><line x1="48" y1="54" x2="20" y2="90" stroke="#555" stroke-width="1.4"/><line x1="48" y1="54" x2="76" y2="90" stroke="#555" stroke-width="1.4"/><line x1="104" y1="18" x2="48" y2="54" stroke="#555" stroke-width="1.4"/><line x1="104" y1="18" x2="216" y2="54" stroke="#555" stroke-width="1.4"/><line x1="160" y1="90" x2="132" y2="126" stroke="#555" stroke-width="1.4"/><line x1="160" y1="90" x2="188" y2="126" stroke="#555" stroke-width="1.4"/><line x1="216" y1="54" x2="160" y2="90" stroke="#555" stroke-width="1.4"/><line x1="216" y1="54" x2="244" y2="90" stroke="#555" stroke-width="1.4"/><circle cx="20" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="48" cy="54" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="76" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="104" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="132" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="160" cy="90" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="188" cy="126" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="216" cy="54" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/><circle cx="244" cy="90" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="20" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">4</text><text x="48" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">2</text><text x="76" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">5</text><text x="104" y="21.96" text-anchor="middle" font-weight="bold" font-size="11">1</text><text x="132" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">8</text><text x="160" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">6</text><text x="188" y="129.96" text-anchor="middle" font-weight="bold" font-size="11">9</text><text x="216" y="57.96" text-anchor="middle" font-weight="bold" font-size="11">3</text><text x="244" y="93.96" text-anchor="middle" font-weight="bold" font-size="11">7</text>
+        </svg>
+      </figure>
+    </div>
+  </div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> কোনো node-এর একটিমাত্র child থাকলে <span class="circ">Pre + post</span> অস্পষ্ট: pre “A B”, post “B A”-তে B left <b>বা</b> right দুটোই হতে পারে। Inorder + যেকোনো একটি <span class="hl">সবসময় অনন্য</span>; একটি traversal একা কখনো নয়।</div>
+  <div class="ex"><span class="lbl">BST শর্টকাট</span> <b>BST</b>-এ inorder মানে sorted key, তাই শুধু preorder-ই যথেষ্ট: pre 8 3 1 6 4 7 10 14 13 → sort → পুনর্গঠন (বা ওই ক্রমে insert) → শিট ৪-এর BST।</div>
+  <div class="ex"><span class="lbl">অনুশীলন</span> Pre 1 5 8 7 4 9 3 · In 8 5 7 1 9 4 3 → 1(5(8, 7), 4(9, 3)): সাধারণ binary tree, BST নয়।</div>
+  <div class="pg-no">৮</div>
+</section>
+
+<!-- SHEET 9: heap & B-tree -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>এক শিটে Heap ও B-tree</span></div>
+  <h2><span class="no">৮</span> Heap ও B-tree: পরীক্ষার মূল কথা <span class="tag">★ Priority queue · DB index</span></h2>
+  <div class="def"><span class="lbl">Heap</span> Array-তে রাখা একটি <span class="hl">complete</span> binary tree: <b>max-heap</b>-এ parent ≥ children (root = max), <b>min-heap</b>-এ parent ≤ children। Sibling-দের মধ্যে ক্রম নেই।</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 135" width="580">
+      <g class="w"><line x1="42" y1="52" x2="15" y2="86" stroke="#555" stroke-width="1.4"/><line x1="42" y1="52" x2="69" y2="86" stroke="#555" stroke-width="1.4"/><line x1="96" y1="18" x2="42" y2="52" stroke="#555" stroke-width="1.4"/><line x1="96" y1="18" x2="123" y2="52" stroke="#555" stroke-width="1.4"/><circle cx="15" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="42" cy="52" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="69" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="96" cy="18" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="123" cy="52" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="15" y="89.6" text-anchor="middle" font-weight="bold" font-size="10">10</text><text x="42" y="55.6" text-anchor="middle" font-weight="bold" font-size="10">30</text><text x="69" y="89.6" text-anchor="middle" font-weight="bold" font-size="10">20</text><text x="96" y="21.6" text-anchor="middle" font-weight="bold" font-size="10">50</text><text x="123" y="55.6" text-anchor="middle" font-weight="bold" font-size="10">40</text>
+      <g class="w"><line x1="237" y1="52" x2="210" y2="86" stroke="#555" stroke-width="1.4"/><line x1="237" y1="52" x2="264" y2="86" stroke="#555" stroke-width="1.4"/><line x1="291" y1="18" x2="237" y2="52" stroke="#555" stroke-width="1.4"/><line x1="291" y1="18" x2="345" y2="52" stroke="#555" stroke-width="1.4"/><line x1="345" y1="52" x2="318" y2="86" stroke="#555" stroke-width="1.4"/><circle cx="210" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="237" cy="52" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="264" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="291" cy="18" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="318" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="345" cy="52" r="11" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.6"/></g><text x="210" y="89.6" text-anchor="middle" font-weight="bold" font-size="10">10</text><text x="237" y="55.6" text-anchor="middle" font-weight="bold" font-size="10">30</text><text x="264" y="89.6" text-anchor="middle" font-weight="bold" font-size="10">20</text><text x="291" y="21.6" text-anchor="middle" font-weight="bold" font-size="10">50</text><text x="318" y="89.6" text-anchor="middle" font-weight="bold" font-size="10">40</text><text x="345" y="55.6" text-anchor="middle" font-weight="bold" font-size="10">45</text>
+      <g class="w"><line x1="447" y1="52" x2="420" y2="86" stroke="#555" stroke-width="1.4"/><line x1="447" y1="52" x2="474" y2="86" stroke="#555" stroke-width="1.4"/><line x1="501" y1="18" x2="447" y2="52" stroke="#555" stroke-width="1.4"/><line x1="501" y1="18" x2="528" y2="52" stroke="#555" stroke-width="1.4"/><circle cx="420" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="447" cy="52" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="474" cy="86" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><circle cx="501" cy="18" r="11" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.6"/><circle cx="528" cy="52" r="11" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/></g><text x="420" y="89.6" text-anchor="middle" font-weight="bold" font-size="10">10</text><text x="447" y="55.6" text-anchor="middle" font-weight="bold" font-size="10">30</text><text x="474" y="89.6" text-anchor="middle" font-weight="bold" font-size="10">20</text><text x="501" y="21.6" text-anchor="middle" font-weight="bold" font-size="10">45</text><text x="528" y="55.6" text-anchor="middle" font-weight="bold" font-size="10">40</text>
+      <line x1="140" y1="45" x2="195" y2="45" stroke="#1f8a5c" stroke-width="2" marker-end="url(#ahg)"/>
+      <text x="167" y="37" text-anchor="middle" font-size="9" class="g">insert 45</text>
+      <line x1="370" y1="45" x2="410" y2="45" stroke="#d32f2f" stroke-width="2" marker-end="url(#ah)"/>
+      <text x="390" y="37" text-anchor="middle" font-size="9" class="r">delete max</text>
+      <text x="15" y="122" font-size="9">[50 30 40 10 20]</text>
+      <text x="210" y="122" font-size="9">[50 30 45 10 20 40]</text>
+      <text x="420" y="122" font-size="9">[45 30 40 10 20]</text>
+    </svg>
+  </figure>
+  <ol class="steps">
+    <li><b>45 insert</b> index 6-এ; parent ⌊6/2⌋ = 3-এ 40 &lt; 45 → swap; parent 50 ≥ 45 → থামুন (<b>sift-up</b>, O(log n))।</li>
+    <li><b>Delete max</b>: 50 সরান, শেষ key 40 root-এ আনুন; child 45 &gt; 40 → swap (<b>sift-down</b>, O(log n))।</li>
+    <li><b>Build-heap</b>: node ⌊n/2⌋ থেকে 1 পর্যন্ত sift-down: মোট <span class="circ">O(n)</span>, O(n log n) নয়। Find-max <span class="hl">O(1)</span>; heapsort O(n log n)।</li>
+  </ol>
+  <div class="def"><span class="lbl">Order m-এর B-tree</span> একটি <span class="hl">self-balancing multi-way search tree</span>: প্রতি node-এ ≤ <b>m</b> child ও ≤ <b>m − 1</b> key; non-root internal node-এ ≥ <b>⌈m/2⌉</b> child; সব leaf <span class="circ">একই level-এ</span>। Height = O(log<sub>m</sub> n)।</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 105" width="580">
+      <g class="w">
+        <rect x="140" y="8" width="80" height="26" rx="3" fill="#fff9e6" stroke="#b8860b" stroke-width="1.6"/>
+        <line x1="180" y1="8" x2="180" y2="34" stroke="#b8860b"/>
+        <rect x="20" y="66" width="80" height="26" rx="3" fill="#eef6ff" stroke="#1d3f8f" stroke-width="1.5"/>
+        <line x1="60" y1="66" x2="60" y2="92" stroke="#1d3f8f"/>
+        <rect x="140" y="66" width="80" height="26" rx="3" fill="#eef6ff" stroke="#1d3f8f" stroke-width="1.5"/>
+        <line x1="180" y1="66" x2="180" y2="92" stroke="#1d3f8f"/>
+        <rect x="260" y="66" width="80" height="26" rx="3" fill="#eef6ff" stroke="#1d3f8f" stroke-width="1.5"/>
+        <line x1="300" y1="66" x2="300" y2="92" stroke="#1d3f8f"/>
+        <line x1="142" y1="34" x2="60" y2="66" stroke="#555" stroke-width="1.3"/>
+        <line x1="180" y1="34" x2="180" y2="66" stroke="#555" stroke-width="1.3"/>
+        <line x1="218" y1="34" x2="300" y2="66" stroke="#555" stroke-width="1.3"/>
+      </g>
+      <text x="160" y="26" text-anchor="middle" font-weight="bold" font-size="10">20</text>
+      <text x="200" y="26" text-anchor="middle" font-weight="bold" font-size="10">40</text>
+      <text x="40" y="84" text-anchor="middle" font-size="10">5</text><text x="80" y="84" text-anchor="middle" font-size="10">10</text>
+      <text x="160" y="84" text-anchor="middle" font-size="10">25</text><text x="200" y="84" text-anchor="middle" font-size="10">30</text>
+      <text x="280" y="84" text-anchor="middle" font-size="10">50</text><text x="320" y="84" text-anchor="middle" font-size="10">60</text>
+      <text x="370" y="22" font-size="9.5" font-weight="bold">Order 3: ≤ 3 children, ≤ 2 keys</text>
+      <text x="370" y="40" font-size="9">keys &lt; 20 | 20…40 | &gt; 40</text>
+      <text x="370" y="58" font-size="9" class="bn">node = একটি disk block</text>
+      <text x="370" y="76" font-size="9" fill="#d32f2f" class="bn">সব leaf এক level-এ ✓</text>
+      <text x="370" y="94" font-size="9" class="bn">পূর্ণ node → split, মাঝেরটা উপরে</text>
+    </svg>
+  </figure>
+  <div class="ex"><span class="lbl">Database কেন B-tree নেয়</span> Node = শত শত key-সহ একটি disk block: লক্ষ লক্ষ row মাত্র ৩–৪ level-এ = ৩–৪ বার read। <b>B+ tree</b>: record শুধু linked leaf-এ, তাই <span class="hl">range query</span> মানে leaf scan (MySQL InnoDB, PostgreSQL)।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>Heap BST নয়</b>: heap-এ search O(n)। “Order m” = <i>সর্বোচ্চ m child</i> (Knuth); CLRS-এ <i>minimum degree t</i>। কোনটি নিচ্ছেন বলুন।</div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>Heap = priority, BST = search, B-tree = disk।</b> Insert-এ sift <b>up</b>, delete-এ sift <b>down</b>।</div>
+  <div class="pg-no">৯</div>
+</section>
+
+<!-- SHEET 10: decision tree + night before -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>Decision Tree Lower Bound · রাতের আগে</span></div>
+  <h2><span class="no">৯</span> Decision Tree: Sorting-এ কেন Ω(n log n) লাগে <span class="tag">★ BCS MCQ</span></h2>
+  <div class="def"><span class="lbl">Decision tree model</span> n key-এর যেকোনো <span class="hl">comparison sort</span> একটি binary tree: internal node = একটি তুলনা (a ≤ b?), <b>leaf</b> = একটি চূড়ান্ত ক্রম, একটি run = একটি root-to-leaf path। তাই <b>worst-case তুলনা = height</b>।</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 175" width="580">
+      <g class="w">
+        <path d="M290,20 L150,65 M290,20 L430,65 M150,65 L80,110 M150,65 L220,110 M430,65 L360,110 M430,65 L500,110 M220,110 L178,155 M220,110 L262,155 M500,110 L458,155 M500,110 L542,155" stroke="#555" stroke-width="1.4" fill="none"/>
+        <ellipse cx="290" cy="20" rx="24" ry="13" fill="#fff9e6" stroke="#b8860b" stroke-width="1.6"/>
+        <ellipse cx="150" cy="65" rx="24" ry="13" fill="#fff9e6" stroke="#b8860b" stroke-width="1.6"/>
+        <ellipse cx="430" cy="65" rx="24" ry="13" fill="#fff9e6" stroke="#b8860b" stroke-width="1.6"/>
+        <ellipse cx="220" cy="110" rx="24" ry="13" fill="#fff9e6" stroke="#b8860b" stroke-width="1.6"/>
+        <ellipse cx="500" cy="110" rx="24" ry="13" fill="#fff9e6" stroke="#b8860b" stroke-width="1.6"/>
+        <rect x="56" y="99" width="48" height="22" rx="4" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="336" y="99" width="48" height="22" rx="4" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="154" y="144" width="48" height="22" rx="4" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="238" y="144" width="48" height="22" rx="4" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="434" y="144" width="48" height="22" rx="4" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="518" y="144" width="48" height="22" rx="4" fill="#e8f7ee" stroke="#1f8a5c" stroke-width="1.5"/>
+      </g>
+      <text x="290" y="24" text-anchor="middle" font-size="10" font-weight="bold">a:b</text>
+      <text x="150" y="69" text-anchor="middle" font-size="10" font-weight="bold">b:c</text>
+      <text x="430" y="69" text-anchor="middle" font-size="10" font-weight="bold">a:c</text>
+      <text x="220" y="114" text-anchor="middle" font-size="10" font-weight="bold">a:c</text>
+      <text x="500" y="114" text-anchor="middle" font-size="10" font-weight="bold">b:c</text>
+      <text x="80" y="114" text-anchor="middle" font-size="10">a b c</text>
+      <text x="360" y="114" text-anchor="middle" font-size="10">b a c</text>
+      <text x="178" y="159" text-anchor="middle" font-size="10">a c b</text>
+      <text x="262" y="159" text-anchor="middle" font-size="10">c a b</text>
+      <text x="458" y="159" text-anchor="middle" font-size="10">b c a</text>
+      <text x="542" y="159" text-anchor="middle" font-size="10">c b a</text>
+      <text x="205" y="38" font-size="9" class="b">≤</text><text x="365" y="38" font-size="9" class="r">&gt;</text>
+      <text x="100" y="85" font-size="9">≤</text><text x="192" y="85" font-size="9">&gt;</text>
+      <text x="380" y="85" font-size="9">≤</text><text x="472" y="85" font-size="9">&gt;</text>
+      <text x="185" y="132" font-size="9">≤</text><text x="248" y="132" font-size="9">&gt;</text>
+      <text x="465" y="132" font-size="9">≤</text><text x="528" y="132" font-size="9">&gt;</text>
+      <text x="8" y="22" font-size="9" class="r">3! = 6 leaves → height ≥ ⌈log₂6⌉ = 3</text>
+    </svg>
+  </figure>
+  <ol class="steps">
+    <li>n টি ভিন্ন key-এর <b>n!</b> ক্রম, প্রতিটির নিজস্ব leaf লাগে → leaf ≥ n!।</li>
+    <li>Height h-এর binary tree-তে সর্বোচ্চ <b>2^h</b> leaf → 2^h ≥ n! → <span class="circ">h ≥ log₂(n!)</span>।</li>
+    <li>n! ≥ (n/2)^(n/2) ⇒ log₂(n!) ≥ (n/2)·log₂(n/2) = <b>Ω(n log n)</b>। Merge sort ও heapsort তাই optimal।</li>
+  </ol>
+  <div class="cols">
+    <div class="exam" style="margin-top:0"><span class="lbl">পরীক্ষার ফাঁদ</span> Counting/radix sort comparison sort <b>নয়</b>: O(n + k) সম্ভব। ML-এ “decision tree” একটি <b>classifier</b>।</div>
+    <div class="ex" style="margin-top:0"><span class="lbl">সংখ্যা</span> ⌈log₂ n!⌉: n = 3 → 3, n = 4 → <b>5</b>, n = 5 → 7। Sorted array-তে search: Ω(log n)।</div>
+  </div>
+  <div class="sumbox"><span class="lbl">রাতের আগের শিট</span>
+    <ul style="font-size:8.5pt;margin:1mm 0;padding-left:1.2em;columns:2">
+      <li>n node → n − 1 edge, n + 1 NULL link</li>
+      <li>height h-এ সর্বোচ্চ node = 2^(h+1) − 1; N level = 2^N − 1</li>
+      <li>full tree: L = I + 1; যেকোনো tree: n₀ = n₂ + 1</li>
+      <li>complete tree-এর height = ⌊log₂ n⌋</li>
+      <li>Pre = Root L R · In = L Root R · Post = L R Root</li>
+      <li>BST inorder = sorted; postorder দিয়ে tree মোছা</li>
+      <li>level order-এ queue; DFS-এ stack</li>
+      <li>R-L-Root = উল্টো preorder</li>
+      <li>BST ops O(h): balanced O(log n), skewed O(n)</li>
+      <li>delete, ২ child → inorder successor</li>
+      <li>1-indexed: 2i, 2i+1, ⌊i/2⌋; 0-indexed: 2i+1, 2i+2</li>
+      <li>inorder + pre/post → অনন্য tree</li>
+      <li>heap: insert/delete O(log n), build O(n)</li>
+      <li>B-tree: সব leaf এক level-এ, node = disk block</li>
+      <li>sorting lower bound: h ≥ log₂ n! = Ω(n log n)</li>
+      <li>৪টি key-তে ≥ ৫টি তুলনা</li>
+    </ul>
+  </div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>“n! leaf, 2^h জায়গা”</b>: 2^h ঘরের tree-তে n!টি উত্তর ধরাতে হবে, তাই h ≥ log₂ n!।</div>
+  <div class="pg-no">১০</div>
+</section>
+
+<!-- SHEET 11: practice -->
+<section class="page">
+  <div class="pg-head"><span>DSA ▸ ট্রি ওয়ার্কশপ</span><span>অনুশীলন MCQ + লিখিত</span></div>
+  <h2><span class="no">✓</span> অনুশীলন MCQ ও একটি মডেল লিখিত উত্তর</h2>
+  <div class="mcq-set">
+    <div class="mcq"><b>১।</b> Binary search tree-এর কোন traversal key-গুলো ascending ক্রমে দেয়?<br>
+      <span>ক) Preorder</span> <span>খ) Postorder</span> <span class="hl">গ) Inorder</span> <span>ঘ) Level order</span></div>
+    <div class="mcq"><b>২।</b> Comparison sorting-এর lower bound প্রমাণে কোন পদ্ধতি ব্যবহৃত হয়?<br>
+      <span class="hl">ক) Decision tree</span> <span>খ) Recursion tree</span> <span>গ) Master theorem</span> <span>ঘ) Dynamic programming</span></div>
+    <div class="mcq"><b>৩।</b> প্রতিটি child-কে তার parent-এর আগে delete করতে ___ order লাগে।<br>
+      <span>ক) Pre</span> <span>খ) In</span> <span>গ) Level</span> <span class="hl">ঘ) Post</span></div>
+    <div class="mcq"><b>৪।</b> Zero-based array-তে রাখা complete binary tree-তে index i-এর left child কোথায়?<br>
+      <span>ক) 2i</span> <span class="hl">খ) 2i + 1</span> <span>গ) i + 1</span> <span>ঘ) i − 1</span></div>
+    <div class="mcq"><b>৫।</b> Height 3-এর binary tree-তে সর্বোচ্চ node কত (root-এর height 0)?<br>
+      <span>ক) 8</span> <span>খ) 7</span> <span class="hl">গ) 15</span> <span>ঘ) 16</span></div>
+    <div class="mcq"><b>৬।</b> একটি full binary tree-তে ১০টি internal node। Leaf কয়টি?<br>
+      <span>ক) 9</span> <span>খ) 10</span> <span>গ) 20</span> <span class="hl">ঘ) 11</span></div>
+    <div class="mcq"><b>৭।</b> n node-এর BST-তে search-এর worst-case সময়:<br>
+      <span>ক) O(1)</span> <span class="hl">খ) O(n)</span> <span>গ) O(log n)</span> <span>ঘ) O(n log n)</span></div>
+    <div class="mcq"><b>৮।</b> n টি অসাজানো key থেকে bottom-up binary heap তৈরিতে সময়:<br>
+      <span class="hl">ক) O(n)</span> <span>খ) O(log n)</span> <span>গ) O(n log n)</span> <span>ঘ) O(n²)</span></div>
+    <div class="mcq"><b>৯।</b> দুটি child-সহ BST node delete করলে তার key-এর জায়গায় বসে:<br>
+      <span>ক) তার parent</span> <span>খ) তার left child</span> <span class="hl">গ) তার inorder successor</span> <span>ঘ) root</span></div>
+    <div class="mcq"><b>১০।</b> Comparison দিয়ে ৪টি key sort করতে worst case-এ ন্যূনতম কতটি তুলনা লাগে?<br>
+      <span>ক) 4</span> <span class="hl">খ) 5</span> <span>গ) 6</span> <span>ঘ) 24</span></div>
+    <div class="anskey">উত্তর: ১গ ২ক ৩ঘ ৪খ ৫গ ৬ঘ ৭খ ৮ক ৯গ ১০খ</div>
+  </div>
+  <div class="wq"><b>লিখিত (১০ নম্বর):</b> একটি binary tree-এর inorder <b>D B H E A I F J C G</b> এবং preorder <b>A B D E H C F I J G</b>। Tree-টি আঁকুন ও postorder লিখুন।
+    <div class="mk">মডেল উত্তর:<br>
+      Root = preorder-এর প্রথম = <b>A</b>; inorder ভাগ করে: বামে {D B H E}, ডানে {I F J C G}। <i>[২]</i><br>
+      বাম: pre B D E H → root B; inorder “D | B | H E” → D হলো B-এর left; {H E}, pre E H → E, যার left child H। <i>[২]</i><br>
+      ডান: pre C F I J G → root C; inorder “I F J | C | G” → G হলো C-এর right; {I F J}, pre F I J → F(I, J)। <i>[২]</i><br>
+      Tree: A(B(D, E(H, –)), C(F(I, J), G))। <i>[২]</i> Postorder: <b>D H E B I J F G C A</b>; আঁকা tree থেকে preorder ও inorder পড়ে মিলিয়ে নিলে ঠিক ✓। <i>[২]</i>
+    </div>
+  </div>
+  <div class="sumbox"><span class="lbl">পরীক্ষার আগে ✓</span> ☐ height-এর রীতি বলুন ☐ outline ধরে traversal ☐ BST delete-এ successor নিয়ম ☐ indexing ভিত্তি (0 না 1) দেখুন ☐ পুনর্গঠনের পর দুটি traversal মিলিয়ে নিন ☐ heap ≠ BST</div>
+  <div class="pg-no">১১</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+<script src="../../assets/fit.js"></script>
+</body>
+</html>
