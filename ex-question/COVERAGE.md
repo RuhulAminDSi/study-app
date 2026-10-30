@@ -84,7 +84,7 @@ Unmapped clusters: Other (10)
 | `dsa-data-representation-adt` | 104 | 94 | 43 | 6 | Linked list (35); Stack & queue (32); Data structure basics (11) | 36 / 11 / 1 | ✓ |
 | `dsa-tree-workshop` *(new)* | 71 | 61 | 36 | 4 | Trees & traversals (61) | 0 / 4 / 0 | — |
 | `dsa-design-methods-graph-algorithms` | 64 | 56 | 24 | 5 | Algorithm design (greedy, DP, D&C, NP) (30); Graph algorithms (26) | 39 / 11 / 4 | ✓ |
-| `dsa-heaps-btrees` | 28 | 24 | 11 | 0 | Heap (24) | 5 / 1 / 0 | ✓ |
+| `dsa-heaps-btrees` | 28 | 24 | 11 | 0 | Heap (24) | 39 / 14 / 4 | ✓ |
 | `dsa5` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 | `dsa-lower-bound-np-completeness` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 
