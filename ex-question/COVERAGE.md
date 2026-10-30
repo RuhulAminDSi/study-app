@@ -72,7 +72,7 @@ Unmapped clusters: Other (17)
 |---|---|---|---|---|---|---|---|
 | `oop-constructors-inheritance` | 68 | 57 | 19 | 2 | Inheritance (23); Constructors & destructors (16); OOP programs (10) | 49 / 11 / 3 | ✓ |
 | `oop-philosophy-concepts` | 77 | 52 | 17 | 6 | Java specifics (15); OOP principles (14); Classes & objects (12) | 43 / 11 / 4 | ✓ |
-| `oop-polymorphism-exceptions-threading` | 54 | 45 | 20 | 2 | Polymorphism, overloading & overriding (38); Multithreading (4); Exception handling (3) | 11 / 0 / 2 | ✓ |
+| `oop-polymorphism-exceptions-threading` | 54 | 45 | 20 | 2 | Polymorphism, overloading & overriding (38); Multithreading (4); Exception handling (3) | 47 / 11 / 6 | ✓ |
 
 Unmapped clusters: Other (10)
 
