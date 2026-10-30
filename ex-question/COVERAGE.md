@@ -124,7 +124,7 @@ Unmapped clusters: Other (32)
 | `os-memory-management` | 66 | 53 | 28 | 2 | Memory management & paging (53) | 6 / 8 / 0 | ✓ |
 | `os-deadlock` | 46 | 43 | 28 | 1 | Deadlock (43) | 4 / 2 / 0 | ✓ |
 | `os-role-concepts` | 38 | 33 | 14 | 3 | OS concepts & types (33) | 3 / 1 / 0 | ✓ |
-| `os-input-output` | 8 | 9 | 3 | 2 | Disk, files & I/O (9) | 3 / 0 / 0 | ✓ |
+| `os-input-output` | 8 | 9 | 3 | 2 | Disk, files & I/O (9) | 39 / 11 / 4 | ✓ |
 | `os-file-systems` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 
 Unmapped clusters: Other (29)
