@@ -3,8 +3,8 @@
   "chapter": 16,
   "subject": "DBMS",
   "lessonTitleEn": "File Organization, Indexing & Query Optimization",
-  "status": "draft",
-  "updatedOn": "2026-10-29",
+  "status": "published",
+  "updatedOn": "2026-10-30",
   "heat": {
     "asked": 24,
     "recent": 9,
@@ -343,11 +343,663 @@
       "repeat": false
     }
   ],
-  "mustKnow": [],
-  "formulas": [],
-  "traps": [],
-  "writtenPlan": [],
-  "viva": [],
+  "mustKnow": [
+    {
+      "en": "Heap (unordered) file: insert is O(1) at end, but search is O(n) full scan.",
+      "bn": "Heap (unordered) file: insert শেষে O(1), কিন্তু search O(n) full scan।"
+    },
+    {
+      "en": "Sequential file: records sorted by key; binary search O(log n), but insert needs shifting/overflow.",
+      "bn": "Sequential file: record key অনুযায়ী sorted; binary search O(log n), কিন্তু insert-এ shifting/overflow লাগে।"
+    },
+    {
+      "en": "Hashed file: h(k)=k mod N gives O(1) equality search, but no range query support.",
+      "bn": "Hashed file: h(k)=k mod N দিয়ে equality search O(1), কিন্তু range query হয় না।"
+    },
+    {
+      "en": "Storage ladder: Bit → Byte → Block/Page → File → Database; disk I/O is counted in blocks, not records.",
+      "bn": "Storage ladder: Bit → Byte → Block/Page → File → Database; disk I/O block-এ গোনা হয়, record-এ নয়।"
+    },
+    {
+      "en": "Dense index = one entry per record; sparse index = one entry per block (only on an ordered file).",
+      "bn": "Dense index = প্রতি record-এ একটি entry; sparse index = প্রতি block-এ একটি entry (শুধু ordered file-এ)।"
+    },
+    {
+      "en": "Primary index is on the ordering key and can be sparse; secondary index is on a non-ordering field and must be dense.",
+      "bn": "Primary index ordering key-এর উপর, sparse হতে পারে; secondary index non-ordering field-এর উপর, dense হতেই হয়।"
+    },
+    {
+      "en": "A table has at most ONE clustered index (it fixes physical row order) but many non-clustered ones.",
+      "bn": "একটি table-এ সর্বোচ্চ একটি clustered index (physical row order ঠিক করে) কিন্তু অনেক non-clustered থাকতে পারে।"
+    },
+    {
+      "en": "B+ tree: all keys (with record pointers) live in the leaves; internal nodes only route the search.",
+      "bn": "B+ tree: সব key (record pointer সহ) leaf-এ থাকে; internal node শুধু search route করে।"
+    },
+    {
+      "en": "B+ tree order n: a node holds up to n pointers and n-1 keys; it is balanced, all leaves at the same level.",
+      "bn": "B+ tree order n: একটি node-এ সর্বোচ্চ n pointer ও n-1 key; এটি balanced, সব leaf একই level-এ।"
+    },
+    {
+      "en": "B+ tree leaves are chained in sorted order, so range queries (BETWEEN) just scan the leaf chain.",
+      "bn": "B+ tree-এর leaf গুলো sorted ক্রমে linked, তাই range query (BETWEEN) শুধু leaf chain scan করে।"
+    },
+    {
+      "en": "B-tree stores data pointers in every node; B+ tree keeps them only in leaves, giving higher fan-out and a shorter tree.",
+      "bn": "B-tree প্রতি node-এ data pointer রাখে; B+ tree শুধু leaf-এ রাখে, ফলে fan-out বেশি ও tree ছোট।"
+    },
+    {
+      "en": "Extendible hashing: directory of 2^(global depth) entries; a bucket splits locally, directory doubles only when local depth = global depth.",
+      "bn": "Extendible hashing: 2^(global depth) entry-র directory; bucket local-ভাবে split হয়, directory শুধু তখন double হয় যখন local depth = global depth।"
+    },
+    {
+      "en": "Static hashing suffers overflow/underflow as data grows; dynamic hashing (extendible, linear) grows the bucket space on demand.",
+      "bn": "Static hashing-এ data বাড়লে overflow/underflow হয়; dynamic hashing (extendible, linear) প্রয়োজনে bucket space বাড়ায়।"
+    },
+    {
+      "en": "Query processing order: Parser → translation to relational algebra → Optimizer (chooses a plan) → Execution engine → Result.",
+      "bn": "Query processing ক্রম: Parser → relational algebra-তে অনুবাদ → Optimizer (plan বাছে) → Execution engine → Result।"
+    },
+    {
+      "en": "Cost of a plan is dominated by disk-block I/O; optimizers compare plans by estimated block reads using table statistics.",
+      "bn": "একটি plan-এর cost মূলত disk-block I/O দিয়ে নির্ধারিত; optimizer table statistics দিয়ে আনুমানিক block read তুলনা করে।"
+    },
+    {
+      "en": "Heuristic (rule-based) optimization pushes SELECT and PROJECT down the query tree to shrink rows/columns early.",
+      "bn": "Heuristic (rule-based) optimization query tree-তে SELECT ও PROJECT নিচে ঠেলে আগেই row/column কমায়।"
+    },
+    {
+      "en": "Bitmap indexes suit LOW-cardinality columns (gender, yes/no); B+ tree suits high-cardinality and range columns.",
+      "bn": "Bitmap index LOW-cardinality column-এ (gender, yes/no) ভালো; B+ tree high-cardinality ও range column-এ ভালো।"
+    },
+    {
+      "en": "OLTP = many short read/write transactions (normalized); OLAP/warehouse = few large read-only analytical queries (denormalized).",
+      "bn": "OLTP = অনেক ছোট read/write transaction (normalized); OLAP/warehouse = অল্প বড় read-only analytical query (denormalized)।"
+    },
+    {
+      "en": "Star schema: one fact table + denormalized dimensions; snowflake schema normalizes the dimensions into sub-tables.",
+      "bn": "Star schema: একটি fact table + denormalized dimension; snowflake schema dimension-কে sub-table-এ normalize করে।"
+    },
+    {
+      "en": "ETL = Extract, Transform, Load — the pipeline that feeds cleaned source data into a data warehouse.",
+      "bn": "ETL = Extract, Transform, Load — যে pipeline পরিষ্কার source data data warehouse-এ আনে।"
+    },
+    {
+      "en": "Data mining tasks: classification (supervised), clustering (unsupervised), association rules (Apriori), regression.",
+      "bn": "Data mining task: classification (supervised), clustering (unsupervised), association rule (Apriori), regression।"
+    },
+    {
+      "en": "Apriori: support(X)=transactions containing X ÷ total; confidence(X→Y)=support(X∪Y) ÷ support(X); subset of a frequent set is frequent (downward closure).",
+      "bn": "Apriori: support(X)=X-যুক্ত transaction ÷ total; confidence(X→Y)=support(X∪Y) ÷ support(X); frequent set-এর subset-ও frequent (downward closure)।"
+    }
+  ],
+  "formulas": [
+    {
+      "title": {
+        "en": "Blocking factor & number of blocks",
+        "bn": "Blocking factor ও block সংখ্যা"
+      },
+      "formula": "bfr = floor(B / R);  blocks = ceil(records / bfr)",
+      "example": {
+        "question": {
+          "en": "30,000 records of 100 B each in 1024 B blocks (unspanned). How many data blocks?",
+          "bn": "1024 B block-এ 100 B-এর 30,000 record (unspanned)। কতটি data block?"
+        },
+        "working": {
+          "en": "bfr = floor(1024/100) = 10 records/block; blocks = ceil(30000/10) = 3000.",
+          "bn": "bfr = floor(1024/100) = প্রতি block-এ 10 record; block = ceil(30000/10) = 3000।"
+        },
+        "answer": "3000 blocks"
+      }
+    },
+    {
+      "title": {
+        "en": "Single-level sparse index size",
+        "bn": "Single-level sparse index-এর আকার"
+      },
+      "formula": "index entries = data blocks;  index blocks = ceil(data_blocks / floor(B / entry_size))",
+      "example": {
+        "question": {
+          "en": "3000 data blocks; sparse index entry = 15 B (9 B key + 6 B pointer) in 1024 B blocks. Index blocks?",
+          "bn": "3000 data block; sparse index entry = 15 B (9 B key + 6 B pointer), 1024 B block-এ। Index block?"
+        },
+        "working": {
+          "en": "entries/block = floor(1024/15) = 68; index blocks = ceil(3000/68) = ceil(44.1) = 45.",
+          "bn": "প্রতি block entry = floor(1024/15) = 68; index block = ceil(3000/68) = ceil(44.1) = 45।"
+        },
+        "answer": "45 index blocks (binary-searched in ceil(log2 45)+1 = 7 block reads)"
+      }
+    },
+    {
+      "title": {
+        "en": "Multilevel index levels",
+        "bn": "Multilevel index-এর level সংখ্যা"
+      },
+      "formula": "repeat blocks = ceil(blocks / fan-out) until blocks = 1; number of repeats = index levels",
+      "example": {
+        "question": {
+          "en": "First-level sparse index = 45 blocks, fan-out 68. How many index levels, and the search cost?",
+          "bn": "First-level sparse index = 45 block, fan-out 68। কতটি index level এবং search cost কত?"
+        },
+        "working": {
+          "en": "Level 2 = ceil(45/68) = 1 block (the top). So 2 index levels. Search = 1 (L2) + 1 (L1) + 1 (data) = 3 block reads.",
+          "bn": "Level 2 = ceil(45/68) = 1 block (top)। তাই 2টি index level। Search = 1 (L2) + 1 (L1) + 1 (data) = 3 block read।"
+        },
+        "answer": "2 index levels; 3 block reads vs 7 for a single-level sparse index"
+      }
+    },
+    {
+      "title": {
+        "en": "B+ tree node order from block size",
+        "bn": "Block size থেকে B+ tree node order"
+      },
+      "formula": "internal node order n:  n·P + (n-1)·K ≤ B   (P = block pointer, K = key)",
+      "example": {
+        "question": {
+          "en": "Block B = 512 B, key K = 9 B, block pointer P = 6 B. Maximum order n of an internal node?",
+          "bn": "Block B = 512 B, key K = 9 B, block pointer P = 6 B। Internal node-এর সর্বোচ্চ order n?"
+        },
+        "working": {
+          "en": "n·6 + (n-1)·9 ≤ 512 → 15n - 9 ≤ 512 → 15n ≤ 521 → n ≤ 34.7 → n = 34.",
+          "bn": "n·6 + (n-1)·9 ≤ 512 → 15n - 9 ≤ 512 → 15n ≤ 521 → n ≤ 34.7 → n = 34।"
+        },
+        "answer": "n = 34 (so up to 34 pointers and 33 keys per internal node)"
+      }
+    },
+    {
+      "title": {
+        "en": "B+ tree leaf capacity & max record pointers",
+        "bn": "B+ tree leaf capacity ও max record pointer"
+      },
+      "formula": "leaf: p_leaf·(K + Pr) + P_next ≤ B;  for order n, a leaf holds up to n-1 keys/record pointers",
+      "example": {
+        "question": {
+          "en": "A B+ tree index has n = 100. What is the maximum number of record pointers in a leaf? (BUET M.Sc. 2021)",
+          "bn": "একটি B+ tree index-এর n = 100। একটি leaf-এ সর্বোচ্চ কতটি record pointer? (BUET M.Sc. 2021)"
+        },
+        "working": {
+          "en": "A node of order n holds at most n pointers and n-1 keys. A leaf stores one record pointer per key plus one next-leaf pointer, so max record pointers = n - 1 = 99.",
+          "bn": "order n-এর node-এ সর্বোচ্চ n pointer ও n-1 key। Leaf প্রতি key-তে একটি record pointer রাখে, সাথে একটি next-leaf pointer, তাই সর্বোচ্চ record pointer = n - 1 = 99।"
+        },
+        "answer": "99 record pointers"
+      }
+    },
+    {
+      "title": {
+        "en": "B+ tree height / levels for N keys",
+        "bn": "N key-র জন্য B+ tree height / level"
+      },
+      "formula": "levels ≈ ceil(log_fanout(N));  disk accesses to reach a record = tree height",
+      "example": {
+        "question": {
+          "en": "Order 100, 1,000,000 keys. How many levels (max disk accesses) to reach a record?",
+          "bn": "Order 100, 1,000,000 key। একটি record-এ পৌঁছাতে কতটি level (সর্বোচ্চ disk access)?"
+        },
+        "working": {
+          "en": "Leaves = ceil(1e6/99) = 10,102; L2 = ceil(10102/100) = 102; L3 = ceil(102/100) = 2; L4 = 1. So 4 levels.",
+          "bn": "Leaf = ceil(1e6/99) = 10,102; L2 = ceil(10102/100) = 102; L3 = ceil(102/100) = 2; L4 = 1। তাই 4টি level।"
+        },
+        "answer": "4 levels → at most 4 block reads"
+      }
+    },
+    {
+      "title": {
+        "en": "Extendible hashing directory",
+        "bn": "Extendible hashing directory"
+      },
+      "formula": "directory entries = 2^(global depth);  double the directory only when a full bucket has local depth = global depth",
+      "example": {
+        "question": {
+          "en": "Start global depth 1 (2 buckets), bucket capacity 2, hash = low-order bits. Insert 2,3,5,8,4,7. Final global depth & bucket count?",
+          "bn": "Global depth 1 (2 bucket), bucket capacity 2, hash = low-order bit দিয়ে শুরু। 2,3,5,8,4,7 insert করো। শেষ global depth ও bucket সংখ্যা?"
+        },
+        "working": {
+          "en": "Even keys {2,8,4} and odd keys {3,5,7} overflow their depth-1 buckets. Each full bucket has local depth = global depth, so the directory doubles to global depth 2; buckets split on bit 2 into 00:{8,4}, 10:{2}, 01:{5}, 11:{3,7}.",
+          "bn": "Even key {2,8,4} ও odd key {3,5,7} depth-1 bucket overflow করে। প্রতিটি full bucket-এর local depth = global depth, তাই directory double হয়ে global depth 2; bit 2-তে split হয়ে 00:{8,4}, 10:{2}, 01:{5}, 11:{3,7}।"
+        },
+        "answer": "global depth 2, directory 4 entries, 4 buckets"
+      }
+    },
+    {
+      "title": {
+        "en": "Static hashing bucket count",
+        "bn": "Static hashing-এ bucket সংখ্যা"
+      },
+      "formula": "min buckets = ceil(records / bucket_capacity);  with load factor L: ceil(records / (capacity·L))",
+      "example": {
+        "question": {
+          "en": "10,000 records, 20 records/bucket, target load factor 0.8. Minimum buckets?",
+          "bn": "10,000 record, প্রতি bucket 20 record, target load factor 0.8। সর্বনিম্ন bucket?"
+        },
+        "working": {
+          "en": "Tight packing = ceil(10000/20) = 500; at load factor 0.8 = ceil(10000/(20·0.8)) = ceil(625) = 625.",
+          "bn": "Tight packing = ceil(10000/20) = 500; load factor 0.8-এ = ceil(10000/(20·0.8)) = ceil(625) = 625।"
+        },
+        "answer": "500 (tight) / 625 (at 0.8 load)"
+      }
+    },
+    {
+      "title": {
+        "en": "Join cost: block nested-loop vs sort-merge",
+        "bn": "Join cost: block nested-loop বনাম sort-merge"
+      },
+      "formula": "BNL (1-block buffer, smaller relation outer) = b_outer + b_outer · b_inner;  sort-merge (already sorted) = b_r + b_s",
+      "example": {
+        "question": {
+          "en": "R = 400 blocks, S = 100 blocks, one-block buffer. Block nested-loop cost (best choice of outer) vs sort-merge if both are sorted on the join key?",
+          "bn": "R = 400 block, S = 100 block, one-block buffer। Block nested-loop cost (outer-এর সেরা বাছাই) বনাম sort-merge যদি দুটোই join key-তে sorted?"
+        },
+        "working": {
+          "en": "Make the smaller relation S the outer: cost = b_S + b_S·b_R = 100 + 100·400 = 40,100 block I/Os. If both are already sorted, sort-merge just merges: b_R + b_S = 400 + 100 = 500.",
+          "bn": "ছোট relation S-কে outer করো: cost = b_S + b_S·b_R = 100 + 100·400 = 40,100 block I/O। দুটোই আগে থেকে sorted হলে sort-merge শুধু merge করে: b_R + b_S = 400 + 100 = 500।"
+        },
+        "answer": "BNL ≈ 40,100 block I/Os; sort-merge (pre-sorted) = 500 — far cheaper"
+      }
+    },
+    {
+      "title": {
+        "en": "Apriori support & confidence",
+        "bn": "Apriori support ও confidence"
+      },
+      "formula": "support(X) = count(X) / N;  confidence(X→Y) = support(X∪Y) / support(X)",
+      "example": {
+        "question": {
+          "en": "5 baskets: {M,O,N,K,E,Y},{D,O,N,K,E,Y},{M,A,K,E},{M,U,C,K,Y},{C,O,O,K,I,E}, minsup 60% (count 3), minconf 70%. Is O,K→E a strong rule?",
+          "bn": "5টি basket: {M,O,N,K,E,Y},{D,O,N,K,E,Y},{M,A,K,E},{M,U,C,K,Y},{C,O,O,K,I,E}, minsup 60% (count 3), minconf 70%। O,K→E কি strong rule?"
+        },
+        "working": {
+          "en": "count{O,K}=3, count{O,K,E}=3. support{O,K,E}=3/5=60% ≥ minsup. confidence = support{O,K,E}/support{O,K} = 3/3 = 100% ≥ 70%.",
+          "bn": "count{O,K}=3, count{O,K,E}=3। support{O,K,E}=3/5=60% ≥ minsup। confidence = support{O,K,E}/support{O,K} = 3/3 = 100% ≥ 70%।"
+        },
+        "answer": "Yes — support 60%, confidence 100%, so {O,K}→E is a strong rule"
+      }
+    }
+  ],
+  "traps": [
+    {
+      "en": "Sparse index is NOT allowed on an unordered (heap) file — a sparse index needs the data sorted so one entry can stand for a whole block. Only ordered files get sparse indexes.",
+      "bn": "Unordered (heap) file-এ sparse index চলে না — sparse index-এর জন্য data sorted থাকতে হয় যাতে একটি entry পুরো block বোঝায়। শুধু ordered file-এ sparse index হয়।"
+    },
+    {
+      "en": "A secondary index cannot be sparse: since the data is not ordered on that field, every record needs its own entry, so a secondary index is always dense.",
+      "bn": "Secondary index sparse হতে পারে না: ঐ field-এ data ordered নয়, তাই প্রতিটি record-এর আলাদা entry লাগে, অর্থাৎ secondary index সবসময় dense।"
+    },
+    {
+      "en": "B-tree vs B+ tree mix-up: in a B+ tree data pointers are ONLY in the leaves and internal keys may repeat in leaves; in a B-tree every node can point to data. Range scans need the B+ tree leaf chain.",
+      "bn": "B-tree বনাম B+ tree গুলিয়ে ফেলা: B+ tree-তে data pointer শুধু leaf-এ এবং internal key leaf-এ আবার আসতে পারে; B-tree-তে প্রতি node data-তে point করতে পারে। Range scan-এ B+ tree leaf chain লাগে।"
+    },
+    {
+      "en": "Indexing does NOT always make queries faster: on low-selectivity columns or queries returning many rows, a full scan beats the index, and every index slows down INSERT/UPDATE/DELETE. (Asked: Combined Bank SO(IT) 2024 — 'always faster?')",
+      "bn": "Indexing সবসময় query দ্রুত করে না: low-selectivity column বা অনেক row ফেরত দেওয়া query-তে full scan index-কে হারায়, আর প্রতিটি index INSERT/UPDATE/DELETE ধীর করে। (এসেছে: Combined Bank SO(IT) 2024 — 'always faster?')"
+    },
+    {
+      "en": "Bitmap index is for LOW-cardinality columns (few distinct values), not high-cardinality ones. A common coaching key wrongly picks 'high-cardinality'; the correct answer is low-cardinality. (Asked: 49th BCS ICT 2025)",
+      "bn": "Bitmap index LOW-cardinality column-এর জন্য (অল্প distinct মান), high-cardinality নয়। অনেক coaching key ভুল করে 'high-cardinality' বাছে; সঠিক উত্তর low-cardinality। (এসেছে: 49th BCS ICT 2025)"
+    },
+    {
+      "en": "Extendible hashing: the directory doubles ONLY when the overflowing bucket's local depth equals the global depth. If local depth < global depth, only the bucket splits — the directory stays the same size.",
+      "bn": "Extendible hashing: directory শুধু তখন double হয় যখন overflow bucket-এর local depth = global depth। Local depth < global depth হলে শুধু bucket split হয় — directory-র আকার একই থাকে।"
+    },
+    {
+      "en": "Data warehouse ≠ data mining: the warehouse is the stored, integrated, historical database (OLAP); data mining is the process of finding patterns in it. The question asks for the DIFFERENCE, not a synonym.",
+      "bn": "Data warehouse ≠ data mining: warehouse হলো সংরক্ষিত, integrated, historical database (OLAP); data mining হলো তার মধ্যে pattern খোঁজার প্রক্রিয়া। প্রশ্নে পার্থক্য চাওয়া হয়, সমার্থক নয়।"
+    },
+    {
+      "en": "Star vs snowflake: star keeps dimensions denormalized (faster, some redundancy); snowflake normalizes them into sub-tables (less redundancy, more joins). Do not swap the two.",
+      "bn": "Star বনাম snowflake: star dimension-কে denormalized রাখে (দ্রুত, কিছু redundancy); snowflake sub-table-এ normalize করে (কম redundancy, বেশি join)। দুটো উল্টে ফেলো না।"
+    }
+  ],
+  "writtenPlan": [
+    {
+      "question": {
+        "en": "Describe the methods of indexing and hashing in a database, and compare dense vs sparse indexes. (17th NTRCA ICT 2023; 15th NTRCA)",
+        "bn": "একটি database-এ indexing ও hashing-এর পদ্ধতিগুলো বর্ণনা করো এবং dense ও sparse index তুলনা করো। (17th NTRCA ICT 2023; 15th NTRCA)"
+      },
+      "askedIn": [
+        "17th NTRCA ICT (2023)",
+        "15th NTRCA CSE"
+      ],
+      "skeleton": {
+        "en": [
+          "Define indexing: an auxiliary structure mapping a search key to record locations to speed retrieval.",
+          "Ordered indexes: primary (sparse, on ordering key) and secondary (dense, on non-ordering field); multilevel/B+ tree.",
+          "Hashing: a hash function maps a key to a bucket for O(1) equality search; static vs dynamic (extendible/linear).",
+          "Table: dense (entry per record) vs sparse (entry per block) — space, applicability (ordered only), search cost.",
+          "Example: a sparse index on 3000 data blocks needs 45 index blocks vs a dense index's 442.",
+          "Advantage/limitation: indexes speed reads but cost writes/space; hashing has no range support."
+        ],
+        "bn": [
+          "Indexing সংজ্ঞা: search key-কে record location-এ map করা auxiliary structure, যা retrieval দ্রুত করে।",
+          "Ordered index: primary (sparse, ordering key-তে) ও secondary (dense, non-ordering field-এ); multilevel/B+ tree।",
+          "Hashing: hash function key-কে bucket-এ map করে O(1) equality search দেয়; static বনাম dynamic (extendible/linear)।",
+          "Table: dense (প্রতি record entry) বনাম sparse (প্রতি block entry) — space, প্রযোজ্যতা (শুধু ordered), search cost।",
+          "উদাহরণ: 3000 data block-এ sparse index-এ 45টি index block, dense হলে 442টি।",
+          "সুবিধা/সীমাবদ্ধতা: index read দ্রুত করে কিন্তু write/space খরচ বাড়ায়; hashing-এ range support নেই।"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Define index + hashing, one dense-vs-sparse table, one line on static vs dynamic hashing.",
+          "bn": "Index + hashing সংজ্ঞা, একটি dense-vs-sparse table, static বনাম dynamic hashing-এর এক লাইন।"
+        },
+        "10": {
+          "en": "Add primary/secondary/clustered index types, the sparse-index block example, and an extendible-hashing sketch.",
+          "bn": "সাথে primary/secondary/clustered index ধরন, sparse-index block উদাহরণ ও extendible-hashing স্কেচ যোগ করো।"
+        },
+        "20": {
+          "en": "Add B+ tree structure and range-scan behaviour, full extendible-hashing trace, and a comparison of when to use indexing vs hashing with a worked cost.",
+          "bn": "সাথে B+ tree structure ও range-scan আচরণ, পূর্ণ extendible-hashing trace, এবং কখন indexing বনাম hashing — worked cost সহ তুলনা যোগ করো।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "Draw a B+ tree by inserting 12,14,19,30,21,22,13,34,18,23,38,40 with n=5, then delete a node. Explain fan-out and height. (BUET M.Sc. 2017; BAERA 2021)",
+        "bn": "n=5 নিয়ে 12,14,19,30,21,22,13,34,18,23,38,40 insert করে B+ tree আঁকো, তারপর একটি node delete করো। Fan-out ও height ব্যাখ্যা করো। (BUET M.Sc. 2017; BAERA 2021)"
+      },
+      "askedIn": [
+        "BUET M.Sc. April 2017",
+        "BAERA Engineer(CSE) November 2021"
+      ],
+      "skeleton": {
+        "en": [
+          "State the rules for n=5: up to 5 pointers / 4 keys per node, leaves ceil((n-1)/2)=2 keys min, internal ceil(n/2)=3 pointers min.",
+          "Insert in order, splitting a full leaf by pushing the middle key up; show each split.",
+          "Draw the final tree: all keys in leaves, leaves linked in sorted order.",
+          "Delete: remove from the leaf; if it underflows, borrow from a sibling or merge and pull a key down.",
+          "Explain fan-out = pointers per node (high fan-out → shallow tree) and height ≈ log_fanout(N).",
+          "Note the range-query advantage of the leaf chain."
+        ],
+        "bn": [
+          "n=5-এর নিয়ম: প্রতি node সর্বোচ্চ 5 pointer / 4 key, leaf-এ ন্যূনতম ceil((n-1)/2)=2 key, internal-এ ন্যূনতম ceil(n/2)=3 pointer।",
+          "ক্রম অনুযায়ী insert করো, full leaf split করে middle key উপরে পাঠাও; প্রতিটি split দেখাও।",
+          "চূড়ান্ত tree আঁকো: সব key leaf-এ, leaf গুলো sorted ক্রমে linked।",
+          "Delete: leaf থেকে বাদ দাও; underflow হলে sibling থেকে borrow বা merge করে key নিচে নামাও।",
+          "Fan-out = প্রতি node-এর pointer (বেশি fan-out → ছোট tree) ও height ≈ log_fanout(N) ব্যাখ্যা করো।",
+          "Leaf chain-এর range-query সুবিধা উল্লেখ করো।"
+        ]
+      },
+      "marks": {
+        "10": {
+          "en": "Insert all keys with splits shown and draw the final B+ tree; one deletion with rebalancing.",
+          "bn": "সব key split সহ insert করে চূড়ান্ত B+ tree আঁকো; rebalancing সহ একটি deletion।"
+        },
+        "20": {
+          "en": "Add the full step-by-step split trace, a deletion that triggers borrow and one that triggers merge, and the fan-out/height analysis with numbers.",
+          "bn": "সাথে ধাপে ধাপে পূর্ণ split trace, একটি borrow ও একটি merge ঘটানো deletion, এবং সংখ্যা সহ fan-out/height বিশ্লেষণ যোগ করো।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "Explain how indexing improves query performance, and whether an index always makes an application faster. (BSCL AE 2025; Combined Bank SO(IT) 2024)",
+        "bn": "Indexing কীভাবে query performance উন্নত করে এবং index কি সবসময় application দ্রুত করে — ব্যাখ্যা করো। (BSCL AE 2025; Combined Bank SO(IT) 2024)"
+      },
+      "askedIn": [
+        "BSCL AE(CSE) 2025",
+        "Combined Bank SO(IT) 2024"
+      ],
+      "skeleton": {
+        "en": [
+          "Define index and how a B+ tree turns an O(n) scan into an O(log n) lookup + range scan.",
+          "Benefits: faster WHERE/JOIN/ORDER BY, covering indexes avoid table access.",
+          "When it does NOT help: low-selectivity columns, queries returning most rows, tiny tables.",
+          "Costs: extra storage, slower INSERT/UPDATE/DELETE, maintenance/fragmentation.",
+          "Conclusion: indexing is a trade-off; choose columns by selectivity and read/write ratio."
+        ],
+        "bn": [
+          "Index-এর সংজ্ঞা এবং B+ tree কীভাবে O(n) scan-কে O(log n) lookup + range scan করে তা বলো।",
+          "সুবিধা: দ্রুত WHERE/JOIN/ORDER BY, covering index table access এড়ায়।",
+          "কখন সাহায্য করে না: low-selectivity column, বেশির ভাগ row ফেরত দেওয়া query, খুব ছোট table।",
+          "খরচ: অতিরিক্ত storage, ধীর INSERT/UPDATE/DELETE, maintenance/fragmentation।",
+          "উপসংহার: indexing একটি trade-off; selectivity ও read/write অনুপাত দেখে column বাছো।"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Define index, state two benefits and one case where it does not help.",
+          "bn": "Index-এর সংজ্ঞা, দুটি সুবিধা ও একটি ক্ষেত্রে যেখানে সাহায্য করে না।"
+        },
+        "10": {
+          "en": "Add the B+ tree O(log n) argument, four index costs, and a Bangladeshi example (e.g. an NID lookup on a citizen table).",
+          "bn": "সাথে B+ tree O(log n) যুক্তি, চারটি index খরচ, এবং একটি বাংলাদেশি উদাহরণ (যেমন নাগরিক table-এ NID lookup) যোগ করো।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "Explain the difference between database, data warehouse and data mining with real-world examples. (Combined Bank SO(IT) 2023; 16th NTRCA ICT)",
+        "bn": "বাস্তব উদাহরণসহ database, data warehouse ও data mining-এর পার্থক্য ব্যাখ্যা করো। (Combined Bank SO(IT) 2023; 16th NTRCA ICT)"
+      },
+      "askedIn": [
+        "Combined Bank SO(IT) 2023",
+        "16th NTRCA ICT"
+      ],
+      "skeleton": {
+        "en": [
+          "Database (OLTP): operational, current, normalized data for day-to-day transactions — e.g. a bank's core account table.",
+          "Data warehouse (OLAP): integrated, historical, denormalized data for analysis — e.g. years of transactions for reporting; star/snowflake schema fed by ETL.",
+          "Data mining: the process that finds patterns in that data — classification, clustering, association (Apriori) — e.g. market-basket analysis for cross-selling.",
+          "Comparison table: purpose, data freshness, schema, users.",
+          "Relationship: OLTP feeds the warehouse via ETL; mining runs on the warehouse."
+        ],
+        "bn": [
+          "Database (OLTP): দৈনন্দিন transaction-এর জন্য operational, current, normalized data — যেমন একটি bank-এর core account table।",
+          "Data warehouse (OLAP): বিশ্লেষণের জন্য integrated, historical, denormalized data — যেমন reporting-এর জন্য বছরের পর বছরের transaction; ETL-চালিত star/snowflake schema।",
+          "Data mining: সেই data-তে pattern খোঁজার প্রক্রিয়া — classification, clustering, association (Apriori) — যেমন cross-selling-এর জন্য market-basket analysis।",
+          "তুলনা table: উদ্দেশ্য, data freshness, schema, user।",
+          "সম্পর্ক: OLTP, ETL দিয়ে warehouse-কে খাওয়ায়; mining warehouse-এর উপর চলে।"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Define all three with one example each and one distinguishing line.",
+          "bn": "তিনটিরই সংজ্ঞা, প্রতিটির একটি উদাহরণ ও একটি পার্থক্যসূচক লাইন।"
+        },
+        "10": {
+          "en": "Add a comparison table, the ETL/OLAP-vs-OLTP contrast, and an Apriori market-basket example.",
+          "bn": "সাথে একটি তুলনা table, ETL/OLAP-বনাম-OLTP পার্থক্য ও একটি Apriori market-basket উদাহরণ যোগ করো।"
+        }
+      }
+    }
+  ],
+  "viva": [
+    {
+      "q": {
+        "en": "Why are all keys kept in the leaves of a B+ tree?",
+        "bn": "B+ tree-তে সব key leaf-এ রাখা হয় কেন?"
+      },
+      "a": {
+        "en": "So internal nodes hold only keys + pointers (higher fan-out, shorter tree) and the linked leaves give efficient ordered range scans.",
+        "bn": "যাতে internal node শুধু key + pointer রাখে (বেশি fan-out, ছোট tree) এবং linked leaf efficient ordered range scan দেয়।"
+      }
+    },
+    {
+      "q": {
+        "en": "Difference between a clustered and a non-clustered index?",
+        "bn": "Clustered ও non-clustered index-এর পার্থক্য?"
+      },
+      "a": {
+        "en": "A clustered index stores the rows in the index's key order (one per table); a non-clustered index is a separate structure pointing to the rows (many allowed).",
+        "bn": "Clustered index row গুলো index key-এর ক্রমে রাখে (table-প্রতি একটি); non-clustered index আলাদা structure যা row-এ point করে (অনেক থাকতে পারে)।"
+      }
+    },
+    {
+      "q": {
+        "en": "When does the directory double in extendible hashing?",
+        "bn": "Extendible hashing-এ directory কখন double হয়?"
+      },
+      "a": {
+        "en": "Only when a bucket overflows and its local depth equals the global depth; otherwise just the bucket splits.",
+        "bn": "শুধু যখন একটি bucket overflow করে এবং তার local depth = global depth; নাহলে শুধু bucket split হয়।"
+      }
+    },
+    {
+      "q": {
+        "en": "Is a sparse index possible on a heap file?",
+        "bn": "Heap file-এ sparse index সম্ভব?"
+      },
+      "a": {
+        "en": "No. A sparse index needs the file ordered on the key so one entry can represent a whole block; a heap file is unordered, so only a dense index works.",
+        "bn": "না। Sparse index-এর জন্য file key-তে ordered হতে হয় যাতে এক entry পুরো block বোঝায়; heap file unordered, তাই শুধু dense index চলে।"
+      }
+    },
+    {
+      "q": {
+        "en": "What is the main difference between OLTP and OLAP?",
+        "bn": "OLTP ও OLAP-এর মূল পার্থক্য কী?"
+      },
+      "a": {
+        "en": "OLTP handles many short read/write transactions on current normalized data; OLAP runs few large read-only analytical queries on historical denormalized data.",
+        "bn": "OLTP current normalized data-তে অনেক ছোট read/write transaction চালায়; OLAP historical denormalized data-তে অল্প বড় read-only analytical query চালায়।"
+      }
+    },
+    {
+      "q": {
+        "en": "What does the Apriori downward-closure property say?",
+        "bn": "Apriori-র downward-closure property কী বলে?"
+      },
+      "a": {
+        "en": "Every non-empty subset of a frequent itemset must also be frequent — so if {A,B} is infrequent, no superset can be frequent, which prunes candidates.",
+        "bn": "একটি frequent itemset-এর প্রতিটি non-empty subset-ও frequent — তাই {A,B} infrequent হলে কোনো superset frequent হতে পারে না, এতে candidate prune হয়।"
+      }
+    },
+    {
+      "q": {
+        "en": "Why might the optimizer ignore an index you created?",
+        "bn": "তুমি তৈরি করা index optimizer উপেক্ষা করতে পারে কেন?"
+      },
+      "a": {
+        "en": "If the query returns a large fraction of rows or the column has low selectivity, a full table scan reads fewer blocks than index + random row fetches.",
+        "bn": "query যদি বেশি অংশ row ফেরত দেয় বা column-এর selectivity কম হয়, full table scan index + random row fetch-এর চেয়ে কম block পড়ে।"
+      }
+    },
+    {
+      "q": {
+        "en": "Star schema vs snowflake schema?",
+        "bn": "Star schema বনাম snowflake schema?"
+      },
+      "a": {
+        "en": "Star has one fact table with denormalized dimensions (fast, some redundancy); snowflake normalizes dimensions into sub-tables (less redundancy, more joins).",
+        "bn": "Star-এ একটি fact table ও denormalized dimension (দ্রুত, কিছু redundancy); snowflake dimension-কে sub-table-এ normalize করে (কম redundancy, বেশি join)।"
+      }
+    }
+  ],
   "facts": [],
-  "sources": []
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Extendible_hashing",
+      "title": "Extendible hashing — Wikipedia",
+      "accessed": "2026-10-30"
+    },
+    {
+      "url": "https://www.geeksforgeeks.org/dbms/extendible-hashing-dynamic-approach-to-dbms/",
+      "title": "Extendible Hashing (Dynamic approach to DBMS) — GeeksforGeeks",
+      "accessed": "2026-10-30"
+    },
+    {
+      "url": "https://www.cs.umd.edu/class/fall2019/cmsc420-0201/Lects/slides-09-btree.pdf",
+      "title": "B-trees and B+-trees — UMD CMSC420 lecture",
+      "accessed": "2026-10-30"
+    },
+    {
+      "url": "https://www2.cs.sfu.ca/CourseCentral/454/bzhou/documents/s16.pdf",
+      "title": "Indexing and B+ tree sizing — SFU CMPT454",
+      "accessed": "2026-10-30"
+    },
+    {
+      "url": "https://www3.cs.stonybrook.edu/~cse634/L8ch5assoc.pdf",
+      "title": "Association rules and the Apriori algorithm — Stony Brook CSE634",
+      "accessed": "2026-10-30"
+    },
+    {
+      "url": "https://www2.seas.gwu.edu/~bell/csci243/lectures/data_warehousing.pdf",
+      "title": "Data Warehousing and OLAP Technology — GWU CSCI243",
+      "accessed": "2026-10-30"
+    }
+  ],
+  "topics": [
+    {
+      "name": "Indexing, B+ tree & hashing",
+      "overview": {
+        "en": "Indexing and hashing are the two access paths a DBMS uses to reach a row without scanning the whole file. Ordered indexes (primary sparse, secondary dense, multilevel, B+ tree) support both equality and range access; hashing gives O(1) equality access but no ranges.",
+        "bn": "Indexing ও hashing হলো দুটি access path যা দিয়ে DBMS পুরো file scan না করে একটি row-তে পৌঁছায়। Ordered index (primary sparse, secondary dense, multilevel, B+ tree) equality ও range দুটোই দেয়; hashing O(1) equality দেয় কিন্তু range দেয় না।"
+      },
+      "points": [
+        {
+          "en": "Primary index: sparse, on the ordering key; secondary index: dense, on a non-ordering field.",
+          "bn": "Primary index: sparse, ordering key-তে; secondary index: dense, non-ordering field-এ।"
+        },
+        {
+          "en": "Multilevel index treats the index as a file and indexes it again until the top fits one block — reducing block reads from binary-search to the tree height.",
+          "bn": "Multilevel index, index-কে file ধরে আবার index করে যতক্ষণ না top এক block-এ আঁটে — block read binary-search থেকে tree height-এ নামায়।"
+        },
+        {
+          "en": "B+ tree is the dynamic multilevel index used in practice: balanced, all data pointers in leaves, leaves chained for ranges.",
+          "bn": "B+ tree হলো বাস্তবে ব্যবহৃত dynamic multilevel index: balanced, সব data pointer leaf-এ, range-এর জন্য leaf chained।"
+        },
+        {
+          "en": "Static hashing fixes the bucket count and suffers overflow; extendible hashing uses a directory of 2^global-depth and splits buckets on demand.",
+          "bn": "Static hashing bucket সংখ্যা স্থির রাখে ও overflow হয়; extendible hashing 2^global-depth-এর directory ব্যবহার করে ও প্রয়োজনে bucket split করে।"
+        }
+      ],
+      "examples": [
+        {
+          "question": {
+            "en": "A file of 3000 blocks has a sparse primary index with fan-out 68. How many block reads to find one record with a 2-level multilevel index vs binary search on a single-level index?",
+            "bn": "3000 block-এর একটি file-এ fan-out 68-এর sparse primary index। একটি record খুঁজতে 2-level multilevel index-এ বনাম single-level index-এ binary search-এ কতটি block read?"
+          },
+          "working": {
+            "en": "Single level = ceil(3000/68)=45 index blocks → binary search ceil(log2 45)+1 = 7, + 1 data read. Multilevel: L1=45, L2=ceil(45/68)=1 → 2 index reads + 1 data = 3.",
+            "bn": "Single level = ceil(3000/68)=45 index block → binary search ceil(log2 45)+1 = 7, + 1 data read। Multilevel: L1=45, L2=ceil(45/68)=1 → 2 index read + 1 data = 3।"
+          },
+          "answer": {
+            "en": "Multilevel = 3 block reads vs 8 for binary search on a single level.",
+            "bn": "Multilevel = 3 block read, single-level binary search-এ 8।"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Data warehouse & mining",
+      "overview": {
+        "en": "A data warehouse is an integrated, historical, read-mostly copy of operational data organised for analysis (OLAP), fed by ETL and modelled as star/snowflake schemas. Data mining is the step that extracts patterns from it: classification, clustering and association rules.",
+        "bn": "Data warehouse হলো operational data-র একটি integrated, historical, read-mostly কপি যা বিশ্লেষণের (OLAP) জন্য সাজানো, ETL দিয়ে খাওয়ানো, star/snowflake schema-তে মডেল করা। Data mining হলো সেই ধাপ যা তা থেকে pattern বের করে: classification, clustering ও association rule।"
+      },
+      "points": [
+        {
+          "en": "OLTP vs OLAP: transactional/current/normalized vs analytical/historical/denormalized.",
+          "bn": "OLTP বনাম OLAP: transactional/current/normalized বনাম analytical/historical/denormalized।"
+        },
+        {
+          "en": "Star schema = one fact table + denormalized dimensions; snowflake = normalized dimensions.",
+          "bn": "Star schema = একটি fact table + denormalized dimension; snowflake = normalized dimension।"
+        },
+        {
+          "en": "ETL (Extract-Transform-Load) cleans and integrates source data into the warehouse.",
+          "bn": "ETL (Extract-Transform-Load) source data পরিষ্কার ও integrate করে warehouse-এ আনে।"
+        },
+        {
+          "en": "Mining tasks: classification (supervised labels), clustering (unsupervised groups), association (Apriori frequent itemsets).",
+          "bn": "Mining task: classification (supervised label), clustering (unsupervised group), association (Apriori frequent itemset)।"
+        }
+      ],
+      "examples": [
+        {
+          "question": {
+            "en": "In 5 baskets, {milk,bread} appears in 3 and {milk} in 4. Compute support{milk,bread} and confidence milk→bread.",
+            "bn": "5টি basket-এ {milk,bread} 3-টিতে ও {milk} 4-টিতে আছে। support{milk,bread} ও confidence milk→bread বের করো।"
+          },
+          "working": {
+            "en": "support{milk,bread} = 3/5 = 60%. confidence(milk→bread) = support{milk,bread}/support{milk} = 3/4 = 75%.",
+            "bn": "support{milk,bread} = 3/5 = 60%। confidence(milk→bread) = support{milk,bread}/support{milk} = 3/4 = 75%।"
+          },
+          "answer": {
+            "en": "support 60%, confidence 75%.",
+            "bn": "support 60%, confidence 75%।"
+          }
+        }
+      ]
+    }
+  ]
 }
