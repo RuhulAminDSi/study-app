@@ -11,7 +11,7 @@ Bank targets per lesson (spec §5.1): MCQ ≥30, written ≥10, programming/SQL/
 |---|---|---|---|---|---|---|---|
 | `ics-cloud-datacentre` *(new)* | 113 | 64 | 50 | 4 | Cloud, data centre & servers (64) | 30 / 10 / 2 | ✓ |
 | `ics-web-basics` *(new)* | 78 | 54 | 22 | 4 | Web technology (HTML, CSS, JS) (54) | 30 / 10 / 3 | ✓ |
-| `ics-hardware-architecture` | 84 | 51 | 14 | 0 | Hardware & peripherals (28); Memory (17); BIOS & booting (6) | 6 / 2 / 0 | ✓ |
+| `ics-hardware-architecture` | 84 | 51 | 14 | 0 | Hardware & peripherals (28); Memory (17); BIOS & booting (6) | 39 / 13 / 0 | ✓ |
 | `ics-it-internet` | 46 | 23 | 11 | 0 | Emerging technology (14); ICT, policy & society (4); Banking IT & digital finance (3) | 5 / 0 / 0 | ✓ |
 | `ics-history-computing` | 26 | 22 | 13 | 0 | Computer generations & types (22) | 4 / 0 / 0 | ✓ |
 | `ics-software-os` | 26 | 17 | 6 | 1 | Software types (13); MS Office / Excel (4); Mobile & Android (0) | 4 / 2 / 0 | ✓ |
@@ -60,7 +60,7 @@ Unmapped clusters: Other (79)
 |---|---|---|---|---|---|---|---|
 | `spl-data-types-operators` | 255 | 190 | 78 | 2 | Output tracing (65); Programs & programming basics (49); Data types, variables & operators (29) | 37 / 11 / 4 | ✓ |
 | `spl-preprocessor-pointers-arrays-strings` | 77 | 59 | 25 | 3 | Arrays & matrices (25); Pointers & dynamic memory (18); Strings (16) | 46 / 12 / 6 | ✓ |
-| `spl-functions-recursion` | 47 | 47 | 17 | 5 | Recursion & classic programs (26); Call by value vs reference (14); Functions & library (7) | 5 / 0 / 3 | ✓ |
+| `spl-functions-recursion` | 47 | 47 | 17 | 5 | Recursion & classic programs (26); Call by value vs reference (14); Functions & library (7) | 40 / 10 / 7 | ✓ |
 | `spl-io-files-linking` | 24 | 23 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); File handling (3) | 3 / 0 / 2 | ✓ |
 | `spl-structures-unions-enums` | 16 | 15 | 3 | 1 | Structure & union (15) | 5 / 0 / 0 | ✓ |
 
@@ -96,7 +96,7 @@ Unmapped clusters: Other (28)
 |---|---|---|---|---|---|---|---|
 | `db2` | 232 | 171 | 61 | 2 | SQL queries (154); Views, triggers & procedures (11); SQL command types (6) | 39 / 11 / 20 | ✓ |
 | `db1` | 154 | 111 | 40 | 3 | ER model & relationships (40); Keys (36); DBMS concepts & architecture (35) | 36 / 11 / 2 | ✓ |
-| `db5` | 62 | 51 | 17 | 2 | Transactions & ACID (31); Concurrency control & recovery (11); Distributed DB, NoSQL & backup (9) | 5 / 2 / 0 | ✓ |
+| `db5` | 62 | 51 | 17 | 2 | Transactions & ACID (31); Concurrency control & recovery (11); Distributed DB, NoSQL & backup (9) | 41 / 15 / 0 | ✓ |
 | `db4` | 31 | 24 | 9 | 0 | Indexing, B+ tree & hashing (19); Data warehouse & mining (5) | 3 / 1 / 0 | ✓ |
 | `db3` | 30 | 23 | 10 | 0 | Normalization (23) | 5 / 0 / 0 | ✓ |
 
@@ -121,8 +121,8 @@ Unmapped clusters: Other (32)
 |---|---|---|---|---|---|---|---|
 | `os-process-scheduling` | 105 | 86 | 37 | 5 | Processes & threads (48); CPU scheduling (30); Process synchronization (8) | 44 / 14 / 3 | ✓ |
 | `os-linux-raid` *(new)* | 104 | 72 | 28 | 0 | Linux commands (53); RAID (19) | 30 / 10 / 2 | ✓ |
-| `os-memory-management` | 66 | 53 | 28 | 2 | Memory management & paging (53) | 6 / 8 / 0 | ✓ |
-| `os-deadlock` | 46 | 43 | 28 | 1 | Deadlock (43) | 4 / 2 / 0 | ✓ |
+| `os-memory-management` | 66 | 53 | 28 | 2 | Memory management & paging (53) | 39 / 22 / 0 | ✓ |
+| `os-deadlock` | 46 | 43 | 28 | 1 | Deadlock (43) | 35 / 15 / 0 | ✓ |
 | `os-role-concepts` | 38 | 33 | 14 | 3 | OS concepts & types (33) | 3 / 1 / 0 | ✓ |
 | `os-input-output` | 8 | 9 | 3 | 2 | Disk, files & I/O (9) | 3 / 0 / 0 | ✓ |
 | `os-file-systems` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
