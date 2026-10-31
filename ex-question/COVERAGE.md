@@ -133,7 +133,7 @@ Unmapped clusters: Other (29)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `ai-expert-systems-ml` | 47 | 39 | 24 | 0 | Machine learning (37); Association rules (Apriori) (1); Ensemble learning (weak vs strong learners) (1) | 5 / 2 / 0 | ✓ |
+| `ai-expert-systems-ml` | 47 | 39 | 24 | 0 | Machine learning (37); Association rules (Apriori) (1); Ensemble learning (weak vs strong learners) (1) | 45 / 13 / 4 | ✓ |
 | `ai-search-techniques` | 19 | 18 | 10 | 0 | Search techniques (18) | 38 / 14 / 0 | ✓ |
 | `ai-introduction` | 26 | 12 | 6 | 0 | AI concepts & applications (8); Types of intelligent agents (4) | 36 / 11 / 3 | ✓ |
 | `ai-modern-ml` *(new)* | 11 | 8 | 7 | 0 | Neural networks (5); Generative AI & LLMs (3) | 0 / 0 / 0 | — |
