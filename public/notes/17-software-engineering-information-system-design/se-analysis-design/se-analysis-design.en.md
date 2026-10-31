@@ -159,17 +159,17 @@ An entry that cannot be written down is a requirement that is still fuzzy.
 | Symbol | Means |
 |---|---|
 | `x = a + b` | x is **composed of** a and b |
-| `x = a, b` | alternatives — a **or** b |
-| `x = [a]` | repeated **one or more** times |
-| `x = {a}` | optional — **zero or one** |
-| `qualifier/x` | x is the key that identifies one y |
+| `x = [a \| b]` | selection — a **or** b |
+| `x = {a}` | iteration — **zero or more** (`1{a}n` sets bounds) |
+| `x = (a)` | optional — **zero or one** |
+| `@x` | x is the key that identifies the entry |
 | `* text *` | comment / alias |
 
 ✍ **Entries for Case A.**
 
 ```
 Loan    = loan_id + member_id + accession_no +
-          issue_date + due_date + {return_date}
+          issue_date + due_date + (return_date)
 Member  = member_id + name + phone + membership_type
 Book    = accession_no + isbn + title + author
 ```
@@ -217,7 +217,7 @@ The **ER model** (Chen, **1976**) is a **conceptual data model**: it pictures th
 
 *(Doodle: Chen notation — MEMBER rectangle —1— `issues` diamond —0..*— LOAN (double rectangle) —0..*— `on loan` diamond —1— BOOK rectangle. Caption: "LOAN is weak: key = Member_id + Accession_no".)*
 
-A **MEMBER** issues 0..* **LOAN**s and a **BOOK** appears in 0..* **LOAN**s; LOAN joins both totally, so it cannot exist without both. It carries Issue_date, Due_date and {Return_date}. When the same two entities meet again **later in time** — loans, orders, enrolments — you need a **third relation holding the event**.
+A **MEMBER** issues 0..* **LOAN**s and a **BOOK** appears in 0..* **LOAN**s; LOAN joins both totally, so it cannot exist without both. It carries Issue_date, Due_date and Return_date. When the same two entities meet again **later in time** — loans, orders, enrolments — you need a **third relation holding the event**.
 
 - ⚠️ **Exam trap:** MEMBER–LOAN is **not** a plain 1:N on one line: the pair (member, book) repeats over time, so it is **M : N**, resolved by making LOAN the **associative entity**.
 
@@ -238,7 +238,7 @@ A **MEMBER** issues 0..* **LOAN**s and a **BOOK** appears in 0..* **LOAN**s; LOA
 ```
 MEMBER(member_id, name, phone)
 BOOK(accession_no, isbn, title)
-LOAN(member_id, accession_no, issue_date, due_date, {return_date})
+LOAN(member_id, accession_no, issue_date, due_date, return_date)
 AUTHOR_BOOK(isbn, author_name)
 ```
 

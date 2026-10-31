@@ -20,7 +20,7 @@
 11. `<<include>>` is **mandatory** ("always"), base → included. `<<extend>>` is **conditional** ("only if"), extending → extended. Same arrow; the **direction and the condition** tell them apart.
 12. **UML** began at **Rational in the late 1980s** (Booch, Rumbaugh, Jacobson) and has been an **OMG standard since 1997**. UML 2 has **14 diagrams = 7 structural + 7 behavioural**.
 13. Notation: **hollow diamond** = aggregation (weak whole–part) · **filled diamond** = composition (strong, one owner) · **hollow triangle** = generalisation/realisation · **dashed + open head** = dependency · **solid line** = association.
-14. **CRC cards** are attributed to **Beck & Cunningham (OOPSLA 1986)**. A **responsibility** = what a class **knows** or **does**; a **collaborator** is the class that helps fulfil it.
+14. **CRC cards** are attributed to **Beck & Cunningham (OOPSLA 1989)**. A **responsibility** = what a class **knows** or **does**; a **collaborator** is the class that helps fulfil it.
 15. A **domain (concept) class** is information only — no calculating operations. A **design class** is **any class of the design model**: implementation-level, attributes and operations in full detail, and it **need not be abstract**.
 16. **Refactoring** = behaviour-preserving restructuring in small steps, never mixed with new feature work. Objects classify as **entity** (the data), **boundary** (what the user touches), **control** (the sequencing logic).
 
@@ -308,7 +308,7 @@ A gateway call is **inside** the box here — that is why an SSD is not a sequen
 | **Order** | orderId, lines | `confirm()`, `generateInvoice()` |
 | **Payment** | method, amount | `processTransaction()` |
 
-*(Doodle: a yellow index card labelled "CART" split into two columns — RESPONSIBILITIES (red header) listing "know the items, know the total, addItem(sku), calculateTotal(), createOrder(), clear()" and COLLABORATORS (green header) listing Customer, Product, Order, Payment. Caption: "a CRC card (Beck & Cunningham, 1986)".)*
+*(Doodle: a yellow index card labelled "CART" split into two columns — RESPONSIBILITIES (red header) listing "know the items, know the total, addItem(sku), calculateTotal(), createOrder(), clear()" and COLLABORATORS (green header) listing Customer, Product, Order, Payment. Caption: "a CRC card (Beck & Cunningham, OOPSLA 1989)".)*
 
 - **Concept vs design class.** A **domain (concept) class** is pure information — **no operations that calculate** — named as a **singular common noun**. A **design class** is **any class of the design model** — implementation-level, with attributes and operations in full detail; it **need not be abstract**.
 - 💡 **Reuse & refactoring.** **Reuse** = patterns, inheritance, composition. **Refactoring** = a **behaviour-preserving** restructuring of code, in small steps, never mixed with feature work.
@@ -350,7 +350,7 @@ Read a multiplicity **at the far end** of the association, never left to right. 
 | SSD = black box, verb+noun, no internals | Sequence: time ↓, lifelines, activations |
 | Aggregation = hollow ◆ · Composition = filled ◆ | Dependency = dashed + open arrowhead |
 | Generalisation / realisation = hollow △ | UML 2 = 14 diagrams = 7 + 7 |
-| Collaboration = Communication diagram | CRC: Beck & Cunningham, 1986 |
+| Collaboration = Communication diagram | CRC: Beck & Cunningham, 1989 |
 | Responsibility = knowing + doing | Refactoring = behaviour-preserving |
 | Concept class = information only | Objects: entity · boundary · control |
 
