@@ -61,7 +61,7 @@ Unmapped clusters: Other (79)
 | `spl-data-types-operators` | 255 | 190 | 78 | 2 | Output tracing (65); Programs & programming basics (49); Data types, variables & operators (29) | 37 / 11 / 4 | ✓ |
 | `spl-preprocessor-pointers-arrays-strings` | 77 | 59 | 25 | 3 | Arrays & matrices (25); Pointers & dynamic memory (18); Strings (16) | 46 / 12 / 6 | ✓ |
 | `spl-functions-recursion` | 47 | 47 | 17 | 5 | Recursion & classic programs (26); Call by value vs reference (14); Functions & library (7) | 5 / 0 / 3 | ✓ |
-| `spl-io-files-linking` | 24 | 23 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); File handling (3) | 3 / 0 / 2 | ✓ |
+| `spl-io-files-linking` | 24 | 23 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); File handling (3) | 46 / 11 / 5 | ✓ |
 | `spl-structures-unions-enums` | 16 | 15 | 3 | 1 | Structure & union (15) | 5 / 0 / 0 | ✓ |
 
 Unmapped clusters: Other (17)
