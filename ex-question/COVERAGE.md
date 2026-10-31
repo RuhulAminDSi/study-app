@@ -61,8 +61,8 @@ Unmapped clusters: Other (79)
 | `spl-data-types-operators` | 255 | 190 | 78 | 2 | Output tracing (65); Programs & programming basics (49); Data types, variables & operators (29) | 37 / 11 / 4 | ✓ |
 | `spl-preprocessor-pointers-arrays-strings` | 77 | 59 | 25 | 3 | Arrays & matrices (25); Pointers & dynamic memory (18); Strings (16) | 46 / 12 / 6 | ✓ |
 | `spl-functions-recursion` | 47 | 47 | 17 | 5 | Recursion & classic programs (26); Call by value vs reference (14); Functions & library (7) | 40 / 10 / 7 | ✓ |
-| `spl-io-files-linking` | 24 | 23 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); File handling (3) | 3 / 0 / 2 | ✓ |
-| `spl-structures-unions-enums` | 16 | 15 | 3 | 1 | Structure & union (15) | 5 / 0 / 0 | ✓ |
+| `spl-io-files-linking` | 24 | 23 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); File handling (3) | 41 / 11 / 6 | ✓ |
+| `spl-structures-unions-enums` | 16 | 15 | 3 | 1 | Structure & union (15) | 39 / 11 / 3 | ✓ |
 
 Unmapped clusters: Other (17)
 
@@ -72,7 +72,7 @@ Unmapped clusters: Other (17)
 |---|---|---|---|---|---|---|---|
 | `oop-constructors-inheritance` | 68 | 57 | 19 | 2 | Inheritance (23); Constructors & destructors (16); OOP programs (10) | 49 / 11 / 3 | ✓ |
 | `oop-philosophy-concepts` | 77 | 52 | 17 | 6 | Java specifics (15); OOP principles (14); Classes & objects (12) | 43 / 11 / 4 | ✓ |
-| `oop-polymorphism-exceptions-threading` | 54 | 45 | 20 | 2 | Polymorphism, overloading & overriding (38); Multithreading (4); Exception handling (3) | 11 / 0 / 2 | ✓ |
+| `oop-polymorphism-exceptions-threading` | 54 | 45 | 20 | 2 | Polymorphism, overloading & overriding (38); Multithreading (4); Exception handling (3) | 59 / 14 / 5 | ✓ |
 
 Unmapped clusters: Other (10)
 
@@ -84,7 +84,7 @@ Unmapped clusters: Other (10)
 | `dsa-data-representation-adt` | 104 | 94 | 43 | 6 | Linked list (35); Stack & queue (32); Data structure basics (11) | 36 / 11 / 1 | ✓ |
 | `dsa-tree-workshop` *(new)* | 71 | 61 | 36 | 4 | Trees & traversals (61) | 30 / 10 / 3 | ✓ |
 | `dsa-design-methods-graph-algorithms` | 64 | 56 | 24 | 5 | Algorithm design (greedy, DP, D&C, NP) (30); Graph algorithms (26) | 39 / 11 / 4 | ✓ |
-| `dsa-heaps-btrees` | 28 | 24 | 11 | 0 | Heap (24) | 5 / 1 / 0 | ✓ |
+| `dsa-heaps-btrees` | 28 | 24 | 11 | 0 | Heap (24) | 42 / 14 / 3 | ✓ |
 | `dsa5` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 | `dsa-lower-bound-np-completeness` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 
@@ -97,8 +97,8 @@ Unmapped clusters: Other (28)
 | `db2` | 232 | 171 | 61 | 2 | SQL queries (154); Views, triggers & procedures (11); SQL command types (6) | 39 / 11 / 20 | ✓ |
 | `db1` | 154 | 111 | 40 | 3 | ER model & relationships (40); Keys (36); DBMS concepts & architecture (35) | 36 / 11 / 2 | ✓ |
 | `db5` | 62 | 51 | 17 | 2 | Transactions & ACID (31); Concurrency control & recovery (11); Distributed DB, NoSQL & backup (9) | 41 / 15 / 0 | ✓ |
-| `db4` | 31 | 24 | 9 | 0 | Indexing, B+ tree & hashing (19); Data warehouse & mining (5) | 3 / 1 / 0 | ✓ |
-| `db3` | 30 | 23 | 10 | 0 | Normalization (23) | 5 / 0 / 0 | ✓ |
+| `db4` | 31 | 24 | 9 | 0 | Indexing, B+ tree & hashing (19); Data warehouse & mining (5) | 39 / 13 / 4 | ✓ |
+| `db3` | 30 | 23 | 10 | 0 | Normalization (23) | 37 / 11 / 4 | ✓ |
 
 Unmapped clusters: Other (35)
 
@@ -108,9 +108,9 @@ Unmapped clusters: Other (35)
 |---|---|---|---|---|---|---|---|
 | `se-concepts-paradigms-sdlc` | 110 | 70 | 36 | 6 | SDLC models (Waterfall, Agile, Spiral…) (28); SDLC phases (22); Software engineering basics (20) | 45 / 17 / 0 | ✓ |
 | `se-testing-maintenance` | 88 | 66 | 33 | 3 | Testing & quality assurance (66) | 44 / 15 / 3 | ✓ |
-| `se-waterfall-uml-oo` | 42 | 28 | 16 | 0 | Design, UML & patterns (28) | 5 / 1 / 0 | ✓ |
-| `se-analysis-design` | 22 | 9 | 2 | 1 | Requirements & feasibility (7); Banking IT (1); Information systems & ERP (1) | 3 / 2 / 0 | ✓ |
-| `se-project-management` | 16 | 7 | 3 | 0 | Risk, maintenance & tooling (7) | 5 / 0 / 0 | ✓ |
+| `se-waterfall-uml-oo` | 42 | 28 | 16 | 0 | Design, UML & patterns (28) | 46 / 14 / 4 | ✓ |
+| `se-analysis-design` | 22 | 9 | 2 | 1 | Requirements & feasibility (7); Banking IT (1); Information systems & ERP (1) | 38 / 13 / 2 | ✓ |
+| `se-project-management` | 16 | 7 | 3 | 0 | Risk, maintenance & tooling (7) | 38 / 11 / 2 | ✓ |
 | `se-grasp-patterns` | 0 | 0 | 0 | 0 | — | 4 / 0 / 0 | — |
 
 Unmapped clusters: Other (32)
@@ -123,8 +123,8 @@ Unmapped clusters: Other (32)
 | `os-linux-raid` *(new)* | 104 | 72 | 28 | 0 | Linux commands (53); RAID (19) | 30 / 10 / 2 | ✓ |
 | `os-memory-management` | 66 | 53 | 28 | 2 | Memory management & paging (53) | 39 / 22 / 0 | ✓ |
 | `os-deadlock` | 46 | 43 | 28 | 1 | Deadlock (43) | 35 / 15 / 0 | ✓ |
-| `os-role-concepts` | 38 | 33 | 14 | 3 | OS concepts & types (33) | 3 / 1 / 0 | ✓ |
-| `os-input-output` | 8 | 9 | 3 | 2 | Disk, files & I/O (9) | 3 / 0 / 0 | ✓ |
+| `os-role-concepts` | 38 | 33 | 14 | 3 | OS concepts & types (33) | 43 / 17 / 0 | ✓ |
+| `os-input-output` | 8 | 9 | 3 | 2 | Disk, files & I/O (9) | 40 / 15 / 0 | ✓ |
 | `os-file-systems` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 
 Unmapped clusters: Other (29)
@@ -133,12 +133,12 @@ Unmapped clusters: Other (29)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `ai-expert-systems-ml` | 47 | 39 | 24 | 0 | Machine learning (37); Association rules (Apriori) (1); Ensemble learning (weak vs strong learners) (1) | 5 / 2 / 0 | ✓ |
-| `ai-search-techniques` | 19 | 18 | 10 | 0 | Search techniques (18) | 6 / 1 / 0 | ✓ |
-| `ai-introduction` | 26 | 12 | 6 | 0 | AI concepts & applications (8); Types of intelligent agents (4) | 2 / 1 / 0 | ✓ |
+| `ai-expert-systems-ml` | 47 | 39 | 24 | 0 | Machine learning (37); Association rules (Apriori) (1); Ensemble learning (weak vs strong learners) (1) | 44 / 14 / 3 | ✓ |
+| `ai-search-techniques` | 19 | 18 | 10 | 0 | Search techniques (18) | 37 / 12 / 4 | ✓ |
+| `ai-introduction` | 26 | 12 | 6 | 0 | AI concepts & applications (8); Types of intelligent agents (4) | 34 / 12 / 3 | ✓ |
 | `ai-modern-ml` *(new)* | 11 | 8 | 7 | 0 | Neural networks (5); Generative AI & LLMs (3) | 30 / 10 / 3 | ✓ |
-| `ai-knowledge-representation` | 4 | 3 | 0 | 0 | Knowledge, logic & reasoning (3) | 5 / 0 / 0 | ✓ |
-| `ai-probabilistic-nlp` | 2 | 2 | 2 | 0 | NLP (2) | 3 / 1 / 0 | ✓ |
+| `ai-knowledge-representation` | 4 | 3 | 0 | 0 | Knowledge, logic & reasoning (3) | 35 / 11 / 3 | ✓ |
+| `ai-probabilistic-nlp` | 2 | 2 | 2 | 0 | NLP (2) | 34 / 12 / 3 | ✓ |
 | `ai-ml-applications-regression` | 0 | 0 | 0 | 0 | — | 4 / 0 / 0 | — |
 
 Unmapped clusters: Other (20)

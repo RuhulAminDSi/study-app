@@ -3,8 +3,8 @@
   "chapter": 10,
   "subject": "SPL",
   "lessonTitleEn": "User Defined Data Types: Structures, Unions, Enumerations",
-  "status": "draft",
-  "updatedOn": "2026-10-29",
+  "status": "published",
+  "updatedOn": "2026-10-31",
   "heat": {
     "asked": 15,
     "recent": 3,
@@ -217,11 +217,542 @@
       "repeat": false
     }
   ],
-  "mustKnow": [],
-  "formulas": [],
-  "traps": [],
-  "writtenPlan": [],
-  "viva": [],
+  "mustKnow": [
+    {
+      "en": "A structure (struct) is a user-defined type that groups members of different types under one name; every member has its own memory, so all of them can hold values at once.",
+      "bn": "Structure (struct) হলো user-defined type যা বিভিন্ন type-এর member-কে এক নামে একত্র করে; প্রতিটি member-এর নিজস্ব memory থাকে, তাই সবগুলো একসাথে মান রাখতে পারে।"
+    },
+    {
+      "en": "A union is declared like a struct, but all members share the same memory starting at offset 0, so only the member written last holds a meaningful value.",
+      "bn": "Union struct-এর মতোই declare করা হয়, কিন্তু সব member offset 0 থেকে একই memory ভাগ করে, তাই শুধু সর্বশেষ লেখা member-এর মানই অর্থবহ।"
+    },
+    {
+      "en": "sizeof(struct) ≥ sum of its members (padding); sizeof(union) = size of the largest member, rounded up to the strictest member alignment.",
+      "bn": "sizeof(struct) ≥ member-গুলোর যোগফল (padding); sizeof(union) = সবচেয়ে বড় member-এর আকার, সবচেয়ে কড়া member alignment-এর গুণিতকে বাড়ানো।"
+    },
+    {
+      "en": "Padding rule: each member starts at a multiple of its alignment (char 1, short 2, int/float 4, double/pointer 8 on x86-64), and the total is rounded up to a multiple of the largest alignment. {char; int; char} = 12, {int; char; char} = 8.",
+      "bn": "Padding-এর নিয়ম: প্রতিটি member তার alignment-এর গুণিতকে শুরু হয় (x86-64-এ char 1, short 2, int/float 4, double/pointer 8), এবং মোট আকার সবচেয়ে বড় alignment-এর গুণিতকে বাড়ানো হয়। {char; int; char} = 12, {int; char; char} = 8।"
+    },
+    {
+      "en": "Order members from largest to smallest alignment to minimise padding: {char; double; int} = 24 but {double; int; char} = 16. #pragma pack(1) removes padding ({char; int; char} = 6).",
+      "bn": "Padding কমাতে member বড় থেকে ছোট alignment অনুযায়ী সাজাও: {char; double; int} = 24 কিন্তু {double; int; char} = 16। #pragma pack(1) padding সরায় ({char; int; char} = 6)।"
+    },
+    {
+      "en": "Member access: the dot operator for a structure variable (s.id), the arrow operator for a pointer to a structure (p->id), and p->id ≡ (*p).id. *p.id means *(p.id) because . binds tighter than *.",
+      "bn": "Member access: structure variable-এর জন্য dot operator (s.id), structure-এর pointer-এর জন্য arrow operator (p->id), এবং p->id ≡ (*p).id। *p.id মানে *(p.id), কারণ . *-এর চেয়ে বেশি শক্তভাবে বাঁধে।"
+    },
+    {
+      "en": "Whole structures can be assigned (s2 = s1 copies every member, arrays inside too), passed to and returned from functions by value, but cannot be compared with == or !=.",
+      "bn": "সম্পূর্ণ structure assign করা যায় (s2 = s1 প্রতিটি member, ভেতরের array-সহ, copy করে), function-এ by value পাঠানো ও ফেরত দেওয়া যায়, কিন্তু == বা != দিয়ে তুলনা করা যায় না।"
+    },
+    {
+      "en": "A struct declaration (template) reserves no memory; memory is allocated only when a variable is defined. Initialise in member order: struct Student s = {101, \"Rahim\", 85.5f}; an array member cannot be assigned later with = (use strcpy).",
+      "bn": "Struct declaration (template) কোনো memory নেয় না; variable define করলেই memory বরাদ্দ হয়। Member-এর ক্রমে initialise করো: struct Student s = {101, \"Rahim\", 85.5f}; পরে array member-এ = দিয়ে assign করা যায় না (strcpy ব্যবহার করো)।"
+    },
+    {
+      "en": "Nested structure: a structure member that is itself a structure (struct Employee { struct Date dob; }); access with two dots: e.dob.year, or pe->dob.year through a pointer.",
+      "bn": "Nested structure: যে structure-এর member নিজেই একটি structure (struct Employee { struct Date dob; }); দুটি dot দিয়ে access: e.dob.year, বা pointer দিয়ে pe->dob.year।"
+    },
+    {
+      "en": "Self-referential structure: contains a pointer to its own type (struct Node { int data; struct Node *next; }), the building block of linked lists and trees; a struct cannot contain a member of its own type.",
+      "bn": "Self-referential structure: নিজের type-এর একটি pointer ধারণ করে (struct Node { int data; struct Node *next; }), linked list ও tree-র ভিত্তি; একটি struct নিজের type-এর member রাখতে পারে না।"
+    },
+    {
+      "en": "An array of structures stores records contiguously; for struct Student *p = arr, p++ advances by sizeof(struct Student) bytes (60 for {int; char[50]; float}), not by 1.",
+      "bn": "Structure-এর array record-গুলো পাশাপাশি রাখে; struct Student *p = arr-এর জন্য p++ sizeof(struct Student) byte এগোয় ({int; char[50]; float}-এর জন্য 60), 1 নয়।"
+    },
+    {
+      "en": "Bit-field: an int/unsigned/_Bool member with a width in bits (unsigned flag : 1;) to pack flags; you cannot take its address, make arrays of it or use sizeof on it, and an unsigned field keeps value mod 2^width (9 in 3 bits → 1).",
+      "bn": "Bit-field: bit-এ width দেওয়া int/unsigned/_Bool member (unsigned flag : 1;) যা flag ঘন করে রাখে; এর address নেওয়া, array বানানো বা sizeof করা যায় না, আর unsigned field মান mod 2^width রাখে (3 bit-এ 9 → 1)।"
+    },
+    {
+      "en": "A union initialiser sets only the first member (union Data d = {65}; sets d.i); C99 designated initialisers pick another: {.f = 2.5f}.",
+      "bn": "Union initialiser কেবল প্রথম member-এ মান দেয় (union Data d = {65}; d.i-তে দেয়); অন্য member বেছে নিতে C99 designated initialiser: {.f = 2.5f}।"
+    },
+    {
+      "en": "Uses of union: saving memory when only one of several fields is needed at a time (variant record with a tag), and viewing the same bytes as different types (an int as 4 chars).",
+      "bn": "Union-এর ব্যবহার: একসাথে কয়েকটির মধ্যে একটি field দরকার হলে memory বাঁচানো (tag-সহ variant record), এবং একই byte-কে ভিন্ন type হিসেবে দেখা (একটি int-কে 4টি char হিসেবে)।"
+    },
+    {
+      "en": "An enumeration (enum) is a set of named integer constants (of type int up to C17). The first is 0 by default and each next one is previous + 1; an explicit value restarts the count: enum {RED, GREEN = 5, BLUE} → BLUE = 6.",
+      "bn": "Enumeration (enum) হলো নামযুক্ত integer constant-এর একটি সেট (C17 পর্যন্ত type int)। ডিফল্টে প্রথমটি 0 এবং পরেরটি আগেরটি + 1; স্পষ্ট মান দিলে গণনা সেখান থেকে চলে: enum {RED, GREEN = 5, BLUE} → BLUE = 6।"
+    },
+    {
+      "en": "Enum rules: duplicate and negative values are allowed, values must be integer constant expressions, an enumerator is a constant (RED = 3 is an error), and sizeof an enum is implementation-defined (usually 4).",
+      "bn": "Enum-এর নিয়ম: একই মান ও ঋণাত্মক মান চলে, মান integer constant expression হতে হবে, enumerator একটি constant (RED = 3 error), আর enum-এর sizeof implementation-defined (সাধারণত 4)।"
+    },
+    {
+      "en": "enum vs #define: enum constants are grouped under a type, follow scope rules, get automatic values and are visible to the debugger; #define is plain text substitution by the preprocessor.",
+      "bn": "enum বনাম #define: enum constant একটি type-এর অধীনে দলবদ্ধ, scope মেনে চলে, স্বয়ংক্রিয় মান পায় এবং debugger দেখতে পায়; #define হলো preprocessor-এর সাধারণ text প্রতিস্থাপন।"
+    },
+    {
+      "en": "typedef gives an existing type a new name and creates no memory: typedef struct Student Student; typedef char *PTR; PTR a, b; makes both pointers, while #define PTR2 char * then PTR2 c, d; makes d a plain char.",
+      "bn": "typedef বিদ্যমান type-কে নতুন নাম দেয়, কোনো memory তৈরি করে না: typedef struct Student Student; typedef char *PTR; PTR a, b; দুটোকেই pointer বানায়, কিন্তু #define PTR2 char * দিলে PTR2 c, d;-এ d সাধারণ char।"
+    },
+    {
+      "en": "Passing a structure by value copies it, so changes inside the function do not reach the caller; pass a pointer (f(&s), q->x = …) to modify it or to avoid copying a large struct.",
+      "bn": "Structure by value পাঠালে copy হয়, তাই function-এর ভেতরের পরিবর্তন caller-এ পৌঁছায় না; বদলাতে বা বড় struct copy এড়াতে pointer পাঠাও (f(&s), q->x = …)।"
+    },
+    {
+      "en": "Structured programming (a different topic often confused with struct): top-down design with sequence, selection and iteration only (no goto), modules and single entry/exit; C, Pascal and FORTRAN are structured languages.",
+      "bn": "Structured programming (struct-এর সাথে প্রায়ই গুলিয়ে ফেলা আলাদা বিষয়): শুধু sequence, selection ও iteration দিয়ে top-down design (goto নয়), module ও single entry/exit; C, Pascal ও FORTRAN structured language।"
+    }
+  ],
+  "formulas": [
+    {
+      "title": {
+        "en": "sizeof a structure with padding",
+        "bn": "Padding-সহ structure-এর sizeof"
+      },
+      "formula": "offset(member) = next multiple of its alignment at or after the end of the previous member;  sizeof(struct) = end of the last member rounded up to a multiple of the largest member alignment",
+      "example": {
+        "question": {
+          "en": "Assume a 64-bit compiler with 1-byte char, 2-byte short, 4-byte int and 8-byte double (each aligned to its size). Find sizeof(struct E { char a; short s; char b; int i; }) and sizeof(struct R { char c; double d; int i; }). How small can R become by reordering?",
+          "bn": "ধরো 64-bit compiler-এ char 1, short 2, int 4 ও double 8 byte (প্রত্যেকটি নিজের আকারে aligned)। sizeof(struct E { char a; short s; char b; int i; }) ও sizeof(struct R { char c; double d; int i; }) বের করো। সাজানো বদলে R কত ছোট হতে পারে?"
+        },
+        "working": {
+          "en": "E: a at 0; s needs a multiple of 2 → 1 pad byte, s at 2–3; b at 4; i needs a multiple of 4 → 3 pad bytes, i at 8–11; end 12, already a multiple of 4 → 12.\nR: c at 0; d needs a multiple of 8 → 7 pad bytes, d at 8–15; i at 16–19; end 20 rounded up to a multiple of 8 → 24.\nReordered { double d; int i; char c; }: d 0–7, i 8–11, c 12, end 13 → rounded to 16. (All three checked with sizeof and offsetof on x86-64.)",
+          "bn": "E: a থাকে 0-তে; s-এর জন্য 2-এর গুণিতক লাগে → 1 byte pad, s থাকে 2–3-এ; b থাকে 4-এ; i-এর জন্য 4-এর গুণিতক → 3 byte pad, i থাকে 8–11-এ; শেষ 12, যা আগেই 4-এর গুণিতক → 12।\nR: c থাকে 0-তে; d-এর জন্য 8-এর গুণিতক → 7 byte pad, d থাকে 8–15-এ; i থাকে 16–19-এ; শেষ 20, 8-এর গুণিতকে বাড়িয়ে → 24।\nনতুন সাজানো { double d; int i; char c; }: d 0–7, i 8–11, c 12, শেষ 13 → বাড়িয়ে 16। (তিনটিই x86-64-এ sizeof ও offsetof দিয়ে যাচাই।)"
+        },
+        "answer": "sizeof(E) = 12; sizeof(R) = 24; reordered R = 16"
+      }
+    },
+    {
+      "title": {
+        "en": "sizeof a union",
+        "bn": "Union-এর sizeof"
+      },
+      "formula": "sizeof(union) = largest member size, rounded up to a multiple of the largest member alignment",
+      "example": {
+        "question": {
+          "en": "With 4-byte int/float and 8-byte double, find the sizes of union U1 { int i; float f; char str[20]; }, union U2 { char c[5]; int i; } and union U3 { double d; char c[10]; }.",
+          "bn": "4-byte int/float ও 8-byte double ধরে union U1 { int i; float f; char str[20]; }, union U2 { char c[5]; int i; } ও union U3 { double d; char c[10]; }-এর আকার বের করো।"
+        },
+        "working": {
+          "en": "U1: largest member str = 20, alignment 4, 20 is a multiple of 4 → 20.\nU2: largest c = 5, alignment 4 (from int) → round 5 up to 8.\nU3: largest c = 10, alignment 8 (from double) → round 10 up to 16. (Checked with sizeof.)",
+          "bn": "U1: সবচেয়ে বড় member str = 20, alignment 4, 20 হলো 4-এর গুণিতক → 20।\nU2: সবচেয়ে বড় c = 5, alignment 4 (int থেকে) → 5-কে বাড়িয়ে 8।\nU3: সবচেয়ে বড় c = 10, alignment 8 (double থেকে) → 10-কে বাড়িয়ে 16। (sizeof দিয়ে যাচাই।)"
+        },
+        "answer": "U1 = 20, U2 = 8, U3 = 16 bytes"
+      }
+    },
+    {
+      "title": {
+        "en": "Enumerator values",
+        "bn": "Enumerator-এর মান"
+      },
+      "formula": "first enumerator = 0 unless given;  each later enumerator = previous value + 1 unless given;  a given value can be any integer constant expression (may use earlier enumerators)",
+      "example": {
+        "question": {
+          "en": "Find every value in enum { A, B = 5, C, D = 2, E } and in enum { P = -1, Q, R = Q + 3, S }.",
+          "bn": "enum { A, B = 5, C, D = 2, E } ও enum { P = -1, Q, R = Q + 3, S }-এর প্রতিটি মান বের করো।"
+        },
+        "working": {
+          "en": "First: A = 0 (default), B = 5 (given), C = 6, D = 2 (given), E = 3.\nSecond: P = −1, Q = 0, R = 0 + 3 = 3, S = 4. (Printed by a test program.)",
+          "bn": "প্রথমটি: A = 0 (ডিফল্ট), B = 5 (দেওয়া), C = 6, D = 2 (দেওয়া), E = 3।\nদ্বিতীয়টি: P = −1, Q = 0, R = 0 + 3 = 3, S = 4। (Test program দিয়ে print করে দেখা।)"
+        },
+        "answer": "A=0 B=5 C=6 D=2 E=3; P=-1 Q=0 R=3 S=4"
+      }
+    },
+    {
+      "title": {
+        "en": "Value stored in an unsigned bit-field",
+        "bn": "Unsigned bit-field-এ রাখা মান"
+      },
+      "formula": "stored value = value mod 2^width;  range of an unsigned w-bit field = 0 … 2^w − 1",
+      "example": {
+        "question": {
+          "en": "struct { unsigned a : 3; } x; x.a = 9; What does printf(\"%u\", x.a) print? What is the largest value a 4-bit unsigned field can hold?",
+          "bn": "struct { unsigned a : 3; } x; x.a = 9; printf(\"%u\", x.a) কী print করবে? 4-bit unsigned field সর্বোচ্চ কত রাখতে পারে?"
+        },
+        "working": {
+          "en": "9 = 1001 in binary; only the low 3 bits (001) are kept: 9 mod 2^3 = 9 mod 8 = 1. (The compiler also warns that the value changes from 9 to 1.)\nA 4-bit unsigned field holds 0 … 2^4 − 1 = 15.",
+          "bn": "9 = binary-তে 1001; শুধু নিচের 3টি bit (001) থাকে: 9 mod 2^3 = 9 mod 8 = 1। (Compiler-ও সতর্ক করে যে মান 9 থেকে 1 হয়ে যায়।)\n4-bit unsigned field রাখে 0 … 2^4 − 1 = 15।"
+        },
+        "answer": "prints 1; maximum 15"
+      }
+    }
+  ],
+  "traps": [
+    {
+      "en": "'sizeof(struct) = sum of the members' is usually wrong: {char; int; char} is 12, not 6, on common compilers. Only if no option shows the padded size did the setter assume no padding; padding is implementation-defined (on 32-bit Linux {char; double} is 12, on x86-64 it is 16).",
+      "bn": "'sizeof(struct) = member-গুলোর যোগফল' সাধারণত ভুল: প্রচলিত compiler-এ {char; int; char} হলো 12, 6 নয়। কোনো option-এ padding-সহ আকার না থাকলেই বুঝতে হবে প্রশ্নকর্তা padding ধরেননি; padding implementation-defined (32-bit Linux-এ {char; double} = 12, x86-64-এ 16)।"
+    },
+    {
+      "en": "'sizeof(union) = sum of the members' is wrong: it is the largest member rounded up to the alignment ({char c[5]; int i;} is 8, not 9 or 5).",
+      "bn": "'sizeof(union) = member-গুলোর যোগফল' ভুল: এটি সবচেয়ে বড় member, alignment অনুযায়ী বাড়ানো ({char c[5]; int i;} হলো 8, 9 বা 5 নয়)।"
+    },
+    {
+      "en": "After d.i = 10; d.f = 3.14f; reading d.i does not give 10 or 3: it gives the float's bit pattern read as an int (1078523331 for IEEE-754 3.14f). In a union only the last-written member is reliable.",
+      "bn": "d.i = 10; d.f = 3.14f;-এর পরে d.i পড়লে 10 বা 3 আসে না: float-এর bit pattern int হিসেবে পড়া হয় (IEEE-754 3.14f-এর জন্য 1078523331)। Union-এ শুধু সর্বশেষ লেখা member-ই নির্ভরযোগ্য।"
+    },
+    {
+      "en": "In enum {RED, GREEN = 5, BLUE}, BLUE is 6, not 2: after an explicit value the count continues from that value, not from the position.",
+      "bn": "enum {RED, GREEN = 5, BLUE}-এ BLUE হলো 6, 2 নয়: স্পষ্ট মানের পরে গণনা সেই মান থেকে চলে, অবস্থান থেকে নয়।"
+    },
+    {
+      "en": "if (s1 == s2) does not compile for structures; compare members one by one (memcmp may also compare garbage padding bytes). Assignment s1 = s2 is allowed.",
+      "bn": "Structure-এর জন্য if (s1 == s2) compile হয় না; member ধরে ধরে তুলনা করো (memcmp padding-এর আবর্জনা byte-ও তুলনা করতে পারে)। s1 = s2 assignment চলে।"
+    },
+    {
+      "en": "s.name = \"Rahim\"; is a compile error (an array is not assignable); use strcpy(s.name, \"Rahim\") or initialise at the definition.",
+      "bn": "s.name = \"Rahim\"; compile error (array assign করা যায় না); strcpy(s.name, \"Rahim\") ব্যবহার করো বা definition-এর সময়ই initialise করো।"
+    },
+    {
+      "en": "*p.x is not (*p).x: . has higher precedence, so *p.x means *(p.x) and fails for a pointer p. Write p->x.",
+      "bn": "*p.x মানে (*p).x নয়: .-এর precedence বেশি, তাই *p.x মানে *(p.x), যা pointer p-এর জন্য ব্যর্থ। p->x লেখো।"
+    },
+    {
+      "en": "typedef char *PTR; PTR a, b; makes two pointers, but #define PTR2 char * followed by PTR2 c, d; makes only c a pointer (d is a char) because #define is text substitution.",
+      "bn": "typedef char *PTR; PTR a, b; দুটি pointer বানায়, কিন্তু #define PTR2 char *-এর পরে PTR2 c, d; শুধু c-কে pointer বানায় (d একটি char), কারণ #define শুধু text প্রতিস্থাপন।"
+    },
+    {
+      "en": "'Structured programming' questions (structured vs OOP, objectives of structured programming) are not about the struct keyword; answer with top-down design, sequence/selection/iteration and modules.",
+      "bn": "'Structured programming'-এর প্রশ্ন (structured বনাম OOP, structured programming-এর উদ্দেশ্য) struct keyword নিয়ে নয়; top-down design, sequence/selection/iteration ও module দিয়ে উত্তর দাও।"
+    },
+    {
+      "en": "A union initialiser {65} sets only the first member; writing union Data d = {3.14}; with int as the first member stores 3, not 3.14.",
+      "bn": "Union initialiser {65} শুধু প্রথম member-এ মান দেয়; প্রথম member int হলে union Data d = {3.14}; লিখলে 3 রাখা হয়, 3.14 নয়।"
+    }
+  ],
+  "writtenPlan": [
+    {
+      "question": {
+        "en": "What are the differences between structure and union in C? Explain with examples.",
+        "bn": "C-তে structure ও union-এর মধ্যে পার্থক্য কী? উদাহরণসহ ব্যাখ্যা করুন।"
+      },
+      "askedIn": [
+        "16th NTRCA",
+        "16th NTRCA ICT",
+        "47th BCS CSE",
+        "15th NTRCA CSE"
+      ],
+      "skeleton": {
+        "en": [
+          "Define structure and union, with the declaration syntax of each",
+          "Memory diagram of the same three members as a struct (separate offsets, padding) and as a union (all at offset 0) with the sizes",
+          "Difference table: keyword, memory, size, members active at once, initialisation, effect of writing one member, use",
+          "Example program showing the struct keeping all values and the union keeping only the last one; when to use each"
+        ],
+        "bn": [
+          "Structure ও union-এর সংজ্ঞা, প্রতিটির declaration syntax-সহ",
+          "একই তিনটি member-এর memory diagram: struct হিসেবে (আলাদা offset, padding) ও union হিসেবে (সব offset 0-তে), আকারসহ",
+          "পার্থক্যের টেবিল: keyword, memory, আকার, একসাথে কয়টি member সক্রিয়, initialisation, একটি member লেখার প্রভাব, ব্যবহার",
+          "উদাহরণ program: struct সব মান রাখে আর union শুধু শেষটি; কখন কোনটি ব্যবহার করতে হয়"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Two definitions and a 5-row table with sizes for one example.",
+          "bn": "দুটি সংজ্ঞা এবং একটি উদাহরণের আকারসহ ৫ সারির টেবিল।"
+        },
+        "10": {
+          "en": "Definitions, syntax, the memory diagram, an 8-row table and the example program with output.",
+          "bn": "সংজ্ঞা, syntax, memory diagram, ৮ সারির টেবিল এবং output-সহ উদাহরণ program।"
+        },
+        "20": {
+          "en": "Add padding and alignment, a tagged union (variant record), enum for the tag and typedef, with sizes worked out.",
+          "bn": "এর সাথে padding ও alignment, tagged union (variant record), tag-এর জন্য enum ও typedef, আকারের হিসাবসহ যোগ করুন।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "What is a nested structure in C? Explain with an example.",
+        "bn": "C-তে nested structure কী? উদাহরণসহ ব্যাখ্যা করুন।"
+      },
+      "askedIn": [
+        "SPCBL SAE 2022"
+      ],
+      "skeleton": {
+        "en": [
+          "Define: a structure that has another structure as a member; separate and embedded declarations",
+          "Diagram of struct Employee containing struct Date dob, with the sizes",
+          "Program: initialise with nested braces, access e.dob.year and pe->dob.year, print the output",
+          "Uses (dates, addresses inside records) and the contrast with a self-referential structure (pointer to its own type)"
+        ],
+        "bn": [
+          "সংজ্ঞা: যে structure-এর member হিসেবে আরেকটি structure থাকে; আলাদা ও ভেতরে লেখা declaration",
+          "struct Date dob-সহ struct Employee-এর diagram, আকারসহ",
+          "Program: nested brace দিয়ে initialise, e.dob.year ও pe->dob.year access, output print",
+          "ব্যবহার (record-এর ভেতরে তারিখ, ঠিকানা) এবং self-referential structure-এর (নিজের type-এর pointer) সাথে পার্থক্য"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Definition, the two-struct declaration and the e.dob.year access line.",
+          "bn": "সংজ্ঞা, দুই struct-এর declaration এবং e.dob.year access-এর লাইন।"
+        },
+        "10": {
+          "en": "Definition, diagram, a full program with output and the self-referential contrast.",
+          "bn": "সংজ্ঞা, diagram, output-সহ পূর্ণ program এবং self-referential-এর সাথে পার্থক্য।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "Write a C program to store information using structures with dynamic memory allocation.",
+        "bn": "Dynamic memory allocation ব্যবহার করে structure-এ তথ্য সংরক্ষণের একটি C program লিখুন।"
+      },
+      "askedIn": [
+        "38th BCS (2018)"
+      ],
+      "skeleton": {
+        "en": [
+          "Declare the structure; explain why malloc (the number of records is known only at run time)",
+          "Allocate n * sizeof(struct …) with malloc, check for NULL",
+          "Read and display through e[i].member or (e + i)->member; show the output",
+          "free() the block; mention calloc (zeroed) and realloc (grow the list)"
+        ],
+        "bn": [
+          "Structure declare করো; কেন malloc (record-এর সংখ্যা কেবল run time-এ জানা যায়)",
+          "malloc দিয়ে n * sizeof(struct …) বরাদ্দ, NULL যাচাই",
+          "e[i].member বা (e + i)->member দিয়ে পড়া ও দেখানো; output দেখাও",
+          "free() দিয়ে block ছেড়ে দাও; calloc (শূন্যে ভরা) ও realloc (তালিকা বড় করা) উল্লেখ করো"
+        ]
+      },
+      "marks": {
+        "10": {
+          "en": "Complete program with the NULL check, input/output loop, sample output and free().",
+          "bn": "NULL যাচাই, input/output loop, নমুনা output ও free()-সহ পূর্ণ program।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "What is an enumeration (enum)? Write its rules with examples, and compare enum with #define.",
+        "bn": "Enumeration (enum) কী? উদাহরণসহ এর নিয়ম লিখুন এবং enum-কে #define-এর সাথে তুলনা করুন।"
+      },
+      "askedIn": [],
+      "skeleton": {
+        "en": [
+          "Define enum as named integer constants; syntax and an enum variable",
+          "Value rules on a number line: default 0, previous + 1, explicit values restart the count, duplicates and negatives allowed",
+          "Program using enum Week in a switch, with output",
+          "enum vs #define table (type, scope, automatic values, debugger, memory)"
+        ],
+        "bn": [
+          "Enum-এর সংজ্ঞা: নামযুক্ত integer constant; syntax ও একটি enum variable",
+          "Number line-এ মানের নিয়ম: ডিফল্ট 0, আগেরটি + 1, স্পষ্ট মান থেকে আবার গণনা, একই ও ঋণাত্মক মান চলে",
+          "Switch-এ enum Week ব্যবহারের program, output-সহ",
+          "enum বনাম #define টেবিল (type, scope, স্বয়ংক্রিয় মান, debugger, memory)"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Definition, syntax and the value rules with one worked enum.",
+          "bn": "সংজ্ঞা, syntax এবং একটি হিসাব করা enum-সহ মানের নিয়ম।"
+        },
+        "10": {
+          "en": "Definition, rules, the switch program with output and the enum vs #define table.",
+          "bn": "সংজ্ঞা, নিয়ম, output-সহ switch program এবং enum বনাম #define টেবিল।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "Why is sizeof a structure often larger than the sum of its members? Explain padding and alignment with an example.",
+        "bn": "একটি structure-এর sizeof কেন প্রায়ই member-গুলোর যোগফলের চেয়ে বড় হয়? উদাহরণসহ padding ও alignment ব্যাখ্যা করুন।"
+      },
+      "askedIn": [],
+      "skeleton": {
+        "en": [
+          "Define alignment (why the CPU wants aligned addresses) and padding",
+          "Offset table for {char; int; char} = 12 and the reordered {int; char; char} = 8",
+          "Rules: member offset multiple of its alignment, total multiple of the largest alignment; arrays of structs",
+          "Reordering, #pragma pack / packed attribute, and that padding is implementation-defined"
+        ],
+        "bn": [
+          "Alignment (CPU কেন aligned address চায়) ও padding-এর সংজ্ঞা",
+          "{char; int; char} = 12 এবং নতুন সাজানো {int; char; char} = 8-এর offset টেবিল",
+          "নিয়ম: member-এর offset তার alignment-এর গুণিতক, মোট আকার সবচেয়ে বড় alignment-এর গুণিতক; struct-এর array",
+          "সাজানো বদলানো, #pragma pack / packed attribute, এবং padding যে implementation-defined"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Definitions and one worked offset table.",
+          "bn": "সংজ্ঞা ও একটি হিসাব করা offset টেবিল।"
+        },
+        "10": {
+          "en": "Definitions, two offset tables, the rules and the packing/reordering remedies.",
+          "bn": "সংজ্ঞা, দুটি offset টেবিল, নিয়ম এবং packing/সাজানো বদলের প্রতিকার।"
+        }
+      }
+    },
+    {
+      "question": {
+        "en": "What is structured programming? Write its main objectives and advantages, with an example.",
+        "bn": "Structured programming কী? উদাহরণসহ এর প্রধান উদ্দেশ্য ও সুবিধা লিখুন।"
+      },
+      "askedIn": [
+        "38th BCS (2018)",
+        "SPARRSO 2020",
+        "13th NTRCA CSE (2016)"
+      ],
+      "skeleton": {
+        "en": [
+          "Define structured programming and a structured language (C, Pascal)",
+          "The three control structures (sequence, selection, iteration) as small flowcharts; no goto; single entry and exit",
+          "Example: a C program split into functions (top-down), such as reading marks, computing the grade and printing",
+          "Objectives and advantages (readability, easier testing and maintenance, reuse) and limitations compared with OOP"
+        ],
+        "bn": [
+          "Structured programming ও structured language (C, Pascal)-এর সংজ্ঞা",
+          "তিনটি control structure (sequence, selection, iteration) ছোট flowchart-এ; goto নয়; single entry ও exit",
+          "উদাহরণ: function-এ ভাগ করা (top-down) একটি C program, যেমন marks পড়া, grade হিসাব ও print",
+          "উদ্দেশ্য ও সুবিধা (পাঠযোগ্যতা, সহজ testing ও maintenance, reuse) এবং OOP-এর তুলনায় সীমাবদ্ধতা"
+        ]
+      },
+      "marks": {
+        "5": {
+          "en": "Definition, the three control structures and two advantages.",
+          "bn": "সংজ্ঞা, তিনটি control structure ও দুটি সুবিধা।"
+        },
+        "10": {
+          "en": "Definition, flowcharts of the three structures, a modular C example, objectives and advantages.",
+          "bn": "সংজ্ঞা, তিনটি structure-এর flowchart, একটি modular C উদাহরণ, উদ্দেশ্য ও সুবিধা।"
+        }
+      }
+    }
+  ],
+  "viva": [
+    {
+      "q": {
+        "en": "What is the main difference between a structure and a union?",
+        "bn": "Structure ও union-এর মূল পার্থক্য কী?"
+      },
+      "a": {
+        "en": "Struct members each have their own memory and all hold values together; union members share one memory, so only one holds a value at a time.",
+        "bn": "Struct-এর প্রতিটি member-এর নিজস্ব memory, সবাই একসাথে মান রাখে; union-এর member-রা একটি memory ভাগ করে, তাই একসময়ে একটিই মান রাখে।"
+      }
+    },
+    {
+      "q": {
+        "en": "What is the size of a union?",
+        "bn": "Union-এর আকার কত?"
+      },
+      "a": {
+        "en": "The size of its largest member, rounded up to the alignment of its strictest member.",
+        "bn": "এর সবচেয়ে বড় member-এর আকার, সবচেয়ে কড়া member-এর alignment অনুযায়ী বাড়ানো।"
+      }
+    },
+    {
+      "q": {
+        "en": "Why can sizeof(struct) be more than the sum of its members?",
+        "bn": "sizeof(struct) কেন member-গুলোর যোগফলের চেয়ে বেশি হতে পারে?"
+      },
+      "a": {
+        "en": "The compiler inserts padding bytes so that each member is aligned and arrays of the struct stay aligned.",
+        "bn": "প্রতিটি member aligned রাখতে এবং struct-এর array aligned রাখতে compiler padding byte বসায়।"
+      }
+    },
+    {
+      "q": {
+        "en": "When do you use . and when ->?",
+        "bn": "কখন . আর কখন -> ব্যবহার করা হয়?"
+      },
+      "a": {
+        "en": "Dot with a structure variable (s.x), arrow with a pointer to a structure (p->x, the same as (*p).x).",
+        "bn": "Structure variable-এর সাথে dot (s.x), structure-এর pointer-এর সাথে arrow (p->x, যা (*p).x-এর সমান)।"
+      }
+    },
+    {
+      "q": {
+        "en": "What is the default value of the first enum constant?",
+        "bn": "প্রথম enum constant-এর ডিফল্ট মান কত?"
+      },
+      "a": {
+        "en": "0; each following constant is one more than the previous unless a value is given.",
+        "bn": "0; মান না দিলে পরের প্রতিটি constant আগেরটির চেয়ে 1 বেশি।"
+      }
+    },
+    {
+      "q": {
+        "en": "What is a self-referential structure?",
+        "bn": "Self-referential structure কী?"
+      },
+      "a": {
+        "en": "A structure with a member that points to its own type, such as struct Node { int data; struct Node *next; }, used for linked lists.",
+        "bn": "যে structure-এর একটি member নিজের type-কে point করে, যেমন struct Node { int data; struct Node *next; }, linked list-এ ব্যবহৃত।"
+      }
+    },
+    {
+      "q": {
+        "en": "Can two structure variables be compared with ==?",
+        "bn": "দুটি structure variable কি == দিয়ে তুলনা করা যায়?"
+      },
+      "a": {
+        "en": "No, it is a compile error; compare member by member. Assignment with = is allowed.",
+        "bn": "না, compile error হয়; member ধরে ধরে তুলনা করতে হয়। = দিয়ে assign করা যায়।"
+      }
+    },
+    {
+      "q": {
+        "en": "What is a bit-field?",
+        "bn": "Bit-field কী?"
+      },
+      "a": {
+        "en": "A struct member with a declared width in bits (unsigned ready : 1;) used to pack flags; its address cannot be taken.",
+        "bn": "Bit-এ width দেওয়া struct member (unsigned ready : 1;), flag ঘন করে রাখতে ব্যবহৃত; এর address নেওয়া যায় না।"
+      }
+    },
+    {
+      "q": {
+        "en": "What does typedef do?",
+        "bn": "typedef কী করে?"
+      },
+      "a": {
+        "en": "It gives a new name to an existing type (typedef struct Student Student;); it does not create a new type or memory.",
+        "bn": "এটি বিদ্যমান type-কে নতুন নাম দেয় (typedef struct Student Student;); নতুন type বা memory তৈরি করে না।"
+      }
+    }
+  ],
   "facts": [],
-  "sources": []
+  "sources": [
+    {
+      "url": "https://en.cppreference.com/w/c/language/struct",
+      "title": "cppreference — Struct declaration (member layout, padding, flexible array member)",
+      "accessed": "2026-10-31"
+    },
+    {
+      "url": "https://en.cppreference.com/w/c/language/union",
+      "title": "cppreference — Union declaration (members share storage; size of the largest member)",
+      "accessed": "2026-10-31"
+    },
+    {
+      "url": "https://en.cppreference.com/w/c/language/enum",
+      "title": "cppreference — Enumerations (default 0, previous + 1, int constants)",
+      "accessed": "2026-10-31"
+    },
+    {
+      "url": "https://en.cppreference.com/w/c/language/bit_field",
+      "title": "cppreference — Bit-fields (allowed types, no address, unsigned wrap)",
+      "accessed": "2026-10-31"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Data_structure_alignment",
+      "title": "Wikipedia — Data structure alignment (padding rules, reordering, #pragma pack)",
+      "accessed": "2026-10-31"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Structured_programming",
+      "title": "Wikipedia — Structured programming (sequence, selection, iteration; structured program theorem)",
+      "accessed": "2026-10-31"
+    }
+  ],
+  "solutions": {
+    "G2661": {
+      "answer": {
+        "en": "(a) break. break ends the innermost loop (or switch) at once; continue only skips to the next iteration. (This loop question was grouped here by keyword; it belongs to control statements.)",
+        "bn": "(a) break। break সবচেয়ে ভেতরের loop (বা switch) সাথে সাথে শেষ করে; continue শুধু পরের iteration-এ যায়। (Keyword মিলে যাওয়ায় loop-এর এই প্রশ্নটি এখানে এসেছে; এটি control statement-এর অংশ।)"
+      }
+    },
+    "G4166": {
+      "answer": {
+        "en": "Write the keyword union, an optional tag, and the member declarations in braces, ending with a semicolon: union tag { type1 m1; type2 m2; }; Variables can be defined with the declaration or later (union tag u1, *p;). Members are accessed with . or ->; all members start at the same address, the size is that of the largest member (rounded up for alignment), and an initialiser sets only the first member unless a designated initialiser ({.m2 = …}) is used.",
+        "bn": "union keyword, ঐচ্ছিক tag, তারপর brace-এর ভেতরে member declaration, শেষে semicolon: union tag { type1 m1; type2 m2; }; Variable declaration-এর সাথেই বা পরে define করা যায় (union tag u1, *p;)। Member . বা -> দিয়ে access হয়; সব member একই address থেকে শুরু হয়, আকার সবচেয়ে বড় member-এর (alignment অনুযায়ী বাড়ানো), এবং designated initialiser ({.m2 = …}) না দিলে initialiser শুধু প্রথম member-এ মান দেয়।"
+      }
+    }
+  }
 }
