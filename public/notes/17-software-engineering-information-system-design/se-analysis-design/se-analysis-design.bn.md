@@ -159,17 +159,17 @@
 | চিহ্ন | অর্থ |
 |---|---|
 | `x = a + b` | x গঠিত a ও b দিয়ে |
-| `x = a, b` | বিকল্প — a **অথবা** b |
-| `x = [a]` | পুনরাবৃত্তি — **এক বা তার বেশি** বার |
-| `x = {a}` | ঐচ্ছিক — **শূন্য বা এক** |
-| `qualifier/x` | x হলো সেই key, যা একটি y চিহ্নিত করে |
+| `x = [a \| b]` | নির্বাচন (selection) — a **অথবা** b |
+| `x = {a}` | পুনরাবৃত্তি (iteration) — **শূন্য বা তার বেশি** (`1{a}n` দিয়ে সীমা) |
+| `x = (a)` | ঐচ্ছিক — **শূন্য বা এক** |
+| `@x` | x হলো সেই key, যা এন্ট্রিটি চিহ্নিত করে |
 | `* লেখা *` | মন্তব্য / ছদ্মনাম |
 
 ✍ **কেস A-এর এন্ট্রি।**
 
 ```
 Loan    = loan_id + member_id + accession_no +
-          issue_date + due_date + {return_date}
+          issue_date + due_date + (return_date)
 Member  = member_id + name + phone + membership_type
 Book    = accession_no + isbn + title + author
 ```
@@ -217,7 +217,7 @@ Book    = accession_no + isbn + title + author
 
 *(চিত্র: Chen নোটেশন — MEMBER বর্গ —1— `issues` রোম্বাস —0..*— LOAN (দ্বিবর্গাকার) —0..*— `on loan` রোম্বাস —1— BOOK বর্গ। ক্যাপশন: "LOAN দুর্বল: key = Member_id + Accession_no"।)*
 
-একজন **MEMBER** 0..*টি **LOAN** দেন, আর একটি **BOOK** 0..*টি **LOAN**-এ থাকে; LOAN দুটির সঙ্গেই টোটাল অংশ নেয়, তাই দুটো ছাড়া তার অস্তিত্ব নেই। এতে থাকে Issue_date, Due_date ও {Return_date}। একই দুই এন্টিটি পরে আবার মেলে — ধার, অর্ডার, ভর্তি — তখন ঘটনাটি ধরে রাখতে **তৃতীয় একটি রিলেশন** লাগে।
+একজন **MEMBER** 0..*টি **LOAN** দেন, আর একটি **BOOK** 0..*টি **LOAN**-এ থাকে; LOAN দুটির সঙ্গেই টোটাল অংশ নেয়, তাই দুটো ছাড়া তার অস্তিত্ব নেই। এতে থাকে Issue_date, Due_date ও Return_date। একই দুই এন্টিটি পরে আবার মেলে — ধার, অর্ডার, ভর্তি — তখন ঘটনাটি ধরে রাখতে **তৃতীয় একটি রিলেশন** লাগে।
 
 - ⚠️ **পরীক্ষার ফাঁদ:** MEMBER–LOAN এক লাইনের সাধারণ 1 : N নয়: (সদস্য, বই) জোড়া সময়ের সঙ্গে আবার আসে, তাই এটি **M : N**, এবং সমাধান হলো LOAN-কে **সহায়ক (associative) এন্টিটি** করা।
 
@@ -238,7 +238,7 @@ Book    = accession_no + isbn + title + author
 ```
 MEMBER(member_id, name, phone)
 BOOK(accession_no, isbn, title)
-LOAN(member_id, accession_no, issue_date, due_date, {return_date})
+LOAN(member_id, accession_no, issue_date, due_date, return_date)
 AUTHOR_BOOK(isbn, author_name)
 ```
 

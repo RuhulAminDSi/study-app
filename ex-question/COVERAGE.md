@@ -9,25 +9,25 @@ Bank targets per lesson (spec §5.1): MCQ ≥30, written ≥10, programming/SQL/
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `ics-cloud-datacentre` *(new)* | 109 | 60 | 50 | 4 | Cloud, data centre & servers (60) | 0 / 0 / 0 | — |
-| `ics-web-basics` *(new)* | 78 | 54 | 22 | 4 | Web technology (HTML, CSS, JS) (54) | 0 / 0 / 0 | — |
-| `ics-hardware-architecture` | 76 | 44 | 14 | 0 | Hardware & peripherals (26); Memory (15); BIOS & booting (3) | 6 / 1 / 0 | — |
-| `ics-it-internet` | 46 | 23 | 11 | 0 | Emerging technology (14); ICT, policy & society (4); Banking IT & digital finance (3) | 5 / 0 / 0 | — |
-| `ics-history-computing` | 26 | 22 | 13 | 0 | Computer generations & types (22) | 4 / 0 / 0 | — |
-| `ics-software-os` | 25 | 17 | 6 | 1 | Software types (13); MS Office / Excel (4); Mobile & Android (0) | 4 / 1 / 0 | — |
-| `ics-number-systems` | 12 | 9 | 3 | 0 | Data representation & units (9) | 6 / 1 / 0 | — |
+| `ics-cloud-datacentre` *(new)* | 113 | 64 | 50 | 4 | Cloud, data centre & servers (64) | 30 / 10 / 2 | ✓ |
+| `ics-web-basics` *(new)* | 78 | 54 | 22 | 4 | Web technology (HTML, CSS, JS) (54) | 30 / 10 / 3 | ✓ |
+| `ics-hardware-architecture` | 84 | 51 | 14 | 0 | Hardware & peripherals (28); Memory (17); BIOS & booting (6) | 39 / 13 / 0 | ✓ |
+| `ics-it-internet` | 46 | 23 | 11 | 0 | Emerging technology (14); ICT, policy & society (4); Banking IT & digital finance (3) | 40 / 12 / 0 | ✓ |
+| `ics-history-computing` | 26 | 22 | 13 | 0 | Computer generations & types (22) | 38 / 12 / 0 | ✓ |
+| `ics-software-os` | 26 | 17 | 6 | 1 | Software types (13); MS Office / Excel (4); Mobile & Android (0) | 37 / 12 / 0 | ✓ |
+| `ics-number-systems` | 13 | 10 | 3 | 0 | Data representation & units (10) | 43 / 12 / 0 | ✓ |
 
-Unmapped clusters: Other (98)
+Unmapped clusters: Other (101)
 
 ## Chapter 4 · DLD
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `dld-boolean-algebra` | 94 | 94 | 37 | 5 | Boolean algebra & simplification (51); K-map (43) | 5 / 1 / 0 | — |
-| `dld-number-systems` | 70 | 63 | 34 | 0 | Number systems & codes (63) | 5 / 0 / 0 | — |
-| `dld-logic-gates` | 51 | 51 | 24 | 1 | Logic gates & universal gates (51) | 5 / 0 / 0 | — |
-| `dld-combinational` | 38 | 35 | 16 | 1 | Combinational circuits (35) | 5 / 1 / 0 | — |
-| `dld-sequential` | 32 | 34 | 9 | 1 | Sequential circuits (flip-flops, counters) (34) | 5 / 1 / 0 | — |
+| `dld-boolean-algebra` | 95 | 95 | 37 | 5 | Boolean algebra & simplification (52); K-map (43) | 36 / 14 / 0 | ✓ |
+| `dld-number-systems` | 72 | 64 | 34 | 0 | Number systems & codes (64) | 40 / 12 / 3 | ✓ |
+| `dld-logic-gates` | 51 | 51 | 24 | 1 | Logic gates & universal gates (51) | 40 / 14 / 3 | ✓ |
+| `dld-combinational` | 38 | 35 | 16 | 1 | Combinational circuits (35) | 39 / 16 / 3 | ✓ |
+| `dld-sequential` | 33 | 34 | 9 | 1 | Sequential circuits (flip-flops, counters) (34) | 41 / 16 / 4 | ✓ |
 
 Unmapped clusters: Other (12)
 
@@ -35,8 +35,8 @@ Unmapped clusters: Other (12)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `ca-memory-hierarchy` | 88 | 88 | 39 | 11 | Cache memory (60); Memory organisation (26); Storage devices (2) | 11 / 1 / 0 | — |
-| `ca-cpu-organization` | 71 | 68 | 27 | 1 | Pipelining & superscalar (21); Registers, instructions & addressing (18); CPU design & performance (13) | 14 / 2 / 0 | — |
+| `ca-memory-hierarchy` | 101 | 96 | 39 | 11 | Cache memory (64); Memory organisation (29); Storage devices (3) | 41 / 17 / 0 | ✓ |
+| `ca-cpu-organization` | 76 | 71 | 27 | 1 | Pipelining & superscalar (21); Registers, instructions & addressing (20); CPU design & performance (14) | 46 / 13 / 0 | ✓ |
 
 Unmapped clusters: Other (14)
 
@@ -44,25 +44,25 @@ Unmapped clusters: Other (14)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `net-ip-firewalls` | 238 | 201 | 94 | 10 | IP addressing & subnetting (147); IPv4 vs IPv6 (26); Firewall, IDS/IPS & DMZ (23) | 37 / 14 / 0 | ✓ |
-| `net-application-osi` | 191 | 158 | 77 | 13 | Application & support protocols (DNS, DHCP, NAT, HTTP…) (72); OSI & TCP/IP models (61); Network types & Internet (25) | 4 / 1 / 0 | — |
-| `net-protocols-datalink` | 180 | 115 | 57 | 7 | Network devices (42); Network topology (22); Transmission media & Ethernet (14) | 5 / 0 / 0 | — |
-| `net-transport-crypto` | 130 | 94 | 50 | 3 | Cryptography & digital signature (58); TCP, UDP & congestion control (36) | 4 / 1 / 0 | — |
-| `net-cyber-attacks` *(new)* | 107 | 69 | 37 | 3 | Cyber attacks & malware (69) | 0 / 0 / 0 | — |
-| `net-routing-congestion` | 53 | 35 | 16 | 2 | Routing & routing protocols (20); Delay, bandwidth & throughput numericals (13); Bank / enterprise network design (2) | 3 / 0 / 0 | — |
-| `net-auth-dns-email` | 47 | 31 | 22 | 3 | Security concepts & authentication (30); Blockchain (1) | 3 / 0 / 0 | — |
+| `net-ip-firewalls` | 251 | 209 | 94 | 10 | IP addressing & subnetting (153); IPv4 vs IPv6 (28); Firewall, IDS/IPS & DMZ (23) | 37 / 19 / 0 | ✓ |
+| `net-application-osi` | 203 | 167 | 77 | 13 | Application & support protocols (DNS, DHCP, NAT, HTTP…) (77); OSI & TCP/IP models (63); Network types & Internet (27) | 44 / 18 / 0 | ✓ |
+| `net-protocols-datalink` | 186 | 120 | 57 | 7 | Network devices (44); Network topology (22); Transmission media & Ethernet (14) | 41 / 15 / 1 | ✓ |
+| `net-transport-crypto` | 137 | 97 | 50 | 3 | Cryptography & digital signature (60); TCP, UDP & congestion control (37) | 35 / 11 / 0 | ✓ |
+| `net-cyber-attacks` *(new)* | 111 | 71 | 37 | 3 | Cyber attacks & malware (71) | 42 / 15 / 2 | ✓ |
+| `net-routing-congestion` | 58 | 38 | 16 | 2 | Routing & routing protocols (21); Delay, bandwidth & throughput numericals (15); Bank / enterprise network design (2) | 45 / 16 / 1 | ✓ |
+| `net-auth-dns-email` | 48 | 32 | 22 | 3 | Security concepts & authentication (31); Blockchain (1) | 38 / 13 / 1 | ✓ |
 
-Unmapped clusters: Other (75)
+Unmapped clusters: Other (79)
 
 ## Chapter 10 · SPL
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `spl-data-types-operators` | 252 | 190 | 78 | 2 | Output tracing (62); Programs & programming basics (50); Data types, variables & operators (31) | 5 / 0 / 0 | — |
-| `spl-preprocessor-pointers-arrays-strings` | 74 | 59 | 25 | 3 | Arrays & matrices (25); Pointers & dynamic memory (18); Strings (16) | 7 / 0 / 1 | — |
-| `spl-functions-recursion` | 45 | 47 | 17 | 5 | Recursion & classic programs (26); Call by value vs reference (14); Functions & library (7) | 5 / 0 / 1 | — |
-| `spl-io-files-linking` | 20 | 20 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); Errors & debugging (1) | 3 / 0 / 1 | — |
-| `spl-structures-unions-enums` | 16 | 15 | 3 | 1 | Structure & union (15) | 5 / 0 / 0 | — |
+| `spl-data-types-operators` | 255 | 190 | 78 | 2 | Output tracing (65); Programs & programming basics (49); Data types, variables & operators (29) | 37 / 11 / 4 | ✓ |
+| `spl-preprocessor-pointers-arrays-strings` | 77 | 59 | 25 | 3 | Arrays & matrices (25); Pointers & dynamic memory (18); Strings (16) | 46 / 12 / 6 | ✓ |
+| `spl-functions-recursion` | 47 | 47 | 17 | 5 | Recursion & classic programs (26); Call by value vs reference (14); Functions & library (7) | 40 / 10 / 7 | ✓ |
+| `spl-io-files-linking` | 24 | 23 | 9 | 1 | Compiler, interpreter & linker (14); Input / output functions (5); File handling (3) | 41 / 11 / 6 | ✓ |
+| `spl-structures-unions-enums` | 16 | 15 | 3 | 1 | Structure & union (15) | 39 / 11 / 3 | ✓ |
 
 Unmapped clusters: Other (17)
 
@@ -70,21 +70,21 @@ Unmapped clusters: Other (17)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `oop-constructors-inheritance` | 65 | 55 | 19 | 2 | Inheritance (22); Constructors & destructors (16); OOP programs (9) | 10 / 0 / 0 | — |
-| `oop-philosophy-concepts` | 76 | 52 | 17 | 6 | Java specifics (15); OOP principles (14); Classes & objects (12) | 4 / 0 / 1 | — |
-| `oop-polymorphism-exceptions-threading` | 54 | 45 | 20 | 2 | Polymorphism, overloading & overriding (38); Multithreading (4); Exception handling (3) | 11 / 0 / 2 | — |
+| `oop-constructors-inheritance` | 68 | 57 | 19 | 2 | Inheritance (23); Constructors & destructors (16); OOP programs (10) | 49 / 11 / 3 | ✓ |
+| `oop-philosophy-concepts` | 77 | 52 | 17 | 6 | Java specifics (15); OOP principles (14); Classes & objects (12) | 43 / 11 / 4 | ✓ |
+| `oop-polymorphism-exceptions-threading` | 54 | 45 | 20 | 2 | Polymorphism, overloading & overriding (38); Multithreading (4); Exception handling (3) | 59 / 14 / 5 | ✓ |
 
-Unmapped clusters: Other (9)
+Unmapped clusters: Other (10)
 
 ## Chapter 15 · DSA
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `dsa-recursion-sorting-hashing` | 104 | 97 | 44 | 3 | Sorting (51); Searching (22); Complexity analysis (10) | 5 / 0 / 2 | — |
-| `dsa-data-representation-adt` | 101 | 92 | 43 | 6 | Linked list (35); Stack & queue (31); Data structure basics (11) | 4 / 0 / 0 | — |
-| `dsa-tree-workshop` *(new)* | 66 | 60 | 36 | 4 | Trees & traversals (60) | 0 / 0 / 0 | — |
-| `dsa-design-methods-graph-algorithms` | 60 | 55 | 24 | 5 | Algorithm design (greedy, DP, D&C, NP) (29); Graph algorithms (26) | 4 / 0 / 1 | — |
-| `dsa-heaps-btrees` | 27 | 24 | 11 | 0 | Heap (24) | 5 / 0 / 0 | — |
+| `dsa-recursion-sorting-hashing` | 112 | 103 | 44 | 3 | Sorting (54); Searching (24); Complexity analysis (11) | 36 / 10 / 2 | ✓ |
+| `dsa-data-representation-adt` | 104 | 94 | 43 | 6 | Linked list (35); Stack & queue (32); Data structure basics (11) | 36 / 11 / 1 | ✓ |
+| `dsa-tree-workshop` *(new)* | 71 | 61 | 36 | 4 | Trees & traversals (61) | 30 / 10 / 3 | ✓ |
+| `dsa-design-methods-graph-algorithms` | 64 | 56 | 24 | 5 | Algorithm design (greedy, DP, D&C, NP) (30); Graph algorithms (26) | 39 / 11 / 4 | ✓ |
+| `dsa-heaps-btrees` | 28 | 24 | 11 | 0 | Heap (24) | 42 / 14 / 3 | ✓ |
 | `dsa5` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 | `dsa-lower-bound-np-completeness` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 
@@ -94,51 +94,51 @@ Unmapped clusters: Other (28)
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `db2` | 198 | 152 | 61 | 2 | SQL queries (138); Views, triggers & procedures (8); SQL command types (6) | 8 / 0 / 3 | — |
-| `db1` | 135 | 94 | 40 | 3 | Keys (33); ER model & relationships (33); DBMS concepts & architecture (28) | 4 / 0 / 0 | — |
-| `db5` | 44 | 35 | 17 | 2 | Transactions & ACID (21); Concurrency control & recovery (7); Distributed DB, NoSQL & backup (7) | 5 / 0 / 0 | — |
-| `db3` | 25 | 18 | 10 | 0 | Normalization (18) | 5 / 0 / 0 | — |
-| `db4` | 24 | 18 | 9 | 0 | Indexing, B+ tree & hashing (15); Data warehouse & mining (3) | 3 / 0 / 0 | — |
+| `db2` | 232 | 171 | 61 | 2 | SQL queries (154); Views, triggers & procedures (11); SQL command types (6) | 39 / 11 / 20 | ✓ |
+| `db1` | 154 | 111 | 40 | 3 | ER model & relationships (40); Keys (36); DBMS concepts & architecture (35) | 36 / 11 / 2 | ✓ |
+| `db5` | 62 | 51 | 17 | 2 | Transactions & ACID (31); Concurrency control & recovery (11); Distributed DB, NoSQL & backup (9) | 41 / 15 / 0 | ✓ |
+| `db4` | 31 | 24 | 9 | 0 | Indexing, B+ tree & hashing (19); Data warehouse & mining (5) | 39 / 13 / 4 | ✓ |
+| `db3` | 30 | 23 | 10 | 0 | Normalization (23) | 37 / 11 / 4 | ✓ |
 
-Unmapped clusters: Other (32)
+Unmapped clusters: Other (35)
 
 ## Chapter 17 · SE
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `se-concepts-paradigms-sdlc` | 107 | 69 | 36 | 6 | SDLC models (Waterfall, Agile, Spiral…) (28); SDLC phases (22); Software engineering basics (19) | 4 / 0 / 0 | — |
-| `se-testing-maintenance` | 86 | 65 | 33 | 3 | Testing & quality assurance (65) | 4 / 1 / 0 | — |
-| `se-waterfall-uml-oo` | 42 | 28 | 16 | 0 | Design, UML & patterns (28) | 5 / 1 / 0 | — |
-| `se-analysis-design` | 22 | 9 | 2 | 1 | Requirements & feasibility (7); Banking IT (1); Information systems & ERP (1) | 3 / 1 / 0 | — |
-| `se-project-management` | 14 | 6 | 3 | 0 | Risk, maintenance & tooling (6) | 5 / 0 / 0 | — |
+| `se-concepts-paradigms-sdlc` | 110 | 70 | 36 | 6 | SDLC models (Waterfall, Agile, Spiral…) (28); SDLC phases (22); Software engineering basics (20) | 45 / 17 / 0 | ✓ |
+| `se-testing-maintenance` | 88 | 66 | 33 | 3 | Testing & quality assurance (66) | 44 / 15 / 3 | ✓ |
+| `se-waterfall-uml-oo` | 42 | 28 | 16 | 0 | Design, UML & patterns (28) | 46 / 14 / 4 | ✓ |
+| `se-analysis-design` | 22 | 9 | 2 | 1 | Requirements & feasibility (7); Banking IT (1); Information systems & ERP (1) | 38 / 13 / 2 | ✓ |
+| `se-project-management` | 16 | 7 | 3 | 0 | Risk, maintenance & tooling (7) | 38 / 11 / 2 | ✓ |
 | `se-grasp-patterns` | 0 | 0 | 0 | 0 | — | 4 / 0 / 0 | — |
 
-Unmapped clusters: Other (31)
+Unmapped clusters: Other (32)
 
 ## Chapter 18 · OS
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `os-process-scheduling` | 98 | 81 | 37 | 5 | Processes & threads (45); CPU scheduling (28); Process synchronization (8) | 6 / 1 / 0 | — |
-| `os-linux-raid` *(new)* | 95 | 64 | 28 | 0 | Linux commands (48); RAID (16) | 0 / 0 / 0 | — |
-| `os-memory-management` | 57 | 51 | 28 | 2 | Memory management & paging (51) | 6 / 1 / 0 | — |
-| `os-deadlock` | 44 | 43 | 28 | 1 | Deadlock (43) | 4 / 1 / 0 | — |
-| `os-role-concepts` | 38 | 33 | 14 | 3 | OS concepts & types (33) | 3 / 0 / 0 | — |
-| `os-input-output` | 8 | 9 | 3 | 2 | Disk, files & I/O (9) | 3 / 0 / 0 | — |
+| `os-process-scheduling` | 105 | 86 | 37 | 5 | Processes & threads (48); CPU scheduling (30); Process synchronization (8) | 44 / 14 / 3 | ✓ |
+| `os-linux-raid` *(new)* | 104 | 72 | 28 | 0 | Linux commands (53); RAID (19) | 30 / 10 / 2 | ✓ |
+| `os-memory-management` | 66 | 53 | 28 | 2 | Memory management & paging (53) | 39 / 22 / 0 | ✓ |
+| `os-deadlock` | 46 | 43 | 28 | 1 | Deadlock (43) | 35 / 15 / 0 | ✓ |
+| `os-role-concepts` | 38 | 33 | 14 | 3 | OS concepts & types (33) | 43 / 17 / 0 | ✓ |
+| `os-input-output` | 8 | 9 | 3 | 2 | Disk, files & I/O (9) | 40 / 15 / 0 | ✓ |
 | `os-file-systems` | 0 | 0 | 0 | 0 | — | 3 / 0 / 0 | — |
 
-Unmapped clusters: Other (27)
+Unmapped clusters: Other (29)
 
 ## Chapter 19 · AI
 
 | Lesson | Distinct Qs | Asked | 2023+ | Repeats | Top clusters | Bank MCQ / written / prog | Kit |
 |---|---|---|---|---|---|---|---|
-| `ai-expert-systems-ml` | 42 | 35 | 22 | 0 | Machine learning (33); Association rules (Apriori) (1); Ensemble learning (weak vs strong learners) (1) | 5 / 1 / 0 | — |
-| `ai-search-techniques` | 19 | 18 | 10 | 0 | Search techniques (18) | 6 / 1 / 0 | — |
-| `ai-introduction` | 25 | 12 | 6 | 0 | AI concepts & applications (8); Types of intelligent agents (4) | 2 / 0 / 0 | — |
-| `ai-modern-ml` *(new)* | 11 | 8 | 7 | 0 | Neural networks (5); Generative AI & LLMs (3) | 0 / 0 / 0 | — |
-| `ai-knowledge-representation` | 4 | 3 | 0 | 0 | Knowledge, logic & reasoning (3) | 5 / 0 / 0 | — |
-| `ai-probabilistic-nlp` | 2 | 2 | 2 | 0 | NLP (2) | 3 / 1 / 0 | — |
+| `ai-expert-systems-ml` | 47 | 39 | 24 | 0 | Machine learning (37); Association rules (Apriori) (1); Ensemble learning (weak vs strong learners) (1) | 44 / 14 / 3 | ✓ |
+| `ai-search-techniques` | 19 | 18 | 10 | 0 | Search techniques (18) | 37 / 12 / 4 | ✓ |
+| `ai-introduction` | 26 | 12 | 6 | 0 | AI concepts & applications (8); Types of intelligent agents (4) | 34 / 12 / 3 | ✓ |
+| `ai-modern-ml` *(new)* | 11 | 8 | 7 | 0 | Neural networks (5); Generative AI & LLMs (3) | 30 / 10 / 3 | ✓ |
+| `ai-knowledge-representation` | 4 | 3 | 0 | 0 | Knowledge, logic & reasoning (3) | 35 / 11 / 3 | ✓ |
+| `ai-probabilistic-nlp` | 2 | 2 | 2 | 0 | NLP (2) | 34 / 12 / 3 | ✓ |
 | `ai-ml-applications-regression` | 0 | 0 | 0 | 0 | — | 4 / 0 / 0 | — |
 
-Unmapped clusters: Other (23)
+Unmapped clusters: Other (20)

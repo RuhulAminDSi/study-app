@@ -116,7 +116,7 @@ A deadlock always produces a cycle, so a cycle is **necessary**. But it is **suf
 
 **Reduces away ⇒ a cycle but NO deadlock.** The spare instance of R2 saves it.
 
-✍ **The same graph with 1 instance of R1.** R1 = **1** instance (held by P1), R2 = 3 instances (2 held by P2). Free R1 = 1 − 1 = **0**, free R2 = 3 − 2 = **1**. P3 can finish, but then both counts are 0 and nobody can move → the cycle P1 → R1 → P2 → R2 → P1 **is a real deadlock**.
+✍ **The same graph with 1 instance of R1.** R1 = **1** instance (held by P1), R2 = **2** instances (both held by P2). Free R1 = 1 − 1 = **0**, free R2 = 2 − 2 = **0**: no request — P1's, P2's or P3's — can be paid, so nothing peels → the cycle **is a real deadlock** (P1 and P2 deadlocked; P3 waits behind them).
 
 - ⚠️ **Trap:** never write "cycle = deadlock" without the qualifier. **Deadlock ⇒ cycle** always; **cycle ⇒ deadlock** only for single-instance resources. High-yield: for a single-instance graph "a deadlock **definitely** exists"; for a multiple-instance graph "a deadlock **may** exist".
 - 💡 **Trick:** "**One dot, one answer.**" If every square holds a single dot the cycle **is** the proof. If a square holds two or more dots, someone may still pay for somebody's request — so **peel the graph** and look at what is left.

@@ -10,17 +10,17 @@
 1. **Four constraints:** scope · time · cost, with **quality in the middle**; fix three and the fourth is decided for you.
 2. A project is **temporary** and produces a **unique** result; **scope creep** = uncontrolled growth of work with no change to time or cost; the cure is **configuration management (CM)**.
 3. **COCOMO:** `E = a × (KLOC)^b × ∏EM` and `T_DEV = c × (E)^d`. **c = 2.5 in every mode**; only a, b, d change.
-4. Constants — **organic** a = **2.5**, b = **1.05**, d = **0.38**; **semi-detached** a = **3.0**, b = **1.12**, d = **0.35**; **embedded** a = **3.6**, b = **1.20**, d = **0.32**.
+4. Constants — **organic** a = **2.4**, b = **1.05**, d = **0.38**; **semi-detached** a = **3.0**, b = **1.12**, d = **0.35**; **embedded** a = **3.6**, b = **1.20**, d = **0.32**.
 5. Three modes only: organic, semi-detached, embedded. **"Distributed" is not a mode.** Basic COCOMO has **three** modes.
-6. **Function-point weights:** **ILF 7 · EIF 5 · EO 4 · EI 3 · EQ 2** — `UFP = Σ (count × weight)`, `FP = UFP × CAF`. **Five** element types, not six. **CAF multiplies**, never adds.
-7. **CAF:** ≤ 50 % → 0 · 51–75 % → **0.40** · 76–100 % → **0.60** · 101–150 % → **0.85** · > 150 % → **1.00**.
+6. **Function-point weights:** **ILF 7 · EIF 5 · EO 4 · EI 3 · EQ 3** — `UFP = Σ (count × weight)`, `FP = UFP × VAF`. **Five** element types, not six. **VAF multiplies**, never adds.
+7. **VAF** = `0.65 + 0.01 × ΣFi` — 14 general system characteristics, each rated 0–5 ⇒ VAF lies in **0.65–1.35**; a VAF of 0.60 is impossible.
 8. **PERT:** `t(e) = (o + 4m + p) ÷ 6` and `σ = (p − o) ÷ 6`; project σ = `√(Σ σ²)` along the critical path.
 9. **CPM:** forward pass `ES = max(EF of predecessors)`, `EF = ES + duration`; backward pass `LF = min(LS of successors)`, `LS = LF − duration`. **Total float = LS − ES = LF − EF.**
 10. The **critical path** is the **longest** path with **zero** float; its length **is** the project duration. Free float ≤ total float.
 11. **Risk exposure = probability × cost**; **RPI = P(1–5) × I(1–5)**, max **25**. Four responses: **avoid · reduce · transfer · accept**.
 12. `MTBF = 1 ÷ failure rate`, `Availability A = MTBF ÷ (MTBF + MTTR)`; productivity = `LOC ÷ person-months`; defect density = `defects ÷ KLOC`.
 13. Earned value: `SV = EV − PV`, `CV = EV − AC`, `SPI = EV ÷ PV`, `CPI = EV ÷ AC`.
-14. **LOC is not a size measure; function points are.** Gantt shows duration but **no** dependencies.
+14. **LOC is a language-dependent size measure; function points are language-independent.** Gantt shows duration but **no** dependencies.
 
 **Legend:** yellow = key term · red circle = must-memorise fact · purple box = memory trick · red box = exam trap · green = worked example.
 
@@ -30,7 +30,7 @@
 
 ## 1. The Topic on One Page (cover)
 
-*(Doodle: a yellow ellipse in the centre reading "PROJECT MANAGEMENT — topic mind-map" with eight spokes out to eight rounded boxes — Scope · time · cost (quality in the middle) in blue; COCOMO a, b, c, d ★, LOC vs function points / UFP × CAF ★, Four constraints ★, CPM · PERT ★ with t(e), σ, slack ★, Critical path ★ in red; Risk register · responses and Gantt · earned value in green. Red = high-yield, green = method / applied.)*
+*(Doodle: a yellow ellipse in the centre reading "PROJECT MANAGEMENT — topic mind-map" with eight spokes out to eight rounded boxes — Scope · time · cost (quality in the middle) in blue; COCOMO a, b, c, d ★, LOC vs function points / UFP × VAF ★, Four constraints ★, CPM · PERT ★ with t(e), σ, slack ★, Critical path ★ in red; Risk register · responses and Gantt · earned value in green. Red = high-yield, green = method / applied.)*
 
 **Cover high-yield list**
 
@@ -155,38 +155,38 @@ A typical plan carries: objective and scope statement, WBS, resource and staffin
 ✍ **Worked example.** 2000 LOC with 10 defects ⇒ KLOC = 2, defect density = 10 ÷ 2 = **5 per KLOC**. 12,000 LOC in 15 person-months ⇒ productivity = **800 LOC/person-month**. 20 defects over 400 FP ⇒ **0.05 defects/FP**, language-free.
 
 - 💡 **Memory trick — why LOC productivity is contested ★.** (i) the same function can take **3× more lines** in COBOL than in Java; (ii) verbose code **raises** LOC and so **raises** the "productivity" number; (iii) it is unavailable exactly when the estimate is needed. Use **FP, feature or use-case points**.
-- ⚠️ **Exam trap:** **LOC is not a size measure** in the ISO/IFB sense; **FPs are.** And "defects per KLOC" over **test code** is meaningless — test modules sit inside KLOC but their defects are not product defects.
+- ⚠️ **Exam trap:** **LOC is a size measure** too, but it depends on the language and is known only after coding; **FP** is language-independent and can be counted from the requirements. And "defects per KLOC" over **test code** is meaningless — test modules sit inside KLOC but their defects are not product defects.
 
 ## 6. Function Point Analysis
 
 **Definition.** **Function Point Analysis (FPA)** — A. J. Albrecht, late 1970s — measures a system by the **functionality a user can see**, not by the code. It counts **five** element types at the **system boundary**, weights them, sums to a **UFP**, adjusts for complexity, and the result is the function point count.
 
-| Type | Count | What it is |
+| Type | Weight | What it is |
 |---|---|---|
 | **EI** external input | × **3** | unique data **into** the system from outside |
 | **EO** external output | × **4** | unique data **out** that is **derived** (report, calculated screen) |
-| **EQ** external inquiry | × **2** | a **read-only** retrieval, no derivation — a search or lookup |
+| **EQ** external inquiry | × **3** | a **read-only** retrieval, no derivation — a search or lookup |
 | **ILF** internal logical file | × **7** | a **user-identifiable** group of data **inside** the boundary |
 | **EIF** external interface file | × **5** | user-identifiable data **outside**, maintained elsewhere |
 
 **Two equations**
 
 - `UFP` = Σ (count of each type × its weight)
-- `FP` = `UFP × CAF`
-- **CAF:** ≤ 50 % improvement → 0 · 51–75 % → **0.40** · 76–100 % → **0.60** · 101–150 % → **0.85** · > 150 % → **1.00**
+- `FP` = `UFP × VAF`
+- **VAF** = `0.65 + 0.01 × ΣFi` — 14 general system characteristics, each rated 0–5 ⇒ VAF lies in **0.65–1.35**
 
 *(Doodle: a dashed black box labelled SYSTEM with two blue ILF rectangles inside it; three red boxes EI, EQ, EO on the left with blue arrows pointing into the boundary, one green EIF box on the right with a green arrow out of the boundary; caption "count only what crosses the boundary".)*
 
 ✍ **Worked example — payroll system.** EI = 20, EO = 8, EQ = 12, ILF = 6, EIF = 3.
 
-1. `UFP = 20×3 + 8×4 + 12×2 + 6×7 + 3×5 = 60 + 32 + 24 + 42 + 15 = 173`
-2. Complexity improvement potential **80 %** ⇒ `CAF = 0.60`
-3. `FP = 173 × 0.60 = 103.8 ≈ 104 function points`; roughly `104 × 40 LOC ≈ 4.2 KLOC` for COCOMO
+1. `UFP = 20×3 + 8×4 + 12×3 + 6×7 + 3×5 = 60 + 32 + 36 + 42 + 15 = 185`
+2. The 14 characteristics sum to `ΣFi = 42` ⇒ `VAF = 0.65 + 0.42 = 1.07`
+3. `FP = 185 × 1.07 = 197.95 ≈ 198 function points`; at about 40 LOC per FP ≈ `7.9 KLOC` for COCOMO
 
 **The nature of an FP.** An FP is a **high-level** measure — a system of the same kind may run to a few hundred FPs or several thousand, so the numbers are not directly comparable; the rough conversion used in tenders only is **1 FP ≈ 35–50 LOC**.
 
-- 💡 **Memory trick:** weight order, high to low: **ILF 7 > EIF 5 > EO 4 > EI 3 > EQ 2** — "the **I**nternal **L**ogical **F**ile is the heavyweight, the inquiry the featherweight". A field that arrives without changing behaviour is **not** an EI; a report that merely repeats stored data is an **EQ**, not an EO.
-- ⚠️ **Exam trap:** there are **five** element types, not six — "external inquiries" is the third, not an extra one. **CAF multiplies**; it is never added. FP counts the user's view, so it must be re-counted whenever the boundary moves.
+- 💡 **Memory trick:** weight order, high to low: **ILF 7 > EIF 5 > EO 4 > EI 3 = EQ 3** — "the **I**nternal **L**ogical **F**ile is the heavyweight, input and inquiry the lightest". A field that arrives without changing behaviour is **not** an EI; a report that merely repeats stored data is an **EQ**, not an EO.
+- ⚠️ **Exam trap:** there are **five** element types, not six — "external inquiries" is the third, not an extra one. **VAF multiplies** the UFP and can only be **0.65–1.35** — a VAF of 0.60 is impossible. FP counts the user's view, so it must be re-counted whenever the boundary moves.
 
 ## 7. Estimation & COCOMO
 
@@ -201,23 +201,23 @@ A typical plan carries: objective and scope statement, WBS, resource and staffin
 
 | Project mode | Basic | Full | Det. | b | c | d |
 |---|---|---|---|---|---|---|
-| **Organic** | **2.5** | 3.2 | 3.2 | 1.05 | 2.5 | 0.38 |
+| **Organic** | **2.4** | 3.2 | 3.2 | 1.05 | 2.5 | 0.38 |
 | **Semi-detached** | 3.0 | 3.0 | 3.0 | 1.12 | 2.5 | 0.35 |
-| **Embedded** | **3.6** | 4.3 | 4.3 | 1.20 | 2.5 | 0.32 |
+| **Embedded** | **3.6** | 2.8 | 2.8 | 1.20 | 2.5 | 0.32 |
 
 - **Organic** — small, familiar, few rigid rules. **Semi-detached** — medium, mixed team, some rules. **Embedded** — tight constraints, hardware and regulations.
-- **Basic** = size only. **Full / intermediate** = size × mode. **Detailed** adds `∏EM`: product, platform, personnel and project multipliers (≈ 0.75–1.40, worst case 0.65), so the effective **a** rises to about **3.2** for organic. COCOMO II (1997) drops the modes for size factors including **schedule stretch**.
+- **Basic** = size and mode only. **Full / intermediate** multiplies by `∏EM` from **15 cost drivers** (product, platform, personnel, project) and uses its own a: **3.2 / 3.0 / 2.8**. **Detailed** keeps those a and b but makes the multipliers phase-sensitive. COCOMO II (1997) drops the modes for size factors including **schedule stretch**.
 
-*(Doodle: a blue KLOC box labelled "size" pointing into a yellow box holding the two formulas E = a·(KLOC)^b and T = c·E^d with the note "× ∏EM in detailed", which points out to two green boxes, Effort and Time; caption "size in, effort and time out".)*
+*(Doodle: a blue KLOC box labelled "size" pointing into a yellow box holding the two formulas E = a·(KLOC)^b and T = c·E^d with the note "× ∏EM in intermediate", which points out to two green boxes, Effort and Time; caption "size in, effort and time out".)*
 
 ✍ **Worked example — organic, 10 KLOC.**
 
-1. `10^1.05 ≈ 11.220`; `E = 2.5 × 11.220 = 28.05 person-months` (a = 2.5, b = 1.05)
-2. `T_DEV = 2.5 × (28.05)^0.38 = 2.5 × 3.549 = 8.87 months`; average staffing = `28.05 ÷ 8.87 ≈ 3.2 people`
+1. `10^1.05 ≈ 11.220`; `E = 2.4 × 11.220 = 26.93 person-months` (a = 2.4, b = 1.05)
+2. `T_DEV = 2.5 × (26.93)^0.38 = 2.5 × 3.495 = 8.74 months`; average staffing = `26.93 ÷ 8.74 ≈ 3.1 people`
 
-✍ **Second example.** Detailed organic, a = 3.2: `E = 3.2 × 11.220 = 35.90 ≈ 35.9 person-months`, `T_DEV = 2.5 × 35.9^0.38 ≈ 9.7 months`. If the question supplies **its own a**, use that a.
+✍ **Second example.** Intermediate organic, all drivers nominal (`∏EM = 1`), a = 3.2: `E = 3.2 × 11.220 = 35.90 ≈ 35.9 person-months`, `T_DEV = 2.5 × 35.9^0.38 ≈ 9.7 months`. If the question supplies **its own a**, use that a.
 
-✍ **Worked example 3 — detailed mode.** Embedded project, 8 KLOC; `∏EM = 0.95 × 0.85 × 1.10 × 1.20 = 1.066`; `8^1.20 ≈ 12.13`. `E = 4.3 × 12.13 × 1.066 = 4.3 × 12.93 ≈ 55.6 person-months`; `T = 2.5 × (55.6)^0.38 ≈ 11.5 months`.
+✍ **Worked example 3 — intermediate mode.** Embedded project, 8 KLOC; `∏EM = 0.95 × 0.85 × 1.10 × 1.20 = 1.066`; `8^1.20 ≈ 12.13`. `E = 2.8 × 12.13 × 1.066 = 2.8 × 12.93 ≈ 36.2 person-months`; `T = 2.5 × (36.2)^0.32 ≈ 7.9 months`.
 
 - 📌 **Using it in practice:** choose the mode from the **constraints**, not from the wish — only an avionics display is truly **embedded**; a payroll screen and an avionics display are both "people writing code", but only one is embedded. Re-baseline whenever the specification changes: that is normal management, not failure.
 - 💡 **Memory trick:** read the constants as a story: a harder project ⇒ bigger **a** (more effort per KLOC) and bigger **b** (effort grows faster). Bigger **d** = more time per unit effort. And **c = 2.5 everywhere**.
@@ -312,7 +312,7 @@ Sommerville folds these into three — technical · organisational · project, w
 
 ## 10. Scheduling II — PERT, Gantt & Control
 
-**PERT (Malcolm Rose, Polaroid, 1958).** The same network as CPM, but every duration is **uncertain**, so it is given as three estimates — optimistic **o**, most likely **m**, pessimistic **p** — and converted to an **expected time** plus a **standard deviation**.
+**PERT (US Navy, Polaris programme, 1958).** The same network as CPM, but every duration is **uncertain**, so it is given as three estimates — optimistic **o**, most likely **m**, pessimistic **p** — and converted to an **expected time** plus a **standard deviation**.
 
 **The two PERT equations**
 
@@ -352,9 +352,9 @@ Network A→B, A→C, B→D, C→D. Path A–B–D = 5.5 + 6 + 3 = **14.5 d**; p
 |---|---|
 | Triple constraint: scope · time · cost, quality inside | Baseline = approved scope–schedule–cost |
 | COCOMO: `E = a·(KLOC)^b·∏EM`; `T = c·E^d` | Modes: organic · semi-detached · embedded |
-| Organic a = 2.5 / 3.2 / 3.2 · b = 1.05 · d = 0.38 | Semi-detached a = 3.0 · b = 1.12 · d = 0.35 |
-| Embedded a = 3.6 / 4.3 / 4.3 · b = 1.20 · d = 0.32 | `c = 2.5` in **every** mode |
-| FP weights: ILF 7 · EIF 5 · EO 4 · EI 3 · EQ 2 | `FP = UFP × CAF` (0.40 / 0.60 / 0.85 / 1.00) |
+| Organic a = 2.4 / 3.2 / 3.2 · b = 1.05 · d = 0.38 | Semi-detached a = 3.0 · b = 1.12 · d = 0.35 |
+| Embedded a = 3.6 / 2.8 / 2.8 · b = 1.20 · d = 0.32 | `c = 2.5` in **every** mode |
+| FP weights: ILF 7 · EIF 5 · EO 4 · EI 3 · EQ 3 | `FP = UFP × VAF`; `VAF = 0.65 + 0.01ΣFi` |
 | `t(e) = (o + 4m + p)/6` · `σ = (p − o)/6` | Float = LS − ES = LF − EF; critical = 0 |
 | `ES = max(EF preds)` · `EF = ES + d` | `LF = min(LS succs)` · `LS = LF − d` |
 | Risk exposure = P × impact | `RPI = P(1-5) × I(1-5)`, max 25 |
@@ -365,8 +365,8 @@ Network A→B, A→C, B→D, C→D. Path A–B–D = 5.5 + 6 + 3 = **14.5 d**; p
 1. Basic COCOMO has **three** modes, none called distributed
 2. FP counts the **user's** view, not the code
 3. Five FP types; ILF carries weight 7
-4. CAF multiplies the UFP, never adds
-5. LOC is **not** a size measure; FP is
+4. VAF multiplies the UFP; range 0.65–1.35
+5. LOC depends on the language; FP does **not**
 6. Defect density = defects ÷ KLOC
 7. `t(e) = (o + 4m + p)/6`
 8. `σ = (p − o)/6`
@@ -377,7 +377,7 @@ Network A→B, A→C, B→D, C→D. Path A–B–D = 5.5 + 6 + 3 = **14.5 d**; p
 
 **Top traps.** "Distributed" is not a COCOMO mode · effort is person-months, duration is months · the schedule equation takes E, not KLOC · there are five FP types, not six · an output with no derivation is an EQ · slack ≠ free float · critical path is the longest, not the shortest · a risk **score** is probability × impact, not a probability alone.
 
-**All tricks together.** Fix three constraints, the fourth is decided · a change is a change only against a baseline · WBS leaves must be 100 % assigned · add people to a late project and it gets later · ILF is the heavyweight, EQ the featherweight · read the constants as a story, c = 2.5 always · name the dependency "first happens, then happens" · zero float means critical · o, 4m, p is the PERT weight · transfer the consequence, not the probability.
+**All tricks together.** Fix three constraints, the fourth is decided · a change is a change only against a baseline · WBS leaves must be 100 % assigned · add people to a late project and it gets later · ILF is the heavyweight, EI and EQ the lightest · read the constants as a story, c = 2.5 always · name the dependency "first happens, then happens" · zero float means critical · o, 4m, p is the PERT weight · transfer the consequence, not the probability.
 
 *(Doodle: four circles in a chain — a blue "o m p" circle, then a red "t(e)" circle with the arrow labelled "÷ 6", then a red "CP" circle with the arrow labelled "longest", then a green "±σ" circle with the arrow labelled "√ Σσ²"; a purple return arrow under the chain captioned "if the critical path slips, the project slips".)*
 
@@ -411,7 +411,7 @@ Network A→B, A→C, B→D, C→D. Path A–B–D = 5.5 + 6 + 3 = **14.5 d**; p
 
 *(Doodle: three bars on a small axis — E (red), T (blue) and staff (red) — captioned "122 pm ÷ 15.5 mo ≈ 8 people on average", with the note "peak staffing is always higher"; the figure caption reads "effort → time → headcount; state the mode and the size first".)*
 
-**Also practise (written).** ① FP for a library system with 80 % complexity potential ② COCOMO detailed mode with `∏EM = 0.85` ③ PERT project σ over a 3-activity critical path.
+**Also practise (written).** ① FP for a library system with `ΣFi = 30` ② COCOMO intermediate mode with `∏EM = 0.85` ③ PERT project σ over a 3-activity critical path.
 
 **Before the exam ✓**
 

@@ -188,8 +188,9 @@ the shrinking phase.
 
 ### Exam trap ✍ what 2PL guarantees
 
-**Guarantees:** **conflict-serialisable** schedules (no cycle forms in the precedence graph) and, since no
-lock is dropped before commit, **strict** and so **recoverable** ones. **Does not guarantee:**
+**Guarantees:** **conflict-serialisable** schedules (no cycle forms in the precedence graph) — but **not**
+strict or even recoverable ones on its own: a lock may be released before commit, so cascading rollback can
+happen; **strict 2PL** fixes that. **Does not guarantee:**
 **freedom from deadlock** or from starvation — two transactions locking in opposite order deadlock under 2PL,
 the commonest wrong claim here.
 
@@ -197,8 +198,8 @@ the commonest wrong claim here.
 
 > **Grow then shrink: first only open doors, then only close them.**
 
-**Rigorous 2PL** holds every **X** lock until commit, so the shrinking phase goes to the end — strict
-schedules, **no cascading rollback**. **Conservative 2PL** declares every needed lock **before the
+**Strict 2PL** holds every **X** lock until commit — strict schedules, **no cascading rollback**;
+**rigorous 2PL** holds **every** lock, S and X, until commit. **Conservative 2PL** declares every needed lock **before the
 transaction starts**, so a missing lock means it never starts: **deadlock-free**, at a large cost in
 concurrency.
 
@@ -482,7 +483,7 @@ $.library.books[*].title
 | Non-repeatable: value changed | Phantom: row arrived |
 | S + S = compatible | S + X, X + X = conflict |
 | 2PL: grow, then shrink | 2PL ≠ deadlock-free |
-| Rigorous 2PL ⇒ strict | Conservative ⇒ no deadlock |
+| Strict / rigorous 2PL ⇒ strict | Conservative ⇒ no deadlock |
 | Wait-for cycle = deadlock | Abort one; or fix order |
 | Timestamps: may abort | OCC: validate at commit |
 | MVCC: snapshot readers | RU < RC < RR < Serial |
@@ -541,7 +542,7 @@ Try first, then check.
    - d. X(A) with X(A)
 3. Two-Phase Locking guarantees:
    - a. Freedom from deadlock
-   - b. Conflict-serialisable and recoverable schedules
+   - b. Conflict-serialisable schedules
    - c. Freedom from cascading rollback only
    - d. That no transaction is ever aborted
 4. A **phantom** occurs when:
@@ -600,8 +601,9 @@ update on crash.
 2. **Lock matrix (2)** — `S(A)` with `S(A)` is the **only** compatible pair; `S` with `X`, `X` with `S`
    and `X` with `X` all conflict. Many readers, one writer, never two writers. *(2)*
 3. **2PL, and its limits (2)** — **growing phase** acquires and releases nothing, **shrinking phase**
-   releases and acquires nothing; the transaction commits at the end of the shrinking phase. Because no
-   lock is dropped before commit, the schedule is **conflict-serialisable and strict (hence recoverable)**.
+   releases and acquires nothing; the schedule is **conflict-serialisable**, but basic 2PL may release a
+   lock before commit, so it is not necessarily recoverable; **strict 2PL** (X locks held to commit) prevents
+   cascading rollback.
    It does **not** guarantee **freedom from deadlock** or from starvation. *(2)*
 4. **Deadlock (1)** — build a **wait-for graph** with an edge Ti→Tj when Ti waits for Tj; a **cycle** means
    deadlock, detected by a periodic search, broken by **aborting one transaction** and restarting it.

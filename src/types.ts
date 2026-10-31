@@ -301,6 +301,10 @@ export interface Translations {
   pdfOpenNewTab: string
   pdfPreviewTitle: string
   pdfNoPreview: string
+  pdfZoomIn: string
+  pdfZoomOut: string
+  pdfZoomFit: string
+  pdfZoomLabel: string
   pdfLanguage: string
   pdfPages: string
   pdfFileSize: string
@@ -414,6 +418,19 @@ export interface Translations {
   ekShowLess: string
   ekViva: string
   ekReveal: string
+  ekTopicsDeep: string
+  ekTopicAsked: string
+  ekKeyPoints: string
+  ekExamples: string
+  ekSolution: string
+  ekPracticeExample: string
+  ekKindMcq: string
+  ekKindWritten: string
+  ekExampleN: string
+  pyqLinksTitle: string
+  pyqLinkKit: string
+  pyqLinkKitMeta: string
+  pyqLinkSetMeta: string
   ekFacts: string
   ekAsOf: string
   ekSources: string

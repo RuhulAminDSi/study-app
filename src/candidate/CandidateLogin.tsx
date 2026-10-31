@@ -11,9 +11,12 @@ import './candidate.css'
 
 const wantsAdmin = (next?: string) => next === 'admin' || !!next?.startsWith('admin/')
 
-/** Where to go after signing in: admins to the admin panel, candidates to Study Hub (never the admin panel). */
+/**
+ * Where to go after signing in: the page asked for, else the Study Hub dashboard. Only admins may go on
+ * to the admin panel; they reach it from the navbar's Admin button or a `#/admin` link.
+ */
 function destination(kind: 'candidate' | 'admin', next?: string): string {
-  if (kind === 'admin') return wantsAdmin(next) ? next! : 'admin'
+  if (kind === 'admin') return next ?? ''
   return next && !wantsAdmin(next) ? next : ''
 }
 
@@ -35,11 +38,8 @@ export default function CandidateLogin({ next }: { next?: string }) {
   // Already signed in (e.g. a bookmarked login link): go straight on. A candidate heading for the admin
   // panel stays here instead, so they can sign in with an admin account.
   useEffect(() => {
-    if (wantsAdmin(next)) {
-      if (adminAuth.isAuthenticated) navigate(destination('admin', next), { replace: true })
-    } else if (candidateAuth.isSignedIn) {
-      navigate(destination('candidate', next), { replace: true })
-    }
+    if (adminAuth.isAuthenticated) navigate(destination('admin', next), { replace: true })
+    else if (candidateAuth.isSignedIn && !wantsAdmin(next)) navigate(destination('candidate', next), { replace: true })
   }, [candidateAuth.isSignedIn, adminAuth.isAuthenticated, next])
 
   async function handleSubmit(e: FormEvent) {
@@ -49,10 +49,13 @@ export default function CandidateLogin({ next }: { next?: string }) {
     setSubmitting(true)
     try {
       const res = await candidateApi.signIn(identifier, password)
+      // One session at a time, so signing out later ends it and the reader is who just signed in.
       if (res.kind === 'admin') {
+        candidateAuth.signOut()
         adminAuth.login(res.token, res.user)
         navigate(destination('admin', next), { replace: true })
       } else {
+        adminAuth.logout()
         candidateAuth.signIn(res.token, res.candidate)
         navigate(destination('candidate', next), { replace: true })
       }

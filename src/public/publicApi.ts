@@ -154,6 +154,8 @@ export interface ExamKitData {
   traps: Bi[]
   writtenPlan: { question: Bi; askedIn: string[]; skeleton: { en: string[]; bn: string[] }; marks: Partial<Record<'5' | '10' | '20', Bi>> }[]
   viva: { q: Bi; a: Bi }[]
+  topics?: { name: string; overview: Bi; points: Bi[]; examples: { question: Bi; working: Bi; answer: Bi }[] }[]
+  solutions?: Record<string, { answer: Bi; example?: Bi }>
   facts: string[]
   factsResolved?: { id: string; en: string; bn: string; asOf: string; status: string; sources: string[] }[]
   sources: { url: string; title: string; accessed: string }[]
@@ -175,10 +177,10 @@ export interface ExamKitIndexEntry {
 }
 
 /** Published kits; the reader shows the Exam Kit tab only for lessons listed here. */
-export function fetchExamKitIndex(): Promise<ExamKitIndexEntry[]> {
-  return cachedPublicFetch<ExamKitIndexEntry[]>('/exam-kits')
+export function fetchExamKitIndex(onFresh?: (data: ExamKitIndexEntry[]) => void): Promise<ExamKitIndexEntry[]> {
+  return cachedPublicFetch<ExamKitIndexEntry[]>('/exam-kits', onFresh)
 }
 
-export function fetchExamKit(slug: string): Promise<ExamKitResponse> {
-  return cachedPublicFetch<ExamKitResponse>(`/exam-kits/${encodeURIComponent(slug)}`)
+export function fetchExamKit(slug: string, onFresh?: (data: ExamKitResponse) => void): Promise<ExamKitResponse> {
+  return cachedPublicFetch<ExamKitResponse>(`/exam-kits/${encodeURIComponent(slug)}`, onFresh)
 }

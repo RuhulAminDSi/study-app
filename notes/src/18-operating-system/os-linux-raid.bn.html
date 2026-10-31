@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>Linux কমান্ড ও RAID: রিভিশন নোট</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+<!-- SHEET 1: cover -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux কমান্ড ও RAID</span><span>তারিখ: ৩০.১০.২০২৬</span></div>
+  <div class="cover-band"><span>সরকারি IT নিয়োগ: রিভিশন নোটবুক</span><span>★ টপারের নোট</span></div>
+  <h1 class="title" style="font-size:22pt"><span class="u">Linux কমান্ড ও RAID</span></h1>
+  <p class="subtitle">ফাইল সিস্টেম · পারমিশন · প্রসেস · নেটওয়ার্ক · RAID লেভেল: পরীক্ষা-প্রস্তুত ৮টি শিটে</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 600 200" width="600">
+      <g class="w">
+        <rect x="10" y="10" width="180" height="55" rx="6" fill="#ffeaea" stroke="#d32f2f" stroke-width="2"/>
+        <text x="100" y="30" text-anchor="middle" class="r" font-weight="bold" font-size="11">Linux কমান্ড</text>
+        <text x="100" y="48" text-anchor="middle" font-size="9">(★ সর্বোচ্চ পরীক্ষিত)</text>
+        <rect x="210" y="10" width="180" height="55" rx="6" fill="#fff9e6" stroke="#b8860b" stroke-width="2"/>
+        <text x="300" y="30" text-anchor="middle" font-weight="bold" font-size="11">RAID</text>
+        <text x="300" y="48" text-anchor="middle" font-size="9">লেভেল ০/১/৫/৬/১০ (★)</text>
+        <rect x="410" y="10" width="170" height="55" rx="6" fill="#eef6ff" stroke="#1d3f8f" stroke-width="2"/>
+        <text x="495" y="30" text-anchor="middle" class="r" font-weight="bold" font-size="11">পারমিশন</text>
+        <text x="495" y="48" text-anchor="middle" font-size="9">chmod / chown (★)</text>
+        <rect x="30" y="90" width="240" height="100" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+        <text x="150" y="110" text-anchor="middle" font-weight="bold" font-size="10">মূল কমান্ড</text>
+        <text x="150" y="128" text-anchor="middle" font-size="9">ls -la · pwd · cd · mkdir · rm -rf</text>
+        <text x="150" y="143" text-anchor="middle" font-size="9">grep -r · find · tail -f · head</text>
+        <text x="150" y="158" text-anchor="middle" font-size="9">chmod NNN · chown · ps aux</text>
+        <text x="150" y="173" text-anchor="middle" font-size="9">df -h · free -m · ip a · wget</text>
+        <rect x="330" y="90" width="250" height="100" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+        <text x="455" y="110" text-anchor="middle" font-weight="bold" font-size="10">RAID তালিকা</text>
+        <text x="455" y="128" text-anchor="middle" font-size="9">RAID 0: N×disk, ০ fault (striping)</text>
+        <text x="455" y="143" text-anchor="middle" font-size="9">RAID 1: disk_size, ১ fault (mirroring)</text>
+        <text x="455" y="158" text-anchor="middle" font-size="9">RAID 5: (N-1)×disk, ১ fault ★</text>
+        <text x="455" y="173" text-anchor="middle" font-size="9">RAID 10: N/2×disk, ১/pair ★</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="sticky pink"><b>উচ্চ-yield তালিকা</b><br>
+    ① chmod ৭৫৫ → rwxr-xr-x<br>② chmod ৭০১ → rwx-----x (group=০!)<br>③ RAID ৫ usable = (N-1)×disk<br>④ tail -f = রিয়েল-টাইম লগ<br>⑤ RAID ≠ backup<br>⑥ PHP web server নয়
+  </div>
+  <div class="tipbox"><span class="lbl">কিংবদন্তি</span> <span class="hl">হলুদ</span>=মূল শব্দ · <span class="circ">●</span>=অবশ্যই মুখস্থ · <span class="trick"></span>=স্মৃতি-কৌশল · <span class="exam"></span>=পরীক্ষার ফাঁদ</div>
+  <div class="cols" style="margin-top:3mm">
+    <div><b>বিষয়বস্তু</b><ol style="font-size:8.5pt;margin:0;padding-left:1em">
+      <li>ফাইল ও ডিরেক্টরি কমান্ড … পৃ.২</li>
+      <li>পারমিশন: chmod ও chown … পৃ.৩</li>
+      <li>প্রসেস, ডিস্ক ও নেটওয়ার্ক … পৃ.৪</li>
+      <li>RAID ধারণা ও লেভেল … পৃ.৫</li>
+      <li>RAID capacity ফর্মুলা … পৃ.৬</li>
+      <li>RAID failure recovery … পৃ.৭</li>
+      <li>রাতের আগের শিট + MCQ … পৃ.৮</li>
+    </ol></div>
+    <div>
+      <div class="tipbox" style="margin-top:0"><span class="lbl">সিলেবাস</span>অধ্যায় ১৮ OS সিলেবাসে Linux কমান্ড, ফাইল পারমিশন, এবং RAID স্টোরেজ রয়েছে। এই নোটবুক সবকিছু কভার করে।</div>
+      <div class="exam" style="margin-top:2mm"><span class="lbl">শীর্ষ ৩ ফাঁদ</span>① chmod ৭০১ = rwx-----x (০=---)<br>② RAID ৫ usable = (N-1)×disk<br>③ RAID ≠ backup</div>
+    </div>
+  </div>
+  <div class="pg-no">১</div>
+</section>
+
+<!-- SHEET 2: file & directory -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux কমান্ড</span><span>ফাইল ও ডিরেক্টরি কমান্ড</span></div>
+  <h2><span class="no">১</span> ফাইল ও ডিরেক্টরি কমান্ড <span class="tag">★ সর্বোচ্চ পরীক্ষিত</span></h2>
+  <div class="def"><span class="lbl">Linux</span> হলো একটি open-source Unix-সদৃশ OS kernel। এটি CLI (terminal)-এ <span class="hl">text-based কমান্ড</span> ব্যবহার করে প্রশাসনের জন্য। কমান্ডের গঠন: <code>command [options] [arguments]</code>। Case-sensitive।</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 55" width="580">
+      <g class="w">
+        <text x="10" y="18" font-size="9" font-family="monospace">$ find . -name '*.[ch]' | xargs wc -l | tail -1</text>
+        <text x="10" y="35" font-size="9" font-family="monospace">   ৩৪৫৬ total</text>
+        <text x="10" y="50" font-size="8" fill="#1d3f8f">→ recursively সব .c ও .h ফাইলের লাইন গণনা করে</text>
+        <text x="330" y="18" font-size="9" font-family="monospace">$ ls -la /home/user</text>
+        <text x="330" y="35" font-size="8">total 48 · -rw-r--r-- 1 user ... .bashrc</text>
+        <text x="330" y="50" font-size="8" fill="#d32f2f">dotfile (.bashrc) = hidden, -a দিয়ে দেখা যায়</text>
+      </g>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8.5pt;width:100%">
+    <tr><th>কমান্ড</th><th>Flag</th><th>উদ্দেশ্য</th><th>উদাহরণ</th></tr>
+    <tr><td><span class="hl">ls</span></td><td>-la</td><td>সব ফাইল তালিকা (hidden সহ)</td><td><code>ls -la /home</code></td></tr>
+    <tr><td><span class="hl">pwd</span></td><td>—</td><td>বর্তমান ডিরেক্টরি দেখান</td><td><code>pwd</code> → /home/user</td></tr>
+    <tr><td><span class="circ">cd</span></td><td>.. ~ /path</td><td>ডিরেক্টরি পরিবর্তন; cd ~ = home</td><td><code>cd /var/log</code></td></tr>
+    <tr><td><span class="hl">mkdir</span></td><td>-p</td><td>ডিরেক্টরি তৈরি (parent সহ)</td><td><code>mkdir -p a/b/c</code></td></tr>
+    <tr><td><span class="circ">rm</span></td><td>-rf</td><td>recursive ও force মুছুন</td><td><code>rm -rf /tmp/old</code></td></tr>
+    <tr><td><span class="hl">cp / mv</span></td><td>-r</td><td>কপি / সরানো</td><td><code>cp -r src/ dst/</code></td></tr>
+    <tr><td><span class="hl">cat</span></td><td>—</td><td>ফাইলের বিষয়বস্তু দেখান</td><td><code>cat /etc/hosts</code></td></tr>
+    <tr><td><span class="circ">grep</span></td><td>-r -i -n</td><td>ফাইলে text অনুসন্ধান</td><td><code>grep -rn 'error' /var/log/</code></td></tr>
+    <tr><td><span class="hl">find</span></td><td>-name -type</td><td>recursive ফাইল অনুসন্ধান</td><td><code>find . -name '*.c'</code></td></tr>
+    <tr><td><span class="circ">wget / curl</span></td><td>-O</td><td>URL থেকে ডাউনলোড</td><td><code>wget https://example.com/f.tar</code></td></tr>
+    <tr><td><span class="hl">tar</span></td><td>-cvf / -xvf</td><td>archive / extract</td><td><code>tar -cvf archive.tar dir/</code></td></tr>
+  </table>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>PCLMFRG</b>: pwd · cd · ls · mkdir · find · rm · grep — প্রতিটি sysadmin প্রতিদিন টাইপ করেন এই ৭টি কমান্ড।</div>
+  <div class="ex"><span class="lbl">কাজের উদাহরণ</span> সব .c ও .h ফাইলের লাইন গণনা: <code>find . -name '*.[ch]' | xargs wc -l | tail -1</code></div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> <code>ls -la</code> hidden ফাইল (. দিয়ে শুরু dotfiles) দেখায়। <code>ls -l</code> দেখায় <span class="circ">না</span>।</div>
+  <div class="pg-no">২</div>
+</section>
+
+<!-- SHEET 3: permissions -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux পারমিশন</span><span>chmod ও chown</span></div>
+  <h2><span class="no">২</span> ফাইল পারমিশন: chmod ও chown <span class="tag">★ সর্বোচ্চ yield</span></h2>
+  <div class="def"><span class="lbl">পারমিশন মডেল</span> প্রতিটি ফাইলের ৩টি user class: <span class="hl">owner</span>, <span class="hl">group</span>, <span class="hl">others</span>। প্রতিটি পায় <b>r=4, w=2, x=1</b> bit। <code>chmod NNN file</code> — প্রতিটি digit = r×4+w×2+x×1।</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 100" width="580">
+      <g class="w">
+        <text x="10" y="20" font-size="14" font-family="monospace" font-weight="bold">-rwxr-xr-x  script.sh</text>
+        <line x1="15" y1="25" x2="30" y2="50" stroke="#d32f2f" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="5" y="65" font-size="9" class="r">ফাইল টাইপ</text>
+        <line x1="36" y1="25" x2="65" y2="50" stroke="#d32f2f" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="50" y="65" font-size="9" class="r">owner rwx(7)</text>
+        <line x1="60" y1="25" x2="108" y2="50" stroke="#1d3f8f" stroke-width="1.5" marker-end="url(#ahb)"/>
+        <text x="95" y="65" font-size="9">group r-x(5)</text>
+        <line x1="84" y1="25" x2="148" y2="50" stroke="#1f8a5c" stroke-width="1.5" marker-end="url(#ahg)"/>
+        <text x="133" y="65" font-size="9">others r-x(5)</text>
+        <rect x="300" y="5" width="270" height="90" rx="6" fill="#fffde7" stroke="#b8860b" stroke-width="1.5"/>
+        <text x="435" y="22" text-anchor="middle" font-weight="bold" font-size="10">সাধারণ chmod মান</text>
+        <text x="435" y="38" text-anchor="middle" font-size="9">755 = rwxr-xr-x (executable/web dir)</text>
+        <text x="435" y="54" text-anchor="middle" font-size="9">644 = rw-r--r-- (সাধারণ ফাইল)</text>
+        <text x="435" y="70" text-anchor="middle" font-size="9" fill="#d32f2f" font-weight="bold">701 = rwx-----x (group=০, --- নয় --x!)</text>
+        <text x="435" y="86" text-anchor="middle" font-size="9">700 = rwx------ (private)</text>
+      </g>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8.5pt;width:100%">
+    <tr><th>কমান্ড</th><th>উদ্দেশ্য</th><th>উদাহরণ</th></tr>
+    <tr><td><span class="circ">chmod 755 file</span></td><td>owner=rwx, group=r-x, others=r-x</td><td>executable-এর জন্য standard</td></tr>
+    <tr><td><span class="hl">chmod 644 file</span></td><td>owner=rw-, group=r--, others=r--</td><td>data file-এর জন্য standard</td></tr>
+    <tr><td><span class="circ">chmod 701 file</span></td><td>owner=rwx, group=---, others=--x</td><td>group gets কোনো bit নেই (0=---)</td></tr>
+    <tr><td><span class="hl">chown user:group file</span></td><td>owner ও group পরিবর্তন করুন</td><td><code>chown www:www index.html</code></td></tr>
+    <tr><td><span class="hl">chgrp group file</span></td><td>শুধু group পরিবর্তন করুন</td><td><code>chgrp dev project/</code></td></tr>
+  </table>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> r=<b>৪</b>, w=<b>২</b>, x=<b>১</b> → যোগ করুন: rwx=৭, rw-=৬, r-x=৫, r--=৪, --x=১, ---=০। তিন-সংখ্যার octal বাম থেকে ডানে লিখুন: owner · group · others।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> chmod <b>701</b>: মাঝের digit হলো <b>0</b> = <b>---</b> (group-এর কোনো access নেই), <b>--x</b> নয়। অনেকে 701 = rwx--x--x লেখেন — <span class="circ">ভুল</span>। 0 = ---, 1 = --x।</div>
+  <div class="ex"><span class="lbl">কাজের উদাহরণ</span> <code>chmod 755 script.sh</code>: 7=rwx(owner), 5=r-x(group), 5=r-x(others) → <span class="hl">-rwxr-xr-x</span>।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> <b>chown</b> ownership পরিবর্তন করে। <b>chmod</b> permission পরিবর্তন করে। এগুলো আলাদা operation — MCQ-তে সাধারণ বিভ্রান্তি।</div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>ls -l</b>: <code>-rwxr-xr-x user group size Oct 30 file</code> — প্রথম character file type, তারপর ৯ bit (owner·group·others)।</div>
+  <div class="pg-no">৩</div>
+</section>
+
+<!-- SHEET 4: process, disk, network -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux কমান্ড</span><span>প্রসেস · ডিস্ক · নেটওয়ার্ক</span></div>
+  <h2><span class="no">৩</span> প্রসেস, ডিস্ক ও নেটওয়ার্ক কমান্ড <span class="tag">★ PSU favourite</span></h2>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 55" width="580">
+      <g class="w">
+        <text x="10" y="18" font-size="9" font-family="monospace">$ tail -f /var/log/syslog</text>
+        <text x="10" y="35" font-size="8">Oct 30 10:05:12 server sshd[1234]: Accepted password for user</text>
+        <text x="10" y="50" font-size="8" fill="#d32f2f">→ live stream — নতুন লাইন যোগ হলে দেখায়। Ctrl+C দিয়ে বন্ধ করুন।</text>
+        <text x="350" y="18" font-size="9" font-family="monospace">$ df -h</text>
+        <text x="350" y="33" font-size="8">Filesystem  Size  Used  Avail  Use%</text>
+        <text x="350" y="48" font-size="8">/dev/sda1    50G   20G    28G   42%</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="cols">
+    <div>
+      <h3>প্রসেস ম্যানেজমেন্ট</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>কমান্ড</th><th>উদ্দেশ্য</th></tr>
+        <tr><td><span class="circ">ps aux</span></td><td>সব চলমান process তালিকা</td></tr>
+        <tr><td><span class="hl">top</span></td><td>live CPU/memory দেখান</td></tr>
+        <tr><td><span class="hl">kill PID</span></td><td>PID দিয়ে process বন্ধ করুন</td></tr>
+        <tr><td><span class="circ">kill -9 PID</span></td><td>SIGKILL — force terminate (uncatchable)</td></tr>
+        <tr><td><span class="hl">sudo command</span></td><td>root হিসেবে চালান (audit trail)</td></tr>
+      </table>
+      <h3 style="margin-top:3mm">ডিস্ক ও মেমরি</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>কমান্ড</th><th>উদ্দেশ্য</th></tr>
+        <tr><td><span class="circ">df -h</span></td><td>ডিস্ক স্পেস (human-readable)</td></tr>
+        <tr><td><span class="hl">du -sh /path</span></td><td>ডিরেক্টরি সাইজ</td></tr>
+        <tr><td><span class="circ">free -m</span></td><td>MB-তে memory ব্যবহার</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>ফাইল বিষয়বস্তু দেখা</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>কমান্ড</th><th>উদ্দেশ্য</th></tr>
+        <tr><td><span class="circ">tail -n 10 file</span></td><td>শেষ ১০ লাইন</td></tr>
+        <tr><td><span class="circ">tail -f file</span></td><td>live log অনুসরণ (real-time!)</td></tr>
+        <tr><td><span class="hl">head -n 10 file</span></td><td>প্রথম ১০ লাইন</td></tr>
+        <tr><td><span class="hl">wc -l file</span></td><td>লাইন গণনা</td></tr>
+      </table>
+      <h3 style="margin-top:3mm">নেটওয়ার্ক</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>কমান্ড</th><th>উদ্দেশ্য</th></tr>
+        <tr><td><span class="circ">ip a / ifconfig</span></td><td>IP address দেখান</td></tr>
+        <tr><td><span class="hl">ping host</span></td><td>connectivity পরীক্ষা</td></tr>
+        <tr><td><span class="hl">ssh user@host</span></td><td>remote login</td></tr>
+        <tr><td><span class="circ">wget URL</span></td><td>URL থেকে ফাইল ডাউনলোড</td></tr>
+        <tr><td><span class="hl">netstat / ss -tuln</span></td><td>খোলা port দেখান</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>tail -f</b> = "<b>f</b>ollow" = live লগ। <b>tail -n</b> = শেষ N লাইন দেখায় এবং বের হয়। পরীক্ষায় জিজ্ঞেস করে কোনটি continuously updating লগ monitor করে → <span class="hl">tail -f</span>।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> Root login ডিফল্টে নিষ্ক্রিয়। আক্রমণকারীকে username AND password উভয়ই অনুমান করতে হবে। <code>sudo</code> প্রতিটি action username সহ log করে — <span class="circ">audit trail</span>।</div>
+  <div class="ex"><span class="lbl">দ্রুত রেফারেন্স</span>
+    <ul style="font-size:8.5pt;margin:1mm 0;padding-left:1.5em">
+      <li>লাইভ লগ: <code>tail -f /var/log/syslog</code></li>
+      <li>ফাইল খোঁজা: <code>find /home -name '*.txt'</code></li>
+      <li>ডিস্ক: <code>df -h</code> · মেমরি: <code>free -m</code></li>
+      <li>IP: <code>ip a</code> বা <code>ifconfig</code></li>
+      <li>Process: <code>ps aux</code> · বন্ধ: <code>kill -9 PID</code></li>
+    </ul>
+  </div>
+  <div class="pg-no">৪</div>
+</section>
+
+<!-- SHEET 5: RAID concepts -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ RAID</span><span>Redundant Array of Independent Disks</span></div>
+  <h2><span class="no">৪</span> RAID: ধারণা ও লেভেল <span class="tag">★ Bank/PSU favourite</span></h2>
+  <div class="def"><span class="lbl">RAID</span> = <span class="hl">Redundant Array of Independent Disks</span>। একাধিক physical disk-কে একটি logical unit-এ একত্রিত করে। লক্ষ্য: <b>performance</b> (striping) বা <b>reliability</b> (mirroring/parity) বা উভয়।</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 130" width="580">
+      <g class="w">
+        <rect x="5" y="5" width="105" height="120" rx="6" fill="#fff0f0" stroke="#d32f2f" stroke-width="2"/>
+        <text x="57" y="22" text-anchor="middle" class="r" font-weight="bold" font-size="11">RAID 0</text>
+        <text x="57" y="38" text-anchor="middle" font-size="9">Striping</text>
+        <rect x="15" y="45" width="30" height="25" rx="3" fill="#fcc" stroke="#d32f2f" stroke-width="1"/>
+        <rect x="55" y="45" width="30" height="25" rx="3" fill="#fcc" stroke="#d32f2f" stroke-width="1"/>
+        <text x="57" y="88" text-anchor="middle" font-size="8">N×disk, ০ fault</text>
+        <text x="57" y="102" text-anchor="middle" font-size="8" fill="#d32f2f" font-weight="bold">কোনো redundancy নেই</text>
+        <rect x="120" y="5" width="105" height="120" rx="6" fill="#f0f8ff" stroke="#1d3f8f" stroke-width="2"/>
+        <text x="172" y="22" text-anchor="middle" font-weight="bold" font-size="11">RAID 1</text>
+        <text x="172" y="38" text-anchor="middle" font-size="9">Mirroring</text>
+        <rect x="130" y="45" width="30" height="25" rx="3" fill="#bbddff" stroke="#1d3f8f" stroke-width="1"/>
+        <rect x="170" y="45" width="30" height="25" rx="3" fill="#bbddff" stroke="#1d3f8f" stroke-width="1"/>
+        <text x="172" y="88" text-anchor="middle" font-size="8">disk_size, ১ fault</text>
+        <text x="172" y="102" text-anchor="middle" font-size="8">৫০% usable</text>
+        <rect x="235" y="5" width="125" height="120" rx="6" fill="#f0fff0" stroke="#1f8a5c" stroke-width="2"/>
+        <text x="297" y="22" text-anchor="middle" font-weight="bold" font-size="11">RAID 5 ★</text>
+        <text x="297" y="38" text-anchor="middle" font-size="9">Distributed Parity</text>
+        <rect x="243" y="45" width="22" height="25" rx="3" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1"/>
+        <rect x="271" y="45" width="22" height="25" rx="3" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1"/>
+        <rect x="299" y="45" width="22" height="25" rx="3" fill="#ffe0a0" stroke="#b8860b" stroke-width="1"/>
+        <text x="310" y="62" text-anchor="middle" font-size="8">P</text>
+        <text x="297" y="88" text-anchor="middle" font-size="8">(N-1)×disk, ১ fault</text>
+        <text x="297" y="102" text-anchor="middle" font-size="8">min ৩ disk ★</text>
+        <rect x="370" y="5" width="200" height="120" rx="6" fill="#fff9e6" stroke="#b8860b" stroke-width="2"/>
+        <text x="470" y="22" text-anchor="middle" font-weight="bold" font-size="11">RAID 10 ★</text>
+        <text x="470" y="38" text-anchor="middle" font-size="9">Mirror + Stripe</text>
+        <rect x="380" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <rect x="412" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <rect x="444" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <rect x="476" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <text x="470" y="88" text-anchor="middle" font-size="8">N/2×disk, ১/pair</text>
+        <text x="470" y="102" text-anchor="middle" font-size="8">banking ★ min ৪ disk</text>
+      </g>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8.5pt;width:100%">
+    <tr><th>Level</th><th>Technique</th><th>Min disk</th><th>Fault tolerance</th><th>Usable capacity</th><th>সেরা ব্যবহার</th></tr>
+    <tr><td><span class="hl">RAID 0</span></td><td>Striping</td><td>২</td><td><span class="circ">০</span></td><td>N × disk</td><td>গতি (video editing)</td></tr>
+    <tr><td><span class="hl">RAID 1</span></td><td>Mirroring</td><td>২</td><td>১ drive</td><td>disk_size</td><td>OS drive, critical data</td></tr>
+    <tr><td><span class="circ">RAID 5</span></td><td>Dist. parity</td><td>৩</td><td>১ drive</td><td>(N−১) × disk</td><td>File server, NAS</td></tr>
+    <tr><td><span class="hl">RAID 6</span></td><td>Double parity</td><td>৪</td><td>২ drive</td><td>(N−২) × disk</td><td>বড় array</td></tr>
+    <tr><td><span class="circ">RAID 10</span></td><td>Mirror+stripe</td><td>৪ (জোড়)</td><td>১ per pair</td><td>N/২ × disk</td><td>Banking database ★</td></tr>
+  </table>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>RAID ৫ usable = (N−১)×disk</b>। একটি disk "সমতুল্য" স্থান parity-তে যায় — distributed, কিন্তু গণিতে একটি disk consumed। পরীক্ষায় এই formula বারবার আসে।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> <span class="circ">RAID ≠ backup।</span> RAID শুধু <b>hardware disk failure</b> থেকে রক্ষা করে — ransomware, accidental deletion, বা data corruption থেকে নয়।</div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল ২</span> কোন RAID কোথায়? — <b>RAID 0</b>: শুধু speed (temp storage) · <b>RAID 1</b>: OS drive, small critical data · <b>RAID 5</b>: file server, NAS · <b>RAID 10</b>: banking database, high-I/O systems।</div>
+  <div class="ex"><span class="lbl">তুলনামূলক</span>
+    <table class="hand" style="font-size:8pt;width:100%">
+      <tr><th>RAID</th><th>Technique</th><th>Min disk</th><th>Fault</th></tr>
+      <tr><td><span class="circ">0</span></td><td>Striping</td><td>২</td><td>০</td></tr>
+      <tr><td><span class="hl">1</span></td><td>Mirroring</td><td>২</td><td>১</td></tr>
+      <tr><td><span class="circ">5</span></td><td>Dist. parity</td><td>৩</td><td>১</td></tr>
+      <tr><td><span class="hl">6</span></td><td>Double parity</td><td>৪</td><td>২</td></tr>
+      <tr><td><span class="circ">10</span></td><td>Mirror+stripe</td><td>৪</td><td>১/pair</td></tr>
+    </table>
+  </div>
+  <div class="pg-no">৫</div>
+</section>
+
+<!-- SHEET 6: RAID capacity formulas -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ RAID</span><span>Capacity ফর্মুলা ও সংখ্যাসূচক</span></div>
+  <h2><span class="no">৫</span> RAID Capacity ফর্মুলা <span class="tag">★ সংখ্যাসূচক favourite</span></h2>
+  <div class="def"><span class="lbl">ফর্মুলা শিট</span> এই ৫টি ফর্মুলা মুখস্থ করুন — বাংলাদেশের পরীক্ষায় প্রতিটি RAID সংখ্যাসূচক কভার করে।</div>
+  <table class="hand" style="font-size:9pt;width:100%">
+    <tr><th>RAID</th><th>Usable capacity ফর্মুলা</th><th>৪ × ২ TB উদাহরণ</th></tr>
+    <tr><td><b>RAID 0</b></td><td><code>N × disk_size</code></td><td>৪ × ২ = <span class="circ">৮ TB</span></td></tr>
+    <tr><td><b>RAID 1</b></td><td><code>disk_size</code> (এক copy)</td><td><span class="hl">২ TB</span> (N নির্বিশেষে)</td></tr>
+    <tr><td><b>RAID 5</b></td><td><code>(N − ১) × disk_size</code></td><td>(৪−১) × ২ = <span class="circ">৬ TB</span></td></tr>
+    <tr><td><b>RAID 6</b></td><td><code>(N − ২) × disk_size</code></td><td>(৪−২) × ২ = <span class="hl">৪ TB</span></td></tr>
+    <tr><td><b>RAID 10</b></td><td><code>(N / ২) × disk_size</code></td><td>(৪/২) × ২ = <span class="circ">৪ TB</span></td></tr>
+  </table>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 65" width="580">
+      <g class="w">
+        <text x="5" y="16" font-weight="bold" font-size="9">RAID 5 — ৫টি drive × ৪ TB</text>
+        <rect x="5" y="22" width="45" height="35" rx="4" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="58" y="22" width="45" height="35" rx="4" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="111" y="22" width="45" height="35" rx="4" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="164" y="22" width="45" height="35" rx="4" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1.5"/>
+        <rect x="217" y="22" width="45" height="35" rx="4" fill="#ffe0a0" stroke="#b8860b" stroke-width="1.5"/>
+        <text x="240" y="44" text-anchor="middle" font-size="9" font-weight="bold">P</text>
+        <text x="280" y="35" font-size="9">→ (5-1)×4 = <tspan font-weight="bold" fill="#d32f2f">১৬ TB</tspan> usable</text>
+        <text x="280" y="52" font-size="8">১ drive = parity (৫টি drive-এ বিতরণ)</text>
+        <text x="280" y="65" font-size="8" fill="#1d3f8f">১টি drive failure → parity থেকে rebuild ✓</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="ex"><span class="lbl">কাজের উদাহরণ ১</span> <b>BSCS AP 2026</b>: ৪টি ২ TB drive সহ RAID 0, RAID 5 ও RAID 10-এর usable storage গণনা করুন।
+    <ul class="steps">
+      <li>RAID 0: ৪ × ২ = <b>৮ TB</b> (redundancy নেই — যেকোনো failure সব data হারায়)</li>
+      <li>RAID 5: (৪−১) × ২ = <b>৬ TB</b> (১ drive parity-র জন্য; ১টি failure সহ্য করে)</li>
+      <li>RAID 10: (৪/২) × ২ = <b>৪ TB</b> (২টি mirrored pair stripe করে)</li>
+    </ul>
+  </div>
+  <div class="ex"><span class="lbl">কাজের উদাহরণ ২</span> <b>Combined Bank AME 2026</b>: ৫টি ৪ TB drive RAID 5-এ। কেন ২০ TB নয়?
+    <ul class="steps">
+      <li>Usable = (৫−১) × ৪ = <b>১৬ TB</b></li>
+      <li>৪ TB distributed parity-তে consumed — একটি drive-এর <i>সমতুল্য</i></li>
+    </ul>
+  </div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> <b>banking</b> প্রশ্নে কোন RAID? → <span class="circ">RAID 10</span> (mirror pairs + stripe = সেরা I/O performance + redundancy, কোনো parity calculation delay নেই)।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> RAID 10-এ <b>জোড়</b> সংখ্যক disk প্রয়োজন (minimum ৪)। RAID 5-এ minimum ৩। RAID 1 (min ২) ও RAID 10 (min ৪) গুলিয়ে ফেলা সাধারণ ভুল।</div>
+  <div class="pg-no">৬</div>
+</section>
+
+<!-- SHEET 7: failure recovery -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ RAID</span><span>Failure Recovery ও Drive Types</span></div>
+  <h2><span class="no">৬</span> RAID Failure Recovery ও Drive Types</h2>
+  <h3>RAID failure recovery পদ্ধতি</h3>
+  <ol class="steps">
+    <li><b>Controller failure শনাক্ত করে</b> → array <span class="hl">degraded mode</span>-এ চলতে থাকে (বাকি disk + parity ব্যবহার করে)</li>
+    <li><b>নষ্ট drive প্রতিস্থাপন করুন</b> সমান বা বড় capacity-র নতুন drive দিয়ে</li>
+    <li><b>Controller স্বয়ংক্রিয়ভাবে rebuild করে</b> parity/mirror থেকে নতুন drive-এ হারানো data reconstruct করে</li>
+    <li>Rebuild চলাকালে: array <span class="circ">vulnerable</span> — RAID 5-এ দ্বিতীয় failure সব data হারাবে</li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Server types</h3>
+      <table class="hand" style="font-size:8.5pt;width:100%">
+        <tr><th>Type</th><th>বিবরণ</th></tr>
+        <tr><td><span class="hl">Tower</span></td><td>Standalone, desktop PC-এর মতো</td></tr>
+        <tr><td><span class="circ">Rack</span></td><td>19" rack, U unit-এ পরিমাপ</td></tr>
+        <tr><td><span class="hl">Blade</span></td><td>Shared chassis-এ পাতলা modules, সর্বোচ্চ density</td></tr>
+      </table>
+      <h3 style="margin-top:3mm">Data centre tier</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>Tier</th><th>Uptime</th></tr>
+        <tr><td>Tier 1</td><td>৯৯.৬৭১%</td></tr>
+        <tr><td>Tier 2</td><td>৯৯.৭৪১%</td></tr>
+        <tr><td><span class="circ">Tier 3</span></td><td>৯৯.৯৮২% — বাংলাদেশ NCC</td></tr>
+        <tr><td>Tier 4</td><td>৯৯.৯৯৫% (fault tolerant)</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Linux root login</h3>
+      <div class="def" style="font-size:8.5pt">Root login <span class="hl">ডিফল্টে নিষ্ক্রিয়</span>:<br>
+        ① আক্রমণকারীকে username AND password উভয়ই অনুমান করতে হবে<br>
+        ② <code>sudo</code> username সহ প্রতিটি privileged action log করে<br>
+        → একক কমান্ডের জন্য <code>sudo command</code> ব্যবহার করুন<br>
+        → পূর্ণ root shell-এর জন্য <code>su -</code> (প্রস্তাবিত নয়)</div>
+      <h3 style="margin-top:3mm">PUE ফর্মুলা</h3>
+      <div class="def" style="font-size:8.5pt"><b>PUE = মোট facility power / IT equipment power</b><br>
+        PUE = ১.০ = নিখুঁত (অসম্ভব)<br>
+        Industry average ≈ ১.৫<br>
+        Green data centre: PUE &lt; ১.২<br>
+        <i>কম PUE = বেশি efficient</i></div>
+    </div>
+  </div>
+  <div class="trick"><span class="lbl">স্মৃতি-কৌশল</span> Banking transaction server-এর জন্য কোন RAID? → <span class="circ">RAID 10</span>: mirroring (পূর্ণ redundancy প্রতিটি pair-এ) + striping (উচ্চ throughput)। কোনো parity calculation delay নেই। দ্রুত rebuild।</div>
+  <div class="exam"><span class="lbl">পরীক্ষার ফাঁদ</span> RAID <b>backup নয়</b>। RAID array hardware disk failure থেকে রক্ষা করে। Ransomware, accidental deletion, এবং আগুন সব copy একসঙ্গে ধ্বংস করে।</div>
+  <div class="pg-no">৭</div>
+</section>
+
+<!-- SHEET 8: night-before + MCQ -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux ও RAID</span><span>রাতের আগের শিট + MCQ</span></div>
+  <h2><span class="no">৭</span> রাতের আগের শিট ও অনুশীলন MCQ</h2>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <ul style="font-size:8.5pt;margin:2mm 0;padding-left:1.2em;columns:2">
+      <li>r=৪, w=২, x=১; chmod NNN: owner·group·others</li>
+      <li>chmod ৭৫৫ → rwxr-xr-x; chmod ৭০১ → rwx-----x</li>
+      <li>ls -la hidden (dot) ফাইল দেখায়</li>
+      <li>tail -f = live/real-time লগ monitoring</li>
+      <li>tail -n ১০ = শেষ ১০ লাইন এবং বের হয়</li>
+      <li>find . -name '*.c' = recursive ফাইল অনুসন্ধান</li>
+      <li>grep -r = recursive content অনুসন্ধান</li>
+      <li>df -h = ডিস্ক স্পেস; free -m = MB-তে memory</li>
+      <li>RAID 0: N×disk, ০ fault (striping)</li>
+      <li>RAID 1: disk_size, ১ fault (mirroring)</li>
+      <li>RAID 5: (N-1)×disk, ১ fault (min ৩ disk)</li>
+      <li>RAID 6: (N-2)×disk, ২ fault (double parity)</li>
+      <li>RAID 10: N/2×disk, ১/pair (min ৪ disk)</li>
+      <li>RAID ≠ backup; degraded mode on ১ failure</li>
+      <li>PUE = মোট power / IT power (কম = ভালো)</li>
+      <li>বাংলাদেশ NCC = Tier 3, কালিয়াকৈর, গাজীপুর</li>
+    </ul>
+  </div>
+  <div class="mcq-set">
+    <div class="mcq"><b>১।</b> continuously updating লগ ফাইল real-time-এ monitor করার কমান্ড কোনটি?<br>
+      <span>ক) tail -n ১০ file</span> <span>খ) head -f file</span> <span class="hl">গ) tail -f file</span> <span>ঘ) cat -r file</span></div>
+    <div class="mcq"><b>২।</b> <code>chmod 701 myfile</code>-এর পর permission string কী?<br>
+      <span class="hl">ক) rwx-----x</span> <span>খ) rwx--x--x</span> <span>গ) rwxrwx--x</span> <span>ঘ) rwx-wx--x</span></div>
+    <div class="mcq"><b>৩।</b> RAID 5 array-এ ৪টি ২ TB drive। usable storage কত?<br>
+      <span>ক) ৮ TB</span> <span class="hl">খ) ৬ TB</span> <span>গ) ৪ TB</span> <span>ঘ) ২ TB</span></div>
+    <div class="mcq"><b>৪।</b> ব্যাংকের core transaction server-এর জন্য কোন RAID সেরা?<br>
+      <span>ক) RAID 0</span> <span>খ) RAID 5</span> <span>গ) RAID 1</span> <span class="hl">ঘ) RAID 10</span></div>
+    <div class="mcq"><b>৫।</b> Human-readable format-এ ডিস্ক স্পেস দেখানোর কমান্ড?<br>
+      <span class="hl">ক) df -h</span> <span>খ) du -h</span> <span>গ) ls -h</span> <span>ঘ) disk -h</span></div>
+    <div class="mcq"><b>৬।</b> Mirroring-এর মাধ্যমে fault tolerance প্রদান করে কোন RAID?<br>
+      <span class="hl">ক) RAID 1</span> <span>খ) RAID 0</span> <span>গ) RAID 3</span> <span>ঘ) RAID 4</span></div>
+    <div class="mcq"><b>৭।</b> <code>chmod 755 script.sh</code> কোন permission সেট করে?<br>
+      <span class="hl">ক) rwxr-xr-x</span> <span>খ) rwxrwxrwx</span> <span>গ) rw-r--r--</span> <span>ঘ) rwx------</span></div>
+    <div class="anskey">উত্তর: ১গ ২ক ৩খ ৪ঘ ৫ক ৬ক ৭ক</div>
+  </div>
+  <div class="wq"><b>লিখিত (৫ নম্বর):</b> RAID 0, 1, 5 ও 10 ব্যাখ্যা করুন। প্রতিটির usable capacity ফর্মুলা ও fault tolerance বলুন। বাংলাদেশের একটি ব্যাংকের core transaction database-এর জন্য কোনটি সুপারিশ করবেন এবং কেন?
+    <div class="mk">Model answer:<br>
+      RAID 0: N×disk, ০ fault — শুধু গতি, redundancy নেই।<br>
+      RAID 1: disk_size, ১ fault — mirroring, ৫০% usable।<br>
+      RAID 5: (N-1)×disk, ১ fault — distributed parity, min ৩ disk।<br>
+      RAID 10: N/2×disk, ১ per pair — mirror+stripe, min ৪ disk।<br>
+      সুপারিশ: banking-এর জন্য <b>RAID 10</b> — উচ্চ I/O throughput + পূর্ণ redundancy + কোনো parity calculation delay নেই।
+    </div>
+  </div>
+  <div class="pg-no">৮</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

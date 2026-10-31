@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Linux Commands &amp; RAID: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+<!-- SHEET 1: cover -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux Commands &amp; RAID</span><span>Date: 30.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>★ topper's notes</span></div>
+  <h1 class="title" style="font-size:24pt"><span class="u">Linux Commands &amp; RAID</span></h1>
+  <p class="subtitle">File system · permissions · processes · networking · RAID levels: exam-ready in 8 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 600 230" width="600">
+      <g class="w">
+        <rect x="10" y="10" width="170" height="50" rx="6" fill="#ffeaea" stroke="#d32f2f" stroke-width="2"/>
+        <text x="95" y="31" text-anchor="middle" class="r" font-weight="bold" font-size="11">Linux</text>
+        <text x="95" y="48" text-anchor="middle" font-size="9">Commands (★ HIGH YIELD)</text>
+        <rect x="220" y="10" width="170" height="50" rx="6" fill="#fff9e6" stroke="#b8860b" stroke-width="2"/>
+        <text x="305" y="31" text-anchor="middle" font-weight="bold" font-size="11">RAID</text>
+        <text x="305" y="48" text-anchor="middle" font-size="9">Levels 0/1/5/6/10 (★ HIGH YIELD)</text>
+        <rect x="430" y="10" width="150" height="50" rx="6" fill="#eef6ff" stroke="#1d3f8f" stroke-width="2"/>
+        <text x="505" y="31" text-anchor="middle" class="r" font-weight="bold" font-size="11">Permissions</text>
+        <text x="505" y="48" text-anchor="middle" font-size="9">chmod / chown (★)</text>
+        <rect x="60" y="100" width="200" height="110" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+        <text x="160" y="120" text-anchor="middle" font-weight="bold" font-size="10">Core Commands</text>
+        <text x="160" y="138" text-anchor="middle" font-size="9">ls -la · pwd · cd · mkdir · rm -rf</text>
+        <text x="160" y="153" text-anchor="middle" font-size="9">grep -r · find · tail -f · head</text>
+        <text x="160" y="168" text-anchor="middle" font-size="9">chmod NNN · chown · ps aux</text>
+        <text x="160" y="183" text-anchor="middle" font-size="9">df -h · free -m · ip a · wget</text>
+        <text x="160" y="198" text-anchor="middle" font-size="9">sudo · kill · top · ssh · scp</text>
+        <rect x="330" y="100" width="240" height="110" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+        <text x="450" y="120" text-anchor="middle" font-weight="bold" font-size="10">RAID Table</text>
+        <text x="450" y="138" text-anchor="middle" font-size="9">RAID 0: stripe — N×disk, 0 fault</text>
+        <text x="450" y="153" text-anchor="middle" font-size="9">RAID 1: mirror — disk_size, 1 fault</text>
+        <text x="450" y="168" text-anchor="middle" font-size="9">RAID 5: (N-1)×disk, 1 fault ★</text>
+        <text x="450" y="183" text-anchor="middle" font-size="9">RAID 6: (N-2)×disk, 2 fault</text>
+        <text x="450" y="198" text-anchor="middle" font-size="9">RAID 10: N/2×disk, 1/pair ★</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="sticky pink"><b>High-yield list</b><br>
+    ① chmod 755 → rwxr-xr-x<br>② chmod 701 → rwx-----x (group=0!)<br>③ RAID 5 usable = (N-1)×disk<br>④ tail -f = real-time log<br>⑤ RAID ≠ backup<br>⑥ PHP is NOT a web server
+  </div>
+  <div class="tipbox"><span class="lbl">Legend</span> <span class="hl">yellow</span>=key term · <span class="circ">●</span>=must-memorise · <span class="trick"></span>=memory trick · <span class="exam"></span>=exam trap</div>
+  <div class="cols" style="margin-top:3mm">
+    <div><b>Contents</b><ol style="font-size:8.5pt;margin:0;padding-left:1em">
+      <li>Linux file &amp; directory commands … p.2</li>
+      <li>Permissions: chmod &amp; chown … p.3</li>
+      <li>Process, disk &amp; network commands … p.4</li>
+      <li>RAID concepts &amp; levels … p.5</li>
+      <li>RAID capacity formulas … p.6</li>
+      <li>RAID failure recovery … p.7</li>
+      <li>Night-before sheet + MCQ … p.8</li>
+    </ol></div>
+    <div>
+      <div class="tipbox" style="margin-top:0"><span class="lbl">Syllabus coverage</span>
+        Chapter 18 OS syllabus covers Linux commands, file permissions, and RAID storage. This notebook covers all of it. Processes, scheduling, memory management, and deadlock have separate lessons.
+      </div>
+      <div class="exam" style="margin-top:2mm"><span class="lbl">Top 3 traps</span>
+        ① chmod 701 = rwx-----x (0=---)<br>
+        ② RAID 5 usable = (N-1)×disk<br>
+        ③ RAID ≠ backup
+      </div>
+    </div>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- SHEET 2: file & directory commands -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux Commands</span><span>File &amp; Directory Commands</span></div>
+  <h2><span class="no">1</span> File &amp; Directory Commands <span class="tag">★ Most tested</span></h2>
+  <div class="def"><span class="lbl">Linux</span> is an open-source Unix-like OS kernel. It uses a <span class="hl">text-based CLI (terminal)</span> for administration. Commands follow: <code>command [options] [arguments]</code>. Case-sensitive.</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 90" width="580">
+      <g class="w">
+        <rect x="5" y="5" width="80" height="35" rx="4" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.5"/>
+        <text x="45" y="22" text-anchor="middle" class="r" font-weight="bold" font-size="9">ls -la</text>
+        <text x="45" y="35" text-anchor="middle" font-size="8">all files+perms</text>
+        <rect x="95" y="5" width="80" height="35" rx="4" fill="#ffeaea" stroke="#d32f2f" stroke-width="1.5"/>
+        <text x="135" y="22" text-anchor="middle" class="r" font-weight="bold" font-size="9">pwd</text>
+        <text x="135" y="35" text-anchor="middle" font-size="8">current dir</text>
+        <rect x="185" y="5" width="80" height="35" rx="4" fill="#eef6ff" stroke="#1d3f8f" stroke-width="1.5"/>
+        <text x="225" y="22" text-anchor="middle" class="r" font-weight="bold" font-size="9">mkdir / rmdir</text>
+        <text x="225" y="35" text-anchor="middle" font-size="8">create / remove dir</text>
+        <rect x="275" y="5" width="80" height="35" rx="4" fill="#eef6ff" stroke="#1d3f8f" stroke-width="1.5"/>
+        <text x="315" y="22" text-anchor="middle" class="r" font-weight="bold" font-size="9">rm -rf dir</text>
+        <text x="315" y="35" text-anchor="middle" font-size="8">delete recursive+force</text>
+        <rect x="365" y="5" width="80" height="35" rx="4" fill="#f0fff0" stroke="#1f8a5c" stroke-width="1.5"/>
+        <text x="405" y="22" text-anchor="middle" font-weight="bold" font-size="9">cp / mv</text>
+        <text x="405" y="35" text-anchor="middle" font-size="8">copy / move</text>
+        <rect x="455" y="5" width="110" height="35" rx="4" fill="#f0fff0" stroke="#1f8a5c" stroke-width="1.5"/>
+        <text x="510" y="22" text-anchor="middle" font-weight="bold" font-size="9">find . -name '*.txt'</text>
+        <text x="510" y="35" text-anchor="middle" font-size="8">recursive file search</text>
+      </g>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8.5pt;width:100%">
+    <tr><th>Command</th><th>Flags</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td><span class="hl">ls</span></td><td>-la</td><td>list all files (including hidden)</td><td><code>ls -la /home</code></td></tr>
+    <tr><td><span class="hl">pwd</span></td><td>—</td><td>print working directory</td><td><code>pwd</code> → /home/user</td></tr>
+    <tr><td><span class="circ">cd</span></td><td>.. ~ /path</td><td>change directory; cd ~ → home</td><td><code>cd /var/log</code></td></tr>
+    <tr><td><span class="hl">mkdir</span></td><td>-p</td><td>create directory (and parents)</td><td><code>mkdir -p a/b/c</code></td></tr>
+    <tr><td><span class="circ">rm</span></td><td>-rf</td><td>remove recursively &amp; force</td><td><code>rm -rf /tmp/old</code></td></tr>
+    <tr><td><span class="hl">cp / mv</span></td><td>-r</td><td>copy / move files</td><td><code>cp -r src/ dst/</code></td></tr>
+    <tr><td><span class="hl">cat</span></td><td>—</td><td>display file content</td><td><code>cat /etc/hosts</code></td></tr>
+    <tr><td><span class="circ">grep</span></td><td>-r -i -n</td><td>search text in files</td><td><code>grep -rn 'error' /var/log/</code></td></tr>
+    <tr><td><span class="hl">find</span></td><td>-name -type</td><td>recursive file search</td><td><code>find . -name '*.c'</code></td></tr>
+    <tr><td><span class="circ">wget / curl</span></td><td>-O</td><td>download from URL</td><td><code>wget https://example.com/f.tar</code></td></tr>
+    <tr><td><span class="hl">tar</span></td><td>-cvf / -xvf</td><td>archive / extract</td><td><code>tar -cvf archive.tar dir/</code></td></tr>
+  </table>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 55" width="580">
+      <g class="w">
+        <text x="10" y="18" font-size="9" font-family="monospace">$ find . -name '*.[ch]' | xargs wc -l | tail -1</text>
+        <text x="10" y="35" font-size="9" font-family="monospace">   3456 total</text>
+        <text x="10" y="50" font-size="8" fill="#1d3f8f">→ counts all .c and .h lines recursively</text>
+        <text x="320" y="18" font-size="9" font-family="monospace">$ ls -la /home/user</text>
+        <text x="320" y="35" font-size="8">total 48 · -rw-r--r-- 1 user ... .bashrc</text>
+        <text x="320" y="50" font-size="8" fill="#d32f2f">dotfile (.bashrc) = hidden, shown by -a</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="trick"><span class="lbl">Memory trick</span> <b>PCLMFRG</b>: pwd · cd · ls · mkdir · find · rm · grep — the 7 daily commands every sysadmin types.</div>
+  <div class="ex"><span class="lbl">Worked example</span> Count lines in all .c and .h files: <code>find . -name '*.[ch]' | xargs wc -l | tail -1</code></div>
+  <div class="exam"><span class="lbl">Exam trap</span> <code>ls -la</code> shows hidden files (dotfiles starting with <b>.</b>). <code>ls -l</code> does NOT.</div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- SHEET 3: permissions -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux Permissions</span><span>chmod &amp; chown</span></div>
+  <h2><span class="no">2</span> File Permissions: chmod &amp; chown <span class="tag">★ Highest-yield</span></h2>
+  <div class="def"><span class="lbl">Permission model</span> Every file has 3 user classes: <span class="hl">owner</span>, <span class="hl">group</span>, <span class="hl">others</span>. Each gets <b>r=4, w=2, x=1</b> bits. <code>chmod NNN file</code> — each digit = r×4+w×2+x×1.</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 130" width="580">
+      <g class="w">
+        <text x="10" y="25" font-size="14" font-family="monospace" font-weight="bold">-rwxr-xr-x  script.sh</text>
+        <line x1="10" y1="30" x2="30" y2="55" stroke="#d32f2f" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="5" y="70" font-size="9" class="r">file type</text>
+        <line x1="33" y1="30" x2="60" y2="55" stroke="#d32f2f" stroke-width="1.5" marker-end="url(#ah)"/>
+        <text x="45" y="70" font-size="9" class="r">owner rwx(7)</text>
+        <line x1="60" y1="30" x2="105" y2="55" stroke="#1d3f8f" stroke-width="1.5" marker-end="url(#ahb)"/>
+        <text x="90" y="70" font-size="9" class="r">group r-x(5)</text>
+        <line x1="82" y1="30" x2="145" y2="55" stroke="#1f8a5c" stroke-width="1.5" marker-end="url(#ahg)"/>
+        <text x="130" y="70" font-size="9">others r-x(5)</text>
+        <rect x="300" y="5" width="270" height="120" rx="6" fill="#fffde7" stroke="#b8860b" stroke-width="1.5"/>
+        <text x="435" y="22" text-anchor="middle" font-weight="bold" font-size="10">Common chmod values</text>
+        <text x="435" y="40" text-anchor="middle" font-size="9">755 = rwxr-xr-x  (executable/web dir)</text>
+        <text x="435" y="56" text-anchor="middle" font-size="9">644 = rw-r--r--  (regular files)</text>
+        <text x="435" y="72" text-anchor="middle" font-size="9" fill="#d32f2f" font-weight="bold">701 = rwx-----x  (group=0, not --x!)</text>
+        <text x="435" y="88" text-anchor="middle" font-size="9">700 = rwx------  (private)</text>
+        <text x="435" y="104" text-anchor="middle" font-size="9">777 = rwxrwxrwx  (dangerous!)</text>
+        <text x="435" y="120" text-anchor="middle" font-size="9">400 = r--------  (read-only)</text>
+      </g>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8.5pt;width:100%">
+    <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td><span class="circ">chmod 755 file</span></td><td>owner=rwx, group=r-x, others=r-x</td><td>standard for executables</td></tr>
+    <tr><td><span class="hl">chmod 644 file</span></td><td>owner=rw-, group=r--, others=r--</td><td>standard for data files</td></tr>
+    <tr><td><span class="circ">chmod 701 file</span></td><td>owner=rwx, group=---, others=--x</td><td>group gets NO bits (0=---)</td></tr>
+    <tr><td><span class="hl">chown user:group file</span></td><td>change owner and group</td><td><code>chown www:www index.html</code></td></tr>
+    <tr><td><span class="hl">chgrp group file</span></td><td>change group only</td><td><code>chgrp dev project/</code></td></tr>
+  </table>
+  <div class="trick"><span class="lbl">Memory trick</span> r=<b>4</b>, w=<b>2</b>, x=<b>1</b> → add them: rwx=7, rw-=6, r-x=5, r--=4, --x=1, ---=0. Write the 3-digit octal left to right: owner · group · others.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> chmod <b>701</b>: middle digit is <b>0</b> = <b>---</b> (no access for group), NOT <b>--x</b>. Many candidates write 701 as rwx--x--x — <span class="circ">WRONG</span>. 0 = ---, 1 = --x.</div>
+  <div class="ex"><span class="lbl">Worked example</span> <code>chmod 755 script.sh</code>: 7=rwx(owner), 5=r-x(group), 5=r-x(others) → <span class="hl">-rwxr-xr-x</span>. Standard for web server directories.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> <b>chown</b> changes ownership. <b>chmod</b> changes permissions. They are separate operations — a common confusion in MCQs.</div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- SHEET 4: process, disk, network -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux Commands</span><span>Process · Disk · Network</span></div>
+  <h2><span class="no">3</span> Process, Disk &amp; Network Commands <span class="tag">★ PSU favourite</span></h2>
+  <div class="cols">
+    <div>
+      <h3>Process Management</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><span class="circ">ps aux</span></td><td>list all running processes</td></tr>
+        <tr><td><span class="hl">top</span></td><td>live CPU/memory usage</td></tr>
+        <tr><td><span class="hl">kill PID</span></td><td>terminate process by PID</td></tr>
+        <tr><td><span class="circ">kill -9 PID</span></td><td>SIGKILL — force terminate (uncatchable)</td></tr>
+        <tr><td><span class="hl">killall name</span></td><td>kill all processes by name</td></tr>
+        <tr><td><span class="hl">sudo command</span></td><td>run as root (audit trail)</td></tr>
+        <tr><td><span class="hl">su -</span></td><td>switch to root shell (not recommended)</td></tr>
+      </table>
+      <h3 style="margin-top:3mm">Disk &amp; Memory</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><span class="circ">df -h</span></td><td>disk space (human-readable)</td></tr>
+        <tr><td><span class="hl">du -sh /path</span></td><td>directory size</td></tr>
+        <tr><td><span class="circ">free -m</span></td><td>memory usage in MB</td></tr>
+        <tr><td><span class="hl">mount / umount</span></td><td>attach / detach filesystem</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Viewing File Content</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><span class="circ">tail -n 10 file</span></td><td>last 10 lines</td></tr>
+        <tr><td><span class="circ">tail -f file</span></td><td>follow live log (real-time!)</td></tr>
+        <tr><td><span class="hl">head -n 10 file</span></td><td>first 10 lines</td></tr>
+        <tr><td><span class="hl">less file</span></td><td>paginated view (q to quit)</td></tr>
+        <tr><td><span class="hl">wc -l file</span></td><td>count lines in file</td></tr>
+      </table>
+      <h3 style="margin-top:3mm">Network</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><span class="circ">ip a / ifconfig</span></td><td>show IP addresses</td></tr>
+        <tr><td><span class="hl">ping host</span></td><td>test connectivity</td></tr>
+        <tr><td><span class="hl">ssh user@host</span></td><td>remote login</td></tr>
+        <tr><td><span class="hl">scp file user@host:/path</span></td><td>secure file copy</td></tr>
+        <tr><td><span class="circ">wget URL</span></td><td>download file from URL</td></tr>
+        <tr><td><span class="hl">netstat / ss -tuln</span></td><td>show open ports</td></tr>
+      </table>
+    </div>
+  </div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 55" width="580">
+      <g class="w">
+        <text x="10" y="18" font-size="9" font-family="monospace">$ tail -f /var/log/syslog</text>
+        <text x="10" y="35" font-size="8">Oct 30 10:05:12 server sshd[1234]: Accepted password for user</text>
+        <text x="10" y="50" font-size="8" fill="#d32f2f">→ live stream — new lines appear as written. Ctrl+C to stop.</text>
+        <text x="330" y="18" font-size="9" font-family="monospace">$ df -h</text>
+        <text x="330" y="33" font-size="8">Filesystem  Size  Used  Avail  Use%  Mounted on</text>
+        <text x="330" y="48" font-size="8">/dev/sda1    50G   20G    28G   42%  /</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="trick"><span class="lbl">Memory trick</span> <b>tail -f</b> = "<b>f</b>ollow" = live log. <b>tail -n</b> = last N lines and exit. Exams ask which monitors a continuously updating log → <span class="hl">tail -f</span>.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> Root login is disabled by default for security. Attackers must guess username AND password. <code>sudo</code> logs every action with originating username — <span class="circ">audit trail</span>.</div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- SHEET 5: RAID concepts -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ RAID</span><span>Redundant Array of Independent Disks</span></div>
+  <h2><span class="no">4</span> RAID: Concepts &amp; Levels <span class="tag">★ Bank/PSU favourite</span></h2>
+  <div class="def"><span class="lbl">RAID</span> = <span class="hl">Redundant Array of Independent Disks</span>. Combines multiple physical disks into one logical unit. Goals: <b>performance</b> (striping) or <b>reliability</b> (mirroring/parity) or both.</div>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 140" width="580">
+      <g class="w">
+        <!-- RAID 0 -->
+        <rect x="5" y="5" width="100" height="130" rx="6" fill="#fff0f0" stroke="#d32f2f" stroke-width="2"/>
+        <text x="55" y="22" text-anchor="middle" class="r" font-weight="bold" font-size="11">RAID 0</text>
+        <text x="55" y="38" text-anchor="middle" font-size="9">Striping</text>
+        <rect x="15" y="45" width="30" height="25" rx="3" fill="#fcc" stroke="#d32f2f" stroke-width="1"/>
+        <rect x="55" y="45" width="30" height="25" rx="3" fill="#fcc" stroke="#d32f2f" stroke-width="1"/>
+        <text x="55" y="88" text-anchor="middle" font-size="8">N×disk, 0 fault</text>
+        <text x="55" y="102" text-anchor="middle" font-size="8" fill="#d32f2f" font-weight="bold">NO redundancy</text>
+        <!-- RAID 1 -->
+        <rect x="115" y="5" width="100" height="130" rx="6" fill="#f0f8ff" stroke="#1d3f8f" stroke-width="2"/>
+        <text x="165" y="22" text-anchor="middle" font-weight="bold" font-size="11">RAID 1</text>
+        <text x="165" y="38" text-anchor="middle" font-size="9">Mirroring</text>
+        <rect x="125" y="45" width="30" height="25" rx="3" fill="#bbddff" stroke="#1d3f8f" stroke-width="1"/>
+        <rect x="165" y="45" width="30" height="25" rx="3" fill="#bbddff" stroke="#1d3f8f" stroke-width="1"/>
+        <text x="165" y="88" text-anchor="middle" font-size="8">disk_size, 1 fault</text>
+        <text x="165" y="102" text-anchor="middle" font-size="8">50% usable</text>
+        <!-- RAID 5 -->
+        <rect x="225" y="5" width="120" height="130" rx="6" fill="#f0fff0" stroke="#1f8a5c" stroke-width="2"/>
+        <text x="285" y="22" text-anchor="middle" font-weight="bold" font-size="11">RAID 5 ★</text>
+        <text x="285" y="38" text-anchor="middle" font-size="9">Distributed Parity</text>
+        <rect x="233" y="45" width="22" height="25" rx="3" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1"/>
+        <rect x="261" y="45" width="22" height="25" rx="3" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1"/>
+        <rect x="289" y="45" width="22" height="25" rx="3" fill="#ffe0a0" stroke="#b8860b" stroke-width="1"/>
+        <text x="300" y="67" text-anchor="middle" font-size="8">P</text>
+        <text x="285" y="88" text-anchor="middle" font-size="8">(N-1)×disk, 1 fault</text>
+        <text x="285" y="102" text-anchor="middle" font-size="8">min 3 disks ★</text>
+        <!-- RAID 10 -->
+        <rect x="355" y="5" width="130" height="130" rx="6" fill="#fff9e6" stroke="#b8860b" stroke-width="2"/>
+        <text x="420" y="22" text-anchor="middle" font-weight="bold" font-size="11">RAID 10 ★</text>
+        <text x="420" y="38" text-anchor="middle" font-size="9">Mirror + Stripe</text>
+        <rect x="365" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <rect x="397" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <rect x="429" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <rect x="461" y="45" width="25" height="25" rx="3" fill="#ffd0a0" stroke="#b8860b" stroke-width="1"/>
+        <text x="420" y="88" text-anchor="middle" font-size="8">N/2×disk, 1/pair</text>
+        <text x="420" y="102" text-anchor="middle" font-size="8">banking ★ min 4 disks</text>
+      </g>
+    </svg>
+  </figure>
+  <table class="hand" style="font-size:8.5pt;width:100%">
+    <tr><th>Level</th><th>Technique</th><th>Min disks</th><th>Fault tolerance</th><th>Usable capacity</th><th>Best for</th></tr>
+    <tr><td><span class="hl">RAID 0</span></td><td>Striping</td><td>2</td><td><span class="circ">0</span></td><td>N × disk</td><td>Speed (video editing)</td></tr>
+    <tr><td><span class="hl">RAID 1</span></td><td>Mirroring</td><td>2</td><td>1 drive</td><td>disk_size</td><td>OS drives, critical data</td></tr>
+    <tr><td><span class="circ">RAID 5</span></td><td>Dist. parity</td><td>3</td><td>1 drive</td><td>(N−1) × disk</td><td>File servers, NAS</td></tr>
+    <tr><td><span class="hl">RAID 6</span></td><td>Double parity</td><td>4</td><td>2 drives</td><td>(N−2) × disk</td><td>Large arrays</td></tr>
+    <tr><td><span class="circ">RAID 10</span></td><td>Mirror+stripe</td><td>4 (even)</td><td>1 per pair</td><td>N/2 × disk</td><td>Banking databases ★</td></tr>
+  </table>
+  <figure class="doodle">
+    <svg viewBox="0 0 580 65" width="580">
+      <g class="w">
+        <text x="5" y="16" font-weight="bold" font-size="9">RAID 5 — 4 drives × 2TB</text>
+        <rect x="5" y="22" width="50" height="35" rx="4" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1.5"/>
+        <text x="30" y="44" text-anchor="middle" font-size="9">DATA</text>
+        <rect x="65" y="22" width="50" height="35" rx="4" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1.5"/>
+        <text x="90" y="44" text-anchor="middle" font-size="9">DATA</text>
+        <rect x="125" y="22" width="50" height="35" rx="4" fill="#bbffcc" stroke="#1f8a5c" stroke-width="1.5"/>
+        <text x="150" y="44" text-anchor="middle" font-size="9">DATA</text>
+        <rect x="185" y="22" width="50" height="35" rx="4" fill="#ffe0a0" stroke="#b8860b" stroke-width="1.5"/>
+        <text x="210" y="44" text-anchor="middle" font-size="9" font-weight="bold">P</text>
+        <text x="250" y="35" font-size="9">→ (4-1)×2 = <tspan font-weight="bold" fill="#d32f2f">6 TB</tspan> usable</text>
+        <text x="250" y="52" font-size="8">1 drive = parity (distributed across all 4)</text>
+        <text x="250" y="65" font-size="8" fill="#1d3f8f">1 drive failure → rebuild from parity ✓</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="trick"><span class="lbl">Memory trick</span> <b>RAID 5 usable = (N−1)×disk</b>. One disk "worth" of space goes to parity — distributed, but the math works as if one disk is consumed. Exams test this formula constantly.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> <span class="circ">RAID ≠ backup.</span> RAID protects against <b>hardware disk failure</b> only — not against ransomware, accidental deletion, or data corruption (those get mirrored too!).</div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- SHEET 6: RAID capacity formulas -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ RAID</span><span>Capacity Formulas &amp; Numericals</span></div>
+  <h2><span class="no">5</span> RAID Capacity Formulas <span class="tag">★ Numerical favourite</span></h2>
+  <div class="def"><span class="lbl">Formula sheet</span> Memorise these 5 formulas — they cover every RAID numerical in Bangladesh exams.</div>
+  <table class="hand" style="font-size:9pt;width:100%">
+    <tr><th>RAID</th><th>Usable capacity formula</th><th>4 × 2 TB example</th></tr>
+    <tr><td><b>RAID 0</b></td><td><code>N × disk_size</code></td><td>4 × 2 = <span class="circ">8 TB</span></td></tr>
+    <tr><td><b>RAID 1</b></td><td><code>disk_size</code> (one copy)</td><td><span class="hl">2 TB</span> (regardless of N)</td></tr>
+    <tr><td><b>RAID 5</b></td><td><code>(N − 1) × disk_size</code></td><td>(4−1) × 2 = <span class="circ">6 TB</span></td></tr>
+    <tr><td><b>RAID 6</b></td><td><code>(N − 2) × disk_size</code></td><td>(4−2) × 2 = <span class="hl">4 TB</span></td></tr>
+    <tr><td><b>RAID 10</b></td><td><code>(N / 2) × disk_size</code></td><td>(4/2) × 2 = <span class="circ">4 TB</span></td></tr>
+  </table>
+  <div class="ex"><span class="lbl">Worked example 1</span> <b>BSCS AP 2026</b>: You have 4 drives of 2 TB each. Calculate usable storage for RAID 0, RAID 5, and RAID 10.
+    <ul class="steps">
+      <li>RAID 0: 4 × 2 = <b>8 TB</b> (no redundancy — any failure loses all data)</li>
+      <li>RAID 5: (4−1) × 2 = <b>6 TB</b> (1 drive for parity; tolerates 1 failure)</li>
+      <li>RAID 10: (4/2) × 2 = <b>4 TB</b> (2 mirrored pairs striped together)</li>
+    </ul>
+  </div>
+  <div class="ex"><span class="lbl">Worked example 2</span> <b>Combined Bank AME 2026</b>: 5 drives × 4 TB each in RAID 5. Why not 20 TB?
+    <ul class="steps">
+      <li>Usable = (5−1) × 4 = <b>16 TB</b></li>
+      <li>4 TB is consumed by distributed parity — one drive's <i>equivalent</i> across all 5</li>
+      <li>Parity enables reconstruction if exactly ONE drive fails</li>
+    </ul>
+  </div>
+  <div class="trick"><span class="lbl">Memory trick</span> For <b>banking</b> questions: which RAID? → <span class="circ">RAID 10</span> (mirror pairs that stripe = best I/O performance + redundancy, no parity calculation delay). RAID 5 is acceptable for file/archive servers.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> RAID 10 needs an <b>even</b> number of disks (minimum 4). RAID 5 needs minimum 3. RAID 6 needs minimum 4. Confusing RAID 1 (min 2) with RAID 10 (min 4) is a common error.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> RAID 5 tolerates exactly <b>1</b> disk failure. Two simultaneous failures → data lost. Use RAID 6 for 2-drive tolerance.</div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- SHEET 7: RAID failure recovery -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ RAID</span><span>Failure Recovery &amp; Drive Types</span></div>
+  <h2><span class="no">6</span> RAID Failure Recovery &amp; Drive Types</h2>
+  <h3>RAID failure recovery procedure</h3>
+  <ol class="steps">
+    <li><b>Controller detects failure</b> → array continues in <span class="hl">degraded mode</span> (using remaining disks + parity)</li>
+    <li><b>Replace failed drive</b> with a new drive of equal or greater capacity</li>
+    <li><b>Controller rebuilds</b> (reconstructs) lost data from parity/mirror onto new drive automatically</li>
+    <li>During rebuild: array is <span class="circ">vulnerable</span> — a second failure in RAID 5 will lose all data</li>
+  </ol>
+  <div class="cols">
+    <div>
+      <h3>Server types</h3>
+      <table class="hand" style="font-size:8.5pt;width:100%">
+        <tr><th>Type</th><th>Description</th></tr>
+        <tr><td><span class="hl">Tower</span></td><td>Standalone, like desktop PC</td></tr>
+        <tr><td><span class="circ">Rack</span></td><td>19" rack, measured in U units</td></tr>
+        <tr><td><span class="hl">Blade</span></td><td>Thin modules in shared chassis, highest density</td></tr>
+      </table>
+      <h3 style="margin-top:3mm">Data centre tiers</h3>
+      <table class="hand" style="font-size:8pt;width:100%">
+        <tr><th>Tier</th><th>Uptime</th></tr>
+        <tr><td>Tier 1</td><td>99.671%</td></tr>
+        <tr><td>Tier 2</td><td>99.741%</td></tr>
+        <tr><td><span class="circ">Tier 3</span></td><td>99.982% — NCC Bangladesh</td></tr>
+        <tr><td>Tier 4</td><td>99.995% (fault tolerant)</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Linux root login</h3>
+      <div class="def" style="font-size:8.5pt">Root login is <span class="hl">disabled by default</span> for security:<br>
+        ① Attacker must guess both <b>username AND password</b><br>
+        ② <code>sudo</code> logs every privileged action with username<br>
+        ③ Prevents accidental destructive root commands<br>
+        → Use <code>sudo command</code> for single commands<br>
+        → Use <code>su -</code> for full root shell (not recommended)</div>
+      <h3 style="margin-top:3mm">PUE formula</h3>
+      <div class="def" style="font-size:8.5pt"><b>PUE = Total facility power / IT equipment power</b><br>
+        PUE = 1.0 = perfect (impossible)<br>
+        Industry average ≈ 1.5<br>
+        Green data centres: PUE &lt; 1.2<br>
+        <i>Lower PUE = more efficient</i></div>
+    </div>
+  </div>
+  <div class="trick"><span class="lbl">Memory trick</span> Which RAID is best for a banking transaction server? → <span class="circ">RAID 10</span>: combines mirroring (full redundancy per pair) + striping (high throughput). No parity calculation penalty. Fast rebuild.</div>
+  <div class="exam"><span class="lbl">Exam trap</span> RAID is <b>NOT a backup</b>. A RAID array protects against hardware disk failure. Ransomware, accidental deletion, and fire destroy all copies simultaneously. Always have a separate backup.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- SHEET 8: night-before + MCQ -->
+<section class="page">
+  <div class="pg-head"><span>OS ▸ Linux &amp; RAID</span><span>Night-Before Sheet + MCQs</span></div>
+  <h2><span class="no">7</span> Night-Before Sheet &amp; Practice MCQs</h2>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <ul style="font-size:8.5pt;margin:2mm 0;padding-left:1.2em;columns:2">
+      <li>r=4, w=2, x=1; chmod NNN: owner·group·others</li>
+      <li>chmod 755 → rwxr-xr-x; chmod 701 → rwx-----x</li>
+      <li>ls -la shows hidden (dot) files</li>
+      <li>tail -f = live/real-time log monitoring</li>
+      <li>tail -n 10 = last 10 lines and exit</li>
+      <li>find . -name '*.c' = recursive file search</li>
+      <li>grep -r = recursive content search</li>
+      <li>df -h = disk space; free -m = memory in MB</li>
+      <li>RAID 0: N×disk, 0 fault (striping)</li>
+      <li>RAID 1: disk_size, 1 fault (mirroring)</li>
+      <li>RAID 5: (N-1)×disk, 1 fault (distributed parity, min 3)</li>
+      <li>RAID 6: (N-2)×disk, 2 fault (double parity, min 4)</li>
+      <li>RAID 10: N/2×disk, 1/pair (mirror+stripe, min 4)</li>
+      <li>RAID ≠ backup; degraded mode on 1 failure</li>
+      <li>PUE = total power / IT power (lower = better)</li>
+      <li>Bangladesh NCC = Tier 3, Kaliakair, Gazipur</li>
+    </ul>
+  </div>
+  <div class="mcq-set">
+    <div class="mcq"><b>1.</b> Which command monitors a continuously updating log file in real time?<br>
+      <span>a) tail -n 10 file</span> <span>b) head -f file</span> <span class="hl">c) tail -f file</span> <span>d) cat -r file</span></div>
+    <div class="mcq"><b>2.</b> What is the permission string after <code>chmod 701 myfile</code>?<br>
+      <span class="hl">a) rwx-----x</span> <span>b) rwx--x--x</span> <span>c) rwxrwx--x</span> <span>d) rwx-wx--x</span></div>
+    <div class="mcq"><b>3.</b> A RAID 5 array has 4 drives of 2 TB each. What is the usable storage?<br>
+      <span>a) 8 TB</span> <span class="hl">b) 6 TB</span> <span>c) 4 TB</span> <span>d) 2 TB</span></div>
+    <div class="mcq"><b>4.</b> For a bank's core transaction server, which RAID is best?<br>
+      <span>a) RAID 0</span> <span>b) RAID 5</span> <span>c) RAID 1</span> <span class="hl">d) RAID 10</span></div>
+    <div class="mcq"><b>5.</b> Which Linux command shows disk space in human-readable format?<br>
+      <span class="hl">a) df -h</span> <span>b) du -h</span> <span>c) ls -h</span> <span>d) disk -h</span></div>
+    <div class="mcq"><b>6.</b> RAID 0 uses 4 drives of 2 TB each. What is the total usable storage?<br>
+      <span class="hl">a) 8 TB</span> <span>b) 6 TB</span> <span>c) 4 TB</span> <span>d) 2 TB</span></div>
+    <div class="mcq"><b>7.</b> Which RAID level provides fault tolerance through mirroring?<br>
+      <span class="hl">a) RAID 1</span> <span>b) RAID 0</span> <span>c) RAID 3</span> <span>d) RAID 4</span></div>
+    <div class="anskey">Answers: 1c 2a 3b 4d 5a 6a 7a</div>
+  </div>
+  <div class="wq"><b>Written (5 marks):</b> Explain RAID 0, 1, 5, and 10. Include usable capacity formula and fault tolerance for each. Which would you recommend for a Bangladesh bank's core transaction database and why?
+    <div class="mk">Model answer:<br>
+      RAID 0: N×disk, 0 fault — speed only, no redundancy.<br>
+      RAID 1: disk_size, 1 fault — mirroring, 50% usable.<br>
+      RAID 5: (N-1)×disk, 1 fault — distributed parity, min 3 disks, balance of space and safety.<br>
+      RAID 10: N/2×disk, 1 per pair — mirror+stripe, min 4 disks.<br>
+      Recommendation: <b>RAID 10</b> for banking — high I/O throughput (striping) + full redundancy (mirroring) + no parity calculation delay + fast rebuild. RAID 5 for less critical storage (reports, archives).
+    </div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 // Seeds Exam Kits (data/exam-kits/<slug>.json) and exam blueprints (data/blueprints/<id>.json), plan E0.
 // Fills gaps only, like seedExamPrep: a kit or blueprint the seed created before and an admin deleted is not
-// brought back (seed_ledger). A kit already in the database is refreshed only when its file has a newer updatedOn.
+// brought back (seed_ledger). A kit already in the database is refreshed whenever its file's content differs, and is
+// published when its file changes from draft to published.
 import fs from "fs";
 import path from "path";
 import type { Pool, PoolClient } from "pg";
@@ -30,6 +31,13 @@ export interface Blueprint {
 }
 
 const readJson = <T>(file: string): T => JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, "")) as T;
+/** JSON with object keys sorted, so a file and its jsonb copy (which reorders keys) compare equal. */
+const canonical = (v: unknown): string =>
+  JSON.stringify(v, (_k, x) =>
+    x && typeof x === "object" && !Array.isArray(x)
+      ? Object.fromEntries(Object.keys(x).sort().map((k) => [k, (x as Record<string, unknown>)[k]]))
+      : x,
+  );
 const jsonFiles = (dir: string) =>
   fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".json") && !f.startsWith("_")).sort() : [];
 
@@ -73,10 +81,16 @@ export async function seedExamKits(db: Db, kitsDir: string, questionsDir: string
     const kit = readJson<ExamKit>(path.join(kitsDir, f));
     // the referenced facts travel with the kit, so the reader needs one request
     const data = { ...kit, factsResolved: kit.facts.map((id) => facts.get(id)).filter(Boolean) };
-    const current = await db.query("SELECT data->>'updatedOn' AS updated_on FROM exam_kits WHERE slug = $1", [kit.slug]);
+    const current = await db.query("SELECT data FROM exam_kits WHERE slug = $1", [kit.slug]);
     if (current.rows[0]) {
-      if ((current.rows[0].updated_on ?? "") < kit.updatedOn) {
-        await db.query("UPDATE exam_kits SET data = $2, lesson_title_en = $3, updated_at = now() WHERE slug = $1", [kit.slug, data, kit.lessonTitleEn]);
+      const stored = current.rows[0].data ?? {};
+      if (canonical(stored) !== canonical(data)) {
+        // a kit whose file moves from draft to published goes live; an admin's later unpublish is left alone
+        const goesLive = stored.status !== "published" && kit.status === "published";
+        await db.query(
+          `UPDATE exam_kits SET data = $2, lesson_title_en = $3, updated_at = now()${goesLive ? ", is_published = true" : ""} WHERE slug = $1`,
+          [kit.slug, data, kit.lessonTitleEn],
+        );
         refreshed++;
       }
     } else if (!(await seededBefore(db, "exam_kit", kit.slug))) {

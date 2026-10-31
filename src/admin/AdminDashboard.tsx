@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useApp, useAppDispatch } from '../context/AppContext'
 import { useAuth } from '../context/AuthContext'
+import { useCandidateAuth } from '../candidate/CandidateAuthContext'
 import { translations } from '../data/translations'
 import type { Translations } from '../types'
 import { navigate, useRoute } from '../router'
@@ -53,6 +54,7 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
   const appState = useApp()
   const dispatch = useAppDispatch()
   const auth = useAuth()
+  const candidateAuth = useCandidateAuth()
   const t = translations[appState.language]
   const route = useRoute()
   const role = auth.user?.role ?? ''
@@ -73,11 +75,13 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
     return () => document.removeEventListener('keydown', onKey)
   }, [mobileOpen])
 
-  // Same as the portal's "Sign out": end the session and go back to the landing page.
+  // Same as the portal's "Sign out": end every session and show the login page. Navigating first (in the
+  // same batch) keeps AdminRoute from sending us to the login page with `next=admin`.
   const signOut = async () => {
     if (!await canLeave()) return
+    navigate('login', { replace: true })
+    candidateAuth.signOut()
     auth.logout()
-    window.location.href = '/'
   }
   const go = async (key: AdminView) => {
     setMobileOpen(false)

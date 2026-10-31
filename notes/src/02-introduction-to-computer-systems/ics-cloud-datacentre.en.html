@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cloud Computing, Virtualisation &amp; Data Centres: Revision Notes</title>
+<link rel="stylesheet" href="../../assets/hw.css">
+</head>
+<body>
+
+<!-- shared drawing defs: wobble filters, arrowheads (inline attributes!) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="wobble" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+    <filter id="wobble-soft" filterUnits="userSpaceOnUse" x="-200" y="-200" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#d32f2f" stroke-width="2"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1d3f8f" stroke-width="2"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#1f8a5c" stroke-width="2"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#6a3fa0" stroke-width="2"/></marker>
+  </defs>
+</svg>
+
+
+<!-- ============ SHEET 1: cover ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Date: 29.10.2026</span></div>
+  <div class="cover-band"><span>Govt IT Recruitment: Revision Notebook</span><span>✎ topper's notes</span></div>
+  <h1 class="title" style="font-size:24pt"><span class="u">Cloud Computing, Virtualisation &amp; Data Centres</span></h1>
+  <p class="subtitle">IaaS/PaaS/SaaS · deployment models · hypervisors &amp; containers · tiers · UPS/IPS · DR, RTO/RPO · edge · migration: exam-ready in 15 sheets</p>
+  <figure class="doodle">
+    <svg viewBox="0 0 640 300" width="530">
+      <g class="w">
+        <ellipse cx="320" cy="150" rx="100" ry="42" class="ink-k fill-y"/>
+        <path class="ink" d="M240,132 L170,74 M240,168 L170,226 M320,108 L320,56 M400,132 L470,74 M400,168 L470,226 M320,192 L320,244 M220,150 L176,150 M420,150 L464,150"/>
+        <rect x="60" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="240" y="14" width="160" height="42" rx="14" class="ink-r fill-r"/>
+        <rect x="420" y="40" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="16" y="130" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="464" y="130" width="160" height="40" rx="14" class="ink-r fill-r"/>
+        <rect x="60" y="220" width="160" height="40" rx="14" class="ink fill-b"/>
+        <rect x="240" y="244" width="160" height="42" rx="14" class="ink-g fill-g"/>
+        <rect x="420" y="220" width="160" height="40" rx="14" class="ink-g fill-g"/>
+      </g>
+      <text x="320" y="146" text-anchor="middle" class="k l">CLOUD &amp; DC</text><text x="320" y="168" text-anchor="middle" class="r s">services · hosting · mind-map</text>
+      <text x="140" y="65" text-anchor="middle" class="r w6">IaaS · PaaS · SaaS ★</text>
+      <text x="320" y="41" text-anchor="middle" class="r w6">Hypervisor · VM ★</text>
+      <text x="500" y="65" text-anchor="middle" class="r w6">DC tiers I–IV ★</text>
+      <text x="96" y="155" text-anchor="middle">Deployment models</text>
+      <text x="544" y="155" text-anchor="middle" class="r w6">DR · RTO · RPO ★</text>
+      <text x="140" y="245" text-anchor="middle">Docker · K8s</text>
+      <text x="320" y="271" text-anchor="middle" class="g">UPS/IPS · PUE · edge</text>
+      <text x="500" y="245" text-anchor="middle" class="g">migration · BD cases</text>
+    </svg>
+    <figcaption>↑ red = high-yield, blue = core, green = applied / Bangladesh</figcaption>
+  </figure>
+  <div class="sticky"><b>High-yield list</b><br>① NIST definition, 5 traits<br>② IaaS vs PaaS vs SaaS<br>③ public/private/hybrid<br>④ Type-1 vs Type-2<br>⑤ VM vs container<br>⑥ Tier II vs Tier III<br>⑦ UPS vs IPS<br>⑧ RTO vs RPO, DC vs DRS</div>
+  <h3>Syllabus coverage</h3>
+  <p class="small">"Introduction to Computer Systems: … <span class="hl">Basic Information Technology</span>; <span class="hl">The Internet</span> …". Written bank papers stretch this line to cloud computing, virtual machines, data centres, disaster recovery and cloud migration. Networks, DNS and cyber attacks have their own notes.</p>
+  <div class="tipbox blk"><span class="lbl">Legend</span> <span class="hl">yellow</span> = key term · <span class="circ">red circle</span> = must-memorise fact · <span class="purple"><b>purple box</b></span> = memory trick · <span class="red"><b>red box</b></span> = exam trap · <span class="green"><b>green</b></span> = worked example</div>
+  <h3>Contents</h3>
+  <div class="cols small">
+    <ul class="tick"><li>Cloud computing: NIST definition … p. 2</li><li>Service models IaaS/PaaS/SaaS … p. 3</li><li>Deployment models ……… p. 4</li><li>Cloud security &amp; Bangladesh … p. 5</li><li>Virtualisation &amp; hypervisors … p. 6</li><li>Containers, Kubernetes, scaling … p. 7</li><li>Data centres &amp; tiers ……… p. 8</li></ul>
+    <ul class="tick"><li>Power: UPS vs IPS, redundancy … p. 9</li><li>Cooling, PUE, servers ……… p. 10</li><li>DR, RTO/RPO, maintenance … p. 11</li><li>Edge, fog, CDN &amp; big data … p. 12</li><li>Migration &amp; scenarios ……… p. 13</li><li>Night-before sheet ……… p. 14</li><li>Practice MCQs + written ……… p. 15</li></ul>
+  </div>
+  <div class="pg-no">1</div>
+</section>
+
+<!-- ============ SHEET 2: cloud basics ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Cloud basics</span></div>
+  <h2><span class="no">1</span>What Is Cloud Computing?</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">NIST SP 800-145 (2011)</span> Cloud computing is a model for enabling ubiquitous, convenient, <span class="hl">on-demand network access to a shared pool of configurable computing resources</span> (networks, servers, storage, applications, services) that can be <b>rapidly provisioned and released</b> with minimal management effort or service-provider interaction. NIST counts <span class="circ">5 characteristics · 3 service models · 4 deployment models</span>.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);align-items:start">
+    <div>
+      <h3>The 5 essential characteristics</h3>
+      <ol class="num small">
+        <li><b>On-demand self-service</b>: start a server from a portal, no human at the provider</li>
+        <li><b>Broad network access</b>: reached over the network from phones, laptops, PCs</li>
+        <li><b>Resource pooling</b>: one pool serves many tenants (<span class="hl">multi-tenancy</span>); location-independent</li>
+        <li><b>Rapid elasticity</b>: scale out and back in, seemingly unlimited</li>
+        <li><b>Measured service</b>: metered, <span class="hl">pay-as-you-go</span> like electricity</li>
+      </ol>
+    </div>
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 190" width="260">
+      <g class="w">
+        <path class="ink fill-b" d="M70,92 C40,92 36,58 66,54 C70,26 112,22 124,44 C138,18 188,22 190,52 C226,48 238,90 206,94 Z"/>
+        <rect x="14" y="140" width="60" height="36" rx="6" class="ink-g fill-g"/>
+        <rect x="120" y="140" width="60" height="36" rx="6" class="ink-g fill-g"/>
+        <rect x="226" y="140" width="60" height="36" rx="6" class="ink-g fill-g"/>
+        <path class="ink-k" d="M44,138 L100,96 M150,138 L150,98 M256,138 L200,96" marker-end="url(#ahb)"/>
+      </g>
+      <text x="132" y="66" text-anchor="middle" class="k w6">shared pool</text>
+      <text x="132" y="84" text-anchor="middle" class="s">CPU · RAM · disk</text>
+      <text x="44" y="163" text-anchor="middle" class="s">phone</text>
+      <text x="150" y="163" text-anchor="middle" class="s">laptop</text>
+      <text x="256" y="163" text-anchor="middle" class="s">office PC</text>
+      <text x="150" y="122" text-anchor="middle" class="r s">via Internet</text>
+    </svg></figure>
+  </div>
+  <h3>Cloud vs traditional (on-premises) computing</h3>
+  <table class="hand tiny" style="line-height:5.4mm;width:100%">
+    <tr><th class="l">Point</th><th class="l">Traditional / on-premises</th><th class="l">Cloud</th></tr>
+    <tr><td class="l">Cost model</td><td class="l"><b>CapEx</b>: buy servers up front</td><td class="l"><b>OpEx</b>: pay per use, monthly bill</td></tr>
+    <tr><td class="l">Provisioning</td><td class="l">weeks (purchase, install)</td><td class="l">minutes, self-service</td></tr>
+    <tr><td class="l">Scaling</td><td class="l">sized for the <b>peak</b>; idle most of the year</td><td class="l">elastic: grows and shrinks with load</td></tr>
+        <tr><td class="l">Control &amp; data location</td><td class="l">full control, data on site</td><td class="l">less control; data in provider's region</td></tr>
+  </table>
+  <div class="cols" style="margin-top:2mm">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Advantages</span> low up-front cost, elasticity, high availability, global reach in minutes, automatic updates, built-in backup and DR, provider maintains hardware.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Disadvantages / challenges</span> needs reliable Internet, <b>vendor lock-in</b>, data sovereignty, provider outages, egress costs. <b>Solved by</b> multi-region design, own-key encryption, exit plan, SLA penalties, cost monitoring.</div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> 5 traits = "<b>O-B-R-R-M</b>": <b>O</b>n-demand, <b>B</b>road access, <b>R</b>esource pooling, <b>R</b>apid elasticity, <b>M</b>easured. "Cloud is a <b>utility</b>: switch on, use, pay the meter."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The concept tied to <b>pooling and sharing</b> of resources is <span class="hl">virtualisation</span>. A cloud service is usually <b>stateless</b> (each request carries what it needs), which is why it scales out easily.</div>
+  </div>
+  <div class="pg-no">2</div>
+</section>
+
+<!-- ============ SHEET 3: service models ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Service models</span></div>
+  <h2><span class="no">2</span>Service Models: IaaS, PaaS, SaaS</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Rule</span> The service models differ in <span class="hl">how much of the stack the provider manages</span>. The higher you go (IaaS → PaaS → SaaS), the less you manage and the less you control.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 230" width="560">
+    <g class="w">
+      <rect x="20" y="20" width="130" height="190" rx="6" class="ink"/>
+      <rect x="180" y="20" width="130" height="190" rx="6" class="ink"/>
+      <rect x="340" y="20" width="130" height="190" rx="6" class="ink"/>
+      <rect x="500" y="20" width="130" height="190" rx="6" class="ink"/>
+      <rect x="24" y="24" width="122" height="182" class="fill-y"/>
+      <rect x="184" y="24" width="122" height="54" class="fill-y"/><rect x="184" y="80" width="122" height="126" class="fill-b"/>
+      <rect x="344" y="24" width="122" height="27" class="fill-y"/><rect x="344" y="53" width="122" height="153" class="fill-b"/>
+      <rect x="504" y="24" width="122" height="182" class="fill-b"/>
+    </g>
+    <text x="85" y="14" text-anchor="middle" class="k w6">On-premises</text>
+    <text x="245" y="14" text-anchor="middle" class="r w6">IaaS</text>
+    <text x="405" y="14" text-anchor="middle" class="r w6">PaaS</text>
+    <text x="565" y="14" text-anchor="middle" class="r w6">SaaS</text>
+    <g class="s">
+      <text x="85" y="44" text-anchor="middle">Application</text><text x="85" y="70" text-anchor="middle">Data</text><text x="85" y="96" text-anchor="middle">Runtime</text><text x="85" y="122" text-anchor="middle">OS</text><text x="85" y="148" text-anchor="middle">Virtualisation</text><text x="85" y="174" text-anchor="middle">Servers · storage</text><text x="85" y="200" text-anchor="middle">Network</text>
+      <text x="245" y="44" text-anchor="middle">App · Data</text><text x="245" y="70" text-anchor="middle">Runtime · OS</text><text x="245" y="122" text-anchor="middle">Virtualisation</text><text x="245" y="148" text-anchor="middle">Servers · storage</text><text x="245" y="174" text-anchor="middle">Network</text>
+      <text x="405" y="44" text-anchor="middle">App · Data</text><text x="405" y="96" text-anchor="middle">Runtime · OS</text><text x="405" y="122" text-anchor="middle">Virtualisation</text><text x="405" y="148" text-anchor="middle">Servers · storage</text><text x="405" y="174" text-anchor="middle">Network</text>
+      <text x="565" y="96" text-anchor="middle">everything</text><text x="565" y="122" text-anchor="middle">run by provider</text>
+    </g>
+    <text x="320" y="226" text-anchor="middle" class="s">yellow = you manage · blue = provider manages</text>
+  </svg></figure>
+  <table class="hand tiny" style="line-height:5.3mm;width:100%">
+    <tr><th class="l">Model</th><th class="l">You get</th><th class="l">You manage</th><th class="l">Typical user</th><th class="l">Examples</th></tr>
+    <tr><td class="l"><b>IaaS</b></td><td class="l">virtual servers, disks, networks</td><td class="l">OS, runtime, app, data</td><td class="l">system / network admin</td><td class="l">AWS EC2, Azure VMs, Google Compute Engine</td></tr>
+    <tr><td class="l"><b>PaaS</b></td><td class="l">a ready platform to <span class="hl">deploy code</span></td><td class="l">only app + data</td><td class="l">developer</td><td class="l">Google App Engine, Heroku, AWS Elastic Beanstalk, Azure App Service</td></tr>
+    <tr><td class="l"><b>SaaS</b></td><td class="l">a finished application in a browser</td><td class="l">only settings, users</td><td class="l">end user</td><td class="l">Gmail, Microsoft 365, Salesforce, Zoom, Dropbox</td></tr>
+  </table>
+  <div class="cols" style="margin-top:2mm">
+    <div class="ex small" style="margin-top:0"><span class="lbl">Worked scenario</span> A startup wants to write and deploy code only, with <b>no hardware, OS or runtime</b> to manage → <span class="circ">PaaS</span>. Examples: Google App Engine, Heroku (or AWS Elastic Beanstalk, Azure App Service). IaaS would still leave the OS to them; SaaS gives no place for their own code.</div>
+    <div>
+      <h3>Other "as a Service"</h3>
+      <ul class="dash tiny">
+        <li><b>FaaS / serverless</b>: run a function per event (AWS Lambda, 2014; Azure Functions)</li>
+        <li><b>DBaaS</b>: managed database (Amazon RDS, Azure SQL); the "cloud-based database"</li>
+        <li><b>STaaS</b>: storage (Amazon S3, 2006; Google Drive)</li>
+        <li><b>DaaS</b>: virtual desktops; <b>CaaS</b>: containers as a service</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> <b>Pizza as a service</b>: make at home = on-prem; take-and-bake = IaaS; delivery = PaaS; dine in a restaurant = SaaS. "<b>I</b>nfrastructure for <b>I</b>T admins, <b>P</b>latform for <b>P</b>rogrammers, <b>S</b>oftware for <b>S</b>taff."</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> The 3 NIST "layers" are IaaS, PaaS, SaaS; "Computing as a Service" is <b>not</b> one of them. The 3 basic cloud functions are <b>compute, storage and networking</b>. Security in the cloud is <b>shared</b>: provider secures the cloud, customer secures what it puts in it.</div>
+  </div>
+  <div class="pg-no">3</div>
+</section>
+
+<!-- ============ SHEET 4: deployment ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Deployment models</span></div>
+  <h2><span class="no">3</span>Deployment Models &amp; Enabling Technologies</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Deployment model</span> says <span class="hl">who owns and who may use</span> the cloud. NIST lists four: <b>public, private, community, hybrid</b>. Industry adds <b>multi-cloud</b> (two or more public providers).</div>
+  <table class="hand tiny" style="line-height:5.4mm;width:100%">
+    <tr><th class="l">Model</th><th class="l">Used by</th><th class="l">Strength</th><th class="l">Weakness</th><th class="l">Example</th></tr>
+    <tr><td class="l"><b>Public</b></td><td class="l">anyone, over the Internet</td><td class="l">cheapest, huge scale</td><td class="l">least control, shared tenancy</td><td class="l">AWS, Azure, Google Cloud</td></tr>
+    <tr><td class="l"><b>Private</b></td><td class="l"><b>one</b> organisation (on site or hosted)</td><td class="l">control, compliance</td><td class="l">costly, limited elasticity</td><td class="l">bank's own OpenStack / VMware cloud</td></tr>
+    <tr><td class="l"><b>Community</b></td><td class="l">a group with shared concerns</td><td class="l">costs shared, common rules</td><td class="l">limited members, governance</td><td class="l">a government cloud for ministries</td></tr>
+    <tr><td class="l"><b>Hybrid</b></td><td class="l">private + public, linked</td><td class="l">sensitive data private, peaks public (<span class="hl">cloud bursting</span>)</td><td class="l">complex integration, security at the joins</td><td class="l">core banking on-prem, website on public cloud</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;margin-top:2mm">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 150" width="300">
+      <g class="w">
+        <rect x="10" y="40" width="110" height="70" rx="10" class="ink-g fill-g"/>
+        <path class="ink fill-b" d="M196,104 C170,104 166,74 192,70 C196,44 234,40 244,60 C256,38 292,44 290,70 C306,74 300,104 280,104 Z"/>
+        <path class="ink-r" d="M122,76 H172" marker-end="url(#ah)" marker-start="url(#ah)"/>
+      </g>
+      <text x="65" y="70" text-anchor="middle" class="g w6">Private</text>
+      <text x="65" y="90" text-anchor="middle" class="s">core data</text>
+      <text x="236" y="84" text-anchor="middle" class="k w6">Public</text>
+      <text x="236" y="98" text-anchor="middle" class="s">peaks, web</text>
+      <text x="148" y="66" text-anchor="middle" class="r s">VPN</text>
+      <text x="150" y="138" text-anchor="middle" class="s w6">Hybrid = both, one managed whole</text>
+    </svg></figure>
+    <div>
+      <h3>5 key enabling technologies</h3>
+      <ol class="num tiny">
+        <li><b>Virtualisation</b>: one physical host, many VMs</li>
+        <li><b>Broadband networks &amp; data centres</b> at scale</li>
+        <li><b>Service-oriented architecture</b>, web services and REST APIs</li>
+        <li><b>Multi-tenancy &amp; automation</b> (orchestration, self-service portals)</li>
+        <li><b>Utility &amp; grid computing</b> ideas: metered, distributed resources</li>
+      </ol>
+      <p class="tiny">Milestones: Salesforce SaaS (1999) · <span class="circ">AWS S3 &amp; EC2 (2006)</span> · Google App Engine (2008) · Microsoft Azure (2010).</p>
+    </div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Viva: may a Bangladeshi bank use the cloud?</span> "Yes, under the Bangladesh Bank cloud guideline (2023, p. 5). Benefits for a bank: lower cost, fast scaling for festival-time transactions, DR in another region. Drawbacks: data sovereignty, dependence on the provider and the link, regulatory approval, skills gap. Keep core banking and customer data in-country (private/hybrid); move websites, email, analytics and DR first."</div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>P</b>ublic = <b>P</b>ark (anyone), <b>P</b>rivate = home, <b>C</b>ommunity = <b>C</b>lub, <b>H</b>ybrid = <b>H</b>ome + park." Hybrid's signature word: <b>cloud bursting</b>.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> Private cloud is defined by <b>exclusive use</b>, not location: a provider can host it off site. Hybrid needs the two parts to work together (data and app portability); owning two separate clouds is just multi-cloud.</div>
+  </div>
+  <div class="pg-no">4</div>
+</section>
+
+<!-- ============ SHEET 5: cloud security & Bangladesh ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Cloud security</span></div>
+  <h2><span class="no">4</span>Cloud Security, Audit &amp; the Bangladesh Rules</h2><span class="tag">frequently tested</span>
+  <div class="def"><span class="lbl">Shared responsibility model</span> the provider secures <span class="hl">"the cloud"</span> (buildings, hardware, hypervisor, its network); the customer secures <span class="hl">"what it puts in the cloud"</span> (data, identities, configuration, its code). The split moves with the service model.</div>
+  <table class="hand tiny" style="line-height:5.3mm;width:100%">
+    <tr><th class="l">Layer</th><th>IaaS</th><th>PaaS</th><th>SaaS</th></tr>
+    <tr><td class="l">Data, users, access rights</td><td>customer</td><td>customer</td><td><b>customer</b></td></tr>
+    <tr><td class="l">Application code</td><td>customer</td><td>customer</td><td>provider</td></tr>
+    <tr><td class="l">OS, patches, runtime</td><td>customer</td><td>provider</td><td>provider</td></tr>
+    <tr><td class="l">Hypervisor, hardware, facility</td><td>provider</td><td>provider</td><td>provider</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;margin-top:2mm">
+    <div>
+      <h3>Top cloud threats</h3>
+      <ul class="dash tiny">
+        <li><b>Misconfiguration</b> (public storage bucket, open ports): the most common cause of cloud breaches</li>
+        <li>weak identity and access management, no MFA, stolen keys → <b>account hijacking</b></li>
+        <li>insecure APIs, data breach and loss, insider misuse</li>
+      </ul>
+    </div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Security assessment &amp; audit</span> ① <b>vulnerability scans</b> and <b>penetration tests</b> find weaknesses ② <span class="hl">CSPM</span> (cloud security posture management) tools check every setting against a baseline (CIS benchmarks) and flag drift ③ <b>audit reports</b> compare controls with a standard: <b>ISO/IEC 27001</b>, 27017 (cloud), 27018 (personal data), SOC 2, PCI DSS v4.0 (2022) ④ findings → risk rating → fix → re-test → continuous monitoring (SIEM, logs).</div>
+  </div>
+  <h3>Cloud in Bangladesh: may a bank use it?</h3>
+  <div class="sumbox tiny"><span class="lbl">Bangladesh</span> <b>Bangladesh Bank Guidelines on Cloud Computing</b> (BRPD Circular No. 05, <span class="hl">16 March 2023</span>) apply to banks, NBFIs, MFS providers and payment system operators; compliance was due by <b>December 2023</b>. So <b>yes, financial institutions may use cloud</b>, under a risk-based framework: a board-approved cloud policy, risk assessment and due diligence on the provider, an SLA with exit plan, encryption and access control, audit and regulator access, and care with customer data (the Bank Company Act 1991, s.12, bars moving records abroad without Bangladesh Bank's permission). Government agencies follow <b>GoBISM 2016</b> (BCC's information security manual).</div>
+  <div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Securing an e-banking web server in our DC</span> web server in a <b>DMZ</b> behind a next-generation firewall and <b>WAF</b>; IPS; TLS 1.2/1.3 certificates and HSTS; load balancer; hardened, patched OS; MFA for admins; database in an inner zone; HSM for keys; SIEM logging; regular VAPT; backups and a DR copy.</div>
+  </div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> "Provider guards the <b>house</b>; you lock your own <b>cupboard</b>." Audit cycle: "<b>Scan, Score, Fix, Re-check</b>."</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Even in SaaS the customer still owns <b>data and user access</b>; a leaked password is never the provider's fault. An ISO 27001 certificate shows a managed process, not that a system cannot be breached.</div>
+  </div>
+  <div class="pg-no">5</div>
+</section>
+
+<!-- ============ SHEET 6: virtualisation ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Virtualisation</span></div>
+  <h2><span class="no">5</span>Virtualisation, VMs &amp; Hypervisors</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Virtualisation</span> creates a <span class="hl">software version of hardware</span> (CPU, memory, disk, network) so one physical machine runs several isolated <b>virtual machines</b>. A <b>VM</b> is a complete emulated computer with its own guest OS, virtual CPU, RAM, disk and NIC. The <span class="circ">hypervisor</span> (virtual machine monitor, VMM) creates, runs and isolates VMs and shares out the real hardware.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 210" width="590">
+    <g class="w">
+      <rect x="20" y="20" width="80" height="60" rx="6" class="ink-g fill-g"/><rect x="110" y="20" width="80" height="60" rx="6" class="ink-g fill-g"/><rect x="200" y="20" width="80" height="60" rx="6" class="ink-g fill-g"/>
+      <rect x="20" y="92" width="260" height="34" rx="6" class="ink-r fill-r"/>
+      <rect x="20" y="138" width="260" height="34" rx="6" class="ink fill-b"/>
+      <rect x="360" y="20" width="80" height="50" rx="6" class="ink-g fill-g"/><rect x="450" y="20" width="80" height="50" rx="6" class="ink-g fill-g"/><rect x="540" y="20" width="80" height="50" rx="6" class="ink-p fill-p"/>
+      <rect x="360" y="78" width="260" height="30" rx="6" class="ink-r fill-r"/>
+      <rect x="360" y="114" width="260" height="28" rx="6" class="ink fill-y"/>
+      <rect x="360" y="148" width="260" height="28" rx="6" class="ink fill-b"/>
+    </g>
+    <g class="s">
+      <text x="60" y="46" text-anchor="middle">VM 1</text><text x="60" y="64" text-anchor="middle">app + OS</text>
+      <text x="150" y="46" text-anchor="middle">VM 2</text><text x="150" y="64" text-anchor="middle">app + OS</text>
+      <text x="240" y="46" text-anchor="middle">VM 3</text><text x="240" y="64" text-anchor="middle">app + OS</text>
+      <text x="150" y="114" text-anchor="middle" class="r w6">Type-1 hypervisor (bare metal)</text>
+      <text x="150" y="160" text-anchor="middle">physical hardware</text>
+      <text x="400" y="50" text-anchor="middle">VM 1</text><text x="490" y="50" text-anchor="middle">VM 2</text><text x="580" y="50" text-anchor="middle">host apps</text>
+      <text x="490" y="98" text-anchor="middle" class="r w6">Type-2 hypervisor (an app)</text>
+      <text x="490" y="133" text-anchor="middle">host OS (Windows, Linux, macOS)</text>
+      <text x="490" y="167" text-anchor="middle">physical hardware</text>
+    </g>
+    <text x="150" y="198" text-anchor="middle" class="k w6">servers, data centres</text>
+    <text x="490" y="198" text-anchor="middle" class="k w6">desktops, labs, testing</text>
+  </svg></figure>
+  <table class="hand tiny" style="line-height:5.3mm;width:100%">
+    <tr><th class="l">Point</th><th class="l">Type-1 (native, bare-metal)</th><th class="l">Type-2 (hosted)</th></tr>
+    <tr><td class="l">Runs on</td><td class="l">directly on hardware</td><td class="l">on top of a host OS</td></tr>
+    <tr><td class="l">Speed, security</td><td class="l"><b>faster</b>, smaller attack surface</td><td class="l">slower (extra layer); host OS bugs matter</td></tr>
+    <tr><td class="l">Examples</td><td class="l"><span class="hl">VMware ESXi, Microsoft Hyper-V, Xen, KVM</span></td><td class="l"><span class="hl">Oracle VirtualBox, VMware Workstation, Parallels</span></td></tr>
+  </table>
+  <div class="cols" style="margin-top:2mm">
+    <div>
+      <h3>Kinds of virtualisation</h3>
+      <ul class="dash tiny">
+        <li><b>Full</b>: guest OS unmodified; hypervisor traps privileged instructions (binary translation)</li>
+        <li><b>Para-virtualisation</b>: guest OS modified to call the hypervisor (hypercalls); early Xen</li>
+        <li><b>Hardware-assisted</b>: CPU support, Intel VT-x / AMD-V (2005–06)</li>
+        <li>Also: storage (SAN, vSAN), network (VLAN, SDN), desktop (VDI), application</li>
+      </ul>
+    </div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Benefits of a VM</span> server consolidation (fewer boxes, less power), isolation (one crash stays inside), snapshots and quick rollback, <b>live migration</b> (vMotion) with no downtime, fast provisioning from templates, easy DR (a VM is a set of files), run old OSs, safe testing sandbox. <b>Cost</b>: hypervisor overhead, licence cost, one host failure hits all its VMs.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example: VM sizing</span> Host: 32 cores, 96 GB RAM, 4 TB. Each VM: 4 cores, 16 GB, 500 GB. CPU → 32/4 = 8; RAM → 96/16 = <span class="circ">6</span>; disk → 4000/500 = 8. Max VMs without overcommit = <b>min(8, 6, 8) = 6</b>; <b>RAM</b> is the limiting resource (8 cores and 1 TB stay free).</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> Type-<b>1</b> = <b>1</b>st layer on metal; Type-<b>2</b> = <b>2</b>nd, needs a host. "<b>E</b>SXi, <b>H</b>yper-V, <b>X</b>en, <b>K</b>VM: <b>EH, X K</b>ings are bare."</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> The <b>Java Virtual Machine</b> is a process VM: it runs bytecode and manages memory; it is <b>not</b> a hypervisor. Hyper-V and KVM count as Type-1 even though they ship inside Windows/Linux.</div>
+  </div>
+  <div class="pg-no">6</div>
+</section>
+
+<!-- ============ SHEET 7: containers & scaling ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Containers &amp; scaling</span></div>
+  <h2><span class="no">6</span>Containers, Docker &amp; Kubernetes</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Container</span> packages an application with its libraries and settings and runs it as an <span class="hl">isolated process sharing the host OS kernel</span> (namespaces + cgroups). <b>Docker</b> (2013) builds and runs containers; <b>Docker Hub</b> is its <b>cloud image registry</b>. <b>Kubernetes</b> (K8s, open-sourced by Google 2014, now CNCF) orchestrates many containers across many machines.</div>
+  <table class="hand tiny" style="line-height:5.3mm;width:100%">
+    <tr><th class="l">Point</th><th class="l">Virtual machine</th><th class="l">Container</th></tr>
+    <tr><td class="l">What is virtualised</td><td class="l">hardware; <b>each VM has a full guest OS</b></td><td class="l">the OS; all containers <b>share one kernel</b></td></tr>
+    <tr><td class="l">Size, start time</td><td class="l">GBs; boots in minutes</td><td class="l"><span class="circ">MBs; starts in seconds</span></td></tr>
+    <tr><td class="l">Resource use, density</td><td class="l">heavier; tens per host</td><td class="l">light; hundreds per host</td></tr>
+    <tr><td class="l">Isolation</td><td class="l"><b>stronger</b> (separate kernels)</td><td class="l">weaker; a kernel flaw affects all</td></tr>
+    <tr><td class="l">Pick when</td><td class="l">different OSs, legacy apps, strict isolation</td><td class="l">microservices, CI/CD, same image dev → prod</td></tr>
+  </table>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;margin-top:2mm">
+    <div>
+      <h3>Kubernetes architecture</h3>
+      <ul class="dash tiny">
+        <li><b>Control plane</b>: <span class="hl">kube-apiserver</span> (front door), <b>etcd</b> (key-value store of cluster state), <b>kube-scheduler</b> (places pods on nodes), <b>kube-controller-manager</b> (keeps desired state), cloud-controller-manager</li>
+        <li><b>Worker node</b>: <b>kubelet</b> (agent, runs pods), <b>kube-proxy</b> (service networking), container runtime (containerd, CRI-O)</li>
+        <li>Objects: <b>Pod</b> (smallest unit), Deployment, Service, Ingress</li>
+      </ul>
+    </div>
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">VM or container for data transfer?</span> For a reliable, efficient transmission service choose <b>containers</b>: lighter, start in seconds, scale out under K8s with health checks and auto-restart. Run them <b>inside VMs</b> where strong isolation is needed; the answer is often "both".</div>
+  </div>
+  <h2><span class="no">7</span>Scaling: Vertical, Horizontal, Auto</h2>
+  <div class="cols" style="grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 330 150" width="280">
+      <g class="w">
+        <rect x="20" y="70" width="60" height="30" rx="4" class="ink fill-b"/>
+        <rect x="110" y="30" width="60" height="70" rx="4" class="ink-r fill-r"/>
+        <path class="ink-k" d="M84,85 H104" marker-end="url(#ahb)"/>
+        <rect x="200" y="70" width="34" height="30" rx="4" class="ink fill-b"/><rect x="240" y="70" width="34" height="30" rx="4" class="ink-g fill-g"/><rect x="280" y="70" width="34" height="30" rx="4" class="ink-g fill-g"/>
+        <rect x="200" y="22" width="114" height="22" rx="4" class="ink-p fill-p"/>
+        <path class="ink-k" d="M217,46 V66 M257,46 V66 M297,46 V66"/>
+      </g>
+      <text x="95" y="124" text-anchor="middle" class="r s w6">vertical: bigger box</text>
+      <text x="95" y="140" text-anchor="middle" class="s">scale up (more CPU/RAM)</text>
+      <text x="257" y="37" text-anchor="middle" class="s">load balancer</text>
+      <text x="257" y="124" text-anchor="middle" class="g s w6">horizontal: more boxes</text>
+      <text x="257" y="140" text-anchor="middle" class="s">scale out</text>
+    </svg></figure>
+    <ul class="dash tiny">
+      <li><b>Vertical</b>: simple; limited by the biggest box, downtime, single point of failure</li>
+      <li><b>Horizontal</b>: near-unlimited, fault tolerant; app must be <span class="hl">stateless</span> or share session state</li>
+      <li><b>Auto scaling</b>: a metric (CPU &gt; 70%) triggers a policy that adds instances behind the load balancer and removes them when load falls (min/max counts)</li>
+    </ul>
+  </div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>VM brings its own OS, a container borrows the kernel</b>." Vertical = <b>taller</b> server, horizontal = <b>wider</b> rack. K8s control plane = "<b>A E S C</b>": API server, etcd, scheduler, controller manager.</div>
+  <div class="pg-no">7</div>
+</section>
+
+<!-- ============ SHEET 8: data centre & tiers ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Data centres</span></div>
+  <h2><span class="no">8</span>Data Centre: Components &amp; Tiers</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Data centre</span> a secured facility that houses an organisation's <span class="hl">servers, storage and network equipment</span> with conditioned power, cooling, fire protection, physical security and monitoring, so that IT services run 24/7. A <b>server</b> is a computer that provides services to clients (web, database, mail, DNS, file); servers use ECC RAM, redundant PSUs and hot-swap disks, so they are more reliable than PCs.</div>
+  <h3>Components (hardware required)</h3>
+  <div class="cols">
+    <ul class="dash tiny" style="margin-top:0">
+      <li><b>Compute</b>: rack and blade servers in 42U racks</li>
+      <li><b>Storage</b>: SAN / NAS, disk arrays (SAS/SSD), tape backup</li>
+      <li><b>Network</b>: core/distribution/access switches, routers, firewalls, load balancers, structured cabling, carrier links</li>
+    </ul>
+    <ul class="dash tiny" style="margin-top:0">
+      <li><b>Power</b>: utility feeds, transformer, ATS, <b>UPS</b>, batteries, generator, PDUs</li>
+      <li><b>Cooling</b>: precision AC (CRAC/CRAH), raised floor, hot/cold aisles</li>
+      <li><b>Security, fire, monitoring</b>: access control, CCTV, gas suppression, DCIM/NOC (p. 10)</li>
+    </ul>
+  </div>
+  <h3>Uptime Institute tiers (TIA-942 uses Rated 1–4)</h3>
+  <table class="hand tiny" style="line-height:5.3mm;width:100%">
+    <tr><th class="l">Tier</th><th class="l">Name</th><th class="l">Power/cooling paths</th><th class="l">Redundancy</th><th>Availability</th><th>Downtime/yr</th></tr>
+    <tr><td class="l">I</td><td class="l">Basic capacity</td><td class="l">1 path</td><td class="l">N</td><td>99.671%</td><td>28.8 h</td></tr>
+    <tr><td class="l">II</td><td class="l">Redundant capacity components</td><td class="l">1 path</td><td class="l">N+1 components</td><td>99.741%</td><td>22 h</td></tr>
+    <tr><td class="l"><b>III</b></td><td class="l">Concurrently maintainable</td><td class="l">1 active + 1 alternate</td><td class="l">N+1</td><td><span class="circ">99.982%</span></td><td>1.6 h</td></tr>
+    <tr><td class="l"><b>IV</b></td><td class="l">Fault tolerant</td><td class="l">2 active, compartmentalised</td><td class="l">2N / 2(N+1)</td><td>99.995%</td><td>26.3 min</td></tr>
+  </table>
+  <div class="cols" style="margin-top:2mm">
+    <div class="ex tiny" style="margin-top:0"><span class="lbl">Tier II vs Tier III</span> Both have spare (N+1) components, but Tier II has <b>one distribution path</b>, so maintaining that path stops the IT load. Tier III adds a <b>second path</b>: any component or path can be taken down for maintenance <b>without shutting down</b> (concurrently maintainable). Bank primary DCs are normally Tier III or better.</div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Bangladesh</span> The <b>national Tier IV data centre</b> at Bangabandhu Hi-Tech City, <b>Kaliakoir, Gazipur</b>, run by Bangladesh Data Center Company Ltd (BDCCL), was inaugurated on <span class="hl">28 Nov 2019</span>, Uptime Tier IV certified, 2N+1, 99.995%. BCC's <b>National Data Centre</b> (Agargaon, Dhaka) hosts government e-services and the government cloud.</div>
+  </div>
+  <div class="ex tiny"><span class="lbl">Worked example: series vs parallel reliability</span> PSU, motherboard, storage in <b>series</b>, each R = 0.95 → R = 0.95³ = <span class="circ">0.857</span> (85.7%). In <b>parallel</b> two 0.95 PSUs → 1 − 0.05² = 0.9975: that is why redundancy works.</div>
+  <div class="cols">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> Tier downtime "<b>29, 22, 1.6, 0.4</b>" hours. Tier III = <b>"maintain without stopping"</b>; Tier IV = <b>"fail without stopping"</b>.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Higher tier ≠ "more servers"; tiers rate <b>site infrastructure</b> (power, cooling paths), not IT equipment. Uptime uses Roman tiers I–IV; TIA-942 uses "Rated 1–4".</div>
+  </div>
+  <div class="pg-no">8</div>
+</section>
+
+<!-- ============ SHEET 9: power & cooling ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Power &amp; redundancy</span></div>
+  <h2><span class="no">9</span>Power: UPS vs IPS, Generators</h2><span class="tag">high-yield</span>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="def" style="margin-top:0"><span class="lbl">UPS</span> (Uninterruptible Power Supply) keeps power flowing with <span class="hl">zero or a few milliseconds' break</span> and conditions it (surge, sag, noise). It bridges the gap until the generator starts. An <b>online (double-conversion)</b> UPS always feeds the load from the inverter: <b>0 ms transfer</b>.</div>
+    <div class="def" style="margin-top:0"><span class="lbl">IPS</span> (Instant Power Supply) is an inverter-and-battery backup common in Bangladeshi homes and offices for <b>lights and fans</b>. It switches over only after mains fails, with a noticeable delay (tens of ms) and often unclean output: computers may reboot.</div>
+  </div>
+  <table class="hand tiny" style="line-height:5.3mm;width:100%">
+    <tr><th class="l">Point</th><th class="l">UPS (online)</th><th class="l">IPS</th></tr>
+    <tr><td class="l">Changeover</td><td class="l"><span class="circ">0 ms</span> (online) / 2–10 ms (offline)</td><td class="l">delayed switch after outage</td></tr>
+    <tr><td class="l">Output quality</td><td class="l">pure sine, regulated, filtered</td><td class="l">may be modified sine, unregulated</td></tr>
+    <tr><td class="l">Backup time</td><td class="l">minutes (bridge to generator)</td><td class="l">hours (big batteries)</td></tr>
+    <tr><td class="l">Used for</td><td class="l"><b>servers, network, data centre</b></td><td class="l">lights, fans, ordinary loads</td></tr>
+  </table>
+  <p class="tiny"><b>UPS types</b>: offline/standby (cheapest, PCs) → line-interactive (AVR, small racks) → <b>online double-conversion</b> (data centres). Power chain: utility → ATS → UPS → PDU → dual PSUs in each server; <b>ATS</b> (automatic transfer switch) brings in the generator within ~10–15 s.</p>
+  <div class="ex tiny"><span class="lbl">Which generator for a DC?</span> <b>Diesel</b> standby generator: starts and takes load in seconds, fuel stored on site (24–72 h tank), proven; higher running cost and emissions. <b>Natural-gas</b>: cheaper fuel and cleaner, but depends on pipeline pressure (gas shortage in BD) and starts slower; good for prime power. <b>Choice</b>: diesel for standby/emergency at a bank DC, sized N+1 with AMF panel, fuel contract and monthly load test; gas only if supply is assured. ("DC generator" in such questions means the data-centre generator; standby gensets give AC.)</div>
+  <h3>Redundancy words (power and cooling)</h3>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <ul class="dash tiny" style="margin-top:0">
+      <li><b>N</b>: just enough capacity; no spare</li>
+      <li><b>N+1</b>: one spare unit (e.g. 4 UPS modules where 3 are needed)</li>
+      <li><b>2N</b>: a complete second, independent system (A and B feeds)</li>
+      <li><b>2(N+1)</b> / 2N+1: two systems, each with its own spare</li>
+    </ul>
+    <ul class="dash tiny" style="margin-top:0">
+      <li><b>Concurrently maintainable</b>: any part can be serviced without stopping the IT load (Tier III)</li>
+      <li><b>Fault tolerant</b>: survives any single unplanned failure (Tier IV)</li>
+      <li><b>Dual-corded</b> servers: two PSUs on two PDUs, so one feed can fail</li>
+    </ul>
+  </div>
+  <div class="cols">
+    <div class="trick small" style="margin-top:0"><span class="lbl">Memory trick</span> "<b>U</b>PS = <b>U</b>nbroken; <b>I</b>PS = <b>I</b>nterrupts a little." Chain order: "<b>U-A-U-P-S</b>" = Utility, ATS, UPS, PDU, Server.</div>
+    <div class="exam small" style="margin-top:0"><span class="lbl">Exam trap</span> A UPS is <b>not</b> long-term backup: its battery lasts minutes; the generator carries the load. N+1 ≠ 2N: N+1 adds one unit, 2N doubles the whole system.</div>
+  </div>
+  <div class="pg-no">9</div>
+</section>
+
+<!-- ============ SHEET 10: cooling, security, servers ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Cooling &amp; servers</span></div>
+  <h2><span class="no">10</span>Cooling, PUE &amp; Energy Efficiency</h2>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <figure class="doodle" style="margin-top:0"><svg viewBox="0 0 300 140" width="300">
+      <g class="w">
+        <rect x="30" y="30" width="40" height="80" rx="3" class="ink fill-b"/><rect x="130" y="30" width="40" height="80" rx="3" class="ink fill-b"/><rect x="230" y="30" width="40" height="80" rx="3" class="ink fill-b"/>
+        <path class="ink" d="M100,108 V60" marker-end="url(#ahb)"/>
+        <path class="ink-r" d="M200,60 V18" marker-end="url(#ah)"/>
+        <path class="ink-k" d="M10,118 H290"/>
+      </g>
+      <text x="100" y="22" text-anchor="middle" class="s w6">cold aisle</text>
+      <text x="200" y="128" text-anchor="middle" class="r s w6">hot aisle</text>
+      <text x="100" y="132" text-anchor="middle" class="s">cool air from raised floor</text>
+    </svg></figure>
+    <div>
+      <p class="tiny"><b>Why cooling?</b> Every watt the IT uses becomes heat; above the safe range (ASHRAE recommends about <b>18–27 °C</b> inlet) chips throttle, fail early, and the room can overheat within minutes. Methods: precision CRAC/CRAH units, <b>hot/cold aisle containment</b>, blanking panels, free (outside-air) cooling, in-row and liquid cooling for dense AI racks.</p>
+      <div class="sumbox tiny"><span class="lbl">PUE</span> <span class="circ" style="white-space:nowrap;font-size:8.5pt">PUE = total power ÷ IT power</span><br>(total facility power ÷ IT equipment power). Ideal 1.0; global average about <b>1.56</b> (Uptime survey 2024). Example: 1,500 kW total, 1,000 kW IT → PUE 1.5.</div>
+    </div>
+  </div>
+  <div class="exam tiny"><span class="lbl">Challenges in data-centre energy efficiency</span> cooling takes a large share of power · old, inefficient equipment and low server utilisation (idle servers still draw ~half power) · rising rack density from AI/GPUs · hot climate and humidity (Bangladesh) limit free cooling · costly retrofits, legacy layouts · unreliable grid needing generators · measuring accurately (no metering) · balancing redundancy (2N) against efficiency. <b>Fixes</b>: virtualise and consolidate, containment, raise set points, efficient UPS (eco mode), VFD fans, renewables, DCIM monitoring.</div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <h3>Physical security &amp; fire</h3>
+      <ul class="dash tiny" style="margin-top:0">
+        <li>layered access: fence, guards, <b>biometric</b> + card, <b>mantrap</b>, locked cages and racks</li>
+        <li>CCTV with recording, visitor log, escort rule</li>
+        <li>very early smoke detection (VESDA); <b>clean-agent gas</b> suppression (FM-200, Novec 1230), never water sprinklers on live racks</li>
+        <li>water-leak, temperature and humidity sensors</li>
+      </ul>
+      <h3>Monitoring tools</h3>
+      <p class="tiny"><b>SNMP</b>-based NMS: Nagios, Zabbix, PRTG, SolarWinds; NetFlow for traffic; <b>DCIM</b> / BMS for power, cooling and space; SIEM for security logs; all watched 24/7 from a <b>NOC</b>.</p>
+    </div>
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Server hardware &amp; buying checklist</span> multi-core <b>CPUs</b> (1–2 sockets), <b>ECC RAM</b> (corrects bit errors), <b>RAID controller</b> with hot-swap drives, redundant hot-swap <b>PSUs</b> and fans, multiple NICs (10/25 GbE), remote management <b>BMC</b> (iLO, iDRAC, IPMI), BIOS/UEFI settings (boot order, RAID, virtualisation on). <b>Before buying</b>: workload sizing and growth, form factor (rack/blade), warranty and on-site support SLA, compatibility with the hypervisor and OS, power draw, vendor track record, total cost of ownership.<br><b>SAS vs SATA</b>: SAS is full-duplex, dual-ported, built for 24/7 duty → <b>servers</b>; SATA is cheaper and larger, for desktops and cold storage. SSDs are preferred for low latency and no moving parts.</div>
+  </div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> PUE: "<b>P</b>ower in the building ÷ <b>U</b>seful (IT) power" → closer to 1 is better. Server reliability = "<b>E</b>CC, <b>R</b>AID, <b>R</b>edundant PSU": <b>ERR</b> on the side of safety.</div>
+  <div class="pg-no">10</div>
+</section>
+
+<!-- ============ SHEET 11: DR ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Disaster recovery</span></div>
+  <h2><span class="no">11</span>Disaster Recovery, BCP, RTO &amp; RPO</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">DR vs BCP</span> A <b>disaster recovery plan</b> restores <span class="hl">IT systems and data</span> after fire, flood, earthquake, ransomware or power loss. A <b>business continuity plan</b> keeps the <b>whole business</b> running (people, branches, suppliers); DR is the IT part of BCP. A <b>DRS</b> is a second site, far from the primary <b>DC</b>, holding replicated systems.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 120" width="520">
+    <g class="w">
+      <path class="ink-k" d="M20,84 H620" marker-end="url(#ahb)"/>
+      <rect x="20" y="40" width="200" height="40" class="fill-g"/>
+      <rect x="420" y="40" width="180" height="40" class="fill-r"/>
+      <path class="ink-r" d="M320,24 V96"/>
+      <path class="ink-g" d="M220,30 H316" marker-end="url(#ahg)" marker-start="url(#ahg)"/>
+      <path class="ink-r" d="M324,30 H416" marker-end="url(#ah)" marker-start="url(#ah)"/>
+    </g>
+    <text x="320" y="16" text-anchor="middle" class="r w6">disaster</text>
+    <text x="120" y="66" text-anchor="middle" class="s">last good backup</text>
+    <text x="510" y="66" text-anchor="middle" class="s">service restored</text>
+    <text x="268" y="50" text-anchor="middle" class="g s w6">RPO</text>
+    <text x="370" y="50" text-anchor="middle" class="r s w6">RTO</text>
+    <text x="268" y="112" text-anchor="middle" class="g s">data you can lose</text>
+    <text x="370" y="112" text-anchor="middle" class="r s">time to recover</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div>
+      <ul class="dash tiny">
+        <li><b>RPO</b> (Recovery Point Objective): the <span class="hl">maximum data loss</span> allowed, measured backwards in time. RPO 15 min → replicate at least every 15 min</li>
+        <li><b>RTO</b> (Recovery Time Objective): the <span class="hl">maximum downtime</span> allowed until service is back</li>
+        <li><b>MTBF</b> (mean time between failures), <b>MTTR</b> (mean time to repair): availability = MTBF ÷ (MTBF + MTTR)</li>
+      </ul>
+    </div>
+    <table class="hand tiny" style="line-height:5.2mm;margin-top:0">
+      <tr><th class="l">Site</th><th class="l">State</th><th class="l">RTO</th><th class="l">Cost</th></tr>
+      <tr><td class="l"><b>Hot</b></td><td class="l">live replica, synced</td><td class="l">minutes</td><td class="l">highest</td></tr>
+      <tr><td class="l"><b>Warm</b></td><td class="l">hardware ready, data some hours old</td><td class="l">hours</td><td class="l">medium</td></tr>
+      <tr><td class="l"><b>Cold</b></td><td class="l">space and power only</td><td class="l">days</td><td class="l">lowest</td></tr>
+      <tr><td class="l">DRaaS</td><td class="l">cloud replica</td><td class="l">min–hours</td><td class="l">pay per use</td></tr>
+    </table>
+  </div>
+  <div class="ex tiny"><span class="lbl">Scenario: DC in Dhaka, DR in Khulna</span> ① business impact analysis: set RTO/RPO per system (core banking, ATM switch, mail) ② pick the DR site in a <b>different seismic and flood zone</b> on a different power grid ③ two diverse links from different carriers (fibre + backup) ④ replicate: synchronous for near-zero RPO only over short distance; <b>asynchronous</b> over ~300 km Dhaka–Khulna ⑤ compatible hardware, licences, DNS/IP failover ⑥ backups follow <span class="circ">3-2-1</span> (3 copies, 2 media, 1 off site, plus one offline/immutable against ransomware) ⑦ runbook, roles, call tree ⑧ DR drill twice a year, then fail back.</div>
+  <div class="cols">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">DC vs DRS</span> DC = primary, serves live traffic; DRS = standby copy that takes over on disaster (active-passive, or active-active sharing load). <b>Colocation</b> DR = renting racks, power and cooling in a provider's DC: saves building cost, but no <b>granular climate control</b>.</div>
+    <div>
+      <h3>Maintenance</h3>
+      <p class="tiny"><b>Preventive</b>: planned before failure (filters, battery tests, patches, generator load test) · <b>Corrective</b>: repair after failure (replace a failed disk, PSU). Good practice: cleaning, monitoring, patch windows, backup checks, recorded BIOS settings: longer life, fewer outages.</p>
+    </div>
+  </div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> "<b>RP</b>O = <b>R</b>ewind <b>P</b>oint (data); <b>RT</b>O = <b>R</b>estart <b>T</b>ime." Hot-warm-cold = minutes-hours-days.</div>
+  <div class="pg-no">11</div>
+</section>
+
+<!-- ============ SHEET 12: edge, fog, big data ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Edge &amp; big data</span></div>
+  <h2><span class="no">12</span>Edge, Fog &amp; CDN</h2><span class="tag">frequently tested</span>
+  <div class="def"><span class="lbl">Edge computing</span> processes data <span class="hl">near where it is produced</span> (on the device, a factory gateway, a mobile base station) instead of sending everything to a distant cloud. <b>Fog computing</b> (Cisco, 2012) is the layer of local nodes between devices and the cloud. An <b>edge server</b> is a server placed at the network edge, close to users.</div>
+  <figure class="doodle"><svg viewBox="0 0 640 152" width="640">
+    <g class="w">
+      <path class="ink fill-b" d="M270,52 C240,52 236,22 264,18 C270,0 312,0 322,14 C340,-2 380,6 378,26 C404,26 404,52 380,54 Z"/>
+      <rect x="120" y="70" width="110" height="30" rx="6" class="ink-p fill-p"/><rect x="410" y="70" width="110" height="30" rx="6" class="ink-p fill-p"/>
+      <circle cx="80" cy="124" r="10" class="ink-g fill-g"/><circle cx="170" cy="124" r="10" class="ink-g fill-g"/><circle cx="260" cy="124" r="10" class="ink-g fill-g"/>
+      <circle cx="380" cy="124" r="10" class="ink-g fill-g"/><circle cx="470" cy="124" r="10" class="ink-g fill-g"/><circle cx="560" cy="124" r="10" class="ink-g fill-g"/>
+      <path class="ink-k" d="M175,68 L270,48 M465,68 L376,48 M80,114 L160,102 M170,114 V102 M260,114 L200,102 M380,114 L450,102 M470,114 V102 M560,114 L480,102"/>
+    </g>
+    <text x="322" y="36" text-anchor="middle" class="k w6">cloud DC</text>
+    <text x="175" y="90" text-anchor="middle" class="p s w6">edge / fog node</text>
+    <text x="465" y="90" text-anchor="middle" class="p s w6">edge / fog node</text>
+    <text x="320" y="150" text-anchor="middle" class="g s">IoT devices, phones</text>
+    <text x="560" y="40" text-anchor="middle" class="r s">ms latency at edge</text>
+  </svg></figure>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Why an edge server?</span> ① <b>low latency</b> (self-driving cars, AR, online games, factory control) ② saves backbone <b>bandwidth</b> (filter video/IoT data locally) ③ keeps working when the WAN link is down ④ data stays local for privacy rules ⑤ serves cached content near users. Used by 5G MEC, smart meters, CCTV analytics.</div>
+    <div>
+      <p class="tiny"><b>CDN</b> (content delivery network): a network of edge cache servers that serve static content (images, video, scripts) from the nearest location: Akamai, Cloudflare, Amazon CloudFront. Cuts latency and absorbs DDoS.</p>
+      <p class="tiny"><b>Cloud vs edge</b>: the cloud is centralised, huge and elastic, good for heavy analytics and storage; the edge is distributed, small and close, good for real-time decisions. They work together.</p>
+    </div>
+  </div>
+  <h2><span class="no">13</span>Big Data &amp; Hadoop (cloud workloads)</h2>
+  <div class="def tiny"><span class="lbl">Big data</span> data sets too large, fast or varied for a traditional database to store and process. The <span class="circ">5 V's</span>: <b>Volume</b>, <b>Velocity</b>, <b>Variety</b>, <b>Veracity</b>, <b>Value</b>. Examples: bank transactions and server logs, mobile call records, social-media posts, sensor and CCTV streams.</div>
+  <table class="hand tiny" style="line-height:5.2mm;width:100%">
+    <tr><th class="l">Hadoop component</th><th class="l">Role (fraud detection on server logs)</th></tr>
+    <tr><td class="l"><b>HDFS</b></td><td class="l">distributed, replicated (3 copies) file storage for the raw logs</td></tr>
+    <tr><td class="l"><b>YARN</b></td><td class="l">resource manager: schedules jobs on the cluster</td></tr>
+    <tr><td class="l"><b>MapReduce</b></td><td class="l">batch processing: map (key-value pairs) → shuffle → reduce</td></tr>
+    <tr><td class="l"><b>Kafka</b> + <b>Spark Streaming</b></td><td class="l">ingest log events and score them in near real time</td></tr>
+    <tr><td class="l"><b>Hive</b> / HBase, <b>Spark MLlib</b></td><td class="l">SQL queries, fast row lookups, ML models for predictive maintenance</td></tr>
+  </table>
+  <div class="cols" style="margin-top:2mm">
+    <div class="trick tiny" style="margin-top:0"><span class="lbl">Memory trick</span> Edge = "<b>process at the doorstep</b>"; cloud = "<b>process at head office</b>". Big data 5 V's: "<b>V</b>ery <b>V</b>ast <b>V</b>aried <b>V</b>erified <b>V</b>aluable".</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Exam trap</span> Edge computing does <b>not</b> replace the cloud; fog sits between edge and cloud. MapReduce is batch, not real-time; real-time needs a stream engine (Spark Streaming, Flink).</div>
+  </div>
+  <div class="pg-no">12</div>
+</section>
+
+<!-- ============ SHEET 13: migration ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Migration &amp; scenarios</span></div>
+  <h2><span class="no">14</span>Moving a Data Centre to the Cloud</h2><span class="tag">high-yield</span>
+  <div class="def"><span class="lbl">Cloud migration</span> moves applications, data and infrastructure from an on-premises data centre to a cloud. It is planned app by app, using the <span class="hl">"R" strategies</span> (Gartner 5 R's, 2010; AWS later lists 7).</div>
+  <table class="hand tiny" style="line-height:5.2mm;width:100%">
+    <tr><th class="l">Strategy</th><th class="l">What it means</th><th class="l">Bank example</th></tr>
+    <tr><td class="l"><b>Rehost</b> (lift &amp; shift)</td><td class="l">move VMs as they are to IaaS</td><td class="l">file and print servers</td></tr>
+    <tr><td class="l"><b>Replatform</b></td><td class="l">small changes, e.g. move to a managed DB</td><td class="l">intranet DB → managed SQL</td></tr>
+    <tr><td class="l"><b>Refactor</b></td><td class="l">re-architect as cloud-native microservices</td><td class="l">mobile banking API</td></tr>
+    <tr><td class="l"><b>Repurchase</b></td><td class="l">switch to a SaaS product</td><td class="l">email → Microsoft 365</td></tr>
+    <tr><td class="l"><b>Retire / Retain</b> (+ Relocate)</td><td class="l">switch off unused apps / keep on-prem for now</td><td class="l">core banking kept in-country</td></tr>
+  </table>
+  <figure class="doodle"><svg viewBox="0 0 640 86" width="640">
+    <g class="w">
+      <rect x="6" y="14" width="110" height="44" rx="10" class="ink fill-b"/>
+      <rect x="134" y="14" width="110" height="44" rx="10" class="ink-r fill-r"/>
+      <rect x="262" y="14" width="110" height="44" rx="10" class="ink-p fill-p"/>
+      <rect x="390" y="14" width="110" height="44" rx="10" class="ink-g fill-g"/>
+      <rect x="518" y="14" width="116" height="44" rx="10" class="ink fill-y"/>
+      <path class="ink-k" d="M116,36 H130 M244,36 H258 M372,36 H386 M500,36 H514" marker-end="url(#ahb)"/>
+    </g>
+    <g class="s"><text x="61" y="33" text-anchor="middle" class="w6">① Assess</text><text x="61" y="49" text-anchor="middle">inventory, TCO</text>
+    <text x="189" y="33" text-anchor="middle" class="r w6">② Plan</text><text x="189" y="49" text-anchor="middle">model, R's, risk</text>
+    <text x="317" y="33" text-anchor="middle" class="p w6">③ Pilot</text><text x="317" y="49" text-anchor="middle">landing zone</text>
+    <text x="445" y="33" text-anchor="middle" class="g w6">④ Migrate</text><text x="445" y="49" text-anchor="middle">waves, test</text>
+    <text x="576" y="33" text-anchor="middle" class="w6">⑤ Operate</text><text x="576" y="49" text-anchor="middle">optimise, FinOps</text></g>
+    <text x="320" y="80" text-anchor="middle" class="s">regulator approval and security review run through every phase</text>
+  </svg></figure>
+  <div class="ex tiny"><span class="lbl">Model answer: "transform the bank's data centre into a cloud"</span> ① <b>Assess</b>: list every application, its data class, dependencies and current cost; set RTO/RPO ② <b>Decide the model</b>: hybrid; customer and core-banking data stay in a private cloud or an in-country provider, as the BB cloud guideline and s.12 of the Bank Company Act require; public cloud for web, analytics, DR, dev/test ③ <b>Choose a provider</b>: Tier III+ facility, ISO 27001, PCI DSS, local presence, SLA (99.95%+), exit clause ④ <b>Build a landing zone</b>: accounts, network (VPN/direct link), IAM with MFA, encryption keys, logging ⑤ <b>Migrate in waves</b>, low-risk first, parallel run, rollback plan ⑥ <b>Secure &amp; govern</b>: shared-responsibility matrix, CSPM tools, audits, staff training ⑦ <b>Optimise</b>: autoscaling, reserved instances, cost reports.</div>
+  <div class="cols">
+    <div class="sumbox tiny" style="margin-top:0"><span class="lbl">Scenario: 10k → 50k hits, no cloud</span> <b>Technical</b>: CPU/RAM saturate, slow pages, time-outs and HTTP 5xx errors (500 internal error, 503 unavailable), DB lock contention, no headroom for a DDoS. <b>Business</b>: failed transactions, lost customers and trust, emergency CapEx for servers that sit idle after the peak, staff overtime, possible regulatory penalty. Fix: load balancer + horizontal scaling, caching/CDN, or hybrid cloud bursting.</div>
+    <div class="exam tiny" style="margin-top:0"><span class="lbl">Cloud outage: who is responsible?</span> <b>Technically</b> the provider answers for its infrastructure under the <b>SLA</b> (service credits); the bank answers for its architecture (single region? no DR?). <b>Legally</b> the bank stays accountable to customers and Bangladesh Bank: outsourcing a service never outsources the responsibility. Hence: multi-zone design, DR plan, incident reporting, contract penalties.</div>
+  </div>
+  <div class="trick tiny"><span class="lbl">Memory trick</span> R's: "<b>Re-host, Re-platform, Re-factor, Re-purchase, Retire, Retain</b>": from "move as is" to "rewrite" to "drop". Phases: "<b>A P P M O</b>" = Assess, Plan, Pilot, Migrate, Operate.</div>
+  <div class="pg-no">13</div>
+</section>
+
+<!-- ============ SHEET 14: night-before ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Revision I</span></div>
+  <h1 class="title" style="font-size:28pt"><span class="u">Night-Before-the-Exam Sheet</span></h1>
+  <div class="sumbox"><span class="lbl">Fact sheet</span>
+    <div class="fgrid small">
+      <p>NIST SP 800-145 (2011): 5 · 3 · 4</p><p>5 traits: O-B-R-R-M</p>
+      <p>IaaS = VMs · PaaS = deploy code</p><p>SaaS = finished app (Gmail, M365)</p>
+      <p>public · private · community · hybrid</p><p>hybrid → cloud bursting</p>
+      <p>Type-1: ESXi, Hyper-V, Xen, KVM</p><p>Type-2: VirtualBox, Workstation</p>
+      <p>VM = own OS · container = shared kernel</p><p>Docker 2013 · Kubernetes 2014</p>
+      <p>vertical = scale up · horizontal = out</p><p>max VMs = min over CPU, RAM, disk</p>
+      <p>Tier III 99.982% (1.6 h)</p><p>Tier IV 99.995% (26.3 min)</p>
+      <p>N+1 = one spare · 2N = full copy</p><p>UPS 0 ms (online) · IPS delayed</p>
+      <p>PUE = total ÷ IT power (avg 1.56)</p><p>ASHRAE inlet ≈ 18–27 °C</p>
+      <p>RPO = data loss · RTO = downtime</p><p>hot = min · warm = h · cold = days</p>
+      <p>series R = R₁R₂R₃ · 0.95³ = 0.857</p><p>3-2-1 backup + 1 offline</p>
+      <p>BB cloud guideline: 16 Mar 2023</p><p>Kaliakoir Tier IV DC: 28 Nov 2019</p>
+    </div>
+  </div>
+  <h3>Top 14 one-liners for MCQs</h3>
+  <div class="cols small">
+    <ol class="num">
+      <li>Pooling/sharing concept = virtualisation</li>
+      <li>Cloud services are usually stateless</li>
+      <li>CaaS (computing) is not a NIST layer</li>
+      <li>Google App Engine, Heroku = PaaS</li>
+      <li>AWS EC2 = IaaS; Salesforce = SaaS</li>
+      <li>JVM is a process VM, not a hypervisor</li>
+      <li>Docker Hub = cloud image registry</li>
+    </ol>
+    <ol class="num" start="8">
+      <li>K8s smallest unit = Pod; state in etcd</li>
+      <li>Tier III = concurrently maintainable</li>
+      <li>Tier IV = fault tolerant</li>
+      <li>Servers prefer SAS/SSD and ECC RAM</li>
+      <li>Fire suppression = clean gas, not water</li>
+      <li>Colocation: no granular climate control</li>
+      <li>HTTP 500 = internal server error</li>
+    </ol>
+  </div>
+  <div class="exam"><span class="lbl">Top traps</span> private = exclusive use, not "on site" · SaaS customer still owns data and access · Type-1 is faster than Type-2 · containers isolate less than VMs · tiers rate power/cooling paths, not server count · UPS bridges minutes, the generator carries hours · RPO is about data, RTO about time · MapReduce is batch · outsourcing to cloud never outsources responsibility</div>
+  <div class="trick"><span class="lbl">All tricks together</span> O-B-R-R-M · pizza as a service · Park / home / Club / Home + park · provider guards the house · Type-1 on metal · VM brings its OS · taller vs wider · 29-22-1.6-0.4 h · UPS unbroken · ERR (ECC, RAID, Redundant PSU) · Rewind Point, Restart Time · doorstep vs head office · A-P-P-M-O</div>
+  <figure class="doodle"><svg viewBox="0 0 600 96" width="600">
+    <g class="w">
+      <rect x="10" y="60" width="130" height="28" rx="6" class="ink fill-b"/>
+      <rect x="160" y="44" width="130" height="44" rx="6" class="ink fill-y"/>
+      <rect x="310" y="26" width="130" height="62" rx="6" class="ink-r fill-r"/>
+      <rect x="460" y="8" width="130" height="80" rx="6" class="ink-g fill-g"/>
+    </g>
+    <text x="75" y="79" text-anchor="middle" class="s w6">I · N · 28.8 h</text>
+    <text x="225" y="71" text-anchor="middle" class="s w6">II · N+1 · 22 h</text>
+    <text x="375" y="62" text-anchor="middle" class="r s w6">III · maintain live</text>
+    <text x="375" y="80" text-anchor="middle" class="s">1.6 h</text>
+    <text x="525" y="44" text-anchor="middle" class="g s w6">IV · fault tolerant</text>
+    <text x="525" y="62" text-anchor="middle" class="s">2N · 26 min</text>
+  </svg></figure>
+  <div class="pg-no">14</div>
+</section>
+
+<!-- ============ SHEET 15: practice ============ -->
+<section class="page">
+  <div class="pg-head"><span>ICS · Cloud &amp; Data Centres</span><span>Revision II: Practice</span></div>
+  <h2><span class="no">✓</span>Practice MCQs (exam pattern, 10 marks)</h2><span class="tag g">try first, then check</span>
+  <div class="mcq-set">
+    <div class="mcq"><span class="qn">1.</span>A developer only wants to deploy code; the model is:<ol class="opts"><li>IaaS</li><li>SaaS</li><li>PaaS</li><li>on-premises</li></ol></div>
+    <div class="mcq"><span class="qn">2.</span>Not a cloud service layer:<ol class="opts"><li>CaaS (Computing)</li><li>IaaS</li><li>PaaS</li><li>SaaS</li></ol></div>
+    <div class="mcq"><span class="qn">3.</span>A Type-2 (hosted) hypervisor:<ol class="opts"><li>VMware ESXi</li><li>Xen</li><li>Hyper-V</li><li>VirtualBox</li></ol></div>
+    <div class="mcq"><span class="qn">4.</span>Cloud concept for pooling and sharing resources:<ol class="opts"><li>polymorphism</li><li>virtualisation</li><li>abstraction</li><li>digitising</li></ol></div>
+    <div class="mcq"><span class="qn">5.</span>Concurrently maintainable data centre tier:<ol class="opts"><li>Tier III</li><li>Tier I</li><li>Tier II</li><li>Tier IV</li></ol></div>
+    <div class="mcq"><span class="qn">6.</span>Maximum acceptable data loss is the:<ol class="opts"><li>RTO</li><li>MTTR</li><li>RPO</li><li>SLA</li></ol></div>
+    <div class="mcq"><span class="qn">7.</span>Docker Hub is:<ol class="opts"><li>a hypervisor</li><li>a database</li><li>a language</li><li>a cloud image registry</li></ol></div>
+    <div class="mcq"><span class="qn">8.</span>32 cores, 96 GB, 4 TB host; VM 4 c / 16 GB / 500 GB. Max VMs:<ol class="opts"><li>8</li><li>6</li><li>4</li><li>24</li></ol></div>
+    <div class="mcq"><span class="qn">9.</span>Not a usual reason for colocation-based DR:<ol class="opts"><li>full hardware control</li><li>security, location</li><li>cost of building</li><li>granular climate control</li></ol></div>
+    <div class="mcq"><span class="qn">10.</span>Total 1,800 kW, IT load 1,200 kW. PUE:<ol class="opts"><li>0.67</li><li>1.2</li><li>1.5</li><li>1.8</li></ol></div>
+  </div>
+  <div class="anskey">Answer key → 1-c · 2-a · 3-d · 4-b · 5-a · 6-c · 7-d · 8-b · 9-d · 10-c</div>
+  <div class="wq"><span class="lbl">Written question</span> Define a virtual machine and a hypervisor with a diagram. Distinguish Type-1 and Type-2 hypervisors and a VM from a container. List four benefits of VMs. <i class="mk">10 marks</i></div>
+  <ol class="steps tiny" style="line-height:6.6mm">
+    <li><b>Definitions</b>: VM = software computer with its own guest OS; hypervisor = layer that creates, isolates and schedules VMs on real hardware <i class="mk">2</i></li>
+    <li><b>Diagram</b>: hardware → hypervisor → VMs (Type-1); hardware → host OS → hypervisor → VMs (Type-2) <i class="mk">2</i></li>
+    <li><b>Type-1 vs Type-2</b>: bare metal, faster (ESXi, Hyper-V, KVM) vs hosted (VirtualBox, Workstation) <i class="mk">2</i></li>
+    <li><b>VM vs container</b>: full OS, GBs, minutes, strong isolation vs shared kernel, MBs, seconds <i class="mk">2</i></li>
+    <li><b>Benefits</b>: consolidation, isolation, snapshots, live migration, easy DR <i class="mk">2</i></li>
+  </ol>
+  <div class="tipbox tiny"><span class="lbl">Before the exam ✓</span> IaaS/PaaS/SaaS stack drawn · Type-1 vs Type-2 diagram · tier table · RTO/RPO timeline. <b>Also practise (written)</b>: cloud traits, pros and cons · DR plan Dhaka → Khulna · DC → cloud migration plan · UPS vs IPS.</div>
+  <div class="pg-no">15</div>
+</section>
+
+<script>
+addEventListener('load', () => {
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > p.clientHeight + 2) { p.dataset.overflow = String(i + 1); p.classList.add('ovf'); }
+    const top = p.getBoundingClientRect().top; let bottom = 0;
+    p.querySelectorAll(':scope > *:not(.pg-no)').forEach(c => { bottom = Math.max(bottom, c.getBoundingClientRect().bottom - top); });
+    p.dataset.fill = Math.round(100 * bottom / p.clientHeight);
+  });
+});
+</script>
+</body>
+</html>
