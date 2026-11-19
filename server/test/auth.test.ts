@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { createApp } from "../src/app";
+import { pool } from "../src/db/pool";
 import { resetDb } from "./helpers/db";
 import { createAdmin, candidateToken, legacyAdminToken } from "./helpers/auth";
 
@@ -13,6 +14,25 @@ describe("admin-only routes", () => {
     const admin = await createAdmin();
     const res = await request(createApp()).get("/api/chapters").set("Authorization", `Bearer ${admin.token}`);
     expect(res.status).toBe(200);
+  });
+
+  it("reject a deactivated or deleted admin's token at once, and use the role from the database", async () => {
+    const app = createApp();
+    const boss = await createAdmin("super_admin");
+    const register = () => request(app).post("/api/auth/register").set("Authorization", `Bearer ${boss.token}`)
+      .send({ username: "new_editor", email: "new@example.com", password: "long-enough-1", role: "editor" });
+    await pool.query("UPDATE admin_users SET role = 'admin' WHERE id = $1", [boss.id]);
+    expect((await register()).status).toBe(403); // demoted, though the token still says super_admin
+
+    await pool.query("UPDATE admin_users SET is_active = false WHERE id = $1", [boss.id]);
+    const off = await request(app).get("/api/chapters").set("Authorization", `Bearer ${boss.token}`);
+    expect(off.status).toBe(401);
+    expect(off.body.code).toBe("account_inactive");
+    const reading = await request(app).get("/api/public/chapters/published").set("Authorization", `Bearer ${boss.token}`);
+    expect(reading.status).toBe(401);
+
+    await pool.query("DELETE FROM admin_users WHERE id = $1", [boss.id]);
+    expect((await request(app).get("/api/chapters").set("Authorization", `Bearer ${boss.token}`)).status).toBe(401);
   });
 
   it("reject a candidate token with 403", async () => {

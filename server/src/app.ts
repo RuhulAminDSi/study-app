@@ -3,7 +3,7 @@ import cors from "cors";
 import path from "path";
 import { config, type AppConfig } from "./config.js";
 import { pool } from "./db/pool.js";
-import { adminRequired, adminRoleRequired, candidateRequired, examTakerRequired, readerRequired } from "./middleware/auth.js";
+import { adminRequired, adminRoleRequired, candidateRequired, examTakerRequired, readerRequired, type ReaderRequest } from "./middleware/auth.js";
 import { createAuthLimiter } from "./middleware/rateLimit.js";
 import { asyncHandler } from "./http/asyncHandler.js";
 import authRoutes from "./routes/auth.js";
@@ -103,6 +103,12 @@ export function createApp(overrides: Partial<Pick<AppConfig, "trustProxy" | "aut
   return app;
 }
 
+/** FROM/WHERE for lessons a reader may see: published, in an active section of a published chapter. */
+const VISIBLE_LESSONS = `FROM lessons l
+  JOIN side_menus m ON m.id = l.side_menu_id AND m.is_active
+  JOIN chapters c ON c.id = m.chapter_id AND c.is_published
+ WHERE l.is_published`;
+
 /**
  * Read-only endpoints for the public site. Study content (chapters, menus, lessons) needs a signed-in
  * candidate or admin; the subject and job-post lists stay open for the landing and sign-up pages.
@@ -115,28 +121,37 @@ function createPublicRouter() {
     const result = await pool.query("SELECT * FROM chapters WHERE is_published = true ORDER BY sort_order");
     res.json(result.rows);
   }));
-  router.get("/chapters/:id", asyncHandler(async (req, res) => {
-    const result = await pool.query("SELECT * FROM chapters WHERE id = $1", [req.params.id]);
+  // A lesson is visible only when it, its section and its chapter all are. Admins previewing the portal may
+  // still open a draft chapter or lesson by id.
+  const preview = (req: ReaderRequest) => req.reader?.kind === "admin";
+  router.get("/chapters/:id", asyncHandler(async (req: ReaderRequest, res) => {
+    if (!UUID_RE.test(req.params.id)) { res.status(404).json({ error: "Not found" }); return; }
+    const result = await pool.query("SELECT * FROM chapters WHERE id = $1 AND (is_published OR $2)", [req.params.id, preview(req)]);
     if (!result.rows[0]) { res.status(404).json({ error: "Not found" }); return; }
     res.json(result.rows[0]);
   }));
   router.get("/menus", asyncHandler(async (_req, res) => {
-    const result = await pool.query("SELECT * FROM side_menus WHERE is_active = true ORDER BY sort_order");
-    res.json(result.rows);
-  }));
-  router.get("/lessons/published", asyncHandler(async (_req, res) => {
-    const result = await pool.query("SELECT * FROM lessons WHERE is_published = true ORDER BY lesson_number");
-    res.json(result.rows);
-  }));
-  router.get("/lessons/by-menu/:menuId", asyncHandler(async (req, res) => {
     const result = await pool.query(
-      "SELECT * FROM lessons WHERE side_menu_id = $1 AND is_published = true ORDER BY lesson_number",
-      [req.params.menuId],
+      `SELECT m.* FROM side_menus m JOIN chapters c ON c.id = m.chapter_id AND c.is_published
+        WHERE m.is_active ORDER BY m.sort_order`,
     );
     res.json(result.rows);
   }));
-  router.get("/lessons/:id", asyncHandler(async (req, res) => {
-    const result = await pool.query("SELECT * FROM lessons WHERE id = $1", [req.params.id]);
+  router.get("/lessons/published", asyncHandler(async (_req, res) => {
+    const result = await pool.query(`SELECT l.* ${VISIBLE_LESSONS} ORDER BY l.lesson_number`);
+    res.json(result.rows);
+  }));
+  router.get("/lessons/by-menu/:menuId", asyncHandler(async (req, res) => {
+    if (!UUID_RE.test(req.params.menuId)) { res.json([]); return; }
+    const result = await pool.query(`SELECT l.* ${VISIBLE_LESSONS} AND l.side_menu_id = $1 ORDER BY l.lesson_number`, [req.params.menuId]);
+    res.json(result.rows);
+  }));
+  router.get("/lessons/:id", asyncHandler(async (req: ReaderRequest, res) => {
+    if (!UUID_RE.test(req.params.id)) { res.status(404).json({ error: "Not found" }); return; }
+    const result = await pool.query(
+      preview(req) ? "SELECT * FROM lessons WHERE id = $1" : `SELECT l.* ${VISIBLE_LESSONS} AND l.id = $1`,
+      [req.params.id],
+    );
     if (!result.rows[0]) { res.status(404).json({ error: "Not found" }); return; }
     res.json(result.rows[0]);
   }));
