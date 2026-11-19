@@ -68,6 +68,7 @@ const ERROR_KEYS: Record<string, keyof Translations> = {
   deadline_passed: 'exErrDeadline',
   attempt_closed: 'exErrClosedAttempt',
   already_answered: 'exErrAnswered',
+  question_in_test: 'exErrInTest',
   review_unavailable: 'exErrReview',
   not_finished: 'exErrNotFinished',
   account_inactive: 'errAccountInactive',

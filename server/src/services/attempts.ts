@@ -1,7 +1,7 @@
 import type { Pool, PoolClient } from "pg";
 import { pool } from "../db/pool.js";
 import { withTransaction } from "../db/tx.js";
-import { buildPaper, ExamError, optionOrders, shuffle, TEST_SUMMARY_SELECT, type PaperItem, type TestSummaryRow } from "./mockTests.js";
+import { buildPaper, ExamError, heldBackSql, optionOrders, questionHeldBack, shuffle, TEST_SUMMARY_SELECT, type PaperItem, type TestSummaryRow } from "./mockTests.js";
 
 type Db = Pool | PoolClient;
 
@@ -139,7 +139,7 @@ export interface PracticeFilters {
 export async function startPractice(candidateId: string, f: PracticeFilters): Promise<{ attemptId: string; questionCount: number }> {
   return withTransaction(async (client) => {
     await lockCandidate(client, candidateId);
-    const where = ["q.is_published", "q.type = 'mcq'"];
+    const where = ["q.is_published", "q.type = 'mcq'", `NOT ${heldBackSql("$1", "q.id")}`];
     const params: unknown[] = [candidateId];
     const add = (sql: (p: string) => string, value: unknown) => { params.push(value); where.push(sql(`$${params.length}`)); };
     if (f.subjectId) add((p) => `q.subject_id = ${p}`, f.subjectId);
@@ -414,6 +414,11 @@ export async function saveAnswer(candidateId: string, attemptId: string, questio
 
     if (a.mode !== "mock") {
       const previous = row.rows[0].selected_option_id as string | null;
+      // A practice session started before a timed test may share its questions; answering one would reveal the key.
+      if (option && !previous) {
+        const held = await client.query(`SELECT ${heldBackSql("$1", "$2::uuid")} AS held_back`, [candidateId, questionId]);
+        if (held.rows[0].held_back) throw questionHeldBack();
+      }
       if (input.optionId === null && previous) throw new ExamError(409, "already_answered", "This question is already answered.");
       if (option && previous && previous !== option.id) throw new ExamError(409, "already_answered", "This question is already answered.");
       if (option && !previous) {
@@ -583,7 +588,21 @@ export async function getReview(candidateId: string, attemptId: string) {
     throw new ExamError(403, "review_unavailable", "Answers for this test are not released yet.", { availableAt: release.availableAt });
   }
   const paper = await paperOf(attemptId);
-  return { attempt: attemptMeta(a), questions: paper.map((r) => questionView(r, true)) };
+  // A practice session may share questions with a timed test whose answers are not out yet: keep those hidden
+  // unless the candidate answered them here (the feedback was shown then).
+  const held = a.mode === "mock" ? new Set<string>() : await heldBackIds(candidateId, paper.map((r) => r.question_id));
+  return {
+    attempt: attemptMeta(a),
+    questions: paper.map((r) => questionView(r, !held.has(r.question_id) || r.selected_option_id !== null)),
+  };
+}
+
+async function heldBackIds(candidateId: string, questionIds: string[]): Promise<Set<string>> {
+  const { rows } = await pool.query(
+    `SELECT id FROM unnest($2::uuid[]) AS id WHERE ${heldBackSql("$1", "id")}`,
+    [candidateId, questionIds],
+  );
+  return new Set(rows.map((r) => r.id));
 }
 
 // ── History and overview ───────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 import { pool } from "../db/pool.js";
-import { ExamError } from "./mockTests.js";
+import { ExamError, heldBackSql, questionHeldBack } from "./mockTests.js";
 
 /**
  * The question bank as candidates study it before a test: plain MCQs, CQs (short questions) and written questions,
@@ -100,20 +100,21 @@ export async function listBank(candidateId: string, f: BankFilters) {
  * The answer to one published question: the correct option (and whether `optionId` was it) for an MCQ, the model
  * answer for a CQ or written question, with the explanation and the lesson that teaches it.
  */
-export async function checkAnswer(questionId: string, optionId: string | null) {
+export async function checkAnswer(candidateId: string, questionId: string, optionId: string | null) {
   const { rows } = await pool.query(
     `SELECT q.type, q.explanation_en, q.explanation_bn, q.model_answer_en, q.model_answer_bn,
             (SELECT id FROM question_options WHERE question_id = q.id AND is_correct) AS correct_option_id,
-            l.id AS lesson_id, m.chapter_id
+            l.id AS lesson_id, m.chapter_id, ${heldBackSql("$2", "q.id")} AS held_back
        FROM questions q
        LEFT JOIN topics t ON t.id = q.topic_id
        LEFT JOIN lessons l ON l.id = t.lesson_id AND l.is_published
        LEFT JOIN side_menus m ON m.id = l.side_menu_id AND m.is_active
       WHERE q.id = $1 AND q.is_published`,
-    [questionId],
+    [questionId, candidateId],
   );
   const q = rows[0];
   if (!q) throw notFound();
+  if (q.held_back) throw questionHeldBack();
   if (q.type === "mcq" && optionId) {
     const own = await pool.query("SELECT 1 FROM question_options WHERE id = $1 AND question_id = $2", [optionId, questionId]);
     if (!own.rowCount) throw new ExamError(400, "option_invalid", "That option does not belong to this question.");

@@ -233,7 +233,7 @@ candidateExamsRouter.get("/bank/questions", handle((req) => listBank(me(req), pa
 candidateExamsRouter.post("/bank/questions/:id/check", handle(async (req, res) => {
   const optionId = req.body?.optionId ?? null;
   if (optionId !== null && (typeof optionId !== "string" || !UUID_RE.test(optionId))) { invalid(res, { optionId: "option_invalid" }); return; }
-  return checkAnswer(uuidParam(req.params.id), optionId);
+  return checkAnswer(me(req), uuidParam(req.params.id), optionId);
 }));
 
 candidateExamsRouter.get("/bank/questions/:id/responses", handle((req) => listResponses(me(req), uuidParam(req.params.id))));

@@ -645,6 +645,7 @@ export const translation_en: Translations = {
   exErrDeadline: "Time is up: this answer was not saved.",
   exErrClosedAttempt: "This attempt is already finished.",
   exErrAnswered: "This question is already answered.",
+  exErrInTest: "This question is in one of your tests. Its answer shows once that test's answers are released.",
   exErrReview: "The answers for this test are not released yet.",
   exErrNotFinished: "Submit the attempt to see its result.",
   exErrCandidateOnly: "Tests are taken with a candidate account.",

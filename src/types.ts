@@ -665,6 +665,7 @@ export interface Translations {
   exErrDeadline: string
   exErrClosedAttempt: string
   exErrAnswered: string
+  exErrInTest: string
   exErrReview: string
   exErrNotFinished: string
   exErrCandidateOnly: string
