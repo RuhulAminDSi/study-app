@@ -19,6 +19,22 @@ export class ExamError extends Error {
   }
 }
 
+/**
+ * SQL that is true when the question `question` is in one of candidate `candidate`'s timed attempts whose answers
+ * are not public yet: the attempt is still open, or its review is held back by `result_release` (as in
+ * `reviewRelease`). The question bank and practice must not reveal those answers. Both arguments are SQL expressions.
+ */
+export const heldBackSql = (candidate: string, question: string) => `EXISTS (
+  SELECT 1 FROM attempt_questions hb_aq
+    JOIN attempts hb_a ON hb_a.id = hb_aq.attempt_id
+    LEFT JOIN mock_tests hb_t ON hb_t.id = hb_a.mock_test_id
+   WHERE hb_aq.question_id = ${question} AND hb_a.candidate_id = ${candidate} AND hb_a.mode = 'mock'
+     AND (hb_a.status = 'in_progress' OR hb_t.result_release = 'never'
+          OR (hb_t.result_release = 'after_close' AND hb_t.available_until > now())))`;
+
+export const questionHeldBack = () =>
+  new ExamError(409, "question_in_test", "This question is in one of your tests; its answer is shown once the test's answers are released.");
+
 export function shuffle<T>(items: T[]): T[] {
   const a = [...items];
   for (let i = a.length - 1; i > 0; i--) {
@@ -36,7 +52,7 @@ export const TEST_SUMMARY_SELECT = `
   SELECT mt.id, mt.kind, mt.mode, mt.title_en, mt.title_bn, mt.description_en, mt.description_bn, mt.job_post_id,
          mt.duration_minutes, mt.marks_per_question::float AS marks_per_question, mt.negative_mark::float AS negative_mark,
          mt.pass_mark::float AS pass_mark, mt.shuffle_options, mt.available_from, mt.available_until, mt.max_attempts,
-         mt.result_release, mt.is_published, mt.is_archived, mt.blueprint_id, mt.created_at, mt.updated_at,
+         mt.result_release, mt.is_published, mt.is_archived, mt.is_free, mt.blueprint_id, mt.created_at, mt.updated_at,
          CASE WHEN mt.mode = 'fixed' THEN fx.n ELSE COALESCE(sc.n, 0) END::int AS question_count,
          CASE WHEN mt.mode = 'fixed' THEN fx.n * mt.marks_per_question ELSE COALESCE(sc.marks, 0) END::float AS total_marks,
          CASE WHEN mt.mode = 'fixed' THEN fx.subjects ELSE sc.subjects END AS subjects,
@@ -67,7 +83,7 @@ export interface TestSummaryRow {
   description_en: string | null; description_bn: string | null; job_post_id: string | null;
   duration_minutes: number; marks_per_question: number; negative_mark: number; pass_mark: number | null;
   shuffle_options: boolean; available_from: Date | null; available_until: Date | null; max_attempts: number | null;
-  result_release: ResultRelease; is_published: boolean; is_archived: boolean; blueprint_id: string | null;
+  result_release: ResultRelease; is_published: boolean; is_archived: boolean; is_free: boolean; blueprint_id: string | null;
   created_at: Date; updated_at: Date;
   question_count: number; total_marks: number; subjects: { code: string; name_en: string; name_bn: string | null }[] | null;
   difficulties: (number | null)[] | null; negative_marks: number[] | null; written_sections: number;

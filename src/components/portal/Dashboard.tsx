@@ -6,6 +6,7 @@ import { useCandidateAuth } from '../../candidate/CandidateAuthContext'
 import { translations } from '../../data/translations'
 import ContentStatus from '../ContentStatus'
 import Announcements from './Announcements'
+import LatestCirculars from './LatestCirculars'
 import { CONTENT_MANAGEMENT } from '../../features'
 import Icon, { type IconName } from './icons'
 import { chapterTitle, fill, lessonTitle, noteSets, num, subjectSummaries } from './portalData'
@@ -142,6 +143,8 @@ export default function Dashboard() {
           </section>
 
           <aside className="pd-rail">
+            <LatestCirculars lang={lang} t={t} />
+
             <section className="pd-panel" aria-labelledby="pd-recent-title">
               <h2 id="pd-recent-title"><Icon name="clock" />{t.dashRecent}</h2>
               {recent.length === 0 ? (

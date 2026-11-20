@@ -118,6 +118,56 @@ function timestamp(v: unknown): string | null | undefined {
   return new Date(v).toISOString();
 }
 
+export const RESOURCE_CATEGORIES = ["circular", "notice", "suggestion", "question", "other"] as const;
+
+export interface ResourceInput {
+  category: (typeof RESOURCE_CATEGORIES)[number]; tag: string | null; title_en: string; title_bn: string | null;
+  details_en: string | null; details_bn: string | null; file_id: string | null; link_url: string | null; apply_url: string | null;
+  starts_on: string | null; ends_on: string | null; is_pinned: boolean; is_published: boolean;
+}
+
+/** `YYYY-MM-DD` (or empty for none); undefined when malformed. */
+function dateOnly(v: unknown): string | null | undefined {
+  if (v === null || v === undefined || v === "") return null;
+  if (typeof v !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(v) || Number.isNaN(Date.parse(v))) return undefined;
+  return v;
+}
+
+/** A circular, suggestion, exam question or other download. It needs a file or a link to be useful. */
+export function parseResource(input: unknown): Result<ResourceInput> {
+  const b = body(input);
+  const fields: Record<string, string> = {};
+  const category = b.category as ResourceInput["category"];
+  if (!RESOURCE_CATEGORIES.includes(category)) fields.category = "category_invalid";
+  const title_en = text(b.title_en);
+  if (!title_en) fields.title_en = "required";
+  else if (title_en.length > 200) fields.title_en = "too_long";
+  const title_bn = text(b.title_bn);
+  if (title_bn && title_bn.length > 200) fields.title_bn = "too_long";
+  const tag = text(b.tag);
+  if (tag && tag.length > 60) fields.tag = "too_long";
+  let file_id: string | null = null;
+  if (b.file_id !== null && b.file_id !== undefined && b.file_id !== "") {
+    if (typeof b.file_id !== "string" || !UUID_RE.test(b.file_id)) fields.file_id = "file_unknown";
+    else file_id = b.file_id;
+  }
+  const link_url = text(b.link_url);
+  if (link_url && (link_url.length > 500 || !LINK_RE.test(link_url))) fields.link_url = "link_invalid";
+  const apply_url = text(b.apply_url);
+  if (apply_url && (apply_url.length > 500 || !LINK_RE.test(apply_url))) fields.apply_url = "link_invalid";
+  if (!file_id && !link_url && !apply_url && !fields.file_id && !fields.link_url && !fields.apply_url) fields.file_id = "file_or_link_required";
+  const starts_on = dateOnly(b.starts_on);
+  if (starts_on === undefined) fields.starts_on = "date_invalid";
+  const ends_on = dateOnly(b.ends_on);
+  if (ends_on === undefined) fields.ends_on = "date_invalid";
+  else if (ends_on && starts_on && ends_on < starts_on) fields.ends_on = "ends_before_start";
+  return done(fields, {
+    category, tag, title_en: title_en ?? "", title_bn, details_en: text(b.details_en), details_bn: text(b.details_bn),
+    file_id, link_url, apply_url, starts_on: starts_on ?? null, ends_on: ends_on ?? null,
+    is_pinned: b.is_pinned === true, is_published: b.is_published === true,
+  });
+}
+
 export function parseAnnouncement(input: unknown): Result<AnnouncementInput> {
   const b = body(input);
   const fields: Record<string, string> = {};

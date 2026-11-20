@@ -16,13 +16,35 @@ function bearerToken(req: Request): string | null {
   return header?.startsWith("Bearer ") ? header.slice(7) : null;
 }
 
-export function adminRequired(req: AuthRequest, res: Response, next: NextFunction) {
+const accountInactive = (res: Response) =>
+  res.status(401).json({ error: "This account is not available. Sign in again.", code: "account_inactive" });
+
+/** The admin's current account, or null when it was deleted or deactivated after the token was issued. */
+async function liveAdmin(claims: AdminClaims): Promise<AdminClaims | null> {
+  const { rows } = await pool.query("SELECT username, role, is_active FROM admin_users WHERE id = $1", [claims.id]);
+  if (!rows[0]?.is_active) return null;
+  return { ...claims, username: rows[0].username, role: rows[0].role };
+}
+
+/**
+ * An admin whose account still exists and is active. The role comes from the database, not the token, so
+ * deactivating or demoting an admin takes effect at once, not when the token expires.
+ */
+export async function adminRequired(req: AuthRequest, res: Response, next: NextFunction) {
   const token = bearerToken(req);
   if (!token) { res.status(401).json({ error: "No token provided" }); return; }
   const claims = verifyToken(token);
   if (!claims) { res.status(401).json({ error: "Invalid or expired token" }); return; }
   if (claims.kind !== "admin") { res.status(403).json({ error: "Admin access required" }); return; }
-  req.user = claims;
+  let admin: AdminClaims | null;
+  try {
+    admin = await liveAdmin(claims);
+  } catch (err) {
+    next(err);
+    return;
+  }
+  if (!admin) { accountInactive(res); return; }
+  req.user = admin;
   next();
 }
 
@@ -48,26 +70,26 @@ export interface ReaderRequest extends Request {
 }
 
 /**
- * Study content: a signed-in candidate, or an admin previewing the portal. A candidate's account must
- * still exist and be active, so deactivating or deleting it takes effect at once, not when the token expires.
+ * Study content: a signed-in candidate, or an admin previewing the portal. The account must still exist and
+ * be active, so deactivating or deleting it takes effect at once, not when the token expires.
  */
 export async function readerRequired(req: ReaderRequest, res: Response, next: NextFunction) {
   const token = bearerToken(req);
   const claims = token ? verifyToken(token) : null;
   if (!claims) { res.status(401).json({ error: "Sign in to read the lessons.", code: "sign_in_required" }); return; }
-  if (claims.kind === "candidate") {
-    try {
+  let reader: AdminClaims | CandidateClaims | null = claims;
+  try {
+    if (claims.kind === "admin") reader = await liveAdmin(claims);
+    else {
       const { rows } = await pool.query("SELECT is_active FROM candidates WHERE id = $1", [claims.id]);
-      if (!rows[0]?.is_active) {
-        res.status(401).json({ error: "This account is not available. Sign in again.", code: "account_inactive" });
-        return;
-      }
-    } catch (err) {
-      next(err);
-      return;
+      if (!rows[0]?.is_active) reader = null;
     }
+  } catch (err) {
+    next(err);
+    return;
   }
-  req.reader = claims;
+  if (!reader) { accountInactive(res); return; }
+  req.reader = reader;
   next();
 }
 
@@ -95,28 +117,28 @@ export const PREVIEW_EMAIL_DOMAIN = "admin-preview.studypath.invalid";
  * default), an admin testing the exams. Attempts belong to a candidate, so each admin gets a linked preview candidate,
  * created on first use. It cannot sign in (its password hash is not a bcrypt hash).
  */
-export function examTakerRequired(req: CandidateRequest, res: Response, next: NextFunction) {
+export async function examTakerRequired(req: CandidateRequest, res: Response, next: NextFunction) {
   const token = bearerToken(req);
   const claims = token ? verifyToken(token) : null;
   if (claims?.kind !== "admin" || !config.examAdminPreview) { activeCandidateRequired(req, res, next); return; }
   const email = `admin-${claims.id}@${PREVIEW_EMAIL_DOMAIN}`;
-  pool
-    .query(
+  try {
+    const admin = await liveAdmin(claims);
+    if (!admin) { accountInactive(res); return; }
+    const { rows } = await pool.query(
       `INSERT INTO candidates (full_name, email, password_hash, preferred_language)
        VALUES ($1, $2, '!preview', 'en')
        ON CONFLICT ((lower(email))) DO UPDATE SET full_name = EXCLUDED.full_name
        RETURNING id, is_active`,
-      [`${claims.username} (admin preview)`.slice(0, 150), email],
-    )
-    .then(({ rows }) => {
-      if (!rows[0].is_active) {
-        res.status(401).json({ error: "This account is not available. Sign in again.", code: "account_inactive" });
-        return;
-      }
-      req.candidate = { kind: "candidate", id: rows[0].id, email };
-      next();
-    })
-    .catch(next);
+      [`${admin.username} (admin preview)`.slice(0, 150), email],
+    );
+    if (!rows[0].is_active) { accountInactive(res); return; }
+    req.candidate = { kind: "candidate", id: rows[0].id, email };
+  } catch (err) {
+    next(err);
+    return;
+  }
+  next();
 }
 
 /** Limits an admin route to some roles (use after adminRequired). Editors, for example, manage content only. */

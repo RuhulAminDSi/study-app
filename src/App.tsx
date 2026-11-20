@@ -13,7 +13,11 @@ import ExamsPage from './exam/ExamsPage'
 import ExamInstructions from './exam/ExamInstructions'
 import ExamSession from './exam/ExamSession'
 import ExamResult from './exam/ExamResult'
-import { useRoute, navigate, type ExamRoute, type PublicView as View } from './router'
+import AccountPage from './components/portal/AccountPage'
+import SiteRoute from './site/SiteRoute'
+import SiteContent from './site/SiteContent'
+import WhatsAppButton from './components/WhatsAppButton'
+import { useRoute, navigate, type ExamRoute, type PublicView as View, type SitePage } from './router'
 import './index.css'
 
 // The admin panel (and its rich-text editor) loads only when an admin opens it, not for every reader.
@@ -37,6 +41,23 @@ function PublicView({ view, exam }: { view: View; exam?: ExamRoute }) {
       {(view === 'notes' || view === 'pyq') && <NotesLibrary key={view} kind={view} />}
       {view === 'lesson' && <MainContent />}
       {view === 'exams' && exam && <ExamView exam={exam} />}
+      {view === 'account' && <AccountPage />}
+    </div>
+  )
+}
+
+/** An open page (articles, free tests, plans, contact) for a signed-in reader: inside the portal's navbar and side menu. */
+function SitePortalView({ page }: { page: SitePage }) {
+  const state = useApp()
+  const pageKey = JSON.stringify(page)
+  useEffect(() => { window.scrollTo(0, 0) }, [pageKey])
+  return (
+    <div className={`app-bg ${state.theme}`}>
+      <Navbar onAdminClick={() => navigate('admin')} />
+      <Sidebar view="site" site={page} />
+      <div className="main-content portal-main site-embed">
+        <SiteContent page={page} />
+      </div>
     </div>
   )
 }
@@ -101,23 +122,35 @@ function SignInRequired({ children }: { children: ReactNode }) {
 
 function AppShell() {
   const route = useRoute()
-
   return (
     <AuthProvider>
       <CandidateAuthProvider>
         <ReaderAppProvider>
-          {route.type === 'public' && (
-            <SignInRequired>
-              <PublicView view={route.view ?? 'dashboard'} exam={route.exam} />
-            </SignInRequired>
-          )}
-          {route.type === 'admin' && <AdminRoute />}
-          {route.type === 'login' && <LoginRoute />}
-          {route.type === 'candidate-login' && <CandidateLogin next={route.next} />}
-          {route.type === 'candidate-signup' && <CandidateSignup next={route.next} />}
+          <Routes route={route} />
         </ReaderAppProvider>
       </CandidateAuthProvider>
     </AuthProvider>
+  )
+}
+
+/** Inside the providers, so it can tell a signed-in reader (portal frame) from a visitor (site frame). */
+function Routes({ route }: { route: ReturnType<typeof useRoute> }) {
+  const readerId = useReaderId()
+
+  return (
+    <>
+      {route.type === 'public' && (
+        <SignInRequired>
+          <PublicView view={route.view ?? 'dashboard'} exam={route.exam} />
+        </SignInRequired>
+      )}
+      {route.type === 'admin' && <AdminRoute />}
+      {route.type === 'login' && <LoginRoute />}
+      {route.type === 'candidate-login' && <CandidateLogin next={route.next} />}
+      {route.type === 'candidate-signup' && <CandidateSignup next={route.next} />}
+      {route.type === 'site' && route.site && (readerId ? <SitePortalView page={route.site} /> : <SiteRoute page={route.site} />)}
+      {route.type !== 'admin' && route.exam?.page !== 'attempt' && route.view !== 'lesson' && <WhatsAppButton />}
+    </>
   )
 }
 

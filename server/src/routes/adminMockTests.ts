@@ -111,7 +111,7 @@ async function checkReferences(client: PoolClient, v: MockTestInput): Promise<Re
 
 const COLUMNS = [
   "kind", "mode", "title_en", "title_bn", "description_en", "description_bn", "job_post_id", "duration_minutes", "total_questions",
-  "marks_per_question", "negative_mark", "pass_mark", "shuffle_options", "available_from", "available_until", "max_attempts", "result_release",
+  "marks_per_question", "negative_mark", "pass_mark", "shuffle_options", "available_from", "available_until", "max_attempts", "result_release", "is_free",
 ] as const;
 
 async function writeTest(client: PoolClient, id: string | null, v: MockTestInput): Promise<string> {

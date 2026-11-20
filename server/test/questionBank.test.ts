@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createApp } from "../src/app";
 import { pool } from "../src/db/pool";
 import { candidateToken } from "./helpers/auth";
-import { insertCandidate, insertMcq, insertSubject, resetDb } from "./helpers/db";
+import { insertCandidate, insertMcq, insertMockTest, insertSubject, resetDb } from "./helpers/db";
 
 const app = createApp();
 beforeEach(resetDb);
@@ -62,6 +62,36 @@ describe("question bank", () => {
     await pool.query("UPDATE questions SET is_published = true WHERE id = $1", [otherMcq]);
     const bad = await request(app).post(`/api/candidate/bank/questions/${otherMcq}/check`).set("Authorization", s.auth).send({ optionId: right });
     expect(bad.body.code).toBe("option_invalid");
+  });
+
+  it("holds back answers of questions in the candidate's open or unreleased timed tests", async () => {
+    const s = await setup();
+    const test = await insertMockTest();
+    const { rows } = await pool.query(
+      `INSERT INTO attempts (candidate_id, mode, mock_test_id, deadline_at, max_score, settings)
+       VALUES ($1, 'mock', $2, now() + interval '1 hour', 1, '{}') RETURNING id`,
+      [s.candidateId, test],
+    );
+    const attempt = rows[0].id;
+    await pool.query("INSERT INTO attempt_questions (attempt_id, question_id, position, option_order, marks, negative_mark) VALUES ($1, $2, 1, '{1,2,3,4}', 1, 0)", [attempt, s.mcq]);
+    const check = () => request(app).post(`/api/candidate/bank/questions/${s.mcq}/check`).set("Authorization", s.auth).send({});
+    const practice = () => request(app).post("/api/candidate/practice/sessions").set("Authorization", s.auth).send({ subjectId: s.subject, count: 10 });
+
+    // Open attempt: no answer from the bank, and practice leaves the question out.
+    expect((await check()).body.code).toBe("question_in_test");
+    expect((await practice()).body.code).toBe("no_questions");
+    const other = await insertCandidate("other@example.com");
+    const theirs = await request(app).post(`/api/candidate/bank/questions/${s.mcq}/check`)
+      .set("Authorization", `Bearer ${candidateToken(other, "other@example.com")}`).send({});
+    expect(theirs.status).toBe(200); // only the test-taker is held back
+
+    // Finished, but answers are released only after the test closes.
+    await pool.query("UPDATE attempts SET status = 'submitted', submitted_at = now() WHERE id = $1", [attempt]);
+    await pool.query("UPDATE mock_tests SET result_release = 'after_close', available_until = now() + interval '1 day' WHERE id = $1", [test]);
+    expect((await check()).body.code).toBe("question_in_test");
+    await pool.query("UPDATE mock_tests SET available_from = NULL, available_until = now() - interval '1 minute' WHERE id = $1", [test]);
+    expect((await check()).status).toBe(200);
+    expect((await practice()).status).toBe(201);
   });
 
   it("saves a self-marked written answer for the candidate only", async () => {

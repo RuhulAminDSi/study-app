@@ -231,7 +231,12 @@ export const examApi = {
   submit: (aid: string) => candidateFetch<{ status: AttemptStatus; alreadyClosed: boolean }>(`/candidate/attempts/${aid}/submit`, { method: 'POST' }),
   result: (aid: string) => candidateFetch<AttemptResult>(`/candidate/attempts/${aid}/result`),
   review: (aid: string) => candidateFetch<{ attempt: AttemptMeta; questions: AttemptQuestion[] }>(`/candidate/attempts/${aid}/review`),
+  leaderboard: (testId: string, limit = 10) => candidateFetch<Leaderboard>(`/candidate/exams/${testId}/leaderboard?limit=${limit}`),
 }
+
+/** One candidate's first finished attempt on a timed test; names come shortened ("Rahim U.") from the server. */
+export interface LeaderboardEntry { rank: number; name: string; score: number; maxScore: number; percentage: number; seconds: number; isMe: boolean }
+export interface Leaderboard { total: number; top: LeaderboardEntry[]; me: LeaderboardEntry | null }
 
 // ── Question bank: study plain MCQs, CQs (short questions) and written questions before a test ──
 

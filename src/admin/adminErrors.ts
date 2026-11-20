@@ -46,6 +46,16 @@ const KEYS: Record<string, keyof Translations> = {
   topic_unknown: 'axErrTopicUnknown',
   count_invalid: 'axErrCount',
   difficulty_invalid: 'axErrDifficulty',
+  category_invalid: 'rsErrCategory',
+  file_or_link_required: 'rsErrFileOrLink',
+  file_unknown: 'rsErrFileUnknown',
+  free_needs_fixed: 'axErrFreeFixed',
+  free_needs_immediate: 'axErrFreeImmediate',
+  slug_invalid: 'arErrSlug',
+  slug_taken: 'arErrSlugTaken',
+  months_invalid: 'plErrMonths',
+  price_invalid: 'plErrPrice',
+  already_reviewed: 'plErrReviewed',
 }
 
 /** Translated text for an admin API error code; falls back to the server's message. */

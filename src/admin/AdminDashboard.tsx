@@ -11,6 +11,10 @@ import AdminLessons from './AdminLessons'
 import AdminCandidates from './AdminCandidates'
 import AdminAnnouncements from './AdminAnnouncements'
 import AdminMedia from './AdminMedia'
+import AdminResources from './AdminResources'
+import AdminArticles from './AdminArticles'
+import AdminBilling from './AdminBilling'
+import AdminSettings from './AdminSettings'
 import AdminExams from './AdminExams'
 import ExamEditor from './ExamEditor'
 import LessonEditor from './LessonEditor'
@@ -24,7 +28,7 @@ interface AdminDashboardProps {
   onBack: () => void
 }
 
-type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'announcements' | 'media' | 'exams' | 'candidates'
+type AdminView = 'dashboard' | 'chapters' | 'lessons' | 'announcements' | 'resources' | 'articles' | 'media' | 'exams' | 'candidates' | 'billing' | 'settings'
 
 interface NavItem { key: AdminView; label: keyof Translations; subtitle: keyof Translations; icon: IconName }
 
@@ -35,6 +39,8 @@ const navGroups: { label?: keyof Translations; items: NavItem[] }[] = [
     items: [
       { key: 'chapters', label: 'adminChapters', subtitle: 'adminSubChapters', icon: 'chapters' },
       { key: 'lessons', label: 'adminLessons', subtitle: 'adminSubLessons', icon: 'lessons' },
+      { key: 'resources', label: 'adminResources', subtitle: 'adminSubResources', icon: 'file' },
+      { key: 'articles', label: 'adminArticles', subtitle: 'adminSubArticles', icon: 'notes' },
       ...(CONTENT_MANAGEMENT ? [
         { key: 'announcements', label: 'adminAnnouncements', subtitle: 'adminSubAnnouncements', icon: 'megaphone' } as NavItem,
         { key: 'media', label: 'adminMedia', subtitle: 'adminSubMedia', icon: 'image' } as NavItem,
@@ -42,12 +48,20 @@ const navGroups: { label?: keyof Translations; items: NavItem[] }[] = [
     ],
   },
   { label: 'adminNavAssessment', items: [{ key: 'exams', label: 'adminExams', subtitle: 'adminSubExams', icon: 'exams' }] },
-  { label: 'adminNavPeople', items: [{ key: 'candidates', label: 'adminCandidates', subtitle: 'adminSubCandidates', icon: 'candidates' }] },
+  {
+    label: 'adminNavPeople',
+    items: [
+      { key: 'candidates', label: 'adminCandidates', subtitle: 'adminSubCandidates', icon: 'candidates' },
+      { key: 'billing', label: 'adminBilling', subtitle: 'adminSubBilling', icon: 'wallet' },
+    ],
+  },
+  { label: 'adminNavSite', items: [{ key: 'settings', label: 'adminSettings', subtitle: 'adminSubSettings', icon: 'cog' }] },
 ]
 const navItems = navGroups.flatMap(g => g.items)
 
 /** Candidate accounts hold personal data: only admins and super admins manage them (editors handle content). */
-const ROLE_VIEWS: Partial<Record<AdminView, string[]>> = { candidates: ['super_admin', 'admin'] }
+const ADMINS = ['super_admin', 'admin']
+const ROLE_VIEWS: Partial<Record<AdminView, string[]>> = { candidates: ADMINS, billing: ADMINS, settings: ADMINS }
 const ROLE_LABELS: Record<string, keyof Translations> = { super_admin: 'adminRoleSuperAdmin', admin: 'adminRoleAdmin', editor: 'adminRoleEditor' }
 
 export default function AdminDashboard({ onBack }: AdminDashboardProps) {
@@ -172,6 +186,10 @@ export default function AdminDashboard({ onBack }: AdminDashboardProps) {
               ? <LessonEditor key={editingLesson} id={editingLesson} language={appState.language} onExit={() => go('lessons')} />
               : <AdminLessons language={appState.language} />)}
             {view === 'announcements' && <AdminAnnouncements language={appState.language} />}
+            {view === 'resources' && <AdminResources language={appState.language} />}
+            {view === 'articles' && <AdminArticles language={appState.language} />}
+            {view === 'billing' && <AdminBilling language={appState.language} />}
+            {view === 'settings' && <AdminSettings language={appState.language} />}
             {view === 'media' && <AdminMedia language={appState.language} />}
             {view === 'exams' && (editingExam
               ? <ExamEditor key={editingExam} id={editingExam} language={appState.language} onExit={() => go('exams')} />

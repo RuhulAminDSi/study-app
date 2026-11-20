@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useApp, useAppDispatch, type OrderedLesson } from '../context/AppContext'
 import { useProgress } from '../context/progress'
 import { translations } from '../data/translations'
-import type { ExamRoute, ExamTab, PublicView } from '../router'
+import type { ExamRoute, ExamTab, PublicView, SitePage } from '../router'
 import type { Translations } from '../types'
 import Icon, { type IconName } from './portal/icons'
 import { chapterTitle, lessonTitle, noteSetOf, noteSets, num } from './portal/portalData'
@@ -84,7 +84,7 @@ interface PageLink {
 const lessonHref = (o: OrderedLesson) => `#/chapter/${o.chapterId}/lesson/${o.lesson.id}`
 
 /** The portal's side menu: study pages, practice & exam pages, then the subject → lesson tree. */
-export default function Sidebar({ view, exam }: { view: PublicView; exam?: ExamRoute }) {
+export default function Sidebar({ view, exam, site }: { view: PublicView | 'site'; exam?: ExamRoute; site?: SitePage }) {
   const state = useApp()
   const dispatch = useAppDispatch()
   const progress = useProgress()
@@ -112,6 +112,15 @@ export default function Sidebar({ view, exam }: { view: PublicView; exam?: ExamR
     { key: 'dashboard', active: view === 'dashboard', href: '#/', label: t.navDashboard, icon: 'dashboard' },
     { key: 'notes', active: view === 'notes', href: '#/notes', label: t.navNotes, icon: 'notes', count: sets.length - pyqCount },
     { key: 'pyq', active: view === 'pyq', href: '#/pyq', label: t.navPyq, icon: 'pyq', count: pyqCount },
+    { key: 'resources', active: site?.page === 'resources', href: '#/resources', label: t.navResources, icon: 'folder' },
+  ]
+  // The open site pages (articles, free sets, plans) and the reader's own plan and payments.
+  const morePages: PageLink[] = [
+    { key: 'articles', active: site?.page === 'articles' || site?.page === 'article', href: '#/articles', label: t.siteNavArticles, icon: 'notes' },
+    { key: 'free', active: site?.page === 'free' || site?.page === 'free-set', href: '#/free-test', label: t.navFreeSets, icon: 'trophy' },
+    { key: 'plans', active: site?.page === 'plans', href: '#/plans', label: t.siteNavPlans, icon: 'flag' },
+    { key: 'account', active: view === 'account', href: '#/account', label: t.acTitle, icon: 'wallet' },
+    { key: 'contact', active: site?.page === 'contact', href: '#/contact', label: t.siteNavContact, icon: 'chat' },
   ]
   // A test's instructions, attempt and result pages belong to no tab, so none is highlighted there.
   const examTab = view === 'exams' && exam?.page === 'home' ? (exam.tab ?? 'bank') : undefined
@@ -125,6 +134,7 @@ export default function Sidebar({ view, exam }: { view: PublicView; exam?: ExamR
   const groups = [
     { key: 'study', label: t.navStudy, pages: studyPages },
     { key: 'practice', label: t.navPractice, pages: examPages },
+    { key: 'more', label: t.navMore, pages: morePages },
   ]
 
   return (

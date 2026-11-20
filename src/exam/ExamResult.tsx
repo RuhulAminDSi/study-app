@@ -8,6 +8,7 @@ import { ApiError } from '../candidate/candidateApi'
 import { examApi, type AttemptQuestion, type AttemptResult, type TopicBucket } from './examApi'
 import { attemptTitle, dateTime, duration, examError, fill, mark, num, pick } from './format'
 import { KindBadge, LoadError } from './ExamUi'
+import LeaderboardCard from './LeaderboardCard'
 import { useRemote } from './useRemote'
 import './exam.css'
 
@@ -136,7 +137,7 @@ function Summary({ result: r, t, lang }: { result: AttemptResult; t: Translation
         )}
         <a className="ex-btn" href="#/exams">{t.exBackToExams}</a>
       </div>
-      {practiceError && <p className="ex-alert bad" role="alert"><Icon name="alert" /><span>{practiceError}</span></p>}
+      {practiceError && <LoadError text={practiceError} t={t} />}
 
       <div className="ex-result-grid">
         <section className="ex-card" aria-labelledby="ex-subjects-title">
@@ -181,6 +182,8 @@ function Summary({ result: r, t, lang }: { result: AttemptResult; t: Translation
           )}
         </section>
       </div>
+
+      {r.test && <LeaderboardCard testId={r.test.id} t={t} lang={lang} />}
 
       {r.byTopic.length > 1 && (
         <section className="ex-card ex-topics" aria-labelledby="ex-topics-title">

@@ -10,12 +10,15 @@ export function KindBadge({ kind, t }: { kind: HistoryItem['kind']; t: Translati
   return <span className={`ex-kind ex-kind-${kind}`}>{t[KIND_LABEL[kind]]}</span>
 }
 
+/** A paywall refusal (`examError` → `planRequired`) links to the plans instead of offering a retry. */
 export function LoadError({ text, onRetry, t }: { text: string; onRetry?: () => void; t: Translations }) {
+  const needsPlan = text === t.planRequired
   return (
     <div className="ex-alert bad" role="alert">
       <Icon name="alert" />
       <span>{text}</span>
-      {onRetry && <button type="button" className="ex-btn sm" onClick={onRetry}><Icon name="refresh" />{t.retry}</button>}
+      {needsPlan && <a className="ex-btn sm primary" href="#/plans">{t.planSeePlans}</a>}
+      {onRetry && !needsPlan && <button type="button" className="ex-btn sm" onClick={onRetry}><Icon name="refresh" />{t.retry}</button>}
     </div>
   )
 }

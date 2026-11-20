@@ -212,3 +212,53 @@ describe("media uploads", () => {
     expect(fs.existsSync(stored)).toBe(false);
   });
 });
+
+describe("resources", () => {
+  const circular = {
+    category: "circular", tag: "Govt job", title_en: "Bangladesh Petroleum Corporation", details_en: "Assistant Programmer-01",
+    apply_url: "https://bpc.teletalk.com.bd/", starts_on: "2026-11-19", ends_on: "2026-12-19", is_published: true,
+  };
+
+  it("lets an editor create, edit and delete a circular, with its PDF attached", async () => {
+    fs.mkdirSync(config.uploadDir, { recursive: true });
+    const a = await admin("editor");
+    const pdf = await a.upload("/api/files/upload", "circular.pdf", Buffer.from("%PDF-1.4\n%%EOF"));
+    const created = await a.post("/api/resources", { ...circular, file_id: pdf.body.id });
+    expect(created.status).toBe(201);
+    expect(created.body).toMatchObject({
+      title_en: circular.title_en, starts_on: "2026-11-19", ends_on: "2026-12-19",
+      file_name: "circular.pdf", file_url: `/uploads/${pdf.body.storage_path}`,
+    });
+    const edited = await a.put(`/api/resources/${created.body.id}`, { ...circular, is_pinned: true });
+    expect(edited.body).toMatchObject({ is_pinned: true, file_id: null, file_url: null });
+    expect((await a.get("/api/resources?category=circular")).body).toHaveLength(1);
+    expect((await a.get("/api/resources?category=suggestion")).body).toHaveLength(0);
+    expect((await a.del(`/api/resources/${created.body.id}`)).status).toBe(200);
+    await a.del(`/api/files/${pdf.body.id}`); // leave no test file in the upload folder
+  });
+
+  it("validates the category, title, links, dates and that a file or link is given", async () => {
+    const a = await admin();
+    const res = await a.post("/api/resources", { category: "memo", title_en: "", link_url: "javascript:alert(1)", starts_on: "2026-12-10", ends_on: "2026-12-01" });
+    expect(res.status).toBe(400);
+    expect(res.body.fields).toEqual({ category: "category_invalid", title_en: "required", link_url: "link_invalid", ends_on: "ends_before_start" });
+    const empty = await a.post("/api/resources", { category: "suggestion", title_en: "DBMS suggestion" });
+    expect(empty.body.fields).toEqual({ file_id: "file_or_link_required" });
+    const unknown = await a.post("/api/resources", { category: "suggestion", title_en: "DBMS", file_id: "00000000-0000-4000-8000-000000000000" });
+    expect(unknown.body.fields).toEqual({ file_id: "file_unknown" });
+  });
+
+  it("shows readers only published resources, pinned and open circulars first", async () => {
+    const a = await admin();
+    await a.post("/api/resources", { ...circular, title_en: "Closed", starts_on: "2020-01-01", ends_on: "2020-02-01" });
+    await a.post("/api/resources", { ...circular, title_en: "Open", ends_on: "2999-01-01" });
+    await a.post("/api/resources", { ...circular, title_en: "Pinned", is_pinned: true });
+    await a.post("/api/resources", { ...circular, title_en: "Draft", is_published: false });
+
+    const app = createApp();
+    expect((await request(app).get("/api/public/resources")).status).toBe(401);
+    const res = await request(app).get("/api/public/resources").set("Authorization", `Bearer ${candidateToken(await insertCandidate())}`);
+    expect(res.status).toBe(200);
+    expect(res.body.map((r: { title_en: string }) => r.title_en)).toEqual(["Pinned", "Open", "Closed"]);
+  });
+});

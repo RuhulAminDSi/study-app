@@ -134,6 +134,35 @@ export interface ApiAnnouncement {
 
 export type AnnouncementInput = Omit<ApiAnnouncement, 'id' | 'created_at' | 'updated_at'>
 
+export type ResourceCategory = 'circular' | 'notice' | 'suggestion' | 'question' | 'other'
+
+/** A circular, suggestion, past exam question or other download (server/src/routes/resources.ts). */
+export interface ApiResource {
+  id: string
+  category: ResourceCategory
+  tag: string | null
+  title_en: string
+  title_bn: string | null
+  details_en: string | null
+  details_bn: string | null
+  file_id: string | null
+  link_url: string | null
+  apply_url: string | null
+  /** `YYYY-MM-DD` */
+  starts_on: string | null
+  ends_on: string | null
+  is_pinned: boolean
+  is_published: boolean
+  created_at: string
+  updated_at: string
+  file_name: string | null
+  file_type: string | null
+  file_size: number | null
+  file_url: string | null
+}
+
+export type ResourceInput = Omit<ApiResource, 'id' | 'created_at' | 'updated_at' | 'file_name' | 'file_type' | 'file_size' | 'file_url'>
+
 const json = (method: string, body: unknown): RequestInit => ({ method, body: JSON.stringify(body) })
 
 export const api = {
@@ -183,6 +212,12 @@ export const api = {
     create: (data: AnnouncementInput) => apiFetch<ApiAnnouncement>('/announcements', json('POST', data)),
     update: (id: string, data: AnnouncementInput) => apiFetch<ApiAnnouncement>(`/announcements/${id}`, json('PUT', data)),
     delete: (id: string) => apiFetch<{ deleted: boolean }>(`/announcements/${id}`, { method: 'DELETE' }),
+  },
+  resources: {
+    list: () => apiFetch<ApiResource[]>('/resources'),
+    create: (data: ResourceInput) => apiFetch<ApiResource>('/resources', json('POST', data)),
+    update: (id: string, data: ResourceInput) => apiFetch<ApiResource>(`/resources/${id}`, json('PUT', data)),
+    delete: (id: string) => apiFetch<{ deleted: boolean }>(`/resources/${id}`, { method: 'DELETE' }),
   },
   files: {
     list: () => apiFetch<ApiUploadedFile[]>('/files'),

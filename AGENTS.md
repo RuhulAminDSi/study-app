@@ -39,9 +39,9 @@
 - Needs `server/.env` (copy from `.env.example`). Never read or print `.env`; it holds real secrets.
 
 ## Notes pipeline (`notes/`)
-Each stage is a separate command: `.opencode/command/notes-*.md`, with `notes.md` as a router. The
-same commands also exist under `.claude/commands/`. Targets are **lesson slugs**. A chapter is never
-a valid target. If given a chapter, list its lessons and ask which one. Never loop over a chapter.
+Each stage is a separate opencode command (defined in `notes/README.md` §2.0; there are no
+command files on disk). Targets are **lesson slugs**. A chapter is never a valid target. If given
+a chapter, list its lessons and ask which one. Never loop over a chapter.
 
 | Stage | Command | Script |
 |---|---|---|
@@ -60,8 +60,8 @@ a valid target. If given a chapter, list its lessons and ask which one. Never lo
 - Fill target 85–95%; the ceiling is ~96% (`scrollHeight` includes margin and padding). `check.mjs`
   measures vertical fill only. It does not catch horizontal overflow or overlap.
 - Never edit `notes/assets/hw.css`, `public/notes/`, a build script, or the `notes/src/` root.
-- `render.mjs` reads only `notes/src/*.html`. `publish.mjs` reads the Markdown. An English-only set
-  publishes 6 files, not 14.
+- `render.mjs` reads only `notes/src/<NN-chapter>/<slug>.en.html` (chapter-nested). `publish.mjs`
+  reads the Markdown. An English-only set publishes 6 files, not 14.
 
 ### Notes gotchas (verified)
 - `.ink-b` does not exist in `hw.css`. An unstyled SVG `<path>` renders as a solid black blob. Use `.ink`.
@@ -86,8 +86,7 @@ a valid target. If given a chapter, list its lessons and ask which one. Never lo
 - ESLint 9 flat config lives in `eslint.config.js`.
 - Tailwind v4 via `@tailwindcss/vite`. There is no `tailwind.config`. Entry is `@import "tailwindcss"` in `src/index.css`.
 - React 19. State is local `useState`/hooks; there is no global state library.
-- Frontend deploys to Vercel (`.vercel/` is linked). The backend appears to run on Azure App Service
-  (`TRUST_PROXY` comment, `azure-logs*/` folders). Check before assuming either.
+- Frontend deploys to Vercel (`.vercel/` is linked).
 
 ## Repo hygiene
 - Root contains many stray artifacts: screenshots, zips, `--outDir/`, `bash.exe.stackdump`, `filelist.txt`.
