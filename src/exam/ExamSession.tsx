@@ -13,6 +13,13 @@ import './exam.css'
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E']
 const RETRY_MS = 4000
+/** The server still accepts answers this long after the deadline (GRACE_MS in server/src/services/attempts.ts). */
+const SERVER_GRACE_MS = 15_000
+/** How long a manual submit waits for unsaved answers before asking the candidate what to do. */
+const SUBMIT_WAIT_MS = 8000
+/** Save errors the server will give again on every retry: the change is undone instead of retried. */
+const REJECTED = new Set(['option_invalid', 'not_found', 'validation_failed'])
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
 /** Time on a question shorter than this is not worth a request of its own (it rides along with the next answer). */
 const MIN_TIME_REPORT_MS = 5000
 
@@ -40,10 +47,16 @@ export default function ExamSession({ id }: { id: string }) {
   const [answerError, setAnswerError] = useState('')
   const [now, setNow] = useState(() => Date.now())
   const [announce, setAnnounce] = useState('')
+  const [saveRejected, setSaveRejected] = useState(false)
+  const [unsaved, setUnsaved] = useState(0) // changes still unsaved when a manual submit gave up waiting
 
   const offset = useRef(0) // server clock − device clock
   const pending = useRef(new Map<string, Body>()) // latest unsent change per question
   const inflight = useRef(new Set<string>())
+  /** What the server last confirmed per question, to undo a change it rejects. */
+  const confirmed = useRef(new Map<string, { selectedOptionId: string | null; flagged: boolean }>())
+  const alive = useRef(true)
+  const autoSubmitted = useRef(false)
   const enteredAt = useRef(Date.now())
   const finished = useRef(false)
   const announced = useRef(new Set<number>())
@@ -58,6 +71,7 @@ export default function ExamSession({ id }: { id: string }) {
       offset.current = new Date(p.serverNow).getTime() - Date.now()
       setPaper(p)
       setQuestions(p.questions)
+      confirmed.current = new Map(p.questions.map(q => [q.questionId, { selectedOptionId: q.selectedOptionId, flagged: q.flagged }]))
       const timed = p.attempt.mode === 'mock'
       // Practice resumes at the first question not answered yet; a test at the question the candidate was on.
       const firstOpen = p.questions.findIndex(q => !q.selectedOptionId)
@@ -78,6 +92,9 @@ export default function ExamSession({ id }: { id: string }) {
     navigate(`exams/result/${id}`, { replace: true })
   }, [id])
 
+  const update = (qid: string, change: Partial<AttemptQuestion>) =>
+    setQuestions(list => list.map(q => (q.questionId === qid ? { ...q, ...change } : q)))
+
   const flush = useCallback(async () => {
     const jobs = [...pending.current.entries()].filter(([qid]) => !inflight.current.has(qid))
     if (!jobs.length) return
@@ -86,17 +103,34 @@ export default function ExamSession({ id }: { id: string }) {
       pending.current.delete(qid)
       inflight.current.add(qid)
       try {
-        await examApi.answer(id, qid, body)
+        const saved = await examApi.answer(id, qid, body) as { selectedOptionId?: string | null; flagged?: boolean }
+        const was = confirmed.current.get(qid)
+        confirmed.current.set(qid, {
+          selectedOptionId: saved.selectedOptionId !== undefined ? saved.selectedOptionId : was?.selectedOptionId ?? null,
+          flagged: saved.flagged ?? was?.flagged ?? false,
+        })
       } catch (e) {
         if (e instanceof ApiError && (e.code === 'deadline_passed' || e.code === 'attempt_closed')) { goToResult(); return }
-        if (e instanceof ApiError && e.status < 500 && e.status !== 408) return // a rejected change will not succeed on retry
-        // Keep the change (merged under anything newer) for the next try.
+        if (e instanceof ApiError && e.code && REJECTED.has(e.code)) {
+          // The server will refuse this change every time: undo it on screen (unless a newer change is waiting) and say so.
+          const was = confirmed.current.get(qid)
+          if (was && !pending.current.has(qid)) setQuestions(list => list.map(q => (q.questionId === qid ? { ...q, ...was } : q)))
+          setSaveRejected(true)
+          return
+        }
+        // Anything else (offline, server error, rate limit, expired sign-in) may pass later: keep the change, merged
+        // under anything newer, for the next try. It is never shown as saved until the server confirms it.
         pending.current.set(qid, { ...body, ...pending.current.get(qid), timeSpentMs: (body.timeSpentMs ?? 0) + (pending.current.get(qid)?.timeSpentMs ?? 0) })
       } finally {
         inflight.current.delete(qid)
       }
     }))
-    setSaveState(pending.current.size ? 'error' : 'saved')
+    if (pending.current.size) setSaveState('error')
+    else if (inflight.current.size) setSaveState('saving')
+    else {
+      setSaveState('saved')
+      setUnsaved(0) // everything got through after all: the "not saved" notice no longer applies
+    }
   }, [id, goToResult])
 
   const queue = useCallback((qid: string, change: Body) => {
@@ -113,6 +147,11 @@ export default function ExamSession({ id }: { id: string }) {
     window.addEventListener('online', online)
     return () => { clearInterval(timer); window.removeEventListener('online', online) }
   }, [timed, flush])
+
+  useEffect(() => {
+    alive.current = true
+    return () => { alive.current = false }
+  }, [])
 
   // Unsaved answers: ask before the tab closes.
   useEffect(() => {
@@ -151,11 +190,9 @@ export default function ExamSession({ id }: { id: string }) {
 
   // ── Answering ─────────────────────────────────────────────────────────────
 
-  const update = (qid: string, change: Partial<AttemptQuestion>) =>
-    setQuestions(list => list.map(q => (q.questionId === qid ? { ...q, ...change } : q)))
-
   async function choose(q: AttemptQuestion, optionId: string) {
     if (timed) {
+      setSaveRejected(false)
       update(q.questionId, { selectedOptionId: optionId })
       queue(q.questionId, { optionId, timeSpentMs: takeTime() })
       return
@@ -188,23 +225,58 @@ export default function ExamSession({ id }: { id: string }) {
 
   // ── Submitting ────────────────────────────────────────────────────────────
 
-  const submit = useCallback(async (auto = false) => {
-    if (finished.current) return
-    setSubmitting(true); setSubmitError('')
-    // Last answers first; the server accepts them for a few seconds past the deadline.
-    for (let i = 0; i < 3 && (pending.current.size || inflight.current.size); i++) {
+  const unsent = useCallback(() => pending.current.size + inflight.current.size, [])
+
+  /** Saves what is still unsaved, retrying until it is all saved or the device clock reaches `until`. */
+  const settle = useCallback(async (until: number) => {
+    while (unsent() && Date.now() < until && alive.current) {
       await flush()
-      if (inflight.current.size) await new Promise(r => setTimeout(r, 300))
+      if (unsent()) await sleep(inflight.current.size ? 300 : 1500)
     }
-    try {
-      await examApi.submit(id)
-      goToResult()
-    } catch (e) {
-      if (auto && e instanceof ApiError && e.status === 404) return
-      setSubmitError(examError(t, e))
+  }, [flush, unsent])
+
+  /**
+   * Saves the last answers, then submits. A manual submit waits a few seconds; if answers are still unsaved it stops
+   * and lets the candidate retry or submit without them (`force`). At time-up (`auto`) it keeps saving until the
+   * server's grace period is nearly over, then submits, retrying with backoff while the server is out of reach.
+   */
+  const submit = useCallback(async ({ auto = false, force = false } = {}) => {
+    if (finished.current) return
+    setSubmitting(true); setSubmitError(''); setUnsaved(0)
+    const until = auto && deadline !== null
+      ? deadline - offset.current + SERVER_GRACE_MS - 3000
+      : Date.now() + (force ? 0 : SUBMIT_WAIT_MS)
+    await settle(until)
+    if (!alive.current) return
+    if (!auto && !force && unsent()) {
+      setUnsaved(unsent())
       setSubmitting(false)
+      return
     }
-  }, [flush, goToResult, id, t])
+    for (let tries = 0; alive.current && !finished.current; tries++) {
+      try {
+        await examApi.submit(id)
+        goToResult()
+        return
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 404) {
+          finished.current = true
+          navigate('exams', { replace: true })
+          return
+        }
+        const retryable = !(e instanceof ApiError) || e.status >= 500 || e.status === 408 || e.status === 429
+        if (!auto || !retryable) {
+          setSubmitError(examError(t, e))
+          setSubmitting(false)
+          return
+        }
+        // Time is up but the server is out of reach. Keep trying; the server also closes the attempt on its own
+        // after the deadline, scoring every answer it has.
+        setSubmitError(t.exAutoSubmitRetry)
+        await sleep(Math.min(RETRY_MS * 2 ** tries, 30_000))
+      }
+    }
+  }, [deadline, settle, unsent, goToResult, id, t])
 
   // Clock: tick every second; announce 5 and 1 minutes left; submit at zero.
   useEffect(() => {
@@ -220,11 +292,13 @@ export default function ExamSession({ id }: { id: string }) {
         setAnnounce(fill(mins === 1 ? t.exOneMinuteLeft : t.exMinutesLeft, { n: num(mins, lang) }))
       }
     }
-    if (remainingSec === 0 && !submitting) {
+    // Once only: a failed auto-submit retries inside submit() with backoff, never by re-running this effect.
+    if (remainingSec === 0 && !autoSubmitted.current) {
+      autoSubmitted.current = true
       setAnnounce(t.exTimeUp)
-      void submit(true)
+      void submit({ auto: true })
     }
-  }, [remainingSec, submitting, submit, t, lang, totalSec])
+  }, [remainingSec, submit, t, lang, totalSec])
 
   // ── Render ────────────────────────────────────────────────────────────────
 
@@ -289,6 +363,15 @@ export default function ExamSession({ id }: { id: string }) {
         </header>
         <p className="sr-only" aria-live="assertive">{announce}</p>
         {submitError && <LoadError text={submitError} t={t} />}
+        {saveRejected && <LoadError text={t.exSaveRejected} t={t} />}
+        {unsaved > 0 && (
+          <div className="ex-alert bad" role="alert">
+            <Icon name="alert" />
+            <span>{fill(t.exUnsavedBlock, { n: num(unsaved, lang) })}</span>
+            <button type="button" className="ex-btn sm" onClick={() => void submit()} disabled={submitting}><Icon name="refresh" />{t.retry}</button>
+            <button type="button" className="ex-btn sm" onClick={() => void submit({ force: true })} disabled={submitting}>{t.exSubmitAnyway}</button>
+          </div>
+        )}
 
         <div className="ex-body">
           <section className="ex-qpanel" aria-label={fill(t.exQuestionOf, { n: num(index + 1, lang), total: num(questions.length, lang) })}>

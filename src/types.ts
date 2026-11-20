@@ -592,6 +592,10 @@ export interface Translations {
   exSaving: string
   exSaveRetry: string
   exSaved: string
+  exSaveRejected: string
+  exUnsavedBlock: string
+  exSubmitAnyway: string
+  exAutoSubmitRetry: string
   exCorrectSoFar: string
   exSubmit: string
   exFinish: string
