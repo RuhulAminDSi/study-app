@@ -319,6 +319,7 @@ export interface Translations {
   navDashboard: string
   navNotes: string
   navPyq: string
+  navHistory: string
   navSubjects: string
   navHome: string
   dashWelcome: string
@@ -344,6 +345,10 @@ export interface Translations {
   dashRecentEmpty: string
   dashPyqTitle: string
   dashViewAll: string
+  historyTitle: string
+  historyIntro: string
+  historyEmpty: string
+  historyCount: string
   libNotesIntro: string
   libPyqIntro: string
   libFilter: string

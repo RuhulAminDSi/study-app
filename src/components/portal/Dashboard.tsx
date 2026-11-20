@@ -13,6 +13,9 @@ import { chapterTitle, fill, lessonTitle, noteSets, num, subjectSummaries } from
 
 const lessonHref = (o: OrderedLesson) => `#/chapter/${o.chapterId}/lesson/${o.lesson.id}`
 
+/** The dashboard only teases the newest few; the full reading history lives on `#/history`. */
+const RECENT_PREVIEW = 3
+
 /** `#/`: the portal home. Every number comes from the loaded content or this browser's reading progress. */
 export default function Dashboard() {
   const state = useApp()
@@ -150,32 +153,43 @@ export default function Dashboard() {
               {recent.length === 0 ? (
                 <p className="pd-muted pd-empty">{t.dashRecentEmpty}</p>
               ) : (
-                <ul className="pd-list">
-                  {recent.map(o => (
-                    <li key={o.lesson.id}>
-                      <a href={lessonHref(o)}>
-                        <span className="pd-list-title">{lessonTitle(o, lang)}</span>
-                        <span className="pd-list-sub">{chapterTitle(o, lang)}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <div className={`pd-list-wrap${recent.length > RECENT_PREVIEW ? ' has-fade' : ''}`}>
+                    <ul className="pd-list">
+                      {recent.slice(0, RECENT_PREVIEW).map(o => (
+                        <li key={o.lesson.id}>
+                          <a href={lessonHref(o)}>
+                            <span className="pd-list-title">{lessonTitle(o, lang)}</span>
+                            <span className="pd-list-sub">{chapterTitle(o, lang)}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                    {recent.length > RECENT_PREVIEW && <div className="pd-list-fade" aria-hidden="true" />}
+                  </div>
+                  {recent.length > RECENT_PREVIEW && (
+                    <a className="pd-more" href="#/history">{t.dashViewAll}<Icon name="arrow" /></a>
+                  )}
+                </>
               )}
             </section>
 
             {pyqSets.length > 0 && (
               <section className="pd-panel" aria-labelledby="pd-pyq-title">
                 <h2 id="pd-pyq-title"><Icon name="pyq" />{t.dashPyqTitle}</h2>
-                <ul className="pd-list">
-                  {pyqSets.slice(0, 5).map(n => (
-                    <li key={n.slug}>
-                      <a href={lessonHref(n.item)}>
-                        <span className="pd-list-title">{chapterTitle(n.item, lang)}</span>
-                        <span className="pd-list-sub">{lessonTitle(n.item, lang)}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <div className={`pd-list-wrap${pyqSets.length > 5 ? ' has-fade' : ''}`} style={{ '--pd-fade-max': '300px' } as CSSProperties}>
+                  <ul className="pd-list">
+                    {pyqSets.slice(0, 5).map(n => (
+                      <li key={n.slug}>
+                        <a href={lessonHref(n.item)}>
+                          <span className="pd-list-title">{chapterTitle(n.item, lang)}</span>
+                          <span className="pd-list-sub">{lessonTitle(n.item, lang)}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  {pyqSets.length > 5 && <div className="pd-list-fade" aria-hidden="true" />}
+                </div>
                 <a className="pd-more" href="#/pyq">{t.dashViewAll}<Icon name="arrow" /></a>
               </section>
             )}
