@@ -59,6 +59,7 @@ export function negativeText(values: number[], t: Translations, lang: Language):
 }
 
 const ERROR_KEYS: Record<string, keyof Translations> = {
+  subscription_required: 'planRequired',
   not_found: 'exErrNotFound',
   not_open_yet: 'exErrNotOpen',
   closed: 'exErrClosed',

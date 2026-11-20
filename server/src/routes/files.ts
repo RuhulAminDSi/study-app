@@ -10,10 +10,10 @@ import { UUID_RE } from "../validation/taxonomy.js";
 import type { AuthRequest } from "../middleware/auth.js";
 
 /**
- * Media library: files served at /uploads/<storage_path> for use in lessons. SVG is refused because it
- * can carry script, and uploads are served from the app's own origin.
+ * Media library: files served at /uploads/<storage_path> for lessons and resources. SVG and HTML are refused because
+ * they can carry script, and uploads are served from the app's own origin. Word files (DOC/DOCX) are for downloads.
  */
-const ALLOWED = /\.(png|jpe?g|gif|webp|pdf)$/i;
+const ALLOWED = /\.(png|jpe?g|gif|webp|pdf|docx?)$/i;
 const MAX_BYTES = 10 * 1024 * 1024;
 
 const storage = multer.diskStorage({
@@ -48,7 +48,7 @@ router.post("/upload", (req, res, next) => {
 }, asyncHandler(async (req: AuthRequest, res) => {
   const file = req.file;
   if (!file) {
-    res.status(400).json({ error: "Choose a PNG, JPG, GIF, WebP or PDF file.", code: "file_type" });
+    res.status(400).json({ error: "Choose a PNG, JPG, GIF, WebP, PDF or Word (DOC/DOCX) file.", code: "file_type" });
     return;
   }
   const result = await pool.query(

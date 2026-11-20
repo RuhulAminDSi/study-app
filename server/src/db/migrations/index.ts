@@ -7,5 +7,7 @@ import { migration005 } from "./005_candidate_language_default.js";
 import { migration006 } from "./006_content_management.js";
 import { migration007 } from "./007_exam_edge.js";
 import { migration008 } from "./008_exam_module.js";
+import { migration009 } from "./009_resources.js";
+import { migration010 } from "./010_site_features.js";
 
-export const migrations: Migration[] = [migration001, migration002, migration003, migration004, migration005, migration006, migration007, migration008];
+export const migrations: Migration[] = [migration001, migration002, migration003, migration004, migration005, migration006, migration007, migration008, migration009, migration010];

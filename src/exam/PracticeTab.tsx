@@ -66,7 +66,7 @@ export default function PracticeTab({ lesson, overview }: { lesson?: string; ove
 
   return (
     <div className="ex-practice">
-      {startError && <p className="ex-alert bad" role="alert"><Icon name="alert" /><span>{startError}</span></p>}
+      {startError && <LoadError text={startError} t={t} />}
 
       {lesson && (
         <section className="ex-lesson-banner" aria-labelledby="ex-lesson-title">

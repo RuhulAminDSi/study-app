@@ -124,9 +124,8 @@ function render() {
     .map((a, i) => `<div style="--i:${i}"><dt lang="en">${esc(a.term)}</dt><dd>${esc(a.desc)}</dd></div>`)
     .join('')
 
-  $('#stats-list').innerHTML = T.stats
-    .map((s) => `<li><strong>${esc(s.value)}</strong><span>${esc(s.label)}</span></li>`)
-    .join('')
+  renderStats()
+  renderCirculars()
 
   $('#exams-list').innerHTML = T.exams
     .map(
@@ -208,6 +207,107 @@ function render() {
   syncMenuBtn()
 }
 
+/* ---- Live data from the server (no sign-in) -------------------------- */
+// /api/site/site-info: live counts and the WhatsApp number; /api/site/open-circulars: circulars still open.
+// Until they arrive (or if the server can't be reached) the page shows the static stats from the config.
+let live = null
+let circulars = []
+
+const fmt = (n) => (lang === 'bn' ? digits(n) : Number(n).toLocaleString('en-US'))
+
+function renderStats() {
+  const s = live?.stats
+  const items = s
+    ? [
+        { value: s.mcq, label: T.ui.liveMcq },
+        { value: s.written, label: T.ui.liveWritten },
+        { value: s.subjects, label: T.ui.liveSubjects },
+        { value: s.lessons, label: T.ui.liveLessons },
+        { value: s.openCirculars, label: T.ui.liveCirculars },
+        { value: s.tests, label: T.ui.liveTests },
+      ]
+        .filter((x) => x.value > 0)
+        .map((x) => ({ value: fmt(x.value), label: x.label }))
+    : []
+  // Fewer than three live numbers (a fresh install) says less than the static summary.
+  const shown = items.length >= 3 ? items : T.stats
+  $('#stats-list').innerHTML = shown
+    .map((x) => `<li><strong>${esc(x.value)}</strong><span>${esc(x.label)}</span></li>`)
+    .join('')
+}
+
+const todayIso = () => {
+  const d = new Date()
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10)
+}
+
+function renderCirculars() {
+  const section = $('#circulars')
+  const has = circulars.length > 0
+  section.hidden = !has
+  document.querySelectorAll('[data-circulars-link]').forEach((a) => (a.hidden = !has))
+  if (!has) return
+  const today = todayIso()
+  const date = (d) =>
+    new Date(`${d}T00:00:00`).toLocaleDateString(lang === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  const pick = (en, bn) => (lang === 'bn' && bn ? bn : en)
+  $('#circulars-list').innerHTML = circulars
+    .map((c, i) => {
+      let badge = ''
+      if (c.ends_on) {
+        const left = Math.round((Date.parse(c.ends_on) - Date.parse(today)) / 86400000)
+        badge = left <= 0
+          ? `<span class="circ-badge urgent">${esc(T.ui.circToday)}</span>`
+          : `<span class="circ-badge${left <= 3 ? ' urgent' : ''}">${esc(left === 1 ? T.ui.circOneDay : T.ui.circDaysLeft.replace('{n}', digits(left)))}</span>`
+      }
+      const posts = pick(c.details_en, c.details_bn)
+      const apply = c.apply_url
+        ? `<a class="btn btn-primary btn-sm" href="${esc(c.apply_url)}" target="_blank" rel="noopener">${esc(T.ui.circApply)}</a>`
+        : ''
+      const pdf = c.file_url
+        ? `<a class="btn btn-ghost btn-sm" href="${esc(c.file_url)}" target="_blank" rel="noopener">${esc(T.ui.circPdf)}</a>`
+        : ''
+      return `<li class="circ" style="--i:${i}">
+        <div class="circ-main">
+          <h3>${esc(pick(c.title_en, c.title_bn))}${c.tag ? ` <span class="circ-tag">${esc(c.tag)}</span>` : ''}</h3>
+          ${posts ? `<p class="circ-posts">${esc(posts)}</p>` : ''}
+          ${c.ends_on ? `<p class="circ-date">${esc(T.ui.circLastDate)}: <strong>${esc(date(c.ends_on))}</strong> ${badge}</p>` : ''}
+        </div>
+        <div class="circ-actions">${apply}${pdf}</div>
+      </li>`
+    })
+    .join('')
+}
+
+function renderWhatsapp() {
+  const a = $('#wa-float')
+  const number = live?.contact?.whatsapp
+  a.hidden = !number
+  if (number) a.href = `https://wa.me/${encodeURIComponent(number)}`
+}
+
+const getJson = (url) => fetch(url).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+getJson('/api/site/site-info')
+  .then((data) => {
+    live = data
+    renderStats()
+    renderWhatsapp()
+    renderContacts()
+  })
+  .catch(() => {})
+getJson('/api/site/open-circulars?limit=6')
+  .then((data) => {
+    circulars = Array.isArray(data) ? data : []
+    renderCirculars()
+  })
+  .catch(() => {})
+
+// "See all circulars" opens Study Hub's Resources page (through the login screen while signed out).
+document.querySelectorAll('[data-resources-link]').forEach((a) => {
+  a.href = isSignedIn ? `${C.STUDY_HUB_URL}#/resources` : `${C.STUDY_HUB_URL}${C.LOGIN_HASH}?next=resources`
+  openInTab(a)
+})
+
 /* ---- Tour: one screen of StudyPath per tab --------------------------- */
 let tourIdx = 0
 const tourImg = $('#tour-img')
@@ -266,17 +366,22 @@ $('#lang-toggle').addEventListener('click', () => {
 })
 
 /* ---- Footer contacts (language-neutral) ------------------------------ */
-const contacts = [
-  C.contact.email && { href: `mailto:${C.contact.email}`, label: C.contact.email },
-  C.contact.facebook && { href: C.contact.facebook, label: 'Facebook', ext: true },
-  C.contact.youtube && { href: C.contact.youtube, label: 'YouTube', ext: true },
-].filter(Boolean)
-if (contacts.length) {
+// The config's links first; Admin ? Settings ? Contact (from site-info) overrides them once loaded.
+function renderContacts() {
+  const c = { ...C.contact, ...Object.fromEntries(Object.entries(live?.contact ?? {}).filter(([, v]) => v)) }
+  const contacts = [
+    c.phone && { href: `tel:${String(c.phone).replace(/[^\d+]/g, '')}`, label: c.phone },
+    c.email && { href: `mailto:${c.email}`, label: c.email },
+    c.facebook && { href: c.facebook, label: 'Facebook', ext: true },
+    c.youtube && { href: c.youtube, label: 'YouTube', ext: true },
+    { href: '/study-hub/#/contact', label: c.address || null, i18n: 'footerContactPage' },
+  ].filter((x) => x && (x.label || x.i18n))
   $('#contact-list').innerHTML = contacts
-    .map((c) => `<li><a href="${esc(c.href)}"${c.ext ? ' target="_blank" rel="noopener"' : ''}>${esc(c.label)}</a></li>`)
+    .map((x) => `<li><a href="${esc(x.href)}"${x.ext ? ' target="_blank" rel="noopener"' : ''}${x.label ? '' : ` data-i18n="${x.i18n}"`}>${esc(x.label || T.ui[x.i18n])}</a></li>`)
     .join('')
   $('#contact-block').hidden = false
 }
+renderContacts()
 $('#copyright-name').textContent = C.copyrightName
 
 /* ---- Mobile menu ----------------------------------------------------- */

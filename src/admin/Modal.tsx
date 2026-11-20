@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
 /** Open modals, innermost last: only the top one answers Escape (a confirm dialog can open over another modal). */
 const openStack: object[] = []
@@ -39,7 +40,10 @@ export default function Modal({ open, onClose, title, children, wide, size = wid
   }, [open])
 
   if (!open) return null
-  return (
+  // Rendered via a portal to document.body: a position:fixed overlay nested inside an animated ancestor
+  // (e.g. .adm-screen, whose entrance animation leaves a lingering transform) would otherwise be confined
+  // to that ancestor's box instead of the viewport.
+  return createPortal(
     <div className="modal-overlay" onMouseDown={e => { if (e.target === e.currentTarget) onClose() }}>
       <div ref={panel} className={`modal-content modal-${size}`} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}>
         <div className="modal-header">
@@ -52,6 +56,7 @@ export default function Modal({ open, onClose, title, children, wide, size = wid
         </div>
         <div className="modal-body">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

@@ -53,6 +53,7 @@ interface Draft {
   available_until: string
   max_attempts: string
   result_release: ResultRelease
+  is_free: boolean
   sections: SectionDraft[]
   questions: PickedQuestion[]
 }
@@ -75,7 +76,7 @@ const fromLocal = (v: string) => (v ? new Date(v).toISOString() : null)
 const NEW_DRAFT: Omit<Draft, 'sections' | 'questions'> = {
   kind: 'mock', mode: 'random', title_en: '', title_bn: '', description_en: '', description_bn: '', job_post_id: '',
   duration_minutes: '60', marks_per_question: '1', negative_mark: '0.25', pass_mark: '', shuffle_options: true,
-  available_from: '', available_until: '', max_attempts: '', result_release: 'immediate',
+  available_from: '', available_until: '', max_attempts: '', result_release: 'immediate', is_free: false,
 }
 
 function toDraft(d: AdminTestDetail): Draft {
@@ -84,7 +85,7 @@ function toDraft(d: AdminTestDetail): Draft {
     description_bn: d.description_bn ?? '', job_post_id: d.job_post_id ?? '', duration_minutes: str(d.duration_minutes),
     marks_per_question: str(d.marks_per_question), negative_mark: str(d.negative_mark), pass_mark: str(d.pass_mark),
     shuffle_options: d.shuffle_options, available_from: toLocal(d.available_from), available_until: toLocal(d.available_until),
-    max_attempts: str(d.max_attempts), result_release: d.result_release,
+    max_attempts: str(d.max_attempts), result_release: d.result_release, is_free: d.is_free,
     sections: d.sections.map(s => ({
       key: nextKey++, subject_id: s.subject_id, topic_id: s.topic_id ?? '', type: s.type, question_count: str(s.question_count),
       difficulty: str(s.difficulty), marks_per_question: str(s.marks_per_question),
@@ -104,7 +105,7 @@ function toInput(d: Draft): TestInput {
     description_bn: blank(d.description_bn), job_post_id: d.job_post_id || null, duration_minutes: d.duration_minutes.trim(),
     marks_per_question: d.marks_per_question.trim(), negative_mark: d.negative_mark.trim() || '0', pass_mark: blank(d.pass_mark),
     shuffle_options: d.shuffle_options, available_from: fromLocal(d.available_from), available_until: fromLocal(d.available_until),
-    max_attempts: blank(d.max_attempts), result_release: d.result_release,
+    max_attempts: blank(d.max_attempts), result_release: d.result_release, is_free: d.is_free,
     sections: d.mode === 'random' ? d.sections.map(s => ({
       subject_id: s.subject_id, topic_id: s.topic_id || null, type: s.type, question_count: s.question_count.trim(),
       difficulty: s.difficulty ? Number(s.difficulty) : null, marks_per_question: blank(s.marks_per_question),
@@ -340,6 +341,11 @@ export default function ExamEditor({ id, language, onExit }: { id: string; langu
               <label className="cm-active full-width">
                 <input type="checkbox" checked={draft.shuffle_options} onChange={e => set('shuffle_options', e.target.checked)} /> {t.axFieldShuffle}
               </label>
+              <label className="cm-active full-width">
+                <input type="checkbox" checked={draft.is_free} onChange={e => set('is_free', e.target.checked)} /> {t.axFieldFree}
+              </label>
+              <small className="ax-hint full-width">{t.axFreeHint}</small>
+              {fe('is_free')}
             </div>
           </section>
 

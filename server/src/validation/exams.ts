@@ -41,6 +41,8 @@ export interface MockTestInput {
   available_until: string | null;
   max_attempts: number | null;
   result_release: ResultRelease;
+  /** Open to visitors without an account (fixed paper, answers released at once). */
+  is_free: boolean;
   sections: SectionInput[];
   question_ids: string[];
   /** fixed: number of questions; random: sum of the MCQ sections. */
@@ -112,6 +114,10 @@ export function parseMockTest(input: unknown): Result<MockTestInput> {
   if (max_attempts !== null && (!inRange(max_attempts, 1, 50) || !Number.isInteger(max_attempts))) fields.max_attempts = "attempts_invalid";
   const result_release = b.result_release ?? "immediate";
   if (!["immediate", "after_close", "never"].includes(result_release as string)) fields.result_release = "release_invalid";
+  const is_free = b.is_free === true;
+  // Visitors see a free set's answers, so it needs a fixed paper whose answers are released straight away.
+  if (is_free && mode !== "fixed") fields.is_free = "free_needs_fixed";
+  else if (is_free && result_release !== "immediate") fields.is_free = "free_needs_immediate";
 
   const sections = mode === "random" && Array.isArray(b.sections) ? b.sections.map((s, i) => parseSection(s, i, fields)) : [];
   const rawIds = mode === "fixed" && Array.isArray(b.question_ids) ? b.question_ids : [];
@@ -128,7 +134,7 @@ export function parseMockTest(input: unknown): Result<MockTestInput> {
     kind: kind as TestKind, mode: mode as "fixed" | "random", title_en: title_en ?? "", title_bn, description_en, description_bn,
     job_post_id: job_post_id ?? null, duration_minutes: duration ?? 0, marks_per_question: marks ?? 0, negative_mark: negative,
     pass_mark, shuffle_options: b.shuffle_options !== false, available_from: available_from ?? null,
-    available_until: available_until ?? null, max_attempts, result_release: result_release as ResultRelease,
+    available_until: available_until ?? null, max_attempts, result_release: result_release as ResultRelease, is_free,
     sections, question_ids, total_questions: total,
   });
 }

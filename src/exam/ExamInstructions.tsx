@@ -6,6 +6,7 @@ import Icon from '../components/portal/icons'
 import { examApi } from './examApi'
 import { dateTime, DIFFICULTY_LABEL, examError, fill, mark, negativeText, num, pick } from './format'
 import { KindBadge, LoadError } from './ExamUi'
+import LeaderboardCard from './LeaderboardCard'
 import { useRemote } from './useRemote'
 import './exam.css'
 
@@ -107,7 +108,7 @@ export default function ExamInstructions({ id }: { id: string }) {
         </div>
 
         <section className="ex-start" aria-label={t.exStartExam}>
-          {startError && <p className="ex-alert bad" role="alert"><Icon name="alert" /><span>{startError}</span></p>}
+          {startError && <LoadError text={startError} t={t} />}
           {test.openAttemptId ? (
             <>
               <p className="pd-muted">{t.exResumeNote}</p>
@@ -130,6 +131,8 @@ export default function ExamInstructions({ id }: { id: string }) {
           )}
           {test.lastAttemptId && <a className="ex-btn" href={`#/exams/result/${test.lastAttemptId}`}>{t.exViewLastResult}</a>}
         </section>
+
+        <LeaderboardCard testId={test.id} t={t} lang={lang} />
       </div>
     </main>
   )

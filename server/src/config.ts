@@ -17,6 +17,8 @@ export interface AppConfig {
    * production or on App Service unless EXAM_ADMIN_PREVIEW=true; EXAM_ADMIN_PREVIEW=false turns it off anywhere.
    */
   examAdminPreview: boolean;
+  /** WhatsApp number (digits with country code, e.g. 8801XXXXXXXXX) for the contact button; empty hides it. */
+  whatsappNumber: string;
 }
 
 /** Values shipped in docs/examples; using one in production would let anyone forge tokens. */
@@ -47,6 +49,7 @@ export function loadConfig(env: NodeJS.ProcessEnv): AppConfig {
     authRateLimitMax: Number(env.AUTH_RATE_LIMIT_MAX) || 10,
     bcryptRounds: Number(env.BCRYPT_ROUNDS) || 12,
     examAdminPreview: env.EXAM_ADMIN_PREVIEW ? env.EXAM_ADMIN_PREVIEW === "true" : !deployed,
+    whatsappNumber: (env.WHATSAPP_NUMBER ?? "").replace(/\D/g, ""),
   };
 }
 

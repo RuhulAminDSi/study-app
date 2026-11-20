@@ -27,6 +27,8 @@ export interface AdminTest {
   available_until: string | null
   max_attempts: number | null
   result_release: ResultRelease
+  /** Listed on the public site's free sets with answers and a merit list (fixed paper, immediate results only). */
+  is_free: boolean
   is_published: boolean
   is_archived: boolean
   blueprint_id: string | null
@@ -100,6 +102,7 @@ export interface TestInput {
   available_until: string | null
   max_attempts: number | string | null
   result_release: ResultRelease
+  is_free: boolean
   sections: {
     subject_id: string
     topic_id: string | null

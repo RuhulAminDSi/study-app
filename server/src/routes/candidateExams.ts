@@ -9,6 +9,7 @@ import { difficultyLabel, ExamError, getSections, TEST_SUMMARY_SELECT, type Test
 import { parseAnswer, parseBankQuery, parsePractice, parseResponse } from "../validation/exams.js";
 import { checkAnswer, listBank, listResponses, saveResponse } from "../services/questionBank.js";
 import { UUID_RE } from "../validation/taxonomy.js";
+import { paywalled } from "../services/siteSettings.js";
 
 /** Candidate side of the examination module, mounted at /api/candidate (spec §6, §7.1). */
 export const candidateExamsRouter = Router();
@@ -31,6 +32,13 @@ const handle = (fn: (req: CandidateRequest, res: Response) => Promise<unknown>) 
 const notFound = () => new ExamError(404, "not_found", "Not found");
 const uuidParam = (v: string) => { if (!UUID_RE.test(v)) throw notFound(); return v; };
 const me = (req: CandidateRequest) => req.candidate!.id;
+
+/** 402 when the paywall (Admin → Settings) covers this area and the candidate has no active plan. */
+async function requirePlan(req: CandidateRequest, area: "tests" | "practice") {
+  if (await paywalled(me(req), area)) {
+    throw new ExamError(402, "subscription_required", "This needs an active plan. Choose a plan to continue.", { area });
+  }
+}
 
 // ── Tests ──────────────────────────────────────────────────────────────────────
 
@@ -134,8 +142,57 @@ candidateExamsRouter.get("/exams/:id", handle(async (req) => {
   return { ...testCard(t, mine.rows[0]), outline };
 }));
 
+/** "Rahim Uddin" → "Rahim U.": enough to recognise yourself, not enough to identify someone else. */
+export function publicName(full: string): string {
+  const parts = full.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "Candidate";
+  return parts.length === 1 ? parts[0] : `${parts[0]} ${[...parts[parts.length - 1]][0]}.`;
+}
+
+/**
+ * Top scores on a timed test: every candidate's first finished attempt (as the rank on the result page), best
+ * score first, then the faster finish. Includes the asking candidate's own place even when outside the top.
+ */
+candidateExamsRouter.get("/exams/:id/leaderboard", handle(async (req) => {
+  const id = uuidParam(req.params.id);
+  const test = await pool.query("SELECT id FROM mock_tests WHERE id = $1 AND (is_published OR is_archived)", [id]);
+  if (!test.rowCount) throw notFound();
+  const limit = Math.min(50, Math.max(5, parseInt(String(req.query.limit ?? "10"), 10) || 10));
+  const { rows } = await pool.query(
+    `WITH firsts AS (
+       SELECT DISTINCT ON (a.candidate_id) a.candidate_id, a.score::float AS score, a.max_score::float AS max_score,
+              EXTRACT(EPOCH FROM (COALESCE(a.submitted_at, a.deadline_at) - a.started_at))::int AS seconds
+         FROM attempts a
+        WHERE a.mock_test_id = $1 AND a.status IN ('submitted','expired')
+        ORDER BY a.candidate_id, a.started_at),
+     ranked AS (
+       SELECT f.*, c.full_name, RANK() OVER (ORDER BY f.score DESC) AS place,
+              ROW_NUMBER() OVER (ORDER BY f.score DESC, f.seconds, c.full_name) AS row_no
+         FROM firsts f JOIN candidates c ON c.id = f.candidate_id)
+     SELECT *, (SELECT count(*) FROM ranked)::int AS total FROM ranked
+      WHERE row_no <= $2 OR candidate_id = $3 ORDER BY row_no`,
+    [id, limit, me(req)],
+  );
+  const entry = (r: Record<string, unknown>) => ({
+    rank: Number(r.place),
+    name: publicName(String(r.full_name)),
+    score: Math.round(Number(r.score) * 100) / 100,
+    maxScore: Math.round(Number(r.max_score ?? 0) * 100) / 100,
+    percentage: Number(r.max_score) > 0 ? Math.round((10000 * Number(r.score)) / Number(r.max_score)) / 100 : 0,
+    seconds: Number(r.seconds),
+    isMe: r.candidate_id === me(req),
+  });
+  const top = rows.filter((r) => Number(r.row_no) <= limit).map(entry);
+  const mine = rows.find((r) => r.candidate_id === me(req));
+  return { total: rows[0]?.total ?? 0, top, me: mine ? entry(mine) : null };
+}));
+
 candidateExamsRouter.post("/exams/:id/start", handle(async (req, res) => {
-  const out = await startTest(me(req), uuidParam(req.params.id));
+  const id = uuidParam(req.params.id);
+  // Practice sets (quiz) and free sets stay open; mock and model tests need a plan when the paywall is on.
+  const t = await pool.query("SELECT kind, is_free FROM mock_tests WHERE id = $1", [id]);
+  if (t.rows[0] && t.rows[0].kind !== "quiz" && !t.rows[0].is_free) await requirePlan(req, "tests");
+  const out = await startTest(me(req), id);
   res.status(out.resumed ? 200 : 201);
   return out;
 }));
@@ -191,6 +248,7 @@ candidateExamsRouter.get("/practice/catalog", handle(async (req) => {
 candidateExamsRouter.post("/practice/sessions", handle(async (req, res) => {
   const r = parsePractice(req.body);
   if (r.ok === false) { invalid(res, r.fields); return; }
+  await requirePlan(req, "practice");
   const out = await startPractice(me(req), r.value);
   res.status(201);
   return out;
@@ -228,7 +286,10 @@ candidateExamsRouter.get("/attempts/:aid/review", handle((req) => getReview(me(r
 
 // ── Question bank (study before a test) ───────────────────────────────────────
 
-candidateExamsRouter.get("/bank/questions", handle((req) => listBank(me(req), parseBankQuery(req.query as Record<string, unknown>))));
+candidateExamsRouter.get("/bank/questions", handle(async (req) => {
+  await requirePlan(req, "practice");
+  return listBank(me(req), parseBankQuery(req.query as Record<string, unknown>));
+}));
 
 candidateExamsRouter.post("/bank/questions/:id/check", handle(async (req, res) => {
   const optionId = req.body?.optionId ?? null;

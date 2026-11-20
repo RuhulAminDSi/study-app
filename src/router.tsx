@@ -1,8 +1,28 @@
 import { useState, useEffect } from 'react'
 
-type RouteType = 'public' | 'admin' | 'login' | 'candidate-login' | 'candidate-signup'
-/** Which page of the public portal: `#/` dashboard, `#/notes`, `#/pyq`, `#/exams...`, or a lesson under `#/chapter/...`. */
-export type PublicView = 'dashboard' | 'notes' | 'pyq' | 'lesson' | 'exams'
+type RouteType = 'public' | 'admin' | 'login' | 'candidate-login' | 'candidate-signup' | 'site'
+/** Which page of the public portal: `#/` dashboard, `#/notes`, `#/pyq`, `#/exams...`, `#/resources`, or a lesson under `#/chapter/...`. */
+export type PublicView = 'dashboard' | 'notes' | 'pyq' | 'lesson' | 'exams' | 'resources' | 'account'
+
+/** The tabs of `#/resources[?tab=]`: job circulars (default), suggestions, past exam questions, other files. */
+export type ResourceTab = 'circular' | 'notice' | 'suggestion' | 'question' | 'other'
+const RESOURCE_TABS: ResourceTab[] = ['circular', 'notice', 'suggestion', 'question', 'other']
+
+export type ArticleCategory = 'guideline' | 'news' | 'written' | 'solution'
+export const ARTICLE_CATEGORIES: ArticleCategory[] = ['guideline', 'news', 'written', 'solution']
+
+/**
+ * Pages open to visitors without an account (shown inside the portal for a signed-in reader): the free tests
+ * (`#/free-test`, `#/free-test/<id>[/answers|/take|/merit]`), articles (`#/articles[?cat=]`, `#/articles/<slug>`),
+ * plans and contact.
+ */
+export type SitePage =
+  | { page: 'free' }
+  | { page: 'free-set'; id: string; mode: 'home' | 'answers' | 'take' | 'merit' }
+  | { page: 'articles'; category?: ArticleCategory; tag?: string }
+  | { page: 'article'; slug: string }
+  | { page: 'plans' }
+  | { page: 'contact' }
 
 export type ExamTab = 'bank' | 'practice' | 'mock' | 'model' | 'results'
 
@@ -27,6 +47,8 @@ export interface RouteInfo {
   adminView?: string
   next?: string
   exam?: ExamRoute
+  resourceTab?: ResourceTab
+  site?: SitePage
 }
 
 const UUID_PATTERN = /[a-fA-F0-9-]{36}/
@@ -42,6 +64,9 @@ export function parseHash(): RouteInfo {
     const safe = next && SAFE_NEXT.test(next) && !/^(login|signup)(\/|$)/.test(next) ? next : undefined
     return { type: path === 'login' ? 'candidate-login' : 'candidate-signup', next: safe }
   }
+  // The free sample test is open to visitors: no sign-in.
+  const site = parseSitePath(path, query)
+  if (site) return { type: 'site', site }
   const adminMatch = hash.match(/^admin\/(.+)/)
   if (adminMatch) {
     const sub = adminMatch[1]
@@ -67,8 +92,30 @@ export function parseHash(): RouteInfo {
   }
 
   if (path === 'notes' || path === 'pyq') return { type: 'public', view: path }
+  if (path === 'account') return { type: 'public', view: 'account' }
+  if (path === 'resources') {
+    const tab = new URLSearchParams(query).get('tab') as ResourceTab | null
+    return { type: 'public', view: 'resources', resourceTab: tab && RESOURCE_TABS.includes(tab) ? tab : 'circular' }
+  }
   if (path === 'exams' || path.startsWith('exams/')) return { type: 'public', view: 'exams', exam: parseExamPath(path, query) }
   return { type: 'public', view: 'dashboard' }
+}
+
+function parseSitePath(path: string, query: string): SitePage | null {
+  if (path === 'free-test') return { page: 'free' }
+  const set = path.match(new RegExp(`^free-test/(${UUID_PATTERN.source})(?:/(answers|take|merit))?$`))
+  if (set) return { page: 'free-set', id: set[1], mode: (set[2] as 'answers' | 'take' | 'merit' | undefined) ?? 'home' }
+  if (path === 'articles') {
+    const params = new URLSearchParams(query)
+    const cat = params.get('cat') as ArticleCategory | null
+    const tag = params.get('tag')?.slice(0, 40) || undefined
+    return { page: 'articles', category: cat && ARTICLE_CATEGORIES.includes(cat) ? cat : undefined, tag }
+  }
+  const article = path.match(/^articles\/([a-z0-9-]{1,120})$/)
+  if (article) return { page: 'article', slug: article[1] }
+  if (path === 'plans') return { page: 'plans' }
+  if (path === 'contact') return { page: 'contact' }
+  return null
 }
 
 const EXAM_TABS: ExamTab[] = ['bank', 'practice', 'mock', 'model', 'results']

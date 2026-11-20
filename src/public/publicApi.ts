@@ -133,6 +133,32 @@ export function fetchAnnouncements(): Promise<PublicAnnouncement[]> {
   return publicFetch<PublicAnnouncement[]>('/announcements')
 }
 
+/** A published circular, suggestion, past exam question or other download (server/src/routes/resources.ts). */
+export interface PublicResource {
+  id: string
+  category: 'circular' | 'notice' | 'suggestion' | 'question' | 'other'
+  tag: string | null
+  title_en: string
+  title_bn: string | null
+  details_en: string | null
+  details_bn: string | null
+  link_url: string | null
+  apply_url: string | null
+  /** `YYYY-MM-DD` */
+  starts_on: string | null
+  ends_on: string | null
+  is_pinned: boolean
+  created_at: string
+  file_name: string | null
+  file_type: string | null
+  file_size: number | null
+  file_url: string | null
+}
+
+export function fetchResources(onFresh?: (data: PublicResource[]) => void): Promise<PublicResource[]> {
+  return cachedPublicFetch<PublicResource[]>('/resources', onFresh)
+}
+
 /** Text in both languages. */
 export interface Bi {
   en: string
