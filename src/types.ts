@@ -943,8 +943,6 @@ export interface Translations {
   rsLoadFailed: string
   rsOnlyClosed: string
   rsNothingYet: string
-  rsOrganisation: string
-  rsPosts: string
   rsHideClosed: string
   rsShowClosed: string
   rsLatestCirculars: string

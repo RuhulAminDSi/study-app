@@ -178,69 +178,30 @@ export default function ResourcesPage({ tab }: { tab: ResourceTab }) {
           <p className="pd-muted pd-empty">{!ofTab.length ? t.rsNothingYet : tab === 'circular' && status === 'active' && !q && !activeTag ? t.rsOnlyClosed : t.libEmpty}</p>
         )}
 
-        {items && shown.length > 0 && tab === 'circular' && (
-          <div className="rs-table-wrap">
-            <table className="rs-table">
-              <thead>
-                <tr>
-                  <th className="rs-sn">#</th>
-                  <th>{t.rsOrganisation}</th>
-                  <th>{t.rsPosts}</th>
-                  <th>{t.rsStartCircular}</th>
-                  <th>{t.rsEndCircular}</th>
-                  <th><span className="sr-only">{t.rsApplyNow}</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                {shown.map((r, i) => (
-                  <tr key={r.id} className={statusOf(r) === 'expired' ? 'is-closed' : undefined}>
-                    <td className="rs-sn">{num(i + 1, lang)}</td>
-                    <td className="rs-org">
-                      {r.is_pinned && <span className="rs-pin" title={t.anPinnedBadge}><Icon name="pin" /></span>}
-                      {r.file_url && (isPdf(r) || isImage(r))
-                        ? <button type="button" className="rs-org-link" onClick={() => open(r)}>{pick(r.title_en, r.title_bn, lang)}</button>
-                        : <span>{pick(r.title_en, r.title_bn, lang)}</span>}
-                      {r.tag && <span className="rs-tag">{r.tag}</span>}
-                    </td>
-                    <td className="rs-posts" data-label={t.rsPosts}>{pick(r.details_en, r.details_bn, lang) ?? '—'}</td>
-                    <td className="rs-date" data-label={t.rsStartCircular}>{r.starts_on ? date(r.starts_on) : '—'}</td>
-                    <td className="rs-date" data-label={t.rsEndCircular}>
-                      {r.ends_on ? date(r.ends_on) : '—'}
-                      {deadline(r)}
-                    </td>
-                    <td className="rs-actions">
-                      <div className="rs-actions-inner">
-                        {applyButton(r)}
-                        {fileButtons(r)}
-                        {linkButton(r)}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {items && shown.length > 0 && tab !== 'circular' && (
+        {items && shown.length > 0 && (
           <ul className="rs-grid">
             {shown.map(r => {
+              const isCircular = tab === 'circular'
               const k = kindOf(r)
               return (
-                <li key={r.id} className="rs-card">
+                <li key={r.id} className={`rs-card${isCircular && statusOf(r) === 'expired' ? ' is-closed' : ''}`}>
                   <div className="rs-card-top">
-                    <span className={`rs-card-icon kind-${k}`}>
-                      {k === 'pdf' ? <span className="rs-ext">PDF</span> : <Icon name={k === 'image' ? 'grid' : 'link'} />}
+                    <span className={`rs-card-icon kind-${isCircular ? 'circular' : k}`}>
+                      {isCircular ? <Icon name="flag" /> : k === 'pdf' ? <span className="rs-ext">PDF</span> : <Icon name={k === 'image' ? 'grid' : 'link'} />}
                     </span>
                     <div className="rs-card-head">
                       <h2 className="rs-card-title">
                         {r.is_pinned && <span className="rs-pin" title={t.anPinnedBadge}><Icon name="pin" /></span>}
-                        {pick(r.title_en, r.title_bn, lang)}
+                        {r.file_url && (isPdf(r) || isImage(r))
+                          ? <button type="button" className="rs-card-title-link" onClick={() => open(r)}>{pick(r.title_en, r.title_bn, lang)}</button>
+                          : pick(r.title_en, r.title_bn, lang)}
                       </h2>
                       <div className="rs-card-meta">
                         {r.tag && <span className="rs-tag">{r.tag}</span>}
-                        <span>{date(r.starts_on ?? r.created_at.slice(0, 10))}</span>
-                        {r.file_size != null && <span>{bytes(r.file_size, lang)}</span>}
+                        {isCircular
+                          ? (r.starts_on || r.ends_on) && <span>{r.starts_on ? date(r.starts_on) : '—'} → {r.ends_on ? date(r.ends_on) : '—'}</span>
+                          : <span>{date(r.starts_on ?? r.created_at.slice(0, 10))}</span>}
+                        {!isCircular && r.file_size != null && <span>{bytes(r.file_size, lang)}</span>}
                         {deadline(r)}
                       </div>
                     </div>

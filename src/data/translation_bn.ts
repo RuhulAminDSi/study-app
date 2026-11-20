@@ -922,8 +922,6 @@ export const translation_bn: Translations = {
   rsLoadFailed: "রিসোর্স লোড করা যায়নি। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।",
   rsOnlyClosed: "এই মুহূর্তে কোনো চলমান বিজ্ঞপ্তি নেই।",
   rsNothingYet: "এখানে এখনও কিছু নেই। শীঘ্রই আবার দেখুন।",
-  rsOrganisation: "প্রতিষ্ঠান",
-  rsPosts: "পদ",
   rsHideClosed: "বন্ধ বিজ্ঞপ্তি লুকান",
   rsShowClosed: "{n}টি বন্ধ বিজ্ঞপ্তি দেখুন",
   rsLatestCirculars: "সাম্প্রতিক বিজ্ঞপ্তি",

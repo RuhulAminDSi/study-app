@@ -922,8 +922,6 @@ export const translation_en: Translations = {
   rsLoadFailed: "Couldn't load resources. Check your connection and try again.",
   rsOnlyClosed: "No open circulars right now.",
   rsNothingYet: "Nothing here yet. Check back soon.",
-  rsOrganisation: "Organisation",
-  rsPosts: "Posts",
   rsHideClosed: "Hide closed circulars",
   rsShowClosed: "Show {n} closed circulars",
   rsLatestCirculars: "Latest circulars",
