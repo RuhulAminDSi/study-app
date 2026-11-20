@@ -112,6 +112,7 @@ export default function Sidebar({ view, exam, site }: { view: PublicView | 'site
     { key: 'dashboard', active: view === 'dashboard', href: '#/', label: t.navDashboard, icon: 'dashboard' },
     { key: 'notes', active: view === 'notes', href: '#/notes', label: t.navNotes, icon: 'notes', count: sets.length - pyqCount },
     { key: 'pyq', active: view === 'pyq', href: '#/pyq', label: t.navPyq, icon: 'pyq', count: pyqCount },
+    { key: 'history', active: view === 'history', href: '#/history', label: t.navHistory, icon: 'clock' },
     { key: 'resources', active: site?.page === 'resources', href: '#/resources', label: t.navResources, icon: 'folder' },
   ]
   // The open site pages (articles, free sets, plans) and the reader's own plan and payments.

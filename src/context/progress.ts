@@ -2,7 +2,8 @@ import { useSyncExternalStore } from 'react'
 
 /**
  * Reading progress for the public portal, kept in this browser only (no account needed).
- * `opened` holds every lesson id the reader has shown; `recent` the last few, newest first.
+ * `opened` holds every lesson id the reader has shown; `recent` the full reading history, newest first
+ * (the `#/history` page and the dashboard's "Recently viewed" panel both read it).
  */
 export interface Progress {
   opened: string[]
@@ -10,7 +11,8 @@ export interface Progress {
 }
 
 const KEY = 'studyhub_progress'
-const RECENT_MAX = 6
+// Comfortably above the lesson count (103 as of writing), so this is the full history, not a rolling window.
+const RECENT_MAX = 500
 const EMPTY: Progress = { opened: [], recent: [] }
 const listeners = new Set<() => void>()
 

@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar'
 import MainContent from './components/MainContent'
 import Dashboard from './components/portal/Dashboard'
 import NotesLibrary from './components/portal/NotesLibrary'
+import ReadingHistory from './components/portal/ReadingHistory'
 import CandidateLogin from './candidate/CandidateLogin'
 import CandidateSignup from './candidate/CandidateSignup'
 import ExamsPage from './exam/ExamsPage'
@@ -39,6 +40,7 @@ function PublicView({ view, exam }: { view: View; exam?: ExamRoute }) {
       {examPage !== 'attempt' && <Sidebar view={view} exam={exam} />}
       {view === 'dashboard' && <Dashboard />}
       {(view === 'notes' || view === 'pyq') && <NotesLibrary key={view} kind={view} />}
+      {view === 'history' && <ReadingHistory />}
       {view === 'lesson' && <MainContent />}
       {view === 'exams' && exam && <ExamView exam={exam} />}
       {view === 'account' && <AccountPage />}

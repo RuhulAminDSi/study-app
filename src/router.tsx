@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
 type RouteType = 'public' | 'admin' | 'login' | 'candidate-login' | 'candidate-signup' | 'site'
-/** Which page of the public portal: `#/` dashboard, `#/notes`, `#/pyq`, `#/exams...`, or a lesson under `#/chapter/...`. */
-export type PublicView = 'dashboard' | 'notes' | 'pyq' | 'lesson' | 'exams' | 'account'
+/** Which page of the public portal: `#/` dashboard, `#/notes`, `#/pyq`, `#/history`, `#/exams...`, or a lesson under `#/chapter/...`. */
+export type PublicView = 'dashboard' | 'notes' | 'pyq' | 'history' | 'lesson' | 'exams' | 'account'
 
 /** The tabs of `#/resources[?tab=]`: job circulars (default), suggestions, past exam questions, other files. */
 export type ResourceTab = 'circular' | 'notice' | 'suggestion' | 'question' | 'other'
@@ -92,7 +92,7 @@ export function parseHash(): RouteInfo {
     return { type: 'public', view: 'lesson', chapterNumber: Number(subjectMatch[1]) }
   }
 
-  if (path === 'notes' || path === 'pyq') return { type: 'public', view: path }
+  if (path === 'notes' || path === 'pyq' || path === 'history') return { type: 'public', view: path }
   if (path === 'account') return { type: 'public', view: 'account' }
   if (path === 'exams' || path.startsWith('exams/')) return { type: 'public', view: 'exams', exam: parseExamPath(path, query) }
   return { type: 'public', view: 'dashboard' }
