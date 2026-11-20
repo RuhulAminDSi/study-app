@@ -7,6 +7,7 @@ import { getSettings } from "../services/siteSettings.js";
 import { asyncHandler } from "../http/asyncHandler.js";
 import { clientKey } from "../middleware/rateLimit.js";
 import { UUID_RE } from "../validation/taxonomy.js";
+import { PUBLISHED_RESOURCES_SQL } from "./resources.js";
 
 /**
  * Open endpoints (no sign-in) for the landing page and visitors: live counts, open job circulars, the contact
@@ -66,6 +67,13 @@ siteRouter.get("/site-info", asyncHandler(async (_req, res) => {
     payment: { bkash: settings.payment.bkash, nagad: settings.payment.nagad, rocket: settings.payment.rocket },
     paywall: { enabled: settings.paywall.enabled },
   });
+}));
+
+// ── Resources ───────────────────────────────────────────────────────────────────
+
+/** Every published resource (circulars, notices, suggestions, past exam questions, other files): the Resources page is open to visitors. */
+siteRouter.get("/resources", asyncHandler(async (_req, res) => {
+  res.json((await pool.query(PUBLISHED_RESOURCES_SQL)).rows);
 }));
 
 // ── Open circulars ─────────────────────────────────────────────────────────────

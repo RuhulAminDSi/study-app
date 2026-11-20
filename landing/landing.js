@@ -302,9 +302,9 @@ getJson('/api/site/open-circulars?limit=6')
   })
   .catch(() => {})
 
-// "See all circulars" opens Study Hub's Resources page (through the login screen while signed out).
+// "See all circulars" opens Study Hub's Resources page directly: it's public, no sign-in needed.
 document.querySelectorAll('[data-resources-link]').forEach((a) => {
-  a.href = isSignedIn ? `${C.STUDY_HUB_URL}#/resources` : `${C.STUDY_HUB_URL}${C.LOGIN_HASH}?next=resources`
+  a.href = `${C.STUDY_HUB_URL}#/resources`
   openInTab(a)
 })
 

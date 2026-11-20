@@ -10,7 +10,7 @@ import '../exam/exam.css'
 import '../exam/free-test.css'
 import './site.css'
 
-type Section = 'free' | 'articles' | 'plans' | 'contact'
+type Section = 'free' | 'articles' | 'resources' | 'plans' | 'contact'
 const sectionOf = (p: SitePage): Section =>
   p.page === 'free-set' ? 'free' : p.page === 'article' ? 'articles' : p.page
 
@@ -31,6 +31,7 @@ export default function SiteShell({ page, children }: { page: SitePage; children
   const links: { key: Section; href: string; label: string }[] = [
     { key: 'free', href: '#/free-test', label: t.siteNavFree },
     { key: 'articles', href: '#/articles', label: t.siteNavArticles },
+    { key: 'resources', href: '#/resources', label: t.navResources },
     { key: 'plans', href: '#/plans', label: t.siteNavPlans },
     { key: 'contact', href: '#/contact', label: t.siteNavContact },
   ]

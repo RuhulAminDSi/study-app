@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
 type RouteType = 'public' | 'admin' | 'login' | 'candidate-login' | 'candidate-signup' | 'site'
-/** Which page of the public portal: `#/` dashboard, `#/notes`, `#/pyq`, `#/exams...`, `#/resources`, or a lesson under `#/chapter/...`. */
-export type PublicView = 'dashboard' | 'notes' | 'pyq' | 'lesson' | 'exams' | 'resources' | 'account'
+/** Which page of the public portal: `#/` dashboard, `#/notes`, `#/pyq`, `#/exams...`, or a lesson under `#/chapter/...`. */
+export type PublicView = 'dashboard' | 'notes' | 'pyq' | 'lesson' | 'exams' | 'account'
 
 /** The tabs of `#/resources[?tab=]`: job circulars (default), suggestions, past exam questions, other files. */
 export type ResourceTab = 'circular' | 'notice' | 'suggestion' | 'question' | 'other'
@@ -14,6 +14,7 @@ export const ARTICLE_CATEGORIES: ArticleCategory[] = ['guideline', 'news', 'writ
 /**
  * Pages open to visitors without an account (shown inside the portal for a signed-in reader): the free tests
  * (`#/free-test`, `#/free-test/<id>[/answers|/take|/merit]`), articles (`#/articles[?cat=]`, `#/articles/<slug>`),
+ * resources (`#/resources[?tab=]`: job circulars, notices, suggestions, past exam questions, other files),
  * plans and contact.
  */
 export type SitePage =
@@ -21,6 +22,7 @@ export type SitePage =
   | { page: 'free-set'; id: string; mode: 'home' | 'answers' | 'take' | 'merit' }
   | { page: 'articles'; category?: ArticleCategory; tag?: string }
   | { page: 'article'; slug: string }
+  | { page: 'resources'; tab: ResourceTab }
   | { page: 'plans' }
   | { page: 'contact' }
 
@@ -47,7 +49,6 @@ export interface RouteInfo {
   adminView?: string
   next?: string
   exam?: ExamRoute
-  resourceTab?: ResourceTab
   site?: SitePage
 }
 
@@ -93,10 +94,6 @@ export function parseHash(): RouteInfo {
 
   if (path === 'notes' || path === 'pyq') return { type: 'public', view: path }
   if (path === 'account') return { type: 'public', view: 'account' }
-  if (path === 'resources') {
-    const tab = new URLSearchParams(query).get('tab') as ResourceTab | null
-    return { type: 'public', view: 'resources', resourceTab: tab && RESOURCE_TABS.includes(tab) ? tab : 'circular' }
-  }
   if (path === 'exams' || path.startsWith('exams/')) return { type: 'public', view: 'exams', exam: parseExamPath(path, query) }
   return { type: 'public', view: 'dashboard' }
 }
@@ -113,6 +110,10 @@ function parseSitePath(path: string, query: string): SitePage | null {
   }
   const article = path.match(/^articles\/([a-z0-9-]{1,120})$/)
   if (article) return { page: 'article', slug: article[1] }
+  if (path === 'resources') {
+    const tab = new URLSearchParams(query).get('tab') as ResourceTab | null
+    return { page: 'resources', tab: tab && RESOURCE_TABS.includes(tab) ? tab : 'circular' }
+  }
   if (path === 'plans') return { page: 'plans' }
   if (path === 'contact') return { page: 'contact' }
   return null

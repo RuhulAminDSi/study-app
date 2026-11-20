@@ -1,6 +1,9 @@
 /** Open endpoints under /api/site (server/src/routes/site.ts): no sign-in needed. */
 import type { ArticleCategory } from '../router'
+import type { PublicResource } from './publicApi'
 import type { Translations } from '../types'
+
+export type { PublicResource as ResourceCard }
 
 export type { ArticleCategory }
 export interface SiteContact { email: string; phone: string; whatsapp: string | null; address: string; hours: string; facebook: string; youtube: string }
@@ -137,6 +140,8 @@ export const articlesApi = {
   },
   get: (slug: string) => siteFetch<Article>(`/articles/${encodeURIComponent(slug)}`),
 }
+
+export const resourcesApi = { list: () => siteFetch<PublicResource[]>('/resources') }
 
 export const plansApi = { list: () => siteFetch<Plan[]>('/plans') }
 

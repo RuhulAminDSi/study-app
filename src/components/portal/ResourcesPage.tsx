@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useApp } from '../../context/AppContext'
 import { translations } from '../../data/translations'
-import { fetchResources, type PublicResource } from '../../public/publicApi'
+import { resourcesApi, type ResourceCard as PublicResource } from '../../public/siteApi'
 import { navigate, type ResourceTab } from '../../router'
 import type { Language, Translations } from '../../types'
 import Icon from './icons'
@@ -65,9 +65,7 @@ export default function ResourcesPage({ tab }: { tab: ResourceTab }) {
 
   useEffect(() => {
     let live = true
-    fetchResources(fresh => { if (live) setItems(fresh) })
-      .then(list => { if (live) setItems(list) })
-      .catch(() => { if (live) setFailed(true) })
+    resourcesApi.list().then(list => { if (live) setItems(list) }).catch(() => { if (live) setFailed(true) })
     return () => { live = false }
   }, [])
 
@@ -140,7 +138,7 @@ export default function ResourcesPage({ tab }: { tab: ResourceTab }) {
   )
 
   return (
-    <main className="main-content portal-main">
+    <main className="ft-main site-wide">
       <div className="pd rs-page">
         <header className="pd-head">
           <p className="pd-eyebrow">{t.navResources}</p>

@@ -7,7 +7,6 @@ import Sidebar from './components/Sidebar'
 import MainContent from './components/MainContent'
 import Dashboard from './components/portal/Dashboard'
 import NotesLibrary from './components/portal/NotesLibrary'
-import ResourcesPage from './components/portal/ResourcesPage'
 import CandidateLogin from './candidate/CandidateLogin'
 import CandidateSignup from './candidate/CandidateSignup'
 import ExamsPage from './exam/ExamsPage'
@@ -18,13 +17,13 @@ import AccountPage from './components/portal/AccountPage'
 import SiteRoute from './site/SiteRoute'
 import SiteContent from './site/SiteContent'
 import WhatsAppButton from './components/WhatsAppButton'
-import { useRoute, navigate, type ExamRoute, type PublicView as View, type ResourceTab, type SitePage } from './router'
+import { useRoute, navigate, type ExamRoute, type PublicView as View, type SitePage } from './router'
 import './index.css'
 
 // The admin panel (and its rich-text editor) loads only when an admin opens it, not for every reader.
 const AdminDashboard = lazy(() => import('./admin/AdminDashboard'))
 
-function PublicView({ view, exam, resourceTab }: { view: View; exam?: ExamRoute; resourceTab?: ResourceTab }) {
+function PublicView({ view, exam }: { view: View; exam?: ExamRoute }) {
   const state = useApp()
   const examPage = exam?.page
 
@@ -41,7 +40,6 @@ function PublicView({ view, exam, resourceTab }: { view: View; exam?: ExamRoute;
       {view === 'dashboard' && <Dashboard />}
       {(view === 'notes' || view === 'pyq') && <NotesLibrary key={view} kind={view} />}
       {view === 'lesson' && <MainContent />}
-      {view === 'resources' && <ResourcesPage tab={resourceTab ?? 'circular'} />}
       {view === 'exams' && exam && <ExamView exam={exam} />}
       {view === 'account' && <AccountPage />}
     </div>
@@ -143,7 +141,7 @@ function Routes({ route }: { route: ReturnType<typeof useRoute> }) {
     <>
       {route.type === 'public' && (
         <SignInRequired>
-          <PublicView view={route.view ?? 'dashboard'} exam={route.exam} resourceTab={route.resourceTab} />
+          <PublicView view={route.view ?? 'dashboard'} exam={route.exam} />
         </SignInRequired>
       )}
       {route.type === 'admin' && <AdminRoute />}
