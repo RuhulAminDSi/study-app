@@ -241,17 +241,24 @@ const todayIso = () => {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10)
 }
 
+// The homepage only teases the newest circulars; the full list lives on Study Hub's Resources page.
+const CIRCULARS_PREVIEW = 2
+
 function renderCirculars() {
   const section = $('#circulars')
   const has = circulars.length > 0
   section.hidden = !has
   document.querySelectorAll('[data-circulars-link]').forEach((a) => (a.hidden = !has))
   if (!has) return
+  const shown = circulars.slice(0, CIRCULARS_PREVIEW)
+  const hasMore = circulars.length > shown.length
+  $('#circulars-fade').hidden = !hasMore
+  $('#circulars-wrap').classList.toggle('has-fade', hasMore)
   const today = todayIso()
   const date = (d) =>
     new Date(`${d}T00:00:00`).toLocaleDateString(lang === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
   const pick = (en, bn) => (lang === 'bn' && bn ? bn : en)
-  $('#circulars-list').innerHTML = circulars
+  $('#circulars-list').innerHTML = shown
     .map((c, i) => {
       let badge = ''
       if (c.ends_on) {
